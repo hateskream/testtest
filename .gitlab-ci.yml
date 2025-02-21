@@ -3,13 +3,14 @@ stages:
 
 build_and_push:
   stage: build
-  image: docker:latest
+  image: alpine:3.21
   services:
     - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: "tcp://docker:2375"
   script:
+    - make build-service-withoutDocker
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker build -t $CI_REGISTRY_IMAGE:latest -f backend/api_gateway/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:latest
