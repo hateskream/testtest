@@ -1,0 +1,37 @@
+stages:
+  - deploy
+
+variables:
+  IMAGE_TAG: "$HARBOR_REGISTRY/backend/gateway:$CI_COMMIT_REF_SLUG"
+
+before_script:
+  - echo "$KUBECONFIG_B64" | base64 -d > /tmp/kubeconfig
+  - chmod 600 /tmp/kubeconfig
+  - export KUBECONFIG=/tmp/kubeconfig
+
+#build:
+#  stage: build
+#  tags:
+#    - kuber
+#  image: quay.io/buildah/stable
+#  script:
+#    - mkdir -p ~/.config/containers
+#    - echo "$DOCKER_AUTH_CONFIG" > ~/.config/containers/auth.json
+#    - buildah bud -t "$IMAGE_TAG" .
+#    - buildah push "$IMAGE_TAG"
+#  after_script:
+#    - rm -f ~/.config/containers/auth.json
+
+deploy:
+  stage: deploy
+  tags:
+    - kuber
+  image: bitnami/kubectl:latest
+  script:
+    - kubectl apply -f k8s/deployment.yaml
+    - kubectl apply -f k8s/service.yaml
+    - kubectl apply -f k8s/ingress.yaml
+  only:
+    - main
+  after_script:
+    - rm -f /tmp/kubeconfig
