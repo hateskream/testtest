@@ -12,9 +12,10 @@ build_and_push:
   before_script:
     - apk add --no-cache make
   script:
+    - cd backend/api_gateway
     - make build-service-withoutDocker
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker build -t $CI_REGISTRY_IMAGE:latest -f backend/api_gateway/Dockerfile .
+    - docker build -t $CI_REGISTRY_IMAGE:latest . # -f backend/api_gateway/Dockerfile
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
