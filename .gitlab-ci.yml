@@ -11,7 +11,7 @@ build_and_push:
     DOCKER_HOST: "tcp://docker:2375"
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker build -t $CI_REGISTRY_IMAGE:latest -f backend/backend/api_gateway/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
