@@ -3,7 +3,7 @@ stages:
 
 build_and_push:
   stage: build
-  image: alpine:3.21
+  image: golang:1.24-alpine3.21
   services:
     - docker:dind
   variables:
