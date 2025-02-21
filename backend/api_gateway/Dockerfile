@@ -1,4 +1,4 @@
-FROM alpine:3.21
+FROM golang:1.24-alpine3.21
 WORKDIR /app
 COPY bin/api_gateway .
 COPY .env . # ???
