@@ -36,6 +36,7 @@ const config = {
 		es6: true,
 	},
 	rules: {
+		'import/prefer-default-export': 'off',
 		'prettier/prettier': [
 			2,
 			{
@@ -182,7 +183,6 @@ const config = {
 	},
 	overrides: [
 		{
-			files: ['src/App.vue'], // Указываем конкретный файл
 			rules: {
 				'filenames/match-regex': 0, // Отключаем правило только для src/App.vue
 			},
