@@ -13,6 +13,10 @@ module.exports = {
       files: ['src/**/*.vue'],
       customSyntax: 'postcss-html',
     },
+    {
+      files: ['**/*.css'],
+      customSyntax: 'postcss',
+    },
   ],
   rules: {
     'font-family-no-missing-generic-family-keyword': true,
