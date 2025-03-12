@@ -1,5 +1,5 @@
 <script setup lang="ts">
-interface Prosps {}
+interface Pr11osps {}
 </script>
 
 <template>
