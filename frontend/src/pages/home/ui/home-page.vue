@@ -1,6 +1,4 @@
-<script setup lang="ts">
-interface Pr11osps {}
-</script>
+<script setup lang="ts"></script>
 
 <template>
 	<div>

@@ -2,9 +2,9 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
-import App from './app-component.vue';
-
 import routes from './routes';
+
+import App from './app-component.vue';
 
 const app = createApp(App);
 
