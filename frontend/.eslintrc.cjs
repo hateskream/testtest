@@ -183,11 +183,6 @@ const config = {
 	},
 	overrides: [
 		{
-			rules: {
-				'filenames/match-regex': 0, // Отключаем правило только для src/App.vue
-			},
-		},
-		{
 			files: ['*.ts'],
 			rules: {
 				'no-empty-function': 0,
