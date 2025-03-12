@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { DashboardType } from '../model/types';
-import { useDashboardsStore } from '../model/dashboards-store';
+import { DashboardType } from '../model';
+import { useDashboardsStore } from '../stores';
 
 const dashboardTypes = Object.values(DashboardType);
 

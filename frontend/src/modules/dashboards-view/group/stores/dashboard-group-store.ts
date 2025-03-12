@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { type IDashboardGroup, type IDashboardTab } from './types';
+import { type IDashboardGroup, type IDashboardTab } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {

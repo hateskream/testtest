@@ -6,7 +6,7 @@ import type {
 	IDashboardGroup,
 	DashboardType,
 	IDashboardInstance,
-} from './types';
+} from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardsStore = defineStore('dashboards', () => {

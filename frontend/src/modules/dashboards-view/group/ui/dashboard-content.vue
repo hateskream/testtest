@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-import { DashboardType } from '../model/types';
 import { FearGreedDashboard } from '../../dashboards/fear-greed';
 import { MarketDashboard } from '../../dashboards/market';
 import { MarketCapDashboard } from '../../dashboards/market-cap';
 import { NewsDashboard } from '../../dashboards/news';
 import { PriceDashboard } from '../../dashboards/price';
-import { useDashboardsStore } from '../model/dashboards-store';
+import { useDashboardsStore } from '../stores';
+import { DashboardType } from '../model';
 
 const { activeGroup } = storeToRefs(useDashboardsStore());
 

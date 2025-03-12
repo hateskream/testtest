@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { useDashboardGroupsStore } from '../model/dashboard-group-store';
+import { useDashboardGroupsStore } from '../stores';
 
 const dashboardStore = useDashboardGroupsStore();
 
