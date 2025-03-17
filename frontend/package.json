@@ -10,7 +10,7 @@
 		"prepare": "cd .. && husky install frontend/.husky && chmod +x frontend/.husky/*",
 		"lint:ts": "vue-tsc --noEmit",
     "lint:js": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:css": "stylelint \"src/**/*.{vue,scss,styl}\"",
+    "lint:css": "stylelint \"src/**/*.{vue,css}\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" "
   },
   "dependencies": {
