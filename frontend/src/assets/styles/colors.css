@@ -1,244 +1,167 @@
 :root {
-  --common-color-white-700: rgba(255, 255, 255, 1);
-  --common-color-white-500: rgba(224, 224, 224, 1);
-  --common-color-white-400: rgba(220, 220, 223, 1);
-  --common-color-white-100: rgba(255, 255, 255, 0.4);
-
-  --common-color-gray-700: rgba(199, 199, 199, 0.1);
-  --common-color-gray-500: rgba(92, 92, 102, 1);
-  --common-color-gray-400: rgba(105, 105, 115, 1);
-  --common-color-gray-300: rgba(146, 146, 149, 1);
-  --common-color-gray-200: rgba(141, 141, 144, 1);
-  --common-color-gray-100: rgba(155, 155, 163, 1);
-
-  --common-color-green-500: rgba(152, 251, 14, 1);
-
-  --common-color-orange-700: rgba(255, 145, 81, 1);
-  --common-color-orange-500: rgba(255, 141, 41, 1);
-  --common-color-orange-300: rgba(177, 107, 57, 1);
-
-  --common-color-black-700: rgba(0, 0, 0, 1);
-  --common-color-black-500: rgba(12, 12, 14, 1);
-  --common-color-black-300: rgba(22, 22, 24, 1);
-
-  --text-color-base-500: rgba(255, 255, 255, 1);
-  --text-color-base-300: rgba(146, 146, 149, 1);
-  --text-color-base-100: rgba(89, 90, 92, 1);
-
-  --text-color-contrast-500: rgba(12, 12, 14, 1);
-  --text-color-contrast-300: rgba(92, 92, 102, 1);
-  --text-color-contrast-100: rgba(155, 155, 163, 1);
-
-  --text-color-brand-500: rgba(255, 255, 255, 1);
-  --text-color-brand-300: rgba(0, 0, 0, 1);
-
-  --text-color-positive-500: rgba(152, 251, 14, 1);
-  --text-color-positive-300: rgba(152, 251, 14, 0.5);
-
-  --text-color-info-500: rgba(135, 89, 252, 1);
-  --text-color-info-300: rgba(163, 140, 222, 1);
-
-  --text-color-attention-500: rgba(255, 141, 41, 1);
-  --text-color-attention-300: rgba(177, 107, 57, 1);
-
-  --text-color-negative-500: rgba(255, 92, 92, 1);
-  --text-color-negative-300: rgba(0, 0, 0, 1);
-
-  --text-color-base-300-activated: rgba(255, 255, 255, 1);
-  --text-color-base-100-activated: rgba(146, 146, 149, 1);
-
-  --text-color-base-500-effect: rgba(255, 255, 255, 1);
-  --text-color-base-300-effect: rgba(245, 245, 245, 0.9);
-  --text-color-base-100-effect: rgba(131, 132, 135, 0.9);
-
-  --text-color-contrast-500-effect: rgba(12, 12, 14, 1);
-  --text-color-contrast-300-effect: rgba(83, 83, 91, 1);
-  --text-color-contrast-100-effect: rgba(155, 155, 163, 1);
-
-  --text-color-brand-500-effect: rgba(255, 255, 255, 1);
-  --text-color-brand-300-effect: rgba(141, 141, 144, 1);
-
-  --text-color-positive-500-effect: rgba(255, 255, 255, 1);
-  --text-color-positive-300-effect: rgba(141, 141, 144, 1);
-
-  --text-color-info-500-effect: rgba(255, 255, 255, 1);
-  --text-color-info-300-effect: rgba(141, 141, 144, 1);
-
-  --text-color-attention-500-effect: rgba(177, 107, 57, 1);
-  --text-color-attention-300-effect: rgba(255, 145, 81, 1);
-
-  --text-color-negative-500-effect: rgba(255, 255, 255, 1);
-  --text-color-negative-300-effect: rgba(255, 255, 255, 1);
-
-  --bg-color-surface-00: rgba(3, 3, 3, 1);
-  --bg-color-surface-01: rgba(12, 12, 13, 1);
-  --bg-color-surface-02: rgba(22, 22, 24, 1);
-  --bg-color-surface-03: rgba(27, 27, 29, 1);
-
-  --bg-color-surface-00-shade-0: rgba(3, 3, 3, 0);
-  --bg-color-surface-01-shade-0: rgba(12, 13, 14, 0);
-
-  --bg-color-base-500: rgba(77, 77, 77, 0.5);
-  --bg-color-base-300: rgba(37, 37, 39, 0.5);
-  --bg-color-base-100: rgba(37, 37, 39, 0.2);
-
-  --bg-color-contrast-500: rgba(224, 224, 224, 1);
-  --bg-color-contrast-300: rgba(220, 220, 223, 1);
-
-  --bg-color-brand-500: rgba(109, 0, 252, 1);
-  --bg-color-brand-300: rgba(109, 0, 252, 0.6);
-
-  --bg-color-positive-500: rgba(152, 251, 14, 1);
-  --bg-color-positive-300: rgba(152, 251, 14, 0.12);
-
-  --bg-color-info-500: rgba(255, 255, 255, 1);
-  --bg-color-info-300: rgba(255, 255, 255, 1);
-
-  --bg-color-attention-500: rgba(255, 127, 53, 1);
-  --bg-color-attention-300: rgba(255, 127, 53, 0.12);
-
-  --bg-color-negative-500: rgba(219, 4, 4, 1);
-  --bg-color-negative-300: rgba(219, 4, 4, 0.12);
-
-  --bg-tooltip-color-base: rgba(37, 37, 39, 0.65);
-  --bg-tooltip-color-contrast: rgba(255, 255, 255, 0.75);
-
-  --bg-modal-color-base: rgba(22, 22, 24, 1);
-  --bg-underModal-color-base: rgba(0, 0, 0, 0.75);
-
-  --bg-color-surface-00-effect: rgba(0, 0, 0, 1);
-
-  --bg-color-surface-01-effect: rgba(37, 35, 35, 0.3);
-  --bg-color-surface-01-activated: rgba(45, 45, 47, 0.5);
-
-  --bg-color-surface-02-effect: rgba(39, 39, 43, 0.7);
-  --bg-color-surface-03-effect: rgba(23, 23, 23, 1);
-
-  --bg-color-base-500-effect: rgba(94, 94, 94, 0.4);
-  --bg-color-base-500-activated: rgba(61, 61, 61, 0.8);
-
-  --bg-color-base-300-effect: rgba(64, 64, 64, 0.4);
-  --bg-color-base-300-activated: rgba(51, 51, 51, 0.8);
-
-  --bg-color-base-100-effect: rgba(54, 54, 58, 0.27);
-  --bg-color-base-100-activated: rgba(49, 49, 53, 0.2);
-
-  --bg-color-contrast-500-effect: rgba(255, 255, 255, 1);
-  --bg-color-contrast-500-activated: rgba(224, 224, 224, 1);
-
-  --bg-color-contrast-300-effect: rgba(220, 220, 223, 1);
-
-  --bg-color-brand-500-effect: rgba(224, 224, 224, 1);
-  --bg-color-brand-300-effect: rgba(220, 220, 223, 1);
-
-  --bg-color-positive-500-effect: rgba(255, 255, 255, 1);
-  --bg-color-positive-300-effect: rgba(255, 255, 255, 1);
-
-  --bg-color-info-500-effect: rgba(255, 255, 255, 1);
-  --bg-color-info-300-effect: rgba(255, 255, 255, 1);
-
-  --bg-color-attention-500-effect: rgba(255, 255, 255, 1);
-  --bg-color-attention-300-effect: rgba(61, 39, 24, 0.8);
-
-  --bg-color-negative-500-effect: rgba(255, 255, 255, 1);
-  --bg-color-negative-300-effect: rgba(255, 255, 255, 1);
-
-  --border-color-surface-01: rgba(199, 199, 199, 0.06);
-  --border-color-surface-02: rgba(199, 199, 199, 0.1);
-
-  --border-color-base-500: rgba(178, 178, 178, 0.4);
-  --border-color-base-300: rgba(97, 97, 97, 0.3);
-
-  --border-color-contrast-500: rgba(0, 0, 0, 1);
-  --border-color-contrast-300: rgba(0, 0, 0, 1);
-
-  --border-color-brand-500: rgba(0, 0, 0, 1);
-  --border-color-brand-300: rgba(0, 0, 0, 1);
-
-  --border-color-positive-500: rgba(0, 0, 0, 1);
-  --border-color-positive-300: rgba(152, 251, 14, 0.18);
-
-  --border-color-info-500: rgba(0, 0, 0, 1);
-  --border-color-info-300: rgba(163, 140, 222, 0.18);
-
-  --border-color-attention-500: rgba(255, 141, 41, 1);
-  --border-color-attention-300: rgba(255, 141, 41, 0.23);
-
-  --border-color-negative-500: rgba(0, 0, 0, 1);
-  --border-color-negative-300: rgba(219, 4, 4, 0.34);
-
-  --border-modal-color-base: rgba(199, 199, 199, 0.1);
-
-  --border-color-surface-01-effect: rgba(199, 199, 199, 0.12);
-  --border-color-surface-01-activated: rgba(199, 199, 199, 0.5);
-
-  --border-color-surface-02-effect: rgba(199, 199, 199, 0.16);
-  --border-color-surface-02-activated: rgba(199, 199, 199, 0.5);
-
-  --border-color-base-500-effect: rgba(0, 0, 0, 1);
-
-  --border-color-base-300-effect: rgba(166, 166, 166, 0.3);
-  --border-color-base-300-activated: rgba(60, 60, 62, 0.5);
-
-  --border-color-contrast-500-effect: rgba(0, 0, 0, 1);
-  --border-color-contrast-300-effect: rgba(0, 0, 0, 1);
-
-  --border-color-brand-500-effect: rgba(0, 0, 0, 1);
-  --border-color-brand-300-effect: rgba(0, 0, 0, 1);
-
-  --border-color-positive-500-effect: rgba(0, 0, 0, 1);
-  --border-color-positive-300-effect: rgba(0, 0, 0, 1);
-
-  --border-color-info-500-effect: rgba(0, 0, 0, 1);
-  --border-color-info-300-effect: rgba(0, 0, 0, 1);
-
-  --border-color-attention-500-effect: rgba(255, 145, 81, 1);
-  --border-color-attention-300-effect: rgba(0, 0, 0, 1);
-
-  --border-color-negative-500-effect: rgba(0, 0, 0, 1);
-  --border-color-negative-300-effect: rgba(0, 0, 0, 1);
-
-  --icon-color-base-500: rgba(255, 255, 255, 1);
-  --icon-color-base-300: rgba(100, 101, 104, 1);
-
-  --icon-color-contrast-500: rgba(0, 0, 0, 1);
-  --icon-color-contrast-300: rgba(105, 105, 115, 1);
-
-  --icon-color-brand-500: rgba(0, 0, 0, 1);
-  --icon-color-brand-300: rgba(255, 255, 255, 0.4);
-
-  --icon-color-positive-500: rgba(255, 255, 255, 0.4);
-  --icon-color-positive-300: rgba(124, 211, 3, 0.4);
-
-  --icon-color-info-500: rgba(255, 255, 255, 1);
-  --icon-color-info-300: rgba(255, 255, 255, 0.4);
-
-  --icon-color-attention-500: rgba(255, 141, 41, 1);
-  --icon-color-attention-300: rgba(255, 141, 41, 0.4);
-
-  --icon-color-negative-500: rgba(248, 89, 97, 0.4);
-  --icon-color-negative-300: rgba(248, 89, 97, 1);
-
-  --icon-color-base-500-effect: rgba(255, 255, 255, 1);
-  --icon-color-base-300-effect: rgba(255, 255, 255, 1);
-
-  --icon-color-contrast-500-effect: rgba(0, 0, 0, 1);
-  --icon-color-contrast-300-effect: rgba(105, 105, 115, 1);
-
-  --icon-color-brand-500-effect: rgba(255, 255, 255, 1);
-  --icon-color-brand-300-effect: rgba(255, 255, 255, 0.4);
-
-  --icon-color-positive-500-effect: rgba(255, 255, 255, 1);
-
-  --icon-color-positive-300-effect: rgba(174, 252, 64, 1);
-  --icon-color-positive-300-activated: rgba(255, 255, 255, 0.4);
-
-  --icon-color-info-500-effect: rgba(255, 255, 255, 1);
-  --icon-color-info-300-effect: rgba(255, 255, 255, 0.4);
-
-  --icon-color-attention-500-effect: rgba(255, 145, 81, 1);
-  --icon-color-attention-300-effect: rgba(255, 145, 81, 0.4);
-
-  --icon-color-negative-500-effect: rgba(248, 89, 97, 0.4);
-  --icon-color-negative-300-effect: rgba(248, 89, 97, 1);
+	--common-color-white-700: rgb(255 255 255 / 100%);
+	--common-color-white-500: rgb(224 224 224 / 100%);
+	--common-color-white-400: rgb(220 220 223 / 100%);
+	--common-color-white-100: rgb(255 255 255 / 40%);
+	--common-color-gray-700: rgb(199 199 199 / 10%);
+	--common-color-gray-500: rgb(92 92 102 / 100%);
+	--common-color-gray-400: rgb(105 105 115 / 100%);
+	--common-color-gray-300: rgb(146 146 149 / 100%);
+	--common-color-gray-200: rgb(141 141 144 / 100%);
+	--common-color-gray-100: rgb(155 155 163 / 100%);
+	--common-color-green-500: rgb(152 251 14 / 100%);
+	--common-color-orange-700: rgb(255 145 81 / 100%);
+	--common-color-orange-500: rgb(255 141 41 / 100%);
+	--common-color-orange-300: rgb(177 107 57 / 100%);
+	--common-color-black-700: rgb(0 0 0 / 100%);
+	--common-color-black-500: rgb(12 12 14 / 100%);
+	--common-color-black-300: rgb(22 22 24 / 100%);
+	--text-color-base-500: rgb(255 255 255 / 100%);
+	--text-color-base-300: rgb(146 146 149 / 100%);
+	--text-color-base-100: rgb(89 90 92 / 100%);
+	--text-color-contrast-500: rgb(12 12 14 / 100%);
+	--text-color-contrast-300: rgb(92 92 102 / 100%);
+	--text-color-contrast-100: rgb(155 155 163 / 100%);
+	--text-color-brand-500: rgb(255 255 255 / 100%);
+	--text-color-brand-300: rgb(0 0 0 / 100%);
+	--text-color-positive-500: rgb(152 251 14 / 100%);
+	--text-color-positive-300: rgb(152 251 14 / 50%);
+	--text-color-info-500: rgb(135 89 252 / 100%);
+	--text-color-info-300: rgb(163 140 222 / 100%);
+	--text-color-attention-500: rgb(255 141 41 / 100%);
+	--text-color-attention-300: rgb(177 107 57 / 100%);
+	--text-color-negative-500: rgb(255 92 92 / 100%);
+	--text-color-negative-300: rgb(0 0 0 / 100%);
+	--text-color-base-300-activated: rgb(255 255 255 / 100%);
+	--text-color-base-100-activated: rgb(146 146 149 / 100%);
+	--text-color-base-500-effect: rgb(255 255 255 / 100%);
+	--text-color-base-300-effect: rgb(245 245 245 / 90%);
+	--text-color-base-100-effect: rgb(131 132 135 / 90%);
+	--text-color-contrast-500-effect: rgb(12 12 14 / 100%);
+	--text-color-contrast-300-effect: rgb(83 83 91 / 100%);
+	--text-color-contrast-100-effect: rgb(155 155 163 / 100%);
+	--text-color-brand-500-effect: rgb(255 255 255 / 100%);
+	--text-color-brand-300-effect: rgb(141 141 144 / 100%);
+	--text-color-positive-500-effect: rgb(255 255 255 / 100%);
+	--text-color-positive-300-effect: rgb(141 141 144 / 100%);
+	--text-color-info-500-effect: rgb(255 255 255 / 100%);
+	--text-color-info-300-effect: rgb(141 141 144 / 100%);
+	--text-color-attention-500-effect: rgb(177 107 57 / 100%);
+	--text-color-attention-300-effect: rgb(255 145 81 / 100%);
+	--text-color-negative-500-effect: rgb(255 255 255 / 100%);
+	--text-color-negative-300-effect: rgb(255 255 255 / 100%);
+	--bg-color-surface-00: rgb(3 3 3 / 100%);
+	--bg-color-surface-01: rgb(12 12 13 / 100%);
+	--bg-color-surface-02: rgb(22 22 24 / 100%);
+	--bg-color-surface-03: rgb(27 27 29 / 100%);
+	--bg-color-surface-00-shade-0: rgb(3 3 3 / 0%);
+	--bg-color-surface-01-shade-0: rgb(12 13 14 / 0%);
+	--bg-color-base-500: rgb(77 77 77 / 50%);
+	--bg-color-base-300: rgb(37 37 39 / 50%);
+	--bg-color-base-100: rgb(37 37 39 / 20%);
+	--bg-color-contrast-500: rgb(224 224 224 / 100%);
+	--bg-color-contrast-300: rgb(220 220 223 / 100%);
+	--bg-color-brand-500: rgb(109 0 252 / 100%);
+	--bg-color-brand-300: rgb(109 0 252 / 60%);
+	--bg-color-positive-500: rgb(152 251 14 / 100%);
+	--bg-color-positive-300: rgb(152 251 14 / 12%);
+	--bg-color-info-500: rgb(255 255 255 / 100%);
+	--bg-color-info-300: rgb(255 255 255 / 100%);
+	--bg-color-attention-500: rgb(255 127 53 / 100%);
+	--bg-color-attention-300: rgb(255 127 53 / 12%);
+	--bg-color-negative-500: rgb(219 4 4 / 100%);
+	--bg-color-negative-300: rgb(219 4 4 / 12%);
+	--bg-tooltip-color-base: rgb(37 37 39 / 65%);
+	--bg-tooltip-color-contrast: rgb(255 255 255 / 75%);
+	--bg-modal-color-base: rgb(22 22 24 / 100%);
+	--bg-under-modal-color-base: rgb(0 0 0 / 75%);
+	--bg-color-surface-00-effect: rgb(0 0 0 / 100%);
+	--bg-color-surface-01-effect: rgb(37 35 35 / 30%);
+	--bg-color-surface-01-activated: rgb(45 45 47 / 50%);
+	--bg-color-surface-02-effect: rgb(39 39 43 / 70%);
+	--bg-color-surface-03-effect: rgb(23 23 23 / 100%);
+	--bg-color-base-500-effect: rgb(94 94 94 / 40%);
+	--bg-color-base-500-activated: rgb(61 61 61 / 80%);
+	--bg-color-base-300-effect: rgb(64 64 64 / 40%);
+	--bg-color-base-300-activated: rgb(51 51 51 / 80%);
+	--bg-color-base-100-effect: rgb(54 54 58 / 27%);
+	--bg-color-base-100-activated: rgb(49 49 53 / 20%);
+	--bg-color-contrast-500-effect: rgb(255 255 255 / 100%);
+	--bg-color-contrast-500-activated: rgb(224 224 224 / 100%);
+	--bg-color-contrast-300-effect: rgb(220 220 223 / 100%);
+	--bg-color-brand-500-effect: rgb(224 224 224 / 100%);
+	--bg-color-brand-300-effect: rgb(220 220 223 / 100%);
+	--bg-color-positive-500-effect: rgb(255 255 255 / 100%);
+	--bg-color-positive-300-effect: rgb(255 255 255 / 100%);
+	--bg-color-info-500-effect: rgb(255 255 255 / 100%);
+	--bg-color-info-300-effect: rgb(255 255 255 / 100%);
+	--bg-color-attention-500-effect: rgb(255 255 255 / 100%);
+	--bg-color-attention-300-effect: rgb(61 39 24 / 80%);
+	--bg-color-negative-500-effect: rgb(255 255 255 / 100%);
+	--bg-color-negative-300-effect: rgb(255 255 255 / 100%);
+	--border-color-surface-01: rgb(199 199 199 / 6%);
+	--border-color-surface-02: rgb(199 199 199 / 10%);
+	--border-color-base-500: rgb(178 178 178 / 40%);
+	--border-color-base-300: rgb(97 97 97 / 30%);
+	--border-color-contrast-500: rgb(0 0 0 / 100%);
+	--border-color-contrast-300: rgb(0 0 0 / 100%);
+	--border-color-brand-500: rgb(0 0 0 / 100%);
+	--border-color-brand-300: rgb(0 0 0 / 100%);
+	--border-color-positive-500: rgb(0 0 0 / 100%);
+	--border-color-positive-300: rgb(152 251 14 / 18%);
+	--border-color-info-500: rgb(0 0 0 / 100%);
+	--border-color-info-300: rgb(163 140 222 / 18%);
+	--border-color-attention-500: rgb(255 141 41 / 100%);
+	--border-color-attention-300: rgb(255 141 41 / 23%);
+	--border-color-negative-500: rgb(0 0 0 / 100%);
+	--border-color-negative-300: rgb(219 4 4 / 34%);
+	--border-modal-color-base: rgb(199 199 199 / 10%);
+	--border-color-surface-01-effect: rgb(199 199 199 / 12%);
+	--border-color-surface-01-activated: rgb(199 199 199 / 50%);
+	--border-color-surface-02-effect: rgb(199 199 199 / 16%);
+	--border-color-surface-02-activated: rgb(199 199 199 / 50%);
+	--border-color-base-500-effect: rgb(0 0 0 / 100%);
+	--border-color-base-300-effect: rgb(166 166 166 / 30%);
+	--border-color-base-300-activated: rgb(60 60 62 / 50%);
+	--border-color-contrast-500-effect: rgb(0 0 0 / 100%);
+	--border-color-contrast-300-effect: rgb(0 0 0 / 100%);
+	--border-color-brand-500-effect: rgb(0 0 0 / 100%);
+	--border-color-brand-300-effect: rgb(0 0 0 / 100%);
+	--border-color-positive-500-effect: rgb(0 0 0 / 100%);
+	--border-color-positive-300-effect: rgb(0 0 0 / 100%);
+	--border-color-info-500-effect: rgb(0 0 0 / 100%);
+	--border-color-info-300-effect: rgb(0 0 0 / 100%);
+	--border-color-attention-500-effect: rgb(255 145 81 / 100%);
+	--border-color-attention-300-effect: rgb(0 0 0 / 100%);
+	--border-color-negative-500-effect: rgb(0 0 0 / 100%);
+	--border-color-negative-300-effect: rgb(0 0 0 / 100%);
+	--icon-color-base-500: rgb(255 255 255 / 100%);
+	--icon-color-base-300: rgb(100 101 104 / 100%);
+	--icon-color-contrast-500: rgb(0 0 0 / 100%);
+	--icon-color-contrast-300: rgb(105 105 115 / 100%);
+	--icon-color-brand-500: rgb(0 0 0 / 100%);
+	--icon-color-brand-300: rgb(255 255 255 / 40%);
+	--icon-color-positive-500: rgb(255 255 255 / 40%);
+	--icon-color-positive-300: rgb(124 211 3 / 40%);
+	--icon-color-info-500: rgb(255 255 255 / 100%);
+	--icon-color-info-300: rgb(255 255 255 / 40%);
+	--icon-color-attention-500: rgb(255 141 41 / 100%);
+	--icon-color-attention-300: rgb(255 141 41 / 40%);
+	--icon-color-negative-500: rgb(248 89 97 / 40%);
+	--icon-color-negative-300: rgb(248 89 97 / 100%);
+	--icon-color-base-500-effect: rgb(255 255 255 / 100%);
+	--icon-color-base-300-effect: rgb(255 255 255 / 100%);
+	--icon-color-contrast-500-effect: rgb(0 0 0 / 100%);
+	--icon-color-contrast-300-effect: rgb(105 105 115 / 100%);
+	--icon-color-brand-500-effect: rgb(255 255 255 / 100%);
+	--icon-color-brand-300-effect: rgb(255 255 255 / 40%);
+	--icon-color-positive-500-effect: rgb(255 255 255 / 100%);
+	--icon-color-positive-300-effect: rgb(174 252 64 / 100%);
+	--icon-color-positive-300-activated: rgb(255 255 255 / 40%);
+	--icon-color-info-500-effect: rgb(255 255 255 / 100%);
+	--icon-color-info-300-effect: rgb(255 255 255 / 40%);
+	--icon-color-attention-500-effect: rgb(255 145 81 / 100%);
+	--icon-color-attention-300-effect: rgb(255 145 81 / 40%);
+	--icon-color-negative-500-effect: rgb(248 89 97 / 40%);
+	--icon-color-negative-300-effect: rgb(248 89 97 / 100%);
 }
