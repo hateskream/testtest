@@ -1,7 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {
+	AllDashboard,
+	DashboardContent,
+	TabsComponent,
+} from '@/modules/dashboards-view/group';
+</script>
 
 <template>
 	<div>
-		<h1>Home</h1>
+		<all-dashboard />
+		<tabs-component />
+		<dashboard-content />
 	</div>
 </template>
