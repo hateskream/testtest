@@ -1,11 +1,15 @@
 @import url('./fonts.css');
 @import url('./colors.css');
+@import url('./normalize.css');
 
-/* For test font */
 body {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
 	font-style: normal;
 	font-weight: 400;
 	font-family: 'Roboto Flex', sans-serif;
+	background: var(--bg-color-surface-00);
 	font-optical-sizing: auto;
 	font-variation-settings:
 		'slnt' 0,
@@ -19,4 +23,10 @@ body {
 		'YTFI' 738,
 		'YTLC' 514,
 		'YTUC' 712;
+}
+
+#app {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
 }
