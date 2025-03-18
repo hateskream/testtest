@@ -9,6 +9,7 @@ body {
 	font-style: normal;
 	font-weight: 400;
 	font-family: 'Roboto Flex', sans-serif;
+	color: var(--text-color-base-500);
 	background: var(--bg-color-surface-00);
 	font-optical-sizing: auto;
 	font-variation-settings:
@@ -29,4 +30,8 @@ body {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	box-sizing: border-box;
+	overflow-y: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
