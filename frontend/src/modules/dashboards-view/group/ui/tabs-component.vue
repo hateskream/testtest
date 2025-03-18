@@ -55,7 +55,8 @@ function finishEditing(tabId: string) {
 .tabs {
 	display: flex;
 	gap: 10px;
-	margin-bottom: 20px;
+
+	/* margin-bottom: 20px; */
 }
 
 .tab {

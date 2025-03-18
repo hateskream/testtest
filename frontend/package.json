@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-		"prepare": "cd .. && husky install frontend/.husky && chmod +x frontend/.husky/*",
-		"lint:ts": "vue-tsc --noEmit",
+    "prepare": "cd .. && husky install frontend/.husky && chmod +x frontend/.husky/*",
+    "lint:ts": "vue-tsc --noEmit",
     "lint:js": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:css": "stylelint \"src/**/*.{vue,css}\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" "
@@ -45,6 +45,7 @@
     "stylelint-order": "5.0.0",
     "typescript": "5.7.2",
     "vite": "6.2.0",
+    "vite-plugin-svg-icons": "2.0.1",
     "vite-svg-loader": "5.1.0",
     "vue-eslint-parser": "9.4.2",
     "vue-tsc": "2.2.4"

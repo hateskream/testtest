@@ -1,61 +1,38 @@
 <script setup lang="ts">
-import { computed, watch, shallowRef } from 'vue';
-
-import type { IconIds } from './icons';
-import { getIconComponent } from './icon-cache';
+import { computed } from 'vue';
+import type { CSSProperties } from 'vue';
 
 interface IUiIconProps {
-	id: IconIds;
-	width?: string | number;
-	height?: string | number;
+	id: string;
+	width?: string;
+	height?: string;
 }
 
-const props = withDefaults(defineProps<IUiIconProps>(), {
-	width: '16px',
-	height: '16px',
+const props = defineProps<IUiIconProps>();
+
+const xlinkHref = computed((): string => `#icon-${props.id}`);
+
+const inlineStyles = computed((): Partial<CSSProperties> => {
+	const { width, height } = props;
+	return { width, height };
 });
-
-const icon = shallowRef(getIconComponent(props.id));
-
-const iconStyle = computed(() => ({
-	width: normalizeSize(props.width),
-	height: normalizeSize(props.height),
-}));
-
-watch(
-	() => props.id,
-	newId => {
-		icon.value = getIconComponent(newId);
-	},
-);
-
-function normalizeSize(value: string | number): string {
-	return typeof value === 'number' ? `${value}px` : value;
-}
 </script>
 
 <template>
-	<span
-		class="icon-container"
-		:style="iconStyle"
+	<svg
+		:class="classes.root"
+		aria-hidden="true"
+		role="img"
+		:style="inlineStyles"
 	>
-		<component
-			:is="icon"
-			:class="classes.root"
-		/>
-	</span>
+		<use :xlink:href="xlinkHref" />
+	</svg>
 </template>
 
 <style module="classes">
-.icon-container {
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-}
-
 .root {
-	width: 100%;
-	height: 100%;
+	width: 1em;
+	height: 1em;
 	overflow: hidden;
 	fill: currentcolor;
 }
