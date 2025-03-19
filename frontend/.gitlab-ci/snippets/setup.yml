@@ -3,9 +3,13 @@ install_dependencies:
   image: node:22.13.0-alpine
 
   script:
+    - pwd
+    - ls -la
+    - cd frontend
+    - ls -la
     - npm ci
-    - ls -la frontend/node_modules
-    - ls -la frontend
+    - ls -la
+    - ls -la node_modules
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}
