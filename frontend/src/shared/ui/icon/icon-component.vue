@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { CSSProperties } from 'vue';
+import { computed, type CSSProperties } from 'vue';
+
+import type { IconIds } from './icons';
 
 interface IUiIconProps {
-	id: string;
-	width?: string;
-	height?: string;
+	id: IconIds;
+	width?: CSSProperties['width'];
+	height?: CSSProperties['height'];
 }
 
-const props = defineProps<IUiIconProps>();
+const props = defineProps<IUiIconProps>()
 
-const xlinkHref = computed((): string => `#icon-${props.id}`);
+const xlinkHref = computed<string>(() => `#icon-${props.id}`);
 
-const inlineStyles = computed((): Partial<CSSProperties> => {
-	const { width, height } = props;
-	return { width, height };
-});
+const inlineStyles = computed<Partial<CSSProperties>>(() => ({
+	width: props.width,
+	height: props.height,
+}));
 </script>
 
 <template>
@@ -34,6 +35,5 @@ const inlineStyles = computed((): Partial<CSSProperties> => {
 	width: 1em;
 	height: 1em;
 	overflow: hidden;
-	fill: currentcolor;
 }
 </style>
