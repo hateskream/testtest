@@ -4,6 +4,8 @@ install_dependencies:
 
   script:
     - npm ci
+    - ls -la frontend/node_modules
+    - ls -la frontend
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}
