@@ -38,42 +38,25 @@ async function handleInteractiveUpdate() {
 	data.value = await getMockData(true);
 }
 
-function polarToCartesian(
-	centerX: number,
-	centerY: number,
-	radius: number,
-	angleInDegrees: number,
-) {
-	const angleInRadians = (angleInDegrees * Math.PI) / 180.0;
-	return {
-		x: centerX + radius * Math.cos(angleInRadians),
-		y: centerY + radius * -Math.sin(angleInRadians),
-	};
-}
-
 const circleChart = computed(() => {
 	const tension = data.value?.tension ?? 0;
 
 	const arrowRotateInDeg = -90 + (tension / 100) * 180;
 
-	const arcLength = 35; // Длина подсвеченной дуги (в градусах)
-	const startAngle = -180 - (tension / 100) * 180; // Откуда начинается
-
-	const centerX = 100;
-	const centerY = 100;
 	const radius = 80;
+	const arcAngle = 34;
 
-	const start = polarToCartesian(centerX, centerY, radius, startAngle + arcLength / 2);
-
-	const end = polarToCartesian(centerX, centerY, radius, startAngle - arcLength / 2);
-
-	const chartActiveLineD = `M ${start.x},${start.y} A ${radius},${radius} 0 0,1 ${end.x},${end.y}`;
+	const totalLength = Math.PI * radius;
+	const arcLength = (arcAngle / 180) * totalLength;
+	const offset = -(tension / 100) * (totalLength - arcLength);
 
 	return {
 		arrowRotateInDeg,
-		chartActiveLineAttrs: {
-			d: chartActiveLineD,
-			stroke: tensionText.value.colors.chart,
+
+		activeLine: {
+			radius,
+			dasharray: `${arcLength}, ${totalLength}`,
+			offset,
 		},
 	};
 });
@@ -96,10 +79,10 @@ const circleChart = computed(() => {
 						:class="classes.metricСhartIndicator"
 					>
 						<svg
-							:class="classes.metricСhartContainer"
 							width="200"
 							height="100"
 							viewBox="0 0 200 100"
+							:class="classes.metricСhartContainer"
 						>
 							<!-- Фоновая дуга -->
 							<path
@@ -109,8 +92,11 @@ const circleChart = computed(() => {
 
 							<!-- Активная дуга -->
 							<path
+								d="M 20,100 A 80,80 0 0,1 180,100"
 								:class="classes.metricСhartActive"
-								v-bind="circleChart.chartActiveLineAttrs"
+								:stroke="tensionText.colors.chart"
+								:stroke-dasharray="circleChart.activeLine.dasharray"
+								:stroke-dashoffset="circleChart.activeLine.offset"
 							/>
 						</svg>
 
@@ -216,7 +202,7 @@ const circleChart = computed(() => {
 	fill: none;
 	stroke-width: 4;
 	stroke-linecap: round;
-	transition: d 0.5s ease-in-out;
+	transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
 .metricСhartArrowContainer {
