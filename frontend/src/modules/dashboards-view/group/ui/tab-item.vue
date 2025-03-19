@@ -73,6 +73,7 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	<tab-wrapper
 		:is-active="tab.isActive"
 		:is-editing="editing"
+		:class="classes.tab"
 	>
 		<input
 			v-if="editing"
@@ -93,6 +94,11 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 </template>
 
 <style module="classes">
+.tab::selection {
+	color: var(--text-color-contrast-500);
+	background-color: #ffffff;
+}
+
 input {
 	min-width: 1ch;
 	padding: 0;
