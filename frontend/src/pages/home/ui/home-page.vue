@@ -10,7 +10,9 @@ import { LayoutComponent } from '@/modules/layaout';
 			<tabs-component />
 		</template>
 		<template #content>
-			<fear-greed-dashboard market="test" />
+			<suspense>
+				<fear-greed-dashboard market="test" />
+			</suspense>
 		</template>
 	</layout-component>
 </template>

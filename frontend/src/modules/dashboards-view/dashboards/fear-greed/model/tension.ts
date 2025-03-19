@@ -16,10 +16,3 @@ export interface ITensionTextData {
 		sub: string;
 	};
 }
-
-export interface IFearGreedProps {
-	market: string;
-
-	showChart?: boolean;
-	showChartDescription?: boolean;
-}
