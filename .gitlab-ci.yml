@@ -1,7 +1,6 @@
 include:
-  - local: "./frontend/.gitlab-ci/snippets/setup.yml"
+  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
   - local: "/frontend/.gitlab-ci/snippets/lint.yml"
-
 
 stages:
   - setup
