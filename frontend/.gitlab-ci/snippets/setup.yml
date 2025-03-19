@@ -4,9 +4,9 @@ install_dependencies:
 
   script:
     - npm ci
-    
+
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - node_modules/
-      - package-lock.json
+      - frontend/node_modules/
+      - frontend/package-lock.json
