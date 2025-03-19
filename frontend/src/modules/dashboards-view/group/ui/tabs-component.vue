@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-import { useDashboardGroupsStore } from '../stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { useDashboardGroupsStore } from '../stores';
 
 import TabItem from './tab-item.vue';
 import TabWrapper from './tab-wrapper.vue';

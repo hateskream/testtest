@@ -1,20 +1,23 @@
 <script setup lang="ts">
-defineProps<{
+import { computed, useCssModule } from 'vue';
+
+interface ITabWrapperProps {
 	isActive?: boolean;
 	isEditing?: boolean;
-}>();
+}
+
+const props = defineProps<ITabWrapperProps>();
+
+const classes = useCssModule('classes');
+
+const classList = computed(() => ({
+	[classes.active]: props.isActive,
+	[classes.editing]: props.isEditing,
+}));
 </script>
 
 <template>
-	<div
-		:class="[
-			classes.tab,
-			{
-				[classes.active]: isActive,
-				[classes.editing]: isEditing,
-			},
-		]"
-	>
+	<div :class="[classes.tab, classList]">
 		<slot />
 	</div>
 </template>
