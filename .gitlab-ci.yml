@@ -7,8 +7,8 @@ before_script:
 
 stages:
   - setup
-#  - lint
-#  - build
+  - lint
+  - build
 #  - deploy
 
 build:
