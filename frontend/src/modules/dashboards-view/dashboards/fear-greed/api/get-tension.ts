@@ -7,9 +7,7 @@ export interface IGetTensionRequest {
 	market: string;
 }
 
-export async function getTension({
-	market,
-}: IGetTensionRequest): Promise<ITension | null> {
+export async function getTension({ market }: IGetTensionRequest): Promise<ITension | null> {
 	const httpService = useHttpService();
 
 	try {
