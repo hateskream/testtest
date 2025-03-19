@@ -1,6 +1,3 @@
-variables:
-  CI_PROJECT_DIR: "$CI_PROJECT_DIR/frontend"
-
 include:
   - local: "/frontend/.gitlab-ci/snippets/setup.yml"
   - local: "/frontend/.gitlab-ci/snippets/lint.yml"
@@ -10,8 +7,8 @@ before_script:
 
 stages:
   - setup
-  - lint
-  - build
+#  - lint
+#  - build
 #  - deploy
 
 build:

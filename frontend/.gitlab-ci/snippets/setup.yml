@@ -4,6 +4,7 @@ install_dependencies:
 
   script:
     - npm ci
+    
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
