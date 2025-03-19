@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FearGreedDashboard } from '@/modules/dashboards-view/dashboards/fear-greed';
 import { LayoutComponent } from '@/modules/layaout';
 </script>
 
@@ -8,7 +9,7 @@ import { LayoutComponent } from '@/modules/layaout';
 			<div />
 		</template>
 		<template #content>
-			<div />
+			<fear-greed-dashboard market="test" />
 		</template>
 	</layout-component>
 </template>

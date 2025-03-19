@@ -3,8 +3,8 @@ import { computed } from 'vue';
 
 import type { IFearGreedProps, ITensionTextData } from '../model/tension.ts';
 import { useMapTension } from '../composables/use-map-tension.ts';
-import { useQueryTension } from '../queries/use-query-tension.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
+import { useQueryTension } from '../queries/use-query-tension.ts';
 
 const props = withDefaults(defineProps<IFearGreedProps>(), {
 	showChart: true,
@@ -66,9 +66,9 @@ const circleChart = computed(() => {
 		startAngle - arcLength / 2,
 	);
 
-	// Формируем путь дуги
-	const largeArcFlag = arcLength <= 180 ? 0 : 1;
-	const chartActiveLineD = `M ${start.x},${start.y} A ${radius},${radius} 0 ${largeArcFlag},1 ${end.x},${end.y}`;
+	const chartActiveLineD = `M ${start.x},${start.y} A ${radius},${radius} 0 0,1 ${end.x},${end.y}`;
+
+	console.log(tensionText.value.colors.chart);
 
 	return {
 		arrowRotateInDeg,
@@ -171,7 +171,7 @@ const circleChart = computed(() => {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 12px;
+	gap: 4px;
 }
 
 .metricСhart {
@@ -198,7 +198,7 @@ const circleChart = computed(() => {
 	position: relative;
 	width: 200px;
 	height: 100px;
-	margin-bottom: -25px;
+	margin-bottom: -30px;
 }
 
 .metricСhartContainer {
@@ -209,14 +209,13 @@ const circleChart = computed(() => {
 
 .metricСhartBg {
 	fill: none;
-	stroke: #222222;
-	stroke-width: 6;
+	stroke: rgb(91 91 91 / 50%);
+	stroke-width: 2;
 }
 
 .metricСhartActive {
 	fill: none;
-	stroke: #e3a877;
-	stroke-width: 6;
+	stroke-width: 4;
 	stroke-linecap: round;
 	transition: d 0.5s ease-in-out;
 }
@@ -234,10 +233,15 @@ const circleChart = computed(() => {
 
 .metricСhartArrow {
 	position: absolute;
-	width: 3px;
-	height: 50px;
-	background: #e3a877;
-	box-shadow: 0 0 10px rgb(227 168 119 / 80%);
+	width: 2px;
+	height: 77px;
+	background:
+		linear-gradient(
+			225deg,
+			rgb(255 255 255 / 20%) 0%,
+			rgb(255 255 255 / 20%) 22.5%,
+			rgb(255 255 255 / 0%) 48.5%
+		);
 	transform-origin: bottom right;
 	transition: transform 0.5s ease-in-out;
 }
@@ -248,10 +252,23 @@ const circleChart = computed(() => {
 	left: 50%;
 	width: 8px;
 	height: 8px;
-	background: #e3a877;
+	background: #ffffff;
 	border-radius: 50%;
 	box-shadow: 0 0 15px rgb(227 168 119 / 80%);
 	transform: translateX(-50%);
+}
+
+.metricСhartDot::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 28px;
+	height: 28px;
+	background-color: rgb(255 255 255 / 10%);
+	border-radius: 100%;
+	transform: translate(-50%, -50%);
+	filter: blur(1px);
 }
 
 .history {
