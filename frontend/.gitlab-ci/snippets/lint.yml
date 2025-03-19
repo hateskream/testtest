@@ -1,0 +1,11 @@
+.lint_configuration:
+  stage: lint
+  image: node:22.13.0-alpine
+
+  dependencies:
+    - install_dependencies
+
+lint_uscode:
+  extends: .lint_configuration
+  script:
+    - npm run lint

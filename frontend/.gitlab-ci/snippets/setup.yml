@@ -1,0 +1,11 @@
+install_dependencies:
+  stage: setup
+  image: node:22.13.0-alpine
+
+  script:
+    - npm ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - package-lock.json
