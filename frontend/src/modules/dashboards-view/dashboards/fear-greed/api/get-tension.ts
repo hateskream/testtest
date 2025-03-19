@@ -34,7 +34,7 @@ async function getMockData(): Promise<ITension> {
 	});
 
 	const response: ITension = {
-		tension: 35,
+		tension: 39,
 		history: {
 			yesterday: 3,
 			lastWeek: 45,
