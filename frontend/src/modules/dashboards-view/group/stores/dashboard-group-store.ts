@@ -8,14 +8,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const dashboardGroups = ref<IDashboardGroup[]>([
 		{
 			id: 'group-1',
-			name: 'Tab 1',
+			name: 'Standart',
 			isActive: true,
-			dashboards: [],
-		},
-		{
-			id: 'group-2',
-			name: 'Tab 2',
-			isActive: false,
 			dashboards: [],
 		},
 	]);
@@ -28,9 +22,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		})),
 	);
 
-	const activeGroupId = computed(
-		() => dashboardGroups.value.find(group => group.isActive)?.id,
-	);
+	const activeGroupId = computed(() => dashboardGroups.value.find(group => group.isActive)?.id);
 
 	function addTab() {
 		const newGroup: IDashboardGroup = {

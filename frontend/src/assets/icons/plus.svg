@@ -1,0 +1,29 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="13"
+	height="14"
+>
+	<mask
+		id="a"
+		width="13"
+		height="14"
+		x="0"
+		y="0"
+		maskUnits="userSpaceOnUse"
+		style="mask-type: alpha"
+	>
+		<path
+			fill-rule="evenodd"
+			d="M6.644.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-1 0V1a.5.5 0 0 1 .5-.5Z"
+			clip-rule="evenodd"
+		/>
+		<path
+			fill-rule="evenodd"
+			d="M0 7a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 0 1H.5A.5.5 0 0 1 0 7Z"
+			clip-rule="evenodd"
+		/>
+	</mask>
+	<g mask="url(#a)">
+		<path d="M-3.5 17h20V-3h-20v20Z" />
+	</g>
+</svg>

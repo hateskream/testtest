@@ -1,4 +1,4 @@
-const MAX_LINE_LENGTH = 80;
+const MAX_LINE_LENGTH = 100;
 
 const pathGroupsImportOptions = {
 	patternOptions: { dot: true, nocomment: true },
@@ -17,11 +17,7 @@ const config = {
 		},
 	},
 	plugins: ['prettier', '@typescript-eslint', 'filenames', 'node'],
-	extends: [
-		'airbnb-base',
-		'prettier',
-		'plugin:@typescript-eslint/recommended',
-	],
+	extends: ['airbnb-base', 'prettier', 'plugin:@typescript-eslint/recommended'],
 	ignorePatterns: ['**/coverage/*', 'dist/', 'node_modules/'],
 	root: true,
 	globals: {
@@ -62,14 +58,7 @@ const config = {
 				groups: [
 					'builtin',
 					'external',
-					[
-						'internal',
-						'unknown',
-						'parent',
-						'sibling',
-						'index',
-						'object',
-					],
+					['internal', 'unknown', 'parent', 'sibling', 'index', 'object'],
 				],
 				pathGroups: [
 					{
@@ -93,17 +82,8 @@ const config = {
 		'prefer-destructuring': 1,
 		curly: [2, 'all'],
 		'class-methods-use-this': 0,
-		'lines-between-class-members': [
-			2,
-			'always',
-			{ exceptAfterSingleLine: true },
-		],
-		'no-restricted-syntax': [
-			'error',
-			'ForInStatement',
-			'LabeledStatement',
-			'WithStatement',
-		],
+		'lines-between-class-members': [2, 'always', { exceptAfterSingleLine: true }],
+		'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
 
 		'@typescript-eslint/no-shadow': 2,
 		'@typescript-eslint/array-type': [2, { default: 'array' }],
@@ -192,11 +172,7 @@ const config = {
 			},
 		},
 		{
-			files: [
-				'**/config.{j,t}s',
-				'**/*.config.{j,t}s',
-				'**/environment.{j,t}s',
-			],
+			files: ['**/config.{j,t}s', '**/*.config.{j,t}s', '**/environment.{j,t}s'],
 			rules: {
 				'node/no-process-env': 0,
 			},

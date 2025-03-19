@@ -9,7 +9,7 @@ interface IUiIconProps {
 	height?: CSSProperties['height'];
 }
 
-const props = defineProps<IUiIconProps>()
+const props = defineProps<IUiIconProps>();
 
 const xlinkHref = computed<string>(() => `#icon-${props.id}`);
 
@@ -35,5 +35,6 @@ const inlineStyles = computed<Partial<CSSProperties>>(() => ({
 	width: 1em;
 	height: 1em;
 	overflow: hidden;
+	fill: currentcolor;
 }
 </style>
