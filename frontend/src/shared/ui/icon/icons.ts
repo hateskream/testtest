@@ -8,4 +8,5 @@ export enum IconIds {
 	Calendar = 'calendar',
 	ControlRightMenu = 'control-right-menu',
 	AddWidget = 'add-widget',
+	Plus = 'plus',
 }

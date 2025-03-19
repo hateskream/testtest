@@ -9,7 +9,7 @@ interface IUiIconProps {
 	height?: CSSProperties['height'];
 }
 
-const props = defineProps<IUiIconProps>()
+const props = defineProps<IUiIconProps>();
 
 const xlinkHref = computed<string>(() => `#icon-${props.id}`);
 

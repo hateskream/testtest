@@ -28,11 +28,7 @@ class HttpService {
 			console.error('Request error:', error);
 		},
 		onResponseError({ response }) {
-			console.error(
-				'Response error:',
-				response.status,
-				response.statusText,
-			);
+			console.error('Response error:', response.status, response.statusText);
 		},
 	});
 
@@ -40,11 +36,7 @@ class HttpService {
 		return this.request<T>(url, HttpMethod.Get, options);
 	}
 
-	public post<T>(
-		url: string,
-		body: BodyType,
-		options?: IOptions,
-	): Promise<T> {
+	public post<T>(url: string, body: BodyType, options?: IOptions): Promise<T> {
 		return this.request<T>(url, HttpMethod.Post, { ...options, body });
 	}
 
