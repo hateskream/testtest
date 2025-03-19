@@ -8,7 +8,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 			<slot name="title" />
 
 			<div :class="classes.control">
-				<icon-component
+				<ui-icon
 					:id="IconIds.ControlMore"
 					:class="classes.iconWrapper"
 					width="20px"
