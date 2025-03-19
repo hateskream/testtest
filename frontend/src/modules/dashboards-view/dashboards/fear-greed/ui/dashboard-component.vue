@@ -234,12 +234,13 @@ const circleChart = computed(() => {
 	position: absolute;
 	width: 2px;
 	height: 77px;
-	background: linear-gradient(
-		225deg,
-		rgb(255 255 255 / 20%) 0%,
-		rgb(255 255 255 / 20%) 22.5%,
-		rgb(255 255 255 / 0%) 48.5%
-	);
+	background:
+		linear-gradient(
+			225deg,
+			rgb(255 255 255 / 20%) 0%,
+			rgb(255 255 255 / 20%) 22.5%,
+			rgb(255 255 255 / 0%) 48.5%
+		);
 	transform-origin: bottom right;
 	transition: transform 0.5s ease-in-out;
 }
