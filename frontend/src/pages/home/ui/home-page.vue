@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TabsComponent } from '@/modules/dashboards-view/group';
+import { TabsComponent, DashboardGroupContent } from '@/modules/dashboards-view/group';
 import { LayoutComponent } from '@/modules/layaout';
 </script>
 
@@ -9,7 +9,7 @@ import { LayoutComponent } from '@/modules/layaout';
 			<tabs-component />
 		</template>
 		<template #content>
-			<div />
+			<dashboard-group-content />
 		</template>
 	</layout-component>
 </template>

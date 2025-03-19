@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { type IDashboardGroup, type IDashboardTab } from '../model';
+import { type IDashboardGroup, type IDashboardTab, type IDashboardItem } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
@@ -10,7 +10,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: 'group-1',
 			name: 'Standart',
 			isActive: true,
-			dashboards: [],
+			items: [],
+			market: 'crypto',
 		},
 	]);
 
@@ -29,7 +30,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: generateTimestampId(),
 			name: `Tab ${dashboardGroups.value.length + 1}`,
 			isActive: false,
-			dashboards: [],
+			items: [],
+			market: 'crypto',
 		};
 		dashboardGroups.value.push(newGroup);
 		switchTab(newGroup.id);
@@ -48,6 +50,34 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
+	function addItemToGroup(groupId: string, item: IDashboardItem) {
+		const group = dashboardGroups.value.find(g => g.id === groupId);
+		if (group) {
+			group.items.push(item);
+		}
+	}
+
+	function moveItem(
+		sourceGroupId: string,
+		targetGroupId: string,
+		itemId: string,
+		targetIndex: number,
+	) {
+		const sourceGroup = dashboardGroups.value.find(g => g.id === sourceGroupId);
+		const targetGroup = dashboardGroups.value.find(g => g.id === targetGroupId);
+		if (!sourceGroup || !targetGroup) {
+			return;
+		}
+
+		const itemIndex = sourceGroup.items.findIndex(i => i.id === itemId);
+		if (itemIndex === -1) {
+			return;
+		}
+
+		const [item] = sourceGroup.items.splice(itemIndex, 1);
+		targetGroup.items.splice(targetIndex, 0, item);
+	}
+
 	return {
 		dashboardGroups,
 		tabs,
@@ -55,5 +85,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		addTab,
 		renameTab,
 		switchTab,
+		addItemToGroup,
+		moveItem,
 	};
 });
