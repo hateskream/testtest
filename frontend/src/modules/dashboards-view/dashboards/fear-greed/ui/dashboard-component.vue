@@ -222,7 +222,7 @@ const circleChart = computed(() => {
 	fill: none;
 	stroke-width: 4;
 	stroke-linecap: round;
-	transition: stroke-dashoffset 0.5s ease-in-out;
+	transition: stroke-dashoffset 0.7s ease-in-out;
 }
 
 .metricСhartArrowContainer {
@@ -248,7 +248,7 @@ const circleChart = computed(() => {
 		rgb(255 255 255 / 0%) 48.5%
 	);
 	transform-origin: bottom right;
-	transition: transform 0.5s ease-in-out;
+	transition: transform 0.7s ease-in-out;
 }
 
 .metricСhartDot {

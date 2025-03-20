@@ -46,9 +46,9 @@ export function getMockData(current: number = -1): ITension {
 		if (current <= 20) {
 			val = Math.round(Math.random() * (39 - 20) + 20);
 		} else if (current <= 40) {
-			val = Math.round(Math.random() * (69 - 40) + 40);
+			val = Math.round(Math.random() * (59 - 40) + 40);
 		} else if (current <= 60) {
-			val = Math.round(Math.random() * (89 - 60) + 60);
+			val = Math.round(Math.random() * (79 - 60) + 60);
 		} else if (current <= 80) {
 			val = Math.round(Math.random() * (100 - 80) + 80);
 		} else {
