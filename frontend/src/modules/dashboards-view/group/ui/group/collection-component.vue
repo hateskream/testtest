@@ -45,6 +45,7 @@ function getProps(item: IDashboardInstance | IDashboardFolder) {
 <style module="clasese">
 .root {
 	display: flex;
+	gap: 6px;
 }
 
 .root > * {

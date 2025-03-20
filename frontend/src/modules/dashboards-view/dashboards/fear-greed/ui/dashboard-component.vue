@@ -18,9 +18,7 @@ const { mapTension } = useMapTension();
 
 const { data } = useQueryTension(props.market);
 
-const tensionText = computed<ITensionTextData>(() =>
-	mapTension(data.value?.tension ?? 0),
-);
+const tensionText = computed<ITensionTextData>(() => mapTension(data.value?.tension ?? 0));
 
 const history = computed(() =>
 	Object.entries(data.value?.history ?? {}).map(([key, val]) => ({

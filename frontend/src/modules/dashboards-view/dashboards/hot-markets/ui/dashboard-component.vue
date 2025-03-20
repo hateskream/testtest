@@ -1,5 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { BaseDashboardComponent } from '../../base/index.ts';
+</script>
 
 <template>
-	<div>hot-markets</div>
+	<base-dashboard-component>
+		<template #title>
+			<h2>Hot markets</h2>
+		</template>
+	</base-dashboard-component>
 </template>
