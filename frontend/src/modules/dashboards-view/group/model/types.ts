@@ -43,7 +43,6 @@ export interface IDashboardCollection {
 export interface IDashboardFolder {
 	type: DashboardItemType.Folder;
 	id: string;
-	name: string;
 	position: IPosition;
 	items: IDashboardInstance[];
 }

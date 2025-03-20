@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { type IDashboardGroup, type IDashboardTab, type IDashboardItem } from '../model';
+import {
+	type IDashboardGroup,
+	type IDashboardTab,
+	type IDashboardItem,
+	DashboardItemType,
+	DashboardType,
+} from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
@@ -10,7 +16,91 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: 'group-1',
 			name: 'Standart',
 			isActive: true,
-			items: [],
+			items: [
+				{
+					type: DashboardItemType.Collection,
+					id: 'collection-1',
+					name: 'Overview',
+					position: { x: 0, y: 0, w: 1, h: 1 },
+					items: [
+						{
+							type: DashboardItemType.Instance,
+							id: 'instance-1',
+							dashboardType: DashboardType.HotMarkets,
+							position: { x: 0, y: 0, w: 1, h: 1 },
+						},
+						{
+							type: DashboardItemType.Instance,
+							id: 'instance-2',
+							dashboardType: DashboardType.FearGreed,
+							position: { x: 0, y: 0, w: 1, h: 1 },
+						},
+						{
+							type: DashboardItemType.Instance,
+							id: 'instance-3',
+							dashboardType: DashboardType.Price,
+							position: { x: 0, y: 0, w: 1, h: 1 },
+						},
+					],
+				},
+				{
+					type: DashboardItemType.Instance,
+					id: 'instance-4',
+					dashboardType: DashboardType.Search,
+					position: { x: 0, y: 0, w: 1, h: 1 },
+				},
+				{
+					type: DashboardItemType.Collection,
+					id: 'collection-2',
+					name: 'Analytics',
+					position: { x: 0, y: 0, w: 1, h: 1 },
+					items: [
+						{
+							type: DashboardItemType.Instance,
+							id: 'instance-5',
+							dashboardType: DashboardType.Market,
+							position: { x: 0, y: 0, w: 1, h: 1 },
+						},
+						{
+							type: DashboardItemType.Folder,
+							id: 'folder-1',
+							position: { x: 0, y: 0, w: 1, h: 1 },
+							items: [
+								{
+									type: DashboardItemType.Instance,
+									id: 'instance-6',
+									dashboardType: DashboardType.News,
+									position: { x: 0, y: 0, w: 1, h: 1 },
+								},
+								{
+									type: DashboardItemType.Instance,
+									id: 'instance-7',
+									dashboardType: DashboardType.Insiders,
+									position: { x: 0, y: 0, w: 1, h: 1 },
+								},
+								{
+									type: DashboardItemType.Instance,
+									id: 'instance-8',
+									dashboardType: DashboardType.Events,
+									position: { x: 0, y: 0, w: 1, h: 1 },
+								},
+								{
+									type: DashboardItemType.Instance,
+									id: 'instance-9',
+									dashboardType: DashboardType.Telegram,
+									position: { x: 0, y: 0, w: 1, h: 1 },
+								},
+							],
+						},
+					],
+				},
+				{
+					type: DashboardItemType.Instance,
+					id: 'instance-10',
+					dashboardType: DashboardType.Chart,
+					position: { x: 0, y: 0, w: 1, h: 1 },
+				},
+			],
 			market: 'crypto',
 		},
 	]);
@@ -28,7 +118,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	function addTab() {
 		const newGroup: IDashboardGroup = {
 			id: generateTimestampId(),
-			name: `Tab ${dashboardGroups.value.length + 1}`,
+			name: 'Dashboard',
 			isActive: false,
 			items: [],
 			market: 'crypto',
