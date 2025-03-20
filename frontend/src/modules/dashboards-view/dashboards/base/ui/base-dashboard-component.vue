@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { IconIds } from '@/shared/ui/icon';
-
-import IconComponent from '@/shared/ui/icon/icon-component.vue';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 </script>
 
 <template>
@@ -12,13 +10,13 @@ import IconComponent from '@/shared/ui/icon/icon-component.vue';
 			</div>
 
 			<div :class="classes.control">
-				<icon-component
+				<ui-icon
 					:id="IconIds.ControlMore"
 					:class="classes.iconWrapper"
 					width="20px"
 					height="20px"
 				/>
-				<icon-component
+				<ui-icon
 					:id="IconIds.ControlShare"
 					:class="classes.iconWrapper"
 					width="20px"
@@ -38,7 +36,7 @@ import IconComponent from '@/shared/ui/icon/icon-component.vue';
 }
 
 .container {
-	padding: 10px 8px 18px;
+	padding: 0 16px 18px;
 	background-color: var(--bg-color-surface-01);
 	border-radius: 18px;
 }

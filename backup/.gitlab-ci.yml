@@ -1,0 +1,22 @@
+stages:
+  - build
+
+build_and_push:
+  stage: build
+  image: docker:28
+  services:
+    - docker:28-dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: "tcp://docker:2375"
+    CI_REGISTRY: "http://gitlab.planet9.uk:5050"
+  script:
+    - cd backend/api_gateway  # Переходим туда, где Dockerfile
+    - ls -la  # Проверяем наличие Dockerfile
+    - docker build -t $CI_REGISTRY_IMAGE:latest .  # Собираем образ
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker push $CI_REGISTRY_IMAGE:latest  # Пушим в Registry
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  tags:
+    - docker

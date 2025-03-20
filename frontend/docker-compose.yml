@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  nginx-i88:
+    container_name: nginx-i88
+    build:
+      context: .
+      dockerfile: .nginx/Dockerfile
+    ports:
+      - "8082:8082"
+    volumes:
+      - frontend-i88:/usr/share/nginx/html
+    depends_on:
+      - frontend-i88
+
+  frontend-i88:
+    container_name: frontend-i88
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - frontend-i88:/app/dist
+
+volumes:
+  frontend-i88:
