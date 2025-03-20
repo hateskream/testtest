@@ -51,7 +51,7 @@ function positiveOrNegativeStyles(val: string) {
 </script>
 
 <template>
-	<base-dashboard-component>
+	<base-dashboard-component :class="classes.root">
 		<template #title> Market </template>
 
 		<div :class="classes.tabs">
@@ -132,6 +132,12 @@ function positiveOrNegativeStyles(val: string) {
 </template>
 
 <style module="classes">
+.root {
+	/* display: flex; */
+	flex-grow: 1;
+	flex-basis: 0;
+}
+
 .tabs {
 	display: flex;
 	gap: 7px;
