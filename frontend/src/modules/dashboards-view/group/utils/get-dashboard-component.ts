@@ -6,6 +6,7 @@ import { MarketCapDashboard } from '@/modules/dashboards-view/dashboards/market-
 import { NewsDashboard } from '@/modules/dashboards-view/dashboards/news';
 import { PriceDashboard } from '@/modules/dashboards-view/dashboards/price';
 import { HotMarketsDashboard } from '@/modules/dashboards-view/dashboards/hot-markets';
+import { SearchDashboard } from '@/modules/dashboards-view/dashboards/search';
 import { DashboardType } from '../model';
 
 export function getDashboardComponent(type: DashboardType) {
@@ -16,6 +17,8 @@ export function getDashboardComponent(type: DashboardType) {
 		[DashboardType.News]: NewsDashboard,
 		[DashboardType.Price]: PriceDashboard,
 		[DashboardType.HotMarkets]: HotMarketsDashboard,
+		[DashboardType.Search]: SearchDashboard,
 	};
+
 	return components[type];
 }
