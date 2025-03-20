@@ -3,7 +3,9 @@ install_dependencies:
   image: node:22.13.0-alpine
 
   script:
-    - npm ci
+# временно, до фикса  
+#    - npm ci
+    - npm i
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}
