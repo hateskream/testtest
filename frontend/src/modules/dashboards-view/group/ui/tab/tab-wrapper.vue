@@ -38,6 +38,7 @@ const classList = computed(() => ({
 	background-color: var(--bg-color-base-300);
 	border-radius: 42px;
 	cursor: pointer;
+	gap: 10px;
 }
 
 .tab.active {
