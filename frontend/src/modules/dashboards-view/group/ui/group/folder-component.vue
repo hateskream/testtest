@@ -48,7 +48,7 @@ function getInitialActiveTab() {
 </script>
 
 <template>
-	<div>
+	<div :class="classes.root">
 		<div
 			v-for="tab in tabs"
 			:key="tab.id"
@@ -60,3 +60,10 @@ function getInitialActiveTab() {
 		<component :is="getDashboardComponent(activeDashboardInstance.dashboardType)" />
 	</div>
 </template>
+
+<style module="classes">
+.root {
+	flex-grow: 1;
+	flex-basis: 0;
+}
+</style>

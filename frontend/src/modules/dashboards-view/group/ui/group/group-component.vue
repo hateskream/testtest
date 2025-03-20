@@ -45,10 +45,20 @@ function getProps(item: IDashboardItem) {
 </script>
 
 <template>
-	<component
-		:is="getComponent(item)"
-		v-for="item in props.items"
-		:key="item.id"
-		v-bind="getProps(item)"
-	/>
+	<div :class="classes.root">
+		<component
+			:is="getComponent(item)"
+			v-for="item in props.items"
+			:key="item.id"
+			v-bind="getProps(item)"
+		/>
+	</div>
 </template>
+
+<style module="classes">
+.root {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+</style>

@@ -3,9 +3,15 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 </script>
 
 <template>
-	<base-dashboard-component>
+	<base-dashboard-component :class="classes.root">
 		<template #title>
-			<h2>BTCUSDT</h2>
+			<div>BTCUSDT</div>
 		</template>
 	</base-dashboard-component>
 </template>
+
+<style module="classes">
+.root {
+	height: 584px;
+}
+</style>

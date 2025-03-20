@@ -30,9 +30,9 @@ const history = computed(() =>
 </script>
 
 <template>
-	<base-dashboard-component>
+	<base-dashboard-component :class="classes.root">
 		<template #title>
-			<h2>Fear & Greed</h2>
+			<div>Fear & Greed</div>
 		</template>
 
 		<div :class="classes.container">
@@ -82,6 +82,11 @@ const history = computed(() =>
 </template>
 
 <style module="classes">
+.root {
+	flex-grow: 0.99;
+	flex-basis: 0;
+}
+
 .container {
 	display: flex;
 	flex-wrap: wrap;
