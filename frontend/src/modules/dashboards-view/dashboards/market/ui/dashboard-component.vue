@@ -26,6 +26,8 @@ function positiveOrNegativeStyles(val: string) {
 
 <template>
 	<base-dashboard-component>
+		<template #title> Market </template>
+
 		<table :class="classes.table">
 			<thead :class="classes.thead">
 				<tr>
