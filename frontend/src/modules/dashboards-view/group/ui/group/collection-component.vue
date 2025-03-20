@@ -32,7 +32,7 @@ function getProps(item: IDashboardInstance | IDashboardFolder) {
 </script>
 
 <template>
-	<div>
+	<div :class="clasese.root">
 		<component
 			:is="getComponent(itemDashboard)"
 			v-for="itemDashboard in props.item.items"
@@ -41,3 +41,14 @@ function getProps(item: IDashboardInstance | IDashboardFolder) {
 		/>
 	</div>
 </template>
+
+<style module="clasese">
+.root {
+	display: flex;
+}
+
+.root > * {
+	flex-grow: 1;
+	flex-basis: 0;
+}
+</style>
