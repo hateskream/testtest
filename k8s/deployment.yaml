@@ -17,6 +17,6 @@ spec:
         - name: demo-front
           image: gitlab.planet9.uk:5050/i88/i88:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8082
       imagePullSecrets:
         - name: gitlab-registry
