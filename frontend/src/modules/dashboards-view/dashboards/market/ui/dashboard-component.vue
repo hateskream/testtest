@@ -194,7 +194,6 @@ function positiveOrNegativeStyles(val: string) {
 .tbody > tr {
 	display: table;
 	width: 100%;
-	padding: 8px;
 	table-layout: fixed;
 }
 
@@ -204,6 +203,7 @@ function positiveOrNegativeStyles(val: string) {
 }
 
 .tbody td {
+	padding: 8px 0;
 	font-size: 13px;
 	color: #ffffff;
 }
