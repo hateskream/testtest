@@ -10,4 +10,6 @@ export enum IconIds {
 	AddWidget = 'add-widget',
 	Plus = 'plus',
 	Search = 'search',
+	Loosers = 'loosers',
+	Gainers = 'gainers',
 }

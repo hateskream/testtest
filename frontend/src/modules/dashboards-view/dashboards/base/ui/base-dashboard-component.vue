@@ -25,7 +25,9 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 			</div>
 		</div>
 
-		<slot name="default" />
+		<div :class="classes.content">
+			<slot name="default" />
+		</div>
 	</div>
 </template>
 
@@ -35,8 +37,11 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	cursor: pointer;
 }
 
-.container {
+.content {
 	padding: 0 16px 18px;
+}
+
+.container {
 	background-color: var(--bg-color-surface-01);
 	border-radius: 18px;
 }

@@ -1,11 +1,37 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import { useQueryMarket } from '../queries';
 import { UiImage } from '@/shared/ui/image';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import BaseDashboardComponent from '../../base/ui/base-dashboard-component.vue';
 import NumberComponent from './number-component.vue';
+import TabWrapper from './tab-wrapper.vue';
 
 const { data } = useQueryMarket();
+
+const tabs = ref<{ name: string; icon?: IconIds }[]>([
+	{
+		name: 'All',
+	},
+	{
+		name: 'Gainers',
+		icon: IconIds.Gainers,
+	},
+	{
+		name: 'Losers',
+		icon: IconIds.Loosers,
+	},
+	{
+		name: 'New',
+	},
+	{
+		name: 'Upcoming',
+	},
+]);
+
+const activeTab = ref<string>(tabs.value[0].name);
 
 function positiveOrNegativeStyles(val: string) {
 	if (+val === 0) {
@@ -27,6 +53,24 @@ function positiveOrNegativeStyles(val: string) {
 <template>
 	<base-dashboard-component>
 		<template #title> Market </template>
+
+		<div :class="classes.tabs">
+			<tab-wrapper
+				v-for="tab in tabs"
+				:key="tab.name"
+				:is-active="activeTab === tab.name"
+				@click="activeTab = tab.name"
+			>
+				<ui-icon
+					v-if="tab.icon"
+					:id="tab.icon"
+					width="20px"
+					height="20px"
+					:class="classes.iconWrapper"
+				/>
+				{{ tab.name }}
+			</tab-wrapper>
+		</div>
 
 		<table :class="classes.table">
 			<thead :class="classes.thead">
@@ -88,6 +132,17 @@ function positiveOrNegativeStyles(val: string) {
 </template>
 
 <style module="classes">
+.tabs {
+	display: flex;
+	gap: 7px;
+	margin-bottom: 7px;
+}
+
+.iconWrapper {
+	color: var(--icon-color-base-300);
+	cursor: pointer;
+}
+
 .imageWrapper {
 	display: flex;
 	justify-content: center;
