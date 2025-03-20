@@ -6,4 +6,8 @@ export const dashboardTypeToFolderNameMapping: Record<DashboardType, string> = {
 	[DashboardType.MarketCap]: 'Market Cap',
 	[DashboardType.News]: 'News',
 	[DashboardType.Price]: 'Price',
+	[DashboardType.HotMarkets]: 'Hot Markets',
+	[DashboardType.Search]: 'Search',
+	[DashboardType.Insiders]: 'Insiders',
+	[DashboardType.Events]: 'Events',
 };
