@@ -11,4 +11,5 @@ export const dashboardTypeToFolderNameMapping: Record<DashboardType, string> = {
 	[DashboardType.Insiders]: 'Insiders',
 	[DashboardType.Events]: 'Events',
 	[DashboardType.Telegram]: 'Telegram',
+	[DashboardType.Chart]: 'BTCUSDT',
 };

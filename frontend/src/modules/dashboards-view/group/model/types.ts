@@ -22,6 +22,7 @@ export enum DashboardType {
 	Insiders = 'insiders',
 	Events = 'events',
 	Telegram = 'telegram',
+	Chart = 'chart',
 }
 
 export interface IDashboardInstance {

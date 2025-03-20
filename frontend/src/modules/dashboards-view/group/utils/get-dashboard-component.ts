@@ -10,6 +10,7 @@ import { SearchDashboard } from '@/modules/dashboards-view/dashboards/search';
 import { InsidersDashboard } from '@/modules/dashboards-view/dashboards/insiders';
 import { EventsDashboard } from '@/modules/dashboards-view/dashboards/events';
 import { TelegramDashboard } from '@/modules/dashboards-view/dashboards/telegram';
+import { ChartDashboard } from '@/modules/dashboards-view/dashboards/chart';
 import { DashboardType } from '../model';
 
 export function getDashboardComponent(type: DashboardType) {
@@ -24,6 +25,7 @@ export function getDashboardComponent(type: DashboardType) {
 		[DashboardType.Insiders]: InsidersDashboard,
 		[DashboardType.Events]: EventsDashboard,
 		[DashboardType.Telegram]: TelegramDashboard,
+		[DashboardType.Chart]: ChartDashboard,
 	};
 
 	return components[type];
