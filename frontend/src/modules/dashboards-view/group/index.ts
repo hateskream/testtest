@@ -1,5 +1,3 @@
-import AllDashboard from './ui/all-dashboard.vue';
-import DashboardContent from './ui/dashboard-content.vue';
-import TabsComponent from './ui/tabs-component.vue';
+export { DashboardGroupContent } from './ui/group';
 
-export { AllDashboard, DashboardContent, TabsComponent };
+export { TabsComponent } from './ui/tab';

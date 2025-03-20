@@ -1,5 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { BaseDashboardComponent } from '../../base/index.ts';
+</script>
 
 <template>
-	<div>market-cap</div>
+	<base-dashboard-component :class="classes.root">
+		<template #title> Market cap </template>
+	</base-dashboard-component>
 </template>
+
+<style module="classes">
+.root {
+	flex-grow: 1.8;
+	flex-basis: 0;
+}
+</style>

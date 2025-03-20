@@ -26,10 +26,10 @@ export async function getTension({ market }: IGetTensionRequest): Promise<ITensi
 	return null;
 }
 
-export async function getMockData(isRandom: boolean = false): Promise<ITension> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
+export function getMockData(isRandom: boolean = false): ITension {
+	// await new Promise(resolve => {
+	// 	setTimeout(resolve, 0);
+	// });
 
 	const response: ITension = {
 		tension: 80,
