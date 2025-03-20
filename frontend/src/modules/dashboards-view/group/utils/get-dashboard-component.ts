@@ -7,6 +7,7 @@ import { NewsDashboard } from '@/modules/dashboards-view/dashboards/news';
 import { PriceDashboard } from '@/modules/dashboards-view/dashboards/price';
 import { HotMarketsDashboard } from '@/modules/dashboards-view/dashboards/hot-markets';
 import { SearchDashboard } from '@/modules/dashboards-view/dashboards/search';
+import { InsidersDashboard } from '@/modules/dashboards-view/dashboards/insiders';
 import { DashboardType } from '../model';
 
 export function getDashboardComponent(type: DashboardType) {
@@ -18,6 +19,7 @@ export function getDashboardComponent(type: DashboardType) {
 		[DashboardType.Price]: PriceDashboard,
 		[DashboardType.HotMarkets]: HotMarketsDashboard,
 		[DashboardType.Search]: SearchDashboard,
+		[DashboardType.Insiders]: InsidersDashboard,
 	};
 
 	return components[type];

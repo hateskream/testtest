@@ -19,6 +19,7 @@ export enum DashboardType {
 	Price = 'price',
 	HotMarkets = 'hot-markets',
 	Search = 'search',
+	Insiders = 'insiders',
 }
 
 export interface IDashboardInstance {
