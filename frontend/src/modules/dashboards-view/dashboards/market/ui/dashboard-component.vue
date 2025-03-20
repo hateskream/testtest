@@ -57,19 +57,19 @@ function positiveOrNegativeStyles(val: string) {
 					<td>
 						<number-component
 							:is-fiat="true"
+							format="pretty-with-key"
 							:value="item.price"
 						/>
 					</td>
 
 					<td>
-						<div :styles="positiveOrNegativeStyles(item.chg24h)">
-							{{ item.chg24h }}%
-						</div>
+						<div :style="positiveOrNegativeStyles(item.chg24h)">{{ item.chg24h }}%</div>
 					</td>
 
 					<td>
 						<number-component
 							:is-fiat="true"
+							format="pretty-with-key"
 							:value="item.volume24h"
 						/>
 					</td>
@@ -77,6 +77,7 @@ function positiveOrNegativeStyles(val: string) {
 					<td>
 						<number-component
 							:is-fiat="true"
+							format="pretty-with-key"
 							:value="item.marketCap"
 						/>
 					</td>
