@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FearGreedDashboard } from '@/modules/dashboards-view/dashboards/fear-greed';
+import { MarketDashboard } from '@/modules/dashboards-view/dashboards/market';
 import { TabsComponent } from '@/modules/dashboards-view/group';
 import { LayoutComponent } from '@/modules/layaout';
 </script>
@@ -11,7 +12,7 @@ import { LayoutComponent } from '@/modules/layaout';
 		</template>
 		<template #content>
 			<suspense>
-				<fear-greed-dashboard market="test" />
+				<market-dashboard />
 			</suspense>
 		</template>
 	</layout-component>
