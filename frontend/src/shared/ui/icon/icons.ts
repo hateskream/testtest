@@ -9,4 +9,5 @@ export enum IconIds {
 	ControlRightMenu = 'control-right-menu',
 	AddWidget = 'add-widget',
 	Plus = 'plus',
+	Search = 'search',
 }

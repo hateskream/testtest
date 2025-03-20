@@ -8,13 +8,14 @@ import { getMockData } from '../api/get-tension.ts';
 // import { useQueryTension } from '../queries/use-query-tension.ts';
 
 export interface IFearGreedProps {
-	market: string;
+	market?: string;
 
 	showChart?: boolean;
 	showChartDescription?: boolean;
 }
 
 withDefaults(defineProps<IFearGreedProps>(), {
+	market: '',
 	showChart: true,
 	showChartDescription: true,
 });
@@ -22,7 +23,7 @@ withDefaults(defineProps<IFearGreedProps>(), {
 const { mapTension } = useMapTension();
 
 // const { data } = useQueryTension(props.market);
-const data = ref<ITension>(await getMockData());
+const data = ref<ITension>(getMockData());
 
 const tensionText = computed<ITensionTextData>(() => mapTension(data.value?.tension ?? 0));
 
@@ -65,7 +66,7 @@ const circleChart = computed(() => {
 <template>
 	<base-dashboard-component @click="handleInteractiveUpdate">
 		<template #title>
-			<h2>Fear & Greed</h2>
+			<div>Fear & Greed</div>
 		</template>
 
 		<div :class="classes.container">
@@ -142,6 +143,11 @@ const circleChart = computed(() => {
 </template>
 
 <style module="classes">
+.root {
+	flex-grow: 0.99;
+	flex-basis: 0;
+}
+
 .container {
 	display: flex;
 	flex-wrap: wrap;
@@ -220,13 +226,13 @@ const circleChart = computed(() => {
 	position: absolute;
 	width: 2px;
 	height: 77px;
-	background:
-		linear-gradient(
-			225deg,
-			rgb(255 255 255 / 20%) 0%,
-			rgb(255 255 255 / 20%) 22.5%,
-			rgb(255 255 255 / 0%) 48.5%
-		);
+	/* stylelint-disable-next-line declaration-colon-newline-after */
+	background: linear-gradient(
+		225deg,
+		rgb(255 255 255 / 20%) 0%,
+		rgb(255 255 255 / 20%) 22.5%,
+		rgb(255 255 255 / 0%) 48.5%
+	);
 	transform-origin: bottom right;
 	transition: transform 0.5s ease-in-out;
 }

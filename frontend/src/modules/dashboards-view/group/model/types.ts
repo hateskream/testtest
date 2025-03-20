@@ -1,20 +1,14 @@
-export interface IDashboardGroup {
-	id: string;
-	name: string;
-	dashboards: IDashboardInstance[];
-	isActive: boolean;
+export interface IPosition {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
 }
 
-export interface IDashboardInstance {
-	id: string;
-	type: DashboardType;
-	position: { x: number; y: number; w: number; h: number };
-}
-
-export interface IDashboardTab {
-	id: string;
-	name: string;
-	isActive: boolean;
+export enum DashboardItemType {
+	Instance = 'instance',
+	Collection = 'collection',
+	Folder = 'folder',
 }
 
 export enum DashboardType {
@@ -23,4 +17,48 @@ export enum DashboardType {
 	MarketCap = 'market-cap',
 	News = 'news',
 	Price = 'price',
+	HotMarkets = 'hot-markets',
+	Search = 'search',
+	Insiders = 'insiders',
+	Events = 'events',
+	Telegram = 'telegram',
+	Chart = 'chart',
+}
+
+export interface IDashboardInstance {
+	type: DashboardItemType.Instance;
+	id: string;
+	dashboardType: DashboardType;
+	position: IPosition;
+}
+
+export interface IDashboardCollection {
+	type: DashboardItemType.Collection;
+	id: string;
+	name: string;
+	position: IPosition;
+	items: (IDashboardInstance | IDashboardFolder)[];
+}
+
+export interface IDashboardFolder {
+	type: DashboardItemType.Folder;
+	id: string;
+	position: IPosition;
+	items: IDashboardInstance[];
+}
+
+export type IDashboardItem = IDashboardInstance | IDashboardCollection | IDashboardFolder;
+
+export interface IDashboardGroup {
+	id: string;
+	name: string;
+	items: IDashboardItem[];
+	isActive: boolean;
+	market: string;
+}
+
+export interface IDashboardTab {
+	id: string;
+	name: string;
+	isActive: boolean;
 }

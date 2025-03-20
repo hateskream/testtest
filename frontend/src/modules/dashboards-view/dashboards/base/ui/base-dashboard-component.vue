@@ -5,7 +5,9 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 <template>
 	<div :class="classes.container">
 		<div :class="classes.title">
-			<slot name="title" />
+			<div :class="classes.titleText">
+				<slot name="title" />
+			</div>
 
 			<div :class="classes.control">
 				<ui-icon
@@ -43,10 +45,16 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 0;
+	padding: 10px 8px 10px 16px;
+	color: var(--text-color-base-300);
+}
+
+.titleText {
 	font-weight: 300;
-	font-size: 12px;
-	color: #ffffff;
+	font-size: 16px;
+	line-height: 140%;
+	color: var(--text-color-base-300);
+	letter-spacing: 0.104px;
 }
 
 .control {
