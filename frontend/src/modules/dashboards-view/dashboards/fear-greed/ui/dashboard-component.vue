@@ -36,20 +36,34 @@ const history = computed(() =>
 );
 
 async function handleInteractiveUpdate() {
-	data.value = await getMockData(true);
+	data.value = await getMockData(data.value.tension);
 }
 
 const circleChart = computed(() => {
 	const tension = data.value?.tension ?? 0;
 
+	let val;
+
+	if (tension < 20) {
+		val = 1;
+	} else if (tension < 40) {
+		val = 20;
+	} else if (tension < 60) {
+		val = 50;
+	} else if (tension < 80) {
+		val = 75;
+	} else if (tension < 100) {
+		val = 99;
+	}
+
 	const arrowRotateInDeg = -90 + (tension / 100) * 180;
 
 	const radius = 80;
-	const arcAngle = 34;
+	const arcAngle = 45;
 
 	const totalLength = Math.PI * radius;
 	const arcLength = (arcAngle / 180) * totalLength;
-	const offset = -(tension / 100) * (totalLength - arcLength);
+	const offset = -(val / 100) * (totalLength - arcLength);
 
 	return {
 		arrowRotateInDeg,

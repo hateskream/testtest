@@ -26,13 +26,13 @@ export async function getTension({ market }: IGetTensionRequest): Promise<ITensi
 	return null;
 }
 
-export function getMockData(isRandom: boolean = false): ITension {
+export function getMockData(current: number = -1): ITension {
 	// await new Promise(resolve => {
 	// 	setTimeout(resolve, 0);
 	// });
 
 	const response: ITension = {
-		tension: 80,
+		tension: 19,
 		history: {
 			yesterday: 3,
 			lastWeek: 45,
@@ -40,8 +40,22 @@ export function getMockData(isRandom: boolean = false): ITension {
 		},
 	};
 
-	if (isRandom) {
-		response.tension = Math.round(Math.random() * 100);
+	if (current !== -1) {
+		let val;
+
+		if (current <= 20) {
+			val = Math.round(Math.random() * (39 - 20) + 20);
+		} else if (current <= 40) {
+			val = Math.round(Math.random() * (69 - 40) + 40);
+		} else if (current <= 60) {
+			val = Math.round(Math.random() * (89 - 60) + 60);
+		} else if (current <= 80) {
+			val = Math.round(Math.random() * (100 - 80) + 80);
+		} else {
+			val = Math.round(Math.random() * (19 - 1) + 1);
+		}
+
+		response.tension = val;
 	}
 
 	return response;
