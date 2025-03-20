@@ -57,9 +57,6 @@ function getInitialActiveTab() {
 			{{ tab.name }}
 		</div>
 
-		<component
-			:is="getDashboardComponent(activeDashboardInstance.dashboardType)"
-			:item="activeDashboardInstance"
-		/>
+		<component :is="getDashboardComponent(activeDashboardInstance.dashboardType)" />
 	</div>
 </template>

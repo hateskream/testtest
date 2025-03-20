@@ -21,12 +21,23 @@ function getComponent(item: IDashboardInstance | IDashboardFolder) {
 	}
 	return FolderComponent;
 }
+
+function getProps(item: IDashboardInstance | IDashboardFolder) {
+	if (item.type === DashboardItemType.Folder) {
+		return { item };
+	}
+
+	return {};
+}
 </script>
 
 <template>
-	<component
-		:is="getComponent(itemDashboard)"
-		v-for="itemDashboard in props.item.items"
-		:key="itemDashboard.id"
-	/>
+	<div>
+		<component
+			:is="getComponent(itemDashboard)"
+			v-for="itemDashboard in props.item.items"
+			:key="itemDashboard.id"
+			v-bind="getProps(itemDashboard)"
+		/>
+	</div>
 </template>
