@@ -10,4 +10,5 @@ export const dashboardTypeToFolderNameMapping: Record<DashboardType, string> = {
 	[DashboardType.Search]: 'Search',
 	[DashboardType.Insiders]: 'Insiders',
 	[DashboardType.Events]: 'Events',
+	[DashboardType.Telegram]: 'Telegram',
 };
