@@ -10,7 +10,8 @@ RUN NODE_OPTIONS=--no-network-family-autoselection npm ci --legacy-peer-deps
 
 COPY . .
 
-RUN npm run build
+RUN npm ci && npm run build
+# RUN npm run build
 
 # Stage 2
 FROM nginx:1.27.3-alpine
