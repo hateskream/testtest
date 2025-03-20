@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'git@gitlab.planet9.uk:i88/i88.git'
+    repoURL: 'https://gitlab.planet9.uk/i88/i88.git'
     targetRevision: main
     path: k8s
   destination:
