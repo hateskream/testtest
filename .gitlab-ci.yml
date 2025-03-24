@@ -12,7 +12,6 @@ stages:
   - setup
   - lint
   - build
-#  - deploy
 
 build:
   stage: build
@@ -29,3 +28,7 @@ build:
     - cd frontend
     - docker build -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest    
+  
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
