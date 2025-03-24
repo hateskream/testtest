@@ -13,6 +13,7 @@
     "lint": "concurrently \"npm:lint:*(!fix)\" "
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.6",
     "@tanstack/vue-query": "5.67.3",
     "decimal.js": "^10.5.0",
     "ofetch": "1.4.1",

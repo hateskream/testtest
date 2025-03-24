@@ -42,11 +42,9 @@ async function handleInteractiveUpdate() {
 const circleChart = computed(() => {
 	const tension = data.value?.tension ?? 0;
 
-	let val;
+	let val = 1;
 
-	if (tension < 20) {
-		val = 1;
-	} else if (tension < 40) {
+	if (tension < 40) {
 		val = 20;
 	} else if (tension < 60) {
 		val = 50;

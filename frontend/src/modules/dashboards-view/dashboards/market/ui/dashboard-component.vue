@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useQueryMarket } from '../queries';
 import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiTooltip } from '@/shared/ui/tooltip';
 
 import BaseDashboardComponent from '../../base/ui/base-dashboard-component.vue';
 import NumberComponent from './number-component.vue';
@@ -107,6 +108,11 @@ function positiveOrNegativeStyles(val: string) {
 					</td>
 
 					<td>
+						<ui-tooltip
+							title="Click to sort by change 24h%"
+							description="test"
+						/>
+
 						<div :style="positiveOrNegativeStyles(item.chg24h)">{{ item.chg24h }}%</div>
 					</td>
 
