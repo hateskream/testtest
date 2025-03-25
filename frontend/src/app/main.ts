@@ -9,6 +9,7 @@ import '@/assets/styles/base.css';
 import 'virtual:svg-icons-register';
 
 import routes from './routes';
+import { loggerPlugin } from './plugins';
 
 import App from './app.vue';
 
@@ -16,6 +17,7 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(routes);
+app.use(loggerPlugin);
 app.use(VueQueryPlugin);
 
 app.mount('#app');
