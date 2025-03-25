@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import type { ICurrency as ICurrencyDomain } from '../model';
+import { type ICurrency as ICurrencyDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import { getCurrencyImage } from '@/shared/lib';
 
@@ -35,9 +35,8 @@ export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyD
 		return prepareResponse(response);
 	} catch (error) {
 		logger.error('Failed to get price', error as Error);
+		throw error;
 	}
-
-	return null;
 }
 
 function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
