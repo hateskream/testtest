@@ -81,76 +81,78 @@ const circleChart = computed(() => {
 			<div>Fear & Greed</div>
 		</template>
 
-		<div :class="classes.container">
-			<div
-				:class="classes.metric"
-				:style="{ flexDirection: showChart ? 'column' : 'unset' }"
-			>
-				<div :class="classes.metricСhart">
-					<div
-						v-if="showChart"
-						:class="classes.metricСhartIndicator"
-					>
-						<svg
-							width="200"
-							height="100"
-							viewBox="0 0 200 100"
-							:class="classes.metricСhartContainer"
+		<template #content>
+			<div :class="classes.container">
+				<div
+					:class="classes.metric"
+					:style="{ flexDirection: showChart ? 'column' : 'unset' }"
+				>
+					<div :class="classes.metricСhart">
+						<div
+							v-if="showChart"
+							:class="classes.metricСhartIndicator"
 						>
-							<!-- Фоновая дуга -->
-							<path
-								:class="classes.metricСhartBg"
-								d="M 20,100 A 80,80 0 0,1 180,100"
-							/>
-
-							<!-- Активная дуга -->
-							<path
-								d="M 20,100 A 80,80 0 0,1 180,100"
-								:class="classes.metricСhartActive"
-								:stroke="tensionText.colors.chart"
-								:stroke-dasharray="circleChart.activeLine.dasharray"
-								:stroke-dashoffset="circleChart.activeLine.offset"
-							/>
-						</svg>
-
-						<div :class="classes.metricСhartArrowContainer">
-							<div
-								:class="classes.metricСhartArrow"
-								:style="{
-									transform: `rotate(${circleChart.arrowRotateInDeg}deg)`,
-								}"
+							<svg
+								width="200"
+								height="100"
+								viewBox="0 0 200 100"
+								:class="classes.metricСhartContainer"
 							>
-								<div :class="classes.metricСhartDot" />
+								<!-- Фоновая дуга -->
+								<path
+									:class="classes.metricСhartBg"
+									d="M 20,100 A 80,80 0 0,1 180,100"
+								/>
+
+								<!-- Активная дуга -->
+								<path
+									d="M 20,100 A 80,80 0 0,1 180,100"
+									:class="classes.metricСhartActive"
+									:stroke="tensionText.colors.chart"
+									:stroke-dasharray="circleChart.activeLine.dasharray"
+									:stroke-dashoffset="circleChart.activeLine.offset"
+								/>
+							</svg>
+
+							<div :class="classes.metricСhartArrowContainer">
+								<div
+									:class="classes.metricСhartArrow"
+									:style="{
+										transform: `rotate(${circleChart.arrowRotateInDeg}deg)`,
+									}"
+								>
+									<div :class="classes.metricСhartDot" />
+								</div>
 							</div>
 						</div>
+
+						<h3 :style="{ color: tensionText?.colors.text }">
+							{{ data?.tension }}
+						</h3>
 					</div>
 
-					<h3 :style="{ color: tensionText?.colors.text }">
-						{{ data?.tension }}
-					</h3>
+					<div :class="classes.metricDescription">
+						<h4>{{ tensionText?.text.main }}</h4>
+						<small>{{ tensionText?.text.sub }}</small>
+					</div>
 				</div>
 
-				<div :class="classes.metricDescription">
-					<h4>{{ tensionText?.text.main }}</h4>
-					<small>{{ tensionText?.text.sub }}</small>
-				</div>
-			</div>
-
-			<ul
-				v-if="history.length > 0"
-				:class="classes.history"
-			>
-				<li
-					v-for="item in history"
-					:key="item.name"
+				<ul
+					v-if="history.length > 0"
+					:class="classes.history"
 				>
-					<p>{{ item.name }}</p>
-					<p :style="item.style">
-						{{ item.tension }}
-					</p>
-				</li>
-			</ul>
-		</div>
+					<li
+						v-for="item in history"
+						:key="item.name"
+					>
+						<p>{{ item.name }}</p>
+						<p :style="item.style">
+							{{ item.tension }}
+						</p>
+					</li>
+				</ul>
+			</div>
+		</template>
 	</base-dashboard-component>
 </template>
 

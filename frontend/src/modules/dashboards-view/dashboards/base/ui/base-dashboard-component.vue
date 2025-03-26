@@ -26,7 +26,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 		</div>
 
 		<div :class="classes.content">
-			<slot name="default" />
+			<slot name="content" />
 		</div>
 	</div>
 </template>

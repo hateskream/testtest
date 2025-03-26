@@ -55,85 +55,89 @@ function positiveOrNegativeStyles(val: string) {
 	<base-dashboard-component :class="classes.root">
 		<template #title> Market </template>
 
-		<div :class="classes.tabs">
-			<tab-wrapper
-				v-for="tab in tabs"
-				:key="tab.name"
-				:is-active="activeTab === tab.name"
-				@click="activeTab = tab.name"
-			>
-				<ui-icon
-					v-if="tab.icon"
-					:id="tab.icon"
-					width="20px"
-					height="20px"
-					:class="classes.iconWrapper"
-				/>
-				{{ tab.name }}
-			</tab-wrapper>
-		</div>
-
-		<table :class="classes.table">
-			<thead :class="classes.thead">
-				<tr>
-					<th>Symbol</th>
-					<th>Price</th>
-					<th>Chg 24h%</th>
-					<th>Volume 24h</th>
-					<th>Market cap</th>
-				</tr>
-			</thead>
-
-			<tbody :class="classes.tbody">
-				<tr
-					v-for="item in data?.list ?? []"
-					:key="item.symbol"
+		<template #content>
+			<div :class="classes.tabs">
+				<tab-wrapper
+					v-for="tab in tabs"
+					:key="tab.name"
+					:is-active="activeTab === tab.name"
+					@click="activeTab = tab.name"
 				>
-					<td>
-						<div :class="classes.tableIcon">
-							<div :class="classes.imageWrapper">
-								<ui-image :src="`/images/market/${item.symbol}.png`" />
+					<ui-icon
+						v-if="tab.icon"
+						:id="tab.icon"
+						width="20px"
+						height="20px"
+						:class="classes.iconWrapper"
+					/>
+					{{ tab.name }}
+				</tab-wrapper>
+			</div>
+
+			<table :class="classes.table">
+				<thead :class="classes.thead">
+					<tr>
+						<th>Symbol</th>
+						<th>Price</th>
+						<th>Chg 24h%</th>
+						<th>Volume 24h</th>
+						<th>Market cap</th>
+					</tr>
+				</thead>
+
+				<tbody :class="classes.tbody">
+					<tr
+						v-for="item in data?.list ?? []"
+						:key="item.symbol"
+					>
+						<td>
+							<div :class="classes.tableIcon">
+								<div :class="classes.imageWrapper">
+									<ui-image :src="`/images/market/${item.symbol}.png`" />
+								</div>
+
+								<div>{{ item.symbol }}</div>
 							</div>
+						</td>
 
-							<div>{{ item.symbol }}</div>
-						</div>
-					</td>
+						<td>
+							<number-component
+								:is-fiat="true"
+								format="pretty-with-key"
+								:value="item.price"
+							/>
+						</td>
 
-					<td>
-						<number-component
-							:is-fiat="true"
-							format="pretty-with-key"
-							:value="item.price"
-						/>
-					</td>
+						<td>
+							<ui-tooltip
+								title="Click to sort by change 24h%"
+								description="test"
+							/>
 
-					<td>
-						<ui-tooltip
-							title="Click to sort by change 24h%"
-							description="test"
-						/>
+							<div :style="positiveOrNegativeStyles(item.chg24h)">
+								{{ item.chg24h }}%
+							</div>
+						</td>
 
-						<div :style="positiveOrNegativeStyles(item.chg24h)">{{ item.chg24h }}%</div>
-					</td>
+						<td>
+							<number-component
+								:is-fiat="true"
+								format="pretty-with-key"
+								:value="item.volume24h"
+							/>
+						</td>
 
-					<td>
-						<number-component
-							:is-fiat="true"
-							format="pretty-with-key"
-							:value="item.volume24h"
-						/>
-					</td>
-
-					<td>
-						<number-component
-							:is-fiat="true"
-							format="pretty-with-key"
-							:value="item.marketCap"
-						/>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+						<td>
+							<number-component
+								:is-fiat="true"
+								format="pretty-with-key"
+								:value="item.marketCap"
+							/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
 	</base-dashboard-component>
 </template>
 
