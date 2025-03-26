@@ -60,9 +60,11 @@ watch(refImg, () => {
 		return;
 	}
 
-	refImg.value.onerror = () => {
-		refImg.value!.src = replacementSrcUrl.value;
-	};
+	if (replacementSrcUrl.value) {
+		refImg.value.onerror = () => {
+			refImg.value!.src = replacementSrcUrl.value;
+		};
+	}
 });
 
 async function tryLoadImage(src: string): Promise<boolean> {
