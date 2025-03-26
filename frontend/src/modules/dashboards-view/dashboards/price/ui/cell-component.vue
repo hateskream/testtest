@@ -36,4 +36,28 @@ const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
 	</div>
 </template>
 
-<style module="classes"></style>
+<style module="classes">
+.root {
+	/* comming  */
+}
+
+.logo {
+	/* comming  */
+}
+
+.container {
+	/* comming */
+}
+
+.containerSecond {
+	/* comming  */
+}
+
+.marketCap {
+	/* comming  */
+}
+
+.chart {
+	/* comming  */
+}
+</style>

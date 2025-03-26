@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+
 import {
 	DashboardItemType,
 	type IDashboardCollection,
@@ -6,6 +8,7 @@ import {
 	type IDashboardInstance,
 } from '../../model';
 import { getDashboardComponent } from '../../utils';
+import { useDashboardsStore } from '../../stores';
 
 import FolderComponent from './folder-component.vue';
 
@@ -14,6 +17,8 @@ interface IDashboardCollectionProps {
 }
 
 const props = defineProps<IDashboardCollectionProps>();
+
+const { activeGroup } = storeToRefs(useDashboardsStore());
 
 function getComponent(item: IDashboardInstance | IDashboardFolder) {
 	if (item.type === DashboardItemType.Instance) {
@@ -27,7 +32,7 @@ function getProps(item: IDashboardInstance | IDashboardFolder) {
 		return { item };
 	}
 
-	return {};
+	return { market: activeGroup.value.market };
 }
 </script>
 

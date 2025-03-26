@@ -1,4 +1,4 @@
-import { inject, provide } from 'vue';
+import { inject, provide, type App } from 'vue';
 
 import { useConsoleLogger } from './console-logger-provider';
 import { useLogManager, type ILogManagerPublic } from './log-manager';
@@ -7,7 +7,15 @@ import type { ILoggerProvider } from './provider-interface';
 const loggerKey = Symbol('logger-key');
 
 export const provideLogger = () => {
-	provide<ILogManagerPublic>(loggerKey, createLogger());
+	const logger = createLogger();
+	return logger;
+};
+
+export const loggerPlugin = {
+	install(app: App) {
+		const logger = provideLogger();
+		app.provide(loggerKey, logger);
+	},
 };
 
 export const useLogger = () => {

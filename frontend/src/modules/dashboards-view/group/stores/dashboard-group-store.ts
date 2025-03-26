@@ -109,6 +109,20 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			],
 			market: 'crypto',
 		},
+		{
+			id: 'group-2',
+			name: 'Price',
+			isActive: false,
+			items: [
+				{
+					type: DashboardItemType.Instance,
+					id: 'instance-4',
+					dashboardType: DashboardType.Price,
+					position: { x: 0, y: 0, w: 1, h: 1 },
+				},
+			],
+			market: 'crypto',
+		},
 	]);
 
 	const tabs = computed<IDashboardTab[]>(() =>

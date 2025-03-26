@@ -9,7 +9,7 @@ import '@/assets/styles/base.css';
 import 'virtual:svg-icons-register';
 
 import routes from './routes';
-import { loggerPlugin } from './plugins';
+import { loggerPlugin } from '@/shared/service/logger';
 
 import App from './app.vue';
 

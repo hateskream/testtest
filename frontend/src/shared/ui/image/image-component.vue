@@ -12,6 +12,10 @@ interface IUiImage {
 
 const props = withDefaults(defineProps<IUiImage>(), {
 	loading: 'eager',
+	alt: '',
+	width: '100%',
+	height: '100%',
+	replacement: '',
 });
 
 const refImg = ref<HTMLImageElement | null>(null);
