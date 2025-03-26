@@ -11,7 +11,7 @@ const props = defineProps<IViewComponentProps>();
 </script>
 
 <template>
-	<div>
+	<div :class="classes.root">
 		<cell-component
 			v-for="currency in props.currencies"
 			:key="currency.ticker"
@@ -20,4 +20,10 @@ const props = defineProps<IViewComponentProps>();
 	</div>
 </template>
 
-<style module="classes"></style>
+<style module="classes">
+.root {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+</style>

@@ -1,0 +1,33 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="4"
+	height="12"
+>
+	<mask
+		id="a"
+		width="4"
+		height="12"
+		x="0"
+		y="0"
+		maskUnits="userSpaceOnUse"
+		style="mask-type: alpha"
+	>
+		<circle
+			cx="2"
+			cy="3.5"
+			r="1"
+			transform="rotate(-90 2 3.5)"
+		/>
+		<circle
+			cx="2"
+			cy="8.5"
+			r="1"
+			transform="rotate(-90 2 8.5)"
+		/>
+	</mask>
+	<g mask="url(#a)">
+		<path
+			d="M0 12h4V0H0v12Z"
+		/>
+	</g>
+</svg>

@@ -20,17 +20,7 @@ const props = withDefaults(defineProps<IUiImage>(), {
 
 const refImg = ref<HTMLImageElement | null>(null);
 
-const replacementSrcUrl = computed(() => {
-	if (!props.replacement) {
-		return '';
-	}
-
-	const { origin, href } = new URL(`@/assets/images/${props.replacement}`, import.meta.url);
-
-	return href.replace(origin, '');
-});
-
-const currentSrc = ref(replacementSrcUrl.value);
+const currentSrc = ref(props.replacement);
 
 const inlineStyles = computed((): Partial<CSSProperties> => {
 	const { width, height } = props;
@@ -40,7 +30,7 @@ const inlineStyles = computed((): Partial<CSSProperties> => {
 watch(
 	() => props.src,
 	async newSrc => {
-		currentSrc.value = replacementSrcUrl.value;
+		currentSrc.value = props.replacement;
 
 		if (!newSrc) {
 			return;
@@ -60,9 +50,9 @@ watch(refImg, () => {
 		return;
 	}
 
-	if (replacementSrcUrl.value) {
+	if (props.replacement) {
 		refImg.value.onerror = () => {
-			refImg.value!.src = replacementSrcUrl.value;
+			refImg.value!.src = props.replacement;
 		};
 	}
 });

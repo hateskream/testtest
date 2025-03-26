@@ -12,4 +12,5 @@ export enum IconIds {
 	Search = 'search',
 	Loosers = 'loosers',
 	Gainers = 'gainers',
+	Drag = 'drag',
 }

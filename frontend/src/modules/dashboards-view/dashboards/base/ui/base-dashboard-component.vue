@@ -38,7 +38,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 }
 
 .content {
-	padding: 0 16px 18px;
+	/* padding: 0 16px 18px; */
 }
 
 .container {
