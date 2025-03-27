@@ -56,7 +56,7 @@ import { LayoutComponent } from '@/modules/layaout';
 }
 
 .first {
-	width: 295px;
+	max-width: 295px;
 }
 
 .second {
