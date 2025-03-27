@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
@@ -14,6 +15,8 @@ const props = defineProps<ICellComponentProps>();
 
 const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
 	storeToRefs(usePriceStore());
+
+const label = computed(() => (isShowTicker.value ? props.currency.ticker : props.currency.name));
 </script>
 
 <template>
@@ -39,7 +42,7 @@ const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
 					v-if="isShowTicker"
 					:class="classes.ticker"
 				>
-					{{ props.currency.ticker }}
+					{{ label }}
 				</div>
 				<div :class="classes.containerSecond">
 					<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
