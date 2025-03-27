@@ -90,10 +90,13 @@ const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
 }
 
 .logo {
-	width: 32px;
-	height: 32px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	margin-right: 12px;
-	border-radius: 50%;
+	padding: 4px;
+	border: 1px solid var(--border-color-base-300);
+	border-radius: 100px;
 }
 
 .container {
