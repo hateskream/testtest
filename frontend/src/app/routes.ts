@@ -8,6 +8,11 @@ const router = createRouter({
 			name: 'home',
 			component: () => import('../pages/home').then(m => m.HomePage),
 		},
+		{
+			path: '/price_demo',
+			name: 'price_demo',
+			component: () => import('../pages/price').then(m => m.PriceDemoPage),
+		},
 	],
 });
 

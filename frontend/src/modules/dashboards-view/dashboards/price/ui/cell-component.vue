@@ -6,6 +6,7 @@ import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
 import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import MockChart from '@/assets/images/mock/chart.svg';
 
 interface ICellComponentProps {
 	currency: ICurrency;
@@ -38,10 +39,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 				/>
 			</div>
 			<div :class="classes.container">
-				<div
-					v-if="isShowTicker"
-					:class="classes.ticker"
-				>
+				<div :class="classes.ticker">
 					{{ label }}
 				</div>
 				<div :class="classes.containerSecond">
@@ -55,7 +53,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 				</div>
 			</div>
 			<div v-if="isShowChart">
-				<div :class="classes.chart">chart</div>
+				<img :src="MockChart" />
 			</div>
 		</div>
 	</div>
