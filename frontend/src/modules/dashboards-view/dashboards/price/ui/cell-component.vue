@@ -99,6 +99,11 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 
 .icon {
 	color: transparent;
+	cursor: grab;
+}
+
+.icon:active {
+	cursor: grabbing;
 }
 
 .content {
