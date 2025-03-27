@@ -13,4 +13,5 @@ export enum IconIds {
 	Loosers = 'loosers',
 	Gainers = 'gainers',
 	Drag = 'drag',
+	Retry = 'retry',
 }
