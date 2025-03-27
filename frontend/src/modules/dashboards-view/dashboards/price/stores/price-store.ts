@@ -6,21 +6,28 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 	const isShowPercentageChange = ref(true);
 	const isShowLogo = ref(true);
 	const isShowTicker = ref(true);
+	const isShowDescription = ref(false);
 
-	function setShowChart(value: boolean) {
-		isShowChart.value = value;
+	function toggleShowChart() {
+		isShowChart.value = !isShowChart.value;
 	}
 
-	function setShowPercentageChange(value: boolean) {
-		isShowPercentageChange.value = value;
+	function toggleShowPercentageChange() {
+		isShowPercentageChange.value = !isShowPercentageChange.value;
 	}
 
-	function setShowLogo(value: boolean) {
-		isShowLogo.value = value;
+	function toggleShowLogo() {
+		isShowLogo.value = !isShowLogo.value;
 	}
 
-	function setShowTicker(value: boolean) {
-		isShowTicker.value = value;
+	function toggleShowTicker() {
+		isShowTicker.value = !isShowTicker.value;
+		isShowDescription.value = !isShowDescription.value;
+	}
+
+	function toggleShowDescription() {
+		isShowDescription.value = !isShowDescription.value;
+		isShowTicker.value = !isShowTicker.value;
 	}
 
 	return {
@@ -28,9 +35,11 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 		isShowPercentageChange: readonly(isShowPercentageChange),
 		isShowLogo: readonly(isShowLogo),
 		isShowTicker: readonly(isShowTicker),
-		setShowChart,
-		setShowPercentageChange,
-		setShowLogo,
-		setShowTicker,
+		isShowDescription: readonly(isShowDescription),
+		toggleShowChart,
+		toggleShowPercentageChange,
+		toggleShowLogo,
+		toggleShowTicker,
+		toggleShowDescription,
 	};
 });
