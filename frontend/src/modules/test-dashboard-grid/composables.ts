@@ -6,6 +6,7 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const rowsNum = ref(0);
 	const columnsNum = ref(0);
 	const rowHeight = ref(0);
+	const columnWidth = ref(0);
 
 	onMounted(() => {
 		update();
@@ -23,6 +24,7 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 
 		const {
 			rowHeight: rowHeightCalc,
+			columnWidth: columnWidthCalc,
 			columns,
 			rows,
 		} = calculateGrid(grid.value.offsetWidth, grid.value.offsetHeight);
@@ -30,11 +32,13 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 		columnsNum.value = columns;
 		rowsNum.value = rows;
 		rowHeight.value = rowHeightCalc;
+		columnWidth.value = columnWidthCalc;
 	}
 
 	return {
 		rowsNum: readonly(rowsNum),
 		columnsNum: readonly(columnsNum),
 		rowHeight: readonly(rowHeight),
+		columnWidth: readonly(columnWidth),
 	};
 }

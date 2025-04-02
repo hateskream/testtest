@@ -1,50 +1,62 @@
 <script setup lang="ts">
-import { GridLayout, GridItem } from 'grid-layout-plus';
-import { reactive } from 'vue';
+import { ref } from 'vue';
 
-const layout = reactive([
-	{ x: 0, y: 0, w: 2, h: 2, i: '0', static: false },
-	{ x: 2, y: 0, w: 2, h: 4, i: '1', static: true },
-	{ x: 4, y: 0, w: 2, h: 5, i: '2', static: false },
-	{ x: 6, y: 0, w: 2, h: 3, i: '3', static: false },
-	{ x: 8, y: 0, w: 2, h: 3, i: '4', static: false },
-	{ x: 10, y: 0, w: 2, h: 3, i: '5', static: false },
-	{ x: 0, y: 5, w: 2, h: 5, i: '6', static: false },
-	{ x: 2, y: 5, w: 2, h: 5, i: '7', static: false },
-	{ x: 4, y: 5, w: 2, h: 5, i: '8', static: false },
-	{ x: 6, y: 3, w: 2, h: 4, i: '9', static: true },
-	{ x: 8, y: 4, w: 2, h: 4, i: '10', static: false },
-	{ x: 10, y: 4, w: 2, h: 4, i: '11', static: false },
-	{ x: 0, y: 10, w: 2, h: 5, i: '12', static: false },
-	{ x: 2, y: 10, w: 2, h: 5, i: '13', static: false },
-	{ x: 4, y: 8, w: 2, h: 4, i: '14', static: false },
-	{ x: 6, y: 8, w: 2, h: 4, i: '15', static: false },
-	{ x: 8, y: 10, w: 2, h: 5, i: '16', static: false },
-	{ x: 10, y: 4, w: 2, h: 2, i: '17', static: false },
-	{ x: 0, y: 9, w: 2, h: 3, i: '18', static: false },
-	{ x: 2, y: 6, w: 2, h: 2, i: '19', static: false },
-]);
+import { responsiveGridLayout } from './composables';
+import { GAP } from './constants';
+
+import GridComponents from './grid-components.vue';
+
+const grid = ref<HTMLDivElement | null>(null);
+
+const { rowsNum, columnsNum, rowHeight, columnWidth } = responsiveGridLayout(grid);
 </script>
 
 <template>
-	<grid-layout
-		v-model:layout="layout"
-		:row-height="30"
+	<div
+		ref="grid"
+		class="grid-wrapper"
 	>
-		<template #item="{ item }">
-			<span class="text">{{ `${item.i}${item.static ? '- Static' : ''}` }}</span>
-		</template>
-	</grid-layout>
+		<div class="grid-layout1">
+			<grid-components
+				:gap="GAP"
+				:col-num="columnsNum"
+				:row-num="rowsNum"
+				:item-height="rowHeight"
+				:item-width="columnWidth"
+			/>
+		</div>
+	</div>
 </template>
 
 <style scoped>
+.grid-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	min-height: 100%;
+	overflow: hidden;
+}
+
+.grid-layout {
+	width: calc(100% + 12px);
+	height: calc(100% + 12px);
+	margin: -6px;
+}
+
+.grid-layout1 {
+	width: 100%;
+	height: 100%;
+}
+
 .vgl-layout {
 	background-color: #eeeeee;
+	touch-action: none;
 }
 
 :deep(.vgl-item:not(.vgl-item--placeholder)) {
 	background-color: #cccccc;
-	border: 1px solid black;
+	user-select: none;
 }
 
 :deep(.vgl-item--resizing) {
@@ -55,6 +67,10 @@ const layout = reactive([
 	background-color: #ccccee;
 }
 
+.grid-item {
+	background-color: rgb(200 200 200 / 30%);
+}
+
 .text {
 	position: absolute;
 	inset: 0;
@@ -63,5 +79,6 @@ const layout = reactive([
 	margin: auto;
 	font-size: 24px;
 	text-align: center;
+	pointer-events: none;
 }
 </style>

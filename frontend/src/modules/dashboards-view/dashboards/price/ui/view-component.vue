@@ -67,15 +67,15 @@ const gridConfig = {
 	width: 100%;
 }
 
-:global(.vgl-layout) {
+:deep(.vgl-layout) {
 	width: 310px !important;
 }
 
-:global(.vgl-item) {
+:deep(.vgl-item) {
 	width: 310px !important;
 }
 
-:global(.vgl-item--placeholder) {
+:deep(.vgl-item--placeholder) {
 	width: 310px !important;
 	background: transparent !important;
 }
