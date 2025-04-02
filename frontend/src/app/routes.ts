@@ -13,6 +13,11 @@ const router = createRouter({
 			name: 'price_demo',
 			component: () => import('../pages/price').then(m => m.PriceDemoPage),
 		},
+		{
+			path: '/dashboard_grid',
+			name: 'dashboard_grid',
+			component: () => import('../pages/dashboard-grid').then(m => m.DashboardGridPage),
+		},
 	],
 });
 
