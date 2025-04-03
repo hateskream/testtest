@@ -15,46 +15,29 @@ const isShowGrid = ref(true);
 </script>
 
 <template>
-	<div
-		ref="grid"
-		:class="classes.root"
-	>
-		<div :class="classes.grid">
-			<grid-components
-				v-show="isShowGrid"
-				:gap="GAP"
-				:col-num="columnsNum"
-				:row-num="rowsNum"
-				:item-height="rowHeight"
-				:item-width="columnWidth"
-			/>
-		</div>
-		<div :class="classes.content">
-			<grid-with-dashboards
-				:gap="GAP"
-				:col-num="columnsNum"
-				:row-num="rowsNum"
-				:item-height="rowHeight"
-				:item-width="columnWidth"
-			/>
-		</div>
-	</div>
+	<grid-with-dashboards
+		:col-num="columnsNum"
+		:row-num="rowsNum"
+		:item-height="rowHeight"
+		:gap="GAP"
+		:item-width="columnWidth"
+	/>
 </template>
 
 <style module="classes">
 .root {
-	position: relative;
+	/* position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
 	min-height: 100%;
 	padding: 2px;
-	overflow: hidden;
+	overflow: hidden; */
 }
 
 .content {
-	position: absolute;
+	/* position: absolute; */
 	width: 100%;
 	height: 100%;
 }

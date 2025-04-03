@@ -15,18 +15,28 @@ const totalItems = computed(() => props.colNum * props.rowNum);
 
 const gridStyle = computed(
 	(): Partial<CSSProperties> => ({
-		paddingRight: `${props.gap}px`,
-		paddingLeft: `${props.gap}px`,
-		paddingTop: `${props.gap / 2}px`,
-		paddingBottom: `${props.gap / 2}px`,
+		// paddingRight: `${props.gap}px`,
+		// paddingLeft: `${props.gap}px`,
+		// paddingTop: `${props.gap / 2}px`,
+		// paddingBottom: `${props.gap / 2}px`,
+		paddingRight: '0px',
+		paddingLeft: '0px',
+		paddingTop: '0px',
+		paddingBottom: '0px',
 	}),
 );
 
 const itemStyle = computed(
 	(): Partial<CSSProperties> => ({
-		width: `${props.itemWidth + props.gap / 2}px`,
-		height: `${props.itemHeight + props.gap / 2}px`,
-		padding: `${props.gap / 2 + 3}px`,
+		// width: `${props.itemWidth + props.gap / 2}px`,
+		// height: `${props.itemHeight + props.gap / 2}px`,
+		// padding: `${props.gap / 2 + 3}px`,
+		width: `${props.itemWidth}px`, // Чистая ширина элемента
+		height: `${props.itemHeight}px`, // Чистая высота элемента
+		marginRight: `${props.gap}px`, // Промежуток справа
+		marginBottom: `${props.gap}px`, // Промежуток снизу
+		// Если нужен внутренний padding, добавляем его отдельно
+		padding: '3px', // Ваш +3px из исходного кода
 	}),
 );
 </script>

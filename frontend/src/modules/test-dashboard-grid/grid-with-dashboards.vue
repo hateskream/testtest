@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, type CSSProperties } from 'vue';
-import { GridLayout } from 'grid-layout-plus';
+import { GridLayout, GridItem } from 'grid-layout-plus';
 
 interface IGridWidthDashboardsProps {
 	itemWidth: number;
@@ -12,7 +12,7 @@ interface IGridWidthDashboardsProps {
 
 const props = defineProps<IGridWidthDashboardsProps>();
 
-const layout = reactive(
+const layout = computed(() =>
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => {
 		const x = index % props.colNum;
 		const y = Math.floor(index / props.colNum);
@@ -29,6 +29,7 @@ const layout = reactive(
 </script>
 
 <template>
+	<!-- <div :class="classes.gridWrapper"> -->
 	<grid-layout
 		v-model:layout="layout"
 		:col-num="props.colNum"
@@ -37,8 +38,8 @@ const layout = reactive(
 		:is-resizable="false"
 		:use-css-transforms="true"
 		:prevent-collision="false"
-		:margin="[6, 6]"
-		class="grid-layout"
+		:margin="[props.gap, props.gap]"
+		:class="classes.gridLayout"
 	>
 		<grid-item
 			v-for="item in layout"
@@ -48,17 +49,16 @@ const layout = reactive(
 			:w="item.w"
 			:h="item.h"
 			:i="item.i"
-			class="grid-item"
+			:class="classes.gridItem"
 		>
-			<span class="text">{{ `${item.i}` }}</span>
+			<span :class="classes.text" />
 		</grid-item>
 	</grid-layout>
+	<!-- </div> -->
 </template>
 
-<style module="classes"></style>
-
-<style scoped>
-.grid-wrapper {
+<style module="classes">
+.gridWrapper {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -67,36 +67,32 @@ const layout = reactive(
 	overflow: hidden;
 }
 
-.grid-layout {
-	width: calc(100% + 12px);
-	height: calc(100% + 12px);
-	margin: -6px;
-}
-
-.grid-layout1 {
+.gridLayout {
 	width: 100%;
 	height: 100%;
+	margin: 0;
+	opacity: 0.1;
 }
 
-.vgl-layout {
+:global(.vgl-layout) {
 	background-color: #eeeeee;
 	touch-action: none;
 }
 
-:deep(.vgl-item:not(.vgl-item--placeholder)) {
+:global(.vgl-item:not(.vgl-item--placeholder)) {
 	background-color: #cccccc;
 	user-select: none;
 }
 
-:deep(.vgl-item--resizing) {
+:global(.vgl-item--resizing) {
 	opacity: 0.9;
 }
 
-:deep(.vgl-item--static) {
+:global(.vgl-item--static) {
 	background-color: #ccccee;
 }
 
-.grid-item {
+.gridItem {
 	background-color: rgb(200 200 200 / 30%);
 }
 
