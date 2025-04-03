@@ -1,6 +1,6 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
-  IMAGE_TAG: $CI_COMMIT_REF_NAME-CI_PIPELINE_IID
+  IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
 
 include:
   - local: "/frontend/.gitlab-ci/snippets/setup.yml"
