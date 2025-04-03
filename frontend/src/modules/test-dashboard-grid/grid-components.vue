@@ -15,54 +15,58 @@ const totalItems = computed(() => props.colNum * props.rowNum);
 
 const gridStyle = computed(
 	(): Partial<CSSProperties> => ({
-		gap: `${props.gap}px`,
+		paddingRight: `${props.gap}px`,
+		paddingLeft: `${props.gap}px`,
+		paddingTop: `${props.gap / 2}px`,
+		paddingBottom: `${props.gap / 2}px`,
 	}),
 );
 
 const itemStyle = computed(
 	(): Partial<CSSProperties> => ({
-		width: `${props.itemWidth}px`,
-		height: `${props.itemHeight}px`,
-	}),
-);
-
-const itemInner = computed(
-	(): Partial<CSSProperties> => ({
-		width: `${props.itemWidth - 2}px`,
-		height: `${props.itemHeight - 2}px`,
+		width: `${props.itemWidth + props.gap / 2}px`,
+		height: `${props.itemHeight + props.gap / 2}px`,
+		padding: `${props.gap / 2 + 3}px`,
 	}),
 );
 </script>
 
 <template>
-	<div
-		:class="classes.gridContainer"
-		:style="gridStyle"
-	>
+	<div :class="classes.root">
 		<div
-			v-for="index in totalItems"
-			:key="index"
-			:class="classes.gridItem"
-			:style="itemStyle"
+			:class="classes.gridContainer"
+			:style="gridStyle"
 		>
 			<div
-				:class="classes.gridItemInner"
-				:style="itemInner"
+				v-for="index in totalItems"
+				:key="index"
+				:class="classes.gridItem"
+				:style="itemStyle"
 			>
-				<div :class="classes.topRightVertical" />
-				<div :class="classes.topRightHorizontal" />
-				<div :class="classes.topLeftVertical" />
-				<div :class="classes.topLeftHorizontal" />
-				<div :class="classes.bottomRightVertical" />
-				<div :class="classes.bottomRightHorizontal" />
-				<div :class="classes.bottomLeftVertical" />
-				<div :class="classes.bottomLeftHorizontal" />
+				<div :class="classes.gridItemInner">
+					<div :class="classes.topRightVertical" />
+					<div :class="classes.topRightHorizontal" />
+					<div :class="classes.topLeftVertical" />
+					<div :class="classes.topLeftHorizontal" />
+					<div :class="classes.bottomRightVertical" />
+					<div :class="classes.bottomRightHorizontal" />
+					<div :class="classes.bottomLeftVertical" />
+					<div :class="classes.bottomLeftHorizontal" />
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
+.root {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
 .gridContainer {
 	display: flex;
 	flex-wrap: wrap;
@@ -73,13 +77,17 @@ const itemInner = computed(
 	flex-shrink: 1;
 	justify-content: center;
 	align-items: center;
-	background-color: rgb(200 200 200 / 10%);
+
+	/* background-color: rgb(200 200 200 / 10%); */
 	opacity: 0.5;
 }
 
 .gridItemInner {
 	position: relative;
-	background-color: rgb(255 0 0 / 10%);
+	width: 100%;
+	height: 100%;
+
+	/* background-color: rgb(255 0 0 / 10%); */
 }
 
 .topRightVertical,
@@ -96,58 +104,58 @@ const itemInner = computed(
 }
 
 .topRightVertical {
-	top: -11px;
-	left: -3px;
+	top: -14px;
+	left: -6px;
 	width: 0.5px;
 	height: 16px;
 }
 
 .topRightHorizontal {
-	top: -3px;
-	left: -11px;
+	top: -6px;
+	left: -14px;
 	width: 16px;
 	height: 0.5px;
 }
 
 .topLeftVertical {
-	top: -11px;
-	right: -3px;
+	top: -14px;
+	right: -6px;
 	width: 0.5px;
 	height: 16px;
 }
 
 .topLeftHorizontal {
-	top: -3px;
-	right: -11px;
+	top: -6px;
+	right: -14px;
 	width: 16px;
 	height: 0.5px;
 }
 
-/* .topRight {
-	top: -11px;
-	left: -3px;
+.bottomRightVertical {
+	bottom: -14px;
+	left: -6px;
 	width: 0.5px;
 	height: 16px;
 }
 
-.topLeft {
-	top: -3px;
-	left: -11px;
+.bottomRightHorizontal {
+	bottom: -6px;
+	left: -14px;
 	width: 16px;
 	height: 0.5px;
 }
 
-.bottomRight {
-	right: -3px;
-	bottom: -11px;
+.bottomLeftVertical {
+	right: -6px;
+	bottom: -14px;
 	width: 0.5px;
 	height: 16px;
 }
 
-.bottomLeft {
-	bottom: -3px;
-	left: -11px;
+.bottomLeftHorizontal {
+	right: -14px;
+	bottom: -6px;
 	width: 16px;
 	height: 0.5px;
-} */
+}
 </style>
