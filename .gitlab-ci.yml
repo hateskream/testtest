@@ -1,6 +1,6 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
-  IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  IMAGE_TAG: $CI_COMMIT_REF_NAME-CI_PIPELINE_IID
 
 include:
   - local: "/frontend/.gitlab-ci/snippets/setup.yml"
@@ -13,7 +13,7 @@ stages:
   - setup
   - lint
   - build
-  - deploy
+#  - deploy
 
 build:
   stage: build
@@ -34,11 +34,11 @@ build:
   only:
     - main
 
-deploy:
-  image: bitnami/kubectl:1.32
-  script:
-    - kubectl set image deployment/demo-front demo-front=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -n demo-front
-    - kubectl rollout restart deployment/demo-front -n demo-front
+# deploy:
+#   image: bitnami/kubectl:1.32
+#   script:
+#     - kubectl set image deployment/demo-front demo-front=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -n demo-front
+#     - kubectl rollout restart deployment/demo-front -n demo-front
   
-  only:
-    - main
+#   only:
+#     - main
