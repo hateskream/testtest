@@ -13,6 +13,7 @@ stages:
   - setup
   - lint
   - build
+  - deploy
 
 build:
   stage: build
@@ -30,6 +31,14 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
   
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: on_success
+  only:
+    - main
+
+deploy:
+  image: bitnami/kubectl:1.32
+  script:
+    - kubectl set image deployment/demo-front demo-front=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -n demo-front
+    - kubectl rollout restart deployment/demo-front -n demo-front
+  
+  only:
+    - main
