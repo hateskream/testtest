@@ -14,4 +14,6 @@ export enum IconIds {
 	Gainers = 'gainers',
 	Drag = 'drag',
 	Retry = 'retry',
+	DropdownDown = 'dropdown-down',
+	Tertiary = 'tertiary',
 }

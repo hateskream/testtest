@@ -1,1 +1,2 @@
-export * from './pretty-number';
+export * from './set-positions-columns';
+export * from './get-next-direction-sort';

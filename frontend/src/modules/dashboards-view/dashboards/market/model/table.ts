@@ -1,0 +1,34 @@
+export type ITableRowValueType = 'image' | 'number' | 'percent' | 'date';
+export type ITableColumnDirection = 0 | 1 | -1;
+
+export interface IActiveSortColumn {
+	columnName: string;
+	direction: ITableColumnDirection;
+}
+
+export interface IActiveTabSort {
+	sortTab: string;
+	direction: ITableColumnDirection;
+	columnName?: string;
+	timeframe?: string;
+}
+
+export interface ITableColumn {
+	position: number;
+	isShow: boolean;
+	displayColumnName: string;
+	displayShortColumnName: string;
+	group: {
+		order?: number;
+		name: string;
+	};
+	columnName: string;
+	type: ITableRowValueType;
+}
+
+export type ITableRowValue = string;
+
+export type ITableRow = {
+	value: ITableRowValue;
+	type: ITableRowValueType;
+};

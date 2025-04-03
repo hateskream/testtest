@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, computed, useCssModule } from 'vue';
+import { computed, useCssModule } from 'vue';
 
 interface IToggleComponentProps {
 	label: string;
