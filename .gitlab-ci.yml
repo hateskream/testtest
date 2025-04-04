@@ -40,9 +40,9 @@ deploy:
   image: alpine/git:v2.47.2
 
   script:
-    - git init repo
-    - cd repo
-    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
+    - 'git init repo'
+    - 'cd repo'
+    - 'git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git'
     - git config core.sparseCheckout true
     - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
     - git pull origin main
