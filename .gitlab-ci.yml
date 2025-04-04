@@ -1,6 +1,7 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
   IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  GITLAB_TOKEN: $GITLAB_TOKEN
 
 #include:
 #  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
@@ -46,8 +47,5 @@ deploy:
     - cat deployment.yaml
     - 'curl -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml" -d "{\"branch\":\"main\",\"content\":\"$(cat deployment.yaml | sed "s/\"/\\\\\"/g")\",\"commit_message\":\"Update image tag to $IMAGE_TAG\"}"'
   
-  variables:
-    GITLAB_TOKEN: $GITLAB_TOKEN
-
   # only:
   #   - main
