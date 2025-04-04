@@ -40,10 +40,10 @@ deploy:
   image: badouralix/curl-jq:debian
 
   script:
-    - 'curl -f -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml/raw?ref=main" -o deployment.yaml'
+    - 'curl --insecure -f -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml/raw?ref=main" -o deployment.yaml'
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" deployment.yaml'
     - cat deployment.yaml
     - echo
-    - 'curl -f -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml" -d "$(jq -c -R "{"branch":"main","content":.,"commit_message":"Update image tag to "$IMAGE_TAG""} deployment.yaml)"'
+    - 'curl --insecure -f -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml" -d "$(jq -c -R "{"branch":"main","content":.,"commit_message":"Update image tag to "$IMAGE_TAG""} deployment.yaml)"'
   # only:
   #   - main
