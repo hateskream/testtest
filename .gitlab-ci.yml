@@ -41,11 +41,11 @@ deploy:
 
   script:
     - echo $GITLAB_TOKEN
-    - 'curl -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml/raw?ref=main" -o deployment.yaml'
+    - 'curl -f -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml/raw?ref=main" -o deployment.yaml'
     - ls
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" deployment.yaml'
     - cat deployment.yaml
-    - 'curl -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml" -d "{\"branch\":\"main\",\"content\":\"$(cat deployment.yaml | sed "s/\"/\\\\\"/g")\",\"commit_message\":\"Update image tag to $IMAGE_TAG\"}"'
+    - 'curl -f -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml" -d "{\"branch\":\"main\",\"content\":\"$(cat deployment.yaml | sed "s/\"/\\\\\"/g")\",\"commit_message\":\"Update image tag to $IMAGE_TAG\"}"'
   
   # only:
   #   - main
