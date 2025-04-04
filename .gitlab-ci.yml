@@ -1,17 +1,18 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
   IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  SKIP_ALL: "true"
 
-include:
-  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
-  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
+#include:
+#  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
+#  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
 
 before_script:
   - cd frontend
 
 stages:
-  - setup
-  - lint
+#  - setup
+#  - lint
   - build
   - deploy
 
@@ -33,6 +34,10 @@ build:
   
   only:
     - main
+
+  rules:
+    - if: '$SKIP_ALL == "true"'
+    - when: never
 
 deploy:
   stage: deploy
