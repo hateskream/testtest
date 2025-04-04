@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: demo-front
-          image: gitlab.planet9.uk:5050/i88/i88-frontend:temp4-107
+          image: gitlab.planet9.uk:5050/i88/i88-frontend:temp4-108
           ports:
             - containerPort: 8082
           resources:
