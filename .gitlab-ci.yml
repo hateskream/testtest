@@ -64,7 +64,7 @@ deploy:
     - git commit -m "Update image tag to $IMAGE_TAG" || echo "No changes to commit"
     - git push origin $CI_COMMIT_BRANCH
   rules:
-    - if: '$CI_MERGE_REQUEST_IID && $CI_COMMIT_AUTHOR != "GitLab CI"'
+    - if: '$CI_COMMIT_AUTHOR != "GitLab CI"'
       when: on_success
     - when: never
     
