@@ -40,6 +40,7 @@ deploy:
   image: alpine:3.21
 
   script:
+    - apk update && apk add --no-cache git
     - 'git init repo'
     - 'cd repo'
     - 'git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git'
