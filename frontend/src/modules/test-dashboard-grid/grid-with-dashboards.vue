@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, type CSSProperties } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
+
+const GAP_IN_DND = 24;
+const GAP_IN_DND_PX = `${GAP_IN_DND}px`;
 
 interface IGridWidthDashboardsProps {
 	itemWidth: number;
@@ -16,6 +19,8 @@ const emit = defineEmits<{
 	(e: 'update'): void;
 }>();
 
+const isDnd = ref(false);
+
 const layout = computed(() =>
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => {
 		const x = index % props.colNum;
@@ -30,21 +35,66 @@ const layout = computed(() =>
 		};
 	}),
 );
+
+const rowHeight = computed(() => props.itemHeight - (isDnd.value ? GAP_IN_DND : props.gap));
+
+const gridLayoutStyles = computed(
+	(): Partial<CSSProperties> =>
+		isDnd.value
+			? {
+					width: `calc(100% + ${GAP_IN_DND_PX})`,
+					margin: `-${GAP_IN_DND / 2}px`,
+				}
+			: {
+					width: `calc(100% + ${props.gap}px)`,
+					margin: `-${props.gap / 2}px`,
+				},
+);
+
+const margin = computed(() => (isDnd.value ? [GAP_IN_DND, GAP_IN_DND] : [props.gap, props.gap]));
+
+function move() {
+	isDnd.value = true;
+	console.log('move');
+}
+
+function moved() {
+	isDnd.value = false;
+	console.log('moved');
+}
+
+function resize() {
+	isDnd.value = true;
+	console.log('resize');
+}
+
+function resized() {
+	isDnd.value = false;
+	console.log('resized');
+}
+
+function updated() {
+	isDnd.value = false;
+	emit('update');
+}
 </script>
 
 <template>
 	<div :class="classes.gridWrapper">
-		<div :class="classes.gridLayout">
+		<div
+			:class="classes.gridLayout"
+			:style="gridLayoutStyles"
+		>
 			<grid-layout
 				v-model:layout="layout"
 				:col-num="props.colNum"
-				:row-height="props.itemHeight - props.gap"
+				:row-height="rowHeight"
 				:is-draggable="true"
 				:is-resizable="true"
 				:use-css-transforms="false"
 				:prevent-collision="false"
-				:margin="[props.gap, props.gap]"
-				@layout-updated="emit('update')"
+				:margin="margin"
+				@layout-updated="updated"
 				@layout-ready="emit('update')"
 			>
 				<grid-item
@@ -56,6 +106,10 @@ const layout = computed(() =>
 					:h="item.h"
 					:i="item.i"
 					:class="classes.gridItem"
+					@move="move"
+					@moved="moved"
+					@resize="resize"
+					@resized="resized"
 				>
 					<span :class="classes.text">
 						{{ item.i }}
@@ -69,23 +123,34 @@ const layout = computed(() =>
 <style module="classes">
 .gridWrapper {
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	overflow: hidden;
 }
 
 .gridLayout {
-	width: calc(100% + 6px);
-	margin: -3px;
 	opacity: 0.1;
+
+	/* transition:
+		width 0.3s ease,
+		margin 0.3s ease; */
 }
 
 :global(.vgl-layout) {
 	background-color: #eeeeee;
 	touch-action: none;
+	transition: none;
 }
 
 :global(.vgl-item:not(.vgl-item--placeholder)) {
 	background-color: #cccccc;
 	user-select: none;
+}
+
+:global(.vgl-item) {
+	transition: 0.1s ease-in !important;
 }
 
 :global(.vgl-item--resizing) {
