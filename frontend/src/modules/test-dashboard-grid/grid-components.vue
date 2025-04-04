@@ -6,7 +6,6 @@ interface IGridComponentProps {
 	itemHeight: number;
 	colNum: number;
 	rowNum: number;
-	gap: number;
 }
 
 const props = defineProps<IGridComponentProps>();
@@ -15,89 +14,253 @@ const totalItems = computed(() => props.colNum * props.rowNum);
 
 const gridStyle = computed(
 	(): Partial<CSSProperties> => ({
-		// paddingRight: `${props.gap}px`,
-		// paddingLeft: `${props.gap}px`,
-		// paddingTop: `${props.gap / 2}px`,
-		// paddingBottom: `${props.gap / 2}px`,
-		paddingRight: '0px',
-		paddingLeft: '0px',
-		paddingTop: '0px',
-		paddingBottom: '0px',
+		display: 'grid',
+		gridTemplateColumns: `repeat(${props.colNum}, ${props.itemWidth}px)`,
+		gridTemplateRows: `repeat(${props.rowNum}, ${props.itemHeight}px)`,
 	}),
 );
 
 const itemStyle = computed(
 	(): Partial<CSSProperties> => ({
-		// width: `${props.itemWidth + props.gap / 2}px`,
-		// height: `${props.itemHeight + props.gap / 2}px`,
-		// padding: `${props.gap / 2 + 3}px`,
-		width: `${props.itemWidth}px`, // Чистая ширина элемента
-		height: `${props.itemHeight}px`, // Чистая высота элемента
-		marginRight: `${props.gap}px`, // Промежуток справа
-		marginBottom: `${props.gap}px`, // Промежуток снизу
-		// Если нужен внутренний padding, добавляем его отдельно
-		padding: '3px', // Ваш +3px из исходного кода
+		maxWidth: `${props.itemWidth}px`,
+		height: `${props.itemHeight}px`,
 	}),
 );
+
+function topRightVerticalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isTopRightItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isTopRow(itemIndex)) {
+		return {
+			top: '1px',
+		};
+	}
+	if (isLeftCell(itemIndex)) {
+		return {
+			width: '1px',
+		};
+	}
+	return {};
+}
+
+function topRightHorizontalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isTopRightItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isTopRow(itemIndex)) {
+		return {
+			height: '1px',
+		};
+	}
+	if (isLeftCell(itemIndex)) {
+		return {
+			left: '1px',
+		};
+	}
+	return {};
+}
+
+function topLeftVerticalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isTopLeftItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isTopRow(itemIndex)) {
+		return {
+			top: '1px',
+		};
+	}
+	if (isRightCell(itemIndex)) {
+		return {
+			width: '1px',
+		};
+	}
+	return {};
+}
+
+function topLeftHorizontalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isTopLeftItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isTopRow(itemIndex)) {
+		return {
+			height: '1px',
+		};
+	}
+	if (isRightCell(itemIndex)) {
+		return {
+			right: '1px',
+		};
+	}
+
+	return {};
+}
+
+function bottomRightVerticalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isBottomRightItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isLeftCell(itemIndex)) {
+		return {
+			width: '1px',
+		};
+	}
+	if (isBottomLineItem(itemIndex)) {
+		return {
+			bottom: '1px',
+		};
+	}
+
+	return {};
+}
+
+function bottomLeftVerticalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isBottomLeftItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isRightCell(itemIndex)) {
+		return {
+			width: '1px',
+		};
+	}
+	if (isBottomLineItem(itemIndex)) {
+		return {
+			bottom: '1px',
+		};
+	}
+	return {};
+}
+
+function bottomLeftHorizontalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isBottomRightItem(itemIndex)) {
+		return {
+			width: '0px',
+		};
+	}
+	if (isLeftCell(itemIndex)) {
+		return {
+			left: '1px',
+		};
+	}
+	if (isBottomLineItem(itemIndex)) {
+		return {
+			height: '1px',
+		};
+	}
+	return {};
+}
+
+function bottomRightHorizontalLineStyle(itemIndex: number): Partial<CSSProperties> {
+	if (isBottomLeftItem(itemIndex)) {
+		return {
+			height: '0px',
+		};
+	}
+	if (isRightCell(itemIndex)) {
+		return {
+			right: '1px',
+		};
+	}
+	if (isBottomLineItem(itemIndex)) {
+		return {
+			height: '1px',
+		};
+	}
+	return {};
+}
+
+function isTopRightItem(itemIndex: number): boolean {
+	return itemIndex === 1;
+}
+
+function isTopLeftItem(itemIndex: number): boolean {
+	return itemIndex === props.colNum;
+}
+
+function isBottomRightItem(itemIndex: number): boolean {
+	return itemIndex === props.colNum * (props.rowNum - 1) + 1;
+}
+
+function isBottomLeftItem(itemIndex: number): boolean {
+	return itemIndex === totalItems.value;
+}
+
+function isTopRow(itemIndex: number): boolean {
+	return itemIndex <= props.colNum;
+}
+
+function isLeftCell(itemIndex: number): boolean {
+	return (itemIndex - 1) % props.colNum === 0;
+}
+
+function isRightCell(itemIndex: number): boolean {
+	return itemIndex % props.colNum === 0;
+}
+
+function isBottomLineItem(itemIndex: number): boolean {
+	return itemIndex > totalItems.value - props.colNum;
+}
 </script>
 
 <template>
-	<div :class="classes.root">
+	<div :style="gridStyle">
 		<div
-			:class="classes.gridContainer"
-			:style="gridStyle"
+			v-for="index in totalItems"
+			:key="index"
+			:class="classes.gridItem"
+			:style="itemStyle"
 		>
 			<div
-				v-for="index in totalItems"
-				:key="index"
-				:class="classes.gridItem"
-				:style="itemStyle"
-			>
-				<div :class="classes.gridItemInner">
-					<div :class="classes.topRightVertical" />
-					<div :class="classes.topRightHorizontal" />
-					<div :class="classes.topLeftVertical" />
-					<div :class="classes.topLeftHorizontal" />
-					<div :class="classes.bottomRightVertical" />
-					<div :class="classes.bottomRightHorizontal" />
-					<div :class="classes.bottomLeftVertical" />
-					<div :class="classes.bottomLeftHorizontal" />
-				</div>
-			</div>
+				:class="classes.topRightVertical"
+				:style="topRightVerticalLineStyle(index)"
+			/>
+			<div
+				:class="classes.topRightHorizontal"
+				:style="topRightHorizontalLineStyle(index)"
+			/>
+			<div
+				:class="classes.topLeftVertical"
+				:style="topLeftVerticalLineStyle(index)"
+			/>
+			<div
+				:class="classes.topLeftHorizontal"
+				:style="topLeftHorizontalLineStyle(index)"
+			/>
+			<div
+				:class="classes.bottomRightVertical"
+				:style="bottomRightVerticalLineStyle(index)"
+			/>
+			<div
+				:class="classes.bottomRightHorizontal"
+				:style="bottomRightHorizontalLineStyle(index)"
+			/>
+			<div
+				:class="classes.bottomLeftVertical"
+				:style="bottomLeftVerticalLineStyle(index)"
+			/>
+			<div
+				:class="classes.bottomLeftHorizontal"
+				:style="bottomLeftHorizontalLineStyle(index)"
+			/>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.root {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-}
-
-.gridContainer {
-	display: flex;
-	flex-wrap: wrap;
-}
-
 .gridItem {
-	display: flex;
-	flex-shrink: 1;
-	justify-content: center;
-	align-items: center;
-
-	/* background-color: rgb(200 200 200 / 10%); */
-	opacity: 0.5;
-}
-
-.gridItemInner {
 	position: relative;
-	width: 100%;
-	height: 100%;
-
-	/* background-color: rgb(255 0 0 / 10%); */
 }
 
 .topRightVertical,
@@ -114,58 +277,58 @@ const itemStyle = computed(
 }
 
 .topRightVertical {
-	top: -14px;
-	left: -6px;
+	top: 0;
+	left: 0;
 	width: 0.5px;
-	height: 16px;
+	height: 8px;
 }
 
 .topRightHorizontal {
-	top: -6px;
-	left: -14px;
-	width: 16px;
+	top: 0;
+	left: 0;
+	width: 8px;
 	height: 0.5px;
 }
 
 .topLeftVertical {
-	top: -14px;
-	right: -6px;
+	top: 0;
+	right: 0;
 	width: 0.5px;
-	height: 16px;
+	height: 8px;
 }
 
 .topLeftHorizontal {
-	top: -6px;
-	right: -14px;
-	width: 16px;
+	top: 0;
+	right: 0;
+	width: 8px;
 	height: 0.5px;
 }
 
 .bottomRightVertical {
-	bottom: -14px;
-	left: -6px;
+	bottom: 0;
+	left: 0;
 	width: 0.5px;
-	height: 16px;
+	height: 8px;
 }
 
 .bottomRightHorizontal {
-	bottom: -6px;
-	left: -14px;
-	width: 16px;
+	right: 0;
+	bottom: 0;
+	width: 8px;
+	height: 0.5px;
+}
+
+.bottomLeftHorizontal {
+	bottom: 0;
+	left: 0;
+	width: 8px;
 	height: 0.5px;
 }
 
 .bottomLeftVertical {
-	right: -6px;
-	bottom: -14px;
+	right: 0;
+	bottom: 0;
 	width: 0.5px;
-	height: 16px;
-}
-
-.bottomLeftHorizontal {
-	right: -14px;
-	bottom: -6px;
-	width: 16px;
-	height: 0.5px;
+	height: 8px;
 }
 </style>
