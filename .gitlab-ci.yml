@@ -32,8 +32,8 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
   
-  only:
-    - main
+#  only:
+#    - main
 
   rules:
     - if: '$SKIP_ALL == "true"'
