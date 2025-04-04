@@ -3,59 +3,46 @@ variables:
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
 
-#include:
-#  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
-#  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
+include:
+  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
+  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
 
 before_script:
   - cd frontend
 
 stages:
-#  - setup
-#  - lint
-#  - build
-  - check
+  - setup
+  - lint
+  - build
   - deploy
 
-# build:
-#   stage: build
-#   image: docker:latest
-#   services:
-#     - docker:dind
-#   variables:
-#     DOCKER_TLS_CERTDIR: ""
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
 
-#   before_script:
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
-#   script:
-#     - cd frontend
-#     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
-#     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
-  
-#  only:
-#    - main
-
-check:
-  stage: check
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   script:
-    - echo $CI_MERGE_REQUEST_IID
-    - echo $CI_MERGE_REQUEST_ID
-    - echo $CI_COMMIT_AUTHOR
-
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - cd frontend
+    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
+  
+  only:
+    - main
 
 deploy:
   stage: deploy
   image: alpine:3.21
-
   script:
     - apk update && apk add --no-cache git
-    - 'git init repo'
-    - 'cd repo'
-    - 'git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git'
+    - git init repo
+    - cd repo
+    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
     - git config core.sparseCheckout true
     - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
@@ -66,8 +53,6 @@ deploy:
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
-    
-  # only:
-  #   - main
