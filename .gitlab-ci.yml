@@ -44,6 +44,9 @@ check:
     - echo $CI_MERGE_REQUEST_ID
     - echo $CI_COMMIT_AUTHOR
 
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
 deploy:
   stage: deploy
   image: alpine:3.21
