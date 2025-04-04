@@ -44,6 +44,7 @@ check:
     - echo $CI_MERGE_REQUEST_ID
     - echo $CI_COMMIT_AUTHOR
     - echo $CI_COMMIT_BRANCH
+    - echo $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -57,20 +58,21 @@ deploy:
     - echo $CI_MERGE_REQUEST_ID
     - echo $CI_COMMIT_AUTHOR
     - echo $CI_COMMIT_BRANCH
+    - echo $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - apk update && apk add --no-cache git
     - 'git init repo'
     - 'cd repo'
     - 'git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git'
     - git config core.sparseCheckout true
     - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
-    - git fetch origin $CI_COMMIT_BRANCH
-    - git checkout $CI_COMMIT_BRANCH
+    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
     - git config user.email "svc-account@planet9.uk"
     - git config user.name "svc-account"
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG" || echo "No changes to commit"
-    - git push origin $CI_COMMIT_BRANCH
+    - git push origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     
