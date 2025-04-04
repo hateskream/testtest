@@ -37,7 +37,7 @@ stages:
 
 deploy:
   stage: deploy
-#  image: alpine/git:v2.47.2
+  image: alpine/3.21
 
   script:
     - 'git init repo'
