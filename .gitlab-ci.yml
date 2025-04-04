@@ -40,7 +40,7 @@ deploy:
 
   script:
     - 'curl -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fimage-tag.yaml/raw?ref=main" -o image-tag.yaml'
-    - 'sed -i "s|tag: .*|tag: $IMAGE_TAG|" image-tag.yaml'
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" deployment.yaml'
     - 'curl -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fimage-tag.yaml" -d "{\"branch\":\"main\",\"content\":\"$(cat image-tag.yaml | sed "s/\"/\\\\\"/g")\",\"commit_message\":\"Update image tag to $IMAGE_TAG\"}"'
   
   variables:
