@@ -58,8 +58,8 @@ deploy:
     - git fetch origin $CI_COMMIT_BRANCH
     - git checkout $CI_COMMIT_BRANCH
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
-    - git config user.email "ci@planet9.uk"
-    - git config user.name "GitLab CI"
+    - git config user.email "svc-account@planet9.uk"
+    - git config user.name "svc-account"
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG" || echo "No changes to commit"
     - git push origin $CI_COMMIT_BRANCH
