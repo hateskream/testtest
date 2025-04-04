@@ -54,7 +54,10 @@ deploy:
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG" || echo "No changes to commit"
     - git push origin $CI_COMMIT_BRANCH
-
+  rules:
+    - if: '$CI_MERGE_REQUEST_IID'  # Только для MR
+      when: on_success
+    - when: never
     
   # only:
   #   - main
