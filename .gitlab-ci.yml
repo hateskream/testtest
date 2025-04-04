@@ -68,13 +68,13 @@ deploy:
     - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
-    - git config user.email "svc-account@planet9.uk"
-    - git config user.name "svc-account"
+    - git config user.email "ci@planet9.uk"
+    - git config user.name "GitLab CI"
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG" || echo "No changes to commit"
     - git push origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
     
   # only:
   #   - main
