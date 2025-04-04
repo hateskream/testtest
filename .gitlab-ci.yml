@@ -1,7 +1,6 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
   IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-  SKIP_ALL: "true"
 
 #include:
 #  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
@@ -13,31 +12,27 @@ before_script:
 stages:
 #  - setup
 #  - lint
-  - build
+#  - build
   - deploy
 
-build:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
+# build:
+#   stage: build
+#   image: docker:latest
+#   services:
+#     - docker:dind
+#   variables:
+#     DOCKER_TLS_CERTDIR: ""
 
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#   before_script:
+#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-  script:
-    - cd frontend
-    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
+#   script:
+#     - cd frontend
+#     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
+#     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
   
 #  only:
 #    - main
-
-  rules:
-    - if: '$SKIP_ALL == "true"'
-    - when: never
 
 deploy:
   stage: deploy
