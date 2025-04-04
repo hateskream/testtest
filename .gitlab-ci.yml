@@ -13,7 +13,7 @@ stages:
   - setup
   - lint
   - build
-#  - deploy
+  - deploy
 
 build:
   stage: build
@@ -34,11 +34,17 @@ build:
   only:
     - main
 
-# deploy:
-#   image: bitnami/kubectl:1.32
-#   script:
-#     - kubectl set image deployment/demo-front demo-front=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -n demo-front
-#     - kubectl rollout restart deployment/demo-front -n demo-front
+deploy:
+  stage: deploy
+  image: curlimages/curl
+
+  script:
+    - curl -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fimage-tag.yaml/raw?ref=main" -o image-tag.yaml
+    - sed -i "s|tag: .*|tag: $IMAGE_TAG|" image-tag.yaml
+    - curl -X PUT -H "PRIVATE-TOKEN: $GITLAB_TOKEN" -H "Content-Type: application/json" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fimage-tag.yaml" -d "{\"branch\":\"main\",\"content\":\"$(cat image-tag.yaml | sed 's/\"/\\\\\"/g')\",\"commit_message\":\"Update image tag to $IMAGE_TAG\"}"
   
-#   only:
-#     - main
+  variables:
+    GITLAB_TOKEN: $GITLAB_TOKEN
+
+  only:
+    - main
