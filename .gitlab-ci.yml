@@ -37,7 +37,7 @@ stages:
 
 deploy:
   stage: deploy
-  image: badouralix/curl-jq:alpine
+  image: badouralix/curl-jq:debian
 
   script:
     - 'curl -f -H "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.planet9.uk/api/v4/projects/$CI_PROJECT_ID/repository/files/k8s%2Fdeployment.yaml/raw?ref=main" -o deployment.yaml'
