@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, type CSSProperties } from 'vue';
+import { computed } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
 
 interface IGridWidthDashboardsProps {
@@ -22,55 +22,53 @@ const layout = computed(() =>
 			w: 1,
 			h: 1,
 			i: String(index),
-			static: true,
+			static: false,
 		};
 	}),
 );
 </script>
 
 <template>
-	<!-- <div :class="classes.gridWrapper"> -->
-	<grid-layout
-		v-model:layout="layout"
-		:col-num="props.colNum"
-		:row-height="props.itemHeight"
-		:is-draggable="false"
-		:is-resizable="false"
-		:use-css-transforms="true"
-		:prevent-collision="false"
-		:margin="[props.gap, props.gap]"
-		:class="classes.gridLayout"
-	>
-		<grid-item
-			v-for="item in layout"
-			:key="item.i"
-			:x="item.x"
-			:y="item.y"
-			:w="item.w"
-			:h="item.h"
-			:i="item.i"
-			:class="classes.gridItem"
-		>
-			<span :class="classes.text" />
-		</grid-item>
-	</grid-layout>
-	<!-- </div> -->
+	<div :class="classes.gridWrapper">
+		<div :class="classes.gridLayout">
+			<grid-layout
+				v-model:layout="layout"
+				:col-num="props.colNum"
+				:row-height="props.itemHeight - props.gap"
+				:is-draggable="true"
+				:is-resizable="true"
+				:use-css-transforms="false"
+				:prevent-collision="false"
+				:margin="[props.gap, props.gap]"
+			>
+				<grid-item
+					v-for="item in layout"
+					:key="item.i"
+					:x="item.x"
+					:y="item.y"
+					:w="item.w"
+					:h="item.h"
+					:i="item.i"
+					:class="classes.gridItem"
+				>
+					<span :class="classes.text">
+						{{ item.i }}
+					</span>
+				</grid-item>
+			</grid-layout>
+		</div>
+	</div>
 </template>
 
 <style module="classes">
 .gridWrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	min-height: 100%;
+	position: relative;
 	overflow: hidden;
 }
 
 .gridLayout {
-	width: 100%;
-	height: 100%;
-	margin: 0;
+	width: calc(100% + 6px);
+	margin: -3px;
 	opacity: 0.1;
 }
 
