@@ -12,6 +12,10 @@ interface IGridWidthDashboardsProps {
 
 const props = defineProps<IGridWidthDashboardsProps>();
 
+const emit = defineEmits<{
+	(e: 'update'): void;
+}>();
+
 const layout = computed(() =>
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => {
 		const x = index % props.colNum;
@@ -40,6 +44,8 @@ const layout = computed(() =>
 				:use-css-transforms="false"
 				:prevent-collision="false"
 				:margin="[props.gap, props.gap]"
+				@layout-updated="emit('update')"
+				@layout-ready="emit('update')"
 			>
 				<grid-item
 					v-for="item in layout"

@@ -9,17 +9,18 @@ import GridWithDashboards from './grid-with-dashboards.vue';
 
 const grid = ref<HTMLDivElement | null>(null);
 
-const { rowsNum, columnsNum, rowHeight, columnWidth } = responsiveGridLayout(grid);
+const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
+	responsiveGridLayout(grid);
 
 const isShowGrid = ref(true);
 </script>
 
 <template>
-	<dev
+	<div
 		ref="grid"
 		:class="classes.root"
 	>
-		<dev
+		<div
 			v-show="isShowGrid"
 			:class="classes.grid"
 		>
@@ -27,19 +28,20 @@ const isShowGrid = ref(true);
 				:col-num="columnsNum"
 				:item-height="rowHeight"
 				:item-width="columnWidth"
-				:row-num="rowsNum"
+				:row-num="rowNumGrid"
 			/>
-		</dev>
-		<dev :class="classes.content">
+		</div>
+		<div :class="classes.content">
 			<grid-with-dashboards
 				:col-num="columnsNum"
 				:item-height="rowHeight"
 				:item-width="columnWidth"
 				:row-num="rowsNum"
 				:gap="GAP"
+				@update="updateColumnsNumGrid"
 			/>
-		</dev>
-	</dev>
+		</div>
+	</div>
 </template>
 
 <style module="classes">

@@ -36,3 +36,15 @@ export function calculateGrid(screenWidth: number, screenHeight: number) {
 		totalHeight: numRows * rowHeight,
 	};
 }
+
+export function calculateRows(screenHeight: number, fixedRowHeight: number) {
+	const numRows = Math.floor(screenHeight / fixedRowHeight);
+
+	const finalRows = Math.max(1, numRows);
+
+	return {
+		rows: finalRows,
+		rowHeight: fixedRowHeight,
+		totalHeight: finalRows * fixedRowHeight,
+	};
+}
