@@ -1,6 +1,7 @@
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
+  POST_IMAGE_TAG: $CI_COMMIT_BRANCH-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
 
 include:
@@ -29,8 +30,8 @@ build:
 
   script:
     - cd frontend
-    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG    
+    - docker build -t $CI_REGISTRY_IMAGE:POST_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:POST_IMAGE_TAG
   
   only:
     - main
@@ -45,8 +46,9 @@ deploy:
     - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
     - git config core.sparseCheckout true
     - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
-    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
     - git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git rebase origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME || (git rebase --abort && echo "Rebase failed, continuing with original branch")
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
     - git config user.email "ci@planet9.uk"
     - git config user.name "GitLab CI"
@@ -56,3 +58,5 @@ deploy:
 
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
+
+    
