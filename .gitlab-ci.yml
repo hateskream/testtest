@@ -36,8 +36,8 @@ build:
 
   script:
     - cd frontend
-    - docker build -t $CI_REGISTRY_IMAGE:POST_IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:POST_IMAGE_TAG
+    - docker build -t $CI_REGISTRY_IMAGE:$POST_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$POST_IMAGE_TAG
   
   only:
     - main
