@@ -1,3 +1,9 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /\[ci skip\]/ || $CI_COMMIT_MESSAGE =~ /\[skip ci\]/'
+      when: never
+    - when: always
+
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
@@ -40,23 +46,25 @@ deploy:
   stage: deploy
   image: alpine:3.21
   script:
-    - apk update && apk add --no-cache git
+    - 'echo "MR source branch: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"'
+    - apk add --no-cache git
     - git init repo
     - cd repo
-    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
-    - git config core.sparseCheckout true
-    - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
-    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
-    - git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-    - git rebase origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME || (git rebase --abort && echo "Rebase failed, continuing with original branch")
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
     - git config user.email "ci@planet9.uk"
     - git config user.name "GitLab CI"
+    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
+
+    - git config core.sparseCheckout true
+    - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
+
+    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
+
     - git add k8s/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
-
-    
