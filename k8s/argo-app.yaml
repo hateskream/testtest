@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://gitlab.planet9.uk/88/i88-frontend.git'
+    repoURL: 'https://gitlab.planet9.uk/devops/k8s-manifests.git'
     targetRevision: main
     path: demo-front
   destination:
