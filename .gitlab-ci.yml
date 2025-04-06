@@ -9,6 +9,7 @@ variables:
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
   POST_IMAGE_TAG: $CI_COMMIT_BRANCH-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
+  MANIFEST_BRANCH_REPO: main
 
 include:
   - local: "/frontend/.gitlab-ci/snippets/setup.yml"
@@ -46,25 +47,24 @@ deploy:
   stage: deploy
   image: alpine:3.21
   script:
-    - 'echo "MR source branch: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"'
     - apk add --no-cache git
     - git init repo
     - cd repo
     - git config user.email "ci@planet9.uk"
     - git config user.name "GitLab CI"
-    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/i88/i88-frontend.git
+    - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/devops/k8s-manifests.git
 
     - git config core.sparseCheckout true
-    - echo "k8s/deployment.yaml" > .git/info/sparse-checkout
+    - echo "demo-front/deployment.yaml" > .git/info/sparse-checkout
 
-    - git fetch origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-    - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git fetch origin $MANIFEST_BRANCH_REPO
+    - git checkout -b $MANIFEST_BRANCH_REPO origin/$MANIFEST_BRANCH_REPO
 
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" k8s/deployment.yaml'
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" demo-front/deployment.yaml'
 
-    - git add k8s/deployment.yaml
+    - git add demo-front/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
-    - git push origin $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - git push origin $MANIFEST_BRANCH_REPO
 
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
