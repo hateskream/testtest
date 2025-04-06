@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://gitlab.planet9.uk/i88/i88-frontend.git'
+    repoURL: 'https://gitlab.planet9.uk/88/i88-frontend.git'
     targetRevision: main
-    path: k8s
+    path: demo-front
   destination:
     server: https://kubernetes.default.svc
     namespace: demo-front
