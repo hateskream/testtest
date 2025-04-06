@@ -12,3 +12,7 @@ install_dependencies:
     paths:
       - frontend/node_modules/
       - frontend/package-lock.json
+  
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "main"'
+      when: always
