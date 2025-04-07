@@ -16,42 +16,67 @@ const isShowGrid = ref(true);
 </script>
 
 <template>
-	<div
-		ref="grid"
-		:class="classes.root"
-	>
+	<div :class="classes.testWrapper">
 		<div
-			v-show="isShowGrid"
-			:class="classes.grid"
+			:class="classes.droppable"
+			draggable="true"
+			unselectable="on"
 		>
-			<grid-components
-				:col-num="columnsNum"
-				:item-height="rowHeight"
-				:item-width="columnWidth"
-				:row-num="rowNumGrid"
-			/>
+			Droppable Element (Drag me!)
 		</div>
-		<div :class="classes.content">
-			<grid-with-dashboards
-				:col-num="columnsNum"
-				:item-height="rowHeight"
-				:item-width="columnWidth"
-				:row-num="rowsNum"
-				:gap="GAP"
-				@update="updateColumnsNumGrid"
-			/>
+		<div
+			ref="grid"
+			:class="classes.root"
+		>
+			<div
+				v-show="isShowGrid"
+				:class="classes.grid"
+			>
+				<grid-components
+					:col-num="columnsNum"
+					:item-height="rowHeight"
+					:item-width="columnWidth"
+					:row-num="rowNumGrid"
+				/>
+			</div>
+			<div :class="classes.content">
+				<grid-with-dashboards
+					:col-num="columnsNum"
+					:item-height="rowHeight"
+					:item-width="columnWidth"
+					:row-num="rowsNum"
+					:gap="GAP"
+					@update="updateColumnsNumGrid"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.root {
+.testWrapper {
 	position: relative;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
 	min-height: 100%;
+}
+
+.droppable {
+	margin-bottom: 20px;
+}
+
+.root {
+	position: relative;
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+
+	/* min-height: 100%; */
 	overflow: hidden;
 }
 

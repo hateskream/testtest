@@ -1,6 +1,5 @@
-<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { computed, ref, watch, type ComponentPublicInstance, type CSSProperties } from 'vue';
+import { computed, ref, type CSSProperties } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
 
 const GAP_IN_DND = 24;
@@ -22,7 +21,7 @@ const emit = defineEmits<{
 
 const isDnd = ref(false);
 
-const layout = ref(
+const layout = computed(() =>
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => {
 		const x = index % props.colNum;
 		const y = Math.floor(index / props.colNum);
@@ -36,8 +35,6 @@ const layout = ref(
 		};
 	}),
 );
-
-const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
 
 const rowHeight = computed(() => props.itemHeight - (isDnd.value ? GAP_IN_DND : props.gap));
 
@@ -55,138 +52,6 @@ const gridLayoutStyles = computed(
 );
 
 const margin = computed(() => (isDnd.value ? [GAP_IN_DND, GAP_IN_DND] : [props.gap, props.gap]));
-
-watch(
-	props,
-	() => {
-		layout.value = createGridInitGrid(props.colNum, props.rowNum);
-	},
-	{ once: true },
-);
-
-function createGridInitGrid(colNum: number, rowNum: number) {
-	return Array.from({ length: colNum * rowNum }, (item, index) => {
-		const x = index % colNum;
-		const y = Math.floor(index / colNum);
-		return {
-			x,
-			y,
-			w: 1,
-			h: 1,
-			i: String(index),
-			static: false,
-		};
-	});
-}
-
-function handleDrag(data: {
-	mouseAt: { x: number; y: number };
-	parentRect: DOMRect;
-	mouseInGrid: boolean;
-	dropId: string;
-	dragItem: any;
-}) {
-	if (!gridLayoutRef.value) {
-		return;
-	}
-
-	const { mouseAt, parentRect, mouseInGrid, dropId, dragItem } = data;
-	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
-		layout.value.push({
-			x: (layout.value.length * 2) % props.colNum,
-			y: layout.value.length + props.rowNum,
-			w: 2,
-			h: 2,
-			i: dropId,
-			static: false,
-		});
-	}
-
-	const index = layout.value.findIndex(item => item.i === dropId);
-	if (index !== -1) {
-		const item = gridLayoutRef.value.getItem(dropId);
-		if (!item) {
-			return;
-		}
-
-		try {
-			item.wrapper.style.display = 'none';
-		} catch (e) {
-			console.error(e);
-		}
-
-		Object.assign(item.state, {
-			top: mouseAt.y - parentRect.top,
-			left: mouseAt.x - parentRect.left,
-		});
-		const newPos = item.calcXY(mouseAt.y - parentRect.top, mouseAt.x - parentRect.left);
-
-		if (mouseInGrid) {
-			gridLayoutRef.value.dragEvent(
-				'dragstart',
-				dropId,
-				newPos.x,
-				newPos.y,
-				dragItem.h,
-				dragItem.w,
-			);
-			dragItem.i = String(index);
-			dragItem.x = layout.value[index].x;
-			dragItem.y = layout.value[index].y;
-		} else {
-			gridLayoutRef.value.dragEvent(
-				'dragend',
-				dropId,
-				newPos.x,
-				newPos.y,
-				dragItem.h,
-				dragItem.w,
-			);
-			layout.value = layout.value.filter(item1 => item1.i !== dropId);
-		}
-	}
-}
-
-function handleDragEnd(data: {
-	mouseAt: { x: number; y: number };
-	parentRect: DOMRect;
-	mouseInGrid: boolean;
-	dragItem: any;
-}) {
-	if (!gridLayoutRef.value) {
-		return;
-	}
-
-	const { mouseInGrid, dragItem } = data;
-	if (mouseInGrid) {
-		alert(`Dropped element props:\n${JSON.stringify(dragItem, ['x', 'y', 'w', 'h'], 2)}`);
-		gridLayoutRef.value.dragEvent(
-			'dragend',
-			'drop',
-			dragItem.x,
-			dragItem.y,
-			dragItem.h,
-			dragItem.w,
-		);
-		layout.value = layout.value.filter(item => item.i !== 'drop');
-		layout.value.push({
-			x: dragItem.x,
-			y: dragItem.y,
-			w: dragItem.w,
-			h: dragItem.h,
-			i: dragItem.i,
-			static: false,
-		});
-		gridLayoutRef.value.dragEvent(
-			'dragend',
-			dragItem.i,
-			dragItem.x,
-			dragItem.y,
-			dragItem.h,
-			dragItem.w,
-		);
-	}
-}
 
 function move() {
 	isDnd.value = true;
@@ -221,7 +86,6 @@ function updated() {
 			:style="gridLayoutStyles"
 		>
 			<grid-layout
-				ref="gridLayoutRef"
 				v-model:layout="layout"
 				:col-num="props.colNum"
 				:row-height="rowHeight"
@@ -232,8 +96,6 @@ function updated() {
 				:margin="margin"
 				@layout-updated="updated"
 				@layout-ready="emit('update')"
-				@drag="handleDrag($event)"
-				@drag-end="handleDragEnd($event)"
 			>
 				<grid-item
 					v-for="item in layout"
@@ -249,7 +111,9 @@ function updated() {
 					@resize="resize"
 					@resized="resized"
 				>
-					<span :class="classes.text">{{ item.i }}</span>
+					<span :class="classes.text">
+						{{ item.i }}
+					</span>
 				</grid-item>
 			</grid-layout>
 		</div>
@@ -267,6 +131,8 @@ function updated() {
 }
 
 .gridLayout {
+	opacity: 0.1;
+
 	/* transition:
 		width 0.3s ease,
 		margin 0.3s ease; */
