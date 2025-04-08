@@ -72,3 +72,4 @@ build:
   
 #  rules:
 #    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
+#
