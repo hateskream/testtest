@@ -23,7 +23,7 @@ defineProps<{
 				:key="item.value"
 			>
 				<div
-					v-if="item.type === 'image'"
+					v-if="['image-string', 'image'].includes(item.type)"
 					:class="classes.tableIcon"
 				>
 					<div :class="classes.imageWrapper">
@@ -57,7 +57,7 @@ defineProps<{
 
 <style module="classes">
 .tertiaryFix {
-	width: 20px;
+	width: 45px;
 }
 
 .imageWrapper {
@@ -108,9 +108,11 @@ defineProps<{
 }
 
 .tbody td {
+	min-width: 100px;
 	height: 50px;
 	padding: 8px 0;
 	font-size: 13px;
+	text-align: right;
 	color: #ffffff;
 }
 </style>

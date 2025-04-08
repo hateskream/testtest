@@ -2,12 +2,14 @@
 import { offset, shift, useFloating, flip } from '@floating-ui/vue';
 import { ref, useTemplateRef } from 'vue';
 
-withDefaults(
+const props = withDefaults(
 	defineProps<{
 		forceHide?: boolean;
+		showInMs?: number;
 	}>(),
 	{
 		forceHide: false,
+		showInMs: 800,
 	},
 );
 
@@ -15,19 +17,31 @@ const reference = useTemplateRef('reference');
 const floating = useTemplateRef('floating');
 
 const { floatingStyles } = useFloating(reference, floating, {
-	placement: 'bottom',
 	strategy: 'absolute',
 	middleware: [offset(6), flip(), shift({ padding: 5 })],
 });
 
 const isVisible = ref(false);
+const timeout = ref<number | null>(null);
 
 function handleMouseover() {
-	isVisible.value = true;
+	if (timeout.value) {
+		return;
+	}
+
+	timeout.value = setTimeout(() => {
+		isVisible.value = true;
+	}, props.showInMs);
 }
 
 function handleMouseleave() {
-	isVisible.value = false;
+	if (timeout.value) {
+		clearTimeout(timeout.value);
+
+		timeout.value = null;
+
+		isVisible.value = false;
+	}
 }
 </script>
 

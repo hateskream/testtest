@@ -68,6 +68,10 @@ function sortRowsByType(args: {
 		case 'date':
 			return new Date(args.left).getTime() - new Date(args.right).getTime();
 
+		case 'string':
+		case 'image-string':
+			return args.left.localeCompare(args.right);
+
 		default:
 			return +args.left - +args.right;
 	}

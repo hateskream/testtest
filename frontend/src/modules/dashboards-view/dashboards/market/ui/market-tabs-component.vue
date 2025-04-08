@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useMarketStore } from '../stores';
 import type { ITableColumnDirection } from '../model';
 
 import TabWrapperComponent from './tab-wrapper-component.vue';
+import TabTimeframeComponent from './tab-timeframe-component.vue';
 
 const marketStore = useMarketStore();
 
@@ -18,7 +19,7 @@ interface ITab {
 	timeframe?: string;
 }
 
-const tabs: ITab[] = [
+const tabs = ref<ITab[]>([
 	{
 		name: 'All',
 		sortTab: 'all',
@@ -52,26 +53,27 @@ const tabs: ITab[] = [
 		sortTab: 'upcoming',
 		direction: 0,
 	},
-];
+]);
+
+function setActiveTabTimeframe(idx: number, timeframe: string) {
+	tabs.value[idx].timeframe = timeframe;
+
+	marketStore.setActiveTabTimeframe(tabs.value[idx]);
+}
 
 const activeTabs = computed(() =>
-	tabs.filter(tab => !tab.columnName || marketStore.showTableColumns.includes(tab.columnName)),
+	tabs.value.filter(
+		tab => !tab.columnName || marketStore.showTableColumns.includes(tab.columnName),
+	),
 );
 </script>
 <template>
 	<div :class="classes.tabs">
 		<tab-wrapper-component
-			v-for="tab in activeTabs"
+			v-for="(tab, idx) in activeTabs"
 			:key="tab.name"
 			:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
-			@click="
-				marketStore.setActiveTabSort({
-					direction: tab.direction,
-					sortTab: tab.sortTab,
-					columnName: tab.columnName,
-					timeframe: tab.timeframe,
-				})
-			"
+			@click.prevent.stop="marketStore.setActiveTabSort(tab)"
 		>
 			<ui-icon
 				v-if="tab.icon"
@@ -80,8 +82,14 @@ const activeTabs = computed(() =>
 				height="20px"
 				:class="classes.iconWrapper"
 			/>
+
 			{{ tab.name }}
-			{{ tab.timeframe }}
+
+			<tab-timeframe-component
+				v-if="tab.timeframe"
+				:model-value="tab.timeframe"
+				@update:model-value="setActiveTabTimeframe(idx, $event)"
+			/>
 		</tab-wrapper-component>
 	</div>
 </template>
