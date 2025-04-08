@@ -5,7 +5,7 @@ workflow:
     # - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     #   variables:
     #     IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH'
       variables:
         IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_IID
 
