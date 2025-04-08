@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { computed, ref, toValue } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
 
 import {
 	ACCEPT_COLUMNS_TYPES_SORT,
@@ -12,10 +11,7 @@ import { compareStrings } from '@/shared/lib';
 import type { IActiveSortColumn, IActiveTabSort, ITableColumn } from '../model';
 
 export const useMarketStore = defineStore('dashboards-market', () => {
-	const activeTableColumns = useLocalStorage(
-		'dashboard-market-active-table-columns',
-		INITIAL_ACTIVE_TABLE_COLUMNS,
-	);
+	const activeTableColumns = ref(INITIAL_ACTIVE_TABLE_COLUMNS);
 
 	const showTableColumns = computed(() =>
 		activeTableColumns.value.map(column => column.columnName),
@@ -31,11 +27,22 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		sortTab: 'all',
 	});
 
+	function setActiveTabTimeframe(args: IActiveTabSort) {
+		activeTabSort.value = args;
+
+		if (args.columnName) {
+			activeSort.value = {
+				columnName: args.columnName,
+				direction: args.direction,
+			};
+		}
+	}
+
 	function setActiveTabSort(args: IActiveTabSort) {
 		if (args.columnName) {
 			let { direction } = args;
 
-			if (activeTabSort.value.columnName === args.columnName) {
+			if (activeTabSort.value.sortTab === args.sortTab) {
 				direction = getNextDirectionSort(activeSort.value.direction);
 			}
 
@@ -96,10 +103,11 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 
 			data.splice(idxActiveTableColumnItem, 1);
 		} else {
-			data.push({
-				...INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem],
+			const item = INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem];
+
+			data.splice(item.position, 0, {
+				...item,
 				isShow: true,
-				position: activeTableColumns.value.length - 1,
 			});
 		}
 
@@ -114,5 +122,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTabSort,
 		setActiveTabSort,
 		showTableColumns,
+		setActiveTabTimeframe,
 	};
 });

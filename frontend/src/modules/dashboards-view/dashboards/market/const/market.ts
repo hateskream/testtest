@@ -8,7 +8,7 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayShortColumnName: 'Symbol',
 		isShow: true,
 		position: 0,
-		type: 'image',
+		type: 'image-string',
 		group: {
 			name: 'symbol',
 		},

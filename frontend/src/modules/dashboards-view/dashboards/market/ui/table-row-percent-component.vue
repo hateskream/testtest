@@ -21,7 +21,7 @@ const percentClasses = computed<string>(() => {
 </script>
 
 <template>
-	<div :class="percentClasses">{{ value }}%</div>
+	<div :class="[percentClasses, classes.percent]">{{ value }}%</div>
 </template>
 
 <style module="classes">
@@ -31,5 +31,11 @@ const percentClasses = computed<string>(() => {
 
 .negative {
 	color: rgb(255 175 106 / 100%);
+}
+
+.percent {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
 }
 </style>

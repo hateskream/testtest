@@ -16,4 +16,5 @@ export enum IconIds {
 	Retry = 'retry',
 	DropdownDown = 'dropdown-down',
 	Tertiary = 'tertiary',
+	Checkbox = 'checkbox',
 }

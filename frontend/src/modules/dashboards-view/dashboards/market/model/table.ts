@@ -1,4 +1,10 @@
-export type ITableRowValueType = 'image' | 'number' | 'percent' | 'date';
+export type ITableRowValueType =
+	| 'image'
+	| 'image-string'
+	| 'string'
+	| 'number'
+	| 'percent'
+	| 'date';
 export type ITableColumnDirection = 0 | 1 | -1;
 
 export interface IActiveSortColumn {

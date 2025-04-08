@@ -13,13 +13,19 @@ const props = defineProps<{
 const iconStyles = computed(() => ({
 	transform: props.sortDirection === -1 ? 'rotate(180deg)' : '',
 }));
+
+const columnStyles = computed(() => ({
+	justifyContent: ['image', 'image-string'].includes(props.column.type)
+		? 'flex-start'
+		: 'flex-end',
+}));
 </script>
 
 <template>
 	<ui-tooltip>
 		<template #default>
 			<div :class="classes.iconWrapper">
-				<span>{{ column.displayShortColumnName }}</span>
+				<span :style="columnStyles">{{ column.displayShortColumnName }}</span>
 
 				<ui-icon
 					v-show="sortDirection !== 0"
@@ -45,6 +51,11 @@ const iconStyles = computed(() => ({
 	gap: 4px;
 	align-items: center;
 	transition: color 0.3s ease-in;
+}
+
+.iconWrapper > span {
+	display: flex;
+	width: 100%;
 }
 
 .icon {

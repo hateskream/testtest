@@ -29,7 +29,7 @@ const formattedValue = computed(() => {
 </script>
 
 <template>
-	<ui-tooltip>
+	<ui-tooltip :show-in-ms="100">
 		<template #default>
 			<div :class="classes.number">
 				<span>{{ formattedValue.value }}</span>
@@ -47,5 +47,7 @@ const formattedValue = computed(() => {
 <style module="classes">
 .number {
 	display: flex;
+	justify-content: flex-end;
+	width: 100%;
 }
 </style>

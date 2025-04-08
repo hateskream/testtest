@@ -9,5 +9,13 @@ const formattedValue = computed(() => new Date(props.value).toLocaleDateString('
 </script>
 
 <template>
-	<div>{{ formattedValue }}</div>
+	<div :class="classes.date">{{ formattedValue }}</div>
 </template>
+
+<style module="classes">
+.date {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+}
+</style>

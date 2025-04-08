@@ -20,7 +20,7 @@ const isTableHeadColumns = ref(false);
 		item-key="position"
 		:chosen-class="classes.dragActive"
 		:class="classes.thead"
-		:delay="200"
+		:delay="150"
 		@update:model-value="
 			marketStore.$patch({
 				activeTableColumns: $event,
@@ -63,8 +63,7 @@ const isTableHeadColumns = ref(false);
 
 .iconWrapperTertiary {
 	position: relative;
-	width: 20px;
-	text-align: right;
+	width: 45px;
 }
 
 .thead {
@@ -83,10 +82,10 @@ const isTableHeadColumns = ref(false);
 }
 
 .thead th {
+	min-width: 100px;
 	padding: 4px 0;
 	font-weight: 440;
 	font-size: 12px;
-	text-align: left;
 	color: var(--text-color-base-100);
 	cursor: pointer;
 	user-select: none;
