@@ -24,7 +24,4 @@
 	font-size: 13px;
 	color: var(--text-color-base-300);
 }
-
-.content {
-}
 </style>
