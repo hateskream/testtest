@@ -1,13 +1,13 @@
-workflow:
-  rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /\[ci skip\]/'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME != null'
-      variables:
-        IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH'
-      variables:
-        IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_IID
+# workflow:
+#   rules:
+#     - if: '$CI_COMMIT_MESSAGE =~ /\[ci skip\]/'
+#       when: never
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+#       variables:
+#         IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
+#     - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+#       variables:
+#         IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_IID
 
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
