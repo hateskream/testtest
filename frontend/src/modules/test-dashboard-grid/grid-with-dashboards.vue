@@ -1,6 +1,13 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-import { computed, ref, watch, type ComponentPublicInstance, type CSSProperties } from 'vue';
+import {
+	computed,
+	ref,
+	useCssModule,
+	watch,
+	type ComponentPublicInstance,
+	type CSSProperties,
+} from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
 
 const GAP_IN_DND = 24;
@@ -20,7 +27,9 @@ const emit = defineEmits<{
 	(e: 'update'): void;
 }>();
 
-const isDnd = ref(false);
+const classes = useCssModule('classes');
+
+const isDnd = ref(true);
 
 const layout = ref(
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => {
@@ -39,22 +48,29 @@ const layout = ref(
 
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
 
-const rowHeight = computed(() => props.itemHeight - (isDnd.value ? GAP_IN_DND : props.gap));
+const rowHeight = computed(() => props.itemHeight - props.gap);
 
 const gridLayoutStyles = computed(
+	(): Partial<CSSProperties> => ({
+		width: `calc(100% + ${props.gap}px)`,
+		margin: `-${props.gap / 2}px`,
+	}),
+);
+
+const gridItemStyles = computed(
 	(): Partial<CSSProperties> =>
 		isDnd.value
 			? {
-					width: `calc(100% + ${GAP_IN_DND_PX})`,
-					margin: `-${GAP_IN_DND / 2}px`,
+					transform: `scale(0.9)`,
 				}
 			: {
-					width: `calc(100% + ${props.gap}px)`,
-					margin: `-${props.gap / 2}px`,
+					transform: `scale(1)`,
 				},
 );
 
-const margin = computed(() => (isDnd.value ? [GAP_IN_DND, GAP_IN_DND] : [props.gap, props.gap]));
+const classListItem = computed(() => ({
+	[classes.isDnd]: isDnd.value,
+}));
 
 watch(
 	props,
@@ -229,7 +245,7 @@ function updated() {
 				:is-resizable="true"
 				:use-css-transforms="false"
 				:prevent-collision="false"
-				:margin="margin"
+				:margin="[props.gap, props.gap]"
 				@layout-updated="updated"
 				@layout-ready="emit('update')"
 				@drag="handleDrag($event)"
@@ -249,7 +265,9 @@ function updated() {
 					@resize="resize"
 					@resized="resized"
 				>
-					<span :class="classes.text">{{ item.i }}</span>
+					<div :class="[classes.text, classListItem]">
+						{{ item.i }}
+					</div>
 				</grid-item>
 			</grid-layout>
 		</div>
@@ -257,6 +275,12 @@ function updated() {
 </template>
 
 <style module="classes">
+:global(.vgl-item--placeholder) {
+	background-color: rgb(0 128 255 / 50%) !important;
+	border: 2px solid #0000ff;
+	transform: scale(0.9);
+}
+
 .gridWrapper {
 	position: relative;
 	display: flex;
@@ -272,6 +296,10 @@ function updated() {
 		margin 0.3s ease; */
 }
 
+.isDnd {
+	transform: scale(0.9);
+}
+
 :global(.vgl-layout) {
 	background-color: #eeeeee;
 	touch-action: none;
@@ -279,7 +307,7 @@ function updated() {
 }
 
 :global(.vgl-item:not(.vgl-item--placeholder)) {
-	background-color: #cccccc;
+	background-color: transparent;
 	user-select: none;
 }
 
@@ -291,22 +319,13 @@ function updated() {
 	opacity: 0.9;
 }
 
-:global(.vgl-item--static) {
-	background-color: #ccccee;
-}
-
 .gridItem {
 	background-color: rgb(200 200 200 / 30%);
 }
 
 .text {
-	position: absolute;
-	inset: 0;
 	width: 100%;
 	height: 100%;
-	margin: auto;
-	font-size: 24px;
-	text-align: center;
-	pointer-events: none;
+	background-color: rgb(200 200 200 / 30%);
 }
 </style>
