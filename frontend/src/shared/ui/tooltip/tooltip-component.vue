@@ -2,16 +2,15 @@
 import { offset, shift, useFloating, flip, autoUpdate } from '@floating-ui/vue';
 import { ref, useTemplateRef } from 'vue';
 
-const props = withDefaults(
-	defineProps<{
-		forceHide?: boolean;
-		showInMs?: number;
-	}>(),
-	{
-		forceHide: false,
-		showInMs: 800,
-	},
-);
+interface IProps {
+	forceHide?: boolean;
+	showInMs?: number;
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+	forceHide: false,
+	showInMs: 800,
+});
 
 const reference = useTemplateRef('reference');
 const floating = useTemplateRef('floating');

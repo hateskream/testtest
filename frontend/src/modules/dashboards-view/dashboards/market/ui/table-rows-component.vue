@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getCurrencyImage } from '@/shared/lib';
 import type { ITableRow } from '../model';
 import { UiImage } from '@/shared/ui/image';
 
@@ -7,27 +6,29 @@ import TableRowNumberComponent from './table-row-number-component.vue';
 import TableRowPercentComponent from './table-row-percent-component.vue';
 import TableRowDateComponent from './table-row-date-component.vue';
 
-defineProps<{
+interface IProps {
 	rows: ITableRow[][];
-}>();
+}
+
+const props = defineProps<IProps>();
 </script>
 
 <template>
 	<tbody :class="classes.tbody">
 		<tr
-			v-for="(items, idx) in rows"
+			v-for="(items, idx) in props.rows"
 			:key="`${idx}-table-row`"
 		>
 			<td
 				v-for="item in items"
-				:key="item.value"
+				:key="item.id"
 			>
 				<div
 					v-if="['image-string', 'image'].includes(item.type)"
 					:class="classes.tableIcon"
 				>
 					<div :class="classes.imageWrapper">
-						<ui-image :src="getCurrencyImage(item.value)" />
+						<ui-image :src="item.srcValue!" />
 					</div>
 
 					<div>{{ item.value }}</div>
@@ -35,7 +36,7 @@ defineProps<{
 
 				<table-row-number-component
 					v-else-if="item.type === 'number'"
-					:is-fiat="true"
+					is-fiat
 					format="pretty-with-key"
 					:value="item.value"
 				/>

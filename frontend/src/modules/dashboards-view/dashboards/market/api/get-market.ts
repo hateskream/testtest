@@ -1,7 +1,7 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import type { IMarket } from '../model';
-import { removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { getCurrencyImage, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 
 const IS_USE_MOCK = true;
 
@@ -15,7 +15,11 @@ export interface IGetMarketResponse {
 	data: IMarket[];
 }
 
-export async function getMarket(args: IGetMarketRequest): Promise<IMarket[]> {
+export interface IMarketDomain extends IMarket {
+	srcValue: string;
+}
+
+export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
@@ -28,11 +32,18 @@ export async function getMarket(args: IGetMarketRequest): Promise<IMarket[]> {
 					query,
 				});
 
-		return response.data;
+		return prepareResponse(response.data);
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
+}
+
+function prepareResponse(data: IMarket[]): IMarketDomain[] {
+	return data.map(item => ({
+		...item,
+		srcValue: getCurrencyImage(item.symbol),
+	}));
 }
 
 export async function getMockData(): Promise<IGetMarketResponse> {
@@ -42,6 +53,7 @@ export async function getMockData(): Promise<IGetMarketResponse> {
 
 	const mockData: IMarket[] = [
 		{
+			id: '1',
 			chg24h: '0',
 			price: '137.4',
 			volume24h: '11723737.43',
@@ -52,6 +64,7 @@ export async function getMockData(): Promise<IGetMarketResponse> {
 			chg7d: '15',
 		},
 		{
+			id: '2',
 			chg24h: '-2.93',
 			price: '635.4',
 			volume24h: '323737.43',
@@ -62,6 +75,7 @@ export async function getMockData(): Promise<IGetMarketResponse> {
 			chg7d: '-42',
 		},
 		{
+			id: '3',
 			chg24h: '0.86',
 			price: '97432.7',
 			volume24h: '32374523437.43',
@@ -72,6 +86,7 @@ export async function getMockData(): Promise<IGetMarketResponse> {
 			chg7d: '49',
 		},
 		{
+			id: '4',
 			chg24h: '2.33',
 			price: '0.24743',
 			volume24h: '13123743437.43',

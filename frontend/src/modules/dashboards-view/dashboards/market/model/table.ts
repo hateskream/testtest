@@ -36,5 +36,7 @@ export type ITableRowValue = string;
 
 export type ITableRow = {
 	value: ITableRowValue;
+	id: string;
+	srcValue: string;
 	type: ITableRowValueType;
 };

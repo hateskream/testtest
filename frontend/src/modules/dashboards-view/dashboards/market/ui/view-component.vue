@@ -3,14 +3,15 @@ import { computed, toValue } from 'vue';
 
 import { compareStrings } from '@/shared/lib';
 import { useMarketStore } from '../stores';
-import type { ITableRow, ITableRowValue, ITableRowValueType, IMarket } from '../model';
+import type { ITableRow, ITableRowValue, ITableRowValueType } from '../model';
+import type { IMarketDomain } from '../api';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import TableRowsComponent from './table-rows-component.vue';
 import TableColumnsComponent from './table-columns-component.vue';
 
 interface IViewComponentProps {
-	markets: IMarket[];
+	markets: IMarketDomain[];
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -25,7 +26,9 @@ const tableRows = computed<ITableRow[][]>(() => {
 		marketStore.activeTableColumns.forEach(column => {
 			tempRow.push({
 				type: column.type,
+				srcValue: row.srcValue,
 				value: row[column.columnName],
+				id: row.id,
 			});
 		});
 
