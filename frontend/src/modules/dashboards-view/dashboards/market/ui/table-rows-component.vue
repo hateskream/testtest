@@ -23,33 +23,35 @@ const props = defineProps<IProps>();
 				v-for="item in items"
 				:key="item.value + item.id"
 			>
-				<div
-					v-if="['image-string', 'image'].includes(item.type)"
-					:class="classes.tableIcon"
-				>
-					<div :class="classes.imageWrapper">
-						<ui-image :src="item.srcValue!" />
+				<div :class="classes.rowColumnWrapper">
+					<div
+						v-if="['image-string', 'image'].includes(item.type)"
+						:class="classes.tableIcon"
+					>
+						<div :class="classes.imageWrapper">
+							<ui-image :src="item.srcValue!" />
+						</div>
+
+						<div>{{ item.value }}</div>
 					</div>
 
-					<div>{{ item.value }}</div>
+					<table-row-number-component
+						v-else-if="item.type === 'number'"
+						is-fiat
+						format="pretty-with-key"
+						:value="item.value"
+					/>
+
+					<table-row-percent-component
+						v-else-if="item.type === 'percent'"
+						:value="item.value"
+					/>
+
+					<table-row-date-component
+						v-else-if="item.type === 'date'"
+						:value="item.value"
+					/>
 				</div>
-
-				<table-row-number-component
-					v-else-if="item.type === 'number'"
-					is-fiat
-					format="pretty-with-key"
-					:value="item.value"
-				/>
-
-				<table-row-percent-component
-					v-else-if="item.type === 'percent'"
-					:value="item.value"
-				/>
-
-				<table-row-date-component
-					v-else-if="item.type === 'date'"
-					:value="item.value"
-				/>
 			</td>
 
 			<td :class="classes.iconTertiary" />
@@ -58,6 +60,17 @@ const props = defineProps<IProps>();
 </template>
 
 <style module="classes">
+.rowColumnWrapper {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	height: 50px;
+	padding: 8px 0;
+	font-size: 13px;
+	text-align: right;
+	color: #ffffff;
+}
+
 .imageWrapper {
 	display: flex;
 	justify-content: center;
@@ -99,21 +112,25 @@ tbody tr:hover {
 	border-radius: 16px;
 }
 
+tbody tr:hover td:first-child .rowColumnWrapper {
+	background-color: var(--border-color-surface-02-effect);
+	border-top-left-radius: 16px;
+	border-bottom-left-radius: 16px;
+}
+
 tbody tr td:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
-	z-index: 1;
 	background-color: var(--bg-color-surface-01);
+}
+
+tbody tr td:first-child .rowColumnWrapper {
+	justify-content: flex-start;
 }
 
 .tbody td {
 	min-width: 100px;
-	height: 50px;
-	padding: 8px 0;
-	font-size: 13px;
-	text-align: right;
-	color: #ffffff;
 }
 
 .iconTertiary {
