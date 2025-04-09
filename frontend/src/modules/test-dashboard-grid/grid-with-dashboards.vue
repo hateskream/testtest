@@ -276,6 +276,7 @@ function updated() {
 			:class="classes.droppable"
 			draggable="true"
 			unselectable="on"
+			effect-allowed="move"
 			@drag="drag"
 			@dragend="dragEnd"
 		>
@@ -301,6 +302,7 @@ function updated() {
 					:margin="[props.gap, props.gap]"
 					@layout-updated="updated"
 					@layout-ready="emit('update')"
+					@dragover.prevent
 				>
 					<grid-item
 						v-for="item in layout"
@@ -341,6 +343,8 @@ function updated() {
 	z-index: -1;
 	background-color: rgb(0 128 255 / 50%) !important;
 	border: 2px solid #0000ff;
+	transform: scale(0.955);
+	transition: scale 0.3s ease;
 }
 
 .gridWrapper {
@@ -359,6 +363,7 @@ function updated() {
 
 .isDnd {
 	transform: scale(0.9);
+	transition: scale 0.3s ease;
 }
 
 :global(.vgl-layout) {
@@ -392,5 +397,6 @@ function updated() {
 	width: 100%;
 	height: 100%;
 	background-color: rgb(200 200 200 / 30%);
+	transition: transform 0.3s ease;
 }
 </style>
