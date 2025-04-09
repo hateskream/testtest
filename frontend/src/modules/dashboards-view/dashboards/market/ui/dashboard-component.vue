@@ -42,7 +42,9 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 
 <style module="classes">
 .root {
-	flex-grow: 1.8;
-	flex-basis: 0;
+	/* flex-grow: 1.8;
+	flex-basis: 0; */
+
+	width: 430px;
 }
 </style>

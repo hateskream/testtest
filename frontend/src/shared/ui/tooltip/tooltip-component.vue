@@ -71,6 +71,7 @@ function handleMouseleave() {
 
 <style module="classes">
 .content {
+	z-index: 100;
 	width: max-content;
 	padding: 4px 10px;
 	font-size: 12px;

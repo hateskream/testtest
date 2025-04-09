@@ -85,24 +85,26 @@ defineProps<{
 
 .tbody {
 	display: block;
-	width: 100%;
+	width: max-content;
+	min-width: 100%;
 	max-height: 450px;
-	overflow-y: auto;
 }
 
 .tbody > tr {
 	display: table;
-	width: 100%;
-	table-layout: fixed;
+	width: max-content;
+	min-width: 100%;
 }
 
-.tbody > tr > td:first-child {
+tbody tr td:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
+	z-index: 1;
+	background-color: var(--bg-color-surface-01);
 }
 
-.tbody > tr:hover {
+tbody tr:hover {
 	background-color: var(--border-color-surface-02-effect);
 	border-radius: 16px;
 }

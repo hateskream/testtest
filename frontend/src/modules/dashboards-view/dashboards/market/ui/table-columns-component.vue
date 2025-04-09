@@ -68,7 +68,8 @@ const isTableHeadColumns = ref(false);
 
 .thead {
 	display: table;
-	width: 100%;
+	width: max-content;
+	min-width: calc(100% - 45px);
 	table-layout: fixed;
 }
 
@@ -91,10 +92,11 @@ const isTableHeadColumns = ref(false);
 	user-select: none;
 }
 
-.thead > th:first-child {
+.thead th:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
+	background-color: var(--bg-color-surface-01);
 }
 
 .dragActive {

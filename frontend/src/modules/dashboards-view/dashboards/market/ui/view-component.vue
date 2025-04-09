@@ -82,19 +82,42 @@ function sortRowsByType(args: {
 	<div :class="classes.tableContainer">
 		<market-tabs-component />
 
-		<table :class="classes.table">
-			<table-columns-component />
-			<table-rows-component :rows="tableRows" />
-		</table>
+		<div :class="classes.tableWrapper">
+			<div :class="classes.scrollContainer">
+				<table :class="classes.table">
+					<table-columns-component />
+					<table-rows-component :rows="tableRows" />
+				</table>
+			</div>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
 .tableContainer {
+	position: relative;
 	padding: 0 16px 18px;
+	overflow: hidden;
+}
+
+.tableWrapper {
+	position: relative;
+	width: 100%;
+	clip-path: inset(0 0 0 0);
+}
+
+.scrollContainer {
+	position: relative;
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 .table {
-	width: 100%;
+	position: relative;
+	z-index: 1;
+	width: max-content;
+	min-width: 100%;
+	border-spacing: 0;
 }
 </style>
