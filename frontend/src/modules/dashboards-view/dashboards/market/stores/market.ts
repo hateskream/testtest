@@ -85,33 +85,35 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 	}
 
 	function toggleShowActiveTableColumns(columnName: string) {
-		const idxActiveTableColumnItem = activeTableColumns.value.findIndex(column =>
-			compareStrings(columnName, column.columnName),
-		);
-
 		const idxAllTableColumnItem = INITIAL_ALL_TABLE_COLUMNS.findIndex(column =>
 			compareStrings(columnName, column.columnName),
 		)!;
 
-		const data = toValue(activeTableColumns.value);
+		const settingsItem = INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem];
 
-		if (idxActiveTableColumnItem > -1) {
-			setActiveTabSort({
-				direction: 0,
-				sortTab: 'all',
-			});
+		if (settingsItem.isToggleable) {
+			const idxActiveTableColumnItem = activeTableColumns.value.findIndex(column =>
+				compareStrings(columnName, column.columnName),
+			);
 
-			data.splice(idxActiveTableColumnItem, 1);
-		} else {
-			const item = INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem];
+			const data = toValue(activeTableColumns.value);
 
-			data.splice(item.position, 0, {
-				...item,
-				isShow: true,
-			});
+			if (idxActiveTableColumnItem > -1) {
+				setActiveTabSort({
+					direction: 0,
+					sortTab: 'all',
+				});
+
+				data.splice(idxActiveTableColumnItem, 1);
+			} else {
+				data.splice(settingsItem.position, 0, {
+					...settingsItem,
+					isShow: true,
+				});
+			}
+
+			activeTableColumns.value = setPositionColumns(data);
 		}
-
-		activeTableColumns.value = setPositionColumns(data);
 	}
 
 	return {

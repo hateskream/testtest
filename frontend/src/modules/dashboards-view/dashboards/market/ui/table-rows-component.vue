@@ -51,16 +51,13 @@ const props = defineProps<IProps>();
 					:value="item.value"
 				/>
 			</td>
-			<td :class="classes.tertiaryFix" />
+
+			<td :class="classes.iconTertiary" />
 		</tr>
 	</tbody>
 </template>
 
 <style module="classes">
-.tertiaryFix {
-	width: 45px;
-}
-
 .imageWrapper {
 	display: flex;
 	justify-content: center;
@@ -97,17 +94,17 @@ const props = defineProps<IProps>();
 	min-width: 100%;
 }
 
+tbody tr:hover {
+	background-color: var(--border-color-surface-02-effect);
+	border-radius: 16px;
+}
+
 tbody tr td:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
 	z-index: 1;
 	background-color: var(--bg-color-surface-01);
-}
-
-tbody tr:hover {
-	background-color: var(--border-color-surface-02-effect);
-	border-radius: 16px;
 }
 
 .tbody td {
@@ -117,5 +114,10 @@ tbody tr:hover {
 	font-size: 13px;
 	text-align: right;
 	color: #ffffff;
+}
+
+.iconTertiary {
+	width: 40px;
+	min-width: 40px !important;
 }
 </style>

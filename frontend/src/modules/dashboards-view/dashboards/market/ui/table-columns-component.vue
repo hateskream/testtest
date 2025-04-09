@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import draggableComponent from 'vuedraggable';
-import { ref } from 'vue';
 
 import { useMarketStore } from '../stores';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
-import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 
 const marketStore = useMarketStore();
 
-const isTableHeadColumns = ref(false);
+const ignoreDragClass = 'ignoreDrag';
+
+function getSortDirection(columnName: string) {
+	return marketStore.activeSort.columnName === columnName ? marketStore.activeSort.direction : 0;
+}
 </script>
 
 <template>
@@ -18,6 +19,7 @@ const isTableHeadColumns = ref(false);
 		:model-value="marketStore.activeTableColumns"
 		tag="thead"
 		item-key="position"
+		:filter="`.${ignoreDragClass}`"
 		:chosen-class="classes.dragActive"
 		:class="classes.thead"
 		:delay="150"
@@ -28,31 +30,17 @@ const isTableHeadColumns = ref(false);
 		"
 	>
 		<template #item="{ element: column }">
-			<th>
+			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
 				<table-column-with-sort-component
 					:column="column"
-					:sort-direction="
-						marketStore.activeSort.columnName === column.columnName
-							? marketStore.activeSort.direction
-							: 0
-					"
+					:sort-direction="getSortDirection(column.columnName)"
 					@click="marketStore.toggleActiveSort(column)"
 				/>
 			</th>
 		</template>
 
 		<template #footer>
-			<th :class="classes.iconWrapperTertiary">
-				<ui-icon
-					:id="IconIds.Tertiary"
-					:class="classes.iconTertiary"
-					width="20"
-					height="20"
-					@click="isTableHeadColumns = !isTableHeadColumns"
-				/>
-
-				<table-columns-settings-component v-show="isTableHeadColumns" />
-			</th>
+			<th :class="classes.iconTertiary" />
 		</template>
 	</draggable-component>
 </template>
@@ -61,25 +49,11 @@ const isTableHeadColumns = ref(false);
 	padding: 0 16px 18px;
 }
 
-.iconWrapperTertiary {
-	position: relative;
-	width: 45px;
-}
-
 .thead {
 	display: table;
 	width: max-content;
 	min-width: calc(100% - 45px);
 	table-layout: fixed;
-}
-
-.iconTertiary {
-	color: var(--icon-color-base-300);
-	transition: color 0.3s ease-in;
-}
-
-.iconTertiary:hover {
-	color: var(--icon-color-base-300-effect);
 }
 
 .thead th {
@@ -92,10 +66,16 @@ const isTableHeadColumns = ref(false);
 	user-select: none;
 }
 
+.iconTertiary {
+	width: 20px;
+	min-width: 40px !important;
+}
+
 .thead th:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
+	z-index: 20;
 	background-color: var(--bg-color-surface-01);
 }
 

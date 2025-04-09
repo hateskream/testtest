@@ -46,8 +46,6 @@ const formattedValue = computed(() => {
 
 <style module="classes">
 .number {
-	display: flex;
-	justify-content: flex-end;
 	width: 100%;
 }
 </style>

@@ -24,6 +24,8 @@ export interface ITableColumn {
 	isShow: boolean;
 	displayColumnName: string;
 	displayShortColumnName: string;
+	isToggleable: boolean;
+	isDraggable: boolean;
 	group: {
 		order?: number;
 		name: string;

@@ -9,6 +9,7 @@ import type { IMarketDomain } from '../api';
 import MarketTabsComponent from './market-tabs-component.vue';
 import TableRowsComponent from './table-rows-component.vue';
 import TableColumnsComponent from './table-columns-component.vue';
+import TableMetricsComponent from './table-metrics-component.vue';
 
 interface IViewComponentProps {
 	markets: IMarketDomain[];
@@ -92,6 +93,7 @@ function sortRowsByType(args: {
 					<table-rows-component :rows="tableRows" />
 				</table>
 			</div>
+			<table-metrics-component />
 		</div>
 	</div>
 </template>
@@ -100,13 +102,11 @@ function sortRowsByType(args: {
 .tableContainer {
 	position: relative;
 	padding: 0 16px 18px;
-	overflow: hidden;
 }
 
 .tableWrapper {
 	position: relative;
 	width: 100%;
-	clip-path: inset(0 0 0 0);
 }
 
 .scrollContainer {
@@ -114,6 +114,7 @@ function sortRowsByType(args: {
 	max-width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
+	clip-path: inset(0 0 0 0);
 }
 
 .table {

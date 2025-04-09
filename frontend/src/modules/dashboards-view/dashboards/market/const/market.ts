@@ -6,6 +6,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		columnName: 'symbol',
 		displayColumnName: 'Symbol',
 		displayShortColumnName: 'Symbol',
+		isToggleable: false,
+		isDraggable: false,
 		isShow: true,
 		position: 0,
 		type: 'image-string',
@@ -21,7 +23,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 			name: 'price',
 		},
 		isShow: true,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 1,
 		type: 'number',
 	},
@@ -30,7 +33,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Change 24h%',
 		displayShortColumnName: 'Chg 24h%',
 		isShow: true,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 2,
 		type: 'percent',
 		group: {
@@ -43,7 +47,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Change 1h%',
 		displayShortColumnName: 'Chg 1h%',
 		isShow: false,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 3,
 		type: 'percent',
 		group: {
@@ -56,7 +61,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Change 7d%',
 		displayShortColumnName: 'Chg 7d%',
 		isShow: false,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 4,
 		type: 'percent',
 		group: {
@@ -68,7 +74,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Volume 24h',
 		displayShortColumnName: 'Vol 24h',
 		isShow: true,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 5,
 		type: 'number',
 		group: {
@@ -80,7 +87,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Market cap 24h',
 		displayShortColumnName: 'MCap 24h',
 		isShow: true,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 6,
 		type: 'number',
 		group: {
@@ -92,7 +100,8 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 		displayColumnName: 'Listing Date',
 		displayShortColumnName: 'Listing Date',
 		isShow: true,
-
+		isToggleable: true,
+		isDraggable: true,
 		position: 7,
 		type: 'date',
 		group: {
