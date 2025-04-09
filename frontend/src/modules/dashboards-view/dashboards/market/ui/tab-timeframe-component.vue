@@ -3,9 +3,11 @@ import { ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
-defineProps<{
+interface IProps {
 	modelValue: string;
-}>();
+}
+
+defineProps<IProps>();
 
 const emits = defineEmits<{
 	(e: 'update:modelValue', data: string): void;

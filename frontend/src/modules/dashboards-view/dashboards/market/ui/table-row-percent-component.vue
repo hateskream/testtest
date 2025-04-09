@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-const props = defineProps<{
+interface IProps {
 	value: string;
-}>();
+}
+
+const props = defineProps<IProps>();
 
 const classes = useCssModule('classes');
 

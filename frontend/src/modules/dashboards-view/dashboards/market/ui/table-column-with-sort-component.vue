@@ -5,10 +5,12 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { ITableColumn, ITableColumnDirection } from '../model';
 import { UiTooltip } from '@/shared/ui/tooltip';
 
-const props = defineProps<{
+interface IProps {
 	column: ITableColumn;
 	sortDirection: ITableColumnDirection;
-}>();
+}
+
+const props = defineProps<IProps>();
 
 const iconStyles = computed(() => ({
 	transform: props.sortDirection === -1 ? 'rotate(180deg)' : '',

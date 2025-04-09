@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const props = defineProps<{
+interface IProps {
 	value: string;
-}>();
+}
+
+const props = defineProps<IProps>();
 
 const formattedValue = computed(() => new Date(props.value).toLocaleDateString('ru-RU'));
 </script>
