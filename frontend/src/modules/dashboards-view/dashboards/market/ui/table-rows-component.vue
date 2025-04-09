@@ -17,11 +17,11 @@ const props = defineProps<IProps>();
 	<tbody :class="classes.tbody">
 		<tr
 			v-for="(items, idx) in props.rows"
-			:key="`${idx}-table-row`"
+			:key="`${idx}-table-tr`"
 		>
 			<td
 				v-for="item in items"
-				:key="item.id"
+				:key="item.value + item.id"
 			>
 				<div
 					v-if="['image-string', 'image'].includes(item.type)"
