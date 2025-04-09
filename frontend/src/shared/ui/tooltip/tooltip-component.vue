@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { offset, shift, useFloating, flip } from '@floating-ui/vue';
+import { offset, shift, useFloating, flip, autoUpdate } from '@floating-ui/vue';
 import { ref, useTemplateRef } from 'vue';
 
 const props = withDefaults(
@@ -17,8 +17,10 @@ const reference = useTemplateRef('reference');
 const floating = useTemplateRef('floating');
 
 const { floatingStyles } = useFloating(reference, floating, {
-	strategy: 'absolute',
+	strategy: 'fixed',
+	placement: 'bottom',
 	middleware: [offset(6), flip(), shift({ padding: 5 })],
+	whileElementsMounted: autoUpdate,
 });
 
 const isVisible = ref(false);
@@ -46,7 +48,7 @@ function handleMouseleave() {
 </script>
 
 <template>
-	<div :class="classes.container">
+	<div>
 		<div
 			ref="reference"
 			@mouseover="handleMouseover"
@@ -54,26 +56,22 @@ function handleMouseleave() {
 		>
 			<slot name="default" />
 		</div>
-		<div ref="floating">
-			<transition name="fade">
-				<div
-					v-show="isVisible && !forceHide"
-					:style="floatingStyles"
-					:class="classes.content"
-				>
-					<slot name="content" />
-				</div>
-			</transition>
-		</div>
+		<transition name="fade">
+			<div
+				v-show="isVisible && !forceHide"
+				ref="floating"
+				:style="floatingStyles"
+				:class="classes.content"
+			>
+				<slot name="content" />
+			</div>
+		</transition>
 	</div>
 </template>
 
 <style module="classes">
-.container {
-	position: relative;
-}
-
 .content {
+	z-index: 100;
 	width: max-content;
 	padding: 4px 10px;
 	font-size: 12px;
