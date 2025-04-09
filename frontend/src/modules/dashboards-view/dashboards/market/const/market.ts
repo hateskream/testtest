@@ -114,4 +114,10 @@ export const INITIAL_ACTIVE_TABLE_COLUMNS: ITableColumn[] = setPositionColumns(
 	INITIAL_ALL_TABLE_COLUMNS.filter(item => item.isShow),
 );
 
-export const ACCEPT_COLUMNS_TYPES_SORT: ITableRowValueType[] = ['number', 'percent', 'date'];
+export const ACCEPT_COLUMNS_TYPES_SORT: ITableRowValueType[] = [
+	'image-string',
+	'string',
+	'number',
+	'percent',
+	'date',
+];

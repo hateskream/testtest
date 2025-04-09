@@ -17,17 +17,21 @@ const iconStyles = computed(() => ({
 }));
 
 const columnStyles = computed(() => ({
-	justifyContent: ['image', 'image-string'].includes(props.column.type)
-		? 'flex-start'
-		: 'flex-end',
+	justifyContent:
+		['image', 'image-string'].includes(props.column.type) || props.column.position === 0
+			? 'flex-start'
+			: 'flex-end',
 }));
 </script>
 
 <template>
 	<ui-tooltip>
 		<template #default>
-			<div :class="classes.iconWrapper">
-				<span :style="columnStyles">{{ column.displayShortColumnName }}</span>
+			<div
+				:class="classes.iconWrapper"
+				:style="columnStyles"
+			>
+				<span>{{ column.displayShortColumnName }}</span>
 
 				<ui-icon
 					v-show="sortDirection !== 0"
@@ -50,14 +54,14 @@ const columnStyles = computed(() => ({
 <style module="classes">
 .iconWrapper {
 	display: flex;
-	gap: 4px;
 	align-items: center;
+	width: 100%;
 	transition: color 0.3s ease-in;
+	gap: 4px;
 }
 
 .iconWrapper > span {
 	display: flex;
-	width: 100%;
 }
 
 .icon {

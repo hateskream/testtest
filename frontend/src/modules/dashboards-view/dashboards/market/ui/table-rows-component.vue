@@ -29,7 +29,7 @@ const props = defineProps<IProps>();
 						:class="classes.tableIcon"
 					>
 						<div :class="classes.imageWrapper">
-							<ui-image :src="item.srcValue!" />
+							<ui-image :src="item.srcValue" />
 						</div>
 
 						<div>{{ item.value }}</div>
