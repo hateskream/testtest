@@ -13,17 +13,14 @@ const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNu
 	responsiveGridLayout(grid);
 
 const isShowGrid = ref(true);
+
+function updateIsShowGridState(newState: boolean) {
+	isShowGrid.value = newState;
+}
 </script>
 
 <template>
 	<div :class="classes.testWrapper">
-		<div
-			:class="classes.droppable"
-			draggable="true"
-			unselectable="on"
-		>
-			Droppable Element (Drag me!)
-		</div>
 		<div
 			ref="grid"
 			:class="classes.root"
@@ -39,6 +36,7 @@ const isShowGrid = ref(true);
 					:row-num="rowNumGrid"
 				/>
 			</div>
+
 			<div :class="classes.content">
 				<grid-with-dashboards
 					:col-num="columnsNum"
@@ -47,6 +45,7 @@ const isShowGrid = ref(true);
 					:row-num="rowsNum"
 					:gap="GAP"
 					@update="updateColumnsNumGrid"
+					@update-is-show-grid-state="updateIsShowGridState"
 				/>
 			</div>
 		</div>
@@ -60,7 +59,8 @@ const isShowGrid = ref(true);
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
+
+	/* width: 100%; */
 	min-height: 100%;
 }
 
@@ -77,7 +77,8 @@ const isShowGrid = ref(true);
 	width: 100%;
 
 	/* min-height: 100%; */
-	overflow: hidden;
+
+	/* overflow: hidden; */
 }
 
 .content {
@@ -87,7 +88,8 @@ const isShowGrid = ref(true);
 
 .grid {
 	position: absolute;
-	z-index: -1;
+
+	/* z-index: -1; */
 	width: 100%;
 	height: 100%;
 }

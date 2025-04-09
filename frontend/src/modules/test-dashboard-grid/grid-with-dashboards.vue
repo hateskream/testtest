@@ -2,16 +2,15 @@
 <script setup lang="ts">
 import {
 	computed,
+	onBeforeUnmount,
+	onMounted,
 	ref,
 	useCssModule,
 	watch,
-	type ComponentPublicInstance,
 	type CSSProperties,
 } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
-
-const GAP_IN_DND = 24;
-const GAP_IN_DND_PX = `${GAP_IN_DND}px`;
+import { throttle } from '@vexip-ui/utils';
 
 interface IGridWidthDashboardsProps {
 	itemWidth: number;
@@ -25,6 +24,7 @@ const props = defineProps<IGridWidthDashboardsProps>();
 
 const emit = defineEmits<{
 	(e: 'update'): void;
+	(e: 'update-is-show-grid-state', value: boolean): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -46,6 +46,7 @@ const layout = ref(
 	}),
 );
 
+const wrapper = ref<HTMLElement>();
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
 
 const rowHeight = computed(() => props.itemHeight - props.gap);
@@ -57,20 +58,27 @@ const gridLayoutStyles = computed(
 	}),
 );
 
-const gridItemStyles = computed(
-	(): Partial<CSSProperties> =>
-		isDnd.value
-			? {
-					transform: `scale(0.9)`,
-				}
-			: {
-					transform: `scale(1)`,
-				},
-);
-
 const classListItem = computed(() => ({
 	[classes.isDnd]: isDnd.value,
 }));
+
+onMounted(() => {
+	document.addEventListener('dragover', syncMousePosition);
+});
+
+onBeforeUnmount(() => {
+	document.removeEventListener('dragover', syncMousePosition);
+});
+
+const mouseAt = { x: -1, y: -1 };
+
+function syncMousePosition(event: MouseEvent) {
+	mouseAt.x = event.clientX;
+	mouseAt.y = event.clientY;
+}
+
+const dropId = 'drop';
+const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
 watch(
 	props,
@@ -80,62 +88,61 @@ watch(
 	{ once: true },
 );
 
-function createGridInitGrid(colNum: number, rowNum: number) {
-	return Array.from({ length: colNum * rowNum }, (item, index) => {
-		const x = index % colNum;
-		const y = Math.floor(index / colNum);
-		return {
-			x,
-			y,
-			w: 1,
-			h: 1,
-			i: String(index),
-			static: false,
-		};
-	});
-}
+const drag = throttle(() => {
+	isDnd.value = true;
+	emit('update-is-show-grid-state', true);
 
-function handleDrag(data: {
-	mouseAt: { x: number; y: number };
-	parentRect: DOMRect;
-	mouseInGrid: boolean;
-	dropId: string;
-	dragItem: any;
-}) {
-	if (!gridLayoutRef.value) {
+	const parentRect = wrapper.value?.getBoundingClientRect();
+
+	if (!parentRect || !gridLayoutRef.value) {
 		return;
 	}
 
-	const { mouseAt, parentRect, mouseInGrid, dropId, dragItem } = data;
+	const mouseInGrid =
+		mouseAt.x > parentRect.left &&
+		mouseAt.x < parentRect.right &&
+		mouseAt.y > parentRect.top &&
+		mouseAt.y < parentRect.bottom;
+
 	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
+		// Центрируем начальную позицию заполнителя
+		const centerX = Math.floor(props.colNum / 2) - Math.floor(dragItem.w / 2);
+		const centerY = Math.floor(props.rowNum / 2) - Math.floor(dragItem.h / 2);
 		layout.value.push({
-			x: (layout.value.length * 2) % props.colNum,
-			y: layout.value.length + props.rowNum,
-			w: 2,
-			h: 2,
+			x: Math.max(0, Math.min(centerX, props.colNum - dragItem.w)), // Ограничиваем по ширине сетки
+			y: Math.max(0, Math.min(centerY, props.rowNum - dragItem.h)), // Ограничиваем по высоте сетки
+			w: dragItem.w,
+			h: dragItem.h,
 			i: dropId,
 			static: false,
 		});
 	}
 
 	const index = layout.value.findIndex(item => item.i === dropId);
+
 	if (index !== -1) {
 		const item = gridLayoutRef.value.getItem(dropId);
+
 		if (!item) {
 			return;
 		}
 
 		try {
 			item.wrapper.style.display = 'none';
-		} catch (e) {
-			console.error(e);
-		}
+		} catch (e) {}
 
+		// Корректируем позицию с учетом центра элемента
+		const offsetX = (dragItem.w * (props.itemWidth - props.gap)) / 2;
+		const offsetY = (dragItem.h * rowHeight.value) / 2;
 		Object.assign(item.state, {
-			top: mouseAt.y - parentRect.top,
-			left: mouseAt.x - parentRect.left,
+			top: mouseAt.y - parentRect.top - offsetY,
+			left: mouseAt.x - parentRect.left - offsetX,
 		});
-		const newPos = item.calcXY(mouseAt.y - parentRect.top, mouseAt.x - parentRect.left);
+
+		const newPos = item.calcXY(
+			mouseAt.y - parentRect.top - offsetY,
+			mouseAt.x - parentRect.left - offsetX,
+		);
 
 		if (mouseInGrid) {
 			gridLayoutRef.value.dragEvent(
@@ -158,127 +165,182 @@ function handleDrag(data: {
 				dragItem.h,
 				dragItem.w,
 			);
-			layout.value = layout.value.filter(item1 => item1.i !== dropId);
+			layout.value = layout.value.filter(el => el.i !== dropId);
 		}
 	}
+});
+
+function createGridInitGrid(colNum: number, rowNum: number) {
+	return Array.from({ length: colNum * rowNum }, (item, index) => {
+		const x = index % colNum;
+		const y = Math.floor(index / colNum);
+		return {
+			x,
+			y,
+			w: 1,
+			h: 1,
+			i: String(index),
+			static: false,
+		};
+	});
 }
 
-function handleDragEnd(data: {
-	mouseAt: { x: number; y: number };
-	parentRect: DOMRect;
-	mouseInGrid: boolean;
-	dragItem: any;
-}) {
-	if (!gridLayoutRef.value) {
+function dragEnd() {
+	isDnd.value = false;
+	emit('update-is-show-grid-state', false);
+
+	const parentRect = wrapper.value?.getBoundingClientRect();
+
+	if (!parentRect || !gridLayoutRef.value) {
 		return;
 	}
 
-	const { mouseInGrid, dragItem } = data;
+	const mouseInGrid =
+		mouseAt.x > parentRect.left &&
+		mouseAt.x < parentRect.right &&
+		mouseAt.y > parentRect.top &&
+		mouseAt.y < parentRect.bottom;
+
 	if (mouseInGrid) {
-		alert(`Dropped element props:\n${JSON.stringify(dragItem, ['x', 'y', 'w', 'h'], 2)}`);
 		gridLayoutRef.value.dragEvent(
 			'dragend',
-			'drop',
+			dropId,
 			dragItem.x,
 			dragItem.y,
 			dragItem.h,
 			dragItem.w,
 		);
-		layout.value = layout.value.filter(item => item.i !== 'drop');
-		layout.value.push({
-			x: dragItem.x,
-			y: dragItem.y,
-			w: dragItem.w,
-			h: dragItem.h,
-			i: dragItem.i,
-			static: false,
-		});
-		gridLayoutRef.value.dragEvent(
-			'dragend',
-			dragItem.i,
-			dragItem.x,
-			dragItem.y,
-			dragItem.h,
-			dragItem.w,
-		);
+		layout.value = layout.value.filter(item => item.i !== dropId);
+	} else {
+		return;
 	}
+
+	layout.value.push({
+		x: dragItem.x,
+		y: dragItem.y,
+		w: dragItem.w,
+		h: dragItem.h,
+		i: dragItem.i,
+		static: false,
+	});
+	gridLayoutRef.value.dragEvent(
+		'dragend',
+		dragItem.i,
+		dragItem.x,
+		dragItem.y,
+		dragItem.h,
+		dragItem.w,
+	);
+
+	const item = gridLayoutRef.value.getItem(dropId);
+
+	if (!item) {
+		return;
+	}
+
+	try {
+		item.wrapper.style.display = '';
+	} catch (e) {}
 }
 
 function move() {
 	isDnd.value = true;
-	console.log('move');
+	emit('update-is-show-grid-state', true);
 }
 
 function moved() {
 	isDnd.value = false;
-	console.log('moved');
+	emit('update-is-show-grid-state', false);
 }
 
 function resize() {
 	isDnd.value = true;
-	console.log('resize');
+	emit('update-is-show-grid-state', true);
 }
 
 function resized() {
 	isDnd.value = false;
-	console.log('resized');
+	emit('update-is-show-grid-state', false);
 }
 
 function updated() {
 	isDnd.value = false;
+	emit('update-is-show-grid-state', false);
 	emit('update');
 }
 </script>
 
 <template>
-	<div :class="classes.gridWrapper">
-		<div
-			:class="classes.gridLayout"
-			:style="gridLayoutStyles"
+	<div>
+		<!-- <div
+			:class="classes.droppable"
+			draggable="true"
+			unselectable="on"
+			@drag="drag"
+			@dragend="dragEnd"
 		>
-			<grid-layout
-				ref="gridLayoutRef"
-				v-model:layout="layout"
-				:col-num="props.colNum"
-				:row-height="rowHeight"
-				:is-draggable="true"
-				:is-resizable="true"
-				:use-css-transforms="false"
-				:prevent-collision="false"
-				:margin="[props.gap, props.gap]"
-				@layout-updated="updated"
-				@layout-ready="emit('update')"
-				@drag="handleDrag($event)"
-				@drag-end="handleDragEnd($event)"
+			Droppable Element (Drag me!)
+		</div> -->
+		<div
+			ref="wrapper"
+			:class="classes.gridWrapper"
+		>
+			<div
+				:class="classes.gridLayout"
+				:style="gridLayoutStyles"
 			>
-				<grid-item
-					v-for="item in layout"
-					:key="item.i"
-					:x="item.x"
-					:y="item.y"
-					:w="item.w"
-					:h="item.h"
-					:i="item.i"
-					:class="classes.gridItem"
-					@move="move"
-					@moved="moved"
-					@resize="resize"
-					@resized="resized"
+				<grid-layout
+					ref="gridLayoutRef"
+					v-model:layout="layout"
+					:col-num="props.colNum"
+					:row-height="rowHeight"
+					:is-draggable="true"
+					:is-resizable="true"
+					:use-css-transforms="false"
+					:prevent-collision="false"
+					:margin="[props.gap, props.gap]"
+					@layout-updated="updated"
+					@layout-ready="emit('update')"
 				>
-					<div :class="[classes.text, classListItem]">
-						{{ item.i }}
-					</div>
-				</grid-item>
-			</grid-layout>
+					<grid-item
+						v-for="item in layout"
+						:key="item.i"
+						:x="item.x"
+						:y="item.y"
+						:w="item.w"
+						:h="item.h"
+						:i="item.i"
+						:class="classes.gridItem"
+						@move="move"
+						@moved="moved"
+						@resize="resize"
+						@resized="resized"
+					>
+						<div :class="[classes.text, classListItem]">
+							{{ item.i }}
+						</div>
+					</grid-item>
+				</grid-layout>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
+.droppable {
+	width: 150px;
+	margin: 10px 0;
+	padding: 10px;
+	text-align: center;
+	background-color: #ffdddd;
+	border: 1px solid #000000;
+}
+
 :global(.vgl-item--placeholder) {
+	position: relative;
+	z-index: -1;
 	background-color: rgb(0 128 255 / 50%) !important;
 	border: 2px solid #0000ff;
-	transform: scale(0.9);
 }
 
 .gridWrapper {
@@ -287,7 +349,6 @@ function updated() {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	overflow: hidden;
 }
 
 .gridLayout {
@@ -301,7 +362,6 @@ function updated() {
 }
 
 :global(.vgl-layout) {
-	background-color: #eeeeee;
 	touch-action: none;
 	transition: none;
 }
@@ -312,6 +372,9 @@ function updated() {
 }
 
 :global(.vgl-item) {
+	position: relative;
+
+	/* z-index: -1; */
 	transition: 0.1s ease-in !important;
 }
 
@@ -324,6 +387,8 @@ function updated() {
 }
 
 .text {
+	position: relative;
+	z-index: 10000;
 	width: 100%;
 	height: 100%;
 	background-color: rgb(200 200 200 / 30%);
