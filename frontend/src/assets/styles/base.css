@@ -50,3 +50,7 @@ body {
 	background-color: var(--bg-color-base-300);
 	border-radius: 20px;
 }
+
+::-webkit-scrollbar-corner {
+	background-color: inherit;
+}
