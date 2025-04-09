@@ -272,7 +272,7 @@ function updated() {
 
 <template>
 	<div>
-		<!-- <div
+		<div
 			:class="classes.droppable"
 			draggable="true"
 			unselectable="on"
@@ -280,7 +280,7 @@ function updated() {
 			@dragend="dragEnd"
 		>
 			Droppable Element (Drag me!)
-		</div> -->
+		</div>
 		<div
 			ref="wrapper"
 			:class="classes.gridWrapper"

@@ -12,10 +12,10 @@ const grid = ref<HTMLDivElement | null>(null);
 const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
 	responsiveGridLayout(grid);
 
-const isShowGrid = ref(true);
+const isShowGrid = ref(false);
 
 function updateIsShowGridState(newState: boolean) {
-	isShowGrid.value = newState;
+	// isShowGrid.value = newState;
 }
 </script>
 
