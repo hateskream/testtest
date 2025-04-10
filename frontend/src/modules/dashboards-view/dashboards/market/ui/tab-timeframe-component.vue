@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
@@ -33,6 +34,12 @@ const timeframes = [
 ];
 
 const isVisible = ref(false);
+
+const timeframeRef = useTemplateRef('timeframe');
+
+onClickOutside(timeframeRef, () => {
+	isVisible.value = false;
+});
 </script>
 
 <template>
@@ -46,6 +53,7 @@ const isVisible = ref(false);
 
 		<div
 			v-if="isVisible"
+			ref="timeframe"
 			:class="classes.container"
 		>
 			<div :class="classes.title">Timeframe</div>
