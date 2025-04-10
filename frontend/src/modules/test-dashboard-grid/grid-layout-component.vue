@@ -8,7 +8,6 @@ const props = defineProps<{
 	colNum: number;
 	rowHeight: number;
 	gap: number;
-	// gridLayoutRef: any;
 }>();
 
 const emit = defineEmits<{
@@ -16,6 +15,8 @@ const emit = defineEmits<{
 	(e: 'update:modelValue', value: Layout): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
+	(e: 'dropover'): void;
+	(e: 'drop'): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -29,13 +30,6 @@ const gridLayoutStyles = computed(() => ({
 }));
 
 const classListItem = computed(() => ({ [classes.isDnd]: props.isDnd }));
-
-watch(
-	() => props.modelValue,
-	value => {
-		console.log('props.modelValue', value);
-	},
-);
 
 watch(
 	wrapperRef,
@@ -77,6 +71,23 @@ function resize() {
 function resized() {
 	// emit('update-is-show-grid-state', false);
 }
+
+function handleDragOver(e: DragEvent) {
+	// Предотвращаем стандартное поведение браузера
+	e.preventDefault();
+
+	// Проверяем, нужно ли добавить временный элемент
+	// if (!props.modelValue) {
+	// 	emit('dropover');
+	// }
+}
+
+function handleDrop(e: DragEvent) {
+	// Предотвращаем стандартное поведение браузера
+	// e.preventDefault();
+	// Удаляем временный элемент после завершения перетаскивания
+	// emit('drop');
+}
 </script>
 
 <template>
@@ -88,8 +99,6 @@ function resized() {
 			:class="classes.gridLayout"
 			:style="gridLayoutStyles"
 		>
-			<!-- 				@layout-updated="emit('update:modelValue', $event)"
- -->
 			<grid-layout
 				ref="gridLayoutRef"
 				:layout="props.modelValue"
@@ -100,8 +109,13 @@ function resized() {
 				:use-css-transforms="false"
 				:prevent-collision="false"
 				:margin="[gap, gap]"
-				@dragover.prevent
+				@dragover="handleDragOver"
+				@drop="handleDrop"
 			>
+				<!-- 				@dragover.prevent
+												@dragover="handleDragOver"
+
+ -->
 				<grid-item
 					v-for="item in props.modelValue"
 					:key="item.i"

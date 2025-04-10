@@ -13,7 +13,7 @@ const grid = ref<HTMLDivElement | null>(null);
 const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
 	responsiveGridLayout(grid);
 
-const isShowGrid = ref(false);
+const isEditState = ref(false);
 
 function updateIsShowGridState(newState: boolean) {
 	// isShowGrid.value = newState;
@@ -27,7 +27,7 @@ function updateIsShowGridState(newState: boolean) {
 			:class="classes.root"
 		>
 			<div
-				v-show="isShowGrid"
+				v-show="isEditState"
 				:class="classes.grid"
 			>
 				<grid-components
@@ -49,6 +49,7 @@ function updateIsShowGridState(newState: boolean) {
 					@update-is-show-grid-state="updateIsShowGridState"
 				/> -->
 				<parent-component
+					v-model="isEditState"
 					:col-num="columnsNum"
 					:item-height="rowHeight"
 					:item-width="columnWidth"
