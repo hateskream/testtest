@@ -12,6 +12,7 @@ interface IGridWidthDashboardsProps {
 	colNum: number;
 	rowNum: number;
 	gap: number;
+	mouseAt: { x: number; y: number };
 }
 
 const props = defineProps<IGridWidthDashboardsProps>();
@@ -20,7 +21,7 @@ const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
 }>();
 
-const isDnd = ref(false);
+const isDnd = ref(true);
 const layout = ref<Layout>(
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => ({
 		x: index % props.colNum,
@@ -36,7 +37,7 @@ const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
 
 const rowHeight = computed(() => props.itemHeight - props.gap);
-const mouseAt = { x: -1, y: -1 };
+// const mouseAt = { x: -1, y: -1 };
 const dropId = 'drop';
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
@@ -48,13 +49,13 @@ watch(
 	{ once: true },
 );
 
-onMounted(() => {
-	document.addEventListener('dragover', syncMousePosition);
-});
+// onMounted(() => {
+// 	document.addEventListener('dragover', syncMousePosition);
+// });
 
-onBeforeUnmount(() => {
-	document.removeEventListener('dragover', syncMousePosition);
-});
+// onBeforeUnmount(() => {
+// 	document.removeEventListener('dragover', syncMousePosition);
+// });
 
 function createGridInitGrid(colNum: number, rowNum: number) {
 	return Array.from({ length: colNum * rowNum }, (item, index) => ({
@@ -68,7 +69,7 @@ function createGridInitGrid(colNum: number, rowNum: number) {
 }
 
 function updateIsShowGridState(value: boolean) {
-	// isDnd.value = value;
+	isDnd.value = value;
 	emit('update-is-show-grid-state', value);
 }
 
@@ -80,10 +81,10 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 	gridLayoutRef.value = gridLayout;
 }
 
-function syncMousePosition(event: MouseEvent) {
-	mouseAt.x = event.clientX;
-	mouseAt.y = event.clientY;
-}
+// function syncMousePosition(event: MouseEvent) {
+// 	mouseAt.x = event.clientX;
+// 	mouseAt.y = event.clientY;
+// }
 
 const drag = throttle(() => {
 	isDnd.value = true;
@@ -96,10 +97,10 @@ const drag = throttle(() => {
 	}
 
 	const mouseInGrid =
-		mouseAt.x > parentRect.left &&
-		mouseAt.x < parentRect.right &&
-		mouseAt.y > parentRect.top &&
-		mouseAt.y < parentRect.bottom;
+		props.mouseAt.x > parentRect.left &&
+		props.mouseAt.x < parentRect.right &&
+		props.mouseAt.y > parentRect.top &&
+		props.mouseAt.y < parentRect.bottom;
 
 	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
 		// Центрируем начальную позицию заполнителя
@@ -126,19 +127,21 @@ const drag = throttle(() => {
 
 		try {
 			item.wrapper.style.display = 'none';
-		} catch (e) {}
+		} catch (e) {
+			console.error(e);
+		}
 
 		// Корректируем позицию с учетом центра элемента
 		const offsetX = (dragItem.w * (props.itemWidth - props.gap)) / 2;
 		const offsetY = (dragItem.h * rowHeight.value) / 2;
 		Object.assign(item.state, {
-			top: mouseAt.y - parentRect.top - offsetY,
-			left: mouseAt.x - parentRect.left - offsetX,
+			top: props.mouseAt.y - parentRect.top - offsetY,
+			left: props.mouseAt.x - parentRect.left - offsetX,
 		});
 
 		const newPos = item.calcXY(
-			mouseAt.y - parentRect.top - offsetY,
-			mouseAt.x - parentRect.left - offsetX,
+			props.mouseAt.y - parentRect.top - offsetY,
+			props.mouseAt.x - parentRect.left - offsetX,
 		);
 
 		if (mouseInGrid) {
@@ -178,10 +181,10 @@ function dragEnd() {
 	}
 
 	const mouseInGrid =
-		mouseAt.x > parentRect.left &&
-		mouseAt.x < parentRect.right &&
-		mouseAt.y > parentRect.top &&
-		mouseAt.y < parentRect.bottom;
+		props.mouseAt.x > parentRect.left &&
+		props.mouseAt.x < parentRect.right &&
+		props.mouseAt.y > parentRect.top &&
+		props.mouseAt.y < parentRect.bottom;
 
 	if (mouseInGrid) {
 		gridLayoutRef.value.dragEvent(
@@ -205,14 +208,14 @@ function dragEnd() {
 		i: dragItem.i,
 		static: false,
 	});
-	// gridLayoutRef.value.dragEvent(
-	// 	'dragend',
-	// 	dragItem.i,
-	// 	dragItem.x,
-	// 	dragItem.y,
-	// 	dragItem.h,
-	// 	dragItem.w,
-	// );
+	gridLayoutRef.value.dragEvent(
+		'dragend',
+		dragItem.i,
+		dragItem.x,
+		dragItem.y,
+		dragItem.h,
+		dragItem.w,
+	);
 
 	const item = gridLayoutRef.value.getItem(dropId);
 
@@ -222,27 +225,20 @@ function dragEnd() {
 
 	try {
 		item.wrapper.style.display = '';
-	} catch (e) {}
+	} catch (e) {
+		console.error(e);
+	}
 }
 </script>
 
 <template>
 	<div>
-		{{ isDnd }} ndn
-		<!-- <draggable-element
+		<draggable-element
 			@drag="drag"
 			@drag-end="dragEnd"
-		/> -->
-		<div
-			draggable="true"
-			unselectable="on"
-			effect-allowed="move"
-			@drag="drag"
-			@dragend="dragEnd"
-		>
-			Droppable Element (Drag me!)
-		</div>
+		/>
 		<grid-layout-component
+			ref="wrapper"
 			v-model="layout"
 			:is-dnd="isDnd"
 			:col-num="props.colNum"

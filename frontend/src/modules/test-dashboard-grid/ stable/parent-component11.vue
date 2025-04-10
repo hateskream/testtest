@@ -20,7 +20,7 @@ const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
 }>();
 
-const isDnd = ref(false);
+const isDnd = ref(true);
 const layout = ref<Layout>(
 	Array.from({ length: props.colNum * props.rowNum }, (item, index) => ({
 		x: index % props.colNum,
@@ -68,7 +68,7 @@ function createGridInitGrid(colNum: number, rowNum: number) {
 }
 
 function updateIsShowGridState(value: boolean) {
-	// isDnd.value = value;
+	isDnd.value = value;
 	emit('update-is-show-grid-state', value);
 }
 
@@ -126,7 +126,9 @@ const drag = throttle(() => {
 
 		try {
 			item.wrapper.style.display = 'none';
-		} catch (e) {}
+		} catch (e) {
+			console.error(e);
+		}
 
 		// Корректируем позицию с учетом центра элемента
 		const offsetX = (dragItem.w * (props.itemWidth - props.gap)) / 2;
@@ -205,14 +207,14 @@ function dragEnd() {
 		i: dragItem.i,
 		static: false,
 	});
-	// gridLayoutRef.value.dragEvent(
-	// 	'dragend',
-	// 	dragItem.i,
-	// 	dragItem.x,
-	// 	dragItem.y,
-	// 	dragItem.h,
-	// 	dragItem.w,
-	// );
+	gridLayoutRef.value.dragEvent(
+		'dragend',
+		dragItem.i,
+		dragItem.x,
+		dragItem.y,
+		dragItem.h,
+		dragItem.w,
+	);
 
 	const item = gridLayoutRef.value.getItem(dropId);
 
@@ -222,27 +224,20 @@ function dragEnd() {
 
 	try {
 		item.wrapper.style.display = '';
-	} catch (e) {}
+	} catch (e) {
+		console.error(e);
+	}
 }
 </script>
 
 <template>
 	<div>
-		{{ isDnd }} ndn
-		<!-- <draggable-element
+		<draggable-element
 			@drag="drag"
 			@drag-end="dragEnd"
-		/> -->
-		<div
-			draggable="true"
-			unselectable="on"
-			effect-allowed="move"
-			@drag="drag"
-			@dragend="dragEnd"
-		>
-			Droppable Element (Drag me!)
-		</div>
+		/>
 		<grid-layout-component
+			ref="wrapper"
 			v-model="layout"
 			:is-dnd="isDnd"
 			:col-num="props.colNum"

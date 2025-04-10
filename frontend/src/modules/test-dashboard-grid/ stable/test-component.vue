@@ -5,8 +5,7 @@ import { responsiveGridLayout } from './composables';
 import { GAP } from './constants';
 
 import GridComponents from './grid-components.vue';
-import ParentComponent from './parent-component.vue';
-// import GridWithDashboards from './grid-with-dashboards.vue';
+import ParentComponent from './parent-component11.vue';
 
 const grid = ref<HTMLDivElement | null>(null);
 
@@ -39,15 +38,6 @@ function updateIsShowGridState(newState: boolean) {
 			</div>
 
 			<div :class="classes.content">
-				<!-- <grid-with-dashboards
-					:col-num="columnsNum"
-					:item-height="rowHeight"
-					:item-width="columnWidth"
-					:row-num="rowsNum"
-					:gap="GAP"
-					@update="updateColumnsNumGrid"
-					@update-is-show-grid-state="updateIsShowGridState"
-				/> -->
 				<parent-component
 					:col-num="columnsNum"
 					:item-height="rowHeight"
