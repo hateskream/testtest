@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, useCssModule, ref, watch } from 'vue';
+import { computed, useCssModule, ref, watch } from 'vue';
 import { GridLayout, GridItem, type Layout } from 'grid-layout-plus';
 
 const props = defineProps<{
@@ -57,36 +57,19 @@ watch(
 );
 
 function move() {
-	// emit('update-is-show-grid-state', true);
+	emit('update-is-show-grid-state', true);
 }
 
 function moved() {
-	// emit('update-is-show-grid-state', false);
+	emit('update-is-show-grid-state', false);
 }
 
 function resize() {
-	// emit('update-is-show-grid-state', true);
+	emit('update-is-show-grid-state', true);
 }
 
 function resized() {
-	// emit('update-is-show-grid-state', false);
-}
-
-function handleDragOver(e: DragEvent) {
-	// Предотвращаем стандартное поведение браузера
-	e.preventDefault();
-
-	// Проверяем, нужно ли добавить временный элемент
-	// if (!props.modelValue) {
-	// 	emit('dropover');
-	// }
-}
-
-function handleDrop(e: DragEvent) {
-	// Предотвращаем стандартное поведение браузера
-	// e.preventDefault();
-	// Удаляем временный элемент после завершения перетаскивания
-	// emit('drop');
+	emit('update-is-show-grid-state', false);
 }
 </script>
 
@@ -94,6 +77,7 @@ function handleDrop(e: DragEvent) {
 	<div
 		ref="wrapperRef"
 		:class="classes.gridWrapper"
+		@dragover.prevent
 	>
 		<div
 			:class="classes.gridLayout"
@@ -106,16 +90,9 @@ function handleDrop(e: DragEvent) {
 				:row-height="rowHeight"
 				:is-draggable="true"
 				:is-resizable="true"
-				:use-css-transforms="false"
 				:prevent-collision="false"
 				:margin="[gap, gap]"
-				@dragover="handleDragOver"
-				@drop="handleDrop"
 			>
-				<!-- 				@dragover.prevent
-												@dragover="handleDragOver"
-
- -->
 				<grid-item
 					v-for="item in props.modelValue"
 					:key="item.i"
@@ -163,22 +140,18 @@ function handleDrop(e: DragEvent) {
 	user-select: none;
 }
 
-:global(.vgl-item) {
-	position: relative;
-	transition: 0.1s ease-in !important;
-}
-
-:global(.vgl-item--resizing) {
+:global(.vgl-item__resizer) {
+	right: 10px !important;
+	bottom: 5px !important;
 	opacity: 0.9;
 }
 
 :global(.vgl-item--placeholder) {
-	position: relative;
-	z-index: -1;
 	background-color: rgb(0 128 255 / 50%) !important;
 	border: 2px solid #0000ff;
-	transform: scale(0.955);
-	transition: scale 0.3s ease;
+
+	/* transform: scale(0.9); */
+	transition: transform 0.3s ease;
 }
 
 .gridItem {
@@ -186,11 +159,9 @@ function handleDrop(e: DragEvent) {
 }
 
 .text {
-	position: relative;
-	z-index: 10000;
 	width: 100%;
 	height: 100%;
-	background-color: rgb(200 200 200 / 30%);
+	background-color: rgb(200 200 200 / 50%);
 	transition: transform 0.3s ease;
 }
 </style>

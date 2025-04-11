@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onBeforeUnmount, onMounted, nextTick } from 'vue';
 import type { GridLayout, Layout } from 'grid-layout-plus';
-import { throttle } from '@vexip-ui/utils';
+import { throttle, debounce } from '@vexip-ui/utils';
 
 import DraggableElement from './draggable-element.vue';
 import GridLayoutComponent from './grid-layout-component.vue';
@@ -182,143 +182,64 @@ const drag = throttle(() => {
 	}
 });
 
-function dragEnd() {
-	setTimeout(() => {
-		const parentRect = wrapperRef.value?.getBoundingClientRect();
+const dragEnd = debounce(() => {
+	console.log('dragEnd');
+	emit('update:modelValue', false);
 
-		if (!parentRect || !gridLayoutRef.value) {
-			layout.value = layout.value.filter(item => item.i !== dropId);
+	const parentRect = wrapperRef.value?.getBoundingClientRect();
+
+	if (!parentRect || !gridLayoutRef.value) {
+		layout.value = layout.value.filter(item => item.i !== dropId);
+		emit('update:modelValue', false);
+		return;
+	}
+
+	const mouseInGrid =
+		mouseAt.x > parentRect.left &&
+		mouseAt.x < parentRect.right &&
+		mouseAt.y > parentRect.top &&
+		mouseAt.y < parentRect.bottom;
+
+	if (mouseInGrid) {
+		const item = gridLayoutRef.value.getItem(dropId);
+
+		try {
+			item.wrapper.style.display = '';
+		} finally {
+			emit('update:modelValue', false);
+		}
+
+		if (!item) {
+			console.warn('Item not found in grid:', dropId);
 			return;
 		}
 
-		const mouseInGrid =
-			mouseAt.x > parentRect.left &&
-			mouseAt.x < parentRect.right &&
-			mouseAt.y > parentRect.top &&
-			mouseAt.y < parentRect.bottom;
+		const gridX = Math.floor((mouseAt.x - parentRect.left) / (props.itemWidth - props.gap));
+		const gridY = Math.floor((mouseAt.y - parentRect.top) / rowHeight.value);
+		const finalX = Math.max(0, Math.min(gridX, props.colNum - dragItem.w));
+		const finalY = Math.max(0, Math.min(gridY, props.rowNum - dragItem.h));
 
-		if (mouseInGrid) {
-			const item = gridLayoutRef.value.getItem(dropId);
+		layout.value = [...layout.value.filter(el => el.i !== dropId)];
 
-			try {
-				item.wrapper.style.display = '';
-			} finally {
-				emit('update:modelValue', false);
-			}
+		const newItemId = String(Date.now());
+		layout.value.push({
+			x: finalX,
+			y: finalY,
+			w: dragItem.w,
+			h: dragItem.h,
+			i: newItemId,
+			static: false,
+		});
 
-			if (!item) {
-				console.warn('Item not found in grid:', dropId);
-				return;
-			}
-
-			// Вычисляем финальную позицию
-			const gridX = Math.floor((mouseAt.x - parentRect.left) / (props.itemWidth - props.gap));
-			const gridY = Math.floor((mouseAt.y - parentRect.top) / rowHeight.value);
-			const finalX = Math.max(0, Math.min(gridX, props.colNum - dragItem.w));
-			const finalY = Math.max(0, Math.min(gridY, props.rowNum - dragItem.h));
-
-			// Удаляем временный элемент
-			layout.value = [...layout.value.filter(el => el.i !== dropId)];
-
-			// Добавляем новый элемент с финальной позицией
-			const newItemId = String(Date.now());
-			layout.value.push({
-				x: finalX,
-				y: finalY,
-				w: dragItem.w,
-				h: dragItem.h,
-				i: newItemId,
-				static: false,
-			});
-
-			gridLayoutRef.value.dragEvent(
-				'dragend',
-				newItemId,
-				finalX,
-				finalY,
-				dragItem.h,
-				dragItem.w,
-			);
-		} else {
-			layout.value = [...layout.value.filter(item => item.i !== dropId)];
-		}
-	}, 100);
-
-	// setTimeout(() => {
-	// 	layout.value = layout.value.filter(item => item.i !== dropId);
-	// 	emit('update:modelValue', false);
-	// }, 100);
-}
-
-// function dragEnd() {
-// 	console.log('dragEnd');
-// 	emit('update:modelValue', false);
-
-// 	const parentRect = wrapperRef.value?.getBoundingClientRect();
-
-// 	if (!parentRect || !gridLayoutRef.value) {
-// 		return;
-// 	}
-
-// 	const mouseInGrid =
-// 		mouseAt.x > parentRect.left &&
-// 		mouseAt.x < parentRect.right &&
-// 		mouseAt.y > parentRect.top &&
-// 		mouseAt.y < parentRect.bottom;
-
-// 	if (mouseInGrid) {
-// 		gridLayoutRef.value.dragEvent(
-// 			'dragend',
-// 			dropId,
-// 			dragItem.x,
-// 			dragItem.y,
-// 			dragItem.h,
-// 			dragItem.w,
-// 		);
-// 		layout.value = layout.value.filter(item => item.i !== dropId);
-// 	} else {
-// 		return;
-// 	}
-
-// 	layout.value.push({
-// 		x: dragItem.x,
-// 		y: dragItem.y,
-// 		w: dragItem.w,
-// 		h: dragItem.h,
-// 		i: dragItem.i,
-// 		static: false,
-// 	});
-// 	gridLayoutRef.value.dragEvent(
-// 		'dragend',
-// 		dragItem.i,
-// 		dragItem.x,
-// 		dragItem.y,
-// 		dragItem.h,
-// 		dragItem.w,
-// 	);
-
-// 	const item = gridLayoutRef.value.getItem(dropId);
-
-// 	if (!item) {
-// 		return;
-// 	}
-
-// 	try {
-// 		item.wrapper.style.display = '';
-// 	} catch (e) {
-// 		console.error(e);
-// 	}
-
-// 	setTimeout(() => {
-// 		layout.value = layout.value.filter(el => el.i !== dropId);
-// 		emit('update:modelValue', false);
-// 	}, 100);
-// }
+		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
+	} else {
+		layout.value = [...layout.value.filter(item => item.i !== dropId)];
+	}
+});
 </script>
 
 <template>
 	<div>
-		<!-- @drag-end="dragEnd" -->
 		<draggable-element
 			@drag="drag"
 			@drag-end="dragEnd"
