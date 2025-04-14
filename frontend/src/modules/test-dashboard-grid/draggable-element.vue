@@ -8,8 +8,6 @@ const emit = defineEmits<{
 
 const customGhost = ref<HTMLElement | null>(null);
 const isDragging = ref(false);
-const touchStartX = ref(0);
-const touchStartY = ref(0);
 
 const onDragStart = (event: DragEvent) => {
 	if (event.dataTransfer && customGhost.value) {
@@ -21,12 +19,9 @@ const onDragStart = (event: DragEvent) => {
 const onTouchStart = (event: TouchEvent) => {
 	isDragging.value = true;
 
-	const touch = event.touches[0];
-	touchStartX.value = touch.clientX;
-	touchStartY.value = touch.clientY;
-
 	if (customGhost.value) {
-		customGhost.value.style.display = 'block';
+		const touch = event.touches[0];
+
 		customGhost.value.style.left = `${touch.clientX - 100}px`;
 		customGhost.value.style.top = `${touch.clientY - 100}px`;
 	}
@@ -35,8 +30,9 @@ const onTouchStart = (event: TouchEvent) => {
 const onTouchMove = (event: TouchEvent) => {
 	if (isDragging.value && customGhost.value) {
 		const touch = event.touches[0];
-		customGhost.value.style.left = `${touch.clientX}px`;
-		customGhost.value.style.top = `${touch.clientY}px`;
+
+		customGhost.value.style.left = `${touch.clientX - 95}px`;
+		customGhost.value.style.top = `${touch.clientY - 90}px`;
 		emit('drag');
 	}
 };
@@ -44,6 +40,10 @@ const onTouchMove = (event: TouchEvent) => {
 const onDragEnd = () => {
 	if (isDragging.value) {
 		isDragging.value = false;
+
+		if (customGhost.value) {
+			customGhost.value.style.left = `9999px`;
+		}
 		emit('drag-end');
 	}
 };
@@ -86,7 +86,7 @@ const onDragEnd = () => {
 
 .custom-ghost {
 	position: absolute;
-	left: -99999px;
+	left: -9999px;
 	width: 50px;
 	height: 50px;
 	line-height: 50px;

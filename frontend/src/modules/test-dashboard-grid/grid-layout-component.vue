@@ -71,6 +71,10 @@ function resize() {
 function resized() {
 	emit('update-is-show-grid-state', false);
 }
+
+function updated() {
+	emit('update-is-show-grid-state', false);
+}
 </script>
 
 <template>
@@ -92,6 +96,8 @@ function resized() {
 				:is-resizable="true"
 				:prevent-collision="false"
 				:margin="[gap, gap]"
+				:use-css-transforms="false"
+				@layout-updated="updated"
 			>
 				<grid-item
 					v-for="item in props.modelValue"
@@ -149,8 +155,6 @@ function resized() {
 :global(.vgl-item--placeholder) {
 	background-color: rgb(0 128 255 / 50%) !important;
 	border: 2px solid #0000ff;
-
-	/* transform: scale(0.9); */
 	transition: transform 0.3s ease;
 }
 
