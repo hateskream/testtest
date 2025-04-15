@@ -5,6 +5,7 @@ import { compareStrings } from '@/shared/lib';
 import { useMarketStore } from '../stores';
 import type { ITableRow, ITableRowValue, ITableRowValueType } from '../model';
 import type { IMarketDomain } from '../api';
+import { ScrollContainer } from '../../base';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import TableRowsComponent from './table-rows-component.vue';
@@ -87,13 +88,18 @@ function sortRowsByType(args: {
 		<market-tabs-component />
 
 		<div :class="classes.tableWrapper">
-			<div :class="classes.scrollContainer">
-				<table :class="classes.table">
-					<table-columns-component />
-					<table-rows-component :rows="tableRows" />
-				</table>
-			</div>
-			<table-metrics-component />
+			<scroll-container>
+				<template #content>
+					<table :class="classes.table">
+						<table-columns-component />
+						<table-rows-component :rows="tableRows" />
+					</table>
+				</template>
+
+				<template #footer>
+					<table-metrics-component />
+				</template>
+			</scroll-container>
 		</div>
 	</div>
 </template>
@@ -102,19 +108,6 @@ function sortRowsByType(args: {
 .tableContainer {
 	position: relative;
 	padding: 0 16px 18px;
-}
-
-.tableWrapper {
-	position: relative;
-	width: 100%;
-}
-
-.scrollContainer {
-	position: relative;
-	max-width: 100%;
-	overflow-x: auto;
-	-webkit-overflow-scrolling: touch;
-	clip-path: inset(0 0 0 0);
 }
 
 .table {

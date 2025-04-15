@@ -35,9 +35,9 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			:id="IconIds.Drag"
 			width="4px"
 			height="12px"
-			:class="classes.icon"
+			:class="[classes.icon, 'price-drag']"
 		/>
-		<div :class="classes.content">
+		<div :class="[classes.content, 'price-no-drag']">
 			<transition v-bind="transitionClasses">
 				<div
 					v-if="isShowLogo"
