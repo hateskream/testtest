@@ -3,17 +3,16 @@ import { computed, useCssModule, ref, watch } from 'vue';
 import { GridLayout, GridItem, type Layout } from 'grid-layout-plus';
 
 const props = defineProps<{
-	leyout: Layout;
+	modelValue: Layout;
 	isDnd: boolean;
 	colNum: number;
 	rowHeight: number;
 	gap: number;
-	colWidth: number;
-	rowNum: number;
 }>();
 
 const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
+	(e: 'update:modelValue', value: Layout): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
 	(e: 'dropover'): void;
@@ -88,22 +87,20 @@ function updated() {
 			:class="classes.gridLayout"
 			:style="gridLayoutStyles"
 		>
-			<!--
- -->
 			<grid-layout
 				ref="gridLayoutRef"
-				:layout="props.leyout"
+				:layout="props.modelValue"
 				:col-num="colNum"
 				:row-height="rowHeight"
 				:is-draggable="true"
 				:is-resizable="true"
-				:prevent-collision="true"
+				:prevent-collision="false"
 				:margin="[gap, gap]"
 				:use-css-transforms="false"
 				@layout-updated="updated"
 			>
 				<grid-item
-					v-for="item in props.leyout"
+					v-for="item in props.modelValue"
 					:key="item.i"
 					:x="item.x"
 					:y="item.y"
