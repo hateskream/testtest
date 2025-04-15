@@ -10,23 +10,14 @@ import GridComponents from './grid-components.vue';
 import DraggableElement from './draggable-element.vue';
 import GridLayoutComponent from './grid-layout-component.vue';
 
-const grid = ref<HTMLDivElement | null>(null);
+const gridRef = ref<HTMLDivElement | null>(null);
 
 const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
-	responsiveGridLayout(grid);
+	responsiveGridLayout(gridRef);
 
 const isEditState = ref(false);
 
-const layout = ref<Layout>(
-	Array.from({ length: columnsNum.value * rowsNum.value }, (item, index) => ({
-		x: index % columnsNum.value,
-		y: Math.floor(index / columnsNum.value),
-		w: 1,
-		h: 1,
-		i: String(index),
-		static: false,
-	})),
-);
+const layout = ref<Layout>([]);
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
@@ -36,13 +27,23 @@ const mouseAt = { x: -1, y: -1 };
 const dropId = 'drop';
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
-watch(
-	[columnsNum, rowsNum],
-	() => {
-		layout.value = createGridInitGrid(columnsNum.value, rowsNum.value);
-	},
-	{ immediate: true },
-);
+const dashboardsInit: IWidget[] = [
+	{ x: 0, y: 0, w: 2, h: 2, i: 0, static: false },
+	{ x: 2, y: 0, w: 1, h: 1, i: 1, static: false },
+	{ x: 3, y: 0, w: 1, h: 1, i: 2, static: false },
+	{ x: 2, y: 2, w: 2, h: 1, i: 3, static: false },
+	{ x: 4, y: 0, w: 2, h: 4, i: 4, static: false },
+	{ x: 6, y: 0, w: 2, h: 2, i: 5, static: false },
+	// { x: 0, y: 5, w: 2, h: 2, i: 66, static: false },
+	// { x: 2, y: 5, w: 2, h: 2, i: 77, static: false },
+
+	{ x: 6, y: 2, w: 2, h: 2, i: 6, static: false },
+	{ x: 0, y: 3, w: 4, h: 2, i: 7, static: false },
+];
+
+watch([columnsNum, rowsNum], () => {
+	layout.value = createGrid(columnsNum.value);
+});
 
 function syncMousePosition(event: MouseEvent | TouchEvent) {
 	if ('touches' in event) {
@@ -67,178 +68,235 @@ onBeforeUnmount(() => {
 	document.removeEventListener('touchmove', syncMousePosition);
 });
 
-function createGridInitGrid(colNum: number, rowNum: number) {
-	return Array.from({ length: colNum * rowNum }, (item, index) => ({
-		x: index % colNum,
-		y: Math.floor(index / colNum),
-		w: 1,
-		h: 1,
-		i: String(index),
-		static: false,
-	}));
+interface IWidget {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
+	i: number;
+	static: boolean;
 }
 
-function updateIsShowGridState(value: boolean) {
-	isEditState.value = value;
+function createGrid(colNum: number): IWidget[] {
+	const dashboards: IWidget[] = [...dashboardsInit];
+
+	function isWidgetOffScreen(widget: IWidget) {
+		return widget.x + widget.w > colNum;
+	}
+
+	function isDashboardsGridWiderThanScreen() {
+		const isOffScreen = dashboards.some(isWidgetOffScreen);
+		const isDashboardsWiderThanScreen = dashboards.some(item => item.w > colNum);
+
+		return isOffScreen || isDashboardsWiderThanScreen;
+	}
+
+	function findXInLastRow(widgetWidth: number, dashboards1: IWidget[]): { x: number; y: number } {
+		const lastRow = Math.max(...dashboards1.map(widget => widget.y + widget.h));
+
+		const widgetsInLastRow = dashboards1.filter(
+			widget => widget.y + widget.h > lastRow - 1 && widget.y <= lastRow,
+		);
+
+		// eslint-disable-next-line no-plusplus
+		for (let x = 0; x <= colNum - widgetWidth; x++) {
+			const isPositionFree = !widgetsInLastRow.some(
+				widget => x < widget.x + widget.w && x + widgetWidth > widget.x,
+			);
+
+			if (isPositionFree) {
+				return { x, y: lastRow - 1 };
+			}
+		}
+
+		return { x: 0, y: lastRow };
+	}
+
+	function adjustDashboards() {
+		let updatedDashboards = [...dashboards];
+
+		while (isDashboardsGridWiderThanScreen()) {
+			const widget = updatedDashboards.find(isWidgetOffScreen);
+
+			if (!widget) {
+				break;
+			}
+
+			const widgetIndex = updatedDashboards.findIndex(item => item.i === widget.i);
+			const { x, y } = findXInLastRow(widget.w, updatedDashboards);
+
+			updatedDashboards = updatedDashboards.map((item, index) =>
+				index === widgetIndex ? { ...item, x, y } : item,
+			);
+		}
+
+		return updatedDashboards;
+	}
+
+	return adjustDashboards();
 }
 
 function setWrapper(wrapper: HTMLDivElement) {
 	wrapperRef.value = wrapper;
 }
 
+function updateIsShowGridState(value: boolean) {
+	isEditState.value = value;
+}
+
 function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 	gridLayoutRef.value = gridLayout;
 }
 
-const drag = throttle(() => {
-	isEditState.value = true;
+// const drag = throttle(() => {
+// 	isEditState.value = true;
 
-	const parentRect = wrapperRef.value?.getBoundingClientRect();
+// 	const parentRect = wrapperRef.value?.getBoundingClientRect();
 
-	if (!parentRect || !gridLayoutRef.value) {
-		return;
-	}
+// 	if (!parentRect || !gridLayoutRef.value) {
+// 		return;
+// 	}
 
-	const mouseInGrid =
-		mouseAt.x > parentRect.left - 20 &&
-		mouseAt.x < parentRect.right - 20 &&
-		mouseAt.y > parentRect.top - 20 &&
-		mouseAt.y < parentRect.bottom - 20;
+// 	const mouseInGrid =
+// 		mouseAt.x > parentRect.left - 20 &&
+// 		mouseAt.x < parentRect.right - 20 &&
+// 		mouseAt.y > parentRect.top - 20 &&
+// 		mouseAt.y < parentRect.bottom - 20;
 
-	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
-		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.w / 2);
-		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.h / 2);
-		layout.value.push({
-			x: Math.max(0, Math.min(centerX, columnsNum.value - dragItem.w)),
-			y: Math.max(0, Math.min(centerY, rowsNum.value - dragItem.h)),
-			w: dragItem.w,
-			h: dragItem.h,
-			i: dropId,
-			static: false,
-		});
-	}
+// 	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
+// 		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.w / 2);
+// 		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.h / 2);
+// 		layout.value.push({
+// 			x: Math.max(0, Math.min(centerX, columnsNum.value - dragItem.w)),
+// 			y: Math.max(0, Math.min(centerY, rowsNum.value - dragItem.h)),
+// 			w: dragItem.w,
+// 			h: dragItem.h,
+// 			i: dropId,
+// 			static: false,
+// 		});
+// 	}
 
-	const index = layout.value.findIndex(item => item.i === dropId);
+// 	const index = layout.value.findIndex(item => item.i === dropId);
 
-	if (index !== -1) {
-		const item = gridLayoutRef.value.getItem(dropId);
+// 	if (index !== -1) {
+// 		const item = gridLayoutRef.value.getItem(dropId);
 
-		if (!item) {
-			return;
-		}
+// 		if (!item) {
+// 			return;
+// 		}
 
-		try {
-			item.wrapper.style.display = 'none';
-		} catch (e) {
-			console.error(e);
-		}
+// 		try {
+// 			item.wrapper.style.display = 'none';
+// 		} catch (e) {
+// 			console.error(e);
+// 		}
 
-		const offsetX = (dragItem.w * (columnWidth.value - GAP)) / 2;
-		const offsetY = (dragItem.h * rowHeightComputed.value) / 2;
-		Object.assign(item.state, {
-			top: mouseAt.y - parentRect.top - offsetY,
-			left: mouseAt.x - parentRect.left - offsetX,
-		});
+// 		const offsetX = (dragItem.w * (columnWidth.value - GAP)) / 2;
+// 		const offsetY = (dragItem.h * rowHeightComputed.value) / 2;
+// 		Object.assign(item.state, {
+// 			top: mouseAt.y - parentRect.top - offsetY,
+// 			left: mouseAt.x - parentRect.left - offsetX,
+// 		});
 
-		const newPos = item.calcXY(
-			mouseAt.y - parentRect.top - offsetY,
-			mouseAt.x - parentRect.left - offsetX,
-		);
+// 		const newPos = item.calcXY(
+// 			mouseAt.y - parentRect.top - offsetY,
+// 			mouseAt.x - parentRect.left - offsetX,
+// 		);
 
-		if (mouseInGrid) {
-			gridLayoutRef.value.dragEvent(
-				'dragstart',
-				dropId,
-				newPos.x,
-				newPos.y,
-				dragItem.h,
-				dragItem.w,
-			);
-			dragItem.i = String(index);
-			dragItem.x = layout.value[index].x;
-			dragItem.y = layout.value[index].y;
-		} else {
-			gridLayoutRef.value.dragEvent(
-				'dragend',
-				dropId,
-				newPos.x,
-				newPos.y,
-				dragItem.h,
-				dragItem.w,
-			);
-			layout.value = layout.value.filter(el => el.i !== dropId);
-		}
-	}
-});
+// 		if (mouseInGrid) {
+// 			gridLayoutRef.value.dragEvent(
+// 				'dragstart',
+// 				dropId,
+// 				newPos.x,
+// 				newPos.y,
+// 				dragItem.h,
+// 				dragItem.w,
+// 			);
+// 			dragItem.i = String(index);
+// 			dragItem.x = layout.value[index].x;
+// 			dragItem.y = layout.value[index].y;
+// 		} else {
+// 			gridLayoutRef.value.dragEvent(
+// 				'dragend',
+// 				dropId,
+// 				newPos.x,
+// 				newPos.y,
+// 				dragItem.h,
+// 				dragItem.w,
+// 			);
+// 			layout.value = layout.value.filter(el => el.i !== dropId);
+// 		}
+// 	}
+// });
 
-const dragEnd = debounce(() => {
-	isEditState.value = false;
+// const dragEnd = debounce(() => {
+// 	isEditState.value = false;
 
-	const parentRect = wrapperRef.value?.getBoundingClientRect();
+// 	const parentRect = wrapperRef.value?.getBoundingClientRect();
 
-	if (!parentRect || !gridLayoutRef.value) {
-		layout.value = layout.value.filter(item => item.i !== dropId);
-		isEditState.value = false;
-		return;
-	}
+// 	if (!parentRect || !gridLayoutRef.value) {
+// 		layout.value = layout.value.filter(item => item.i !== dropId);
+// 		isEditState.value = false;
+// 		return;
+// 	}
 
-	const mouseInGrid =
-		mouseAt.x > parentRect.left &&
-		mouseAt.x < parentRect.right &&
-		mouseAt.y > parentRect.top &&
-		mouseAt.y < parentRect.bottom;
+// 	const mouseInGrid =
+// 		mouseAt.x > parentRect.left &&
+// 		mouseAt.x < parentRect.right &&
+// 		mouseAt.y > parentRect.top &&
+// 		mouseAt.y < parentRect.bottom;
 
-	if (mouseInGrid) {
-		const placeholder = layout.value.find(item => item.i === dropId);
+// 	if (mouseInGrid) {
+// 		const placeholder = layout.value.find(item => item.i === dropId);
 
-		if (!placeholder) {
-			console.warn('Placeholder not found in layout:', dropId);
-			layout.value = layout.value.filter(item => item.i !== dropId);
-			return;
-		}
+// 		if (!placeholder) {
+// 			console.warn('Placeholder not found in layout:', dropId);
+// 			layout.value = layout.value.filter(item => item.i !== dropId);
+// 			return;
+// 		}
 
-		const item = gridLayoutRef.value.getItem(dropId);
+// 		const item = gridLayoutRef.value.getItem(dropId);
 
-		try {
-			if (item) {
-				item.wrapper.style.display = '';
-			}
-		} catch (e) {
-			console.error('Error restoring placeholder display:', e);
-		} finally {
-			isEditState.value = false;
-		}
+// 		try {
+// 			if (item) {
+// 				item.wrapper.style.display = '';
+// 			}
+// 		} catch (e) {
+// 			console.error('Error restoring placeholder display:', e);
+// 		} finally {
+// 			isEditState.value = false;
+// 		}
 
-		const finalX = Math.max(0, Math.min(placeholder.x, columnsNum.value - dragItem.w));
-		const finalY = Math.max(0, Math.min(placeholder.y, rowsNum.value - dragItem.h));
+// 		const finalX = Math.max(0, Math.min(placeholder.x, columnsNum.value - dragItem.w));
+// 		const finalY = Math.max(0, Math.min(placeholder.y, rowsNum.value - dragItem.h));
 
-		layout.value = layout.value.filter(el => el.i !== dropId);
+// 		layout.value = layout.value.filter(el => el.i !== dropId);
 
-		const newItemId = String(Date.now());
-		layout.value.push({
-			x: finalX,
-			y: finalY,
-			w: dragItem.w,
-			h: dragItem.h,
-			i: newItemId,
-			static: false,
-		});
+// 		const newItemId = String(Date.now());
+// 		layout.value.push({
+// 			x: finalX,
+// 			y: finalY,
+// 			w: dragItem.w,
+// 			h: dragItem.h,
+// 			i: newItemId,
+// 			static: false,
+// 		});
 
-		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
-	} else {
-		layout.value = layout.value.filter(item => item.i !== dropId);
-	}
-});
+// 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
+// 	} else {
+// 		layout.value = layout.value.filter(item => item.i !== dropId);
+// 	}
+// });
 </script>
 
 <template>
 	<div :class="classes.testWrapper">
-		<draggable-element
+		<!-- <draggable-element
 			@drag="drag"
 			@drag-end="dragEnd"
-		/>
+		/> -->
 		<div
-			ref="grid"
+			ref="gridRef"
 			:class="classes.root"
 		>
 			<div
@@ -254,10 +312,12 @@ const dragEnd = debounce(() => {
 			</div>
 			<div :class="classes.content">
 				<grid-layout-component
-					v-model="layout"
+					:leyout="layout"
 					:is-dnd="isEditState"
 					:col-num="columnsNum"
 					:row-height="rowHeightComputed"
+					:col-width="columnWidth"
+					:row-num="rowsNum"
 					:gap="GAP"
 					@update-is-show-grid-state="updateIsShowGridState"
 					@set-wrapper="setWrapper"
