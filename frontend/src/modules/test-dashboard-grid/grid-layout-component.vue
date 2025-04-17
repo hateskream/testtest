@@ -21,6 +21,8 @@ const emit = defineEmits<{
 
 const classes = useCssModule('classes');
 
+let isUserInteracted = false;
+
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
 
@@ -57,23 +59,32 @@ watch(
 );
 
 function move() {
+	isUserInteracted = true;
 	emit('update-is-show-grid-state', true);
 }
 
 function moved() {
+	isUserInteracted = true;
 	emit('update-is-show-grid-state', false);
 }
 
 function resize() {
+	isUserInteracted = true;
 	emit('update-is-show-grid-state', true);
 }
 
 function resized() {
+	isUserInteracted = true;
 	emit('update-is-show-grid-state', false);
 }
 
-function updated() {
+function updated(newLayout: Layout) {
 	emit('update-is-show-grid-state', false);
+
+	if (isUserInteracted) {
+		emit('update:modelValue', newLayout);
+		isUserInteracted = false;
+	}
 }
 </script>
 
@@ -114,8 +125,7 @@ function updated() {
 					@resized="resized"
 				>
 					<div :class="[classes.text, classListItem]">
-						<div>i {{ item.i }}</div>
-						<div>width {{ item.w }}</div>
+						<div>{{ item.i }}</div>
 					</div>
 				</grid-item>
 			</grid-layout>
@@ -170,6 +180,7 @@ function updated() {
 	align-items: center;
 	width: 100%;
 	height: 100%;
+	font-size: 40px;
 	background-color: rgb(200 200 200 / 50%);
 	transition: transform 0.3s ease;
 }

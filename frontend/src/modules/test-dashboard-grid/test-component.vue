@@ -18,20 +18,20 @@ const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNu
 const isEditState = ref(false);
 
 const dashboardsInit: IWidget[] = [
-	{ x: 0, y: 0, w: 2, h: 2, i: 0, static: false },
-	{ x: 2, y: 0, w: 1, h: 1, i: 1, static: false },
-	{ x: 3, y: 0, w: 1, h: 1, i: 2, static: false },
-	{ x: 2, y: 2, w: 2, h: 1, i: 3, static: false },
-	{ x: 4, y: 0, w: 2, h: 4, i: 4, static: false },
-	{ x: 6, y: 0, w: 2, h: 2, i: 5, static: false },
-	// { x: 0, y: 5, w: 2, h: 2, i: 66, static: false },
-	// { x: 2, y: 5, w: 2, h: 2, i: 77, static: false },
+	{ x: 0, y: 0, w: 2, h: 2, i: 0 },
+	{ x: 2, y: 0, w: 1, h: 1, i: 1 },
+	{ x: 3, y: 0, w: 1, h: 1, i: 2 },
+	{ x: 2, y: 2, w: 2, h: 1, i: 3 },
+	{ x: 4, y: 0, w: 2, h: 4, i: 4 },
+	{ x: 6, y: 0, w: 2, h: 2, i: 5 },
+	// { x: 0, y: 5, w: 2, h: 2, i: 66 },
+	// { x: 2, y: 5, w: 2, h: 2, i: 77 },
 
-	{ x: 6, y: 2, w: 2, h: 2, i: 6, static: false },
-	{ x: 0, y: 3, w: 4, h: 2, i: 7, static: false },
+	{ x: 6, y: 2, w: 2, h: 2, i: 6 },
+	{ x: 0, y: 3, w: 4, h: 2, i: 7 },
 ];
 
-// const dashboardsInit: IWidget[] = [{ x: 0, y: 0, w: 10, h: 2, i: 0, static: false }];
+// const dashboardsInit: IWidget[] = [{ x: 0, y: 0, w: 10, h: 2, i: 0 }];
 
 const layout = ref<Layout>(dashboardsInit);
 
@@ -71,160 +71,70 @@ onBeforeUnmount(() => {
 	document.removeEventListener('touchmove', syncMousePosition);
 });
 
-// interface IWidget {
-// 	x: number;
-// 	y: number;
-// 	w: number;
-// 	h: number;
-// 	i: number;
-// 	static: boolean;
-// }
-
-// function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
-// 	const dashboards: IWidget[] = [...initDashboards];
-
-// 	function isWidgetOffScreen(widget: IWidget) {
-// 		return widget.x + widget.w > colNum;
-// 	}
-
-// 	function isWidgetWiderThanScreen(widget: IWidget) {
-// 		return widget.w > colNum;
-// 	}
-
-// 	function isDashboardsGridWiderThanScreen() {
-// 		const isOffScreen = dashboards.some(isWidgetOffScreen);
-// 		const isWiderThanScreen = dashboards.some(isWidgetWiderThanScreen);
-
-// 		return isOffScreen || isWiderThanScreen;
-// 	}
-
-// 	function findXInLastRow(
-// 		widgetWidth: number,
-// 		currentDashboards: IWidget[],
-// 	): { x: number; y: number } {
-// 		const lastRow = Math.max(...currentDashboards.map(widget => widget.y + widget.h));
-
-// 		const widgetsInLastRow = currentDashboards.filter(
-// 			widget => widget.y + widget.h > lastRow - 1 && widget.y <= lastRow,
-// 		);
-
-// 		// eslint-disable-next-line no-plusplus
-// 		for (let x = 0; x <= colNum - widgetWidth; x++) {
-// 			const isPositionFree = !widgetsInLastRow.some(
-// 				widget => x < widget.x + widget.w && x + widgetWidth > widget.x,
-// 			);
-
-// 			if (isPositionFree) {
-// 				return { x, y: lastRow - 1 };
-// 			}
-// 		}
-
-// 		return { x: 0, y: lastRow };
-// 	}
-
-// 	function canPlaceWidgetAt(
-// 		widget: IWidget,
-// 		x: number,
-// 		y: number,
-// 		currentDashboards: IWidget[],
-// 	): boolean {
-// 		return !currentDashboards.some(
-// 			w =>
-// 				w.i !== widget.i &&
-// 				y < w.y + w.h &&
-// 				y + widget.h > w.y &&
-// 				x < w.x + w.w &&
-// 				x + widget.w > w.x,
-// 		);
-// 	}
-
-// 	function optimizeLayout(currentDashboards: IWidget[]): IWidget[] {
-// 		let updatedDashboards = [...currentDashboards];
-// 		let maxHeight = Math.max(...updatedDashboards.map(widget => widget.y + widget.h));
-
-// 		const sortedWidgets = [...updatedDashboards].sort((a, b) => b.y + b.h - (a.y + a.h));
-
-// 		for (const widget of sortedWidgets) {
-// 			const currentHeight = widget.y + widget.h;
-// 			if (currentHeight < maxHeight) {
-// 				// eslint-disable-next-line no-continue
-// 				continue;
-// 			}
-
-// 			// eslint-disable-next-line no-plusplus
-// 			for (let y = 0; y < widget.y; y++) {
-// 				// eslint-disable-next-line no-plusplus
-// 				for (let x = 0; x <= colNum - widget.w; x++) {
-// 					if (canPlaceWidgetAt(widget, x, y, updatedDashboards)) {
-// 						const widgetIndex = updatedDashboards.findIndex(
-// 							item => item.i === widget.i,
-// 						);
-
-// 						updatedDashboards = updatedDashboards.map((item, index) =>
-// 							index === widgetIndex ? { ...item, x, y } : item,
-// 						);
-
-// 						maxHeight = Math.max(...updatedDashboards.map(w => w.y + w.h));
-// 						break;
-// 					}
-// 				}
-// 			}
-// 		}
-
-// 		const newMaxHeight = Math.max(...updatedDashboards.map(widget => widget.y + widget.h));
-
-// 		if (newMaxHeight < maxHeight) {
-// 			return optimizeLayout(updatedDashboards);
-// 		}
-
-// 		return updatedDashboards;
-// 	}
-
-// 	function updateWidthDashboard(newWidgetWidth: number, currentDashboards: IWidget[]): IWidget[] {
-// 		return currentDashboards.map(widget => {
-// 			if (widget.w > newWidgetWidth) {
-// 				return { ...widget, w: newWidgetWidth };
-// 			}
-// 			return widget;
-// 		});
-// 	}
-
-// 	function adjustDashboards() {
-// 		let updatedDashboards = [...dashboards];
-
-// 		while (isDashboardsGridWiderThanScreen()) {
-// 			const widget = updatedDashboards.find(isWidgetOffScreen);
-
-// 			if (!widget) {
-// 				break;
-// 			}
-
-// 			updatedDashboards = updateWidthDashboard(colNum, updatedDashboards);
-
-// 			const widgetIndex = updatedDashboards.findIndex(item => item.i === widget.i);
-// 			const { x, y } = findXInLastRow(widget.w, updatedDashboards);
-
-// 			updatedDashboards = updatedDashboards.map((item, index) =>
-// 				index === widgetIndex ? { ...item, x, y } : item,
-// 			);
-// 		}
-
-// 		return optimizeLayout(updatedDashboards);
-// 	}
-
-// 	return adjustDashboards();
-// }
-
 interface IWidget {
 	x: number;
 	y: number;
 	w: number;
 	h: number;
 	i: number;
-	static: boolean;
+}
+
+interface ISavedLayout {
+	columnNum: number;
+	layout: IWidget[];
+}
+
+function saveLayout(columnNum: number, newLayout: IWidget[]) {
+	// Get existing layouts from localStorage
+	let savedLayouts: ISavedLayout[] = [];
+	const storedLayouts = localStorage.getItem('layouts');
+
+	if (storedLayouts) {
+		savedLayouts = JSON.parse(storedLayouts) as ISavedLayout[];
+	}
+
+	// Check if layout for this columnNum exists
+	const existingLayoutIndex = savedLayouts.findIndex(el => el.columnNum === columnNum);
+
+	const newSavedLayout: ISavedLayout = {
+		columnNum,
+		layout: newLayout,
+	};
+
+	if (existingLayoutIndex !== -1) {
+		// Update existing layout
+		savedLayouts[existingLayoutIndex] = newSavedLayout;
+	} else {
+		// Add new layout
+		savedLayouts.push(newSavedLayout);
+	}
+
+	// Save updated layouts array
+	localStorage.setItem('layouts', JSON.stringify(savedLayouts));
+}
+
+function getLayout(columnNum: number): ISavedLayout | null {
+	const storedLayouts = localStorage.getItem('layouts');
+
+	if (!storedLayouts) {
+		return null;
+	}
+
+	const savedLayouts = JSON.parse(storedLayouts) as ISavedLayout[];
+
+	// Find layout matching columnNum
+	const matchingLayout = savedLayouts.find(el => el.columnNum === columnNum);
+
+	return matchingLayout || null;
 }
 
 function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
+	const test = getLayout(colNum);
+
+	if (test) {
+		return test.layout;
+	}
+
 	const dashboards = [...initDashboards];
 
 	const isOffScreen = (widget: IWidget) => widget.x + widget.w > colNum;
@@ -238,6 +148,7 @@ function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
 			w => w.y + w.h > lastRow - 1 && w.y <= lastRow,
 		);
 
+		// eslint-disable-next-line no-plusplus
 		for (let x = 0; x <= colNum - widgetWidth; x++) {
 			if (!lastRowWidgets.some(w => x < w.x + w.w && x + widgetWidth > w.x)) {
 				return { x, y: lastRow - 1 };
@@ -263,7 +174,9 @@ function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
 		const sortedWidgets = [...updatedDashboards].sort((a, b) => b.y + b.h - (a.y + a.h));
 
 		for (const widget of sortedWidgets) {
+			// eslint-disable-next-line no-plusplus
 			for (let y = 0; y < widget.y; y++) {
+				// eslint-disable-next-line no-plusplus
 				for (let x = 0; x <= colNum - widget.w; x++) {
 					if (canPlaceWidget(widget, x, y, updatedDashboards)) {
 						updatedDashboards = updatedDashboards.map(w =>
@@ -453,6 +366,11 @@ const dragEnd = debounce(() => {
 		layout.value = layout.value.filter(item => item.i !== dropId);
 	}
 });
+
+function updateLayout(newLayout: Layout) {
+	saveLayout(columnsNum.value, newLayout as IWidget[]);
+	layout.value = newLayout;
+}
 </script>
 
 <template>
@@ -478,13 +396,14 @@ const dragEnd = debounce(() => {
 			</div>
 			<div :class="classes.content">
 				<grid-layout-component
-					v-model="layout"
+					:model-value="layout"
 					:is-dnd="isEditState"
 					:col-num="columnsNum"
 					:row-height="rowHeightComputed"
 					:col-width="columnWidth"
 					:row-num="rowsNum"
 					:gap="GAP"
+					@update:model-value="updateLayout"
 					@update-is-show-grid-state="updateIsShowGridState"
 					@set-wrapper="setWrapper"
 					@set-grid-layout-ref="setGridLayoutRef"
