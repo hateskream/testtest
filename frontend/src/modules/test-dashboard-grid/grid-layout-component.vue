@@ -114,7 +114,8 @@ function updated() {
 					@resized="resized"
 				>
 					<div :class="[classes.text, classListItem]">
-						{{ item.i }}
+						<div>i {{ item.i }}</div>
+						<div>width {{ item.w }}</div>
 					</div>
 				</grid-item>
 			</grid-layout>
@@ -163,6 +164,10 @@ function updated() {
 }
 
 .text {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	width: 100%;
 	height: 100%;
 	background-color: rgb(200 200 200 / 50%);
