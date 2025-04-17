@@ -21,13 +21,10 @@ function getSortDirection(columnName: string) {
 		item-key="position"
 		:filter="`.${ignoreDragClass}`"
 		:chosen-class="classes.dragActive"
+		:ghost-class="classes.dragPlaceholder"
 		:class="classes.thead"
 		:delay="150"
-		@update:model-value="
-			marketStore.$patch({
-				activeTableColumns: $event,
-			})
-		"
+		@update:model-value="marketStore.updateActiveTableColumns"
 	>
 		<template #item="{ element: column }">
 			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
@@ -49,6 +46,32 @@ function getSortDirection(columnName: string) {
 	padding: 0 16px 18px;
 }
 
+.dragPlaceholder::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 2;
+	width: 1px;
+	height: 16px;
+	background: var(--border-color-base-300);
+	transform: translate(-50%, -50%);
+}
+
+.dragPlaceholder::after {
+	content: '';
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	color: var(--border-color-base-300);
+	background: var(--bg-color-surface-01);
+}
+
 .thead {
 	display: table;
 	width: max-content;
@@ -57,7 +80,9 @@ function getSortDirection(columnName: string) {
 }
 
 .thead th {
+	position: relative;
 	min-width: 100px;
+	height: 32px;
 	padding: 4px 0;
 	font-weight: 440;
 	font-size: 12px;
@@ -67,7 +92,6 @@ function getSortDirection(columnName: string) {
 }
 
 .iconTertiary {
-	width: 20px;
 	min-width: 40px !important;
 }
 
@@ -83,7 +107,8 @@ function getSortDirection(columnName: string) {
 	display: flex;
 	align-items: center;
 	width: max-content;
-	padding: 6px 10px !important;
+	height: 32px;
+	padding-inline: 10px !important;
 	text-align: center !important;
 	color: var(--text-color-base-100-effect) !important;
 	background-color: var(--bg-tooltip-color-base) !important;

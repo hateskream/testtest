@@ -25,7 +25,7 @@ onClickOutside(settingsRef, () => {
 			:class="classes.iconTertiary"
 			width="20"
 			height="20"
-			@click.prevent.stop="isTableHeadColumns = !isTableHeadColumns"
+			@click="isTableHeadColumns = !isTableHeadColumns"
 		/>
 
 		<table-columns-settings-component v-show="isTableHeadColumns" />
@@ -37,8 +37,12 @@ onClickOutside(settingsRef, () => {
 	position: absolute;
 	top: 0;
 	right: 0;
-	z-index: 100;
-	height: 20px;
+	z-index: 9;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	height: 32px;
+	padding-right: 8px;
 	background-color: var(--bg-color-surface-01);
 	cursor: pointer;
 }

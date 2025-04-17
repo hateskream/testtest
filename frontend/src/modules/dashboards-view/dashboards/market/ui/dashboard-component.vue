@@ -8,6 +8,7 @@ import { useMarketStore } from '../stores';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
+import RcmMarket from './rcm-market.vue';
 
 interface IDashboardComponentProps {
 	market: string;
@@ -37,6 +38,9 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				:markets="data"
 			/>
 		</template>
+		<template #rcm="{ positions }">
+			<rcm-market :positions="positions" />
+		</template>
 	</base-dashboard-component>
 </template>
 
@@ -45,6 +49,6 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 	/* flex-grow: 1.8;
 	flex-basis: 0; */
 
-	width: 430px;
+	width: 530px;
 }
 </style>

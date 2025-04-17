@@ -22,21 +22,15 @@ const marketStore = useMarketStore();
 
 const tableRows = computed<ITableRow[][]>(() => {
 	const rows: ITableRow[][] = [];
-	let tempRow: ITableRow[] = [];
 
 	props.markets.forEach(row => {
-		marketStore.activeTableColumns.forEach(column => {
-			tempRow.push({
-				type: column.type,
-				srcValue: row.srcValue,
-				value: row[column.columnName],
-				id: row.id,
-			});
-		});
-
-		rows.push(tempRow);
-
-		tempRow = [];
+		if (marketStore.isFavorites) {
+			if (marketStore.favorites.includes(row.id)) {
+				rows.push(prepareRow(row));
+			}
+		} else {
+			rows.push(prepareRow(row));
+		}
 	});
 
 	if (marketStore.activeSort.direction !== 0) {
@@ -63,6 +57,21 @@ const tableRows = computed<ITableRow[][]>(() => {
 
 	return rows;
 });
+
+function prepareRow(row: IMarketDomain) {
+	const data: ITableRow[] = [];
+
+	marketStore.activeTableColumns.forEach(column => {
+		data.push({
+			type: column.type,
+			srcValue: row.srcValue,
+			value: row[column.columnName],
+			id: row.id,
+		});
+	});
+
+	return data;
+}
 
 function sortRowsByType(args: {
 	left: ITableRowValue;

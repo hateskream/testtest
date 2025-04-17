@@ -13,8 +13,13 @@ export enum IconIds {
 	Loosers = 'loosers',
 	Gainers = 'gainers',
 	Drag = 'drag',
+	DoubleDrag = 'double-drug',
 	Retry = 'retry',
 	DropdownDown = 'dropdown-down',
 	Tertiary = 'tertiary',
+	RcmArrowRight = 'rcm-arrow-right',
 	Checkbox = 'checkbox',
+	RcmCheckbox = 'rcm-checkbox',
+	Favorite = 'favorite',
+	FavoriteFill = 'favorite-fill',
 }

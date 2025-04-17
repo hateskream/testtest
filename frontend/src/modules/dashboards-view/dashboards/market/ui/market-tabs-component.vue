@@ -73,7 +73,7 @@ const activeTabs = computed(() =>
 			v-for="(tab, idx) in activeTabs"
 			:key="tab.name"
 			:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
-			@click.prevent.stop="marketStore.setActiveTabSort(tab)"
+			@click="marketStore.setActiveTabSort(tab)"
 		>
 			<ui-icon
 				v-if="tab.icon"
@@ -91,18 +91,35 @@ const activeTabs = computed(() =>
 				@update:model-value="setActiveTabTimeframe(idx, $event)"
 			/>
 		</tab-wrapper-component>
+
+		<tab-wrapper-component
+			:is-active="marketStore.isFavorites"
+			@click.prevent.stop="marketStore.toggleFavorites"
+		>
+			<ui-icon
+				:id="IconIds.FavoriteFill"
+				width="20px"
+				height="20px"
+				:class="classes.iconFavorite"
+			/>
+		</tab-wrapper-component>
 	</div>
 </template>
 
 <style module="classes">
 .tabs {
 	display: flex;
-	gap: 7px;
 	margin-bottom: 7px;
+	padding-bottom: 12px;
+	gap: 7px;
 }
 
 .iconWrapper {
 	color: var(--icon-color-base-300);
 	cursor: pointer;
+}
+
+.iconFavorite {
+	color: var(--icon-color-base-300);
 }
 </style>

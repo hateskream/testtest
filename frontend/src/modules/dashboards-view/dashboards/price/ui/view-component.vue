@@ -3,8 +3,6 @@ import { computed, ref } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
 
 import type { ICurrency } from '../model';
-// import { ScrollContainer } from '../../base';
-
 import { ScrollContainer } from '../../base';
 
 import CellComponent from './cell-component.vue';

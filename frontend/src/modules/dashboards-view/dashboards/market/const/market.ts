@@ -1,7 +1,7 @@
 import type { ITableColumn, ITableRowValueType } from '../model';
 import { setPositionColumns } from '../utils';
 
-export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
+export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 	{
 		columnName: 'symbol',
 		displayColumnName: 'Symbol',
@@ -108,7 +108,7 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = [
 			name: 'Date',
 		},
 	},
-];
+]);
 
 export const INITIAL_ACTIVE_TABLE_COLUMNS: ITableColumn[] = setPositionColumns(
 	INITIAL_ALL_TABLE_COLUMNS.filter(item => item.isShow),

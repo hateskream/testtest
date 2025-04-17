@@ -66,7 +66,7 @@ onClickOutside(timeframeRef, () => {
 						classes.contentItem,
 						{ [classes.contentItemActive]: item.value === modelValue },
 					]"
-					@click.prevent.stop="
+					@click="
 						emits('update:modelValue', item.value);
 						isVisible = false;
 					"

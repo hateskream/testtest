@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import { useMarketStore } from '../stores';
 import { INITIAL_ALL_TABLE_COLUMNS } from '../const';
 import type { ITableColumn } from '../model';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiDriver } from '@/shared/ui/driver';
+import { setPositionColumns } from '../utils';
 
 import TabWrapper from './tab-wrapper-component.vue';
+
+interface IGridLayoutCell extends LayoutItem {
+	data: ITableColumn;
+}
 
 const marketStore = useMarketStore();
 
@@ -22,6 +30,43 @@ const groupedTableColumns = computed(() => {
 
 	return grouped;
 });
+
+const layout = computed<IGridLayoutCell[]>(() =>
+	marketStore.showTableColumnsDraggable.map((item, index) => ({
+		x: 0,
+		y: index + 1,
+		w: 12,
+		h: 1,
+		i: item.columnName,
+		static: !item.isDraggable,
+		data: item,
+	})),
+);
+
+const gridConfig = {
+	colNum: 12,
+	rowHeight: 32,
+	margin: [0, 8],
+	isDraggable: true,
+	isResizable: false,
+};
+
+// @ts-expect-error no need, skip
+function handleUpdatePositionsColumns(columnName: string, x: number, y: number) {
+	// TODO: fix with isDragging and first element
+
+	const activeTableColumns = setPositionColumns(
+		[
+			marketStore.activeTableColumns[0],
+			...layout.value.map(item => ({
+				...item.data,
+				position: item.data.columnName === columnName ? y : item.y,
+			})),
+		].sort((a, b) => a.position - b.position),
+	);
+
+	marketStore.updateActiveTableColumns(activeTableColumns);
+}
 
 function handleToggleTab(columnName: string) {
 	marketStore.toggleShowActiveTableColumns(columnName);
@@ -56,20 +101,89 @@ function handleToggleTab(columnName: string) {
 				</div>
 			</div>
 		</div>
+
+		<ui-driver :class="classes.driver" />
+
+		<div>
+			<div :class="classes.title">Column order</div>
+
+			<div>
+				<grid-layout
+					:layout="layout"
+					:col-num="gridConfig.colNum"
+					:row-height="gridConfig.rowHeight"
+					:margin="gridConfig.margin"
+					:is-draggable="gridConfig.isDraggable"
+					:is-resizable="gridConfig.isResizable"
+					:vertical-compact="true"
+					:class="classes.columnCellTabs"
+				>
+					<grid-item
+						v-for="item in layout"
+						:key="item.i"
+						:x="item.x"
+						:y="item.y"
+						:w="item.w"
+						:h="item.h"
+						:i="item.i"
+						:static="item.static"
+						:class="classes.columnCellTab"
+						@moved="handleUpdatePositionsColumns"
+					>
+						<ui-icon
+							v-if="!item.static"
+							:id="IconIds.DoubleDrag"
+							:class="classes.icon"
+							width="10px"
+							height="14px"
+						/>
+						<tab-wrapper :class="classes.columnCellTabWrapper">
+							<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
+							<span>
+								{{ item.data.displayColumnName }}
+							</span>
+						</tab-wrapper>
+					</grid-item>
+				</grid-layout>
+			</div>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
+.driver {
+	margin: 28px 0 12px;
+}
+
+.columnCellTabWrapper {
+	color: var(--text-color-base-500);
+}
+
+.columnCellTabOrder {
+	color: var(--text-color-base-300);
+}
+
+.columnCellTab {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
 .tabs {
 	display: flex;
 	gap: 8px;
 	align-items: center;
 }
 
+.icon {
+	margin-left: 6px;
+	color: var(--icon-color-base-300);
+}
+
 .row {
 	display: flex;
 	align-items: center;
-	padding: 10px 0;
+	padding: 4px 0;
 }
 
 .rowTitle {
@@ -92,7 +206,8 @@ function handleToggleTab(columnName: string) {
 
 .container {
 	position: absolute;
-	left: 0;
+	top: 0;
+	left: 100%;
 	width: max-content;
 	min-width: 463px;
 	padding: 0 16px;

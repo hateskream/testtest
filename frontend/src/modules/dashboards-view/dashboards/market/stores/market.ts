@@ -17,6 +17,14 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTableColumns.value.map(column => column.columnName),
 	);
 
+	const showTableColumnsDraggable = computed(() =>
+		activeTableColumns.value.filter(column => column.isDraggable),
+	);
+
+	const favorites = ref<string[]>([]);
+
+	const isFavorites = ref<boolean>(false);
+
 	const activeSort = ref<IActiveSortColumn>({
 		columnName: '',
 		direction: 0,
@@ -26,6 +34,30 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		direction: 0,
 		sortTab: 'all',
 	});
+
+	function addToFavorites(id: string) {
+		favorites.value.push(id);
+	}
+
+	function removeFromFavorites(id: string) {
+		const idx = favorites.value.findIndex(item => item === id);
+
+		if (idx > -1) {
+			favorites.value.splice(idx, 1);
+		}
+	}
+
+	function toggleFavorites() {
+		isFavorites.value = !isFavorites.value;
+	}
+
+	function toggleFavoriteItem(id: string) {
+		if (favorites.value.includes(id)) {
+			removeFromFavorites(id);
+		} else {
+			addToFavorites(id);
+		}
+	}
 
 	function setActiveTabTimeframe(args: IActiveTabSort) {
 		activeTabSort.value = args;
@@ -116,6 +148,26 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		}
 	}
 
+	function resetAll() {
+		updateActiveTableColumns(INITIAL_ACTIVE_TABLE_COLUMNS);
+
+		activeSort.value = {
+			columnName: '',
+			direction: 0,
+		};
+
+		activeTabSort.value = {
+			direction: 0,
+			sortTab: 'all',
+		};
+
+		isFavorites.value = false;
+	}
+
+	function updateActiveTableColumns(newActiveTableColumns: ITableColumn[]) {
+		activeTableColumns.value = newActiveTableColumns;
+	}
+
 	return {
 		activeTableColumns,
 		toggleShowActiveTableColumns,
@@ -125,5 +177,14 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		setActiveTabSort,
 		showTableColumns,
 		setActiveTabTimeframe,
+		toggleFavorites,
+		isFavorites,
+		resetAll,
+		favorites,
+		addToFavorites,
+		removeFromFavorites,
+		toggleFavoriteItem,
+		showTableColumnsDraggable,
+		updateActiveTableColumns,
 	};
 });

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { ITableRow } from '../model';
 import { UiImage } from '@/shared/ui/image';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { useMarketStore } from '../stores';
+import { UiTooltip } from '@/shared/ui/tooltip';
 
 import TableRowNumberComponent from './table-row-number-component.vue';
 import TableRowPercentComponent from './table-row-percent-component.vue';
@@ -11,6 +14,8 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+
+const marketStore = useMarketStore();
 </script>
 
 <template>
@@ -54,7 +59,24 @@ const props = defineProps<IProps>();
 				</div>
 			</td>
 
-			<td :class="classes.iconTertiary" />
+			<td :class="classes.favoriteIconWrapper">
+				<ui-tooltip :show-in-ms="100">
+					<template #default>
+						<div
+							:class="classes.favoriteIcon"
+							@click="marketStore.toggleFavoriteItem(items[items.length - 1].id)"
+						>
+							<ui-icon
+								:id="IconIds.Favorite"
+								width="20px"
+								height="20px"
+							/>
+						</div>
+					</template>
+
+					<template #content> Add to favorites </template>
+				</ui-tooltip>
+			</td>
 		</tr>
 	</tbody>
 </template>
@@ -126,15 +148,38 @@ tbody tr td:first-child {
 }
 
 tbody tr td:first-child .rowColumnWrapper {
+	position: relative;
 	justify-content: flex-start;
+}
+
+tbody tr td:first-child .rowColumnWrapper::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	width: 100%;
+	height: 100%;
 }
 
 .tbody td {
 	min-width: 100px;
 }
 
-.iconTertiary {
-	width: 40px;
-	min-width: 40px !important;
+.favoriteIconWrapper {
+	min-width: 50px !important;
+	padding-right: 8px;
+}
+
+.favoriteIcon {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+	color: var(--icon-color-base-300);
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+
+.favoriteIcon:hover {
+	color: var(--icon-color-base-300-effect);
 }
 </style>
