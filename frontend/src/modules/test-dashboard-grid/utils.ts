@@ -1,40 +1,76 @@
 import { MAX_COL_WIDTH, MAX_ROW_HEIGHT, MIN_COL_WIDTH, MIN_ROW_HEIGHT } from './constants';
 
 export function calculateGrid(screenWidth: number, screenHeight: number) {
-	const minCols = Math.floor(screenWidth / MAX_COL_WIDTH);
-	const maxCols = Math.floor(screenWidth / MIN_COL_WIDTH);
+	const optimalColumn = calculateOptimalSegment(screenWidth, MIN_COL_WIDTH, MAX_COL_WIDTH);
+	const column = calculateSegment(optimalColumn, screenWidth);
 
-	let numCols = maxCols;
-	let colWidth;
-
-	if (numCols * MIN_COL_WIDTH <= screenWidth) {
-		colWidth = Math.min(MAX_COL_WIDTH, Math.floor(screenWidth / numCols));
-	} else {
-		numCols = minCols;
-		colWidth = Math.min(MAX_COL_WIDTH, Math.floor(screenWidth / numCols));
-	}
-
-	const minRows = Math.floor(screenHeight / MAX_ROW_HEIGHT);
-	const maxRows = Math.floor(screenHeight / MIN_ROW_HEIGHT);
-
-	let numRows = maxRows;
-	let rowHeight;
-
-	if (numRows * MIN_ROW_HEIGHT <= screenHeight) {
-		rowHeight = Math.min(MAX_ROW_HEIGHT, Math.floor(screenHeight / numRows));
-	} else {
-		numRows = minRows;
-		rowHeight = Math.min(MAX_ROW_HEIGHT, Math.floor(screenHeight / numRows));
-	}
+	const optimalRow = calculateOptimalSegment(screenHeight, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT);
+	const row = calculateSegment(optimalRow, screenHeight);
 
 	return {
-		columns: numCols,
-		columnWidth: colWidth,
-		rows: numRows,
-		rowHeight,
-		totalWidth: numCols * colWidth,
-		totalHeight: numRows * rowHeight,
+		columns: column.segmentsCount,
+		columnWidth: column.segmentSize,
+		rows: row.segmentsCount,
+		rowHeight: row.segmentSize,
+		totalWidth: column.totalLengthCovered,
+		totalHeight: row.totalLengthCovered,
 	};
+}
+
+interface ISegmentInfo {
+	segmentsCount: number;
+	segmentSize: number;
+	totalLengthCovered: number;
+}
+
+function calculateSegment(
+	{ segmentsCount, segmentSize, totalLengthCovered }: ISegmentInfo,
+	screenWidth: number,
+): ISegmentInfo {
+	const delta = screenWidth - totalLengthCovered;
+
+	if (delta <= 0) {
+		return {
+			segmentsCount,
+			segmentSize,
+			totalLengthCovered,
+		};
+	}
+
+	const incrementation = delta / segmentsCount;
+
+	return {
+		segmentsCount,
+		segmentSize: segmentSize + incrementation,
+		totalLengthCovered: segmentsCount * (segmentSize + incrementation),
+	};
+}
+
+function calculateOptimalSegment(
+	totalLength: number,
+	minSegmentSize: number,
+	maxSegmentSize: number,
+): ISegmentInfo {
+	let currentSegmentSize = maxSegmentSize;
+
+	const segmentOptions: ISegmentInfo[] = [];
+
+	while (currentSegmentSize >= minSegmentSize) {
+		const segmentsCount = Math.floor(totalLength / currentSegmentSize);
+		const totalLengthCovered = segmentsCount * currentSegmentSize;
+
+		segmentOptions.push({
+			segmentsCount,
+			segmentSize: currentSegmentSize,
+			totalLengthCovered,
+		});
+
+		currentSegmentSize -= 1;
+	}
+
+	segmentOptions.sort((a, b) => b.totalLengthCovered - a.totalLengthCovered);
+
+	return segmentOptions[0];
 }
 
 export function calculateRows(screenHeight: number, fixedRowHeight: number) {
