@@ -469,7 +469,7 @@ function updateLayout(newLayout: Layout) {
 			:class="classes.root"
 		>
 			<div
-				v-show="true"
+				v-show="isEditState"
 				:class="classes.grid"
 			>
 				<grid-components

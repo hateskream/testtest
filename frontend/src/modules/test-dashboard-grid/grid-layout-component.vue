@@ -2,6 +2,8 @@
 import { computed, useCssModule, ref, watch } from 'vue';
 import { GridLayout, GridItem, type Layout } from 'grid-layout-plus';
 
+import { BaseDashboardComponent } from '../dashboards-view/dashboards/base';
+
 const props = defineProps<{
 	modelValue: Layout;
 	isDnd: boolean;
@@ -25,7 +27,10 @@ let isUserInteracted = false;
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
 
-const classListItem = computed(() => ({ [classes.isDnd]: props.isDnd }));
+const classListItem = computed(() => ({
+	[classes.isDnd]: props.isDnd,
+	[classes.notDnd]: !props.isDnd,
+}));
 
 watch(
 	wrapperRef,
@@ -85,7 +90,7 @@ function updated(newLayout: Layout) {
 <template>
 	<div
 		ref="wrapperRef"
-		:class="classes.gridLayout"
+		class="gridLayout"
 		@dragover.prevent
 	>
 		<grid-layout
@@ -113,53 +118,89 @@ function updated(newLayout: Layout) {
 				@resize="resize"
 				@resized="resized"
 			>
-				<div :class="classes.itemWrapper">
-					<div :class="[classes.text, classListItem]">
+				<div :class="[classes.itemWrapper, classListItem]">
+					<!-- <div :class="[classes.text, classListItem]">
 						<div>{{ item.i }}</div>
-					</div>
+					</div> -->
+					<base-dashboard-component :class="classes.item">
+						<template #title> some widget {{ item.i }} </template>
+						<template #content>
+							<div :class="classes.content">{{ item.i }}</div>
+						</template>
+					</base-dashboard-component>
 				</div>
 			</grid-item>
 		</grid-layout>
 	</div>
 </template>
 
+<style scoped>
+.gridLayout {
+	width: 100%;
+
+	--vgl-item-resizing-opacity: 100% !important;
+}
+</style>
+
 <style module="classes">
+.content {
+	margin: 0 16px 18px;
+}
+
+.item {
+	width: 100%;
+	height: 100%;
+}
+
 .gridLayout {
 	width: 100%;
 }
 
 .isDnd {
-	transform: scale(0.9);
+	padding: 7px;
+}
+
+.notDnd {
+	padding: 3px;
 }
 
 :global(.vgl-layout) {
-	touch-action: none;
+	opacity: 1 !important;
 	transition: none;
+	touch-action: none;
+
+	--vgl-item-resizing-opacity: 100% !important;
 }
 
 :global(.vgl-item:not(.vgl-item--placeholder)) {
-	background-color: transparent;
+	/* background-color: transparent; */
 	user-select: none;
 }
 
+:global(.vgl-item--placeholder .vgl-item__resizer) {
+	display: none !important;
+}
+
 :global(.vgl-item__resizer) {
-	right: 10px !important;
-	bottom: 5px !important;
-	opacity: 0.9;
+	right: 15px !important;
+	bottom: 10px !important;
+	background-color: #000000 !important;
 }
 
 :global(.vgl-item--placeholder) {
-	background-color: rgb(0 128 255 / 50%) !important;
-	border: 2px solid #0000ff;
-	transition: transform 0.3s ease;
+	background-color: rgb(0 128 255 / 80%) !important;
+	border: 7px solid #000000 !important;
+	border-radius: 18px;
+	opacity: 0.1 !important;
 }
 
 .itemWrapper {
+	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	height: 100%;
-	padding: 3px;
+	transition: padding 0.3s ease;
 }
 
 .text {
@@ -170,6 +211,5 @@ function updated(newLayout: Layout) {
 	height: 100%;
 	font-size: 40px;
 	background-color: rgb(200 200 200 / 50%);
-	transition: transform 0.3s ease;
 }
 </style>
