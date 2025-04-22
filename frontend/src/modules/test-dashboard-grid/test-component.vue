@@ -17,17 +17,17 @@ const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNu
 const isEditState = ref(true);
 
 const dashboardsInit: IWidget[] = [
-	{ x: 0, y: 0, w: 2, h: 2, i: 0 },
-	{ x: 2, y: 0, w: 1, h: 1, i: 1 },
-	{ x: 3, y: 0, w: 1, h: 1, i: 2 },
-	{ x: 2, y: 2, w: 2, h: 1, i: 3 },
-	{ x: 4, y: 0, w: 2, h: 4, i: 4 },
-	{ x: 6, y: 0, w: 2, h: 2, i: 5 },
+	{ x: 0, y: 0, w: 2, h: 2, i: 0, prevW: 2 },
+	{ x: 2, y: 0, w: 1, h: 1, i: 1, prevW: 1 },
+	{ x: 3, y: 0, w: 1, h: 1, i: 2, prevW: 1 },
+	{ x: 2, y: 2, w: 2, h: 1, i: 3, prevW: 2 },
+	{ x: 4, y: 0, w: 2, h: 4, i: 4, prevW: 2 },
+	{ x: 6, y: 0, w: 2, h: 2, i: 5, prevW: 2 },
 	// { x: 0, y: 5, w: 2, h: 2, i: 66 },
 	// { x: 2, y: 5, w: 2, h: 2, i: 77 },
 
-	{ x: 6, y: 2, w: 2, h: 2, i: 6 },
-	{ x: 0, y: 3, w: 4, h: 2, i: 7 },
+	{ x: 6, y: 2, w: 2, h: 2, i: 6, prevW: 2 },
+	{ x: 0, y: 3, w: 4, h: 2, i: 7, prevW: 4 },
 ];
 
 // const dashboardsInit: IWidget[] = [{ x: 0, y: 0, w: 10, h: 2, i: 0 }];
@@ -75,6 +75,7 @@ interface IWidget {
 	w: number;
 	h: number;
 	i: number;
+	prevW: number;
 }
 
 interface ISavedLayout {
@@ -165,7 +166,7 @@ function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
 				x + widget.w > w.x,
 		);
 
-	const optimizeLayout = (currentDashboards: IWidget[]): IWidget[] => {
+	const optimizeLayoutHeight = (currentDashboards: IWidget[]): IWidget[] => {
 		let updatedDashboards = [...currentDashboards];
 		const prevHeight = Math.max(0, ...updatedDashboards.map(w => w.y + w.h));
 
@@ -187,14 +188,98 @@ function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
 		}
 
 		const newHeight = Math.max(0, ...updatedDashboards.map(w => w.y + w.h));
-		return newHeight < prevHeight ? optimizeLayout(updatedDashboards) : updatedDashboards;
+		return newHeight < prevHeight ? optimizeLayoutHeight(updatedDashboards) : updatedDashboards;
 	};
 
+	function setPrevWidth(currentDashboards: IWidget[]) {
+		return currentDashboards.map(w => ({ ...w, w: w.prevW, prevW: w.w }));
+	}
+
 	const adjustWidgetWidth = (currentDashboards: IWidget[]): IWidget[] =>
-		currentDashboards.map(w => (w.w > colNum ? { ...w, w: colNum } : w));
+		currentDashboards.map(widget =>
+			widget.w > colNum ? { ...widget, w: colNum, prevW: widget.w } : widget,
+		);
+
+	function calculateGridWidth(widgets: IWidget[]): number {
+		const rowMax: { [key: number]: number } = {};
+
+		for (const widget of widgets) {
+			const { x, y, w } = widget;
+
+			if (!(y in rowMax)) {
+				rowMax[y] = 0;
+			}
+
+			rowMax[y] = Math.max(rowMax[y], x + w);
+		}
+
+		let maxWidth = 0;
+		for (const max of Object.values(rowMax)) {
+			maxWidth = Math.max(maxWidth, max);
+		}
+
+		return maxWidth;
+	}
+
+	function getItemsByColumns(
+		widgets: IWidget[],
+		gridWidth: number,
+	): { index: number; itemIds: number[] }[] {
+		const result: { index: number; itemIds: number[] }[] = [];
+
+		// eslint-disable-next-line no-plusplus
+		for (let colIndex = 0; colIndex < gridWidth; colIndex++) {
+			const itemIds: number[] = [];
+
+			for (const widget of widgets) {
+				const { x, w, i } = widget;
+
+				const itemLeft = x;
+				const itemRight = x + w;
+
+				const colLeft = colIndex;
+				const colRight = colIndex + 1;
+
+				if (itemLeft < colRight && itemRight > colLeft) {
+					itemIds.push(i);
+				}
+			}
+
+			result.push({ index: colIndex, itemIds });
+		}
+
+		return result;
+	}
+
+	function optimizeLayoutWidth(widgets: IWidget[]) {
+		const gridWidth = calculateGridWidth(widgets);
+
+		const delta = gridWidth - colNum;
+
+		if (delta === 0) {
+			return;
+		}
+
+		const itemsByColumns = getItemsByColumns(widgets, gridWidth);
+
+		/*
+
+		1 2 3 - 3
+
+		4
+
+		*/
+
+		console.log('colNum', colNum);
+		console.log('gridWidth', gridWidth);
+		console.log('delta', delta);
+		console.log('itemsByColumns', itemsByColumns);
+	}
 
 	const adjustDashboards = (): IWidget[] => {
-		let updatedDashboards = [...dashboards];
+		let updatedDashboards = setPrevWidth([...dashboards]);
+
+		optimizeLayoutWidth(updatedDashboards);
 
 		while (isGridTooWide(updatedDashboards)) {
 			const widget = updatedDashboards.find(isOffScreen);
@@ -207,7 +292,7 @@ function createGrid(colNum: number, initDashboards: IWidget[]): IWidget[] {
 			updatedDashboards = updatedDashboards.map(w => (w.i === widget.i ? { ...w, x, y } : w));
 		}
 
-		return optimizeLayout(updatedDashboards);
+		return optimizeLayoutHeight(updatedDashboards);
 	};
 
 	return adjustDashboards();
@@ -366,8 +451,10 @@ const dragEnd = debounce(() => {
 });
 
 function updateLayout(newLayout: Layout) {
-	// saveLayout(columnsNum.value, newLayout as IWidget[]);
-	layout.value = newLayout;
+	// layout.value = newLayout.map(el => ({
+	// 	...el,
+	// 	prevW: el.w,
+	// }));
 }
 </script>
 
