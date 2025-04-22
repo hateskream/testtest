@@ -1,10 +1,10 @@
 import { MAX_COL_WIDTH, MAX_ROW_HEIGHT, MIN_COL_WIDTH, MIN_ROW_HEIGHT } from './constants';
 
 export function calculateGrid(screenWidth: number, screenHeight: number) {
-	const optimalColumn = calculateOptimalSegment(screenWidth, MIN_COL_WIDTH, MAX_COL_WIDTH);
+	const optimalColumn = calculateOptimalColumn(screenWidth, MIN_COL_WIDTH, MAX_COL_WIDTH);
 	const column = calculateSegment(optimalColumn, screenWidth);
 
-	const optimalRow = calculateOptimalSegment(screenHeight, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT);
+	const optimalRow = calculateOptimalRow(screenHeight, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT);
 	const row = calculateSegment(optimalRow, screenHeight);
 
 	return {
@@ -46,11 +46,37 @@ function calculateSegment(
 	};
 }
 
-function calculateOptimalSegment(
+function calculateOptimalRow(
 	totalLength: number,
 	minSegmentSize: number,
 	maxSegmentSize: number,
 ): ISegmentInfo {
+	let segmentOptions = calculateOptimalSegments(totalLength, minSegmentSize, maxSegmentSize);
+
+	segmentOptions = segmentOptions.sort((a, b) => b.totalLengthCovered - a.totalLengthCovered);
+
+	return segmentOptions[0];
+}
+
+function calculateOptimalColumn(
+	totalLength: number,
+	minSegmentSize: number,
+	maxSegmentSize: number,
+): ISegmentInfo {
+	let segmentOptions = calculateOptimalSegments(totalLength, minSegmentSize, maxSegmentSize);
+
+	segmentOptions = segmentOptions
+		.sort((a, b) => b.totalLengthCovered - a.totalLengthCovered)
+		.filter(el => el.segmentsCount % 2 === 0);
+
+	return segmentOptions[0];
+}
+
+function calculateOptimalSegments(
+	totalLength: number,
+	minSegmentSize: number,
+	maxSegmentSize: number,
+): ISegmentInfo[] {
 	let currentSegmentSize = maxSegmentSize;
 
 	const segmentOptions: ISegmentInfo[] = [];
@@ -68,9 +94,7 @@ function calculateOptimalSegment(
 		currentSegmentSize -= 1;
 	}
 
-	segmentOptions.sort((a, b) => b.totalLengthCovered - a.totalLengthCovered);
-
-	return segmentOptions[0];
+	return segmentOptions;
 }
 
 export function calculateRows(screenHeight: number, fixedRowHeight: number) {
