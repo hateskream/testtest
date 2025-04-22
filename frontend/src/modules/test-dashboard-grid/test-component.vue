@@ -4,7 +4,6 @@ import type { GridLayout, Layout } from 'grid-layout-plus';
 import { throttle, debounce } from '@vexip-ui/utils';
 
 import { responsiveGridLayout } from './composables';
-import { GAP } from './constants';
 
 import GridComponents from './grid-components.vue';
 import DraggableElement from './draggable-element.vue';
@@ -15,7 +14,7 @@ const gridRef = ref<HTMLDivElement | null>(null);
 const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
 	responsiveGridLayout(gridRef);
 
-const isEditState = ref(false);
+const isEditState = ref(true);
 
 const dashboardsInit: IWidget[] = [
 	{ x: 0, y: 0, w: 2, h: 2, i: 0 },
@@ -38,7 +37,6 @@ const layout = ref<Layout>(dashboardsInit);
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
 
-const rowHeightComputed = computed(() => rowHeight.value - GAP);
 const mouseAt = { x: -1, y: -1 };
 const dropId = 'drop';
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
@@ -270,8 +268,8 @@ const drag = throttle(() => {
 			console.error(e);
 		}
 
-		const offsetX = (dragItem.w * (columnWidth.value - GAP)) / 2;
-		const offsetY = (dragItem.h * rowHeightComputed.value) / 2;
+		const offsetX = (dragItem.w * columnWidth.value) / 2;
+		const offsetY = (dragItem.h * rowHeight.value) / 2;
 		Object.assign(item.state, {
 			top: mouseAt.y - parentRect.top - offsetY,
 			left: mouseAt.x - parentRect.left - offsetX,
@@ -368,7 +366,7 @@ const dragEnd = debounce(() => {
 });
 
 function updateLayout(newLayout: Layout) {
-	saveLayout(columnsNum.value, newLayout as IWidget[]);
+	// saveLayout(columnsNum.value, newLayout as IWidget[]);
 	layout.value = newLayout;
 }
 </script>
@@ -384,7 +382,7 @@ function updateLayout(newLayout: Layout) {
 			:class="classes.root"
 		>
 			<div
-				v-show="isEditState"
+				v-show="true"
 				:class="classes.grid"
 			>
 				<grid-components
@@ -399,10 +397,9 @@ function updateLayout(newLayout: Layout) {
 					:model-value="layout"
 					:is-dnd="isEditState"
 					:col-num="columnsNum"
-					:row-height="rowHeightComputed"
+					:row-height="rowHeight"
 					:col-width="columnWidth"
 					:row-num="rowsNum"
-					:gap="GAP"
 					@update:model-value="updateLayout"
 					@update-is-show-grid-state="updateIsShowGridState"
 					@set-wrapper="setWrapper"
@@ -431,10 +428,13 @@ function updateLayout(newLayout: Layout) {
 
 .root {
 	position: relative;
-	display: flex;
+
+	/* display: flex; */
 	flex-grow: 1;
-	justify-content: center;
-	align-items: center;
+
+	/* justify-content: center; */
+
+	/* align-items: center; */
 	width: 100%;
 
 	/* min-height: 100%; */

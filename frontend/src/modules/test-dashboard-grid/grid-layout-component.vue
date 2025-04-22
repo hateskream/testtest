@@ -7,7 +7,6 @@ const props = defineProps<{
 	isDnd: boolean;
 	colNum: number;
 	rowHeight: number;
-	gap: number;
 }>();
 
 const emit = defineEmits<{
@@ -25,11 +24,6 @@ let isUserInteracted = false;
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
-
-const gridLayoutStyles = computed(() => ({
-	width: `calc(100% + ${props.gap}px)`,
-	margin: `-${props.gap / 2}px`,
-}));
 
 const classListItem = computed(() => ({ [classes.isDnd]: props.isDnd }));
 
@@ -91,60 +85,51 @@ function updated(newLayout: Layout) {
 <template>
 	<div
 		ref="wrapperRef"
-		:class="classes.gridWrapper"
+		:class="classes.gridLayout"
 		@dragover.prevent
 	>
-		<div
-			:class="classes.gridLayout"
-			:style="gridLayoutStyles"
+		<grid-layout
+			ref="gridLayoutRef"
+			:layout="props.modelValue"
+			:col-num="colNum"
+			:row-height="rowHeight"
+			:is-draggable="true"
+			:is-resizable="true"
+			:prevent-collision="false"
+			:use-css-transforms="false"
+			:margin="[0, 0]"
+			@layout-updated="updated"
 		>
-			<grid-layout
-				ref="gridLayoutRef"
-				:layout="props.modelValue"
-				:col-num="colNum"
-				:row-height="rowHeight"
-				:is-draggable="true"
-				:is-resizable="true"
-				:prevent-collision="false"
-				:margin="[gap, gap]"
-				:use-css-transforms="false"
-				@layout-updated="updated"
+			<grid-item
+				v-for="item in props.modelValue"
+				:key="item.i"
+				:x="item.x"
+				:y="item.y"
+				:w="item.w"
+				:h="item.h"
+				:i="item.i"
+				@move="move"
+				@moved="moved"
+				@resize="resize"
+				@resized="resized"
 			>
-				<grid-item
-					v-for="item in props.modelValue"
-					:key="item.i"
-					:x="item.x"
-					:y="item.y"
-					:w="item.w"
-					:h="item.h"
-					:i="item.i"
-					:class="classes.gridItem"
-					@move="move"
-					@moved="moved"
-					@resize="resize"
-					@resized="resized"
-				>
+				<div :class="classes.itemWrapper">
 					<div :class="[classes.text, classListItem]">
 						<div>{{ item.i }}</div>
 					</div>
-				</grid-item>
-			</grid-layout>
-		</div>
+				</div>
+			</grid-item>
+		</grid-layout>
 	</div>
 </template>
 
 <style module="classes">
-.gridWrapper {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+.gridLayout {
+	width: 100%;
 }
 
 .isDnd {
 	transform: scale(0.9);
-	transition: scale 0.3s ease;
 }
 
 :global(.vgl-layout) {
@@ -169,8 +154,12 @@ function updated(newLayout: Layout) {
 	transition: transform 0.3s ease;
 }
 
-.gridItem {
-	background-color: rgb(200 200 200 / 30%);
+.itemWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	padding: 3px;
 }
 
 .text {
@@ -178,7 +167,6 @@ function updated(newLayout: Layout) {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
 	height: 100%;
 	font-size: 40px;
 	background-color: rgb(200 200 200 / 50%);
