@@ -3,7 +3,13 @@ import { type ICurrency as ICurrencyDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import { getCurrencyImage } from '@/shared/lib';
 
-const IS_USE_MOCK = true;
+enum TypeSendRequest {
+	Prod,
+	MockLocal,
+	MockServer,
+}
+
+const typeSendRequest = TypeSendRequest.MockServer;
 
 export interface IGetPriceRequest {
 	market: string;
@@ -22,15 +28,10 @@ export interface IGetPriceResponse {
 }
 
 export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyDomain[] | null> {
-	const httpService = useHttpService();
 	const logger = useLogger();
 
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData()
-			: await httpService.get<IGetPriceResponse>('/api/price', {
-					query: { market },
-				});
+		const response = await sendereRequestByType(typeSendRequest, { market });
 
 		return prepareResponse(response);
 	} catch (error) {
@@ -39,7 +40,28 @@ export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyD
 	}
 }
 
+function sendereRequestByType(
+	type: TypeSendRequest,
+	{ market }: IGetPriceRequest,
+): Promise<IGetPriceResponse> {
+	const httpService = useHttpService();
+
+	switch (type) {
+		case TypeSendRequest.Prod:
+			return httpService.get<IGetPriceResponse>('/api/price1', {
+				query: { market },
+			});
+		case TypeSendRequest.MockLocal:
+			return getMockData();
+		case TypeSendRequest.MockServer:
+			return httpService.get<IGetPriceResponse>('/api/price');
+		default:
+			return getMockData();
+	}
+}
+
 function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
+	console.log('response', response);
 	return response.data.map(currency => ({
 		...currency,
 		srcImage: getCurrencyImage(currency.ticker),
