@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, useCssModule, ref, watch } from 'vue';
-import { GridLayout, GridItem, type Layout } from 'grid-layout-plus';
+import { ref, watch } from 'vue';
+import { GridLayout, type Layout } from 'grid-layout-plus';
 
-import { BaseDashboardComponent } from '../dashboards-view/dashboards/base';
+import GridElement from './grid-element.vue';
 
 const props = defineProps<{
 	modelValue: Layout;
@@ -20,17 +20,10 @@ const emit = defineEmits<{
 	(e: 'drop'): void;
 }>();
 
-const classes = useCssModule('classes');
-
 let isUserInteracted = false;
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
-
-const classListItem = computed(() => ({
-	[classes.isDnd]: props.isDnd,
-	[classes.notDnd]: !props.isDnd,
-}));
 
 watch(
 	wrapperRef,
@@ -57,26 +50,6 @@ watch(
 	},
 );
 
-function move() {
-	isUserInteracted = true;
-	emit('update-is-show-grid-state', true);
-}
-
-function moved() {
-	isUserInteracted = true;
-	emit('update-is-show-grid-state', false);
-}
-
-function resize() {
-	isUserInteracted = true;
-	emit('update-is-show-grid-state', true);
-}
-
-function resized() {
-	isUserInteracted = true;
-	emit('update-is-show-grid-state', false);
-}
-
 function updated(newLayout: Layout) {
 	emit('update-is-show-grid-state', false);
 
@@ -85,12 +58,19 @@ function updated(newLayout: Layout) {
 		isUserInteracted = false;
 	}
 }
+
+function onDragStart() {
+	emit('update-is-show-grid-state', true);
+}
+
+function onDragEnd() {
+	emit('update-is-show-grid-state', false);
+}
 </script>
 
 <template>
 	<div
 		ref="wrapperRef"
-		class="gridLayout"
 		@dragover.prevent
 	>
 		<grid-layout
@@ -105,7 +85,7 @@ function updated(newLayout: Layout) {
 			:margin="[0, 0]"
 			@layout-updated="updated"
 		>
-			<grid-item
+			<grid-element
 				v-for="item in props.modelValue"
 				:key="item.i"
 				:x="item.x"
@@ -113,103 +93,20 @@ function updated(newLayout: Layout) {
 				:w="item.w"
 				:h="item.h"
 				:i="item.i"
-				@move="move"
-				@moved="moved"
-				@resize="resize"
-				@resized="resized"
-			>
-				<div :class="[classes.itemWrapper, classListItem]">
-					<!-- <div :class="[classes.text, classListItem]">
-						<div>{{ item.i }}</div>
-					</div> -->
-					<base-dashboard-component :class="classes.item">
-						<template #title> some widget {{ item.i }} </template>
-						<template #content>
-							<div :class="classes.content">{{ item.i }}</div>
-						</template>
-					</base-dashboard-component>
-				</div>
-			</grid-item>
+				:is-dnd="isDnd"
+				@is-drag="onDragStart"
+				@is-drag-end="onDragEnd"
+			/>
 		</grid-layout>
 	</div>
 </template>
 
-<style scoped>
-.gridLayout {
-	width: 100%;
-
-	--vgl-item-resizing-opacity: 100% !important;
-}
-</style>
-
 <style module="classes">
-.content {
-	margin: 0 16px 18px;
-}
-
-.item {
-	width: 100%;
-	height: 100%;
-}
-
-.gridLayout {
-	width: 100%;
-}
-
-.isDnd {
-	padding: 7px;
-}
-
-.notDnd {
-	padding: 3px;
-}
-
 :global(.vgl-layout) {
 	opacity: 1 !important;
 	transition: none;
 	touch-action: none;
 
 	--vgl-item-resizing-opacity: 100% !important;
-}
-
-:global(.vgl-item:not(.vgl-item--placeholder)) {
-	/* background-color: transparent; */
-	user-select: none;
-}
-
-:global(.vgl-item--placeholder .vgl-item__resizer) {
-	display: none !important;
-}
-
-:global(.vgl-item__resizer) {
-	right: 15px !important;
-	bottom: 10px !important;
-	background-color: #000000 !important;
-}
-
-:global(.vgl-item--placeholder) {
-	background-color: rgb(0 128 255 / 80%) !important;
-	border: 7px solid #000000 !important;
-	border-radius: 18px;
-	opacity: 0.1 !important;
-}
-
-.itemWrapper {
-	z-index: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	height: 100%;
-	transition: padding 0.3s ease;
-}
-
-.text {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	font-size: 40px;
-	background-color: rgb(200 200 200 / 50%);
 }
 </style>
