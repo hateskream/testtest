@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, useCssModule } from 'vue';
+import { computed } from 'vue';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
 import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
+import { UiTransitionFade } from '@/shared/ui/transition';
 
 interface ICellComponentProps {
 	currency: ICurrency;
@@ -17,15 +18,6 @@ const props = defineProps<ICellComponentProps>();
 const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
 	storeToRefs(usePriceStore());
 
-const classes = useCssModule('classes');
-
-const transitionClasses = {
-	'enter-active-class': classes['fade-enter-active'],
-	'leave-active-class': classes['fade-leave-active'],
-	'enter-from-class': classes['fade-enter-from'],
-	'leave-to-class': classes['fade-leave-to'],
-};
-
 const label = computed(() => (isShowTicker.value ? props.currency.ticker : props.currency.name));
 </script>
 
@@ -35,10 +27,10 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			:id="IconIds.Drag"
 			width="4px"
 			height="12px"
-			:class="classes.icon"
+			:class="[classes.icon, 'price-drag']"
 		/>
-		<div :class="classes.content">
-			<transition v-bind="transitionClasses">
+		<div :class="[classes.content, 'price-no-drag']">
+			<ui-transition-fade>
 				<div
 					v-if="isShowLogo"
 					:class="classes.logo"
@@ -48,7 +40,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 						replacement="/images/market/ADA.png"
 					/>
 				</div>
-			</transition>
+			</ui-transition-fade>
 
 			<div :class="classes.container">
 				<div :class="classes.ticker">
@@ -56,24 +48,24 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 				</div>
 				<div :class="classes.containerSecond">
 					<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
-					<transition v-bind="transitionClasses">
+					<ui-transition-fade>
 						<div
 							v-if="isShowPercentageChange"
 							:class="classes.change"
 						>
 							{{ props.currency.changeLastDay }}
 						</div>
-					</transition>
+					</ui-transition-fade>
 				</div>
 			</div>
-			<transition v-bind="transitionClasses">
+			<ui-transition-fade>
 				<div
 					v-if="isShowChart"
 					:class="classes.chart"
 				>
 					<img :src="MockChart" />
 				</div>
-			</transition>
+			</ui-transition-fade>
 		</div>
 	</div>
 </template>
@@ -156,15 +148,5 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 
 .chart {
 	margin-left: 42px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	opacity: 0;
 }
 </style>

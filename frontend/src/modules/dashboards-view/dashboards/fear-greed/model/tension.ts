@@ -2,8 +2,10 @@ export interface ITension {
 	tension: number;
 
 	history?: {
-		[x in 'yesterday' | 'lastWeek' | 'lastMonth']: number;
-	};
+		displayName: string;
+		name: 'yesterday' | 'lastWeek' | 'lastMonth';
+		value: number;
+	}[];
 }
 
 export interface ITensionTextData {

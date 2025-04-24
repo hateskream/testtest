@@ -1,62 +1,105 @@
 import { useHttpService } from '@/shared/service/http-service';
+import { useLogger } from '@/shared/service/logger';
 import type { IMarket } from '../model';
+import { getCurrencyImage, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 
 const IS_USE_MOCK = true;
 
-export async function getMarket(): Promise<IMarket | null> {
+export interface IGetMarketRequest {
+	market: string;
+	sort?: string;
+	timeframe?: string;
+}
+
+export interface IGetMarketResponse {
+	data: IMarket[];
+}
+
+export interface IMarketDomain extends IMarket {
+	srcValue: string;
+}
+
+export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[]> {
 	const httpService = useHttpService();
+	const logger = useLogger();
+
+	const query = removeUndefinedPropertiesFromObject(args);
 
 	try {
 		const response = IS_USE_MOCK
 			? await getMockData()
-			: await httpService.get<IMarket>('/api/market', {
-					// headers: { Authorization: `Bearer ${accessToken}` },
+			: await httpService.get<IGetMarketResponse>('/api/market', {
+					query,
 				});
 
-		return response;
+		return prepareResponse(response.data);
 	} catch (error) {
-		console.error(error);
+		logger.error('Failed to get market', error as Error);
+		throw error;
 	}
-
-	return null;
 }
 
-export async function getMockData(): Promise<IMarket> {
+function prepareResponse(data: IMarket[]): IMarketDomain[] {
+	return data.map(item => ({
+		...item,
+		srcValue: getCurrencyImage(item.symbol),
+	}));
+}
+
+export async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const response: IMarket = {
-		list: [
-			{
-				chg24h: '0',
-				price: '137.4',
-				volume24h: '11723737.43',
-				marketCap: '22737283.45',
-				symbol: 'ADA',
-			},
-			{
-				chg24h: '-2.93',
-				price: '635.4',
-				volume24h: '323737.43',
-				marketCap: '37283.45',
-				symbol: 'BNB',
-			},
-			{
-				chg24h: '0.86',
-				price: '97432.7',
-				volume24h: '32374523437.43',
-				marketCap: '372853453.45',
-				symbol: 'BTC',
-			},
-			{
-				chg24h: '2.33',
-				price: '0.24743',
-				volume24h: '13123743437.43',
-				marketCap: '1233453.45',
-				symbol: 'TRX',
-			},
-		],
+	const mockData: IMarket[] = [
+		{
+			id: '1',
+			chg24h: '0',
+			price: '137.4',
+			volume24h: '11723737.43',
+			marketCap24h: '22737283.45',
+			symbol: 'ADA',
+			listingDate: new Date('2024-04-30').toString(),
+			chg1h: '12',
+			chg7d: '15',
+		},
+		{
+			id: '2',
+			chg24h: '-2.93',
+			price: '635.4',
+			volume24h: '323737.43',
+			marketCap24h: '37283.45',
+			symbol: 'BNB',
+			listingDate: new Date('2025-04-12').toString(),
+			chg1h: '32',
+			chg7d: '-42',
+		},
+		{
+			id: '3',
+			chg24h: '0.86',
+			price: '97432.7',
+			volume24h: '32374523437.43',
+			marketCap24h: '372853453.45',
+			symbol: 'BTC',
+			listingDate: new Date('2023-06-15').toString(),
+			chg1h: '-12',
+			chg7d: '49',
+		},
+		{
+			id: '4',
+			chg24h: '2.33',
+			price: '0.24743',
+			volume24h: '13123743437.43',
+			marketCap24h: '1233453.45',
+			symbol: 'TRON',
+			listingDate: new Date('2025-01-24').toString(),
+			chg1h: '-5',
+			chg7d: '25',
+		},
+	];
+
+	const response: IGetMarketResponse = {
+		data: mockData,
 	};
 
 	return response;

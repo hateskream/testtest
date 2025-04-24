@@ -1,157 +1,43 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
-import type { ITension, ITensionTextData } from '../model/tension.ts';
-import { useMapTension } from '../composables/use-map-tension.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { getMockData } from '../api/get-tension.ts';
-// import { useQueryTension } from '../queries/use-query-tension.ts';
+import { useQueryTension } from '../queries/use-query-tension.ts';
 
-export interface IFearGreedProps {
-	market?: string;
+import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
+import ErrorComponent from './error-component.vue';
+import PreloaderComponent from './preloader-component.vue';
+import ViewComponent from './view-component.vue';
 
-	showChart?: boolean;
-	showChartDescription?: boolean;
+interface IDashboardComponentProps {
+	market: string;
 }
 
-withDefaults(defineProps<IFearGreedProps>(), {
-	market: '',
-	showChart: true,
-	showChartDescription: true,
-});
+const props = defineProps<IDashboardComponentProps>();
 
-const { mapTension } = useMapTension();
+const { data, isLoading, isError, refetch } = useQueryTension(props.market);
 
-// const { data } = useQueryTension(props.market);
-const data = ref<ITension>(getMockData());
-
-const tensionText = computed<ITensionTextData>(() => mapTension(data.value?.tension ?? 0));
-
-const history = computed(() =>
-	Object.entries(data.value?.history ?? {}).map(([key, val]) => ({
-		style: { color: mapTension(val).colors.text },
-		name: key,
-		tension: val,
-	})),
-);
-
-async function handleInteractiveUpdate() {
-	data.value = await getMockData(data.value.tension);
-}
-
-const circleChart = computed(() => {
-	const tension = data.value?.tension ?? 0;
-
-	let val = 1;
-
-	if (tension < 40) {
-		val = 20;
-	} else if (tension < 60) {
-		val = 50;
-	} else if (tension < 80) {
-		val = 75;
-	} else if (tension < 100) {
-		val = 99;
-	}
-
-	const arrowRotateInDeg = -90 + (tension / 100) * 180;
-
-	const radius = 80;
-	const arcAngle = 45;
-
-	const totalLength = Math.PI * radius;
-	const arcLength = (arcAngle / 180) * totalLength;
-	const offset = -(val / 100) * (totalLength - arcLength);
-
-	return {
-		arrowRotateInDeg,
-
-		activeLine: {
-			radius,
-			dasharray: `${arcLength}, ${totalLength}`,
-			offset,
-		},
-	};
-});
+const isNotData = computed(() => !!data.value && isLoading.value);
 </script>
 
 <template>
-	<base-dashboard-component @click="handleInteractiveUpdate">
+	<base-dashboard-component>
 		<template #title>
 			<div>Fear & Greed</div>
 		</template>
 
 		<template #content>
-			<div :class="classes.container">
-				<div
-					:class="classes.metric"
-					:style="{ flexDirection: showChart ? 'column' : 'unset' }"
-				>
-					<div :class="classes.metricСhart">
-						<div
-							v-if="showChart"
-							:class="classes.metricСhartIndicator"
-						>
-							<svg
-								width="200"
-								height="100"
-								viewBox="0 0 200 100"
-								:class="classes.metricСhartContainer"
-							>
-								<!-- Фоновая дуга -->
-								<path
-									:class="classes.metricСhartBg"
-									d="M 20,100 A 80,80 0 0,1 180,100"
-								/>
+			<error-component v-if="isError" />
+			<preloader-component v-else-if="isNotData" />
+			<view-component
+				v-else-if="data"
+				:tension="data"
+				@update-interactive="refetch"
+			/>
+		</template>
 
-								<!-- Активная дуга -->
-								<path
-									d="M 20,100 A 80,80 0 0,1 180,100"
-									:class="classes.metricСhartActive"
-									:stroke="tensionText.colors.chart"
-									:stroke-dasharray="circleChart.activeLine.dasharray"
-									:stroke-dashoffset="circleChart.activeLine.offset"
-								/>
-							</svg>
-
-							<div :class="classes.metricСhartArrowContainer">
-								<div
-									:class="classes.metricСhartArrow"
-									:style="{
-										transform: `rotate(${circleChart.arrowRotateInDeg}deg)`,
-									}"
-								>
-									<div :class="classes.metricСhartDot" />
-								</div>
-							</div>
-						</div>
-
-						<h3 :style="{ color: tensionText?.colors.text }">
-							{{ data?.tension }}
-						</h3>
-					</div>
-
-					<div :class="classes.metricDescription">
-						<h4>{{ tensionText?.text.main }}</h4>
-						<small>{{ tensionText?.text.sub }}</small>
-					</div>
-				</div>
-
-				<ul
-					v-if="history.length > 0"
-					:class="classes.history"
-				>
-					<li
-						v-for="item in history"
-						:key="item.name"
-					>
-						<p>{{ item.name }}</p>
-						<p :style="item.style">
-							{{ item.tension }}
-						</p>
-					</li>
-				</ul>
-			</div>
+		<template #rcm="{ positions }">
+			<rcm-fear-greed-component :positions="positions" />
 		</template>
 	</base-dashboard-component>
 </template>
@@ -160,154 +46,5 @@ const circleChart = computed(() => {
 .root {
 	flex-grow: 0.99;
 	flex-basis: 0;
-}
-
-.container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
-	max-width: min-content;
-	margin-top: 18px;
-	gap: 25px 48px;
-}
-
-.metric {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 4px;
-}
-
-.metricСhart {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-
-.metricСhart > h3 {
-	font-weight: 460;
-	font-size: 28px;
-	color: var(--common-color-white-700);
-}
-
-.metricDescription {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 4px;
-}
-
-.metricСhartIndicator {
-	position: relative;
-	width: 200px;
-	height: 100px;
-	margin-bottom: -30px;
-}
-
-.metricСhartContainer {
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-.metricСhartBg {
-	fill: none;
-	stroke: rgb(91 91 91 / 50%);
-	stroke-width: 2;
-}
-
-.metricСhartActive {
-	fill: none;
-	stroke-width: 4;
-	stroke-linecap: round;
-	transition: stroke-dashoffset 0.7s ease-in-out;
-}
-
-.metricСhartArrowContainer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-	width: 100%;
-	height: 100%;
-}
-
-.metricСhartArrow {
-	position: absolute;
-	width: 2px;
-	height: 77px;
-	/* stylelint-disable-next-line declaration-colon-newline-after */
-	background: linear-gradient(
-		225deg,
-		rgb(255 255 255 / 20%) 0%,
-		rgb(255 255 255 / 20%) 22.5%,
-		rgb(255 255 255 / 0%) 48.5%
-	);
-	transform-origin: bottom right;
-	transition: transform 0.7s ease-in-out;
-}
-
-.metricСhartDot {
-	position: absolute;
-	top: -7px;
-	left: 50%;
-	width: 8px;
-	height: 8px;
-	background: #ffffff;
-	border-radius: 50%;
-	box-shadow: 0 0 15px rgb(227 168 119 / 80%);
-	transform: translateX(-50%);
-}
-
-.metricСhartDot::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 28px;
-	height: 28px;
-	background-color: rgb(255 255 255 / 10%);
-	border-radius: 100%;
-	transform: translate(-50%, -50%);
-	filter: blur(1px);
-}
-
-.history {
-	width: 100%;
-	max-width: 139px;
-}
-
-.history li {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 4px;
-}
-
-.history li > p:first-child {
-	font-weight: 440;
-	font-size: 12px;
-	color: var(--text-color-base-300);
-}
-
-.history li > p:last-child {
-	font-weight: 440;
-	font-size: 12px;
-	color: #ffffff;
-}
-
-.metricDescription > h4 {
-	font-size: 13px;
-	color: var(--common-color-white-700);
-}
-
-.metricDescription > small {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
 }
 </style>

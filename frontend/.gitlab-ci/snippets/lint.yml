@@ -9,3 +9,7 @@ lint_uscode:
   extends: .lint_configuration
   script:
     - npm run lint
+    
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "main"'
+      when: always

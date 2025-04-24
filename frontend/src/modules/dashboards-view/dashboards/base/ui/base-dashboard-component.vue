@@ -1,10 +1,42 @@
 <script setup lang="ts">
+import { ref, useTemplateRef } from 'vue';
+import { onClickOutside, useMouseInElement } from '@vueuse/core';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type { IRcmPositions } from '../../rcm/model';
+
+const target = useTemplateRef('target');
+const isVisibleRcm = ref(false);
+const mousePositions = useMouseInElement(target);
+const rcmPositions = ref<IRcmPositions>({
+	x: 0,
+	y: 0,
+});
+
+function handleOpenRcm() {
+	rcmPositions.value = {
+		x: mousePositions.elementX.value,
+		y: mousePositions.elementY.value,
+	};
+	isVisibleRcm.value = true;
+}
+
+const rcmRef = useTemplateRef('rcm');
+
+onClickOutside(rcmRef, () => {
+	isVisibleRcm.value = false;
+});
 </script>
 
 <template>
-	<div :class="classes.container">
-		<div :class="classes.title">
+	<div
+		ref="target"
+		:class="classes.container"
+	>
+		<div
+			:class="classes.title"
+			@click.prevent.right="handleOpenRcm"
+		>
 			<div :class="classes.titleText">
 				<slot name="title" />
 			</div>
@@ -28,6 +60,17 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 		<div :class="classes.content">
 			<slot name="content" />
 		</div>
+
+		<div
+			v-show="isVisibleRcm"
+			ref="rcm"
+			:class="classes.rcm"
+		>
+			<slot
+				name="rcm"
+				:positions="rcmPositions"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -37,11 +80,8 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	cursor: pointer;
 }
 
-.content {
-	/* padding: 0 16px 18px; */
-}
-
 .container {
+	position: relative;
 	background-color: var(--bg-color-surface-01);
 	border-radius: 18px;
 }

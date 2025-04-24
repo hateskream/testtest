@@ -7,6 +7,7 @@ import { useQueryPrice } from '../queries';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
+import RcmPriceComponent from './rcm-price-component.vue';
 
 interface IDashboardComponentProps {
 	market: string;
@@ -29,6 +30,9 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				v-else-if="data"
 				:currencies="data"
 			/>
+		</template>
+		<template #rcm="{ positions }">
+			<rcm-price-component :positions="positions" />
 		</template>
 	</base-dashboard-component>
 </template>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { GridLayout, GridItem } from 'grid-layout-plus';
 
 import type { ICurrency } from '../model';
+import { ScrollContainer } from '../../base';
 
 import CellComponent from './cell-component.vue';
 
@@ -31,32 +32,49 @@ const gridConfig = {
 	isDraggable: true,
 	isResizable: false,
 };
+
+const visibleCells = computed(() => {
+	const cells = 5;
+	const fixMarginHeight = gridConfig.margin.reduce((acc, item) => acc + item, 0);
+	const totalHeight = gridConfig.rowHeight + fixMarginHeight;
+
+	return totalHeight * cells;
+});
 </script>
 
 <template>
 	<div :class="classes.root">
-		<grid-layout
-			v-model:layout="layout"
-			:col-num="gridConfig.colNum"
-			:row-height="gridConfig.rowHeight"
-			:margin="gridConfig.margin"
-			:is-draggable="gridConfig.isDraggable"
-			:is-resizable="gridConfig.isResizable"
-			:vertical-compact="true"
+		<scroll-container
+			:max-height="visibleCells"
+			overflow-x="hidden"
 		>
-			<grid-item
-				v-for="item in layout"
-				:key="item.i"
-				:x="item.x"
-				:y="item.y"
-				:w="item.w"
-				:h="item.h"
-				:i="item.i"
-				:static="item.static"
-			>
-				<cell-component :currency="item.data" />
-			</grid-item>
-		</grid-layout>
+			<template #content>
+				<grid-layout
+					v-model:layout="layout"
+					:col-num="gridConfig.colNum"
+					:row-height="gridConfig.rowHeight"
+					:margin="gridConfig.margin"
+					:is-draggable="gridConfig.isDraggable"
+					:is-resizable="gridConfig.isResizable"
+					:vertical-compact="true"
+				>
+					<grid-item
+						v-for="item in layout"
+						:key="item.i"
+						:x="item.x"
+						:y="item.y"
+						:w="item.w"
+						:h="item.h"
+						:i="item.i"
+						:static="item.static"
+						drag-allow-from=".price-drag"
+						drag-ignore-from=".price-no-drag"
+					>
+						<cell-component :currency="item.data" />
+					</grid-item>
+				</grid-layout>
+			</template>
+		</scroll-container>
 	</div>
 </template>
 
@@ -72,11 +90,11 @@ const gridConfig = {
 }
 
 :deep(.vgl-item) {
-	width: 310px !important;
+	width: 305px !important;
 }
 
 :deep(.vgl-item--placeholder) {
-	width: 310px !important;
+	width: 300px !important;
 	background: transparent !important;
 }
 </style>

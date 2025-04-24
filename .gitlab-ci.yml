@@ -1,17 +1,12 @@
 workflow:
   rules:
-  #   - if: '$CI_COMMIT_MESSAGE =~ /\[ci skip\]/'
-  #     when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      variables:
-        IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
+    - if: '$CI_COMMIT_MESSAGE =~ /\[ci skip\]/ || $CI_COMMIT_MESSAGE =~ /\[skip ci\]/'
       when: never
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
-      variables:
-        IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_IID
+    - when: always
 
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
+  IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
   MANIFEST_BRANCH_REPO: main
 
@@ -40,20 +35,19 @@ deploy:
     - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/devops/k8s-manifests.git
 
     - git config core.sparseCheckout true
-    - echo "demo-front/demo-grid/deployment.yaml" > .git/info/sparse-checkout
+    - echo "demo-front/deployment.yaml" > .git/info/sparse-checkout
 
     - git fetch origin $MANIFEST_BRANCH_REPO
     - git checkout -b $MANIFEST_BRANCH_REPO origin/$MANIFEST_BRANCH_REPO
 
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" demo-front/demo-grid/deployment.yaml'
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" demo-front/deployment.yaml'
 
-    - git add demo-front/demo-grid/deployment.yaml
+    - git add demo-front/deployment.yaml
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
-    - git pull --rebase origin $MANIFEST_BRANCH_REPO
     - git push origin $MANIFEST_BRANCH_REPO
 
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
 
 build:
   stage: build
@@ -71,7 +65,5 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
-#
-#
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
