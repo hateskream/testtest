@@ -1,0 +1,205 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+import { UiImage } from '@/shared/ui/image';
+import { type INews } from '../model/news';
+import { UiTransitionFade } from '@/shared/ui/transition';
+import { useNewsStore } from '../stores';
+
+import NewsIconScoreComponent from './news-icon-score-component.vue';
+
+const props = defineProps<INews>();
+
+const newsStore = useNewsStore();
+
+const time = computed(() =>
+	new Date(props.timestamp).toLocaleDateString('en-US', {
+		day: '2-digit',
+		month: 'short',
+		hour12: true,
+		hour: '2-digit',
+		minute: '2-digit',
+	}),
+);
+</script>
+
+<template>
+	<div :class="classes.container">
+		<div :class="classes.newsLeftImageWrapper">
+			<ui-image
+				:class="classes.newsLeftImage"
+				:src="srcSourceImage"
+				replacement="/images/market/ADA.png"
+			/>
+		</div>
+
+		<div :class="classes.newsContent">
+			<div :class="classes.newsTitle">
+				<h3>{{ title }}</h3>
+			</div>
+
+			<ui-transition-fade>
+				<div
+					v-if="newsStore.isShowDesc"
+					:class="classes.newsDesc"
+				>
+					<p>
+						{{ description }}
+					</p>
+				</div>
+			</ui-transition-fade>
+
+			<div :class="classes.newsOther">
+				<ui-transition-fade>
+					<div v-if="newsStore.isShowDate">
+						<time
+							:class="classes.newsOtherText"
+							:datetime="time"
+						>
+							{{ time }}
+						</time>
+					</div>
+				</ui-transition-fade>
+
+				<ui-transition-fade>
+					<span
+						v-if="newsStore.isShowDate && newsStore.isShowAuthor"
+						:class="classes.newsOtherText"
+					>
+						·
+					</span>
+				</ui-transition-fade>
+
+				<ui-transition-fade>
+					<div v-if="newsStore.isShowAuthor">
+						<small :class="[classes.newsOtherText, classes.newsOtherAuthorText]">
+							{{ author }}
+						</small>
+					</div>
+				</ui-transition-fade>
+
+				<ui-transition-fade>
+					<div
+						v-if="newsStore.isShowSymbols"
+						:class="classes.newsStocks"
+					>
+						<div
+							v-for="stock in stocks"
+							:key="stock.ticker"
+							:class="classes.newsStock"
+						>
+							<ui-image
+								:class="classes.newsStockImage"
+								:src="stock.srcImage"
+								replacement="/images/market/ADA.png"
+							/>
+						</div>
+					</div>
+				</ui-transition-fade>
+
+				<ui-transition-fade>
+					<news-icon-score-component
+						v-if="newsStore.isShowScore"
+						:score="score"
+					/>
+				</ui-transition-fade>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style module="classes">
+.container {
+	display: flex;
+	width: 100%;
+	padding: 14px 12px;
+	border-radius: 18px;
+	transition: background-color 0.3s ease;
+	gap: 6px;
+}
+
+.container:hover {
+	background-color: var(--bg-color-base-100-effect);
+}
+
+.newsLeftImageWrapper {
+	flex: 0 0 18px;
+	height: 18px;
+}
+
+.newsContent {
+	flex: 1 1 100%;
+}
+
+.newsLeftImage {
+	border-radius: 4px;
+	object-fit: cover;
+}
+
+.newsOtherAuthorText {
+	transition: color 0.3s ease;
+}
+
+.newsOtherAuthorText:hover {
+	color: var(--text-color-base-300-effect);
+	cursor: pointer;
+}
+
+.newsTitle {
+	margin-bottom: 6px;
+}
+
+.newsTitle > h3 {
+	font-weight: 300;
+	font-size: 13px;
+	color: var(--text-color-base-500);
+}
+
+.newsDesc {
+	margin-bottom: 6px;
+}
+
+.newsDesc > p {
+	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+	letter-spacing: 0.08px;
+}
+
+.newsOther {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	padding-right: 32px;
+}
+
+.newsOtherText {
+	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+	letter-spacing: 0.08px;
+}
+
+.newsStocks {
+	display: flex;
+}
+
+.newsStock {
+	width: 20px;
+	height: 20px;
+	margin-left: -6px;
+	overflow: hidden;
+	border: 2px solid #222223;
+	border-radius: 16px;
+}
+
+.newsStock:first-child {
+	margin-left: 0;
+}
+
+.newsStockImage {
+	object-fit: cover;
+}
+</style>

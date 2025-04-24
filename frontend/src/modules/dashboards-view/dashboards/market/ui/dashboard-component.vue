@@ -49,6 +49,6 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 	/* flex-grow: 1.8;
 	flex-basis: 0; */
 
-	width: 530px;
+	width: 50%;
 }
 </style>

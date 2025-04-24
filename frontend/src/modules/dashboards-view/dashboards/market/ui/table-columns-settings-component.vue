@@ -8,8 +8,7 @@ import type { ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { setPositionColumns } from '../utils';
-
-import TabWrapper from './tab-wrapper-component.vue';
+import { BaseFilterModal, BaseFilterModalTabWrapper, BaseFilterModalTitle } from '../../base';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
@@ -74,80 +73,82 @@ function handleToggleTab(columnName: string) {
 </script>
 
 <template>
-	<div :class="classes.container">
-		<div :class="classes.title">Choose Metrics</div>
+	<base-filter-modal>
+		<template #title> Choose Metrics </template>
 
-		<div>
-			<div
-				v-for="(columns, key) in groupedTableColumns"
-				:key="key"
-				:class="classes.row"
-			>
-				<div :class="classes.rowTitle">
-					{{ key }}
-				</div>
+		<template #content>
+			<div>
+				<div
+					v-for="(columns, key) in groupedTableColumns"
+					:key="key"
+					:class="classes.row"
+				>
+					<div :class="classes.rowTitle">
+						{{ key }}
+					</div>
 
-				<div>
-					<div :class="classes.tabs">
-						<tab-wrapper
-							v-for="tab in columns"
-							:key="tab.columnName"
-							:is-active="marketStore.showTableColumns.includes(tab.columnName)"
-							@click="handleToggleTab(tab.columnName)"
-						>
-							{{ tab.displayShortColumnName }}
-						</tab-wrapper>
+					<div>
+						<div :class="classes.tabs">
+							<base-filter-modal-tab-wrapper
+								v-for="tab in columns"
+								:key="tab.columnName"
+								:is-active="marketStore.showTableColumns.includes(tab.columnName)"
+								@click="handleToggleTab(tab.columnName)"
+							>
+								{{ tab.displayShortColumnName }}
+							</base-filter-modal-tab-wrapper>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<ui-driver :class="classes.driver" />
-
-		<div>
-			<div :class="classes.title">Column order</div>
+			<ui-driver :class="classes.driver" />
 
 			<div>
-				<grid-layout
-					:layout="layout"
-					:col-num="gridConfig.colNum"
-					:row-height="gridConfig.rowHeight"
-					:margin="gridConfig.margin"
-					:is-draggable="gridConfig.isDraggable"
-					:is-resizable="gridConfig.isResizable"
-					:vertical-compact="true"
-					:class="classes.columnCellTabs"
-				>
-					<grid-item
-						v-for="item in layout"
-						:key="item.i"
-						:x="item.x"
-						:y="item.y"
-						:w="item.w"
-						:h="item.h"
-						:i="item.i"
-						:static="item.static"
-						:class="classes.columnCellTab"
-						@moved="handleUpdatePositionsColumns"
+				<base-filter-modal-title> Column order </base-filter-modal-title>
+
+				<div>
+					<grid-layout
+						:layout="layout"
+						:col-num="gridConfig.colNum"
+						:row-height="gridConfig.rowHeight"
+						:margin="gridConfig.margin"
+						:is-draggable="gridConfig.isDraggable"
+						:is-resizable="gridConfig.isResizable"
+						:vertical-compact="true"
+						:class="classes.columnCellTabs"
 					>
-						<ui-icon
-							v-if="!item.static"
-							:id="IconIds.DoubleDrag"
-							:class="classes.icon"
-							width="10px"
-							height="14px"
-						/>
-						<tab-wrapper :class="classes.columnCellTabWrapper">
-							<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
-							<span>
-								{{ item.data.displayColumnName }}
-							</span>
-						</tab-wrapper>
-					</grid-item>
-				</grid-layout>
+						<grid-item
+							v-for="item in layout"
+							:key="item.i"
+							:x="item.x"
+							:y="item.y"
+							:w="item.w"
+							:h="item.h"
+							:i="item.i"
+							:static="item.static"
+							:class="classes.columnCellTab"
+							@moved="handleUpdatePositionsColumns"
+						>
+							<ui-icon
+								v-if="!item.static"
+								:id="IconIds.DoubleDrag"
+								:class="classes.icon"
+								width="10px"
+								height="14px"
+							/>
+							<base-filter-modal-tab-wrapper :class="classes.columnCellTabWrapper">
+								<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
+								<span>
+									{{ item.data.displayColumnName }}
+								</span>
+							</base-filter-modal-tab-wrapper>
+						</grid-item>
+					</grid-layout>
+				</div>
 			</div>
-		</div>
-	</div>
+		</template>
+	</base-filter-modal>
 </template>
 
 <style module="classes">
@@ -195,24 +196,5 @@ function handleToggleTab(columnName: string) {
 
 .rowTitle::first-letter {
 	text-transform: uppercase;
-}
-
-.title {
-	padding: 12px 0;
-	font-size: 12px;
-	text-align: left;
-	color: var(--text-color-base-100);
-}
-
-.container {
-	position: absolute;
-	top: 0;
-	left: 100%;
-	width: max-content;
-	min-width: 463px;
-	padding: 0 16px;
-	background: var(--bg-modal-color-base);
-	border: 1px solid var(--border-modal-color-base);
-	border-radius: 18px;
 }
 </style>

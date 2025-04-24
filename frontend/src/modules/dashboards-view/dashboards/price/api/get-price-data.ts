@@ -1,7 +1,8 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { type ICurrency as ICurrencyDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
-import { getCurrencyImage } from '@/shared/lib';
+import { getImagePath } from '@/shared/lib';
+import { ImageTypePath } from '@/shared/lib/get-image-path';
 
 const IS_USE_MOCK = true;
 
@@ -42,7 +43,7 @@ export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyD
 function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
 	return response.data.map(currency => ({
 		...currency,
-		srcImage: getCurrencyImage(currency.ticker),
+		srcImage: getImagePath(currency.ticker, ImageTypePath.Currency),
 	}));
 }
 

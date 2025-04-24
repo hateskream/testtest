@@ -22,4 +22,6 @@ export enum IconIds {
 	RcmCheckbox = 'rcm-checkbox',
 	Favorite = 'favorite',
 	FavoriteFill = 'favorite-fill',
+	ScoreMedium = 'score-medium',
+	NewsFilter = 'news-filter',
 }

@@ -11,6 +11,7 @@
 	position: absolute;
 	top: 0;
 	left: calc(100% + 10px);
+	min-width: 204px;
 	padding: 6px;
 	background: var(--bg-modal-color-base);
 	border: 1px solid var(--border-modal-color-base);
