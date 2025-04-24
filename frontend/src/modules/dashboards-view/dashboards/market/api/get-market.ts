@@ -1,7 +1,8 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import type { IMarket } from '../model';
-import { getCurrencyImage, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { ImageTypePath } from '@/shared/lib/get-image-path';
 
 const IS_USE_MOCK = true;
 
@@ -42,7 +43,7 @@ export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[
 function prepareResponse(data: IMarket[]): IMarketDomain[] {
 	return data.map(item => ({
 		...item,
-		srcValue: getCurrencyImage(item.symbol),
+		srcValue: getImagePath(item.symbol, ImageTypePath.Currency),
 	}));
 }
 

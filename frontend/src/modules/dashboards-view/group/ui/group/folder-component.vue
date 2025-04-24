@@ -135,7 +135,6 @@ function getInitialActiveTab() {
 
 .content {
 	flex: 1;
-	padding: 16px;
 	background-color: var(--bg-color-surface-01);
 	border-radius: 0 18px 18px;
 }

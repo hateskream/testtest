@@ -4,8 +4,8 @@ import { computed, ref } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useMarketStore } from '../stores';
 import type { ITableColumnDirection } from '../model';
+import { BaseFilterModalTabWrapper } from '../../base';
 
-import TabWrapperComponent from './tab-wrapper-component.vue';
 import TabTimeframeComponent from './tab-timeframe-component.vue';
 
 const marketStore = useMarketStore();
@@ -69,7 +69,7 @@ const activeTabs = computed(() =>
 </script>
 <template>
 	<div :class="classes.tabs">
-		<tab-wrapper-component
+		<base-filter-modal-tab-wrapper
 			v-for="(tab, idx) in activeTabs"
 			:key="tab.name"
 			:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
@@ -90,9 +90,9 @@ const activeTabs = computed(() =>
 				:model-value="tab.timeframe"
 				@update:model-value="setActiveTabTimeframe(idx, $event)"
 			/>
-		</tab-wrapper-component>
+		</base-filter-modal-tab-wrapper>
 
-		<tab-wrapper-component
+		<base-filter-modal-tab-wrapper
 			:is-active="marketStore.isFavorites"
 			@click.prevent.stop="marketStore.toggleFavorites"
 		>
@@ -102,7 +102,7 @@ const activeTabs = computed(() =>
 				height="20px"
 				:class="classes.iconFavorite"
 			/>
-		</tab-wrapper-component>
+		</base-filter-modal-tab-wrapper>
 	</div>
 </template>
 

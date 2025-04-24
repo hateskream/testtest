@@ -51,7 +51,7 @@ const marketStore = useMarketStore();
 								<template #title> Column metrics </template>
 								<template #content>
 									<table-columns-settings-component
-										:class="classes.metricsSettings"
+										class="submenu-content-modal-offset"
 									/>
 								</template>
 							</rcm-submenu>
