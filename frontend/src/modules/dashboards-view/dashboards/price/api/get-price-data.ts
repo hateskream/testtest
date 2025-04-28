@@ -49,7 +49,7 @@ function sendereRequestByType(
 
 	switch (type) {
 		case TypeSendRequest.Prod:
-			return httpService.get<IGetPriceResponse>('/api/price', {
+			return httpService.get<IGetPriceResponse>('https://gateway.planet9.uk/price', {
 				query: { market },
 			});
 		case TypeSendRequest.MockLocal:
