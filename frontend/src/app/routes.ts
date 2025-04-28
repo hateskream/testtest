@@ -6,8 +6,8 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'home',
-			// component: () => import('../pages/home').then(m => m.HomePage),
-			component: () => import('../pages/dashboard-grid').then(m => m.DashboardGridPage),
+			component: () => import('../pages/home').then(m => m.HomePage),
+			// component: () => import('../pages/dashboard-grid').then(m => m.DashboardGridPage),
 		},
 		{
 			path: '/price_demo',

@@ -38,8 +38,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 </template>
 
 <style module="classes">
-.root {
+/* .root {
 	flex-grow: 1.8;
 	flex-basis: 0;
-}
+} */
 </style>

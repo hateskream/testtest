@@ -1,4 +1,7 @@
-import { MAX_COL_WIDTH, MAX_ROW_HEIGHT, MIN_COL_WIDTH, MIN_ROW_HEIGHT } from './constants';
+const MIN_COL_WIDTH = 156;
+const MAX_COL_WIDTH = 231;
+const MIN_ROW_HEIGHT = 55;
+const MAX_ROW_HEIGHT = 73;
 
 export function calculateGrid(screenWidth: number, screenHeight: number) {
 	const optimalColumn = calculateOptimalColumn(screenWidth, MIN_COL_WIDTH, MAX_COL_WIDTH);

@@ -2,7 +2,7 @@
 import { GridItem } from 'grid-layout-plus';
 import { useCssModule, computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { BaseDashboardComponent } from '../dashboards-view/dashboards/base';
+import GroupComponent from './group-component.vue';
 
 interface IGridElement {
 	i: number | string;
@@ -73,12 +73,7 @@ onBeforeUnmount(() => {
 		:i="props.i"
 	>
 		<div :class="[classes.itemWrapper, classListItem]">
-			<base-dashboard-component :class="classes.item">
-				<template #title> some widget {{ props.i }} </template>
-				<template #content>
-					<div :class="classes.content">{{ props.i }}</div>
-				</template>
-			</base-dashboard-component>
+			<group-component :item-id="props.i" />
 		</div>
 	</grid-item>
 </template>

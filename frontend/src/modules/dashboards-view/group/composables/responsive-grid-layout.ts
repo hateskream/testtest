@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted, readonly, ref, type Ref } from 'vue';
 import { throttle } from '@vexip-ui/utils';
 
-import { calculateGrid, calculateRows } from './utils';
+import { calculateGrid, calculateRows } from '../utils';
 
 export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const rowsNum = ref(0);
