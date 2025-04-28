@@ -77,27 +77,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style module="classes">
-:global(.vgl-item:not(.vgl-item--placeholder)) {
-	user-select: none;
-}
-
-:global(.vgl-item--placeholder .vgl-item__resizer) {
-	display: none !important;
-}
-
-:global(.vgl-item__resizer) {
-	right: 15px !important;
-	bottom: 10px !important;
-	background-color: #000000 !important;
-}
-
-:global(.vgl-item--placeholder) {
-	background-color: rgb(0 128 255 / 80%) !important;
-	border: 7px solid #000000 !important;
-	border-radius: 18px;
-	opacity: 0.1 !important;
-}
-
 .isDnd {
 	padding: 7px;
 }
@@ -106,20 +85,7 @@ onBeforeUnmount(() => {
 	padding: 3px;
 }
 
-.content {
-	margin: 0 16px 18px;
-}
-
-.item {
-	width: 100%;
-	height: 100%;
-}
-
 .itemWrapper {
-	z-index: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
 	height: 100%;
 	transition: padding 0.3s ease;
 }

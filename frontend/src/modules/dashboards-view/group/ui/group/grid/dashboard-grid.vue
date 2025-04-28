@@ -127,12 +127,33 @@ function onDragEnd() {
 	</div>
 </template>
 
-<style module="classes">
-:global(.vgl-layout) {
+<style scoped>
+:deep(.vgl-layout) {
 	opacity: 1 !important;
 	transition: none;
 	touch-action: none;
 
 	--vgl-item-resizing-opacity: 100% !important;
+}
+
+:deep(.vgl-item:not(.vgl-item--placeholder)) {
+	user-select: none;
+}
+
+:deep(.vgl-item--placeholder .vgl-item__resizer) {
+	display: none !important;
+}
+
+:deep(.vgl-item__resizer) {
+	right: 15px !important;
+	bottom: 10px !important;
+	background-color: #000000 !important;
+}
+
+:deep(.vgl-item--placeholder) {
+	background-color: rgb(0 128 255 / 80%) !important;
+	border: 7px solid #000000 !important;
+	border-radius: 18px;
+	opacity: 0.1 !important;
 }
 </style>

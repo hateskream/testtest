@@ -144,7 +144,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 						type: DashboardItemType.Instance,
 						id: '0',
 						dashboardType: DashboardType.Price,
-						position: { x: 0, y: 0, w: 20, h: 10, prevW: 2 },
+						position: { x: 0, y: 0, w: 20, h: 5, prevW: 2 },
 					},
 					// {
 					// 	type: DashboardItemType.Instance,

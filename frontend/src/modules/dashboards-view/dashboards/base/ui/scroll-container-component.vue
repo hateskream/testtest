@@ -2,17 +2,18 @@
 import { computed, type CSSProperties } from 'vue';
 
 interface IScrollContainerComponentProps {
-	maxHeight?: number;
+	maxHeight?: CSSProperties['max-height'];
 	overflowX?: CSSProperties['overflow-x'];
 }
 
 const props = withDefaults(defineProps<IScrollContainerComponentProps>(), {
 	overflowX: 'auto',
+	maxHeight: 'auto',
 });
 
 const scrollStyles = computed<CSSProperties>(() => ({
-	maxHeight: `${props.maxHeight}px`,
-	overflowX: props.overflowX,
+	// maxHeight: `${props.maxHeight}px`,
+	// overflowX: props.overflowX,
 }));
 </script>
 
@@ -33,13 +34,13 @@ const scrollStyles = computed<CSSProperties>(() => ({
 .scrollWrapper {
 	position: relative;
 	width: 100%;
+	overflow: hidden;
 }
 
 .scrollContainer {
 	position: relative;
 	max-width: 100%;
-	overflow-x: auto;
-	overflow-y: auto;
+	height: fit-content;
 	-webkit-overflow-scrolling: touch;
 	clip-path: inset(0 0 0 0);
 }

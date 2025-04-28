@@ -98,6 +98,34 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
 		},
+		{
+			ticker: 'TR4ON1',
+			name: 'Tron',
+			price: '$2.4552',
+			changeLastDay: '4.73%',
+			marketCap: '$3.20T',
+		},
+		{
+			ticker: 'TR4ON2',
+			name: 'Tron',
+			price: '$2.4552',
+			changeLastDay: '4.73%',
+			marketCap: '$3.20T',
+		},
+		{
+			ticker: 'TR4ON3',
+			name: 'Tron',
+			price: '$2.4552',
+			changeLastDay: '4.73%',
+			marketCap: '$3.20T',
+		},
+		{
+			ticker: 'TR4ON4',
+			name: 'Tron',
+			price: '$2.4552',
+			changeLastDay: '4.73%',
+			marketCap: '$3.20T',
+		},
 	];
 
 	await new Promise(resolve => {
