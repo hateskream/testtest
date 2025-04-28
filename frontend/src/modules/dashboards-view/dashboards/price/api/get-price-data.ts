@@ -9,7 +9,7 @@ enum TypeSendRequest {
 	MockServer,
 }
 
-const typeSendRequest = TypeSendRequest.MockServer;
+const typeSendRequest = TypeSendRequest.Prod;
 
 export interface IGetPriceRequest {
 	market: string;
@@ -48,7 +48,7 @@ function sendereRequestByType(
 
 	switch (type) {
 		case TypeSendRequest.Prod:
-			return httpService.get<IGetPriceResponse>('/api/price1', {
+			return httpService.get<IGetPriceResponse>('/api/price', {
 				query: { market },
 			});
 		case TypeSendRequest.MockLocal:
