@@ -3,39 +3,116 @@ import { onClickOutside } from '@vueuse/core';
 import { ref, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { BaseModalItemCheckbox, BaseModalList } from '../../base';
+import { useNewsStore } from '../stores';
+import type { IFilterList } from '../../base/model/filter-modal';
+import { compareStrings } from '@/shared/lib';
 
 import NewsFilters from './news-filters-component.vue';
 
+const newsFilters = useNewsStore();
+
 const isVisibleFilters = ref(false);
 
-const newsFiltersRef = useTemplateRef('newsFilters');
+const newsFiltersRef = useTemplateRef('newsFilter');
 
 onClickOutside(newsFiltersRef, () => {
 	isVisibleFilters.value = false;
 });
+
+function getTitleFilterList(
+	filterName: string,
+	value: string[],
+	list: IFilterList<string>['list'],
+) {
+	if (value.length === 0) {
+		return filterName;
+	}
+
+	const { label } = list.find(item => compareStrings(item.value, value[0]))!;
+
+	return `${label} ${value.length > 1 ? `+${value.length - 1}` : ''}`;
+}
 </script>
 
 <template>
-	<div
-		ref="newsFilters"
-		:class="classes.iconFilter"
-	>
-		<ui-icon
-			:id="IconIds.NewsFilter"
-			width="20"
-			height="20"
-			:class="classes.icon"
-			@click="isVisibleFilters = !isVisibleFilters"
-		/>
+	<div :class="classes.container">
+		<div
+			ref="newsFilter"
+			:class="classes.iconAllFilter"
+		>
+			<ui-icon
+				:id="IconIds.NewsFilter"
+				width="20"
+				height="20"
+				:class="classes.icon"
+				@click="isVisibleFilters = !isVisibleFilters"
+			/>
 
-		<news-filters v-show="isVisibleFilters" />
+			<news-filters v-show="isVisibleFilters" />
+		</div>
+
+		<div :class="classes.listFilters">
+			<base-modal-list
+				v-for="(filter, key) in newsFilters.activeFilters"
+				:key="key"
+			>
+				<template #title>
+					<div :class="classes.listFiltersTitle">
+						<div :class="classes.listFiltersTitleText">
+							{{ getTitleFilterList(filter.name, filter.value, filter.list) }}
+						</div>
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</div>
+				</template>
+
+				<template #content>
+					<base-modal-item-checkbox
+						v-for="item in filter.list"
+						:key="item.value"
+						:model-value="
+							(newsFilters.activeFilters[key].value as string[]).includes(item.value)
+						"
+						@update:model-value="
+							newsFilters.toggleFiltersList(key as string, item.value)
+						"
+					>
+						{{ item.label }}
+					</base-modal-item-checkbox>
+				</template>
+			</base-modal-list>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
-.iconFilter {
+.listFiltersTitle {
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	height: 20px;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.listFilters {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.iconAllFilter {
 	position: relative;
-	z-index: 20;
+	z-index: 21;
 	cursor: pointer;
 }
 </style>

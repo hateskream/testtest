@@ -1,10 +1,32 @@
+<script setup lang="ts">
+import { onClickOutside } from '@vueuse/core';
+import { ref, useTemplateRef } from 'vue';
+
+const isVisible = ref(false);
+
+const modalRef = useTemplateRef('modal');
+
+onClickOutside(modalRef, () => {
+	isVisible.value = false;
+});
+</script>
+
 <template>
-	<div :class="classes.container">
-		<div :class="classes.title">
+	<div
+		ref="modal"
+		:class="classes.container"
+	>
+		<div
+			:class="classes.title"
+			@click="isVisible = !isVisible"
+		>
 			<slot name="title" />
 		</div>
 
-		<div :class="classes.content">
+		<div
+			v-show="isVisible"
+			:class="classes.content"
+		>
 			<slot name="content" />
 		</div>
 	</div>
@@ -12,22 +34,28 @@
 
 <style module="classes">
 .container {
+	position: relative;
+	z-index: 20;
+}
+
+.content {
 	position: absolute;
-	top: 0;
-	left: 100%;
 	width: max-content;
 	min-width: 208px;
-	padding: 0 6px;
+	padding: 6px;
 	background: var(--bg-modal-color-base);
 	border: 1px solid var(--border-modal-color-base);
 	border-radius: 18px;
 }
 
 .title {
-	padding: 12px 0;
+	padding: 7.5px 12px;
 	font-weight: 300;
-	font-size: 13px;
+	font-size: 10px;
 	text-align: left;
 	color: var(--text-color-base-300);
+	background-color: var(--bg-color-base-300);
+	border-radius: 18px;
+	cursor: pointer;
 }
 </style>

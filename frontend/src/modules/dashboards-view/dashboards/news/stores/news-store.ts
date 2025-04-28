@@ -23,6 +23,12 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 	const filters = ref<IFilterNews>(NEWS_FILTERS);
 
+	const activeFilters = computed(() =>
+		Object.fromEntries(
+			Object.entries(filters.value).filter(([key, item]) => item.value.length > 0),
+		),
+	);
+
 	const locationFilters = ref<INewsLocation[]>(NEWS_LOCATIONS);
 
 	const activeLocationFilters = computed(() => {
@@ -46,7 +52,8 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		return countries;
 	});
 
-	function toggleFiltersList(key: keyof IFilterNews, value: string) {
+	function toggleFiltersList(key: keyof IFilterNews | string, value: string) {
+		// @ts-expect-error no-error, only for ts
 		const filterActive = filters.value[key] as IFilterList<string>;
 
 		const filterActiveValueIdx = filterActive.value.findIndex(item =>
@@ -92,7 +99,18 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		isShowSentiment.value = !isShowSentiment.value;
 	}
 
-	function resetAll() {}
+	function resetAll() {
+		isShowDate.value = true;
+		isShowSource.value = true;
+		isShowDesc.value = true;
+		isShowAuthor.value = true;
+		isShowSymbols.value = true;
+		isShowScore.value = true;
+		isShowSentiment.value = true;
+
+		locationFilters.value = NEWS_LOCATIONS;
+		filters.value = NEWS_FILTERS;
+	}
 
 	return {
 		isShowDate,
@@ -103,6 +121,8 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		isShowScore,
 		isShowSentiment,
 		locationFilters,
+
+		activeFilters,
 
 		activeLocationFilters,
 		toggleFiltersList,
