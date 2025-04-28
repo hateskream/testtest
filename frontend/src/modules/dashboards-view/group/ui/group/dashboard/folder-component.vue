@@ -5,7 +5,7 @@ import { dashboardTypeToFolderNameMapping, type IDashboardFolder } from '../../.
 import { getDashboardComponent } from '../../../utils';
 
 interface ITab {
-	id: string;
+	id: number;
 	name: string;
 }
 
@@ -31,7 +31,7 @@ const tabs = computed((): ITab[] =>
 	})),
 );
 
-function switchTab(id: string) {
+function switchTab(id: number) {
 	activeTab.value = id;
 }
 
