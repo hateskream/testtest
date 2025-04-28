@@ -7,7 +7,7 @@ export interface IPosition {
 }
 
 export interface IPositionWithId extends IPosition {
-	i: string;
+	i: number;
 }
 
 export enum DashboardItemType {
@@ -32,14 +32,14 @@ export enum DashboardType {
 
 export interface IDashboardInstance {
 	type: DashboardItemType.Instance;
-	id: string;
+	id: number;
 	dashboardType: DashboardType;
 	position: IPosition;
 }
 
 export interface IDashboardCollection {
 	type: DashboardItemType.Collection;
-	id: string;
+	id: number;
 	name: string;
 	position: IPosition;
 	items: (IDashboardInstance | IDashboardFolder)[];
@@ -47,7 +47,7 @@ export interface IDashboardCollection {
 
 export interface IDashboardFolder {
 	type: DashboardItemType.Folder;
-	id: string;
+	id: number;
 	position: IPosition;
 	items: IDashboardInstance[];
 }

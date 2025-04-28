@@ -22,7 +22,7 @@ export function useRebuildingGrid(
 	);
 
 	watch([columnsNum, rowsNum], () => {
-		const newLayout = createGrid(columnsNum.value, layout.value);
+		const newLayout = createGrid(columnsNum.value, rawDashboard.value);
 		layout.value = newLayout;
 	});
 

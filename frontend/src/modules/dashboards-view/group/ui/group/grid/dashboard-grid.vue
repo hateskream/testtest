@@ -36,7 +36,8 @@ const rawDashboards = computed((): IPositionWithId[] =>
 	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
 );
 
-const { columnsNum, rowsNum } = toRefs(props);
+const columnsNum = computed(() => props.columnsNum);
+const rowsNum = computed(() => props.rowsNum);
 
 const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 
@@ -65,7 +66,7 @@ watch(
 	},
 );
 
-function getDashboardItemById(id: string): IDashboardItem {
+function getDashboardItemById(id: number): IDashboardItem {
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
 	if (foundDashboard) {
 		return foundDashboard;

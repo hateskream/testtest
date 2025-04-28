@@ -86,6 +86,7 @@ function adjustWidgetWidth(
 
 export function createGrid(colNum: number, initDashboards: IPositionWithId[]): IPositionWithId[] {
 	let updatedDashboards = setPrevWidth([...initDashboards]);
+	// let updatedDashboards = [...initDashboards];
 
 	while (isGridTooWide(updatedDashboards, colNum)) {
 		const widget = updatedDashboards.find(isOffScreen);
