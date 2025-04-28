@@ -3,8 +3,11 @@ export interface IPosition {
 	y: number;
 	w: number;
 	h: number;
-	i: string;
 	prevW: number;
+}
+
+export interface IPositionWithId extends IPosition {
+	i: string;
 }
 
 export enum DashboardItemType {

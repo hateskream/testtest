@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-import type { IDashboardInstance } from '../../model';
-import { useDashboardsStore } from '../../stores';
-import { getDashboardComponent } from '../../utils';
+import type { IDashboardInstance } from '../../../model';
+import { useDashboardsStore } from '../../../stores';
+import { getDashboardComponent } from '../../../utils';
 
 interface IDashboardInstanceProps {
 	item: IDashboardInstance;

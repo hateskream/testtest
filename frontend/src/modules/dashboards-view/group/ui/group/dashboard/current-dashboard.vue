@@ -5,14 +5,14 @@ import {
 	type IDashboardFolder,
 	type IDashboardInstance,
 	type IDashboardItem,
-} from '../../model';
+} from '../../../model';
 
 import InstanceComponent from './instance-component.vue';
 import CollectionComponent from './collection-component.vue';
 import FolderComponent from './folder-component.vue';
 
 interface IGroupComponentProps {
-	items: IDashboardItem[];
+	dashboardItem: IDashboardItem;
 }
 
 const props = defineProps<IGroupComponentProps>();
@@ -45,20 +45,8 @@ function getProps(item: IDashboardItem) {
 </script>
 
 <template>
-	<div :class="classes.root">
-		<component
-			:is="getComponent(item)"
-			v-for="item in props.items"
-			:key="item.id"
-			v-bind="getProps(item)"
-		/>
-	</div>
+	<component
+		:is="getComponent(props.dashboardItem)"
+		v-bind="getProps(props.dashboardItem)"
+	/>
 </template>
-
-<style module="classes">
-.root {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-}
-</style>

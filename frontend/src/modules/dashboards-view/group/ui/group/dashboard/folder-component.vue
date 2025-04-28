@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { dashboardTypeToFolderNameMapping, type IDashboardFolder } from '../../model';
-import { getDashboardComponent } from '../../utils';
+import { dashboardTypeToFolderNameMapping, type IDashboardFolder } from '../../../model';
+import { getDashboardComponent } from '../../../utils';
 
 interface ITab {
 	id: string;

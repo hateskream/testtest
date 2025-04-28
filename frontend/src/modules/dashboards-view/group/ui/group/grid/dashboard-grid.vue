@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 import { GridLayout, type Layout } from 'grid-layout-plus';
 
-import GridElement from './grid-element.vue';
+import { useRebuildingGrid } from '../../../composables';
+import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../model';
 
-const props = defineProps<{
-	modelValue: Layout;
+import DashboardGridElement from './dashboard-grid-element.vue';
+import CurrentDashboard from '../dashboard/current-dashboard.vue';
+
+interface IGridLayoutComponent {
+	dashboards: IDashboardGroup;
 	isDnd: boolean;
-	colNum: number;
+	columnsNum: number;
+	rowsNum: number;
 	rowHeight: number;
-}>();
+}
+
+const props = defineProps<IGridLayoutComponent>();
 
 const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
@@ -24,6 +31,14 @@ let isUserInteracted = false;
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
+
+const rawDashboards = computed((): IPositionWithId[] =>
+	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
+);
+
+const { columnsNum, rowsNum } = toRefs(props);
+
+const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 
 watch(
 	wrapperRef,
@@ -50,6 +65,15 @@ watch(
 	},
 );
 
+function getDashboardItemById(id: string): IDashboardItem {
+	const foundDashboard = props.dashboards.items.find(item => item.id === id);
+	if (foundDashboard) {
+		return foundDashboard;
+	}
+
+	throw new Error(`Dashboard with id ${id} not found`);
+}
+
 function updated(newLayout: Layout) {
 	emit('update-is-show-grid-state', false);
 
@@ -75,8 +99,8 @@ function onDragEnd() {
 	>
 		<grid-layout
 			ref="gridLayoutRef"
-			:layout="props.modelValue"
-			:col-num="colNum"
+			:layout="layout"
+			:col-num="columnsNum"
 			:row-height="rowHeight"
 			:is-draggable="true"
 			:is-resizable="true"
@@ -85,8 +109,8 @@ function onDragEnd() {
 			:margin="[0, 0]"
 			@layout-updated="updated"
 		>
-			<grid-element
-				v-for="item in props.modelValue"
+			<dashboard-grid-element
+				v-for="item in layout"
 				:key="item.i"
 				:x="item.x"
 				:y="item.y"
@@ -96,7 +120,9 @@ function onDragEnd() {
 				:is-dnd="isDnd"
 				@is-drag="onDragStart"
 				@is-drag-end="onDragEnd"
-			/>
+			>
+				<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
+			</dashboard-grid-element>
 		</grid-layout>
 	</div>
 </template>

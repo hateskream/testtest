@@ -1,3 +1,3 @@
-import DashboardGroupContent from './dashboard-group-content.vue';
+import DashboardGroup from './dashboard-group.vue';
 
-export { DashboardGroupContent };
+export { DashboardGroup };

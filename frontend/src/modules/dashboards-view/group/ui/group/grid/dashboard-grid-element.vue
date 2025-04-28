@@ -2,8 +2,6 @@
 import { GridItem } from 'grid-layout-plus';
 import { useCssModule, computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-import GroupComponent from './group-component.vue';
-
 interface IGridElement {
 	i: number | string;
 	x: number;
@@ -73,7 +71,7 @@ onBeforeUnmount(() => {
 		:i="props.i"
 	>
 		<div :class="[classes.itemWrapper, classListItem]">
-			<group-component :item-id="props.i" />
+			<slot />
 		</div>
 	</grid-item>
 </template>

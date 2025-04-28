@@ -1,15 +1,14 @@
-import type { Layout } from 'grid-layout-plus';
 import { ref, watch, type Ref } from 'vue';
 
 import { createGrid } from '../utils';
-import type { IPosition } from '../model';
+import type { IPosition, IPositionWithId } from '../model';
 
 export function useRebuildingGrid(
 	columnsNum: Ref<number>,
 	rowsNum: Ref<number>,
-	rawDashboard: Ref<IPosition[]>,
+	rawDashboard: Ref<IPositionWithId[]>,
 ) {
-	const layout = ref<Layout>([]);
+	const layout = ref<IPositionWithId[]>([]);
 
 	watch(
 		rawDashboard,
@@ -23,7 +22,7 @@ export function useRebuildingGrid(
 	);
 
 	watch([columnsNum, rowsNum], () => {
-		const newLayout = createGrid(columnsNum.value, layout.value as IPosition[]);
+		const newLayout = createGrid(columnsNum.value, layout.value);
 		layout.value = newLayout;
 	});
 
