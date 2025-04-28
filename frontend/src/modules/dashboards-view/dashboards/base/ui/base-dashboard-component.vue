@@ -40,7 +40,6 @@ onClickOutside(rcmRef, () => {
 			<div :class="classes.titleText">
 				<slot name="title" />
 			</div>
-
 			<div :class="classes.control">
 				<ui-icon
 					:id="IconIds.ControlMore"
@@ -56,11 +55,9 @@ onClickOutside(rcmRef, () => {
 				/>
 			</div>
 		</div>
-
 		<div :class="classes.content">
 			<slot name="content" />
 		</div>
-
 		<div
 			v-show="isVisibleRcm"
 			ref="rcm"
@@ -82,6 +79,9 @@ onClickOutside(rcmRef, () => {
 
 .container {
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 	background-color: var(--bg-color-surface-01);
 	border-radius: 18px;
 }
@@ -102,6 +102,11 @@ onClickOutside(rcmRef, () => {
 	letter-spacing: 0.104px;
 }
 
+.content {
+	flex: 1;
+	overflow: hidden;
+}
+
 .control {
 	display: flex;
 	align-items: center;
@@ -112,5 +117,10 @@ onClickOutside(rcmRef, () => {
 
 .title:hover > .control {
 	opacity: 1;
+}
+
+.rcm {
+	position: absolute;
+	z-index: 10;
 }
 </style>

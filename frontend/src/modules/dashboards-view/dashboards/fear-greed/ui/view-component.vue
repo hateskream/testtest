@@ -146,7 +146,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 			</div>
 		</div>
 
-		<ui-transition-fade>
+		<!-- <ui-transition-fade>
 			<ul
 				v-if="history.length > 0 && fearGreedStore.isShowPastValues"
 				:class="classes.history"
@@ -161,7 +161,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 					</p>
 				</li>
 			</ul>
-		</ui-transition-fade>
+		</ui-transition-fade> -->
 	</div>
 </template>
 

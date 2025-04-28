@@ -28,7 +28,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 </script>
 
 <template>
-	<base-dashboard-component :class="classes.root">
+	<base-dashboard-component>
 		<template #title> Market </template>
 		<template #content>
 			<error-component v-if="isError" />
@@ -43,12 +43,3 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 		</template>
 	</base-dashboard-component>
 </template>
-
-<style module="classes">
-.root {
-	/* flex-grow: 1.8;
-	flex-basis: 0; */
-
-	width: 50%;
-}
-</style>

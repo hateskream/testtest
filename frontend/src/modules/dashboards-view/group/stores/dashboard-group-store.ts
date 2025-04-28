@@ -18,108 +18,66 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			isActive: true,
 			items: [
 				{
-					type: DashboardItemType.Collection,
-					id: 'collection-1',
-					name: 'Overview',
-					position: { x: 0, y: 0, w: 1, h: 1 },
-					items: [
-						{
-							type: DashboardItemType.Instance,
-							id: 'instance-1',
-							dashboardType: DashboardType.HotMarkets,
-							position: { x: 0, y: 0, w: 1, h: 1 },
-						},
-						{
-							type: DashboardItemType.Instance,
-							id: 'instance-2',
-							dashboardType: DashboardType.FearGreed,
-							position: { x: 0, y: 0, w: 1, h: 1 },
-						},
-						{
-							type: DashboardItemType.Instance,
-							id: 'instance-2',
-							dashboardType: DashboardType.MarketCap,
-							position: { x: 0, y: 0, w: 1, h: 1 },
-						},
-						{
-							type: DashboardItemType.Instance,
-							id: 'instance-3',
-							dashboardType: DashboardType.Price,
-							position: { x: 0, y: 0, w: 1, h: 1 },
-						},
-					],
+					type: DashboardItemType.Instance,
+					id: 0,
+					dashboardType: DashboardType.HotMarkets,
+					position: { x: 0, y: 0, w: 2, h: 4, prevW: 2 },
 				},
 				{
 					type: DashboardItemType.Instance,
-					id: 'instance-4',
-					dashboardType: DashboardType.Search,
-					position: { x: 0, y: 0, w: 1, h: 1 },
-				},
-				{
-					type: DashboardItemType.Collection,
-					id: 'collection-2',
-					name: 'Analytics',
-					position: { x: 0, y: 0, w: 1, h: 1 },
-					items: [
-						{
-							type: DashboardItemType.Instance,
-							id: 'instance-5',
-							dashboardType: DashboardType.Market,
-							position: { x: 0, y: 0, w: 1, h: 1 },
-						},
-						{
-							type: DashboardItemType.Folder,
-							id: 'folder-1',
-							position: { x: 0, y: 0, w: 1, h: 1 },
-							items: [
-								{
-									type: DashboardItemType.Instance,
-									id: 'instance-6',
-									dashboardType: DashboardType.News,
-									position: { x: 0, y: 0, w: 1, h: 1 },
-								},
-								{
-									type: DashboardItemType.Instance,
-									id: 'instance-7',
-									dashboardType: DashboardType.Insiders,
-									position: { x: 0, y: 0, w: 1, h: 1 },
-								},
-								{
-									type: DashboardItemType.Instance,
-									id: 'instance-8',
-									dashboardType: DashboardType.Events,
-									position: { x: 0, y: 0, w: 1, h: 1 },
-								},
-								{
-									type: DashboardItemType.Instance,
-									id: 'instance-9',
-									dashboardType: DashboardType.Telegram,
-									position: { x: 0, y: 0, w: 1, h: 1 },
-								},
-							],
-						},
-					],
+					id: 1,
+					dashboardType: DashboardType.FearGreed,
+					position: { x: 2, y: 0, w: 2, h: 4, prevW: 2 },
 				},
 				{
 					type: DashboardItemType.Instance,
-					id: 'instance-10',
-					dashboardType: DashboardType.Chart,
-					position: { x: 0, y: 0, w: 1, h: 1 },
-				},
-			],
-			market: 'crypto',
-		},
-		{
-			id: 'group-2',
-			name: 'Price',
-			isActive: false,
-			items: [
-				{
-					type: DashboardItemType.Instance,
-					id: 'instance-4',
+					id: 2,
 					dashboardType: DashboardType.Price,
-					position: { x: 0, y: 0, w: 1, h: 1 },
+					position: { x: 4, y: 0, w: 2, h: 4, prevW: 2 },
 				},
+				{
+					type: DashboardItemType.Instance,
+					id: 3,
+					dashboardType: DashboardType.Market,
+					position: { x: 0, y: 4, w: 3, h: 4, prevW: 3 },
+				},
+				{
+					type: DashboardItemType.Instance,
+					id: 4,
+					dashboardType: DashboardType.News,
+					position: { x: 3, y: 4, w: 3, h: 4, prevW: 3 },
+				},
+				// {
+				// 	type: DashboardItemType.Instance,
+				// 	id: 'instance-4',
+				// 	dashboardType: DashboardType.Price,
+				// 	position: { x: 3, y: 0, w: 1, h: 1, i: 2, prevW: 1 },
+				// },
+
+				// {
+				// 	type: DashboardItemType.Instance,
+				// 	id: 'instance-3',
+				// 	dashboardType: DashboardType.Price,
+				// 	position: { x: 2, y: 0, w: 1, h: 1, i: 1, prevW: 1 },
+				// },
+				// {
+				// 	type: DashboardItemType.Instance,
+				// 	id: 'instance-3',
+				// 	dashboardType: DashboardType.Price,
+				// 	position: { x: 2, y: 0, w: 1, h: 1, i: 1, prevW: 1 },
+				// },
+				// {
+				// 	type: DashboardItemType.Instance,
+				// 	id: 'instance-3',
+				// 	dashboardType: DashboardType.Price,
+				// 	position: { x: 2, y: 0, w: 1, h: 1, i: 1, prevW: 1 },
+				// },
+				// {
+				// 	type: DashboardItemType.Instance,
+				// 	id: 'instance-3',
+				// 	dashboardType: DashboardType.Price,
+				// 	position: { x: 2, y: 0, w: 1, h: 1, i: 1, prevW: 1 },
+				// },
 			],
 			market: 'crypto',
 		},
@@ -167,26 +125,26 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		}
 	}
 
-	function moveItem(
-		sourceGroupId: string,
-		targetGroupId: string,
-		itemId: string,
-		targetIndex: number,
-	) {
-		const sourceGroup = dashboardGroups.value.find(g => g.id === sourceGroupId);
-		const targetGroup = dashboardGroups.value.find(g => g.id === targetGroupId);
-		if (!sourceGroup || !targetGroup) {
-			return;
-		}
+	// function moveItem(
+	// 	sourceGroupId: string,
+	// 	targetGroupId: string,
+	// 	itemId: string,
+	// 	targetIndex: number,
+	// ) {
+	// 	const sourceGroup = dashboardGroups.value.find(g => g.id === sourceGroupId);
+	// 	const targetGroup = dashboardGroups.value.find(g => g.id === targetGroupId);
+	// 	if (!sourceGroup || !targetGroup) {
+	// 		return;
+	// 	}
 
-		const itemIndex = sourceGroup.items.findIndex(i => i.id === itemId);
-		if (itemIndex === -1) {
-			return;
-		}
+	// 	const itemIndex = sourceGroup.items.findIndex(i => i.id === itemId);
+	// 	if (itemIndex === -1) {
+	// 		return;
+	// 	}
 
-		const [item] = sourceGroup.items.splice(itemIndex, 1);
-		targetGroup.items.splice(targetIndex, 0, item);
-	}
+	// 	const [item] = sourceGroup.items.splice(itemIndex, 1);
+	// 	targetGroup.items.splice(targetIndex, 0, item);
+	// }
 
 	return {
 		dashboardGroups,
@@ -196,6 +154,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		renameTab,
 		switchTab,
 		addItemToGroup,
-		moveItem,
+		// moveItem,
 	};
 });

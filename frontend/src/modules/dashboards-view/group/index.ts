@@ -1,3 +1,3 @@
-export { DashboardGroupContent } from './ui/group';
+export { DashboardGroup } from './ui/group';
 
 export { TabsComponent } from './ui/tab';

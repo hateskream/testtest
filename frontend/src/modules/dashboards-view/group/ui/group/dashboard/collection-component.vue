@@ -6,9 +6,9 @@ import {
 	type IDashboardCollection,
 	type IDashboardFolder,
 	type IDashboardInstance,
-} from '../../model';
-import { getDashboardComponent } from '../../utils';
-import { useDashboardsStore } from '../../stores';
+} from '../../../model';
+import { getDashboardComponent } from '../../../utils';
+import { useDashboardsStore } from '../../../stores';
 
 import FolderComponent from './folder-component.vue';
 

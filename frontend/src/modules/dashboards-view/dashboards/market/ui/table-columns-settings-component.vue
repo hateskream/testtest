@@ -50,7 +50,6 @@ const gridConfig = {
 	isResizable: false,
 };
 
-// @ts-expect-error no need, skip
 function handleUpdatePositionsColumns(columnName: string, x: number, y: number) {
 	// TODO: fix with isDragging and first element
 
