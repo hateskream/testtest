@@ -1,12 +1,12 @@
 <template>
-	<div class="wrapper">
-		<div class="placeholder-content">
-			<span class="placeholder" />
+	<div :class="classes.wrapper">
+		<div :class="classes['placeholder-content']">
+			<span :class="classes.placeholder" />
 		</div>
 	</div>
 </template>
 
-<style scoped>
+<style module="classes">
 .wrapper {
 	height: 100%;
 	padding: 10px;

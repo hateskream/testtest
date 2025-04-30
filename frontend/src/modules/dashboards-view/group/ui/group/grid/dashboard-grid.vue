@@ -8,6 +8,7 @@ import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../
 import DashboardGridElement from './dashboard-grid-element.vue';
 import CurrentDashboard from '../dashboard/current-dashboard.vue';
 import PlaceholderComponent from './placeholder-component.vue';
+import GhostMoveComponent from './ghost-move-component.vue';
 
 interface IGridLayoutComponent {
 	dashboards: IDashboardGroup;
@@ -114,10 +115,6 @@ function mountPlaceholderComponents() {
 		return;
 	}
 
-	// const container = document.createElement('div');
-
-	// placeholder.appendChild(container);
-
 	mountedApp = createApp(PlaceholderComponent);
 	mountedApp.mount(placeholder);
 }
@@ -164,7 +161,7 @@ function unmountPlaceholderComponents() {
 					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
 				</template>
 				<template #dnd>
-					<div>fssdfsdfsdfsd</div>
+					<ghost-move-component title="test" />
 				</template>
 			</dashboard-grid-element>
 		</grid-layout>
@@ -192,6 +189,7 @@ function unmountPlaceholderComponents() {
 	right: 15px !important;
 	bottom: 10px !important;
 	background-color: #000000 !important;
+	opacity: 0;
 }
 
 :deep(.vgl-item--placeholder) {
