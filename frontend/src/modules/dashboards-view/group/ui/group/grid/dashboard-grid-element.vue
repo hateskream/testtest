@@ -27,6 +27,8 @@ const classListItem = computed(() => ({
 
 const gridItemRef = ref<InstanceType<typeof GridItem> | null>(null);
 
+const cuurentItemDnd = ref(false);
+
 let observer: MutationObserver | null = null;
 
 onMounted(() => {
@@ -44,8 +46,10 @@ onMounted(() => {
 					element.classList.contains('vgl-item--resizing');
 
 				if (isChanging) {
+					cuurentItemDnd.value = true;
 					emit('is-drag');
 				} else {
+					cuurentItemDnd.value = false;
 					emit('is-drag-end');
 				}
 			}
@@ -73,7 +77,18 @@ onBeforeUnmount(() => {
 		:i="props.i"
 	>
 		<div :class="[classes.itemWrapper, classListItem]">
-			<slot />
+			<div
+				v-if="!cuurentItemDnd"
+				:class="classes.item"
+			>
+				<slot name="not-dnd" />
+			</div>
+			<div
+				v-if="cuurentItemDnd"
+				:class="classes.item"
+			>
+				<slot name="dnd" />
+			</div>
 		</div>
 	</grid-item>
 </template>
@@ -90,5 +105,10 @@ onBeforeUnmount(() => {
 .itemWrapper {
 	height: 100%;
 	transition: padding 0.3s ease;
+}
+
+.item {
+	width: 100%;
+	height: 100%;
 }
 </style>

@@ -62,7 +62,6 @@ function sendereRequestByType(
 }
 
 function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
-	console.log('response', response);
 	return response.data.map(currency => ({
 		...currency,
 		srcImage: getImagePath(currency.ticker, ImageTypePath.Currency),
