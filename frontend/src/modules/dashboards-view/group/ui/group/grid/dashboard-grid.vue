@@ -114,12 +114,12 @@ function mountPlaceholderComponents() {
 		return;
 	}
 
-	const container = document.createElement('div');
+	// const container = document.createElement('div');
 
-	placeholder.appendChild(container);
+	// placeholder.appendChild(container);
 
 	mountedApp = createApp(PlaceholderComponent);
-	mountedApp.mount(container);
+	mountedApp.mount(placeholder);
 }
 
 function unmountPlaceholderComponents() {
@@ -195,10 +195,7 @@ function unmountPlaceholderComponents() {
 }
 
 :deep(.vgl-item--placeholder) {
-	/* display: none !important; */
 	background-color: transparent !important;
-	border: 7px solid #000000 !important;
-	border-radius: 18px;
 	opacity: 1 !important;
 }
 </style>
