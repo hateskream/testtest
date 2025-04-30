@@ -10,7 +10,7 @@ enum TypeSendRequest {
 	MockServer,
 }
 
-const typeSendRequest = TypeSendRequest.Prod;
+const typeSendRequest = TypeSendRequest.MockLocal;
 
 export interface IGetPriceRequest {
 	market: string;

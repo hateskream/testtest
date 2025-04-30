@@ -39,9 +39,11 @@ onMounted(() => {
 	observer = new MutationObserver(mutations => {
 		mutations.forEach(mutation => {
 			if (mutation.attributeName === 'class') {
-				const isDragging = element.classList.contains('vgl-item--dragging');
+				const isChanging =
+					element.classList.contains('vgl-item--dragging') ||
+					element.classList.contains('vgl-item--resizing');
 
-				if (isDragging) {
+				if (isChanging) {
 					emit('is-drag');
 				} else {
 					emit('is-drag-end');
