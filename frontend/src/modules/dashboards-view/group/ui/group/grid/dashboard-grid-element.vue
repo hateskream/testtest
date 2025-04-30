@@ -36,20 +36,23 @@ onMounted(() => {
 		return;
 	}
 
-	const element = gridItemRef.value.$el;
+	const element = gridItemRef.value.$el as HTMLElement;
 
 	observer = new MutationObserver(mutations => {
 		mutations.forEach(mutation => {
 			if (mutation.attributeName === 'class') {
-				const isChanging =
-					element.classList.contains('vgl-item--dragging') ||
-					element.classList.contains('vgl-item--resizing');
+				const isResizing = element.classList.contains('vgl-item--resizing');
+				const isDragging = element.classList.contains('vgl-item--dragging');
 
-				if (isChanging) {
+				if (isDragging) {
 					cuurentItemDnd.value = true;
-					emit('is-drag');
 				} else {
 					cuurentItemDnd.value = false;
+				}
+
+				if (isResizing || isDragging) {
+					emit('is-drag');
+				} else {
 					emit('is-drag-end');
 				}
 			}
