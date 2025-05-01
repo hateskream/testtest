@@ -77,7 +77,6 @@ function getSortDirection(columnName: string) {
 
 .thead {
 	display: table;
-	width: max-content;
 	min-width: 100%;
 	table-layout: fixed;
 }
@@ -97,6 +96,9 @@ function getSortDirection(columnName: string) {
 	position: sticky !important;
 	top: 0;
 	right: 0;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 	min-width: 50px !important;
 	padding-right: 8px;
 }

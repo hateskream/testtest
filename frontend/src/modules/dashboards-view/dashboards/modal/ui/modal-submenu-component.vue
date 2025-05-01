@@ -7,6 +7,7 @@ import { UiPosition } from '@/shared/ui/position';
 	<ui-position
 		trigger="hover"
 		position="right-start"
+		:position-offset="12"
 	>
 		<template #default="{ isVisible }">
 			<div :class="[classes.title, { [classes.titleActive]: isVisible }]">
