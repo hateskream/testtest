@@ -102,14 +102,6 @@ const marketStore = useMarketStore();
 	border-radius: 100px;
 }
 
-.tableChgNegative {
-	color: var(--metrics-color-negative-500);
-}
-
-.tableChgPositive {
-	color: rgb(178 242 211 / 100%);
-}
-
 .tableIcon {
 	display: flex;
 	align-items: center;
@@ -120,7 +112,6 @@ const marketStore = useMarketStore();
 	display: block;
 	width: max-content;
 	min-width: 100%;
-	max-height: 450px;
 }
 
 .tbody > tr {

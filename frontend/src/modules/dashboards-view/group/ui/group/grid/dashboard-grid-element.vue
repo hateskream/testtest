@@ -27,6 +27,8 @@ const classListItem = computed(() => ({
 
 const gridItemRef = ref<InstanceType<typeof GridItem> | null>(null);
 
+const cuurentItemDnd = ref(false);
+
 let observer: MutationObserver | null = null;
 
 onMounted(() => {
@@ -34,14 +36,21 @@ onMounted(() => {
 		return;
 	}
 
-	const element = gridItemRef.value.$el;
+	const element = gridItemRef.value.$el as HTMLElement;
 
 	observer = new MutationObserver(mutations => {
 		mutations.forEach(mutation => {
 			if (mutation.attributeName === 'class') {
+				const isResizing = element.classList.contains('vgl-item--resizing');
 				const isDragging = element.classList.contains('vgl-item--dragging');
 
 				if (isDragging) {
+					cuurentItemDnd.value = true;
+				} else {
+					cuurentItemDnd.value = false;
+				}
+
+				if (isResizing || isDragging) {
 					emit('is-drag');
 				} else {
 					emit('is-drag-end');
@@ -71,7 +80,18 @@ onBeforeUnmount(() => {
 		:i="props.i"
 	>
 		<div :class="[classes.itemWrapper, classListItem]">
-			<slot />
+			<div
+				v-if="!cuurentItemDnd"
+				:class="classes.item"
+			>
+				<slot name="not-dnd" />
+			</div>
+			<div
+				v-if="cuurentItemDnd"
+				:class="classes.item"
+			>
+				<slot name="dnd" />
+			</div>
 		</div>
 	</grid-item>
 </template>
@@ -88,5 +108,10 @@ onBeforeUnmount(() => {
 .itemWrapper {
 	height: 100%;
 	transition: padding 0.3s ease;
+}
+
+.item {
+	width: 100%;
+	height: 100%;
 }
 </style>

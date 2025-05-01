@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RcmItem } from '../index';
+import { ModalItem } from '../index';
 
 interface IProps {
 	value: string | number;
@@ -9,11 +9,11 @@ defineProps<IProps>();
 </script>
 
 <template>
-	<rcm-item :class="classes.content">
+	<modal-item :class="classes.content">
 		<slot name="default" />
 
 		<span :class="classes.number">{{ value }}</span>
-	</rcm-item>
+	</modal-item>
 </template>
 
 <style module="classes">

@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, useCssModule } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useMarketStore } from '../stores';
 import type { ITableColumnDirection } from '../model';
-import { BaseFilterModalTabWrapper } from '../../base';
-
-import TabTimeframeComponent from './tab-timeframe-component.vue';
 
 const marketStore = useMarketStore();
 
 interface ITab {
 	name: string;
-	icon?: IconIds;
 	sortTab: string;
 	columnName?: string;
 	direction: ITableColumnDirection;
-	timeframe?: string;
+	iconColorClass?: string;
+
+	icon?: {
+		name: IconIds;
+		iconColorClass: string;
+		width: string;
+		height: string;
+	};
 }
+
+const classes = useCssModule('classes');
 
 const tabs = ref<ITab[]>([
 	{
@@ -27,26 +32,34 @@ const tabs = ref<ITab[]>([
 	},
 	{
 		name: 'Gainers',
-		icon: IconIds.Gainers,
+		icon: {
+			name: IconIds.Gainers,
+			height: '14',
+			width: '14',
+			iconColorClass: classes.iconGainersColor,
+		},
+		iconColorClass: classes.iconGainersColor,
 		sortTab: 'gainers',
 		columnName: 'chg24h',
 		direction: -1,
-		timeframe: '24h',
 	},
 	{
 		name: 'Losers',
-		icon: IconIds.Loosers,
+		icon: {
+			name: IconIds.Loosers,
+			height: '46',
+			width: '14',
+			iconColorClass: classes.iconLoosersColor,
+		},
 		sortTab: 'losers',
 		columnName: 'chg24h',
 		direction: 1,
-		timeframe: '24h',
 	},
 	{
 		name: 'New',
 		sortTab: 'new',
 		columnName: 'listingDate',
 		direction: -1,
-		timeframe: '24h',
 	},
 	{
 		name: 'Upcoming',
@@ -54,12 +67,6 @@ const tabs = ref<ITab[]>([
 		direction: 0,
 	},
 ]);
-
-function setActiveTabTimeframe(idx: number, timeframe: string) {
-	tabs.value[idx].timeframe = timeframe;
-
-	marketStore.setActiveTabTimeframe(tabs.value[idx]);
-}
 
 const activeTabs = computed(() =>
 	tabs.value.filter(
@@ -69,30 +76,28 @@ const activeTabs = computed(() =>
 </script>
 <template>
 	<div :class="classes.tabs">
-		<base-filter-modal-tab-wrapper
-			v-for="(tab, idx) in activeTabs"
+		<div
+			v-for="tab in activeTabs"
 			:key="tab.name"
 			:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
+			:class="[
+				classes.tab,
+				{ [classes.tabActive]: marketStore.activeTabSort.sortTab === tab.sortTab },
+			]"
 			@click="marketStore.setActiveTabSort(tab)"
 		>
 			<ui-icon
 				v-if="tab.icon"
-				:id="tab.icon"
-				width="20px"
-				height="20px"
-				:class="classes.iconWrapper"
+				:id="tab.icon.name"
+				:width="tab.icon.width"
+				:height="tab.icon.height"
+				:class="[classes.iconWrapper, tab.icon.iconColorClass]"
 			/>
 
 			{{ tab.name }}
+		</div>
 
-			<tab-timeframe-component
-				v-if="tab.timeframe"
-				:model-value="tab.timeframe"
-				@update:model-value="setActiveTabTimeframe(idx, $event)"
-			/>
-		</base-filter-modal-tab-wrapper>
-
-		<base-filter-modal-tab-wrapper
+		<!-- <base-filter-modal-tab-wrapper
 			:is-active="marketStore.isFavorites"
 			@click.prevent.stop="marketStore.toggleFavorites"
 		>
@@ -102,20 +107,50 @@ const activeTabs = computed(() =>
 				height="20px"
 				:class="classes.iconFavorite"
 			/>
-		</base-filter-modal-tab-wrapper>
+		</base-filter-modal-tab-wrapper> -->
 	</div>
 </template>
 
 <style module="classes">
+.iconGainersColor {
+	color: rgb(206 255 139 / 100%);
+}
+
+.iconLoosersColor {
+	color: rgb(248 89 97 / 50%);
+}
+
 .tabs {
 	display: flex;
-	margin-bottom: 7px;
-	padding-bottom: 12px;
-	gap: 7px;
+	align-items: center;
+	width: max-content;
+	margin-bottom: 8px;
+	padding: 2px;
+	background: var(--bg-color-base-300);
+	border-radius: 9999px;
+	gap: 2px;
+}
+
+.tab {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 28px;
+	padding: 4px 12px;
+	font-weight: 380;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+	letter-spacing: 0.04px;
+	gap: 2px;
+}
+
+.tabActive {
+	background: var(--bg-color-base-300-activated);
+	border-radius: 28px;
 }
 
 .iconWrapper {
-	color: var(--icon-color-base-300);
+	flex: 14px;
 	cursor: pointer;
 }
 

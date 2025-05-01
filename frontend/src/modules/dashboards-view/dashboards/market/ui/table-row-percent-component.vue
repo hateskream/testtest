@@ -10,6 +10,10 @@ const props = defineProps<IProps>();
 const classes = useCssModule('classes');
 
 const percentClasses = computed<string>(() => {
+	if (+props.value === 0) {
+		return classes.positive;
+	}
+
 	if (+props.value > 0) {
 		return classes.positive;
 	}
@@ -27,12 +31,16 @@ const percentClasses = computed<string>(() => {
 </template>
 
 <style module="classes">
+.commonly {
+	color: var(--text-color-base-300);
+}
+
 .positive {
-	color: rgb(178 242 211 / 100%);
+	color: var(--metrics-color-positive);
 }
 
 .negative {
-	color: rgb(255 175 106 / 100%);
+	color: var(--metrics-color-negative-500);
 }
 
 .percent {

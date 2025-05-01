@@ -91,7 +91,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 				<div
 					v-if="fearGreedStore.isShowChart"
 					:class="classes.metricСhartIndicator"
-					@click="emits('updateInteractive')"
+					@click.stop.prevent="emits('updateInteractive')"
 				>
 					<svg
 						width="200"

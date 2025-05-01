@@ -8,9 +8,6 @@
 
 <style module="classes">
 .submenu {
-	position: absolute;
-	top: 0;
-	left: calc(100% + 10px);
 	min-width: 204px;
 	padding: 6px;
 	background: var(--bg-modal-color-base);

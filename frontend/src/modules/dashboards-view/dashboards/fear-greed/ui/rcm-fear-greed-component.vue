@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RcmDashboard, RcmSwitch } from '../../rcm';
-import type { IRcmPositions } from '../../rcm/model';
+import { ModalItemSwitch, ModalRcm } from '../../modal';
+import type { IModalRcmPositions } from '../../modal/model';
 import { useFearGreedStore } from '../stores';
 
 interface IProps {
-	positions: IRcmPositions;
+	positions: IModalRcmPositions;
 }
 
 defineProps<IProps>();
@@ -13,33 +13,33 @@ const fearGreedStore = useFearGreedStore();
 </script>
 
 <template>
-	<rcm-dashboard :positions="positions">
+	<modal-rcm :positions="positions">
 		<template #title> Additional features </template>
 		<template #content>
-			<rcm-switch
+			<modal-item-switch
 				:model-value="fearGreedStore.isShowChart"
 				@update:model-value="fearGreedStore.toggleShowChart"
 			>
 				Chart
-			</rcm-switch>
-			<rcm-switch
+			</modal-item-switch>
+			<modal-item-switch
 				:model-value="fearGreedStore.isShowName"
 				@update:model-value="fearGreedStore.toggleShowName"
 			>
 				Name
-			</rcm-switch>
-			<rcm-switch
+			</modal-item-switch>
+			<modal-item-switch
 				:model-value="fearGreedStore.isShowDescription"
 				@update:model-value="fearGreedStore.toggleShowDescription"
 			>
 				Description
-			</rcm-switch>
-			<rcm-switch
+			</modal-item-switch>
+			<modal-item-switch
 				:model-value="fearGreedStore.isShowPastValues"
 				@update:model-value="fearGreedStore.toggleShowPastValues"
 			>
 				Past values
-			</rcm-switch>
+			</modal-item-switch>
 		</template>
-	</rcm-dashboard>
+	</modal-rcm>
 </template>

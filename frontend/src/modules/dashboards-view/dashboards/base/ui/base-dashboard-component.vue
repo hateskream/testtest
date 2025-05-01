@@ -3,12 +3,12 @@ import { ref, useTemplateRef } from 'vue';
 import { onClickOutside, useMouseInElement } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IRcmPositions } from '../../rcm/model';
+import type { IModalRcmPositions } from '../../modal/model';
 
 const target = useTemplateRef('target');
 const isVisibleRcm = ref(false);
 const mousePositions = useMouseInElement(target);
-const rcmPositions = ref<IRcmPositions>({
+const rcmPositions = ref<IModalRcmPositions>({
 	x: 0,
 	y: 0,
 });
@@ -121,6 +121,6 @@ onClickOutside(rcmRef, () => {
 
 .rcm {
 	position: absolute;
-	z-index: 10;
+	z-index: 101;
 }
 </style>

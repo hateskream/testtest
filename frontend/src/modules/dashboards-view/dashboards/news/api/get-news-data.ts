@@ -20,8 +20,9 @@ export interface IGetNewsRequest {
 	score?: NewsScore[];
 	dateRange?: string | 'all';
 	sortBy?: {
-		name: 'date' | 'source' | 'importance';
-	} & { order: 'ASC' | 'DESC' };
+		name: string;
+		order: string;
+	};
 	locations?: string;
 }
 

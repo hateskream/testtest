@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRefs, watch } from 'vue';
+import { computed, createApp, nextTick, onBeforeMount, onMounted, ref, watch, type App } from 'vue';
 import { GridLayout, type Layout } from 'grid-layout-plus';
 
 import { useRebuildingGrid } from '../../../composables';
@@ -7,6 +7,8 @@ import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import CurrentDashboard from '../dashboard/current-dashboard.vue';
+import PlaceholderComponent from './placeholder-component.vue';
+import GhostMoveComponent from './ghost-move-component.vue';
 
 interface IGridLayoutComponent {
 	dashboards: IDashboardGroup;
@@ -28,6 +30,8 @@ const emit = defineEmits<{
 }>();
 
 let isUserInteracted = false;
+
+let mountedApp: App<Element> | null = null;
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
@@ -66,6 +70,12 @@ watch(
 	},
 );
 
+onMounted(() => {
+	nextTick(mountPlaceholderComponents);
+});
+
+onBeforeMount(unmountPlaceholderComponents);
+
 function getDashboardItemById(id: number): IDashboardItem {
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
 	if (foundDashboard) {
@@ -91,6 +101,30 @@ function onDragStart() {
 function onDragEnd() {
 	emit('update-is-show-grid-state', false);
 }
+
+function mountPlaceholderComponents() {
+	if (!gridLayoutRef.value) {
+		return;
+	}
+
+	const placeholder = gridLayoutRef.value.$el.querySelector(
+		'.dashboard-grid > .vgl-item--placeholder',
+	);
+
+	if (!(placeholder instanceof HTMLElement)) {
+		return;
+	}
+
+	mountedApp = createApp(PlaceholderComponent);
+	mountedApp.mount(placeholder);
+}
+
+function unmountPlaceholderComponents() {
+	if (mountedApp) {
+		mountedApp.unmount();
+		mountedApp = null;
+	}
+}
 </script>
 
 <template>
@@ -108,6 +142,7 @@ function onDragEnd() {
 			:prevent-collision="false"
 			:use-css-transforms="false"
 			:margin="[0, 0]"
+			class="dashboard-grid"
 			@layout-updated="updated"
 		>
 			<dashboard-grid-element
@@ -122,7 +157,12 @@ function onDragEnd() {
 				@is-drag="onDragStart"
 				@is-drag-end="onDragEnd"
 			>
-				<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
+				<template #not-dnd>
+					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
+				</template>
+				<template #dnd>
+					<ghost-move-component title="test" />
+				</template>
 			</dashboard-grid-element>
 		</grid-layout>
 	</div>
@@ -149,12 +189,11 @@ function onDragEnd() {
 	right: 15px !important;
 	bottom: 10px !important;
 	background-color: #000000 !important;
+	opacity: 0;
 }
 
 :deep(.vgl-item--placeholder) {
-	background-color: rgb(0 128 255 / 80%) !important;
-	border: 7px solid #000000 !important;
-	border-radius: 18px;
-	opacity: 0.1 !important;
+	background-color: transparent !important;
+	opacity: 1 !important;
 }
 </style>

@@ -20,7 +20,12 @@ const newsArguments = computed<IGetNewsRequest>(() => ({
 	segment: newsStore.filters.segment.value,
 	sentiment: newsStore.filters.sentiment.value,
 	dateRange: 'newsStore.filters.dateRange.value',
-
+	sortBy: newsStore.activeSort
+		? {
+				name: newsStore.activeSort.key,
+				order: newsStore.activeSort.order.toUpperCase(),
+			}
+		: undefined,
 	locations: JSON.stringify(newsStore.activeLocationFilters),
 }));
 

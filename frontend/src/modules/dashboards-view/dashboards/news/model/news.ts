@@ -82,3 +82,11 @@ export interface INewsCryptoCurrency {
 	name: string;
 	srcImage: string;
 }
+
+export interface INewsSort {
+	key: string;
+	order: string;
+	value: boolean;
+	name: string;
+	span?: string;
+}
