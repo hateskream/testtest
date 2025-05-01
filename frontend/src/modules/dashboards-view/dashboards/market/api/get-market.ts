@@ -9,7 +9,6 @@ const IS_USE_MOCK = true;
 export interface IGetMarketRequest {
 	market: string;
 	sort?: string;
-	timeframe?: string;
 }
 
 export interface IGetMarketResponse {

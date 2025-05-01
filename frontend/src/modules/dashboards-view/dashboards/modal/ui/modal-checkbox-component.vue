@@ -2,7 +2,7 @@
 import { computed, useCssModule } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { BaseModalItem } from '..';
+import { ModalItem } from '../index';
 
 interface IProps {
 	modelValue: boolean;
@@ -25,7 +25,7 @@ const classesList = computed(() => ({
 </script>
 
 <template>
-	<base-modal-item
+	<modal-item
 		:class="classes.content"
 		@click="emits('update:modelValue', !modelValue)"
 	>
@@ -37,7 +37,7 @@ const classesList = computed(() => ({
 				:id="IconIds.RcmCheckbox"
 			/>
 		</div>
-	</base-modal-item>
+	</modal-item>
 </template>
 
 <style module="classes">

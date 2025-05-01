@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { BaseFilterModal, BaseFilterModalTabWrapper } from '../../base';
 import { FilterType } from '../../base/model/filter-modal';
 import { useNewsStore } from '../stores';
+import { UiDriver } from '@/shared/ui/driver';
+import { UiPosition } from '@/shared/ui/position';
+import {
+	ModalFilter,
+	ModalFilterTabWrapper,
+	ModalFilterTitle,
+	ModalItem,
+	ModalItemCheckbox,
+} from '../../modal';
+
+import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
 const newsStore = useNewsStore();
 </script>
 
 <template>
-	<base-filter-modal>
+	<modal-filter>
 		<template #title> Filter </template>
 
 		<template #content>
-			<!-- Remove after demo -->
-			<div style="padding-bottom: 10px;">
+			<div :class="classes.rowWrapper">
 				<div
 					v-for="(filter, key) in newsStore.filters"
 					:key="key"
@@ -26,7 +35,7 @@ const newsStore = useNewsStore();
 						v-if="filter.type === FilterType.List"
 						:class="classes.tabs"
 					>
-						<base-filter-modal-tab-wrapper
+						<modal-filter-tab-wrapper
 							v-for="item in filter.list"
 							:key="`filter-${key}-${item.value}`"
 							:is-active="
@@ -35,19 +44,42 @@ const newsStore = useNewsStore();
 							@click="newsStore.toggleFiltersList(key, item.value)"
 						>
 							{{ item.label }}
-						</base-filter-modal-tab-wrapper>
+						</modal-filter-tab-wrapper>
 					</div>
 				</div>
 			</div>
+
+			<ui-position>
+				<template #default>
+					<modal-item> Location </modal-item>
+				</template>
+
+				<template #content>
+					<news-location-filter-component />
+				</template>
+			</ui-position>
+
+			<modal-item> Ticker </modal-item>
+
+			<ui-driver />
+
+			<div>
+				<modal-filter-title> Sort By </modal-filter-title>
+
+				<modal-item-checkbox
+					v-for="sort in newsStore.sortBy"
+					:key="sort.key"
+					:model-value="sort.value"
+					@update:model-value="newsStore.setSort(sort)"
+				>
+					{{ sort.name }}
+				</modal-item-checkbox>
+			</div>
 		</template>
-	</base-filter-modal>
+	</modal-filter>
 </template>
 
 <style module="classes">
-.locationFilter {
-	position: relative;
-}
-
 .tabs {
 	display: flex;
 	gap: 8px;
@@ -57,7 +89,7 @@ const newsStore = useNewsStore();
 .row {
 	display: flex;
 	align-items: center;
-	padding: 4px 0;
+	padding: 4px 12px;
 }
 
 .rowTitle {

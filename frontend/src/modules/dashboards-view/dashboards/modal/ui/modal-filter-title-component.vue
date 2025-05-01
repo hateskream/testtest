@@ -6,9 +6,11 @@
 
 <style module="classes">
 .title {
-	padding: 12px 0;
-	font-size: 12px;
+	padding: 12px;
+	font-weight: 300;
+	font-size: 13px;
 	text-align: left;
-	color: var(--text-color-base-100);
+	color: var(--text-color-base-300);
+	letter-spacing: 0.052px;
 }
 </style>

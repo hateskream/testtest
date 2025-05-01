@@ -8,7 +8,7 @@ import type { ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { setPositionColumns } from '../utils';
-import { BaseFilterModal, BaseFilterModalTabWrapper, BaseFilterModalTitle } from '../../base';
+import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../modal';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
@@ -72,7 +72,7 @@ function handleToggleTab(columnName: string) {
 </script>
 
 <template>
-	<base-filter-modal>
+	<modal-filter>
 		<template #title> Choose Metrics </template>
 
 		<template #content>
@@ -88,14 +88,14 @@ function handleToggleTab(columnName: string) {
 
 					<div>
 						<div :class="classes.tabs">
-							<base-filter-modal-tab-wrapper
+							<modal-filter-tab-wrapper
 								v-for="tab in columns"
 								:key="tab.columnName"
 								:is-active="marketStore.showTableColumns.includes(tab.columnName)"
 								@click="handleToggleTab(tab.columnName)"
 							>
 								{{ tab.displayShortColumnName }}
-							</base-filter-modal-tab-wrapper>
+							</modal-filter-tab-wrapper>
 						</div>
 					</div>
 				</div>
@@ -104,7 +104,7 @@ function handleToggleTab(columnName: string) {
 			<ui-driver :class="classes.driver" />
 
 			<div>
-				<base-filter-modal-title> Column order </base-filter-modal-title>
+				<modal-filter-title> Column order </modal-filter-title>
 
 				<div>
 					<grid-layout
@@ -136,18 +136,18 @@ function handleToggleTab(columnName: string) {
 								width="10px"
 								height="14px"
 							/>
-							<base-filter-modal-tab-wrapper :class="classes.columnCellTabWrapper">
+							<modal-filter-tab-wrapper :class="classes.columnCellTabWrapper">
 								<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
 								<span>
 									{{ item.data.displayColumnName }}
 								</span>
-							</base-filter-modal-tab-wrapper>
+							</modal-filter-tab-wrapper>
 						</grid-item>
 					</grid-layout>
 				</div>
 			</div>
 		</template>
-	</base-filter-modal>
+	</modal-filter>
 </template>
 
 <style module="classes">
@@ -183,7 +183,7 @@ function handleToggleTab(columnName: string) {
 .row {
 	display: flex;
 	align-items: center;
-	padding: 4px 0;
+	padding: 4px 12px;
 }
 
 .rowTitle {

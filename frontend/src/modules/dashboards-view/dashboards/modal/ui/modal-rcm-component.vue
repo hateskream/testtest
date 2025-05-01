@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IRcmPositions } from '../model';
+import type { IModalRcmPositions } from '../model';
 
 interface IRcmProps {
-	positions: IRcmPositions;
+	positions: IModalRcmPositions;
 }
 
 const props = defineProps<IRcmProps>();

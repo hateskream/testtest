@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 
-import { RcmDashboard, RcmDriver, RcmSwitch, RcmCheckbox } from '../../rcm';
-import type { IRcmPositions } from '../../rcm/model';
+import type { IModalRcmPositions } from '../../modal/model';
 import { usePriceStore } from '../stores';
+import { UiDriver } from '@/shared/ui/driver';
+import { ModalItemSwitch, ModalRcm, ModalItemCheckbox } from '../../modal';
 
 interface IProps {
-	positions: IRcmPositions;
+	positions: IModalRcmPositions;
 }
 
 defineProps<IProps>();
@@ -19,45 +20,45 @@ const select = reactive({
 </script>
 
 <template>
-	<rcm-dashboard :positions="positions">
+	<modal-rcm :positions="positions">
 		<template #title> Additional features </template>
 		<template #content>
-			<rcm-switch
+			<modal-item-switch
 				:model-value="priceStore.isShowChart"
 				@update:model-value="priceStore.toggleShowChart"
 			>
 				Chart
-			</rcm-switch>
-			<rcm-switch
+			</modal-item-switch>
+			<modal-item-switch
 				:model-value="priceStore.isShowPercentageChange"
 				@update:model-value="priceStore.toggleShowPercentageChange"
 			>
 				Change, %
-			</rcm-switch>
-			<rcm-switch
+			</modal-item-switch>
+			<modal-item-switch
 				:model-value="priceStore.isShowLogo"
 				@update:model-value="priceStore.toggleShowLogo"
 			>
 				Logo
-			</rcm-switch>
+			</modal-item-switch>
 
-			<rcm-checkbox v-model="select.favorites">Only favorites</rcm-checkbox>
+			<modal-item-checkbox v-model="select.favorites"> Only favorites </modal-item-checkbox>
 
-			<rcm-driver />
+			<ui-driver />
 
-			<rcm-checkbox
+			<modal-item-checkbox
 				:model-value="priceStore.isShowTicker"
 				@update:model-value="priceStore.toggleShowTicker"
 			>
 				Ticker
-			</rcm-checkbox>
+			</modal-item-checkbox>
 
-			<rcm-checkbox
+			<modal-item-checkbox
 				:model-value="priceStore.isShowDescription"
 				@update:model-value="priceStore.toggleShowDescription"
 			>
 				Description
-			</rcm-checkbox>
+			</modal-item-checkbox>
 		</template>
-	</rcm-dashboard>
+	</modal-rcm>
 </template>

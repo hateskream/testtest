@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RcmItem } from '../index';
 import { BaseSwitch } from '../../base';
+import { ModalItem } from '../index';
 
 interface IProps {
 	modelValue: boolean;
@@ -16,14 +16,14 @@ const emits = defineEmits<IEmits>();
 </script>
 
 <template>
-	<rcm-item
+	<modal-item
 		:class="classes.content"
 		@click="emits('update:modelValue', !modelValue)"
 	>
 		<slot name="default" />
 
 		<base-switch :is-active="props.modelValue" />
-	</rcm-item>
+	</modal-item>
 </template>
 
 <style module="classes">

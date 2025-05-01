@@ -4,6 +4,7 @@ import draggableComponent from 'vuedraggable';
 import { useMarketStore } from '../stores';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
+import TableMetricsComponent from './table-metrics-component.vue';
 
 const marketStore = useMarketStore();
 
@@ -37,7 +38,9 @@ function getSortDirection(columnName: string) {
 		</template>
 
 		<template #footer>
-			<th :class="classes.iconTertiary" />
+			<th :class="classes.iconTertiary">
+				<table-metrics-component />
+			</th>
 		</template>
 	</draggable-component>
 </template>
@@ -75,15 +78,14 @@ function getSortDirection(columnName: string) {
 .thead {
 	display: table;
 	width: max-content;
-	min-width: calc(100% - 45px);
+	min-width: 100%;
 	table-layout: fixed;
 }
 
 .thead th {
 	position: relative;
 	min-width: 100px;
-	height: 32px;
-	padding: 4px 0;
+	height: 28px;
 	font-weight: 440;
 	font-size: 12px;
 	color: var(--text-color-base-100);
@@ -92,14 +94,18 @@ function getSortDirection(columnName: string) {
 }
 
 .iconTertiary {
-	min-width: 40px !important;
+	position: sticky !important;
+	top: 0;
+	right: 0;
+	min-width: 50px !important;
+	padding-right: 8px;
 }
 
 .thead th:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
-	z-index: 20;
+	z-index: 21;
 	background-color: var(--bg-color-surface-01);
 }
 
@@ -107,7 +113,7 @@ function getSortDirection(columnName: string) {
 	display: flex;
 	align-items: center;
 	width: max-content;
-	height: 32px;
+	height: 28px;
 	padding-inline: 10px !important;
 	text-align: center !important;
 	color: var(--text-color-base-100-effect) !important;

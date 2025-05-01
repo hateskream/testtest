@@ -59,17 +59,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		}
 	}
 
-	function setActiveTabTimeframe(args: IActiveTabSort) {
-		activeTabSort.value = args;
-
-		if (args.columnName) {
-			activeSort.value = {
-				columnName: args.columnName,
-				direction: args.direction,
-			};
-		}
-	}
-
 	function setActiveTabSort(args: IActiveTabSort) {
 		if (args.columnName) {
 			let { direction } = args;
@@ -176,7 +165,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTabSort,
 		setActiveTabSort,
 		showTableColumns,
-		setActiveTabTimeframe,
 		toggleFavorites,
 		isFavorites,
 		resetAll,

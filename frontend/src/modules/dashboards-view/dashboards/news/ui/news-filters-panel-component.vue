@@ -1,24 +1,14 @@
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core';
-import { ref, useTemplateRef } from 'vue';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { BaseModalItemCheckbox, BaseModalList } from '../../base';
 import { useNewsStore } from '../stores';
 import type { IFilterList } from '../../base/model/filter-modal';
 import { compareStrings } from '@/shared/lib';
+import { UiPosition } from '@/shared/ui/position';
+import { ModalItemCheckbox, ModalList } from '../../modal';
 
 import NewsFilters from './news-filters-component.vue';
 
 const newsFilters = useNewsStore();
-
-const isVisibleFilters = ref(false);
-
-const newsFiltersRef = useTemplateRef('newsFilter');
-
-onClickOutside(newsFiltersRef, () => {
-	isVisibleFilters.value = false;
-});
 
 function getTitleFilterList(
 	filterName: string,
@@ -37,23 +27,25 @@ function getTitleFilterList(
 
 <template>
 	<div :class="classes.container">
-		<div
-			ref="newsFilter"
-			:class="classes.iconAllFilter"
-		>
-			<ui-icon
-				:id="IconIds.NewsFilter"
-				width="20"
-				height="20"
-				:class="classes.icon"
-				@click="isVisibleFilters = !isVisibleFilters"
-			/>
+		<div :class="classes.iconAllFilter">
+			<ui-position>
+				<template #default>
+					<ui-icon
+						:id="IconIds.NewsFilter"
+						width="20"
+						height="20"
+						:class="classes.icon"
+					/>
+				</template>
 
-			<news-filters v-show="isVisibleFilters" />
+				<template #content>
+					<news-filters />
+				</template>
+			</ui-position>
 		</div>
 
 		<div :class="classes.listFilters">
-			<base-modal-list
+			<modal-list
 				v-for="(filter, key) in newsFilters.activeFilters"
 				:key="key"
 			>
@@ -72,7 +64,7 @@ function getTitleFilterList(
 				</template>
 
 				<template #content>
-					<base-modal-item-checkbox
+					<modal-item-checkbox
 						v-for="item in filter.list"
 						:key="item.value"
 						:model-value="
@@ -83,9 +75,9 @@ function getTitleFilterList(
 						"
 					>
 						{{ item.label }}
-					</base-modal-item-checkbox>
+					</modal-item-checkbox>
 				</template>
-			</base-modal-list>
+			</modal-list>
 		</div>
 	</div>
 </template>

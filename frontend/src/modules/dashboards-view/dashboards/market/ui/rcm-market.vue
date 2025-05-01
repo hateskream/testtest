@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import {
-	RcmItem,
-	RcmDashboard,
-	RcmSubmenu,
-	RcmSubmenuContent,
-	RcmDriver,
-	RcmCheckbox,
-	RcmNumber,
-} from '../../rcm';
-import type { IRcmPositions } from '../../rcm/model';
+import { UiDriver } from '@/shared/ui/driver';
+import type { IModalRcmPositions } from '../../modal/model';
 import { useMarketStore } from '../stores';
+import {
+	ModalItem,
+	ModalItemCheckbox,
+	ModalItemNumber,
+	ModalRcm,
+	ModalSubmenu,
+	ModalSubmenuContent,
+} from '../../modal';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 
 interface IProps {
-	positions: IRcmPositions;
+	positions: IModalRcmPositions;
 }
 
 defineProps<IProps>();
@@ -23,61 +23,50 @@ const marketStore = useMarketStore();
 </script>
 
 <template>
-	<rcm-dashboard :positions="positions">
+	<modal-rcm :positions="positions">
 		<template #title> Market </template>
 		<template #content>
-			<rcm-number :value="1">Duplicate</rcm-number>
-			<rcm-number :value="2">Open in new tab</rcm-number>
-			<rcm-number :value="3">Wrap in stack</rcm-number>
+			<modal-item-number :value="1">Duplicate</modal-item-number>
+			<modal-item-number :value="2">Open in new tab</modal-item-number>
+			<modal-item-number :value="3">Wrap in stack</modal-item-number>
 
-			<rcm-item>Turn into new dashboard</rcm-item>
+			<modal-item>Turn into new dashboard</modal-item>
 
-			<rcm-driver />
+			<ui-driver />
 
-			<rcm-submenu>
+			<modal-submenu>
 				<template #title> Change display </template>
 
 				<template #content>
-					<rcm-submenu-content>
+					<modal-submenu-content>
 						<template #content>
-							<rcm-checkbox
+							<modal-item-checkbox
 								:model-value="marketStore.isFavorites"
 								@update:model-value="marketStore.toggleFavorites"
 							>
 								Only favorites
-							</rcm-checkbox>
+							</modal-item-checkbox>
 
-							<rcm-submenu>
+							<modal-submenu>
 								<template #title> Column metrics </template>
 								<template #content>
 									<table-columns-settings-component
 										class="submenu-content-modal-offset"
 									/>
 								</template>
-							</rcm-submenu>
+							</modal-submenu>
 						</template>
-					</rcm-submenu-content>
+					</modal-submenu-content>
 				</template>
-			</rcm-submenu>
+			</modal-submenu>
 
-			<rcm-item @click="marketStore.resetAll"> Reset all changes </rcm-item>
+			<modal-item @click="marketStore.resetAll"> Reset all changes </modal-item>
 
-			<rcm-driver />
+			<ui-driver />
 
-			<rcm-item> Delete </rcm-item>
+			<modal-item> Delete </modal-item>
 		</template>
 
-		<rcm-item>Delete</rcm-item>
-	</rcm-dashboard>
+		<modal-item>Delete</modal-item>
+	</modal-rcm>
 </template>
-
-<style module="classes">
-.metrics {
-	position: relative;
-}
-
-.metricsSettings {
-	top: 0;
-	left: calc(100% + 10px);
-}
-</style>

@@ -5,12 +5,10 @@ import { compareStrings } from '@/shared/lib';
 import { useMarketStore } from '../stores';
 import type { ITableRow, ITableRowValue, ITableRowValueType } from '../model';
 import type { IMarketDomain } from '../api';
-import { ScrollContainer } from '../../base';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import TableRowsComponent from './table-rows-component.vue';
 import TableColumnsComponent from './table-columns-component.vue';
-import TableMetricsComponent from './table-metrics-component.vue';
 
 interface IViewComponentProps {
 	markets: IMarketDomain[];
@@ -93,35 +91,43 @@ function sortRowsByType(args: {
 </script>
 
 <template>
-	<div :class="classes.tableContainer">
+	<div :class="classes.root">
 		<market-tabs-component />
 
-		<div :class="classes.tableWrapper">
-			<scroll-container>
-				<template #content>
-					<table :class="classes.table">
-						<table-columns-component />
-						<table-rows-component :rows="tableRows" />
-					</table>
-				</template>
-
-				<template #footer>
-					<table-metrics-component />
-				</template>
-			</scroll-container>
+		<div :class="classes.scrollable">
+			<table :class="classes.table">
+				<table-columns-component :class="classes.tableThead" />
+				<table-rows-component :rows="tableRows" />
+			</table>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.tableContainer {
+.scrollable {
 	position: relative;
+	flex: 1;
+	overflow-x: auto;
+	overflow-y: auto;
+}
+
+.tableThead {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background-color: var(--bg-color-surface-01);
+}
+
+.root {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 	padding: 0 16px 18px;
+	overflow: hidden;
 }
 
 .table {
 	position: relative;
-	z-index: 1;
 	width: max-content;
 	min-width: 100%;
 	border-spacing: 0;

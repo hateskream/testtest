@@ -1,49 +1,32 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
-import { onClickOutside } from '@vueuse/core';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiPosition } from '@/shared/ui/position';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
-
-const isTableHeadColumns = ref(false);
-
-const settingsRef = useTemplateRef('settings');
-
-onClickOutside(settingsRef, () => {
-	isTableHeadColumns.value = false;
-});
 </script>
 
 <template>
-	<div
-		ref="settings"
-		:class="classes.metrics"
-	>
-		<ui-icon
-			:id="IconIds.Tertiary"
-			:class="classes.iconTertiary"
-			width="20"
-			height="20"
-			@click="isTableHeadColumns = !isTableHeadColumns"
-		/>
+	<ui-position position="right-start">
+		<template #default>
+			<ui-icon
+				:id="IconIds.Tertiary"
+				:class="classes.iconTertiary"
+				width="20"
+				height="20"
+			/>
+		</template>
 
-		<table-columns-settings-component v-show="isTableHeadColumns" />
-	</div>
+		<template #content>
+			<table-columns-settings-component />
+		</template>
+	</ui-position>
 </template>
 
 <style module="classes">
 .metrics {
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 9;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	height: 32px;
-	padding-right: 8px;
-	background-color: var(--bg-color-surface-01);
 	cursor: pointer;
 }
 

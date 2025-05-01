@@ -21,7 +21,6 @@ const marketStore = useMarketStore();
 const { data, isLoading, isError } = useQueryMarket({
 	market: props.market,
 	sort: marketStore.activeTabSort.sortTab,
-	timeframe: marketStore.activeTabSort.timeframe,
 });
 
 const isNotData = computed(() => !!data.value && isLoading.value);

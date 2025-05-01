@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { type IFilterNews, type INewsLocation } from '../model';
+import { type IFilterNews, type INewsLocation, type INewsSort } from '../model';
 import { NEWS_LOCATIONS, NEWS_FILTERS } from '../const';
 import { type IFilterList } from '../../base/model/filter-modal';
 import { compareStrings } from '@/shared/lib';
@@ -31,6 +31,58 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 	const locationFilters = ref<INewsLocation[]>(NEWS_LOCATIONS);
 
+	const sortBy = ref<INewsSort[]>([
+		{
+			key: 'date',
+			order: 'asc',
+			value: false,
+			name: 'Date',
+			span: 'Newest first',
+		},
+		{
+			key: 'date',
+			order: 'desc',
+			value: false,
+			name: 'Date',
+			span: 'Oldest first',
+		},
+		{
+			key: 'source',
+			order: 'asc',
+			value: false,
+			name: 'Source popularity',
+		},
+		{
+			key: 'importance',
+			order: 'asc',
+			value: false,
+			name: 'Importance',
+		},
+	]);
+
+	const activeSort = computed<INewsSort | undefined>(() =>
+		sortBy.value.find(item => item.value === true),
+	);
+
+	function setSort(sortItem: INewsSort) {
+		sortBy.value = sortBy.value.map(item => {
+			if (
+				compareStrings(item.key, sortItem.key) &&
+				compareStrings(item.order, sortItem.order)
+			) {
+				return {
+					...item,
+					value: !sortItem.value,
+				};
+			}
+
+			return {
+				...item,
+				value: false,
+			};
+		});
+	}
+
 	const activeLocationFilters = computed(() => {
 		const countries: { region: string; countries: string[] }[] = [];
 
@@ -52,8 +104,62 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		return countries;
 	});
 
+	function toggleLocationRegionFilter(region: string) {
+		const locationIdx = locationFilters.value.findIndex(item =>
+			compareStrings(region, item.region),
+		)!;
+
+		const isActive = !locationFilters.value[locationIdx].isActive;
+
+		const countries = locationFilters.value[locationIdx].countries.map(item => ({
+			...item,
+			isActive,
+		}));
+
+		locationFilters.value[locationIdx] = {
+			...locationFilters.value[locationIdx],
+			countries,
+			isActive,
+		};
+	}
+
+	function toggleLocationCountryFilter(region: string, countryCode: string) {
+		const locationIdx = locationFilters.value.findIndex(item =>
+			compareStrings(region, item.region),
+		)!;
+
+		let activeCountries = 0;
+
+		const countries = locationFilters.value[locationIdx].countries.map(item => {
+			if (compareStrings(countryCode, item.code)) {
+				if (!item.isActive) {
+					activeCountries += 1;
+				}
+
+				return {
+					...item,
+					isActive: !item.isActive,
+				};
+			}
+
+			if (item.isActive) {
+				activeCountries += 1;
+			}
+
+			return item;
+		});
+
+		const isActive = activeCountries !== 0;
+
+		locationFilters.value[locationIdx] = {
+			...locationFilters.value[locationIdx],
+			countries,
+			isActive,
+		};
+	}
+
 	function toggleFiltersList(key: keyof IFilterNews | string, value: string) {
-		// @ts-expect-error no-error, only for ts
+		// @ts-expect-error skip
 		const filterActive = filters.value[key] as IFilterList<string>;
 
 		const filterActiveValueIdx = filterActive.value.findIndex(item =>
@@ -126,10 +232,15 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 		activeLocationFilters,
 		toggleFiltersList,
+		toggleLocationCountryFilter,
+		toggleLocationRegionFilter,
 
 		filters,
+		sortBy,
 
 		resetAll,
+		activeSort,
+		setSort,
 
 		toggleShowDate,
 		toggleShowSource,
