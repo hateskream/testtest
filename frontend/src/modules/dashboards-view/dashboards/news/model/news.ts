@@ -1,4 +1,4 @@
-import type { IFilterList } from '../../base/model/filter-modal';
+import type { IFilterList } from '../../modal/model';
 
 export const NewsSegment = {
 	Crypto: 'crypto',

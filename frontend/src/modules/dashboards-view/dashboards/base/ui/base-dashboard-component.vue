@@ -97,7 +97,6 @@ onClickOutside(rcmRef, () => {
 .titleText {
 	font-weight: 300;
 	font-size: 16px;
-	line-height: 140%;
 	color: var(--text-color-base-300);
 	letter-spacing: 0.104px;
 }
