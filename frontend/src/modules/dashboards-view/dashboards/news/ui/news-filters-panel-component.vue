@@ -104,7 +104,7 @@ function getTitleFilterList(
 
 .iconAllFilter {
 	position: relative;
-	z-index: 21;
+	z-index: 19;
 	cursor: pointer;
 }
 </style>
