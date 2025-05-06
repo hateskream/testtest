@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, createApp, nextTick, onBeforeMount, onMounted, ref, watch, type App } from 'vue';
+import { computed, createApp, onBeforeMount, reactive, ref, watch, type App } from 'vue';
 import { GridLayout, type Layout } from 'grid-layout-plus';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 
 import { useRebuildingGrid } from '../../../composables';
 import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../model';
@@ -9,6 +10,12 @@ import DashboardGridElement from './dashboard-grid-element.vue';
 import CurrentDashboard from '../dashboard/current-dashboard.vue';
 import PlaceholderComponent from './placeholder-component.vue';
 import GhostMoveComponent from './ghost-move-component.vue';
+
+interface IGridState {
+	isDnd: boolean;
+	isResize: boolean;
+	isUserInteracted: boolean;
+}
 
 interface IGridLayoutComponent {
 	dashboards: IDashboardGroup;
@@ -22,19 +29,20 @@ const props = defineProps<IGridLayoutComponent>();
 
 const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
-	(e: 'update:modelValue', value: Layout): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
-	(e: 'dropover'): void;
-	(e: 'drop'): void;
 }>();
 
-let isUserInteracted = false;
-
-let mountedApp: App<Element> | null = null;
+let mountedPlaceholder: App<Element> | null = null;
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
+
+const gridState = reactive<IGridState>({
+	isDnd: false,
+	isResize: false,
+	isUserInteracted: false,
+});
 
 const rawDashboards = computed((): IPositionWithId[] =>
 	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
@@ -52,7 +60,6 @@ watch(
 			emit('setWrapper', value);
 		}
 	},
-
 	{
 		once: true,
 	},
@@ -70,9 +77,42 @@ watch(
 	},
 );
 
-onMounted(() => {
-	nextTick(mountPlaceholderComponents);
-});
+watch(
+	() => gridState.isUserInteracted,
+	() => emit('update-is-show-grid-state', false),
+);
+
+watch([() => gridState.isDnd, () => gridState.isResize], ([isDnd, isResize]) =>
+	emit('update-is-show-grid-state', isDnd || isResize),
+);
+
+watch(
+	() => gridState.isDnd,
+	isDnd => {
+		if (isDnd) {
+			mountedPlaceholder = createApp(PlaceholderComponent);
+			mountPlaceholderComponents(mountedPlaceholder);
+		} else {
+			unmountPlaceholderComponents();
+		}
+	},
+);
+
+watch(
+	() => gridState.isResize,
+	isDnd => {
+		if (isDnd) {
+			mountedPlaceholder = createApp(CurrentDashboard, {
+				dashboardItem: getDashboardItemById(1),
+			});
+			mountedPlaceholder.use(VueQueryPlugin);
+
+			mountPlaceholderComponents(mountedPlaceholder);
+		} else {
+			unmountPlaceholderComponents();
+		}
+	},
+);
 
 onBeforeMount(unmountPlaceholderComponents);
 
@@ -85,24 +125,21 @@ function getDashboardItemById(id: number): IDashboardItem {
 	throw new Error(`Dashboard with id ${id} not found`);
 }
 
-function updated(newLayout: Layout) {
-	emit('update-is-show-grid-state', false);
-
-	if (isUserInteracted) {
-		emit('update:modelValue', newLayout);
-		isUserInteracted = false;
+function updated() {
+	if (!gridState.isUserInteracted) {
+		gridState.isUserInteracted = true;
 	}
 }
 
-function onDragStart() {
-	emit('update-is-show-grid-state', true);
+function onChangeDndState(newValue: boolean) {
+	gridState.isDnd = newValue;
 }
 
-function onDragEnd() {
-	emit('update-is-show-grid-state', false);
+function onChangeResizeState(newValue: boolean) {
+	gridState.isResize = newValue;
 }
 
-function mountPlaceholderComponents() {
+function mountPlaceholderComponents(placeholderComponent: App<Element>) {
 	if (!gridLayoutRef.value) {
 		return;
 	}
@@ -115,14 +152,13 @@ function mountPlaceholderComponents() {
 		return;
 	}
 
-	mountedApp = createApp(PlaceholderComponent);
-	mountedApp.mount(placeholder);
+	placeholderComponent.mount(placeholder);
 }
 
 function unmountPlaceholderComponents() {
-	if (mountedApp) {
-		mountedApp.unmount();
-		mountedApp = null;
+	if (mountedPlaceholder) {
+		mountedPlaceholder.unmount();
+		mountedPlaceholder = null;
 	}
 }
 </script>
@@ -153,15 +189,18 @@ function unmountPlaceholderComponents() {
 				:w="item.w"
 				:h="item.h"
 				:i="item.i"
-				:is-dnd="isDnd"
-				@is-drag="onDragStart"
-				@is-drag-end="onDragEnd"
+				:is-editing="props.isDnd"
+				@change-dnd-state="onChangeDndState"
+				@change-resize-state="onChangeResizeState"
 			>
-				<template #not-dnd>
+				<template #state-calm>
 					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
 				</template>
-				<template #dnd>
+				<template #state-dnd>
 					<ghost-move-component title="test" />
+				</template>
+				<template #state-resize>
+					<placeholder-component />
 				</template>
 			</dashboard-grid-element>
 		</grid-layout>
