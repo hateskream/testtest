@@ -4,7 +4,12 @@ import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
 import { useRebuildingGrid } from '../../../composables';
-import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../model';
+import {
+	DashboardItemType,
+	type IDashboardGroup,
+	type IDashboardItem,
+	type IPositionWithId,
+} from '../../../model';
 import { queryClient } from '@/shared/service/query-client';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
@@ -124,6 +129,16 @@ function getDashboardItemById(id: number): IDashboardItem {
 	throw new Error(`Dashboard with id ${id} not found`);
 }
 
+function getNameByDashboardId(id: number): string {
+	const dashboardItem = getDashboardItemById(id);
+
+	if (dashboardItem.type !== DashboardItemType.Instance) {
+		throw new Error(`Dashboard with id ${id} is not instance`);
+	}
+
+	return dashboardItem.name;
+}
+
 function mountPlaceholderResize() {
 	if (resizableWidgetId.value === null) {
 		return;
@@ -219,7 +234,7 @@ function setResizableWidgetId(id: number | null) {
 					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
 				</template>
 				<template #state-dnd>
-					<ghost-move-component title="test" />
+					<ghost-move-component :title="getNameByDashboardId(item.i)" />
 				</template>
 				<template #state-resize>
 					<placeholder-component />

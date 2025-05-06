@@ -33,6 +33,7 @@ export enum DashboardType {
 export interface IDashboardInstance {
 	type: DashboardItemType.Instance;
 	id: number;
+	name: string;
 	dashboardType: DashboardType;
 	position: IPosition;
 }
