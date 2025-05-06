@@ -11,6 +11,8 @@ import DashboardGridElement from './dashboard-grid-element.vue';
 import CurrentDashboard from '../dashboard/current-dashboard.vue';
 import PlaceholderComponent from './placeholder-component.vue';
 import GhostMoveComponent from './ghost-move-component.vue';
+import PlaceholderResizeComponent from './placeholder-resize-component.vue';
+import PlaceholderDndComponent from './placeholder-dnd-component.vue';
 
 interface IGridState {
 	isDnd: boolean;
@@ -127,7 +129,7 @@ function mountPlaceholderResize() {
 		return;
 	}
 
-	mountedPlaceholder = createApp(CurrentDashboard, {
+	mountedPlaceholder = createApp(PlaceholderResizeComponent, {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
 	});
 	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
@@ -136,7 +138,7 @@ function mountPlaceholderResize() {
 }
 
 function mountPlaceholderDnD() {
-	mountedPlaceholder = createApp(PlaceholderComponent);
+	mountedPlaceholder = createApp(PlaceholderDndComponent);
 	mountPlaceholderComponents(mountedPlaceholder);
 }
 

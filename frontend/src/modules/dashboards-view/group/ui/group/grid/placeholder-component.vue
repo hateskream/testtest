@@ -1,17 +1,10 @@
 <template>
-	<div :class="classes.wrapper">
-		<div :class="classes['placeholder-content']">
-			<span :class="classes.placeholder" />
-		</div>
+	<div :class="classes['placeholder-content']">
+		<span :class="classes.placeholder" />
 	</div>
 </template>
 
 <style module="classes">
-.wrapper {
-	height: 100%;
-	padding: 10px;
-}
-
 .placeholder-content {
 	position: relative;
 	height: 100%;
