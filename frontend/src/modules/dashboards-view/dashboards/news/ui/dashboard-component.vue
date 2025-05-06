@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';

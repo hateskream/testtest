@@ -3,8 +3,13 @@ import { computed, ref } from 'vue';
 
 import { type IFilterNews, type INewsLocation, type INewsSort } from '../model';
 import { NEWS_LOCATIONS, NEWS_FILTERS } from '../const';
-import { type IFilterList } from '../../base/model/filter-modal';
 import { compareStrings } from '@/shared/lib';
+import { getImagePath, ImageTypePath } from '@/shared/lib/get-image-path';
+import type {
+	IFilterList,
+	IModalFilterTickerLists,
+	IModalFilterTickerWithGroup,
+} from '../../modal/model';
 
 export const useNewsStore = defineStore('dashboards-news', () => {
 	const isShowDate = ref(true);
@@ -64,24 +69,62 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		sortBy.value.find(item => item.value === true),
 	);
 
-	function setSort(sortItem: INewsSort) {
-		sortBy.value = sortBy.value.map(item => {
-			if (
-				compareStrings(item.key, sortItem.key) &&
-				compareStrings(item.order, sortItem.order)
-			) {
-				return {
-					...item,
-					value: !sortItem.value,
-				};
-			}
+	const tickerLists = ref<IModalFilterTickerLists>({
+		Cryptocurrencies: [
+			{
+				image: getImagePath('TRON', ImageTypePath.Currency),
+				name: 'Tron',
+				ticker: 'TRX',
+				isSelected: false,
+			},
+			{
+				image: getImagePath('ADA', ImageTypePath.Currency),
+				name: 'Cardano',
+				ticker: 'ADA',
+				isSelected: false,
+			},
+			{
+				image: getImagePath('BNB', ImageTypePath.Currency),
+				name: 'BNB',
+				ticker: 'BNB',
+				isSelected: false,
+			},
+			{
+				image: getImagePath('SOL', ImageTypePath.Currency),
+				name: 'Solana',
+				ticker: 'SOL',
+				isSelected: false,
+			},
+		],
 
-			return {
-				...item,
-				value: false,
-			};
-		});
-	}
+		Stocks: [
+			{
+				image: getImagePath('TSLA', ImageTypePath.Stock),
+				name: 'Tesla Inc',
+				ticker: 'TSLA',
+				isSelected: false,
+			},
+			{
+				image: getImagePath('META', ImageTypePath.Stock),
+				name: 'Meta Platforms',
+				ticker: 'META',
+				isSelected: false,
+			},
+			{
+				image: getImagePath('TSLA', ImageTypePath.Stock),
+				name: 'Apple Inc',
+				ticker: 'AAPL',
+				isSelected: false,
+			},
+		],
+	});
+
+	const activeTickersList = computed<IModalFilterTickerWithGroup[]>(() =>
+		Object.entries(tickerLists.value)
+			.map(([group, arr]) => arr.map(item => ({ ...item, group })))
+			.flat()
+			.filter(item => item.isSelected),
+	);
 
 	const activeLocationFilters = computed(() => {
 		const countries: { region: string; countries: string[] }[] = [];
@@ -103,6 +146,29 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 		return countries;
 	});
+
+	function setTickerLists(newList: IModalFilterTickerLists) {
+		tickerLists.value = newList;
+	}
+
+	function setSort(sortItem: INewsSort) {
+		sortBy.value = sortBy.value.map(item => {
+			if (
+				compareStrings(item.key, sortItem.key) &&
+				compareStrings(item.order, sortItem.order)
+			) {
+				return {
+					...item,
+					value: !sortItem.value,
+				};
+			}
+
+			return {
+				...item,
+				value: false,
+			};
+		});
+	}
 
 	function toggleLocationRegionFilter(region: string) {
 		const locationIdx = locationFilters.value.findIndex(item =>
@@ -234,6 +300,10 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		toggleFiltersList,
 		toggleLocationCountryFilter,
 		toggleLocationRegionFilter,
+
+		tickerLists,
+		activeTickersList,
+		setTickerLists,
 
 		filters,
 		sortBy,

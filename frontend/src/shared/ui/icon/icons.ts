@@ -24,4 +24,5 @@ export enum IconIds {
 	FavoriteFill = 'favorite-fill',
 	ScoreMedium = 'score-medium',
 	NewsFilter = 'news-filter',
+	Close = 'close',
 }

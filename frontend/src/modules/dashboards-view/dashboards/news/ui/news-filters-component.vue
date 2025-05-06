@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { FilterType } from '../../base/model/filter-modal';
 import { useNewsStore } from '../stores';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import {
 	ModalFilter,
 	ModalFilterTabWrapper,
+	ModalFilterTicker,
 	ModalFilterTitle,
 	ModalItem,
 	ModalItemCheckbox,
 } from '../../modal';
+import { FilterType } from '../../modal/model';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
@@ -49,7 +50,10 @@ const newsStore = useNewsStore();
 				</div>
 			</div>
 
-			<ui-position>
+			<ui-position
+				:position-offset="12"
+				trigger="hover"
+			>
 				<template #default>
 					<modal-item> Location </modal-item>
 				</template>
@@ -59,7 +63,21 @@ const newsStore = useNewsStore();
 				</template>
 			</ui-position>
 
-			<modal-item> Ticker </modal-item>
+			<ui-position
+				:position-offset="12"
+				trigger="hover"
+			>
+				<template #default>
+					<modal-item> Ticker </modal-item>
+				</template>
+
+				<template #content>
+					<modal-filter-ticker
+						:model-value="newsStore.tickerLists"
+						@update:model-value="newsStore.setTickerLists"
+					/>
+				</template>
+			</ui-position>
 
 			<ui-driver />
 
