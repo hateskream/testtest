@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, createApp, nextTick, onBeforeMount, reactive, ref, watch, type App } from 'vue';
-import { GridLayout, type Layout } from 'grid-layout-plus';
+import { computed, createApp, onBeforeMount, reactive, ref, watch, type App } from 'vue';
+import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
 import { useRebuildingGrid } from '../../../composables';
 import type { IDashboardGroup, IDashboardItem, IPositionWithId } from '../../../model';
+import { queryClient } from '@/shared/service/query-client';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import CurrentDashboard from '../dashboard/current-dashboard.vue';
@@ -129,13 +130,13 @@ function mountPlaceholderResize() {
 	mountedPlaceholder = createApp(CurrentDashboard, {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
 	});
-	mountedPlaceholder.use(VueQueryPlugin);
+	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
 
 	mountPlaceholderComponents(mountedPlaceholder);
 }
 
 function mountPlaceholderDnD() {
-	mountedPlaceholder = createApp(GhostMoveComponent);
+	mountedPlaceholder = createApp(PlaceholderComponent);
 	mountPlaceholderComponents(mountedPlaceholder);
 }
 
