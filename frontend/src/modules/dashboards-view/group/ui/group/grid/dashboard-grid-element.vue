@@ -21,6 +21,7 @@ const props = defineProps<IGridElement>();
 const emit = defineEmits<{
 	(event: 'change-dnd-state', value: boolean): void;
 	(event: 'change-resize-state', value: boolean): void;
+	(event: 'set-resizable-widget-id', value: number | null): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -72,6 +73,15 @@ onBeforeUnmount(() => {
 function updateResizeState(newValue: boolean) {
 	componentState.isResize = newValue;
 	emit('change-resize-state', newValue);
+
+	if (newValue) {
+		const id = props.i;
+		const currentId = typeof id === 'number' ? id : parseInt(id, 10);
+
+		emit('set-resizable-widget-id', currentId);
+	} else {
+		emit('set-resizable-widget-id', null);
+	}
 }
 
 function updateDndState(newValue: boolean) {

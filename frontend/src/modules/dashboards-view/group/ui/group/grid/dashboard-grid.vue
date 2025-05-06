@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, createApp, onBeforeMount, reactive, ref, watch, type App } from 'vue';
+import { computed, createApp, nextTick, onBeforeMount, reactive, ref, watch, type App } from 'vue';
 import { GridLayout, type Layout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
@@ -43,6 +43,8 @@ const gridState = reactive<IGridState>({
 	isResize: false,
 	isUserInteracted: false,
 });
+
+const resizableWidgetId = ref<number | null>(null);
 
 const rawDashboards = computed((): IPositionWithId[] =>
 	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
@@ -90,8 +92,7 @@ watch(
 	() => gridState.isDnd,
 	isDnd => {
 		if (isDnd) {
-			mountedPlaceholder = createApp(PlaceholderComponent);
-			mountPlaceholderComponents(mountedPlaceholder);
+			mountPlaceholderDnD();
 		} else {
 			unmountPlaceholderComponents();
 		}
@@ -100,14 +101,9 @@ watch(
 
 watch(
 	() => gridState.isResize,
-	isDnd => {
-		if (isDnd) {
-			mountedPlaceholder = createApp(CurrentDashboard, {
-				dashboardItem: getDashboardItemById(1),
-			});
-			mountedPlaceholder.use(VueQueryPlugin);
-
-			mountPlaceholderComponents(mountedPlaceholder);
+	isResize => {
+		if (isResize) {
+			mountPlaceholderResize();
 		} else {
 			unmountPlaceholderComponents();
 		}
@@ -125,18 +121,22 @@ function getDashboardItemById(id: number): IDashboardItem {
 	throw new Error(`Dashboard with id ${id} not found`);
 }
 
-function updated() {
-	if (!gridState.isUserInteracted) {
-		gridState.isUserInteracted = true;
+function mountPlaceholderResize() {
+	if (resizableWidgetId.value === null) {
+		return;
 	}
+
+	mountedPlaceholder = createApp(CurrentDashboard, {
+		dashboardItem: getDashboardItemById(resizableWidgetId.value),
+	});
+	mountedPlaceholder.use(VueQueryPlugin);
+
+	mountPlaceholderComponents(mountedPlaceholder);
 }
 
-function onChangeDndState(newValue: boolean) {
-	gridState.isDnd = newValue;
-}
-
-function onChangeResizeState(newValue: boolean) {
-	gridState.isResize = newValue;
+function mountPlaceholderDnD() {
+	mountedPlaceholder = createApp(GhostMoveComponent);
+	mountPlaceholderComponents(mountedPlaceholder);
 }
 
 function mountPlaceholderComponents(placeholderComponent: App<Element>) {
@@ -160,6 +160,24 @@ function unmountPlaceholderComponents() {
 		mountedPlaceholder.unmount();
 		mountedPlaceholder = null;
 	}
+}
+
+function updated() {
+	if (!gridState.isUserInteracted) {
+		gridState.isUserInteracted = true;
+	}
+}
+
+function onChangeDndState(newValue: boolean) {
+	gridState.isDnd = newValue;
+}
+
+function onChangeResizeState(newValue: boolean) {
+	gridState.isResize = newValue;
+}
+
+function setResizableWidgetId(id: number | null) {
+	resizableWidgetId.value = id;
 }
 </script>
 
@@ -192,6 +210,7 @@ function unmountPlaceholderComponents() {
 				:is-editing="props.isDnd"
 				@change-dnd-state="onChangeDndState"
 				@change-resize-state="onChangeResizeState"
+				@set-resizable-widget-id="setResizableWidgetId"
 			>
 				<template #state-calm>
 					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
