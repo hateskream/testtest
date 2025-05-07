@@ -71,22 +71,15 @@ function optimizeLayoutHeight(
 		: updatedDashboards;
 }
 
-function setPrevWidth(currentDashboards: IPositionWithId[]) {
-	return currentDashboards.map(w => ({ ...w, w: w.prevW, prevW: w.w }));
-}
-
 function adjustWidgetWidth(
 	currentDashboards: IPositionWithId[],
 	colNum: number,
 ): IPositionWithId[] {
-	return currentDashboards.map(widget =>
-		widget.w > colNum ? { ...widget, w: colNum, prevW: widget.w } : widget,
-	);
+	return currentDashboards.map(widget => (widget.w > colNum ? { ...widget, w: colNum } : widget));
 }
 
 export function createGrid(colNum: number, initDashboards: IPositionWithId[]): IPositionWithId[] {
-	let updatedDashboards = setPrevWidth([...initDashboards]);
-	// let updatedDashboards = [...initDashboards];
+	let updatedDashboards = [...initDashboards];
 
 	while (isGridTooWide(updatedDashboards, colNum)) {
 		const widget = updatedDashboards.find(isOffScreen);

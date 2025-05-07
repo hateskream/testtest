@@ -3,7 +3,6 @@ export interface IPosition {
 	y: number;
 	w: number;
 	h: number;
-	prevW: number;
 }
 
 export interface IPositionWithId extends IPosition {
