@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { TabsComponent, DashboardGroup } from '@/modules/dashboards-view/group';
-import { LayoutComponent } from '@/modules/layaout';
+import { TabsComponent, DashboardGroup } from '@/modules/dashboard-group';
+import { LayoutComponent } from '@/modules/layout';
 </script>
 
 <template>
