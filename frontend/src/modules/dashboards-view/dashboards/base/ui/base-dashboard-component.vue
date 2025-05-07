@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { computed, ref, useCssModule, useTemplateRef } from 'vue';
 import { onClickOutside, useMouseInElement } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IModalRcmPositions } from '../../modal/model';
+
+interface IBaseDashboardComponentProps {
+	isResizing: boolean;
+}
+
+const props = defineProps<IBaseDashboardComponentProps>();
+
+const classes = useCssModule('classes');
 
 const target = useTemplateRef('target');
 const isVisibleRcm = ref(false);
@@ -12,6 +20,11 @@ const rcmPositions = ref<IModalRcmPositions>({
 	x: 0,
 	y: 0,
 });
+
+const classList = computed(() => ({
+	[classes.resizing]: props.isResizing,
+	[classes.notResizing]: !props.isResizing,
+}));
 
 function handleOpenRcm() {
 	rcmPositions.value = {
@@ -31,7 +44,7 @@ onClickOutside(rcmRef, () => {
 <template>
 	<div
 		ref="target"
-		:class="classes.container"
+		:class="[classes.container, classList]"
 	>
 		<div
 			:class="classes.title"
@@ -77,12 +90,19 @@ onClickOutside(rcmRef, () => {
 	cursor: pointer;
 }
 
+.resizing {
+	background-color: var(--bg-color-surface-02);
+}
+
+.notResizing {
+	background-color: var(--bg-color-surface-01);
+}
+
 .container {
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	background-color: var(--bg-color-surface-01);
 	border-radius: 18px;
 }
 

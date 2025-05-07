@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import type { IMeta } from '@/modules/dashboards-view/group/model/widgets.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
+
+interface IDashboardComponentProps {
+	meta: IMeta;
+}
+
+const props = defineProps<IDashboardComponentProps>();
 </script>
 
 <template>
-	<base-dashboard-component :class="classes.root">
-		<template #title> Hot markets </template>
+	<base-dashboard-component :is-resizing="props.meta.isResizing">
+		<template #title>
+			<div>{{ props.meta.name }}</div>
+		</template>
 	</base-dashboard-component>
 </template>
-
-<style module="classes">
-.root {
-	flex-grow: 1.8;
-	flex-basis: 0;
-}
-</style>

@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { BaseDashboardComponent } from '../../base';
 import { useQueryMarket } from '../queries';
 import { useMarketStore } from '../stores';
+import type { IMeta } from '@/modules/dashboards-view/group/model';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -11,7 +12,7 @@ import ViewComponent from './view-component.vue';
 import RcmMarket from './rcm-market.vue';
 
 interface IDashboardComponentProps {
-	market: string;
+	meta: IMeta;
 }
 
 const props = defineProps<IDashboardComponentProps>();
@@ -19,7 +20,7 @@ const props = defineProps<IDashboardComponentProps>();
 const marketStore = useMarketStore();
 
 const { data, isLoading, isError } = useQueryMarket({
-	market: props.market,
+	market: props.meta.market,
 	sort: marketStore.activeTabSort.sortTab,
 });
 
@@ -27,8 +28,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 </script>
 
 <template>
-	<base-dashboard-component>
-		<template #title> Market </template>
+	<base-dashboard-component :is-resizing="props.meta.isResizing">
+		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />

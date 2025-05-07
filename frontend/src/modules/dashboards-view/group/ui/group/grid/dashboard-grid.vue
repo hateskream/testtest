@@ -146,6 +146,7 @@ function mountPlaceholderResize() {
 
 	mountedPlaceholder = createApp(PlaceholderResizeComponent, {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
+		isResizing: true,
 	});
 	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
 

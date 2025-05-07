@@ -13,9 +13,12 @@ import FolderComponent from './folder-component.vue';
 
 interface IGroupComponentProps {
 	dashboardItem: IDashboardItem;
+	isResizing?: boolean;
 }
 
-const props = defineProps<IGroupComponentProps>();
+const props = withDefaults(defineProps<IGroupComponentProps>(), {
+	isResizing: false,
+});
 
 const getComponent = ({ type }: IDashboardItem) => {
 	switch (type) {
@@ -33,7 +36,9 @@ const getComponent = ({ type }: IDashboardItem) => {
 function getProps(item: IDashboardItem) {
 	switch (item.type) {
 		case DashboardItemType.Instance:
-			return { item } as { item: IDashboardInstance };
+			return { item: { ...item, isResizing: props.isResizing } } as {
+				item: IDashboardInstance;
+			};
 		case DashboardItemType.Collection:
 			return { item } as { item: IDashboardCollection };
 		case DashboardItemType.Folder:

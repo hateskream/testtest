@@ -27,6 +27,7 @@ export interface IDashboardItem {
 export interface IDashboardInstance extends IDashboardItem {
 	type: DashboardItemType.Instance;
 	dashboardType: WidgetType;
+	isResizing?: boolean;
 }
 
 export interface IDashboardCollection extends IDashboardItem {

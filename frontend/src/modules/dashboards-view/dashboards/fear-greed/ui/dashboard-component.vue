@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryTension } from '../queries/use-query-tension.ts';
+import type { IMeta } from '@/modules/dashboards-view/group/model/widgets.ts';
 
 import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
 import ErrorComponent from './error-component.vue';
@@ -10,20 +11,20 @@ import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
 
 interface IDashboardComponentProps {
-	market: string;
+	meta: IMeta;
 }
 
 const props = defineProps<IDashboardComponentProps>();
 
-const { data, isLoading, isError, refetch } = useQueryTension(props.market);
+const { data, isLoading, isError, refetch } = useQueryTension(props.meta.market);
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 </script>
 
 <template>
-	<base-dashboard-component>
+	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div>Fear & Greed</div>
+			<div>{{ props.meta.name }}</div>
 		</template>
 
 		<template #content>

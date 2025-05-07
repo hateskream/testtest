@@ -5,12 +5,19 @@ import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
 import { useNewsStore } from '../stores';
 import type { IGetNewsRequest } from '../api';
+import type { IMeta } from '@/modules/dashboards-view/group/model/widgets.ts';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewNewsComponent from './view-news-component.vue';
 import RcmNewsComponent from './rcm-news-component.vue';
 import NewsFiltersPanel from './news-filters-panel-component.vue';
+
+interface IDashboardComponentProps {
+	meta: IMeta;
+}
+
+const props = defineProps<IDashboardComponentProps>();
 
 const newsStore = useNewsStore();
 
@@ -35,7 +42,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 </script>
 
 <template>
-	<base-dashboard-component :class="classes.root">
+	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
 			<news-filters-panel />
 		</template>
@@ -52,10 +59,3 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 		</template>
 	</base-dashboard-component>
 </template>
-
-<style module="classes">
-.root {
-	flex-grow: 1.8;
-	flex-basis: 0;
-}
-</style>

@@ -5,6 +5,7 @@ import CurrentDashboard from '../dashboard/current-dashboard.vue';
 
 interface IPlaceholderResizeComponent {
 	dashboardItem: IDashboardItem;
+	isResizing: boolean;
 }
 
 const props = defineProps<IPlaceholderResizeComponent>();
@@ -12,7 +13,10 @@ const props = defineProps<IPlaceholderResizeComponent>();
 
 <template>
 	<div :class="classes.root">
-		<current-dashboard :dashboard-item="props.dashboardItem" />
+		<current-dashboard
+			:dashboard-item="props.dashboardItem"
+			:is-resizing="props.isResizing"
+		/>
 	</div>
 </template>
 

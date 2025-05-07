@@ -11,3 +11,9 @@ export enum WidgetType {
 	Telegram = 'telegram',
 	Chart = 'chart',
 }
+
+export interface IMeta {
+	isResizing: boolean;
+	market: string;
+	name: string;
+}
