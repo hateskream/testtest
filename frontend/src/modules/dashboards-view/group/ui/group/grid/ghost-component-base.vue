@@ -8,7 +8,7 @@ const props = defineProps<IGhostComponentProps>();
 
 <template>
 	<div :class="classes.root">
-		{{ props.title }}
+		<span :class="classes.text">{{ props.title }}</span>
 	</div>
 </template>
 
@@ -20,15 +20,21 @@ const props = defineProps<IGhostComponentProps>();
 	height: 44px;
 	padding: 8px 10px 4px;
 	overflow: hidden;
+	background: var(--bg-color-surface-02);
+	border: 1px solid var(--border-color-surface-01);
+	border-radius: 18px;
+}
+
+.text {
+	display: block;
+	overflow: hidden;
 	font-style: normal;
 	font-weight: 300;
 	font-size: var(--typography-headers-size-h-01, 13px);
 	line-height: 170%;
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.104px;
+	white-space: nowrap;
 	text-overflow: ellipsis;
-	background: var(--bg-color-surface-02);
-	border: 1px solid var(--border-color-surface-01);
-	border-radius: 18px;
 }
 </style>
