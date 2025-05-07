@@ -11,21 +11,21 @@ import { InsidersDashboard } from '@/modules/dashboards-view/dashboards/insiders
 import { EventsDashboard } from '@/modules/dashboards-view/dashboards/events';
 import { TelegramDashboard } from '@/modules/dashboards-view/dashboards/telegram';
 import { ChartDashboard } from '@/modules/dashboards-view/dashboards/chart';
-import { DashboardType } from '../model';
+import { WidgetType } from '../model';
 
-export function getDashboardComponent(type: DashboardType) {
-	const components: Record<DashboardType, Component> = {
-		[DashboardType.FearGreed]: FearGreedDashboard,
-		[DashboardType.Market]: MarketDashboard,
-		[DashboardType.MarketCap]: MarketCapDashboard,
-		[DashboardType.News]: NewsDashboard,
-		[DashboardType.Price]: PriceDashboard,
-		[DashboardType.HotMarkets]: HotMarketsDashboard,
-		[DashboardType.Search]: SearchDashboard,
-		[DashboardType.Insiders]: InsidersDashboard,
-		[DashboardType.Events]: EventsDashboard,
-		[DashboardType.Telegram]: TelegramDashboard,
-		[DashboardType.Chart]: ChartDashboard,
+export function getDashboardComponent(type: WidgetType) {
+	const components: Record<WidgetType, Component> = {
+		[WidgetType.FearGreed]: FearGreedDashboard,
+		[WidgetType.Market]: MarketDashboard,
+		[WidgetType.MarketCap]: MarketCapDashboard,
+		[WidgetType.News]: NewsDashboard,
+		[WidgetType.Price]: PriceDashboard,
+		[WidgetType.HotMarkets]: HotMarketsDashboard,
+		[WidgetType.Search]: SearchDashboard,
+		[WidgetType.Insiders]: InsidersDashboard,
+		[WidgetType.Events]: EventsDashboard,
+		[WidgetType.Telegram]: TelegramDashboard,
+		[WidgetType.Chart]: ChartDashboard,
 	};
 
 	return components[type];
