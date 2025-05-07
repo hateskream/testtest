@@ -99,6 +99,8 @@ function updateDndState(newValue: boolean) {
 		:w="props.w"
 		:h="props.h"
 		:i="props.i"
+		drag-allow-from=".widget-drag"
+		drag-ignore-from=".widget-no-drag"
 	>
 		<div :class="[classes.itemWrapper, classListItem]">
 			<div

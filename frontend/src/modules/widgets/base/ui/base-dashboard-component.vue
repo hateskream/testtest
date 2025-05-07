@@ -47,7 +47,7 @@ onClickOutside(rcmRef, () => {
 		:class="[classes.container, classList]"
 	>
 		<div
-			:class="classes.title"
+			:class="[classes.title, 'widget-drag']"
 			@click.prevent.right="handleOpenRcm"
 		>
 			<div :class="classes.titleText">
@@ -68,7 +68,7 @@ onClickOutside(rcmRef, () => {
 				/>
 			</div>
 		</div>
-		<div :class="classes.content">
+		<div :class="[classes.content, 'widget-no-drag']">
 			<slot name="content" />
 		</div>
 		<div

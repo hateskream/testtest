@@ -16,4 +16,6 @@ export interface IMeta {
 	isResizing: boolean;
 	market: string;
 	name: string;
+	dragAllowFrom: string;
+	dragIgnoreTo: string;
 }
