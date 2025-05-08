@@ -16,8 +16,8 @@ export async function getTension({ market }: IGetTensionRequest): Promise<ITensi
 		const response = IS_USE_MOCK
 			? await getMockData()
 			: await httpService.get<ITension>('/api/tension', {
-					query: { market },
-				});
+				query: { market },
+			});
 
 		return response;
 	} catch (error) {

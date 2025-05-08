@@ -50,7 +50,7 @@ const gridConfig = {
 	isResizable: false,
 };
 
-function handleUpdatePositionsColumns(columnName: string, x: number, y: number) {
+function handleUpdatePositionsColumns(columnName: string, _x: number, y: number) {
 	// TODO: fix with isDragging and first element
 
 	const activeTableColumns = setPositionColumns(

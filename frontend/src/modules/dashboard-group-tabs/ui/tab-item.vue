@@ -27,7 +27,7 @@ function startEditing() {
 	isInitialEdit.value = true;
 
 	nextTick(() => {
-		const input = document.querySelector(`input`) as HTMLInputElement;
+		const input = document.querySelector('input') as HTMLInputElement;
 		if (!input) {
 			return;
 		}

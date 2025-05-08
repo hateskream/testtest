@@ -30,7 +30,7 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 	const activeFilters = computed(() =>
 		Object.fromEntries(
-			Object.entries(filters.value).filter(([key, item]) => item.value.length > 0),
+			Object.entries(filters.value).filter(([_key, item]) => item.value.length > 0),
 		),
 	);
 

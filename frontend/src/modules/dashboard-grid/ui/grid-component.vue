@@ -16,7 +16,8 @@ const props = defineProps<IProps>();
 
 const gridRef = ref<HTMLDivElement | null>(null);
 
-const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
+
+const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid } =
 	responsiveGridLayout(gridRef);
 
 const isEditState = ref(true);

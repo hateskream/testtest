@@ -44,8 +44,8 @@ export async function getNews(args: IGetNewsRequest): Promise<INewsDomain[] | nu
 		const response = IS_USE_MOCK
 			? await getMockData()
 			: await httpService.get<IGetNewsResponse>('/api/news', {
-					query,
-				});
+				query,
+			});
 
 		return prepareResponse(response);
 	} catch (error) {
