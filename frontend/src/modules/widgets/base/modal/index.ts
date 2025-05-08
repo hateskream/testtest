@@ -12,6 +12,9 @@ import ModalRcmComponent from './ui/modal-rcm-component.vue';
 import ModalFilterTickerComponent from './ui/modal-filter-ticker-component.vue';
 import ModalBadgeTitleComponent from './ui/modal-badge-title-component.vue';
 import ModalBadgeComponent from './ui/modal-badge-component.vue';
+import ModalItemInteractionComponent from './ui/modal-item-interaction-component.vue';
+import ModalSearchComponent from './ui/modal-search-component.vue';
+import ModalItemSelectorComponent from './ui/modal-item-selector-component.vue';
 
 export {
 	ModalFilterComponent as ModalFilter,
@@ -28,4 +31,7 @@ export {
 	ModalBadgeTitleComponent as ModalBadgeTitle,
 	ModalBadgeListComponent as ModalBadgeList,
 	ModalBadgeComponent as ModalBadge,
+	ModalItemInteractionComponent as ModalItemInteraction,
+	ModalSearchComponent as ModalSearch,
+	ModalItemSelectorComponent as ModalItemSelector,
 };

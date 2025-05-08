@@ -52,7 +52,7 @@ const classesList = computed(() => ({
 	border-width: 1px;
 	border-style: solid;
 	border-color: var(--bg-modal-color-base);
-	border-radius: 50%;
+	border-radius: 6px;
 }
 
 .iconActive {

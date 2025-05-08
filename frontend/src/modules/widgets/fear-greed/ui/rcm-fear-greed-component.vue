@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import { ModalItemSwitch, ModalRcm } from '../../modal';
-import type { IModalRcmPositions } from '../../modal/model';
+import { ModalItemSwitch, ModalRcm } from '../../base';
 import { useFearGreedStore } from '../stores';
-
-interface IProps {
-	positions: IModalRcmPositions;
-}
-
-defineProps<IProps>();
 
 const fearGreedStore = useFearGreedStore();
 </script>
 
 <template>
-	<modal-rcm :positions="positions">
+	<modal-rcm>
 		<template #title> Additional features </template>
 		<template #content>
 			<modal-item-switch

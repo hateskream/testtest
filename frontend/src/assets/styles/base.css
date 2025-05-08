@@ -36,11 +36,6 @@ body {
 	scrollbar-width: none;
 }
 
-.submenu-content-modal-offset {
-	top: 0 !important;
-	left: calc(100% + 10px) !important;
-}
-
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;

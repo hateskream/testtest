@@ -3,9 +3,16 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useNewsStore } from '../stores';
 import { compareStrings } from '@/shared/lib';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalItemCheckbox, ModalBadgeList, ModalBadge, ModalFilterTicker } from '../../modal';
-import type { IFilterList } from '../../modal/model';
+import {
+	ModalBadgeList,
+	ModalBadge,
+	ModalFilterTicker,
+	ModalItemSelector,
+	ModalItemCheckbox,
+} from '../../base';
+import type { IFilterList } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
+import { UiDelimiter } from '@/shared/ui/delimiter';
 
 import NewsFilters from './news-filters-component.vue';
 
@@ -37,7 +44,7 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 						:id="IconIds.NewsFilter"
 						width="20"
 						height="20"
-						:class="classes.icon"
+						:class="classes.iconAllFilterColor"
 					/>
 				</template>
 
@@ -47,10 +54,15 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 			</ui-position>
 		</div>
 
+		<ui-delimiter />
+
 		<div :class="classes.listFilters">
-			<modal-badge v-if="newsStore.activeTickersList.length > 0">
-				<template #title>
-					<div :class="classes.listFiltersTitle">
+			<div
+				v-if="newsStore.activeTickersList.length > 0"
+				:class="classes.listFilterWithDelimiter"
+			>
+				<modal-badge>
+					<template #title>
 						<div :class="classes.listFiltersTitleImageWrapper">
 							<div
 								v-for="item in newsStore.activeTickersList.slice(
@@ -84,67 +96,84 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 							height="12"
 							:class="classes.icon"
 						/>
-					</div>
-				</template>
+					</template>
 
-				<template #content>
-					<modal-filter-ticker
-						:model-value="newsStore.tickerLists"
-						@update:model-value="newsStore.setTickerLists"
-					/>
-				</template>
-			</modal-badge>
+					<template #content>
+						<modal-filter-ticker
+							:model-value="newsStore.tickerLists"
+							@update:model-value="newsStore.setTickerLists"
+						/>
+					</template>
+				</modal-badge>
+				<ui-delimiter />
+			</div>
 
-			<modal-badge
-				v-for="(filter, key) in newsStore.activeFilters"
+			<div
+				v-for="(filter, key, idx) in newsStore.activeFilters"
 				:key="key"
+				:class="classes.listFilterWithDelimiter"
 			>
-				<template #title>
-					<div :class="classes.listFiltersTitle">
-						<div :class="classes.listFiltersTitleText">
-							{{ getTitleFilterList(filter.name, filter.value, filter.list) }}
-						</div>
+				<modal-badge>
+					<template #title>
+						{{ getTitleFilterList(filter.name, filter.value, filter.list) }}
+
 						<ui-icon
 							:id="IconIds.DropdownDown"
 							width="12"
 							height="12"
 							:class="classes.icon"
 						/>
-					</div>
-				</template>
+					</template>
 
-				<template #content>
-					<modal-badge-list>
-						<modal-item-checkbox
-							v-for="item in filter.list"
-							:key="item.value"
-							:model-value="
-								(newsStore.activeFilters[key].value as string[]).includes(
-									item.value,
-								)
-							"
-							@update:model-value="
-								newsStore.toggleFiltersList(key as string, item.value)
-							"
-						>
-							{{ item.label }}
-						</modal-item-checkbox>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								{{ key }}
+							</template>
+
+							<template
+								v-for="item in filter.list"
+								:key="item.value"
+							>
+								<modal-item-checkbox
+									v-if="filter.multiple"
+									:model-value="
+										(newsStore.activeFilters[key].value as string[]).includes(
+											item.value,
+										)
+									"
+									@update:model-value="
+										newsStore.toggleFiltersList(key as string, item.value)
+									"
+								>
+									{{ item.label }}
+								</modal-item-checkbox>
+
+								<modal-item-selector
+									v-else
+									:model-value="
+										(newsStore.activeFilters[key].value as string[]).includes(
+											item.value,
+										)
+									"
+									@update:model-value="
+										newsStore.toggleFiltersList(key as string, item.value)
+									"
+								>
+									{{ item.label }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+
+				<ui-delimiter v-if="idx !== Object.keys(newsStore.activeFilters).length - 1" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.listFiltersTitle {
-	display: flex;
-	align-items: center;
-	width: max-content;
-	height: 20px;
-	gap: 4px;
-}
-
 .listFiltersTitleImageWrapper {
 	display: flex;
 }
@@ -166,7 +195,7 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 .container {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 6px;
 }
 
 .listFilters {
@@ -178,5 +207,15 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 
 .iconAllFilter {
 	cursor: pointer;
+}
+
+.iconAllFilterColor {
+	color: var(--icon-color-base-300);
+}
+
+.listFilterWithDelimiter {
+	display: flex;
+	align-items: center;
+	gap: 6px;
 }
 </style>

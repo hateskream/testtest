@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, useCssModule, useTemplateRef } from 'vue';
-import { onClickOutside, useMouseInElement } from '@vueuse/core';
+import { onClickOutside } from '@vueuse/core';
+import {
+	autoUpdate,
+	flip,
+	offset,
+	shift,
+	useFloating,
+	type VirtualElement,
+} from '@floating-ui/vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IModalRcmPositions } from '../../modal/model';
 
 interface IBaseDashboardComponentProps {
 	isResizing: boolean;
@@ -13,12 +20,15 @@ const props = defineProps<IBaseDashboardComponentProps>();
 
 const classes = useCssModule('classes');
 
-const target = useTemplateRef('target');
 const isVisibleRcm = ref(false);
-const mousePositions = useMouseInElement(target);
-const rcmPositions = ref<IModalRcmPositions>({
-	x: 0,
-	y: 0,
+const rcmRef = useTemplateRef('rcm');
+
+const reference = ref<VirtualElement | null>(null);
+const { floatingStyles } = useFloating(reference, rcmRef, {
+	placement: 'right-start',
+	strategy: 'fixed',
+	middleware: [offset(6), flip(), shift({ padding: 5 })],
+	whileElementsMounted: autoUpdate,
 });
 
 const classList = computed(() => ({
@@ -26,28 +36,34 @@ const classList = computed(() => ({
 	[classes.notResizing]: !props.isResizing,
 }));
 
-function handleOpenRcm() {
-	rcmPositions.value = {
-		x: mousePositions.elementX.value,
-		y: mousePositions.elementY.value,
-	};
-	isVisibleRcm.value = true;
-}
-
-const rcmRef = useTemplateRef('rcm');
-
 onClickOutside(rcmRef, () => {
 	isVisibleRcm.value = false;
 });
+
+function handleOpenRcm(e: MouseEvent) {
+	reference.value = {
+		getBoundingClientRect() {
+			return {
+				width: 0,
+				height: 0,
+				x: e.clientX,
+				y: e.clientY,
+				top: e.clientY,
+				left: e.clientX,
+				right: e.clientX,
+				bottom: e.clientY,
+			};
+		},
+	};
+
+	isVisibleRcm.value = true;
+}
 </script>
 
 <template>
-	<div
-		ref="target"
-		:class="[classes.container, classList]"
-	>
+	<div :class="[classes.container, classList]">
 		<div
-			:class="[classes.title, 'widget-drag']"
+			:class="classes.title"
 			@click.prevent.right="handleOpenRcm"
 		>
 			<div :class="classes.titleText">
@@ -68,18 +84,16 @@ onClickOutside(rcmRef, () => {
 				/>
 			</div>
 		</div>
-		<div :class="[classes.content, 'widget-no-drag']">
+		<div :class="classes.content">
 			<slot name="content" />
 		</div>
 		<div
 			v-show="isVisibleRcm"
 			ref="rcm"
 			:class="classes.rcm"
+			:style="floatingStyles"
 		>
-			<slot
-				name="rcm"
-				:positions="rcmPositions"
-			/>
+			<slot name="rcm" />
 		</div>
 	</div>
 </template>
@@ -139,7 +153,6 @@ onClickOutside(rcmRef, () => {
 }
 
 .rcm {
-	position: absolute;
 	z-index: 101;
 }
 </style>

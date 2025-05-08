@@ -1,25 +1,5 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-import type { IModalRcmPositions } from '../model';
-
-interface IRcmProps {
-	positions: IModalRcmPositions;
-}
-
-const props = defineProps<IRcmProps>();
-
-const positionsStyles = computed(() => ({
-	top: `${props.positions.y}px`,
-	left: `${props.positions.x}px`,
-}));
-</script>
-
 <template>
-	<div
-		:class="classes.container"
-		:style="positionsStyles"
-	>
+	<div :class="classes.container">
 		<div :class="classes.title">
 			<slot name="title" />
 		</div>
@@ -32,8 +12,6 @@ const positionsStyles = computed(() => ({
 
 <style module="classes">
 .container {
-	position: absolute;
-	z-index: 101;
 	min-width: 208px;
 	padding: 6px;
 	background: var(--bg-modal-color-base);

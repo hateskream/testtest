@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import type { IModalRcmPositions } from '../../modal/model';
 import { useMarketStore } from '../stores';
 import {
 	ModalItem,
@@ -9,21 +8,15 @@ import {
 	ModalRcm,
 	ModalSubmenu,
 	ModalSubmenuContent,
-} from '../../modal';
+} from '../../base';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
-
-interface IProps {
-	positions: IModalRcmPositions;
-}
-
-defineProps<IProps>();
 
 const marketStore = useMarketStore();
 </script>
 
 <template>
-	<modal-rcm :positions="positions">
+	<modal-rcm>
 		<template #title> Market </template>
 		<template #content>
 			<modal-item-number :value="1">Duplicate</modal-item-number>
@@ -50,9 +43,7 @@ const marketStore = useMarketStore();
 							<modal-submenu>
 								<template #title> Column metrics </template>
 								<template #content>
-									<table-columns-settings-component
-										class="submenu-content-modal-offset"
-									/>
+									<table-columns-settings-component />
 								</template>
 							</modal-submenu>
 						</template>

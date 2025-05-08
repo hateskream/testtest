@@ -1,4 +1,4 @@
-import { FilterType } from '../../modal/model';
+import { FilterType } from '../../base/modal/model';
 import { NewsScore, NewsSegment, NewsSentiment, NewsSource, type IFilterNews } from '../model';
 
 export const NEWS_FILTERS: IFilterNews = {

@@ -7,10 +7,10 @@ import {
 	ModalFilterTabWrapper,
 	ModalFilterTicker,
 	ModalFilterTitle,
-	ModalItem,
-	ModalItemCheckbox,
-} from '../../modal';
-import { FilterType } from '../../modal/model';
+	ModalItemInteraction,
+	ModalItemSelector,
+} from '../../base';
+import { FilterType } from '../../base/modal/model';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
@@ -55,7 +55,7 @@ const newsStore = useNewsStore();
 				trigger="hover"
 			>
 				<template #default>
-					<modal-item> Location </modal-item>
+					<modal-item-interaction> Location </modal-item-interaction>
 				</template>
 
 				<template #content>
@@ -68,7 +68,7 @@ const newsStore = useNewsStore();
 				trigger="hover"
 			>
 				<template #default>
-					<modal-item> Ticker </modal-item>
+					<modal-item-interaction> Ticker </modal-item-interaction>
 				</template>
 
 				<template #content>
@@ -84,14 +84,14 @@ const newsStore = useNewsStore();
 			<div>
 				<modal-filter-title> Sort By </modal-filter-title>
 
-				<modal-item-checkbox
+				<modal-item-selector
 					v-for="sort in newsStore.sortBy"
 					:key="sort.key"
 					:model-value="sort.value"
 					@update:model-value="newsStore.setSort(sort)"
 				>
 					{{ sort.name }}
-				</modal-item-checkbox>
+				</modal-item-selector>
 			</div>
 		</template>
 	</modal-filter>

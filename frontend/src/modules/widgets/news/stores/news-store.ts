@@ -9,7 +9,7 @@ import type {
 	IFilterList,
 	IModalFilterTickerLists,
 	IModalFilterTickerWithGroup,
-} from '../../modal/model';
+} from '../../base/modal/model';
 
 export const useNewsStore = defineStore('dashboards-news', () => {
 	const isShowDate = ref(true);
