@@ -12,7 +12,7 @@ const props = defineProps<IWidgetComponentProps>();
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div>{{ props.meta.name }}</div>
+			{{ props.meta.name }}
 		</template>
 	</base-dashboard-component>
 </template>

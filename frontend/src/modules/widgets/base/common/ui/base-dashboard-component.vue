@@ -63,11 +63,13 @@ function handleOpenRcm(e: MouseEvent) {
 <template>
 	<div :class="[classes.container, classList]">
 		<div
-			:class="classes.title"
+			:class="[classes.title, 'widget-drag']"
 			@click.prevent.right="handleOpenRcm"
 		>
-			<div :class="classes.titleText">
-				<slot name="title" />
+			<div :class="classes.titleTextContainer">
+				<div :class="classes.titleText">
+					<slot name="title" />
+				</div>
 			</div>
 			<div :class="classes.control">
 				<ui-icon
@@ -84,7 +86,7 @@ function handleOpenRcm(e: MouseEvent) {
 				/>
 			</div>
 		</div>
-		<div :class="classes.content">
+		<div :class="[classes.content, 'widget-no-drag']">
 			<slot name="content" />
 		</div>
 		<div
@@ -128,11 +130,18 @@ function handleOpenRcm(e: MouseEvent) {
 	color: var(--text-color-base-300);
 }
 
-.titleText {
+.titleTextContainer {
+	overflow: hidden;
 	font-weight: 300;
 	font-size: 16px;
 	color: var(--text-color-base-300);
 	letter-spacing: 0.104px;
+}
+
+.titleText {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .content {

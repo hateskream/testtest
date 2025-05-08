@@ -24,7 +24,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div>{{ props.meta.name }}</div>
+			{{ props.meta.name }}
 		</template>
 
 		<template #content>
