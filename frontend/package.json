@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "lint:ts": "vue-tsc --noEmit",
+    "lint:ts": "vue-tsc --pretty --noEmit -p tsconfig.app.json",
     "lint:js": "eslint . --ext .js,.jsx,.ts,.tsx,.vue,.cjs,.mjs",
     "lint:css": "stylelint \"src/**/*.{vue,css}\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" "
