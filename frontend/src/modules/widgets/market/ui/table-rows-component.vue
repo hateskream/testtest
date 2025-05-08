@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ITableRow } from '../model';
 import { UiImage } from '@/shared/ui/image';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useMarketStore } from '../stores';
-import { UiTooltip } from '@/shared/ui/tooltip';
+// import { IconIds, UiIcon } from '@/shared/ui/icon';
+// import { useMarketStore } from '../stores';
+// import { UiTooltip } from '@/shared/ui/tooltip';
 
 import TableRowNumberComponent from './table-row-number-component.vue';
 import TableRowPercentComponent from './table-row-percent-component.vue';
@@ -15,7 +15,7 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const marketStore = useMarketStore();
+// const marketStore = useMarketStore();
 </script>
 
 <template>

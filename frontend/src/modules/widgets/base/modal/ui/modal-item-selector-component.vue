@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+// import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalItem } from '../index';
 
 interface IProps {
