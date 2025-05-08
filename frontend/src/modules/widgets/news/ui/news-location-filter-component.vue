@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { BaseSwitch } from '../../base';
-import { ModalFilter, ModalFilterTabWrapper } from '../../modal';
+import { BaseSwitch, ModalFilter, ModalFilterTabWrapper } from '../../base';
 import { useNewsStore } from '../stores';
 
 const newsStore = useNewsStore();

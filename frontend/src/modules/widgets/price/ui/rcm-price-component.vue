@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 
-import type { IModalRcmPositions } from '../../modal/model';
 import { usePriceStore } from '../stores';
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalItemSwitch, ModalRcm, ModalItemCheckbox } from '../../modal';
-
-interface IProps {
-	positions: IModalRcmPositions;
-}
-
-defineProps<IProps>();
+import { ModalItemSwitch, ModalRcm, ModalItemCheckbox } from '../../base';
 
 const priceStore = usePriceStore();
 
@@ -20,7 +13,7 @@ const select = reactive({
 </script>
 
 <template>
-	<modal-rcm :positions="positions">
+	<modal-rcm>
 		<template #title> Additional features </template>
 		<template #content>
 			<modal-item-switch

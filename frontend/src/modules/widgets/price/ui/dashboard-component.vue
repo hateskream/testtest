@@ -32,8 +32,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				:currencies="data"
 			/>
 		</template>
-		<template #rcm="{ positions }">
-			<rcm-price-component :positions="positions" />
+		<template #rcm>
+			<rcm-price-component />
 		</template>
 	</base-dashboard-component>
 </template>

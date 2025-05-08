@@ -5,6 +5,7 @@ import { UiImage } from '@/shared/ui/image';
 import { type INews } from '../model/news';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { useNewsStore } from '../stores';
+import { UiTooltip } from '@/shared/ui/tooltip';
 
 import NewsIconScoreComponent from './news-icon-score-component.vue';
 
@@ -83,17 +84,24 @@ const time = computed(() =>
 						v-if="newsStore.isShowSymbols"
 						:class="classes.newsStocks"
 					>
-						<div
+						<template
 							v-for="stock in stocks"
 							:key="stock.ticker"
-							:class="classes.newsStock"
 						>
-							<ui-image
-								:class="classes.newsStockImage"
-								:src="stock.srcImage"
-								replacement="/images/market/ADA.png"
-							/>
-						</div>
+							<ui-tooltip>
+								<template #content>
+									{{ stock.name }}
+								</template>
+
+								<div :class="classes.newsStock">
+									<ui-image
+										:class="classes.newsStockImage"
+										:src="stock.srcImage"
+										replacement="/images/market/ADA.png"
+									/>
+								</div>
+							</ui-tooltip>
+						</template>
 					</div>
 				</ui-transition-fade>
 
@@ -193,9 +201,10 @@ const time = computed(() =>
 	overflow: hidden;
 	border: 2px solid #222223;
 	border-radius: 16px;
+	cursor: pointer;
 }
 
-.newsStock:first-child {
+.newsStocks > div:first-child .newsStock {
 	margin-left: 0;
 }
 

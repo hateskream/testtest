@@ -8,7 +8,7 @@ import type { ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { setPositionColumns } from '../utils';
-import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../modal';
+import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;

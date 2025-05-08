@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, toValue } from 'vue';
+import { computed, ref, toValue } from 'vue';
 
-import { ModalItemCheckbox } from '..';
+import { ModalItemCheckbox, ModalSearch } from '..';
 import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type {
@@ -41,10 +41,16 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 
 	emits('update:modelValue', newList);
 }
+
+const search = ref('');
 </script>
 
 <template>
 	<div :class="classes.wrapper">
+		<div :class="classes.search">
+			<modal-search v-model="search" />
+		</div>
+
 		<div :class="classes.listBadge">
 			<div
 				v-for="item in selectedItems"
@@ -80,7 +86,7 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 				<div :class="classes.listItemTitle">{{ name }}</div>
 				<div>
 					<modal-item-checkbox
-						v-for="item in list"
+						v-for="item in list.slice(0, 3)"
 						:key="item.ticker"
 						:model-value="item.isSelected"
 						@update:model-value="
@@ -119,6 +125,7 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 	align-items: center;
 	gap: 4px;
 	overflow: hidden;
+	padding-inline: 12px;
 }
 
 .badgeRemoveIcon {
@@ -155,8 +162,7 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 }
 
 .wrapper {
-	min-width: 286px;
-	max-width: 312px;
+	width: 286px;
 	padding: 6px;
 	background: var(--bg-modal-color-base);
 	border: 1px solid rgb(199 199 199 / 10%);
@@ -219,5 +225,10 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 	font-size: 13px;
 	color: var(--text-color-base-300);
 	letter-spacing: 0.052px;
+}
+
+.search {
+	padding-inline: 12px;
+	margin-bottom: 12px;
 }
 </style>

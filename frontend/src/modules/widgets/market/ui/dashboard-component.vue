@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { BaseDashboardComponent } from '../../base';
 import { useQueryMarket } from '../queries';
 import { useMarketStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group/model';
+import { BaseDashboardComponent } from '../../base';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -38,8 +38,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				:markets="data"
 			/>
 		</template>
-		<template #rcm="{ positions }">
-			<rcm-market :positions="positions" />
+		<template #rcm>
+			<rcm-market />
 		</template>
 	</base-dashboard-component>
 </template>

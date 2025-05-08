@@ -25,6 +25,31 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 
 	const isFavorites = ref<boolean>(false);
 
+	const filterCategories = ref([
+		{
+			name: 'Crypto',
+			value: 'crypto',
+			isSelect: true,
+		},
+		{
+			name: 'Stock',
+			value: 'stock',
+			isSelect: false,
+		},
+		{
+			name: 'Forex',
+			value: 'forex',
+			isSelect: false,
+		},
+		{
+			name: 'Commodity',
+			value: 'commodity',
+			isSelect: false,
+		},
+	]);
+
+	const activeFilterCategory = computed(() => filterCategories.value.find(item => item.isSelect));
+
 	const activeSort = ref<IActiveSortColumn>({
 		columnName: '',
 		direction: 0,
@@ -34,6 +59,19 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		direction: 0,
 		sortTab: 'all',
 	});
+
+	function toggleFilterCategory(value: string) {
+		filterCategories.value = filterCategories.value.map(item => {
+			if (compareStrings(item.value, value)) {
+				return {
+					...item,
+					isSelect: !item.isSelect,
+				};
+			}
+
+			return { ...item, isSelect: false };
+		});
+	}
 
 	function addToFavorites(id: string) {
 		favorites.value.push(id);
@@ -166,6 +204,9 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		setActiveTabSort,
 		showTableColumns,
 		toggleFavorites,
+		toggleFilterCategory,
+		filterCategories,
+		activeFilterCategory,
 		isFavorites,
 		resetAll,
 		favorites,

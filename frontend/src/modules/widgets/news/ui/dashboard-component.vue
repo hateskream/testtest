@@ -54,8 +54,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				:news="data"
 			/>
 		</template>
-		<template #rcm="{ positions }">
-			<rcm-news-component :positions="positions" />
+		<template #rcm>
+			<rcm-news-component />
 		</template>
 	</base-dashboard-component>
 </template>

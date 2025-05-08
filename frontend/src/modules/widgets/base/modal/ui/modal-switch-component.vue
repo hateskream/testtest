@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BaseSwitch } from '../../base';
+import { BaseSwitch } from '../..';
 import { ModalItem } from '../index';
 
 interface IProps {

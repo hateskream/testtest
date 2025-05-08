@@ -37,8 +37,8 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			/>
 		</template>
 
-		<template #rcm="{ positions }">
-			<rcm-fear-greed-component :positions="positions" />
+		<template #rcm>
+			<rcm-fear-greed-component />
 		</template>
 	</base-dashboard-component>
 </template>

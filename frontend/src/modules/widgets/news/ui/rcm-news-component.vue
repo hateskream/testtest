@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import type { IModalRcmPositions } from '../../modal/model';
 import { useNewsStore } from '../stores';
 import {
 	ModalItem,
@@ -9,21 +8,15 @@ import {
 	ModalRcm,
 	ModalSubmenu,
 	ModalSubmenuContent,
-} from '../../modal';
+} from '../../base';
 
 import NewsFilters from './news-filters-component.vue';
-
-interface IProps {
-	positions: IModalRcmPositions;
-}
-
-defineProps<IProps>();
 
 const newsStore = useNewsStore();
 </script>
 
 <template>
-	<modal-rcm :positions="positions">
+	<modal-rcm>
 		<template #title> News </template>
 		<template #content>
 			<modal-item-number :value="1">Duplicate</modal-item-number>
@@ -90,7 +83,7 @@ const newsStore = useNewsStore();
 				<template #title> Filter & Sort </template>
 
 				<template #content>
-					<news-filters class="submenu-content-modal-offset" />
+					<news-filters />
 				</template>
 			</modal-submenu>
 

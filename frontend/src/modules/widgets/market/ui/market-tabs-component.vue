@@ -4,6 +4,12 @@ import { computed, ref, useCssModule } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useMarketStore } from '../stores';
 import type { ITableColumnDirection } from '../model';
+import { UiPosition } from '@/shared/ui/position';
+import { ModalBadge } from '../../base';
+import { UiDelimiter } from '@/shared/ui/delimiter';
+
+import MarketFiltersComponent from './market-filters-component.vue';
+import MarketFilterCategoriesComponent from './market-filter-categories-component.vue';
 
 const marketStore = useMarketStore();
 
@@ -75,43 +81,95 @@ const activeTabs = computed(() =>
 );
 </script>
 <template>
-	<div :class="classes.tabs">
-		<div
-			v-for="tab in activeTabs"
-			:key="tab.name"
-			:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
-			:class="[
-				classes.tab,
-				{ [classes.tabActive]: marketStore.activeTabSort.sortTab === tab.sortTab },
-			]"
-			@click="marketStore.setActiveTabSort(tab)"
-		>
-			<ui-icon
-				v-if="tab.icon"
-				:id="tab.icon.name"
-				:width="tab.icon.width"
-				:height="tab.icon.height"
-				:class="[classes.iconWrapper, tab.icon.iconColorClass]"
-			/>
+	<div :class="classes.container">
+		<div :class="classes.iconAllFilter">
+			<ui-position position="right-start">
+				<template #default>
+					<ui-icon
+						:id="IconIds.NewsFilter"
+						width="20"
+						height="20"
+						:class="classes.iconAllFilterColor"
+					/>
+				</template>
 
-			{{ tab.name }}
+				<template #content>
+					<market-filters-component />
+				</template>
+			</ui-position>
 		</div>
 
-		<!-- <base-filter-modal-tab-wrapper
-			:is-active="marketStore.isFavorites"
-			@click.prevent.stop="marketStore.toggleFavorites"
-		>
-			<ui-icon
-				:id="IconIds.FavoriteFill"
-				width="20px"
-				height="20px"
-				:class="classes.iconFavorite"
-			/>
-		</base-filter-modal-tab-wrapper> -->
+		<div :class="classes.lineDelimiterGroup">
+			<ui-delimiter />
+			<ui-delimiter />
+		</div>
+
+		<div>
+			<modal-badge v-if="marketStore.activeFilterCategory">
+				<template #title>
+					{{ marketStore.activeFilterCategory.name }}
+
+					<ui-icon
+						:id="IconIds.DropdownDown"
+						width="12"
+						height="12"
+						:class="classes.icon"
+					/>
+				</template>
+
+				<template #content>
+					<market-filter-categories-component />
+				</template>
+			</modal-badge>
+		</div>
+
+		<div :class="classes.lineDelimiterGroup">
+			<ui-delimiter />
+		</div>
+
+		<div :class="classes.tabs">
+			<div
+				v-for="tab in activeTabs"
+				:key="tab.name"
+				:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
+				:class="[
+					classes.tab,
+					{ [classes.tabActive]: marketStore.activeTabSort.sortTab === tab.sortTab },
+				]"
+				@click="marketStore.setActiveTabSort(tab)"
+			>
+				<ui-icon
+					v-if="tab.icon"
+					:id="tab.icon.name"
+					:width="tab.icon.width"
+					:height="tab.icon.height"
+					:class="[classes.iconWrapper, tab.icon.iconColorClass]"
+				/>
+
+				{{ tab.name }}
+			</div>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
+.lineDelimiterGroup {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.iconAllFilter {
+	cursor: pointer;
+}
+
 .iconGainersColor {
 	color: rgb(206 255 139 / 100%);
 }
@@ -124,7 +182,6 @@ const activeTabs = computed(() =>
 	display: flex;
 	align-items: center;
 	width: max-content;
-	margin-bottom: 8px;
 	padding: 2px;
 	background: var(--bg-color-base-300);
 	border-radius: 9999px;
@@ -154,7 +211,7 @@ const activeTabs = computed(() =>
 	cursor: pointer;
 }
 
-.iconFavorite {
+.iconAllFilterColor {
 	color: var(--icon-color-base-300);
 }
 </style>

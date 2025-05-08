@@ -59,24 +59,7 @@ const marketStore = useMarketStore();
 				</div>
 			</td>
 
-			<td :class="classes.favoriteIconWrapper">
-				<ui-tooltip :show-in-ms="100">
-					<template #default>
-						<div
-							:class="classes.favoriteIcon"
-							@click="marketStore.toggleFavoriteItem(items[items.length - 1].id)"
-						>
-							<ui-icon
-								:id="IconIds.Favorite"
-								width="20px"
-								height="20px"
-							/>
-						</div>
-					</template>
-
-					<template #content> Add to favorites </template>
-				</ui-tooltip>
-			</td>
+			<td :class="classes.fixTertiaryIcon" />
 		</tr>
 	</tbody>
 </template>
@@ -155,22 +138,8 @@ tbody tr td:first-child .rowColumnWrapper::after {
 	min-width: 100px;
 }
 
-.favoriteIconWrapper {
+.fixTertiaryIcon {
 	min-width: 50px !important;
 	padding-right: 8px;
-}
-
-.favoriteIcon {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	width: 100%;
-	color: var(--icon-color-base-300);
-	cursor: pointer;
-	transition: color 0.3s ease;
-}
-
-.favoriteIcon:hover {
-	color: var(--icon-color-base-300-effect);
 }
 </style>
