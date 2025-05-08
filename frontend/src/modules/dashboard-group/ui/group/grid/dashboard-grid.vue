@@ -263,12 +263,11 @@ function setResizableWidgetId(id: number | null) {
 }
 
 :deep(.vgl-item__resizer) {
-	right: 5px !important;
-	bottom: 5px !important;
+	right: 0 !important;
+	bottom: 0 !important;
 	z-index: 100 !important;
-	width: 30px !important;
-	height: 30px !important;
-	background-color: #000000 !important;
+	width: 40px !important;
+	height: 40px !important;
 	opacity: 0;
 }
 
