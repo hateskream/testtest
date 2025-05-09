@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
 	DashboardItemType,
-	type IDashboardCollection,
+	type IDashboardStack,
 	type IDashboardFolder,
 	type IDashboardInstance,
 	type IDashboardItem,
@@ -9,7 +9,7 @@ import {
 } from '@/modules/dashboard-group';
 
 import InstanceComponent from './instance-component.vue';
-import CollectionComponent from './collection-component.vue';
+import StackComponent from './stack-component.vue';
 import FolderComponent from './folder-component.vue';
 
 interface IInstanceComponentProps {
@@ -22,8 +22,8 @@ interface IFolderComponentProps {
 	meta: IMeta;
 }
 
-interface ICollectionComponentProps {
-	item: IDashboardCollection;
+interface IStackComponentProps {
+	item: IDashboardStack;
 	meta: IMeta;
 }
 
@@ -38,8 +38,8 @@ const getComponent = ({ type }: IDashboardItem) => {
 	switch (type) {
 		case DashboardItemType.Instance:
 			return InstanceComponent;
-		case DashboardItemType.Collection:
-			return CollectionComponent;
+		case DashboardItemType.Stack:
+			return StackComponent;
 		case DashboardItemType.Folder:
 			return FolderComponent;
 		default:
@@ -51,8 +51,8 @@ function getProps(item: IDashboardItem) {
 	switch (item.type) {
 		case DashboardItemType.Instance:
 			return { item, meta: props.meta } as IInstanceComponentProps;
-		case DashboardItemType.Collection:
-			return { item, meta: props.meta } as ICollectionComponentProps;
+		case DashboardItemType.Stack:
+			return { item, meta: props.meta } as IStackComponentProps;
 		case DashboardItemType.Folder:
 			return { item, meta: props.meta } as IFolderComponentProps;
 		default:

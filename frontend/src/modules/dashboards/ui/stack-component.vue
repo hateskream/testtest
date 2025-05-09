@@ -3,7 +3,7 @@ import type { Component } from 'vue';
 
 import {
 	DashboardItemType,
-	type IDashboardCollection,
+	type IDashboardStack,
 	type IDashboardFolder,
 	type IDashboardInstance,
 	type IMeta,
@@ -12,12 +12,12 @@ import { getWidgetComponent } from '../utils';
 
 import FolderComponent from './folder-component.vue';
 
-interface IDashboardCollectionProps {
-	item: IDashboardCollection;
+interface IDashboardStackProps {
+	item: IDashboardStack;
 	meta: IMeta;
 }
 
-const props = defineProps<IDashboardCollectionProps>();
+const props = defineProps<IDashboardStackProps>();
 
 function getComponent(item: IDashboardInstance | IDashboardFolder): Component {
 	if (item.type === DashboardItemType.Instance) {

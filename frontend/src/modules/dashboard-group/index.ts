@@ -1,5 +1,5 @@
 export type {
-	IDashboardCollection,
+	IDashboardStack,
 	IDashboardFolder,
 	IDashboardInstance,
 	IMeta,
