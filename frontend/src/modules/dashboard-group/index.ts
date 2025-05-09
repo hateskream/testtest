@@ -1,7 +1,5 @@
 export { DashboardGroup } from './ui/group';
 
-export { TabsComponent } from './ui/tab';
-
 export type {
 	IDashboardCollection,
 	IDashboardFolder,
@@ -10,5 +8,8 @@ export type {
 	IDashboardItem,
 	IDashboardGroup,
 	IPositionWithId,
+	IDashboardTab,
 } from './model';
 export { DashboardItemType, WidgetType } from './model';
+
+export { useDashboardGroupsStore } from './stores/dashboard-group-store';
