@@ -1,38 +1,29 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
+import type { Component } from 'vue';
 
 import {
 	DashboardItemType,
 	type IDashboardCollection,
 	type IDashboardFolder,
 	type IDashboardInstance,
-} from '../../../model';
-import { getDashboardComponent } from '../../../utils';
-import { useDashboardsStore } from '../../../stores';
+	type IMeta,
+} from '@/modules/dashboard-group';
+import { getWidgetComponent } from '../utils';
 
 import FolderComponent from './folder-component.vue';
 
 interface IDashboardCollectionProps {
 	item: IDashboardCollection;
+	meta: IMeta;
 }
 
 const props = defineProps<IDashboardCollectionProps>();
 
-const { activeGroup } = storeToRefs(useDashboardsStore());
-
-function getComponent(item: IDashboardInstance | IDashboardFolder) {
+function getComponent(item: IDashboardInstance | IDashboardFolder): Component {
 	if (item.type === DashboardItemType.Instance) {
-		return getDashboardComponent(item.dashboardType);
+		return getWidgetComponent(item.dashboardType);
 	}
 	return FolderComponent;
-}
-
-function getProps(item: IDashboardInstance | IDashboardFolder) {
-	if (item.type === DashboardItemType.Folder) {
-		return { item };
-	}
-
-	return { market: activeGroup.value.market };
 }
 </script>
 
@@ -46,7 +37,7 @@ function getProps(item: IDashboardInstance | IDashboardFolder) {
 				:is="getComponent(itemDashboard)"
 				v-for="itemDashboard in props.item.items"
 				:key="itemDashboard.id"
-				v-bind="getProps(itemDashboard)"
+				:meta="props.meta"
 			/>
 		</div>
 	</div>

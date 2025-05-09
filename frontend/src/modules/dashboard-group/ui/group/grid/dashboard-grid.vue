@@ -5,15 +5,15 @@ import { VueQueryPlugin } from '@tanstack/vue-query';
 
 import { useRebuildingGrid } from '../../../composables';
 import {
-	DashboardItemType,
 	type IDashboardGroup,
 	type IDashboardItem,
+	type IMeta,
 	type IPositionWithId,
 } from '../../../model';
 import { queryClient } from '@/shared/service/query-client';
+import { CurrentDashboard } from '@/modules/dashboards';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
-import CurrentDashboard from '../dashboard/current-dashboard.vue';
 import PlaceholderComponent from './placeholder-component.vue';
 import GhostMoveComponent from './ghost-move-component.vue';
 import PlaceholderResizeComponent from './placeholder-resize-component.vue';
@@ -129,14 +129,18 @@ function getDashboardItemById(id: number): IDashboardItem {
 	throw new Error(`Dashboard with id ${id} not found`);
 }
 
-function getNameByDashboardId(id: number): string {
-	const dashboardItem = getDashboardItemById(id);
+function getMeta(id: number, isResizing = false): IMeta {
+	const foundDashboard = props.dashboards.items.find(item => item.id === id);
 
-	if (dashboardItem.type !== DashboardItemType.Instance) {
-		throw new Error(`Dashboard with id ${id} is not instance`);
+	if (!foundDashboard) {
+		throw new Error(`Dashboard with id ${id} not found`);
 	}
 
-	return dashboardItem.name;
+	return {
+		market: '',
+		name: foundDashboard.name,
+		isResizing,
+	};
 }
 
 function mountPlaceholderResize() {
@@ -146,7 +150,7 @@ function mountPlaceholderResize() {
 
 	mountedPlaceholder = createApp(PlaceholderResizeComponent, {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
-		isResizing: true,
+		meta: getMeta(resizableWidgetId.value, true),
 	});
 	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
 
@@ -232,10 +236,13 @@ function setResizableWidgetId(id: number | null) {
 				@set-resizable-widget-id="setResizableWidgetId"
 			>
 				<template #state-calm>
-					<current-dashboard :dashboard-item="getDashboardItemById(item.i)" />
+					<current-dashboard
+						:dashboard-item="getDashboardItemById(item.i)"
+						:meta="getMeta(item.i)"
+					/>
 				</template>
 				<template #state-dnd>
-					<ghost-move-component :title="getNameByDashboardId(item.i)" />
+					<ghost-move-component :title="getDashboardItemById(item.i).name" />
 				</template>
 				<template #state-resize>
 					<placeholder-component />

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { IDashboardItem } from '../../../model';
-
-import CurrentDashboard from '../dashboard/current-dashboard.vue';
+import type { IDashboardItem, IMeta } from '../../../model';
+import { CurrentDashboard } from '@/modules/dashboards';
 
 interface IPlaceholderResizeComponent {
 	dashboardItem: IDashboardItem;
-	isResizing: boolean;
+	meta: IMeta;
 }
 
 const props = defineProps<IPlaceholderResizeComponent>();
@@ -15,7 +14,7 @@ const props = defineProps<IPlaceholderResizeComponent>();
 	<div :class="classes.root">
 		<current-dashboard
 			:dashboard-item="props.dashboardItem"
-			:is-resizing="props.isResizing"
+			:meta="props.meta"
 		/>
 	</div>
 </template>

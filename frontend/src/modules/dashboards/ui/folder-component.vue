@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { dashboardTypeToFolderNameMapping, type IDashboardFolder } from '../../../model';
-import { getDashboardComponent } from '../../../utils';
+import type { IDashboardFolder, IMeta } from '@/modules/dashboard-group';
+import { getWidgetComponent } from '../utils';
 
 interface ITab {
 	id: number;
@@ -11,6 +11,7 @@ interface ITab {
 
 interface IDashboardFolderProps {
 	item: IDashboardFolder;
+	meta: IMeta;
 }
 
 const props = defineProps<IDashboardFolderProps>();
@@ -27,7 +28,7 @@ const activeDashboardInstance = computed(() => {
 const tabs = computed((): ITab[] =>
 	props.item.items.map(item => ({
 		id: item.id,
-		name: dashboardTypeToFolderNameMapping[item.dashboardType],
+		name: '',
 	})),
 );
 
@@ -57,7 +58,7 @@ function getInitialActiveTab() {
 		</div>
 
 		<div :class="classes.content">
-			<component :is="getDashboardComponent(activeDashboardInstance.dashboardType)" />
+			<component :is="getWidgetComponent(activeDashboardInstance.dashboardType)" />
 		</div>
 	</div>
 </template>

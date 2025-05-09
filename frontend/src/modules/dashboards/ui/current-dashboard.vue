@@ -5,20 +5,34 @@ import {
 	type IDashboardFolder,
 	type IDashboardInstance,
 	type IDashboardItem,
-} from '../../../model';
+	type IMeta,
+} from '@/modules/dashboard-group';
 
 import InstanceComponent from './instance-component.vue';
 import CollectionComponent from './collection-component.vue';
 import FolderComponent from './folder-component.vue';
 
-interface IGroupComponentProps {
-	dashboardItem: IDashboardItem;
-	isResizing?: boolean;
+interface IInstanceComponentProps {
+	item: IDashboardInstance;
+	meta: IMeta;
 }
 
-const props = withDefaults(defineProps<IGroupComponentProps>(), {
-	isResizing: false,
-});
+interface IFolderComponentProps {
+	item: IDashboardFolder;
+	meta: IMeta;
+}
+
+interface ICollectionComponentProps {
+	item: IDashboardCollection;
+	meta: IMeta;
+}
+
+interface IGroupComponentProps {
+	dashboardItem: IDashboardItem;
+	meta: IMeta;
+}
+
+const props = defineProps<IGroupComponentProps>();
 
 const getComponent = ({ type }: IDashboardItem) => {
 	switch (type) {
@@ -36,13 +50,11 @@ const getComponent = ({ type }: IDashboardItem) => {
 function getProps(item: IDashboardItem) {
 	switch (item.type) {
 		case DashboardItemType.Instance:
-			return { item: { ...item, isResizing: props.isResizing } } as {
-				item: IDashboardInstance;
-			};
+			return { item, meta: props.meta } as IInstanceComponentProps;
 		case DashboardItemType.Collection:
-			return { item } as { item: IDashboardCollection };
+			return { item, meta: props.meta } as ICollectionComponentProps;
 		case DashboardItemType.Folder:
-			return { item } as { item: IDashboardFolder };
+			return { item, meta: props.meta } as IFolderComponentProps;
 		default:
 			throw new Error(`Unknown dashboard item type: ${(item as IDashboardItem).type}`);
 	}
