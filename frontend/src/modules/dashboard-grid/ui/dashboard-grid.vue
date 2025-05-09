@@ -3,7 +3,7 @@ import { computed, createApp, onBeforeMount, reactive, ref, watch, type App } fr
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
-import { useRebuildingGrid } from '../composables';
+import { useInjectCurrentDashboardInject, useRebuildingGrid } from '../composables';
 import {
 	type IDashboardGroup,
 	type IDashboardItem,
@@ -11,7 +11,7 @@ import {
 	type IPositionWithId,
 } from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
-import { CurrentDashboard } from '@/modules/dashboards';
+import { CurrentDashboardSymbol } from '../model';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -42,6 +42,8 @@ const emit = defineEmits<{
 }>();
 
 let mountedPlaceholder: App<Element> | null = null;
+
+const { currentDashboard } = useInjectCurrentDashboardInject();
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
@@ -152,6 +154,9 @@ function mountPlaceholderResize() {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
 		meta: getMeta(resizableWidgetId.value, true),
 	});
+
+	mountedPlaceholder.provide(CurrentDashboardSymbol, currentDashboard);
+
 	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
 
 	mountPlaceholderComponents(mountedPlaceholder);
@@ -236,7 +241,8 @@ function setResizableWidgetId(id: number | null) {
 				@set-resizable-widget-id="setResizableWidgetId"
 			>
 				<template #state-calm>
-					<current-dashboard
+					<slot
+						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:meta="getMeta(item.i)"
 					/>

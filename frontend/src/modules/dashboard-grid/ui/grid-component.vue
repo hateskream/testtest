@@ -66,7 +66,15 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 					@update-is-show-grid-state="updateIsShowGridState"
 					@set-wrapper="setWrapper"
 					@set-grid-layout-ref="setGridLayoutRef"
-				/>
+				>
+					<template #dashboard-content="{ dashboardItem, meta }">
+						<slot
+							name="dashboard-content"
+							:dashboard-item="dashboardItem"
+							:meta="meta"
+						/>
+					</template>
+				</dashboard-grid>
 			</div>
 		</div>
 	</div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { inject } from 'vue';
+
 import type { IDashboardItem, IMeta } from '@/modules/dashboard-group';
-import { CurrentDashboard } from '@/modules/dashboards';
+import { CurrentDashboardSymbol } from '../model';
 
 interface IPlaceholderResizeComponent {
 	dashboardItem: IDashboardItem;
@@ -8,6 +10,8 @@ interface IPlaceholderResizeComponent {
 }
 
 const props = defineProps<IPlaceholderResizeComponent>();
+
+const CurrentDashboard = inject(CurrentDashboardSymbol);
 </script>
 
 <template>
