@@ -1,5 +1,3 @@
-export { DashboardGroup } from './ui/group';
-
 export type {
 	IDashboardCollection,
 	IDashboardFolder,

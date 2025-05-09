@@ -1,15 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import {
-	type IDashboardGroup,
-	type IDashboardTab,
-	DashboardItemType,
-	WidgetType,
-	type IDashboardInstance,
-	type IDashboardFolder,
-	type IDashboardCollection,
-} from '../model';
+import { type IDashboardGroup, type IDashboardTab, DashboardItemType, WidgetType } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
@@ -67,7 +59,15 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		})),
 	);
 
-	const activeGroupId = computed(() => dashboardGroups.value.find(group => group.isActive)?.id);
+	const activeGroup = computed<IDashboardGroup>(() => {
+		const group = dashboardGroups.value.find(el => el.isActive);
+
+		if (!group) {
+			throw new Error('No active group');
+		}
+
+		return group;
+	});
 
 	function addTab() {
 		const newGroup: IDashboardGroup = {
@@ -94,23 +94,12 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
-	function addItemToGroup(
-		groupId: string,
-		item: IDashboardInstance | IDashboardFolder | IDashboardCollection,
-	) {
-		const group = dashboardGroups.value.find(g => g.id === groupId);
-		if (group) {
-			group.items.push(item);
-		}
-	}
-
 	return {
 		dashboardGroups,
 		tabs,
-		activeGroupId,
 		addTab,
 		renameTab,
 		switchTab,
-		addItemToGroup,
+		activeGroup,
 	};
 });

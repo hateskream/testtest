@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-import { DashboardGroup, useDashboardGroupsStore } from '@/modules/dashboard-group';
+import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
+import { DashboardGrid } from '@/modules/dashboard-grid';
 
 const dashboardStore = useDashboardGroupsStore();
 const { addTab, switchTab, renameTab } = dashboardStore;
-const { tabs } = storeToRefs(dashboardStore);
+const { tabs, activeGroup } = storeToRefs(dashboardStore);
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const { tabs } = storeToRefs(dashboardStore);
 			/>
 		</template>
 		<template #content>
-			<dashboard-group />
+			<dashboard-grid :dashboards="activeGroup" />
 		</template>
 	</layout-component>
 </template>
