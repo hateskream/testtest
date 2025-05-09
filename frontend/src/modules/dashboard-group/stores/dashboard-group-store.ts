@@ -4,6 +4,9 @@ import { computed, ref } from 'vue';
 import { type IDashboardGroup, type IDashboardTab, DashboardItemType, WidgetType } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
+const WIDGET_MIN_SIZE = { w: 2, h: 2 };
+const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
+
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const dashboardGroups = ref<IDashboardGroup[]>([
 		{
@@ -17,6 +20,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Hot Markets',
 					dashboardType: WidgetType.HotMarkets,
 					position: { x: 0, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -24,6 +29,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Fear & Greed',
 					dashboardType: WidgetType.FearGreed,
 					position: { x: 2, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -31,6 +38,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Price',
 					dashboardType: WidgetType.Price,
 					position: { x: 4, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -38,6 +47,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Market',
 					dashboardType: WidgetType.Market,
 					position: { x: 0, y: 4, w: 3, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -45,6 +56,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'News',
 					dashboardType: WidgetType.News,
 					position: { x: 3, y: 4, w: 3, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 			],
 			market: 'crypto',

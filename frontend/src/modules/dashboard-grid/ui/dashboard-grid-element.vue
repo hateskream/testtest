@@ -13,6 +13,10 @@ interface IGridElement {
 	y: number;
 	w: number;
 	h: number;
+	minH: number;
+	minW: number;
+	maxH: number;
+	maxW: number;
 	isEditing: boolean;
 }
 
@@ -99,6 +103,10 @@ function updateDndState(newValue: boolean) {
 		:w="props.w"
 		:h="props.h"
 		:i="props.i"
+		:max-h="props.maxH"
+		:max-w="props.maxW"
+		:min-h="props.minH"
+		:min-w="props.minW"
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
 	>

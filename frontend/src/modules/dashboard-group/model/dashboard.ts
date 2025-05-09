@@ -7,6 +7,11 @@ export interface IPosition {
 	h: number;
 }
 
+export interface ISize {
+	w: number;
+	h: number;
+}
+
 export interface IPositionWithId extends IPosition {
 	i: number;
 }
@@ -22,6 +27,8 @@ export interface IDashboardItem {
 	name: string;
 	id: number;
 	position: IPosition;
+	maxSize: ISize;
+	minSize: ISize;
 }
 
 export interface IDashboardInstance extends IDashboardItem {
