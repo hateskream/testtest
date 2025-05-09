@@ -1,7 +1,7 @@
 import { ref, watch, type Ref } from 'vue';
 
 import { createGrid } from '../utils';
-import type { IPosition, IPositionWithId } from '../model';
+import type { IPositionWithId } from '@/modules/dashboard-group';
 
 export function useRebuildingGrid(
 	columnsNum: Ref<number>,

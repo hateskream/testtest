@@ -1,4 +1,4 @@
-import type { IPositionWithId } from '../model';
+import type { IPositionWithId } from '@/modules/dashboard-group';
 
 function isOffScreen(widget: IPositionWithId, colNum: number) {
 	return widget.x + widget.w > colNum;

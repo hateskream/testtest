@@ -7,6 +7,7 @@ export type {
 	IDashboardGroup,
 	IPositionWithId,
 	IDashboardTab,
+	IPosition,
 } from './model';
 export { DashboardItemType, WidgetType } from './model';
 

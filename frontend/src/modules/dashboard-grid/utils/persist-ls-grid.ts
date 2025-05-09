@@ -1,4 +1,4 @@
-import type { IPosition } from '../model';
+import type { IPosition } from '@/modules/dashboard-group';
 
 interface ISavedLayout {
 	columnNum: number;
