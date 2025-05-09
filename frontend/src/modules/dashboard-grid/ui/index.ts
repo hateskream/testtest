@@ -1,3 +1,3 @@
 import GridComponent from './grid-component.vue';
 
-export { GridComponent };
+export { GridComponent as DashboardGrid };

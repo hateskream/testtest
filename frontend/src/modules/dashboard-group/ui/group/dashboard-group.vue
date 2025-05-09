@@ -2,11 +2,11 @@
 import { storeToRefs } from 'pinia';
 
 import { useDashboardsStore } from '@/modules/dashboard-group/stores';
-import { GridComponent } from './grid';
+import { DashboardGrid } from '@/modules/dashboard-grid';
 
 const { activeGroup } = storeToRefs(useDashboardsStore());
 </script>
 
 <template>
-	<grid-component :dashboards="activeGroup" />
+	<dashboard-grid :dashboards="activeGroup" />
 </template>

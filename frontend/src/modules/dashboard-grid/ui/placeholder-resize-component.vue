@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IDashboardItem, IMeta } from '../../../model';
+import type { IDashboardItem, IMeta } from '@/modules/dashboard-group';
 import { CurrentDashboard } from '@/modules/dashboards';
 
 interface IPlaceholderResizeComponent {

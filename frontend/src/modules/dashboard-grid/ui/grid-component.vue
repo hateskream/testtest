@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, toRefs, computed } from 'vue';
-import type { GridLayout, Layout } from 'grid-layout-plus';
-import { throttle, debounce } from '@vexip-ui/utils';
+import { ref } from 'vue';
+import type { GridLayout } from 'grid-layout-plus';
 
-import {
-	responsiveGridLayout,
-	useMousePositionSync,
-	useRebuildingGrid,
-} from '../../../composables';
-import type { IDashboardGroup, IPosition, IPositionWithId } from '../../../model';
+import { responsiveGridLayout } from '../composables';
+import type { IDashboardGroup } from '@/modules/dashboard-group';
 
 import EditingGrid from './editing-grid.vue';
-import DraggableElement from './draggable-element.vue';
 import DashboardGrid from './dashboard-grid.vue';
 
 interface IProps {
@@ -25,14 +19,10 @@ const gridRef = ref<HTMLDivElement | null>(null);
 const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid, updateColumnsNumGrid } =
 	responsiveGridLayout(gridRef);
 
-// const { mouseAt } = useMousePositionSync();
 const isEditState = ref(true);
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
-
-// const dropId = 'drop';
-// const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
 function setWrapper(wrapper: HTMLDivElement) {
 	wrapperRef.value = wrapper;
@@ -66,7 +56,7 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 			</div>
 			<div :class="classes.content">
 				<dashboard-grid
-					:dashboards="dashboards"
+					:dashboards="props.dashboards"
 					:is-dnd="isEditState"
 					:columns-num="columnsNum"
 					:row-height="rowHeight"

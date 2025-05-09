@@ -3,13 +3,13 @@ import { computed, createApp, onBeforeMount, reactive, ref, watch, type App } fr
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 
-import { useRebuildingGrid } from '../../../composables';
+import { useRebuildingGrid } from '../composables';
 import {
 	type IDashboardGroup,
 	type IDashboardItem,
 	type IMeta,
 	type IPositionWithId,
-} from '../../../model';
+} from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboard } from '@/modules/dashboards';
 
