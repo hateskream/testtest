@@ -1,9 +1,9 @@
-import type { IDashboardCollection, IDashboardFolder, IDashboardInstance } from './dashboard';
+import type { IDashboardStack, IDashboardFolder, IDashboardInstance } from './dashboard';
 
 export interface IDashboardGroup {
 	id: string;
 	name: string;
-	items: (IDashboardInstance | IDashboardFolder | IDashboardCollection)[];
+	items: (IDashboardInstance | IDashboardFolder | IDashboardStack)[];
 	isActive: boolean;
 	market: string;
 }

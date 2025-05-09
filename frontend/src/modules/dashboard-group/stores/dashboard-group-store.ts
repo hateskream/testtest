@@ -1,16 +1,11 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import {
-	type IDashboardGroup,
-	type IDashboardTab,
-	DashboardItemType,
-	WidgetType,
-	type IDashboardInstance,
-	type IDashboardFolder,
-	type IDashboardCollection,
-} from '../model';
+import { type IDashboardGroup, type IDashboardTab, DashboardItemType, WidgetType } from '../model';
 import { generateTimestampId } from '@/shared/lib';
+
+const WIDGET_MIN_SIZE = { w: 2, h: 2 };
+const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const dashboardGroups = ref<IDashboardGroup[]>([
@@ -25,6 +20,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Hot Markets',
 					dashboardType: WidgetType.HotMarkets,
 					position: { x: 0, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -32,6 +29,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Fear & Greed',
 					dashboardType: WidgetType.FearGreed,
 					position: { x: 2, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -39,6 +38,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Price',
 					dashboardType: WidgetType.Price,
 					position: { x: 4, y: 0, w: 2, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -46,6 +47,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'Market',
 					dashboardType: WidgetType.Market,
 					position: { x: 0, y: 4, w: 3, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 				{
 					type: DashboardItemType.Instance,
@@ -53,6 +56,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					name: 'News',
 					dashboardType: WidgetType.News,
 					position: { x: 3, y: 4, w: 3, h: 4 },
+					minSize: WIDGET_MIN_SIZE,
+					maxSize: WIDGET_MAX_SIZE,
 				},
 			],
 			market: 'crypto',
@@ -67,7 +72,15 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		})),
 	);
 
-	const activeGroupId = computed(() => dashboardGroups.value.find(group => group.isActive)?.id);
+	const activeGroup = computed<IDashboardGroup>(() => {
+		const group = dashboardGroups.value.find(el => el.isActive);
+
+		if (!group) {
+			throw new Error('No active group');
+		}
+
+		return group;
+	});
 
 	function addTab() {
 		const newGroup: IDashboardGroup = {
@@ -94,23 +107,12 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
-	function addItemToGroup(
-		groupId: string,
-		item: IDashboardInstance | IDashboardFolder | IDashboardCollection,
-	) {
-		const group = dashboardGroups.value.find(g => g.id === groupId);
-		if (group) {
-			group.items.push(item);
-		}
-	}
-
 	return {
 		dashboardGroups,
 		tabs,
-		activeGroupId,
 		addTab,
 		renameTab,
 		switchTab,
-		addItemToGroup,
+		activeGroup,
 	};
 });
