@@ -20,8 +20,7 @@ const onTouchStart = (event: TouchEvent) => {
 	isDragging.value = true;
 
 	if (customGhost.value) {
-		// eslint-disable-next-line prefer-destructuring
-		const touch = event.touches[0];
+		const [touch] = event.touches;
 
 		customGhost.value.style.left = `${touch.clientX - 100}px`;
 		customGhost.value.style.top = `${touch.clientY - 100}px`;
@@ -30,8 +29,7 @@ const onTouchStart = (event: TouchEvent) => {
 
 const onTouchMove = (event: TouchEvent) => {
 	if (isDragging.value && customGhost.value) {
-		// eslint-disable-next-line prefer-destructuring
-		const touch = event.touches[0];
+		const [touch] = event.touches;
 
 		customGhost.value.style.left = `${touch.clientX - 95}px`;
 		customGhost.value.style.top = `${touch.clientY - 90}px`;

@@ -225,8 +225,7 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 	}
 
 	function toggleFiltersList(key: keyof IFilterNews | string, value: string) {
-		// @ts-expect-error skip
-		const filterActive = filters.value[key] as IFilterList<string>;
+		const filterActive = filters.value[key as keyof IFilterNews] as IFilterList<string>;
 
 		const filterActiveValueIdx = filterActive.value.findIndex(item =>
 			compareStrings(item, value),

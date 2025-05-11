@@ -15,8 +15,8 @@ interface ISearchComponentEmits {
 const emits = defineEmits<ISearchComponentEmits>();
 
 function handleUpdate(e: Event) {
-	// @ts-expect-error skip
-	emits('update:modelValue', e.target!.value!);
+	const target = e.target as HTMLInputElement;
+	emits('update:modelValue', target.value);
 }
 </script>
 
