@@ -12,4 +12,5 @@ export const dashboardTypeToFolderNameMapping: Record<WidgetType, string> = {
 	[WidgetType.Events]: 'Events',
 	[WidgetType.Telegram]: 'Telegram',
 	[WidgetType.Chart]: 'BTCUSDT',
+	[WidgetType.Watchlist]: 'Watchlist',
 };

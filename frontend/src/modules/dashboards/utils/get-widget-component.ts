@@ -11,6 +11,7 @@ import { InsidersDashboard } from '@/modules/widgets/insiders';
 import { EventsDashboard } from '@/modules/widgets/events';
 import { TelegramDashboard } from '@/modules/widgets/telegram';
 import { ChartDashboard } from '@/modules/widgets/chart';
+import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { WidgetType } from '@/modules/dashboard-group';
 
 export function getWidgetComponent(type: WidgetType) {
@@ -26,6 +27,7 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Events]: EventsDashboard,
 		[WidgetType.Telegram]: TelegramDashboard,
 		[WidgetType.Chart]: ChartDashboard,
+		[WidgetType.Watchlist]: WatchlistDashboard,
 	};
 
 	return components[type];

@@ -10,6 +10,7 @@ export enum WidgetType {
 	Events = 'events',
 	Telegram = 'telegram',
 	Chart = 'chart',
+	Watchlist = 'watchlist',
 }
 
 export interface IMeta {
