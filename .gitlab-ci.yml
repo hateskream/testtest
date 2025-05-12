@@ -11,11 +11,11 @@ variables:
   MANIFEST_BRANCH_REPO: main
 
 include:
-  - local: "/snippets/setup.yml"
-  - local: "/snippets/lint.yml"
+  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
+  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
 
-# before_script:
-#   - cd frontend
+before_script:
+  - cd frontend
 
 stages:
   - setup
@@ -54,7 +54,7 @@ deploy:
       variables:
         DEPLOYMENT_PATH: "demo-front/demo-dev/deployment.yaml"
     - when: never
-
+    
 
 build:
   stage: build
@@ -68,9 +68,9 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   script:
-    # - cd frontend
+    - cd frontend
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
-
+  
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'

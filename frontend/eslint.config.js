@@ -150,10 +150,6 @@ export default [
 				],
 				'alphabetical': false
 			}],
-			'vue/component-name-in-template-casing': ['error', 'kebab-case', {
-				'registeredComponentsOnly': false,
-				'ignores': []
-			}],
 
 			// TypeScript
 			'@typescript-eslint/no-shadow': 'error',

@@ -12,11 +12,6 @@ install_dependencies:
   #     - frontend/node_modules/
   #     - frontend/package-lock.json
 
-  artifacts:
-    paths:
-      - node_modules/
-    expire_in: 1h
-
   rules:
     - if: '$CI_COMMIT_REF_NAME != "main"'
       when: always
