@@ -42,8 +42,4 @@ const percentClasses = computed<string>(() => {
 .negative {
 	color: var(--metrics-color-negative-500);
 }
-
-.percent {
-	width: 100%;
-}
 </style>
