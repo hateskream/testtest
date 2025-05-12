@@ -11,8 +11,8 @@ variables:
   MANIFEST_BRANCH_REPO: main
 
 include:
-  - local: "/.gitlab-ci/snippets/setup.yml"
-  - local: "/.gitlab-ci/snippets/lint.yml"
+  - local: "/snippets/setup.yml"
+  - local: "/snippets/lint.yml"
 
 # before_script:
 #   - cd frontend
