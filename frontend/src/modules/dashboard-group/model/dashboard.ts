@@ -7,13 +7,18 @@ export interface IPosition {
 	h: number;
 }
 
+export interface ISize {
+	w: number;
+	h: number;
+}
+
 export interface IPositionWithId extends IPosition {
 	i: number;
 }
 
 export enum DashboardItemType {
 	Instance = 'instance',
-	Collection = 'collection',
+	Stack = 'stack',
 	Folder = 'folder',
 }
 
@@ -22,6 +27,8 @@ export interface IDashboardItem {
 	name: string;
 	id: number;
 	position: IPosition;
+	maxSize: ISize;
+	minSize: ISize;
 }
 
 export interface IDashboardInstance extends IDashboardItem {
@@ -30,8 +37,8 @@ export interface IDashboardInstance extends IDashboardItem {
 	isResizing?: boolean;
 }
 
-export interface IDashboardCollection extends IDashboardItem {
-	type: DashboardItemType.Collection;
+export interface IDashboardStack extends IDashboardItem {
+	type: DashboardItemType.Stack;
 	items: (IDashboardInstance | IDashboardFolder)[];
 }
 

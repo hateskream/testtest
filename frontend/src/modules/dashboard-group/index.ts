@@ -1,3 +1,14 @@
-export { DashboardGroup } from './ui/group';
+export type {
+	IDashboardStack,
+	IDashboardFolder,
+	IDashboardInstance,
+	IMeta,
+	IDashboardItem,
+	IDashboardGroup,
+	IPositionWithId,
+	IDashboardTab,
+	IPosition,
+} from './model';
+export { DashboardItemType, WidgetType } from './model';
 
-export { TabsComponent } from './ui/tab';
+export { useDashboardGroupsStore } from './stores/dashboard-group-store';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue';
+import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
@@ -7,11 +7,11 @@ import { useNewsStore } from '../stores';
 import type { IGetNewsRequest } from '../api';
 import type { IMeta } from '@/modules/dashboard-group/model/widgets';
 
+import NewsFiltersPanel from './news-filters-panel-component.vue';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewNewsComponent from './view-news-component.vue';
 import RcmNewsComponent from './rcm-news-component.vue';
-import NewsFiltersPanel from './news-filters-panel-component.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -29,9 +29,9 @@ const newsArguments = computed<IGetNewsRequest>(() => ({
 	dateRange: 'newsStore.filters.dateRange.value',
 	sortBy: newsStore.activeSort
 		? {
-				name: newsStore.activeSort.key,
-				order: newsStore.activeSort.order.toUpperCase(),
-			}
+			name: newsStore.activeSort.key,
+			order: newsStore.activeSort.order.toUpperCase(),
+		}
 		: undefined,
 	locations: JSON.stringify(newsStore.activeLocationFilters),
 }));

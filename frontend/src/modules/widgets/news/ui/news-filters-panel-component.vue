@@ -82,7 +82,7 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 						<div
 							v-if="
 								newsStore.activeTickersList.length - ACTIVE_TICKER_LIST_COUNT_SHOW >
-								0
+									0
 							"
 						>
 							+{{
