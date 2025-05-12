@@ -55,6 +55,19 @@ const tableRows = computed<ITableRow[][]>(() => {
 	return rows;
 });
 
+const gridLayout = computed(() => {
+	const templateColumns = 'minmax(100px, 1fr) '.repeat(marketStore.activeTableColumns.length)
+
+	const metricsTemplateColumn = `minmax(30px, 1fr)`
+
+	const gridTemplateColumns = `${templateColumns} ${metricsTemplateColumn}`
+
+
+	return {
+		gridTemplateColumns
+	}
+})
+
 function prepareRow(row: IMarketDomain) {
 	const data: ITableRow[] = [];
 
@@ -91,7 +104,7 @@ function sortRowsByType(args: {
 
 <template>
 	<div :class="classes.scrollable">
-		<div :class="classes.grid">
+		<div :class="classes.grid" :style="gridLayout">
 			<table-columns-component />
 			<table-rows-component :rows="tableRows" />
 		</div>
@@ -102,14 +115,6 @@ function sortRowsByType(args: {
 .grid {
 	display: grid;
 	min-width: 100%;
-	grid-template-columns:
-		minmax(100px, 1fr)
-		minmax(100px, 1fr)
-		minmax(100px, 1fr)
-		minmax(100px, 1fr)
-		minmax(100px, 1fr)
-		minmax(100px, 1fr)
-		minmax(30px, 1fr);
 	column-gap: 6px;
 	background-color: inherit;
 }
