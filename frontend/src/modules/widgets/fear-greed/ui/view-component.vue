@@ -23,14 +23,14 @@ const { mapTension } = useMapTension();
 const fearGreedStore = useFearGreedStore();
 
 const tensionText = computed<ITensionTextData>(() => mapTension(props.tension.tension ?? 0));
-
-const history = computed(() =>
-	(props.tension?.history ?? []).map(item => ({
-		style: { color: mapTension(item.value).colors.text },
-		name: item.displayName,
-		tension: item.value,
-	})),
-);
+// FIXME: unused code
+// const history = computed(() =>
+// 	(props.tension?.history ?? []).map(item => ({
+// 		style: { color: mapTension(item.value).colors.text },
+// 		name: item.displayName,
+// 		tension: item.value,
+// 	})),
+// );
 
 const circleChart = computed(() => {
 	const tension = props.tension.tension ?? 0;

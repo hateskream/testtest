@@ -22,7 +22,7 @@ export function useMousePositionSync() {
 
 	function syncMousePosition(event: MouseEvent | TouchEvent) {
 		if ('touches' in event) {
-			const touch = event.touches[0];
+			const [touch] = event.touches;
 			mouseAt.value.x = touch.clientX;
 			mouseAt.value.y = touch.clientY;
 		} else {

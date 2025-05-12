@@ -30,7 +30,7 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 	const activeFilters = computed(() =>
 		Object.fromEntries(
-			Object.entries(filters.value).filter(([key, item]) => item.value.length > 0),
+			Object.entries(filters.value).filter(([_key, item]) => item.value.length > 0),
 		),
 	);
 
@@ -225,8 +225,7 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 	}
 
 	function toggleFiltersList(key: keyof IFilterNews | string, value: string) {
-		// @ts-expect-error skip
-		const filterActive = filters.value[key] as IFilterList<string>;
+		const filterActive = filters.value[key as keyof IFilterNews] as IFilterList<string>;
 
 		const filterActiveValueIdx = filterActive.value.findIndex(item =>
 			compareStrings(item, value),

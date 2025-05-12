@@ -29,8 +29,8 @@ export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[
 		const response = IS_USE_MOCK
 			? await getMockData()
 			: await httpService.get<IGetMarketResponse>('/api/market', {
-					query,
-				});
+				query,
+			});
 
 		return prepareResponse(response.data);
 	} catch (error) {
