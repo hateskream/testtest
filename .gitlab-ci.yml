@@ -35,19 +35,26 @@ deploy:
     - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/devops/k8s-manifests.git
 
     - git config core.sparseCheckout true
-    - echo "demo-front/deployment.yaml" > .git/info/sparse-checkout
+    - echo "$DEPLOYMENT_PATH" > .git/info/sparse-checkout
 
     - git fetch origin $MANIFEST_BRANCH_REPO
     - git checkout -b $MANIFEST_BRANCH_REPO origin/$MANIFEST_BRANCH_REPO
 
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" demo-front/deployment.yaml'
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
 
-    - git add demo-front/deployment.yaml
+    - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin $MANIFEST_BRANCH_REPO
 
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      variables:
+        DEPLOYMENT_PATH: "demo-front/deployment.yaml"
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+      variables:
+        DEPLOYMENT_PATH: "demo-front/demo-dev/deployment.yaml"
+    - when: never
+    
 
 build:
   stage: build
