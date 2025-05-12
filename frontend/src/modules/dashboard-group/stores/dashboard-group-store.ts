@@ -64,7 +64,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 					id: 5,
 					name: 'Watchlist',
 					dashboardType: WidgetType.Watchlist,
-					position: { x: 0, y: 8, w: 3, h: 4 },
+					position: { x: 0, y: 8, w: 2, h: 6 },
 					minSize: WIDGET_MIN_SIZE,
 					maxSize: WIDGET_MAX_SIZE,
 				},
