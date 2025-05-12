@@ -1,23 +1,22 @@
 import type { IPositionWithId } from '@/modules/dashboard-group';
 
-function isOffScreen(widget: IPositionWithId, colNum: number) {
+function isOffScreen(widget: IPositionWithId, colNum: number): boolean {
 	return widget.x + widget.w > colNum;
 }
 
-function isWiderThanScreen(widget: IPositionWithId, colNum: number) {
+function isWiderThanScreen(widget: IPositionWithId, colNum: number): boolean {
 	return widget.w > colNum;
 }
 
-function isGridTooWide(currentDashboards: IPositionWithId[], colNum: number) {
-	return currentDashboards.some(w => isOffScreen(w, colNum) || isWiderThanScreen(w, colNum));
+function isGridTooWide(dashboards: IPositionWithId[], colNum: number): boolean {
+	return dashboards.some(w => isOffScreen(w, colNum) || isWiderThanScreen(w, colNum));
 }
 
-function getLastRowInfo(currentDashboards: IPositionWithId[], widgetWidth: number, colNum: number) {
-	const lastRow = Math.max(0, ...currentDashboards.map(w => w.y + w.h));
-	const lastRowWidgets = currentDashboards.filter(w => w.y + w.h > lastRow - 1 && w.y <= lastRow);
+function getLastRowInfo(dashboards: IPositionWithId[], widgetWidth: number, colNum: number): { x: number; y: number } {
+	const lastRow = Math.max(0, ...dashboards.map(w => w.y + w.h));
+	const lastRowWidgets = dashboards.filter(w => w.y + w.h > lastRow - 1 && w.y <= lastRow);
 
-	// eslint-disable-next-line no-plusplus
-	for (let x = 0; x <= colNum - widgetWidth; x++) {
+	for (let x = 0; x <= colNum - widgetWidth; x += 1) {
 		if (!lastRowWidgets.some(w => x < w.x + w.w && x + widgetWidth > w.x)) {
 			return { x, y: lastRow - 1 };
 		}
@@ -29,32 +28,27 @@ function canPlaceWidget(
 	widget: IPositionWithId,
 	x: number,
 	y: number,
-	currentDashboards: IPositionWithId[],
-) {
-	return !currentDashboards.some(
+	dashboards: IPositionWithId[],
+): boolean {
+	return !dashboards.some(
 		w =>
 			w.i !== widget.i &&
-			y < w.y + w.h &&
-			y + widget.h > w.y &&
-			x < w.x + w.w &&
-			x + widget.w > w.x,
+      y < w.y + w.h &&
+      y + widget.h > w.y &&
+      x < w.x + w.w &&
+      x + widget.w > w.x,
 	);
 }
 
-function optimizeLayoutHeight(
-	currentDashboards: IPositionWithId[],
-	colNum: number,
-): IPositionWithId[] {
-	let updatedDashboards = [...currentDashboards];
+function optimizeLayoutHeight(dashboards: IPositionWithId[], colNum: number): IPositionWithId[] {
+	let updatedDashboards = dashboards;
 	const prevHeight = Math.max(0, ...updatedDashboards.map(w => w.y + w.h));
 
-	const sortedWidgets = [...updatedDashboards].sort((a, b) => b.y + b.h - (a.y + a.h));
+	const sortedWidgets = updatedDashboards.sort((a, b) => b.y + b.h - (a.y + a.h));
 
 	for (const widget of sortedWidgets) {
-		// eslint-disable-next-line no-plusplus
-		for (let y = 0; y < widget.y; y++) {
-			// eslint-disable-next-line no-plusplus
-			for (let x = 0; x <= colNum - widget.w; x++) {
+		for (let y = 0; y < widget.y; y += 1) {
+			for (let x = 0; x <= colNum - widget.w; x += 1) {
 				if (canPlaceWidget(widget, x, y, updatedDashboards)) {
 					updatedDashboards = updatedDashboards.map(w =>
 						w.i === widget.i ? { ...w, x, y } : w,
@@ -66,32 +60,26 @@ function optimizeLayoutHeight(
 	}
 
 	const newHeight = Math.max(0, ...updatedDashboards.map(w => w.y + w.h));
-	return newHeight < prevHeight
-		? optimizeLayoutHeight(updatedDashboards, colNum)
-		: updatedDashboards;
+	return newHeight < prevHeight ? optimizeLayoutHeight(updatedDashboards, colNum) : updatedDashboards;
 }
 
-function adjustWidgetWidth(
-	currentDashboards: IPositionWithId[],
-	colNum: number,
-): IPositionWithId[] {
-	return currentDashboards.map(widget => (widget.w > colNum ? { ...widget, w: colNum } : widget));
+function adjustWidgetWidth(dashboards: IPositionWithId[], colNum: number): IPositionWithId[] {
+	return dashboards.map(widget =>
+		widget.w > colNum ? { ...widget, w: colNum, prevW: widget.w } : widget,
+	);
 }
 
 export function createGrid(colNum: number, initDashboards: IPositionWithId[]): IPositionWithId[] {
-	let updatedDashboards = [...initDashboards];
+	let updatedDashboards = initDashboards;
 
 	while (isGridTooWide(updatedDashboards, colNum)) {
-		const widget = updatedDashboards.find(isOffScreen);
-
+		const widget = updatedDashboards.find(w => isOffScreen(w, colNum));
 		if (!widget) {
 			break;
 		}
 
 		updatedDashboards = adjustWidgetWidth(updatedDashboards, colNum);
-
 		const { x, y } = getLastRowInfo(updatedDashboards, widget.w, colNum);
-
 		updatedDashboards = updatedDashboards.map(w => (w.i === widget.i ? { ...w, x, y } : w));
 	}
 
