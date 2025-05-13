@@ -1,2 +1,2 @@
-export { DashboardGrid } from './ui';
+export { DashboardGrid, DraggableElement } from './ui';
 export { useProvideCurrentDashboard } from './composables';
