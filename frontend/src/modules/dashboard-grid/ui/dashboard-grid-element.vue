@@ -18,6 +18,7 @@ interface IGridElement {
 	maxH: number;
 	maxW: number;
 	isEditing: boolean;
+	dropId: number | string;
 }
 
 const props = defineProps<IGridElement>();
@@ -95,6 +96,7 @@ function updateDndState(newValue: boolean) {
 </script>
 
 <template>
+
 	<grid-item
 		:key="props.i"
 		ref="gridItemRef"
@@ -110,6 +112,7 @@ function updateDndState(newValue: boolean) {
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
 	>
+
 		<div :class="[classes.itemWrapper, classListItem]">
 			<div
 				v-if="componentState.isResize"
@@ -122,6 +125,9 @@ function updateDndState(newValue: boolean) {
 				:class="classes.item"
 			>
 				<slot name="state-dnd" />
+			</div>
+			<div v-else-if="props.dropId === props.i" :class="classes.item">
+				<slot name="state-add-widget" />
 			</div>
 			<div
 				v-else

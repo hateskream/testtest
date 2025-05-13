@@ -13,8 +13,7 @@ export function useRebuildingGrid(
 	watch(
 		rawDashboard,
 		newsDashboard => {
-			const newLayout = createGrid(columnsNum.value, newsDashboard);
-			layout.value = newLayout;
+			layout.value = newsDashboard;
 		},
 		{
 			immediate: true,

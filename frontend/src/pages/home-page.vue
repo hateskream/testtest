@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { provide, ref } from 'vue';
 
 import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -8,12 +9,28 @@ import { DashboardGrid, DraggableElement, useProvideCurrentDashboard } from '@/m
 import { CurrentDashboard } from '@/modules/dashboards';
 
 const dashboardStore = useDashboardGroupsStore();
-const { addTab, switchTab, renameTab } = dashboardStore;
+const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardStore;
 const { tabs, activeGroup } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
 
 provideComponent(CurrentDashboard);
+
+const drag = ref<(() => void)>(() => {});
+const dragEnd = ref<(() => void)>(() => {});
+
+function setDrag(func: () => void) {
+	drag.value = func;
+}
+
+function setDragEnd(func: () => void) {
+	dragEnd.value = func;
+}
+
+provide('funcSetter', {
+	setDrag,
+	setDragEnd,
+});
 </script>
 
 <template>
@@ -28,7 +45,7 @@ provideComponent(CurrentDashboard);
 		</template>
 		<template #content>
 			<div class="root">
-				<dashboard-grid :dashboards="activeGroup" class="grid">
+				<dashboard-grid :dashboards="activeGroup" class="grid" @add-widget="setNewStateInCurrentGroup">
 					<template #dashboard-content="{ dashboardItem, meta }">
 						<current-dashboard
 							:dashboard-item="dashboardItem"
@@ -36,7 +53,11 @@ provideComponent(CurrentDashboard);
 						/>
 					</template>
 				</dashboard-grid>
-				<draggable-element />
+				<div>
+					<draggable-element @drag="drag" @drag-end="dragEnd" />
+					<div>
+					</div>
+				</div>
 			</div>
 
 		</template>
