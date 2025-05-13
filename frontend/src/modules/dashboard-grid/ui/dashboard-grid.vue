@@ -23,10 +23,10 @@ import {
 	type IDashboardItem,
 	type IDashboardStack,
 	type IMeta,
-	type IPositionWithId,
 } from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
+import type { IPosition } from '../model';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -83,7 +83,7 @@ const gridState = reactive<IGridState>({
 
 const resizableWidgetId = ref<number | null>(null);
 
-const rawDashboards = computed((): IPositionWithId[] =>
+const rawDashboards = computed((): IPosition[] =>
 	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
 );
 
@@ -389,7 +389,7 @@ function handlerDragEnd() {
 
 		const newItemId = Date.now();
 
-		const position: IPositionWithId = {
+		const position: IPosition = {
 			x: finalX,
 			y: finalY,
 			w: dragItem.w,
@@ -419,7 +419,7 @@ function handlerDragEnd() {
 
 function updateDashboardItemsPositions(
 	dashboardItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[],
-	positions: IPositionWithId[]
+	positions: IPosition[]
 ): (IDashboardInstance | IDashboardFolder | IDashboardStack)[] {
 	return dashboardItems.map(item => {
 		const matchingPosition = positions.find(pos => pos.i === item.id);

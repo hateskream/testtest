@@ -5,9 +5,8 @@ export type {
 	IMeta,
 	IDashboardItem,
 	IDashboardGroup,
-	IPositionWithId,
-	IDashboardTab,
 	IPosition,
+	IDashboardTab,
 } from './model';
 export { DashboardItemType, WidgetType } from './model';
 

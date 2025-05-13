@@ -12,10 +12,6 @@ export interface ISize {
 	h: number;
 }
 
-export interface IPositionWithId extends IPosition {
-	i: number;
-}
-
 export enum DashboardItemType {
 	Instance = 'instance',
 	Stack = 'stack',
