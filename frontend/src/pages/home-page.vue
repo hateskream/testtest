@@ -54,7 +54,7 @@ provide('funcSetter', {
 					</template>
 				</dashboard-grid>
 				<div>
-					<draggable-element @drag="drag" @drag-end="dragEnd" />
+					<draggable-element title="dfsdfsdf" @drag="drag" @drag-end="dragEnd" />
 					<div>
 					</div>
 				</div>

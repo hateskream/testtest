@@ -1,52 +1,81 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
+import GhostComponentBase from './ghost-component-base.vue';
+
+interface ISize {
+	height: number;
+	width: number;
+}
+
+interface IDraggableElementProps {
+	title: string;
+}
+
+const props = defineProps<IDraggableElementProps>();
 
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
 }>();
 
-const customGhost = ref<HTMLElement | null>(null);
-const isDragging = ref(false);
+const sizeGhostElement: ISize = {
+	height: 0,
+	width: 0,
+}
+
+let isDragging = false;
+
+
+const customGhost = ref<HTMLDivElement | null>(null);
+
+onMounted(() => {
+	if (customGhost.value) {
+		sizeGhostElement.height = customGhost.value.clientHeight;
+		sizeGhostElement.width = customGhost.value.clientWidth;
+	}
+})
 
 const onDragStart = (event: DragEvent) => {
 	if (event.dataTransfer && customGhost.value) {
-		event.dataTransfer.setDragImage(customGhost.value, 25, 25);
+		const { height, width } = sizeGhostElement;
+
+		event.dataTransfer.setDragImage(customGhost.value, width / 2, height / 2);
 		event.dataTransfer.effectAllowed = 'move';
 	}
 };
 
-const onTouchStart = (event: TouchEvent) => {
-	isDragging.value = true;
+const onTouchStart = () => {
+	isDragging = true;
 
 	if (customGhost.value) {
-		const [touch] = event.touches;
-
-		customGhost.value.style.left = `${touch.clientX - 100}px`;
-		customGhost.value.style.top = `${touch.clientY - 100}px`;
+		customGhost.value.style.opacity = '1';
 	}
 };
 
 const onTouchMove = (event: TouchEvent) => {
-	if (isDragging.value && customGhost.value) {
+	if (isDragging && customGhost.value) {
 		const [touch] = event.touches;
+		const { height, width } = sizeGhostElement;
 
-		customGhost.value.style.left = `${touch.clientX - 95}px`;
-		customGhost.value.style.top = `${touch.clientY - 90}px`;
+		customGhost.value.style.left = `${touch.clientX - width / 2}px`;
+		customGhost.value.style.top = `${touch.clientY - height / 2}px`;
 		emit('drag');
 	}
 };
 
 const onDragEnd = () => {
-	if (isDragging.value) {
-		isDragging.value = false;
+	if (isDragging) {
+		isDragging = false;
 
 		if (customGhost.value) {
-			customGhost.value.style.left = '9999px';
+			customGhost.value.style.left = '-9999px';
+			customGhost.value.style.opacity = '0.9';
 		}
 		emit('drag-end');
 	}
 };
+
 </script>
 
 <template>
@@ -67,7 +96,7 @@ const onDragEnd = () => {
 			ref="customGhost"
 			class="custom-ghost"
 		>
-			Drag
+			<ghost-component-base  :title="props.title" />
 		</div>
 	</div>
 </template>
@@ -81,20 +110,13 @@ const onDragEnd = () => {
 	background-color: #ffdddd;
 	border: 1px solid #000000;
 	cursor: move;
-	user-select: none; /* Запрещаем выделение текста */
+	user-select: none;
 }
 
 .custom-ghost {
 	position: absolute;
 	left: -9999px;
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	color: #ffffff;
-	background-color: #ff4444;
-	border-radius: 50%;
 	opacity: 0.9;
-	transition: opacity 0.3s ease;
+	pointer-events: none;
 }
 </style>
