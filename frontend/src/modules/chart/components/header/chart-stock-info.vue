@@ -18,7 +18,7 @@ const { isActiveMarketOpen, activeExchange } = storeToRefs(useChartStore());
 	<div :class="classes.stockInfoWrapper">
 		<div :class="classes.tickerName" class="header-h01">{{ tickerName }}</div>
 		<div :class="classes.marketData">
-			<chart-stock-select/>
+			<chart-stock-select />
 			<chart-open-close :is-open="isActiveMarketOpen" :market="activeExchange" />
 
 
