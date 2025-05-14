@@ -148,27 +148,27 @@ useIntervalFn(() => {
 }
 
 .openCloseLabel {
-	user-select: none;
-	cursor: pointer;
 	display: flex;
-	gap: 3px;
-	padding: 2px 12px 2px 2px;
 	align-items: center;
+	padding: 2px 12px 2px 2px;
 	color: var(--text-color-base-500);
-	border-radius: 999px;
 	background: var(--charts-bg-open);
+	border-radius: 999px;
+	cursor: pointer;
+	user-select: none;
+	gap: 3px;
 }
 
 .openCloseLabel.closed {
-	background: var(--charts-bg-closed)
+	background: var(--charts-bg-closed);
 }
 
 .dropdown {
+	display: flex;
+	flex-direction: column;
 	width: 306px;
 	padding: 12px;
 	color: var(--text-color-base-500);
-	display: flex;
-	flex-direction: column;
 	gap: 16px;
 }
 
@@ -179,29 +179,30 @@ useIntervalFn(() => {
 .dropdownTime {
 	font-weight: 700;
 }
-.dropdownHeader{
-	display:flex;
-	align-items:center;
-	gap:6px;
+
+.dropdownHeader {
+	display: flex;
+	align-items: center;
+	gap: 6px;
 }
-.openMark:before {
+
+.openMark::before {
 	content: '';
-	display:block;
+	display: block;
 	width: 14px;
 	height: 14px;
-	border-radius: 999px;
-	margin-bottom:2px;
+	margin-bottom: 2px;
 	background-color: var(--charts-bg-open);
-
+	border-radius: 999px;
 }
 
-.closeMark:before {
+.closeMark::before {
 	content: '';
-	display:block;
+	display: block;
 	width: 14px;
 	height: 14px;
-	border-radius: 999px;
-	margin-bottom:2px;
+	margin-bottom: 2px;
 	background-color: var(--charts-bg-closed);
+	border-radius: 999px;
 }
 </style>

@@ -91,49 +91,56 @@ const setReports = ()=>{
 	</layout-component>
 </template>
 <style module="classes">
-.placeholderTop{
-	background:yellow;
-	min-height:400px;
+.placeholderTop {
+	min-height: 400px;
+	background: var(--border-color-attention-500-effect);
 }
-.columnTitle{
-	display:flex;
-	align-items:center;
-	gap:8px;
-	font-size:var(--typography-headers-size-h02);
-	margin-bottom:22px;
+
+.columnTitle {
+	display: flex;
+	align-items: center;
+	margin-bottom: 22px;
+	font-size: var(--typography-headers-size-h02);
+	gap: 8px;
 }
-.titleIcon{
-	color:#fff;
+
+.titleIcon {
+	color: #ffffff;
 }
-.columnContent{
-	display:flex;
+
+.columnContent {
+	display: flex;
 	flex-direction: column;
-	gap:20px;
-	min-height:300px;
-	&>*{
-		min-height:300px;
+	gap: 20px;
+	min-height: 300px;
+
+	& > * {
+		min-height: 300px;
 	}
 }
-.navigation{
-	display:flex;
-	position:fixed;
-	bottom:15px;
-	left:50%;
-	transform:translateX(-50%);
+
+.navigation {
+	position: fixed;
+	bottom: 15px;
+	left: 50%;
+	display: flex;
+	background: rgb(84 84 95 / 60%);
+	border: 1px solid rgb(199 199 199 / 10%);
 	border-radius: 99px;
-	border: 1px solid rgba(199, 199, 199, 0.10);
-	background: rgba(84, 84, 95, 0.60);
-	box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.35);
+	box-shadow: 0 6px 12px 0 rgb(0 0 0 / 35%);
+	transform: translateX(-50%);
 	backdrop-filter: blur(12px);
-	button{
+
+	button {
+		height: 34px;
+		padding: 0 12px;
+		color: #9a9a9d;
 		border-radius: 100px;
-		cursor:pointer;
-		height:34px;
-		padding:0 12px;
-		color:#9A9A9D;
+		cursor: pointer;
 	}
 }
-.active{
-	background: #fff;
+
+.active {
+	background: #ffffff;
 }
 </style>

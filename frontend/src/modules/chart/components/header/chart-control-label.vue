@@ -27,22 +27,25 @@ const priceText = computed(()=>{
 </template>
 
 <style module="classes">
-.wrapper{
-	display:flex;
-	gap:3px;
-	align-items:center;
-	padding:5px 11px 5px 6px;
-	border-radius: 99px;
+.wrapper {
+	display: flex;
+	align-items: center;
+	width: fit-content;
+	padding: 5px 11px 5px 6px;
 	background-color: var(--metrics-bg-control-300);
-	width:fit-content;
+	border-radius: 99px;
+	gap: 3px;
 }
+
 .symbol {
-	width:16px;
-	height:16px;
+	width: 16px;
+	height: 16px;
 }
+
 .positive {
 	color: var(--metrics-color-positive-chart);
 }
+
 .negative {
 	color: var(--metrics-color-negative-chart);
 }

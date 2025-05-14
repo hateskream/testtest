@@ -29,7 +29,7 @@ const transformStyle = computed((): string => {
 	>
 		<mask
 			id="mask0_20308_337973"
-			style="mask-type:alpha"
+			style="mask-type: alpha;"
 			maskUnits="userSpaceOnUse"
 			x="0"
 			y="0"
