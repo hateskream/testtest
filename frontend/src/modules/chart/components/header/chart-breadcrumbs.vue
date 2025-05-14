@@ -19,10 +19,15 @@ const breadCrumbsData = [
 		isActive: false,
 	},
 	{
+		name: 'Motor vehicles',
+		type: 'common',
+		isActive: false,
+	},
+	{
 		name: 'TSLA',
 		type: 'common',
 		isActive: true,
-	},
+	}
 
 ];
 </script>
@@ -55,6 +60,7 @@ const breadCrumbsData = [
 	align-items: center;
 	gap: 9px;
 	padding: 5px 0;
+	height:30px;
 
 }
 
