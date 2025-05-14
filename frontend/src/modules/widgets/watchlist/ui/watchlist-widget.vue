@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 
 // TODO: Make them real
-const isLoading = ref(false)
+const isLoading = ref(true)
 const isDataLoadingError = ref(false)
 </script>
 
@@ -37,8 +37,8 @@ const isDataLoadingError = ref(false)
 <style module>
 .title-container {
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
+	align-items: center;
 	width: 100%;
 }
 </style>
