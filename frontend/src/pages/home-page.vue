@@ -5,7 +5,12 @@ import { provide, ref } from 'vue';
 import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
-import { DashboardGrid, DraggableElement, useProvideCurrentDashboard } from '@/modules/dashboard-grid';
+import {
+	DashboardGrid,
+	DraggableElement,
+	useProvideCurrentDashboard,
+	GhostComponentBase
+} from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
 
 const dashboardStore = useDashboardGroupsStore();
@@ -54,7 +59,9 @@ provide('funcSetter', {
 					</template>
 				</dashboard-grid>
 				<div>
-					<draggable-element title="dfsdfsdf" @drag="drag" @drag-end="dragEnd" />
+					<draggable-element @drag="drag" @drag-end="dragEnd">
+						<ghost-component-base title="dfsdfsdf" />
+					</draggable-element>
 					<div>
 					</div>
 				</div>

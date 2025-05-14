@@ -1,51 +1,40 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
-import GhostComponentBase from './ghost-component-base.vue';
-
-interface ISize {
-	height: number;
-	width: number;
-}
-
-interface IDraggableElementProps {
-	title: string;
-}
-
-const props = defineProps<IDraggableElementProps>();
-
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
 }>();
 
-const sizeGhostElement: ISize = {
-	height: 0,
-	width: 0,
+const INIT_LEFT = '-9999px';
+const INIT_OPACITY = '0.9';
+
+const sizeGhostElement = {
+	centerHeight: 0,
+	centerWidth: 0,
 }
 
 let isDragging = false;
-
 
 const customGhost = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
 	if (customGhost.value) {
-		sizeGhostElement.height = customGhost.value.clientHeight;
-		sizeGhostElement.width = customGhost.value.clientWidth;
+		sizeGhostElement.centerHeight = customGhost.value.clientHeight / 2;
+		sizeGhostElement.centerWidth = customGhost.value.clientWidth / 2;
 	}
 })
 
-const onDragStart = (event: DragEvent) => {
+function onDragStart(event: DragEvent) {
 	if (event.dataTransfer && customGhost.value) {
-		const { height, width } = sizeGhostElement;
+		const { centerHeight, centerWidth } = sizeGhostElement;
 
-		event.dataTransfer.setDragImage(customGhost.value, width / 2, height / 2);
+		event.dataTransfer.setDragImage(customGhost.value, centerWidth, centerHeight);
 		event.dataTransfer.effectAllowed = 'move';
 	}
 };
 
-const onTouchStart = () => {
+function onTouchStart() {
 	isDragging = true;
 
 	if (customGhost.value) {
@@ -53,24 +42,24 @@ const onTouchStart = () => {
 	}
 };
 
-const onTouchMove = (event: TouchEvent) => {
+function onTouchMove(event: TouchEvent) {
 	if (isDragging && customGhost.value) {
 		const [touch] = event.touches;
-		const { height, width } = sizeGhostElement;
+		const { centerHeight, centerWidth } = sizeGhostElement;
 
-		customGhost.value.style.left = `${touch.clientX - width / 2}px`;
-		customGhost.value.style.top = `${touch.clientY - height / 2}px`;
+		customGhost.value.style.left = `${touch.clientX - centerWidth}px`;
+		customGhost.value.style.top = `${touch.clientY - centerHeight}px`;
 		emit('drag');
 	}
 };
 
-const onDragEnd = () => {
+function onDragEnd() {
 	if (isDragging) {
 		isDragging = false;
 
 		if (customGhost.value) {
-			customGhost.value.style.left = '-9999px';
-			customGhost.value.style.opacity = '0.9';
+			customGhost.value.style.left = INIT_LEFT;
+			customGhost.value.style.opacity = INIT_OPACITY;
 		}
 		emit('drag-end');
 	}
@@ -81,7 +70,7 @@ const onDragEnd = () => {
 <template>
 	<div>
 		<div
-			class="droppable"
+			:class="classes.droppable"
 			draggable="true"
 			@dragstart="onDragStart"
 			@drag="emit('drag')"
@@ -94,14 +83,14 @@ const onDragEnd = () => {
 		</div>
 		<div
 			ref="customGhost"
-			class="custom-ghost"
+			:class="classes.customGhost"
 		>
-			<ghost-component-base  :title="props.title" />
+			<slot />
 		</div>
 	</div>
 </template>
 
-<style scoped>
+<style module="classes">
 .droppable {
 	width: 150px;
 	margin: 10px 0;
@@ -113,10 +102,10 @@ const onDragEnd = () => {
 	user-select: none;
 }
 
-.custom-ghost {
+.customGhost {
 	position: absolute;
-	left: -9999px;
-	opacity: 0.9;
+	left: v-bind(INIT_LEFT);
+	opacity: v-bind(INIT_OPACITY);
 	pointer-events: none;
 }
 </style>
