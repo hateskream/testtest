@@ -85,9 +85,24 @@ const gridState = reactive<IGridState>({
 const resizableWidgetId = ref<number | null>(null);
 const dndWidgetId = ref<number | null>(null);
 
+const isEmpty = computed(() => props.dashboards.items.length === 0);
+
 const rawDashboards = computed((): IPosition[] =>
-	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
+	isEmpty.value ?
+		generateEmptyGrid(props.columnsNum, props.rowsNum) :
+		props.dashboards.items.map(el => ({ ...el.position, i: el.id }))
+
 );
+
+function generateEmptyGrid(columnsNum: number, rowsNum: number): IPosition[] {
+	return Array.from({ length: rowsNum * columnsNum }, (_, index) => ({
+		x: index % columnsNum,
+		y: Math.floor(index / columnsNum),
+		w: 1,
+		h: 1,
+		i: index + Date.now(),
+	}));
+}
 
 const columnsNum = computed(() => props.columnsNum);
 const rowsNum = computed(() => props.rowsNum);
@@ -190,6 +205,13 @@ function getDashboardItemById(id: number): IDashboardItem {
 }
 
 function getMaxSize(id: number): { w: number; h: number } {
+	if(isEmpty.value) {
+		return {
+			w: 1,
+			h: 1,
+		}
+	}
+
 	if (gridState.isAddWidget) {
 		if (!funcSetter.newDashboard.value) {
 			throw new Error('newDashboard is null');
@@ -211,6 +233,13 @@ function getMaxSize(id: number): { w: number; h: number } {
 }
 
 function getMinSize(id: number): { w: number; h: number } {
+	if(isEmpty.value) {
+		return {
+			w: 1,
+			h: 1,
+		}
+	}
+
 	if (gridState.isAddWidget) {
 		if (!funcSetter.newDashboard.value) {
 			throw new Error('newDashboard is null');
@@ -521,11 +550,14 @@ onCreated();
 				@set-dnd-widget-id="setDndWidgetId"
 			>
 				<template #state-calm>
+
 					<slot
+						v-if="!isEmpty"
 						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:meta="getMeta(item.i)"
 					/>
+					<div v-else class="mock"></div>
 				</template>
 				<template #state-dnd>
 					<ghost-move-component :title="getDashboardItemById(item.i).name" />
@@ -542,6 +574,12 @@ onCreated();
 </template>
 
 <style scoped>
+.mock {
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+}
+
 :deep(.vgl-layout) {
 	opacity: 1 !important;
 	transition: none;
