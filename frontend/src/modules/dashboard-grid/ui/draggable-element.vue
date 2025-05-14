@@ -9,7 +9,7 @@ const emit = defineEmits<{
 const INIT_LEFT = '-9999px';
 const INIT_OPACITY = '0.9';
 
-const sizeGhostElement = {
+const ghostElementCenter = {
 	centerHeight: 0,
 	centerWidth: 0,
 }
@@ -20,14 +20,14 @@ const customGhost = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
 	if (customGhost.value) {
-		sizeGhostElement.centerHeight = customGhost.value.clientHeight / 2;
-		sizeGhostElement.centerWidth = customGhost.value.clientWidth / 2;
+		ghostElementCenter.centerHeight = customGhost.value.clientHeight / 2;
+		ghostElementCenter.centerWidth = customGhost.value.clientWidth / 2;
 	}
 })
 
 function onDragStart(event: DragEvent) {
 	if (event.dataTransfer && customGhost.value) {
-		const { centerHeight, centerWidth } = sizeGhostElement;
+		const { centerHeight, centerWidth } = ghostElementCenter;
 
 		event.dataTransfer.setDragImage(customGhost.value, centerWidth, centerHeight);
 		event.dataTransfer.effectAllowed = 'move';
@@ -45,7 +45,7 @@ function onTouchStart() {
 function onTouchMove(event: TouchEvent) {
 	if (isDragging && customGhost.value) {
 		const [touch] = event.touches;
-		const { centerHeight, centerWidth } = sizeGhostElement;
+		const { centerHeight, centerWidth } = ghostElementCenter;
 
 		customGhost.value.style.left = `${touch.clientX - centerWidth}px`;
 		customGhost.value.style.top = `${touch.clientY - centerHeight}px`;

@@ -30,7 +30,6 @@ export interface IDashboardItem {
 export interface IDashboardInstance extends IDashboardItem {
 	type: DashboardItemType.Instance;
 	dashboardType: WidgetType;
-	isResizing?: boolean;
 }
 
 export interface IDashboardStack extends IDashboardItem {
@@ -42,3 +41,6 @@ export interface IDashboardFolder extends IDashboardItem {
 	type: DashboardItemType.Folder;
 	items: IDashboardInstance[];
 }
+
+export const WIDGET_MIN_SIZE = { w: 2, h: 2 };
+export const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };

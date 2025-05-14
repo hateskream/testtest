@@ -8,11 +8,10 @@ import {
 	type IDashboardStack,
 	type IDashboardTab,
 	DashboardItemType,
+	WIDGET_MAX_SIZE,
+	WIDGET_MIN_SIZE,
 	WidgetType } from '../model';
 import { generateTimestampId } from '@/shared/lib';
-
-const WIDGET_MIN_SIZE = { w: 2, h: 2 };
-const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const dashboardGroups = ref<IDashboardGroup[]>([
