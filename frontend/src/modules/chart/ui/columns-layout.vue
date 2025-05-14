@@ -16,16 +16,18 @@
 </template>
 
 <style module="classes">
-.root{
-	display:flex;
-	gap:24px;
+.root {
+	display: flex;
+	gap: 24px;
 }
 
-.leftCol, .rightCol{
-	min-width:200px;
-	flex-grow:1;
+.leftCol,
+.rightCol {
+	flex-grow: 1;
+	min-width: 200px;
 }
-.mainCol{
-	flex-grow:2;
+
+.mainCol {
+	flex-grow: 2;
 }
 </style>

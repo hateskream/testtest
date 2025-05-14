@@ -87,11 +87,11 @@ const handleExchangeSelect = (exchangeId: number) => {
 <style module="classes">
 .grid {
 	display: grid;
-	grid-template-columns: 1fr;
 	width: 100%;
 	padding: 16px;
+	color: var(--text-color-base-500);
 	background-color: #1e1e1e;
-	color: white;
+	grid-template-columns: 1fr;
 }
 
 .header {
@@ -99,19 +99,19 @@ const handleExchangeSelect = (exchangeId: number) => {
 	grid-template-columns: 180px 110px;
 	padding: 8px 16px;
 	font-size: 14px;
-	color: #888;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	color: #888888;
+	border-bottom: 1px solid rgb(255 255 255 / 10%);
 }
 
 .row {
 	display: grid;
-	grid-template-columns: 180px 110px;
-	padding: 8px 16px;
 	align-items: center;
+	padding: 8px 16px;
+	grid-template-columns: 180px 110px;
 }
 
 .row:hover {
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: rgb(255 255 255 / 5%);
 	cursor: pointer;
 }
 
@@ -124,25 +124,28 @@ const handleExchangeSelect = (exchangeId: number) => {
 .symbol {
 	font-family: monospace;
 }
-.selectWrapper{
-	align-items:center;
-	color:var(--text-color-base-500);
-	display:flex;
+
+.selectWrapper {
+	display: flex;
+	align-items: center;
 	padding: 4px 9px 4px 4px;
-	border-radius: 9999px;
+	color: var(--text-color-base-500);
 	background: var(--metrics-bg-control-300);
+	border-radius: 9999px;
+	cursor: pointer;
 	backdrop-filter: blur(8px);
-	gap:3px;
-	cursor:pointer;
+	gap: 3px;
 }
+
 .iconRotated {
 	transform: rotate(180deg);
 	transition: transform 0.3s ease;
 }
+
 .activeExchangeName {
-	width:100px;
+	width: 100px;
+	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	overflow:hidden;
 }
 </style>

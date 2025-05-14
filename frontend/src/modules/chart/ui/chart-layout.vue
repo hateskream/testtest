@@ -68,31 +68,24 @@ watch(scrollY, (val) => {
 
 <style module="classes">
 .root {
-	overflow: scroll;
 	height: 100vh;
+	overflow: scroll;
 }
 
 .topContent {
-	transition: 0.5s ease-in-out;
+	padding-bottom: 26px;
 	border-bottom: 2px solid var(--border-color-surface-02);
-	padding-bottom:26px;
+	transition: 0.5s ease-in-out;
 }
 
 .hidden {
-	opacity: 0;
 	width: 100%;
+	opacity: 0;
 }
 
 .botContent {
+	padding-top: 35px;
 	transition: 0.5s ease-in-out;
-	padding-top:35px;
 }
 
-.columns {
-
-}
-
-.column {
-
-}
 </style>

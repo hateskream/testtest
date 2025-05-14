@@ -14,21 +14,22 @@
 
 <style module="classes">
 .badge {
-	border-radius: 500px;
-	background-color: var(--charts-bg-badge);
-	cursor: pointer;
-	height: 30px;
-	width: 30px;
 	position: relative;
+	width: 30px;
+	height: 30px;
 	overflow: hidden;
+	background-color: var(--charts-bg-badge);
+	border-radius: 500px;
+	cursor: pointer;
 }
+
 .icon {
-	position:absolute;
-	top:50%;
-	left:50%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	transform: translate(-50%, -50%);
-	display:flex;
-	align-items:center;
-	justify-content:center;
 }
 </style>

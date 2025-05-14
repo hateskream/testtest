@@ -45,33 +45,33 @@ const generate = () => {
 <style module="classes">
 .header {
 	display: flex;
-	gap: 12px;
-	padding:12px 0;
 	justify-content: flex-start;
 	align-items: center;
+	padding: 12px 0;
+	gap: 12px;
 }
 
 .logo {
-	padding: 15px;
+	position: relative;
 	width: 80px;
 	height: 80px;
+	padding: 15px;
+	background: rgb(228 228 231 / 4%);
 	border-radius: 80px;
-	background: rgba(228, 228, 231, 0.04);
-	box-shadow: -1.441px 1.441px 0 0 rgba(255, 255, 255, 0.40) inset;
-	position: relative;
+	box-shadow: -1.441px 1.441px 0 0 rgb(255 255 255 / 40%) inset;
 	cursor: pointer;
 	user-select: none;
 }
 
-.logo:after {
+.logo::after {
 	content: '';
 	position: absolute;
 	top: 0;
 	left: 0;
-	transform: translate(-22%, -30%);
 	width: 330%;
 	height: 250%;
-	background: rgba(v-bind(bgColor), 33%);
+	background: rgb(v-bind(bgColor) 33%);
+	transform: translate(-22%, -30%);
 	filter: blur(88px);
 	pointer-events: none;
 }
@@ -80,6 +80,5 @@ const generate = () => {
 	display: flex;
 	flex-direction: column;
 	gap: 3px;
-
 }
 </style>

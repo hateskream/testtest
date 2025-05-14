@@ -40,13 +40,13 @@ const { isActiveMarketOpen, activeExchange } = storeToRefs(useChartStore());
 <style module="classes">
 .stockInfoWrapper {
 	display: flex;
-	gap: 12px;
-	height: 30px;
 	align-items: center;
+	height: 30px;
+	gap: 12px;
 }
 
 .tickerName {
-	color: var(--text-color-base-500)
+	color: var(--text-color-base-500);
 }
 
 .marketData {

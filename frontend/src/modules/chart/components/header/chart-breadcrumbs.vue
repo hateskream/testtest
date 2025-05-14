@@ -58,38 +58,36 @@ const breadCrumbsData = [
 .breadcrumbs {
 	display: flex;
 	align-items: center;
-	gap: 9px;
+	height: 30px;
 	padding: 5px 0;
-	height:30px;
-
+	gap: 9px;
 }
 
 .breadcrumb {
 	overflow: hidden;
+	color: var(--text-color-base-300);
 	text-overflow: ellipsis;
 	cursor: pointer;
-	color: var(--text-color-base-300);
-	transition: all .2s ease-in-out;
-
+	transition: all 0.2s ease-in-out;
 }
 
 .separator {
-	opacity: .3;
+	opacity: 0.3;
 }
 
 .breadcrumb:hover {
-	color: var(--text-color-brand-500)
+	color: var(--text-color-brand-500);
 }
 
 .iconWrapper {
-	cursor:pointer;
+	cursor: pointer;
 }
 
 .active {
+	margin-left: -5px;
 	padding: 1px 6px;
+	color: var(--text-color-base-500);
 	background: var(--bg-color-base-300);
 	border-radius: 6px;
-	color: var(--text-color-base-500);
-	margin-left: -5px;
 }
 </style>

@@ -75,20 +75,22 @@ const relevantDateTime = computed(() => {
 	flex-direction: column;
 	gap: 1px;
 }
-.performanceWrapper{
-	display:flex;
-	gap:6px;
-	align-items:center;
+
+.performanceWrapper {
+	display: flex;
+	gap: 6px;
+	align-items: center;
 }
 
 .timestamp {
-	height:30px;
-	display:flex;
-	align-items:center;
-	color:var(--text-color-base-300)
+	display: flex;
+	align-items: center;
+	height: 30px;
+	color: var(--text-color-base-300);
 }
-.price{
-	display:flex;
-	gap:2px;
+
+.price {
+	display: flex;
+	gap: 2px;
 }
 </style>
