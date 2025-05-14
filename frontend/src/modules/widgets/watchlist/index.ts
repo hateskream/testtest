@@ -1,3 +1,3 @@
-import DashboardComponent from './ui/dashboard-component.vue';
+import DashboardComponent from './ui/watchlist-widget.vue';
 
 export { DashboardComponent as WatchlistDashboard };
