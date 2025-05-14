@@ -50,9 +50,6 @@ export default [
 		},
 		rules: {
 			'prettier/prettier': 'off',
-			'semi': 'off',
-			'quotes': ['error', 'single'],
-			'max-len': [2, { code: MAX_LINE_LENGTH, ignoreComments: true }],
 
 			'no-param-reassign': ['error', { props: false }],
 			'no-console': 'warn',
@@ -111,11 +108,11 @@ export default [
 			'vue/require-v-for-key': 'off',
 			'vue/max-attributes-per-line': ['error', {
 				'singleline': {
-					'max': 4
+					'max': 2,
 				},
 				'multiline': {
-					'max': 2
-				}
+					'max': 1,
+				},
 			}],
 			'vue/html-closing-bracket-spacing': ['error', {
 				'startTag': 'never',
@@ -155,10 +152,54 @@ export default [
 				'ignores': []
 			}],
 
+			// Stylistic
+			'@stylistic/quotes': ['error', 'single'],
+			'@stylistic/max-len': ['error', {
+				code: MAX_LINE_LENGTH,
+				ignoreComments: true,
+			}],
+			'@stylistic/member-delimiter-style': ['error', {
+				multiline: {
+					delimiter: 'semi',
+					requireLast: true,
+				},
+				singleline: {
+					delimiter: 'semi',
+					requireLast: false,
+				},
+			}],
+			'@stylistic/indent': ['error', 'tab', {
+				SwitchCase: 1,
+				VariableDeclarator: { var: 1, let: 1, const: 1 },
+				MemberExpression: 1,
+				FunctionDeclaration: { parameters: 1, body: 1 },
+				FunctionExpression: { parameters: 1, body: 1 },
+				CallExpression: { arguments: 1 },
+				ArrayExpression: 1,
+				ObjectExpression: 1,
+				ImportDeclaration: 1,
+				flatTernaryExpressions: false,
+				ignoreComments: false,
+				ignoredNodes: ['TemplateLiteral *'],
+			}],
+			'@stylistic/comma-dangle': ['error', 'always-multiline'],
+			'@stylistic/comma-spacing': ['error', { before: false, after: true }],
+			'@stylistic/semi': ['error', 'always'],
+			'@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+			'@stylistic/object-curly-spacing': ['error', 'always'],
+			'@stylistic/array-bracket-spacing': ['error', 'never'],
+			'@stylistic/space-before-function-paren': ['error', {
+				anonymous: 'always',
+				named: 'never',
+				asyncArrow: 'always',
+			}],
+			'@stylistic/space-before-blocks': ['error', 'always'],
+			'@stylistic/keyword-spacing': ['error', { before: true, after: true }],
+
 			// TypeScript
 			'@typescript-eslint/no-shadow': 'error',
 			'@typescript-eslint/no-explicit-any': 'error',
-			'@typescript-eslint/array-type': [2, { default: 'array' }],
+			'@typescript-eslint/array-type': ['error', { default: 'array' }],
 			'@typescript-eslint/no-unused-vars': ['warn', {
 				'args': 'all',
 				'argsIgnorePattern': '^_',
@@ -170,16 +211,6 @@ export default [
 				'vars': 'all'
 			}],
 			'@typescript-eslint/no-unused-expressions': 'off',
-			'@stylistic/member-delimiter-style': ['error', {
-				multiline: {
-					delimiter: 'semi',
-					requireLast: true,
-				},
-				singleline: {
-					delimiter: 'semi',
-					requireLast: false,
-				},
-			}],
 			'@typescript-eslint/naming-convention': ['error',
 				{
 					selector: 'default',
