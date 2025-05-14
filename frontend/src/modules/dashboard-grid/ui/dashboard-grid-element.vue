@@ -27,6 +27,7 @@ const emit = defineEmits<{
 	(event: 'change-dnd-state', value: boolean): void;
 	(event: 'change-resize-state', value: boolean): void;
 	(event: 'set-resizable-widget-id', value: number | null): void;
+	(event: 'set-dnd-widget-id', value: number | null): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -92,6 +93,15 @@ function updateResizeState(newValue: boolean) {
 function updateDndState(newValue: boolean) {
 	componentState.isDnd = newValue;
 	emit('change-dnd-state', newValue);
+
+	if (newValue) {
+		const id = props.i;
+		const currentId = typeof id === 'number' ? id : parseInt(id, 10);
+
+		emit('set-dnd-widget-id', currentId);
+	} else {
+		emit('set-dnd-widget-id', null);
+	}
 }
 </script>
 

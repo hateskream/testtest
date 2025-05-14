@@ -7,13 +7,13 @@ import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
-	DraggableElement,
 	useProvideCurrentDashboard,
 	GhostComponentBase
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
 import { DashboardsCurtain } from '@/modules/dashboards-curtain';
 import { ALL_DASHBOARDS } from '@/modules/dashboard-group/model';
+
 
 const dashboardStore = useDashboardGroupsStore();
 const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardStore;
@@ -25,6 +25,8 @@ provideComponent(CurrentDashboard);
 
 const drag = ref<(() => void)>(() => {});
 const dragEnd = ref<(() => void)>(() => {});
+
+const isIn = ref(false);
 
 const newDashboard = ref<IDashboardInstance | null>(null);
 
@@ -40,10 +42,15 @@ function setDashboard(dashboard: IDashboardInstance) {
 	newDashboard.value = dashboard;
 }
 
+function setIsIn(value: boolean) {
+	isIn.value = value;
+}
+
 provide('funcSetter', {
 	setDrag,
 	setDragEnd,
-	newDashboard
+	newDashboard,
+	isIn
 });
 </script>
 
@@ -73,6 +80,7 @@ provide('funcSetter', {
 						@drag="drag"
 						@drag-end="dragEnd"
 						@new-dashboard="setDashboard"
+						@is-in="setIsIn"
 					>
 						<template #ghost="{title}">
 							<ghost-component-base :title="title" />

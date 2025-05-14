@@ -1,9 +1,4 @@
-import { ref, onMounted, onBeforeUnmount, readonly, reactive } from 'vue';
-
-interface IMousePosition {
-	x: number;
-	y: number;
-}
+import { onMounted, onBeforeUnmount, readonly } from 'vue';
 
 export function useMousePositionSync() {
 	const mouseAt = { x: -1, y: -1 };

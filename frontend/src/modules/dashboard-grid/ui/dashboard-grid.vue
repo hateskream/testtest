@@ -65,6 +65,7 @@ interface IFuncs {
 	setDrag(func: () => void): void;
 	setDragEnd(func: () => void): void;
 	newDashboard: Ref<IDashboardInstance | null>;
+	isIn: Ref<boolean, boolean>;
 }
 
 const funcSetter =	inject('funcSetter') as IFuncs;
@@ -82,6 +83,7 @@ const gridState = reactive<IGridState>({
 });
 
 const resizableWidgetId = ref<number | null>(null);
+const dndWidgetId = ref<number | null>(null);
 
 const rawDashboards = computed((): IPosition[] =>
 	props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
@@ -161,6 +163,15 @@ watch(() => funcSetter.newDashboard.value, () => {
 		dragItem.h = funcSetter.newDashboard.value.minSize.h;
 	}
 })
+
+watch(
+	() => funcSetter.isIn.value,
+	isIn => {
+		if (isIn && dndWidgetId.value !== null) {
+			deleteDashboards(dndWidgetId.value);
+		}
+	},
+);
 
 function onCreated() {
 	funcSetter.setDrag(throttle(handlerDrag));
@@ -295,6 +306,10 @@ function onChangeResizeState(newValue: boolean) {
 
 function setResizableWidgetId(id: number | null) {
 	resizableWidgetId.value = id;
+}
+
+function setDndWidgetId(id: number | null) {
+	dndWidgetId.value = id;
 }
 
 function handlerDrag() {
@@ -449,6 +464,22 @@ function updateDashboardItemsPositions(
 	});
 }
 
+function deleteDashboards(widgetId: number) {
+	if (!gridLayoutRef.value) {
+		console.warn('GridLayoutRef is not available');
+		return;
+	}
+
+	const updatedDashboards = props.dashboards.items.filter(item => item.id !== widgetId);
+
+
+	gridLayoutRef.value.dragEvent('dragend', widgetId, 0, 0, 0, 0);
+	gridState.isDnd = false;
+	dndWidgetId.value = null;
+
+	emit('add-widget', updatedDashboards);
+}
+
 onCreated();
 </script>
 
@@ -487,6 +518,7 @@ onCreated();
 				@change-dnd-state="onChangeDndState"
 				@change-resize-state="onChangeResizeState"
 				@set-resizable-widget-id="setResizableWidgetId"
+				@set-dnd-widget-id="setDndWidgetId"
 			>
 				<template #state-calm>
 					<slot

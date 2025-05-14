@@ -3,6 +3,7 @@ import type { IDashboardInstance } from '@/modules/dashboard-group';
 
 import DraggableElement from './draggable-element.vue';
 import DashboardComponent from './dashboard-component.vue';
+import DeleteComponent from './delete-component.vue';
 
 
 interface IDashboardsCurtainComponentProps {
@@ -15,6 +16,7 @@ const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
 	(e: 'new-dashboard', dashboard: IDashboardInstance): void;
+	(e: 'is-in', value: boolean): void;
 }>();
 
 function onDrag(dashboard: IDashboardInstance) {
@@ -38,6 +40,7 @@ function onDrag(dashboard: IDashboardInstance) {
 				<slot name="ghost" :title="dashboard.name" />
 			</template>
 		</draggable-element>
+		<delete-component @is-in="emit('is-in', $event)" />
 	</div>
 </template>
 
@@ -46,5 +49,6 @@ function onDrag(dashboard: IDashboardInstance) {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+	align-items: end;
 }
 </style>
