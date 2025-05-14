@@ -1,22 +1,22 @@
-import globals from 'globals'
-import js from '@eslint/js'
-import ts from 'typescript-eslint'
-import vue from 'eslint-plugin-vue'
-import github from 'eslint-plugin-github'
-import eslintPluginImport from 'eslint-plugin-import'
-import nodePlugin from 'eslint-plugin-n'
-import prettier from 'eslint-config-prettier'
-import stylistic from '@stylistic/eslint-plugin'
-import typescriptParser from '@typescript-eslint/parser'
+import globals from 'globals';
+import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import vue from 'eslint-plugin-vue';
+import github from 'eslint-plugin-github';
+import eslintPluginImport from 'eslint-plugin-import';
+import nodePlugin from 'eslint-plugin-n';
+import prettier from 'eslint-config-prettier';
+import stylistic from '@stylistic/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
 
 
-const MAX_LINE_LENGTH = 120
+const MAX_LINE_LENGTH = 120;
 
 const pathGroupsImportOptions = {
 	patternOptions: { dot: true, nocomment: true },
 	group: 'unknown',
 	position: 'after',
-}
+};
 
 export default [
 	{
@@ -46,7 +46,7 @@ export default [
 			'@stylistic': stylistic,
 			'import': eslintPluginImport,
 			'n': nodePlugin,
-			github
+			github,
 		},
 		rules: {
 			'prettier/prettier': 'off',
@@ -65,11 +65,6 @@ export default [
 			'no-multi-spaces': 'error',
 			'no-multiple-empty-lines': ['error', { 'max': 2 }],
 			'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
-			'indent': ['error', 'tab', {
-				'SwitchCase': 1,
-				'VariableDeclarator': { 'var': 1, 'let': 1, 'const': 1 },
-				'outerIIFEBody': 1
-			}],
 			'curly': [2, 'all'],
 			'prefer-destructuring': 'warn',
 			'lines-between-class-members': [2, 'always', { exceptAfterSingleLine: true }],
@@ -80,7 +75,7 @@ export default [
 			'import/no-unresolved': 'off',
 			'import/extensions': 'off',
 			'import/prefer-default-export': 'off',
-			'import/order': [	'error', {
+			'import/order': ['error', {
 				'newlines-between': 'always',
 				groups: [
 					'builtin',
@@ -101,7 +96,7 @@ export default [
 
 
 			'n/no-process-env': ['error', {
-				'allowedVariables': ['NODE_ENV']
+				'allowedVariables': ['NODE_ENV'],
 			}],
 
 			// Vue
@@ -117,11 +112,11 @@ export default [
 			'vue/html-closing-bracket-spacing': ['error', {
 				'startTag': 'never',
 				'endTag': 'never',
-				'selfClosingTag': 'always'
+				'selfClosingTag': 'always',
 			}],
 			'vue/html-closing-bracket-newline': ['error', {
 				'singleline': 'never',
-				'multiline': 'always'
+				'multiline': 'always',
 			}],
 			'vue/attribute-hyphenation': ['error', 'always'],
 			'vue/html-indent': ['error', 'tab', {
@@ -129,8 +124,8 @@ export default [
 				'baseIndent': 1,
 				'closeBracket': 0,
 				'alignAttributesVertically': false,
-				'ignores': []
-			} ],
+				'ignores': [],
+			}],
 			'vue/attributes-order': ['error', {
 				'order': [
 					'DEFINITION',
@@ -143,13 +138,13 @@ export default [
 					'OTHER_DIRECTIVES',
 					'OTHER_ATTR',
 					'EVENTS',
-					'CONTENT'
+					'CONTENT',
 				],
-				'alphabetical': false
+				'alphabetical': false,
 			}],
 			'vue/component-name-in-template-casing': ['error', 'kebab-case', {
 				'registeredComponentsOnly': false,
-				'ignores': []
+				'ignores': [],
 			}],
 
 			// Stylistic
@@ -208,7 +203,7 @@ export default [
 				'destructuredArrayIgnorePattern': '^_',
 				'varsIgnorePattern': '^_',
 				'ignoreRestSiblings': true,
-				'vars': 'all'
+				'vars': 'all',
 			}],
 			'@typescript-eslint/no-unused-expressions': 'off',
 			'@typescript-eslint/naming-convention': ['error',
@@ -256,7 +251,7 @@ export default [
 			'@typescript-eslint/no-extraneous-class': 'error',
 			'@typescript-eslint/no-misused-new': 'error',
 			'@typescript-eslint/no-array-constructor': 'error',
-			'@typescript-eslint/no-use-before-define': [ 'error', {
+			'@typescript-eslint/no-use-before-define': ['error', {
 				functions: false,
 				classes: true,
 				variables: true,
@@ -284,6 +279,6 @@ export default [
 		},
 	},
 	{
-		ignores: ['dist', 'coverage', 'node_modules', '.*.cjs',],
+		ignores: ['dist', 'coverage', 'node_modules', '.*.cjs'],
 	},
-]
+];
