@@ -93,6 +93,8 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 	}
 ];
 
+const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };
+
 export const ALL_DASHBOARDS: IDashboardInstance[] = [
 	{
 		type: DashboardItemType.Instance,
@@ -100,7 +102,7 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		name: 'Hot Markets',
 		dashboardType: WidgetType.HotMarkets,
 		position: { x: -1, y: -1, w: -1, h: -1 },
-		minSize: WIDGET_MIN_SIZE,
+		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 	},
 	{
@@ -109,7 +111,7 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		name: 'Fear & Greed',
 		dashboardType: WidgetType.FearGreed,
 		position: { x: -1, y: -1, w: -1, h: -1 },
-		minSize: WIDGET_MIN_SIZE,
+		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 	},
 	{
@@ -118,7 +120,7 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		name: 'Price',
 		dashboardType: WidgetType.Price,
 		position: { x: -1, y: -1, w: -1, h: -1 },
-		minSize: WIDGET_MIN_SIZE,
+		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 	},
 	{
@@ -127,7 +129,7 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		name: 'Market',
 		dashboardType: WidgetType.Market,
 		position: { x: -1, y: -1, w: -1, h: -1 },
-		minSize: WIDGET_MIN_SIZE,
+		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 	},
 	{
@@ -136,7 +138,7 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		name: 'News',
 		dashboardType: WidgetType.News,
 		position: { x: -1, y: -1, w: -1, h: -1 },
-		minSize: WIDGET_MIN_SIZE,
+		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 	}
 ];

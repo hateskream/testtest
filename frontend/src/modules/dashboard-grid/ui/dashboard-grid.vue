@@ -7,7 +7,8 @@ import {
 	reactive,
 	ref,
 	watch,
-	type App
+	type App,
+	type Ref
 } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
@@ -15,8 +16,6 @@ import { throttle, debounce } from '@vexip-ui/utils';
 
 import { useInjectCurrentDashboardInject, useMousePositionSync, useRebuildingGrid } from '../composables';
 import {
-	DashboardItemType,
-	WidgetType,
 	type IDashboardFolder,
 	type IDashboardGroup,
 	type IDashboardInstance,
@@ -65,6 +64,7 @@ let mountedPlaceholder: App<Element> | null = null;
 interface IFuncs {
 	setDrag(func: () => void): void;
 	setDragEnd(func: () => void): void;
+	newDashboard: Ref<IDashboardInstance | null>;
 }
 
 const funcSetter =	inject('funcSetter') as IFuncs;
@@ -95,9 +95,6 @@ const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 const {mouseAt} = useMousePositionSync();
 const dropId = -1;
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
-
-const WIDGET_MIN_SIZE = { w: 2, h: 2 };
-const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
 watch(
 	wrapperRef,
@@ -158,6 +155,13 @@ watch(
 	},
 );
 
+watch(() => funcSetter.newDashboard.value, () => {
+	if (funcSetter.newDashboard.value) {
+		dragItem.w = funcSetter.newDashboard.value.minSize.w;
+		dragItem.h = funcSetter.newDashboard.value.minSize.h;
+	}
+})
+
 function onCreated() {
 	funcSetter.setDrag(throttle(handlerDrag));
 	funcSetter.setDragEnd(debounce(handlerDragEnd));
@@ -176,7 +180,11 @@ function getDashboardItemById(id: number): IDashboardItem {
 
 function getMaxSize(id: number): { w: number; h: number } {
 	if (gridState.isAddWidget) {
-		return WIDGET_MAX_SIZE
+		if (!funcSetter.newDashboard.value) {
+			throw new Error('newDashboard is null');
+		}
+
+		return funcSetter.newDashboard.value.maxSize
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -193,7 +201,11 @@ function getMaxSize(id: number): { w: number; h: number } {
 
 function getMinSize(id: number): { w: number; h: number } {
 	if (gridState.isAddWidget) {
-		return WIDGET_MIN_SIZE
+		if (!funcSetter.newDashboard.value) {
+			throw new Error('newDashboard is null');
+		}
+
+		return funcSetter.newDashboard.value.minSize
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -397,17 +409,16 @@ function handlerDragEnd() {
 			i: newItemId,
 		}
 
-		const newItems: IDashboardInstance[] = [{
-			id: newItemId,
-			position,
-			type: DashboardItemType.Instance,
-			dashboardType: WidgetType.MarketCap,
-			name: 'fsdfsdf',
-			maxSize: WIDGET_MAX_SIZE,
-			minSize:  WIDGET_MIN_SIZE,
-		}]
+		if (!funcSetter.newDashboard.value) {
+			throw new Error('newDashboard is null');
+		}
 
-		emit('add-widget', [...newItems, ...updateDashboardItemsPositions(props.dashboards.items, layout.value)]);
+		const newItems: IDashboardInstance = {
+			...funcSetter.newDashboard.value,
+			position,
+		};
+
+		emit('add-widget', [newItems, ...updateDashboardItemsPositions(props.dashboards.items, layout.value)]);
 
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
 
