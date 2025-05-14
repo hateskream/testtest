@@ -1,6 +1,7 @@
 @import url('./fonts.css');
 @import url('./colors.css');
 @import url('./normalize.css');
+@import url('./typography.css');
 
 body {
 	display: flex;
