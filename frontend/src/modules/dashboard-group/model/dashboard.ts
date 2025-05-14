@@ -1,4 +1,4 @@
-import type { WidgetType } from './widgets';
+import { WidgetType } from './widgets';
 
 export interface IPosition {
 	x: number;
@@ -42,5 +42,101 @@ export interface IDashboardFolder extends IDashboardItem {
 	items: IDashboardInstance[];
 }
 
-export const WIDGET_MIN_SIZE = { w: 2, h: 2 };
-export const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
+const WIDGET_MIN_SIZE = { w: 1, h: 2 };
+const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
+
+export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboardStack) [] = [
+	{
+		type: DashboardItemType.Instance,
+		id: 0,
+		name: 'Hot Markets',
+		dashboardType: WidgetType.HotMarkets,
+		position: { x: 0, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 1,
+		name: 'Fear & Greed',
+		dashboardType: WidgetType.FearGreed,
+		position: { x: 2, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 2,
+		name: 'Price',
+		dashboardType: WidgetType.Price,
+		position: { x: 4, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 3,
+		name: 'Market',
+		dashboardType: WidgetType.Market,
+		position: { x: 0, y: 4, w: 3, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 4,
+		name: 'News',
+		dashboardType: WidgetType.News,
+		position: { x: 3, y: 4, w: 3, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	}
+];
+
+export const ALL_DASHBOARDS: IDashboardInstance[] = [
+	{
+		type: DashboardItemType.Instance,
+		id: 0,
+		name: 'Hot Markets',
+		dashboardType: WidgetType.HotMarkets,
+		position: { x: 0, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 1,
+		name: 'Fear & Greed',
+		dashboardType: WidgetType.FearGreed,
+		position: { x: 2, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 2,
+		name: 'Price',
+		dashboardType: WidgetType.Price,
+		position: { x: 4, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 3,
+		name: 'Market',
+		dashboardType: WidgetType.Market,
+		position: { x: 0, y: 4, w: 3, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 4,
+		name: 'News',
+		dashboardType: WidgetType.News,
+		position: { x: 3, y: 4, w: 3, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	}
+];
