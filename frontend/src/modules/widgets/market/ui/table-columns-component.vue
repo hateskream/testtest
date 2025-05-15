@@ -4,7 +4,7 @@ import draggableComponent from 'vuedraggable';
 import { useMarketStore } from '../stores';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
-import TableMetricsComponent from './table-metrics-component.vue';
+import TableIconSettingsComponent from './table-icon-settings-component.vue';
 
 const marketStore = useMarketStore();
 
@@ -18,35 +18,63 @@ function getSortDirection(columnName: string) {
 <template>
 	<draggable-component
 		:model-value="marketStore.activeTableColumns"
-		tag="thead"
+		tag="div"
 		item-key="position"
 		:filter="`.${ignoreDragClass}`"
 		:chosen-class="classes.dragActive"
 		:ghost-class="classes.dragPlaceholder"
-		:class="classes.thead"
+		:class="classes.gridHead"
 		:delay="150"
 		@update:model-value="marketStore.updateActiveTableColumns"
 	>
 		<template #item="{ element: column }">
-			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
-				<table-column-with-sort-component
-					:column="column"
-					:sort-direction="getSortDirection(column.columnName)"
-					@click="marketStore.toggleActiveSort(column)"
-				/>
-			</th>
+			<table-column-with-sort-component
+				:class="[classes.gridHeadItem, { [ignoreDragClass]: !column.isDraggable }]"
+				:column="column"
+				:sort-direction="getSortDirection(column.columnName)"
+				@click="marketStore.toggleActiveSort(column)"
+			/>
 		</template>
 
 		<template #footer>
-			<th :class="classes.iconTertiary">
-				<table-metrics-component />
-			</th>
+			<table-icon-settings-component :class="[classes.gridHeadItem, classes.iconTertiary]" />
 		</template>
 	</draggable-component>
 </template>
+
 <style module="classes">
-.tableContainer {
-	padding: 0 16px 18px;
+.gridHead {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	display: grid;
+	background-color: var(--bg-color-surface-01);
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
+}
+
+.gridHeadItem {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	height: 28px;
+	font-weight: 440;
+	font-size: 12px;
+	color: var(--text-color-base-100);
+	cursor: pointer;
+	user-select: none;
+}
+
+.gridHeadItem:first-child {
+	position: sticky;
+	left: 0;
+	justify-content: flex-start;
+	background-color: var(--bg-color-surface-01);
+}
+
+.iconTertiary {
+	position: sticky;
+	right: 0;
 }
 
 .dragPlaceholder::before {
@@ -75,53 +103,14 @@ function getSortDirection(columnName: string) {
 	background: var(--bg-color-surface-01);
 }
 
-.thead {
-	display: table;
-	min-width: 100%;
-	table-layout: fixed;
-}
-
-.thead th {
-	position: relative;
-	min-width: 100px;
-	height: 28px;
-	font-weight: 440;
-	font-size: 12px;
-	color: var(--text-color-base-100);
-	cursor: pointer;
-	user-select: none;
-}
-
-.iconTertiary {
-	position: sticky !important;
-	top: 0;
-	right: 0;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	min-width: 50px !important;
-	padding-right: 8px;
-}
-
-.thead th:first-child {
-	position: sticky;
-	top: 0;
-	left: 0;
-	z-index: 21;
-	background-color: var(--bg-color-surface-01);
-}
-
 .dragActive {
-	display: flex;
-	align-items: center;
-	width: max-content;
-	height: 28px;
-	padding-inline: 10px !important;
-	text-align: center !important;
+	justify-content: center;
+	width: 100%;
 	color: var(--text-color-base-100-effect) !important;
 	background-color: var(--bg-tooltip-color-base) !important;
 	border: 1px solid rgb(255 255 255 / 8%);
 	border-radius: 8px;
 	opacity: 1;
+	padding-inline: 10px !important;
 }
 </style>

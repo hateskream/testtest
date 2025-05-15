@@ -23,13 +23,6 @@ import TableColumnsSettingsComponent from './table-columns-settings-component.vu
 </template>
 
 <style module="classes">
-.metrics {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	cursor: pointer;
-}
-
 .iconTertiary {
 	color: var(--icon-color-base-300);
 	transition: color 0.3s ease-in;
