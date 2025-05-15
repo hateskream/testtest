@@ -550,14 +550,13 @@ onCreated();
 				@set-dnd-widget-id="setDndWidgetId"
 			>
 				<template #state-calm>
-
 					<slot
 						v-if="!isEmpty"
 						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:meta="getMeta(item.i)"
 					/>
-					<div v-else class="mock"></div>
+					<div v-else class="mock" />
 				</template>
 				<template #state-dnd>
 					<ghost-move-component :title="getDashboardItemById(item.i).name" />

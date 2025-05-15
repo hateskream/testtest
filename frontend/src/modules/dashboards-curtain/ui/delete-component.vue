@@ -7,7 +7,6 @@ const emit = defineEmits<{ (e: 'is-in', value: boolean): void }>();
 
 const { mouseAt } = useMousePositionSync();
 const rootRef = ref<HTMLDivElement | null>(null);
-const isIn = ref(false);
 
 watch(
 	mouseAt,
@@ -16,15 +15,15 @@ watch(
 			return;
 		}
 
-		const {left, top, right, bottom	} = rootRef.value.getBoundingClientRect();
+		const { left, top, right, bottom	} = rootRef.value.getBoundingClientRect();
 
-		isIn.value =
+		const isIn =
       x > left &&
       x < right &&
       y > top &&
       y < bottom;
 
-		emit('is-in', isIn.value);
+		emit('is-in', isIn);
 	},
 	{ deep: true }
 );
@@ -32,7 +31,7 @@ watch(
 
 <template>
 	<div ref="rootRef" :class="classes.root">
-		Delete {{ isIn ? 'Inside' : 'Outside' }}
+		Delete
 	</div>
 </template>
 
