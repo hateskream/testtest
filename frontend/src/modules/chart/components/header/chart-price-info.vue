@@ -74,6 +74,7 @@ const relevantDateTime = computed(() => {
 	display: flex;
 	flex-direction: column;
 	gap: 1px;
+	padding: 0 16px;
 }
 
 .performanceWrapper {
@@ -92,5 +93,6 @@ const relevantDateTime = computed(() => {
 .price {
 	display: flex;
 	gap: 2px;
+	line-height:30px;
 }
 </style>

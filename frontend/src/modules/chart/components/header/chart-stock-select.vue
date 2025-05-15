@@ -14,7 +14,7 @@ const { setActiveExchange } = useChartStore();
 const positionRef = ref<InstanceType<typeof UiPosition> | null>(null);
 const currencyName = computed(()=>{
 	if (!activeExchange?.value) {return;}
-	return `·${activeExchange.value.symbol}·${activeExchange.value.currency}`
+	return `· ${activeExchange.value.symbol} · ${activeExchange.value.currency}`
 })
 
 const handleExchangeSelect = (exchangeId: number) => {
@@ -41,7 +41,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 				/>
 				<div class="paragraph-p-01" :class="classes.activeExchangeName">{{ activeExchange.fullName }}</div>
 
-				<div class="paragraph-p-01">{{currencyName}}</div>
+				<div class="paragraph-p-01" :class="classes.currencyName">{{currencyName}}</div>
 				<ui-icon
 					:id="IconIds.DropdownDown"
 					width="18"
@@ -133,8 +133,10 @@ const handleExchangeSelect = (exchangeId: number) => {
 	background: var(--metrics-bg-control-300);
 	border-radius: 9999px;
 	cursor: pointer;
-	backdrop-filter: blur(8px);
 	gap: 3px;
+	backdrop-filter: blur(16px);
+	transition: .2s width ease-in-out;
+
 }
 
 .iconRotated {
@@ -148,4 +150,5 @@ const handleExchangeSelect = (exchangeId: number) => {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
 </style>

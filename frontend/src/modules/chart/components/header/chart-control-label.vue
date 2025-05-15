@@ -16,7 +16,7 @@ const priceText = computed(()=>{
 </script>
 
 <template>
-	<div :class="[classes.wrapper, change.points >= 0 ? classes.positive : classes.negative]" class="paragraph-p01">
+	<div :class="[classes.wrapper, change.points >= 0 ? classes.positive : classes.negative]" class="paragraph-p-01">
 		<div :class="classes.symbol">
 			<price-change-icon :is-negative="change.points < 0" />
 		</div>
@@ -31,7 +31,8 @@ const priceText = computed(()=>{
 	display: flex;
 	align-items: center;
 	width: fit-content;
-	padding: 5px 11px 5px 6px;
+	padding: 0 11px 0 6px;
+	height:30px;
 	background-color: var(--metrics-bg-control-300);
 	border-radius: 99px;
 	gap: 3px;
