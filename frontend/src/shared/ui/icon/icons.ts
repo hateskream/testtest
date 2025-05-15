@@ -25,4 +25,17 @@ export enum IconIds {
 	ScoreMedium = 'score-medium',
 	NewsFilter = 'news-filter',
 	Close = 'close',
+	GeneralMore = 'general-more',
+	Moon = 'moon',
+	Sun = 'sun',
+	Crown = 'crown',
+	NASDAQ = 'nasdaq',
+	GETTEX = 'gettex',
+	TRADEGATE = 'tradegate',
+	TSX = 'tsx',
+	BYMA = 'byma',
+	LSX = 'lsx',
+	XETR = 'xetr',
+	B3 = 'b3',
+	Deals = 'deals'
 }

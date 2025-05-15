@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import { type IDashboardGroup, type IDashboardTab, DashboardItemType, WidgetType } from '../model';
+import {
+	type IDashboardFolder,
+	type IDashboardGroup,
+	type IDashboardInstance,
+	type IDashboardStack,
+	type IDashboardTab,
+	INIT_DASHBOARDS,
+} from '../model';
 import { generateTimestampId } from '@/shared/lib';
-
-const WIDGET_MIN_SIZE = { w: 2, h: 2 };
-const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const dashboardGroups = ref<IDashboardGroup[]>([
@@ -13,53 +17,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: 'group-1',
 			name: 'Standart',
 			isActive: true,
-			items: [
-				{
-					type: DashboardItemType.Instance,
-					id: 0,
-					name: 'Hot Markets',
-					dashboardType: WidgetType.HotMarkets,
-					position: { x: 0, y: 0, w: 2, h: 4 },
-					minSize: WIDGET_MIN_SIZE,
-					maxSize: WIDGET_MAX_SIZE,
-				},
-				{
-					type: DashboardItemType.Instance,
-					id: 1,
-					name: 'Fear & Greed',
-					dashboardType: WidgetType.FearGreed,
-					position: { x: 2, y: 0, w: 2, h: 4 },
-					minSize: WIDGET_MIN_SIZE,
-					maxSize: WIDGET_MAX_SIZE,
-				},
-				{
-					type: DashboardItemType.Instance,
-					id: 2,
-					name: 'Price',
-					dashboardType: WidgetType.Price,
-					position: { x: 4, y: 0, w: 2, h: 4 },
-					minSize: WIDGET_MIN_SIZE,
-					maxSize: WIDGET_MAX_SIZE,
-				},
-				{
-					type: DashboardItemType.Instance,
-					id: 3,
-					name: 'Market',
-					dashboardType: WidgetType.Market,
-					position: { x: 0, y: 4, w: 3, h: 4 },
-					minSize: WIDGET_MIN_SIZE,
-					maxSize: WIDGET_MAX_SIZE,
-				},
-				{
-					type: DashboardItemType.Instance,
-					id: 4,
-					name: 'News',
-					dashboardType: WidgetType.News,
-					position: { x: 3, y: 4, w: 3, h: 4 },
-					minSize: WIDGET_MIN_SIZE,
-					maxSize: WIDGET_MAX_SIZE,
-				},
-			],
+			items: INIT_DASHBOARDS,
 			market: 'crypto',
 		},
 	]);
@@ -107,6 +65,14 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
+	function setNewStateInCurrentGroup(items: (IDashboardInstance | IDashboardFolder | IDashboardStack)[]) {
+		const group = dashboardGroups.value.find(g => g.isActive);
+
+		if (group) {
+			group.items = items;
+		}
+	}
+
 	return {
 		dashboardGroups,
 		tabs,
@@ -114,5 +80,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		renameTab,
 		switchTab,
 		activeGroup,
+		setNewStateInCurrentGroup,
 	};
 });

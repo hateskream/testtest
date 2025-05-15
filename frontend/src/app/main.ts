@@ -15,6 +15,6 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(routes);
-app.use(VueQueryPlugin, { queryClient });
+app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true, });
 
 app.mount('#app');

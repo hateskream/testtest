@@ -18,6 +18,7 @@ interface IGridElement {
 	maxH: number;
 	maxW: number;
 	isEditing: boolean;
+	dropId: number | string;
 }
 
 const props = defineProps<IGridElement>();
@@ -26,6 +27,7 @@ const emit = defineEmits<{
 	(event: 'change-dnd-state', value: boolean): void;
 	(event: 'change-resize-state', value: boolean): void;
 	(event: 'set-resizable-widget-id', value: number | null): void;
+	(event: 'set-dnd-widget-id', value: number | null): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -91,10 +93,20 @@ function updateResizeState(newValue: boolean) {
 function updateDndState(newValue: boolean) {
 	componentState.isDnd = newValue;
 	emit('change-dnd-state', newValue);
+
+	if (newValue) {
+		const id = props.i;
+		const currentId = typeof id === 'number' ? id : parseInt(id, 10);
+
+		emit('set-dnd-widget-id', currentId);
+	} else {
+		emit('set-dnd-widget-id', null);
+	}
 }
 </script>
 
 <template>
+
 	<grid-item
 		:key="props.i"
 		ref="gridItemRef"
@@ -110,6 +122,7 @@ function updateDndState(newValue: boolean) {
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
 	>
+
 		<div :class="[classes.itemWrapper, classListItem]">
 			<div
 				v-if="componentState.isResize"
@@ -122,6 +135,9 @@ function updateDndState(newValue: boolean) {
 				:class="classes.item"
 			>
 				<slot name="state-dnd" />
+			</div>
+			<div v-else-if="props.dropId === props.i" :class="classes.item">
+				<slot name="state-add-widget" />
 			</div>
 			<div
 				v-else

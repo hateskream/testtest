@@ -1,20 +1,19 @@
 import { ref, watch, type Ref } from 'vue';
 
 import { createGrid } from '../utils';
-import type { IPositionWithId } from '@/modules/dashboard-group';
+import type { IPosition } from '../model';
 
 export function useRebuildingGrid(
 	columnsNum: Ref<number>,
 	rowsNum: Ref<number>,
-	rawDashboard: Ref<IPositionWithId[]>,
+	rawDashboard: Ref<IPosition[]>,
 ) {
-	const layout = ref<IPositionWithId[]>([]);
+	const layout = ref<IPosition[]>([]);
 
 	watch(
 		rawDashboard,
 		newsDashboard => {
-			const newLayout = createGrid(columnsNum.value, newsDashboard);
-			layout.value = newLayout;
+			layout.value = newsDashboard;
 		},
 		{
 			immediate: true,

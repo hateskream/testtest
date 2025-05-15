@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref, useTemplateRef } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { RouteNames } from '@/app/routes.ts';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -9,27 +11,44 @@ import PanelComponent from './panel-component.vue';
 interface INavigationItem {
 	icon: IconIds;
 	id: IconIds;
+	routeName: string;
 }
 
 const navigation: INavigationItem[] = [
 	{
 		icon: IconIds.Home,
 		id: IconIds.Home,
+		routeName: RouteNames.Home
 	},
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
+		routeName: RouteNames.Chart
 	},
 	{
 		icon: IconIds.Calendar,
 		id: IconIds.Calendar,
+		routeName: RouteNames.Home
 	},
 ];
 
+const layoutState = reactive({
+	isOpenCurtain: false,
+	isCurtainFixed: false,
+})
+
 const activeItem = ref(IconIds.Home);
 
-function setActiveItem(id: IconIds) {
-	activeItem.value = id;
+const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
+
+onClickOutside(curtainRef, closeCurtain)
+
+function openCurtain() {
+	layoutState.isOpenCurtain = true
+}
+
+function closeCurtain() {
+	layoutState.isOpenCurtain = false
 }
 </script>
 
@@ -47,11 +66,11 @@ function setActiveItem(id: IconIds) {
 				/>
 			</div>
 			<nav>
-				<div
+				<router-link
 					v-for="item in navigation"
 					:key="item.icon"
+					:to="{name:item.routeName}"
 					:class="classes.iconWrapper"
-					@click="setActiveItem(item.id)"
 				>
 					<ui-icon
 						:id="item.icon"
@@ -62,11 +81,11 @@ function setActiveItem(id: IconIds) {
 						width="20px"
 						height="20px"
 					/>
-				</div>
+				</router-link>
 			</nav>
 		</panel-component>
 		<div :class="classes.center">
-			<header-panel :class="classes.header">
+			<header-panel v-if="$slots.header" :class="classes.header">
 				<slot name="header" />
 			</header-panel>
 			<div :class="classes.content">
@@ -82,6 +101,7 @@ function setActiveItem(id: IconIds) {
 					:id="IconIds.ControlRightMenu"
 					width="20px"
 					height="20px"
+					@click="openCurtain"
 				/>
 			</div>
 
@@ -91,15 +111,39 @@ function setActiveItem(id: IconIds) {
 						:id="IconIds.AddWidget"
 						width="20px"
 						height="20px"
+						@click="openCurtain"
 					/>
 				</div>
 				<div :class="classes.addWidgetText">Add widgets</div>
 			</div>
 		</panel-component>
+		<div v-if="layoutState.isOpenCurtain" ref="curtainRef" :class="classes.curtain">
+			<div :class="classes.curtainContainer">
+				<slot name="curtain" />
+			</div>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
+.curtainContainer {
+	width: max-content;
+	height: 100%;
+	padding: 18px;
+	background-color: #000000;
+	border: 1px solid var(--border-modal-color-base);
+	border-radius: 18px;
+}
+
+.curtain {
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	width: max-content;
+	height: 100%;
+}
+
 .root {
 	position: relative;
 	display: flex;

@@ -1,58 +1,76 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
 }>();
 
-const customGhost = ref<HTMLElement | null>(null);
-const isDragging = ref(false);
+const INIT_LEFT = '-9999px';
+const INIT_OPACITY = '0.9';
 
-const onDragStart = (event: DragEvent) => {
+const ghostElementCenter = {
+	centerHeight: 0,
+	centerWidth: 0,
+}
+
+let isDragging = false;
+
+const customGhost = ref<HTMLDivElement | null>(null);
+
+onMounted(() => {
+	if (customGhost.value) {
+		ghostElementCenter.centerHeight = customGhost.value.clientHeight / 2;
+		ghostElementCenter.centerWidth = customGhost.value.clientWidth / 2;
+	}
+})
+
+function onDragStart(event: DragEvent) {
 	if (event.dataTransfer && customGhost.value) {
-		event.dataTransfer.setDragImage(customGhost.value, 25, 25);
+		const { centerHeight, centerWidth } = ghostElementCenter;
+
+		event.dataTransfer.setDragImage(customGhost.value, centerWidth, centerHeight);
 		event.dataTransfer.effectAllowed = 'move';
 	}
 };
 
-const onTouchStart = (event: TouchEvent) => {
-	isDragging.value = true;
+function onTouchStart() {
+	isDragging = true;
 
 	if (customGhost.value) {
-		const [touch] = event.touches;
-
-		customGhost.value.style.left = `${touch.clientX - 100}px`;
-		customGhost.value.style.top = `${touch.clientY - 100}px`;
+		customGhost.value.style.opacity = '1';
 	}
 };
 
-const onTouchMove = (event: TouchEvent) => {
-	if (isDragging.value && customGhost.value) {
+function onTouchMove(event: TouchEvent) {
+	if (isDragging && customGhost.value) {
 		const [touch] = event.touches;
+		const { centerHeight, centerWidth } = ghostElementCenter;
 
-		customGhost.value.style.left = `${touch.clientX - 95}px`;
-		customGhost.value.style.top = `${touch.clientY - 90}px`;
+		customGhost.value.style.left = `${touch.clientX - centerWidth}px`;
+		customGhost.value.style.top = `${touch.clientY - centerHeight}px`;
 		emit('drag');
 	}
 };
 
-const onDragEnd = () => {
-	if (isDragging.value) {
-		isDragging.value = false;
+function onDragEnd() {
+	if (isDragging) {
+		isDragging = false;
 
 		if (customGhost.value) {
-			customGhost.value.style.left = '9999px';
+			customGhost.value.style.left = INIT_LEFT;
+			customGhost.value.style.opacity = INIT_OPACITY;
 		}
 		emit('drag-end');
 	}
 };
+
 </script>
 
 <template>
 	<div>
 		<div
-			class="droppable"
+			:class="classes.droppable"
 			draggable="true"
 			@dragstart="onDragStart"
 			@drag="emit('drag')"
@@ -65,14 +83,14 @@ const onDragEnd = () => {
 		</div>
 		<div
 			ref="customGhost"
-			class="custom-ghost"
+			:class="classes.customGhost"
 		>
-			Drag
+			<slot />
 		</div>
 	</div>
 </template>
 
-<style scoped>
+<style module="classes">
 .droppable {
 	width: 150px;
 	margin: 10px 0;
@@ -81,20 +99,13 @@ const onDragEnd = () => {
 	background-color: #ffdddd;
 	border: 1px solid #000000;
 	cursor: move;
-	user-select: none; /* Запрещаем выделение текста */
+	user-select: none;
 }
 
-.custom-ghost {
+.customGhost {
 	position: absolute;
-	left: -9999px;
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	color: #ffffff;
-	background-color: #ff4444;
-	border-radius: 50%;
-	opacity: 0.9;
-	transition: opacity 0.3s ease;
+	left: v-bind(INIT_LEFT);
+	opacity: v-bind(INIT_OPACITY);
+	pointer-events: none;
 }
 </style>

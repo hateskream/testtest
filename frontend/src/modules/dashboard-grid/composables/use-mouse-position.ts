@@ -1,12 +1,7 @@
-import { ref, onMounted, onBeforeUnmount, readonly } from 'vue';
-
-interface IMousePosition {
-	x: number;
-	y: number;
-}
+import { onMounted, onBeforeUnmount, readonly } from 'vue';
 
 export function useMousePositionSync() {
-	const mouseAt = ref<IMousePosition>({ x: -1, y: -1 });
+	const mouseAt = { x: -1, y: -1 };
 
 	onMounted(() => {
 		document.addEventListener('dragover', syncMousePosition);
@@ -23,11 +18,11 @@ export function useMousePositionSync() {
 	function syncMousePosition(event: MouseEvent | TouchEvent) {
 		if ('touches' in event) {
 			const [touch] = event.touches;
-			mouseAt.value.x = touch.clientX;
-			mouseAt.value.y = touch.clientY;
+			mouseAt.x = touch.clientX;
+			mouseAt.y = touch.clientY;
 		} else {
-			mouseAt.value.x = event.clientX;
-			mouseAt.value.y = event.clientY;
+			mouseAt.x = event.clientX;
+			mouseAt.y = event.clientY;
 		}
 	}
 

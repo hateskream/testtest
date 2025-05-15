@@ -1,18 +1,18 @@
-import type { IPositionWithId } from '@/modules/dashboard-group';
+import type { IPosition } from '../model';
 
-function isOffScreen(widget: IPositionWithId, colNum: number): boolean {
+function isOffScreen(widget: IPosition, colNum: number): boolean {
 	return widget.x + widget.w > colNum;
 }
 
-function isWiderThanScreen(widget: IPositionWithId, colNum: number): boolean {
+function isWiderThanScreen(widget: IPosition, colNum: number): boolean {
 	return widget.w > colNum;
 }
 
-function isGridTooWide(dashboards: IPositionWithId[], colNum: number): boolean {
+function isGridTooWide(dashboards: IPosition[], colNum: number): boolean {
 	return dashboards.some(w => isOffScreen(w, colNum) || isWiderThanScreen(w, colNum));
 }
 
-function getLastRowInfo(dashboards: IPositionWithId[], widgetWidth: number, colNum: number): { x: number; y: number } {
+function getLastRowInfo(dashboards: IPosition[], widgetWidth: number, colNum: number): { x: number; y: number } {
 	const lastRow = Math.max(0, ...dashboards.map(w => w.y + w.h));
 	const lastRowWidgets = dashboards.filter(w => w.y + w.h > lastRow - 1 && w.y <= lastRow);
 
@@ -25,10 +25,10 @@ function getLastRowInfo(dashboards: IPositionWithId[], widgetWidth: number, colN
 }
 
 function canPlaceWidget(
-	widget: IPositionWithId,
+	widget: IPosition,
 	x: number,
 	y: number,
-	dashboards: IPositionWithId[],
+	dashboards: IPosition[],
 ): boolean {
 	return !dashboards.some(
 		w =>
@@ -40,7 +40,7 @@ function canPlaceWidget(
 	);
 }
 
-function optimizeLayoutHeight(dashboards: IPositionWithId[], colNum: number): IPositionWithId[] {
+function optimizeLayoutHeight(dashboards: IPosition[], colNum: number): IPosition[] {
 	let updatedDashboards = dashboards;
 	const prevHeight = Math.max(0, ...updatedDashboards.map(w => w.y + w.h));
 
@@ -63,13 +63,13 @@ function optimizeLayoutHeight(dashboards: IPositionWithId[], colNum: number): IP
 	return newHeight < prevHeight ? optimizeLayoutHeight(updatedDashboards, colNum) : updatedDashboards;
 }
 
-function adjustWidgetWidth(dashboards: IPositionWithId[], colNum: number): IPositionWithId[] {
+function adjustWidgetWidth(dashboards: IPosition[], colNum: number): IPosition[] {
 	return dashboards.map(widget =>
 		widget.w > colNum ? { ...widget, w: colNum, prevW: widget.w } : widget,
 	);
 }
 
-export function createGrid(colNum: number, initDashboards: IPositionWithId[]): IPositionWithId[] {
+export function createGrid(colNum: number, initDashboards: IPosition[]): IPosition[] {
 	let updatedDashboards = initDashboards;
 
 	while (isGridTooWide(updatedDashboards, colNum)) {
