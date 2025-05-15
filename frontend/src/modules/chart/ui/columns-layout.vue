@@ -25,9 +25,11 @@
 .rightCol {
 	flex-grow: 1;
 	min-width: 200px;
+	overflow:scroll;
 }
 
 .mainCol {
 	flex-grow: 2;
+	overflow:scroll;
 }
 </style>

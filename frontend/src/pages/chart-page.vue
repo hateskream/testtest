@@ -32,7 +32,7 @@ const setReports = ()=>{
 						<template #leftCol>
 							<div :class="classes.columnTitle">
 								<ui-icon
-									:id="IconIds.Gainers"
+									:id="IconIds.Deals"
 									:class="classes.titleIcon"
 									width="20px"
 									height="20px"
@@ -46,7 +46,7 @@ const setReports = ()=>{
 						<template #mainCol>
 							<div :class="classes.columnTitle">
 								<ui-icon
-									:id="IconIds.Gainers"
+									:id="IconIds.Deals"
 									:class="classes.titleIcon"
 									width="20px"
 									height="20px"
@@ -60,7 +60,7 @@ const setReports = ()=>{
 						<template #rightCol>
 							<div :class="classes.columnTitle">
 								<ui-icon
-									:id="IconIds.Gainers"
+									:id="IconIds.Deals"
 									:class="classes.titleIcon"
 									width="20px"
 									height="20px"
