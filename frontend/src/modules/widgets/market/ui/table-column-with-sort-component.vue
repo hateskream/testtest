@@ -55,13 +55,8 @@ const columnStyles = computed(() => ({
 .iconWrapper {
 	display: flex;
 	align-items: center;
-	width: 100%;
 	transition: color 0.3s ease-in;
 	gap: 4px;
-}
-
-.iconWrapper > span {
-	display: flex;
 }
 
 .icon {

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { useRoute } from 'vue-router';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { RouteNames } from '@/app/routes.ts';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -10,20 +12,24 @@ import PanelComponent from './panel-component.vue';
 interface INavigationItem {
 	icon: IconIds;
 	id: IconIds;
+	routeName: string;
 }
 
 const navigation: INavigationItem[] = [
 	{
 		icon: IconIds.Home,
 		id: IconIds.Home,
+		routeName: RouteNames.Home
 	},
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
+		routeName: RouteNames.Chart
 	},
 	{
 		icon: IconIds.Calendar,
 		id: IconIds.Calendar,
+		routeName: RouteNames.Home
 	},
 ];
 
@@ -65,11 +71,11 @@ function closeCurtain() {
 				/>
 			</div>
 			<nav>
-				<div
+				<router-link
 					v-for="item in navigation"
 					:key="item.icon"
+					:to="{name:item.routeName}"
 					:class="classes.iconWrapper"
-					@click="setActiveItem(item.id)"
 				>
 					<ui-icon
 						:id="item.icon"
@@ -80,11 +86,11 @@ function closeCurtain() {
 						width="20px"
 						height="20px"
 					/>
-				</div>
+				</router-link>
 			</nav>
 		</panel-component>
 		<div :class="classes.center">
-			<header-panel :class="classes.header">
+			<header-panel v-if="$slots.header" :class="classes.header">
 				<slot name="header" />
 			</header-panel>
 			<div :class="classes.content">
