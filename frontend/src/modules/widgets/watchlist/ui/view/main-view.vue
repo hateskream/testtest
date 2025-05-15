@@ -156,22 +156,21 @@ const toggleSection = (sectionName: string) => {
 
 .table-header {
 	display: flex;
-	padding: 0px 40px 0px 16px;
 	align-items: center;
-	gap: 8px;
 	align-self: stretch;
-
+	padding: 0 40px 0 16px;
 	overflow: hidden;
-	color: var(--color-text-base-100, #646568);
-	text-align: right;
-	text-overflow: ellipsis;
+	font-style: normal;
+	font-weight: 440;
 
 	/* paragraph/p-01 */
 	font-size: var(--typography-paragraph-size-p-01, 12px);
-	font-style: normal;
-	font-weight: 440;
 	line-height: 170%; /* 20.4px */
+	text-align: right;
+	color: var(--color-text-base-100, #646568);
 	letter-spacing: 0.096px;
+	text-overflow: ellipsis;
+	gap: 8px;
 }
 
 .header-cell {
@@ -196,7 +195,7 @@ const toggleSection = (sectionName: string) => {
 	min-width: 80px;
 
 	&.commonly {
-	color: var(--text-color-base-300);
+		color: var(--text-color-base-300);
 	}
 
 	&.positive {

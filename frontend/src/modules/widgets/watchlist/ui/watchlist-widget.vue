@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/model';
 import { BaseDashboardComponent } from '../../base/index.ts';
