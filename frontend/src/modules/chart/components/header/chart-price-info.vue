@@ -93,6 +93,6 @@ const relevantDateTime = computed(() => {
 .price {
 	display: flex;
 	gap: 2px;
-	line-height:30px;
+	line-height: 30px;
 }
 </style>

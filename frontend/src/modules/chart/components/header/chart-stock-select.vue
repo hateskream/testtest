@@ -110,7 +110,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: #888888;
-	gap:8px;
+	gap: 8px;
 }
 
 .row {
@@ -146,8 +146,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 	cursor: pointer;
 	gap: 3px;
 	backdrop-filter: blur(16px);
-	transition: .2s width ease-in-out;
-
+	transition: 0.2s width ease-in-out;
 }
 
 .iconRotated {
@@ -167,24 +166,26 @@ const handleExchangeSelect = (exchangeId: number) => {
 	align-items: center;
 	gap: 4px;
 }
-.crownWrapper {
-	border-radius:9999px;
-	background:var(--charts-bg-badge);
-	width:20px;
-	height:20px;
-	position:relative;
 
+.crownWrapper {
+	position: relative;
+	width: 20px;
+	height: 20px;
+	background: var(--charts-bg-badge);
+	border-radius: 9999px;
 }
+
 .crown {
-	position:absolute;
-	left:50%;
-	top:50%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 }
-.exchangeIconWrapper{
-	width:24px;
-	height:24px;
-	overflow:hidden;
+
+.exchangeIconWrapper {
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
 }
 
 </style>

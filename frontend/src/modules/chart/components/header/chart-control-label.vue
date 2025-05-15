@@ -31,8 +31,8 @@ const priceText = computed(()=>{
 	display: flex;
 	align-items: center;
 	width: fit-content;
+	height: 30px;
 	padding: 0 11px 0 6px;
-	height:30px;
 	background-color: var(--metrics-bg-control-300);
 	border-radius: 99px;
 	gap: 3px;

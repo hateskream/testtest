@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-
-import PlaceholderComponent from '@/modules/dashboard-grid/ui/placeholder-component.vue';
+import {IconIds, UiIcon} from '@/shared/ui/icon';
 
 
 const viewMode = ref('mixed');
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
-const setChart = () => {
+const setChart = ()=>{
 	chartLayoutEl.value?.setMixedViewMode();
-};
-const setReports = () => {
+}
+const setReports = ()=>{
 	chartLayoutEl.value?.setReportsViewMode();
-};
+}
 </script>
 
 <template>
@@ -42,7 +40,7 @@ const setReports = () => {
 								<span>Overview</span>
 							</div>
 							<div :class="classes.columnContent">
-								<placeholder-component />
+								<div :class="classes.placeholderBlock"></div>
 							</div>
 						</template>
 						<template #mainCol>
@@ -56,7 +54,7 @@ const setReports = () => {
 								<span>Financials</span>
 							</div>
 							<div :class="classes.columnContent">
-								<placeholder-component />
+								<div :class="classes.placeholderBlock"></div>
 							</div>
 						</template>
 						<template #rightCol>
@@ -70,27 +68,21 @@ const setReports = () => {
 								<span>Insights & Activity</span>
 							</div>
 							<div :class="classes.columnContent">
-								<placeholder-component />
-								<placeholder-component />
-								<placeholder-component />
-								<placeholder-component />
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
 							</div>
 						</template>
 					</columns-layout>
-				</template>
-				/
+				</template>/
 			</chart-layout>
 			<div :class="classes.navigation">
-				<button
-					:class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" class="controls-c00"
-					@click="setChart"
-				>
+				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" @click="setChart">
 					Mixed
 				</button>
-				<button
-					:class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" class="controls-c00"
-					@click="setReports"
-				>
+				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" @click="setReports">
 					Reports
 				</button>
 			</div>
@@ -102,7 +94,6 @@ const setReports = () => {
 	min-height: 400px;
 	background: rgb(84 84 95 / 60%);
 	backdrop-filter: blur(14px);
-
 }
 
 .columnTitle {
@@ -121,11 +112,11 @@ const setReports = () => {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	min-height: 300px;
+}
 
-	& > * {
-		min-height: 300px;
-	}
+.placeholderBlock {
+	min-height: 300px;
+	background: rgb(84 84 95 / 60%);
 }
 
 .navigation {
@@ -133,13 +124,13 @@ const setReports = () => {
 	bottom: 15px;
 	left: 50%;
 	display: flex;
+	padding: 4px;
 	background: rgb(84 84 95 / 60%);
 	border: 1px solid rgb(199 199 199 / 10%);
 	border-radius: 99px;
 	box-shadow: 0 6px 12px 0 rgb(0 0 0 / 35%);
 	transform: translateX(-50%);
 	backdrop-filter: blur(24px);
-	padding:4px;
 }
 
 .navigationBtn {
@@ -155,4 +146,5 @@ const setReports = () => {
 	color: var(--text-color-contrast-500);
 	background: #ffffff;
 }
+
 </style>
