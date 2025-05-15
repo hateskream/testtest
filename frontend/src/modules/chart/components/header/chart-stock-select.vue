@@ -12,17 +12,19 @@ const { exchanges, activeExchange } = storeToRefs(useChartStore());
 const { setActiveExchange } = useChartStore();
 
 const positionRef = ref<InstanceType<typeof UiPosition> | null>(null);
-const currencyName = computed(()=>{
-	if (!activeExchange?.value) {return;}
-	return `· ${activeExchange.value.symbol} · ${activeExchange.value.currency}`
-})
+const currencyName = computed(() => {
+	if (!activeExchange?.value) {
+		return;
+	}
+	return `· ${activeExchange.value.symbol} · ${activeExchange.value.currency}`;
+});
 
 const handleExchangeSelect = (exchangeId: number) => {
 	if (positionRef.value) {
 		positionRef.value.isVisible = false;
 	}
 	setActiveExchange(exchangeId);
-}
+};
 </script>
 
 <template>
@@ -41,7 +43,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 				/>
 				<div class="paragraph-p-01" :class="classes.activeExchangeName">{{ activeExchange.fullName }}</div>
 
-				<div class="paragraph-p-01" :class="classes.currencyName">{{currencyName}}</div>
+				<div class="paragraph-p-01" :class="classes.currencyName">{{ currencyName }}</div>
 				<ui-icon
 					:id="IconIds.DropdownDown"
 					width="18"
@@ -54,7 +56,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 		<template #content>
 			<chart-dropdown-layout>
 				<div :class="classes.grid">
-					<div :class="classes.header">
+					<div :class="classes.header" class="paragraph-p-02">
 						<div>Source</div>
 						<div>Symbol</div>
 					</div>
@@ -62,17 +64,25 @@ const handleExchangeSelect = (exchangeId: number) => {
 						v-for="exchange in exchanges"
 						:key="exchange.id"
 						:class="classes.row"
+						class="paragraph-p-01"
 						@click="() => handleExchangeSelect(exchange.id)"
 					>
 						<div :class="classes.source">
-							<ui-icon :id="exchange.iconId" />
-							<span>{{ exchange.source }}</span>
-							<ui-icon
-								v-if="exchange.isPrimary"
-								:id="IconIds.Crown"
-								width="18"
-								height="18"
-							/>
+							<div :class="classes.exchangeIconWrapper">
+								<ui-icon :id="exchange.iconId" :classes="classes.exchangeIcon" width="24" height="24" />
+							</div>
+							<div :class="classes.sourceName">
+								<span>{{ exchange.source }}</span>
+								<div v-if="exchange.isPrimary" :class="classes.crownWrapper">
+									<ui-icon
+										v-if="exchange.isPrimary"
+										:id="IconIds.Crown"
+										:class="classes.crown"
+										width="13"
+										height="13"
+									/>
+								</div>
+							</div>
 						</div>
 						<div :class="classes.symbol">
 							{{ exchange.displaySymbol }}
@@ -100,13 +110,14 @@ const handleExchangeSelect = (exchangeId: number) => {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: #888888;
-	border-bottom: 1px solid rgb(255 255 255 / 10%);
+	gap:8px;
 }
 
 .row {
 	display: grid;
 	align-items: center;
 	padding: 8px 16px;
+	gap: 8px;
 	grid-template-columns: 180px 110px;
 }
 
@@ -118,7 +129,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 .source {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 6px;
 }
 
 .symbol {
@@ -149,6 +160,31 @@ const handleExchangeSelect = (exchangeId: number) => {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.sourceName {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+.crownWrapper {
+	border-radius:9999px;
+	background:var(--charts-bg-badge);
+	width:20px;
+	height:20px;
+	position:relative;
+
+}
+.crown {
+	position:absolute;
+	left:50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+}
+.exchangeIconWrapper{
+	width:24px;
+	height:24px;
+	overflow:hidden;
 }
 
 </style>

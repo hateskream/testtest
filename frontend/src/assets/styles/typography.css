@@ -183,3 +183,14 @@
 	font-family: 'Roboto Flex', sans-serif;
 	letter-spacing: 0.075px;
 }
+
+/* controls/c00 */
+.controls-c00 {
+	font-weight: 440;
+	font-size: var(--typography-headers-size-h01);
+	line-height: 170%;
+	font-family: 'Roboto Flex', sans-serif;
+	text-align: center;
+	letter-spacing: 0.144px;
+}
+

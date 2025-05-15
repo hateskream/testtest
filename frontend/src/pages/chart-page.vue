@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
-import {IconIds, UiIcon} from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import PlaceholderComponent from '@/modules/dashboard-grid/ui/placeholder-component.vue';
 
@@ -11,12 +11,12 @@ import PlaceholderComponent from '@/modules/dashboard-grid/ui/placeholder-compon
 const viewMode = ref('mixed');
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
-const setChart = ()=>{
+const setChart = () => {
 	chartLayoutEl.value?.setMixedViewMode();
-}
-const setReports = ()=>{
+};
+const setReports = () => {
 	chartLayoutEl.value?.setReportsViewMode();
-}
+};
 </script>
 
 <template>
@@ -77,13 +77,20 @@ const setReports = ()=>{
 							</div>
 						</template>
 					</columns-layout>
-				</template>/
+				</template>
+				/
 			</chart-layout>
 			<div :class="classes.navigation">
-				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" @click="setChart">
+				<button
+					:class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" class="controls-c00"
+					@click="setChart"
+				>
 					Mixed
 				</button>
-				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" @click="setReports">
+				<button
+					:class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" class="controls-c00"
+					@click="setReports"
+				>
 					Reports
 				</button>
 			</div>
@@ -131,18 +138,21 @@ const setReports = ()=>{
 	border-radius: 99px;
 	box-shadow: 0 6px 12px 0 rgb(0 0 0 / 35%);
 	transform: translateX(-50%);
-	backdrop-filter: blur(12px);
-
-	button {
-		height: 34px;
-		padding: 0 12px;
-		color: #9a9a9d;
-		border-radius: 100px;
-		cursor: pointer;
-	}
+	backdrop-filter: blur(24px);
+	padding:4px;
 }
 
+.navigationBtn {
+	height: 34px;
+	padding: 0 12px;
+	color: var(--text-color-base-300);
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+
 .active {
+	color: var(--text-color-contrast-500);
 	background: #ffffff;
 }
 </style>
