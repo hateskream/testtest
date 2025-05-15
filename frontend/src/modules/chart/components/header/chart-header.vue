@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useChartStore } from '@/modules/chart/store';
 
@@ -10,12 +10,14 @@ import ChartPriceInfo from './chart-price-info.vue';
 
 
 const bgColor = ref('230, 23, 53');
+const bgColorShadow = ref('230 23 53 /')
 const {randomizeExchanges} = useChartStore()
 const generateRandomColor = () => {
 	const r = Math.floor(Math.random() * 256);
 	const g = Math.floor(Math.random() * 256);
 	const b = Math.floor(Math.random() * 256);
 	bgColor.value = `${r}, ${g}, ${b}`;
+	bgColorShadow.value = `${r} ${g} ${b} /`;
 };
 
 const generate = () => {
@@ -70,7 +72,7 @@ const generate = () => {
 	left: 0;
 	width: 330%;
 	height: 250%;
-	background: rgb(v-bind(bgColor) 33%);
+	background: rgb(v-bind(bgColorShadow) 33%);
 	transform: translate(-22%, -30%);
 	filter: blur(88px);
 	pointer-events: none;

@@ -93,7 +93,9 @@ const setReports = ()=>{
 <style module="classes">
 .placeholderTop {
 	min-height: 400px;
-	background: var(--border-color-attention-500-effect);
+	background: rgb(84 84 95 / 60%);
+	backdrop-filter: blur(14px);
+
 }
 
 .columnTitle {
