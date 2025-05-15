@@ -40,8 +40,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		return group;
 	});
 
-	const activeGroupId = computed(() => activeGroup.value.id);
-
 	function addTab() {
 		const newGroup: IDashboardGroup = {
 			id: generateTimestampId(),

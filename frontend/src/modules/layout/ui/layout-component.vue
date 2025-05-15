@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import { useRoute } from 'vue-router';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
@@ -43,10 +42,6 @@ const activeItem = ref(IconIds.Home);
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
 
 onClickOutside(curtainRef, closeCurtain)
-
-function setActiveItem(id: IconIds) {
-	activeItem.value = id;
-}
 
 function openCurtain() {
 	layoutState.isOpenCurtain = true

@@ -90,7 +90,16 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		position: { x: 3, y: 4, w: 3, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-	}
+	},
+	{
+		type: DashboardItemType.Instance,
+		id: 5,
+		name: 'Watchlist',
+		dashboardType: WidgetType.Watchlist,
+		position: { x: 0, y: 8, w: 2, h: 6 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
 ];
 
 const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };
