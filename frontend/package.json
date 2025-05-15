@@ -55,5 +55,8 @@
     "vite-plugin-vue-devtools": "7.7.6",
     "vite-svg-loader": "5.1.0",
     "vue-tsc": "2.2.4"
-  }
+  },
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.9.5"
+	}
 }
