@@ -60,7 +60,7 @@ onMounted(() => {
 				@click="reloadDataHandler"
 			/>
 
-			<main-view v-else :markets="data" />
+			<main-view v-else :markets="data || []" />
 		</template>
 	</base-dashboard-component>
 </template>
