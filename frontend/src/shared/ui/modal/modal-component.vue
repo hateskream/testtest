@@ -40,6 +40,7 @@ interface IUiModalProps {
   position?: ModalPosition;
   maxWidth?: string;
   maxHeight?: string;
+	isNotFullShield?: boolean;
 }
 
 const props = withDefaults(defineProps<IUiModalProps>(), {
@@ -50,10 +51,12 @@ const props = withDefaults(defineProps<IUiModalProps>(), {
 	position: 'center',
 	maxWidth: 'max-content',
 	maxHeight: 'none',
+	isNotFullShield: false,
 });
 
 const emit = defineEmits({
 	'update:modelValue': (value: boolean) => typeof value === 'boolean',
+	'drop-success': () => true,
 });
 
 const classes = useCssModule('classes');
@@ -180,6 +183,13 @@ function onKeydown(event: KeyboardEvent): void {
 function closeModal(): void {
 	emit('update:modelValue', false);
 }
+
+function handleDrop(event: DragEvent) {
+	event.preventDefault();
+	// Logic to handle drop (e.g., validate drop target, update state)
+	// Assuming drop is valid, emit or call a function to mark drop as successful
+	emit('drop-success'); // Emit event to parent or call onDropSuccess directly
+}
 </script>
 
 <template>
@@ -190,18 +200,20 @@ function closeModal(): void {
 			:class="[classes.modal, classList]"
 		>
 			<div :class="classes.inner">
-				<div
-					:class="classes.shield"
+				<!-- <div
+					:class="props.isNotFullShield ? classes.notFullShield : classes.fullShield"
 					tabindex="-1"
 					@click="closeModal"
 				/>
-				<div :class="classes.focusguard" tabindex="0" />
+				<div :class="classes.focusguard" tabindex="0" /> -->
 				<div
 					ref="rootDialog"
 					:class="[classes.dialog, classes[props.position]]"
 					role="dialog"
 					aria-modal="true"
 					:style="styles"
+					@drop="handleDrop"
+					@dragover.prevent
 				>
 					<div
 						ref="bodyWrapper"
@@ -247,12 +259,20 @@ function closeModal(): void {
 	margin: auto;
 }
 
-.shield {
+.fullShield {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
+}
+
+.notFullShield {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
 }
 
 .body {

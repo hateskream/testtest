@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref, useTemplateRef } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
@@ -26,10 +27,27 @@ const navigation: INavigationItem[] = [
 	},
 ];
 
+const layoutState = reactive({
+	isOpenCurtain: false,
+	isCurtainFixed: false,
+})
+
 const activeItem = ref(IconIds.Home);
+
+const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
+
+onClickOutside(curtainRef, closeCurtain)
 
 function setActiveItem(id: IconIds) {
 	activeItem.value = id;
+}
+
+function openCurtain() {
+	layoutState.isOpenCurtain = true
+}
+
+function closeCurtain() {
+	layoutState.isOpenCurtain = false
 }
 </script>
 
@@ -82,6 +100,7 @@ function setActiveItem(id: IconIds) {
 					:id="IconIds.ControlRightMenu"
 					width="20px"
 					height="20px"
+					@click="openCurtain"
 				/>
 			</div>
 
@@ -91,15 +110,39 @@ function setActiveItem(id: IconIds) {
 						:id="IconIds.AddWidget"
 						width="20px"
 						height="20px"
+						@click="openCurtain"
 					/>
 				</div>
 				<div :class="classes.addWidgetText">Add widgets</div>
 			</div>
 		</panel-component>
+		<div v-if="layoutState.isOpenCurtain" ref="curtainRef" :class="classes.curtain">
+			<div :class="classes.curtainContainer">
+				<slot name="curtain" />
+			</div>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
+.curtainContainer {
+	width: max-content;
+	height: 100%;
+	padding: 18px;
+	background-color: #000000;
+	border: 1px solid var(--border-modal-color-base);
+	border-radius: 18px;
+}
+
+.curtain {
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	width: max-content;
+	height: 100%;
+}
+
 .root {
 	position: relative;
 	display: flex;

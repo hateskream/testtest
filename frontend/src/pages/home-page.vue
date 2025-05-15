@@ -65,42 +65,27 @@ provide('funcSetter', {
 			/>
 		</template>
 		<template #content>
-			<div class="root">
-				<dashboard-grid :dashboards="activeGroup" class="grid" @add-widget="setNewStateInCurrentGroup">
-					<template #dashboard-content="{ dashboardItem, meta }">
-						<current-dashboard
-							:dashboard-item="dashboardItem"
-							:meta="meta"
-						/>
-					</template>
-				</dashboard-grid>
-				<div>
-					<dashboards-curtain
-						:dashboards="ALL_DASHBOARDS"
-						@drag="drag"
-						@drag-end="dragEnd"
-						@new-dashboard="setDashboard"
-						@is-in="setIsIn"
-					>
-						<template #ghost="{title}">
-							<ghost-component-base :title="title" />
-						</template>
-					</dashboards-curtain>
-					<div>
-					</div>
-				</div>
-			</div>
-
+			<dashboard-grid :dashboards="activeGroup" class="grid" @add-widget="setNewStateInCurrentGroup">
+				<template #dashboard-content="{ dashboardItem, meta }">
+					<current-dashboard
+						:dashboard-item="dashboardItem"
+						:meta="meta"
+					/>
+				</template>
+			</dashboard-grid>
+		</template>
+		<template #curtain>
+			<dashboards-curtain
+				:dashboards="ALL_DASHBOARDS"
+				@drag="drag"
+				@drag-end="dragEnd"
+				@new-dashboard="setDashboard"
+				@is-in="setIsIn"
+			>
+				<template #ghost="{title}">
+					<ghost-component-base :title="title" />
+				</template>
+			</dashboards-curtain>
 		</template>
 	</layout-component>
 </template>
-
-<style scoped>
-.root {
-	display: flex;
-}
-
-.grid {
-	flex-grow: 1;
-}
-</style>
