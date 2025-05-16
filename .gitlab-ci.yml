@@ -5,17 +5,14 @@ workflow:
     - when: always
 
 variables:
-  GIT_CLEAN_FLAGS: -ffdx -e frontend/node_modules/
+  GIT_CLEAN_FLAGS: -ffdx -e node_modules/
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
   MANIFEST_BRANCH_REPO: main
 
 include:
-  - local: "/frontend/.gitlab-ci/snippets/setup.yml"
-  - local: "/frontend/.gitlab-ci/snippets/lint.yml"
-
-before_script:
-  - cd frontend
+  - local: "/.gitlab-ci/snippets/setup.yml"
+  - local: "/.gitlab-ci/snippets/lint.yml"
 
 stages:
   - setup
@@ -68,7 +65,6 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   script:
-    - cd frontend
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   
