@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, toValue } from 'vue';
+import { ref, toValue } from 'vue';
 
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import type { ITableRow, ITableRowValue, ITableRowValueType } from '../../model';
-import { useMarketStore } from '@/modules/widgets/market/stores';
+import { useWatchlistStore } from '../../stores';
+import type { ITableRow, ITableRowValue, ITableRowValueType, IWatchlistMarkets, IWatchlistSection } from '../../model';
+import { compareStrings } from '@/shared/lib/compare-strings';
 import type { IMarketDomain } from '@/modules/widgets/market/api';
-import { compareStrings } from '@/shared/lib';
 
 import tableColumnsComponent from '../markets-table/table-columns-component.vue';
 import tableRowsComponent from '../markets-table/table-rows-component.vue';
@@ -13,19 +13,25 @@ import WatchlistFilterPanel from '../filters/watchlist-filters-panel.vue';
 
 
 interface IViewComponentProps {
-	markets: IMarketDomain[];
+	watchlist: IWatchlistSection[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
-const marketStore = useMarketStore();
+const watchlistStore = useWatchlistStore();
 
-const tableRows = computed<ITableRow[][]>(() => {
+const toggleSection = (_name: string) => {
+	// if (sectionsStatus.value !== null && sectionsStatus.value[name] !== undefined) {
+	// 	sectionsStatus.value[name].isOpen = !sectionsStatus.value[name].isOpen;
+	// }
+};
+
+const tableRows = (markets: IWatchlistMarkets[]) => {
 	const rows: ITableRow[][] = [];
 
-	props.markets.forEach(row => {
-		if (marketStore.isFavorites) {
-			if (marketStore.favorites.includes(row.id)) {
+	markets.forEach(row => {
+		if (watchlistStore.isFavorites) {
+			if (watchlistStore.favorites.includes(row.id)) {
 				rows.push(prepareRow(row));
 			}
 		} else {
@@ -33,16 +39,16 @@ const tableRows = computed<ITableRow[][]>(() => {
 		}
 	});
 
-	if (marketStore.activeSort.direction !== 0) {
-		const activeSortColumn = marketStore.activeTableColumns.find(column =>
-			compareStrings(toValue(marketStore.activeSort.columnName), column.columnName),
+	if (watchlistStore.activeSort.direction !== 0) {
+		const activeSortColumn = watchlistStore.activeTableColumns.find(column =>
+			compareStrings(toValue(watchlistStore.activeSort.columnName), column.columnName),
 		)!;
 
 		rows.sort((a, b) => {
 			let leftValue = a[activeSortColumn.position].value;
 			let rightValue = b[activeSortColumn.position].value;
 
-			if (marketStore.activeSort.direction === -1) {
+			if (watchlistStore.activeSort.direction === -1) {
 				leftValue = b[activeSortColumn.position].value;
 				rightValue = a[activeSortColumn.position].value;
 			}
@@ -56,12 +62,13 @@ const tableRows = computed<ITableRow[][]>(() => {
 	}
 
 	return rows;
-});
+};
 
-function prepareRow(row: IMarketDomain) {
+
+function prepareRow(row: IWatchlistMarkets) {
 	const data: ITableRow[] = [];
 
-	marketStore.activeTableColumns.forEach(column => {
+	watchlistStore.activeTableColumns.forEach(column => {
 		data.push({
 			type: column.type,
 			srcValue: row.srcValue,
@@ -90,29 +97,6 @@ function sortRowsByType(args: {
 			return +args.left - +args.right;
 	}
 }
-
-const sections = ref([
-	{
-		name: 'Crypto', isOpen: true, data: tableRows.value,
-	},
-	{
-		name: 'Stock', isOpen: false, data: tableRows.value,
-	},
-	{
-		name: 'Forex', isOpen: false, data: tableRows.value,
-	},
-	{
-		name: 'Commodity', isOpen: false, data: [],
-	},
-]);
-
-const toggleSection = (sectionName: string) => {
-	sections.value.forEach(section => {
-		if (section.name === sectionName) {
-			section.isOpen = !section.isOpen;
-		}
-	});
-};
 </script>
 
 <template>
@@ -126,8 +110,8 @@ const toggleSection = (sectionName: string) => {
 			<!-- Секции рынков -->
 			<div class="market-sections">
 				<div
-					v-for="section in sections"
-					:key="section.name"
+					v-for="section in props.watchlist"
+					:key="section.id"
 					class="market-section"
 				>
 					<!-- Заголовок секции -->
@@ -140,7 +124,7 @@ const toggleSection = (sectionName: string) => {
 
 					<!-- Данные секции -->
 					<div v-if="section.isOpen" class="section-data">
-						<table-rows-component :rows="section.data" />
+						<table-rows-component :rows="tableRows(section.watchlist)" />
 					</div>
 				</div>
 			</div>

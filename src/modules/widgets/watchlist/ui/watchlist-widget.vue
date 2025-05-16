@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/model';
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { useQueryMarket } from '../../market/queries/index.ts';
 import { useMarketStore } from '../../market/stores/index.ts';
+import { useQueryWatchlist } from '../queries/watchlist.query.ts';
 
 import MainView from './view/main-view.vue';
 import ErrorView from './view/error-view.vue';
@@ -14,34 +13,10 @@ const props = defineProps<{
 	meta: IMeta;
 }>();
 
-// TODO: Make them real
-// const isLoading = ref(false);
-// const isDataLoadingError = ref(false);
-
-const reloadDataHandler = () => {
-	// // TODO: Make it real or remove
-	// // isLoading.value = true;
-	// isDataLoadingError.value = false;
-
-	// setTimeout(() => {
-	// 	// isLoading.value = false;
-	// 	isDataLoadingError.value = false;
-	// }, 2000);
-};
-
 const marketStore = useMarketStore();
-const { data, isLoading, isError } = useQueryMarket({
+const { data, isLoading, isError } = useQueryWatchlist({
 	market: props.meta.market,
 	sort: marketStore.activeTabSort.sortTab,
-});
-// TODO: Remove
-onMounted(() => {
-	// isLoading.value = true;
-
-	// setTimeout(() => {
-	// 	isLoading.value = false;
-	// 	isDataLoadingError.value = true;
-	// }, 2000);
 });
 </script>
 
@@ -55,12 +30,9 @@ onMounted(() => {
 
 		<template #content>
 			<loader-view v-if="isLoading" />
-			<error-view
-				v-else-if="isError"
-				@click="reloadDataHandler"
-			/>
+			<error-view v-else-if="isError" />
 
-			<main-view v-else :markets="data || []" />
+			<main-view v-else :watchlist="data || []" />
 		</template>
 	</base-dashboard-component>
 </template>
