@@ -100,7 +100,9 @@ function updateDndState(newValue: boolean) {
 
 		emit('set-dnd-widget-id', currentId);
 	} else {
-		emit('set-dnd-widget-id', null);
+		setTimeout(() => {
+			emit('set-dnd-widget-id', null);
+		});
 	}
 }
 </script>
