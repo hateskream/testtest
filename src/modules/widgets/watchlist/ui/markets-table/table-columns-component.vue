@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import draggableComponent from 'vuedraggable';
 
-import { useMarketStore } from '../../../market/stores';
+import { useWatchlistStore } from '../../stores';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
 import TableMetricsComponent from './table-metrics-component.vue';
 
-const marketStore = useMarketStore();
+const marketStore = useWatchlistStore();
 
 const ignoreDragClass = 'ignoreDrag';
 

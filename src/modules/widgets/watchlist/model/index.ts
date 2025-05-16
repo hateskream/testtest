@@ -1,2 +1,2 @@
-export * from './market.model';
+export * from './watchlist.model';
 export * from './table.model';
