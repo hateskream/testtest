@@ -12,7 +12,7 @@ const INIT_OPACITY = '0.9';
 const ghostElementCenter = {
 	centerHeight: 0,
 	centerWidth: 0,
-}
+};
 
 let isDragging = false;
 
@@ -23,7 +23,7 @@ onMounted(() => {
 		ghostElementCenter.centerHeight = customGhost.value.clientHeight / 2;
 		ghostElementCenter.centerWidth = customGhost.value.clientWidth / 2;
 	}
-})
+});
 
 function onDragStart(event: DragEvent) {
 	if (event.dataTransfer && customGhost.value) {

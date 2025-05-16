@@ -69,7 +69,12 @@ const handleExchangeSelect = (exchangeId: number) => {
 					>
 						<div :class="classes.source">
 							<div :class="classes.exchangeIconWrapper">
-								<ui-icon :id="exchange.iconId" :classes="classes.exchangeIcon" width="24" height="24" />
+								<ui-icon
+									:id="exchange.iconId"
+									:classes="classes.exchangeIcon"
+									width="24"
+									height="24"
+								/>
 							</div>
 							<div :class="classes.sourceName">
 								<span>{{ exchange.source }}</span>

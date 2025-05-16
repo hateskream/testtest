@@ -56,17 +56,17 @@ const tableRows = computed<ITableRow[][]>(() => {
 });
 
 const gridLayout = computed(() => {
-	const templateColumns = 'minmax(100px, 1fr) '.repeat(marketStore.activeTableColumns.length)
+	const templateColumns = 'minmax(100px, 1fr) '.repeat(marketStore.activeTableColumns.length);
 
-	const metricsTemplateColumn = 'minmax(30px, 1fr)'
+	const metricsTemplateColumn = 'minmax(30px, 1fr)';
 
-	const gridTemplateColumns = `${templateColumns} ${metricsTemplateColumn}`
+	const gridTemplateColumns = `${templateColumns} ${metricsTemplateColumn}`;
 
 
 	return {
-		gridTemplateColumns
-	}
-})
+		gridTemplateColumns,
+	};
+});
 
 function prepareRow(row: IMarketDomain) {
 	const data: ITableRow[] = [];

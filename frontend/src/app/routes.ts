@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 export enum RouteNames {
 	Home = 'home',
-	Chart = 'chart'
+	Chart = 'chart',
 }
 export enum RoutePaths {
 	Home = '/',
-	Chart = '/chart'
+	Chart = '/chart',
 }
 const router = createRouter({
 	history: createWebHistory(),
@@ -21,7 +21,7 @@ const router = createRouter({
 			path: RoutePaths.Chart,
 			name: RouteNames.Chart,
 			component: () => import('@/pages/chart-page.vue'),
-		}
+		},
 	],
 });
 

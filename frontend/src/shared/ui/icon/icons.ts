@@ -37,5 +37,5 @@ export enum IconIds {
 	LSX = 'lsx',
 	XETR = 'xetr',
 	B3 = 'b3',
-	Deals = 'deals'
+	Deals = 'deals',
 }

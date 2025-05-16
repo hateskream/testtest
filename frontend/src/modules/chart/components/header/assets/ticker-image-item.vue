@@ -2,22 +2,23 @@
 
 import { computed } from 'vue';
 
-const {fill = '230, 23, 53', width = 50, height = 50} = defineProps<{
+const { fill = '230, 23, 53', width = 50, height = 50 } = defineProps<{
 	fill?: string;
 	width?: number | string;
 	height?: number | string;
 }
 >();
 const fillRgba = computed(()=>{
-	return `rgba(${fill})`
-})
+	return `rgba(${fill})`;
+});
 
 </script>
 
 
 <template>
 	<svg
-		:width="width" :height="height"
+		:width="width"
+		:height="height"
 		viewBox="0 0 50 50"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"

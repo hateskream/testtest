@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
-import {IconIds, UiIcon} from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 
 const viewMode = ref('mixed');
@@ -11,10 +11,10 @@ const viewMode = ref('mixed');
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const setChart = ()=>{
 	chartLayoutEl.value?.setMixedViewMode();
-}
+};
 const setReports = ()=>{
 	chartLayoutEl.value?.setReportsViewMode();
-}
+};
 </script>
 
 <template>

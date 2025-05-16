@@ -10,8 +10,8 @@ import ChartPriceInfo from './chart-price-info.vue';
 
 
 const bgColor = ref('230, 23, 53');
-const bgColorShadow = ref('230 23 53 /')
-const {randomizeExchanges} = useChartStore()
+const bgColorShadow = ref('230 23 53 /');
+const { randomizeExchanges } = useChartStore();
 const generateRandomColor = () => {
 	const r = Math.floor(Math.random() * 256);
 	const g = Math.floor(Math.random() * 256);
@@ -22,8 +22,8 @@ const generateRandomColor = () => {
 
 const generate = () => {
 	randomizeExchanges();
-	generateRandomColor()
-}
+	generateRandomColor();
+};
 
 
 </script>

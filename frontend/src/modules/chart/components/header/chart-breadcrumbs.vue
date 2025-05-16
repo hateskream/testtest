@@ -27,7 +27,7 @@ const breadCrumbsData = [
 		name: 'TSLA',
 		type: 'common',
 		isActive: true,
-	}
+	},
 
 ];
 </script>

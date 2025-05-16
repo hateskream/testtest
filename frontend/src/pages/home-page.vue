@@ -8,7 +8,7 @@ import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
 	useProvideCurrentDashboard,
-	GhostComponentBase
+	GhostComponentBase,
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
 import { DashboardsCurtain } from '@/modules/dashboards-curtain';
@@ -50,7 +50,7 @@ provide('funcSetter', {
 	setDrag,
 	setDragEnd,
 	newDashboard,
-	isIn
+	isIn,
 });
 </script>
 
@@ -65,7 +65,11 @@ provide('funcSetter', {
 			/>
 		</template>
 		<template #content>
-			<dashboard-grid :dashboards="activeGroup" class="grid" @add-widget="setNewStateInCurrentGroup">
+			<dashboard-grid
+				:dashboards="activeGroup"
+				class="grid"
+				@add-widget="setNewStateInCurrentGroup"
+			>
 				<template #dashboard-content="{ dashboardItem, meta }">
 					<current-dashboard
 						:dashboard-item="dashboardItem"

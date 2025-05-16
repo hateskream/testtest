@@ -43,11 +43,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 248.71,
 			change: {
 				points: 0.93,
-				percentage: 0.33
+				percentage: 0.33,
 			},
 			openTime: '13:30:00',
 			closeTime: '20:00:00',
-			iconId: IconIds.NASDAQ
+			iconId: IconIds.NASDAQ,
 		},
 		{
 			id: 2,
@@ -61,11 +61,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 229.45,
 			change: {
 				points: -0.78,
-				percentage: -0.34
+				percentage: -0.34,
 			},
 			openTime: '06:00:00',
 			closeTime: '20:00:00',
-			iconId: IconIds.GETTEX
+			iconId: IconIds.GETTEX,
 		},
 		{
 			id: 3,
@@ -79,11 +79,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 229.50,
 			change: {
 				points: 0.82,
-				percentage: 0.36
+				percentage: 0.36,
 			},
 			openTime: '07:00:00',
 			closeTime: '21:00:00',
-			iconId: IconIds.TRADEGATE
+			iconId: IconIds.TRADEGATE,
 		},
 		{
 			id: 4,
@@ -97,11 +97,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 339.85,
 			change: {
 				points: -1.32,
-				percentage: -0.39
+				percentage: -0.39,
 			},
 			openTime: '14:30:00',
 			closeTime: '21:00:00',
-			iconId: IconIds.TSX
+			iconId: IconIds.TSX,
 		},
 		{
 			id: 5,
@@ -115,11 +115,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 225689.30,
 			change: {
 				points: 754.62,
-				percentage: 0.33
+				percentage: 0.33,
 			},
 			openTime: '14:00:00',
 			closeTime: '21:00:00',
-			iconId: IconIds.BYMA
+			iconId: IconIds.BYMA,
 		},
 		{
 			id: 6,
@@ -133,11 +133,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 229.40,
 			change: {
 				points: -0.79,
-				percentage: -0.34
+				percentage: -0.34,
 			},
 			openTime: '08:00:00',
 			closeTime: '16:30:00',
-			iconId: IconIds.LSX
+			iconId: IconIds.LSX,
 		},
 		{
 			id: 7,
@@ -151,11 +151,11 @@ export const useChartStore = defineStore('chart', () => {
 			price: 229.55,
 			change: {
 				points: 0.84,
-				percentage: 0.37
+				percentage: 0.37,
 			},
 			openTime: '07:00:00',
 			closeTime: '15:30:00',
-			iconId: IconIds.XETR
+			iconId: IconIds.XETR,
 		},
 		{
 			id: 8,
@@ -169,12 +169,12 @@ export const useChartStore = defineStore('chart', () => {
 			price: 1251.43,
 			change: {
 				points: -4.42,
-				percentage: -0.35
+				percentage: -0.35,
 			},
 			openTime: '13:00:00',
 			closeTime: '20:00:00',
-			iconId: IconIds.B3
-		}
+			iconId: IconIds.B3,
+		},
 		// {
 		// 	id: 9,
 		// 	source: 'JPX',
@@ -214,21 +214,23 @@ export const useChartStore = defineStore('chart', () => {
 	]);
 
 	const activeExchangeId = ref(
-		exchanges.value.find(exchange => exchange.isPrimary)?.id || 1
+		exchanges.value.find(exchange => exchange.isPrimary)?.id || 1,
 	);
 
 	const activeExchange = computed(() =>
-		exchanges.value.find(exchange => exchange.id === activeExchangeId.value)
+		exchanges.value.find(exchange => exchange.id === activeExchangeId.value),
 	);
 
 	const allExchanges = computed(() => exchanges.value);
 
 	const primaryExchange = computed(() =>
-		exchanges.value.find(exchange => exchange.isPrimary)
+		exchanges.value.find(exchange => exchange.isPrimary),
 	);
 
 	const isActiveMarketOpen = computed(() => {
-		if (!activeExchange.value) {return false;}
+		if (!activeExchange.value) {
+			return false;
+		}
 		return isMarketOpen(activeExchange.value.id);
 	});
 
@@ -243,7 +245,9 @@ export const useChartStore = defineStore('chart', () => {
 
 	function isMarketOpen(exchangeId:number) {
 		const exchange = exchanges.value.find(e => e.id === exchangeId);
-		if (!exchange) {return false;}
+		if (!exchange) {
+			return false;
+		}
 
 		const now = new Date();
 		const currentHour = now.getUTCHours();
@@ -278,18 +282,26 @@ export const useChartStore = defineStore('chart', () => {
 			'ARS': { min: 200000, max: 250000 },
 			'BRL': { min: 1100, max: 1400 },
 			'JPY': { min: 35000, max: 40000 },
-			'AUD': { min: 320, max: 420 }
+			'AUD': { min: 320, max: 420 },
 		};
 
 		exchanges.value = exchanges.value.map(exchange => {
 			let range = { min: 200, max: 300 };
-			if (exchange.currency === 'USD') {range = priceRanges['USD'];}
-			else if (exchange.currency === 'EUR') {range = priceRanges['EUR'];}
-			else if (exchange.currency === 'CAD') {range = priceRanges['CAD'];}
-			else if (exchange.currency === 'ARS') {range = priceRanges['ARS'];}
-			else if (exchange.currency === 'BRL') {range = priceRanges['BRL'];}
-			else if (exchange.currency === 'JPY') {range = priceRanges['JPY'];}
-			else if (exchange.currency === 'AUD') {range = priceRanges['AUD'];}
+			if (exchange.currency === 'USD') {
+				range = priceRanges['USD'];
+			} else if (exchange.currency === 'EUR') {
+				range = priceRanges['EUR'];
+			} else if (exchange.currency === 'CAD') {
+				range = priceRanges['CAD'];
+			} else if (exchange.currency === 'ARS') {
+				range = priceRanges['ARS'];
+			} else if (exchange.currency === 'BRL') {
+				range = priceRanges['BRL'];
+			} else if (exchange.currency === 'JPY') {
+				range = priceRanges['JPY'];
+			} else if (exchange.currency === 'AUD') {
+				range = priceRanges['AUD'];
+			}
 
 			const newPrice = parseFloat((Math.random() * (range.max - range.min) + range.min).toFixed(2));
 
@@ -313,10 +325,10 @@ export const useChartStore = defineStore('chart', () => {
 				price: newPrice,
 				change: {
 					points: changePoints,
-					percentage: changePercentage
+					percentage: changePercentage,
 				},
 				openTime,
-				closeTime
+				closeTime,
 			};
 		});
 	}
@@ -330,6 +342,6 @@ export const useChartStore = defineStore('chart', () => {
 		isActiveMarketOpen,
 		setActiveExchange,
 		isMarketOpen,
-		randomizeExchanges
+		randomizeExchanges,
 	};
 });

@@ -77,7 +77,7 @@ function handleMouseleave() {
 		}
 	}
 }
-defineExpose({ isVisible })
+defineExpose({ isVisible });
 </script>
 
 <template>
@@ -113,17 +113,6 @@ defineExpose({ isVisible })
 .content {
 	z-index: 101;
 }
-
-/* .content::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 100%;
-	z-index: -1;
-	width: 500px;
-	height: 500px;
-	transform: translate(0, -50%);
-} */
 </style>
 
 <style scoped>

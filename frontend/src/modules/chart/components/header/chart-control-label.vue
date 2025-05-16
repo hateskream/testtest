@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import PriceChangeIcon from './assets/price-change-icon.vue';
 
-const {change} = defineProps<{
+const { change } = defineProps<{
 	change:{
 		points:number;
 		percentage:number;
@@ -11,8 +11,8 @@ const {change} = defineProps<{
 }>();
 
 const priceText = computed(()=>{
-	return `${change.points.toFixed(2)} (${Math.abs(change.percentage).toFixed(2)}%)`
-})
+	return `${change.points.toFixed(2)} (${Math.abs(change.percentage).toFixed(2)}%)`;
+});
 </script>
 
 <template>

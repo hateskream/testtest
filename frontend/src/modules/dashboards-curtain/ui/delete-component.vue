@@ -25,7 +25,7 @@ watch(
 
 		emit('is-in', isIn);
 	},
-	{ deep: true }
+	{ deep: true },
 );
 </script>
 

@@ -2,7 +2,7 @@
 import { computed, type Ref, ref } from 'vue';
 
 type ViewMode = 'mixed' | 'reports';
-import {useCustomScroll} from '@/shared/composables/scroll.ts';
+import { useCustomScroll } from '@/shared/composables/scroll.ts';
 
 const viewMode = ref<ViewMode>('mixed');
 
@@ -11,15 +11,19 @@ const topContentEl = ref<HTMLElement>();
 const container = ref<HTMLElement>();
 const maxShift = computed(()=>{
 	return topContentEl.value?.offsetHeight;
-})
-const {maxScroll} = useCustomScroll(container as Ref<HTMLElement | null>,(offset)=>{
+});
+const { maxScroll } = useCustomScroll(container as Ref<HTMLElement | null>, (offset)=>{
 	const scale = offset/maxScroll.value;
-	if (!maxShift.value) {return }
+	if (!maxShift.value) {
+		return;
+	}
 	contentShift.value = -scale * maxShift.value;
-})
+});
 
 const opacityTop = computed(()=>{
-	if (!maxShift.value||!contentShift.value) {return 1;}
+	if (!maxShift.value||!contentShift.value) {
+		return 1;
+	}
 	return 1+contentShift.value/maxShift.value;
 });
 
@@ -31,7 +35,7 @@ const setMixedViewMode = () => {
 	viewMode.value = 'mixed';
 	contentShift.value = 0;
 	emit('change-view', viewMode.value);
-}
+};
 const setReportsViewMode = async () => {
 	viewMode.value = 'reports';
 	if (!container.value) {
@@ -41,8 +45,8 @@ const setReportsViewMode = async () => {
 		contentShift.value = -topContentEl.value.offsetHeight;
 	}
 	emit('change-view', viewMode.value);
-}
-defineExpose({setMixedViewMode, setReportsViewMode})
+};
+defineExpose({ setMixedViewMode, setReportsViewMode });
 // watch(scrollY, (val) => {
 // 	lastScroll.value = val;
 // 	const center = window.innerHeight / 2
@@ -68,7 +72,8 @@ defineExpose({setMixedViewMode, setReportsViewMode})
 			<slot name="topContent">Graph</slot>
 		</div>
 		<div
-			ref="botContentEl" :class="classes.botContent"
+			ref="botContentEl"
+			:class="classes.botContent"
 			:style="{transform: `translateY(${contentShift}px)`}"
 		>
 			<slot name="botContent">

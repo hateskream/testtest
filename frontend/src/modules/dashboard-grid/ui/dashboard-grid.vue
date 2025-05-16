@@ -8,7 +8,7 @@ import {
 	ref,
 	watch,
 	type App,
-	type Ref
+	type Ref,
 } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
@@ -90,7 +90,7 @@ const isEmpty = computed(() => props.dashboards.items.length === 0);
 const rawDashboards = computed((): IPosition[] =>
 	isEmpty.value ?
 		generateEmptyGrid(props.columnsNum, props.rowsNum) :
-		props.dashboards.items.map(el => ({ ...el.position, i: el.id }))
+		props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
 
 );
 
@@ -109,7 +109,7 @@ const rowsNum = computed(() => props.rowsNum);
 
 const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 
-const {mouseAt} = useMousePositionSync();
+const { mouseAt } = useMousePositionSync();
 const dropId = -1;
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
@@ -145,7 +145,7 @@ watch(
 watch([
 	() => gridState.isDnd,
 	() => gridState.isResize,
-	() => gridState.isAddWidget
+	() => gridState.isAddWidget,
 ], ([isDnd, isResize, isAddWidget]) =>
 	emit('update-is-show-grid-state', isDnd || isResize || isAddWidget),
 );
@@ -177,7 +177,7 @@ watch(() => funcSetter.newDashboard.value, () => {
 		dragItem.w = funcSetter.newDashboard.value.minSize.w;
 		dragItem.h = funcSetter.newDashboard.value.minSize.h;
 	}
-})
+});
 
 watch(
 	() => funcSetter.isIn.value,
@@ -205,11 +205,11 @@ function getDashboardItemById(id: number): IDashboardItem {
 }
 
 function getMaxSize(id: number): { w: number; h: number } {
-	if(isEmpty.value) {
+	if (isEmpty.value) {
 		return {
 			w: 1,
 			h: 1,
-		}
+		};
 	}
 
 	if (gridState.isAddWidget) {
@@ -217,7 +217,7 @@ function getMaxSize(id: number): { w: number; h: number } {
 			throw new Error('newDashboard is null');
 		}
 
-		return funcSetter.newDashboard.value.maxSize
+		return funcSetter.newDashboard.value.maxSize;
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -229,15 +229,15 @@ function getMaxSize(id: number): { w: number; h: number } {
 	return {
 		w: foundDashboard.maxSize.w,
 		h: foundDashboard.maxSize.h,
-	}
+	};
 }
 
 function getMinSize(id: number): { w: number; h: number } {
-	if(isEmpty.value) {
+	if (isEmpty.value) {
 		return {
 			w: 1,
 			h: 1,
-		}
+		};
 	}
 
 	if (gridState.isAddWidget) {
@@ -245,7 +245,7 @@ function getMinSize(id: number): { w: number; h: number } {
 			throw new Error('newDashboard is null');
 		}
 
-		return funcSetter.newDashboard.value.minSize
+		return funcSetter.newDashboard.value.minSize;
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -257,7 +257,7 @@ function getMinSize(id: number): { w: number; h: number } {
 	return {
 		w: foundDashboard.minSize.w,
 		h: foundDashboard.minSize.h,
-	}
+	};
 }
 
 function getMeta(id: number, isResizing = false): IMeta {
@@ -451,7 +451,7 @@ function handlerDragEnd() {
 			w: dragItem.w,
 			h: dragItem.h,
 			i: newItemId,
-		}
+		};
 
 		if (!funcSetter.newDashboard.value) {
 			throw new Error('newDashboard is null');
@@ -474,7 +474,7 @@ function handlerDragEnd() {
 
 function updateDashboardItemsPositions(
 	dashboardItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[],
-	positions: IPosition[]
+	positions: IPosition[],
 ): (IDashboardInstance | IDashboardFolder | IDashboardStack)[] {
 	return dashboardItems.map(item => {
 		const matchingPosition = positions.find(pos => pos.i === item.id);
@@ -485,8 +485,8 @@ function updateDashboardItemsPositions(
 					x: matchingPosition.x,
 					y: matchingPosition.y,
 					w: matchingPosition.w,
-					h: matchingPosition.h
-				}
+					h: matchingPosition.h,
+				},
 			};
 		}
 		return item;

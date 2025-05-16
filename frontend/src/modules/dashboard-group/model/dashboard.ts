@@ -149,5 +149,5 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-	}
+	},
 ];

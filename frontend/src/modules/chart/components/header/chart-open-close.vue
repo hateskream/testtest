@@ -13,7 +13,7 @@ interface ITimeObject {
 	hours: number;
 	minutes: number;
 }
-const currentTime = ref(new Date())
+const currentTime = ref(new Date());
 const { isActiveMarketOpen, activeExchange } = storeToRefs(useChartStore());
 
 const remainingTimeUntilClose = computed(() => {
@@ -61,9 +61,15 @@ const remainingTimeUntilOpen = computed(() => {
 const formatTime = (timeObj: ITimeObject) => {
 	const { hours, minutes } = timeObj;
 
-	if (hours === 0 && minutes === 0) {return 'soon';}
-	if (hours === 0) {return `${minutes} minute${minutes !== 1 ? 's' : ''}`;}
-	if (minutes === 0) {return `${hours} hour${hours !== 1 ? 's' : ''}`;}
+	if (hours === 0 && minutes === 0) {
+		return 'soon';
+	}
+	if (hours === 0) {
+		return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+	}
+	if (minutes === 0) {
+		return `${hours} hour${hours !== 1 ? 's' : ''}`;
+	}
 
 	return `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''}`;
 };
@@ -77,7 +83,7 @@ const formattedRemainingTimeUntilOpen = computed(() => {
 });
 
 useIntervalFn(() => {
-	currentTime.value = new Date()
+	currentTime.value = new Date();
 }, 60000);
 </script>
 

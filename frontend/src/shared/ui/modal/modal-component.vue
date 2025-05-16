@@ -32,14 +32,14 @@ const FOCUSABLE_ELEMENTS = [
 type ModalPosition = 'right' | 'center' | 'left' | 'top';
 
 interface IUiModalProps {
-  modelValue: boolean;
-  zIndex?: number;
-  bodyScrollLock?: boolean;
-  focusFirstElement?: boolean;
-  closable?: boolean;
-  position?: ModalPosition;
-  maxWidth?: string;
-  maxHeight?: string;
+	modelValue: boolean;
+	zIndex?: number;
+	bodyScrollLock?: boolean;
+	focusFirstElement?: boolean;
+	closable?: boolean;
+	position?: ModalPosition;
+	maxWidth?: string;
+	maxHeight?: string;
 	isNotFullShield?: boolean;
 }
 

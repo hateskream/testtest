@@ -18,37 +18,37 @@ const navigation: INavigationItem[] = [
 	{
 		icon: IconIds.Home,
 		id: IconIds.Home,
-		routeName: RouteNames.Home
+		routeName: RouteNames.Home,
 	},
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
-		routeName: RouteNames.Chart
+		routeName: RouteNames.Chart,
 	},
 	{
 		icon: IconIds.Calendar,
 		id: IconIds.Calendar,
-		routeName: RouteNames.Home
+		routeName: RouteNames.Home,
 	},
 ];
 
 const layoutState = reactive({
 	isOpenCurtain: false,
 	isCurtainFixed: false,
-})
+});
 
 const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
 
-onClickOutside(curtainRef, closeCurtain)
+onClickOutside(curtainRef, closeCurtain);
 
 function openCurtain() {
-	layoutState.isOpenCurtain = true
+	layoutState.isOpenCurtain = true;
 }
 
 function closeCurtain() {
-	layoutState.isOpenCurtain = false
+	layoutState.isOpenCurtain = false;
 }
 </script>
 
@@ -117,7 +117,11 @@ function closeCurtain() {
 				<div :class="classes.addWidgetText">Add widgets</div>
 			</div>
 		</panel-component>
-		<div v-if="layoutState.isOpenCurtain" ref="curtainRef" :class="classes.curtain">
+		<div
+			v-if="layoutState.isOpenCurtain"
+			ref="curtainRef"
+			:class="classes.curtain"
+		>
 			<div :class="classes.curtainContainer">
 				<slot name="curtain" />
 			</div>
