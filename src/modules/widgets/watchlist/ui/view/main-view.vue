@@ -38,6 +38,11 @@ const toggleSection = (sectionId: string) => {
 	sectionStates.value[sectionId] = !sectionStates.value[sectionId];
 };
 
+const handleAddSection = () => {
+	// TODO: Dropdown menu with available markets to add to the watchlist
+	return null;
+};
+
 const tableRows = (markets: IWatchlistMarkets[]) => {
 	const rows: ITableRow[][] = [];
 
@@ -148,11 +153,12 @@ function sortRowsByType(args: {
 					</transition>
 				</div>
 
-				<div class="add-section-action">
+				<div class="add-section-action" @click="handleAddSection">
 					<ui-icon
 						:id="IconIds.ControlPlus"
 						class="section-icon"
 					/>
+					<span class="section-name">Add section</span>
 				</div>
 			</div>
 		</div>
@@ -233,6 +239,28 @@ function sortRowsByType(args: {
 	}
 }
 
+.add-section-action {
+	display: inline-flex;
+	align-items: center;
+	padding: 12px 8px;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01);
+	color: var(--text-color-base-100);
+	letter-spacing: 0.096px;
+	text-overflow: ellipsis;
+	cursor: pointer;
+
+	.section-icon {
+		display: flex;
+		width: 12px;
+		height: 12px;
+		margin-right: 6px;
+		color: var(--text-color-base-100);
+		fill: var(--text-color-base-100);
+	}
+}
+
+/* section toggle animation */
 .section-toggle-enter-active,
 .section-toggle-leave-active {
 	max-height: 700px;
