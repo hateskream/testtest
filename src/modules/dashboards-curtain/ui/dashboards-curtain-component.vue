@@ -18,7 +18,7 @@ const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
 	(e: 'new-dashboard', dashboard: IDashboardInstance): void;
-	(e: 'is-in', value: boolean): void;
+	(e: 'set-can-delete', value: boolean): void;
 }>();
 
 function onDrag(dashboard: IDashboardInstance) {
@@ -50,7 +50,7 @@ function unfixCurtain() {
 				<slot name="ghost" :title="dashboard.name" />
 			</template>
 		</draggable-element>
-		<delete-component @is-in="emit('is-in', $event)" />
+		<delete-component @set-can-delete="emit('set-can-delete', $event)" />
 		<div @click="fixCurtain">
 			fix
 		</div>
