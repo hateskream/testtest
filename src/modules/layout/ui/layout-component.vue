@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
+import { reactive, ref, useTemplateRef, watch, computed, onBeforeUnmount, onMounted } from 'vue';
 import { onClickOutside, useElementHover } from '@vueuse/core';
+import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
@@ -14,11 +15,7 @@ interface INavigationItem {
 	routeName: string;
 }
 
-interface ILayoutComponentProps {
-	isCurtainFixed: boolean;
-}
-
-const props = defineProps<ILayoutComponentProps>();
+const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
 const navigation: INavigationItem[] = [
 	{
@@ -40,15 +37,18 @@ const navigation: INavigationItem[] = [
 
 const layoutState = reactive({
 	isOpenCurtain: false,
-	isCurtainFixed: props.isCurtainFixed,
+	isCurtainFixed: isCurtainFixed.value,
+	leftPanelWidth: 72,
+	rightPanelWidth: 72,
 });
 
 const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
-
 const curtainIconRef = useTemplateRef<HTMLElement>('curtainIconRef');
 const addWidgetIconRef = useTemplateRef<HTMLElement>('addWidgetIconRef');
+const rightPanelRef = useTemplateRef('rightPanelRef');
+const leftPanelRef = useTemplateRef('leftPanelRef');
 
 onClickOutside(curtainRef, closeCurtain);
 
@@ -57,13 +57,20 @@ const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
 
 const isControlOpenCurtainHovered = computed(() => isCurtainIconHovered.value || isAddWidgetIconHovered.value);
 
+const centerContentStyle = computed((): Partial<CSSProperties> => {
+	return {
+		marginLeft: `${layoutState.leftPanelWidth}px`,
+		marginRight: `${layoutState.rightPanelWidth}px`,
+	};
+});
+
 watch(isControlOpenCurtainHovered, newValue => {
 	if (newValue) {
 		openCurtain();
 	}
 });
 
-watch(() => props.isCurtainFixed, newValue => {
+watch(() => isCurtainFixed.value, newValue => {
 	layoutState.isCurtainFixed = newValue;
 });
 
@@ -73,6 +80,40 @@ watch(
 		closeCurtain();
 	},
 );
+
+let leftObserver: ResizeObserver | null = null;
+let rightObserver: ResizeObserver | null = null;
+
+onMounted(() => {
+	const leftElement = leftPanelRef.value?.$el as HTMLElement | null;
+	const rightElement = rightPanelRef.value?.$el as HTMLElement | null;
+
+	if (leftElement) {
+		leftObserver = createResizeObserver(leftElement, (width: number) => {
+			layoutState.leftPanelWidth = width;
+		});
+	}
+
+	if (rightElement) {
+		rightObserver = createResizeObserver(rightElement, (width: number) => {
+			layoutState.rightPanelWidth = width;
+		});
+	}
+});
+
+onBeforeUnmount(() => {
+	leftObserver?.disconnect();
+	rightObserver?.disconnect();
+});
+
+function createResizeObserver(element: HTMLElement, setterCallback: (width: number) => void) {
+	const observer = new ResizeObserver(() => {
+		setterCallback(element.clientWidth);
+	});
+
+	observer.observe(element);
+	return observer;
+}
 
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
@@ -85,11 +126,16 @@ function openCurtain() {
 function closeCurtain() {
 	layoutState.isOpenCurtain = false;
 }
+
+function unFixCurtain() {
+	isCurtainFixed.value = false;
+}
 </script>
 
 <template>
 	<div :class="classes.root">
 		<panel-component
+			ref="leftPanelRef"
 			:class="classes.leftPanel"
 			varinat="left"
 		>
@@ -119,43 +165,55 @@ function closeCurtain() {
 				</router-link>
 			</nav>
 		</panel-component>
-		<div :class="classes.center">
+		<div :class="classes.center" :style="centerContentStyle">
 			<header-panel v-if="$slots.header" :class="classes.header">
 				<slot name="header" />
 			</header-panel>
 			<div :class="classes.content">
 				<slot name="content" />
-				<div
-					v-if="layoutState.isCurtainFixed"
-					:class="classes.curtainFixed"
-				>
-					<slot name="curtain" />
-				</div>
+
 			</div>
 		</div>
 		<panel-component
+			ref="rightPanelRef"
 			:class="classes.rightPanel"
 			varinat="right"
 		>
-			<div ref="curtainIconRef" :class="classes.iconWrapper">
-				<ui-icon
-					:id="IconIds.ControlRightMenu"
-					width="20px"
-					height="20px"
-					@click="openCurtain"
-				/>
+			<div
+				v-if="layoutState.isCurtainFixed"
+				:class="classes.curtainFixed"
+			>
+				<slot name="curtain" />
 			</div>
-
-			<div :class="classes.addWidget">
-				<div ref="addWidgetIconRef" :class="classes.iconWrapper">
+			<div :class="classes.rightPanelControls">
+				<div
+					ref="curtainIconRef"
+					:class="classes.iconWrapper"
+					@click="unFixCurtain"
+				>
 					<ui-icon
-						:id="IconIds.AddWidget"
+						:id="IconIds.ControlRightMenu"
 						width="20px"
 						height="20px"
 					/>
 				</div>
-				<div :class="classes.addWidgetText">Add widgets</div>
+
+				<div :class="classes.addWidget">
+					<div
+						ref="addWidgetIconRef"
+						:class="classes.iconWrapper"
+						@click="unFixCurtain"
+					>
+						<ui-icon
+							:id="IconIds.AddWidget"
+							width="20px"
+							height="20px"
+						/>
+					</div>
+					<div :class="classes.addWidgetText">Add widgets</div>
+				</div>
 			</div>
+
 		</panel-component>
 		<div
 			v-if="layoutState.isOpenCurtain"
@@ -175,6 +233,7 @@ function closeCurtain() {
 	z-index: 1;
 	width: max-content;
 	height: 100%;
+	padding: 12px;
 }
 
 .curtainFixed {
@@ -204,8 +263,6 @@ function closeCurtain() {
 .content {
 	display: flex;
 	flex-grow: 1;
-
-	/* flex-direction: column; */
 }
 
 .iconWrapper {
@@ -227,6 +284,10 @@ function closeCurtain() {
 }
 
 .rightPanel {
+	display: flex;
+}
+
+.rightPanelControls {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

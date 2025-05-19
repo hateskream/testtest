@@ -29,7 +29,7 @@ const styles = computed(
 	position: fixed;
 	top: 0;
 	bottom: 0;
-	width: 72px;
+	width: max-content;
 	padding: 12px;
 	overflow-y: auto;
 }
