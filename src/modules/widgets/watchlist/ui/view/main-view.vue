@@ -213,8 +213,15 @@ function sortRowsByType(args: {
 	font-size: var(--typography-paragraph-size-p-01);
 	color: var(--text-color-base-100);
 	letter-spacing: 0.096px;
-	text-overflow: ellipsis;
 	cursor: pointer;
+
+	&:hover {
+		color: rgb(131 132 135 / 90%);
+
+		.section-icon {
+			color: rgb(131 132 135 / 90%);
+		}
+	}
 }
 
 .section-toggle {
@@ -247,7 +254,6 @@ function sortRowsByType(args: {
 	font-size: var(--typography-paragraph-size-p-01);
 	color: var(--text-color-base-100);
 	letter-spacing: 0.096px;
-	text-overflow: ellipsis;
 	cursor: pointer;
 
 	.section-icon {
@@ -256,7 +262,14 @@ function sortRowsByType(args: {
 		height: 12px;
 		margin-right: 6px;
 		color: var(--text-color-base-100);
-		fill: var(--text-color-base-100);
+	}
+
+	&:hover {
+		color: rgb(131 132 135 / 90%);
+
+		.section-icon {
+			color: rgb(131 132 135 / 90%);
+		}
 	}
 }
 
