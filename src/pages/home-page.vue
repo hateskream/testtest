@@ -41,7 +41,7 @@ watch(() => activeGroup.value.items, (newValue) => {
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="isCurtainFixed">
+	<layout-component v-model:is-curtain-fixed="isCurtainFixed">
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
