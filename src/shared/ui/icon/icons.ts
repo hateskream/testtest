@@ -38,4 +38,10 @@ export enum IconIds {
 	XETR = 'xetr',
 	B3 = 'b3',
 	Deals = 'deals',
+	LogoWidgetMarket = 'logo-widget-market',
+	LogoWidgetFearAndGreat = 'logo-widget-fear-and-great',
+	LogoWidgetWatchlist = 'logo-widget-watchlist',
+	LogoWidgetNews = 'logo-widget-news',
+	LogoWidgetPrice = 'logo-widget-price',
+	LogoWidgetMarketCap = 'logo-widget-market-cap',
 }
