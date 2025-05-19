@@ -2,19 +2,18 @@
 import {
 	computed,
 	createApp,
-	inject,
 	onBeforeUnmount,
 	reactive,
 	ref,
 	watch,
 	type App,
-	type Ref,
 } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { throttle, debounce } from '@vexip-ui/utils';
 
 import {
+	useInjectCanDelete,
 	useInjectCurrentDashboardInject,
 	useInjectSetterDndHandler,
 	useMousePositionSync,
@@ -66,15 +65,11 @@ const emit = defineEmits<{
 
 let mountedPlaceholder: App<Element> | null = null;
 
-interface IFuncs {
-	isIn: Ref<boolean, boolean>;
-}
-
-const funcSetter =	inject('funcSetter') as IFuncs;
-
 const { currentDashboard } = useInjectCurrentDashboardInject();
 
 const { dnDProvider } = useInjectSetterDndHandler();
+
+const { canDelete } = useInjectCanDelete();
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
@@ -184,9 +179,9 @@ watch(() => dnDProvider.newDashboard.value, newValue => {
 });
 
 watch(
-	() => funcSetter.isIn.value,
-	isIn => {
-		if (isIn && dndWidgetId.value !== null) {
+	() => canDelete.value,
+	newValue => {
+		if (newValue && dndWidgetId.value !== null) {
 			deleteDashboards(dndWidgetId.value);
 		}
 	},

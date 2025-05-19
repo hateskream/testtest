@@ -3,14 +3,14 @@ import { ref, watch } from 'vue';
 
 import { useСanDelete } from './use-mouse-position';
 
-const emit = defineEmits<{ (e: 'is-in', value: boolean): void }>();
+const emit = defineEmits<{ (e: 'set-can-delete', value: boolean): void }>();
 const rootRef = ref<HTMLDivElement | null>(null);
 
 const { canDelete } = useСanDelete(rootRef);
 
 watch(canDelete,
 	(newValue) => {
-		emit('is-in', newValue);
+		emit('set-can-delete', newValue);
 	},
 );
 </script>

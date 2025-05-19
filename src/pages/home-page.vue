@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { provide, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -9,6 +9,7 @@ import {
 	DashboardGrid,
 	useProvideCurrentDashboard,
 	useDndHandler,
+	useDelete,
 	GhostComponentBase,
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
@@ -21,16 +22,14 @@ const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardSto
 const { tabs, activeGroup } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
-
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
+const { provideCanDelete, setCanDelete } = useDelete();
 
 provideComponent(CurrentDashboard);
 provideSetterDndHandler();
+provideCanDelete();
 
-const isIn = ref(false);
 const isCurtainFixed = ref(false);
-
-// const newDashboard = ref<IDashboardInstance | null>(null);
 
 watch(() => activeGroup.value.items, (newValue) => {
 	if (newValue.length === 0) {
@@ -38,19 +37,6 @@ watch(() => activeGroup.value.items, (newValue) => {
 	} else {
 		isCurtainFixed.value = false;
 	}
-});
-
-// function setDashboard(dashboard: IDashboardInstance) {
-// 	newDashboard.value = dashboard;
-// }
-
-function setIsIn(value: boolean) {
-	isIn.value = value;
-}
-
-provide('funcSetter', {
-	// newDashboard,
-	isIn,
 });
 </script>
 
@@ -67,7 +53,6 @@ provide('funcSetter', {
 		<template #content>
 			<dashboard-grid
 				:dashboards="activeGroup"
-				class="grid"
 				@add-widget="setNewStateInCurrentGroup"
 			>
 				<template #dashboard-content="{ dashboardItem, meta }">
@@ -85,7 +70,7 @@ provide('funcSetter', {
 				@drag="onDrag"
 				@drag-end="onDragEnd"
 				@new-dashboard="setNewDashboard"
-				@is-in="setIsIn"
+				@set-can-delete="setCanDelete"
 			>
 				<template #ghost="{title}">
 					<ghost-component-base :title="title" />

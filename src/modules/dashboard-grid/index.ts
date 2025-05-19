@@ -1,2 +1,2 @@
 export { DashboardGrid, DraggableElement, GhostComponentBase } from './ui';
-export { useProvideCurrentDashboard, useDndHandler } from './composables';
+export { useProvideCurrentDashboard, useDndHandler, useDelete } from './composables';
