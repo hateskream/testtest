@@ -6,6 +6,7 @@ export enum IconIds {
 	Home = 'home',
 	Chart = 'chart',
 	Calendar = 'calendar',
+	ControlPlus = 'control-plus',
 	ControlRightMenu = 'control-right-menu',
 	AddWidget = 'add-widget',
 	Plus = 'plus',
