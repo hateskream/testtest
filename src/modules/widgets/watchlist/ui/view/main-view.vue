@@ -5,7 +5,6 @@ import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { useWatchlistStore } from '../../stores';
 import type { ITableRow, ITableRowValue, ITableRowValueType, IWatchlistMarkets, IWatchlistSection } from '../../model';
 import { compareStrings } from '@/shared/lib/compare-strings';
-import type { IMarketDomain } from '@/modules/widgets/market/api';
 
 import tableColumnsComponent from '../markets-table/table-columns-component.vue';
 import tableRowsComponent from '../markets-table/table-rows-component.vue';
@@ -115,7 +114,6 @@ function sortRowsByType(args: {
 <template>
 	<div class="root">
 		<watchlist-filter-panel />
-		<!-- <table-rows-component :rows="tableRows" /> -->
 		<div class="watchlist-content">
 			<!-- Заголовки таблицы -->
 			<table-columns-component />
@@ -158,41 +156,6 @@ function sortRowsByType(args: {
 	overflow-y: auto;
 }
 
-.table-header {
-	display: flex;
-	align-items: center;
-	align-self: stretch;
-	padding: 0 40px 0 16px;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-
-	/* paragraph/p-01 */
-	font-size: var(--typography-paragraph-size-p-01, 12px);
-	line-height: 170%; /* 20.4px */
-	text-align: right;
-	color: var(--color-text-base-100, #646568);
-	letter-spacing: 0.096px;
-	text-overflow: ellipsis;
-	gap: 8px;
-}
-
-.header-cell {
-	display: flex;
-	align-items: center;
-}
-
-.symbol-cell {
-	flex: 1;
-	min-width: 80px;
-}
-
-.price-cell {
-	flex: 1;
-	justify-content: flex-end;
-	min-width: 80px;
-}
-
 .change-cell {
 	flex: 1;
 	justify-content: flex-end;
@@ -211,17 +174,6 @@ function sortRowsByType(args: {
 	}
 }
 
-.volume-cell {
-	flex: 1;
-	justify-content: flex-end;
-	min-width: 100px;
-}
-
-.chart-cell {
-	flex: 1;
-	justify-content: flex-end;
-	min-width: 100px;
-}
 
 .market-section {
 	margin-bottom: 8px;
@@ -258,41 +210,5 @@ function sortRowsByType(args: {
 
 .section-name {
 	font-weight: 500;
-}
-
-.data-row {
-	display: flex;
-	align-items: center;
-	padding: 8px 16px;
-	font-size: 14px;
-}
-
-.cell {
-	display: flex;
-	align-items: center;
-}
-
-.crypto-icon {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	margin-right: 8px;
-	font-weight: bold;
-	font-size: 10px;
-	background-color: #2a2a2a;
-	border-radius: 50%;
-}
-
-.symbol-text {
-	margin-right: 4px;
-}
-
-.mini-chart {
-	width: 80px;
-	height: 30px;
-	border-radius: 2px;
-	opacity: 0.8;
 }
 </style>
