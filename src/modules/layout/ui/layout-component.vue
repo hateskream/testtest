@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef, watch } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
+import { onClickOutside, useElementHover } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
@@ -47,7 +47,21 @@ const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
 
+const curtainIconRef = useTemplateRef<HTMLElement>('curtainIconRef');
+const addWidgetIconRef = useTemplateRef<HTMLElement>('addWidgetIconRef');
+
 onClickOutside(curtainRef, closeCurtain);
+
+const isCurtainIconHovered = useElementHover(curtainIconRef);
+const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
+
+const isControlOpenCurtainHovered = computed(() => isCurtainIconHovered.value || isAddWidgetIconHovered.value);
+
+watch(isControlOpenCurtainHovered, newValue => {
+	if (newValue) {
+		openCurtain();
+	}
+});
 
 watch(() => props.isCurtainFixed, newValue => {
 	layoutState.isCurtainFixed = newValue;
@@ -123,7 +137,7 @@ function closeCurtain() {
 			:class="classes.rightPanel"
 			varinat="right"
 		>
-			<div :class="classes.iconWrapper">
+			<div ref="curtainIconRef" :class="classes.iconWrapper">
 				<ui-icon
 					:id="IconIds.ControlRightMenu"
 					width="20px"
@@ -133,12 +147,11 @@ function closeCurtain() {
 			</div>
 
 			<div :class="classes.addWidget">
-				<div :class="classes.iconWrapper">
+				<div ref="addWidgetIconRef" :class="classes.iconWrapper">
 					<ui-icon
 						:id="IconIds.AddWidget"
 						width="20px"
 						height="20px"
-						@click="openCurtain"
 					/>
 				</div>
 				<div :class="classes.addWidgetText">Add widgets</div>
