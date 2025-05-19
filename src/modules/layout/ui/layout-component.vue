@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef } from 'vue';
+import { reactive, ref, useTemplateRef, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -13,6 +13,12 @@ interface INavigationItem {
 	id: IconIds;
 	routeName: string;
 }
+
+interface ILayoutComponentProps {
+	isCurtainFixed: boolean;
+}
+
+const props = defineProps<ILayoutComponentProps>();
 
 const navigation: INavigationItem[] = [
 	{
@@ -34,7 +40,7 @@ const navigation: INavigationItem[] = [
 
 const layoutState = reactive({
 	isOpenCurtain: false,
-	isCurtainFixed: false,
+	isCurtainFixed: props.isCurtainFixed,
 });
 
 const activeItem = ref(IconIds.Home);
@@ -43,7 +49,22 @@ const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
 
 onClickOutside(curtainRef, closeCurtain);
 
+watch(() => props.isCurtainFixed, newValue => {
+	layoutState.isCurtainFixed = newValue;
+});
+
+watch(
+	() => layoutState.isCurtainFixed,
+	() => {
+		closeCurtain();
+	},
+);
+
 function openCurtain() {
+	if (layoutState.isCurtainFixed) {
+		return;
+	}
+
 	layoutState.isOpenCurtain = true;
 }
 
@@ -90,6 +111,12 @@ function closeCurtain() {
 			</header-panel>
 			<div :class="classes.content">
 				<slot name="content" />
+				<div
+					v-if="layoutState.isCurtainFixed"
+					:class="classes.curtainFixed"
+				>
+					<slot name="curtain" />
+				</div>
 			</div>
 		</div>
 		<panel-component
@@ -120,32 +147,25 @@ function closeCurtain() {
 		<div
 			v-if="layoutState.isOpenCurtain"
 			ref="curtainRef"
-			:class="classes.curtain"
+			:class="classes.curtainOpen"
 		>
-			<div :class="classes.curtainContainer">
-				<slot name="curtain" />
-			</div>
+			<slot name="curtain" />
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.curtainContainer {
-	width: max-content;
-	height: 100%;
-	padding: 18px;
-	background-color: #000000;
-	border: 1px solid var(--border-modal-color-base);
-	border-radius: 18px;
-}
-
-.curtain {
+.curtainOpen {
 	position: fixed;
 	top: 0;
 	right: 0;
 	z-index: 1;
 	width: max-content;
 	height: 100%;
+}
+
+.curtainFixed {
+	/* d  */
 }
 
 .root {
@@ -171,7 +191,8 @@ function closeCurtain() {
 .content {
 	display: flex;
 	flex-grow: 1;
-	flex-direction: column;
+
+	/* flex-direction: column; */
 }
 
 .iconWrapper {

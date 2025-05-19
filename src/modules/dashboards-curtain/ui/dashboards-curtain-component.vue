@@ -12,6 +12,8 @@ interface IDashboardsCurtainComponentProps {
 
 const props = defineProps<IDashboardsCurtainComponentProps>();
 
+const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
+
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
@@ -22,6 +24,14 @@ const emit = defineEmits<{
 function onDrag(dashboard: IDashboardInstance) {
 	emit('drag');
 	emit('new-dashboard', dashboard);
+}
+
+function fixCurtain() {
+	isCurtainFixed.value = true;
+}
+
+function unfixCurtain() {
+	isCurtainFixed.value = false;
 }
 </script>
 
@@ -41,6 +51,12 @@ function onDrag(dashboard: IDashboardInstance) {
 			</template>
 		</draggable-element>
 		<delete-component @is-in="emit('is-in', $event)" />
+		<div @click="fixCurtain">
+			fix
+		</div>
+		<div @click="unfixCurtain">
+			unfix
+		</div>
 	</div>
 </template>
 

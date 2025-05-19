@@ -43,60 +43,49 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 </script>
 
 <template>
-	<div :class="classes.testWrapper">
+	<div
+		ref="gridRef"
+		:class="classes.root"
+	>
 		<div
-			ref="gridRef"
-			:class="classes.root"
+			v-show="isEditState"
+			:class="classes.grid"
 		>
-			<div
-				v-show="isEditState"
-				:class="classes.grid"
+			<editing-grid
+				:col-num="columnsNum"
+				:item-height="rowHeight"
+				:item-width="columnWidth"
+				:row-num="rowNumGrid"
+			/>
+		</div>
+		<div :class="classes.content">
+			<dashboard-grid
+				:column-width="columnWidth"
+				:dashboards="props.dashboards"
+				:is-dnd="isEditState"
+				:columns-num="columnsNum"
+				:row-height="rowHeight"
+				:rows-num="rowNumGrid"
+				:col-width="columnWidth"
+				:row-num="rowsNum"
+				@update-is-show-grid-state="updateIsShowGridState"
+				@set-wrapper="setWrapper"
+				@set-grid-layout-ref="setGridLayoutRef"
+				@add-widget="emit('add-widget', $event)"
 			>
-				<editing-grid
-					:col-num="columnsNum"
-					:item-height="rowHeight"
-					:item-width="columnWidth"
-					:row-num="rowNumGrid"
-				/>
-			</div>
-			<div :class="classes.content">
-				<dashboard-grid
-					:column-width="columnWidth"
-					:dashboards="props.dashboards"
-					:is-dnd="isEditState"
-					:columns-num="columnsNum"
-					:row-height="rowHeight"
-					:rows-num="rowNumGrid"
-					:col-width="columnWidth"
-					:row-num="rowsNum"
-					@update-is-show-grid-state="updateIsShowGridState"
-					@set-wrapper="setWrapper"
-					@set-grid-layout-ref="setGridLayoutRef"
-					@add-widget="emit('add-widget', $event)"
-				>
-					<template #dashboard-content="{ dashboardItem, meta }">
-						<slot
-							name="dashboard-content"
-							:dashboard-item="dashboardItem"
-							:meta="meta"
-						/>
-					</template>
-				</dashboard-grid>
-			</div>
+				<template #dashboard-content="{ dashboardItem, meta }">
+					<slot
+						name="dashboard-content"
+						:dashboard-item="dashboardItem"
+						:meta="meta"
+					/>
+				</template>
+			</dashboard-grid>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.testWrapper {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	min-height: 100%;
-}
-
 .droppable {
 	margin-bottom: 20px;
 }

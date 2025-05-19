@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { provide, ref } from 'vue';
+import { provide, ref, watch } from 'vue';
 
 import { useDashboardGroupsStore, type IDashboardInstance } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -27,8 +27,17 @@ const drag = ref<(() => void)>(() => {});
 const dragEnd = ref<(() => void)>(() => {});
 
 const isIn = ref(false);
+const isCurtainFixed = ref(false);
 
 const newDashboard = ref<IDashboardInstance | null>(null);
+
+watch(() => activeGroup.value.items, (newValue) => {
+	if (newValue.length === 0) {
+		isCurtainFixed.value = true;
+	} else {
+		isCurtainFixed.value = false;
+	}
+});
 
 function setDrag(func: () => void) {
 	drag.value = func;
@@ -55,7 +64,7 @@ provide('funcSetter', {
 </script>
 
 <template>
-	<layout-component>
+	<layout-component :is-curtain-fixed="isCurtainFixed">
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
@@ -80,6 +89,7 @@ provide('funcSetter', {
 		</template>
 		<template #curtain>
 			<dashboards-curtain
+				v-model:is-curtain-fixed="isCurtainFixed"
 				:dashboards="ALL_DASHBOARDS"
 				@drag="drag"
 				@drag-end="dragEnd"
