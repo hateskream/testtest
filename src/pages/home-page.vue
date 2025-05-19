@@ -2,12 +2,13 @@
 import { storeToRefs } from 'pinia';
 import { provide, ref, watch } from 'vue';
 
-import { useDashboardGroupsStore, type IDashboardInstance } from '@/modules/dashboard-group';
+import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
 	useProvideCurrentDashboard,
+	useDndHandler,
 	GhostComponentBase,
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
@@ -21,15 +22,15 @@ const { tabs, activeGroup } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
 
-provideComponent(CurrentDashboard);
+const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
 
-const drag = ref<(() => void)>(() => {});
-const dragEnd = ref<(() => void)>(() => {});
+provideComponent(CurrentDashboard);
+provideSetterDndHandler();
 
 const isIn = ref(false);
 const isCurtainFixed = ref(false);
 
-const newDashboard = ref<IDashboardInstance | null>(null);
+// const newDashboard = ref<IDashboardInstance | null>(null);
 
 watch(() => activeGroup.value.items, (newValue) => {
 	if (newValue.length === 0) {
@@ -39,26 +40,16 @@ watch(() => activeGroup.value.items, (newValue) => {
 	}
 });
 
-function setDrag(func: () => void) {
-	drag.value = func;
-}
-
-function setDragEnd(func: () => void) {
-	dragEnd.value = func;
-}
-
-function setDashboard(dashboard: IDashboardInstance) {
-	newDashboard.value = dashboard;
-}
+// function setDashboard(dashboard: IDashboardInstance) {
+// 	newDashboard.value = dashboard;
+// }
 
 function setIsIn(value: boolean) {
 	isIn.value = value;
 }
 
 provide('funcSetter', {
-	setDrag,
-	setDragEnd,
-	newDashboard,
+	// newDashboard,
 	isIn,
 });
 </script>
@@ -91,9 +82,9 @@ provide('funcSetter', {
 			<dashboards-curtain
 				v-model:is-curtain-fixed="isCurtainFixed"
 				:dashboards="ALL_DASHBOARDS"
-				@drag="drag"
-				@drag-end="dragEnd"
-				@new-dashboard="setDashboard"
+				@drag="onDrag"
+				@drag-end="onDragEnd"
+				@new-dashboard="setNewDashboard"
 				@is-in="setIsIn"
 			>
 				<template #ghost="{title}">
