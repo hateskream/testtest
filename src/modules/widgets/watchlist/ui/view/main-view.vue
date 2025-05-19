@@ -119,7 +119,7 @@ function sortRowsByType(args: {
 			<table-columns-component />
 
 			<!-- Секции рынков -->
-			<div class="market-sections">
+			<div>
 				<div
 					v-for="section in props.watchlist"
 					:key="section.id"
@@ -141,9 +141,18 @@ function sortRowsByType(args: {
 					</div>
 
 					<!-- Данные секции -->
-					<div v-show="sectionStates[section.id]" class="section-data">
-						<table-rows-component :rows="tableRows(section.watchlist)" />
-					</div>
+					<transition name="section-toggle">
+						<div v-show="sectionStates[section.id]" class="section-data">
+							<table-rows-component :rows="tableRows(section.watchlist)" />
+						</div>
+					</transition>
+				</div>
+
+				<div class="add-section-action">
+					<ui-icon
+						:id="IconIds.ControlPlus"
+						class="section-icon"
+					/>
 				</div>
 			</div>
 		</div>
@@ -151,8 +160,18 @@ function sortRowsByType(args: {
 </template>
 
 <style scoped>
+.root {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0 16px 18px;
+	overflow: hidden;
+}
+
 .watchlist-content {
+	position: relative;
 	flex: 1;
+	overflow-x: auto;
 	overflow-y: auto;
 }
 
@@ -174,27 +193,33 @@ function sortRowsByType(args: {
 	}
 }
 
-
 .market-section {
-	margin-bottom: 8px;
+	position: relative;
 }
 
 .section-header {
-	display: flex;
+	position: sticky;
+	left: 0;
+	display: inline-flex;
 	align-items: center;
-	padding: 8px 16px;
-	font-size: 14px;
-	color: #8a8a8a;
+	padding: 12px 8px;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01);
+	color: var(--text-color-base-100);
+	letter-spacing: 0.096px;
+	text-overflow: ellipsis;
 	cursor: pointer;
 }
 
 .section-toggle {
-	margin-right: 8px;
-	font-size: 10px;
+	margin-right: 6px;
 
 	.section-icon {
+		display: flex;
 		width: 12px;
 		height: 12px;
+		color: var(--text-color-base-100);
+		fill: var(--text-color-base-100);
 	}
 
 	.section-icon__close {
@@ -208,7 +233,17 @@ function sortRowsByType(args: {
 	}
 }
 
-.section-name {
-	font-weight: 500;
+.section-toggle-enter-active,
+.section-toggle-leave-active {
+	max-height: 700px;
+	opacity: 1;
+	transition: all 0.3s ease;
+}
+
+.section-toggle-enter-from,
+.section-toggle-leave-to {
+	max-height: 0;
+	transform: translateY(-10px);
+	opacity: 0;
 }
 </style>
