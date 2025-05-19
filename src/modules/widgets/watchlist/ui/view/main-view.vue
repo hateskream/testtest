@@ -141,7 +141,7 @@ function sortRowsByType(args: {
 					</div>
 
 					<!-- Данные секции -->
-					<div v-if="sectionStates[section.id]" class="section-data">
+					<div v-show="sectionStates[section.id]" class="section-data">
 						<table-rows-component :rows="tableRows(section.watchlist)" />
 					</div>
 				</div>
