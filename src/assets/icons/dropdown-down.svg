@@ -3,6 +3,6 @@
 <path d="M8.63938 4.97998L6.46604 7.15331C6.20937 7.40998 5.78938 7.40998 5.53271 7.15331L3.35938 4.97998" stroke="white" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </mask>
 <g mask="url(#mask0_13031_32259)">
-<path d="M0 12L12 12L12 0L0 0L0 12Z" fill="white"/>
+<path d="M0 12L12 12L12 0L0 0L0 12Z" fill="currentColor"/>
 </g>
 </svg>

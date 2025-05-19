@@ -1,9 +1,9 @@
 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_21000_69873" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="12">
-<path d="M6.08594 9.5999V2.3999" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M9.59844 6H2.39844" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.08594 9.5999V2.3999" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9.59844 6H2.39844" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </mask>
 <g mask="url(#mask0_21000_69873)">
-<path d="M0 12L12 12L12 0L0 0L0 12Z" fill="#646568"/>
+<path d="M0 12L12 12L12 0L0 0L0 12Z" fill="currentColor"/>
 </g>
 </svg>
