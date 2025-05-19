@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toValue } from 'vue';
+import { ref, toValue, watch } from 'vue';
 
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { useWatchlistStore } from '../../stores';
@@ -20,10 +20,23 @@ const props = defineProps<IViewComponentProps>();
 
 const watchlistStore = useWatchlistStore();
 
-const toggleSection = (_name: string) => {
-	// if (sectionsStatus.value !== null && sectionsStatus.value[name] !== undefined) {
-	// 	sectionsStatus.value[name].isOpen = !sectionsStatus.value[name].isOpen;
-	// }
+const sectionStates = ref<Record<string, boolean>>({});
+
+const initSectionStates = () => {
+	props.watchlist.forEach(section => {
+		sectionStates.value[section.id] = section.isOpen;
+	});
+};
+
+initSectionStates();
+
+// change state if got new props
+watch(() => props.watchlist, () => {
+	initSectionStates();
+}, { deep: true });
+
+const toggleSection = (sectionId: string) => {
+	sectionStates.value[sectionId] = !sectionStates.value[sectionId];
 };
 
 const tableRows = (markets: IWatchlistMarkets[]) => {
@@ -115,15 +128,22 @@ function sortRowsByType(args: {
 					class="market-section"
 				>
 					<!-- Заголовок секции -->
-					<div class="section-header" @click="toggleSection(section.name)">
+					<div class="section-header" @click="toggleSection(section.id)">
 						<span class="section-toggle">
-							<ui-icon v-if="section.isOpen" :id="IconIds.DropdownDown" />
+							<ui-icon
+								:id="IconIds.DropdownDown"
+								class="section-icon"
+								:class="{
+									'section-icon__open': sectionStates[section.id],
+									'section-icon__close': !sectionStates[section.id],
+								}"
+							/>
 						</span>
 						<span class="section-name">{{ section.name }}</span>
 					</div>
 
 					<!-- Данные секции -->
-					<div v-if="section.isOpen" class="section-data">
+					<div v-if="sectionStates[section.id]" class="section-data">
 						<table-rows-component :rows="tableRows(section.watchlist)" />
 					</div>
 				</div>
@@ -219,6 +239,21 @@ function sortRowsByType(args: {
 .section-toggle {
 	margin-right: 8px;
 	font-size: 10px;
+
+	.section-icon {
+		width: 12px;
+		height: 12px;
+	}
+
+	.section-icon__close {
+		transform: rotate(-90deg);
+		transition: transform 0.3s ease;
+	}
+
+	.section-icon__open {
+		transform: rotate(0deg);
+		transition: transform 0.3s ease;
+	}
 }
 
 .section-name {
