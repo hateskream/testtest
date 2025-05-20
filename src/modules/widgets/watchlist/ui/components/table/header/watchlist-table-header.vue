@@ -107,7 +107,6 @@ function getSortDirection(columnName: string) {
 	position: sticky;
 	top: 0;
 	left: 0;
-	z-index: 21;
 	background-color: var(--bg-color-surface-01);
 }
 
