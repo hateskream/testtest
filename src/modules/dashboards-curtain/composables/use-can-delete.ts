@@ -5,7 +5,7 @@ export function useСanDelete(rootRef: Ref<HTMLDivElement | null>) {
 	const mouseAt = ref({ x: -1, y: -1 });
 	const isMouseUp = ref(false);
 
-	const isIn = computed(() => {
+	const isMouseInDeleteControlElement = computed(() => {
 		if (!rootRef.value) {
 			return false;
 		}
@@ -20,7 +20,7 @@ export function useСanDelete(rootRef: Ref<HTMLDivElement | null>) {
 		);
 	});
 
-	const canDelete = computed(() => isIn.value && isMouseUp.value);
+	const canDelete = computed(() => isMouseInDeleteControlElement.value && isMouseUp.value);
 
 	const trottledSyncMousePosition = throttle(syncMousePosition, 300);
 
@@ -57,5 +57,8 @@ export function useСanDelete(rootRef: Ref<HTMLDivElement | null>) {
 		isMouseUp.value = false;
 	}
 
-	return { canDelete: readonly(canDelete) };
+	return {
+		canDelete: readonly(canDelete),
+		isMouseInDeleteControlElement,
+	};
 }

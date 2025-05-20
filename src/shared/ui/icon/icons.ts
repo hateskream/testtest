@@ -44,4 +44,6 @@ export enum IconIds {
 	LogoWidgetNews = 'logo-widget-news',
 	LogoWidgetPrice = 'logo-widget-price',
 	LogoWidgetMarketCap = 'logo-widget-market-cap',
+	TrashClose = 'trash-close',
+	TrashOpen = 'trash-open',
 }

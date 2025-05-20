@@ -1,3 +1,3 @@
-import { DashboardsCurtainComponent } from './ui';
+import { DashboardsCurtainComponent, DeleteComponent } from './ui';
 
-export { DashboardsCurtainComponent as DashboardsCurtain };
+export { DashboardsCurtainComponent as DashboardsCurtain, DeleteComponent };

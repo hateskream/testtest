@@ -22,6 +22,14 @@ interface ILayoutState {
 	rightPanelWidth: number;
 }
 
+interface ILayoutComponentProps {
+	isEditMode?: boolean;
+}
+
+const props = withDefaults(defineProps<ILayoutComponentProps>(), {
+	isEditMode: false,
+});
+
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
 const navigation: INavigationItem[] = [
@@ -208,8 +216,7 @@ function unFixCurtain() {
 						height="20px"
 					/>
 				</div>
-
-				<div :class="classes.addWidget">
+				<div v-show="!props.isEditMode" :class="classes.addWidget">
 					<div
 						ref="addWidgetIconRef"
 						:class="classes.iconWrapper"
@@ -223,8 +230,10 @@ function unFixCurtain() {
 					</div>
 					<div :class="classes.addWidgetText">Add widgets</div>
 				</div>
+				<div v-show="props.isEditMode">
+					<slot name="delete" />
+				</div>
 			</div>
-
 		</panel-component>
 		<div
 			v-if="layoutState.isOpenCurtain"
@@ -233,6 +242,7 @@ function unFixCurtain() {
 		>
 			<slot name="curtain" />
 		</div>
+
 	</div>
 </template>
 
@@ -308,6 +318,7 @@ function unFixCurtain() {
 	display: flex;
 	flex-direction: column;
 	max-width: 48px;
+	color: var(--text-color-base-300);
 	cursor: pointer;
 }
 
@@ -316,7 +327,6 @@ function unFixCurtain() {
 	font-size: 12px;
 	line-height: 170%;
 	text-align: center;
-	color: var(--text-color-base-300);
 	letter-spacing: 0.8;
 }
 </style>
