@@ -13,13 +13,13 @@ const props = defineProps<IWatchlistTableProps>();
 </script>
 
 <template>
-	<div :class="$style.root">
+	<div :class="classes.root">
 		<watchlist-category-filter />
 		<watchlist-table :watchlist-sections="props.watchlistData" />
 	</div>
 </template>
 
-<style module>
+<style module="classes">
 .root {
 	display: flex;
 	flex-direction: column;
