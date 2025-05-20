@@ -1,28 +1,32 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref, toValue, watch } from 'vue';
 
-import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { useWatchlistStore } from '../../stores';
-import type { ITableRow, ITableRowValue, ITableRowValueType, IWatchlistMarkets, IWatchlistSection } from '../../model';
+import type {
+	ITableRow,
+	ITableRowValue,
+	ITableRowValueType,
+	IWatchlistMarkets,
+	IWatchlistSection,
+} from '../../../model';
+import { useWatchlistStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
+import { UiIcon, IconIds } from '@/shared/ui/icon';
 
-import tableColumnsComponent from '../markets-table/table-columns-component.vue';
-import tableRowsComponent from '../markets-table/table-rows-component.vue';
-import WatchlistFilterPanel from '../filters/watchlist-filters-panel.vue';
+import tableRowsComponent from './table-rows-component.vue';
 
 
-interface IViewComponentProps {
-	watchlist: IWatchlistSection[];
+interface IWatchlistTableProps {
+	watchlistSections: IWatchlistSection[];
 }
 
-const props = defineProps<IViewComponentProps>();
+const props = defineProps<IWatchlistTableProps>();
 
 const watchlistStore = useWatchlistStore();
 
 const sectionStates = ref<Record<string, boolean>>({});
 
 const initSectionStates = () => {
-	props.watchlist.forEach(section => {
+	props.watchlistSections.forEach(section => {
 		sectionStates.value[section.id] = section.isOpen;
 	});
 };
@@ -30,16 +34,18 @@ const initSectionStates = () => {
 initSectionStates();
 
 // change state if got new props
-watch(() => props.watchlist, () => {
+watch(() => props.watchlistSections, () => {
 	initSectionStates();
 }, { deep: true });
 
 const toggleSection = (sectionId: string) => {
 	sectionStates.value[sectionId] = !sectionStates.value[sectionId];
+	// TODO: Save state to local storage or elsewere
 };
 
 const handleAddSection = () => {
 	// TODO: Dropdown menu with available markets to add to the watchlist
+	// TODO: sync with backend
 	return null;
 };
 
@@ -117,93 +123,56 @@ function sortRowsByType(args: {
 </script>
 
 <template>
-	<div class="root">
-		<watchlist-filter-panel />
-		<div class="watchlist-content">
-			<!-- Заголовки таблицы -->
-			<table-columns-component />
-
-			<!-- Секции рынков -->
-			<div>
-				<div
-					v-for="section in props.watchlist"
-					:key="section.id"
-					class="market-section"
-				>
-					<!-- Заголовок секции -->
-					<div class="section-header" @click="toggleSection(section.id)">
-						<span class="section-toggle">
-							<ui-icon
-								:id="IconIds.DropdownDown"
-								class="section-icon"
-								:class="{
-									'section-icon__open': sectionStates[section.id],
-									'section-icon__close': !sectionStates[section.id],
-								}"
-							/>
-						</span>
-						<span class="section-name">{{ section.name }}</span>
-					</div>
-
-					<!-- Данные секции -->
-					<transition name="section-toggle">
-						<div v-show="sectionStates[section.id]" class="section-data">
-							<table-rows-component :rows="tableRows(section.watchlist)" />
-						</div>
-					</transition>
-				</div>
-
-				<div class="add-section-action" @click="handleAddSection">
+	<!-- Секции рынков -->
+	<div>
+		<div
+			v-for="section in props.watchlistSections"
+			:key="section.id"
+			:class="classes.marketSection"
+		>
+			<!-- Заголовок секции -->
+			<div :class="classes.sectionHeader" @click="toggleSection(section.id)">
+				<span :class="classes.sectionToggle">
 					<ui-icon
-						:id="IconIds.ControlPlus"
-						class="section-icon"
+						:id="IconIds.DropdownDown"
+						:class="[
+							classes.sectionIcon,
+							sectionStates[section.id] ? classes.sectionIcon__open : classes.sectionIcon__close
+						]"
 					/>
-					<span class="section-name">Add section</span>
-				</div>
+				</span>
+				<span :class="classes.sectionName">{{ section.name }}</span>
 			</div>
+
+			<!-- Данные секции -->
+			<transition
+				:enter-active-class="classes.sectionToggleEnterActive"
+				:leave-active-class="classes.sectionToggleLeaveActive"
+				:enter-from-class="classes.sectionToggleEnterFrom"
+				:leave-to-class="classes.sectionToggleLeaveTo"
+			>
+				<div v-show="sectionStates[section.id]" :class="classes.sectionData">
+					<table-rows-component :rows="tableRows(section.watchlist)" />
+				</div>
+			</transition>
+		</div>
+
+		<div :class="classes.addSectionAction" @click="handleAddSection">
+			<ui-icon
+				:id="IconIds.ControlPlus"
+				:class="classes.actionIcon"
+			/>
+			<span :class="classes.sectionName">Add section</span>
 		</div>
 	</div>
 </template>
 
-<style scoped>
-.root {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	padding: 0 16px 18px;
-	overflow: hidden;
-}
-
-.watchlist-content {
-	position: relative;
-	flex: 1;
-	overflow-x: auto;
-	overflow-y: auto;
-}
-
-.change-cell {
-	flex: 1;
-	justify-content: flex-end;
-	min-width: 80px;
-
-	&.commonly {
-		color: var(--text-color-base-300);
-	}
-
-	&.positive {
-		color: var(--metrics-color-positive);
-	}
-
-	&.negative {
-		color: var(--metrics-color-negative-500);
-	}
-}
-
-.market-section {
+<style module="classes">
+.marketSection {
 	position: relative;
 }
 
-.section-header {
+.sectionHeader {
 	position: sticky;
 	left: 0;
 	display: inline-flex;
@@ -218,16 +187,16 @@ function sortRowsByType(args: {
 	&:hover {
 		color: rgb(131 132 135 / 90%);
 
-		.section-icon {
+		.sectionIcon {
 			color: rgb(131 132 135 / 90%);
 		}
 	}
 }
 
-.section-toggle {
+.sectionToggle {
 	margin-right: 6px;
 
-	.section-icon {
+	.sectionIcon {
 		display: flex;
 		width: 12px;
 		height: 12px;
@@ -235,18 +204,18 @@ function sortRowsByType(args: {
 		fill: var(--text-color-base-100);
 	}
 
-	.section-icon__close {
+	.sectionIcon__close {
 		transform: rotate(-90deg);
 		transition: transform 0.3s ease;
 	}
 
-	.section-icon__open {
+	.sectionIcon__open {
 		transform: rotate(0deg);
 		transition: transform 0.3s ease;
 	}
 }
 
-.add-section-action {
+.addSectionAction {
 	display: inline-flex;
 	align-items: center;
 	padding: 12px 8px;
@@ -256,7 +225,7 @@ function sortRowsByType(args: {
 	letter-spacing: 0.096px;
 	cursor: pointer;
 
-	.section-icon {
+	.actionIcon {
 		display: flex;
 		width: 12px;
 		height: 12px;
@@ -267,22 +236,22 @@ function sortRowsByType(args: {
 	&:hover {
 		color: rgb(131 132 135 / 90%);
 
-		.section-icon {
+		.actionIcon {
 			color: rgb(131 132 135 / 90%);
 		}
 	}
 }
 
 /* section toggle animation */
-.section-toggle-enter-active,
-.section-toggle-leave-active {
+.sectionToggleEnterActive,
+.sectionToggleLeaveActive {
 	max-height: 700px;
 	opacity: 1;
 	transition: all 0.3s ease;
 }
 
-.section-toggle-enter-from,
-.section-toggle-leave-to {
+.sectionToggleEnterFrom,
+.sectionToggleLeaveTo {
 	max-height: 0;
 	transform: translateY(-10px);
 	opacity: 0;

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { ITableRow } from '../../model';
+import type { ITableRow } from '../../../model';
 import { UiImage } from '@/shared/ui/image';
 
-import TableRowNumberComponent from './table-row-number-component.vue';
-import TableRowPercentComponent from './table-row-percent-component.vue';
-import TableRowDateComponent from './table-row-date-component.vue';
+import TableRowNumberComponent from './cells/table-row-number-component.vue';
+import TableRowPercentComponent from './cells/table-row-percent-component.vue';
+import TableRowDateComponent from './cells/table-row-date-component.vue';
 
 interface IProps {
 	rows: ITableRow[][];

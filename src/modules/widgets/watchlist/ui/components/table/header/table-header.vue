@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import draggableComponent from 'vuedraggable';
 
-import { useWatchlistStore } from '../../stores';
+import { useWatchlistStore } from '../../../../stores';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
-import TableMetricsComponent from './table-metrics-component.vue';
+import TableMetricsComponent from '../cells/table-metrics-component.vue';
 
 const marketStore = useWatchlistStore();
 

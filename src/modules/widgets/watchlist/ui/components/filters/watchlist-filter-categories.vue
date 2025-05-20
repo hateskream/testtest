@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ModalBadgeList, ModalItemSelector } from '../../../base';
-import { useWatchlistStore } from '../../stores';
+import { ModalBadgeList, ModalItemSelector } from '../../../../base';
+import { useWatchlistStore } from '../../../stores';
 
 const watchlistStore = useWatchlistStore();
 </script>
