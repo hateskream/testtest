@@ -2,7 +2,7 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 
-import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
+import TableColumnsSettingsComponent from '../header/table-columns-settings-component.vue';
 </script>
 
 <template>

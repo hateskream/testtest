@@ -5,9 +5,9 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import { useMarketStore } from '../../market/stores/index.ts';
 import { useQueryWatchlist } from '../queries/watchlist.query.ts';
 
-import MainView from './view/main-view.vue';
-import ErrorView from './view/error-view.vue';
-import LoaderView from './view/loader-view.vue';
+import MainView from './views/main-view.vue';
+import ErrorView from './views/error-view.vue';
+import LoaderView from './views/loader-view.vue';
 
 const props = defineProps<{
 	meta: IMeta;
@@ -23,7 +23,7 @@ const { data, isLoading, isError } = useQueryWatchlist({
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div class="title-container">
+			<div :class="classes.titleContainer">
 				<span>{{ props.meta.name }}</span>
 			</div>
 		</template>
@@ -32,13 +32,13 @@ const { data, isLoading, isError } = useQueryWatchlist({
 			<loader-view v-if="isLoading" />
 			<error-view v-else-if="isError" />
 
-			<main-view v-else :watchlist="data || []" />
+			<main-view v-else :watchlist-data="data || []" />
 		</template>
 	</base-dashboard-component>
 </template>
 
-<style module>
-.title-container {
+<style module="classes">
+.titleContainer {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useWatchlistStore } from '../../stores';
+import { useWatchlistStore } from '../../../stores';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadgeList, ModalBadge } from '../../../base';
+import { ModalBadgeList, ModalBadge } from '../../../../base';
 
 import WatchlistFilterCategories from './watchlist-filter-categories.vue';
 
