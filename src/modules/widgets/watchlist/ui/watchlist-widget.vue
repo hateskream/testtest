@@ -5,9 +5,9 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import { useMarketStore } from '../../market/stores/index.ts';
 import { useQueryWatchlist } from '../queries/watchlist.query.ts';
 
-import MainView from './views/main-view.vue';
-import ErrorView from './views/error-view.vue';
-import LoaderView from './views/loader-view.vue';
+import WatchlistMain from './views/watchlist-main.vue';
+import WatchlistError from './views/watchlist-error.vue';
+import WatchlistLoader from './views/watchlist-loader.vue';
 
 const props = defineProps<{
 	meta: IMeta;
@@ -29,10 +29,10 @@ const { data, isLoading, isError } = useQueryWatchlist({
 		</template>
 
 		<template #content>
-			<loader-view v-if="isLoading" />
-			<error-view v-else-if="isError" />
+			<watchlist-loader v-if="isLoading" />
+			<watchlist-error v-else-if="isError" />
 
-			<main-view v-else :watchlist-data="data || []" />
+			<watchlist-main v-else :watchlist-data="data || []" />
 		</template>
 	</base-dashboard-component>
 </template>

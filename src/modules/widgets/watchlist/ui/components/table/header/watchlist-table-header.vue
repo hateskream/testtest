@@ -3,8 +3,8 @@ import draggableComponent from 'vuedraggable';
 
 import { useWatchlistStore } from '../../../../stores';
 
-import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
-import TableMetricsComponent from '../cells/table-metrics-component.vue';
+import WatchlistSortableColumn from './watchlist-sortable-column.vue';
+import WatchlistMetricsSelector from './watchlist-metrics-selector.vue';
 
 const marketStore = useWatchlistStore();
 
@@ -29,7 +29,7 @@ function getSortDirection(columnName: string) {
 	>
 		<template #item="{ element: column }">
 			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
-				<table-column-with-sort-component
+				<watchlist-sortable-column
 					:column="column"
 					:sort-direction="getSortDirection(column.columnName)"
 					@click="marketStore.toggleActiveSort(column)"
@@ -39,7 +39,7 @@ function getSortDirection(columnName: string) {
 
 		<template #footer>
 			<th :class="classes.iconTertiary">
-				<table-metrics-component />
+				<watchlist-metrics-selector />
 			</th>
 		</template>
 	</draggable-component>
