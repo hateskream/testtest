@@ -4,7 +4,7 @@ import { useWatchlistStore } from '../../../stores';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalBadge } from '../../../../base';
 
-import WatchlistFilterCategories from './watchlist-filter-categories.vue';
+import WatchlistCategoryFilter from './watchlist-category-filter.vue';
 
 const watchlistStore = useWatchlistStore();
 </script>
@@ -33,7 +33,7 @@ const watchlistStore = useWatchlistStore();
 							Избранное
 						</modal-badge>
 
-						<watchlist-filter-categories />
+						<watchlist-category-filter />
 					</modal-badge-list>
 				</template>
 			</ui-position>
