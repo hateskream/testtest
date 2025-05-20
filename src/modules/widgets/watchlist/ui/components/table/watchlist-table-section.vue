@@ -12,7 +12,7 @@ import { useWatchlistStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
-import tableRowsComponent from './table-rows-component.vue';
+import WatchlistTableRows from './watchlist-table-rows.vue';
 
 
 interface IWatchlistTableProps {
@@ -152,7 +152,7 @@ function sortRowsByType(args: {
 				:leave-to-class="classes.sectionToggleLeaveTo"
 			>
 				<div v-show="sectionStates[section.id]" :class="classes.sectionData">
-					<table-rows-component :rows="tableRows(section.watchlist)" />
+					<watchlist-table-rows :rows="tableRows(section.watchlist)" />
 				</div>
 			</transition>
 		</div>
