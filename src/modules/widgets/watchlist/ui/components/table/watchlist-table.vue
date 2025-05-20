@@ -30,6 +30,6 @@ const props = defineProps<IWatchlistTableProps>();
 }
 
 .tableHeader {
-	z-index: 101;
+	z-index: 21;
 }
 </style>
