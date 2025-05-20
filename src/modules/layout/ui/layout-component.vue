@@ -15,6 +15,13 @@ interface INavigationItem {
 	routeName: string;
 }
 
+interface ILayoutState {
+	isOpenCurtain: boolean;
+	isCurtainFixed: boolean;
+	leftPanelWidth: number;
+	rightPanelWidth: number;
+}
+
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
 const navigation: INavigationItem[] = [
@@ -35,7 +42,9 @@ const navigation: INavigationItem[] = [
 	},
 ];
 
-const layoutState = reactive({
+const disconectObserverFunc: (() => void)[] = [];
+
+const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
 	isCurtainFixed: isCurtainFixed.value,
 	leftPanelWidth: 72,
@@ -81,29 +90,22 @@ watch(
 	},
 );
 
-let leftObserver: ResizeObserver | null = null;
-let rightObserver: ResizeObserver | null = null;
 
 onMounted(() => {
 	const leftElement = leftPanelRef.value?.$el as HTMLElement | null;
 	const rightElement = rightPanelRef.value?.$el as HTMLElement | null;
 
-	if (leftElement) {
-		leftObserver = createResizeObserver(leftElement, (width: number) => {
-			layoutState.leftPanelWidth = width;
-		});
-	}
+	startObserve(leftElement, width => {
+		layoutState.leftPanelWidth = width;
+	});
 
-	if (rightElement) {
-		rightObserver = createResizeObserver(rightElement, (width: number) => {
-			layoutState.rightPanelWidth = width;
-		});
-	}
+	startObserve(rightElement, width => {
+		layoutState.rightPanelWidth = width;
+	});
 });
 
 onBeforeUnmount(() => {
-	leftObserver?.disconnect();
-	rightObserver?.disconnect();
+	disconectObserverFunc.forEach(disconect => disconect());
 });
 
 function createResizeObserver(element: HTMLElement, setterCallback: (width: number) => void) {
@@ -112,7 +114,16 @@ function createResizeObserver(element: HTMLElement, setterCallback: (width: numb
 	});
 
 	observer.observe(element);
-	return observer;
+	return observer.disconnect;
+}
+
+function startObserve(element: HTMLElement | null, setterCallback: (width: number) => void) {
+	if (!element) {
+		return;
+	}
+
+	const disconect = createResizeObserver(element, setterCallback);
+	disconectObserverFunc.push(disconect);
 }
 
 function openCurtain() {
@@ -296,6 +307,7 @@ function unFixCurtain() {
 .addWidget {
 	display: flex;
 	flex-direction: column;
+	max-width: 48px;
 	cursor: pointer;
 }
 
