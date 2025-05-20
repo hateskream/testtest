@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import type { GridLayout } from 'grid-layout-plus';
 
 import { responsiveGridLayout } from '../composables';
@@ -16,6 +16,7 @@ const props = defineProps<IProps>();
 
 const emit = defineEmits<{
 	(e: 'add-widget', newItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[]): void;
+	(e: 'is-edit', value: boolean): void;
 }>();
 
 const gridRef = ref<HTMLDivElement | null>(null);
@@ -28,6 +29,10 @@ const isEditState = ref(true);
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
+
+watch(isEditState, value => {
+	emit('is-edit', value);
+});
 
 function setWrapper(wrapper: HTMLDivElement) {
 	wrapperRef.value = wrapper;

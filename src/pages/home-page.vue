@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { reactive, watch } from 'vue';
 
 import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -13,7 +13,7 @@ import {
 	GhostComponentBase,
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
-import { DashboardsCurtain } from '@/modules/dashboards-curtain';
+import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 import { ALL_DASHBOARDS } from '@/modules/dashboard-group/model';
 
 
@@ -29,19 +29,26 @@ provideComponent(CurrentDashboard);
 provideSetterDndHandler();
 provideCanDelete();
 
-const isCurtainFixed = ref(false);
+const pageState = reactive({
+	isCurtainFixed: false,
+	isEdit: false,
+});
 
 watch(() => activeGroup.value.items, (newValue) => {
 	if (newValue.length === 0) {
-		isCurtainFixed.value = true;
+		pageState.isCurtainFixed = true;
 	} else {
-		isCurtainFixed.value = false;
+		pageState.isCurtainFixed = false;
 	}
 });
+
+function updateIsEdit(value: boolean) {
+	pageState.isEdit = value;
+}
 </script>
 
 <template>
-	<layout-component v-model:is-curtain-fixed="isCurtainFixed">
+	<layout-component v-model:is-curtain-fixed="pageState.isCurtainFixed" :is-edit-mode="pageState.isEdit">
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
@@ -54,6 +61,7 @@ watch(() => activeGroup.value.items, (newValue) => {
 			<dashboard-grid
 				:dashboards="activeGroup"
 				@add-widget="setNewStateInCurrentGroup"
+				@is-edit="updateIsEdit"
 			>
 				<template #dashboard-content="{ dashboardItem, meta }">
 					<current-dashboard
@@ -65,17 +73,19 @@ watch(() => activeGroup.value.items, (newValue) => {
 		</template>
 		<template #curtain>
 			<dashboards-curtain
-				v-model:is-curtain-fixed="isCurtainFixed"
+				v-model:is-curtain-fixed="pageState.isCurtainFixed"
 				:dashboards="ALL_DASHBOARDS"
 				@drag="onDrag"
 				@drag-end="onDragEnd"
 				@new-dashboard="setNewDashboard"
-				@set-can-delete="setCanDelete"
 			>
 				<template #ghost="{title}">
 					<ghost-component-base :title="title" />
 				</template>
 			</dashboards-curtain>
+		</template>
+		<template #delete>
+			<delete-component @set-can-delete="setCanDelete" />
 		</template>
 	</layout-component>
 </template>
