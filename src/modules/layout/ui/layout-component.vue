@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
-import { onClickOutside, useElementHover } from '@vueuse/core';
+import { useElementHover } from '@vueuse/core';
 import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
-import { usePanelWidth } from '../composables';
+import { usePanelWidth, useMousePosition } from '../composables';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -57,14 +57,15 @@ const layoutState = reactive<ILayoutState>({
 const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
+const curtainGuardRef = useTemplateRef<HTMLElement>('curtainGuardRef');
 const curtainIconRef = useTemplateRef<HTMLElement>('curtainIconRef');
 const addWidgetIconRef = useTemplateRef<HTMLElement>('addWidgetIconRef');
 const rightPanelRef = useTemplateRef('rightPanelRef');
 const leftPanelRef = useTemplateRef('leftPanelRef');
 
-onClickOutside(curtainRef, closeCurtain);
-
 const { pannelWidth } = usePanelWidth(leftPanelRef, rightPanelRef);
+
+const { isMouseInElement } = useMousePosition(curtainGuardRef);
 
 const isCurtainIconHovered = useElementHover(curtainIconRef);
 const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
@@ -94,6 +95,12 @@ watch(
 		closeCurtain();
 	},
 );
+
+watch(isMouseInElement, newValue => {
+	if (!newValue) {
+		closeCurtain();
+	}
+});
 
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
@@ -202,6 +209,7 @@ function unFixCurtain() {
 			:class="classes.curtainOpen"
 		>
 			<slot name="curtain" />
+			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>
 
 	</div>
@@ -218,8 +226,13 @@ function unFixCurtain() {
 	padding: 12px;
 }
 
-.curtainFixed {
-	/* d  */
+.curtainGuard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: -1;
+	width: calc(100% + 15px);
+	height: 100%;
 }
 
 .root {
