@@ -18,7 +18,7 @@ const setReports = ()=>{
 </script>
 
 <template>
-	<layout-component>
+	<layout-component :is-curtain-fixed="false">
 		<template #content>
 			<chart-layout ref="chartLayoutEl" @change-view="viewMode=$event">
 				<template #header>
