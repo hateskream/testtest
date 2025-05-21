@@ -4,60 +4,59 @@ import { computed, type Ref, ref } from 'vue';
 type ViewMode = 'mixed' | 'reports';
 import { useCustomScroll } from '@/shared/composables/scroll.ts';
 
-const viewMode = ref<ViewMode>('mixed');
 
 const contentShift = ref(0);
 const topContentEl = ref<HTMLElement>();
 const container = ref<HTMLElement>();
+
+
+const emit = defineEmits<{
+	(event: 'change-view', value: ViewMode): void;
+}>();
+
 const maxShift = computed(()=>{
 	return topContentEl.value?.offsetHeight;
 });
-const { maxScroll } = useCustomScroll(container as Ref<HTMLElement | null>, (offset)=>{
-	const scale = offset/maxScroll.value;
+useCustomScroll(container as Ref<HTMLElement | null>, (delta)=>{
 	if (!maxShift.value) {
 		return;
 	}
-	contentShift.value = -scale * maxShift.value;
+	const autoScrollThreshold = maxShift.value/5;
+	if (delta > 0&&(contentShift.value+delta)>autoScrollThreshold) {
+		contentShift.value = maxShift.value;
+		emit('change-view', 'reports');
+		return;
+	}
+	if (delta < 0&&(contentShift.value+delta)<(maxShift.value-autoScrollThreshold)) {
+		contentShift.value = 0;
+		emit('change-view', 'mixed');
+		return;
+	}
+	contentShift.value = Math.max(0, Math.min(maxShift.value, contentShift.value+delta));
 });
 
 const opacityTop = computed(()=>{
 	if (!maxShift.value||!contentShift.value) {
 		return 1;
 	}
-	return 1+contentShift.value/maxShift.value;
+	return 1-contentShift.value/maxShift.value;
 });
 
-const emit = defineEmits<{
-	(event: 'change-view', value: ViewMode): void;
-}>();
 
 const setMixedViewMode = () => {
-	viewMode.value = 'mixed';
 	contentShift.value = 0;
-	emit('change-view', viewMode.value);
+	emit('change-view', 'mixed');
 };
 const setReportsViewMode = async () => {
-	viewMode.value = 'reports';
 	if (!container.value) {
 		return;
 	}
 	if (topContentEl.value) {
-		contentShift.value = -topContentEl.value.offsetHeight;
+		contentShift.value = topContentEl.value.offsetHeight;
 	}
-	emit('change-view', viewMode.value);
+	emit('change-view', 'reports');
 };
 defineExpose({ setMixedViewMode, setReportsViewMode });
-// watch(scrollY, (val) => {
-// 	lastScroll.value = val;
-// 	const center = window.innerHeight / 2
-// 	const currentTop = top.value
-// 	const threshold = window.innerHeight / 20;
-// 	if (currentTop < center + threshold && viewMode.value === 'mixed') {
-// 		setReportsViewMode();
-// 	} else if (val === 0 && viewMode.value === 'reports') {
-// 		setMixedViewMode()
-// 	}
-// })
 
 </script>
 
@@ -74,7 +73,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 		<div
 			ref="botContentEl"
 			:class="classes.botContent"
-			:style="{transform: `translateY(${contentShift}px)`}"
+			:style="{transform: `translateY(-${contentShift}px)`}"
 		>
 			<slot name="botContent">
 			</slot>
@@ -94,14 +93,9 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 	transition: opacity 0.5s ease-in-out;
 }
 
-.hidden {
-	width: 100%;
-	opacity: 0;
-}
-
 .botContent {
 	padding-top: 35px;
-	transition: 0.5s ease-in-out;
+	transition: 0.4s ease-in-out;
 }
 
 </style>
