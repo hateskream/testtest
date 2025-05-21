@@ -4,7 +4,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import DraggableElement from './draggable-element.vue';
 import DashboardComponent from './dashboard-component.vue';
-// import DeleteComponent from './delete-component.vue';
+import SearchComponent from './search-component.vue';
 
 
 interface IDashboardsCurtainComponentProps {
@@ -30,16 +30,17 @@ function onDrag(dashboard: IDashboardInstance) {
 function fixCurtain() {
 	isCurtainFixed.value = true;
 }
-
-// function unfixCurtain() {
-// 	isCurtainFixed.value = false;
-// }
 </script>
 
 <template>
 	<div :class="[classes.root, { [classes.notFixed]: !isCurtainFixed }]">
 		<div :class="classes.container">
 			<div :class="classes.content">
+				<div :class="classes.header">
+					Add widgets
+				</div>
+				<search-component :class="classes.search" />
+
 				<draggable-element
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
@@ -81,20 +82,13 @@ function fixCurtain() {
 			</div>
 		</div>
 	</div>
-
-	<!-- <delete-component @set-can-delete="emit('set-can-delete', $event)" />
-		<div @click="fixCurtain">
-			fix
-		</div>
-		<div @click="unfixCurtain">
-			unfix
-		</div> -->
 </template>
 
 <style module="classes">
 .root {
 	width: 358px;
 	height: 100%;
+	border: 1px solid #ff0000;
 }
 
 .notFixed {
@@ -112,8 +106,22 @@ function fixCurtain() {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	gap: 10px;
 	padding: 18px 12px 0 8px;
+}
+
+.header {
+	padding-bottom: 12px;
+	padding-left: 12px;
+	font-style: normal;
+	font-weight: 340;
+	font-size: 15px;
+	line-height: 100%;
+	color: var(--text-color-base-500);
+	letter-spacing: 0.075px;
+}
+
+.search {
+	margin: 0 12px 16px;
 }
 
 .panel {
