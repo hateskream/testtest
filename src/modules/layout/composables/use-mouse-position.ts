@@ -1,8 +1,23 @@
-import { onMounted, onBeforeUnmount, readonly, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, computed, type ShallowRef } from 'vue';
 import { throttle } from '@vexip-ui/utils';
 
-export function useMousePositionSync() {
-	const mouseAt = ref({ x: -1, y: -1 });
+export function useMousePosition(elementRef: Readonly<ShallowRef<HTMLElement | null>>) {
+	const mouseAt = ref({ x: 0, y: 0 });
+
+	const isMouseInElement = computed(() => {
+		if (!elementRef.value) {
+			return false;
+		}
+
+		const { left, top, right, bottom	} = elementRef.value.getBoundingClientRect();
+
+		return (
+			mouseAt.value.x > left &&
+				mouseAt.value.x < right &&
+				mouseAt.value.y > top &&
+				mouseAt.value.y < bottom
+		);
+	});
 
 	const trottledSyncMousePosition = throttle(syncMousePosition, 300);
 
@@ -27,5 +42,5 @@ export function useMousePositionSync() {
 		}
 	}
 
-	return { mouseAt: readonly(mouseAt) };
+	return { isMouseInElement };
 }

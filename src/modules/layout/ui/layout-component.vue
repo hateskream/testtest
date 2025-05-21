@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
+import { useElementHover } from '@vueuse/core';
+import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
+import { usePanelWidth, useMousePosition } from '../composables';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -13,6 +15,21 @@ interface INavigationItem {
 	id: IconIds;
 	routeName: string;
 }
+
+interface ILayoutState {
+	isOpenCurtain: boolean;
+	isCurtainFixed: boolean;
+}
+
+interface ILayoutComponentProps {
+	isEditMode?: boolean;
+}
+
+const props = withDefaults(defineProps<ILayoutComponentProps>(), {
+	isEditMode: false,
+});
+
+const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
 const navigation: INavigationItem[] = [
 	{
@@ -32,29 +49,80 @@ const navigation: INavigationItem[] = [
 	},
 ];
 
-const layoutState = reactive({
+const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
-	isCurtainFixed: false,
+	isCurtainFixed: isCurtainFixed.value,
 });
 
 const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
+const curtainGuardRef = useTemplateRef<HTMLElement>('curtainGuardRef');
+const curtainIconRef = useTemplateRef<HTMLElement>('curtainIconRef');
+const addWidgetIconRef = useTemplateRef<HTMLElement>('addWidgetIconRef');
+const rightPanelRef = useTemplateRef('rightPanelRef');
+const leftPanelRef = useTemplateRef('leftPanelRef');
 
-onClickOutside(curtainRef, closeCurtain);
+const { pannelWidth } = usePanelWidth(leftPanelRef, rightPanelRef);
+
+const { isMouseInElement } = useMousePosition(curtainGuardRef);
+
+const isCurtainIconHovered = useElementHover(curtainIconRef);
+const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
+
+const isControlOpenCurtainHovered = computed(() => isCurtainIconHovered.value || isAddWidgetIconHovered.value);
+
+const centerContentStyle = computed((): Partial<CSSProperties> => {
+	return {
+		marginLeft: `${pannelWidth.left}px`,
+		marginRight: `${pannelWidth.right}px`,
+	};
+});
+
+watch(isControlOpenCurtainHovered, newValue => {
+	if (newValue) {
+		openCurtain();
+	}
+});
+
+watch(() => isCurtainFixed.value, newValue => {
+	layoutState.isCurtainFixed = newValue;
+});
+
+watch(
+	() => layoutState.isCurtainFixed,
+	() => {
+		closeCurtain();
+	},
+);
+
+watch(isMouseInElement, newValue => {
+	if (!newValue) {
+		closeCurtain();
+	}
+});
 
 function openCurtain() {
+	if (layoutState.isCurtainFixed) {
+		return;
+	}
+
 	layoutState.isOpenCurtain = true;
 }
 
 function closeCurtain() {
 	layoutState.isOpenCurtain = false;
 }
+
+function unFixCurtain() {
+	isCurtainFixed.value = false;
+}
 </script>
 
 <template>
 	<div :class="classes.root">
 		<panel-component
+			ref="leftPanelRef"
 			:class="classes.leftPanel"
 			varinat="left"
 		>
@@ -84,67 +152,86 @@ function closeCurtain() {
 				</router-link>
 			</nav>
 		</panel-component>
-		<div :class="classes.center">
+		<div :class="classes.center" :style="centerContentStyle">
 			<header-panel v-if="$slots.header" :class="classes.header">
 				<slot name="header" />
 			</header-panel>
 			<div :class="classes.content">
 				<slot name="content" />
+
 			</div>
 		</div>
 		<panel-component
+			ref="rightPanelRef"
 			:class="classes.rightPanel"
 			varinat="right"
 		>
-			<div :class="classes.iconWrapper">
-				<ui-icon
-					:id="IconIds.ControlRightMenu"
-					width="20px"
-					height="20px"
-					@click="openCurtain"
-				/>
+			<div
+				v-if="layoutState.isCurtainFixed"
+				:class="classes.curtainFixed"
+			>
+				<slot name="curtain" />
 			</div>
-
-			<div :class="classes.addWidget">
-				<div :class="classes.iconWrapper">
+			<div :class="classes.rightPanelControls">
+				<div
+					ref="curtainIconRef"
+					:class="classes.iconWrapper"
+					@click="unFixCurtain"
+				>
 					<ui-icon
-						:id="IconIds.AddWidget"
+						:id="IconIds.ControlRightMenu"
 						width="20px"
 						height="20px"
-						@click="openCurtain"
 					/>
 				</div>
-				<div :class="classes.addWidgetText">Add widgets</div>
+				<div v-show="!props.isEditMode" :class="classes.addWidget">
+					<div
+						ref="addWidgetIconRef"
+						:class="classes.iconWrapper"
+						@click="unFixCurtain"
+					>
+						<ui-icon
+							:id="IconIds.AddWidget"
+							width="20px"
+							height="20px"
+						/>
+					</div>
+					<div :class="classes.addWidgetText">Add widgets</div>
+				</div>
+				<div v-show="props.isEditMode">
+					<slot name="delete" />
+				</div>
 			</div>
 		</panel-component>
 		<div
 			v-if="layoutState.isOpenCurtain"
 			ref="curtainRef"
-			:class="classes.curtain"
+			:class="classes.curtainOpen"
 		>
-			<div :class="classes.curtainContainer">
-				<slot name="curtain" />
-			</div>
+			<slot name="curtain" />
+			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>
+
 	</div>
 </template>
 
 <style module="classes">
-.curtainContainer {
-	width: max-content;
-	height: 100%;
-	padding: 18px;
-	background-color: #000000;
-	border: 1px solid var(--border-modal-color-base);
-	border-radius: 18px;
-}
-
-.curtain {
+.curtainOpen {
 	position: fixed;
 	top: 0;
 	right: 0;
-	z-index: 1;
+	z-index: 2;
 	width: max-content;
+	height: 100%;
+	padding: 12px;
+}
+
+.curtainGuard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: -1;
+	width: calc(100% + 15px);
 	height: 100%;
 }
 
@@ -171,7 +258,6 @@ function closeCurtain() {
 .content {
 	display: flex;
 	flex-grow: 1;
-	flex-direction: column;
 }
 
 .iconWrapper {
@@ -194,6 +280,11 @@ function closeCurtain() {
 
 .rightPanel {
 	display: flex;
+	background-color: var(--bg-color-surface-00);
+}
+
+.rightPanelControls {
+	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
@@ -201,6 +292,8 @@ function closeCurtain() {
 .addWidget {
 	display: flex;
 	flex-direction: column;
+	max-width: 48px;
+	color: var(--text-color-base-300);
 	cursor: pointer;
 }
 
@@ -209,7 +302,6 @@ function closeCurtain() {
 	font-size: 12px;
 	line-height: 170%;
 	text-align: center;
-	color: var(--text-color-base-300);
 	letter-spacing: 0.8;
 }
 </style>

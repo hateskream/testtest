@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { provide, ref } from 'vue';
+import { reactive, watch } from 'vue';
 
-import { useDashboardGroupsStore, type IDashboardInstance } from '@/modules/dashboard-group';
+import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
 	useProvideCurrentDashboard,
+	useDndHandler,
+	useDelete,
 	GhostComponentBase,
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
-import { DashboardsCurtain } from '@/modules/dashboards-curtain';
+import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 import { ALL_DASHBOARDS } from '@/modules/dashboard-group/model';
 
 
@@ -20,42 +22,33 @@ const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardSto
 const { tabs, activeGroup } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
+const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
+const { provideCanDelete, setCanDelete } = useDelete();
 
 provideComponent(CurrentDashboard);
+provideSetterDndHandler();
+provideCanDelete();
 
-const drag = ref<(() => void)>(() => {});
-const dragEnd = ref<(() => void)>(() => {});
-
-const isIn = ref(false);
-
-const newDashboard = ref<IDashboardInstance | null>(null);
-
-function setDrag(func: () => void) {
-	drag.value = func;
-}
-
-function setDragEnd(func: () => void) {
-	dragEnd.value = func;
-}
-
-function setDashboard(dashboard: IDashboardInstance) {
-	newDashboard.value = dashboard;
-}
-
-function setIsIn(value: boolean) {
-	isIn.value = value;
-}
-
-provide('funcSetter', {
-	setDrag,
-	setDragEnd,
-	newDashboard,
-	isIn,
+const pageState = reactive({
+	isCurtainFixed: false,
+	isEdit: false,
 });
+
+watch(() => activeGroup.value.items, (newValue) => {
+	if (newValue.length === 0) {
+		pageState.isCurtainFixed = true;
+	} else {
+		pageState.isCurtainFixed = false;
+	}
+});
+
+function updateIsEdit(value: boolean) {
+	pageState.isEdit = value;
+}
 </script>
 
 <template>
-	<layout-component>
+	<layout-component v-model:is-curtain-fixed="pageState.isCurtainFixed" :is-edit-mode="pageState.isEdit">
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
@@ -67,8 +60,8 @@ provide('funcSetter', {
 		<template #content>
 			<dashboard-grid
 				:dashboards="activeGroup"
-				class="grid"
 				@add-widget="setNewStateInCurrentGroup"
+				@is-edit="updateIsEdit"
 			>
 				<template #dashboard-content="{ dashboardItem, meta }">
 					<current-dashboard
@@ -80,16 +73,19 @@ provide('funcSetter', {
 		</template>
 		<template #curtain>
 			<dashboards-curtain
+				v-model:is-curtain-fixed="pageState.isCurtainFixed"
 				:dashboards="ALL_DASHBOARDS"
-				@drag="drag"
-				@drag-end="dragEnd"
-				@new-dashboard="setDashboard"
-				@is-in="setIsIn"
+				@drag="onDrag"
+				@drag-end="onDragEnd"
+				@new-dashboard="setNewDashboard"
 			>
 				<template #ghost="{title}">
 					<ghost-component-base :title="title" />
 				</template>
 			</dashboards-curtain>
+		</template>
+		<template #delete>
+			<delete-component @set-can-delete="setCanDelete" />
 		</template>
 	</layout-component>
 </template>

@@ -2,19 +2,23 @@
 import {
 	computed,
 	createApp,
-	inject,
 	onBeforeUnmount,
 	reactive,
 	ref,
 	watch,
 	type App,
-	type Ref,
 } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { throttle, debounce } from '@vexip-ui/utils';
 
-import { useInjectCurrentDashboardInject, useMousePositionSync, useRebuildingGrid } from '../composables';
+import {
+	useInjectCanDelete,
+	useInjectCurrentDashboardInject,
+	useInjectSetterDndHandler,
+	useMousePositionSync,
+	useRebuildingGrid,
+} from '../composables';
 import {
 	type IDashboardFolder,
 	type IDashboardGroup,
@@ -61,16 +65,11 @@ const emit = defineEmits<{
 
 let mountedPlaceholder: App<Element> | null = null;
 
-interface IFuncs {
-	setDrag(func: () => void): void;
-	setDragEnd(func: () => void): void;
-	newDashboard: Ref<IDashboardInstance | null>;
-	isIn: Ref<boolean, boolean>;
-}
-
-const funcSetter =	inject('funcSetter') as IFuncs;
-
 const { currentDashboard } = useInjectCurrentDashboardInject();
+
+const { dnDProvider } = useInjectSetterDndHandler();
+
+const { canDelete } = useInjectCanDelete();
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
@@ -172,25 +171,25 @@ watch(
 	},
 );
 
-watch(() => funcSetter.newDashboard.value, () => {
-	if (funcSetter.newDashboard.value) {
-		dragItem.w = funcSetter.newDashboard.value.minSize.w;
-		dragItem.h = funcSetter.newDashboard.value.minSize.h;
+watch(() => dnDProvider.newDashboard.value, newValue => {
+	if (newValue) {
+		dragItem.w = newValue.minSize.w;
+		dragItem.h = newValue.minSize.h;
 	}
 });
 
 watch(
-	() => funcSetter.isIn.value,
-	isIn => {
-		if (isIn && dndWidgetId.value !== null) {
+	() => canDelete.value,
+	newValue => {
+		if (newValue && dndWidgetId.value !== null) {
 			deleteDashboards(dndWidgetId.value);
 		}
 	},
 );
 
 function onCreated() {
-	funcSetter.setDrag(throttle(handlerDrag));
-	funcSetter.setDragEnd(debounce(handlerDragEnd));
+	dnDProvider.setDrag(throttle(handlerDrag));
+	dnDProvider.setDragEnd(debounce(handlerDragEnd));
 }
 
 onBeforeUnmount(unmountPlaceholderComponents);
@@ -213,11 +212,11 @@ function getMaxSize(id: number): { w: number; h: number } {
 	}
 
 	if (gridState.isAddWidget) {
-		if (!funcSetter.newDashboard.value) {
+		if (!dnDProvider.newDashboard.value) {
 			throw new Error('newDashboard is null');
 		}
 
-		return funcSetter.newDashboard.value.maxSize;
+		return dnDProvider.newDashboard.value.maxSize;
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -241,11 +240,11 @@ function getMinSize(id: number): { w: number; h: number } {
 	}
 
 	if (gridState.isAddWidget) {
-		if (!funcSetter.newDashboard.value) {
+		if (!dnDProvider.newDashboard.value) {
 			throw new Error('newDashboard is null');
 		}
 
-		return funcSetter.newDashboard.value.minSize;
+		return dnDProvider.newDashboard.value.minSize;
 	}
 
 	const foundDashboard = props.dashboards.items.find(item => item.id === id);
@@ -453,12 +452,12 @@ function handlerDragEnd() {
 			i: newItemId,
 		};
 
-		if (!funcSetter.newDashboard.value) {
+		if (!dnDProvider.newDashboard.value) {
 			throw new Error('newDashboard is null');
 		}
 
 		const newItems: IDashboardInstance = {
-			...funcSetter.newDashboard.value,
+			...dnDProvider.newDashboard.value,
 			position,
 		};
 
