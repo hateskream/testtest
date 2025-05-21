@@ -40,6 +40,8 @@ deploy:
 
     - SANITIZED_IMAGE_TAG=$(echo "$IMAGE_TAG" | tr '/' '-')
     - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - cat "$IMAGE_TAG"
+    - cat "$SANITIZED_IMAGE_TAG"
 
     - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
