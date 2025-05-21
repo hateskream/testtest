@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef, watch, computed, onBeforeUnmount, onMounted } from 'vue';
+import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
 import { onClickOutside, useElementHover } from '@vueuse/core';
 import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/app/routes.ts';
+import { usePanelWidth } from '../composables';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -18,8 +19,6 @@ interface INavigationItem {
 interface ILayoutState {
 	isOpenCurtain: boolean;
 	isCurtainFixed: boolean;
-	leftPanelWidth: number;
-	rightPanelWidth: number;
 }
 
 interface ILayoutComponentProps {
@@ -50,13 +49,9 @@ const navigation: INavigationItem[] = [
 	},
 ];
 
-const disconectObserverFunc: (() => void)[] = [];
-
 const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
 	isCurtainFixed: isCurtainFixed.value,
-	leftPanelWidth: 72,
-	rightPanelWidth: 72,
 });
 
 const activeItem = ref(IconIds.Home);
@@ -69,6 +64,8 @@ const leftPanelRef = useTemplateRef('leftPanelRef');
 
 onClickOutside(curtainRef, closeCurtain);
 
+const { pannelWidth } = usePanelWidth(leftPanelRef, rightPanelRef);
+
 const isCurtainIconHovered = useElementHover(curtainIconRef);
 const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
 
@@ -76,8 +73,8 @@ const isControlOpenCurtainHovered = computed(() => isCurtainIconHovered.value ||
 
 const centerContentStyle = computed((): Partial<CSSProperties> => {
 	return {
-		marginLeft: `${layoutState.leftPanelWidth}px`,
-		marginRight: `${layoutState.rightPanelWidth}px`,
+		marginLeft: `${pannelWidth.left}px`,
+		marginRight: `${pannelWidth.right}px`,
 	};
 });
 
@@ -97,42 +94,6 @@ watch(
 		closeCurtain();
 	},
 );
-
-
-onMounted(() => {
-	const leftElement = leftPanelRef.value?.$el as HTMLElement | null;
-	const rightElement = rightPanelRef.value?.$el as HTMLElement | null;
-
-	startObserve(leftElement, width => {
-		layoutState.leftPanelWidth = width;
-	});
-
-	startObserve(rightElement, width => {
-		layoutState.rightPanelWidth = width;
-	});
-});
-
-onBeforeUnmount(() => {
-	disconectObserverFunc.forEach(disconect => disconect());
-});
-
-function createResizeObserver(element: HTMLElement, setterCallback: (width: number) => void) {
-	const observer = new ResizeObserver(() => {
-		setterCallback(element.clientWidth);
-	});
-
-	observer.observe(element);
-	return observer.disconnect;
-}
-
-function startObserve(element: HTMLElement | null, setterCallback: (width: number) => void) {
-	if (!element) {
-		return;
-	}
-
-	const disconect = createResizeObserver(element, setterCallback);
-	disconectObserverFunc.push(disconect);
-}
 
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
