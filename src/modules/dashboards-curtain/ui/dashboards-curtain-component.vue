@@ -41,19 +41,26 @@ function fixCurtain() {
 				</div>
 				<search-component :class="classes.search" />
 
-				<draggable-element
-					v-for="dashboard in props.dashboards"
-					:key="dashboard.id"
-					@drag="onDrag(dashboard)"
-					@drag-end="emit('drag-end')"
-				>
-					<template #content>
-						<dashboard-component :title="dashboard.name" />
-					</template>
-					<template #ghost>
-						<slot name="ghost" :title="dashboard.name" />
-					</template>
-				</draggable-element>
+				<div 					:class="classes.list">
+					<draggable-element
+						v-for="dashboard in props.dashboards"
+						:key="dashboard.id"
+						@drag="onDrag(dashboard)"
+						@drag-end="emit('drag-end')"
+					>
+						<template #content>
+							<dashboard-component
+								:title="dashboard.name"
+								:description="dashboard.description"
+								:icon="dashboard.icon"
+							/>
+						</template>
+						<template #ghost>
+							<slot name="ghost" :title="dashboard.name" />
+						</template>
+					</draggable-element>
+				</div>
+
 			</div>
 			<div v-if="!isCurtainFixed" :class="classes.panel">
 				<div
@@ -85,6 +92,12 @@ function fixCurtain() {
 </template>
 
 <style module="classes">
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
 .root {
 	width: 358px;
 	height: 100%;
