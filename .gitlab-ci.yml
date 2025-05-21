@@ -6,7 +6,7 @@ workflow:
 
 variables:
   GIT_CLEAN_FLAGS: -ffdx -e node_modules/
-  IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
+  IMAGE_TAG: $CI_COMMIT_BRANCH-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
   MANIFEST_BRANCH_REPO: main
   DEPLOYMENT_PATH: "demo-front/sandbox/vasiliy/deployment.yaml"
