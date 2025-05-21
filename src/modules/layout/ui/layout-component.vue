@@ -220,7 +220,7 @@ function unFixCurtain() {
 	position: fixed;
 	top: 0;
 	right: 0;
-	z-index: 1;
+	z-index: 2;
 	width: max-content;
 	height: 100%;
 	padding: 12px;
@@ -280,6 +280,7 @@ function unFixCurtain() {
 
 .rightPanel {
 	display: flex;
+	background-color: var(--bg-color-surface-00);
 }
 
 .rightPanelControls {

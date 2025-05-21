@@ -41,7 +41,7 @@ function fixCurtain() {
 				</div>
 				<search-component :class="classes.search" />
 
-				<div 					:class="classes.list">
+				<div :class="classes.list">
 					<draggable-element
 						v-for="dashboard in props.dashboards"
 						:key="dashboard.id"
@@ -60,7 +60,6 @@ function fixCurtain() {
 						</template>
 					</draggable-element>
 				</div>
-
 			</div>
 			<div v-if="!isCurtainFixed" :class="classes.panel">
 				<div
@@ -101,7 +100,6 @@ function fixCurtain() {
 .root {
 	width: 358px;
 	height: 100%;
-	border: 1px solid #ff0000;
 }
 
 .notFixed {
@@ -120,9 +118,14 @@ function fixCurtain() {
 	flex-grow: 1;
 	flex-direction: column;
 	padding: 18px 12px 0 8px;
+	overflow-y: auto;
+	scrollbar-width: none;
 }
 
 .header {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 	padding-bottom: 12px;
 	padding-left: 12px;
 	font-style: normal;
@@ -131,6 +134,7 @@ function fixCurtain() {
 	line-height: 100%;
 	color: var(--text-color-base-500);
 	letter-spacing: 0.075px;
+	background-color: inherit;
 }
 
 .search {
