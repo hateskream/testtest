@@ -2,7 +2,7 @@
 
 import type { IWatchlistSection } from '../../model';
 
-import WatchlistFilterToolbar from '../components/filters/watchlist-filter-toolbar.vue';
+import WatchlistTabsToolbar from '../components/filters/watchlist-tabs-toolbar.vue';
 import WatchlistTable from '../components/table/watchlist-table.vue';
 
 interface IWatchlistTableProps {
@@ -14,7 +14,7 @@ const props = defineProps<IWatchlistTableProps>();
 
 <template>
 	<div :class="classes.root">
-		<watchlist-filter-toolbar />
+		<watchlist-tabs-toolbar />
 		<watchlist-table :watchlist-sections="props.watchlistData" />
 	</div>
 </template>
