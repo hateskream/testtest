@@ -47,9 +47,9 @@ deploy:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
       variables:
         DEPLOYMENT_PATH: "demo-front/deployment.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "sandbox/vasiliy"'
       variables:
-        DEPLOYMENT_PATH: "demo-front/demo-dev/deployment.yaml"
+        DEPLOYMENT_PATH: "demo-front/sandbox/vasiliy/deployment.yaml"
     - when: never
     
 
