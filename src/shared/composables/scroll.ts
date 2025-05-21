@@ -1,22 +1,40 @@
-import { ref, onMounted, onUnmounted, type Ref } from 'vue';
-import { useEventListener, useScrollLock } from '@vueuse/core';
+import { ref, type Ref } from 'vue';
+import { useEventListener } from '@vueuse/core';
 
 type ScrollCallback = (offset: number) => void;
 
+function getScrollableAncestor(el: HTMLElement | null, container: HTMLElement): HTMLElement | null {
+	let curEL = el;
+	while (curEL && curEL !== container) {
+		const style = getComputedStyle(curEL);
+		const { overflowY } = style;
+		if ((overflowY === 'auto' || overflowY === 'scroll') && curEL.scrollHeight > curEL.clientHeight) {
+			return curEL;
+		}
+		curEL = curEL.parentElement;
+	}
+	return null;
+}
 export function useCustomScroll(container: Ref<HTMLElement | null>, onScroll: ScrollCallback) {
-	const offset = ref(0);
-	const maxScroll = ref(0);
-	const isLocked = useScrollLock(document.body);
 	const lastTouchY = ref<number | null>(null);
 
-	const clamp = (val: number) => Math.min(Math.max(0, val), maxScroll.value);
-
 	const handleScroll = (delta: number) => {
-		offset.value = clamp(offset.value + delta);
-		onScroll(offset.value);
+		onScroll(delta);
 	};
-
 	const onWheel = (e: WheelEvent) => {
+		const target = e.target as HTMLElement;
+		const scrollableAncestor = getScrollableAncestor(target, container.value!);
+
+		if (scrollableAncestor) {
+			const atTop = scrollableAncestor.scrollTop === 0 && e.deltaY < 0;
+			const atBottom =
+				scrollableAncestor.scrollTop + scrollableAncestor.clientHeight >= scrollableAncestor.scrollHeight &&
+				e.deltaY > 0;
+			if (!atTop && !atBottom) {
+				return;
+			}
+		}
+
 		e.preventDefault();
 		handleScroll(e.deltaY);
 	};
@@ -38,25 +56,8 @@ export function useCustomScroll(container: Ref<HTMLElement | null>, onScroll: Sc
 		lastTouchY.value = null;
 	};
 
-	onMounted(() => {
-		isLocked.value = true;
-
-		if (container.value) {
-			maxScroll.value = container.value.scrollHeight - container.value.clientHeight;
-		}
-
-		useEventListener(container, 'wheel', onWheel, { passive: false });
-		useEventListener(container, 'touchstart', onTouchStart, { passive: false });
-		useEventListener(container, 'touchmove', onTouchMove, { passive: false });
-		useEventListener(container, 'touchend', onTouchEnd, { passive: false });
-	});
-
-	onUnmounted(() => {
-		isLocked.value = false;
-	});
-
-	return {
-		maxScroll,
-		offset,
-	};
+	useEventListener(container, 'wheel', onWheel, { passive: false });
+	useEventListener(container, 'touchstart', onTouchStart, { passive: false });
+	useEventListener(container, 'touchmove', onTouchMove, { passive: false });
+	useEventListener(container, 'touchend', onTouchEnd, { passive: false });
 }

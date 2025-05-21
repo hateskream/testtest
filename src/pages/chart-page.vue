@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import PricePerformanceWidget from "@/modules/chart/components/widgets/range/price-performance-widget.vue";
 
 
 const viewMode = ref('mixed');
@@ -39,9 +40,7 @@ const setReports = ()=>{
 								/>
 								<span>Overview</span>
 							</div>
-							<div :class="classes.columnContent">
-								<div :class="classes.placeholderBlock"></div>
-							</div>
+							<price-performance-widget/>
 						</template>
 						<template #mainCol>
 							<div :class="classes.columnTitle">
@@ -54,6 +53,16 @@ const setReports = ()=>{
 								<span>Financials</span>
 							</div>
 							<div :class="classes.columnContent">
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
 								<div :class="classes.placeholderBlock"></div>
 							</div>
 						</template>
