@@ -38,7 +38,8 @@ deploy:
     - git fetch origin $MANIFEST_BRANCH_REPO
     - git checkout -b $MANIFEST_BRANCH_REPO origin/$MANIFEST_BRANCH_REPO
 
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - SANITIZED_IMAGE_TAG=$(echo "$IMAGE_TAG" | tr '/' '-')
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG|" $DEPLOYMENT_PATH'
 
     - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
@@ -66,8 +67,9 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
+    - SANITIZED_IMAGE_TAG=$(echo "$IMAGE_TAG" | tr '/' '-')
+    - docker build -t $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG
   
   #rules:
   #  - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
