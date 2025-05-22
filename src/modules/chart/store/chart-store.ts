@@ -593,7 +593,7 @@ export const useChartStore = defineStore('chart', () => {
 					percentage: 318.85,
 				},
 			},
-		}
+		},
 	]);
 
 	const activeExchangeId = ref(
