@@ -18,7 +18,7 @@ const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const chartContainerEl = ref<HTMLDivElement | null>(null);
 const chartRef = ref<InstanceType<typeof Chart> | null>(null);
 
-const { width: containerWidth, height: containerHeight } = useElementSize(chartContainerEl);
+const { width: containerWidth } = useElementSize(chartContainerEl);
 const { height: windowHeight } = useWindowSize();
 
 const chartWidth = computed(() => {
@@ -26,9 +26,9 @@ const chartWidth = computed(() => {
 });
 
 const chartHeight = computed(() => {
-	const minHeight = Math.floor(windowHeight.value * 0.3);
-	const calculatedHeight = Math.max(
-		containerHeight.value || 0,
+	const minHeight = Math.floor(windowHeight.value * 0.5);
+	const calculatedHeight = Math.min(
+
 		minHeight,
 		515,
 	);
@@ -64,7 +64,7 @@ const handleRandomize = () => {
 						<chart
 							ref="chartRef"
 							:width="chartWidth"
-							:height="500"
+							:height="chartHeight"
 						/>
 					</div>
 				</template>
@@ -144,11 +144,11 @@ const handleRandomize = () => {
 
 <style module="classes">
 .placeholderTop {
-	min-height: 30svh;
-	width: 100%;
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	width: 100%;
+	min-height: 30svh;
 }
 
 .columnTitle {
@@ -178,6 +178,7 @@ const handleRandomize = () => {
 	position: fixed;
 	bottom: 15px;
 	left: 50%;
+	z-index: 3;
 	display: flex;
 	padding: 4px;
 	background: rgb(84 84 95 / 60%);
