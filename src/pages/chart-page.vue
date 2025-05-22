@@ -57,7 +57,7 @@ const setReports = () => {
 					>
 						<chart
 							:width="chartWidth"
-							:height="chartHeight"
+							:height="500"
 						/>
 					</div>
 				</template>
