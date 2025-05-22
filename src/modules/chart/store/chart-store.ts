@@ -593,141 +593,7 @@ export const useChartStore = defineStore('chart', () => {
 					percentage: 318.85,
 				},
 			},
-		},
-		// {
-		// 	id: 9,
-		// 	source: 'JPX',
-		// 	fullName: 'Japan Exchange Group',
-		// 	symbol: 'TSLA',
-		// 	currency: 'JPY',
-		// 	currency_symbol: '¥',
-		// 	displaySymbol: 'TSLA : JPY',
-		// 	isPrimary: false,
-		// 	price: 37428.55,
-		// 	change: {
-		// 		points: 124.88,
-		// 		percentage: 0.33
-		// 	},
-		// 	openTime: '00:00:00',
-		// 	closeTime: '06:00:00',
-		// 	iconId: IconIds.JPX,
-		// 	periods: {
-		// 		'1D': {
-		// 			min: 31814.27,
-		// 			max: 39399.83,
-		// 			current: 37428.55,
-		// 			start: 36132.74,
-		// 			symbol: '¥',
-		// 		},
-		// 		'1W': {
-		// 			min: 29936.84,
-		// 			max: 41583.06,
-		// 			current: 37428.55,
-		// 			start: 38247.21,
-		// 			symbol: '¥',
-		// 		},
-		// 		'1M': {
-		// 			min: 28071.41,
-		// 			max: 43785.69,
-		// 			current: 37428.55,
-		// 			start: 29275.48,
-		// 			symbol: '¥',
-		// 		},
-		// 		'3M': {
-		// 			min: 26199.99,
-		// 			max: 45000.11,
-		// 			current: 37428.55,
-		// 			start: 43285.92,
-		// 			symbol: '¥',
-		// 		},
-		// 		'1Y': {
-		// 			min: 22457.14,
-		// 			max: 46857.96,
-		// 			current: 37428.55,
-		// 			start: 24098.47,
-		// 			symbol: '¥',
-		// 		},
-		// 	},
-		// 	allTime: {
-		// 		high: {
-		// 			value: 50742.18,
-		// 			date: '2024-08-25',
-		// 			percentage: -26.24,
-		// 		},
-		// 		low: {
-		// 			value: 9074.32,
-		// 			date: '2009-03-09',
-		// 			percentage: 312.49,
-		// 		},
-		// 	},
-		// },
-		// {
-		// 	id: 10,
-		// 	source: 'ASX',
-		// 	fullName: 'Australian Securities Exchange',
-		// 	symbol: 'TSLA',
-		// 	currency: 'AUD',
-		// 	currency_symbol: 'A$',
-		// 	displaySymbol: 'TSLA : AUD',
-		// 	isPrimary: false,
-		// 	price: 374.62,
-		// 	change: {
-		// 		points: -1.42,
-		// 		percentage: -0.38
-		// 	},
-		// 	openTime: '23:00:00',
-		// 	closeTime: '05:00:00',
-		// 	iconId: IconIds.ASX,
-		// 	periods: {
-		// 		'1D': {
-		// 			min: 318.43,
-		// 			max: 394.35,
-		// 			current: 374.62,
-		// 			start: 361.48,
-		// 			symbol: 'A$',
-		// 		},
-		// 		'1W': {
-		// 			min: 299.69,
-		// 			max: 416.09,
-		// 			current: 374.62,
-		// 			start: 382.87,
-		// 			symbol: 'A$',
-		// 		},
-		// 		'1M': {
-		// 			min: 280.97,
-		// 			max: 437.27,
-		// 			current: 374.62,
-		// 			start: 293.45,
-		// 			symbol: 'A$',
-		// 		},
-		// 		'3M': {
-		// 			min: 262.23,
-		// 			max: 449.01,
-		// 			current: 374.62,
-		// 			start: 436.21,
-		// 			symbol: 'A$',
-		// 		},
-		// 		'1Y': {
-		// 			min: 224.77,
-		// 			max: 467.47,
-		// 			current: 374.62,
-		// 			start: 241.28,
-		// 			symbol: 'A$',
-		// 		},
-		// 	},
-		// 	allTime: {
-		// 		high: {
-		// 			value: 509.84,
-		// 			date: '2024-07-11',
-		// 			percentage: -26.53,
-		// 		},
-		// 		low: {
-		// 			value: 91.29,
-		// 			date: '2010-01-27',
-		// 			percentage: 310.41,
-		// 		},
-		// 	},
-		// }
+		}
 	]);
 
 	const activeExchangeId = ref(
@@ -751,12 +617,10 @@ export const useChartStore = defineStore('chart', () => {
 		return isMarketOpen(activeExchange.value.id);
 	});
 
-	// Get periods data for active exchange
 	const activeExchangePeriods = computed(() => {
 		return activeExchange.value?.periods || null;
 	});
 
-	// Get all-time data for active exchange
 	const activeExchangeAllTime = computed(() => {
 		return activeExchange.value?.allTime || null;
 	});
@@ -845,14 +709,14 @@ export const useChartStore = defineStore('chart', () => {
 			const startHour = Math.floor(Math.random() * 24);
 			const endHour = (startHour + tradingDuration) % 24;
 
-			const formatTime = (hour: number) => {
+			function formatTime(hour: number) {
 				return `${hour.toString().padStart(2, '0')}:00:00`;
-			};
+			}
 
 			const openTime = formatTime(startHour);
 			const closeTime = formatTime(endHour);
 
-			const generatePeriodData = (basePrice: number, volatility: number): IPeriodData => {
+			function generatePeriodData(basePrice: number, volatility: number): IPeriodData {
 				const min = parseFloat((basePrice * (1 - volatility)).toFixed(2));
 				const max = parseFloat((basePrice * (1 + volatility)).toFixed(2));
 				const start = parseFloat((min + Math.random() * (max - min)).toFixed(2));
@@ -864,7 +728,7 @@ export const useChartStore = defineStore('chart', () => {
 					start,
 					symbol: exchange.currency_symbol,
 				};
-			};
+			}
 
 			const periods = {
 				'1D': generatePeriodData(newPrice, 0.05),
