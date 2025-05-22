@@ -16,6 +16,7 @@ const viewMode = ref('mixed');
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const chartContainerEl = ref<HTMLDivElement | null>(null);
+const chartRef = ref<InstanceType<typeof Chart> | null>(null);
 
 const { width: containerWidth, height: containerHeight } = useElementSize(chartContainerEl);
 const { height: windowHeight } = useWindowSize();
@@ -41,6 +42,11 @@ const setChart = () => {
 const setReports = () => {
 	chartLayoutEl.value?.setReportsViewMode();
 };
+
+const handleRandomize = () => {
+	randomizeExchanges();
+	chartRef.value?.regenerateData();
+};
 </script>
 
 <template>
@@ -56,6 +62,7 @@ const setReports = () => {
 						:class="classes.placeholderTop"
 					>
 						<chart
+							ref="chartRef"
 							:width="chartWidth"
 							:height="500"
 						/>
@@ -127,7 +134,7 @@ const setReports = () => {
 				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" @click="setReports">
 					Reports
 				</button>
-				<button :class="classes.navigationBtn" @click="randomizeExchanges">
+				<button :class="classes.navigationBtn" @click="handleRandomize">
 					Randomize
 				</button>
 			</div>
@@ -189,10 +196,8 @@ const setReports = () => {
 	cursor: pointer;
 }
 
-
 .active {
 	color: var(--text-color-contrast-500);
 	background: #ffffff;
 }
-
 </style>
