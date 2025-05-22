@@ -87,7 +87,7 @@ const listActiveIndicators = computed(() => {
 
 
 function regenerateData() {
-	mainData.value = generateCandleDataFromLineData(generateLineData(4000));
+	mainData.value = generateCandleDataFromLineData(generateLineData(6000));
 }
 
 function selectRange(range: RangeChart) {
@@ -151,7 +151,7 @@ function updateTypeChart(type: TypeChart) {
 
 onMounted(() => {
 	chartHistory.value = createChart(history.value as HTMLElement, {
-		width: 784,
+		width: props.width,
 		height: 96,
 		crosshair: {
 			horzLine: {
