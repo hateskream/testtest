@@ -47,7 +47,7 @@ export function usePanelWidth(
 		});
 
 		observer.observe(element);
-		return observer.disconnect;
+		return () => observer.disconnect();
 	}
 
 	function startObserve(element: HTMLElement | null, setterCallback: (width: number) => void) {
