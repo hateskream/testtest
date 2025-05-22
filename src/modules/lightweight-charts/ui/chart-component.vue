@@ -63,7 +63,7 @@ const currentTypeGraph = ref<TypeChart>(TypeChart.Line);
 
 const mainData = ref(generateCandleDataFromLineData(generateLineData(6000)));
 
-watch(() => mainData, () => {
+watch(mainData, () => {
 	updateIndicators();
 });
 
@@ -92,7 +92,7 @@ const listActiveIndicators = computed(() => {
 
 
 function regenerateData() {
-	mainData.value = generateCandleDataFromLineData(generateLineData(6000));
+	mainData.value = generateCandleDataFromLineData(generateLineData(4000));
 }
 
 function selectRange(range: RangeChart) {
