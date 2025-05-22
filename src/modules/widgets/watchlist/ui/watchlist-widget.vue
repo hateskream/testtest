@@ -1,72 +1,44 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/model';
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { useQueryMarket } from '../../market/queries/index.ts';
 import { useMarketStore } from '../../market/stores/index.ts';
+import { useQueryWatchlist } from '../queries/watchlist.query.ts';
 
-import MainView from './view/main-view.vue';
-import ErrorView from './view/error-view.vue';
-import LoaderView from './view/loader-view.vue';
+import WatchlistMain from './views/watchlist-main.vue';
+import WatchlistError from './views/watchlist-error.vue';
+import WatchlistLoader from './views/watchlist-loader.vue';
 
 const props = defineProps<{
 	meta: IMeta;
 }>();
 
-// TODO: Make them real
-// const isLoading = ref(false);
-// const isDataLoadingError = ref(false);
-
-const reloadDataHandler = () => {
-	// // TODO: Make it real or remove
-	// // isLoading.value = true;
-	// isDataLoadingError.value = false;
-
-	// setTimeout(() => {
-	// 	// isLoading.value = false;
-	// 	isDataLoadingError.value = false;
-	// }, 2000);
-};
-
 const marketStore = useMarketStore();
-const { data, isLoading, isError } = useQueryMarket({
+const { data, isLoading, isError } = useQueryWatchlist({
 	market: props.meta.market,
 	sort: marketStore.activeTabSort.sortTab,
-});
-// TODO: Remove
-onMounted(() => {
-	// isLoading.value = true;
-
-	// setTimeout(() => {
-	// 	isLoading.value = false;
-	// 	isDataLoadingError.value = true;
-	// }, 2000);
 });
 </script>
 
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div class="title-container">
+			<div :class="classes.titleContainer">
 				<span>{{ props.meta.name }}</span>
 			</div>
 		</template>
 
 		<template #content>
-			<loader-view v-if="isLoading" />
-			<error-view
-				v-else-if="isError"
-				@click="reloadDataHandler"
-			/>
+			<watchlist-loader v-if="isLoading" />
+			<watchlist-error v-else-if="isError" />
 
-			<main-view v-else :markets="data || []" />
+			<watchlist-main v-else :watchlist-data="data || []" />
 		</template>
 	</base-dashboard-component>
 </template>
 
-<style module>
-.title-container {
+<style module="classes">
+.titleContainer {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

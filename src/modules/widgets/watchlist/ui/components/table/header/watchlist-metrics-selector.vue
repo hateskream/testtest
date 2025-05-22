@@ -2,7 +2,7 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 
-import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
+import WatchlistColumnSettings from './watchlist-column-settings.vue';
 </script>
 
 <template>
@@ -17,7 +17,7 @@ import TableColumnsSettingsComponent from './table-columns-settings-component.vu
 		</template>
 
 		<template #content>
-			<table-columns-settings-component />
+			<watchlist-column-settings />
 		</template>
 	</ui-position>
 </template>

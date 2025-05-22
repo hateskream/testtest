@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import type { ITableRow } from '../../model';
+import type { ITableRow } from '../../../model';
 import { UiImage } from '@/shared/ui/image';
-// import { IconIds, UiIcon } from '@/shared/ui/icon';
-// import { useMarketStore } from '../stores';
-// import { UiTooltip } from '@/shared/ui/tooltip';
 
-import TableRowNumberComponent from './table-row-number-component.vue';
-import TableRowPercentComponent from './table-row-percent-component.vue';
-import TableRowDateComponent from './table-row-date-component.vue';
+import WatchlistCellNumber from './cells/watchlist-cell-number.vue';
+import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
+import WatchlistCellDate from './cells/watchlist-cell-date.vue';
 
 interface IProps {
 	rows: ITableRow[][];
 }
 
 const props = defineProps<IProps>();
-
-// const marketStore = useMarketStore();
 </script>
 
 <template>
@@ -40,19 +35,19 @@ const props = defineProps<IProps>();
 						<div>{{ item.value }}</div>
 					</div>
 
-					<table-row-number-component
+					<watchlist-cell-number
 						v-else-if="item.type === 'number'"
 						is-fiat
 						format="pretty-with-key"
 						:value="item.value"
 					/>
 
-					<table-row-percent-component
+					<watchlist-cell-percent
 						v-else-if="item.type === 'percent'"
 						:value="item.value"
 					/>
 
-					<table-row-date-component
+					<watchlist-cell-date
 						v-else-if="item.type === 'date'"
 						:value="item.value"
 					/>

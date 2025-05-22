@@ -115,6 +115,7 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
+
 ];
 
 const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };

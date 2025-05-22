@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { ITableColumn, ITableColumnDirection } from '../../model';
+import type { ITableColumn, ITableColumnDirection } from '../../../../model';
 import { UiTooltip } from '@/shared/ui/tooltip';
 
 interface IProps {
