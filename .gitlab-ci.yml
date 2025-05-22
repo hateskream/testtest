@@ -9,6 +9,7 @@ variables:
   IMAGE_TAG: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME-$CI_PIPELINE_IID
   GITLAB_TOKEN: $GITLAB_TOKEN
   MANIFEST_BRANCH_REPO: main
+  DEPLOYMENT_PATH: "demo-front/sandbox/vasiliy/deployment.yaml"
 
 include:
   - local: "/.gitlab-ci/snippets/setup.yml"
@@ -37,20 +38,23 @@ deploy:
     - git fetch origin $MANIFEST_BRANCH_REPO
     - git checkout -b $MANIFEST_BRANCH_REPO origin/$MANIFEST_BRANCH_REPO
 
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - SANITIZED_IMAGE_TAG=$(echo "$IMAGE_TAG" | tr '/' '-')
+    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - echo "$IMAGE_TAG"
+    - echo "$SANITIZED_IMAGE_TAG"
 
     - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin $MANIFEST_BRANCH_REPO
 
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
-      variables:
-        DEPLOYMENT_PATH: "demo-front/deployment.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
-      variables:
-        DEPLOYMENT_PATH: "demo-front/demo-dev/deployment.yaml"
-    - when: never
+#  rules:
+#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+#      variables:
+#        DEPLOYMENT_PATH: "demo-front/deployment.yaml"
+#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "sandbox/vasiliy"'
+#      variables:
+#        DEPLOYMENT_PATH: "demo-front/sandbox/vasiliy/deployment.yaml"
+#    - when: never
     
 
 build:
@@ -65,8 +69,9 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
+    - SANITIZED_IMAGE_TAG=$(echo "$IMAGE_TAG" | tr '/' '-')
+    - docker build -t $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$SANITIZED_IMAGE_TAG
   
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'
+  #rules:
+  #  - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>"'

@@ -189,8 +189,10 @@ const setReports = () => {
 	cursor: pointer;
 }
 
+
 .active {
 	color: var(--text-color-contrast-500);
 	background: #ffffff;
 }
+
 </style>
