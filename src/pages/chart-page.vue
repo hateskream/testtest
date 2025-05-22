@@ -46,12 +46,28 @@ const handleRandomize = () => {
 	randomizeExchanges();
 	chartRef.value?.regenerateData();
 };
+
+const disableScroll = ref(false);
+
+const startDisableScroll = () => {
+	disableScroll.value = true;
+
+};
+const endDisableScroll = () => {
+	disableScroll.value = false;
+};
+
 </script>
 
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<chart-layout ref="chartLayoutEl" @change-view="viewMode=$event">
+			<chart-layout
+				ref="chartLayoutEl"
+				@change-view="viewMode=$event"
+				@animation-start="startDisableScroll"
+				@animation-end="endDisableScroll"
+			>
 				<template #header>
 					<chart-header />
 				</template>
@@ -68,7 +84,7 @@ const handleRandomize = () => {
 					</div>
 				</template>
 				<template #botContent>
-					<columns-layout>
+					<columns-layout :disable-scroll="disableScroll">
 						<template #leftCol>
 							<div :class="classes.columnTitle">
 								<ui-icon

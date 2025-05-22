@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, toRefs } from 'vue';
 import { useEventListener, useScroll, useBreakpoints } from '@vueuse/core';
+
+const props = defineProps<{ disableScroll?: boolean }>();
+const { disableScroll } = toRefs(props);
 const breakpoints = useBreakpoints({
 	tablet: 640,
 	desktop: 1280,
@@ -22,6 +25,10 @@ const onContainerScroll = (e: WheelEvent) => {
 	}
 };
 const onColumnScroll = (e: WheelEvent) => {
+	if (disableScroll.value) {
+		e.preventDefault();
+		return;
+	}
 	if (arrivedState.top && e.deltaY < 0 || arrivedState.bottom && e.deltaY > 0) {
 		return;
 	}
@@ -89,5 +96,4 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 	overflow: scroll;
 }
 </style>
-
 

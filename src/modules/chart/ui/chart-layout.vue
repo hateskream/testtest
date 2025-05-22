@@ -12,34 +12,40 @@ const container = ref<HTMLElement>();
 
 const emit = defineEmits<{
 	(event: 'change-view', value: ViewMode): void;
+	(event: 'animation-start'): void;
+	(event: 'animation-end'): void;
 }>();
 
-const maxShift = computed(()=>{
+const maxShift = computed(() => {
 	return topContentEl.value?.offsetHeight;
 });
-useCustomScroll(container as Ref<HTMLElement | null>, (delta)=>{
+useCustomScroll(container as Ref<HTMLElement | null>, (delta) => {
 	if (!maxShift.value) {
 		return;
 	}
-	const autoScrollThreshold = maxShift.value/5;
-	if (delta > 0&&(contentShift.value+delta)>autoScrollThreshold) {
+	const autoScrollThreshold = maxShift.value / 5;
+	if (delta > 0 && (contentShift.value + delta) > autoScrollThreshold) {
 		contentShift.value = maxShift.value;
 		emit('change-view', 'reports');
+		emit('animation-start');
+		setTimeout(() => {
+			emit('animation-end');
+		}, 1000);
 		return;
 	}
-	if (delta < 0&&(contentShift.value+delta)<(maxShift.value-autoScrollThreshold)) {
+	if (delta < 0 && (contentShift.value + delta) < (maxShift.value - autoScrollThreshold)) {
 		contentShift.value = 0;
 		emit('change-view', 'mixed');
 		return;
 	}
-	contentShift.value = Math.max(0, Math.min(maxShift.value, contentShift.value+delta));
+	contentShift.value = Math.max(0, Math.min(maxShift.value, contentShift.value + delta));
 });
 
-const opacityTop = computed(()=>{
-	if (!maxShift.value||!contentShift.value) {
+const opacityTop = computed(() => {
+	if (!maxShift.value || !contentShift.value) {
 		return 1;
 	}
-	return 1-contentShift.value/maxShift.value;
+	return 1 - contentShift.value / maxShift.value;
 });
 
 
