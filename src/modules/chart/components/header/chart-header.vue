@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useChartStore } from '@/modules/chart/store';
 
@@ -8,29 +8,13 @@ import TickerImageItem from './assets/ticker-image-item.vue';
 import ChartStockInfo from './chart-stock-info.vue';
 import ChartPriceInfo from '../common/components/chart-price-info/chart-price-info.vue';
 
-
-const bgColor = ref('230, 23, 53');
-const bgColorShadow = ref('230 23 53 /');
 const { randomizeExchanges } = useChartStore();
-const generateRandomColor = () => {
-	const r = Math.floor(Math.random() * 256);
-	const g = Math.floor(Math.random() * 256);
-	const b = Math.floor(Math.random() * 256);
-	bgColor.value = `${r}, ${g}, ${b}`;
-	bgColorShadow.value = `${r} ${g} ${b} /`;
-};
-
-const generate = () => {
-	randomizeExchanges();
-	generateRandomColor();
-};
-
-
+const { bgColor, bgColorShadow } = storeToRefs(useChartStore());
 </script>
 
 <template>
 	<div :class="classes.header">
-		<div :class="classes.logo" @click="generate">
+		<div :class="classes.logo" @click="randomizeExchanges">
 			<ticker-image-item :fill="bgColor" />
 		</div>
 
