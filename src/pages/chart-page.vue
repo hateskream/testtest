@@ -4,8 +4,11 @@ import { ref } from 'vue';
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import PricePerformanceWidget from "@/modules/chart/components/widgets/range/price-performance-widget.vue";
+import { useChartStore } from '@/modules/chart/store';
 
+import PricePerformanceWidget from '@/modules/chart/components/widgets/range/price-performance-widget.vue';
+
+const { randomizeExchanges } = useChartStore();
 
 const viewMode = ref('mixed');
 
@@ -40,7 +43,7 @@ const setReports = ()=>{
 								/>
 								<span>Overview</span>
 							</div>
-							<price-performance-widget/>
+							<price-performance-widget />
 						</template>
 						<template #mainCol>
 							<div :class="classes.columnTitle">
@@ -93,6 +96,9 @@ const setReports = ()=>{
 				</button>
 				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" @click="setReports">
 					Reports
+				</button>
+				<button :class="classes.navigationBtn" @click="randomizeExchanges">
+					Randomize
 				</button>
 			</div>
 		</template>

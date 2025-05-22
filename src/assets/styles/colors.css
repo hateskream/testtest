@@ -171,6 +171,7 @@
 	--metrics-color-positive-chart: rgb(4 237 160 / 100%);
 	--metrics-color-negative-chart: rgb(252 74 107 / 100%);
 	--metrics-bg-control-300: rgb(50 50 52 / 50%);
+	--metrics-bg-control-500: rgb(60 60 63 / 100%);
 	--charts-bg-open: rgb(53 100 227 / 100%);
 	--charts-bg-closed: rgb(31 99 115 /100%);
 	--charts-bg-badge: rgb(126 113 139 /50%);

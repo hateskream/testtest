@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useVModel} from '@vueuse/core';
-import {UiPosition} from '@/shared/ui/position';
-import {IconIds, UiIcon} from "@/shared/ui/icon";
-import ChartDropdownLayout from "@/modules/chart/components/header/chart-dropdown-layout.vue";
+import { ref } from 'vue';
+import { useVModel } from '@vueuse/core';
 
-const props = defineProps<{
-	periods: string[];
-	modelValue: string | undefined;
-}>();
+import { UiPosition } from '@/shared/ui/position';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type {
+	IPeriodSelectProps,
+} from './perios-select.types';
+
+import ChartDropdownLayout from '@/modules/chart/components/header/chart-dropdown-layout.vue';
+
+const props = defineProps<IPeriodSelectProps>();
 
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: string): void;
 }>();
 
-// Use VueUse's useVModel for cleaner v-model handling
 const selectedPeriod = useVModel(props, 'modelValue', emit);
 
-
-
-
-// Use VueUse's onClickOutside for cleaner click-outside detection
 
 const positionRef = ref<InstanceType<typeof UiPosition> | null>(null);
 const handlePeriodSelect = (period: string) => {
@@ -29,8 +26,6 @@ const handlePeriodSelect = (period: string) => {
 	}
 	selectedPeriod.value = period;
 };
-
-
 
 
 </script>
@@ -72,40 +67,37 @@ const handlePeriodSelect = (period: string) => {
 </template>
 
 <style module="classes">
-
 .selectWrapper {
 	display: flex;
-	align-items: center;
-	background-color: #2a2a2a;
-	color: white;
-	border: none;
-	border-radius: 16px;
-	padding: 5px 9px 5px 11px;
-	cursor: pointer;
-	width: 52px;
 	justify-content: space-between;
-	gap:3px;
-}
+	align-items: center;
+	width: 52px;
+	padding: 5px 9px 5px 11px;
+	color: var(--text-color-base-500);
+	background-color: var(--metrics-bg-control-300);
+	border-radius: 16px;
+	cursor: pointer;
+	gap: 3px;
 
-.selectedValue {
-	font-weight: 500;
+	&:hover {
+		background-color: var(--metrics-bg-control-500);
+	}
 }
 
 
 .dropdown {
-	border-radius: 16px;
-	overflow:hidden;
-	padding: 6px;
-	display:flex;
+	display: flex;
 	flex-direction: column;
+	width: 52px;
+	padding: 6px;
+	overflow: hidden;
+	border-radius: 16px;
 	gap: 6px;
-	width:52px;
 }
 
 .option {
 	padding: 2px 6px;
 	cursor: pointer;
-
 	transition: background-color 0.2s ease;
 }
 
@@ -114,14 +106,15 @@ const handlePeriodSelect = (period: string) => {
 }
 
 .optionActive {
-	background-color: #3a3a3a;
 	font-weight: 500;
+	background-color: #3a3a3a;
 }
+
 .icon {
 	transition: transform 0.3s ease;
 }
+
 .iconRotated {
 	transform: rotate(180deg);
-
 }
 </style>

@@ -77,8 +77,8 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 
 .leftCol,
 .rightCol {
-	flex-grow: 1;
-	min-width: 200px;
+	flex: 0 0 330px;
+	width: 100%;
 	height: 100%;
 	overflow: scroll;
 }
