@@ -57,6 +57,10 @@ interface IPriceRange {
 }
 
 export const useChartStore = defineStore('chart', () => {
+	// Color state
+	const bgColor = ref('230, 23, 53');
+	const bgColorShadow = ref('230 23 53 /');
+
 	const exchanges = ref<IExchange[]>([
 		{
 			id: 1,
@@ -671,6 +675,14 @@ export const useChartStore = defineStore('chart', () => {
 		return pastDate.toISOString().split('T')[0];
 	}
 
+	function generateRandomColor() {
+		const r = Math.floor(Math.random() * 256);
+		const g = Math.floor(Math.random() * 256);
+		const b = Math.floor(Math.random() * 256);
+		bgColor.value = `${r}, ${g}, ${b}`;
+		bgColorShadow.value = `${r} ${g} ${b} /`;
+	}
+
 	function randomizeExchanges() {
 		const priceRanges: Record<string, IPriceRange> = {
 			'USD': { min: 200, max: 300 },
@@ -773,9 +785,15 @@ export const useChartStore = defineStore('chart', () => {
 				},
 			};
 		});
+
+		generateRandomColor();
 	}
 
 	return {
+		// Color state
+		bgColor,
+		bgColorShadow,
+		// Exchange data
 		exchanges,
 		activeExchangeId,
 		activeExchange,
@@ -784,8 +802,10 @@ export const useChartStore = defineStore('chart', () => {
 		isActiveMarketOpen,
 		activeExchangePeriods,
 		activeExchangeAllTime,
+		// Methods
 		setActiveExchange,
 		isMarketOpen,
+		generateRandomColor,
 		randomizeExchanges,
 	};
 });
