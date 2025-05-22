@@ -91,10 +91,6 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 </template>
 
 <style module="classes">
-.droppable {
-	margin-bottom: 20px;
-}
-
 .root {
 	position: relative;
 	flex-grow: 1;
