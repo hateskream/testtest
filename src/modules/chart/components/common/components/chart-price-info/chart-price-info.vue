@@ -12,7 +12,7 @@ const { activeExchange, isActiveMarketOpen } = storeToRefs(useChartStore());
 const marketStatusLabel = computed(() => isActiveMarketOpen.value ? 'At Close:' : 'At Open:');
 
 
-const formatDateTimeToLocal = (timeString: string) => {
+function formatDateTimeToLocal(timeString: string) {
 	if (!timeString || !activeExchange.value) {
 		return '';
 	}
@@ -39,7 +39,7 @@ const formatDateTimeToLocal = (timeString: string) => {
 		minute: '2-digit',
 		hour12: true,
 	});
-};
+}
 
 const relevantDateTime = computed(() => {
 	if (!activeExchange.value) {
@@ -60,8 +60,8 @@ const relevantDateTime = computed(() => {
 		</div>
 		<div :class="classes.performanceWrapper">
 			<div :class="classes.price" class="header-h02">
-				<div>{{activeExchange.currency_symbol}}</div>
-				<div>{{activeExchange.price.toFixed(2)}}</div>
+				<div>{{ activeExchange.currency_symbol }}</div>
+				<div>{{ activeExchange.price.toFixed(2) }}</div>
 			</div>
 			<chart-control-label :change="activeExchange.change" />
 		</div>
@@ -74,7 +74,6 @@ const relevantDateTime = computed(() => {
 	display: flex;
 	flex-direction: column;
 	gap: 1px;
-	padding: 0 16px;
 }
 
 .performanceWrapper {

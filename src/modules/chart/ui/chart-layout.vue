@@ -83,6 +83,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 
 <style module="classes">
 .root {
+	width: 100%;
 	height: 100vh;
 }
 

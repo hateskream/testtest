@@ -26,26 +26,26 @@
 
 <style module="classes">
 .widgetWrapper {
-	padding: 3px;
 	width: 100%;
-
+	padding: 3px;
 }
 
 .widget {
-	border-radius: 18px;
-	background: #131315;
 	width: 100%;
+	background: #131315;
+	border-radius: 18px;
 }
 
 .header {
-	padding: 8px 10px
+	padding: 8px 10px;
 }
 
 .headerText {
-	line-height: 22px;
 	padding: 0 8px;
+	line-height: 22px;
 }
+
 .body {
-	padding: 0 16px 8px 16px;
+	padding: 0 16px 8px;
 }
 </style>

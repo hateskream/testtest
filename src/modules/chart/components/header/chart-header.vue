@@ -6,7 +6,7 @@ import { useChartStore } from '@/modules/chart/store';
 import ChartBreadcrumbs from './chart-breadcrumbs.vue';
 import TickerImageItem from './assets/ticker-image-item.vue';
 import ChartStockInfo from './chart-stock-info.vue';
-import ChartPriceInfo from './chart-price-info.vue';
+import ChartPriceInfo from '../common/components/chart-price-info/chart-price-info.vue';
 
 
 const bgColor = ref('230, 23, 53');
@@ -82,5 +82,6 @@ const generate = () => {
 	display: flex;
 	flex-direction: column;
 	gap: 3px;
+	padding: 0 16px;
 }
 </style>
