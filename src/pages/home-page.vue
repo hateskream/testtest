@@ -45,6 +45,7 @@ watch(() => activeGroup.value.items, (newValue) => {
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;
 }
+
 </script>
 
 <template>
