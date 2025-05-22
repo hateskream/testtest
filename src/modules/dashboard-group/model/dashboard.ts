@@ -115,6 +115,20 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
+
+];
+
+
+export const INIT_DASHBOARDS_LIGHTWEIGHT_CHART: (IDashboardInstance | IDashboardFolder | IDashboardStack) [] = [
+	{
+		type: DashboardItemType.Instance,
+		id: 0,
+		name: 'Lightweight charts',
+		dashboardType: WidgetType.LightweightChart,
+		position: { x: 0, y: 0, w: 2, h: 4 },
+		minSize: WIDGET_MIN_SIZE,
+		maxSize: WIDGET_MAX_SIZE,
+	},
 ];
 
 const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };

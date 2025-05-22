@@ -11,6 +11,7 @@ export enum WidgetType {
 	Telegram = 'telegram',
 	Chart = 'chart',
 	Watchlist = 'watchlist',
+	LightweightChart = 'lightweight-chart',
 }
 
 export interface IMeta {

@@ -8,6 +8,7 @@ import {
 	type IDashboardStack,
 	type IDashboardTab,
 	INIT_DASHBOARDS,
+	INIT_DASHBOARDS_LIGHTWEIGHT_CHART,
 } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
@@ -18,6 +19,13 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			name: 'Standart',
 			isActive: true,
 			items: INIT_DASHBOARDS,
+			market: 'crypto',
+		},
+		{
+			id: 'group-2',
+			name: 'Chart',
+			isActive: false,
+			items: INIT_DASHBOARDS_LIGHTWEIGHT_CHART,
 			market: 'crypto',
 		},
 	]);

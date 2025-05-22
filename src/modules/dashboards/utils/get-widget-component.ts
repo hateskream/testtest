@@ -13,6 +13,7 @@ import { TelegramDashboard } from '@/modules/widgets/telegram';
 import { ChartDashboard } from '@/modules/widgets/chart';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { WidgetType } from '@/modules/dashboard-group';
+import { Chart } from '@/modules/lightweight-charts';
 
 export function getWidgetComponent(type: WidgetType) {
 	const components: Record<WidgetType, Component> = {
@@ -28,6 +29,7 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Telegram]: TelegramDashboard,
 		[WidgetType.Chart]: ChartDashboard,
 		[WidgetType.Watchlist]: WatchlistDashboard,
+		[WidgetType.LightweightChart]: Chart,
 	};
 
 	return components[type];
