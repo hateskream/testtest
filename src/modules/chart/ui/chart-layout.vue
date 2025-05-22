@@ -67,7 +67,9 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 			:class="classes.topContent"
 			:style="{opacity:`${opacityTop}`}"
 		>
-			<slot name="header"></slot>
+			<div :class="classes.header">
+				<slot name="header"></slot>
+			</div>
 			<slot name="topContent">Graph</slot>
 		</div>
 		<div
@@ -97,6 +99,10 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 .botContent {
 	padding-top: 35px;
 	transition: 0.4s ease-in-out;
+}
+
+.header {
+	padding: 16px 0;
 }
 
 </style>

@@ -28,7 +28,6 @@ const chartWidth = computed(() => {
 const chartHeight = computed(() => {
 	const minHeight = Math.floor(windowHeight.value * 0.5);
 	const calculatedHeight = Math.min(
-
 		minHeight,
 		515,
 	);
@@ -81,6 +80,13 @@ const handleRandomize = () => {
 								<span>Overview</span>
 							</div>
 							<price-performance-widget />
+							<div :class="classes.columnContent">
+								<div :class="classes.space"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+								<div :class="classes.placeholderBlock"></div>
+							</div>
 						</template>
 						<template #mainCol>
 							<div :class="classes.columnTitle">
@@ -200,5 +206,9 @@ const handleRandomize = () => {
 .active {
 	color: var(--text-color-contrast-500);
 	background: #ffffff;
+}
+
+.space {
+	height: 30px;
 }
 </style>
