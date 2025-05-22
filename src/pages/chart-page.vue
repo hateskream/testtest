@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useElementSize, useWindowSize } from '@vueuse/core';
 
 import { LayoutComponent } from '@/modules/layout';
 import { ChartHeader, ChartLayout, ColumnsLayout } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useChartStore } from '@/modules/chart/store';
+import { Chart } from '@/modules/lightweight-charts';
 
 import PricePerformanceWidget from '@/modules/chart/components/widgets/range/price-performance-widget.vue';
 
@@ -13,10 +15,30 @@ const { randomizeExchanges } = useChartStore();
 const viewMode = ref('mixed');
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
-const setChart = ()=>{
+const chartContainerEl = ref<HTMLDivElement | null>(null);
+
+const { width: containerWidth, height: containerHeight } = useElementSize(chartContainerEl);
+const { height: windowHeight } = useWindowSize();
+
+const chartWidth = computed(() => {
+	return containerWidth.value || 500;
+});
+
+const chartHeight = computed(() => {
+	const minHeight = Math.floor(windowHeight.value * 0.3);
+	const calculatedHeight = Math.max(
+		containerHeight.value || 0,
+		minHeight,
+		515,
+	);
+	return calculatedHeight;
+});
+
+const setChart = () => {
 	chartLayoutEl.value?.setMixedViewMode();
 };
-const setReports = ()=>{
+
+const setReports = () => {
 	chartLayoutEl.value?.setReportsViewMode();
 };
 </script>
@@ -29,7 +51,15 @@ const setReports = ()=>{
 					<chart-header />
 				</template>
 				<template #topContent>
-					<div :class="classes.placeholderTop"></div>
+					<div
+						ref="chartContainerEl"
+						:class="classes.placeholderTop"
+					>
+						<chart
+							:width="chartWidth"
+							:height="chartHeight"
+						/>
+					</div>
 				</template>
 				<template #botContent>
 					<columns-layout>
@@ -88,7 +118,7 @@ const setReports = ()=>{
 							</div>
 						</template>
 					</columns-layout>
-				</template>/
+				</template>
 			</chart-layout>
 			<div :class="classes.navigation">
 				<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" @click="setChart">
@@ -104,11 +134,14 @@ const setReports = ()=>{
 		</template>
 	</layout-component>
 </template>
+
 <style module="classes">
 .placeholderTop {
-	min-height: 400px;
-	background: rgb(84 84 95 / 60%);
-	backdrop-filter: blur(14px);
+	min-height: 30svh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .columnTitle {
@@ -156,10 +189,8 @@ const setReports = ()=>{
 	cursor: pointer;
 }
 
-
 .active {
 	color: var(--text-color-contrast-500);
 	background: #ffffff;
 }
-
 </style>
