@@ -68,8 +68,8 @@ watch(mainData, () => {
 });
 
 watch(() => [props.width, props.height], () => {
-	chartHistory.value!.resize(props.width, props.height);
-	chart.value!.resize(props.width, 96);
+	chartHistory.value!.resize(props.width, 96);
+	chart.value!.resize(props.width, props.height);
 });
 
 const groupedData = computed(() => {
