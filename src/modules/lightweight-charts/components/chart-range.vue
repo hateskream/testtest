@@ -41,14 +41,14 @@ const ranges = ref(Object.entries(RangeChart).map(([title, val])=> ({
 .range {
 	display: flex;
 	align-items: center;
-	width: max-content;
+	width: 100%;
 	padding: 2px;
 	background-color: rgb(50 50 52 / 50%);
 	border-radius: 14px;
 }
 
 .rangeItem {
-	min-width: 130px;
+	flex: auto;
 	padding: 6px 8px;
 	text-align: center;
 	border-radius: 16px;

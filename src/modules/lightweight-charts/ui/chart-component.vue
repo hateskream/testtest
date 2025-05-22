@@ -67,6 +67,11 @@ watch(() => mainData, () => {
 	updateIndicators();
 });
 
+watch(() => [props.width, props.height], () => {
+	chartHistory.value!.resize(props.width, props.height);
+	chart.value!.resize(props.width, 96);
+});
+
 const groupedData = computed(() => {
 	const group: IGroupedData = {} as IGroupedData;
 
