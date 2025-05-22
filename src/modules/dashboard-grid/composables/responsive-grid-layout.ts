@@ -1,7 +1,8 @@
 import { onMounted, onUnmounted, readonly, ref, type Ref } from 'vue';
-import { throttle } from '@vexip-ui/utils';
 
 import { calculateGrid, calculateRows } from '../utils';
+
+type CallbackType = (width: number, height: number) => void;
 
 export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const rowsNum = ref(0);
@@ -10,28 +11,39 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const columnWidth = ref(0);
 	const rowNumGrid = ref(0);
 
-	const debaunceUpdate = throttle(update, 300);
+	let disconectObserverFunc: () => void = () => {};
 
 	onMounted(() => {
-		update();
-		window.addEventListener('resize', debaunceUpdate);
+		startObserve(grid.value, update);
 	});
 
-	onUnmounted(() => {
-		window.removeEventListener('resize', debaunceUpdate);
-	});
+	onUnmounted(disconectObserverFunc);
 
-	function update() {
-		if (!grid.value) {
+	function startObserve(element: HTMLElement | null, setterCallback: CallbackType) {
+		if (!element) {
 			return;
 		}
 
+		const disconect = createResizeObserver(element, setterCallback);
+		disconectObserverFunc = disconect;
+	}
+
+	function createResizeObserver(element: HTMLElement, setterCallback: CallbackType) {
+		const observer = new ResizeObserver(() => {
+			setterCallback(element.clientWidth, element.clientHeight);
+		});
+
+		observer.observe(element);
+		return () => observer.disconnect();
+	}
+
+	function update(width: number, height: number) {
 		const {
 			rowHeight: rowHeightCalc,
 			columnWidth: columnWidthCalc,
 			columns,
 			rows,
-		} = calculateGrid(grid.value.offsetWidth, grid.value.offsetHeight);
+		} = calculateGrid(width, height);
 
 		columnsNum.value = columns;
 		rowsNum.value = rows;
