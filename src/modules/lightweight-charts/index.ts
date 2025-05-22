@@ -1,3 +1,3 @@
-import Chart from './ui/chart.vue';
+import Chart from './ui/chart-component.vue';
 
 export { Chart };

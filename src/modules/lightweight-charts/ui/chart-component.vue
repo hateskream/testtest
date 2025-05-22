@@ -13,7 +13,6 @@ import {
 	type CandlestickData,
 } from 'lightweight-charts';
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
-// import { useDebounceFn } from '@vueuse/core';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
 import { IndicatorsChart, RangeChart, TypeChart } from '../model/chart';
@@ -226,7 +225,7 @@ onMounted(() => {
 				crosshairMarkerVisible: false,
 			}),
 			isActive: true,
-			calcSeries(data: ICalcSeriesData, type: TypeChart) {
+			calcSeries(data: ICalcSeriesData) {
 				return prepareSeries(data, 'Line');
 			},
 		},

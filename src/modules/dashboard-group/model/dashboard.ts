@@ -128,6 +128,8 @@ export const INIT_DASHBOARDS_LIGHTWEIGHT_CHART: (IDashboardInstance | IDashboard
 		position: { x: 0, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
+		icon: IconIds.LogoWidgetMarket,
+		description: 'Candlestick formations and price action analysis.',
 	},
 ];
 
