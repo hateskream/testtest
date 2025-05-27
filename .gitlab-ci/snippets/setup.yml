@@ -1,18 +1,17 @@
 install_dependencies:
   stage: setup
-  image:
-    name: node:23.11.1-alpine
-    pull_policy: if-not-present
+  image: node:22.13.0-alpine
 
   script:
     - npm ci
+    # - npm i
 
-  artifacts:
-    paths:
-      - node_modules/
-    expire_in: 1h
+  # cache:
+  #   key: ${CI_COMMIT_REF_SLUG}
+  #   paths:
+  #     - frontend/node_modules/
+  #     - frontend/package-lock.json
 
   rules:
-    - if: $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_REF_NAME != "main"'
+      when: always

@@ -1,8 +1,6 @@
 .lint_configuration:
   stage: lint
-  image:
-    name: node:23.11.1-alpine
-    pull_policy: if-not-present
+  image: node:22.13.0-alpine
 
   dependencies:
     - install_dependencies
@@ -11,8 +9,7 @@ lint_uscode:
   extends: .lint_configuration
   script:
     - npm run lint
-
+    
   rules:
-    - if: $DISABLE_LINT == "true" || $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_REF_NAME != "main"'
+      when: always

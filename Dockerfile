@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:23.11.1-alpine AS builder
+FROM node:22.13.0-alpine AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN npm run build
 # RUN npm run build
 
 # Stage 2
-FROM nginx:1.28.0-alpine
+FROM nginx:1.27.3-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY .nginx/config.conf /etc/nginx/conf.d/config.conf
 EXPOSE 8082
