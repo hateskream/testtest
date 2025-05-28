@@ -40,10 +40,10 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		return group;
 	});
 
-	function addTab() {
+	function addTab(name?: string) {
 		const newGroup: IDashboardGroup = {
 			id: generateTimestampId(),
-			name: 'Dashboard',
+			name: name || 'Dashboard',
 			isActive: false,
 			items: [],
 			market: 'crypto',
