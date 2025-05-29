@@ -75,7 +75,7 @@ const endDisableScroll = () => {
 					ref="chartRef"
 					:width="chartWidth"
 					:height="chartHeight"
-					:scrollable="disableScroll"
+					:disable-scroll="disableScroll"
 				/>
 			</div>
 		</template>

@@ -26,12 +26,10 @@ import ChartRange from '../components/chart-range.vue';
 interface IChartProps {
 	width: number;
 	height: number;
-	scrollable: boolean;
+	disableScroll: boolean;
 }
 
-const props = withDefaults(defineProps<IChartProps>(), {
-	scrollable: false,
-});
+const props = defineProps<IChartProps>();
 
 defineExpose({
 	regenerateData,
@@ -70,34 +68,22 @@ watch(mainData, () => {
 	updateIndicators();
 });
 
-watch(() => props.scrollable, () => {
+watch(() => props.disableScroll, () => {
 	chartHistory.value!.applyOptions({
 		handleScroll: {
-			mouseWheel: props.scrollable,
-			pressedMouseMove: props.scrollable,
-			horzTouchDrag: props.scrollable,
-			vertTouchDrag: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: props.scrollable,
-			pinch: props.scrollable,
-			axisPressedMouseMove: props.scrollable,
-			axisDoubleClickReset: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 	});
 
 	chart.value!.applyOptions({
 		handleScroll: {
-			mouseWheel: props.scrollable,
-			pressedMouseMove: props.scrollable,
-			horzTouchDrag: props.scrollable,
-			vertTouchDrag: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: props.scrollable,
-			pinch: props.scrollable,
-			axisPressedMouseMove: props.scrollable,
-			axisDoubleClickReset: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 	});
 });
@@ -211,16 +197,10 @@ onMounted(() => {
 		},
 
 		handleScroll: {
-			mouseWheel: props.scrollable,
-			pressedMouseMove: props.scrollable,
-			horzTouchDrag: props.scrollable,
-			vertTouchDrag: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: props.scrollable,
-			pinch: props.scrollable,
-			axisPressedMouseMove: props.scrollable,
-			axisDoubleClickReset: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 
 		grid: {
@@ -243,16 +223,10 @@ onMounted(() => {
 		},
 
 		handleScroll: {
-			mouseWheel: props.scrollable,
-			pressedMouseMove: props.scrollable,
-			horzTouchDrag: props.scrollable,
-			vertTouchDrag: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: props.scrollable,
-			pinch: props.scrollable,
-			axisPressedMouseMove: props.scrollable,
-			axisDoubleClickReset: props.scrollable,
+			mouseWheel: props.disableScroll,
 		},
 	});
 
