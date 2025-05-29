@@ -4,7 +4,7 @@ import { useElementHover } from '@vueuse/core';
 import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { RouteNames } from '@/app/routes.ts';
+import { RouteNames } from '@/types/route.d';
 import { usePanelWidth, useMousePosition } from '../composables';
 
 import HeaderPanel from './header-panel.vue';
@@ -42,11 +42,11 @@ const navigation: INavigationItem[] = [
 		id: IconIds.Chart,
 		routeName: RouteNames.Chart,
 	},
-	{
-		icon: IconIds.Calendar,
-		id: IconIds.Calendar,
-		routeName: RouteNames.Home,
-	},
+	// {
+	// 	icon: IconIds.Calendar,
+	// 	id: IconIds.Calendar,
+	// 	routeName: RouteNames.Home,
+	// },
 ];
 
 const layoutState = reactive<ILayoutState>({
@@ -139,6 +139,7 @@ function unFixCurtain() {
 					:key="item.icon"
 					:to="{name:item.routeName}"
 					:class="classes.iconWrapper"
+					:active-class="classes.activeLink"
 				>
 					<ui-icon
 						:id="item.icon"
@@ -266,17 +267,19 @@ function unFixCurtain() {
 	align-items: center;
 	width: 48px;
 	height: 48px;
-	color: var(--icon-color-base-500);
+	color: var(--icon-color-base-300);
 	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		color: var(--icon-color-base-500);
+	}
 }
 
 .leftPanel > :first-child {
 	margin-bottom: 12px;
 }
 
-.iconNotActive {
-	color: var(--icon-color-base-300);
-}
 
 .rightPanel {
 	display: flex;
@@ -303,5 +306,9 @@ function unFixCurtain() {
 	line-height: 170%;
 	text-align: center;
 	letter-spacing: 0.8;
+}
+
+.activeLink .iconWrapper {
+	color: var(--icon-color-base-500);
 }
 </style>

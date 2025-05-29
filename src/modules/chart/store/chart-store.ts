@@ -2,59 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
 import { IconIds } from '@/shared/ui/icon';
-
-interface IPeriodData {
-	min: number;
-	max: number;
-	current: number;
-	start: number;
-	symbol: string;
-}
-
-interface IAllTimeData {
-	high: {
-		value: number;
-		date: string;
-		percentage: number;
-	};
-	low: {
-		value: number;
-		date: string;
-		percentage: number;
-	};
-}
-
-interface IExchange {
-	id: number;
-	source: string;
-	fullName: string;
-	symbol: string;
-	currency: string;
-	currency_symbol: string;
-	displaySymbol: string;
-	isPrimary: boolean;
-	price: number;
-	change: {
-		points: number;
-		percentage: number;
-	};
-	openTime: string;
-	closeTime: string;
-	iconId: IconIds;
-	periods: {
-		'1D': IPeriodData;
-		'1W': IPeriodData;
-		'1M': IPeriodData;
-		'3M': IPeriodData;
-		'1Y': IPeriodData;
-	};
-	allTime: IAllTimeData;
-}
-
-interface IPriceRange {
-	min: number;
-	max: number;
-}
+import type { IPeriodData, IPriceRange, IExchange } from '../models';
 
 export const useChartStore = defineStore('chart', () => {
 	// Color state

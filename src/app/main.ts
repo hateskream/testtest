@@ -6,7 +6,7 @@ import '@/assets/styles/base.css';
 
 import 'virtual:svg-icons-register';
 
-import routes from './routes';
+import { router } from './router';
 import { queryClient } from '@/shared/service/query-client';
 
 import App from './app.vue';
@@ -14,7 +14,7 @@ import App from './app.vue';
 const app = createApp(App);
 
 app.use(createPinia());
-app.use(routes);
+app.use(router);
 app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
 
 app.mount('#app');
