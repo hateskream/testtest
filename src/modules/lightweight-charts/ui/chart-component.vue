@@ -26,6 +26,7 @@ import ChartRange from '../components/chart-range.vue';
 interface IChartProps {
 	width: number;
 	height: number;
+	disableScroll: boolean;
 }
 
 const props = defineProps<IChartProps>();
@@ -65,6 +66,26 @@ const mainData = ref(generateCandleDataFromLineData(generateLineData(6000)));
 
 watch(mainData, () => {
 	updateIndicators();
+});
+
+watch(() => props.disableScroll, () => {
+	chartHistory.value!.applyOptions({
+		handleScroll: {
+			mouseWheel: !props.disableScroll,
+		},
+		handleScale: {
+			mouseWheel: !props.disableScroll,
+		},
+	});
+
+	chart.value!.applyOptions({
+		handleScroll: {
+			mouseWheel: !props.disableScroll,
+		},
+		handleScale: {
+			mouseWheel: !props.disableScroll,
+		},
+	});
 });
 
 watch(() => [props.width, props.height], () => {
@@ -175,6 +196,13 @@ onMounted(() => {
 			visible: false,
 		},
 
+		handleScroll: {
+			mouseWheel: !props.disableScroll,
+		},
+		handleScale: {
+			mouseWheel: !props.disableScroll,
+		},
+
 		grid: {
 			horzLines: {
 				visible: false,
@@ -192,6 +220,13 @@ onMounted(() => {
 		layout: {
 			textColor: '#9A9A9D',
 			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
+		},
+
+		handleScroll: {
+			mouseWheel: !props.disableScroll,
+		},
+		handleScale: {
+			mouseWheel: !props.disableScroll,
 		},
 	});
 
