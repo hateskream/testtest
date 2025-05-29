@@ -93,23 +93,24 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 
 <style module="classes">
 .root {
-  width: 100%;
-  height: 100vh;
+	width: 100%;
+	height: 100vh;
 }
 
 .topContent {
-  padding-bottom: 26px;
-  border-bottom: 2px solid var(--border-color-surface-02);
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+	padding-bottom: 26px;
+	border-bottom: 2px solid var(--border-color-surface-02);
+	opacity: 1;
+	transition: opacity 0.5s ease-in-out;
 }
 
 .botContent {
-  padding-top: 35px;
-  transition: 0.4s ease-in-out;
+	padding-top: 35px;
+	transition: 0.4s ease-in-out;
 }
-.locked{
-  pointer-events: none;
+
+.locked {
+	pointer-events: none;
 }
 
 </style>
