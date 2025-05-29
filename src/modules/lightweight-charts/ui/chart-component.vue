@@ -71,19 +71,19 @@ watch(mainData, () => {
 watch(() => props.disableScroll, () => {
 	chartHistory.value!.applyOptions({
 		handleScroll: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 	});
 
 	chart.value!.applyOptions({
 		handleScroll: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 	});
 });
@@ -197,10 +197,10 @@ onMounted(() => {
 		},
 
 		handleScroll: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 
 		grid: {
@@ -223,10 +223,10 @@ onMounted(() => {
 		},
 
 		handleScroll: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 		handleScale: {
-			mouseWheel: !props.disableScroll,
+			mouseWheel: props.disableScroll,
 		},
 	});
 
