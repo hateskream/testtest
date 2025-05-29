@@ -47,14 +47,14 @@ deploy:
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin $MANIFEST_BRANCH_REPO
 
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
-#      variables:
-#        DEPLOYMENT_PATH: "demo-front/deployment.yaml"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      variables:
+        DEPLOYMENT_PATH: "demo-front/deployment.yaml"
 #    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_AUTHOR != "GitLab CI <ci@planet9.uk>" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "sandbox/vasiliy"'
 #      variables:
 #        DEPLOYMENT_PATH: "demo-front/sandbox/vasiliy/deployment.yaml"
-#    - when: never
+    - when: never
     
 
 build:
