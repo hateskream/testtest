@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, useTemplateRef } from 'vue';
+import { computed, provide, ref, useCssModule, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import {
 	autoUpdate,
@@ -17,6 +17,9 @@ interface IBaseDashboardComponentProps {
 }
 
 const props = defineProps<IBaseDashboardComponentProps>();
+
+provide('isResize', props.isResizing);
+
 
 const classes = useCssModule('classes');
 
