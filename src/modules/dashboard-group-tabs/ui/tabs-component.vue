@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import { templateRef } from '@vueuse/core';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IDashboardTab } from '@/modules/dashboard-group';
 
@@ -15,37 +12,12 @@ interface ITabsComponentProps {
 const props = defineProps<ITabsComponentProps>();
 
 const emit = defineEmits<{
-	(event: 'add-tab', name: string): void;
+	(event: 'add-tab'): void;
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
 }>();
-
-const tabRenameInputRef = templateRef('tabRenameInputRef');
-const newTabName = ref('Dashboard');
-const isEditing = ref(false);
-
 function onAddTab() {
-	isEditing.value = true;
-	nextTick(() => {
-		tabRenameInputRef.value?.focus();
-		tabRenameInputRef.value?.select();
-	});
-}
-
-function onSaveNewTab(event: Event) {
-	if (event?.type !== 'blur') {
-		tabRenameInputRef.value.blur();
-		return;
-	}
-
-	if (!newTabName.value.trim()) {
-		return;
-	}
-
-	emit('add-tab', newTabName.value);
-	isEditing.value = false;
-	newTabName.value = 'Dashboard';
-
+	emit('add-tab');
 }
 
 function onSwitchTab(id: string) {
@@ -67,21 +39,6 @@ function onRenameTab(id: string, name: string) {
 			@rename="onRenameTab"
 		/>
 
-		<tab-wrapper
-			v-if="isEditing"
-			class="editing"
-			is-editing
-		>
-			<input
-				ref="tabRenameInputRef"
-				v-model="newTabName"
-				:class="classes.tabRenameInput"
-				type="text"
-				@keydown.enter="onSaveNewTab"
-				@blur="onSaveNewTab"
-			/>
-		</tab-wrapper>
-
 		<tab-wrapper @click="onAddTab">
 			<ui-icon
 				:id="IconIds.Plus"
@@ -98,17 +55,5 @@ function onRenameTab(id: string, name: string) {
 	display: flex;
 	gap: 10px;
 	justify-content: center;
-}
-
-.tabRenameInput {
-	width: 100px;
-	font-weight: 300;
-	font-size: 13px;
-	line-height: 170%;
-	color: #ffffff;
-	letter-spacing: 0.8px;
-	background: transparent;
-	border: none;
-	outline: none;
 }
 </style>
