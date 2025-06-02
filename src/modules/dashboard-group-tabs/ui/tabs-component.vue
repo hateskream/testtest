@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { templateRef } from '@vueuse/core';
+import { nextTick } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IDashboardTab } from '@/modules/dashboard-group';
 
@@ -16,6 +19,7 @@ const emit = defineEmits<{
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
 }>();
+
 function onAddTab() {
 	emit('add-tab');
 }
@@ -27,12 +31,27 @@ function onSwitchTab(id: string) {
 function onRenameTab(id: string, name: string) {
 	emit('rename-tab', id, name);
 }
+
+const tabItemRefs = templateRef('tabItemRefs');
+
+const renameTab = () => {
+	nextTick(() => {
+		props.tabs.forEach((tab, index) => {
+			if (tab.isEditing) {
+				tabItemRefs.value[index]?.startEditing();
+			}
+		});
+	});
+};
+
+defineExpose({ renameTab });
 </script>
 
 <template>
 	<div :class="classes.tabs">
 		<tab-item
 			v-for="tab in props.tabs"
+			ref="tabItemRefs"
 			:key="tab.id"
 			:tab="tab"
 			@switch="onSwitchTab"

@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 
+import type { IDashboardTab } from '@/modules/dashboard-group/model';
+
 import TabWrapper from './tab-wrapper.vue';
 
 interface ITabItemProps {
-	tab: {
-		id: string;
-		name: string;
-		isActive: boolean;
-	};
+	tab: IDashboardTab;
 }
 
 const props = defineProps<ITabItemProps>();
@@ -52,6 +50,7 @@ function finishEditing() {
 	if (tabName.value.trim()) {
 		emit('rename', props.tab.id, tabName.value.trim());
 	}
+
 	editing.value = false;
 	isInitialEdit.value = true;
 }
@@ -67,6 +66,8 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	input.style.width = `${measurer.offsetWidth}px`;
 	document.body.removeChild(measurer);
 }
+
+defineExpose({ startEditing });
 </script>
 
 <template>
@@ -81,7 +82,6 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 			:class="{ [classes.initialEdit]: isInitialEdit }"
 			autofocus
 			@blur="finishEditing"
-			@keyup.enter="finishEditing"
 		/>
 		<span
 			v-else

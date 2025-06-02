@@ -5,6 +5,7 @@ export interface IDashboardGroup {
 	name: string;
 	items: (IDashboardInstance | IDashboardFolder | IDashboardStack)[];
 	isActive: boolean;
+	isEditing: boolean;
 	market: string;
 }
 
@@ -12,4 +13,5 @@ export interface IDashboardTab {
 	id: string;
 	name: string;
 	isActive: boolean;
+	isEditing: boolean;
 }
