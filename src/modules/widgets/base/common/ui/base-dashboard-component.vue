@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, provide, ref, useCssModule, useTemplateRef } from 'vue';
+import { computed, ref, useCssModule, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import {
 	autoUpdate,
