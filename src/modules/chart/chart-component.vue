@@ -8,6 +8,8 @@ import { Chart } from '@/modules/lightweight-charts';
 import { ChartHeaderComponent, ChartWidgetPricePerformance } from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 
+import ChartWidgetsExplorer from '@/modules/chart/components/widgets/explorer/chart-widgets-explorer.vue';
+
 
 const { randomizeExchanges } = useChartStore();
 
@@ -92,6 +94,7 @@ const endDisableScroll = () => {
 						<span>Overview</span>
 					</div>
 					<chart-widget-price-performance />
+					<chart-widgets-explorer />
 					<div :class="classes.columnContent">
 						<div :class="classes.space"></div>
 						<div :class="classes.placeholderBlock"></div>
