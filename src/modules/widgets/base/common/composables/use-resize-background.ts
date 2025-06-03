@@ -1,7 +1,9 @@
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+
+import { useResizeContext } from './use-resize-context';
 
 export function useResizeBackground() {
-	const isResizing = inject('isResize') as boolean;
+	const isResizing = useResizeContext();
 
 	const backgroundStyle = computed(() => ({
 		backgroundColor: isResizing

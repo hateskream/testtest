@@ -3,7 +3,7 @@ import draggableComponent from 'vuedraggable';
 
 // FIXME: linter error
 // eslint-disable-next-line import/order
-import { useResizeBackground } from '@/modules/widgets/base/common/composables/resize';
+import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 
 const { backgroundStyle } = useResizeBackground();
 

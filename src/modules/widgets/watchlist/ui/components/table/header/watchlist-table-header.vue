@@ -2,7 +2,7 @@
 import draggableComponent from 'vuedraggable';
 
 import { useWatchlistStore } from '../../../../stores';
-import { useResizeBackground } from '@/modules/widgets/base/common/composables/resize';
+import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 
 import WatchlistSortableColumn from './watchlist-sortable-column.vue';
 import WatchlistMetricsSelector from './watchlist-metrics-selector.vue';
