@@ -3,7 +3,6 @@ import { ref, reactive, watch, defineComponent } from 'vue';
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 
-// Single Generic Icon Component (like in the screenshot)
 const GenericIcon = defineComponent({
 	name: 'GenericIcon',
 	template: `
