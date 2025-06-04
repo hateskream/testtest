@@ -75,6 +75,7 @@ defineExpose({ startEditing });
 		:is-active="tab.isActive"
 		:is-editing="editing"
 		:class="classes.tab"
+		@click="emit('switch', tab.id)"
 	>
 		<input
 			v-if="editing"
@@ -85,7 +86,6 @@ defineExpose({ startEditing });
 		/>
 		<span
 			v-else
-			@click="emit('switch', tab.id)"
 			@dblclick="startEditing"
 		>
 			{{ tab.name }}
