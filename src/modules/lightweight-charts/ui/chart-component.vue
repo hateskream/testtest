@@ -193,7 +193,15 @@ onMounted(() => {
 		},
 
 		rightPriceScale: {
-			visible: false,
+			scaleMargins: {
+				top: 0.3, // leave some space for the legend
+				bottom: 0.25,
+			},
+
+
+			minimumWidth: 55,
+
+			borderVisible: false,
 		},
 
 		handleScroll: {
@@ -228,15 +236,15 @@ onMounted(() => {
 		handleScale: {
 			mouseWheel: props.disableScroll,
 		},
-	});
 
-
-	chart.value.applyOptions({
 		rightPriceScale: {
 			scaleMargins: {
 				top: 0.3, // leave some space for the legend
 				bottom: 0.25,
 			},
+
+			minimumWidth: 55,
+			borderVisible: false,
 		},
 		// hide the grid lines
 		grid: {
@@ -248,7 +256,6 @@ onMounted(() => {
 			},
 		},
 	});
-
 
 	chart.value!.timeScale().applyOptions({
 		borderColor: 'rgba(4, 237, 160, 0.00)',
