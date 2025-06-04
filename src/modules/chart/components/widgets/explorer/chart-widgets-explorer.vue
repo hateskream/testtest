@@ -15,9 +15,10 @@ const activeSection = ref<string | null>(null);
 const selectedItem = ref<string | null>(null);
 const scrollContainerRef = ref<HTMLElement | null>(null);
 
+
 const emit = defineEmits<{
 	sectionToggled: [sectionId: string | null];
-	itemSelected: [sectionId: string, item: string];
+	itemSelected: [sectionId: string | null, item: string | null];
 }>();
 
 const { arrivedState } = useScroll(scrollContainerRef, {
@@ -78,21 +79,14 @@ watch(activeSection, async (newSection) => {
 });
 
 watch([activeSection, selectedItem], ([section, item]) => {
-	if (section && item) {
-		emit('itemSelected', section, item);
-	}
+	emit('itemSelected', section, item);
 });
 </script>
 
 <template>
 	<chart-common-widget-layout>
 		<template #header>
-			<div :class="classes.header">
-				<div :class="classes.navTabs">
-					<button :class="[classes.navTab, classes.active]">Explore</button>
-					<button :class="classes.navTab">My notes</button>
-				</div>
-			</div>
+			Explorer
 		</template>
 		<template #body>
 			<div :class="classes.accordionContent">
@@ -107,30 +101,36 @@ watch([activeSection, selectedItem], ([section, item]) => {
 						:class="classes.section"
 					>
 						<div :class="classes.sectionHeader">
-							<button
+							<div
 								:class="[
-									classes.sectionButton,
-									{ [classes.sectionButtonActive]: activeSection === section.id }
+									classes.sectionRow,
+									{ [classes.sectionRowActive]: activeSection === section.id }
 								]"
 								@click="toggleSection(section.id)"
 							>
-								<ui-icon
-									:id="IconIds.DropdownDown"
-									width="12"
-									height="12"
-									:class="[
-										classes.chevronIcon,
-										{ [classes.chevronRotated]: activeSection === section.id }
-									]"
-								/>
-								<div :class="classes.iconContainer">
+								<div :class="classes.dropdownIconContainer">
 									<ui-icon
-										:id="IconIds.Deals"
-										:class="classes.sectionIcon"
+										:id="IconIds.DropdownDown"
+										width="20px"
+										height="20px"
+										:class="[
+											classes.chevronIcon,
+											{ [classes.chevronRotated]: activeSection === section.id }
+										]"
 									/>
 								</div>
-								<span :class="classes.sectionTitle">{{ section.title }}</span>
-							</button>
+								<div :class="classes.sectionWrapper">
+									<div :class="classes.iconContainer">
+										<ui-icon
+											:id="IconIds.Deals"
+											:class="classes.sectionIcon"
+											width="20px"
+											height="20px"
+										/>
+									</div>
+									<span :class="classes.sectionTitle">{{ section.title }}</span>
+								</div>
+							</div>
 						</div>
 
 						<transition
@@ -141,24 +141,29 @@ watch([activeSection, selectedItem], ([section, item]) => {
 							:enter-to-class="classes.slideEnterTo"
 							:leave-from-class="classes.slideLeaveFrom"
 						>
-							<div v-if="activeSection === section.id" :class="classes.sectionItems">
-								<button
+							<div v-if="activeSection === section.id">
+								<div
 									v-for="(item, index) in section.items"
 									:key="index"
 									:class="[
-										classes.itemButton,
-										{ [classes.itemButtonSelected]: selectedItem === item }
+										classes.sectionRow,
+										{ [classes.sectionRowActive]: selectedItem === item.id }
 									]"
-									@click="selectItem(item)"
+									@click="selectItem(item.id)"
 								>
-									<div :class="classes.iconContainer">
-										<ui-icon
-											:id="IconIds.Deals"
-											:class="classes.itemIcon"
-										/>
+									<div :class="classes.dropdownIconContainer" />
+									<div :class="classes.sectionWrapper">
+										<div :class="classes.iconContainer">
+											<ui-icon
+												:id="IconIds.Deals"
+												:class="classes.sectionIcon"
+												width="20px"
+												height="20px"
+											/>
+										</div>
+										<span :class="classes.sectionTitle">{{ item.title }}</span>
 									</div>
-									<span :class="classes.itemText">{{ item }}</span>
-								</button>
+								</div>
 							</div>
 						</transition>
 					</div>
@@ -169,154 +174,111 @@ watch([activeSection, selectedItem], ([section, item]) => {
 </template>
 
 <style module="classes">
-.accordionContainer {
-	width: 20rem;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-	color: white;
-	background-color: black;
-}
-
-.header {
-	padding: 1rem;
-	border-bottom: 1px solid gray;
-}
-
-.navTabs {
-	display: flex;
-	gap: 1.5rem;
-}
-
-.navTab {
-	padding: 0;
-	font-weight: 500;
-	font-size: 0.875rem;
-	color: gray;
-	background: none;
-	border: none;
-	cursor: pointer;
-	transition: all 0.15s ease-in-out;
-
-	&:hover {
-		color: white;
-	}
-
-	&.active {
-		color: white;
-	}
-}
-
 .accordionContent {
-	height: 24rem;
+	height: 384px;
+	padding: 0 8px 8px;
 	overflow: hidden;
-}
 
-.scrollContainer {
-	height: 100%;
-	overflow-y: auto;
-}
+	.scrollContainer {
+		height: 100%;
+		overflow-y: auto;
 
-.section {
-	border-bottom: 1px solid darkgray;
-}
+		.sectionHeader {
+			position: sticky;
+			top: 0;
+			z-index: 10;
+			background-color: transparent;
+		}
 
-.sectionHeader {
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	background-color: black;
-}
+		.sectionRow {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			padding: 3px 0;
+			text-align: left;
+			color: var(--text-color-base-500);
+			cursor: pointer;
+			transition: all 0.15s ease-in-out;
 
-.sectionButton {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	padding: 1rem;
-	text-align: left;
-	color: white;
-	background: none;
-	border: none;
-	cursor: pointer;
-	transition: all 0.15s ease-in-out;
-	gap: 0.75rem;
+			.dropdownIconContainer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 30px;
+				height: 30px;
 
-	&:hover {
-		background-color: darkgray;
-	}
+				.chevronIcon {
+					flex-shrink: 0;
+					width: 18px;
+					height: 18px;
+					color: #7a7a7a;
+					transform: rotate(-90deg);
+					transition: transform 0.15s ease-in-out;
 
-	&.sectionButtonActive {
-		background-color: darkgray;
-	}
-}
+					&.chevronRotated {
+						transform: rotate(0deg);
+					}
+				}
+			}
 
-.chevronIcon {
-	flex-shrink: 0;
-	width: 1.125rem;
-	height: 1.125rem;
-	transform: rotate(-90deg);
-	transition: transform 0.15s ease-in-out;
+			.sectionWrapper {
+				display: flex;
+				align-items: center;
+				width: 100%;
+				padding: 5px 6px;
+				font-weight: 300;
+				font-size: 12px;
+				line-height: 18px;
+				border-radius: 10px;
+				gap: 2px;
+			}
 
-	&.chevronRotated {
-		transform: rotate(0deg);
-	}
-}
+			&.sectionRowActive {
+				.sectionWrapper {
+					background-color: rgb(51 51 51 / 80%);
+					opacity: 1;
 
-.iconContainer {
-	display: flex;
-	flex-shrink: 0;
-	justify-content: center;
-	align-items: center;
-	width: 1.5rem;
-	height: 1.5rem;
-	background-color: gray;
-	border-radius: 50%;
-}
+					.iconContainer {
+						.sectionIcon {
+							color: var(--text-color-base-500);
+						}
+					}
+				}
+			}
 
-.sectionIcon {
-	width: 1.25rem;
-	height: 1.25rem;
-}
+			&:not(.sectionRowActive):hover {
+				.sectionWrapper {
+					background-color: rgb(64 64 64 / 40%);
 
-.itemIcon {
-	width: 1rem;
-	height: 1rem;
-}
+					.iconContainer {
+						.sectionIcon {
+							color: var(--text-color-base-500);
+						}
+					}
+				}
+			}
 
-.sectionTitle {
-	flex: 1;
-	font-weight: 500;
-}
+			.iconContainer {
+				display: flex;
+				flex-shrink: 0;
+				justify-content: center;
+				align-items: center;
+				width: 20px;
+				height: 20px;
 
-.sectionItems {
-	background-color: darkgray;
-}
+				.sectionIcon {
+					color: var(--text-color-base-300);
+				}
+			}
 
-.itemButton {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	padding: 0.75rem;
-	padding-left: 3rem;
-	text-align: left;
-	color: white;
-	background: none;
-	border: none;
-	cursor: pointer;
-	transition: all 0.15s ease-in-out;
-	gap: 0.75rem;
-
-	&:hover {
-		background-color: gray;
-	}
-
-	&.itemButtonSelected {
-		background-color: gray;
+			.sectionTitle {
+				flex: 1;
+			}
+		}
 	}
 }
 
-.itemText {
-	font-size: 0.875rem;
-	color: lightgray;
-}
 
 .slideEnterActive,
 .slideLeaveActive {
@@ -336,12 +298,4 @@ watch([activeSection, selectedItem], ([section, item]) => {
 	opacity: 1;
 }
 
-button {
-	font-family: inherit;
-
-	&:focus {
-		outline: 2px solid blue;
-		outline-offset: 2px;
-	}
-}
 </style>

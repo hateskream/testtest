@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { useElementSize, useWindowSize } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -10,17 +10,22 @@ import {
 	ChartWidgetPricePerformance,
 	ChartWidgetsExplorer,
 	chartWidgetTestSections,
+	ChartMainColumnComponent,
 } from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
-
 
 const { randomizeExchanges } = useChartStore();
 
 const viewMode = ref('mixed');
 
+const activeSection = ref<string | null>(null);
+const selectedItem = ref<string | null>(null);
+
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const chartContainerEl = ref<HTMLDivElement | null>(null);
 const chartRef = ref<InstanceType<typeof Chart> | null>(null);
+
+const itemRefs = ref<Map<string, HTMLElement>>(new Map());
 
 const { width: containerWidth } = useElementSize(chartContainerEl);
 const { height: windowHeight } = useWindowSize();
@@ -31,7 +36,6 @@ const chartWidth = computed(() => {
 
 const chartHeight = computed(() => {
 	const height = Math.floor(windowHeight.value * 0.5);
-
 	return height;
 });
 
@@ -52,16 +56,54 @@ const disableScroll = ref(false);
 
 const startDisableScroll = () => {
 	disableScroll.value = true;
-
 };
+
 const endDisableScroll = () => {
 	disableScroll.value = false;
 };
 
+function handleSelected(section: string | null, item: string | null) {
+	activeSection.value = section;
+	selectedItem.value = item;
+}
+
+// Function to register item refs from child components
+const registerItemRef = (itemId: string, element: HTMLElement | null) => {
+	if (element) {
+		itemRefs.value.set(itemId, element);
+	} else {
+		itemRefs.value.delete(itemId);
+	}
+};
+
+
+watch(selectedItem, async (newItemId) => {
+	if (newItemId) {
+		await nextTick();
+		const itemElement = itemRefs.value.get(newItemId);
+		if (itemElement) {
+			itemElement.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+		}
+	}
+});
+watch(activeSection, async (newItemId) => {
+	if (newItemId && !selectedItem.value) {
+		await nextTick();
+		const itemElement = itemRefs.value.get(newItemId);
+		if (itemElement) {
+			itemElement.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+		}
+	}
+});
 </script>
 
 <template>
-
 	<chart-layout
 		ref="chartLayoutEl"
 		@change-view="viewMode=$event"
@@ -97,31 +139,18 @@ const endDisableScroll = () => {
 						<span>Overview</span>
 					</div>
 					<chart-widget-price-performance />
-					<chart-widgets-explorer :sections="chartWidgetTestSections" />
+					<chart-widgets-explorer
+						:sections="chartWidgetTestSections"
+						@item-selected="handleSelected"
+					/>
 				</template>
 				<template #mainCol>
-					<div :class="classes.columnTitle">
-						<ui-icon
-							:id="IconIds.Deals"
-							:class="classes.titleIcon"
-							width="20px"
-							height="20px"
-						/>
-						<span>Financials</span>
-					</div>
-					<div :class="classes.columnContent">
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-					</div>
+					<chart-main-column-component
+						:sections="chartWidgetTestSections"
+						:active-section="activeSection"
+						:selected-item="selectedItem"
+						:register-item-ref="registerItemRef"
+					/>
 				</template>
 				<template #rightCol>
 					<div :class="classes.columnTitle">
@@ -158,7 +187,6 @@ const endDisableScroll = () => {
 			Randomize
 		</button>
 	</div>
-
 </template>
 
 <style module="classes">
@@ -171,10 +199,15 @@ const endDisableScroll = () => {
 }
 
 .columnTitle {
+	position: sticky;
+	top: 0;
+	z-index: 10;
 	display: flex;
 	align-items: center;
 	margin-bottom: 22px;
+	padding: 12px 16px 12px 0;
 	font-size: var(--typography-headers-size-h02);
+	background: var(--bg-color-surface-00);
 	gap: 8px;
 }
 
@@ -221,7 +254,5 @@ const endDisableScroll = () => {
 	background: #ffffff;
 }
 
-.space {
-	height: 30px;
-}
+
 </style>

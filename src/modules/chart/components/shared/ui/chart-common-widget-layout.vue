@@ -42,7 +42,7 @@
 
 .headerText {
 	padding: 0 8px;
-	line-height: 22px;
+	font-size: 13px;
 }
 
 .body {

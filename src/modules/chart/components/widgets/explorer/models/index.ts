@@ -11,6 +11,19 @@ export interface ISectionItem {
 
 export const chartWidgetTestSections: ISectionItem[] = [
 	{
+		id: 'financials',
+		title: 'Financials',
+		items: [
+			{ id: 'income-statement', title: 'Income Statement' },
+			{ id: 'balance-sheet', title: 'Balance Sheet' },
+			{ id: 'cash-flow', title: 'Cash Flow' },
+			{ id: 'key-ratios', title: 'Key Ratios' },
+			{ id: 'debt-analysis', title: 'Debt Analysis' },
+			{ id: 'working-capital', title: 'Working Capital' },
+			{ id: 'return-on-equity', title: 'Return on Equity' },
+		],
+	},
+	{
 		id: 'valuation',
 		title: 'Valuation & Estimates',
 		items: [
@@ -36,19 +49,7 @@ export const chartWidgetTestSections: ISectionItem[] = [
 			{ id: 'quarterly-trends', title: 'Quarterly Trends' },
 		],
 	},
-	{
-		id: 'financials',
-		title: 'Financials',
-		items: [
-			{ id: 'income-statement', title: 'Income Statement' },
-			{ id: 'balance-sheet', title: 'Balance Sheet' },
-			{ id: 'cash-flow', title: 'Cash Flow' },
-			{ id: 'key-ratios', title: 'Key Ratios' },
-			{ id: 'debt-analysis', title: 'Debt Analysis' },
-			{ id: 'working-capital', title: 'Working Capital' },
-			{ id: 'return-on-equity', title: 'Return on Equity' },
-		],
-	},
+
 	{
 		id: 'insider',
 		title: 'Insider Trading',
