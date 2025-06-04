@@ -9,6 +9,8 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 
+import IconPlaceholder from '@/shared/ui/ticker/icon-placeholder.vue';
+
 interface ICellComponentProps {
 	currency: ICurrency;
 }
@@ -35,7 +37,10 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 					v-if="isShowLogo"
 					:class="classes.logo"
 				>
+					<!-- TODO: Custom component for Forex -->
+					<icon-placeholder v-if="!props.currency.srcImage" :ticker="props.currency.name" />
 					<ui-image
+						v-else-if="props.currency.srcImage"
 						:src="props.currency.srcImage"
 						replacement="/images/market/ADA.png"
 					/>
