@@ -1,4 +1,13 @@
 import { ChartHeaderComponent } from './header';
-import { ChartWidgetPricePerformance } from './widgets';
+import {
+	ChartWidgetPricePerformance, ChartWidgetsExplorer, type ISectionItem,
+	chartWidgetTestSections,
+} from './widgets';
 
-export { ChartHeaderComponent, ChartWidgetPricePerformance };
+export {
+	ChartHeaderComponent,
+	ChartWidgetPricePerformance,
+	ChartWidgetsExplorer,
+	type ISectionItem,
+	chartWidgetTestSections,
+};

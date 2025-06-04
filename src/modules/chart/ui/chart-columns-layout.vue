@@ -33,7 +33,7 @@ const onColumnScroll = (e: WheelEvent) => {
 		return;
 	}
 	e.stopPropagation();
-	//e.preventDefault();
+	e.preventDefault();
 	const el = e.currentTarget as HTMLElement;
 	el.scrollTop += e.deltaY;
 	if (el.scrollTop === 0 && e.deltaY<0 && !arrivedState.top) {
@@ -82,7 +82,13 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 	height: 100vh;
 }
 
-.leftCol,
+.leftCol {
+	flex: 0 0 330px;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
 .rightCol {
 	flex: 0 0 330px;
 	width: 100%;

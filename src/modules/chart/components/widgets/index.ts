@@ -1,2 +1,4 @@
 import { ChartWidgetPricePerformance } from './price-performance';
-export { ChartWidgetPricePerformance };
+import { ChartWidgetsExplorer, type ISectionItem, chartWidgetTestSections } from './explorer';
+
+export { ChartWidgetPricePerformance, type ISectionItem, ChartWidgetsExplorer, chartWidgetTestSections };

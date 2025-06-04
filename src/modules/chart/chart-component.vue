@@ -5,10 +5,13 @@ import { useElementSize, useWindowSize } from '@vueuse/core';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useChartStore } from '@/modules/chart/store';
 import { Chart } from '@/modules/lightweight-charts';
-import { ChartHeaderComponent, ChartWidgetPricePerformance } from './components';
+import {
+	ChartHeaderComponent,
+	ChartWidgetPricePerformance,
+	ChartWidgetsExplorer,
+	chartWidgetTestSections,
+} from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
-
-import ChartWidgetsExplorer from '@/modules/chart/components/widgets/explorer/chart-widgets-explorer.vue';
 
 
 const { randomizeExchanges } = useChartStore();
@@ -94,14 +97,7 @@ const endDisableScroll = () => {
 						<span>Overview</span>
 					</div>
 					<chart-widget-price-performance />
-					<chart-widgets-explorer />
-					<div :class="classes.columnContent">
-						<div :class="classes.space"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-					</div>
+					<chart-widgets-explorer :sections="chartWidgetTestSections" />
 				</template>
 				<template #mainCol>
 					<div :class="classes.columnTitle">
@@ -138,6 +134,9 @@ const endDisableScroll = () => {
 						<span>Insights & Activity</span>
 					</div>
 					<div :class="classes.columnContent">
+						<div :class="classes.placeholderBlock"></div>
+						<div :class="classes.placeholderBlock"></div>
+						<div :class="classes.placeholderBlock"></div>
 						<div :class="classes.placeholderBlock"></div>
 						<div :class="classes.placeholderBlock"></div>
 						<div :class="classes.placeholderBlock"></div>

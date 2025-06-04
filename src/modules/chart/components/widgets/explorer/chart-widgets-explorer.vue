@@ -1,150 +1,29 @@
 <script setup lang="ts">
-import { ref, reactive, watch, defineComponent } from 'vue';
+import { ref, watch, nextTick } from 'vue';
+import { useScroll, useEventListener } from '@vueuse/core';
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type { ISectionItem } from './models';
 
-const GenericIcon = defineComponent({
-	name: 'GenericIcon',
-	template: `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
-    </svg>
-  `,
-});
-
-// Types
-interface SectionItem {
-	id: string;
-	title: string;
-	items: string[];
+interface IChartWidgetsExplorerProps {
+	sections: ISectionItem[];
 }
 
-// State
+const props = defineProps<IChartWidgetsExplorerProps>();
 const activeSection = ref<string | null>(null);
 const selectedItem = ref<string | null>(null);
+const scrollContainerRef = ref<HTMLElement | null>(null);
 
-// Emit events for parent component communication
 const emit = defineEmits<{
 	sectionToggled: [sectionId: string | null];
 	itemSelected: [sectionId: string, item: string];
 }>();
 
-// Data
-const sections: SectionItem[] = reactive([
-	{
-		id: 'valuation',
-		title: 'Valuation & Estimates',
-		items: [
-			'Price Target',
-			'Analyst Ratings',
-			'Operating Income Widget',
-			'Net Income Widget',
-		],
-	},
-	{
-		id: 'earnings',
-		title: 'Earnings',
-		items: [
-			'EPS Estimates',
-			'Revenue Forecasts',
-			'Earnings Calendar',
-			'Historical Performance',
-		],
-	},
-	{
-		id: 'financials',
-		title: 'Financials',
-		items: [
-			'Income Statement',
-			'Balance Sheet',
-			'Cash Flow',
-			'Key Ratios',
-		],
-	},
-	{
-		id: 'insider',
-		title: 'Insider Trading',
-		items: [
-			'Recent Transactions',
-			'Executive Trades',
-			'Institutional Holdings',
-			'Form 4 Filings',
-		],
-	},
-	{
-		id: 'dividends',
-		title: 'Dividends',
-		items: [
-			'Dividend History',
-			'Yield Analysis',
-			'Payout Ratio',
-			'Ex-Dividend Dates',
-		],
-	},
-	{
-		id: 'peer',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-	{
-		id: 'peer2',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-	{
-		id: 'peer3',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-	{
-		id: 'peer4',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-	{
-		id: 'peer5',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-	{
-		id: 'peer6',
-		title: 'Peer Analysis',
-		items: [
-			'Competitor Comparison',
-			'Industry Metrics',
-			'Market Position',
-			'Relative Valuation',
-		],
-	},
-]);
+const { arrivedState } = useScroll(scrollContainerRef, {
+	throttle: 16,
+});
 
-// Methods
 const toggleSection = (sectionId: string) => {
 	activeSection.value = activeSection.value === sectionId ? null : sectionId;
 	if (activeSection.value !== sectionId) {
@@ -152,14 +31,50 @@ const toggleSection = (sectionId: string) => {
 	}
 };
 
-const selectItem = (sectionId: string, item: string) => {
+const selectItem = (item: string) => {
 	selectedItem.value = item;
-	console.log(`Selected: ${item} from ${sectionId}`);
 };
 
-// Watch for changes and emit events
-watch(activeSection, (newSection) => {
+const forceScrollBoundaryUpdate = async () => {
+	await nextTick();
+	const container = scrollContainerRef.value;
+	if (container) {
+		const currentScrollTop = container.scrollTop;
+		container.scrollTop = currentScrollTop + 0.1;
+		container.scrollTop = currentScrollTop;
+	}
+};
+
+useEventListener(scrollContainerRef, 'wheel', (event: WheelEvent) => {
+	const container = scrollContainerRef.value;
+	if (!container) {
+		return;
+	}
+
+	const { scrollTop, scrollHeight, clientHeight } = container;
+	const isAtTop = scrollTop <= 1;
+	const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+	const { top, bottom } = arrivedState;
+	const atTop = container ? isAtTop : top;
+	const atBottom = container ? isAtBottom : bottom;
+
+	if (atTop && event.deltaY < 0) {
+		event.preventDefault();
+		return;
+	}
+
+	if (atBottom && event.deltaY > 0) {
+		event.preventDefault();
+		return;
+	}
+
+	event.stopPropagation();
+});
+
+watch(activeSection, async (newSection) => {
 	emit('sectionToggled', newSection);
+	await forceScrollBoundaryUpdate();
 });
 
 watch([activeSection, selectedItem], ([section, item]) => {
@@ -168,7 +83,6 @@ watch([activeSection, selectedItem], ([section, item]) => {
 	}
 });
 </script>
-
 
 <template>
 	<chart-common-widget-layout>
@@ -182,13 +96,16 @@ watch([activeSection, selectedItem], ([section, item]) => {
 		</template>
 		<template #body>
 			<div :class="classes.accordionContent">
-				<div :class="classes.scrollContainer">
+				<div
+					ref="scrollContainerRef"
+					:class="classes.scrollContainer"
+					@scroll.stop
+				>
 					<div
-						v-for="section in sections"
+						v-for="section in props.sections"
 						:key="section.id"
 						:class="classes.section"
 					>
-						<!-- Section Header - Sticky -->
 						<div :class="classes.sectionHeader">
 							<button
 								:class="[
@@ -197,29 +114,33 @@ watch([activeSection, selectedItem], ([section, item]) => {
 								]"
 								@click="toggleSection(section.id)"
 							>
-								<svg
+								<ui-icon
+									:id="IconIds.DropdownDown"
+									width="12"
+									height="12"
 									:class="[
 										classes.chevronIcon,
 										{ [classes.chevronRotated]: activeSection === section.id }
 									]"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path d="m9 18 6-6-6-6" />
-								</svg>
+								/>
 								<div :class="classes.iconContainer">
-									<generic-icon :class="classes.sectionIcon" />
+									<ui-icon
+										:id="IconIds.Deals"
+										:class="classes.sectionIcon"
+									/>
 								</div>
 								<span :class="classes.sectionTitle">{{ section.title }}</span>
 							</button>
 						</div>
 
-						<!-- Section Content -->
-						<transition name="slide">
+						<transition
+							:enter-active-class="classes.slideEnterActive"
+							:leave-active-class="classes.slideLeaveActive"
+							:enter-from-class="classes.slideEnterFrom"
+							:leave-to-class="classes.slideLeaveTo"
+							:enter-to-class="classes.slideEnterTo"
+							:leave-from-class="classes.slideLeaveFrom"
+						>
 							<div v-if="activeSection === section.id" :class="classes.sectionItems">
 								<button
 									v-for="(item, index) in section.items"
@@ -228,10 +149,13 @@ watch([activeSection, selectedItem], ([section, item]) => {
 										classes.itemButton,
 										{ [classes.itemButtonSelected]: selectedItem === item }
 									]"
-									@click="selectItem(section.id, item)"
+									@click="selectItem(item)"
 								>
 									<div :class="classes.iconContainer">
-										<generic-icon :class="classes.itemIcon" />
+										<ui-icon
+											:id="IconIds.Deals"
+											:class="classes.itemIcon"
+										/>
 									</div>
 									<span :class="classes.itemText">{{ item }}</span>
 								</button>
@@ -241,38 +165,20 @@ watch([activeSection, selectedItem], ([section, item]) => {
 				</div>
 			</div>
 		</template>
-
 	</chart-common-widget-layout>
 </template>
 
-
 <style module="classes">
-/* CSS Custom Properties for easy theming */
-:root {
-	--bg-primary: #111827;
-	--bg-secondary: #1f2937;
-	--bg-tertiary: #374151;
-	--text-primary: #ffffff;
-	--text-secondary: #d1d5db;
-	--text-muted: #9ca3af;
-	--border-color: #374151;
-	--hover-bg: #1f2937;
-	--active-bg: #374151;
-	--transition: all 0.15s ease-in-out;
-}
-
-/* Main container */
 .accordionContainer {
 	width: 20rem;
-	background-color: var(--bg-primary);
-	color: var(--text-primary);
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+	color: white;
+	background-color: black;
 }
 
-/* Header */
 .header {
 	padding: 1rem;
-	border-bottom: 1px solid var(--border-color);
+	border-bottom: 1px solid gray;
 }
 
 .navTabs {
@@ -281,25 +187,24 @@ watch([activeSection, selectedItem], ([section, item]) => {
 }
 
 .navTab {
-	background: none;
-	border: none;
-	color: var(--text-muted);
+	padding: 0;
 	font-weight: 500;
 	font-size: 0.875rem;
+	color: gray;
+	background: none;
+	border: none;
 	cursor: pointer;
-	padding: 0;
-	transition: var(--transition);
+	transition: all 0.15s ease-in-out;
 
 	&:hover {
-		color: var(--text-primary);
+		color: white;
 	}
 
 	&.active {
-		color: var(--text-primary);
+		color: white;
 	}
 }
 
-/* Accordion content */
 .accordionContent {
 	height: 24rem;
 	overflow: hidden;
@@ -308,152 +213,134 @@ watch([activeSection, selectedItem], ([section, item]) => {
 .scrollContainer {
 	height: 100%;
 	overflow-y: auto;
-
-	/* Custom scrollbar */
-
-	&::-webkit-scrollbar {
-		width: 6px;
-	}
-
-	&::-webkit-scrollbar-track {
-		background: rgba(75, 85, 99, 0.2);
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background: rgba(75, 85, 99, 0.6);
-		border-radius: 3px;
-
-		&:hover {
-			background: rgba(75, 85, 99, 0.8);
-		}
-	}
 }
 
-/* Sections */
 .section {
-	border-bottom: 1px solid var(--bg-secondary);
+	border-bottom: 1px solid darkgray;
 }
 
 .sectionHeader {
 	position: sticky;
 	top: 0;
-	background-color: var(--bg-primary);
 	z-index: 10;
+	background-color: black;
 }
 
 .sectionButton {
-	width: 100%;
-	padding: 1rem;
 	display: flex;
 	align-items: center;
-	gap: 0.75rem;
+	width: 100%;
+	padding: 1rem;
+	text-align: left;
+	color: white;
 	background: none;
 	border: none;
-	color: var(--text-primary);
 	cursor: pointer;
-	transition: var(--transition);
-	text-align: left;
+	transition: all 0.15s ease-in-out;
+	gap: 0.75rem;
 
 	&:hover {
-		background-color: var(--hover-bg);
+		background-color: darkgray;
 	}
 
 	&.sectionButtonActive {
-		background-color: var(--hover-bg);
+		background-color: darkgray;
 	}
 }
 
 .chevronIcon {
-	width: 1rem;
-	height: 1rem;
-	transition: transform 0.15s ease-in-out;
 	flex-shrink: 0;
+	width: 1.125rem;
+	height: 1.125rem;
+	transform: rotate(-90deg);
+	transition: transform 0.15s ease-in-out;
 
 	&.chevronRotated {
-		transform: rotate(90deg);
+		transform: rotate(0deg);
 	}
 }
 
 .iconContainer {
+	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
 	width: 1.5rem;
 	height: 1.5rem;
-	background-color: var(--bg-tertiary);
+	background-color: gray;
 	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
 }
 
-.sectionIcon,
+.sectionIcon {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
 .itemIcon {
-	width: 0.75rem;
-	height: 0.75rem;
+	width: 1rem;
+	height: 1rem;
 }
 
 .sectionTitle {
-	font-weight: 500;
 	flex: 1;
+	font-weight: 500;
 }
 
-/* Section items */
 .sectionItems {
-	background-color: var(--bg-secondary);
+	background-color: darkgray;
 }
 
 .itemButton {
+	display: flex;
+	align-items: center;
 	width: 100%;
 	padding: 0.75rem;
 	padding-left: 3rem;
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
+	text-align: left;
+	color: white;
 	background: none;
 	border: none;
-	color: var(--text-primary);
 	cursor: pointer;
-	transition: var(--transition);
-	text-align: left;
+	transition: all 0.15s ease-in-out;
+	gap: 0.75rem;
 
 	&:hover {
-		background-color: var(--active-bg);
+		background-color: gray;
 	}
 
 	&.itemButtonSelected {
-		background-color: var(--active-bg);
+		background-color: gray;
 	}
 }
 
 .itemText {
-	color: var(--text-secondary);
 	font-size: 0.875rem;
+	color: lightgray;
 }
 
-/* Slide animations */
-:global(.slide-enter-active),
-:global(.slide-leave-active) {
-	transition: all 0.3s ease;
+.slideEnterActive,
+.slideLeaveActive {
 	overflow: hidden;
+	transition: all 0.3s ease;
 }
 
-:global(.slide-enter-from),
-:global(.slide-leave-to) {
+.slideEnterFrom,
+.slideLeaveTo {
 	max-height: 0;
 	opacity: 0;
 }
 
-:global(.slide-enter-to),
-:global(.slide-leave-from) {
+.slideEnterTo,
+.slideLeaveFrom {
 	max-height: 500px;
 	opacity: 1;
 }
 
-/* Reset button styles */
 button {
 	font-family: inherit;
 
 	&:focus {
-		outline: 2px solid #3b82f6;
+		outline: 2px solid blue;
 		outline-offset: 2px;
 	}
 }
