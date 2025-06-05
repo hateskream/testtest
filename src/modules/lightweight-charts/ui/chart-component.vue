@@ -29,7 +29,7 @@ interface IChartProps {
 	disableScroll: boolean;
 }
 
-const props = defineProps<IChartProps>();
+defineProps<IChartProps>();
 
 defineExpose({
 	regenerateData,
@@ -66,31 +66,6 @@ const mainData = ref(generateCandleDataFromLineData(generateLineData(6000)));
 
 watch(mainData, () => {
 	updateIndicators();
-});
-
-watch(() => props.disableScroll, () => {
-	chartHistory.value!.applyOptions({
-		handleScroll: {
-			mouseWheel: props.disableScroll,
-		},
-		handleScale: {
-			mouseWheel: props.disableScroll,
-		},
-	});
-
-	chart.value!.applyOptions({
-		handleScroll: {
-			mouseWheel: props.disableScroll,
-		},
-		handleScale: {
-			mouseWheel: props.disableScroll,
-		},
-	});
-});
-
-watch(() => [props.width, props.height], () => {
-	chartHistory.value!.resize(props.width, 96);
-	chart.value!.resize(props.width, props.height);
 });
 
 const groupedData = computed(() => {
@@ -177,8 +152,7 @@ function updateTypeChart(type: TypeChart) {
 
 onMounted(() => {
 	chartHistory.value = createChart(history.value as HTMLElement, {
-		width: props.width,
-		height: 96,
+		autoSize: true,
 		crosshair: {
 			horzLine: {
 				visible: false,
@@ -204,13 +178,6 @@ onMounted(() => {
 			borderVisible: false,
 		},
 
-		handleScroll: {
-			mouseWheel: props.disableScroll,
-		},
-		handleScale: {
-			mouseWheel: props.disableScroll,
-		},
-
 		grid: {
 			horzLines: {
 				visible: false,
@@ -223,20 +190,11 @@ onMounted(() => {
 
 
 	chart.value = createChart(container.value as HTMLElement, {
-		width: props.width,
-		height: props.height,
+		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
 			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
 		},
-
-		handleScroll: {
-			mouseWheel: props.disableScroll,
-		},
-		handleScale: {
-			mouseWheel: props.disableScroll,
-		},
-
 		rightPriceScale: {
 			scaleMargins: {
 				top: 0.3, // leave some space for the legend
@@ -325,10 +283,9 @@ onMounted(() => {
 </script>
 
 <template>
-	<div>
-
-		<div :class="classes.instuments">
-			<modal-badge style="margin-bottom: 10px;">
+	<div :class="classes.wrapper" :style="{height: `${height}px`}">
+		<div :class="classes.instruments">
+			<modal-badge>
 				<template #title>
 					Indicators
 
@@ -357,7 +314,7 @@ onMounted(() => {
 				</template>
 			</modal-badge>
 
-			<modal-badge style="margin-bottom: 10px;">
+			<modal-badge>
 				<template #title>
 					Type
 
@@ -387,23 +344,48 @@ onMounted(() => {
 			</modal-badge>
 		</div>
 
-		<div ref="container" style=" width: 100%; height: 100%;"></div>
+		<div ref="container" :class="classes.mainChart"></div>
 
 		<chart-range
-			style="margin-top: 10px; margin-bottom: 10px;"
+			:class="classes.range"
 			:active-range="currentRange"
 			@select="selectRange"
 		/>
 
-		<div ref="history" style=" width: 100%; height: 100%;"></div>
+		<div ref="history" :class="classes.chartHistory"></div>
 	</div>
 </template>
 
 <style module="classes">
-.instuments {
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.mainChart {
+	flex-grow: 1;
+	width: 100%;
+	height: 100%;
+}
+
+.chartHistory {
+	flex-grow: 1;
+	width: 100%;
+	height: 100%;
+	max-height: 96px;
+}
+
+.range {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.instruments {
 	display: flex;
 	gap: 4px;
 	align-items: center;
+	margin-bottom: 10px;
 }
 
 :global(a#tv-attr-logo) {

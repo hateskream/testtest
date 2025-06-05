@@ -25,7 +25,7 @@ const chartWidth = computed(() => {
 });
 
 const chartHeight = computed(() => {
-	const height = Math.floor(windowHeight.value * 0.3);
+	const height = Math.floor(windowHeight.value * 0.5);
 
 	return height;
 });
