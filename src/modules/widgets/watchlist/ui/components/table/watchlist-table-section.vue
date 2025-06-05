@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, toValue, watch } from 'vue';
+import { nextTick, ref, toValue, watch } from 'vue';
+import { templateRef } from '@vueuse/core';
 
 import type {
 	ITableRow,
@@ -8,7 +9,7 @@ import type {
 	IWatchlistMarkets,
 	IWatchlistSection,
 } from '../../../model';
-import { useWatchlistStore } from '../../../stores';
+import { useWatchlistStore, useWatchlistSectionStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
@@ -22,6 +23,7 @@ interface IWatchlistTableProps {
 const props = defineProps<IWatchlistTableProps>();
 
 const watchlistStore = useWatchlistStore();
+const watchlistSectionStore = useWatchlistSectionStore();
 
 const sectionStates = ref<Record<string, boolean>>({});
 
@@ -43,10 +45,28 @@ const toggleSection = (sectionId: string) => {
 	// TODO: Save state to local storage or elsewere
 };
 
-const handleAddSection = () => {
-	// TODO: Dropdown menu with available markets to add to the watchlist
-	// TODO: sync with backend
-	return null;
+
+const renameInputRef = templateRef('renameInputRef');
+const showRenameInput = ref(false);
+const sectionName = ref('New section');
+const onAddSection = () => {
+	showRenameInput.value = true;
+	nextTick(() => {
+		renameInputRef.value.focus();
+		renameInputRef.value.select();
+	});
+};
+
+const saveNewSection = (event: Event) => {
+	if (event?.type !== 'blur') {
+		renameInputRef.value.blur();
+		return;
+	}
+
+	watchlistSectionStore.addSection(sectionName.value);
+
+	sectionName.value = 'New section';
+	showRenameInput.value = false;
 };
 
 const tableRows = (markets: IWatchlistMarkets[]) => {
@@ -124,9 +144,9 @@ function sortRowsByType(args: {
 
 <template>
 	<!-- Секции рынков -->
-	<div>
+	<div :class="classes.watchlistTableSection">
 		<div
-			v-for="section in props.watchlistSections"
+			v-for="section in watchlistSectionStore.sections"
 			:key="section.id"
 			:class="classes.marketSection"
 		>
@@ -157,7 +177,17 @@ function sortRowsByType(args: {
 			</transition>
 		</div>
 
-		<div :class="classes.addSectionAction" @click="handleAddSection">
+		<div v-if="showRenameInput" :class="classes.renameSectionWrapper">
+			<input
+				ref="renameInputRef"
+				v-model="sectionName"
+				type="text"
+				@blur="saveNewSection"
+				@keydown.enter="saveNewSection"
+			>
+		</div>
+
+		<div :class="classes.addSectionAction" @click="onAddSection">
 			<ui-icon
 				:id="IconIds.ControlPlus"
 				:class="classes.actionIcon"
@@ -239,6 +269,27 @@ function sortRowsByType(args: {
 		.actionIcon {
 			color: rgb(131 132 135 / 90%);
 		}
+	}
+}
+
+.watchlistTableSection {
+	display: flex;
+	flex-direction: column;
+}
+
+.renameSectionWrapper {
+	display: inline-flex;
+	align-items: center;
+	padding: 12px 8px;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01);
+	color: var(--text-color-base-100);
+	letter-spacing: 0.096px;
+	cursor: pointer;
+
+	input {
+		text-align: start;
+		background-color: transparent;
 	}
 }
 
