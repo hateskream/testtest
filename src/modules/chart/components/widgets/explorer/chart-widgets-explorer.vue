@@ -236,7 +236,7 @@ watch([activeSection, selectedItem], ([section, item]) => {
 
 			&.sectionRowActive {
 				.sectionWrapper {
-					background-color: rgb(51 51 51 / 80%);
+					background-color: rgb(51 51 51 / 100%);
 					opacity: 1;
 
 					.iconContainer {

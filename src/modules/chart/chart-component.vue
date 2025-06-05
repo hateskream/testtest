@@ -18,8 +18,8 @@ const { randomizeExchanges } = useChartStore();
 
 const viewMode = ref('mixed');
 
-// const activeSection = ref<string | null>(null);
-// const selectedItem = ref<string | null>(null);
+const activeSection = ref<string | null>(null);
+const selectedItem = ref<string | null>(null);
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const chartContainerEl = ref<HTMLDivElement | null>(null);
