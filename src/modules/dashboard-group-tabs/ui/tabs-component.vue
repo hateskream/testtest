@@ -32,7 +32,12 @@ function onAddTab() {
 	});
 }
 
-function onSaveNewTab() {
+function onSaveNewTab(event: Event) {
+	if (event?.type !== 'blur') {
+		tabRenameInputRef.value.blur();
+		return;
+	}
+
 	if (!newTabName.value.trim()) {
 		return;
 	}
