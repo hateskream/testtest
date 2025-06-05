@@ -4,12 +4,11 @@ import { computed } from 'vue';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
-import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 
-import IconPlaceholder from '@/shared/ui/ticker/icon-placeholder.vue';
+import TickerIcon from '@/shared/ui/ticker/ticker-icon.vue';
 
 interface ICellComponentProps {
 	currency: ICurrency;
@@ -33,17 +32,8 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 		/>
 		<div :class="[classes.content, 'price-no-drag']">
 			<ui-transition-fade>
-				<div
-					v-if="isShowLogo"
-					:class="classes.logo"
-				>
-					<!-- TODO: Custom component for Forex -->
-					<icon-placeholder v-if="!props.currency.srcImage" :ticker="props.currency.name" />
-					<ui-image
-						v-else-if="props.currency.srcImage"
-						:src="props.currency.srcImage"
-						replacement="/images/market/ADA.png"
-					/>
+				<div v-if="isShowLogo" :class="classes.logo">
+					<ticker-icon :src="props.currency.srcImage" :ticker="props.currency.ticker" />
 				</div>
 			</ui-transition-fade>
 
