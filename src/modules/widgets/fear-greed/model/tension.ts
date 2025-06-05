@@ -18,3 +18,27 @@ export interface ITensionTextData {
 		sub: string;
 	};
 }
+
+
+export const Tension = {
+	extremeFear: {
+		min: 0,
+		max: 24,
+	},
+	fear: {
+		min: 25,
+		max: 45,
+	},
+	neutral: {
+		min: 46,
+		max:54,
+	},
+	greed: {
+		min: 55,
+		max:75,
+	},
+	extremeGreed: {
+		min: 76,
+		max:100,
+	},
+};

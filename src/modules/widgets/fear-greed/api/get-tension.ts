@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import type { ITension } from '../model';
+import { Tension, type ITension } from '../model';
 import { useLogger } from '@/shared/service/logger';
 
 const IS_USE_MOCK = true;
@@ -24,6 +24,10 @@ export async function getTension({ market }: IGetTensionRequest): Promise<ITensi
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
+}
+
+function getRandomFromRange(max: number, min: number) {
+	return Math.round(Math.random() * (max - min) + min);
 }
 
 export async function getMockData(): Promise<ITension> {
@@ -52,17 +56,18 @@ export async function getMockData(): Promise<ITension> {
 		],
 	};
 
+
 	if (mockCurrentTension !== -1) {
-		if (mockCurrentTension <= 20) {
-			mockCurrentTension = Math.round(Math.random() * (39 - 20) + 20);
-		} else if (mockCurrentTension <= 40) {
-			mockCurrentTension = Math.round(Math.random() * (59 - 40) + 40);
-		} else if (mockCurrentTension <= 60) {
-			mockCurrentTension = Math.round(Math.random() * (79 - 60) + 60);
-		} else if (mockCurrentTension <= 80) {
-			mockCurrentTension = Math.round(Math.random() * (100 - 80) + 80);
+		if (mockCurrentTension <= Tension.extremeFear.max) {
+			mockCurrentTension = getRandomFromRange(Tension.fear.max, Tension.fear.min);
+		} else if (mockCurrentTension <= Tension.fear.max) {
+			mockCurrentTension = getRandomFromRange(Tension.neutral.max, Tension.neutral.min);
+		} else if (mockCurrentTension <= Tension.neutral.max) {
+			mockCurrentTension = getRandomFromRange(Tension.greed.max, Tension.greed.min);
+		} else if (mockCurrentTension <= Tension.greed.max) {
+			mockCurrentTension = getRandomFromRange(Tension.extremeGreed.max, Tension.extremeGreed.min);
 		} else {
-			mockCurrentTension = Math.round(Math.random() * (19 - 1) + 1);
+			mockCurrentTension = getRandomFromRange(Tension.extremeFear.max, Tension.extremeFear.min);
 		}
 
 		response.tension = mockCurrentTension;
