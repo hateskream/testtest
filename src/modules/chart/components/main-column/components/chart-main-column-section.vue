@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { ISectionItem } from '@/modules/chart/components';
@@ -22,6 +22,9 @@ onMounted(() => {
 	if (itemRef.value) {
 		props.registerItemRef(props.section.id, itemRef.value);
 	}
+});
+onUnmounted(() => {
+	props.registerItemRef(props.section.id, null);
 });
 </script>
 
