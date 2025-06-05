@@ -30,12 +30,18 @@ function getSortDirection(columnName: string) {
 		:chosen-class="classes.dragActive"
 		:ghost-class="classes.dragPlaceholder"
 		:class="classes.gridHead"
+		:style="backgroundStyle"
 		:delay="150"
 		@update:model-value="marketStore.updateActiveTableColumns"
 	>
-		<template #item="{ element: column }">
+		<template #item="{ element: column, index }">
 			<table-column-with-sort-component
-				:class="[classes.gridHeadItem, { [ignoreDragClass]: !column.isDraggable }]"
+				:class="[classes.gridHeadItem,
+					{
+						[ignoreDragClass]: !column.isDraggable
+					}
+				]"
+				:style="index === 0 ? backgroundStyle : {}"
 				:column="column"
 				:sort-direction="getSortDirection(column.columnName)"
 				@click="marketStore.toggleActiveSort(column)"
@@ -57,7 +63,6 @@ function getSortDirection(columnName: string) {
 	top: 0;
 	z-index: 2;
 	display: grid;
-	background-color: var(--bg-color-surface-01);
 	grid-column: 1 / -1;
 	grid-template-columns: subgrid;
 }
@@ -78,7 +83,6 @@ function getSortDirection(columnName: string) {
 	position: sticky;
 	left: 0;
 	justify-content: flex-start;
-	background-color: var(--bg-color-surface-01);
 }
 
 .iconTertiary {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ITableRow } from '../../../model';
 import { UiImage } from '@/shared/ui/image';
+import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 
 import WatchlistCellNumber from './cells/watchlist-cell-number.vue';
 import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
@@ -11,6 +12,8 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+
+const { backgroundStyle } = useResizeBackground();
 </script>
 
 <template>
@@ -20,10 +23,13 @@ const props = defineProps<IProps>();
 			:key="`${idx}-table-tr`"
 		>
 			<td
-				v-for="item in items"
+				v-for="(item, index) in items"
 				:key="item.value + item.id"
+				:style="index === 0 ? backgroundStyle : {}"
 			>
-				<div :class="classes.rowColumnWrapper">
+				<div
+					:class="classes.rowColumnWrapper"
+				>
 					<div
 						v-if="['image-string', 'image'].includes(item.type)"
 						:class="classes.tableIcon"
@@ -113,7 +119,6 @@ tbody tr td:first-child {
 	position: sticky;
 	top: 0;
 	left: 0;
-	background-color: var(--bg-color-surface-01);
 }
 
 tbody tr td:first-child .rowColumnWrapper {

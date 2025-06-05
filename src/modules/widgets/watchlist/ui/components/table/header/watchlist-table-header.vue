@@ -110,7 +110,6 @@ const { backgroundStyle } = useResizeBackground();
 	position: sticky;
 	top: 0;
 	left: 0;
-	background-color: var(--bg-color-surface-01);
 }
 
 .dragActive {

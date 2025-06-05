@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ITableRow } from '../model';
+import { useResizeBackground } from '../../base/common/composables/use-resize-background';
 
 import TableRowNumberComponent from './table-row-number-component.vue';
 import TableRowPercentComponent from './table-row-percent-component.vue';
@@ -11,6 +12,7 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+const { backgroundStyle } = useResizeBackground();
 </script>
 
 <template>
@@ -21,9 +23,10 @@ const props = defineProps<IProps>();
 			:class="classes.gridBodyWrapperItems"
 		>
 			<div
-				v-for="item in items"
+				v-for="(item, index) in items"
 				:key="item.value + item.id"
 				:class="classes.gridBodyItem"
+				:style="index === 0 ? backgroundStyle : {}"
 			>
 				<table-row-image-component
 					v-if="['image-string', 'image'].includes(item.type)"
@@ -79,7 +82,6 @@ const props = defineProps<IProps>();
 	position: sticky;
 	left: 0;
 	justify-content: flex-start;
-	background-color: var(--bg-color-surface-01);
 }
 
 .gridBodyItem:first-child::after {
