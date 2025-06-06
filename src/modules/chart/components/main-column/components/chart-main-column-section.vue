@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { ISectionItem } from '@/modules/chart/components';
