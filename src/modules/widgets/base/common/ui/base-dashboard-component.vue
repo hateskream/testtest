@@ -10,6 +10,7 @@ import {
 	type VirtualElement,
 } from '@floating-ui/vue';
 
+import { createResizeContext } from '../composables/use-resize-context';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IBaseDashboardComponentProps {
@@ -17,6 +18,8 @@ interface IBaseDashboardComponentProps {
 }
 
 const props = defineProps<IBaseDashboardComponentProps>();
+
+createResizeContext(props.isResizing);
 
 const classes = useCssModule('classes');
 

@@ -17,6 +17,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: 'group-1',
 			name: 'Standart',
 			isActive: true,
+			isEditing: false,
 			items: INIT_DASHBOARDS,
 			market: 'crypto',
 		},
@@ -27,6 +28,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			id: group.id,
 			name: group.name,
 			isActive: group.isActive,
+			isEditing: group.isEditing,
 		})),
 	);
 
@@ -47,9 +49,11 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			isActive: false,
 			items: [],
 			market: 'crypto',
+			isEditing: true,
 		};
 		dashboardGroups.value.push(newGroup);
 		switchTab(newGroup.id);
+		setRenameState(newGroup.id);
 	}
 
 	function renameTab(tabId: string, newName: string) {
@@ -57,6 +61,24 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		if (group) {
 			group.name = newName;
 		}
+
+		stopRenameState();
+	}
+
+	// TODO: Rename
+	function setRenameState(tabId: string) {
+		dashboardGroups.value.forEach(group => {
+			if (group.id === tabId) {
+				group.isEditing = true;
+			}
+		});
+	};
+
+	// TODO: Rename
+	function stopRenameState() {
+		dashboardGroups.value.forEach(group => {
+			group.isEditing = false;
+		});
 	}
 
 	function switchTab(tabId: string) {
@@ -81,5 +103,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		switchTab,
 		activeGroup,
 		setNewStateInCurrentGroup,
+		stopRenameState,
 	};
 });

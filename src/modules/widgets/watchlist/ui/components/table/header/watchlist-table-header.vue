@@ -2,6 +2,7 @@
 import draggableComponent from 'vuedraggable';
 
 import { useWatchlistStore } from '../../../../stores';
+import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 
 import WatchlistSortableColumn from './watchlist-sortable-column.vue';
 import WatchlistMetricsSelector from './watchlist-metrics-selector.vue';
@@ -13,6 +14,8 @@ const ignoreDragClass = 'ignoreDrag';
 function getSortDirection(columnName: string) {
 	return marketStore.activeSort.columnName === columnName ? marketStore.activeSort.direction : 0;
 }
+
+const { backgroundStyle } = useResizeBackground();
 </script>
 
 <template>
@@ -38,7 +41,7 @@ function getSortDirection(columnName: string) {
 		</template>
 
 		<template #footer>
-			<th :class="classes.iconTertiary">
+			<th :class="[classes.iconTertiary]" :style="backgroundStyle">
 				<watchlist-metrics-selector />
 			</th>
 		</template>
@@ -107,7 +110,6 @@ function getSortDirection(columnName: string) {
 	position: sticky;
 	top: 0;
 	left: 0;
-	background-color: var(--bg-color-surface-01);
 }
 
 .dragActive {

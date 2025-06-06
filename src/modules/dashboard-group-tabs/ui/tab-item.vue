@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
+import { templateRef } from '@vueuse/core';
+
+import type { IDashboardTab } from '@/modules/dashboard-group/model';
 
 import TabWrapper from './tab-wrapper.vue';
 
 interface ITabItemProps {
-	tab: {
-		id: string;
-		name: string;
-		isActive: boolean;
-	};
+	tab: IDashboardTab;
 }
 
 const props = defineProps<ITabItemProps>();
@@ -48,10 +47,17 @@ function startEditing() {
 	});
 }
 
-function finishEditing() {
+const tabRenameInputRef = templateRef('tabRenameInputRef');
+function finishEditing(event: Event) {
+	if (event?.type !== 'blur') {
+		tabRenameInputRef.value.blur();
+		return;
+	}
+
 	if (tabName.value.trim()) {
 		emit('rename', props.tab.id, tabName.value.trim());
 	}
+
 	editing.value = false;
 	isInitialEdit.value = true;
 }
@@ -67,6 +73,8 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	input.style.width = `${measurer.offsetWidth}px`;
 	document.body.removeChild(measurer);
 }
+
+defineExpose({ startEditing });
 </script>
 
 <template>
@@ -74,9 +82,11 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 		:is-active="tab.isActive"
 		:is-editing="editing"
 		:class="classes.tab"
+		@click="emit('switch', tab.id)"
 	>
 		<input
 			v-if="editing"
+			ref="tabRenameInputRef"
 			v-model="tabName"
 			:class="{ [classes.initialEdit]: isInitialEdit }"
 			autofocus
@@ -85,7 +95,6 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 		/>
 		<span
 			v-else
-			@click="emit('switch', tab.id)"
 			@dblclick="startEditing"
 		>
 			{{ tab.name }}

@@ -82,7 +82,13 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 	height: 100vh;
 }
 
-.leftCol,
+.leftCol {
+	flex: 0 0 330px;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
 .rightCol {
 	flex: 0 0 330px;
 	width: 100%;

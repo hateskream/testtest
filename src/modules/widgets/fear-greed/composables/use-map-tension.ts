@@ -1,12 +1,12 @@
-import type { ITensionTextData } from '../model';
+import { Tension, type ITensionTextData } from '../model';
 
 export function useMapTension() {
 	function mapTension(tension: number): ITensionTextData {
-		if (tension <= 19) {
+		if (tension <= Tension.extremeFear.max) {
 			return {
 				colors: {
 					text: '#FF5C5C',
-					chart: '#F85961',
+					chart: '#FF5C5C',
 				},
 				text: {
 					main: 'Extreme Fear',
@@ -15,11 +15,11 @@ export function useMapTension() {
 			};
 		}
 
-		if (tension <= 39) {
+		if (tension <= Tension.fear.max) {
 			return {
 				colors: {
-					text: '#FFAF6A',
-					chart: '#FFAF6A',
+					text: '#FF9151',
+					chart: '#FF9151',
 				},
 				text: {
 					main: 'Fear',
@@ -28,11 +28,11 @@ export function useMapTension() {
 			};
 		}
 
-		if (tension <= 59) {
+		if (tension <= Tension.neutral.max) {
 			return {
 				colors: {
 					text: '#FFF',
-					chart: '#DCDCDF',
+					chart: '#FFF',
 				},
 				text: {
 					main: 'Neutral',
@@ -41,11 +41,11 @@ export function useMapTension() {
 			};
 		}
 
-		if (tension <= 79) {
+		if (tension <= Tension.greed.max) {
 			return {
 				colors: {
-					text: '#B2F2D3',
-					chart: '#B2F2D3',
+					text: '#92FFDB',
+					chart: '#92FFDB',
 				},
 				text: {
 					main: 'Greed',

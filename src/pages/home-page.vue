@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { reactive, watch } from 'vue';
+import { templateRef } from '@vueuse/core';
 
 import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -46,14 +47,22 @@ function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;
 }
 
+
+const dashbordTabsRef = templateRef('dashbordTabsRef');
+
+const handleAddTab = () => {
+	addTab();
+	dashbordTabsRef.value?.renameTab();
+};
 </script>
 
 <template>
 	<layout-component v-model:is-curtain-fixed="pageState.isCurtainFixed" :is-edit-mode="pageState.isEdit">
 		<template #header>
 			<dashboard-group-tabs
+				ref="dashbordTabsRef"
 				:tabs="tabs"
-				@add-tab="addTab"
+				@add-tab="handleAddTab"
 				@switch-tab="switchTab"
 				@rename-tab="renameTab"
 			/>

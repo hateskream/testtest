@@ -11,14 +11,14 @@
 				class="header-h01"
 			>
 				<div :class="classes.headerText">
+
 					<slot name="header"></slot>
 				</div>
 			</div>
-			<div :class="classes.body">
-				<slot name="body">
-
-
-				</slot>
+			<div
+				:class="classes.body"
+			>
+				<slot name="body"></slot>
 			</div>
 		</div>
 	</div>
@@ -42,7 +42,7 @@
 
 .headerText {
 	padding: 0 8px;
-	line-height: 22px;
+	font-size: 13px;
 }
 
 .body {

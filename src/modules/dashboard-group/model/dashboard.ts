@@ -109,11 +109,11 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		id: 5,
 		name: 'Watchlist',
 		dashboardType: WidgetType.Watchlist,
-		position: { x: 0, y: 8, w: 2, h: 6 },
+		position: { x: 0, y: 0, w: 6, h: 8 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
 		icon: IconIds.LogoWidgetFearAndGreat,
-		description: 'Hot Markets',
+		description: 'Watchlist',
 	},
 
 ];

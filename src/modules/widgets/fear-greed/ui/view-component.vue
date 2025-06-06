@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 
-import type { ITension, ITensionTextData } from '../model';
+import { Tension, type ITension, type ITensionTextData } from '../model';
 import { useMapTension } from '../composables';
 import { useFearGreedStore } from '../stores';
 import { UiTransitionFade } from '@/shared/ui/transition';
@@ -37,24 +37,25 @@ const circleChart = computed(() => {
 
 	let val = 1;
 
-	if (tension < 20) {
+	if (tension <= Tension.extremeFear.max) {
 		val = 1;
-	} else if (tension < 40) {
-		val = 35;
-	} else if (tension < 60) {
+	} else if (tension <= Tension.fear.max) {
+		val = 25;
+	} else if (tension <= Tension.neutral.max) {
 		val = 50;
-	} else if (tension < 80) {
+	} else if (tension <= Tension.greed.max) {
 		val = 75;
-	} else if (tension <= 100) {
+	} else if (tension <= Tension.extremeGreed.max) {
 		val = 99;
 	}
 
-	const arrowRotateInDeg = -90 + (val / 100) * 180;
+
+	const arrowRotateInDeg = -90 + (tension / 100) * 180;
 
 	const radius = 80;
-	const arcAngle = 180 / 5;
 
 	const totalLength = Math.PI * radius;
+	const arcAngle = 180 / 4.5;
 	const arcLength = (arcAngle / 180) * totalLength;
 
 	const signOffset = tension === 100 ? -1 : -(val / 100);
