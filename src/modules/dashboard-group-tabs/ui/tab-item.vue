@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
+import { templateRef } from '@vueuse/core';
 
 import type { IDashboardTab } from '@/modules/dashboard-group/model';
 
@@ -46,7 +47,13 @@ function startEditing() {
 	});
 }
 
-function finishEditing() {
+const tabRenameInputRef = templateRef('tabRenameInputRef');
+function finishEditing(event: Event) {
+	if (event?.type !== 'blur') {
+		tabRenameInputRef.value.blur();
+		return;
+	}
+
 	if (tabName.value.trim()) {
 		emit('rename', props.tab.id, tabName.value.trim());
 	}
@@ -79,10 +86,12 @@ defineExpose({ startEditing });
 	>
 		<input
 			v-if="editing"
+			ref="tabRenameInputRef"
 			v-model="tabName"
 			:class="{ [classes.initialEdit]: isInitialEdit }"
 			autofocus
 			@blur="finishEditing"
+			@keyup.enter="finishEditing"
 		/>
 		<span
 			v-else
