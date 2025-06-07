@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { templateRef } from '@vueuse/core';
-import { nextTick } from 'vue';
+import { nextTick, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IDashboardTab } from '@/modules/dashboard-group';
@@ -32,13 +31,13 @@ function onRenameTab(id: string, name: string) {
 	emit('rename-tab', id, name);
 }
 
-const tabItemRefs = templateRef('tabItemRefs');
+const tabItemRefs = useTemplateRef('tabItemRefs');
 
 const renameTab = () => {
 	nextTick(() => {
 		props.tabs.forEach((tab, index) => {
 			if (tab.isEditing) {
-				tabItemRefs.value[index]?.startEditing();
+				tabItemRefs.value?.[index]?.startEditing();
 			}
 		});
 	});
