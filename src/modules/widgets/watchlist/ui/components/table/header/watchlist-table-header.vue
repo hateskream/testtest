@@ -49,10 +49,6 @@ const { backgroundStyle } = useResizeBackground();
 	</draggable-component>
 </template>
 <style module="classes">
-.tableContainer {
-	padding: 0 16px 18px;
-}
-
 .dragPlaceholder::before {
 	content: '';
 	position: absolute;
