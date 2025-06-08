@@ -48,4 +48,5 @@ export enum IconIds {
 	TrashClose = 'trash-close',
 	TrashOpen = 'trash-open',
 	ArrowToTopRight = 'arrow-to-top-right',
+	TrashOutline = 'trash-outline',
 }
