@@ -69,6 +69,18 @@ const saveNewSection = (event: Event) => {
 	showRenameInput.value = false;
 };
 
+const onAddTicker = (sectionId: string) => {
+	// TODO: Implement logic to add ticker to section
+	// eslint-disable-next-line no-console
+	console.log('Add ticker to section:', sectionId);
+
+};
+const onDeleteSection = (sectionId: string) => {
+	// TODO: Implement logic to delete section
+	// eslint-disable-next-line no-console
+	console.log('Delete section:', sectionId);
+};
+
 const tableRows = (markets: IWatchlistMarkets[]) => {
 	const rows: ITableRow[][] = [];
 
@@ -151,17 +163,43 @@ function sortRowsByType(args: {
 			:class="classes.marketSection"
 		>
 			<!-- Заголовок секции -->
-			<div :class="classes.sectionHeader" @click="toggleSection(section.id)">
-				<span :class="classes.sectionToggle">
+			<div
+				:class="[
+					classes.sectionHeader,
+					sectionStates[section.id] ? classes.sectionHeader__open : ''
+				]"
+				@click="toggleSection(section.id)"
+			>
+				<div :class="classes.sectionStart">
+					<span :class="classes.sectionToggle">
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							:class="[
+								classes.sectionIcon,
+								sectionStates[section.id] ? classes.sectionIcon__open : classes.sectionIcon__close
+							]"
+						/>
+					</span>
+					<span :class="classes.sectionName">{{ section.name }}</span>
+				</div>
+
+				<div :class="classes.sectionEnd">
 					<ui-icon
-						:id="IconIds.DropdownDown"
-						:class="[
-							classes.sectionIcon,
-							sectionStates[section.id] ? classes.sectionIcon__open : classes.sectionIcon__close
-						]"
+						:id="IconIds.Plus"
+						:width="20"
+						:height="20"
+						:class="classes.sectionHoverIcon"
+						@click.stop="onAddTicker(section.id)"
 					/>
-				</span>
-				<span :class="classes.sectionName">{{ section.name }}</span>
+
+					<ui-icon
+						:id="IconIds.TrashOutline"
+						:width="20"
+						:height="20"
+						:class="classes.sectionHoverIcon"
+						@click.stop="onDeleteSection(section.id)"
+					/>
+				</div>
 			</div>
 
 			<!-- Данные секции -->
@@ -206,7 +244,10 @@ function sortRowsByType(args: {
 	position: sticky;
 	left: 0;
 	display: inline-flex;
+	justify-content: space-between;
 	align-items: center;
+	width: 100%;
+	height: 44px;
 	padding: 12px 8px;
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-01);
@@ -222,6 +263,30 @@ function sortRowsByType(args: {
 		}
 	}
 }
+
+.sectionStart {
+	display: inline-flex;
+	align-items: center;
+}
+
+.sectionEnd {
+	display: none;
+}
+
+.sectionHeader__open {
+	&:hover {
+		.sectionEnd {
+			display: inline-flex;
+			align-items: center;
+			gap: 12px;
+		}
+	}
+}
+
+.sectionHoverIcon {
+	color: var(--text-color-base-300);
+}
+
 
 .sectionToggle {
 	margin-right: 6px;
