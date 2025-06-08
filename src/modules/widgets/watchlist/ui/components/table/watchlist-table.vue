@@ -14,9 +14,9 @@ const props = defineProps<IWatchlistTableProps>();
 </script>
 
 <template>
-	<watchlist-table-header :class="classes.tableHeader" />
-
 	<div :class="classes.watchlistTable">
+		<watchlist-table-header :class="classes.tableHeader" />
+
 		<watchlist-table-section :watchlist-sections="props.watchlistSections" />
 	</div>
 </template>
@@ -30,6 +30,8 @@ const props = defineProps<IWatchlistTableProps>();
 }
 
 .tableHeader {
+	position: relative;
 	z-index: 21;
+	flex: 1;
 }
 </style>

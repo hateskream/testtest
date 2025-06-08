@@ -30,9 +30,10 @@ const { backgroundStyle } = useResizeBackground();
 		:delay="150"
 		@update:model-value="marketStore.updateActiveTableColumns"
 	>
-		<template #item="{ element: column }">
+		<template #item="{ element: column, index}">
 			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
 				<watchlist-sortable-column
+					:style="index === 0 ? backgroundStyle : {}"
 					:column="column"
 					:sort-direction="getSortDirection(column.columnName)"
 					@click="marketStore.toggleActiveSort(column)"
@@ -110,6 +111,7 @@ const { backgroundStyle } = useResizeBackground();
 	position: sticky;
 	top: 0;
 	left: 0;
+	z-index: 1;
 }
 
 .dragActive {
