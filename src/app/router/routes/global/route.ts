@@ -12,4 +12,9 @@ export const globalRoutes =
 			name: RouteNames.Chart,
 			component: () => import('@/pages/chart-page.vue'),
 		},
+		{
+			path: RoutePaths.Test,
+			name: RouteNames.Test,
+			component: () => import('@/pages/test-page.vue'),
+		},
 	];
