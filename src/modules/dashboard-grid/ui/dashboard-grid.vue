@@ -456,6 +456,7 @@ function handlerDragEnd() {
 		const placeholder = layout.value.find(item => item.i === dropId);
 
 		if (!placeholder) {
+			// eslint-disable-next-line no-console
 			console.warn('Placeholder not found in layout:', dropId);
 			layout.value = layout.value.filter(item => item.i !== dropId);
 			return;
@@ -518,6 +519,7 @@ function updateDashboardItemsPositions(
 
 function deleteDashboards(widgetId: number) {
 	if (!gridLayoutRef.value) {
+		// eslint-disable-next-line no-console
 		console.warn('GridLayoutRef is not available');
 		return;
 	}
