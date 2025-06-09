@@ -28,6 +28,7 @@ const emit = defineEmits<{
 	(event: 'change-resize-state', value: boolean): void;
 	(event: 'set-resizable-widget-id', value: number | null): void;
 	(event: 'set-dnd-widget-id', value: number | null): void;
+	(event: 'resize', i : number, newH: number, newW: number): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -105,6 +106,10 @@ function updateDndState(newValue: boolean) {
 		});
 	}
 }
+
+function resize(i: number | string, newH: number, newW: number) {
+	emit('resize', Number(i), newH, newW);
+}
 </script>
 
 <template>
@@ -123,6 +128,7 @@ function updateDndState(newValue: boolean) {
 		:min-w="props.minW"
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
+		@resize="resize"
 	>
 
 		<div :class="[classes.itemWrapper, classListItem]">

@@ -10,7 +10,7 @@ export const NEWS_FILTERS: IFilterNews = {
 		})),
 		value: [NewsScore.Low],
 		type: FilterType.List,
-		multiple: false,
+		multiple: true,
 	},
 	segment: {
 		name: 'Segment',

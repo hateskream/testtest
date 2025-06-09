@@ -30,6 +30,7 @@ import {
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
 import type { IPosition } from '../model';
+import type { ISize } from '@/modules/dashboard-group/model';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -64,6 +65,8 @@ const emit = defineEmits<{
 
 
 let mountedPlaceholder: App<Element> | null = null;
+
+const widgetIdToSize = ref(new Map<number, ISize>());
 
 const { currentDashboard } = useInjectCurrentDashboardInject();
 
@@ -111,6 +114,15 @@ const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 const { mouseAt } = useMousePositionSync();
 const dropId = -1;
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
+
+watch(
+	layout,
+	initializeWidgetIdToSize,
+	{
+		deep: true,
+		immediate: true,
+	},
+);
 
 watch(
 	wrapperRef,
@@ -170,6 +182,11 @@ watch(
 		}
 	},
 );
+
+watch(widgetIdToSize, () => {
+	unmountPlaceholderComponents();
+	mountPlaceholderResize();
+}, { deep: true });
 
 watch(() => dnDProvider.newDashboard.value, newValue => {
 	if (newValue) {
@@ -266,10 +283,17 @@ function getMeta(id: number, isResizing = false): IMeta {
 		throw new Error(`Dashboard with id ${id} not found 2`);
 	}
 
+	const size = widgetIdToSize.value.get(id);
+
+	if (!size) {
+		throw new Error(`Dashboard with id ${id} not found size`);
+	}
+
 	return {
 		market: '',
 		name: foundDashboard.name,
 		isResizing,
+		size,
 	};
 }
 
@@ -508,6 +532,44 @@ function deleteDashboards(widgetId: number) {
 	emit('add-widget', updatedDashboards);
 }
 
+function findDashboardItemById(id: number): IDashboardInstance | IDashboardFolder | IDashboardStack | undefined {
+	return props.dashboards.items.find(item => item.id === id);
+}
+
+function initializeWidgetIdToSize(positions: IPosition[]) {
+	positions.forEach(setValueInWidgetIdToSize);
+}
+
+function setValueInWidgetIdToSize(position: IPosition) {
+	const size: ISize = {
+		h: position.h,
+		w: position.w,
+	};
+
+	const lastValue = widgetIdToSize.value.get(position.i);
+
+	if (!lastValue || lastValue.h !== size.h || lastValue.w !== size.w) {
+		widgetIdToSize.value.set(position.i, size);
+	}
+}
+
+function onResize(i: number, newH: number, newW: number) {
+	const foundDashboard = findDashboardItemById(i);
+
+	if (!foundDashboard) {
+		throw new Error(`Dashboard with id ${i} not found onResize`);
+	}
+
+	const updatedPosition = {
+		...foundDashboard.position,
+		h: newH,
+		w: newW,
+		i: foundDashboard.id,
+	};
+
+	setValueInWidgetIdToSize(updatedPosition);
+}
+
 onCreated();
 </script>
 
@@ -547,6 +609,7 @@ onCreated();
 				@change-resize-state="onChangeResizeState"
 				@set-resizable-widget-id="setResizableWidgetId"
 				@set-dnd-widget-id="setDndWidgetId"
+				@resize="onResize"
 			>
 				<template #state-calm>
 					<slot

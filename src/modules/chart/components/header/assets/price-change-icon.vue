@@ -10,7 +10,7 @@ const negativeColor = useCssVar('--metrics-color-negative-chart', document.docum
 const fillColor = computed((): string => {
 	return props.isNegative
 		? (negativeColor.value || 'rgb(252 74 107 / 100%)')
-		: (positiveColor.value || 'rgb(4 237 160 / 100%)');
+		: (positiveColor.value || 'rgb(4 236 160 / 100%)');
 });
 
 const transformStyle = computed((): string => {

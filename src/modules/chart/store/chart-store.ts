@@ -631,6 +631,11 @@ export const useChartStore = defineStore('chart', () => {
 		bgColorShadow.value = `${r} ${g} ${b} /`;
 	}
 
+	function setColor(r: number, g:number, b:number) {
+		bgColor.value = `${r}, ${g}, ${b}`;
+		bgColorShadow.value = `${r} ${g} ${b} /`;
+	}
+
 	function randomizeExchanges() {
 		const priceRanges: Record<string, IPriceRange> = {
 			'USD': { min: 200, max: 300 },
@@ -752,6 +757,7 @@ export const useChartStore = defineStore('chart', () => {
 		activeExchangeAllTime,
 		// Methods
 		setActiveExchange,
+		setColor,
 		isMarketOpen,
 		generateRandomColor,
 		randomizeExchanges,
