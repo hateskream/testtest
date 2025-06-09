@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import { nextTick, ref, toValue, watch } from 'vue';
-import { templateRef } from '@vueuse/core';
+import { nextTick, ref, toValue, watch, useTemplateRef } from 'vue';
 
 import type {
 	ITableRow,
 	ITableRowValue,
 	ITableRowValueType,
 	IWatchlistMarkets,
-	IWatchlistSection,
 } from '../../../model';
 import { useWatchlistStore, useWatchlistSectionStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
@@ -16,19 +14,13 @@ import { UiIcon, IconIds } from '@/shared/ui/icon';
 import WatchlistTableRows from './watchlist-table-rows.vue';
 
 
-interface IWatchlistTableProps {
-	watchlistSections: IWatchlistSection[];
-}
-
-const props = defineProps<IWatchlistTableProps>();
-
 const watchlistStore = useWatchlistStore();
 const watchlistSectionStore = useWatchlistSectionStore();
 
 const sectionStates = ref<Record<string, boolean>>({});
 
 const initSectionStates = () => {
-	props.watchlistSections.forEach(section => {
+	watchlistSectionStore.sections.forEach(section => {
 		sectionStates.value[section.id] = section.isOpen;
 	});
 };
@@ -36,7 +28,7 @@ const initSectionStates = () => {
 initSectionStates();
 
 // change state if got new props
-watch(() => props.watchlistSections, () => {
+watch(() => watchlistSectionStore.sections, () => {
 	initSectionStates();
 }, { deep: true });
 
@@ -46,27 +38,27 @@ const toggleSection = (sectionId: string) => {
 };
 
 
-const renameInputRef = templateRef('renameInputRef');
-const showRenameInput = ref(false);
+const addSectionInputRef = useTemplateRef('addSectionInputRef');
+const showAddSectionInput = ref(false);
 const sectionName = ref('New section');
 const onAddSection = () => {
-	showRenameInput.value = true;
+	showAddSectionInput.value = true;
 	nextTick(() => {
-		renameInputRef.value.focus();
-		renameInputRef.value.select();
+		addSectionInputRef.value!.focus();
+		addSectionInputRef.value!.select();
 	});
 };
 
 const saveNewSection = (event: Event) => {
 	if (event?.type !== 'blur') {
-		renameInputRef.value.blur();
+		addSectionInputRef.value!.blur();
 		return;
 	}
 
 	watchlistSectionStore.addSection(sectionName.value);
 
 	sectionName.value = 'New section';
-	showRenameInput.value = false;
+	showAddSectionInput.value = false;
 };
 
 const onAddTicker = (sectionId: string) => {
@@ -79,6 +71,42 @@ const onDeleteSection = (sectionId: string) => {
 	// TODO: Implement logic to delete section
 	// eslint-disable-next-line no-console
 	console.log('Delete section:', sectionId);
+};
+
+const renameInputRef = useTemplateRef<HTMLInputElement[]>('renameInputRef');
+const showRenameInput = ref(false);
+const currentSectionId = ref<string | null>(null);
+const handleRenameSection = async (sectionId: string) => {
+	const section = watchlistSectionStore.sections.find(s => s.id === sectionId);
+	if (!section) {
+		return;
+	}
+
+	currentSectionId.value = sectionId;
+	showRenameInput.value = true;
+	sectionName.value = section.name;
+
+	await nextTick();
+
+	renameInputRef.value?.[0].focus();
+	renameInputRef.value?.[0].select();
+};
+
+const saveRenamedSection = (event: Event) => {
+	if (event?.type !== 'blur') {
+		renameInputRef.value?.[0].blur();
+		return;
+	}
+
+	if (!currentSectionId.value || !sectionName.value.trim()) {
+		return;
+	}
+
+	watchlistSectionStore.renameSection(currentSectionId.value, sectionName.value);
+
+	sectionName.value = 'New section';
+	showRenameInput.value = false;
+	currentSectionId.value = null;
 };
 
 const tableRows = (markets: IWatchlistMarkets[]) => {
@@ -169,18 +197,32 @@ function sortRowsByType(args: {
 					sectionStates[section.id] ? classes.sectionHeader__open : ''
 				]"
 				@click="toggleSection(section.id)"
+				@dblclick.stop="handleRenameSection(section.id)"
 			>
 				<div :class="classes.sectionStart">
-					<span :class="classes.sectionToggle">
-						<ui-icon
-							:id="IconIds.DropdownDown"
-							:class="[
-								classes.sectionIcon,
-								sectionStates[section.id] ? classes.sectionIcon__open : classes.sectionIcon__close
-							]"
-						/>
-					</span>
-					<span :class="classes.sectionName">{{ section.name }}</span>
+					<template v-if="!showRenameInput || currentSectionId !== section.id">
+						<span :class="classes.sectionToggle">
+							<ui-icon
+								:id="IconIds.DropdownDown"
+								:class="[
+									classes.sectionIcon,
+									sectionStates[section.id] ? classes.sectionIcon__open : classes.sectionIcon__close
+								]"
+							/>
+						</span>
+						<span :class="classes.sectionName">{{ section.name }}</span>
+					</template>
+
+					<template v-else-if="showRenameInput && currentSectionId === section.id">
+						<input
+							ref="renameInputRef"
+							v-model="sectionName"
+							type="text"
+							:class="classes.renameSectionInput"
+							@blur="saveRenamedSection"
+							@keydown.enter="saveRenamedSection"
+						>
+					</template>
 				</div>
 
 				<div :class="classes.sectionEnd">
@@ -215,9 +257,9 @@ function sortRowsByType(args: {
 			</transition>
 		</div>
 
-		<div v-if="showRenameInput" :class="classes.renameSectionWrapper">
+		<div v-if="showAddSectionInput" :class="classes.addSectionWrapper">
 			<input
-				ref="renameInputRef"
+				ref="addSectionInputRef"
 				v-model="sectionName"
 				type="text"
 				@blur="saveNewSection"
@@ -342,7 +384,12 @@ function sortRowsByType(args: {
 	flex-direction: column;
 }
 
-.renameSectionWrapper {
+.renameSectionInput {
+	text-align: start;
+	background-color: transparent;
+}
+
+.addSectionWrapper {
 	display: inline-flex;
 	align-items: center;
 	padding: 12px 8px;

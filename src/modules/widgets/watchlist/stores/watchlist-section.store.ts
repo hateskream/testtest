@@ -25,5 +25,17 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		sections.value = newSections;
 	};
 
-	return { addSection, getSections, setSections, sections };
+
+	const renameSection = (sectionId: string, newName: string) => {
+		const sectionIndex = sections.value.findIndex(section => section.id === sectionId);
+		if (sectionIndex !== -1) {
+			sections.value = sections.value.map((section, idx) =>
+				idx === sectionIndex
+					? { ...section, name: newName }
+					: section,
+			);
+		}
+	};
+
+	return { addSection, getSections, setSections, sections, renameSection };
 });
