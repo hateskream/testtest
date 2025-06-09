@@ -201,7 +201,10 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 .listFilters {
 	display: flex;
 	align-items: center;
-	overflow: hidden;
+	max-width: 100%;
+	height: 42px;
+	padding-bottom: 4px;
+	overflow-x: auto;
 	gap: 6px;
 }
 
