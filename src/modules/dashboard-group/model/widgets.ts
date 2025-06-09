@@ -1,3 +1,5 @@
+import type { ISize } from './dashboard';
+
 export enum WidgetType {
 	FearGreed = 'fear-greed',
 	Market = 'market',
@@ -17,4 +19,5 @@ export interface IMeta {
 	isResizing: boolean;
 	market: string;
 	name: string;
+	size: ISize;
 }
