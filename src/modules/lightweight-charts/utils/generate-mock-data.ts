@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import type { LineData, Time } from 'lightweight-charts';
 
 let randomFactor = 125 + Math.random() * 125;
