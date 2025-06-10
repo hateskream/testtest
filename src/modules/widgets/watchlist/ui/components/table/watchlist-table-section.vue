@@ -13,11 +13,19 @@ import { UiIcon, IconIds } from '@/shared/ui/icon';
 
 import WatchlistTableRows from './watchlist-table-rows.vue';
 
+const CLICK_DELAY = 200; // ms
 
 const watchlistStore = useWatchlistStore();
 const watchlistSectionStore = useWatchlistSectionStore();
 
 const sectionStates = ref<Record<string, boolean>>({});
+const renameInputRef = useTemplateRef<HTMLInputElement[]>('renameInputRef');
+const addSectionInputRef = useTemplateRef('addSectionInputRef');
+const showAddSectionInput = ref(false);
+const showRenameInput = ref(false);
+const clickTimeout = ref<number | null>(null);
+const currentSectionId = ref<string | null>(null);
+const sectionName = ref('New section');
 
 const initSectionStates = () => {
 	watchlistSectionStore.sections.forEach(section => {
@@ -25,7 +33,6 @@ const initSectionStates = () => {
 	});
 };
 
-// change state if got new props
 watch(() => watchlistSectionStore.sections, () => {
 	initSectionStates();
 }, {
@@ -35,13 +42,9 @@ watch(() => watchlistSectionStore.sections, () => {
 
 const toggleSection = (sectionId: string) => {
 	sectionStates.value[sectionId] = !sectionStates.value[sectionId];
-	// TODO: Save state to local storage or elsewere
+	// TODO: Save state to local storage or elsewhere
 };
 
-
-const addSectionInputRef = useTemplateRef('addSectionInputRef');
-const showAddSectionInput = ref(false);
-const sectionName = ref('New section');
 const onAddSection = () => {
 	showAddSectionInput.value = true;
 	nextTick(() => {
@@ -74,9 +77,6 @@ const onDeleteSection = (sectionId: string) => {
 	initSectionStates();
 };
 
-const renameInputRef = useTemplateRef<HTMLInputElement[]>('renameInputRef');
-const showRenameInput = ref(false);
-const currentSectionId = ref<string | null>(null);
 const handleRenameSection = async (sectionId: string) => {
 	const section = watchlistSectionStore.sections.find(s => s.id === sectionId);
 	if (!section) {
@@ -109,6 +109,28 @@ const saveRenamedSection = (event: Event) => {
 	showRenameInput.value = false;
 	currentSectionId.value = null;
 };
+
+function onSectionClick(sectionId: string) {
+	if (clickTimeout.value) {
+		return;
+	}
+
+	if (showRenameInput.value) {
+		return;
+	}
+
+	clickTimeout.value = window.setTimeout(() => {
+		toggleSection(sectionId);
+		clickTimeout.value = null;
+	}, CLICK_DELAY);
+}
+
+
+function onSectionDblClick(sectionId: string) {
+	if (clickTimeout.value) {
+		clearTimeout(clickTimeout.value); clickTimeout.value = null;
+	} handleRenameSection(sectionId);
+}
 
 const tableRows = (markets: IWatchlistMarkets[]) => {
 	const rows: ITableRow[][] = [];
@@ -197,8 +219,8 @@ function sortRowsByType(args: {
 					classes.sectionHeader,
 					sectionStates[section.id] ? classes.sectionHeader__open : ''
 				]"
-				@click="toggleSection(section.id)"
-				@dblclick.stop="handleRenameSection(section.id)"
+				@click="onSectionClick(section.id)"
+				@dblclick="onSectionDblClick(section.id)"
 			>
 				<div :class="classes.sectionStart">
 					<template v-if="!showRenameInput || currentSectionId !== section.id">
