@@ -25,12 +25,13 @@ const initSectionStates = () => {
 	});
 };
 
-initSectionStates();
-
 // change state if got new props
 watch(() => watchlistSectionStore.sections, () => {
 	initSectionStates();
-}, { deep: true });
+}, {
+	deep: true,
+	immediate: true,
+});
 
 const toggleSection = (sectionId: string) => {
 	sectionStates.value[sectionId] = !sectionStates.value[sectionId];
@@ -68,9 +69,9 @@ const onAddTicker = (sectionId: string) => {
 
 };
 const onDeleteSection = (sectionId: string) => {
-	// TODO: Implement logic to delete section
-	// eslint-disable-next-line no-console
-	console.log('Delete section:', sectionId);
+	watchlistSectionStore.deleteSection(sectionId);
+
+	initSectionStates();
 };
 
 const renameInputRef = useTemplateRef<HTMLInputElement[]>('renameInputRef');
@@ -251,7 +252,7 @@ function sortRowsByType(args: {
 				:enter-from-class="classes.sectionToggleEnterFrom"
 				:leave-to-class="classes.sectionToggleLeaveTo"
 			>
-				<div v-show="sectionStates[section.id]" :class="classes.sectionData">
+				<div v-if="sectionStates[section.id]" :class="classes.sectionData">
 					<watchlist-table-rows :rows="tableRows(section.watchlist)" />
 				</div>
 			</transition>
