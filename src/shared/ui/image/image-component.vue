@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<IUiImage>(), {
 const refImg = ref<HTMLImageElement | null>(null);
 
 const currentSrc = ref(props.replacement);
+const isValidSrc = ref(false);
 
 const inlineStyles = computed((): Partial<CSSProperties> => {
 	const { width, height } = props;
@@ -36,9 +37,9 @@ watch(
 			return;
 		}
 
-		const isValid = await tryLoadImage(newSrc);
+		isValidSrc.value = await tryLoadImage(newSrc);
 
-		if (isValid) {
+		if (isValidSrc.value) {
 			currentSrc.value = newSrc;
 		}
 	},
@@ -68,7 +69,10 @@ async function tryLoadImage(src: string): Promise<boolean> {
 </script>
 
 <template>
+	<slot v-if="!currentSrc" name="loading" />
+	<slot v-else-if="!isValidSrc" name="error" />
 	<img
+		v-else-if="currentSrc && isValidSrc"
 		ref="refImg"
 		:src="currentSrc"
 		:alt="props.alt"
