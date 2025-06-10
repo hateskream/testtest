@@ -17,10 +17,6 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		}] as IWatchlistSection[];
 	};
 
-	const getSections = ():IWatchlistSection[] => {
-		return sections.value;
-	};
-
 	const setSections = (newSections: IWatchlistSection[]) => {
 		sections.value = newSections;
 	};
@@ -37,5 +33,9 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		}
 	};
 
-	return { addSection, getSections, setSections, sections, renameSection };
+	const deleteSection = (sectionId: string) => {
+		sections.value = sections.value.filter(section => section.id !== sectionId);
+	};
+
+	return { addSection, setSections, sections, renameSection, deleteSection };
 });
