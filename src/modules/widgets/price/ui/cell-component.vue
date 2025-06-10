@@ -33,7 +33,11 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 		<div :class="[classes.content, 'price-no-drag']">
 			<ui-transition-fade>
 				<div v-if="isShowLogo" :class="classes.logo">
-					<ticker-icon :src="props.currency.srcImage" :ticker="props.currency.ticker" />
+					<ticker-icon
+						:src="props.currency.srcImage"
+						:ticker="props.currency.ticker"
+						:market="props.currency.market"
+					/>
 				</div>
 			</ui-transition-fade>
 
