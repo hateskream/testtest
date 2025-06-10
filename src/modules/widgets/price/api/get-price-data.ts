@@ -22,6 +22,7 @@ interface ICurrency {
 	price: string;
 	changeLastDay: string;
 	marketCap: string;
+	market: string;
 }
 
 export interface IGetPriceResponse {
@@ -76,6 +77,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$86,945.83',
 			changeLastDay: '1.54%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'ADA',
@@ -83,6 +85,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2,166.88',
 			changeLastDay: '2.34%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'BNB',
@@ -90,6 +93,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$583.99',
 			changeLastDay: '2.23%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'SOL',
@@ -97,13 +101,31 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$143.08',
 			changeLastDay: '1.31%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
-			ticker: 'TRON',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
+			ticker: 'XAU',
+			name: 'Gold',
+			price: '$2,300.00',
+			changeLastDay: '0.45%',
+			marketCap: '$12.00T',
+			market: 'commodities',
+		},
+		{
+			ticker: 'XAG',
+			name: 'Silver',
+			price: '$29.00',
+			changeLastDay: '1.10%',
+			marketCap: '$1.30T',
+			market: 'commodities',
+		},
+		{
+			ticker: 'WTI',
+			name: 'Crude Oil',
+			price: '$75.00',
+			changeLastDay: '-0.80%',
+			marketCap: '$3.00T',
+			market: 'commodities',
 		},
 		{
 			ticker: '2TRONN',
@@ -111,6 +133,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'AASDD',
@@ -118,6 +141,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'STR4ON1',
@@ -125,6 +149,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'DTR4ON2',
@@ -132,6 +157,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'ATR4ON3',
@@ -139,6 +165,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 		{
 			ticker: 'GTR4ON4',
@@ -146,6 +173,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$2.4552',
 			changeLastDay: '4.73%',
 			marketCap: '$3.20T',
+			market: 'crypto',
 		},
 	];
 
