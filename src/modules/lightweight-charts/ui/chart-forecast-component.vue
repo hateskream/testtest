@@ -89,9 +89,9 @@ onMounted(() => {
 		const samples = [];
 		const d = new Date(mainData.value[mainData.value.length - 1].time as number * 1000);
 
-		const days = 30;
+		const days = 20;
 
-		const maxPoint = Math.abs(max / days);
+		const maxPoint = max / days;
 
 		let currentMax = mainData.value[mainData.value.length - 1].close;
 
@@ -113,7 +113,7 @@ onMounted(() => {
 		return samples;
 	};
 
-	priceTargetUp.setData(generatePriceForecast(300));
+	priceTargetUp.setData(generatePriceForecast(250));
 
 	const priceTargetAvg = chart.value!.addSeries(LineSeries, {
 		lineType: LineType.Simple,
@@ -126,11 +126,11 @@ onMounted(() => {
 	});
 	const das = generatePriceForecast(200);
 
-	priceTargetAvg.setData(generatePriceForecast(200));
+	priceTargetAvg.setData(generatePriceForecast(100));
 
 	const priceTargetDown = chart.value!.addSeries(LineSeries, {
 		lineType: LineType.Simple,
-		color: '#E3FF47',
+		color: '#FC4A6B',
 		lineStyle: LineStyle.Dashed,
 		crosshairMarkerVisible: false,
 		lineWidth: 1,
@@ -138,7 +138,7 @@ onMounted(() => {
 		priceLineColor: '#373737',
 	});
 
-	priceTargetDown.setData(generatePriceForecast(100));
+	priceTargetDown.setData(generatePriceForecast(-100));
 
 	priceTargetAvg.attachPrimitive(new Rectangle({
 		price: das[0].value,
