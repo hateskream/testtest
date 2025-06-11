@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, watch, ref, type CSSProperties } from 'vue';
 
+import { UiSkeleton } from '../skeleton';
+
 interface IUiImage {
 	height?: string;
 	width?: string;
@@ -8,6 +10,7 @@ interface IUiImage {
 	alt?: string;
 	replacement?: string;
 	loading?: 'lazy' | 'eager';
+	showLoader?: boolean;
 }
 
 const props = withDefaults(defineProps<IUiImage>(), {
@@ -16,12 +19,19 @@ const props = withDefaults(defineProps<IUiImage>(), {
 	width: '100%',
 	height: '100%',
 	replacement: '',
+	showLoader: false,
 });
+
+const emit = defineEmits<{
+	(e: 'loaded'): void;
+	(e: 'error'): void;
+}>();
 
 const refImg = ref<HTMLImageElement | null>(null);
 
 const currentSrc = ref(props.replacement);
 const isValidSrc = ref(false);
+const isImageLoaded = ref(false);
 
 const inlineStyles = computed((): Partial<CSSProperties> => {
 	const { width, height } = props;
@@ -61,16 +71,33 @@ watch(refImg, () => {
 async function tryLoadImage(src: string): Promise<boolean> {
 	return new Promise(resolve => {
 		const img = new Image();
-		img.onload = () => resolve(true);
-		img.onerror = () => resolve(false);
+		img.onload = () => {
+			isImageLoaded.value = true;
+			emit('loaded');
+			resolve(true);
+		};
+		img.onerror = () => {
+			isImageLoaded.value = true;
+			emit('error');
+			resolve(false);
+		};
 		img.src = src;
 	});
 }
 </script>
 
 <template>
-	<slot v-if="!currentSrc" name="loading" />
-	<slot v-else-if="!isValidSrc" name="error" />
+	<slot v-if="!isImageLoaded && showLoader" name="loading">
+		<ui-skeleton
+			:style="inlineStyles"
+			:shape="'rectangle'"
+			:animation="'wave'"
+			:opacity="0.5"
+		/>
+	</slot>
+
+	<slot v-else-if="!isValidSrc && isImageLoaded" name="error" />
+
 	<img
 		v-else-if="currentSrc && isValidSrc"
 		ref="refImg"

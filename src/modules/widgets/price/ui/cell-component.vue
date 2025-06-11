@@ -7,8 +7,8 @@ import { usePriceStore } from '../stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
+import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 
-import TickerIcon from '@/shared/ui/ticker/ticker-icon.vue';
 
 interface ICellComponentProps {
 	currency: ICurrency;
@@ -34,16 +34,24 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			<ui-transition-fade>
 				<div v-if="isShowLogo" :class="classes.logo">
 					<ticker-icon
+						v-if="props.currency.market !== 'forex' && !Array.isArray(props.currency.srcImage)"
 						:src="props.currency.srcImage"
 						:ticker="props.currency.ticker"
-						:market="props.currency.market"
+					/>
+
+					<forex-ticker-icon
+						v-else-if="Array.isArray(props.currency.srcImage) && props.currency.domain"
+						:src="props.currency.srcImage"
+						:ticker="props.currency.ticker"
+						:domain="props.currency.domain"
 					/>
 				</div>
 			</ui-transition-fade>
 
 			<div :class="classes.container">
 				<div :class="classes.ticker">
-					{{ label }}
+					<span>{{ label }}</span>
+					<span v-if="props.currency.market === 'forex'">{{ props.currency.domain }}</span>
 				</div>
 				<div :class="classes.containerSecond">
 					<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
@@ -106,14 +114,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 }
 
 .logo {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 32px;
-	height: 32px;
 	margin-right: 12px;
-	border: 1px solid var(--border-color-base-300);
-	border-radius: 50%;
 }
 
 .container {
@@ -124,9 +125,11 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 }
 
 .ticker {
+	display: inline-flex;
 	font-weight: 300;
 	line-height: 150%;
 	color: var(--text-color-base-100);
+	gap: 2px;
 }
 
 .containerSecond {

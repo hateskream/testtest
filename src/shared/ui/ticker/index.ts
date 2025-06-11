@@ -1,3 +1,4 @@
-import tickerIconPlaceholder from './icon-placeholder.vue';
+import tickerIcon from './ticker-icon.vue';
+import forexTickerIcon from './forex-ticker-icon.vue';
 
-export { tickerIconPlaceholder as tickerIconPlaceholder };
+export { tickerIcon, forexTickerIcon };

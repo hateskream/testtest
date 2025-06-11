@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue';
+
 import { UiImage } from '../image';
 
 import iconPlaceholder from './icon-placeholder.vue';
@@ -6,20 +8,46 @@ import iconPlaceholder from './icon-placeholder.vue';
 interface ITickerIconProps {
 	src: string;
 	ticker: string;
-	market: string;
+	size?: number;
 }
 
+const isImageLoaded = ref(false);
+
 const props = defineProps<ITickerIconProps>();
+
+const wrapperSize = computed(() => {
+	// This is used to set the size of the wrapper div
+	// to ensure the icon is centered and has padding
+	return {
+		width: props.size ? `${props.size + 8}px` : '40px',
+		height: props.size ? `${props.size + 8}px` : '40px',
+	};
+});
+
+const iconSize = computed(() => {
+	// This is used to set the size of the image
+	return props.size ? `${props.size}px` : '32px';
+});
 </script>
 
 <template>
-	<div :class="classes.tickerIcon">
-		<ui-image :src="props.src">
+	<div
+		:class="classes.tickerIcon"
+		:style="[
+			{ border: isImageLoaded ? `1px solid var(--border-color-base-300)` : 'none' },
+			wrapperSize
+		]"
+	>
+		<ui-image
+			v-show="isImageLoaded"
+			:src="props.src"
+			:width="iconSize"
+			:height="iconSize"
+			show-loader
+			@loaded="isImageLoaded = true"
+			@error="isImageLoaded = true"
+		>
 			<template #error>
-				<icon-placeholder :ticker="props.ticker" />
-			</template>
-
-			<template #loading>
 				<icon-placeholder :ticker="props.ticker" />
 			</template>
 		</ui-image>
@@ -29,5 +57,11 @@ const props = defineProps<ITickerIconProps>();
 <style module="classes">
 .tickerIcon {
 	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
+	padding: 4px;
+	text-align: center;
+	border-radius: 999px;
 }
 </style>
