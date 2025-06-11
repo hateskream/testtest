@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LayoutComponent } from '@/modules/layout';
-import { ChartForecast } from '@/modules/lightweight-charts';
+import { ChartForecast, ChartYearlyRevenue } from '@/modules/lightweight-charts';
 
 
 </script>
@@ -8,11 +8,17 @@ import { ChartForecast } from '@/modules/lightweight-charts';
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<chart-forecast
-				:width="100"
-				:height="400"
-				disable-scroll
-			/>
+			<div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+				<chart-forecast
+					:width="100"
+					:height="400"
+				/>
+
+				<chart-yearly-revenue
+					:width="100"
+					:height="400"
+				/>
+			</div>
 
 		</template>
 	</layout-component>
