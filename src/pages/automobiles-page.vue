@@ -27,20 +27,22 @@ function goBack() {
 <style module="classes">
 .wrapper {
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	flex-direction: column;
-	gap: 10px;
+	justify-content: center;
+	align-items: center;
 	width: 100%;
-	div{
-		font-size:32px;
+	gap: 10px;
+
+	div {
+		font-size: 32px;
 		color: var(--text-color-base-500);
 	}
+
 	button {
-		cursor: pointer;
 		padding: 10px;
-		border: 1px solid var(--text-color-base-500);
 		color: var(--text-color-base-500);
+		border: 1px solid var(--text-color-base-500);
+		cursor: pointer;
 	}
 }
 </style>
