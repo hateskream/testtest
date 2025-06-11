@@ -1,3 +1,6 @@
 export * from './calc-indicators';
 export * from './generate-mock-data';
 export * from './group-series-by-range';
+export * from './assert';
+export * from './position-box';
+export * from './prepare-series';
