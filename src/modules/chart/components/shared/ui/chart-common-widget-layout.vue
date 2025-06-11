@@ -46,6 +46,6 @@
 }
 
 .body {
-	padding: 0 16px 8px;
+	padding: 8px 16px 12px;
 }
 </style>

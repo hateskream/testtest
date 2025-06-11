@@ -15,6 +15,9 @@ import {
 import { ChartColumnsLayout, ChartLayout } from './ui';
 
 import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
+import ChartWidgetsValuation from '@/modules/chart/components/widgets/valuation/chart-widgets-valuation.vue';
+import ChartWidgetsCapitalStructure
+	from '@/modules/chart/components/widgets/capital-structure/chart-widgets-capital-structure.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -111,6 +114,19 @@ const marketDate = {
 	forwardPE: '151 703 351',
 	sector: 'Automobiles',
 };
+const valuationData = {
+	pe: { ltm: '161.4', ntm: '132.7' },
+	evSales: { ltm: '9.3', ntm: '8.8' },
+	evEbitda: { ltm: '62.7', ntm: '54.5' },
+	priceBook: { ltm: '12.2', ntm: null },
+};
+
+const capitalStructureData = {
+	marketCap: '920.81B',
+	totalDebt: '161.4x',
+	cashAndInv: '9.3x',
+	enterpriseValue: '62.7x',
+};
 </script>
 
 <template>
@@ -155,12 +171,27 @@ const marketDate = {
 					/>
 				</template>
 				<template #mainCol>
-					<chart-main-column-component
-						:sections="chartWidgetTestSections"
-						:active-section="activeSection"
-						:selected-item="selectedItem"
-						:register-item-ref="registerItemRef"
-					/>
+					<div :class="classes.columnTitle">
+						<ui-icon
+							:id="IconIds.Deals"
+							:class="classes.titleIcon"
+							width="20px"
+							height="20px"
+						/>
+						<span>Valuation and estimates</span>
+					</div>
+					<!--					<chart-main-column-component-->
+					<!--						:sections="chartWidgetTestSections"-->
+					<!--						:active-section="activeSection"-->
+					<!--						:selected-item="selectedItem"-->
+					<!--						:register-item-ref="registerItemRef"-->
+					<!--					/>-->
+					<div :class="classes.section">
+						<chart-widgets-valuation
+							:values="valuationData"
+						/>
+						<chart-widgets-capital-structure :values="capitalStructureData" />
+					</div>
 				</template>
 				<template #rightCol>
 					<div :class="classes.columnTitle">
@@ -255,5 +286,9 @@ const marketDate = {
 	background: #ffffff;
 }
 
+.section {
+	display: flex;
+	gap: 3px;
+}
 
 </style>
