@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { offset, shift, useFloating, flip, autoUpdate } from '@floating-ui/vue';
+import { offset, shift, useFloating, flip, autoUpdate, type Placement } from '@floating-ui/vue';
 import { ref, useTemplateRef } from 'vue';
 
 interface IProps {
 	forceHide?: boolean;
 	showInMs?: number;
+	position?: Placement;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	forceHide: false,
 	showInMs: 800,
+	position: 'bottom',
 });
 
 const reference = useTemplateRef('reference');
@@ -17,7 +19,7 @@ const floating = useTemplateRef('floating');
 
 const { floatingStyles } = useFloating(reference, floating, {
 	strategy: 'fixed',
-	placement: 'bottom',
+	placement: props.position,
 	middleware: [offset(6), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
 });

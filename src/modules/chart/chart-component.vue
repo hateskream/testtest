@@ -14,6 +14,8 @@ import {
 } from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 
+import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
+
 const { randomizeExchanges } = useChartStore();
 
 const viewMode = ref('mixed');
@@ -101,6 +103,14 @@ watch(activeSection, async (newItemId) => {
 		}
 	}
 });
+const marketDate = {
+	marketCap: 3252255,
+	volume: '151 703 351',
+	totalReturn3M: -29.5,
+	totalReturn1Y: 53.952,
+	forwardPE: '151 703 351',
+	sector: 'Automobiles',
+};
 </script>
 
 <template>
@@ -162,16 +172,7 @@ watch(activeSection, async (newItemId) => {
 						/>
 						<span>Insights & Activity</span>
 					</div>
-					<div :class="classes.columnContent">
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-						<div :class="classes.placeholderBlock"></div>
-					</div>
+					<chart-widgets-key-stats :market-data="marketDate" />
 				</template>
 			</chart-columns-layout>
 		</template>

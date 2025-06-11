@@ -47,4 +47,5 @@ export enum IconIds {
 	LogoWidgetMarketCap = 'logo-widget-market-cap',
 	TrashClose = 'trash-close',
 	TrashOpen = 'trash-open',
+	ArrowToTopRight = 'arrow-to-top-right',
 }
