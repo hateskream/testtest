@@ -23,6 +23,7 @@ interface ICurrency {
 	changeLastDay: string;
 	marketCap: string;
 	market: string;
+	domain?: string;
 }
 
 export interface IGetPriceResponse {
@@ -63,10 +64,16 @@ function sendereRequestByType(
 }
 
 function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
-	return response.data.map(currency => ({
+	return response.data.map(currency => currency.market === 'forex' && currency.domain ? {
+		...currency,
+		srcImage: [
+			getImagePath(currency.ticker, ImageTypePath.Currency),
+			getImagePath(currency.domain, ImageTypePath.Currency),
+		],
+	} : {
 		...currency,
 		srcImage: getImagePath(currency.ticker, ImageTypePath.Currency),
-	}));
+	});
 }
 
 async function getMockData(): Promise<IGetPriceResponse> {
@@ -86,6 +93,15 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			changeLastDay: '2.34%',
 			marketCap: '$3.20T',
 			market: 'crypto',
+		},
+		{
+			ticker: 'EUR',
+			name: 'EUR',
+			price: '$1.03717',
+			changeLastDay: '-2.34%',
+			marketCap: '$29.3T',
+			market: 'forex',
+			domain: 'USD',
 		},
 		{
 			ticker: 'BNB',
