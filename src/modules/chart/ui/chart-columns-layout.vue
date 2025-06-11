@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref, computed, toRefs} from 'vue';
-import {useEventListener, useScroll, useBreakpoints} from '@vueuse/core';
+import { ref, computed, toRefs } from 'vue';
+import { useEventListener, useScroll, useBreakpoints } from '@vueuse/core';
 
 const props = defineProps<{ disableScroll?: boolean }>();
-const {disableScroll} = toRefs(props);
+const { disableScroll } = toRefs(props);
 const breakpoints = useBreakpoints({
 	tablet: 640,
 	desktop: 1280,
@@ -17,7 +17,7 @@ const leftCol = ref<HTMLElement>();
 const rightCol = ref<HTMLElement>();
 const mainCol = ref<HTMLElement>();
 
-const {y: scrollMainCol, arrivedState} = useScroll(mainCol);
+const { y: scrollMainCol, arrivedState } = useScroll(mainCol);
 const onContainerScroll = (e: WheelEvent) => {
 	if (!arrivedState.top && !arrivedState.bottom) {
 		e.stopPropagation();
@@ -45,10 +45,10 @@ const onColumnScroll = (e: WheelEvent) => {
 		scrollMainCol.value += e.deltaY;
 	}
 };
-useEventListener(container, 'wheel', onContainerScroll, {passive: false});
-useEventListener(leftCol, 'wheel', onColumnScroll, {passive: false});
-useEventListener(rightCol, 'wheel', onColumnScroll, {passive: false});
-useEventListener(mainCol, 'wheel', onColumnScroll, {passive: false});
+useEventListener(container, 'wheel', onContainerScroll, { passive: false });
+useEventListener(leftCol, 'wheel', onColumnScroll, { passive: false });
+useEventListener(rightCol, 'wheel', onColumnScroll, { passive: false });
+useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 </script>
 
 <template>
@@ -97,14 +97,12 @@ useEventListener(mainCol, 'wheel', onColumnScroll, {passive: false});
 }
 
 .mainCol {
+	display: flex;
 	flex-grow: 2;
+	flex-direction: column;
 	height: 100%;
 	overflow: scroll;
-
-	display: flex;
-	flex-direction: column;
 	gap: 40px;
-
 }
 </style>
 

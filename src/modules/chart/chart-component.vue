@@ -16,9 +16,6 @@ import { ChartColumnsLayout, ChartLayout } from './ui';
 import { chartWidgetRealSections } from '@/modules/chart/components/widgets/explorer/models';
 
 import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
-import ChartWidgetsValuation from '@/modules/chart/components/widgets/valuation/chart-widgets-valuation.vue';
-import ChartWidgetsCapitalStructure
-	from '@/modules/chart/components/widgets/capital-structure/chart-widgets-capital-structure.vue';
 import ChartSectionValuationsAndEstimates
 	from '@/modules/chart/components/sections/valuations-and-estimates/chart-section-valuations-and-estimates.vue';
 import ChartSectionPriceTarget from '@/modules/chart/components/sections/price-target/chart-section-price-target.vue';

@@ -16,7 +16,6 @@ interface IChartSectionValuationsProps {
 const props = defineProps<IChartSectionValuationsProps>();
 
 
-
 const itemRef = ref<HTMLElement | null>(null);
 
 // Register the ref when component mounts
@@ -51,8 +50,6 @@ onUnmounted(() => {
 </template>
 
 <style module="classes">
-
-
 .section {
 	display: flex;
 	gap: 3px;

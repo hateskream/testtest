@@ -121,38 +121,37 @@ const props = defineProps<IValuationProps>();
 }
 
 .metricLabel {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
 	color: var(--text-color-base-300);
-	display:flex;
-	align-items:center;
-
-	height:100%;
-	width:100%;
 }
 
 
 .metricValue {
-	color: var(--text-color-base-500);
-	display:flex;
-	gap: 3px;
-	align-items:center;
+	display: flex;
 	justify-content: flex-end;
-	height:100%;
-	width:100%;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	color: var(--text-color-base-500);
+	gap: 3px;
 }
 
 .metricValueHeader {
-	color: var(--text-color-base-300);
-	display:flex;
-	align-items:center;
+	display: flex;
 	justify-content: flex-end;
-	height:100%;
-	padding-right:17px;
-	width:100%;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	padding-right: 17px;
+	color: var(--text-color-base-300);
 }
 
 
 .emptyValue {
-	padding-right:17px;
+	padding-right: 17px;
 	color: var(--text-color-base-100);
 }
 </style>

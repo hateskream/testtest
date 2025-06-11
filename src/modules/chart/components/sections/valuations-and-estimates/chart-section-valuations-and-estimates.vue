@@ -70,8 +70,6 @@ onUnmounted(() => {
 </template>
 
 <style module="classes">
-
-
 .section {
 	display: flex;
 	gap: 3px;

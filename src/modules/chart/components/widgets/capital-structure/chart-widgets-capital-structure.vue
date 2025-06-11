@@ -80,21 +80,21 @@ const props = defineProps<ICapitalStructureProps>();
 }
 
 .metricLabel {
-	color: var(--text-color-base-300);
 	display: flex;
 	align-items: center;
-	height: 100%;
 	width: 100%;
+	height: 100%;
+	color: var(--text-color-base-300);
 }
 
 .metricValue {
-	color: var(--text-color-base-500);
 	display: flex;
-	gap: 3px;
-	align-items: center;
 	justify-content: flex-end;
-	height: 100%;
+	align-items: center;
 	width: 100%;
+	height: 100%;
+	color: var(--text-color-base-500);
+	gap: 3px;
 }
 
 .emptyValue {
