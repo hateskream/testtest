@@ -17,7 +17,6 @@ import { Rectangle } from '../rectangles';
 interface IChartProps {
 	width: number;
 	height: number;
-	disableScroll: boolean;
 }
 
 defineProps<IChartProps>();
@@ -25,7 +24,7 @@ defineProps<IChartProps>();
 const container = useTemplateRef('container');
 const chart = ref<IChartApi | null>();
 
-const mainData = ref(generateCandleDataFromLineData(generateLineData(50)));
+const mainData = ref(generateCandleDataFromLineData(generateLineData(50, 7)));
 
 onMounted(() => {
 	chart.value = createChart(container.value as HTMLElement, {

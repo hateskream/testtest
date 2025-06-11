@@ -2,7 +2,7 @@
 import type { LineData, Time } from 'lightweight-charts';
 
 let randomFactor = 125 + Math.random() * 125;
-const samplePoint = (i: number) =>
+export const samplePoint = (i: number) =>
 	i *
 	(0.5 +
 		Math.sin(i / 10) * 0.2 +
@@ -11,10 +11,10 @@ const samplePoint = (i: number) =>
 		Math.sin(i / 500) * 0.5) +
 	350;
 
-export function generateLineData(numberOfPoints: number = 500): LineData[] {
+export function generateLineData(numberOfPoints: number = 500, daySpace: number = 1): LineData[] {
 	randomFactor = 25 + Math.random() * 25;
 	const res = [];
-	const date = new Date(Date.UTC(2005, 0, 1, 12, 0, 0, 0));
+	const date = new Date(Date.UTC(2005, 0, 0, 12, 0, 0, 0));
 	for (let i = 0; i < numberOfPoints; ++i) {
 		const time = (date.getTime() / 1000) as Time;
 		const value = samplePoint(i);
@@ -23,7 +23,7 @@ export function generateLineData(numberOfPoints: number = 500): LineData[] {
 			value,
 		});
 
-		date.setUTCDate(date.getUTCDate() + 7);
+		date.setUTCDate(date.getUTCDate() + daySpace);
 	}
 
 	return res;
