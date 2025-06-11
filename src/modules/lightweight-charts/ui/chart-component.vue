@@ -35,7 +35,6 @@ defineExpose({
 	regenerateData,
 });
 
-
 type IGroupedData = {
 	[x in RangeChart]: CandlestickData[]
 };

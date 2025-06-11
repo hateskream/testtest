@@ -23,7 +23,7 @@ export function generateLineData(numberOfPoints: number = 500): LineData[] {
 			value,
 		});
 
-		date.setUTCDate(date.getUTCDate() + 1);
+		date.setUTCDate(date.getUTCDate() + 7);
 	}
 
 	return res;
