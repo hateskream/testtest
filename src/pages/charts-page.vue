@@ -8,13 +8,14 @@ import { ChartForecast, ChartYearlyRevenue } from '@/modules/lightweight-charts'
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+			<div style="display: flex; flex-direction: column; width: 100%; height: 100%; gap: 32px;">
 				<chart-forecast
 					:width="100"
 					:height="400"
 				/>
 
 				<chart-yearly-revenue
+
 					:width="100"
 					:height="400"
 				/>
