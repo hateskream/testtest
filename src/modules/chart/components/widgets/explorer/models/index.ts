@@ -112,4 +112,12 @@ export const chartWidgetRealSections = [
 		id:'price-target',
 		title: 'Price Target',
 	},
+	{
+		id:'quarterly-revenue',
+		title: 'Quarterly Revenue',
+	},
+	{
+		id:'yearly-revenue',
+		title: 'Yearly revenue',
+	},
 ];

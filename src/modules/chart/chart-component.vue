@@ -19,6 +19,10 @@ import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/c
 import ChartSectionValuationsAndEstimates
 	from '@/modules/chart/components/sections/valuations-and-estimates/chart-section-valuations-and-estimates.vue';
 import ChartSectionPriceTarget from '@/modules/chart/components/sections/price-target/chart-section-price-target.vue';
+import ChartSectionQuarterlyRevenue
+	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
+import ChartSectionYearlyRevenue
+	from '@/modules/chart/components/sections/yearly-revenue/chart-section-yearly-revenue.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -171,6 +175,14 @@ const explorerDate = computed(() => {
 					/>
 					<chart-section-price-target
 						:section="chartWidgetRealSections[1]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-quarterly-revenue
+						:section="chartWidgetRealSections[2]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-yearly-revenue
+						:section="chartWidgetRealSections[3]"
 						:register-item-ref="registerItemRef"
 					/>
 					<chart-main-column-component

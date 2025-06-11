@@ -13,13 +13,22 @@ export const globalRoutes =
 			component: () => import('@/pages/chart-page.vue'),
 		},
 		{
-			path: RoutePaths.Test,
-			name: RouteNames.Test,
-			component: () => import('@/pages/test-page.vue'),
-		},
-		{
 			path: RoutePaths.Charts,
 			name: RouteNames.Charts,
 			component: () => import('@/pages/charts-page.vue'),
 		},
 	];
+
+
+export const testRoutes = [
+	{
+		path: RoutePaths.Test,
+		name: RouteNames.Test,
+		component: () => import('@/pages/test-page.vue'),
+	},
+	{
+		path: RoutePaths.Automobile,
+		name: RouteNames.Automobile,
+		component: () => import('@/pages/automobiles-page.vue'),
+	},
+];

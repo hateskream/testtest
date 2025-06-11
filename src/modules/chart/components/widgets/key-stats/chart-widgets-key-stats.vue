@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ChartCommonTooltip } from '@/modules/chart/components/shared/ui';
+import { RouteNames } from '@/types/route.d';
 
 interface IKeyStatsProps {
 	marketCap: number;
@@ -94,10 +95,9 @@ const formatMarketCap = (value: number | string): string => {
 
 		<div :class="[classes.gridItem, classes.sector, classes.span2]">
 			<div :class="classes.sectorTitle" class="paragraph-p-02">Sector</div>
-			<a
+			<router-link
 				:class="classes.sectorLink"
-				href="https://google.com"
-				target="_blank"
+				:to="{name:RouteNames.Automobile}"
 				class="header-h00"
 			>
 				<span :class="classes.sectorName" class="paragraph-p-01">
@@ -113,7 +113,7 @@ const formatMarketCap = (value: number | string): string => {
 						:class="classes.icon"
 					/>
 				</span>
-			</a>
+			</router-link>
 		</div>
 	</div>
 </template>

@@ -1,3 +1,3 @@
-import { globalRoutes } from './route.ts';
+import { globalRoutes, testRoutes } from './route.ts';
 
-export { globalRoutes };
+export { globalRoutes, testRoutes };
