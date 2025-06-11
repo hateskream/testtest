@@ -13,11 +13,15 @@ import {
 	ChartMainColumnComponent,
 } from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
+import { chartWidgetRealSections } from '@/modules/chart/components/widgets/explorer/models';
 
 import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
 import ChartWidgetsValuation from '@/modules/chart/components/widgets/valuation/chart-widgets-valuation.vue';
 import ChartWidgetsCapitalStructure
 	from '@/modules/chart/components/widgets/capital-structure/chart-widgets-capital-structure.vue';
+import ChartSectionValuationsAndEstimates
+	from '@/modules/chart/components/sections/valuations-and-estimates/chart-section-valuations-and-estimates.vue';
+import ChartSectionPriceTarget from '@/modules/chart/components/sections/price-target/chart-section-price-target.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -114,19 +118,11 @@ const marketDate = {
 	forwardPE: '151 703 351',
 	sector: 'Automobiles',
 };
-const valuationData = {
-	pe: { ltm: '161.4', ntm: '132.7' },
-	evSales: { ltm: '9.3', ntm: '8.8' },
-	evEbitda: { ltm: '62.7', ntm: '54.5' },
-	priceBook: { ltm: '12.2', ntm: null },
-};
 
-const capitalStructureData = {
-	marketCap: '920.81B',
-	totalDebt: '161.4x',
-	cashAndInv: '9.3x',
-	enterpriseValue: '62.7x',
-};
+const explorerDate = computed(() => {
+	return [...chartWidgetRealSections, ...chartWidgetTestSections];
+});
+
 </script>
 
 <template>
@@ -154,6 +150,7 @@ const capitalStructureData = {
 		</template>
 		<template #botContent>
 			<chart-columns-layout :disable-scroll="disableScroll">
+
 				<template #leftCol>
 					<div :class="classes.columnTitle">
 						<ui-icon
@@ -166,26 +163,19 @@ const capitalStructureData = {
 					</div>
 					<chart-widget-price-performance />
 					<chart-widgets-explorer
-						:sections="chartWidgetTestSections"
+						:sections="explorerDate"
 						@item-selected="handleSelected"
 					/>
 				</template>
 				<template #mainCol>
-					<div :class="classes.columnTitle">
-						<ui-icon
-							:id="IconIds.Deals"
-							:class="classes.titleIcon"
-							width="20px"
-							height="20px"
-						/>
-						<span>Valuation and estimates</span>
-					</div>
-					<div :class="classes.section">
-						<chart-widgets-valuation
-							:values="valuationData"
-						/>
-						<chart-widgets-capital-structure :values="capitalStructureData" />
-					</div>
+					<chart-section-valuations-and-estimates
+						:register-item-ref="registerItemRef"
+						:section="chartWidgetRealSections[0]"
+					/>
+					<chart-section-price-target
+						:section="chartWidgetRealSections[1]"
+						:register-item-ref="registerItemRef"
+					/>
 					<chart-main-column-component
 						:sections="chartWidgetTestSections"
 						:active-section="activeSection"

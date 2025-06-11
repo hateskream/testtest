@@ -110,6 +110,7 @@ watch([activeSection, selectedItem], ([section, item]) => {
 							>
 								<div :class="classes.dropdownIconContainer">
 									<ui-icon
+										v-if="section.items && Array.isArray(section.items) && section.items.length > 0"
 										:id="IconIds.DropdownDown"
 										width="20px"
 										height="20px"

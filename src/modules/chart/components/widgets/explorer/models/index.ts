@@ -6,7 +6,7 @@ export interface IWidgetItem {
 export interface ISectionItem {
 	id: string;
 	title: string;
-	items: IWidgetItem[];
+	items?: IWidgetItem[];
 }
 
 export const chartWidgetTestSections: ISectionItem[] = [
@@ -24,19 +24,6 @@ export const chartWidgetTestSections: ISectionItem[] = [
 		],
 	},
 	{
-		id: 'valuation',
-		title: 'Valuation & Estimates',
-		items: [
-			{ id: 'price-target', title: 'Price Target' },
-			{ id: 'analyst-ratings', title: 'Analyst Ratings' },
-			{ id: 'operating-income-widget', title: 'Operating Income Widget' },
-			{ id: 'net-income-widget', title: 'Net Income Widget' },
-			{ id: 'pe-ratio-analysis', title: 'P/E Ratio Analysis' },
-			{ id: 'price-to-book-ratio', title: 'Price-to-Book Ratio' },
-			{ id: 'enterprise-value', title: 'Enterprise Value' },
-		],
-	},
-	{
 		id: 'earnings',
 		title: 'Earnings',
 		items: [
@@ -46,7 +33,6 @@ export const chartWidgetTestSections: ISectionItem[] = [
 			{ id: 'historical-performance', title: 'Historical Performance' },
 			{ id: 'earnings-surprises', title: 'Earnings Surprises' },
 			{ id: 'growth-metrics', title: 'Growth Metrics' },
-			{ id: 'quarterly-trends', title: 'Quarterly Trends' },
 		],
 	},
 
@@ -125,9 +111,5 @@ export const chartWidgetRealSections = [
 	{
 		id:'price-target',
 		title: 'Price Target',
-	},
-	{
-		id: 'quarterly-trends',
-		title: 'Quarterly Trends',
 	},
 ];

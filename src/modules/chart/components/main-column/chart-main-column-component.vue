@@ -14,7 +14,7 @@ const props = defineProps<IChartMainColumnProps>();
 </script>
 
 <template>
-	<div class="main-column">
+	<div>
 		<chart-main-column-section
 			v-for="section in props.sections"
 			:key="section.id"
@@ -27,9 +27,5 @@ const props = defineProps<IChartMainColumnProps>();
 </template>
 
 <style scoped>
-.main-column {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
-}
+
 </style>
