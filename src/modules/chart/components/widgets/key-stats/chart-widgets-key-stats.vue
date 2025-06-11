@@ -2,17 +2,17 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ChartCommonTooltip } from '@/modules/chart/components/shared/ui';
 
-interface MarketData {
-	marketCap: number; // Raw number like 3252255
+interface IKeyStatsProps {
+	marketCap: number;
 	volume: string;
-	totalReturn3M: number | string; // Percentage as number or string
-	totalReturn1Y: number | string; // Percentage as number or string
+	totalReturn3M: number | string;
+	totalReturn1Y: number | string;
 	forwardPE: string;
 	sector: string;
 }
 
 const props = defineProps<{
-	marketData: MarketData;
+	marketData: IKeyStatsProps;
 }>();
 
 // Format percentage to 2 decimal places
@@ -21,7 +21,6 @@ const formatPercentage = (value: number | string): string => {
 	return `${num.toFixed(2)}%`;
 };
 
-// Format market cap with K, M, B, T suffixes from raw numbers
 const formatMarketCap = (value: number | string): string => {
 	const num = typeof value === 'string' ? parseFloat(value) : value;
 
@@ -37,21 +36,6 @@ const formatMarketCap = (value: number | string): string => {
 	return num.toString();
 };
 
-// Usage example:
-// <MarketGrid :market-data="{
-//   marketCap: 3252255, // → '3.25M'
-//   volume: '151 703 351',
-//   totalReturn3M: -29.5, // → '-29.50%'
-//   totalReturn1Y: 53.95, // → '53.95%'
-//   forwardPE: '151 703 351',
-//   sector: 'Automobiles'
-// }" />
-//
-// Examples of number formatting:
-// 3252255 → '3.25M' (millions)
-// 920810000000 → '920.81B' (billions)
-// 1250500000000000 → '1.25T' (trillions)
-// 5500 → '5.50K' (thousands)
 </script>
 
 <template>
@@ -137,27 +121,27 @@ const formatMarketCap = (value: number | string): string => {
 <style module="classes">
 .wrapper {
 	display: grid;
+	max-width: 100%;
+	padding: 3px;
+	color: var(--text-color-base-500);
 	grid-template-columns: 1fr 1fr;
 	gap: 6px;
-	padding: 3px;
-	color: white;
-	max-width: 100%;
 }
 
 .gridItem {
-	background: var(--metrics-bg-temp);
-	padding: 10px 16px;
-	border-radius: 12px;
 	display: flex;
 	flex-direction: column;
-	gap: 1px;
 	align-items: center;
+	padding: 10px 16px;
+	background: var(--metrics-bg-temp);
+	border-radius: 12px;
+	gap: 1px;
 }
 
 .sector {
-	padding: 3px 9px;
 	flex-direction: row;
 	justify-content: space-between;
+	padding: 3px 9px;
 }
 
 .sectorTitle {
@@ -166,10 +150,10 @@ const formatMarketCap = (value: number | string): string => {
 
 .sectorLink {
 	display: flex;
-	gap: 4px;
 	color: var(--text-color-base-300);
-	transition: all .2s ease-in-out;
 	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	gap: 4px;
 
 	&:hover {
 		color: var(--text-color-base-500);
@@ -177,31 +161,31 @@ const formatMarketCap = (value: number | string): string => {
 }
 
 .iconWrapper {
-	border-radius: 9999px;
-	background-color: var(--metrics-bg-control-300);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 30px;
-	width: 30px;
 	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30px;
+	height: 30px;
+	background-color: var(--metrics-bg-control-300);
+	border-radius: 9999px;
 }
 
 .icon {
 	position: absolute;
-	left: 50%;
 	top: 50%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
 .sectorName {
-	border-radius: 9999px;
-	background-color: var(--metrics-bg-control-300);
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
 	height: 30px;
 	padding: 5px 11px;
+	background-color: var(--metrics-bg-control-300);
+	border-radius: 9999px;
 }
 
 .span2 {
@@ -213,11 +197,11 @@ const formatMarketCap = (value: number | string): string => {
 }
 
 .metricLabel {
-	color: var(--text-color-base-300);
-	line-height: 17px;
 	display: flex;
-	gap: 3px;
 	align-items: center;
+	line-height: 17px;
+	color: var(--text-color-base-300);
+	gap: 3px;
 }
 
 .metricValue {

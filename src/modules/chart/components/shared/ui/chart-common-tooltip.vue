@@ -20,25 +20,27 @@ import { UiTooltip } from '@/shared/ui/tooltip';
 <style module="classes">
 .tooltipWrapper {
 	cursor: pointer;
-	&:hover{
-		.iconWrapper{
+
+	&:hover {
+		.iconWrapper {
 			color: var(--text-color-base-500);
 		}
 	}
 }
+
 .iconWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	width: 12px;
 	height: 12px;
-	background-color: var(--bg-color-base-300);
-	color: var(--text-color-base-300);
-	cursor: pointer;
-	transition: all .2s ease-in-out;
-	border-radius: 99999px;
 	font-size: 8px;
 	line-height: 1;
-	display:flex;
-	align-items:center;
-	justify-content: center;
+	color: var(--text-color-base-300);
+	background-color: var(--bg-color-base-300);
+	border-radius: 99999px;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
 	user-select: none;
 }
 

@@ -2,8 +2,6 @@
 import type { ISectionItem } from '@/modules/chart/components';
 import { ChartMainColumnSection } from './components';
 
-import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
-
 interface IChartMainColumnProps {
 	sections: ISectionItem[];
 	activeSection: string | null;
