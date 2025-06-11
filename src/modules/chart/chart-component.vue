@@ -180,18 +180,19 @@ const capitalStructureData = {
 						/>
 						<span>Valuation and estimates</span>
 					</div>
-					<!--					<chart-main-column-component-->
-					<!--						:sections="chartWidgetTestSections"-->
-					<!--						:active-section="activeSection"-->
-					<!--						:selected-item="selectedItem"-->
-					<!--						:register-item-ref="registerItemRef"-->
-					<!--					/>-->
 					<div :class="classes.section">
 						<chart-widgets-valuation
 							:values="valuationData"
 						/>
 						<chart-widgets-capital-structure :values="capitalStructureData" />
 					</div>
+					<chart-main-column-component
+						:sections="chartWidgetTestSections"
+						:active-section="activeSection"
+						:selected-item="selectedItem"
+						:register-item-ref="registerItemRef"
+					/>
+
 				</template>
 				<template #rightCol>
 					<div :class="classes.columnTitle">

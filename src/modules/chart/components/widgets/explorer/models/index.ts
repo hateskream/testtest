@@ -112,3 +112,22 @@ export const chartWidgetTestSections: ISectionItem[] = [
 		],
 	},
 ];
+
+export const chartWidgetRealSections = [
+	{
+		id: 'valuation-and-estimates',
+		title: 'Valuation and estimates',
+		items: [
+			{ id: 'valuation-metrics', title: 'Valuation Metrics' },
+			{ id: 'capital-structure', title: 'Capital Structure' },
+		],
+	},
+	{
+		id:'price-target',
+		title: 'Price Target',
+	},
+	{
+		id: 'quarterly-trends',
+		title: 'Quarterly Trends',
+	},
+];
