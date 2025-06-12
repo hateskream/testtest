@@ -5,9 +5,11 @@ import { Tension, type ITension, type ITensionTextData } from '../model';
 import { useMapTension } from '../composables';
 import { useFearGreedStore } from '../stores';
 import { UiTransitionFade } from '@/shared/ui/transition';
+import type { ISize } from '@/modules/dashboard-group/model';
 
 export interface IViewComponentProps {
 	tension: ITension;
+	size: ISize;
 }
 
 export interface IViewComponentEmits {
@@ -23,14 +25,13 @@ const { mapTension } = useMapTension();
 const fearGreedStore = useFearGreedStore();
 
 const tensionText = computed<ITensionTextData>(() => mapTension(props.tension.tension ?? 0));
-// FIXME: unused code
-// const history = computed(() =>
-// 	(props.tension?.history ?? []).map(item => ({
-// 		style: { color: mapTension(item.value).colors.text },
-// 		name: item.displayName,
-// 		tension: item.value,
-// 	})),
-// );
+const history = computed(() =>
+	(props.tension?.history ?? []).map(item => ({
+		style: { color: mapTension(item.value).colors.text },
+		name: item.displayName,
+		tension: item.value,
+	})),
+);
 
 const circleChart = computed(() => {
 	const tension = props.tension.tension ?? 0;
@@ -73,12 +74,8 @@ const circleChart = computed(() => {
 	};
 });
 
-const metricPositionStyles = computed<CSSProperties>(() => ({
-	flexDirection: fearGreedStore.isShowChart ? 'column' : 'row',
-}));
-
 const metricTextStyles = computed<CSSProperties>(() => ({
-	alignItems: fearGreedStore.isShowChart ? 'center' : 'flex-start',
+	marginTop: fearGreedStore.isShowChart && props.size.h > 2 ? '-30px' : 0,
 }));
 </script>
 
@@ -86,70 +83,70 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	<div :class="classes.container">
 		<div
 			:class="classes.metric"
-			:style="metricPositionStyles"
+			@click.stop.prevent="emits('updateInteractive')"
 		>
-			<div :class="classes.metricСhart">
-				<div
-					v-if="fearGreedStore.isShowChart"
-					:class="classes.metricСhartIndicator"
-					@click.stop.prevent="emits('updateInteractive')"
+			<div
+				v-if="fearGreedStore.isShowChart && size.h > 2"
+				:class="classes.metricСhart"
+			>
+
+				<svg
+					width="200"
+					height="100"
+					viewBox="0 0 200 100"
+					:class="classes.metricСhartContainer"
 				>
-					<svg
-						width="200"
-						height="100"
-						viewBox="0 0 200 100"
-						:class="classes.metricСhartContainer"
+					<!-- Фоновая дуга -->
+					<path
+						:class="classes.metricСhartBg"
+						d="M 20,100 A 80,80 0 0,1 180,100"
+					/>
+
+					<!-- Активная дуга -->
+					<path
+						d="M 20,100 A 80,80 0 0,1 180,100"
+						:class="classes.metricСhartActive"
+						:stroke="tensionText.colors.chart"
+						:stroke-dasharray="circleChart.activeLine.dasharray"
+						:stroke-dashoffset="circleChart.activeLine.offset"
+					/>
+				</svg>
+
+				<div :class="classes.metricСhartArrowContainer">
+					<div
+						:class="classes.metricСhartArrow"
+						:style="{
+							transform: `rotate(${circleChart.arrowRotateInDeg}deg)`,
+						}"
 					>
-						<!-- Фоновая дуга -->
-						<path
-							:class="classes.metricСhartBg"
-							d="M 20,100 A 80,80 0 0,1 180,100"
-						/>
-
-						<!-- Активная дуга -->
-						<path
-							d="M 20,100 A 80,80 0 0,1 180,100"
-							:class="classes.metricСhartActive"
-							:stroke="tensionText.colors.chart"
-							:stroke-dasharray="circleChart.activeLine.dasharray"
-							:stroke-dashoffset="circleChart.activeLine.offset"
-						/>
-					</svg>
-
-					<div :class="classes.metricСhartArrowContainer">
-						<div
-							:class="classes.metricСhartArrow"
-							:style="{
-								transform: `rotate(${circleChart.arrowRotateInDeg}deg)`,
-							}"
-						>
-							<div :class="classes.metricСhartDot" />
-						</div>
+						<div :class="classes.metricСhartDot" />
 					</div>
 				</div>
-				<h3 :style="{ color: tensionText?.colors.text }">
-					{{ tension.tension }}
-				</h3>
 			</div>
 
 			<div
 				:class="classes.metricDescription"
 				:style="metricTextStyles"
 			>
+				<h3 :style="{ color: tensionText?.colors.text }">
+					{{ tension.tension }}
+				</h3>
 				<ui-transition-fade>
 					<h4 v-if="fearGreedStore.isShowName">{{ tensionText?.text.main }}</h4>
 				</ui-transition-fade>
 				<ui-transition-fade>
-					<small v-if="fearGreedStore.isShowDescription">
+					<small v-if="fearGreedStore.isShowDescription && props.size.h > 3">
 						{{ tensionText?.text.sub }}
 					</small>
 				</ui-transition-fade>
 			</div>
 		</div>
 
-		<!-- <ui-transition-fade>
+		<ui-transition-fade>
 			<ul
-				v-if="history.length > 0 && fearGreedStore.isShowPastValues"
+				v-if="
+					(history.length > 0 && fearGreedStore.isShowPastValues) &&
+						(size.h > 4 || (size.w >= 2 && size.h > 2))"
 				:class="classes.history"
 			>
 				<li
@@ -162,20 +159,19 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 					</p>
 				</li>
 			</ul>
-		</ui-transition-fade> -->
+		</ui-transition-fade>
 	</div>
 </template>
 
 <style module="classes">
 .container {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
 	margin-top: 18px;
-	padding: 0 16px;
-	gap: 25px 48px;
+	gap: 25px 32px;
 }
 
 .metric {
@@ -183,18 +179,10 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: 200px;
-	gap: 4px;
+	width: 180px;
 }
 
-.metricСhart {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-
-.metricСhart > h3 {
+.metricDescription > h3 {
 	font-weight: 460;
 	font-size: 28px;
 	color: var(--common-color-white-700);
@@ -205,13 +193,13 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
+	height: 70px;
 }
 
-.metricСhartIndicator {
+.metricСhart {
 	position: relative;
 	width: 200px;
 	height: 100px;
-	margin-bottom: -30px;
 }
 
 .metricСhartContainer {
@@ -288,7 +276,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	max-width: 139px;
+	max-width: 165px;
 	gap: 5px;
 }
 

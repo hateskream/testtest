@@ -19,6 +19,7 @@ const props = defineProps<IWidgetComponentProps>();
 const { data, isLoading, isError, refetch } = useQueryTension(props.meta.market);
 
 const isNotData = computed(() => !!data.value && isLoading.value);
+
 </script>
 
 <template>
@@ -33,6 +34,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			<view-component
 				v-else-if="data"
 				:tension="data"
+				:size="meta.size"
 				@update-interactive="refetch"
 			/>
 		</template>
