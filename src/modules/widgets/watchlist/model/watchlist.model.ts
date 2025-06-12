@@ -1,6 +1,7 @@
 export interface IWatchlistSection {
 	id: string;
 	name: string;
+	type?: MarketType;
 	isOpen: boolean;
 	watchlist: IWatchlistMarkets[];
 	// symbols: ISymbolItem[];

@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { nextTick, ref, toValue, watch, useTemplateRef } from 'vue';
 
-import type {
-	ITableRow,
-	ITableRowValue,
-	ITableRowValueType,
-	IWatchlistMarkets,
+import {
+	MarketType,
+	type ITableRow,
+	type ITableRowValue,
+	type ITableRowValueType,
+	type IWatchlistMarkets,
+	type IWatchlistSection,
 } from '../../../model';
 import { useWatchlistStore, useWatchlistSectionStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
@@ -132,16 +134,17 @@ function onSectionDblClick(sectionId: string) {
 	} handleRenameSection(sectionId);
 }
 
-const tableRows = (markets: IWatchlistMarkets[]) => {
+const tableRows = (section: IWatchlistSection) => {
+	const markets = section.watchlist;
 	const rows: ITableRow[][] = [];
 
 	markets.forEach(row => {
 		if (watchlistStore.isFavorites) {
 			if (watchlistStore.favorites.includes(row.id)) {
-				rows.push(prepareRow(row));
+				rows.push(prepareRow(row, section.type as MarketType));
 			}
 		} else {
-			rows.push(prepareRow(row));
+			rows.push(prepareRow(row, section.type as MarketType));
 		}
 	});
 
@@ -171,14 +174,16 @@ const tableRows = (markets: IWatchlistMarkets[]) => {
 };
 
 
-function prepareRow(row: IWatchlistMarkets) {
+function prepareRow(row: IWatchlistMarkets, marketType: MarketType): ITableRow[] {
 	const data: ITableRow[] = [];
 
 	watchlistStore.activeTableColumns.forEach(column => {
 		data.push({
 			type: column.type,
-			srcValue: row.srcValue,
+			srcValue: marketType === MarketType.Forex ? [row.srcValue, row.srcValue2] : row.srcValue,
 			value: row[column.columnName],
+			domain: row.domain,
+			market: marketType,
 			id: row.id,
 		});
 	});
@@ -275,7 +280,7 @@ function sortRowsByType(args: {
 				:leave-to-class="classes.sectionToggleLeaveTo"
 			>
 				<div v-if="sectionStates[section.id]" :class="classes.sectionData">
-					<watchlist-table-rows :rows="tableRows(section.watchlist)" />
+					<watchlist-table-rows :rows="tableRows(section)" />
 				</div>
 			</transition>
 		</div>

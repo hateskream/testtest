@@ -1,3 +1,5 @@
+import type { MarketType } from './watchlist.model';
+
 export type ITableRowValueType =
 	| 'image'
 	| 'image-string'
@@ -39,6 +41,8 @@ export type ITableRowValue = string;
 export type ITableRow = {
 	value: ITableRowValue;
 	id: string;
-	srcValue: string;
+	srcValue: string | string[];
+	domain: string;
+	market: MarketType;
 	type: ITableRowValueType;
 };

@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { IWatchlistSection } from '../model';
+import { MarketType, type IWatchlistSection } from '../model';
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 
@@ -36,14 +36,18 @@ export async function getWatchlist(args: IGetWatchlistRequest): Promise<IWatchli
 }
 
 function prepareResponse(data: IWatchlistSection[]): IWatchlistSection[] {
-
 	return data.map(sectionItem => ({
 		...sectionItem,
 		watchlist: sectionItem.watchlist.map(marketItem => ({
 			...marketItem,
-			srcValue: getImagePath(marketItem.symbol, ImageTypePath.Currency) }),
+			srcValue: getImagePath(marketItem.symbol, ImageTypePath.Currency),
+			srcValue2: sectionItem.type === MarketType.Forex && marketItem.domain
+				? getImagePath(marketItem.domain, ImageTypePath.Currency)
+				: '',
+		}),
 		),
-	}));
+	}
+	));
 }
 
 async function getMockData(): Promise<IGetWatchlistResponse> {
@@ -55,6 +59,7 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 		{
 			id: '1',
 			name: 'Crypto',
+			type: MarketType.Crypto,
 			isOpen: true,
 			watchlist:[
 				{
@@ -64,6 +69,7 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 					volume24h: '11723737.43',
 					marketCap24h: '22737283.45',
 					symbol: 'ADA',
+					domain: 'Cardano',
 					listingDate: new Date('2024-04-30').toString(),
 					chg1h: '12',
 					chg7d: '15',
@@ -75,17 +81,30 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 					volume24h: '323737.43',
 					marketCap24h: '37283.45',
 					symbol: 'BNB',
+					domain: 'Binance Coin',
 					listingDate: new Date('2025-04-12').toString(),
 					chg1h: '32',
 					chg7d: '-42',
 				},
+				// {
+				// 	id: '3',
+				// 	chg24h: '0.86',
+				// 	price: '97432.7',
+				// 	volume24h: '32374523437.43',
+				// 	marketCap24h: '372853453.45',
+				// 	symbol: 'BTC',
+				// 	domain: 'Bitcoin',
+				// 	listingDate: new Date('2023-06-15').toString(),
+				// 	chg1h: '-12',
+				// 	chg7d: '49',
+				// },
 				{
-					id: '3',
-					chg24h: '0.86',
-					price: '97432.7',
-					volume24h: '32374523437.43',
-					marketCap24h: '372853453.45',
-					symbol: 'BTC',
+					id: '4',
+					chg24h: '0.23',
+					price: '23645.7',
+					volume24h: '7637984137.43',
+					marketCap24h: '346353453.45',
+					symbol: 'NOIMG',
 					listingDate: new Date('2023-06-15').toString(),
 					chg1h: '-12',
 					chg7d: '49',
@@ -95,15 +114,29 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 		{
 			id: '2',
 			name: 'Stocks',
+			type: MarketType.Stock,
 			isOpen: true,
 			watchlist:[
 				{
 					id: '1',
 					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'TSLA',
+					domain: 'Tesla, Inc.',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+				{
+					id: '2',
+					chg24h: '2.33',
 					price: '0.24743',
 					volume24h: '13123743437.43',
 					marketCap24h: '1233453.45',
-					symbol: 'TRON',
+					symbol: 'NOIMG',
+					domain: 'No Image',
 					listingDate: new Date('2025-01-24').toString(),
 					chg1h: '-5',
 					chg7d: '25',
@@ -112,13 +145,35 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 		},
 		{
 			id: '3',
-			name: 'Commodities',
+			name: 'Forex',
+			type: MarketType.Forex,
+			isOpen: true,
+			watchlist: [
+				{
+					id: '1',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'EUR',
+					domain: 'USD',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+			],
+		},
+		{
+			id: '4',
+			name: 'Commodity',
+			type: MarketType.Commodity,
 			isOpen: false,
 			watchlist: [],
 		},
 		{
-			id: '4',
+			id: '5',
 			name: 'Index',
+			type: MarketType.Index,
 			isOpen: false,
 			watchlist: [],
 		},

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ITableRow } from '../../../model';
-import { UiImage } from '@/shared/ui/image';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
+import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
 
 import WatchlistCellNumber from './cells/watchlist-cell-number.vue';
 import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
@@ -34,11 +34,30 @@ const { backgroundStyle } = useResizeBackground();
 						v-if="['image-string', 'image'].includes(item.type)"
 						:class="classes.tableIcon"
 					>
-						<div :class="classes.imageWrapper">
-							<ui-image :src="item.srcValue" />
-						</div>
+						<ticker-icon
+							v-if="item.market?.toLowerCase() !== 'forex' && !Array.isArray(item.srcValue)"
+							:src="item.srcValue"
+							:ticker="item.value"
+							:size="32"
+						/>
 
-						<div>{{ item.value }}</div>
+						<forex-ticker-icon
+							v-if="item.market?.toLowerCase() === 'forex' && item.domain && Array.isArray(item.srcValue)"
+							:src="item.srcValue"
+							:ticker="item.value"
+							:domain="item.domain"
+							:size="40"
+						/>
+
+						<div :class="classes.tickerName">
+							<span>{{ item.value }}</span>
+							<span
+								v-if="item.market?.toLowerCase() === 'forex'"
+								:class="classes.domainName"
+							>
+								{{ item.domain }}
+							</span>
+						</div>
 					</div>
 
 					<watchlist-cell-number
@@ -141,5 +160,14 @@ tbody tr td:first-child .rowColumnWrapper::after {
 .fixTertiaryIcon {
 	min-width: 50px !important;
 	padding-right: 8px;
+}
+
+.tickerName {
+	display: inline-flex;
+	gap: 2px;
+}
+
+.domainName {
+	color: var(--text-color-base-300, #9a9a9d);
 }
 </style>
