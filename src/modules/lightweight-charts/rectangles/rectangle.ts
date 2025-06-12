@@ -303,7 +303,7 @@ export interface IRectangleOptions {
 
 const defaultOptions: IRectangleOptions = {
 	fillColor: 'rgba(0, 111	, 73, 0.2)',
-	fillLabels: 'rgb(12 12 13 / 100%)',
+	fillLabels: '#131315',
 	priceLabelFormatter: (price: number) => price.toFixed(2),
 	timeLabelFormatter: (time: Time) => {
 		if (typeof time == 'string') {

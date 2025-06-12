@@ -5,7 +5,6 @@ import {
 	LineSeries,
 	LineStyle,
 	LineType,
-	PriceLineSource,
 	type IChartApi,
 	type Time,
 } from 'lightweight-charts';
@@ -15,7 +14,7 @@ import { generateCandleDataFromLineData, generateLineData, prepareSeries } from 
 import { Rectangle } from '../rectangles';
 
 interface IChartProps {
-	width: number;
+	// width: number;
 	height: number;
 }
 
@@ -31,13 +30,13 @@ onMounted(() => {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
+			background: { type: ColorType.Solid, color: '#131315' },
 		},
 		handleScroll: false,
 		handleScale: false,
 		rightPriceScale: {
 			scaleMargins: {
-				top: 0.3, // leave some space for the legend
+				top: 0.1, // leave some space for the legend
 				bottom: 0.25,
 			},
 
@@ -50,7 +49,9 @@ onMounted(() => {
 				visible: false,
 			},
 			horzLines: {
-				visible: false,
+				visible: true,
+				color: '#373737',
+				style: LineStyle.Dashed,
 			},
 		},
 		timeScale: {
@@ -61,7 +62,6 @@ onMounted(() => {
 
 	chart.value!.timeScale().applyOptions({
 		borderColor: 'rgba(4, 237, 160, 0.00)',
-
 	});
 
 	const s = chart.value!.addSeries(LineSeries, {
@@ -79,9 +79,7 @@ onMounted(() => {
 		lineStyle: LineStyle.Dashed,
 		crosshairMarkerVisible: false,
 		lineWidth: 1,
-		lastValueVisible: true,
-		priceLineSource: PriceLineSource.LastVisible,
-		priceLineColor: '#373737',
+		priceLineVisible: false,
 	});
 
 	const generatePriceForecast = (max: number = 100) => {
@@ -119,9 +117,8 @@ onMounted(() => {
 		lineStyle: LineStyle.Dashed,
 		crosshairMarkerVisible: false,
 		lineWidth: 1,
-		priceLineColor: '#373737',
 		color: '#E3FF47',
-		lastValueVisible: true,
+		priceLineVisible: false,
 	});
 	const das = generatePriceForecast(200);
 
@@ -134,7 +131,7 @@ onMounted(() => {
 		crosshairMarkerVisible: false,
 		lineWidth: 1,
 		lastValueVisible: true,
-		priceLineColor: '#373737',
+		priceLineVisible: false,
 	});
 
 	priceTargetDown.setData(generatePriceForecast(-100));

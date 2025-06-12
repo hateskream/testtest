@@ -14,7 +14,7 @@ import { addYears } from 'date-fns';
 
 
 interface IChartProps {
-	width: number;
+	// width: number;
 	height: number;
 }
 
@@ -29,13 +29,17 @@ onMounted(() => {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: 'rgb(3 3 3 / 100%)' },
+			background: { type: ColorType.Solid, color: '#131315' },
 		},
 		handleScroll: false,
 		handleScale: false,
 		rightPriceScale: {
+			scaleMargins: {
+				top: 0.1, // leave some space for the legend
+				bottom: 0.25,
+			},
 
-			autoScale: true,
+			minimumWidth: 55,
 
 			borderVisible: false,
 			mode: PriceScaleMode.Normal,
@@ -54,7 +58,7 @@ onMounted(() => {
 		timeScale: {
 			borderVisible: true,
 			borderColor: 'rgb(97 97 97 / 30%)',
-			minimumHeight: 12,
+			minimumHeight: 8,
 			secondsVisible: false,
 			ignoreWhitespaceIndices: true,
 		},
