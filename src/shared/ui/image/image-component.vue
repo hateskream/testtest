@@ -84,26 +84,30 @@ async function tryLoadImage(src: string): Promise<boolean> {
 		img.src = src;
 	});
 }
+defineOptions({ inheritAttrs: false });
 </script>
 
 <template>
-	<slot v-if="!isImageLoaded && showLoader" name="loading">
-		<ui-skeleton
+	<div>
+		<slot v-if="!isImageLoaded && showLoader" name="loading">
+			<ui-skeleton
+				:style="inlineStyles"
+				:shape="'rectangle'"
+				:animation="'wave'"
+				:opacity="0.5"
+			/>
+		</slot>
+
+		<slot v-else-if="!isValidSrc && isImageLoaded" name="error" />
+
+		<img
+			v-else-if="currentSrc && isValidSrc"
+			ref="refImg"
+			:src="currentSrc"
+			:alt="props.alt"
+			loading="lazy"
 			:style="inlineStyles"
-			:shape="'rectangle'"
-			:animation="'wave'"
-			:opacity="0.5"
+			v-bind="$attrs"
 		/>
-	</slot>
-
-	<slot v-else-if="!isValidSrc && isImageLoaded" name="error" />
-
-	<img
-		v-else-if="currentSrc && isValidSrc"
-		ref="refImg"
-		:src="currentSrc"
-		:alt="props.alt"
-		loading="lazy"
-		:style="inlineStyles"
-	/>
+	</div>
 </template>
