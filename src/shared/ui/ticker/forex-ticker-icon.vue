@@ -61,7 +61,7 @@ const iconsSize = computed(() => {
 				<icon-placeholder
 					:class="classes.firstIcon"
 					:ticker="props.ticker"
-					:style="[{ width: iconsSize, height: iconsSize }, backgroundStyle]"
+					:style="{ width: iconsSize, height: iconsSize }"
 				/>
 			</template>
 		</ui-image>
@@ -79,7 +79,7 @@ const iconsSize = computed(() => {
 				<icon-placeholder
 					:class="classes.secondIcon"
 					:ticker="props.domain"
-					:style="[{ width: iconsSize, height: iconsSize }, backgroundStyle]"
+					:style="{ width: iconsSize, height: iconsSize }"
 				/>
 			</template>
 		</ui-image>
@@ -117,5 +117,6 @@ const iconsSize = computed(() => {
 	top: 0;
 	right: 0;
 	z-index: 1;
+	clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 74%, 55% 100%, 50% 71%, 29% 54%, 0 49%, 0% 35%, 20% 10%);
 }
 </style>
