@@ -196,6 +196,7 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 	display: flex;
 	align-items: center;
 	gap: 6px;
+	padding: 0 10px 0 16px;
 }
 
 .listFilters {

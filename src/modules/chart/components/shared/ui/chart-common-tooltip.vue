@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UiTooltip } from '@/shared/ui/tooltip';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 </script>
 
 <template>
@@ -9,7 +10,14 @@ import { UiTooltip } from '@/shared/ui/tooltip';
 		:class="classes.tooltipWrapper"
 	>
 		<template #default>
-			<div :class="classes.iconWrapper">i</div>
+			<div :class="classes.iconWrapper">
+				<ui-icon
+					:id="IconIds.Info"
+					width="6px"
+					height="6px"
+					:class="classes.icon"
+				/>
+			</div>
 		</template>
 		<template #content>
 			<slot>This is so important content for this help</slot>
@@ -37,7 +45,7 @@ import { UiTooltip } from '@/shared/ui/tooltip';
 	font-size: 8px;
 	line-height: 1;
 	color: var(--text-color-base-300);
-	background-color: var(--bg-color-base-300);
+	background-color: rgb(217 217 217 / 0.2);
 	border-radius: 99999px;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;

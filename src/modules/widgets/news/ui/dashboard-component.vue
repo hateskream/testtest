@@ -44,9 +44,13 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<news-filters-panel />
+			<div :class="classes.titleContainer">
+				<span>{{ props.meta.name }}</span>
+			</div>
+
 		</template>
 		<template #content>
+			<news-filters-panel />
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-news-component
@@ -59,3 +63,11 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 		</template>
 	</base-dashboard-component>
 </template>
+<style module="classes">
+.titleContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+</style>
