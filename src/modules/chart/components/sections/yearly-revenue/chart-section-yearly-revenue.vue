@@ -5,7 +5,6 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import type { ISectionItem } from '@/modules/chart/components';
 
 import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
-import ChartWidgetPriceTarget from '@/modules/chart/components/widgets/price-target/chart-widget-price-target.vue';
 import ChartWidgetYearlyRevenue
 	from '@/modules/chart/components/widgets/yearly-revenue/chart-widget-yearly-revenue.vue';
 
