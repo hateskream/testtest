@@ -12,11 +12,6 @@ export const globalRoutes =
 			name: RouteNames.Chart,
 			component: () => import('@/pages/chart-page.vue'),
 		},
-		{
-			path: RoutePaths.Charts,
-			name: RouteNames.Charts,
-			component: () => import('@/pages/charts-page.vue'),
-		},
 	];
 
 
