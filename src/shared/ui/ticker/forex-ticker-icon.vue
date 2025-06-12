@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 import { UiImage } from '../image';
 
 import iconLoader from './icon-loader.vue';
 import iconPlaceholder from './icon-placeholder.vue';
-
-const { backgroundStyle } = useResizeBackground();
 
 interface IForexTickerIconProps {
 	src: string[];
