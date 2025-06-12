@@ -6,7 +6,7 @@ import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import type { IWatchlistTab, TabMenuAction } from '../../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
-import WatchlistTabChips from './watchlist-tab-chips.vue';
+import WatchlistTab from './watchlist-tab.vue';
 
 const tabs = ref<IWatchlistTab[]>([
 	{
@@ -65,7 +65,7 @@ const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 				position="bottom-start"
 			>
 				<template #default="{ isVisible }">
-					<watchlist-tab-chips :tabs="tab" :is-open="isVisible" />
+					<watchlist-tab :tabs="tab" :is-open="isVisible" />
 				</template>
 
 				<template #content>
