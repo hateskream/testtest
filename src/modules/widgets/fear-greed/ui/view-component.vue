@@ -135,7 +135,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 					<h4 v-if="fearGreedStore.isShowName">{{ tensionText?.text.main }}</h4>
 				</ui-transition-fade>
 				<ui-transition-fade>
-					<small v-if="fearGreedStore.isShowDescription && props.size.h > 3">
+					<small v-if="fearGreedStore.isShowDescription && props.size.h > 2">
 						{{ tensionText?.text.sub }}
 					</small>
 				</ui-transition-fade>
@@ -170,7 +170,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	margin-top: 18px;
+	margin-top: 12px;
 	gap: 25px 32px;
 }
 
