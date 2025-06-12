@@ -17,6 +17,7 @@
     "@floating-ui/vue": "1.1.6",
     "@tanstack/vue-query": "5.67.3",
     "@vueuse/core": "13.0.0",
+    "chart.js": "4.4.9",
     "date-fns": "4.1.0",
     "decimal.js": "10.5.0",
     "fancy-canvas": "2.1.0",
