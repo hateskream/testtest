@@ -67,7 +67,7 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		dashboardType: WidgetType.FearGreed,
 		position: { x: 2, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
-		maxSize: WIDGET_MAX_SIZE,
+		maxSize: { w: 2, h: 6 },
 		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
