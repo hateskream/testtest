@@ -3,13 +3,13 @@
 import type { IWatchlistTab } from '../../../model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
-interface IWatchlistFilterChipsProps {
+interface IWatchlistTabProps {
 	tabs: IWatchlistTab;
 	isOpen?: boolean;
 }
 
 
-const props = defineProps<IWatchlistFilterChipsProps>();
+const props = defineProps<IWatchlistTabProps>();
 
 
 </script>
