@@ -116,7 +116,7 @@ input {
 	line-height: 170%;
 	text-align: center;
 	color: var(--text-color-base-500);
-	letter-spacing: 0.8;
+	letter-spacing: 0.8px;
 	background-color: var(--bg-color-base-300);
 	border: none;
 	outline: none;
