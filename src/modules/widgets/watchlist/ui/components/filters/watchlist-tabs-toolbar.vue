@@ -3,29 +3,16 @@ import { ref } from 'vue';
 
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
-import type { IWatchlistTab, TabMenuAction } from '../../../model';
+import type { ITabMenuActions, TabMenuAction } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { useWatchlistTabsStore } from '../../../stores/watchlist-tabs.store';
 
 import WatchlistTab from './watchlist-tab.vue';
 
-const tabs = ref<IWatchlistTab[]>([
-	{
-		id: '1',
-		name: 'Favorites',
-		isActive: true,
-		symbols: [],
-	},
-	{
-		id: '2',
-		name: 'My list',
-		symbols: [],
-	},
-]);
+const tabsStore = useWatchlistTabsStore();
 
-interface ITabMenuActions {
-	name: TabMenuAction;
-	title: string;
-}
+const tabs = ref(tabsStore.tabs);
+
 const tabMenuActions = ref<ITabMenuActions[]>([
 	{
 		name: 'rename',
@@ -91,6 +78,7 @@ const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 				:class="classes.icon"
 				width="20px"
 				height="20px"
+				@click="tabsStore.addTab"
 			/>
 		</div>
 	</div>
