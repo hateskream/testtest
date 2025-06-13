@@ -35,19 +35,14 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 
 	function renameTab(tabId: string, newName: string) {
 		const tab = tabs.value.find(t => t.id === tabId);
-		if (tab) {
-			tab.name = newName;
-		}
-
+		tab!.name = newName;
 		stopRenameState();
 	}
 
 	// TODO: Rename
 	function setRenameState(tabId: string) {
 		tabs.value.forEach(tab => {
-			if (tab.id === tabId) {
-				tab.isEditing = true;
-			}
+			tab.isEditing = tab.id === tabId;
 		});
 	};
 
