@@ -52,7 +52,7 @@ const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 				position="bottom-start"
 			>
 				<template #default="{ isVisible }">
-					<watchlist-tab :tabs="tab" :is-open="isVisible" />
+					<watchlist-tab :tab="tab" :is-open="isVisible" />
 				</template>
 
 				<template #content>

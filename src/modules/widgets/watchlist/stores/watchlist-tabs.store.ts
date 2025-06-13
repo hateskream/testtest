@@ -4,12 +4,9 @@ import { ref } from 'vue';
 import type { IWatchlistTab } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
-interface IWatchlistTabUI extends IWatchlistTab {
-	isEditing?: boolean;
-}
 
 export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
-	const tabs = ref<IWatchlistTabUI[]>([
+	const tabs = ref<IWatchlistTab[]>([
 		{
 			id: '1',
 			name: 'Favorites',
@@ -21,12 +18,12 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 
 
 	function addTab() {
-		const newTab: IWatchlistTabUI = {
+		const newTab: IWatchlistTab = {
 			id: generateTimestampId(),
 			name: 'Personal',
-			isActive: false,
-			symbols: [],
+			isActive: true,
 			isEditing: true,
+			symbols: [],
 		};
 		tabs.value.push(newTab);
 		switchTab(newTab.id);

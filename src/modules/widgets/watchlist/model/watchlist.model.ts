@@ -29,6 +29,7 @@ export interface IWatchlistTab {
 	id: string;
 	name: string;
 	isActive?: boolean;
+	isEditing?: boolean;
 	symbols: ISymbolItem[];
 }
 
