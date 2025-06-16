@@ -27,7 +27,7 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		};
 		tabs.value.push(newTab);
 		switchTab(newTab.id);
-		setRenameState(newTab.id);
+		startRenameState(newTab.id);
 	}
 
 	function renameTab(tabId: string, newName: string) {
@@ -36,14 +36,12 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		stopRenameState();
 	}
 
-	// TODO: Rename
-	function setRenameState(tabId: string) {
+	function startRenameState(tabId: string) {
 		tabs.value.forEach(tab => {
 			tab.isEditing = tab.id === tabId;
 		});
 	};
 
-	// TODO: Rename
 	function stopRenameState() {
 		tabs.value.forEach(tab => {
 			tab.isEditing = false;
@@ -61,6 +59,7 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		addTab,
 		renameTab,
 		switchTab,
+		startRenameState,
 		stopRenameState,
 	};
 });

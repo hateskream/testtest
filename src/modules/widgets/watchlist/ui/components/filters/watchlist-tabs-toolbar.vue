@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, ref, useTemplateRef } from 'vue';
+
 
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
@@ -12,7 +13,8 @@ import WatchlistTab from './watchlist-tab.vue';
 const tabsStore = useWatchlistTabsStore();
 
 const tabs = ref(tabsStore.tabs);
-
+const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
+const watchlistTabRefs = useTemplateRef<InstanceType<typeof WatchlistTab>[]>('watchlistTabRefs');
 const tabMenuActions = ref<ITabMenuActions[]>([
 	{
 		name: 'rename',
@@ -36,23 +38,61 @@ const tabMenuActions = ref<ITabMenuActions[]>([
 	},
 ]);
 
+
+const handleRenameTab = async (index?: number) => {
+	await nextTick();
+	if (!watchlistTabRefs.value) {
+		return;
+	}
+
+	const idx = index || watchlistTabRefs.value.length - 1;
+	watchlistTabRefs.value[idx]?.openRenameInput();
+};
+
 const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 	// eslint-disable-next-line no-console
 	console.log(`Tab id: ${tabId};\nAction name: ${actionName}`);
-	// TODO: implement
+
+	const actions: Record<TabMenuAction, () => void> = {
+		rename: () => {
+			tabsStore.startRenameState(tabId);
+			handleRenameTab();
+		},
+		share: () => null,
+		duplicate: () => null,
+		addAlert: () => null,
+		addSymbolsToList: () => null,
+	};
+
+	actions[actionName]();
+};
+
+const handleAddTab = async () => {
+	tabsStore.addTab();
+
+	handleRenameTab();
+};
+
+const onTabClick = (index: number) => {
+	positionRefs.value?.[index].handleClick();
 };
 
 </script>
 
 <template>
 	<div :class="classes.container">
-		<div v-for="tab in tabs" :key="tab.id">
+		<div v-for="(tab, index) in tabs" :key="tab.id">
 			<ui-position
-				ref="position"
+				ref="positionRefs"
 				position="bottom-start"
 			>
 				<template #default="{ isVisible }">
-					<watchlist-tab :tab="tab" :is-open="isVisible" />
+					<watchlist-tab
+						ref="watchlistTabRefs"
+						:tab="tab"
+						:is-open="isVisible"
+						@click="onTabClick(index)"
+					/>
 				</template>
 
 				<template #content>
@@ -78,7 +118,7 @@ const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 				:class="classes.icon"
 				width="20px"
 				height="20px"
-				@click="tabsStore.addTab"
+				@click="handleAddTab"
 			/>
 		</div>
 	</div>

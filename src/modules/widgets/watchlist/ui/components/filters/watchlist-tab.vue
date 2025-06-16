@@ -10,13 +10,16 @@ const tabsStore = useWatchlistTabsStore();
 interface IWatchlistTabProps {
 	tab: IWatchlistTab;
 	isOpen?: boolean;
-	isRenaming?: boolean;
 }
 
 const props = defineProps<IWatchlistTabProps>();
 
+const emits = defineEmits<{
+	(event: 'click', value: string): void;
+}>();
+
+const tabRenameInputRef = useTemplateRef<HTMLInputElement>('tabRenameInputRef');
 const isEditing = ref(false);
-const tabRenameInputRef = useTemplateRef('tabRenameInputRef');
 const inputModel = ref(props.tab.name);
 
 function adjustInputWidth(input: HTMLInputElement, text: string) {
@@ -31,8 +34,13 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	document.body.removeChild(measurer);
 }
 
-const stopEditing = (tabId: string, newName: string) => {
-	tabsStore.renameTab(tabId, newName);
+const finishEditing = (event: Event) => {
+	if (event?.type !== 'blur') {
+		tabRenameInputRef.value?.blur();
+		return;
+	}
+
+	tabsStore.renameTab(props.tab.id, inputModel.value);
 	inputModel.value = '';
 	tabsStore.stopRenameState();
 
@@ -40,15 +48,12 @@ const stopEditing = (tabId: string, newName: string) => {
 	inputModel.value = props.tab.name;
 };
 
-const onDoubleClick = async () => {
-	if (!props.tab.isActive) {
-		return;
-	}
+const openRenameInput = async () => {
 	isEditing.value = true;
 
 	await nextTick();
 
-	const input = tabRenameInputRef.value as HTMLInputElement;
+	const input = tabRenameInputRef.value;
 	if (!input) {
 		return;
 	}
@@ -61,17 +66,38 @@ const onDoubleClick = async () => {
 	});
 };
 
+const onDoubleClick = async () => {
+	if (!props.tab.isActive) {
+		return;
+	}
+
+	openRenameInput();
+};
+
+const onSingleClick = () => {
+	if (props.tab.isActive) {
+		emits('click', props.tab.id);
+	}
+
+	tabsStore.switchTab(props.tab.id);
+};
+
+defineExpose({ openRenameInput });
 </script>
 
 <template>
-	<div :class="classes.watchlistTab" @dblclick="onDoubleClick">
+	<div
+		:class="classes.watchlistTab"
+		@dblclick="onDoubleClick"
+		@click.stop="onSingleClick"
+	>
 		<input
 			v-if="isEditing"
 			ref="tabRenameInputRef"
 			v-model="inputModel"
 			:class="classes.tabRenameInput"
-			@blur="stopEditing(props.tab.id, inputModel)"
-			@keyup.enter="stopEditing(props.tab.id, inputModel)"
+			@blur="finishEditing"
+			@keyup.enter="finishEditing"
 		/>
 		<span v-else :class="classes.tabLabel">{{ props.tab.name }}</span>
 		<ui-icon
