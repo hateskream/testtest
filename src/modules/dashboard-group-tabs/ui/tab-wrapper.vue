@@ -34,7 +34,7 @@ const classList = computed(() => ({
 	font-size: 13px;
 	line-height: 170%;
 	color: #adadad;
-	letter-spacing: 0.8px;
+	letter-spacing: 0.8%;
 	background-color: var(--bg-color-base-300);
 	border-radius: 42px;
 	cursor: pointer;

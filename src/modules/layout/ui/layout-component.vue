@@ -306,7 +306,7 @@ function unFixCurtain() {
 	font-size: 12px;
 	line-height: 170%;
 	text-align: center;
-	letter-spacing: 0.8px;
+	letter-spacing: 0.8%;
 }
 
 .activeLink .iconWrapper {
