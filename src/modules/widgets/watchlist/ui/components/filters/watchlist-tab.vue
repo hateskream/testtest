@@ -18,6 +18,9 @@ const emits = defineEmits<{
 	(event: 'click', value: string): void;
 }>();
 
+const CLICK_DELAY = 200; // ms
+const clickTimeout = ref<number | null>(null);
+
 const tabRenameInputRef = useTemplateRef<HTMLInputElement>('tabRenameInputRef');
 const isEditing = ref(false);
 const inputModel = ref(props.tab.name);
@@ -67,6 +70,11 @@ const openRenameInput = async () => {
 };
 
 const onDoubleClick = async () => {
+	if (clickTimeout.value) {
+		clearTimeout(clickTimeout.value);
+		clickTimeout.value = null;
+	}
+
 	if (!props.tab.isActive) {
 		return;
 	}
@@ -75,11 +83,23 @@ const onDoubleClick = async () => {
 };
 
 const onSingleClick = () => {
-	if (props.tab.isActive) {
-		emits('click', props.tab.id);
+	if (clickTimeout.value) {
+		return;
 	}
 
-	tabsStore.switchTab(props.tab.id);
+	if (isEditing.value) {
+		return;
+	}
+
+	clickTimeout.value = window.setTimeout(() => {
+		if (props.tab.isActive) {
+			emits('click', props.tab.id);
+		}
+
+		tabsStore.switchTab(props.tab.id);
+
+		clickTimeout.value = null;
+	}, CLICK_DELAY);
 };
 
 defineExpose({ openRenameInput });
