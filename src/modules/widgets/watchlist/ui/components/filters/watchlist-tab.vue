@@ -19,6 +19,18 @@ const isEditing = ref(false);
 const tabRenameInputRef = useTemplateRef('tabRenameInputRef');
 const inputModel = ref(props.tab.name);
 
+function adjustInputWidth(input: HTMLInputElement, text: string) {
+	const measurer = document.createElement('span');
+	measurer.style.visibility = 'hidden';
+	measurer.style.position = 'absolute';
+	measurer.style.whiteSpace = 'nowrap';
+	measurer.style.font = window.getComputedStyle(input).font;
+	measurer.textContent = text || ' ';
+	document.body.appendChild(measurer);
+	input.style.width = `${measurer.offsetWidth}px`;
+	document.body.removeChild(measurer);
+}
+
 const stopEditing = (tabId: string, newName: string) => {
 	tabsStore.renameTab(tabId, newName);
 	inputModel.value = '';
@@ -36,9 +48,17 @@ const onDoubleClick = async () => {
 
 	await nextTick();
 
-	tabRenameInputRef.value?.focus();
-	tabRenameInputRef.value?.select();
+	const input = tabRenameInputRef.value as HTMLInputElement;
+	if (!input) {
+		return;
+	}
 
+	input.focus();
+	input.select();
+	adjustInputWidth(input, inputModel.value);
+	input.addEventListener('input', () => {
+		adjustInputWidth(input, inputModel.value);
+	});
 };
 
 </script>
@@ -53,7 +73,7 @@ const onDoubleClick = async () => {
 			@blur="stopEditing(props.tab.id, inputModel)"
 			@keyup.enter="stopEditing(props.tab.id, inputModel)"
 		/>
-		<span v-else>{{ props.tab.name }}</span>
+		<span v-else :class="classes.tabLabel">{{ props.tab.name }}</span>
 		<ui-icon
 			:id="IconIds.DropdownDown"
 			:class="[
@@ -78,12 +98,18 @@ const onDoubleClick = async () => {
 }
 
 .tabRenameInput {
+	min-width: 1ch;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01);
+	line-height: 170%;
+	letter-spacing: 0.096px;
 	background: transparent;
 }
 
-.name {
+.tabLabel {
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-01);
+	line-height: 170%;
 	color: var(--text-color-base-300-activated);
 	letter-spacing: 0.096px;
 }
