@@ -45,7 +45,7 @@ const handleRenameTab = async (index?: number) => {
 		return;
 	}
 
-	const idx = index || watchlistTabRefs.value.length - 1;
+	const idx = index ?? watchlistTabRefs.value.length - 1;
 	watchlistTabRefs.value[idx]?.openRenameInput();
 };
 
@@ -56,10 +56,12 @@ const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
 	const actions: Record<TabMenuAction, () => void> = {
 		rename: () => {
 			tabsStore.startRenameState(tabId);
-			handleRenameTab();
+			tabsStore.tabs.forEach((tab, index) => {
+				tab.id === tabId && handleRenameTab(index);
+			});
 		},
 		share: () => null,
-		duplicate: () => null,
+		duplicate: () => tabsStore.duplicateTab(tabId),
 		addAlert: () => null,
 		addSymbolsToList: () => null,
 	};

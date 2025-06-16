@@ -36,6 +36,24 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		stopRenameState();
 	}
 
+	const duplicateTab = (tabId: string) => {
+		tabs.value.forEach(tab => {
+			if (tab.id === tabId) {
+				const newTab: IWatchlistTab = {
+					id: generateTimestampId(),
+					name: tab.name,
+					isActive: true,
+					isEditing: false,
+					symbols: tab.symbols,
+				};
+
+				tabs.value.push(newTab);
+
+				switchTab(newTab.id);
+			}
+		});
+	};
+
 	function startRenameState(tabId: string) {
 		tabs.value.forEach(tab => {
 			tab.isEditing = tab.id === tabId;
@@ -58,6 +76,7 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		tabs,
 		addTab,
 		renameTab,
+		duplicateTab,
 		switchTab,
 		startRenameState,
 		stopRenameState,
