@@ -130,8 +130,11 @@ function onSectionClick(sectionId: string) {
 
 function onSectionDblClick(sectionId: string) {
 	if (clickTimeout.value) {
-		clearTimeout(clickTimeout.value); clickTimeout.value = null;
-	} handleRenameSection(sectionId);
+		clearTimeout(clickTimeout.value);
+		clickTimeout.value = null;
+	}
+
+	handleRenameSection(sectionId);
 }
 
 const tableRows = (section: IWatchlistSection) => {
