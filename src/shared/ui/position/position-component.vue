@@ -77,7 +77,7 @@ function handleMouseleave() {
 		}
 	}
 }
-defineExpose({ isVisible });
+defineExpose({ isVisible, handleClick });
 </script>
 
 <template>
