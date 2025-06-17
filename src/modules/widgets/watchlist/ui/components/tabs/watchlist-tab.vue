@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef } from 'vue';
+import { nextTick, ref, useTemplateRef, useCssModule } from 'vue';
 
 import type { IWatchlistTab } from '@/modules/widgets/watchlist/model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
@@ -24,6 +24,8 @@ const clickTimeout = ref<number | null>(null);
 const tabRenameInputRef = useTemplateRef<HTMLInputElement>('tabRenameInputRef');
 const isEditing = ref(false);
 const inputModel = ref(props.tab.name);
+
+const classes = useCssModule('classes');
 
 function adjustInputWidth(input: HTMLInputElement, text: string) {
 	const measurer = document.createElement('span');
@@ -107,7 +109,10 @@ defineExpose({ openRenameInput });
 
 <template>
 	<div
-		:class="classes.watchlistTab"
+		:class="[
+			classes.watchlistTab,
+			props.tab.isActive ? classes.active : {}
+		]"
 		@dblclick="onDoubleClick"
 		@click.stop="onSingleClick"
 	>
@@ -121,6 +126,7 @@ defineExpose({ openRenameInput });
 		/>
 		<span v-else :class="classes.tabLabel">{{ props.tab.name }}</span>
 		<ui-icon
+			v-if="props.tab.isActive"
 			:id="IconIds.DropdownDown"
 			:class="[
 				classes.icon,
@@ -137,10 +143,17 @@ defineExpose({ openRenameInput });
 	display: flex;
 	align-items: center;
 	align-self: stretch;
-	padding: 8px 12px;
-	background: var(--bg-color-base-300);
-	border-radius: 9999px;
+	height: auto;
+	padding: 4px 8px 4px 12px;
+	font-size: var(--typography-paragraph-size-p-01);
+	color: var(--text-color-base-300);
+	border-radius: 28px;
 	gap: 2px;
+}
+
+.active {
+	color: var(--text-color-base-300-activated);
+	background: var(--bg-color-base-300);
 }
 
 .tabRenameInput {
@@ -156,7 +169,6 @@ defineExpose({ openRenameInput });
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-01);
 	line-height: 170%;
-	color: var(--text-color-base-300-activated);
 	letter-spacing: 0.096px;
 }
 
@@ -165,11 +177,11 @@ defineExpose({ openRenameInput });
 }
 
 .icon__open {
-	transform: rotate(180deg);
 	transition: transform 0.3s ease;
 }
 
 .icon__close {
+	transform: rotate(-90deg);
 	transition: transform 0.3s ease;
 }
 </style>
