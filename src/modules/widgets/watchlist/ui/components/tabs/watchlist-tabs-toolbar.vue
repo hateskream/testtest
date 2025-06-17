@@ -82,58 +82,72 @@ const onTabClick = (index: number) => {
 </script>
 
 <template>
-	<div :class="classes.container">
-		<div v-for="(tab, index) in tabs" :key="tab.id">
-			<ui-position
-				ref="positionRefs"
-				position="bottom-start"
-			>
-				<template #default="{ isVisible }">
-					<watchlist-tab
-						ref="watchlistTabRefs"
-						:tab="tab"
-						:is-open="isVisible"
-						@click="onTabClick(index)"
-					/>
-				</template>
+	<div>
+		<div :class="classes.tabGroup">
+			<div v-for="(tab, index) in tabs" :key="tab.id">
+				<ui-position
+					ref="positionRefs"
+					position="bottom-start"
+				>
+					<template #default="{ isVisible }">
+						<watchlist-tab
+							ref="watchlistTabRefs"
+							:tab="tab"
+							:is-open="isVisible"
+							@click="onTabClick(index)"
+						/>
+					</template>
 
-				<template #content>
-					<modal-badge-list>
-						<template #title>{{ tab.name }}</template>
+					<template #content>
+						<modal-badge-list>
+							<template #title>{{ tab.name }}</template>
 
+							<modal-item
+								v-for="action in tabMenuActions"
+								:key="action.name"
+								@click="onTabMenuAction(tab.id, action.name)"
+							>
+								<span :class="classes.menuActionTitle">{{ action.title }}</span>
+							</modal-item>
+						</modal-badge-list>
+					</template>
+				</ui-position>
+			</div>
 
-						<modal-item
-							v-for="action in tabMenuActions"
-							:key="action.name"
-							@click="onTabMenuAction(tab.id, action.name)"
-						>
-							<span :class="classes.menuActionTitle">{{ action.title }}</span>
-						</modal-item>
-					</modal-badge-list>
-				</template>
-			</ui-position>
-		</div>
-
-		<div>
-			<ui-icon
-				:id="IconIds.ControlPlus"
-				:class="classes.icon"
-				width="20px"
-				height="20px"
-				@click="handleAddTab"
-			/>
+			<div :class="classes.addTabAction">
+				<ui-icon
+					:id="IconIds.ControlPlus"
+					:class="classes.addTabActionIcon"
+					width="20px"
+					height="20px"
+					@click="handleAddTab"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.container {
+.tabGroup {
 	display: inline-flex;
 	align-items: center;
-	gap: 8px;
+	padding: 2px;
+	background: var(--bg-color-base-300);
+	border-radius: 9999px;
+	gap: 2px;
 }
 
-.icon {
+.addTabAction {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 32px;
+	min-height: 32px;
+	padding-right: 4px;
+	aspect-ratio: 1/1;
+}
+
+.addTabActionIcon {
 	color: var(--icon-color-base-300);
 	cursor: pointer;
 }
