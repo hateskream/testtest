@@ -2,7 +2,7 @@
 
 import type { IWatchlistSection } from '../../model';
 
-import WatchlistTabsToolbar from '../components/filters/watchlist-tabs-toolbar.vue';
+import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
 import WatchlistTable from '../components/table/watchlist-table.vue';
 
 interface IWatchlistTableProps {
