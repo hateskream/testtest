@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, onMounted, onUnmounted, ref, toValue, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import type { ISectionItem } from '@/modules/chart/components';
 import { useTabs } from '@/modules/chart/components/shared/composables';
