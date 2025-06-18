@@ -111,14 +111,14 @@ defineProps<IProps>();
 
 .tabPanel.active {
 	display: block;
-	animation: fadeIn 0.3s ease-in-out;
+	animation: fade-in 0.3s ease-in-out;
 }
 
 .tabPanel.inactive {
 	display: none;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
 	from {
 		opacity: 0;
 	}
