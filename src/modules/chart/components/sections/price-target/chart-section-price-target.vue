@@ -1,16 +1,21 @@
 <script setup lang="ts">
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, toValue, watch } from 'vue';
 
 import type { ISectionItem } from '@/modules/chart/components';
+import { useTabs } from '@/modules/chart/components/shared/composables';
+import { ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
 
 import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
 import ChartWidgetPriceTarget from '@/modules/chart/components/widgets/price-target/chart-widget-price-target.vue';
+import ChartWidgetYearlyRevenue
+	from '@/modules/chart/components/widgets/yearly-revenue/chart-widget-yearly-revenue.vue';
 
 interface IChartSectionValuationsProps {
 	section: ISectionItem;
-	selectedItem?: string | null;
+	activeSection?: string | null;
 	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
+	selectedItem?: string | null;
 }
 
 const props = defineProps<IChartSectionValuationsProps>();
@@ -18,7 +23,27 @@ const props = defineProps<IChartSectionValuationsProps>();
 
 const itemRef = ref<HTMLElement | null>(null);
 
-// Register the ref when component mounts
+
+const tabs = computed(() => {
+	if (!props.section?.items || !Array.isArray(props.section.items)) {
+		return [];
+	}
+
+	return props.section.items;
+});
+
+const { activeTab, tabList, setActiveTab } = useTabs(tabs);
+
+watch(() => props.selectedItem, (newSelectedItem) => {
+	if (!newSelectedItem) {
+		return;
+	}
+	const newTab = tabs.value.find(el => el.id === newSelectedItem);
+	if (newTab) {
+		setActiveTab(newTab.id);
+	}
+});
+
 onMounted(() => {
 	if (itemRef.value) {
 		props.registerItemRef(props.section.id, itemRef.value);
@@ -39,12 +64,22 @@ onUnmounted(() => {
 
 <template>
 
-
 	<chart-common-section-layout>
-		<template #refAnchor><div ref="itemRef"></div></template>
-		<template #title>{{props.section?.title}}</template>
+
+		<template #refAnchor>
+			<div ref="itemRef"></div>
+		</template>
+		<template #title>{{ props.section?.title }}</template>
 		<template #body>
-			<chart-widget-price-target />
+
+			<chart-common-tabs-layout
+				:active-tab="activeTab"
+				:tab-list="tabList"
+				:set-active-tab="setActiveTab"
+			>
+				<template #price-target-history><chart-widget-price-target /></template>
+				<template #price-target-analysis><chart-widget-yearly-revenue /></template>
+			</chart-common-tabs-layout>
 		</template>
 	</chart-common-section-layout>
 </template>

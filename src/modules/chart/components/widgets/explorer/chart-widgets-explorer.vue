@@ -27,8 +27,8 @@ const { arrivedState } = useScroll(scrollContainerRef, {
 
 const toggleSection = (sectionId: string) => {
 	activeSection.value = activeSection.value === sectionId ? null : sectionId;
-	if (activeSection.value !== sectionId) {
-		selectedItem.value = null;
+	if (activeSection.value !== null) {
+		selectedItem.value = sectionId;
 	}
 };
 

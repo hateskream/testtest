@@ -111,6 +111,10 @@ export const chartWidgetRealSections = [
 	{
 		id:'price-target',
 		title: 'Price Target',
+		items: [
+			{ id: 'price-target-history', title: 'Price Target History' },
+			{ id: 'price-target-analysis', title: 'Price Target Analysis' },
+		],
 	},
 	{
 		id:'yearly-revenue',

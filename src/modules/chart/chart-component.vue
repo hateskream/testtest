@@ -97,18 +97,19 @@ watch(selectedItem, async (newItemId) => {
 		}
 	}
 });
-watch(activeSection, async (newItemId) => {
-	if (newItemId && !selectedItem.value) {
-		await nextTick();
-		const itemElement = itemRefs.value.get(newItemId);
-		if (itemElement) {
-			itemElement.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start',
-			});
-		}
-	}
-});
+// TODO recheck if highlights will be needed or back side  relations , dont delete
+// watch(activeSection, async (newItemId) => {
+// 	if (newItemId && !selectedItem.value) {
+// 		await nextTick();
+// 		const itemElement = itemRefs.value.get(newItemId);
+// 		if (itemElement) {
+// 			itemElement.scrollIntoView({
+// 				behavior: 'smooth',
+// 				block: 'start',
+// 			});
+// 		}
+// 	}
+// });
 const marketDate = {
 	marketCap: 3252255,
 	volume: '151 703 351',
@@ -174,6 +175,8 @@ const explorerDate = computed(() => {
 					<chart-section-price-target
 						:section="chartWidgetRealSections[1]"
 						:register-item-ref="registerItemRef"
+						:active-section="activeSection"
+						:selected-item="selectedItem"
 					/>
 					<chart-section-yearly-revenue
 						:section="chartWidgetRealSections[2]"
