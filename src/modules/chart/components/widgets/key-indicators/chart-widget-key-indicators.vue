@@ -50,5 +50,6 @@ const props = defineProps<IChartSectionProps>();
 	display:flex;
 	flex-direction: column;
 	gap: 8px;
+	padding-bottom:20px;
 }
 </style>

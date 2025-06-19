@@ -19,6 +19,8 @@ import {
 	ChartSectionPriceTarget,
 	ChartSectionValuationsAndEstimates,
 } from './components/sections';
+import { ChartSectionInsightAndActivity } from '@/modules/chart/components/sections';
+
 import ChartSectionQuarterlyRevenue
 	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
 import ChartSectionStockPeersBulk
@@ -196,6 +198,7 @@ const explorerDate = computed(() => {
 				</template>
 				<template #rightCol>
 					<chart-section-insight-and-activity />
+					<div :class="classes.hotfix"/>
 				</template>
 			</chart-columns-layout>
 		</template>
@@ -267,5 +270,8 @@ const explorerDate = computed(() => {
 	font-size: var(--typography-headers-size-h02);
 	background: var(--bg-color-surface-00);
 	gap: 8px;
+}
+.hotfix {
+	margin-bottom:30px;
 }
 </style>
