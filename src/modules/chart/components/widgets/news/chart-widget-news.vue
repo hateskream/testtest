@@ -19,6 +19,7 @@ const props = defineProps<INewsProps>();
 const renderMarkdown = () => {
 	const html = markdown.render(props.markdownText);
 	const sanitized = DOMPurify.sanitize(html);
+	console.log('not sanitized markdown', props.markdownText);
 
 	return h('div', {
 		innerHTML: sanitized,

@@ -198,7 +198,6 @@ const explorerDate = computed(() => {
 				</template>
 				<template #rightCol>
 					<chart-section-insight-and-activity />
-					<div :class="classes.hotfix" />
 				</template>
 			</chart-columns-layout>
 		</template>
