@@ -14,13 +14,13 @@ import {
 } from './components';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 import { chartWidgetRealSections } from '@/modules/chart/components/widgets/explorer/models';
-
-import ChartWidgetsKeyStats from '@/modules/chart/components/widgets/key-stats/chart-widgets-key-stats.vue';
-import ChartSectionValuationsAndEstimates
-	from '@/modules/chart/components/sections/valuations-and-estimates/chart-section-valuations-and-estimates.vue';
-import ChartSectionPriceTarget from '@/modules/chart/components/sections/price-target/chart-section-price-target.vue';
-import ChartSectionYearlyRevenue
-	from '@/modules/chart/components/sections/yearly-revenue/chart-section-yearly-revenue.vue';
+import {
+	ChartSectionYearlyRevenue,
+	ChartSectionInsightAndActivity,
+	ChartSectionPriceTarget,
+	ChartSectionValuationsAndEstimates,
+	ChartSectionQuarterlyRevenue,
+} from './components/sections';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -110,14 +110,7 @@ watch(selectedItem, async (newItemId) => {
 // 		}
 // 	}
 // });
-const marketDate = {
-	marketCap: 3252255,
-	volume: '151 703 351',
-	totalReturn3M: -29.5,
-	totalReturn1Y: 53.952,
-	forwardPE: '151 703 351',
-	sector: 'Automobiles',
-};
+
 
 const explorerDate = computed(() => {
 	return [...chartWidgetRealSections, ...chartWidgetTestSections];
@@ -191,16 +184,7 @@ const explorerDate = computed(() => {
 
 				</template>
 				<template #rightCol>
-					<div :class="classes.columnTitle">
-						<ui-icon
-							:id="IconIds.Deals"
-							:class="classes.titleIcon"
-							width="20px"
-							height="20px"
-						/>
-						<span>Insights & Activity</span>
-					</div>
-					<chart-widgets-key-stats :market-data="marketDate" />
+					<chart-section-insight-and-activity />
 				</template>
 			</chart-columns-layout>
 		</template>
@@ -227,33 +211,6 @@ const explorerDate = computed(() => {
 	min-height: 30svh;
 }
 
-.columnTitle {
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	display: flex;
-	align-items: center;
-	margin-bottom: 22px;
-	padding: 12px 16px 12px 0;
-	font-size: var(--typography-headers-size-h02);
-	background: var(--bg-color-surface-00);
-	gap: 8px;
-}
-
-.titleIcon {
-	color: #ffffff;
-}
-
-.columnContent {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-
-.placeholderBlock {
-	min-height: 300px;
-	background: rgb(84 84 95 / 60%);
-}
 
 .navigation {
 	position: fixed;
@@ -287,5 +244,16 @@ const explorerDate = computed(() => {
 	display: flex;
 	gap: 3px;
 }
-
+.columnTitle {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	margin-bottom: 22px;
+	padding: 12px 16px 12px 0;
+	font-size: var(--typography-headers-size-h02);
+	background: var(--bg-color-surface-00);
+	gap: 8px;
+}
 </style>

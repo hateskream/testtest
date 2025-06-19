@@ -50,4 +50,6 @@ export enum IconIds {
 	ArrowToTopRight = 'arrow-to-top-right',
 	TrashOutline = 'trash-outline',
 	Info = 'info',
+	MetricUpDown = 'metric-up-down-icon',
+	MetricHold = 'metric-hold'
 }

@@ -44,6 +44,11 @@
 					:is-active="activeTab === tab.id"
 				/>
 			</div>
+			<div v-if="$slots.common" :class="classes.separator">
+
+			</div>
+			<slot name="common">
+			</slot>
 		</div>
 	</div>
 </template>
@@ -107,6 +112,14 @@ defineProps<IProps>();
 .tabContent {
 	background: #131315;
 	border-radius: 0 18px 18px;
+	display:flex;
+	flex-direction: column;
+	gap:8px;
+}
+.separator {
+	height: 1px;
+	background: var(--border-color-surface-02-effect);
+	margin:  0 8px;
 }
 
 .tabPanel.active {
