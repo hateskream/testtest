@@ -20,7 +20,6 @@ const props = defineProps<IChartSectionProps>();
 <template>
 	<chart-common-widget-layout>
 		<template #header>Key indicators</template>
-		<div :class="classes.test"></div>
 		<template #body>
 			<div :class="classes.bodyWrapper">
 				<div v-for="indicator in props.indicators" :class="classes.row">
@@ -33,6 +32,7 @@ const props = defineProps<IChartSectionProps>();
 						{{ indicator.text }}
 					</div>
 				</div>
+        <div class="paragraph-p-02" :class="classes.summarized">Summarized at{{props.time}}</div>
 			</div>
 		</template>
 	</chart-common-widget-layout>
@@ -48,14 +48,13 @@ const props = defineProps<IChartSectionProps>();
 	gap: 4px;
 }
 
-.test {
-	height: 30px;
-}
-
 .bodyWrapper {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding-bottom: 20px;
+	padding-bottom: 5px;
+}
+.summarized{
+	color: var(--text-color-base-300);
 }
 </style>

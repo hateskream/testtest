@@ -6,7 +6,7 @@ import { ChartCommonWidgetLayout } from '../../shared/ui';
 
 import FearGreedDashboard from '@/modules/widgets/fear-greed/ui/view-component.vue';
 
-const tension = ref(25);
+const tension = ref(75);
 const randomTension = () => {
 	tension.value = Math.floor(Math.random() * 100) + 1;
 };
