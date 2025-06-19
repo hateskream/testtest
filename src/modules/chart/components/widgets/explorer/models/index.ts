@@ -120,4 +120,8 @@ export const chartWidgetRealSections = [
 		id:'yearly-revenue',
 		title: 'Yearly revenue',
 	},
+	{
+		id:'chart-peers-bulks',
+		title: 'Chart peers bulks',
+	},
 ];
