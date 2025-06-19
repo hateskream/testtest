@@ -177,6 +177,7 @@ onMounted(() => {
 			borderVisible: false,
 		},
 
+
 		grid: {
 			horzLines: {
 				visible: false,
@@ -203,7 +204,9 @@ onMounted(() => {
 			minimumWidth: 55,
 			borderVisible: false,
 		},
-		// hide the grid lines
+
+		handleScale: false,
+
 		grid: {
 			vertLines: {
 				visible: false,
@@ -348,6 +351,7 @@ onMounted(() => {
 		<chart-range
 			:class="classes.range"
 			:active-range="currentRange"
+			:list="Object.values(RangeChart)"
 			@select="selectRange"
 		/>
 

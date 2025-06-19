@@ -16,10 +16,13 @@ import { ChartColumnsLayout, ChartLayout } from './ui';
 import { chartWidgetRealSections } from '@/modules/chart/components/widgets/explorer/models';
 import {
 	ChartSectionYearlyRevenue,
-	ChartSectionInsightAndActivity,
 	ChartSectionPriceTarget,
 	ChartSectionValuationsAndEstimates,
 } from './components/sections';
+import ChartSectionQuarterlyRevenue
+	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
+import ChartSectionStockPeersBulk
+	from '@/modules/chart/components/sections/stock-peers-bulk/chart-section-stock-peers-bulk.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -174,12 +177,21 @@ const explorerDate = computed(() => {
 						:section="chartWidgetRealSections[2]"
 						:register-item-ref="registerItemRef"
 					/>
+					<chart-section-stock-peers-bulk
+						:section="chartWidgetRealSections[3]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-quarterly-revenue
+						:section="chartWidgetRealSections[4]"
+						:register-item-ref="registerItemRef"
+					/>
 					<chart-main-column-component
 						:sections="chartWidgetTestSections"
 						:active-section="activeSection"
 						:selected-item="selectedItem"
 						:register-item-ref="registerItemRef"
 					/>
+
 
 				</template>
 				<template #rightCol>

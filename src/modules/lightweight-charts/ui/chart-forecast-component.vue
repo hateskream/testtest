@@ -11,7 +11,7 @@ import {
 import { onMounted, ref, useTemplateRef } from 'vue';
 
 import { generateCandleDataFromLineData, generateLineData, prepareSeries } from '../utils';
-import { Rectangle } from '../rectangles';
+import { Rectangle, TooltipPrimitive } from '../rectangles';
 
 interface IChartProps {
 	// width: number;
@@ -31,6 +31,7 @@ onMounted(() => {
 		layout: {
 			textColor: '#9A9A9D',
 			background: { type: ColorType.Solid, color: '#131315' },
+
 		},
 		handleScroll: false,
 		handleScale: false,
@@ -65,22 +66,34 @@ onMounted(() => {
 	});
 
 	const s = chart.value!.addSeries(LineSeries, {
-		color: '#999999',
+		color: '#FFF',
 		lineWidth: 1,
-		priceLineColor: '#CDCDCD',
 	});
+
+	const currentPrice = mainData.value[mainData.value.length - 1].close;
 
 	s.setData(prepareSeries(mainData.value, 'Line'));
 
-
-	const priceTargetUp = chart.value!.addSeries(LineSeries, {
-		lineType: LineType.Curved,
-		color: '#E3FF47',
+	s.createPriceLine({
+		price: currentPrice,
+		axisLabelVisible: true,
+		axisLabelColor: '#1C1C1E',
+		axisLabelTextColor: '#fff',
+		color: '#fff',
+		lineVisible: true,
 		lineStyle: LineStyle.Dashed,
-		crosshairMarkerVisible: false,
 		lineWidth: 1,
-		priceLineVisible: false,
+		title: `C ${currentPrice.toFixed(2)}`,
 	});
+
+	const tooltipPrimitive = new TooltipPrimitive({
+		lineColor: 'rgba(0, 0, 0, 0.2)',
+		tooltip: {
+			followMode: 'tracking',
+		},
+	});
+
+	s.attachPrimitive(tooltipPrimitive);
 
 	const generatePriceForecast = (max: number = 100) => {
 		const samples = [];
@@ -110,19 +123,72 @@ onMounted(() => {
 		return samples;
 	};
 
-	priceTargetUp.setData(generatePriceForecast(250));
+	const [priceUp, priceAvg, priceDown] = [
+		generatePriceForecast(250),
+		generatePriceForecast(100),
+		generatePriceForecast(-100),
+	];
+
+
+	const priceTargetUp = chart.value!.addSeries(LineSeries, {
+		color: priceUp[priceUp.length - 1].value >= currentPrice ? '#04EDA0' : '#FC4A6B',
+		lineType: LineType.Curved,
+		lineStyle: LineStyle.Dashed,
+		crosshairMarkerVisible: false,
+		lineWidth: 1,
+		priceLineVisible: false,
+	});
+
+
+	priceTargetUp.setData(priceUp);
+
+	priceTargetUp.createPriceLine({
+		price: priceUp[priceUp.length - 1].value,
+		axisLabelVisible: true,
+
+		...(
+			priceUp[priceUp.length - 1].value >= currentPrice ? {
+
+				axisLabelColor: '#043222',
+				axisLabelTextColor: '#04EDA0',
+			} : {
+				axisLabelColor: '#3B1C24',
+				axisLabelTextColor: '#FC4A6B',
+			}
+		),
+
+		lineVisible: false,
+		title: `H ${priceUp[priceUp.length - 1].value.toFixed(2)}`,
+	});
 
 	const priceTargetAvg = chart.value!.addSeries(LineSeries, {
 		lineType: LineType.Simple,
 		lineStyle: LineStyle.Dashed,
 		crosshairMarkerVisible: false,
 		lineWidth: 1,
-		color: '#E3FF47',
+		color: '#04EDA0',
 		priceLineVisible: false,
 	});
-	const das = generatePriceForecast(200);
 
-	priceTargetAvg.setData(generatePriceForecast(100));
+	priceTargetAvg.createPriceLine({
+		price: priceAvg[priceAvg.length - 1].value,
+		axisLabelVisible: true,
+		lineVisible: false,
+		title: `A ${priceAvg[priceAvg.length - 1].value.toFixed(2)}`,
+
+		...(
+			priceAvg[priceAvg.length - 1].value >= currentPrice ? {
+
+				axisLabelColor: '#043222',
+				axisLabelTextColor: '#04EDA0',
+			} : {
+				axisLabelColor: '#3B1C24',
+				axisLabelTextColor: '#FC4A6B',
+			}
+		),
+	});
+
+	priceTargetAvg.setData(priceAvg);
 
 	const priceTargetDown = chart.value!.addSeries(LineSeries, {
 		lineType: LineType.Simple,
@@ -134,14 +200,32 @@ onMounted(() => {
 		priceLineVisible: false,
 	});
 
-	priceTargetDown.setData(generatePriceForecast(-100));
+	priceTargetDown.setData(priceDown);
+
+	priceTargetDown.createPriceLine({
+		price: priceDown[priceDown.length - 1].value,
+		title: `L ${priceDown[priceDown.length - 1].value.toFixed(2)}`,
+		axisLabelVisible: true,
+		lineVisible: false,
+
+		...(
+			priceDown[priceDown.length - 1].value >= currentPrice ? {
+
+				axisLabelColor: '#043222',
+				axisLabelTextColor: '#04EDA0',
+			} : {
+				axisLabelColor: '#3B1C24',
+				axisLabelTextColor: '#FC4A6B',
+			}
+		),
+	});
 
 	priceTargetAvg.attachPrimitive(new Rectangle({
-		price: das[0].value,
-		time: das[0].time,
+		price: priceAvg[0].value,
+		time: priceAvg[0].time,
 	}, {
-		price: das[das.length - 1].value,
-		time: das[das.length - 1].time,
+		price: priceAvg[priceAvg.length - 1].value,
+		time: priceAvg[priceAvg.length - 1].time,
 	}));
 
 	chart.value!.timeScale().fitContent();
@@ -164,6 +248,7 @@ onMounted(() => {
 }
 
 .mainChart {
+	position: relative;
 	flex-grow: 1;
 	width: 100%;
 	height: 100%;

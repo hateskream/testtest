@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { ChartQuarterlyRevenue } from '@/modules/lightweight-charts';
+import { ChartStockBulk } from '@/modules/lightweight-charts';
 
 
 </script>
@@ -11,7 +11,7 @@ import { ChartQuarterlyRevenue } from '@/modules/lightweight-charts';
 		<template #header>
 			<div :class="classes.wrapperTitle">
 				<div :class="classes.title">
-					Quarterly Revenue
+					Stock Peers Bulk
 				</div>
 
 				<!-- <div :class="classes.potential">
@@ -20,7 +20,7 @@ import { ChartQuarterlyRevenue } from '@/modules/lightweight-charts';
 			</div>
 		</template>
 		<template #body>
-			<chart-quarterly-revenue :height="300" />
+			<chart-stock-bulk :height="300" />
 		</template>
 	</chart-common-widget-layout>
 </template>

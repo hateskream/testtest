@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 
 import { RangeChart } from '../model/chart';
 
 interface IChartRangeProps {
 	activeRange: RangeChart;
+	list: RangeChart[];
 }
 
-defineProps<IChartRangeProps>();
+const props = defineProps<IChartRangeProps>();
 
 interface IChartRangeEmits {
 	(e: 'select', data: RangeChart): void;
@@ -15,10 +16,12 @@ interface IChartRangeEmits {
 
 const emits = defineEmits<IChartRangeEmits>();
 
-const ranges = ref(Object.entries(RangeChart).map(([title, val])=> ({
-	title,
-	val,
-})));
+const ranges = computed(() => {
+	return props.list.map((item) => ({
+		title: item,
+		val: item,
+	}));
+});
 
 
 </script>
@@ -58,6 +61,4 @@ const ranges = ref(Object.entries(RangeChart).map(([title, val])=> ({
 .rangeItemActive {
 	background-color: var(--bg-color-base-300-activated);
 }
-
-
 </style>
