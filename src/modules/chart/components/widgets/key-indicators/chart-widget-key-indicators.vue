@@ -32,7 +32,7 @@ const props = defineProps<IChartSectionProps>();
 						{{ indicator.text }}
 					</div>
 				</div>
-        <div class="paragraph-p-02" :class="classes.summarized">Summarized at{{props.time}}</div>
+				<div class="paragraph-p-02" :class="classes.summarized">Summarized at{{props.time}}</div>
 			</div>
 		</template>
 	</chart-common-widget-layout>
