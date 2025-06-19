@@ -90,9 +90,7 @@ const keyIndicatorsData = {
 </template>
 
 <style module="classes">
-
-
 .tabWrapper {
-  height: 400px
+	height: 400px;
 }
 </style>

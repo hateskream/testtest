@@ -19,7 +19,6 @@ import {
 	ChartSectionInsightAndActivity,
 	ChartSectionPriceTarget,
 	ChartSectionValuationsAndEstimates,
-	ChartSectionQuarterlyRevenue,
 } from './components/sections';
 
 const { randomizeExchanges } = useChartStore();
@@ -244,6 +243,7 @@ const explorerDate = computed(() => {
 	display: flex;
 	gap: 3px;
 }
+
 .columnTitle {
 	position: sticky;
 	top: 0;

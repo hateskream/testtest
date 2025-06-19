@@ -62,11 +62,12 @@ const renderMarkdown = () => {
 }
 
 .markdownWrapper :global(strong) {
-	color: #04eda0;
 	font-weight: 400;
+	color: #04eda0;
 }
+
 .bodyWrapper {
-	display:flex;
+	display: flex;
 	flex-direction: column;
 	gap: 8px;
 }

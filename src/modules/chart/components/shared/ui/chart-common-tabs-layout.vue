@@ -110,16 +110,17 @@ defineProps<IProps>();
 }
 
 .tabContent {
+	display: flex;
+	flex-direction: column;
 	background: #131315;
 	border-radius: 0 18px 18px;
-	display:flex;
-	flex-direction: column;
-	gap:8px;
+	gap: 8px;
 }
+
 .separator {
 	height: 1px;
+	margin: 0 8px;
 	background: var(--border-color-surface-02-effect);
-	margin:  0 8px;
 }
 
 .tabPanel.active {

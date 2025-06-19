@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import {ref} from 'vue';
+import { ref } from 'vue';
 
-import {ChartCommonWidgetLayout} from '../../shared/ui';
+import { ChartCommonWidgetLayout } from '../../shared/ui';
 
 import FearGreedDashboard from '@/modules/widgets/fear-greed/ui/view-component.vue';
 
@@ -26,7 +26,7 @@ const randomTension = () => {
 				/>
 			</template>
 		</chart-common-widget-layout>
-		<div :class="classes.separator"/>
+		<div :class="classes.separator" />
 		<chart-common-widget-layout>
 			<template #header>
 				The economic outline is <span :class="classes.potential">Optimistic</span>
@@ -34,7 +34,7 @@ const randomTension = () => {
 			<template #body>
 				<div :class="classes.bodyWrapper">
 					<div class="paragraph-p-01" :class="classes.text">
-						UK's MPC votes shifted to 0-1-8, Bank Rate stable at 4.5%. SNB lowers rate to 0.25%. AU job
+						UK's MPC votes shifted to 0-1-8, Bank Rate stable at 4.5%. SNB lowers rate to 0.25%. AU job
 						losses surged to
 						52.8K, UK claimants up to 44.2K.
 					</div>

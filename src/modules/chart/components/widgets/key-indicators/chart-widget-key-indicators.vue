@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import {ChartCommonWidgetLayout} from '../../shared/ui';
-import {IconIds, UiIcon} from '@/shared/ui/icon';
+import { ChartCommonWidgetLayout } from '../../shared/ui';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 
 interface IIndicator {
