@@ -1,0 +1,2 @@
+// eslint-disable-next-line @stylistic/max-len
+export const markdown = 'The live price of Bitcoin is **$109,698.0 USD**. In the past 24 hours, the trading volume of Bitcoin was $57.4B USD, with a change of **+1.16%**. The current live price of Bitcoin has changed by **+3.36%** from its 7-day high of $106,444.30 USD and by **+9.58%** from its 7-day low of $100,404.70 USD. With a circulating supply of $19,877,046.00 BTC, the market cap of Bitcoin is currently $2.1T USD, marking a **+4.06%** change in the last 24 hours. Bitcoin currently ranks 1 by market capitalization.';

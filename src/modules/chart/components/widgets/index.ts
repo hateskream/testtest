@@ -3,7 +3,9 @@ import { ChartWidgetsExplorer, type ISectionItem, chartWidgetTestSections, type 
 import { ChartWidgetsKeyStats } from './key-stats';
 import { ChartWidgetPriceTarget } from './price-target';
 import { ChartWidghetInsights } from './insights';
-import { ChartWidgetKeyIndicators} from "./key-indicators";
+import { ChartWidgetKeyIndicators } from './key-indicators';
+import { ChartWidgetFearGreed } from './fear-greed';
+import { ChartWidgetNews } from './news';
 
 export {
 	ChartWidgetPricePerformance,
@@ -14,5 +16,7 @@ export {
 	ChartWidgetsKeyStats,
 	ChartWidgetPriceTarget,
 	ChartWidghetInsights,
-	ChartWidgetKeyIndicators
+	ChartWidgetKeyIndicators,
+	ChartWidgetFearGreed,
+	ChartWidgetNews,
 };

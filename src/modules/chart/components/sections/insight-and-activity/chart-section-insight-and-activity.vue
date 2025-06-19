@@ -1,11 +1,14 @@
 <script setup lang="ts">
 
 
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { ChartWidgetsKeyStats } from '../../widgets';
 import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '../../shared/ui';
 import { useTabs } from '../../shared/composables';
+import { ChartWidgetFearGreed, ChartWidgetKeyIndicators, ChartWidgetNews } from '@/modules/chart/components/widgets';
+import { markdown } from './markdown.ts';
+import { IconIds } from '@/shared/ui/icon';
 
 const tabs = computed(() => [
 	{ id: 'insights-and-activity-insights', title: 'Insights' },
@@ -26,8 +29,33 @@ const marketDate = {
 	forwardPE: '151 703 351',
 	sector: 'Automobiles',
 };
-</script>
 
+const markdownText = ref(markdown);
+
+const keyIndicatorsData = {
+	indicators: [
+		{
+			icon: IconIds.MetricDown,
+			text: 'Trading at +0.74% premium to NAV',
+		},
+		{
+			icon: IconIds.MetricUp,
+			text: '$1.43B net inflows in the last month',
+		},
+		{
+			icon: IconIds.MetricUp,
+			text: 'Outperforming S&P 500 by 2.16% YTD',
+		},
+		{
+			icon: IconIds.MetricHold,
+			text: 'Top holding subtracted 0.01% to YTD returns',
+		},
+	],
+	time: '19:30',
+};
+
+
+</script>
 <template>
 	<chart-common-section-layout>
 		<template #title><span>Insights & Activity</span></template>
@@ -38,9 +66,22 @@ const marketDate = {
 				:tab-list="tabList"
 				:set-active-tab="setActiveTab"
 			>
-				<template #insights-and-activity-insights>1234 </template>
-				<template #insights-and-activity-news>321</template>
-				<template #common> AAA </template>
+				<template #insights-and-activity-insights>
+					<div :class="classes.tabWrapper">
+						<chart-widget-fear-greed />
+					</div>
+				</template>
+				<template #insights-and-activity-news>
+					<div :class="classes.tabWrapper">
+						<chart-widget-news :markdown-text="markdownText"></chart-widget-news>
+					</div>
+				</template>
+				<template #common>
+					<chart-widget-key-indicators
+						:indicators="keyIndicatorsData.indicators"
+						:time="keyIndicatorsData.time"
+					/>
+				</template>
 
 			</chart-common-tabs-layout>
 
@@ -51,8 +92,7 @@ const marketDate = {
 <style module="classes">
 
 
-.titleIcon {
-	color: #ffffff;
+.tabWrapper {
+  height: 400px
 }
-
 </style>

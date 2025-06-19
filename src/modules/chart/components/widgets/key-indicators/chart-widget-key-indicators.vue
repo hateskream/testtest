@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
-import { ChartCommonWidgetLayout } from '../../shared/ui';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import {ChartCommonWidgetLayout} from '../../shared/ui';
+import {IconIds, UiIcon} from '@/shared/ui/icon';
 
 
 interface IIndicator {
 	icon: IconIds;
 	text: string;
 }
+
 interface IChartSectionProps {
 	indicators: IIndicator[];
 	time: string;
@@ -20,20 +21,34 @@ const props = defineProps<IChartSectionProps>();
 	<chart-common-widget-layout>
 		<template #header>Key indicators</template>
 		<template #body>
-			<div v-for="indicator in props.indicators">
-				<ui-icon
-					:id="indicator.icon"
-					width="18"
-					height="18"
-				/>
-				<div class="paragraph-p-01">
-					{{indicator.text}}
+			<div :class="classes.bodyWrapper">
+				<div v-for="indicator in props.indicators" :class="classes.row">
+					<ui-icon
+						:id="indicator.icon"
+						width="18"
+						height="18"
+					/>
+					<div class="paragraph-p-01">
+						{{ indicator.text }}
+					</div>
 				</div>
 			</div>
 		</template>
 	</chart-common-widget-layout>
 </template>
 
-<style scoped>
-
+<style module="classes">
+.row {
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	color: var(--text-color-base-500);
+	height: 20px;
+	overflow: hidden;
+}
+.bodyWrapper {
+	display:flex;
+	flex-direction: column;
+	gap: 8px;
+}
 </style>
