@@ -4,3 +4,5 @@ export * from './group-series-by-range';
 export * from './assert';
 export * from './position-box';
 export * from './prepare-series';
+export * from './position-line';
+export * from './time';
