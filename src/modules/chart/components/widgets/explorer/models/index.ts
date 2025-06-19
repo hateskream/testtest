@@ -122,7 +122,7 @@ export const chartWidgetRealSections = [
 	},
 	{
 		id:'chart-peers-bulks',
-		title: 'Chart peers bulks',
+		title: 'Peer Analysis',
 	},
 	{
 		id:'quarterly-revenue',
