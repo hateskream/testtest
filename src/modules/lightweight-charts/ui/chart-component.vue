@@ -351,6 +351,7 @@ onMounted(() => {
 		<chart-range
 			:class="classes.range"
 			:active-range="currentRange"
+			:list="Object.values(RangeChart)"
 			@select="selectRange"
 		/>
 
