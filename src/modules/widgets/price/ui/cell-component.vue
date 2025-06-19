@@ -28,7 +28,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			:id="IconIds.Drag"
 			width="4px"
 			height="12px"
-			:class="[classes.icon, 'price-drag']"
+			:class="[classes.icon]"
 		/>
 		<div :class="[classes.content, 'price-no-drag']">
 			<ui-transition-fade>
@@ -49,30 +49,37 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			</ui-transition-fade>
 
 			<div :class="classes.container">
-				<div :class="classes.ticker">
-					<span>{{ label }}</span>
-					<span v-if="props.currency.market === 'forex'">{{ props.currency.domain }}</span>
+				<div :class="classes.desc">
+					<div :class="classes.ticker">
+						<span>{{ label }}</span>
+						<span v-if="props.currency.market === 'forex'">{{ props.currency.domain }}</span>
+					</div>
+					<div :class="classes.containerSecond">
+						<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
+						<ui-transition-fade>
+							<div
+								v-if="isShowPercentageChange"
+								:class="classes.change"
+							>
+								{{ props.currency.changeLastDay }}
+							</div>
+						</ui-transition-fade>
+					</div>
 				</div>
-				<div :class="classes.containerSecond">
-					<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
-					<ui-transition-fade>
-						<div
-							v-if="isShowPercentageChange"
-							:class="classes.change"
-						>
-							{{ props.currency.changeLastDay }}
-						</div>
-					</ui-transition-fade>
-				</div>
+
+				<ui-transition-fade>
+					<div
+						v-if="isShowChart"
+						:class="classes.chart"
+					>
+						<img
+							:src="MockChart"
+							style="  width: 90px; height: 40px; object-fit: contain;"
+						/>
+
+					</div>
+				</ui-transition-fade>
 			</div>
-			<ui-transition-fade>
-				<div
-					v-if="isShowChart"
-					:class="classes.chart"
-				>
-					<img :src="MockChart" />
-				</div>
-			</ui-transition-fade>
 		</div>
 
 		<div :class="classes.hoverActions">
@@ -131,7 +138,14 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 	background-color: var(--bg-color-surface-02);
 }
 
+.desc {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
 .icon {
+	flex: 4px 0 0;
 	color: transparent;
 	cursor: grab;
 }
@@ -155,8 +169,9 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 .container {
 	display: flex;
 	flex-grow: 1;
-	flex-direction: column;
+	justify-content: space-between;
 	gap: 4px;
+	align-items: center;
 }
 
 .ticker {
@@ -181,9 +196,5 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 .change {
 	font-weight: 440;
 	color: rgb(178 242 211 / 100%);
-}
-
-.chart {
-	margin-left: 42px;
 }
 </style>

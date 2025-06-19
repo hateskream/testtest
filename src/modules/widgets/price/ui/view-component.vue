@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { GridLayout, GridItem } from 'grid-layout-plus';
+import { computed, ref, watch } from 'vue';
+import draggableComponent from 'vuedraggable';
+import { storeToRefs } from 'pinia';
 
 import type { ICurrency } from '../model';
+import { usePriceStore } from '../stores';
 
 import CellComponent from './cell-component.vue';
 
@@ -12,55 +14,48 @@ interface IViewComponentProps {
 
 const props = defineProps<IViewComponentProps>();
 
-const layout = computed(() =>
-	props.currencies.map((currency, index) => ({
-		x: 0,
-		y: index,
-		w: 1,
-		h: 1,
-		i: currency.ticker,
-		static: false,
-		data: currency,
-	})),
-);
+const layout = ref(props.currencies);
 
-const gridConfig = {
-	colNum: 1,
-	rowHeight: 64,
-	margin: [2, 2],
-	isDraggable: true,
-	isResizable: false,
-};
+watch(() => props.currencies, (newVal) => {
+	layout.value = newVal;
+}, {
+	deep:true,
+});
+
+const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDescription } =
+	storeToRefs(usePriceStore());
+
+const gridTemplateContent = computed(() => {
+	let minWidth = 190 + ((
+		+isShowChart.value +
+		+isShowPercentageChange.value +
+		+isShowLogo.value +
+		+isShowTicker.value +
+		+isShowDescription.value
+	) * 30);
+
+
+	return `repeat(auto-fit, minmax(${minWidth}px, 1fr)) `;
+});
 </script>
 
 <template>
 	<div :class="classes.root">
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
-				<grid-layout
-					v-model:layout="layout"
-					:col-num="gridConfig.colNum"
-					:row-height="gridConfig.rowHeight"
-					:margin="gridConfig.margin"
-					:is-draggable="gridConfig.isDraggable"
-					:is-resizable="gridConfig.isResizable"
-					:vertical-compact="true"
+				<draggable-component
+					v-model="layout"
+					item-key="ticker"
+					:filter="`.price-no-drag`"
+					:class="classes.contentWrapped"
+					:component-data="{ tag: 'div', name: 'flip-list', type: 'transition-group' }"
+					:animation="200"
+					:disabled="false"
 				>
-					<grid-item
-						v-for="item in layout"
-						:key="item.i"
-						:x="item.x"
-						:y="item.y"
-						:w="item.w"
-						:h="item.h"
-						:i="item.i"
-						:static="item.static"
-						drag-allow-from=".price-drag"
-						drag-ignore-from=".price-no-drag"
-					>
-						<cell-component :currency="item.data" />
-					</grid-item>
-				</grid-layout>
+					<template #item="{ element }">
+						<cell-component :currency="element" />
+					</template>
+				</draggable-component>
 			</div>
 		</div>
 	</div>
@@ -81,9 +76,19 @@ const gridConfig = {
 	overflow-y: auto;
 }
 
+.flip-list-move {
+	transition: transform 0.5s;
+}
+
 .content {
 	width: 100%;
 	height: auto;
+}
+
+.contentWrapped {
+	display: grid;
+	grid-template-columns: v-bind(gridTemplateContent);
+	width: 100%;
 }
 </style>
 
