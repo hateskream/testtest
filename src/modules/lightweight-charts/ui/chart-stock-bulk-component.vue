@@ -168,7 +168,6 @@ onMounted(() => {
 	align-items: center;
 	width: calc(100% - 56px);
 	padding: 17px 16px;
-	border-top: 1px solid var(--border-color-base-300);
 	gap: 31px;
 }
 
@@ -202,6 +201,7 @@ onMounted(() => {
 .instruments {
 	display: flex;
 	align-items: center;
+	border-top: 1px solid var(--border-color-base-300);
 }
 
 .range {
