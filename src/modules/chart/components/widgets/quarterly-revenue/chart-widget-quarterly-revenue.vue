@@ -11,7 +11,7 @@ import { ChartQuarterlyRevenue } from '@/modules/lightweight-charts';
 		<template #header>
 			<div :class="classes.wrapperTitle">
 				<div :class="classes.title">
-					Yearly Revenue
+					Quarterly Revenue
 				</div>
 
 				<!-- <div :class="classes.potential">
