@@ -29,7 +29,7 @@ onMounted(() => {
 		'#B93900',
 		'#870700',
 	];
-	const quarterData = {
+	const quarterData: { [x: string]: number[] } = {
 		Q1: generateRandomBars(),
 		Q2: generateRandomBars(),
 		Q3: generateRandomBars(),
