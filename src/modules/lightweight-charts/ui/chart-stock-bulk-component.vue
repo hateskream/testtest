@@ -89,6 +89,11 @@ onMounted(() => {
 				style: LineStyle.Dashed,
 			},
 		},
+
+		timeScale: {
+			lockVisibleTimeRangeOnResize: true,
+
+		},
 	});
 
 

@@ -59,8 +59,7 @@ onMounted(() => {
 			borderVisible: true,
 			borderColor: 'rgb(97 97 97 / 30%)',
 			minimumHeight: 8,
-			secondsVisible: false,
-			ignoreWhitespaceIndices: true,
+			lockVisibleTimeRangeOnResize: true,
 		},
 	});
 
@@ -121,8 +120,6 @@ onMounted(() => {
 
 	chart.value!.timeScale().fitContent();
 });
-
-
 </script>
 
 <template>
@@ -150,6 +147,7 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	height: 100%;
 }
 
 .mainChart {

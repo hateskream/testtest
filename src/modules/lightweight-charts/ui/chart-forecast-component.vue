@@ -57,6 +57,7 @@ onMounted(() => {
 		},
 		timeScale: {
 			visible: false,
+			lockVisibleTimeRangeOnResize: true,
 		},
 	});
 
