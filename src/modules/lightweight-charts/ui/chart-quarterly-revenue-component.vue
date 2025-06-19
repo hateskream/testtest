@@ -12,36 +12,44 @@ defineProps<IChartProps>();
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
 
-const colors = [
-	'#EBEBEB',
-	'#B4B4B7',
-	'#8C8C8F',
-	'#505053',
-	'#FF7F35',
-	'#D7570D',
-	'#B93900',
-	'#870700',
-];
-
-
 const generateRandomBars = () => {
-	return Array.from({ length: 4 }, () => Math.round(Math.random() * 100));
+	return Array.from({ length: 6 }, () => Math.round(Math.random() * 100));
 };
 
 onMounted(() => {
+	const greyShades = [
+		'#EBEBEB',
+		'#B4B4B7',
+		'#8C8C8F',
+		'#505053',
+	];
+	const orangeShades = [
+		'#FF7F35',
+		'#D7570D',
+		'#B93900',
+		'#870700',
+	];
+	const quarterData = {
+		Q1: generateRandomBars(),
+		Q2: generateRandomBars(),
+		Q3: generateRandomBars(),
+		Q4: generateRandomBars(),
+	};
+	const labels = ['2021', '2022', '2023', '2024', '2025', '2026'];
+	const datasets = Object.keys(quarterData).map((q, idx) => ({
+		label: q,
+		data: quarterData[q],
+		// для каждого элемента массива: первые 4 — серый оттенок, последние 2 — оранжевый
+		backgroundColor: labels.map((_, i) => i < 4 ? greyShades[idx] : orangeShades[idx]),
+		borderWidth: 0,
+		borderRadius: 5,
+	}));
+
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'bar',
 		data: {
-			labels: ['2022', '2023', '2024', '2025', '2026'],
-			datasets: Array.from({ length: 4 }, (_, idx) => ({
-				label: '',
-				data: generateRandomBars(),
-				backgroundColor: colors.map(() => colors[idx]),
-				borderRadius: 5,
-				offset: true,
-				order: 12,
-
-			})),
+			labels,
+			datasets,
 		},
 		options: {
 			maintainAspectRatio: false,
@@ -94,6 +102,21 @@ onMounted(() => {
 <template>
 	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
+
+
+		<div :class="classes.legend">
+
+			<div :class="classes.legendItem">
+				<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
+				<span>Reported</span>
+			</div>
+
+			<div :class="classes.legendItem">
+				<div :class="[classes.legendCircle, classes.legendCircleEstimate]"></div>
+				<span>Estimate</span>
+			</div>
+
+		</div>
 	</div>
 </template>
 
@@ -110,6 +133,45 @@ onMounted(() => {
 	width: 100%;
 	height: 100%;
 }
+
+
+.legend {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: calc(100%);
+	padding: 17px 16px;
+	border-top: 1px solid var(--border-color-base-300);
+	gap: 31px;
+}
+
+.legendItem {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.legendItem span {
+	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+	letter-spacing: 0.08px;
+}
+
+.legendCircle {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+}
+
+.legendCircleReport {
+	background-color: #d9d9d9;
+}
+
+.legendCircleEstimate {
+	background-color: #ff7f35;
+}
+
 
 :global(a#tv-attr-logo) {
 	display: none !important;
