@@ -78,10 +78,6 @@ onMounted(() => {
 			minimumWidth: 55,
 			borderVisible: false,
 		},
-		timeScale: {
-			tickMarkMaxCharacterLength: 1,
-
-		},
 		// hide the grid lines
 		grid: {
 			vertLines: {
