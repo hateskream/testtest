@@ -124,4 +124,8 @@ export const chartWidgetRealSections = [
 		id:'chart-peers-bulks',
 		title: 'Chart peers bulks',
 	},
+	{
+		id:'quarterly-revenue',
+		title: 'Quarterly revenue',
+	},
 ];

@@ -21,6 +21,8 @@ import ChartSectionValuationsAndEstimates
 import ChartSectionPriceTarget from '@/modules/chart/components/sections/price-target/chart-section-price-target.vue';
 import ChartSectionYearlyRevenue
 	from '@/modules/chart/components/sections/yearly-revenue/chart-section-yearly-revenue.vue';
+import ChartSectionQuarterlyRevenue
+	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
 import ChartSectionStockPeersBulk
 	from '@/modules/chart/components/sections/stock-peers-bulk/chart-section-stock-peers-bulk.vue';
 
@@ -186,6 +188,10 @@ const explorerDate = computed(() => {
 					/>
 					<chart-section-stock-peers-bulk
 						:section="chartWidgetRealSections[3]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-quarterly-revenue
+						:section="chartWidgetRealSections[4]"
 						:register-item-ref="registerItemRef"
 					/>
 					<chart-main-column-component

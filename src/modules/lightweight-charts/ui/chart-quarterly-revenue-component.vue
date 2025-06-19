@@ -3,7 +3,7 @@ import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js/auto';
 
 interface IChartProps {
-	width: number;
+	// width: number;
 	height: number;
 }
 
@@ -105,7 +105,6 @@ onMounted(() => {
 
 
 		<div :class="classes.legend">
-
 			<div :class="classes.legendItem">
 				<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
 				<span>Reported</span>
@@ -131,15 +130,14 @@ onMounted(() => {
 .mainChart {
 	flex-grow: 1;
 	width: 100%;
-	height: 100%;
+	height: 90% !important;
 }
-
 
 .legend {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	width: calc(100%);
+	width: 100%;
 	padding: 17px 16px;
 	border-top: 1px solid var(--border-color-base-300);
 	gap: 31px;
