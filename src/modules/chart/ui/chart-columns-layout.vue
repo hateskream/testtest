@@ -79,7 +79,7 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 .root {
 	display: flex;
 	gap: 24px;
-	height: 100vh;
+	height: calc(100svh - 30px);
 }
 
 .leftCol {

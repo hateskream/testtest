@@ -51,8 +51,8 @@ const randomTension = () => {
 <style module="classes">
 .separator {
 	height: 1px;
-	background: var(--border-color-surface-02-effect);
 	margin: 0 8px;
+	background: var(--border-color-surface-02-effect);
 }
 
 .sectionWrapper {
@@ -73,16 +73,19 @@ const randomTension = () => {
 	border-radius: 4px;
 	gap: 4px;
 }
+
 .bodyWrapper {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
 }
-.text{
-	color: var(--text-color-base-500)
+
+.text {
+	color: var(--text-color-base-500);
 }
-.summarize{
-	color: var(--text-color-base-300)
+
+.summarize {
+	color: var(--text-color-base-300);
 }
 
 </style>

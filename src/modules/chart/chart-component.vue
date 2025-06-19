@@ -198,7 +198,7 @@ const explorerDate = computed(() => {
 				</template>
 				<template #rightCol>
 					<chart-section-insight-and-activity />
-					<div :class="classes.hotfix"/>
+					<div :class="classes.hotfix" />
 				</template>
 			</chart-columns-layout>
 		</template>
@@ -271,7 +271,8 @@ const explorerDate = computed(() => {
 	background: var(--bg-color-surface-00);
 	gap: 8px;
 }
+
 .hotfix {
-	margin-bottom:30px;
+	margin-bottom: 30px;
 }
 </style>

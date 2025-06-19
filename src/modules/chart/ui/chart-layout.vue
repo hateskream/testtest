@@ -98,6 +98,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 }
 
 .topContent {
+	margin-bottom: 30px;
 	padding-bottom: 26px;
 	border-bottom: 2px solid var(--border-color-surface-02);
 	opacity: 1;
@@ -105,7 +106,6 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 }
 
 .botContent {
-	padding-top: 35px;
 	transition: 0.4s ease-in-out;
 }
 
