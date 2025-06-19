@@ -54,7 +54,8 @@ const props = defineProps<IChartSectionProps>();
 	gap: 8px;
 	padding-bottom: 5px;
 }
-.summarized{
+
+.summarized {
 	color: var(--text-color-base-300);
 }
 </style>
