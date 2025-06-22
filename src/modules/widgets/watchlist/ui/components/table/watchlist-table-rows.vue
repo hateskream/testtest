@@ -4,6 +4,7 @@ import draggable from 'vuedraggable';
 import type { ITableRow } from '../../../model';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
+import { useWatchlistSectionStore } from '../../../stores/watchlist-section.store.ts';
 
 import WatchlistCellNumber from './cells/watchlist-cell-number.vue';
 import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
@@ -11,16 +12,36 @@ import WatchlistCellDate from './cells/watchlist-cell-date.vue';
 
 interface IProps {
 	rows: ITableRow[][];
+	sectionId: string;
 }
 
 const props = defineProps<IProps>();
+const emit = defineEmits(['row-dnd']);
 
+const watchlistSectionStore = useWatchlistSectionStore();
 const { backgroundStyle } = useResizeBackground();
 
+// ГДЕ ТИПЫ СУКА 2025 ГОД ГДЕ ТИПЫ ДЛЯ ЛИБЫ ПОЧЕМУ ИХ НЕТ КАКОЙ ВООБЩЕ ЕБЛАН БУДЕТ БЛЯДЬ ДЕЛАТЬ ЛИБУ НЕ НА ТС СУКА 2025 ГОД НАХУЙ. МНЕ ВООБЩЕ ПОЕБАТЬ Я НЕ СОБИРАЮСЬ ТИПИЗИРОВАТЬ ЭТУ ПАРАШУ. БУДЕТ ЭНИ Я ЗАЕБАЛСЯ НАХУЙ ВЕСЬ ЭТОТ ЕБУЧИЙ ВАЧЛИСТ ДЕЛАТЬ БЛДЯДЬ НАХУЙ ОН НИКОМУ НЕ НУЖЕН ИБО БЛЯДЬ НАХУЙ СЕЙЧАС ДОДЕЛАЕТСЯ БЕК И ВСЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ ЭТА ПАРАША УЙДЕТ НА БЕКЕНД БЛЯДЬ. У НАС ДАЖЕ ДАННЫЕ НИКАК МЕЖДУ СЕККЦИЯМИ И СТРОКАМИ НЕ СВЯЗАНЫ КАКОЙ НАХУЙ ЛОУ КОПЛИНГ ХАЙ КОХИЖН Я БЛЯДЬ ВОЛШЕБНИК
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const onDragChange = (evt: any) => {
-	// eslint-disable-next-line no-console
-	console.log(evt.moved!);
+const onDragChange = (evt: any, sectionId: string) => {
+	// evt содержит moved, added, removed
+	// sectionId — id секции-приёмника
+	// evt.moved/evt.added/evt.removed содержат индексы и элементы
+
+	// Если evt.moved — это перемещение внутри одной секции
+	// Если evt.added/evt.removed — это перенос между секциями
+
+	if (evt.moved) {
+		watchlistSectionStore.moveRowInSection(
+			sectionId,
+			evt.moved.oldIndex,
+			evt.moved.newIndex,
+		);
+	} else if (evt.added) {
+		emit('row-dnd', { type: 'added', ...evt.added, sectionId: props.sectionId });
+	} else if (evt.removed) {
+		emit('row-dnd', { type: 'removed', ...evt.removed, sectionId: props.sectionId });
+	}
 };
 </script>
 
@@ -31,7 +52,7 @@ const onDragChange = (evt: any) => {
 		item-key="0.id"
 		tag="tbody"
 		:class="classes.tbody"
-		@change="onDragChange"
+		@change="onDragChange($event, props.sectionId)"
 	>
 		<template #item="{ element, index: elementIdx }">
 			<tr

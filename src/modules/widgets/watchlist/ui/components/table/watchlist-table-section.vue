@@ -28,6 +28,8 @@ const showRenameInput = ref(false);
 const clickTimeout = ref<number | null>(null);
 const currentSectionId = ref<string | null>(null);
 const sectionName = ref('New section');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const dndBuffer = ref<{ added?: any; removed?: any }>({});
 
 const initSectionStates = () => {
 	watchlistSectionStore.sections.forEach(section => {
@@ -211,6 +213,27 @@ function sortRowsByType(args: {
 			return +args.left - +args.right;
 	}
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function onRowDnd(evt: any) {
+	if (evt.type === 'added') {
+		dndBuffer.value.added = evt;
+	}
+	if (evt.type === 'removed') {
+		dndBuffer.value.removed = evt;
+	}
+
+	// Если оба события пришли — делаем перенос
+	if (dndBuffer.value.added && dndBuffer.value.removed) {
+		watchlistSectionStore.moveRowBetweenSections(
+			dndBuffer.value.removed.sectionId, // id секции-источника
+			dndBuffer.value.added.sectionId, // id секции-приёмника
+			dndBuffer.value.removed.element[0].id, // id строки (market)
+			dndBuffer.value.added.newIndex, // индекс, куда вставить
+		);
+		dndBuffer.value = {};
+	}
+}
 </script>
 
 <template>
@@ -283,7 +306,11 @@ function sortRowsByType(args: {
 				:leave-to-class="classes.sectionToggleLeaveTo"
 			>
 				<div v-if="sectionStates[section.id]" :class="classes.sectionData">
-					<watchlist-table-rows :rows="tableRows(section)" />
+					<watchlist-table-rows
+						:rows="tableRows(section)"
+						:section-id="section.id"
+						@row-dnd="onRowDnd"
+					/>
 				</div>
 			</transition>
 		</div>
