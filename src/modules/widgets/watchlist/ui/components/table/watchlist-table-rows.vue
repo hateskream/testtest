@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import draggable from 'vuedraggable';
+
 import type { ITableRow } from '../../../model';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
@@ -14,74 +16,89 @@ interface IProps {
 const props = defineProps<IProps>();
 
 const { backgroundStyle } = useResizeBackground();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onDragChange = (evt: any) => {
+	// eslint-disable-next-line no-console
+	console.log(evt.moved!);
+};
 </script>
 
 <template>
-	<tbody :class="classes.tbody">
-		<tr
-			v-for="(items, idx) in props.rows"
-			:key="`${idx}-table-tr`"
-		>
-			<td
-				v-for="(item, index) in items"
-				:key="item.value + item.id"
-				:style="index === 0 ? backgroundStyle : {}"
+	<draggable
+		:list="props.rows"
+		:group="'watchlist-rows'"
+		item-key="0.id"
+		tag="tbody"
+		:class="classes.tbody"
+		@change="onDragChange"
+	>
+		<template #item="{ element, index: elementIdx }">
+			<tr
+				:key="`${elementIdx}-table-tr`"
 			>
-				<div
-					:class="classes.rowColumnWrapper"
+				<td
+					v-for="(item, index) in element"
+					:key="item.value + item.id"
+					:style="index === 0 ? backgroundStyle : {}"
 				>
 					<div
-						v-if="['image-string', 'image'].includes(item.type)"
-						:class="classes.tableIcon"
+						:class="classes.rowColumnWrapper"
 					>
-						<ticker-icon
-							v-if="item.market?.toLowerCase() !== 'forex' && !Array.isArray(item.srcValue)"
-							:src="item.srcValue"
-							:ticker="item.value"
-							:size="32"
-						/>
+						<div
+							v-if="['image-string', 'image'].includes(item.type)"
+							:class="classes.tableIcon"
+						>
+							<ticker-icon
+								v-if="item.market?.toLowerCase() !== 'forex' && !Array.isArray(item.srcValue)"
+								:src="item.srcValue"
+								:ticker="item.value"
+								:size="32"
+							/>
 
-						<forex-ticker-icon
-							v-if="item.market?.toLowerCase() === 'forex' && item.domain && Array.isArray(item.srcValue)"
-							:src="item.srcValue"
-							:ticker="item.value"
-							:domain="item.domain"
-							:size="40"
-						/>
+							<forex-ticker-icon
+								v-if="item.market?.toLowerCase() === 'forex'
+									&& item.domain && Array.isArray(item.srcValue)"
+								:src="item.srcValue"
+								:ticker="item.value"
+								:domain="item.domain"
+								:size="40"
+							/>
 
-						<div :class="classes.tickerName">
-							<span>{{ item.value }}</span>
-							<span
-								v-if="item.market?.toLowerCase() === 'forex'"
-								:class="classes.domainName"
-							>
-								{{ item.domain }}
-							</span>
+							<div :class="classes.tickerName">
+								<span>{{ item.value }}</span>
+								<span
+									v-if="item.market?.toLowerCase() === 'forex'"
+									:class="classes.domainName"
+								>
+									{{ item.domain }}
+								</span>
+							</div>
 						</div>
+
+						<watchlist-cell-number
+							v-else-if="item.type === 'number'"
+							is-fiat
+							format="pretty-with-key"
+							:value="item.value"
+						/>
+
+						<watchlist-cell-percent
+							v-else-if="item.type === 'percent'"
+							:value="item.value"
+						/>
+
+						<watchlist-cell-date
+							v-else-if="item.type === 'date'"
+							:value="item.value"
+						/>
 					</div>
+				</td>
 
-					<watchlist-cell-number
-						v-else-if="item.type === 'number'"
-						is-fiat
-						format="pretty-with-key"
-						:value="item.value"
-					/>
-
-					<watchlist-cell-percent
-						v-else-if="item.type === 'percent'"
-						:value="item.value"
-					/>
-
-					<watchlist-cell-date
-						v-else-if="item.type === 'date'"
-						:value="item.value"
-					/>
-				</div>
-			</td>
-
-			<td :class="classes.fixTertiaryIcon" />
-		</tr>
-	</tbody>
+				<td :class="classes.fixTertiaryIcon" />
+			</tr>
+		</template>
+	</draggable>
 </template>
 
 <style module="classes">
