@@ -1,10 +1,18 @@
 import { useQuery } from '@tanstack/vue-query';
+import { unref, type Ref, type ComputedRef } from 'vue';
 
-import { getWatchlist, type IGetWatchlistRequest } from '../api';
+import { getWatchlistSections, type IGetWatchlistRequest } from '../api';
 
-export function useQueryWatchlist(args: IGetWatchlistRequest) {
+export function useQueryWatchlist(
+	args:	IGetWatchlistRequest |	Ref<IGetWatchlistRequest> |	ComputedRef<IGetWatchlistRequest>,
+) {
 	return useQuery({
-		queryKey: ['watchlist', args.market, args.sort],
-		queryFn: () => getWatchlist(args),
+		queryKey: [
+			'watchlist',
+			() => unref(args).market,
+			() => unref(args).sort,
+			() => unref(args).watchlistIdx,
+		],
+		queryFn: () => getWatchlistSections(unref(args)),
 	});
 }

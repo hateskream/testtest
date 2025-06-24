@@ -9,13 +9,14 @@ const IS_USE_MOCK = true;
 export interface IGetWatchlistRequest {
 	market: string;
 	sort?: string;
+	watchlistIdx: number;
 }
 
 export interface IGetWatchlistResponse {
 	data: IWatchlistSection[];
 }
 
-export async function getWatchlist(args: IGetWatchlistRequest): Promise<IWatchlistSection[]> {
+export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<IWatchlistSection[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
@@ -23,7 +24,7 @@ export async function getWatchlist(args: IGetWatchlistRequest): Promise<IWatchli
 
 	try {
 		const response = IS_USE_MOCK
-			? await getMockData()
+			? await getMockData(args.watchlistIdx)
 			: await httpService.get<IGetWatchlistResponse>('/api/watchlist', {
 				query,
 			});
@@ -50,12 +51,14 @@ function prepareResponse(data: IWatchlistSection[]): IWatchlistSection[] {
 	));
 }
 
-async function getMockData(): Promise<IGetWatchlistResponse> {
+async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
+	console.log('getMockData');
+
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const mockData: IWatchlistSection[] = [
+	const mockSections1: IWatchlistSection[] = [
 		{
 			id: '1',
 			name: 'Crypto',
@@ -228,9 +231,104 @@ async function getMockData(): Promise<IGetWatchlistResponse> {
 			],
 		},
 	];
+	const mockSections2: IWatchlistSection[] = [
+		{
+			id: '3',
+			name: 'Forex',
+			type: MarketType.Forex,
+			isOpen: true,
+			watchlist: [
+				{
+					id: '1',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'EUR',
+					domain: 'USD',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+				{
+					id: '2',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'NO',
+					domain: 'IMG',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+			],
+		},
+		{
+			id: '4',
+			name: 'Commodity',
+			type: MarketType.Commodity,
+			isOpen: true,
+			watchlist: [
+				{
+					id: '1',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'GC',
+					domain: 'Gold Futures',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+			],
+		},
+		{
+			id: '5',
+			name: 'Index',
+			type: MarketType.Index,
+			isOpen: true,
+			watchlist: [
+				{
+					id: '1',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'NSE',
+					domain: 'Nifty 50',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+				{
+					id: '2',
+					chg24h: '2.33',
+					price: '275.71',
+					volume24h: '13123743437.43',
+					marketCap24h: '1233453.45',
+					symbol: 'FINRA',
+					domain: 'DFS short',
+					listingDate: new Date('2025-01-24').toString(),
+					chg1h: '-5',
+					chg7d: '25',
+				},
+			],
+		},
+	];
+	const mockSections3: IWatchlistSection[] = [
+	];
 
+	const sectionMocksArray = [
+		mockSections1,
+		mockSections2,
+		mockSections3,
+	];
+
+	const rnd = Math.floor(Math.random() * sectionMocksArray.length);
 	const response: IGetWatchlistResponse = {
-		data: mockData,
+		data: tabIdx !== undefined ? sectionMocksArray[tabIdx] : sectionMocksArray[rnd],
 	};
 
 	return response;

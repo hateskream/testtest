@@ -15,6 +15,7 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 			symbols: [],
 		},
 	]);
+	const currentTabIdx = ref(0);
 
 
 	function addTab() {
@@ -67,12 +68,18 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 	}
 
 	function switchTab(tabId: string) {
-		tabs.value.forEach(tab => {
-			tab.isActive = tab.id === tabId;
+		tabs.value.forEach((tab, idx) => {
+			if (tab.id === tabId) {
+				tab.isActive = true;
+				currentTabIdx.value = idx;
+			} else {
+				tab.isActive = false;
+			}
 		});
 	}
 
 	return {
+		currentTabIdx,
 		tabs,
 		addTab,
 		renameTab,
