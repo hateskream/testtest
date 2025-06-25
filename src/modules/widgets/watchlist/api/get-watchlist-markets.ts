@@ -322,10 +322,12 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		mockSections3,
 	];
 
+	// Use random mock from mock array if dont have real watchlist
+	const selectRandomList = tabIdx === undefined || !(tabIdx !== undefined && sectionMocksArray[tabIdx]);
 	const rnd = Math.floor(Math.random() * sectionMocksArray.length);
-	const response: IGetWatchlistResponse = {
-		data: tabIdx !== undefined ? sectionMocksArray[tabIdx] : sectionMocksArray[rnd],
-	};
 
+	const response: IGetWatchlistResponse = {
+		data: selectRandomList ? sectionMocksArray[rnd] : sectionMocksArray[tabIdx],
+	};
 	return response;
 }
