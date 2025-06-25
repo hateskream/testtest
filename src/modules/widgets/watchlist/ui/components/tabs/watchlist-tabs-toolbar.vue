@@ -16,26 +16,11 @@ const tabs = ref(tabsStore.tabs);
 const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
 const watchlistTabRefs = useTemplateRef<InstanceType<typeof WatchlistTab>[]>('watchlistTabRefs');
 const tabMenuActions = ref<ITabMenuActions[]>([
-	{
-		name: 'rename',
-		title: 'Rename',
-	},
-	{
-		name: 'share',
-		title: 'Share',
-	},
-	{
-		name:'duplicate',
-		title: 'Duplicate',
-	},
-	{
-		name:'addAlert',
-		title: 'Add alert',
-	},
-	{
-		name: 'addSymbolsToList',
-		title: 'Add symbols to list',
-	},
+	{ name: 'rename',	title: 'Rename' },
+	{ name: 'share', title: 'Share' },
+	{ name:'duplicate', title: 'Duplicate' },
+	{ name:'addAlert', title: 'Add alert' },
+	{ name: 'addSymbolsToList', title: 'Add symbols to list' },
 ]);
 
 
