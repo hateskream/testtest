@@ -27,7 +27,7 @@ const { backgroundStyle } = useResizeBackground();
 		:chosen-class="classes.dragActive"
 		:ghost-class="classes.dragPlaceholder"
 		:class="classes.thead"
-		:delay="150"
+		:delay="100"
 		@update:model-value="marketStore.updateActiveTableColumns"
 	>
 		<template #item="{ element: column, index}">
@@ -49,6 +49,15 @@ const { backgroundStyle } = useResizeBackground();
 	</draggable-component>
 </template>
 <style module="classes">
+.thead {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	display: table;
+	min-width: 100%;
+	table-layout: fixed;
+}
+
 .dragPlaceholder::before {
 	content: '';
 	position: absolute;
@@ -75,11 +84,6 @@ const { backgroundStyle } = useResizeBackground();
 	background: var(--bg-color-surface-01);
 }
 
-.thead {
-	display: table;
-	min-width: 100%;
-	table-layout: fixed;
-}
 
 .thead th {
 	position: relative;
@@ -113,7 +117,7 @@ const { backgroundStyle } = useResizeBackground();
 .dragActive {
 	display: flex;
 	align-items: center;
-	width: max-content;
+	width: 100%;
 	height: 28px;
 	padding-inline: 10px !important;
 	text-align: center !important;
