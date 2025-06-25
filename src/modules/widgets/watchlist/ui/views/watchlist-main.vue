@@ -1,21 +1,42 @@
 <script setup lang="ts">
 
-import type { IWatchlistSection } from '../../model';
+import { computed, watch } from 'vue';
 
-import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
+import { useMarketStore } from '../../../market/stores/index.ts';
+import { useQueryWatchlistData } from '../../queries/watchlist.query.ts';
+import { useWatchlistSectionStore } from '../../stores/watchlist-section.store.ts';
+import { useWatchlistTabsStore } from '../../stores/watchlist-tabs.store.ts';
+import type { IWatchlistSection } from '../../model/watchlist.model.ts';
+import type { IGetWatchlistRequest } from '../../api/index.ts';
+
+import WatchlistError from './watchlist-error.vue';
+import WatchlistLoader from './watchlist-loader.vue';
 import WatchlistTable from '../components/table/watchlist-table.vue';
+import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
 
-interface IWatchlistTableProps {
-	watchlistData: IWatchlistSection[];
-}
+const marketStore = useMarketStore();
+const sectionsStore = useWatchlistSectionStore();
+const tabsStore = useWatchlistTabsStore();
 
-const props = defineProps<IWatchlistTableProps>();
+
+const useQueryArgs = computed<IGetWatchlistRequest>(() => ({
+	sort: marketStore.activeTabSort.sortTab,
+	watchlistIdx: tabsStore.currentTabIdx,
+}));
+const { data, isLoading, isError } = useQueryWatchlistData(useQueryArgs);
+
+watch(data, (newVal) => {
+	sectionsStore.setSections((newVal ?? []) as IWatchlistSection[]);
+}, { immediate: true });
 </script>
 
 <template>
 	<div :class="classes.root">
 		<watchlist-tabs-toolbar />
-		<watchlist-table :watchlist-sections="props.watchlistData" />
+
+		<watchlist-loader v-if="isLoading" />
+		<watchlist-error v-else-if="isError" />
+		<watchlist-table v-else-if="data" :watchlist-sections="data" />
 	</div>
 </template>
 

@@ -7,7 +7,6 @@ import { ImageTypePath } from '@/shared/lib/get-image-path';
 const IS_USE_MOCK = true;
 
 export interface IGetWatchlistRequest {
-	market: string;
 	sort?: string;
 	watchlistIdx: number;
 }
@@ -315,8 +314,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 			],
 		},
 	];
-	const mockSections3: IWatchlistSection[] = [
-	];
+	const mockSections3: IWatchlistSection[] = [];
 
 	const sectionMocksArray = [
 		mockSections1,
