@@ -52,8 +52,6 @@ function prepareResponse(data: IWatchlistSection[]): IWatchlistSection[] {
 }
 
 async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
-	console.log('getMockData');
-
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
