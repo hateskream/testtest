@@ -4,6 +4,7 @@ import { useResizeBackground } from '@/modules/widgets/base/common/composables/u
 
 import WatchlistTableHeader from './header/watchlist-table-header.vue';
 import WatchlistTableSection from './watchlist-table-section.vue';
+import watchlistEmptyState from '../watchlist-empty-state.vue';
 
 
 interface IWatchlistTableProps {
@@ -17,9 +18,12 @@ const { backgroundStyle } = useResizeBackground();
 
 <template>
 	<div :class="classes.watchlistTable">
-		<watchlist-table-header :class="classes.tableHeader"  :style="backgroundStyle" />
+		<template v-if="props.watchlistSections.length > 0">
+			<watchlist-table-header :class="classes.tableHeader" :style="backgroundStyle" />
+			<watchlist-table-section :watchlist-sections="props.watchlistSections" />
+		</template>
 
-		<watchlist-table-section :watchlist-sections="props.watchlistSections" />
+		<watchlist-empty-state v-else :class="classes.emptyState" />
 	</div>
 </template>
 
@@ -28,6 +32,7 @@ const { backgroundStyle } = useResizeBackground();
 	position: relative;
 	z-index: 1;
 	flex: 1;
+	padding: 6px;
 	overflow-x: auto;
 	overflow-y: auto;
 }

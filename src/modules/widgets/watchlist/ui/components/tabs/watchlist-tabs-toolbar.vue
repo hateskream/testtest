@@ -67,7 +67,7 @@ const onTabClick = (index: number) => {
 </script>
 
 <template>
-	<div>
+	<div :class="classes.watchlistToolbar">
 		<div :class="classes.tabGroup">
 			<div v-for="(tab, index) in tabs" :key="tab.id">
 				<ui-position
@@ -113,6 +113,10 @@ const onTabClick = (index: number) => {
 </template>
 
 <style module="classes">
+.watchlistToolbar {
+	padding-bottom: 8px;
+}
+
 .tabGroup {
 	display: inline-flex;
 	align-items: center;
