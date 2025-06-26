@@ -11,7 +11,7 @@ import {
 	type IChartApi,
 } from 'lightweight-charts';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
-import { addDays, addYears } from 'date-fns';
+import { addYears } from 'date-fns';
 
 import { generateCandleDataFromLineData, generateLineData, groupSeriesByRange, prepareSeries } from '../utils';
 import { RangeChart } from '../model';
@@ -63,7 +63,11 @@ function selectRange(range: RangeChart) {
 	graphA.value.setData(d.concat(
 		[
 			{
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				time: nD.getTime() / 1000,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				value: d[d.length - 1].value * 2,
 				color: 'rgba(255, 191, 0, 0.6)',
 			},
