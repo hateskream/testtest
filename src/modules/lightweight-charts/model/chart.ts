@@ -4,6 +4,9 @@ export const RangeChart = {
 	'1M': '1M',
 	'6M': '6M',
 	'1Y': '1Y',
+	'3Y': '3Y',
+	'5Y': '5Y',
+	'10Y': '10Y',
 	'ALL': 'ALL',
 } as const;
 

@@ -27,11 +27,11 @@ const ranges = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.range">
+	<div :class="'range'">
 		<div
 			v-for="item in ranges"
 			:key="item.val"
-			:class="[classes.rangeItem, { [classes.rangeItemActive]: activeRange === item.val }]"
+			:class="['rangeItem', { ['rangeItemActive']: activeRange === item.val }]"
 			@click="emits('select', item.val)"
 		>
 			{{ item.title }}
@@ -40,7 +40,7 @@ const ranges = computed(() => {
 </template>
 
 
-<style module="classes">
+<style scoped>
 .range {
 	display: flex;
 	align-items: center;

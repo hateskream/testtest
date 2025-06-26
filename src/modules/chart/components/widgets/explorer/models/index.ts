@@ -136,5 +136,8 @@ export const chartWidgetRealSections = [
 		id:'insider-trading',
 		title: 'Insider trading',
 	},
-
+	{
+		id:'dividends',
+		title: 'Dividends',
+	},
 ];

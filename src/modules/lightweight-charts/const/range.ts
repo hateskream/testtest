@@ -6,5 +6,8 @@ export const RANGE_IN_SECONDS: { [x in RangeChart]: number } = {
 	'1M': 2592000,
 	'6M': 15552000,
 	'1Y': 31536000,
+	'3Y': 31536000 * 3,
+	'5Y': 31536000 * 5,
+	'10Y': 31536000 * 10,
 	ALL: -1,
 };
