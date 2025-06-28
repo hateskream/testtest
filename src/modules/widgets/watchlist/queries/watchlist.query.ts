@@ -8,28 +8,41 @@ import {
 	type IGetWatchlistWidgetRequest,
 } from '../api';
 
-export function useQueryWatchlistData(
-	args:	IGetWatchlistRequest |	Ref<IGetWatchlistRequest> |	ComputedRef<IGetWatchlistRequest>,
-) {
+interface IUseQueryOptions {
+	enabled?: Ref<boolean> | ComputedRef<boolean>;
+}
+
+// eslint-disable-next-line @stylistic/max-len
+export function useQueryWatchlistWidget(args:	IGetWatchlistWidgetRequest | Ref<IGetWatchlistWidgetRequest> | ComputedRef<IGetWatchlistWidgetRequest>) {
 	return useQuery({
 		queryKey: [
-			'watchlist',
-			() => unref(args).sort,
-			() => unref(args).watchlistIdx,
+			'watchlist-widget',
+			() => unref(args).market,
 		],
-		queryFn: () => getWatchlistSections(unref(args)),
+		queryFn: () => getWatchlistWidget(unref(args)),
 	});
 }
 
-export function useQueryWatchlistWidget(
-	args:	IGetWatchlistWidgetRequest |	Ref<IGetWatchlistWidgetRequest> |	ComputedRef<IGetWatchlistWidgetRequest>,
+
+export function useQueryWatchlistData(
+	args: IGetWatchlistRequest | Ref<IGetWatchlistRequest | null> | ComputedRef<IGetWatchlistRequest | null>,
+	options?: IUseQueryOptions,
 ) {
 	return useQuery({
 		queryKey: [
-			'watchlist',
-			() => unref(args).market,
-			// () => unref(args).watchlistIdx,
+			'watchlist-data',
+			() => {
+				const argsValue = unref(args);
+				return argsValue ? [argsValue.sort, argsValue.watchlistIdx] : null;
+			},
 		],
-		queryFn: () => getWatchlistWidget(unref(args)),
+		queryFn: () => {
+			const argsValue = unref(args);
+			if (!argsValue) {
+				throw new Error('No arguments provided for watchlist data query');
+			}
+			return getWatchlistSections(argsValue);
+		},
+		enabled: options?.enabled,
 	});
 }

@@ -2,23 +2,29 @@
 export interface IWatchlistWidgetConfig {
 	widgetId: string;
 	activeTabId: string;
-	tabs: IWatchlistTab[]; // TODO: refactor
-	// table: IWatchlistSection[]; // TODO: refactor
+	tabs: IWatchlistTab[];
+	table: IWatchlistTable[];
 }
 
-// export interface IWatchlistTable {
-// 	ID: string;
-// 	Columns: Column[];
-// 	Sections: Section[];
-// 	// TODO: TickerState: TickerState;
-// }
+export interface IWatchlistTable {
+	id: string;
+	columns: IWatchlistColumn[];
+	sections: IWatchlistSection[];
+	tickerState: IWatchlistTickerState;
+}
+
+export interface IWatchlistTickerState {
+	isShowLogo: boolean;
+	isShowTicker: boolean;
+	isShowDescriptio: boolean;
+}
 
 export interface IWatchlistColumn {
 	id: string;
 	columnType: string;
 	isShow: boolean;
-	sort?: string;
 	order: number;
+	sort?: string;
 	width?: number;
 }
 
@@ -26,17 +32,16 @@ export interface IWatchlistColumn {
 export interface IWatchlistSection {
 	id: string;
 	name: string;
-	type?: MarketType;
+	order: number;
 	isOpen: boolean;
+	type?: MarketType;
 	watchlist: IWatchlistMarkets[];
 }
 
 export interface IWatchlistTab {
 	id: string;
 	name: string;
-	isActive?: boolean;
-	isEditing?: boolean;
-	symbols: ISymbolItem[];
+	order: number;
 }
 
 // Row model

@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/model';
-import { useQueryWatchlistWidget } from '../queries/watchlist.query.ts';
 
 import WatchlistMain from './views/watchlist-main.vue';
-import WatchlistError from './views/watchlist-error.vue';
-import WatchlistLoader from './views/watchlist-loader.vue';
 
 const props = defineProps<{
 	meta: IMeta;
 }>();
-
-const { data, isLoading, isError } = useQueryWatchlistWidget({ market: props.meta.market });
 </script>
 
 <template>
@@ -23,10 +18,7 @@ const { data, isLoading, isError } = useQueryWatchlistWidget({ market: props.met
 		</template>
 
 		<template #content>
-			<watchlist-loader v-if="isLoading" />
-			<watchlist-error v-else-if="isError" />
-
-			<watchlist-main v-else :data="data" />
+			<watchlist-main :meta="props.meta" />
 		</template>
 	</base-dashboard-component>
 </template>

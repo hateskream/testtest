@@ -34,12 +34,19 @@ export async function getWatchlistWidget(args: IGetWatchlistWidgetRequest): Prom
 }
 
 async function getMockWidgetConfig() {
-	await new Promise(resolve => setTimeout(resolve, 0));
+	await new Promise(resolve => setTimeout(resolve, 200));
 
 	const config: IWatchlistWidgetConfig = {
 		widgetId: '1',
 		activeTabId: '1',
-		tabs: [],
+		tabs: [
+			{
+				id: '1',
+				name: 'Favorites',
+				order: 1,
+			},
+		],
+		table: [],
 	};
 	return { config: config };
 };

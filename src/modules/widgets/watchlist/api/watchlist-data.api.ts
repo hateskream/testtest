@@ -52,13 +52,14 @@ function prepareResponse(data: IWatchlistSection[]): IWatchlistSection[] {
 
 async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 	await new Promise(resolve => {
-		setTimeout(resolve, 0);
+		setTimeout(resolve, 200);
 	});
 
 	const mockSections1: IWatchlistSection[] = [
 		{
 			id: '1',
 			name: 'Crypto',
+			order: 1,
 			type: MarketType.Crypto,
 			isOpen: true,
 			watchlist:[
@@ -114,6 +115,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '2',
 			name: 'Stocks',
+			order: 2,
 			type: MarketType.Stock,
 			isOpen: true,
 			watchlist:[
@@ -146,6 +148,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '3',
 			name: 'Forex',
+			order: 3,
 			type: MarketType.Forex,
 			isOpen: true,
 			watchlist: [
@@ -178,6 +181,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '4',
 			name: 'Commodity',
+			order: 4,
 			type: MarketType.Commodity,
 			isOpen: true,
 			watchlist: [
@@ -198,6 +202,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '5',
 			name: 'Index',
+			order: 5,
 			type: MarketType.Index,
 			isOpen: true,
 			watchlist: [
@@ -228,10 +233,12 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 			],
 		},
 	];
+
 	const mockSections2: IWatchlistSection[] = [
 		{
 			id: '3',
 			name: 'Forex',
+			order: 1,
 			type: MarketType.Forex,
 			isOpen: true,
 			watchlist: [
@@ -264,6 +271,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '4',
 			name: 'Commodity',
+			order: 2,
 			type: MarketType.Commodity,
 			isOpen: true,
 			watchlist: [
@@ -284,6 +292,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		{
 			id: '5',
 			name: 'Index',
+			order: 3,
 			type: MarketType.Index,
 			isOpen: true,
 			watchlist: [
@@ -314,6 +323,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 			],
 		},
 	];
+
 	const mockSections3: IWatchlistSection[] = [];
 
 	const sectionMocksArray = [

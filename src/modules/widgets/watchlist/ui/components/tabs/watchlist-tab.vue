@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef, useCssModule } from 'vue';
 
-import type { IWatchlistTab } from '@/modules/widgets/watchlist/model';
+import type { IWatchlistTabUI } from '@/modules/widgets/watchlist/model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { useWatchlistTabsStore } from '@/modules/widgets/watchlist/stores/watchlist-tabs.store';
 
 const tabsStore = useWatchlistTabsStore();
 
 interface IWatchlistTabProps {
-	tab: IWatchlistTab;
+	tab: IWatchlistTabUI;
 	isOpen?: boolean;
 }
 

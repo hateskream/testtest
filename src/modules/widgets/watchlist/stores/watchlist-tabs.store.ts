@@ -1,30 +1,21 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { IWatchlistTab } from '../model';
+import type { IWatchlistTabUI, IWatchlistWidgetConfig } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
-
 export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
-	const tabs = ref<IWatchlistTab[]>([
-		{
-			id: '1',
-			name: 'Favorites',
-			isActive: true,
-			isEditing: false,
-			symbols: [],
-		},
-	]);
+	const tabs = ref<IWatchlistTabUI[]>([]);
 	const currentTabIdx = ref(0);
 
 
 	function addTab() {
-		const newTab: IWatchlistTab = {
+		const newTab: IWatchlistTabUI = {
 			id: generateTimestampId(),
 			name: 'Personal',
+			order: 1,
 			isActive: true,
 			isEditing: true,
-			symbols: [],
 		};
 		tabs.value.push(newTab);
 		switchTab(newTab.id);
@@ -40,12 +31,12 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 	const duplicateTab = (tabId: string) => {
 		tabs.value.forEach(tab => {
 			if (tab.id === tabId) {
-				const newTab: IWatchlistTab = {
+				const newTab: IWatchlistTabUI = {
 					id: generateTimestampId(),
 					name: tab.name,
+					order: 1,
 					isActive: true,
 					isEditing: false,
-					symbols: tab.symbols,
 				};
 
 				tabs.value.push(newTab);
@@ -78,7 +69,18 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 		});
 	}
 
+
+	function setupTabs(widgetConfig: IWatchlistWidgetConfig) {
+		tabs.value = widgetConfig.tabs.map(tab => ({
+			...tab,
+			isActive: tab.id === widgetConfig.activeTabId,
+			isEditing: false,
+		}));
+
+		currentTabIdx.value = tabs.value.findIndex(tab => tab.id === widgetConfig.activeTabId);
+	}
 	return {
+		setupTabs,
 		currentTabIdx,
 		tabs,
 		addTab,
