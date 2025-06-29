@@ -6,7 +6,7 @@ import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import type { ITabMenuActions, TabMenuAction } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useWatchlistTabsStore } from '../../../stores/watchlist-tabs.store';
+import { useWatchlistTabsStore } from '../../../stores';
 
 import WatchlistTab from './watchlist-tab.vue';
 
