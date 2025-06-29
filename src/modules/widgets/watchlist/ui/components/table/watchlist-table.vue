@@ -32,7 +32,7 @@ const { backgroundStyle } = useResizeBackground();
 	position: relative;
 	z-index: 1;
 	flex: 1;
-	padding: 6px;
+	padding: 0 6px 6px;
 	overflow-x: auto;
 	overflow-y: auto;
 }
