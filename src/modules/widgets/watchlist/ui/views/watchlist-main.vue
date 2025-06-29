@@ -42,6 +42,9 @@ const { data: tableData, isLoading: isTableLoading, isError: isTableError } = us
 	{ enabled: computed(() => watchlistDataArgs.value !== null) },
 );
 
+const loaderRow = computed(() => isWidgetLoading.value ? 6 : 5);
+const hasError = computed(() => isWidgetError.value || isTableError.value);
+
 watch(widgetData, newVal => {
 	if (newVal && newVal.config) {
 		tabsStore.setupTabs(newVal.config);
@@ -55,13 +58,12 @@ watch(tableData, (newVal) => {
 
 <template>
 	<div :class="classes.root">
-		<watchlist-loader v-if="isWidgetLoading" :count="6" />
-		<watchlist-error v-else-if="isWidgetError" />
-		<watchlist-tabs-toolbar v-else-if="widgetData" />
+		<watchlist-error v-if="hasError" />
 
-		<watchlist-loader v-if="isTableLoading" :count="5" />
-		<watchlist-error v-else-if="isTableError" />
-		<watchlist-table v-else-if="tableData" :watchlist-sections="tableData" />
+		<watchlist-tabs-toolbar v-if="widgetData && !hasError" />
+		<watchlist-table v-if="tableData && !hasError" :watchlist-sections="tableData" />
+
+		<watchlist-loader v-if="isWidgetLoading || isTableLoading" :count="loaderRow" />
 	</div>
 </template>
 
