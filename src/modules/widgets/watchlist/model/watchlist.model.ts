@@ -3,7 +3,7 @@ export interface IWatchlistWidgetConfig {
 	widgetId: string;
 	activeTabId: string;
 	tabs: IWatchlistTab[];
-	table: IWatchlistTable[];
+	// table: IWatchlistTable;
 }
 
 export interface IWatchlistTable {
@@ -16,7 +16,7 @@ export interface IWatchlistTable {
 export interface IWatchlistTickerState {
 	isShowLogo: boolean;
 	isShowTicker: boolean;
-	isShowDescriptio: boolean;
+	isShowDescription: boolean;
 }
 
 export interface IWatchlistColumn {
@@ -35,7 +35,8 @@ export interface IWatchlistSection {
 	order: number;
 	isOpen: boolean;
 	type?: MarketType;
-	watchlist: IWatchlistMarkets[];
+	rows: IWatchlistMarkets[];
+	totalCount: number;
 }
 
 export interface IWatchlistTab {

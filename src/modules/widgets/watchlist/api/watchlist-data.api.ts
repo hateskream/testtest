@@ -40,7 +40,7 @@ function prepareResponse(data: IWatchlistTable): IWatchlistTable {
 		...data,
 		sections: data.sections.map(sectionItem => ({
 			...sectionItem,
-			watchlist: sectionItem.watchlist.map(marketItem => ({
+			rows: sectionItem.rows.map(marketItem => ({
 				...marketItem,
 				srcValue: getImagePath(marketItem.symbol, ImageTypePath.Currency),
 				srcValue2: sectionItem.type === MarketType.Forex && marketItem.domain
@@ -71,7 +71,7 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 	const mockTickerState: IWatchlistTickerState = {
 		isShowLogo: true,
 		isShowTicker: true,
-		isShowDescriptio: true,
+		isShowDescription: true,
 	};
 
 	const mockTable1: IWatchlistTable = {
@@ -85,7 +85,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 1,
 				type: MarketType.Crypto,
 				isOpen: true,
-				watchlist:[
+				totalCount: 3,
+				rows:[
 					{
 						id: '1',
 						chg24h: '0',
@@ -129,7 +130,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 2,
 				type: MarketType.Stock,
 				isOpen: true,
-				watchlist:[
+				totalCount: 2,
+				rows:[
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -162,7 +164,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 3,
 				type: MarketType.Forex,
 				isOpen: true,
-				watchlist: [
+				totalCount: 2,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -195,7 +198,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 4,
 				type: MarketType.Commodity,
 				isOpen: true,
-				watchlist: [
+				totalCount: 1,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -216,7 +220,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 5,
 				type: MarketType.Index,
 				isOpen: true,
-				watchlist: [
+				totalCount: 2,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -257,7 +262,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 1,
 				type: MarketType.Forex,
 				isOpen: true,
-				watchlist: [
+				totalCount: 2,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -290,7 +296,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 2,
 				type: MarketType.Commodity,
 				isOpen: true,
-				watchlist: [
+				totalCount: 1,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',
@@ -311,7 +318,8 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 				order: 3,
 				type: MarketType.Index,
 				isOpen: true,
-				watchlist: [
+				totalCount: 2,
+				rows: [
 					{
 						id: '1',
 						chg24h: '2.33',

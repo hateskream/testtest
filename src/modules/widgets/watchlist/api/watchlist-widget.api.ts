@@ -51,7 +51,7 @@ async function getMockWidgetConfig() {
 				order: 2,
 			},
 		],
-		table: [],
+		// table: [],
 	};
 	return { config: config };
 };
