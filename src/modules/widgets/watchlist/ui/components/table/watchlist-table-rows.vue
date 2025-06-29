@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable';
 
-import type { ITableRow } from '../../../model';
+import type { ITableRow, IWatchlistTickerState } from '../../../model';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
 import { useWatchlistSectionStore } from '../../../stores/watchlist-section.store.ts';
@@ -13,6 +13,7 @@ import WatchlistCellDate from './cells/watchlist-cell-date.vue';
 interface IProps {
 	rows: ITableRow[][];
 	sectionId: string;
+	tickerState: IWatchlistTickerState;
 }
 
 const props = defineProps<IProps>();
@@ -21,7 +22,6 @@ const emit = defineEmits(['row-dnd']);
 const watchlistSectionStore = useWatchlistSectionStore();
 const { backgroundStyle } = useResizeBackground();
 
-// ГДЕ ТИПЫ СУКА 2025 ГОД ГДЕ ТИПЫ ДЛЯ ЛИБЫ ПОЧЕМУ ИХ НЕТ КАКОЙ ВООБЩЕ ЕБЛАН БУДЕТ БЛЯДЬ ДЕЛАТЬ ЛИБУ НЕ НА ТС СУКА 2025 ГОД НАХУЙ. МНЕ ВООБЩЕ ПОЕБАТЬ Я НЕ СОБИРАЮСЬ ТИПИЗИРОВАТЬ ЭТУ ПАРАШУ. БУДЕТ ЭНИ Я ЗАЕБАЛСЯ НАХУЙ ВЕСЬ ЭТОТ ЕБУЧИЙ ВАЧЛИСТ ДЕЛАТЬ БЛДЯДЬ НАХУЙ ОН НИКОМУ НЕ НУЖЕН ИБО БЛЯДЬ НАХУЙ СЕЙЧАС ДОДЕЛАЕТСЯ БЕК И ВСЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯ ЭТА ПАРАША УЙДЕТ НА БЕКЕНД БЛЯДЬ. У НАС ДАЖЕ ДАННЫЕ НИКАК МЕЖДУ СЕККЦИЯМИ И СТРОКАМИ НЕ СВЯЗАНЫ КАКОЙ НАХУЙ ЛОУ КОПЛИНГ ХАЙ КОХИЖН Я БЛЯДЬ ВОЛШЕБНИК
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onDragChange = (evt: any, sectionId: string) => {
 	// evt содержит moved, added, removed
@@ -71,7 +71,9 @@ const onDragChange = (evt: any, sectionId: string) => {
 							:class="classes.tableIcon"
 						>
 							<ticker-icon
-								v-if="item.market?.toLowerCase() !== 'forex' && !Array.isArray(item.srcValue)"
+								v-if="item.market?.toLowerCase() !== 'forex'
+									&& !Array.isArray(item.srcValue)
+									&& props.tickerState.isShowLogo"
 								:src="item.srcValue"
 								:ticker="item.value"
 								:size="32"
@@ -79,7 +81,9 @@ const onDragChange = (evt: any, sectionId: string) => {
 
 							<forex-ticker-icon
 								v-if="item.market?.toLowerCase() === 'forex'
-									&& item.domain && Array.isArray(item.srcValue)"
+									&& item.domain
+									&& Array.isArray(item.srcValue)
+									&& props.tickerState.isShowLogo"
 								:src="item.srcValue"
 								:ticker="item.value"
 								:domain="item.domain"
@@ -87,9 +91,9 @@ const onDragChange = (evt: any, sectionId: string) => {
 							/>
 
 							<div :class="classes.tickerName">
-								<span>{{ item.value }}</span>
+								<span v-if="props.tickerState.isShowTicker">{{ item.value }}</span>
 								<span
-									v-if="item.market?.toLowerCase() === 'forex'"
+									v-if="item.market?.toLowerCase() === 'forex' && props.tickerState.isShowDescriptio"
 									:class="classes.domainName"
 								>
 									{{ item.domain }}

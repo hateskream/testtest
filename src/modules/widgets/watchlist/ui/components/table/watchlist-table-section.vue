@@ -8,12 +8,22 @@ import {
 	type ITableRowValueType,
 	type IWatchlistMarkets,
 	type IWatchlistSection,
+	type IWatchlistColumn,
+	type IWatchlistTickerState,
 } from '../../../model';
 import { useWatchlistStore, useWatchlistSectionStore } from '../../../stores';
 import { compareStrings } from '@/shared/lib/compare-strings';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
 import WatchlistTableRows from './watchlist-table-rows.vue';
+
+interface IWatchlistTableSectionProps {
+	watchlistSections: IWatchlistSection[];
+	columns: IWatchlistColumn[];
+	tickerState: IWatchlistTickerState;
+}
+
+const props = defineProps<IWatchlistTableSectionProps>();
 
 const CLICK_DELAY = 200; // ms
 
@@ -309,6 +319,7 @@ function onRowDnd(evt: any) {
 					<watchlist-table-rows
 						:rows="tableRows(section)"
 						:section-id="section.id"
+						:ticker-state="props.tickerState"
 						@row-dnd="onRowDnd"
 					/>
 				</div>

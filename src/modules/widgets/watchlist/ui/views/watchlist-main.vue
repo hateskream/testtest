@@ -58,7 +58,7 @@ watch(tableData, (newVal) => {
 		<watchlist-error v-if="hasError" />
 
 		<watchlist-tabs-toolbar v-if="widgetData && !hasError" />
-		<watchlist-table v-if="tableData && !hasError" :watchlist-sections="tableData" />
+		<watchlist-table v-if="tableData && !hasError" :watchlist-table="tableData" />
 
 		<watchlist-loader v-if="isWidgetLoading || isTableLoading" :count="loaderRow" />
 	</div>
