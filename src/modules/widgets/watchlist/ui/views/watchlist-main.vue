@@ -29,11 +29,11 @@ const watchlistDataArgs = computed<IGetWatchlistRequest | null>(() => {
 	}
 
 	const { activeTabId } = widgetData.value.config;
-	const tabIndex = widgetData.value.config.tabs.findIndex(tab => tab.id === activeTabId);
+	const currentActiveTabId = tabsStore.currentTabId;
 
 	return {
 		sort: watchlistStore.activeTabSort.sortTab,
-		watchlistIdx: tabIndex >= 0 ? tabIndex : 0,
+		tabId: currentActiveTabId,
 	};
 });
 
@@ -49,7 +49,7 @@ watch(widgetData, newVal => {
 	if (newVal && newVal.config) {
 		tabsStore.setupTabs(newVal.config);
 	}
-});
+}, { once: true });
 
 watch(tableData, (newVal) => {
 	sectionsStore.setSections((newVal ?? []) as IWatchlistSection[]);

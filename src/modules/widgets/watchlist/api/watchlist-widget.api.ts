@@ -45,6 +45,11 @@ async function getMockWidgetConfig() {
 				name: 'Favorites',
 				order: 1,
 			},
+			{
+				id: '2',
+				name: 'My List',
+				order: 2,
+			},
 		],
 		table: [],
 	};

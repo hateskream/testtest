@@ -6,14 +6,14 @@ import { generateTimestampId } from '@/shared/lib';
 
 export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 	const tabs = ref<IWatchlistTabUI[]>([]);
-	const currentTabIdx = ref(0);
+	const currentTabId = ref('');
 
 
 	function addTab() {
 		const newTab: IWatchlistTabUI = {
 			id: generateTimestampId(),
 			name: 'Personal',
-			order: 1,
+			order: tabs.value.length,
 			isActive: true,
 			isEditing: true,
 		};
@@ -59,14 +59,10 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 	}
 
 	function switchTab(tabId: string) {
-		tabs.value.forEach((tab, idx) => {
-			if (tab.id === tabId) {
-				tab.isActive = true;
-				currentTabIdx.value = idx;
-			} else {
-				tab.isActive = false;
-			}
+		tabs.value.forEach(tab => {
+			tab.isActive = tab.id === tabId;
 		});
+		currentTabId.value = tabId;
 	}
 
 
@@ -77,11 +73,11 @@ export const useWatchlistTabsStore = defineStore('watchlistTabs', () => {
 			isEditing: false,
 		}));
 
-		currentTabIdx.value = tabs.value.findIndex(tab => tab.id === widgetConfig.activeTabId);
+		currentTabId.value = widgetConfig.activeTabId;
 	}
 	return {
 		setupTabs,
-		currentTabIdx,
+		currentTabId,
 		tabs,
 		addTab,
 		renameTab,

@@ -3,12 +3,13 @@ import { useLogger } from '@/shared/service/logger';
 import { MarketType, type IWatchlistSection } from '../model';
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
+import { useWatchlistTabsStore } from '../stores';
 
 const IS_USE_MOCK = true;
 
 export interface IGetWatchlistRequest {
 	sort?: string;
-	watchlistIdx: number;
+	tabId: string;
 }
 
 export interface IGetWatchlistResponse {
@@ -23,7 +24,7 @@ export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<
 
 	try {
 		const response = IS_USE_MOCK
-			? await getMockData(args.watchlistIdx)
+			? await getMockData(args.tabId)
 			: await httpService.get<IGetWatchlistResponse>('/api/watchlist', {
 				query,
 			});
@@ -50,12 +51,14 @@ function prepareResponse(data: IWatchlistSection[]): IWatchlistSection[] {
 	));
 }
 
-async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
+async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 200);
 	});
 
-	const mockSections1: IWatchlistSection[] = [
+	const tabsStore = useWatchlistTabsStore();
+
+	const mockTable1: IWatchlistSection[] = [
 		{
 			id: '1',
 			name: 'Crypto',
@@ -234,7 +237,7 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		},
 	];
 
-	const mockSections2: IWatchlistSection[] = [
+	const mockTable2: IWatchlistSection[] = [
 		{
 			id: '3',
 			name: 'Forex',
@@ -324,20 +327,22 @@ async function getMockData(tabIdx?: number): Promise<IGetWatchlistResponse> {
 		},
 	];
 
-	const mockSections3: IWatchlistSection[] = [];
+	const mockTable3: IWatchlistSection[] = [];
 
-	const sectionMocksArray = [
-		mockSections1,
-		mockSections2,
-		mockSections3,
-	];
+	const mockTables = [mockTable1, mockTable2, mockTable3];
 
-	// Use random mock from mock array if dont have real watchlist
-	const selectRandomList = tabIdx === undefined || !(tabIdx !== undefined && sectionMocksArray[tabIdx]);
-	const rnd = Math.floor(Math.random() * sectionMocksArray.length);
+	// eslint-disable-next-line prefer-destructuring
+	let selectedData: IWatchlistSection[] = mockTables[2];
+
+	tabsStore.tabs.forEach((tab, idx) => {
+		if (idx <= 2 && tabId === tab.id) {
+
+			selectedData = mockTables[idx];
+		}
+	});
 
 	const response: IGetWatchlistResponse = {
-		data: selectRandomList ? sectionMocksArray[rnd] : sectionMocksArray[tabIdx],
+		data: selectedData,
 	};
 	return response;
 }
