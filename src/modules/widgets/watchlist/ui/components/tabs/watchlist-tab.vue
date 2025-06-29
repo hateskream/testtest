@@ -148,6 +148,7 @@ defineExpose({ openRenameInput });
 	font-size: var(--typography-paragraph-size-p-01);
 	color: var(--text-color-base-300);
 	border-radius: 28px;
+	cursor: pointer;
 	gap: 2px;
 }
 

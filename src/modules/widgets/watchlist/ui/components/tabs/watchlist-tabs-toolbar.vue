@@ -123,7 +123,7 @@ const onTabClick = (index: number) => {
 	padding: 2px;
 	background: var(--bg-color-base-300);
 	border-radius: 9999px;
-	gap: 2px;
+	gap: 4px;
 }
 
 .addTabAction {
