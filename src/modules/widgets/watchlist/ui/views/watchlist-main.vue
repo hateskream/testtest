@@ -26,14 +26,11 @@ const { data: widgetData, isLoading: isWidgetLoading, isError: isWidgetError } =
 const watchlistDataArgs = computed<IGetWatchlistRequest | null>(() => {
 	if (!widgetData.value?.config?.activeTabId) {
 		return null;
-	}
-
-	const { activeTabId } = widgetData.value.config;
-	const currentActiveTabId = tabsStore.currentTabId;
+	};
 
 	return {
 		sort: watchlistStore.activeTabSort.sortTab,
-		tabId: currentActiveTabId,
+		tabId: tabsStore.currentTabId,
 	};
 });
 
