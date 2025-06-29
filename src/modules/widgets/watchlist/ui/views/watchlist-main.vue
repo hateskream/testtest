@@ -2,7 +2,7 @@
 import { computed, watch } from 'vue';
 
 import { useQueryWatchlistData, useQueryWatchlistWidget } from '../../queries/watchlist.query.ts';
-import { useWatchlistStore, useWatchlistTabsStore, useWatchlistSectionStore } from '../../stores';
+import { useWatchlistTabsStore, useWatchlistSectionStore } from '../../stores';
 import type { IWatchlistSection } from '../../model';
 import type { IGetWatchlistRequest } from '../../api';
 import type { IMeta } from '@/modules/dashboard-group/model';
@@ -12,7 +12,6 @@ import WatchlistLoader from './watchlist-loader.vue';
 import WatchlistTable from '../components/table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
 
-const watchlistStore = useWatchlistStore();
 const sectionsStore = useWatchlistSectionStore();
 const tabsStore = useWatchlistTabsStore();
 
@@ -29,7 +28,6 @@ const watchlistDataArgs = computed<IGetWatchlistRequest | null>(() => {
 	};
 
 	return {
-		sort: watchlistStore.activeTabSort.sortTab,
 		tabId: tabsStore.currentTabId,
 	};
 });

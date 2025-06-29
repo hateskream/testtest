@@ -14,7 +14,7 @@ interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
 }
 
-const marketStore = useWatchlistStore();
+const watchlistStore = useWatchlistStore();
 
 const groupedTableColumns = computed(() => {
 	const grouped: { [x: string]: ITableColumn[] } = {};
@@ -31,7 +31,7 @@ const groupedTableColumns = computed(() => {
 });
 
 const layout = computed<IGridLayoutCell[]>(() =>
-	marketStore.showTableColumnsDraggable.map((item, index) => ({
+	watchlistStore.showTableColumnsDraggable.map((item, index) => ({
 		x: 0,
 		y: index + 1,
 		w: 12,
@@ -55,7 +55,7 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 
 	const activeTableColumns = setPositionColumns(
 		[
-			marketStore.activeTableColumns[0],
+			watchlistStore.activeTableColumns[0],
 			...layout.value.map(item => ({
 				...item.data,
 				position: item.data.columnName === columnName ? y : item.y,
@@ -63,11 +63,11 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 		].sort((a, b) => a.position - b.position),
 	);
 
-	marketStore.updateActiveTableColumns(activeTableColumns);
+	watchlistStore.updateActiveTableColumns(activeTableColumns);
 }
 
 function handleToggleTab(columnName: string) {
-	marketStore.toggleShowActiveTableColumns(columnName);
+	watchlistStore.toggleShowActiveTableColumns(columnName);
 }
 </script>
 
@@ -91,7 +91,7 @@ function handleToggleTab(columnName: string) {
 							<modal-filter-tab-wrapper
 								v-for="tab in columns"
 								:key="tab.columnName"
-								:is-active="marketStore.showTableColumns.includes(tab.columnName)"
+								:is-active="watchlistStore.showTableColumns.includes(tab.columnName)"
 								@click="handleToggleTab(tab.columnName)"
 							>
 								{{ tab.displayShortColumnName }}

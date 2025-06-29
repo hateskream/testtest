@@ -33,7 +33,7 @@ export function useQueryWatchlistData(
 			'watchlist-data',
 			() => {
 				const argsValue = unref(args);
-				return argsValue ? [argsValue.sort, argsValue.tabId] : null;
+				return argsValue ? argsValue.tabId : null;
 			},
 		],
 		queryFn: () => {

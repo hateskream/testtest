@@ -8,7 +8,6 @@ import { useWatchlistTabsStore } from '../stores';
 const IS_USE_MOCK = true;
 
 export interface IGetWatchlistRequest {
-	sort?: string;
 	tabId: string;
 }
 

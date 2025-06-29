@@ -8,7 +8,7 @@ import {
 } from '../const';
 import { getNextDirectionSort, setPositionColumns } from '../utils';
 import { compareStrings } from '@/shared/lib';
-import type { IActiveSortColumn, IActiveTabSort, ITableColumn } from '../model';
+import type { IActiveSortColumn, ITableColumn } from '../model';
 
 export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 	const activeTableColumns = ref(INITIAL_ACTIVE_TABLE_COLUMNS);
@@ -22,56 +22,12 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 	);
 
 	const favorites = ref<string[]>([]);
-
 	const isFavorites = ref<boolean>(false);
-
-	const filterCategories = ref([
-		{
-			name: 'Crypto',
-			value: 'crypto',
-			isSelect: true,
-		},
-		{
-			name: 'Stock',
-			value: 'stock',
-			isSelect: false,
-		},
-		{
-			name: 'Forex',
-			value: 'forex',
-			isSelect: false,
-		},
-		{
-			name: 'Commodity',
-			value: 'commodity',
-			isSelect: false,
-		},
-	]);
-
-	const activeFilterCategory = computed(() => filterCategories.value.find(item => item.isSelect));
 
 	const activeSort = ref<IActiveSortColumn>({
 		columnName: '',
 		direction: 0,
 	});
-
-	const activeTabSort = ref<IActiveTabSort>({
-		direction: 0,
-		sortTab: 'all',
-	});
-
-	function toggleFilterCategory(value: string) {
-		filterCategories.value = filterCategories.value.map(item => {
-			if (compareStrings(item.value, value)) {
-				return {
-					...item,
-					isSelect: !item.isSelect,
-				};
-			}
-
-			return { ...item, isSelect: false };
-		});
-	}
 
 	function addToFavorites(id: string) {
 		favorites.value.push(id);
@@ -97,33 +53,7 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 		}
 	}
 
-	function setActiveTabSort(args: IActiveTabSort) {
-		if (args.columnName) {
-			let { direction } = args;
-
-			if (activeTabSort.value.sortTab === args.sortTab) {
-				direction = getNextDirectionSort(activeSort.value.direction);
-			}
-
-			activeSort.value = {
-				direction,
-				columnName: args.columnName,
-			};
-		} else {
-			activeSort.value = {
-				columnName: '',
-				direction: 0,
-			};
-		}
-
-		activeTabSort.value = args;
-	}
-
 	function toggleActiveSort(column: ITableColumn) {
-		if (activeTabSort.value.columnName) {
-			return;
-		}
-
 		if (ACCEPT_COLUMNS_TYPES_SORT.includes(column.type)) {
 			if (activeSort.value.columnName !== column.columnName) {
 				activeSort.value = {
@@ -158,10 +88,10 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 			const data = toValue(activeTableColumns.value);
 
 			if (idxActiveTableColumnItem > -1) {
-				setActiveTabSort({
+				activeSort.value = {
+					columnName: '',
 					direction: 0,
-					sortTab: 'all',
-				});
+				};
 
 				data.splice(idxActiveTableColumnItem, 1);
 			} else {
@@ -175,45 +105,23 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 		}
 	}
 
-	function resetAll() {
-		updateActiveTableColumns(INITIAL_ACTIVE_TABLE_COLUMNS);
-
-		activeSort.value = {
-			columnName: '',
-			direction: 0,
-		};
-
-		activeTabSort.value = {
-			direction: 0,
-			sortTab: 'all',
-		};
-
-		isFavorites.value = false;
-	}
-
 	function updateActiveTableColumns(newActiveTableColumns: ITableColumn[]) {
 		activeTableColumns.value = newActiveTableColumns;
 	}
 
 	return {
 		activeTableColumns,
-		toggleShowActiveTableColumns,
-		toggleActiveSort,
-		activeSort,
-		activeTabSort,
-		setActiveTabSort,
 		showTableColumns,
-		toggleFavorites,
-		toggleFilterCategory,
-		filterCategories,
-		activeFilterCategory,
+		showTableColumnsDraggable,
+		activeSort,
 		isFavorites,
-		resetAll,
 		favorites,
 		addToFavorites,
 		removeFromFavorites,
+		toggleFavorites,
 		toggleFavoriteItem,
-		showTableColumnsDraggable,
+		toggleActiveSort,
+		toggleShowActiveTableColumns,
 		updateActiveTableColumns,
 	};
 });

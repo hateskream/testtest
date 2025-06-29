@@ -15,12 +15,12 @@ interface IWatchlistTableHeaderProps {
 
 const props = defineProps<IWatchlistTableHeaderProps>();
 
-const marketStore = useWatchlistStore();
+const watchlistStore = useWatchlistStore();
 
 const ignoreDragClass = 'ignoreDrag';
 
 function getSortDirection(columnName: string) {
-	return marketStore.activeSort.columnName === columnName ? marketStore.activeSort.direction : 0;
+	return watchlistStore.activeSort.columnName === columnName ? watchlistStore.activeSort.direction : 0;
 }
 
 const { backgroundStyle } = useResizeBackground();
@@ -28,7 +28,7 @@ const { backgroundStyle } = useResizeBackground();
 
 <template>
 	<draggable-component
-		:model-value="marketStore.activeTableColumns"
+		:model-value="watchlistStore.activeTableColumns"
 		tag="thead"
 		item-key="position"
 		:filter="`.${ignoreDragClass}`"
@@ -36,7 +36,7 @@ const { backgroundStyle } = useResizeBackground();
 		:ghost-class="classes.dragPlaceholder"
 		:class="classes.thead"
 		:delay="100"
-		@update:model-value="marketStore.updateActiveTableColumns"
+		@update:model-value="watchlistStore.updateActiveTableColumns"
 	>
 		<template #item="{ element: column, index}">
 			<th :class="{ [ignoreDragClass]: !column.isDraggable }">
@@ -44,7 +44,7 @@ const { backgroundStyle } = useResizeBackground();
 					:style="index === 0 ? backgroundStyle : {}"
 					:column="column"
 					:sort-direction="getSortDirection(column.columnName)"
-					@click="marketStore.toggleActiveSort(column)"
+					@click="watchlistStore.toggleActiveSort(column)"
 				/>
 			</th>
 		</template>
