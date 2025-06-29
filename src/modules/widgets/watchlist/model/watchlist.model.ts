@@ -87,12 +87,12 @@ export enum MarketType {
 }
 
 
-// Sorting configuration
-export interface ISortConfig {
-	enabled: boolean;
-	sortBy: keyof ISymbolMetrics;
-	order: 'asc' | 'desc';
-}
+// // Sorting configuration
+// export interface ISortConfig {
+// 	enabled: boolean;
+// 	sortBy: keyof ISymbolMetrics;
+// 	order: 'asc' | 'desc';
+// }
 
 
 // Tab menu actions
