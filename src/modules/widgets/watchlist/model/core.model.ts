@@ -25,11 +25,7 @@ export type ITableRowValueType =
 	| 'percent' // IWatchlistPercentCell
 	| 'chart' // IWatchlistSvgChartCell
 	| 'text' // IWatchlistTextCell
-	| 'range' // IWatchlistRangeCell
-	| 'image' // Legacy support
-	| 'image-string' // Legacy support
-	| 'string' // Legacy support
-	| 'date'; // Legacy support
+	| 'range'; // IWatchlistRangeCell
 
 // Table column sort direction
 export type ITableColumnDirection = 0 | 1 | -1;

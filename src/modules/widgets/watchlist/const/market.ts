@@ -13,7 +13,7 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		isDraggable: false,
 		isShow: true,
 		position: 0,
-		type: 'image-string',
+		type: 'symbol',
 		group: {
 			name: 'symbol',
 		},
@@ -127,9 +127,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		isToggleable: true,
 		isDraggable: true,
 		position: 7,
-		type: 'date',
+		type: 'text',
 		group: {
-			name: 'Date',
+			name: 'text',
 		},
 	},
 	{
@@ -575,7 +575,7 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		isToggleable: true,
 		isDraggable: true,
 		position: 35,
-		type: 'date',
+		type: 'text',
 		group: {
 			name: 'meta',
 		},
@@ -587,11 +587,9 @@ export const INITIAL_ACTIVE_TABLE_COLUMNS: ITableColumn[] = setPositionColumns(
 );
 
 export const ACCEPT_COLUMNS_TYPES_SORT: ITableRowValueType[] = [
-	'image-string',
-	'string',
+	'symbol',
 	'number',
 	'percent',
-	'date',
 	'text',
 	'chart',
 	'range',

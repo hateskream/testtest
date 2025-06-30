@@ -51,7 +51,7 @@ const layout = computed<IGridLayoutCell[]>(() =>
 		y: index + 1,
 		w: 12,
 		h: 1,
-		i: item.columnName,
+		i: `${item.columnType || item.columnName || item.id || index}`, // Используем уникальный идентификатор
 		static: !item.isDraggable,
 		data: item,
 	})),
@@ -65,15 +65,21 @@ const gridConfig = {
 	isResizable: false,
 };
 
-function handleUpdatePositionsColumns(columnName: string, _x: number, y: number) {
+function handleUpdatePositionsColumns(itemId: string, _x: number, y: number) {
 	// TODO: fix with isDragging and first element
+
+	// Находим элемент по уникальному ID
+	const movedItem = layout.value.find(item => item.i === itemId);
+	if (!movedItem) {
+		return;
+	}
 
 	const activeTableColumns = setPositionColumns(
 		[
 			watchlistStore.activeTableColumns[0],
 			...layout.value.map(item => ({
 				...item.data,
-				position: item.data.columnName === columnName ? y : item.y,
+				position: item.i === itemId ? y : item.y,
 			})),
 		].sort((a, b) => a.position - b.position),
 	);
