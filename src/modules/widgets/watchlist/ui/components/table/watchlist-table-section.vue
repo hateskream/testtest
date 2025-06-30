@@ -162,7 +162,7 @@ function onRowDnd(evt: any) {
 			: removedElement?.tickerID;
 
 		if (!tickerID) {
-			console.error('No tickerID found in removed element:', removedElement);
+			// Reset buffer and return early if no tickerID found
 			dndBuffer.value = {};
 			return;
 		}

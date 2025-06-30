@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import draggableComponent from 'vuedraggable';
 
-// FIXME: linter error
-// eslint-disable-next-line import/order
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
+import { useMarketStore } from '../stores';
 
 const { backgroundStyle } = useResizeBackground();
-
-import { useMarketStore } from '../stores';
 
 import TableColumnWithSortComponent from './table-column-with-sort-component.vue';
 import TableIconSettingsComponent from './table-icon-settings-component.vue';

@@ -6,7 +6,6 @@ export enum CellType {
 	CHART = 'chart',
 	RANGE = 'range',
 	TEXT = 'text',
-	DATE = 'date', // Legacy support
 }
 
 // Column types enum
@@ -58,9 +57,6 @@ export enum ColumnType {
 	SOURCE = 'source',
 	LISTING_DATE = 'listingDate',
 	UPDATE_DATE = 'updateDate',
-
-	// Legacy support
-	DATE = 'date',
 }
 
 // Trend types enum

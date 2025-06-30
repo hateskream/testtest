@@ -70,7 +70,6 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 		{ id: '18', columnType: ColumnType.SOURCE, isShow: true, order: 18 },
 		{ id: '19', columnType: ColumnType.LISTING_DATE, isShow: true, order: 19 },
 		{ id: '20', columnType: ColumnType.UPDATE_DATE, isShow: true, order: 20 },
-		{ id: '21', columnType: ColumnType.DATE, isShow: true, order: 21 },
 	];
 
 	// Mock ticker state
