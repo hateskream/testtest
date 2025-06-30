@@ -1,33 +1,36 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
+import type { IWatchlistPercentCell } from '../../../../model';
+import { getPercentTrendClass } from '../../../../const';
+
 interface IProps {
-	value: string;
+	cell: IWatchlistPercentCell;
 }
 
 const props = defineProps<IProps>();
 
 const classes = useCssModule('classes');
 
+const displayValue = computed(() => {
+	if (!props.cell.value || props.cell.value === 'N/A' || isNaN(+props.cell.value)) {
+		return '—';
+	}
+	return `${props.cell.value}%`;
+});
+
 const percentClasses = computed<string>(() => {
-	if (+props.value === 0) {
-		return classes.positive;
+	if (!props.cell.value) {
+		return classes.commonly;
 	}
 
-	if (+props.value > 0) {
-		return classes.positive;
-	}
-
-	if (+props.value < 0) {
-		return classes.negative;
-	}
-
-	return '';
+	const trendClass = getPercentTrendClass(props.cell.value, props.cell.trend);
+	return classes[trendClass] || classes.commonly;
 });
 </script>
 
 <template>
-	<div :class="[percentClasses, classes.percent]">{{ value }}%</div>
+	<div :class="[percentClasses, classes.percent]">{{ displayValue }}</div>
 </template>
 
 <style module="classes">

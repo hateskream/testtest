@@ -3,40 +3,59 @@ import { computed } from 'vue';
 
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiTooltip } from '@/shared/ui/tooltip';
+import type { IWatchlistNumberCell } from '../../../../model';
+import { getNumberTrendClass } from '../../../../const';
 
 interface IProps {
-	value: string;
+	cell: IWatchlistNumberCell;
 	format?: 'pretty-with-key' | 'default';
-	isFiat?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-	isFiat: false,
 	format: 'default',
 });
 
 const formattedValue = computed(() => {
+	if (!props.cell.value || props.cell.value === 'N/A' || isNaN(+props.cell.value)) {
+		return {
+			prefix: '',
+			value: '—',
+			suffix: '',
+			default: '—',
+			trend: props.cell.trend,
+		};
+	}
+
 	const { value, suffix } =
 		props.format === 'pretty-with-key'
-			? prettyNumberWithKey(props.value)
-			: { value: props.value, suffix: '' };
-	const prefix = props.isFiat ? '$' : '';
+			? prettyNumberWithKey(props.cell.value)
+			: { value: props.cell.value, suffix: props.cell.magnitude || '' };
 
-	const numFormat = new Intl.NumberFormat('en', { minimumFractionDigits: 2 });
+	const prefix = props.cell.currencySymbol || '';
+
+	const numFormat = new Intl.NumberFormat('en', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	});
 
 	return {
 		prefix,
 		value,
 		suffix,
-		default: numFormat.format(+props.value),
+		default: numFormat.format(+props.cell.value),
+		trend: props.cell.trend,
 	};
+});
+
+const trendClass = computed(() => {
+	return getNumberTrendClass(props.cell.value, formattedValue.value.trend);
 });
 </script>
 
 <template>
 	<ui-tooltip :show-in-ms="100">
 		<template #default>
-			<div :class="classes.number">
+			<div :class="[classes.number, classes[trendClass]]">
 				<span :class="classes.prefix">{{ formattedValue.prefix }}</span>
 				<span :class="classes.formatted">{{ formattedValue.value }}</span>
 				<span :class="classes.suffix">{{ formattedValue.suffix }}</span>
@@ -80,5 +99,17 @@ const formattedValue = computed(() => {
 .number {
 	display: flex;
 	width: 100%;
+}
+
+.positive {
+	color: var(--metrics-color-positive);
+}
+
+.negative {
+	color: var(--metrics-color-negative-500);
+}
+
+.neutral {
+	color: var(--text-color-base-500);
 }
 </style>

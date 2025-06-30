@@ -1,17 +1,36 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable';
+import { ref, watch, computed, toRaw } from 'vue';
 
-import type { ITableRow, IWatchlistTickerState } from '../../../model';
+import type {
+	IWatchlistRow,
+	IWatchlistColumn,
+	IWatchlistTickerState,
+} from '../../../model';
+import {
+	getCellType,
+	CellType,
+	getSymbolCellData,
+	getNumberCellData,
+	getPercentCellData,
+	getChartCellData,
+	getRangeCellData,
+	getTextCellData,
+} from '../../../const';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
-import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
 import { useWatchlistSectionStore } from '../../../stores/watchlist-section.store.ts';
 
+import WatchlistCellSymbol from './cells/watchlist-cell-symbol.vue';
 import WatchlistCellNumber from './cells/watchlist-cell-number.vue';
 import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
+import WatchlistCellChart from './cells/watchlist-cell-chart.vue';
+import WatchlistCellRange from './cells/watchlist-cell-range.vue';
+import WatchlistCellText from './cells/watchlist-cell-text.vue';
 import WatchlistCellDate from './cells/watchlist-cell-date.vue';
 
 interface IProps {
-	rows: ITableRow[][];
+	rows: IWatchlistRow[];
+	columns: IWatchlistColumn[];
 	sectionId: string;
 	tickerState: IWatchlistTickerState;
 }
@@ -21,6 +40,16 @@ const emit = defineEmits(['row-dnd']);
 
 const watchlistSectionStore = useWatchlistSectionStore();
 const { backgroundStyle } = useResizeBackground();
+
+// Create a mutable copy of rows for draggable
+const mutableRows = ref<IWatchlistRow[]>([]);
+
+// Update mutable rows when props change
+watch(() => props.rows, (newRows) => {
+	mutableRows.value = JSON.parse(JSON.stringify(toRaw(newRows)));
+}, { immediate: true, deep: true });
+
+// Helper functions moved to constants file for better maintainability
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onDragChange = (evt: any, sectionId: string) => {
@@ -43,80 +72,80 @@ const onDragChange = (evt: any, sectionId: string) => {
 		emit('row-dnd', { type: 'removed', ...evt.removed, sectionId: props.sectionId });
 	}
 };
+
+// Get visible columns sorted by order
+const visibleColumns = computed(() => {
+	return props.columns
+		.filter(column => column.isShow)
+		.sort((a, b) => a.order - b.order);
+});
 </script>
 
 <template>
 	<draggable
-		:list="props.rows"
+		v-model="mutableRows"
 		:group="'watchlist-rows'"
-		item-key="0.id"
+		item-key="tickerID"
 		tag="tbody"
 		:class="classes.tbody"
 		@change="onDragChange($event, props.sectionId)"
 	>
-		<template #item="{ element, index: elementIdx }">
-			<tr
-				:key="`${elementIdx}-table-tr`"
-			>
+		<template #item="{ element: row }">
+			<tr :key="row.tickerID">
 				<td
-					v-for="(item, index) in element"
-					:key="item.value + item.id"
+					v-for="(column, index) in visibleColumns"
+					:key="column.id"
 					:style="index === 0 ? backgroundStyle : {}"
+					:class="{ [classes.firstColumn]: index === 0 }"
 				>
-					<div
-						:class="classes.rowColumnWrapper"
-					>
-						<div
-							v-if="['image-string', 'image'].includes(item.type)"
-							:class="classes.tableIcon"
-						>
-							<ticker-icon
-								v-if="item.market?.toLowerCase() !== 'forex'
-									&& !Array.isArray(item.srcValue)
-									&& props.tickerState.isShowLogo"
-								:src="item.srcValue"
-								:ticker="item.value"
-								:size="32"
-							/>
 
-							<forex-ticker-icon
-								v-if="item.market?.toLowerCase() === 'forex'
-									&& item.domain
-									&& Array.isArray(item.srcValue)
-									&& props.tickerState.isShowLogo"
-								:src="item.srcValue"
-								:ticker="item.value"
-								:domain="item.domain"
-								:size="40"
-							/>
+					<div :class="classes.rowColumnWrapper">
+						<!-- Symbol cell -->
+						<watchlist-cell-symbol
+							v-if="getCellType(column.columnType) === CellType.SYMBOL"
+							:cell="getSymbolCellData(row, column)"
+							:ticker-state="props.tickerState"
+						/>
 
-							<div :class="classes.tickerName">
-								<span v-if="props.tickerState.isShowTicker">{{ item.value }}</span>
-								<span
-									v-if="item.market?.toLowerCase() === 'forex' && props.tickerState.isShowDescription"
-									:class="classes.domainName"
-								>
-									{{ item.domain }}
-								</span>
-							</div>
-						</div>
-
+						<!-- Number cell -->
 						<watchlist-cell-number
-							v-else-if="item.type === 'number'"
-							is-fiat
+							v-else-if="getCellType(column.columnType) === CellType.NUMBER"
+							:cell="getNumberCellData(row, column)"
 							format="pretty-with-key"
-							:value="item.value"
 						/>
 
+						<!-- Percent cell -->
 						<watchlist-cell-percent
-							v-else-if="item.type === 'percent'"
-							:value="item.value"
+							v-else-if="getCellType(column.columnType) === CellType.PERCENT"
+							:cell="getPercentCellData(row, column)"
 						/>
 
-						<watchlist-cell-date
-							v-else-if="item.type === 'date'"
-							:value="item.value"
+						<!-- Chart cell -->
+						<watchlist-cell-chart
+							v-else-if="getCellType(column.columnType) === CellType.CHART"
+							:cell="getChartCellData(row, column)"
 						/>
+
+						<!-- Range cell -->
+						<watchlist-cell-range
+							v-else-if="getCellType(column.columnType) === CellType.RANGE"
+							:cell="getRangeCellData(row, column)"
+						/>
+
+						<!-- Text cell -->
+						<watchlist-cell-text
+							v-else-if="getCellType(column.columnType) === CellType.TEXT"
+							:cell="getTextCellData(row, column)"
+						/>
+
+						<!-- Date cell (legacy support) -->
+						<watchlist-cell-date
+							v-else-if="getCellType(column.columnType) === CellType.DATE"
+							:value="getTextCellData(row, column).value || ''"
+						/>
+
+						<!-- Fallback for unknown types -->
+						<span v-else>—</span>
 					</div>
 				</td>
 
@@ -136,21 +165,6 @@ const onDragChange = (evt: any, sectionId: string) => {
 	font-size: 13px;
 	text-align: right;
 	color: #ffffff;
-}
-
-.imageWrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 4px;
-	border: 1px solid var(--border-color-base-300);
-	border-radius: 100px;
-}
-
-.tableIcon {
-	display: flex;
-	align-items: center;
-	gap: 8px;
 }
 
 .tbody {
@@ -176,18 +190,18 @@ tbody tr:hover td:first-child .rowColumnWrapper {
 	border-bottom-left-radius: 16px;
 }
 
-tbody tr td:first-child {
+.firstColumn {
 	position: sticky;
 	top: 0;
 	left: 0;
 }
 
-tbody tr td:first-child .rowColumnWrapper {
+.firstColumn .rowColumnWrapper {
 	position: relative;
 	justify-content: flex-start;
 }
 
-tbody tr td:first-child .rowColumnWrapper::after {
+.firstColumn .rowColumnWrapper::after {
 	content: '';
 	position: absolute;
 	right: 0;
@@ -202,14 +216,5 @@ tbody tr td:first-child .rowColumnWrapper::after {
 .fixTertiaryIcon {
 	min-width: 50px !important;
 	padding-right: 8px;
-}
-
-.tickerName {
-	display: inline-flex;
-	gap: 2px;
-}
-
-.domainName {
-	color: var(--text-color-base-300, #9a9a9d);
 }
 </style>

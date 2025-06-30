@@ -9,6 +9,7 @@ import {
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { useWatchlistTabsStore } from '../stores';
+import { ColumnType } from '../const';
 
 const IS_USE_MOCK = true;
 
@@ -49,11 +50,11 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 
 	// Mock columns configuration
 	const mockColumns: IWatchlistColumn[] = [
-		{ id: 'symbol', columnType: 'symbol', isShow: true, order: 1, width: 120 },
-		{ id: 'priceCurrent', columnType: 'price', isShow: true, order: 2, width: 100 },
-		{ id: 'changePrice24hPercent', columnType: 'chg24h', isShow: true, order: 3, width: 80 },
-		{ id: 'volume24h', columnType: 'volume24h', isShow: true, order: 4, width: 120 },
-		{ id: 'marketCap24h', columnType: 'marketCap24h', isShow: true, order: 5, width: 120 },
+		{ id: 'symbol', columnType: ColumnType.SYMBOL, isShow: true, order: 1, width: 120 },
+		{ id: 'priceCurrent', columnType: ColumnType.PRICE, isShow: true, order: 2, width: 100 },
+		{ id: 'changePrice24hPercent', columnType: ColumnType.CHG24H, isShow: true, order: 3, width: 80 },
+		{ id: 'volume24h', columnType: ColumnType.VOLUME24H, isShow: true, order: 4, width: 120 },
+		{ id: 'marketCap24h', columnType: ColumnType.MARKET_CAP24H, isShow: true, order: 5, width: 120 },
 	];
 
 	// Mock ticker state

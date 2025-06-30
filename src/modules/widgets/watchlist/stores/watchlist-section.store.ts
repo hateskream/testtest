@@ -13,7 +13,7 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 			id: crypto.randomUUID(),
 			name: sectionName,
 			isOpen: false,
-			watchlist: [],
+			rows: [],
 		}] as IWatchlistSection[];
 	};
 
@@ -44,23 +44,23 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		}
 
 		const section = sections.value[sectionIdx];
-		const updatedWatchlist = [...section.rows];
+		const updatedRows = [...section.rows];
 
 		if (
 			oldIndex < 0 ||
         newIndex < 0 ||
-        oldIndex >= updatedWatchlist.length ||
-        newIndex >= updatedWatchlist.length
+        oldIndex >= updatedRows.length ||
+        newIndex >= updatedRows.length
 		) {
 			return;
 		}
 
-		const [moved] = updatedWatchlist.splice(oldIndex, 1);
-		updatedWatchlist.splice(newIndex, 0, moved);
+		const [moved] = updatedRows.splice(oldIndex, 1);
+		updatedRows.splice(newIndex, 0, moved);
 
 		sections.value = sections.value.map((s, idx) =>
 			idx === sectionIdx
-				? { ...s, watchlist: updatedWatchlist }
+				? { ...s, rows: updatedRows }
 				: s,
 		);
 	};
@@ -80,23 +80,23 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		const fromSection = sections.value[fromSectionIdx];
 		const toSection = sections.value[toSectionIdx];
 
-		const fromWatchlist = [...fromSection.rows];
-		const toWatchlist = [...toSection.rows];
+		const fromRows = [...fromSection.rows];
+		const toRows = [...toSection.rows];
 
-		const rowIdx = fromWatchlist.findIndex(m => m.id === rowId);
+		const rowIdx = fromRows.findIndex(m => m.tickerID === rowId);
 		if (rowIdx === -1) {
 			return;
 		}
 
-		const [moved] = fromWatchlist.splice(rowIdx, 1);
-		toWatchlist.splice(toIndex, 0, moved);
+		const [moved] = fromRows.splice(rowIdx, 1);
+		toRows.splice(toIndex, 0, moved);
 
 		sections.value = sections.value.map((s, idx) => {
 			if (idx === fromSectionIdx) {
-				return { ...s, watchlist: fromWatchlist };
+				return { ...s, rows: fromRows };
 			}
 			if (idx === toSectionIdx) {
-				return { ...s, watchlist: toWatchlist };
+				return { ...s, rows: toRows };
 			}
 			return s;
 		});

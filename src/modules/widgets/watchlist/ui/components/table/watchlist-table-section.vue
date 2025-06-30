@@ -1,18 +1,12 @@
 <script lang="ts" setup>
-import { nextTick, ref, toValue, watch, useTemplateRef } from 'vue';
+import { nextTick, ref, watch, useTemplateRef } from 'vue';
 
 import {
-	MarketType,
-	type ITableRow,
-	type ITableRowValue,
-	type ITableRowValueType,
-	type IWatchlistMarkets,
 	type IWatchlistSection,
 	type IWatchlistColumn,
 	type IWatchlistTickerState,
 } from '../../../model';
-import { useWatchlistStore, useWatchlistSectionStore } from '../../../stores';
-import { compareStrings } from '@/shared/lib/compare-strings';
+import { useWatchlistSectionStore } from '../../../stores';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
 import WatchlistTableRows from './watchlist-table-rows.vue';
@@ -27,7 +21,6 @@ const props = defineProps<IWatchlistTableSectionProps>();
 
 const CLICK_DELAY = 200; // ms
 
-const watchlistStore = useWatchlistStore();
 const watchlistSectionStore = useWatchlistSectionStore();
 
 const sectionStates = ref<Record<string, boolean>>({});
@@ -149,80 +142,8 @@ function onSectionDblClick(sectionId: string) {
 	handleRenameSection(sectionId);
 }
 
-const tableRows = (section: IWatchlistSection) => {
-	const markets = section.rows;
-	const rows: ITableRow[][] = [];
-
-	markets.forEach(row => {
-		if (watchlistStore.isFavorites) {
-			if (watchlistStore.favorites.includes(row.id)) {
-				rows.push(prepareRow(row, section.type as MarketType));
-			}
-		} else {
-			rows.push(prepareRow(row, section.type as MarketType));
-		}
-	});
-
-	if (watchlistStore.activeSort.direction !== 0) {
-		const activeSortColumn = watchlistStore.activeTableColumns.find(column =>
-			compareStrings(toValue(watchlistStore.activeSort.columnName), column.columnName),
-		)!;
-
-		rows.sort((a, b) => {
-			let leftValue = a[activeSortColumn.position].value;
-			let rightValue = b[activeSortColumn.position].value;
-
-			if (watchlistStore.activeSort.direction === -1) {
-				leftValue = b[activeSortColumn.position].value;
-				rightValue = a[activeSortColumn.position].value;
-			}
-
-			return sortRowsByType({
-				left: leftValue,
-				right: rightValue,
-				type: activeSortColumn.type,
-			});
-		});
-	}
-
-	return rows;
-};
-
-
-function prepareRow(row: IWatchlistMarkets, marketType: MarketType): ITableRow[] {
-	const data: ITableRow[] = [];
-
-	watchlistStore.activeTableColumns.forEach(column => {
-		data.push({
-			type: column.type,
-			srcValue: marketType === MarketType.Forex ? [row.srcValue, row.srcValue2] : row.srcValue,
-			value: row[column.columnName],
-			domain: row.domain,
-			market: marketType,
-			id: row.id,
-		});
-	});
-
-	return data;
-}
-
-function sortRowsByType(args: {
-	left: ITableRowValue;
-	right: ITableRowValue;
-	type: ITableRowValueType;
-}) {
-	switch (args.type) {
-		case 'date':
-			return new Date(args.left).getTime() - new Date(args.right).getTime();
-
-		case 'string':
-		case 'image-string':
-			return args.left.localeCompare(args.right);
-
-		default:
-			return +args.left - +args.right;
-	}
-}
+// Removed old tableRows, prepareRow, and sortRowsByType functions
+// as they are no longer needed with the new typed cell architecture
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onRowDnd(evt: any) {
@@ -235,10 +156,21 @@ function onRowDnd(evt: any) {
 
 	// Если оба события пришли — делаем перенос
 	if (dndBuffer.value.added && dndBuffer.value.removed) {
+		const removedElement = dndBuffer.value.removed.element;
+		const tickerID = Array.isArray(removedElement)
+			? removedElement[0]?.tickerID
+			: removedElement?.tickerID;
+
+		if (!tickerID) {
+			console.error('No tickerID found in removed element:', removedElement);
+			dndBuffer.value = {};
+			return;
+		}
+
 		watchlistSectionStore.moveRowBetweenSections(
 			dndBuffer.value.removed.sectionId, // id секции-источника
 			dndBuffer.value.added.sectionId, // id секции-приёмника
-			dndBuffer.value.removed.element[0].id, // id строки (market)
+			tickerID, // id строки (market)
 			dndBuffer.value.added.newIndex, // индекс, куда вставить
 		);
 		dndBuffer.value = {};
@@ -317,7 +249,8 @@ function onRowDnd(evt: any) {
 			>
 				<div v-if="sectionStates[section.id]" :class="classes.sectionData">
 					<watchlist-table-rows
-						:rows="tableRows(section)"
+						:rows="section.rows"
+						:columns="props.columns"
 						:section-id="section.id"
 						:ticker-state="props.tickerState"
 						@row-dnd="onRowDnd"
