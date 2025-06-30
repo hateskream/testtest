@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IWatchlistSvgChartCell } from '../../../../model';
+import MockChart from '@/assets/images/mock/chart.svg';
 
 interface IProps {
 	cell: IWatchlistSvgChartCell;
@@ -10,12 +11,13 @@ const props = defineProps<IProps>();
 
 <template>
 	<div :class="classes.chartContainer">
-		<img
+		<img v-if="props.cell.src" :src="MockChart" />
+		<!-- <img
 			v-if="props.cell.src"
 			:src="props.cell.src"
 			:class="classes.chartImage"
 			alt="Chart"
-		/>
+		/> -->
 		<span v-else :class="classes.noChart">—</span>
 	</div>
 </template>
@@ -23,7 +25,7 @@ const props = defineProps<IProps>();
 <style module="classes">
 .chartContainer {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 	width: 100%;
 	height: 32px;
