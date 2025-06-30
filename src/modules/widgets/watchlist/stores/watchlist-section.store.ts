@@ -44,7 +44,7 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		}
 
 		const section = sections.value[sectionIdx];
-		const updatedWatchlist = [...section.watchlist];
+		const updatedWatchlist = [...section.rows];
 
 		if (
 			oldIndex < 0 ||
@@ -80,8 +80,8 @@ export const useWatchlistSectionStore = defineStore('watchlist-section', () => {
 		const fromSection = sections.value[fromSectionIdx];
 		const toSection = sections.value[toSectionIdx];
 
-		const fromWatchlist = [...fromSection.watchlist];
-		const toWatchlist = [...toSection.watchlist];
+		const fromWatchlist = [...fromSection.rows];
+		const toWatchlist = [...toSection.rows];
 
 		const rowIdx = fromWatchlist.findIndex(m => m.id === rowId);
 		if (rowIdx === -1) {

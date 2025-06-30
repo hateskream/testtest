@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import draggableComponent from 'vuedraggable';
 
-import type { IWatchlistColumn, IWatchlistTickerState } from '../../../../model';
+// import type { IWatchlistColumn, IWatchlistTickerState } from '../../../../model';
 import { useWatchlistStore } from '../../../../stores';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 
 import WatchlistSortableColumn from './watchlist-sortable-column.vue';
 import WatchlistMetricsSelector from './watchlist-metrics-selector.vue';
 
-interface IWatchlistTableHeaderProps {
-	columns: IWatchlistColumn[];
-	tickerState: IWatchlistTickerState;
-}
+// interface IWatchlistTableHeaderProps {
+// 	columns: IWatchlistColumn[];
+// 	tickerState: IWatchlistTickerState;
+// }
 
-const props = defineProps<IWatchlistTableHeaderProps>();
+// const props = defineProps<IWatchlistTableHeaderProps>();
 
 const watchlistStore = useWatchlistStore();
 

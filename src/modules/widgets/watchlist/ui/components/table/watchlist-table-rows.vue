@@ -93,7 +93,7 @@ const onDragChange = (evt: any, sectionId: string) => {
 							<div :class="classes.tickerName">
 								<span v-if="props.tickerState.isShowTicker">{{ item.value }}</span>
 								<span
-									v-if="item.market?.toLowerCase() === 'forex' && props.tickerState.isShowDescriptio"
+									v-if="item.market?.toLowerCase() === 'forex' && props.tickerState.isShowDescription"
 									:class="classes.domainName"
 								>
 									{{ item.domain }}
