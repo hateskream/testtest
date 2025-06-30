@@ -50,9 +50,6 @@ export const COLUMN_TYPE_TO_CELL_TYPE: Record<string, CellType> = {
 	[ColumnType.SOURCE]: CellType.TEXT,
 	[ColumnType.LISTING_DATE]: CellType.TEXT,
 	[ColumnType.UPDATE_DATE]: CellType.TEXT,
-
-	// Legacy support
-	[ColumnType.DATE]: CellType.DATE,
 };
 
 // Column type to row property mapping - используем columnType из store

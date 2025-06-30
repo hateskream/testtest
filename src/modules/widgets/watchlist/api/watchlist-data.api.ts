@@ -68,7 +68,6 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 		{ id: '16', columnType: ColumnType.SECTOR, isShow: true, order: 16 },
 		{ id: '17', columnType: ColumnType.INDUSTRY, isShow: true, order: 17 },
 		{ id: '18', columnType: ColumnType.SOURCE, isShow: true, order: 18 },
-		{ id: '19', columnType: ColumnType.LISTING_DATE, isShow: true, order: 19 },
 		{ id: '20', columnType: ColumnType.UPDATE_DATE, isShow: true, order: 20 },
 	];
 
