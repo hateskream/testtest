@@ -45,36 +45,12 @@ export interface IWatchlistTab {
 	order: number;
 }
 
-// Row model
-export interface ISymbolItem {
-	id: string;
-	name: string;
-	ticker: string;
-	logoUrl?: string;
-	market: MarketType;
-	metrics: ISymbolMetrics;
-}
 
 // Cell dataModel
 // TODO: Refactor after get backend data
 export interface IWatchlistMarkets {
 	[marketProp: string]: string;
 	id: string;
-}
-
-// Metric configuration for columns
-export interface IMetricConfig {
-	id: string;
-	name: string;
-	displayName: string;
-	isActive: boolean;
-	options?: string[];
-}
-
-// Metrics for each symbol
-export interface ISymbolMetrics {
-	id: string;
-	[key: string]: string;
 }
 
 // Enum for Market Types
@@ -87,27 +63,5 @@ export enum MarketType {
 	Custom = 'Custom',
 }
 
-
-// // Sorting configuration
-// export interface ISortConfig {
-// 	enabled: boolean;
-// 	sortBy: keyof ISymbolMetrics;
-// 	order: 'asc' | 'desc';
-// }
-
-
 // Tab menu actions
 export type TabMenuAction = | 'rename' | 'share' | 'duplicate' | 'addAlert' | 'addSymbolsToList';
-
-// Widget Interaction Events
-export interface IWidgetInteractionEvents {
-	onTabClick: (tabId: string) => void;
-	onSymbolDoubleClick: (symbolId: string) => void;
-	onTabMenuAction: (action: TabMenuAction, targetId: string) => void;
-	onMetricChange: (metricId: string, newValue: string) => void;
-}
-
-// Complete Widget Props
-export interface IWatchlistWidgetProps extends IWidgetInteractionEvents {
-	config: IWatchlistWidgetConfig;
-}
