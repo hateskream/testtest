@@ -24,11 +24,6 @@ function getSortDirection(columnName: string) {
 }
 
 const { backgroundStyle } = useResizeBackground();
-
-// Helper function to get column width with default fallback
-const getColumnWidth = (column: { width?: number }) => {
-	return column.width ? `${column.width}px` : 'auto';
-};
 </script>
 
 <template>
@@ -46,10 +41,6 @@ const getColumnWidth = (column: { width?: number }) => {
 		<template #item="{ element: column, index}">
 			<th
 				:class="{ [ignoreDragClass]: !column.isDraggable }"
-				:style="{
-					width: getColumnWidth(column),
-					minWidth: column.width ? `${column.width}px` : '100px'
-				}"
 			>
 				<watchlist-sortable-column
 					:style="index === 0 ? backgroundStyle : {}"
@@ -107,7 +98,7 @@ const getColumnWidth = (column: { width?: number }) => {
 
 .thead th {
 	position: relative;
-	min-width: 100px;
+	min-width: 160px;
 	height: 28px;
 	font-weight: 440;
 	font-size: 12px;

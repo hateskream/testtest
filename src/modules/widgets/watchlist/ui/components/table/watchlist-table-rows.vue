@@ -4,8 +4,8 @@ import { ref, watch, computed, toRaw } from 'vue';
 
 import type {
 	IWatchlistRow,
-	IWatchlistColumn,
 	IWatchlistTickerState,
+	ITableColumn,
 } from '../../../model';
 import {
 	getCellType,
@@ -29,7 +29,7 @@ import WatchlistCellText from './cells/watchlist-cell-text.vue';
 
 interface IProps {
 	rows: IWatchlistRow[];
-	columns: IWatchlistColumn[];
+	columns: ITableColumn[];
 	sectionId: string;
 	tickerState: IWatchlistTickerState;
 }
@@ -40,15 +40,12 @@ const emit = defineEmits(['row-dnd']);
 const watchlistSectionStore = useWatchlistSectionStore();
 const { backgroundStyle } = useResizeBackground();
 
-// Create a mutable copy of rows for draggable
 const mutableRows = ref<IWatchlistRow[]>([]);
 
 // Update mutable rows when props change
 watch(() => props.rows, (newRows) => {
 	mutableRows.value = JSON.parse(JSON.stringify(toRaw(newRows)));
 }, { immediate: true, deep: true });
-
-// Helper functions moved to constants file for better maintainability
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onDragChange = (evt: any, sectionId: string) => {
@@ -78,11 +75,6 @@ const visibleColumns = computed(() => {
 		.filter(column => column.isShow)
 		.sort((a, b) => a.order - b.order);
 });
-
-// Helper function to get column width with default fallback
-const getColumnWidth = (column: IWatchlistColumn) => {
-	return column.width ? `${column.width}px` : 'auto';
-};
 </script>
 
 <template>
@@ -100,8 +92,6 @@ const getColumnWidth = (column: IWatchlistColumn) => {
 					v-for="(column, index) in visibleColumns"
 					:key="column.id"
 					:style="{
-						width: getColumnWidth(column),
-						minWidth: column.width ? `${column.width}px` : '100px',
 						...(index === 0 ? backgroundStyle : {})
 					}"
 					:class="{ [classes.firstColumn]: index === 0 }"
@@ -213,7 +203,7 @@ tbody tr:hover td:first-child .rowColumnWrapper {
 }
 
 .tbody td {
-	min-width: 100px;
+	min-width: 160px;
 }
 
 .fixTertiaryIcon {

@@ -3,8 +3,8 @@ import { nextTick, ref, watch, useTemplateRef } from 'vue';
 
 import {
 	type IWatchlistSection,
-	type IWatchlistColumn,
 	type IWatchlistTickerState,
+	type ITableColumn,
 } from '../../../model';
 import { useWatchlistSectionStore } from '../../../stores';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
@@ -13,7 +13,7 @@ import WatchlistTableRows from './watchlist-table-rows.vue';
 
 interface IWatchlistTableSectionProps {
 	watchlistSections: IWatchlistSection[];
-	columns: IWatchlistColumn[];
+	columns: ITableColumn[];
 	tickerState: IWatchlistTickerState;
 }
 
