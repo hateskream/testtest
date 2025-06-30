@@ -50,11 +50,14 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 
 	// Mock columns configuration
 	const mockColumns: IWatchlistColumn[] = [
-		{ id: 'symbol', columnType: ColumnType.SYMBOL, isShow: true, order: 1, width: 120 },
-		{ id: 'priceCurrent', columnType: ColumnType.PRICE, isShow: true, order: 2, width: 100 },
-		{ id: 'changePrice24hPercent', columnType: ColumnType.CHG24H, isShow: true, order: 3, width: 80 },
-		{ id: 'volume24h', columnType: ColumnType.VOLUME24H, isShow: true, order: 4, width: 120 },
-		{ id: 'marketCap24h', columnType: ColumnType.MARKET_CAP24H, isShow: true, order: 5, width: 120 },
+		{ id: '1', columnType: ColumnType.SYMBOL, isShow: true, order: 1 },
+		{ id: '2', columnType: ColumnType.PRICE, isShow: true, order: 2 },
+		{ id: '3', columnType: ColumnType.CHG24H, isShow: true, order: 3 },
+		{ id: '4', columnType: ColumnType.VOLUME24H, isShow: true, order: 4 },
+		{ id: '5', columnType: ColumnType.MARKET_CAP24H, isShow: true, order: 5 },
+		{ id: '6', columnType: ColumnType.LISTING_DATE, isShow: true, order: 6, width: 80 },
+		{ id: '7', columnType: ColumnType.CHG1H, isShow: false, order: 7 },
+		{ id: '8', columnType: ColumnType.CHG7D, isShow: false, order: 8 },
 	];
 
 	// Mock ticker state
@@ -202,10 +205,10 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 							value: 'Binance',
 						},
 						listingDate: {
-							value: new Date('2024-04-30').toISOString(),
+							value: new Date('2024-04-30').toDateString(),
 						},
 						updateDate: {
-							value: new Date().toISOString(),
+							value: new Date().toDateString(),
 						},
 					},
 					{
@@ -333,10 +336,10 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 							value: 'Binance',
 						},
 						listingDate: {
-							value: new Date('2025-04-12').toISOString(),
+							value: new Date('2025-04-12').toDateString(),
 						},
 						updateDate: {
-							value: new Date().toISOString(),
+							value: new Date().toDateString(),
 						},
 					},
 				],
@@ -474,10 +477,10 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 							value: 'NASDAQ',
 						},
 						listingDate: {
-							value: new Date('2025-01-24').toISOString(),
+							value: new Date('2025-01-24').toDateString(),
 						},
 						updateDate: {
-							value: new Date().toISOString(),
+							value: new Date().toDateString(),
 						},
 					},
 				],
@@ -603,10 +606,10 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 							value: 'Forex.com',
 						},
 						listingDate: {
-							value: new Date('2025-01-24').toISOString(),
+							value: new Date('2025-01-24').toDateString(),
 						},
 						updateDate: {
-							value: new Date().toISOString(),
+							value: new Date().toDateString(),
 						},
 					},
 				],
@@ -750,10 +753,10 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 							value: 'COMEX',
 						},
 						listingDate: {
-							value: new Date('2025-01-24').toISOString(),
+							value: new Date('2025-01-24').toDateString(),
 						},
 						updateDate: {
-							value: new Date().toISOString(),
+							value: new Date().toDateString(),
 						},
 					},
 				],

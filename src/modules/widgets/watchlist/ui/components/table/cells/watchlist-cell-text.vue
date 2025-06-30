@@ -16,10 +16,12 @@ const props = defineProps<IProps>();
 
 <style module="classes">
 .text {
+	overflow: hidden;
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13px;
 	color: var(--text-color-base-500);
 	letter-spacing: 0.143px;
+	text-wrap: nowrap;
 }
 </style>

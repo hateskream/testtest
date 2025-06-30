@@ -26,7 +26,6 @@ import WatchlistCellPercent from './cells/watchlist-cell-percent.vue';
 import WatchlistCellChart from './cells/watchlist-cell-chart.vue';
 import WatchlistCellRange from './cells/watchlist-cell-range.vue';
 import WatchlistCellText from './cells/watchlist-cell-text.vue';
-import WatchlistCellDate from './cells/watchlist-cell-date.vue';
 
 interface IProps {
 	rows: IWatchlistRow[];
@@ -79,6 +78,11 @@ const visibleColumns = computed(() => {
 		.filter(column => column.isShow)
 		.sort((a, b) => a.order - b.order);
 });
+
+// Helper function to get column width with default fallback
+const getColumnWidth = (column: IWatchlistColumn) => {
+	return column.width ? `${column.width}px` : 'auto';
+};
 </script>
 
 <template>
@@ -95,7 +99,11 @@ const visibleColumns = computed(() => {
 				<td
 					v-for="(column, index) in visibleColumns"
 					:key="column.id"
-					:style="index === 0 ? backgroundStyle : {}"
+					:style="{
+						width: getColumnWidth(column),
+						minWidth: column.width ? `${column.width}px` : '100px',
+						...(index === 0 ? backgroundStyle : {})
+					}"
 					:class="{ [classes.firstColumn]: index === 0 }"
 				>
 
@@ -138,12 +146,6 @@ const visibleColumns = computed(() => {
 							:cell="getTextCellData(row, column)"
 						/>
 
-						<!-- Date cell (legacy support) -->
-						<watchlist-cell-date
-							v-else-if="getCellType(column.columnType) === CellType.DATE"
-							:value="getTextCellData(row, column).value || ''"
-						/>
-
 						<!-- Fallback for unknown types -->
 						<span v-else>—</span>
 					</div>
@@ -177,6 +179,7 @@ const visibleColumns = computed(() => {
 	display: table;
 	width: max-content;
 	min-width: 100%;
+	table-layout: fixed;
 }
 
 tbody tr:hover {
