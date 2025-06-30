@@ -106,7 +106,7 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 	}
 
 	function updateActiveTableColumns(newActiveTableColumns: ITableColumn[]) {
-		activeTableColumns.value = newActiveTableColumns;
+		activeTableColumns.value = setPositionColumns(newActiveTableColumns);
 	}
 
 	return {

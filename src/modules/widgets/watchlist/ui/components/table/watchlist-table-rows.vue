@@ -69,11 +69,11 @@ const onDragChange = (evt: any, sectionId: string) => {
 	}
 };
 
-// Get visible columns sorted by order
+// Get visible columns sorted by position
 const visibleColumns = computed(() => {
 	return props.columns
 		.filter(column => column.isShow)
-		.sort((a, b) => a.order - b.order);
+		.sort((a, b) => a.position - b.position);
 });
 </script>
 
