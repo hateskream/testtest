@@ -41,9 +41,9 @@ const { backgroundStyle } = useResizeBackground();
 		<template #item="{ element: column, index}">
 			<th
 				:class="{ [ignoreDragClass]: !column.isDraggable }"
+				:style="index === 0 ? backgroundStyle : {}"
 			>
 				<watchlist-sortable-column
-					:style="index === 0 ? backgroundStyle : {}"
 					:column="column"
 					:sort-direction="getSortDirection(column.columnName)"
 					@click="watchlistStore.toggleActiveSort(column)"
@@ -97,7 +97,6 @@ const { backgroundStyle } = useResizeBackground();
 
 
 .thead th {
-	position: relative;
 	min-width: 160px;
 	height: 28px;
 	font-weight: 440;
@@ -122,7 +121,6 @@ const { backgroundStyle } = useResizeBackground();
 	position: sticky;
 	top: 0;
 	left: 0;
-	z-index: 1;
 }
 
 .dragActive {
