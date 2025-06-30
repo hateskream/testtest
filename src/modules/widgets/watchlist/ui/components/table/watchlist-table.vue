@@ -4,7 +4,7 @@ import { watch } from 'vue';
 import type { IWatchlistTable } from '../../../model';
 import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
 import { useWatchlistSectionStore, useWatchlistStore } from '../../../stores';
-import { updateStoreColumnsWithApiData } from '../../../utils';
+import { adaptApiColumnsToStore, updateStoreColumnsWithApiData } from '../../../utils';
 
 import WatchlistTableHeader from './header/watchlist-table-header.vue';
 import WatchlistTableSection from './watchlist-table-section.vue';
@@ -21,17 +21,28 @@ const { backgroundStyle } = useResizeBackground();
 const watchlistSectionStore = useWatchlistSectionStore();
 const watchlistStore = useWatchlistStore();
 
+// Флаг для отслеживания первоначальной инициализации колонок
+let isColumnsInitialized = false;
+
 // Синхронизируем секции из API с store
 watch(() => props.watchlistTable.sections, (newSections) => {
 	watchlistSectionStore.setSections(newSections);
 }, { immediate: true, deep: true });
 
-// Синхронизируем колонки из API с store, сохраняя пользовательские настройки
+// Синхронизируем колонки из API с store
 watch(() => props.watchlistTable.columns, (newColumns) => {
 	if (newColumns.length > 0) {
-		const currentStoreColumns = watchlistStore.activeTableColumns;
-		const updatedColumns = updateStoreColumnsWithApiData(currentStoreColumns, newColumns);
-		watchlistStore.updateActiveTableColumns(updatedColumns);
+		if (!isColumnsInitialized) {
+			// При первоначальной загрузке полностью заменяем колонки данными из API
+			const adaptedColumns = adaptApiColumnsToStore(newColumns);
+			watchlistStore.updateActiveTableColumns(adaptedColumns);
+			isColumnsInitialized = true;
+		} else {
+			// При последующих обновлениях сохраняем пользовательские настройки
+			const currentStoreColumns = watchlistStore.activeTableColumns;
+			const updatedColumns = updateStoreColumnsWithApiData(currentStoreColumns, newColumns);
+			watchlistStore.updateActiveTableColumns(updatedColumns);
+		}
 	}
 }, { immediate: true });
 </script>

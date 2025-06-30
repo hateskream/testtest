@@ -1,5 +1,6 @@
 import type { IWatchlistColumn, ITableColumn } from '../model';
 import { INITIAL_ALL_TABLE_COLUMNS } from '../const';
+import { setPositionColumns } from './set-positions-columns';
 
 /**
  * Адаптирует колонки из API (IWatchlistColumn[]) в формат для store (ITableColumn[])
@@ -13,7 +14,7 @@ export function adaptApiColumnsToStore(apiColumns: IWatchlistColumn[]): ITableCo
 	});
 
 	// Адаптируем API колонки, дополняя их UI настройками
-	return apiColumns
+	const adaptedColumns = apiColumns
 		.map(apiCol => {
 			const uiCol = uiColumnsMap.get(apiCol.columnType);
 			if (!uiCol) {
@@ -30,10 +31,18 @@ export function adaptApiColumnsToStore(apiColumns: IWatchlistColumn[]): ITableCo
 				isShow: apiCol.isShow ?? uiCol.isShow,
 				order: apiCol.order || uiCol.order,
 				width: apiCol.width || uiCol.width || 100,
-				position: uiCol.position, // Позиция берется из UI настроек
+				position: 0, // Позиция будет пересчитана ниже
 			} as ITableColumn;
 		})
 		.filter(Boolean) as ITableColumn[];
+
+	// Фильтруем только видимые колонки и сортируем по order
+	const visibleColumns = adaptedColumns
+		.filter(col => col.isShow)
+		.sort((a, b) => a.order - b.order);
+
+	// Устанавливаем правильные позиции на основе порядка в отсортированном массиве
+	return setPositionColumns(visibleColumns);
 }
 
 /**

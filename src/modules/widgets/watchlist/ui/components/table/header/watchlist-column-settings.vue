@@ -19,7 +19,22 @@ const watchlistStore = useWatchlistStore();
 const groupedTableColumns = computed(() => {
 	const grouped: { [x: string]: ITableColumn[] } = {};
 
+	// Объединяем все возможные колонки: видимые из store + скрытые из константы
+	const allAvailableColumns: ITableColumn[] = [];
+
+	// Добавляем все колонки из константы как базу
 	INITIAL_ALL_TABLE_COLUMNS.forEach(column => {
+		allAvailableColumns.push(column);
+	});
+
+	// Обновляем статус isShow на основе данных из store
+	const storeColumnNames = watchlistStore.showTableColumns;
+	allAvailableColumns.forEach(column => {
+		column.isShow = storeColumnNames.includes(column.columnName);
+	});
+
+	// Группируем колонки
+	allAvailableColumns.forEach(column => {
 		if (!Array.isArray(grouped[column.group.name])) {
 			grouped[column.group.name] = [column];
 		} else {
