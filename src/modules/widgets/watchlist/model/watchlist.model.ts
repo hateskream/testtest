@@ -1,3 +1,5 @@
+import { type IWatchlistRow } from './cells.model';
+
 // Widget full configuration
 export interface IWatchlistWidgetConfig {
 	widgetId: string;
@@ -28,14 +30,13 @@ export interface IWatchlistColumn {
 	width?: number;
 }
 
-
 export interface IWatchlistSection {
 	id: string;
 	name: string;
 	order: number;
 	isOpen: boolean;
 	type?: MarketType;
-	rows: IWatchlistMarkets[];
+	rows: IWatchlistRow[];
 	totalCount: number;
 }
 
@@ -43,14 +44,6 @@ export interface IWatchlistTab {
 	id: string;
 	name: string;
 	order: number;
-}
-
-
-// Cell dataModel
-// TODO: Refactor after get backend data
-export interface IWatchlistMarkets {
-	[marketProp: string]: string;
-	id: string;
 }
 
 // Enum for Market Types

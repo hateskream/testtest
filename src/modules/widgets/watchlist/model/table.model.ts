@@ -14,13 +14,6 @@ export interface IActiveSortColumn {
 	direction: ITableColumnDirection;
 }
 
-export interface IActiveTabSort {
-	sortTab: string;
-	direction: ITableColumnDirection;
-	columnName?: string;
-	timeframe?: string;
-}
-
 export interface ITableColumn {
 	position: number;
 	isShow: boolean;
