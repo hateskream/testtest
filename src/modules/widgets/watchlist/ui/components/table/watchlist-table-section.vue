@@ -150,7 +150,7 @@ function onSectionDblClick(sectionId: string) {
 }
 
 const tableRows = (section: IWatchlistSection) => {
-	const markets = section.watchlist;
+	const markets = section.rows;
 	const rows: ITableRow[][] = [];
 
 	markets.forEach(row => {
