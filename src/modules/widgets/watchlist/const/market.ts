@@ -3,6 +3,9 @@ import { setPositionColumns } from '../utils';
 
 export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 	{
+		id: '1',
+		columnType: 'symbol',
+		order: 1,
 		columnName: 'symbol',
 		displayColumnName: 'Symbol',
 		displayShortColumnName: 'Symbol',
@@ -16,6 +19,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '2',
+		columnType: 'price',
+		order: 2,
 		columnName: 'price',
 		displayColumnName: 'Price',
 		displayShortColumnName: 'Price',
@@ -29,6 +35,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		type: 'number',
 	},
 	{
+		id: '3',
+		columnType: 'chg24h',
+		order: 3,
 		columnName: 'chg24h',
 		displayColumnName: 'Change 24h%',
 		displayShortColumnName: 'Chg 24h%',
@@ -43,6 +52,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '4',
+		columnType: 'chg1h',
+		order: 4,
 		columnName: 'chg1h',
 		displayColumnName: 'Change 1h%',
 		displayShortColumnName: 'Chg 1h%',
@@ -57,6 +69,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '5',
+		columnType: 'chg7d',
+		order: 5,
 		columnName: 'chg7d',
 		displayColumnName: 'Change 7d%',
 		displayShortColumnName: 'Chg 7d%',
@@ -70,6 +85,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '6',
+		columnType: 'volume24h',
+		order: 6,
 		columnName: 'volume24h',
 		displayColumnName: 'Volume 24h',
 		displayShortColumnName: 'Vol 24h',
@@ -83,6 +101,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '7',
+		columnType: 'marketCap24h',
+		order: 7,
 		columnName: 'marketCap24h',
 		displayColumnName: 'Market cap 24h',
 		displayShortColumnName: 'MCap 24h',
@@ -96,6 +117,9 @@ export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
 		},
 	},
 	{
+		id: '8',
+		columnType: 'listingDate',
+		order: 8,
 		columnName: 'listingDate',
 		displayColumnName: 'Listing Date',
 		displayShortColumnName: 'Listing Date',
