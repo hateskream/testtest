@@ -135,9 +135,7 @@ const onTabClick = (index: number) => {
 	justify-content: center;
 	align-items: center;
 	min-width: 32px;
-	min-height: 32px;
 	padding-right: 4px;
-	aspect-ratio: 1/1;
 }
 
 .addTabActionIcon {
