@@ -69,5 +69,6 @@ watch(tableData, (newVal) => {
 	height: 100%;
 	padding: 0 16px 18px;
 	overflow: hidden;
+	gap: 8px;
 }
 </style>

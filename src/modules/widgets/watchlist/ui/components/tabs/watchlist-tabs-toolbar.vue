@@ -114,14 +114,17 @@ const onTabClick = (index: number) => {
 
 <style module="classes">
 .watchlistToolbar {
-	padding-bottom: 8px;
-	overflow-x: auto;
+	display: flex;
+	overflow: hidden;
+	border-radius: 9999px;
 }
 
 .tabGroup {
 	display: inline-flex;
 	align-items: center;
+	max-width: 100%;
 	padding: 2px;
+	overflow-x: auto;
 	background: var(--bg-color-base-300);
 	border-radius: 9999px;
 	gap: 4px;
