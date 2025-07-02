@@ -171,6 +171,7 @@ defineExpose({ openRenameInput });
 	font-size: var(--typography-paragraph-size-p-01);
 	line-height: 170%;
 	letter-spacing: 0.096px;
+	text-wrap: nowrap;
 }
 
 .icon {

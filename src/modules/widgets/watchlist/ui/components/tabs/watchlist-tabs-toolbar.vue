@@ -115,6 +115,7 @@ const onTabClick = (index: number) => {
 <style module="classes">
 .watchlistToolbar {
 	padding-bottom: 8px;
+	overflow-x: auto;
 }
 
 .tabGroup {
