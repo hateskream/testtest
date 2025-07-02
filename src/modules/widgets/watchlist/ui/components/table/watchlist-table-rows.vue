@@ -69,6 +69,11 @@ const onDragChange = (evt: any, sectionId: string) => {
 	}
 };
 
+const lastColumnBackgroundStyle = computed(() => {
+	// eslint-disable-next-line @stylistic/max-len
+	return `background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, ${backgroundStyle.value.backgroundColor} 40%);`;
+});
+
 // Get visible columns sorted by position
 const visibleColumns = computed(() => {
 	return props.columns
@@ -141,7 +146,7 @@ const visibleColumns = computed(() => {
 					</div>
 				</td>
 
-				<td :class="classes.fixTertiaryIcon" />
+				<td :class="classes.fixTertiaryIcon" :style="lastColumnBackgroundStyle" />
 			</tr>
 		</template>
 	</draggable>
@@ -207,6 +212,9 @@ tbody tr:hover td:first-child .rowColumnWrapper {
 }
 
 .fixTertiaryIcon {
+	position: sticky;
+	top: 0;
+	right: 0;
 	min-width: 50px !important;
 	padding-right: 8px;
 }
