@@ -140,4 +140,8 @@ export const chartWidgetRealSections = [
 		id:'dividends',
 		title: 'Dividends',
 	},
+	{
+		id:'balance-sheet',
+		title: 'Balance Sheet',
+	},
 ];

@@ -30,6 +30,7 @@ import ChartSectionQuarterlyRevenue
 import ChartSectionStockPeersBulk
 	from '@/modules/chart/components/sections/stock-peers-bulk/chart-section-stock-peers-bulk.vue';
 import ChartSectionDividends from './components/sections/dividends/chart-section-dividends.vue';
+import ChartSectionBalanceSheet from './components/sections/balance-sheet/chart-section-balance-sheet.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -202,6 +203,10 @@ const explorerDate = computed(() => {
 					/>
 					<chart-section-dividends
 						:section="chartWidgetRealSections[7]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-balance-sheet
+						:section="chartWidgetRealSections[8]"
 						:register-item-ref="registerItemRef"
 					/>
 					<chart-main-column-component

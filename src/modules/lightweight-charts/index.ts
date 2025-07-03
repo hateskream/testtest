@@ -4,6 +4,15 @@ import ChartQuarterlyRevenue from './ui/chart-quarterly-revenue-component.vue';
 import ChartYearlyRevenue from './ui/chart-yearly-revenue-component.vue';
 import ChartStockBulk from './ui/chart-stock-bulk-component.vue';
 import ChartDividends from './ui/chart-dividends.vue';
+import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 
 
-export { Chart, ChartForecast, ChartYearlyRevenue, ChartQuarterlyRevenue, ChartStockBulk, ChartDividends };
+export {
+	Chart,
+	ChartForecast,
+	ChartYearlyRevenue,
+	ChartQuarterlyRevenue,
+	ChartStockBulk,
+	ChartDividends,
+	ChartBalanceSheet,
+};
