@@ -82,6 +82,10 @@ onMounted(() => {
 				},
 
 				x: {
+					ticks: {
+						padding: 10,
+					},
+
 					grid: {
 						display: false,
 					},

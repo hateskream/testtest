@@ -5,6 +5,7 @@ import ChartYearlyRevenue from './ui/chart-yearly-revenue-component.vue';
 import ChartStockBulk from './ui/chart-stock-bulk-component.vue';
 import ChartDividends from './ui/chart-dividends.vue';
 import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
+import ChartIncomeStatement from './ui/chart-income-statement.vue';
 
 
 export {
@@ -15,4 +16,5 @@ export {
 	ChartStockBulk,
 	ChartDividends,
 	ChartBalanceSheet,
+	ChartIncomeStatement,
 };

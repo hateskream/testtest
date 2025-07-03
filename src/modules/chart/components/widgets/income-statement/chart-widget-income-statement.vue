@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { ChartYearlyRevenue } from '@/modules/lightweight-charts';
+
+import ChartIncomeStatement from '@/modules/lightweight-charts/ui/chart-income-statement.vue';
 
 
 </script>
@@ -11,7 +12,7 @@ import { ChartYearlyRevenue } from '@/modules/lightweight-charts';
 		<template #header>
 			<div :class="classes.wrapperTitle">
 				<div :class="classes.title">
-					Yearly Revenue
+					Income Statement
 				</div>
 
 				<!-- <div :class="classes.potential">
@@ -20,7 +21,7 @@ import { ChartYearlyRevenue } from '@/modules/lightweight-charts';
 			</div>
 		</template>
 		<template #body>
-			<chart-yearly-revenue :height="400" />
+			<chart-income-statement :height="400" />
 		</template>
 	</chart-common-widget-layout>
 </template>
