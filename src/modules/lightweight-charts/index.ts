@@ -7,7 +7,6 @@ import ChartDividends from './ui/chart-dividends.vue';
 import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 import ChartIncomeStatement from './ui/chart-income-statement.vue';
 
-
 export {
 	Chart,
 	ChartForecast,

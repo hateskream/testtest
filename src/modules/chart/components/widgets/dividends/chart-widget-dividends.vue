@@ -21,7 +21,7 @@ import ChartDividends from '@/modules/lightweight-charts/ui/chart-dividends.vue'
 			</div>
 		</template>
 		<template #body>
-			<chart-dividends :height="300" />
+			<chart-dividends :height="400" />
 		</template>
 	</chart-common-widget-layout>
 </template>

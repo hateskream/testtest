@@ -1,24 +1,7 @@
 <script setup lang="ts">
-import {
-	ColorType,
-	createChart,
-	HistogramSeries,
-	LastPriceAnimationMode,
-	LineSeries,
-	LineStyle,
-	PriceScaleMode,
-	type CandlestickData,
-	type IChartApi,
-} from 'lightweight-charts';
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
-import { addYears } from 'date-fns';
+import { onMounted, ref, useTemplateRef } from 'vue';
+import { Chart, type TooltipModel } from 'chart.js/auto';
 
-import { generateCandleDataFromLineData, generateLineData, groupSeriesByRange, prepareSeries } from '../utils';
-import { RangeChart } from '../model';
-import { RANGE_IN_SECONDS } from '../const';
-import { TooltipPrimitive } from '../rectangles';
-
-import ChartRange from '../components/chart-range.vue';
 
 interface IChartProps {
 	// width: number;
@@ -27,152 +10,275 @@ interface IChartProps {
 
 defineProps<IChartProps>();
 
+
 const container = useTemplateRef('container');
-const chart = ref<IChartApi | null>();
+const chart = ref<Chart>();
 
-const mainData = ref(generateCandleDataFromLineData(generateLineData(500, 20)));
+const getOrCreateTooltip = (ct: Chart): HTMLDivElement => {
+	let tooltipEl = ct.canvas.parentNode!.querySelector('.chartjs-income-statement-tooltip') as HTMLDivElement;
 
-const graphA = ref();
-const graphB = ref();
+	if (!tooltipEl) {
+		tooltipEl = document.createElement('div');
+		tooltipEl.classList.add('chartjs-income-statement-tooltip');
+		tooltipEl.style.background = 'rgba(22, 22, 24, 1)';
+		tooltipEl.style.borderRadius = '12px';
+		tooltipEl.style.border = '12px';
+		tooltipEl.style.borderWidth = '1px';
+		tooltipEl.style.borderStyle = 'solid';
+		tooltipEl.style.borderColor = 'rgba(199, 199, 199, 0.1)';
+		tooltipEl.style.width = '190px';
+		tooltipEl.style.color = 'white';
+		tooltipEl.style.opacity = '1';
+		tooltipEl.style.pointerEvents = 'none';
+		tooltipEl.style.position = 'absolute';
+		tooltipEl.style.transform = 'translate(-50%, 0)';
+		tooltipEl.style.transition = 'all .1s ease';
 
+		const table = document.createElement('article');
+		table.style.margin = '0px';
 
-type IGroupedData = {
-	[x in RangeChart]: CandlestickData[]
+		tooltipEl.appendChild(table);
+		ct.canvas.parentNode!.appendChild(tooltipEl);
+	}
+
+	return tooltipEl as HTMLDivElement;
 };
 
-const currentRange = ref<RangeChart>(RangeChart['1Y']);
+const externalTooltipHandler = (context: {
+	chart: Chart;
+	tooltip: TooltipModel<'line'>;
+}) => {
+	const tooltipEl = getOrCreateTooltip(context.chart);
 
-const groupedData = computed(() => {
-	const group: IGroupedData = {} as IGroupedData;
+	// Hide if no tooltip
+	if (context.tooltip.opacity === 0) {
+		tooltipEl.style.opacity = '0';
+		return;
+	}
 
-	Object.entries(RangeChart).forEach(([key, val]) => {
-		group[key as RangeChart] = groupSeriesByRange<CandlestickData>(mainData.value, RANGE_IN_SECONDS[val]);
-	});
+	// Set Text
+	if (context.tooltip.body) {
+		const titleLines = context.tooltip.title || [];
+		const bodyLines = context.tooltip.body.map(b => b.lines);
 
-	return group;
-});
+		const cont = document.createElement('article');
 
-function selectRange(range: RangeChart) {
-	currentRange.value = range;
-
-
-	const d = prepareSeries(groupedData.value[currentRange.value], 'Line');
-
-	const nD = addYears(new Date(+d[d.length - 1].time * 1000), 1);
-
-	graphA.value.setData(d.concat(
-		[
-			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				time: nD.getTime() / 1000,
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				value: d[d.length - 1].value * 2,
-				color: 'rgba(255, 191, 0, 0.6)',
-			},
-		],
-	));
-
-	graphB.value.setData(prepareSeries(groupedData.value[currentRange.value], 'Line'));
+		cont.style.display = 'flex';
+		cont.style.flexDirection = 'column';
+		cont.style.gap = '6px';
+		cont.style.padding = '8px';
 
 
-	chart.value!.timeScale().fitContent();
-}
+		bodyLines.forEach((body, i) => {
+			const contItem = document.createElement('div');
+			const circle = document.createElement('div');
 
+			contItem.style.display = 'flex';
+			contItem.style.alignItems = 'center';
+			contItem.style.gap = '26px';
+			contItem.style.justifyContent = 'space-between';
+
+			const spanCircle = document.createElement('div');
+
+			spanCircle.style.borderWidth = '2px';
+			spanCircle.style.marginRight = '10px';
+			spanCircle.style.borderRadius = '20px';
+			spanCircle.style.height = '10px';
+			spanCircle.style.width = '10px';
+			spanCircle.style.display = 'inline-block';
+
+			const text = document.createElement('div');
+			text.style.fontSize = '12px';
+
+			const spanCircleText = document.createElement('span');
+			spanCircleText.style.fontSize = '10px';
+
+			if (i === 0) {
+				spanCircle.style.background = 'rgba(255, 255, 255, 1)';
+				spanCircleText.textContent = 'D. Yield';
+				text.textContent = '$' + body.toString() + 'B';
+
+			} else if (i === 1) {
+				spanCircle.style.background = 'rgba(4, 237, 160, 1)';
+				spanCircleText.textContent = 'D. Payment';
+				text.textContent = body.toString() + '%';
+			} else if (i === 2) {
+				spanCircle.style.background = 'rgba(221, 246, 34, 1)';
+				spanCircleText.textContent = 'Next Payment';
+			}
+
+
+			circle.appendChild(spanCircle);
+			circle.appendChild(spanCircleText);
+
+			contItem.appendChild(circle);
+			contItem.appendChild(text);
+			cont.appendChild(contItem);
+		});
+
+
+		titleLines.forEach(title => {
+			const contItem = document.createElement('div');
+			const text = document.createTextNode(title);
+
+			contItem.style.fontSize = '10px';
+			contItem.style.color = 'rgba(154, 154, 157, 1)';
+
+			contItem.appendChild(text);
+			cont.appendChild(contItem);
+		});
+
+		const root = tooltipEl.querySelector('article');
+
+		// Remove old children
+		while (root!.firstChild) {
+			root!.firstChild.remove();
+		}
+
+		root!.appendChild(cont);
+	}
+
+	const { offsetLeft: positionX, offsetTop: positionY } = context.chart!.canvas;
+
+	// Display, position, and set styles for font
+	tooltipEl.style.opacity = '1';
+	tooltipEl.style.left = positionX + context.tooltip.caretX + 'px';
+	tooltipEl.style.top = positionY + context.tooltip.caretY + 'px';
+	tooltipEl.style.padding = context.tooltip.options.padding + 'px ' + context.tooltip.options.padding + 'px';
+};
 
 onMounted(() => {
-	chart.value = createChart(container.value as HTMLElement, {
-		autoSize: true,
-		layout: {
-			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: '#131315' },
-		},
-		handleScroll: {
-			mouseWheel: false,
-		},
-		rightPriceScale: {
-			mode: PriceScaleMode.Percentage,
+	const labels = [
+		'Mar 20, 2005', 'Mar 21, 2009', 'Mar 18, 2013', 'Mar 21, 2017',
+		'Mar 19, 2021', 'Mar 21, 2025', 'Mar 22, 2025', 'Mar 23, 2025',
+		'Mar 24, 2021', 'Mar 25, 2025', 'Mar 26, 2025', 'Mar 27, 2025',
+	];
 
+	const barData = [5, 10, 25, 35, 20, 45, 39, 15, 20, 40, 58, 58];
 
-			minimumWidth: 55,
-			borderVisible: false,
+	chart.value = new Chart(container.value as HTMLCanvasElement, {
+		type: 'bar',
+		data: {
+			labels,
+			datasets: [
+				{
+					type: 'line',
+					borderColor: 'rgba(255, 255, 255, 1)',
+					data: [40, 50, 69, 70, 75, 65, 50, 65, 65, 80, 96, 50, 86],
+					pointStyle: false,
+					yAxisID: 'y',
+					tension: 0.1,
+				},
+				{
+					type: 'bar',
+					data: barData,
+
+					backgroundColor:
+						barData
+							.map((_, idx) =>
+								idx === barData.length - 1 ? 'rgba(255, 191, 0, 0.2)' : 'rgba(4, 237, 160, 0.1)',
+							),
+					borderColor:
+						barData
+							.map((_, idx) =>
+								idx === barData.length - 1 ? 'rgba(221, 246, 34, 1)' : 'rgba(4, 237, 160, 1)',
+							),
+					borderWidth: {
+						top: 2,
+					},
+					yAxisID: 'y1',
+					barPercentage: 0.9,
+					categoryPercentage: 1,
+				},
+			],
 		},
-		leftPriceScale: {
-			scaleMargins: {
-				top: 0.1, // leave some space for the legend
-				bottom: 0.2,
+		options: {
+			maintainAspectRatio: false,
+			responsive: true,
+
+			interaction: {
+				mode: 'index',
+				intersect: false,
+			},
+			plugins: {
+				legend: {
+					display: false,
+				},
+				tooltip: {
+					enabled: false,
+					position: 'nearest',
+					external: externalTooltipHandler,
+				},
 			},
 
-			visible: true,
+			scales: {
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					beginAtZero: true,
 
-			mode: PriceScaleMode.Percentage,
+					grid: {
+						color: '#373737',
+					},
+
+					ticks: {
+						color: 'rgba(154, 154, 157, 1)',
+						callback: function (value) {
+							return value + 'B';
+						},
+					},
 
 
-			minimumWidth: 55,
-			borderVisible: false,
-		},
-		// hide the grid lines
-		grid: {
-			vertLines: {
-				visible: false,
+					border: {
+						dash: [2, 2],
+					},
+				},
+				y1: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					beginAtZero: true,
+
+					min: 0,
+					max: 100,
+
+
+					ticks: {
+						maxTicksLimit: 6,
+						color: 'rgba(154, 154, 157, 1)',
+						callback: function (value) {
+							return value + '%';
+						},
+					},
+
+					// grid line settings
+					grid: {
+						drawOnChartArea: false, // only want the grid lines for one axis to show up
+					},
+				},
+
+				x: {
+					offset: false,
+
+					ticks: {
+						padding: 20,
+						autoSkip: true,
+						maxTicksLimit: 6, // Показать максимум 6 меток по оси X
+					},
+
+					grid: {
+						display: false,
+					},
+
+					border: {
+						display: false,
+					},
+				},
+
 			},
-			horzLines: {
-				visible: true,
-				color: '#373737',
-				style: LineStyle.Dashed,
-			},
-		},
-
-		timeScale: {
-			lockVisibleTimeRangeOnResize: true,
-
 		},
 	});
-
-
-	chart.value!.timeScale().applyOptions({
-		borderColor: 'rgba(4, 237, 160, 0.00)',
-	});
-
-	graphA.value = chart.value!.addSeries(HistogramSeries, {
-		priceScaleId: 'left',
-		color: '#26a69a',
-		priceLineVisible: false,
-	});
-
-	graphA.value.priceScale().applyOptions({
-		priceLineVisible: false,
-		priceFormat: {
-			type: 'volume',
-
-		},
-		scaleMargins: {
-			top: 0.7, // highest point of the series will be 70% away from the top
-			bottom: 0,
-		},
-	});
-
-	graphB.value = chart.value!.addSeries(LineSeries, {
-		color: '#fff',
-		lineWidth: 2,
-		priceLineVisible: false,
-		lastPriceAnimation: LastPriceAnimationMode.Continuous,
-	});
-
-	const tooltipPrimitive = new TooltipPrimitive({
-		lineColor: 'rgba(0, 0, 0, 0.2)',
-		tooltip: {
-			followMode: 'tracking',
-		},
-	});
-
-	graphB.value.attachPrimitive(tooltipPrimitive);
-
-
-	selectRange(currentRange.value);
-
-	chart.value!.timeScale().fitContent();
 });
 
 
@@ -180,16 +286,9 @@ onMounted(() => {
 
 <template>
 	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
-		<div ref="container" :class="classes.mainChart"></div>
+		<canvas ref="container" :class="classes.mainChart"></canvas>
 
 		<div :class="classes.instruments">
-			<chart-range
-				class="range"
-				:active-range="currentRange"
-				:list="[ RangeChart['1M'], RangeChart['1Y'], RangeChart['3Y'], RangeChart['5Y'], RangeChart['10Y'] ]"
-				@select="selectRange"
-			/>
-
 			<div :class="classes.legend">
 
 				<div :class="classes.legendItem">
@@ -231,6 +330,7 @@ onMounted(() => {
 
 <style module="classes">
 .wrapper {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
@@ -239,15 +339,15 @@ onMounted(() => {
 .mainChart {
 	flex-grow: 1;
 	width: 100%;
-	height: 100%;
+	height: 90% !important;
 }
 
 .legend {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	width: calc(100% - 56px);
-	padding: 17px 16px;
+	width: 100%;
+	padding: 20px 16px;
 	gap: 31px;
 }
 
@@ -271,11 +371,15 @@ onMounted(() => {
 }
 
 .legendCircleReport {
-	background-color: #ffffff;
+	background-color: rgb(255 255 255 / 100%);
 }
 
 .legendCircleEstimate {
-	background-color: #04eda0;
+	background-color: rgb(4 237 160 / 100%);
+}
+
+.legendCircleNextPayment {
+	background-color: rgb(231 181 37 / 100%);
 }
 
 .instruments {
@@ -284,8 +388,8 @@ onMounted(() => {
 	border-top: 1px solid var(--border-color-base-300);
 }
 
-.legendCircleNextPayment {
-	background-color: rgb(255 191 0 / 60%);
+.range {
+	max-width: 92px;
 }
 
 :global(a#tv-attr-logo) {
