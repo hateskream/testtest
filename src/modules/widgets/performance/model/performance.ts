@@ -2,12 +2,12 @@ export interface IPerformanceItem {
 	id: string;
 	name: string;
 	change: number; // Percentage change
-	type: 'stock' | 'industry' | 'sector';
+	type: 'industry' | 'sector';
 }
 
 export interface IPerformanceFilter {
-	type: 'stock' | 'industry' | 'sector';
-	timeRange: 'today' | 'yesterday' | 'week';
+	type: 'industry' | 'sector';
+	timeRange: 'today' | 'yesterday' | 'week' | 'custom';
 }
 
 export interface IPerformanceSettings {
@@ -21,6 +21,6 @@ export interface IPerformanceResponse {
 }
 
 export interface IGetPerformanceRequest {
-	type?: 'stock' | 'industry' | 'sector';
-	timeRange?: 'today' | 'yesterday' | 'week';
+	type?: 'industry' | 'sector';
+	timeRange?: 'today' | 'yesterday' | 'week' | 'custom';
 }

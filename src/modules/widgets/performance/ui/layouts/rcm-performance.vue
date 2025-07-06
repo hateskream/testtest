@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { usePerformanceStore } from '../stores';
+import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import {
 	ModalItem,
 	ModalItemNumber,
 	ModalRcm,
 	ModalSubmenu,
-} from '../../base';
+} from '@/modules/widgets/base';
 
 import FilterSettingsComponent from './filter-settings-component.vue';
 

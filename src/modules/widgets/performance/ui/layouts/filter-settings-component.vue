@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { usePerformanceStore } from '../stores';
+import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import {
 	ModalSubmenuContent,
 	ModalItemCheckbox,
 	ModalBadgeTitle,
 	ModalBadgeList,
 	ModalBadge,
-} from '../../base';
+} from '@/modules/widgets/base';
 
 const performanceStore = usePerformanceStore();
 </script>

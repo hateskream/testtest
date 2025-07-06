@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PERFORMANCE_COLORS } from '../const';
-import type { IPerformanceItem } from '../model';
+import { PERFORMANCE_COLORS } from '@/modules/widgets/performance/const';
+import type { IPerformanceItem } from '@/modules/widgets/performance/model';
 
 interface IPerformanceListViewProps {
 	performanceData: IPerformanceItem[];

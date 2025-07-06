@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { PERFORMANCE_COLORS } from '../const';
-import type { IPerformanceItem } from '../model';
+import { PERFORMANCE_COLORS } from '@/modules/widgets/performance/const';
+import type { IPerformanceItem } from '@/modules/widgets/performance/model';
 
 interface IPerformanceBarChartProps {
 	performanceData: IPerformanceItem[];
@@ -68,34 +68,35 @@ function formatChange(change: number): string {
 <style scoped>
 .performance-bar-chart {
 	height: 100%;
-	padding: 16px;
+	padding: 12px 16px;
 	overflow-y: auto;
 }
 
 .performance-bar-chart.compact {
-	padding: 8px;
+	padding: 8px 12px;
 }
 
 .chart-container {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 12px;
 }
 
 .performance-bar-chart.compact .chart-container {
-	gap: 4px;
+	gap: 8px;
 }
 
 .bar-row {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 6px;
 }
 
 .bar-info {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 2px;
 }
 
 .bar-name {
@@ -103,45 +104,46 @@ function formatChange(change: number): string {
 	margin-right: 8px;
 	overflow: hidden;
 	font-weight: 400;
-	font-size: 12px;
+	font-size: 13px;
 	color: var(--text-color-base-300);
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
 .performance-bar-chart.compact .bar-name {
-	font-size: 10px;
+	font-size: 11px;
 }
 
 .bar-change {
-	font-weight: 500;
-	font-size: 12px;
+	font-weight: 600;
+	font-size: 13px;
 	white-space: nowrap;
 }
 
 .performance-bar-chart.compact .bar-change {
-	font-size: 10px;
+	font-size: 11px;
 }
 
 .bar-container {
-	height: 6px;
+	height: 8px;
 	overflow: hidden;
 	background-color: var(--bg-color-surface-02);
-	border-radius: 3px;
+	border-radius: 4px;
 }
 
 .performance-bar-chart.compact .bar-container {
-	height: 4px;
+	height: 6px;
 }
 
 .bar {
-	min-width: 2px;
+	min-width: 4px;
 	height: 100%;
-	border-radius: 3px;
+	border-radius: 4px;
 	transition: width 0.3s ease;
 }
 
 .performance-bar-chart.compact .bar {
-	border-radius: 2px;
+	min-width: 3px;
+	border-radius: 3px;
 }
 </style>

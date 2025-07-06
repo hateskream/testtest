@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 
 import {
 	INITIAL_PERFORMANCE_SETTINGS,
-	PERFORMANCE_FILTER_TYPES,
+	PERFORMANCE_STOCK_TYPES,
 	PERFORMANCE_TIME_RANGES,
 	PERFORMANCE_DISPLAY_MODES,
 } from '../const';
@@ -14,7 +14,7 @@ export const usePerformanceStore = defineStore('performance', () => {
 	const settings = ref<IPerformanceSettings>({ ...INITIAL_PERFORMANCE_SETTINGS });
 
 	// Computed
-	const filterTypes = computed(() => PERFORMANCE_FILTER_TYPES);
+	const filterTypes = computed(() => PERFORMANCE_STOCK_TYPES);
 	const timeRanges = computed(() => PERFORMANCE_TIME_RANGES);
 	const displayModes = computed(() => PERFORMANCE_DISPLAY_MODES);
 

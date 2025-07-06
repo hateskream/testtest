@@ -27,7 +27,7 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 
 async function getMockData(args: IGetPerformanceRequest): Promise<IPerformanceResponse> {
 	await new Promise(resolve => {
-		setTimeout(resolve, 500);
+		setTimeout(resolve, 200);
 	});
 
 	// Mock data based on the provided designs
@@ -139,45 +139,42 @@ async function getMockData(args: IGetPerformanceRequest): Promise<IPerformanceRe
 		},
 	];
 
-	const stocksData: IPerformanceItem[] = [
+	const industriesData2: IPerformanceItem[] = [
 		{
 			id: '1',
 			name: 'AAPL',
 			change: 2.34,
-			type: 'stock',
+			type: 'industry',
 		},
 		{
 			id: '2',
 			name: 'GOOGL',
 			change: 1.87,
-			type: 'stock',
+			type: 'industry',
 		},
 		{
 			id: '3',
 			name: 'MSFT',
 			change: 1.45,
-			type: 'stock',
+			type: 'industry',
 		},
 		{
 			id: '4',
 			name: 'TSLA',
 			change: -0.78,
-			type: 'stock',
+			type: 'industry',
 		},
 		{
 			id: '5',
 			name: 'AMZN',
 			change: -1.23,
-			type: 'stock',
+			type: 'industry',
 		},
 	];
 
 	let data: IPerformanceItem[] = [];
 
 	switch (args.type) {
-		case 'stock':
-			data = stocksData;
-			break;
 		case 'sector':
 			data = sectorsData;
 			break;

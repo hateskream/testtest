@@ -3,8 +3,7 @@ export const PERFORMANCE_COLORS = {
 	NEGATIVE: '#FC4A6B',
 } as const;
 
-export const PERFORMANCE_FILTER_TYPES = [
-	{ name: 'Stock', value: 'stock' },
+export const PERFORMANCE_STOCK_TYPES = [
 	{ name: 'Industry', value: 'industry' },
 	{ name: 'Sector', value: 'sector' },
 ] as const;
@@ -13,6 +12,7 @@ export const PERFORMANCE_TIME_RANGES = [
 	{ name: 'Today', value: 'today' },
 	{ name: 'Yesterday', value: 'yesterday' },
 	{ name: 'A week ago', value: 'week' },
+	{ name: 'Custom', value: 'custom' },
 ] as const;
 
 export const PERFORMANCE_DISPLAY_MODES = [

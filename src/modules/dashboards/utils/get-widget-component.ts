@@ -12,7 +12,7 @@ import { EventsDashboard } from '@/modules/widgets/events';
 import { TelegramDashboard } from '@/modules/widgets/telegram';
 import { ChartDashboard } from '@/modules/widgets/chart';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
-import { PerformanceDashboard } from '@/modules/widgets/performance';
+import { PerformanceWidget } from '@/modules/widgets/performance';
 import { WidgetType } from '@/modules/dashboard-group';
 
 export function getWidgetComponent(type: WidgetType) {
@@ -29,7 +29,7 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Telegram]: TelegramDashboard,
 		[WidgetType.Chart]: ChartDashboard,
 		[WidgetType.Watchlist]: WatchlistDashboard,
-		[WidgetType.Performance]: PerformanceDashboard,
+		[WidgetType.Performance]: PerformanceWidget,
 	};
 
 	return components[type];

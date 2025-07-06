@@ -1,3 +1,3 @@
-import DashboardComponent from './ui/dashboard-component.vue';
+import PerformanceWidget from './ui/performance-widget.vue';
 
-export { DashboardComponent as PerformanceDashboard };
+export { PerformanceWidget };
