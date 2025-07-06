@@ -8,7 +8,7 @@ import {
 	ModalSubmenu,
 } from '@/modules/widgets/base';
 
-import FilterSettingsComponent from './filter-settings-component.vue';
+import PerformanceFilter from './performance-filters.vue';
 
 const performanceStore = usePerformanceStore();
 </script>
@@ -16,6 +16,7 @@ const performanceStore = usePerformanceStore();
 <template>
 	<modal-rcm>
 		<template #title>Performance</template>
+
 		<template #content>
 			<modal-item-number :value="1">Duplicate</modal-item-number>
 			<modal-item-number :value="2">Open in new tab</modal-item-number>
@@ -28,7 +29,7 @@ const performanceStore = usePerformanceStore();
 			<modal-submenu>
 				<template #title>Filter</template>
 				<template #content>
-					<filter-settings-component />
+					<performance-filter />
 				</template>
 			</modal-submenu>
 

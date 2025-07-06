@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { computed } from 'vue';
 
-import { usePerformanceStore } from '../../stores';
+import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const performanceStore = usePerformanceStore();

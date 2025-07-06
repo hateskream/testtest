@@ -7,10 +7,10 @@ import { BaseDashboardComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 
-import ErrorComponent from './layouts/error-component.vue';
-import PreloaderComponent from './layouts/preloader-component.vue';
-import ViewComponent from './layouts/view-component.vue';
-import RcmPerformanceComponent from './layouts/rcm-performance.vue';
+import PerformanceError from './layouts/performance-error.vue';
+import PerformanceLoader from './layouts/performance-loader.vue';
+import PerformanceView from './layouts/performance-view.vue';
+import PerformanceRcm from './modals/performance-rcm.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -30,10 +30,10 @@ const { data, isLoading, isError } = useQueryPerformance(filters.value);
 		<template #title> {{ props.meta.name }} </template>
 
 		<template #content>
-			<error-component v-if="isError" />
-			<preloader-component v-else-if="isLoading" />
+			<performance-error v-if="isError" />
+			<performance-loader v-else-if="isLoading" />
 
-			<view-component
+			<performance-view
 				v-else-if="data"
 				:performance-data="data"
 				:size="{ width: meta.size.w, height: meta.size.h }"
@@ -41,7 +41,7 @@ const { data, isLoading, isError } = useQueryPerformance(filters.value);
 		</template>
 
 		<template #rcm>
-			<rcm-performance-component />
+			<performance-rcm />
 		</template>
 	</base-dashboard-component>
 </template>
