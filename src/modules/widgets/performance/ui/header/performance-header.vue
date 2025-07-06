@@ -1,58 +1,17 @@
 <script setup lang="ts">
-// import { computed } from 'vue';
-
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const performanceStore = usePerformanceStore();
-
-// const currentFilterTypeLabel = computed(() => {
-// 	const currentType = performanceStore.currentFilter.type;
-// 	return performanceStore.filterTypes.find(type => type.value === currentType)?.name || 'Industry';
-// });
-
-// const currentTimeRangeLabel = computed(() => {
-// 	const currentRange = performanceStore.currentFilter.timeRange;
-// 	return performanceStore.timeRanges.find(range => range.value === currentRange)?.name || 'Today';
-// });
 </script>
 
 <template>
-	<div class="performance-header">
-		<div class="header-top">
-			<div class="view-toggle">
-				<button
-					:class="{ active: performanceStore.currentDisplayMode === 'bar' }"
-					class="toggle-button"
-					title="Bar view"
-					@click="performanceStore.setDisplayMode('bar')"
-				>
-					<ui-icon
-						:id="IconIds.Bars"
-						width="20"
-						height="20"
-					/>
-				</button>
-				<button
-					:class="{ active: performanceStore.currentDisplayMode === 'list' }"
-					class="toggle-button"
-					title="List view"
-					@click="performanceStore.setDisplayMode('list')"
-				>
-					<ui-icon
-						:id="IconIds.List"
-						width="20"
-						height="20"
-					/>
-				</button>
-			</div>
-		</div>
-
-		<div class="header-filters">
-			<div class="dropdown-container">
+	<div :class="classes.performanceHeader">
+		<div :class="classes.headerFilters">
+			<div :class="classes.dropdownContainer">
 				<select
 					:value="performanceStore.currentFilter.type"
-					class="filter-dropdown"
+					:class="classes.filterDropdown"
 					@change="performanceStore.setFilterType(($event.target as HTMLSelectElement).value as any)"
 				>
 					<option
@@ -65,10 +24,10 @@ const performanceStore = usePerformanceStore();
 				</select>
 			</div>
 
-			<div class="dropdown-container">
+			<div :class="classes.dropdownContainer">
 				<select
 					:value="performanceStore.currentFilter.timeRange"
-					class="filter-dropdown"
+					:class="classes.filterDropdown"
 					@change="performanceStore.setTimeRange(($event.target as HTMLSelectElement).value as any)"
 				>
 					<option
@@ -81,42 +40,61 @@ const performanceStore = usePerformanceStore();
 				</select>
 			</div>
 		</div>
+
+		<div :class="classes.viewToggle">
+			<button
+				:class="[classes.toggleButton, { [classes.active]: performanceStore.currentDisplayMode === 'bar' }]"
+				title="Bar view"
+				@click="performanceStore.setDisplayMode('bar')"
+			>
+				<ui-icon
+					:id="IconIds.Bars"
+					width="20"
+					height="20"
+				/>
+			</button>
+			<button
+				:class="[classes.toggleButton, { [classes.active]: performanceStore.currentDisplayMode === 'list' }]"
+				title="List view"
+				@click="performanceStore.setDisplayMode('list')"
+			>
+				<ui-icon
+					:id="IconIds.List"
+					width="20"
+					height="20"
+				/>
+			</button>
+		</div>
 	</div>
 </template>
 
-<style scoped>
-.performance-header {
+<style module="classes">
+.performanceHeader {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	justify-content: space-between;
 	padding: 16px;
 	border-bottom: 1px solid var(--border-color-base-100);
 }
 
-.header-top {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 12px;
-}
-
-.header-title {
+.headerTitle {
 	margin: 0;
 	font-weight: 600;
 	font-size: 16px;
 	color: var(--text-color-base-400);
 }
 
-.header-filters {
+.headerFilters {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 }
 
-.dropdown-container {
+.dropdownContainer {
 	position: relative;
 }
 
-.filter-dropdown {
+.filterDropdown {
 	min-width: 80px;
 	padding: 6px 12px;
 	font-weight: 500;
@@ -128,16 +106,16 @@ const performanceStore = usePerformanceStore();
 	cursor: pointer;
 }
 
-.filter-dropdown:hover {
+.filterDropdown:hover {
 	background: var(--bg-color-surface-03);
 }
 
-.filter-dropdown:focus {
+.filterDropdown:focus {
 	border-color: var(--accent-color);
 	outline: none;
 }
 
-.view-toggle {
+.viewToggle {
 	display: flex;
 	align-items: center;
 	padding: 2px;
@@ -146,7 +124,7 @@ const performanceStore = usePerformanceStore();
 	gap: 2px;
 }
 
-.toggle-button {
+.toggleButton {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -160,12 +138,12 @@ const performanceStore = usePerformanceStore();
 	transition: all 0.2s ease;
 }
 
-.toggle-button:hover {
+.toggleButton:hover {
 	color: var(--text-color-base-300);
 	background: var(--bg-color-surface-03);
 }
 
-.toggle-button.active {
+.toggleButton.active {
 	color: var(--text-color-white);
 	background: var(--accent-color);
 }
