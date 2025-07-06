@@ -5,7 +5,7 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 <template>
 	<div class="preloader-container">
 		<div class="preloader-header">
-			<ui-skeleton width="100px" height="24px" />
+			<ui-skeleton width="30%" height="24px" />
 			<ui-skeleton width="60px" height="24px" />
 		</div>
 		<div class="preloader-content">
