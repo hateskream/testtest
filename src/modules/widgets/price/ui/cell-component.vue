@@ -74,6 +74,15 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 				</div>
 			</ui-transition-fade>
 		</div>
+
+		<div :class="classes.hoverActions">
+			<ui-icon
+				:id="IconIds.Pin"
+				:width="20"
+				:height="20"
+				:class="classes.hoverActionIcon"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -86,6 +95,32 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 	letter-spacing: 0.104px;
 	cursor: pointer;
 	gap: 4px;
+
+	&:hover {
+		.hoverActions {
+			display: flex;
+		}
+	}
+}
+
+.hoverActions {
+	position: absolute;
+	top: 50%;
+	right: 4px;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	width: 15%;
+	max-width: 56px;
+	height: 100%;
+	padding: 0 6px 0 12px;
+	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
+	transform: translateY(-50%);
+	cursor: default;
+}
+
+.hoverActionIcon {
+	color: var(--icon-color-base-300);
 }
 
 .root:hover .icon {
