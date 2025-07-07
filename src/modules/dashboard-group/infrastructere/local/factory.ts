@@ -10,8 +10,11 @@ import { AddWidget } from './use-case/add-widget';
 import { GetWidgetList } from './use-case/get-widget-list';
 import { ChangeDashboardState } from './use-case/change-dashboard-state';
 import { LSDashboardGroup } from './repository/ls-dashboard-group';
+import { DeleteTab } from './use-case/delete-tab';
 
-class LocalFactoryImpl implements IUseCaseFactory {
+// использовать напрямую нельзя, без export ts дает ошибку
+//Property 'repo' of exported anonymous class type may not be private or protected.ts(4094)
+export class LocalFactoryImpl implements IUseCaseFactory {
 	constructor(private readonly repo : IRepository) {}
 
 	GetDashboardsUc() {
@@ -23,7 +26,7 @@ class LocalFactoryImpl implements IUseCaseFactory {
 	}
 
 	DeleteTabUc() {
-		return DeleteWidget(this.repo);
+		return DeleteTab(this.repo);
 	}
 
 	ChangeActiveTabUc() {
@@ -57,7 +60,7 @@ class LocalFactoryImpl implements IUseCaseFactory {
 
 let LocalFactoryImplInstance : LocalFactoryImpl | null = null;
 
-export function LocalFactory(lsKey : string) {
+export function LocalFactory(lsKey : string): LocalFactoryImpl {
 	if (LocalFactoryImplInstance === null) {
 		const repo = new LSDashboardGroup(lsKey);
 
