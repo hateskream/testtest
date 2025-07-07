@@ -1,5 +1,4 @@
 export interface IDashboardGroup {
-	id: string;
 	activeDashboardId: string;
 	dashboards: IDashboard[];
 }

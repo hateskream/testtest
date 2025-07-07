@@ -1,4 +1,4 @@
-import type { IRepository } from '../../domains/adapters/contract';
+import type { IRepository } from '../../domains/adapters';
 import { allWidgets } from '../../domains/entities/widget';
 import type { IDeleteTabUc } from '../../domains/uce-cases';
 

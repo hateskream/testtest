@@ -1,4 +1,4 @@
-import type { IRepository } from '../../domains/adapters/contract';
+import type { IRepository } from '../../domains/adapters';
 import type { IChangeTabOrderUc } from '../../domains/uce-cases';
 
 

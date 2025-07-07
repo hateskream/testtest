@@ -1,4 +1,4 @@
-import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../domains/adapters/contract';
+import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../domains/adapters';
 import type { IRenameTabUc } from '../../domains/uce-cases';
 
 

@@ -1,4 +1,4 @@
-import type { IGetterDashboardGroup } from '../../domains/adapters/contract';
+import type { IGetterDashboardGroup } from '../../domains/adapters';
 import type { IGetWidgetListUc } from '../../domains/uce-cases';
 
 interface IRepository extends IGetterDashboardGroup {}
