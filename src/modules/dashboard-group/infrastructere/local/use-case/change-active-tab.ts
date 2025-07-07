@@ -1,7 +1,7 @@
 import type { IRepository } from '../../../domains/adapters';
 import type { IChangeActiveTabUc } from '../../../domains/uce-cases';
 
-export function ChangeActiveTa(repo: IRepository): IChangeActiveTabUc {
+export function ChangeActiveTab(repo: IRepository): IChangeActiveTabUc {
 	return {
 		async execute(_in) {
 			const dashboardGroup = await repo.Get();
