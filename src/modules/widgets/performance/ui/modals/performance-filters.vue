@@ -1,69 +1,183 @@
 <script setup lang="ts">
-import { UiDriver } from '@/shared/ui/driver';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
-import {
-	ModalSubmenuContent,
-	ModalItemCheckbox,
-	ModalBadgeTitle,
-	ModalBadgeList,
-	ModalBadge,
-} from '@/modules/widgets/base';
+import { ref } from 'vue';
 
-const performanceStore = usePerformanceStore();
+import {
+	ModalFilter,
+	ModalFilterTabWrapper,
+	ModalItemSwitch,
+} from '@/modules/widgets/base/modal';
+import { UiIcon, IconIds } from '@/shared/ui/icon';
+
+// Реактивные состояния для фильтров
+const selectedStock = ref<'industry' | 'sector'>('industry');
+const selectedDate = ref<'today' | 'yesterday' | 'week'>('today');
+const selectedDisplay = ref<'bar' | 'list'>('bar');
+const compactMode = ref(false);
+
+// Методы для обновления состояний
+const selectStock = (value: 'industry' | 'sector') => {
+	selectedStock.value = value;
+};
+
+const selectDate = (value: 'today' | 'yesterday' | 'week') => {
+	selectedDate.value = value;
+};
+
+const selectDisplay = (value: 'bar' | 'list') => {
+	selectedDisplay.value = value;
+};
 </script>
 
 <template>
-	<modal-submenu-content>
-		<template #content>
-			<!-- Stock Filter -->
-			<modal-badge-title>Stock</modal-badge-title>
-			<modal-badge-list>
-				<modal-badge
-					v-for="type in performanceStore.filterTypes"
-					:key="type.value"
-					:is-active="performanceStore.currentFilter.type === type.value"
-					@click="performanceStore.setFilterType(type.value)"
-				>
-					{{ type.name }}
-				</modal-badge>
-			</modal-badge-list>
-
-			<!-- Date Filter -->
-			<modal-badge-title>Date</modal-badge-title>
-			<modal-badge-list>
-				<modal-badge
-					v-for="timeRange in performanceStore.timeRanges"
-					:key="timeRange.value"
-					:is-active="performanceStore.currentFilter.timeRange === timeRange.value"
-					@click="performanceStore.setTimeRange(timeRange.value)"
-				>
-					{{ timeRange.name }}
-				</modal-badge>
-			</modal-badge-list>
-
-			<!-- Display Mode -->
-			<modal-badge-title>Display</modal-badge-title>
-			<modal-badge-list>
-				<modal-badge
-					v-for="mode in performanceStore.displayModes"
-					:key="mode.value"
-					:is-active="performanceStore.currentDisplayMode === mode.value"
-					@click="performanceStore.setDisplayMode(mode.value)"
-				>
-					{{ mode.name }}
-				</modal-badge>
-			</modal-badge-list>
-
-			<ui-driver />
-
-			<!-- Settings -->
-			<modal-badge-title>Settings</modal-badge-title>
-			<modal-item-checkbox
-				:model-value="performanceStore.isCompactMode"
-				@update:model-value="performanceStore.toggleCompactMode"
-			>
-				Compact mode
-			</modal-item-checkbox>
+	<modal-filter>
+		<template #title>
+			Filter
 		</template>
-	</modal-submenu-content>
+
+		<template #content>
+			<div :class="classes.content">
+				<!-- Stock Section -->
+				<div :class="classes.row">
+					<div :class="classes.rowTitle">Stock</div>
+					<div :class="classes.tabs">
+						<modal-filter-tab-wrapper
+							:is-active="selectedStock === 'industry'"
+							@click="selectStock('industry')"
+						>
+							Industry
+						</modal-filter-tab-wrapper>
+						<modal-filter-tab-wrapper
+							:is-active="selectedStock === 'sector'"
+							@click="selectStock('sector')"
+						>
+							Sector
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+
+				<!-- Date Section -->
+				<div :class="classes.row">
+					<div :class="classes.rowTitle">Date</div>
+					<div :class="classes.tabs">
+						<modal-filter-tab-wrapper
+							:is-active="selectedDate === 'today'"
+							@click="selectDate('today')"
+						>
+							Today
+						</modal-filter-tab-wrapper>
+						<modal-filter-tab-wrapper
+							:is-active="selectedDate === 'yesterday'"
+							@click="selectDate('yesterday')"
+						>
+							Yesterday
+						</modal-filter-tab-wrapper>
+						<modal-filter-tab-wrapper
+							:is-active="selectedDate === 'week'"
+							@click="selectDate('week')"
+						>
+							<div :class="classes.dateOption">
+								A week ago
+								<ui-icon :id="IconIds.Calendar" :class="classes.calendarIcon" />
+							</div>
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+
+				<!-- Display Section -->
+				<div :class="classes.row">
+					<div :class="classes.rowTitle">Display</div>
+					<div :class="classes.tabs">
+						<modal-filter-tab-wrapper
+							:is-active="selectedDisplay === 'bar'"
+							@click="selectDisplay('bar')"
+						>
+							<div :class="classes.displayOption">
+								<ui-icon :id="IconIds.Bars" :class="classes.displayIcon" />
+								Bar
+							</div>
+						</modal-filter-tab-wrapper>
+						<modal-filter-tab-wrapper
+							:is-active="selectedDisplay === 'list'"
+							@click="selectDisplay('list')"
+						>
+							<div :class="classes.displayOption">
+								<ui-icon :id="IconIds.List" :class="classes.displayIcon" />
+								List
+							</div>
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+
+				<!-- Settings Section -->
+				<div :class="classes.row">
+					<div :class="classes.rowTitle">Settings</div>
+					<div :class="classes.settingsContent">
+						<modal-item-switch
+							v-model="compactMode"
+						>
+							Compact mode
+						</modal-item-switch>
+					</div>
+				</div>
+			</div>
+		</template>
+	</modal-filter>
 </template>
+
+<style module="classes">
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 12px 0;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	padding: 4px 12px;
+}
+
+.rowTitle {
+	flex: 0 0 80px;
+	font-weight: 500;
+	font-size: 12px;
+	text-align: left;
+	color: var(--text-color-base-300);
+}
+
+.tabs {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 8px;
+}
+
+.settingsContent {
+	flex: 1;
+}
+
+.dateOption {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.displayOption {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.calendarIcon {
+	width: 12px;
+	height: 12px;
+	color: var(--icon-color-base-500);
+}
+
+.displayIcon {
+	width: 12px;
+	height: 12px;
+	color: var(--icon-color-base-500);
+}
+</style>
