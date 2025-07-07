@@ -78,6 +78,10 @@ export class DashboardGroup {
 		this.findActiveDashboard().deleteWidget(widgetId, widgetsState);
 	}
 
+	renameDashboard(id: string, name: string) {
+		this.findDashboardById(id).name = name;
+	}
+
 	private selectNewActive(id: string) {
 		const newIndex = this._dashboards
 			.reverse()
