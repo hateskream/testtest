@@ -9,8 +9,8 @@ import type {
 
 import GenericGridRows from './generic-grid-rows.vue';
 
-interface IProps<T = Record<string, unknown>> {
-	section: IGenericTableSection<T>;
+interface IProps {
+	section: IGenericTableSection;
 	columns: IGenericTableColumn[];
 	gridTemplateColumns: string;
 	enableDragDrop?: boolean;
@@ -18,11 +18,11 @@ interface IProps<T = Record<string, unknown>> {
 	enableRowActions?: boolean;
 }
 
-interface IEmits<T = Record<string, unknown>> {
+interface IEmits {
 	(e: 'sectionToggled', sectionId: string): void;
 	(e: 'sectionDeleted', sectionId: string): void;
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
-	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
+	(e: 'rowMoved', payload: IDragDropEvent): void;
 	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
 }
 
@@ -53,6 +53,7 @@ const handleSectionClick = (sectionId: string) => {
 };
 
 const startRename = async (sectionId: string) => {
+	console.log(sectionId);
 	showRenameInput.value = true;
 	sectionName.value = props.section.title;
 
@@ -110,20 +111,22 @@ const handleDeleteSection = (sectionId: string) => {
 </script>
 
 <template>
-	<div class="grid-section">
+	<div :class="classes.gridSection">
 		<div
-			class="section-header"
-			:class="{ 'section-header-open': !section.isCollapsed }"
+			:class="[classes.sectionHeader, { [classes.sectionHeaderOpen]: !section.isCollapsed }]"
 			:style="{ gridTemplateColumns }"
 			@click="handleSectionClick(section.id)"
 			@dblclick="handleSectionDoubleClick(section.id)"
 		>
-			<div class="section-title">
+			<div :class="classes.sectionTitle">
 				<template v-if="!showRenameInput">
-					<span class="section-toggle">
+					<span :class="classes.sectionToggle">
 						<span
-							class="section-icon"
-							:class="section.isCollapsed ? 'section-icon-collapsed' : 'section-icon-expanded'"
+							:class="
+								[classes.sectionIcon, section.isCollapsed ?
+									classes.sectionIconCollapsed
+									: classes.sectionIconExpanded]
+							"
 						>
 							▼
 						</span>
@@ -134,7 +137,7 @@ const handleDeleteSection = (sectionId: string) => {
 						:section="section"
 						:is-collapsed="section.isCollapsed"
 					>
-						<span class="section-name">{{ section.title }}</span>
+						<span :class="classes.sectionName">{{ section.title }}</span>
 					</slot>
 				</template>
 
@@ -143,7 +146,7 @@ const handleDeleteSection = (sectionId: string) => {
 						ref="renameInputRef"
 						v-model="sectionName"
 						type="text"
-						class="rename-input"
+						:class="classes.renameInput"
 						@blur="saveRename"
 						@keydown.enter="saveRename"
 						@keydown.escape="cancelRename"
@@ -151,9 +154,9 @@ const handleDeleteSection = (sectionId: string) => {
 				</template>
 			</div>
 
-			<div class="section-actions">
+			<div :class="classes.sectionActions">
 				<button
-					class="action-button"
+					:class="classes.actionButton"
 					title="Delete section"
 					@click.stop="handleDeleteSection(section.id)"
 				>
@@ -163,12 +166,12 @@ const handleDeleteSection = (sectionId: string) => {
 		</div>
 
 		<transition
-			enter-active-class="section-enter-active"
-			leave-active-class="section-leave-active"
-			enter-from-class="section-enter-from"
-			leave-to-class="section-leave-to"
+			:enter-active-class="classes.sectionEnterActive"
+			:leave-active-class="classes.sectionLeaveActive"
+			:enter-from-class="classes.sectionEnterFrom"
+			:leave-to-class="classes.sectionLeaveTo"
 		>
-			<div v-if="!section.isCollapsed" class="section-content">
+			<div v-if="!section.isCollapsed" :class="classes.sectionContent">
 				<generic-grid-rows
 					:rows="section.rows"
 					:section-id="section.id"
@@ -181,12 +184,12 @@ const handleDeleteSection = (sectionId: string) => {
 					@row-deleted="handleRowDeleted"
 				>
 					<template
-						v-for="(column, index) in columns"
-						:key="column.key"
-						#[`cell-${index}`]="cellProps"
+						v-for="(_column, _index) in columns"
+						:key="_column.key"
+						#[`cell-${_index}`]="cellProps"
 					>
 						<slot
-							:name="`cell-${index}`"
+							:name="`cell-${_index}`"
 							v-bind="cellProps"
 						/>
 					</template>
@@ -196,13 +199,13 @@ const handleDeleteSection = (sectionId: string) => {
 	</div>
 </template>
 
-<style scoped>
-.grid-section {
+<style module="classes">
+.gridSection {
 	display: flex;
 	flex-direction: column;
 }
 
-.section-header {
+.sectionHeader {
 	position: sticky;
 	left: 0;
 	z-index: 10;
@@ -220,22 +223,22 @@ const handleDeleteSection = (sectionId: string) => {
 	transition: color 0.2s ease;
 }
 
-.section-header:hover {
+.sectionHeader:hover {
 	color: rgb(131 132 135 / 90%);
 }
 
-.section-header:hover .section-icon {
+.sectionHeader:hover .sectionIcon {
 	color: rgb(131 132 135 / 90%);
 }
 
-.section-title {
+.sectionTitle {
 	display: flex;
 	flex: 1;
 	align-items: center;
 	grid-column: 1 / -1;
 }
 
-.section-actions {
+.sectionActions {
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -244,11 +247,11 @@ const handleDeleteSection = (sectionId: string) => {
 	opacity: 0;
 }
 
-.section-header-open:hover .section-actions {
+.sectionHeaderOpen:hover .sectionActions {
 	opacity: 1;
 }
 
-.action-button {
+.actionButton {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -261,15 +264,15 @@ const handleDeleteSection = (sectionId: string) => {
 	transition: color 0.2s ease;
 }
 
-.action-button:hover {
+.actionButton:hover {
 	color: var(--text-color-base-100, #ffffff);
 }
 
-.section-toggle {
+.sectionToggle {
 	margin-right: 6px;
 }
 
-.section-icon {
+.sectionIcon {
 	display: flex;
 	width: 12px;
 	height: 12px;
@@ -278,21 +281,21 @@ const handleDeleteSection = (sectionId: string) => {
 	transition: transform 0.3s ease, color 0.2s ease;
 }
 
-.section-icon-collapsed {
+.sectionIconCollapsed {
 	transform: rotate(-90deg);
 }
 
-.section-icon-expanded {
+.sectionIconExpanded {
 	transform: rotate(0deg);
 }
 
-.section-name {
+.sectionName {
 	font-weight: inherit;
 	font-size: inherit;
 	color: inherit;
 }
 
-.rename-input {
+.renameInput {
 	font-weight: inherit;
 	font-size: inherit;
 	color: var(--text-color-base-100, #ffffff);
@@ -302,19 +305,19 @@ const handleDeleteSection = (sectionId: string) => {
 	outline: none;
 }
 
-.section-content {
+.sectionContent {
 	overflow: hidden;
 }
 
-.section-enter-active,
-.section-leave-active {
+.sectionEnterActive,
+.sectionLeaveActive {
 	max-height: 700px;
 	opacity: 1;
 	transition: all 0.3s ease;
 }
 
-.section-enter-from,
-.section-leave-to {
+.sectionEnterFrom,
+.sectionLeaveTo {
 	max-height: 0;
 	transform: translateY(-10px);
 	opacity: 0;

@@ -1,4 +1,3 @@
-<!-- GenericGridRows.vue -->
 <script setup lang="ts">
 import draggable from 'vuedraggable';
 
@@ -86,20 +85,19 @@ const handleRowDelete = (rowId: string, event: Event) => {
 		:group="enableDragDrop ? 'table-rows' : false"
 		:disabled="!enableDragDrop"
 		item-key="id"
-		class="grid-rows"
+		:class="classes.gridRows"
 		@change="onDragChange"
 	>
 		<template #item="{ element: row, index: rowIndex }">
 			<div
 				:key="row.id"
-				class="grid-row"
+				:class="classes.gridRow"
 				:style="{ gridTemplateColumns }"
 			>
 				<div
 					v-for="(column, cellIndex) in columns"
 					:key="`${row.id}-${column.key}`"
-					class="grid-cell"
-					:class="{ 'sticky-first-cell': cellIndex === 0 && stickyFirstColumn }"
+					:class="[classes.gridCell, { [classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn }]"
 				>
 					<slot
 						:name="`cell-${cellIndex}`"
@@ -113,14 +111,14 @@ const handleRowDelete = (rowId: string, event: Event) => {
 					</slot>
 				</div>
 
-				<div v-if="enableRowActions" class="row-actions-cell">
-					<div class="row-actions">
+				<div v-if="enableRowActions" :class="classes.rowActionsCell">
+					<div :class="classes.rowActions">
 						<button
-							class="row-action-btn delete-btn"
+							:class="[classes.rowActionBtn, classes.deleteBtn]"
 							title="Delete row"
 							@click="handleRowDelete(row.id, $event)"
 						>
-							<span class="delete-icon">🗑️</span>
+							<span :class="classes.deleteIcon">🗑️</span>
 						</button>
 					</div>
 				</div>
@@ -129,13 +127,13 @@ const handleRowDelete = (rowId: string, event: Event) => {
 	</draggable>
 </template>
 
-<style scoped>
-.grid-rows {
+<style module="classes">
+.gridRows {
 	display: flex;
 	flex-direction: column;
 }
 
-.grid-row {
+.gridRow {
 	display: grid;
 	align-items: center;
 	min-height: 50px;
@@ -143,21 +141,21 @@ const handleRowDelete = (rowId: string, event: Event) => {
 	transition: background-color 0.2s ease;
 }
 
-.grid-row:hover {
+.gridRow:hover {
 	background-color: var(--border-color-surface-02-effect, rgb(255 255 255 / 5%));
 }
 
-.grid-row:hover .grid-cell:first-child {
+.gridRow:hover .gridCell:first-child {
 	border-top-left-radius: 16px;
 	border-bottom-left-radius: 16px;
 }
 
-.grid-row:hover .row-actions-cell {
+.gridRow:hover .rowActionsCell {
 	border-top-right-radius: 16px;
 	border-bottom-right-radius: 16px;
 }
 
-.grid-cell {
+.gridCell {
 	display: flex;
 	align-items: center;
 	min-height: 50px;
@@ -166,18 +164,18 @@ const handleRowDelete = (rowId: string, event: Event) => {
 	border-right: 1px solid rgb(255 255 255 / 5%);
 }
 
-.grid-cell:last-child {
+.gridCell:last-child {
 	border-right: none;
 }
 
-.sticky-first-cell {
+.stickyFirstCell {
 	position: sticky;
 	left: 0;
 	z-index: 5;
 	background: inherit;
 }
 
-.row-actions-cell {
+.rowActionsCell {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -186,18 +184,18 @@ const handleRowDelete = (rowId: string, event: Event) => {
 	padding: 8px;
 }
 
-.row-actions {
+.rowActions {
 	display: flex;
 	gap: 4px;
 	opacity: 0;
 	transition: opacity 0.2s ease;
 }
 
-.grid-row:hover .row-actions {
+.gridRow:hover .rowActions {
 	opacity: 1;
 }
 
-.row-action-btn {
+.rowActionBtn {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -210,23 +208,23 @@ const handleRowDelete = (rowId: string, event: Event) => {
 	transition: all 0.2s ease;
 }
 
-.row-action-btn:hover {
+.rowActionBtn:hover {
 	background: rgb(255 255 255 / 10%);
 	border-color: rgb(255 255 255 / 20%);
 }
 
-.delete-btn:hover {
+.deleteBtn:hover {
 	background: rgb(255 77 79 / 20%);
 	border-color: rgb(255 77 79 / 40%);
 }
 
-.delete-icon {
+.deleteIcon {
 	font-size: 14px;
 	color: var(--text-color-base-300, #9a9a9d);
 	transition: color 0.2s ease;
 }
 
-.delete-btn:hover .delete-icon {
+.deleteBtn:hover .deleteIcon {
 	color: #ff4d4f;
 }
 </style>

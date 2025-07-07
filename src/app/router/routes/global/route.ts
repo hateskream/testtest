@@ -17,11 +17,6 @@ export const globalRoutes =
 
 export const testRoutes = [
 	{
-		path: RoutePaths.Test,
-		name: RouteNames.Test,
-		component: () => import('@/pages/test-page.vue'),
-	},
-	{
 		path: RoutePaths.Automobile,
 		name: RouteNames.Automobile,
 		component: () => import('@/pages/automobiles-page.vue'),

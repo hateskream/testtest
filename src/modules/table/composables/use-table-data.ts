@@ -7,7 +7,7 @@ import type {
 	IDragEvent,
 } from '../type';
 
-export function useTableData<T = Record<string, unknown>>() {
+export function useTableData() {
 	const compareValues = (a: unknown, b: unknown, type: string): number => {
 		if (a == null && b == null) {
 			return 0;
@@ -21,6 +21,7 @@ export function useTableData<T = Record<string, unknown>>() {
 
 		switch (type) {
 			case 'date':
+				// eslint-disable-next-line @stylistic/max-len
 				return new Date(a as string | number | Date).getTime() - new Date(b as string | number | Date).getTime();
 			case 'string':
 			case 'image-string':
@@ -45,10 +46,10 @@ export function useTableData<T = Record<string, unknown>>() {
 	};
 
 	const sortData = (
-		data: IGenericTableRow<T>[],
+		data: IGenericTableRow[],
 		column: IGenericTableColumn,
 		direction: SortDirection,
-	): IGenericTableRow<T>[] => {
+	): IGenericTableRow[] => {
 		if (direction === 'none' || !column.sortable) {
 			return data;
 		}
@@ -80,19 +81,19 @@ export function useTableData<T = Record<string, unknown>>() {
 	};
 }
 
-export function useTableDragDrop<T = Record<string, unknown>>() {
-	const dndBuffer = ref<Record<string, IGenericTableRow<T>>>({});
+export function useTableDragDrop() {
+	const dndBuffer = ref<Record<string, IGenericTableRow>>({});
 
 	const handleDragChange = (
-		evt: IDragEvent,
-		sectionId: string,
+		dragEvent: IDragEvent,
+		currentSectionId: string,
 		onMoved?: (sectionId: string, oldIndex: number, newIndex: number) => void,
-		onTransfer?: (evt: IDragEvent, sectionId: string) => void,
+		onTransfer?: (event: IDragEvent, sectionId: string) => void,
 	) => {
-		if (evt.moved && onMoved) {
-			onMoved(sectionId, evt.moved.oldIndex, evt.moved.newIndex);
-		} else if ((evt.added || evt.removed) && onTransfer) {
-			onTransfer(evt, sectionId);
+		if (dragEvent.moved && onMoved) {
+			onMoved(currentSectionId, dragEvent.moved.oldIndex, dragEvent.moved.newIndex);
+		} else if ((dragEvent.added || dragEvent.removed) && onTransfer) {
+			onTransfer(dragEvent, currentSectionId);
 		}
 	};
 
@@ -101,6 +102,7 @@ export function useTableDragDrop<T = Record<string, unknown>>() {
 		handleDragChange,
 	};
 }
+
 
 export function useTableColumns() {
 	const groupColumnsByCategory = (columns: IGenericTableColumn[]) => {

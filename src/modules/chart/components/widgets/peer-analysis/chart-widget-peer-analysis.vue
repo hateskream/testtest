@@ -3,10 +3,8 @@ import { ref, computed } from 'vue';
 
 import type {
 	IGenericTableColumn,
-	IGenericTableSection,
 	IGenericTableRow,
 	ISortConfig,
-	IDragDropEvent,
 } from '@/modules/table';
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { GenericDataTable } from '@/modules/table';
@@ -25,13 +23,6 @@ interface IPeerAnalysisData {
 	analyst_rating?: string;
 }
 
-// Pagination state
-const currentPage = ref(1);
-const pageSize = ref(10);
-
-// Delete tracking (optional - for showing feedback)
-const recentlyDeleted = ref<string[]>([]);
-const deleteMessage = ref<string>('');
 
 const tableColumns = ref<IGenericTableColumn[]>([
 	{
