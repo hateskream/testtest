@@ -1,8 +1,10 @@
-import type { Dashboard } from '../dashboard/dashboard';
+import { Dashboard } from '../dashboard/dashboard';
 import { Widget } from '../widget';
 import type { IPosition } from '../widget/position';
 import { NotFoundDashboard } from './error';
 export class DashboardGroup {
+	private lastOrder = 0; // нужно пересчитывать при создание/мутации
+
 	private constructor(
 		private _activeDashboardId: string,
 		private _dashboards: Dashboard[],
@@ -38,6 +40,14 @@ export class DashboardGroup {
 		newOrder.forEach((dashboardId, index) => {
 			this.findDashboardById(dashboardId).order = index;
 		});
+	}
+
+	createNewDashboard(): string {
+		this.lastOrder += 1;
+		const newDashboard = Dashboard.createEmpty(this.lastOrder);
+		this._dashboards.push(newDashboard);
+
+		return newDashboard.id;
 	}
 
 	private checkAllDashboardsExist(dashboardIds: string[]) {

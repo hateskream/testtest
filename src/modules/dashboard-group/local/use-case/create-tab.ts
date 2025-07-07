@@ -1,6 +1,6 @@
-import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../domains/adapters/contract';
+import type { IRepository } from '../../domains/adapters/contract';
+import { allWidgets } from '../../domains/entities/widget';
 import type { ICreateTabUc } from '../../domains/uce-cases';
-
 
 
 export function CreateTab(repo: IRepository): ICreateTabUc {
@@ -8,13 +8,13 @@ export function CreateTab(repo: IRepository): ICreateTabUc {
 		async execute() {
 			const dashboardGroup = await repo.Get();
 
-			// Здесь предполагается, что у DashboardGroup есть метод createTab, возвращающий id и список виджетов
-			const { tabId, widgets } = dashboardGroup.createTab();
+			const id = dashboardGroup.createNewDashboard();
 
 			await repo.Set(dashboardGroup);
 
+			const widgets = allWidgets();
 			return {
-				tabId,
+				tabId : id,
 				widgets,
 			};
 		},

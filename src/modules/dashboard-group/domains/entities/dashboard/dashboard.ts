@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 
-import { Widget } from '../widget';
-import { PresetWidget } from '../widget/widget-preset';
-
+import { Widget, PresetWidget } from '../widget';
 export class Dashboard {
 	private constructor(
 		private _id: string,
@@ -38,6 +36,10 @@ export class Dashboard {
 
 	addWidget(widget: Widget) {
 		this._widgets.push(widget);
+	}
+
+	static createEmpty(order: number): Dashboard {
+		return new Dashboard(uuidv4(), 'Dashboard', order, []);
 	}
 
 	static createMainDashboard(order = 0): Dashboard {
