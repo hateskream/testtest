@@ -1,43 +1,119 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiPosition } from '@/shared/ui/position';
+import { UiDelimiter } from '@/shared/ui/delimiter';
+import {
+	ModalBadge,
+	ModalBadgeList,
+	ModalItemSelector,
+} from '@/modules/widgets/base';
+
+import PerformanceFilters from '../modals/performance-filters.vue';
 
 const performanceStore = usePerformanceStore();
+
+const currentFilterTypeLabel = computed(() => {
+	const currentType = performanceStore.currentFilter.type;
+	return performanceStore.filterTypes.find(type => type.value === currentType)?.name || 'Industry';
+});
+
+const currentTimeRangeLabel = computed(() => {
+	const currentRange = performanceStore.currentFilter.timeRange;
+	return performanceStore.timeRanges.find(range => range.value === currentRange)?.name || 'Today';
+});
 </script>
 
 <template>
-	<div :class="classes.performanceHeader">
-		<div :class="classes.headerFilters">
-			<div :class="classes.dropdownContainer">
-				<select
-					:value="performanceStore.currentFilter.type"
-					:class="classes.filterDropdown"
-					@change="performanceStore.setFilterType(($event.target as HTMLSelectElement).value as any)"
-				>
-					<option
-						v-for="type in performanceStore.filterTypes"
-						:key="type.value"
-						:value="type.value"
-					>
-						{{ type.name }}
-					</option>
-				</select>
-			</div>
+	<div :class="classes.container">
+		<div :class="classes.listFilters">
+			<div :class="classes.listFilterWithDelimiter">
+				<div :class="classes.iconAllFilter">
+					<ui-position>
+						<template #default>
+							<ui-icon
+								:id="IconIds.NewsFilter"
+								width="20"
+								height="20"
+								:class="classes.iconAllFilterColor"
+							/>
+						</template>
 
-			<div :class="classes.dropdownContainer">
-				<select
-					:value="performanceStore.currentFilter.timeRange"
-					:class="classes.filterDropdown"
-					@change="performanceStore.setTimeRange(($event.target as HTMLSelectElement).value as any)"
-				>
-					<option
-						v-for="range in performanceStore.timeRanges"
-						:key="range.value"
-						:value="range.value"
-					>
-						{{ range.name }}
-					</option>
-				</select>
+						<template #content>
+							<performance-filters />
+						</template>
+					</ui-position>
+				</div>
+
+				<ui-delimiter />
+
+				<modal-badge>
+					<template #title>
+						{{ currentFilterTypeLabel }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</template>
+
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Stock
+							</template>
+
+							<template
+								v-for="type in performanceStore.filterTypes"
+								:key="type.value"
+							>
+								<modal-item-selector
+									:model-value="performanceStore.currentFilter.type === type.value"
+									@update:model-value="performanceStore.setFilterType(type.value)"
+								>
+									{{ type.name }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+
+				<modal-badge>
+					<template #title>
+						{{ currentTimeRangeLabel }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</template>
+
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Date
+							</template>
+
+							<template
+								v-for="range in performanceStore.timeRanges"
+								:key="range.value"
+							>
+								<modal-item-selector
+									:model-value="performanceStore.currentFilter.timeRange === range.value"
+									@update:model-value="performanceStore.setTimeRange(range.value)"
+								>
+									{{ range.name }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
 			</div>
 		</div>
 
@@ -69,50 +145,47 @@ const performanceStore = usePerformanceStore();
 </template>
 
 <style module="classes">
-.performanceHeader {
+.container {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-between;
-	padding: 16px;
-	border-bottom: 1px solid var(--border-color-base-100);
-}
-
-.headerTitle {
-	margin: 0;
-	font-weight: 600;
-	font-size: 16px;
-	color: var(--text-color-base-400);
-}
-
-.headerFilters {
-	display: flex;
 	align-items: center;
-	gap: 8px;
+	padding: 0 10px 0 16px;
+	border-bottom: 1px solid var(--border-color-base-100);
+	gap: 6px;
 }
 
-.dropdownContainer {
-	position: relative;
-}
-
-.filterDropdown {
-	min-width: 80px;
-	padding: 6px 12px;
-	font-weight: 500;
-	font-size: 12px;
-	color: var(--text-color-base-300);
-	background: var(--bg-color-surface-02);
-	border: 1px solid var(--border-color-base-100);
-	border-radius: 6px;
+.iconAllFilter {
 	cursor: pointer;
 }
 
-.filterDropdown:hover {
-	background: var(--bg-color-surface-03);
+.iconAllFilterColor {
+	color: var(--icon-color-base-300);
 }
 
-.filterDropdown:focus {
-	border-color: var(--accent-color);
-	outline: none;
+.allFiltersMenu {
+	padding: 16px;
+	font-size: 14px;
+	color: var(--text-color-base-300);
+}
+
+.listFilters {
+	display: flex;
+	align-items: center;
+	max-width: 100%;
+	height: 42px;
+	padding-bottom: 4px;
+	overflow-x: auto;
+	gap: 6px;
+}
+
+.listFilterWithDelimiter {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.icon {
+	color: var(--icon-color-base-200);
 }
 
 .viewToggle {
