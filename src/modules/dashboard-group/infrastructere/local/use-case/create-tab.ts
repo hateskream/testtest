@@ -1,6 +1,6 @@
-import type { IRepository } from '../../domains/adapters';
-import { allWidgets } from '../../domains/entities/widget';
-import type { ICreateTabUc } from '../../domains/uce-cases';
+import type { IRepository } from '../../../domains/adapters';
+import { allWidgets } from '../../../domains/entities/widget';
+import type { ICreateTabUc } from '../../../domains/uce-cases';
 
 
 export function CreateTab(repo: IRepository): ICreateTabUc {

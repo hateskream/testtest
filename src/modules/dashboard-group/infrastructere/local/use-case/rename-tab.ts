@@ -1,5 +1,5 @@
-import type { IRepository } from '../../domains/adapters';
-import type { IRenameTabUc } from '../../domains/uce-cases';
+import type { IRepository } from '../../../domains/adapters';
+import type { IRenameTabUc } from '../../../domains/uce-cases';
 
 export function RenameTab(repo: IRepository): IRenameTabUc {
 	return {

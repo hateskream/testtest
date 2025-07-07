@@ -1,5 +1,5 @@
-import type { IGetterDashboardGroup } from '../../domains/adapters';
-import type { IGetDashboardsUc } from '../../domains/uce-cases';
+import type { IGetterDashboardGroup } from '../../../domains/adapters';
+import type { IGetDashboardsUc } from '../../../domains/uce-cases';
 
 export function GetDashboards(repo: IGetterDashboardGroup): IGetDashboardsUc {
 	return {

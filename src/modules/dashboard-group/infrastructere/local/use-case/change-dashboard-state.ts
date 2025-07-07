@@ -1,5 +1,5 @@
-import type { IRepository } from '../../domains/adapters';
-import type { IChangeDashboardStateUc } from '../../domains/uce-cases';
+import type { IRepository } from '../../../domains/adapters';
+import type { IChangeDashboardStateUc } from '../../../domains/uce-cases';
 
 
 export function ChangeDashboardState(repo: IRepository): IChangeDashboardStateUc {

@@ -1,5 +1,5 @@
-import type { IRepository } from '../../domains/adapters';
-import type { IDeleteWidgetUc } from '../../domains/uce-cases';
+import type { IRepository } from '../../../domains/adapters';
+import type { IDeleteWidgetUc } from '../../../domains/uce-cases';
 
 
 export function DeleteWidget(repo: IRepository): IDeleteWidgetUc {

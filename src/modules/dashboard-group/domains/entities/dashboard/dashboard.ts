@@ -86,4 +86,13 @@ export class Dashboard {
 			Widget.createFromPresets(cryptoPreset),
 		);
 	}
+
+	static rehydrate(
+		id: string,
+		name: string,
+		order: number,
+		widgets: Widget[],
+	): Dashboard {
+		return new Dashboard(id, name, order, widgets);
+	}
 }

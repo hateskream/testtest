@@ -15,7 +15,7 @@ export class Widget {
 		private _position: IPosition,
 		private _maxSize: ISize,
 		private _minSize: ISize,
-		private _defaultSize: ISize,
+		private _size: ISize,
 	) {}
 
 	get id(): string {
@@ -50,8 +50,8 @@ export class Widget {
 		return this._minSize;
 	}
 
-	get defaultSize(): ISize {
-		return this._defaultSize;
+	get size(): ISize {
+		return this._size;
 	}
 
 	static create(type: string, position: IPosition): Widget {
@@ -59,7 +59,6 @@ export class Widget {
 
 		return Widget.createFromPreset(preset);
 	}
-
 
 	static createFromPreset(preset: PresetWidget): Widget {
 		return new Widget(
@@ -76,5 +75,25 @@ export class Widget {
 
 	static createFromPresets(presets: PresetWidget[]): Widget[] {
 		return presets.map((preset) => Widget.createFromPreset(preset));
+	}
+
+	static rehydrate(
+		id: string,
+		type: string,
+		position: IPosition,
+		size: ISize,
+	): Widget {
+		const preset = PresetWidget.create(type, position);
+
+		return new Widget(
+			id,
+			preset.widgetType,
+			preset.name,
+			preset.description,
+			preset.position,
+			preset.maxSize,
+			preset.minSize,
+			size,
+		);
 	}
 }

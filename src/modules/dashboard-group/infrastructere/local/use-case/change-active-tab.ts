@@ -1,5 +1,5 @@
-import type { IRepository } from '../../domains/adapters';
-import type { IChangeActiveTabUc } from '../../domains/uce-cases';
+import type { IRepository } from '../../../domains/adapters';
+import type { IChangeActiveTabUc } from '../../../domains/uce-cases';
 
 export function ChangeActiveTa(repo: IRepository): IChangeActiveTabUc {
 	return {

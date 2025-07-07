@@ -3,7 +3,7 @@ import { Widget, type IWidgetState } from '../widget';
 import type { IPosition } from '../widget/position';
 import { NotFoundDashboard } from './error';
 export class DashboardGroup {
-	private lastOrder = 0; // нужно пересчитывать при создание/мутации
+	private lastOrder = 0;
 
 	private constructor(
 		private _activeDashboardId: string,
@@ -54,11 +54,7 @@ export class DashboardGroup {
 		this.findDashboardById(id);
 
 		if (this._dashboards.length === 1) {
-			const emptyDashboard = Dashboard.createEmpty(0);
-			this._dashboards = [emptyDashboard];
-			this.lastOrder = 0;
-
-			this._activeDashboardId = emptyDashboard.id;
+			this.setDefaultState();
 		} else {
 			this.selectNewActive(id);
 
@@ -68,6 +64,14 @@ export class DashboardGroup {
 		}
 
 		return this.findActiveDashboard();
+	}
+
+	private setDefaultState() {
+		const { activeDashboardId, dashboards, lastOrder } = DashboardGroup.create();
+
+		this._activeDashboardId = activeDashboardId;
+		this._dashboards = dashboards;
+		this.lastOrder = lastOrder;
 	}
 
 	changeStateWidgets(widgetsState: IWidgetState[]) {
@@ -127,5 +131,27 @@ export class DashboardGroup {
 		}
 
 		throw new NotFoundDashboard(`Dashboard with id ${id} not found`);
+	}
+
+	static create(): DashboardGroup {
+		const emptyDashboard = Dashboard.createEmpty(0);
+		const dashboards = [emptyDashboard];
+
+		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);
+
+		dashboardGroup.lastOrder = 0;
+
+		return dashboardGroup;
+	}
+
+	static rehydrate(
+		_activeDashboardId: string,
+		_dashboards: Dashboard[],
+	): DashboardGroup {
+		const dashboardGroup = new DashboardGroup(_activeDashboardId, _dashboards);
+
+		dashboardGroup.calculateOrder();
+
+		return dashboardGroup;
 	}
 }
