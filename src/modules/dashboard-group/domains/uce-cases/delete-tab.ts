@@ -1,4 +1,4 @@
-import type { IDashboard } from './dto';
+import type { IDashboard, IWidgetPreset } from './dto';
 
 export interface IDeleteTabUc {
 	execute(in_: IInDeleteTab): Promise<IOutDeleteTab>;
@@ -9,6 +9,6 @@ export interface IInDeleteTab {
 }
 
 export interface IOutDeleteTab {
-	activeTabId: string;
-	dashboards: IDashboard[];
+	dashboard: IDashboard;
+	widgets: IWidgetPreset[];
 }

@@ -50,6 +50,46 @@ export class DashboardGroup {
 		return newDashboard.id;
 	}
 
+	deleteDashboard(id: string): Dashboard {
+		this.findDashboardById(id);
+
+		if (this._dashboards.length === 1) {
+			const emptyDashboard = Dashboard.createEmpty(0);
+			this._dashboards = [emptyDashboard];
+			this.lastOrder = 0;
+
+			this._activeDashboardId = emptyDashboard.id;
+		} else {
+			this.selectNewActive(id);
+
+			this._dashboards = this._dashboards.filter(dashboard => dashboard.id !== id);
+
+			this.calculateOrder();
+		}
+
+		return this.findActiveDashboard();
+	}
+
+	private selectNewActive(id: string) {
+		const newIndex = this._dashboards
+			.reverse()
+			.findIndex(dashboard => dashboard.id === id) - 1;
+
+		if (newIndex === -1) {
+			this._activeDashboardId = this._dashboards[this._dashboards.length - 1].id;
+		} else {
+			this._activeDashboardId = this._dashboards[newIndex].id;
+		}
+	}
+
+	private calculateOrder() {
+		this._dashboards.forEach((dashboard, index) => {
+			dashboard.order = index;
+		});
+
+		this.lastOrder = this._dashboards.length;
+	}
+
 	private checkAllDashboardsExist(dashboardIds: string[]) {
 		dashboardIds.forEach(dashboardId => this.findDashboardById(dashboardId));
 	}

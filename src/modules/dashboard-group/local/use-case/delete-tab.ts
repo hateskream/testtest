@@ -1,6 +1,6 @@
-import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../domains/adapters/contract';
+import type { IRepository } from '../../domains/adapters/contract';
+import { allWidgets } from '../../domains/entities/widget';
 import type { IDeleteTabUc } from '../../domains/uce-cases';
-
 
 
 export function DeleteTab(repo: IRepository): IDeleteTabUc {
@@ -8,14 +8,15 @@ export function DeleteTab(repo: IRepository): IDeleteTabUc {
 		async execute(_in) {
 			const dashboardGroup = await repo.Get();
 
-			// TODO: реализовать метод удаления таба в DashboardGroup
-			const { activeTabId, dashboards } = dashboardGroup.deleteTab(_in.tabId);
+			const dashboard = dashboardGroup.deleteDashboard(_in.tabId);
 
 			await repo.Set(dashboardGroup);
 
+			const widgets = allWidgets();
+
 			return {
-				activeTabId,
-				dashboards,
+				dashboard,
+				widgets,
 			};
 		},
 	};
