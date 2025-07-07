@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ErrorNetworkComponent } from '../../../base';
+import { ErrorNetworkComponent } from '@/modules/widgets/base';
 </script>
 
 <template>
