@@ -38,6 +38,10 @@ export class Widget {
 		return this._position;
 	}
 
+	set position(value: IPosition) {
+		this._position = value;
+	}
+
 	get maxSize(): ISize {
 		return this._maxSize;
 	}

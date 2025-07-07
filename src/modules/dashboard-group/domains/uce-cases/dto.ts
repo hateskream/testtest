@@ -45,6 +45,6 @@ export interface IWidgetPreset {
 }
 
 export interface IWidgetState {
-	widgetId: string;
+	id: string;
 	position: IPosition;
 }

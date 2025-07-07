@@ -1,5 +1,5 @@
 import { Dashboard } from '../dashboard/dashboard';
-import { Widget } from '../widget';
+import { Widget, type IWidgetState } from '../widget';
 import type { IPosition } from '../widget/position';
 import { NotFoundDashboard } from './error';
 export class DashboardGroup {
@@ -68,6 +68,14 @@ export class DashboardGroup {
 		}
 
 		return this.findActiveDashboard();
+	}
+
+	changeStateWidgets(widgetsState: IWidgetState[]) {
+		this.findActiveDashboard().changeWidgetsState(widgetsState);
+	}
+
+	deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
+		this.findActiveDashboard().deleteWidget(widgetId, widgetsState);
 	}
 
 	private selectNewActive(id: string) {

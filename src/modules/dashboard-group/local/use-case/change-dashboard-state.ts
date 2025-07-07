@@ -7,8 +7,7 @@ export function ChangeDashboardState(repo: IRepository): IChangeDashboardStateUc
 		async execute(_in) {
 			const dashboardGroup = await repo.Get();
 
-			// TODO: реализовать метод изменения состояния дашборда в DashboardGroup
-			// dashboardGroup.changeDashboardState(_in.dashboardState);
+			dashboardGroup.changeStateWidgets(_in.dashboardState);
 
 			await repo.Set(dashboardGroup);
 		},

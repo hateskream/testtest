@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
 
-import { Widget, PresetWidget } from '../widget';
+import { Widget, PresetWidget, type IWidgetState } from '../widget';
+import { NotFoundWidget } from './error';
 export class Dashboard {
 	private constructor(
 		private _id: string,
@@ -32,6 +33,32 @@ export class Dashboard {
 
 	set name(value: string) {
 		this._name = value;
+	}
+
+	changeWidgetsState(widgetsState: IWidgetState[]) {
+		widgetsState.forEach(widgetState => {
+			if (widgetState.id) {
+				this.findWidgetById(widgetState.id).position = widgetState.position;
+			}
+		});
+	}
+
+	deleteWidget(id: string, widgetsState: IWidgetState[]) {
+		this.findWidgetById(id);
+
+		this._widgets = this._widgets.filter(w => w.id !== id);
+
+		this.changeWidgetsState(widgetsState);
+	}
+
+	private findWidgetById(id: string): Widget {
+		const foundedWidget = this._widgets.find(w => w.id === id);
+
+		if (foundedWidget) {
+			return foundedWidget;
+		}
+
+		throw new NotFoundWidget('Widget with id ' + id + ' not found');
 	}
 
 	addWidget(widget: Widget) {
