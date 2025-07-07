@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/model';
-import type { IPerformanceFilter } from '@/modules/widgets/performance/model';
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
@@ -20,9 +19,10 @@ const props = defineProps<IWidgetComponentProps>();
 
 const performanceStore = usePerformanceStore();
 
-const filters = ref<IPerformanceFilter>(performanceStore.currentFilter);
+// Reactive filter from store
+const filters = computed(() => performanceStore.currentFilter);
 
-const { data, isLoading, isError } = useQueryPerformance(filters.value);
+const { data, isLoading, isError } = useQueryPerformance(filters);
 </script>
 
 <template>

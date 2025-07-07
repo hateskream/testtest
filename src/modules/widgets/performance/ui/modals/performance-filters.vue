@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 
 import {
 	ModalFilter,
@@ -7,24 +7,42 @@ import {
 	ModalItemSwitch,
 } from '@/modules/widgets/base/modal';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 
-// Реактивные состояния для фильтров
-const selectedStock = ref<'industry' | 'sector'>('industry');
-const selectedDate = ref<'today' | 'yesterday' | 'week'>('today');
-const selectedDisplay = ref<'bar' | 'list'>('bar');
-const compactMode = ref(false);
+const performanceStore = usePerformanceStore();
 
-// Методы для обновления состояний
+// Computed properties from store
+const selectedStock = computed({
+	get: () => performanceStore.currentFilter.type,
+	set: (value: 'industry' | 'sector') => performanceStore.setFilterType(value),
+});
+
+const selectedDate = computed({
+	get: () => performanceStore.currentFilter.timeRange,
+	set: (value: 'today' | 'yesterday' | 'week') => performanceStore.setTimeRange(value),
+});
+
+const selectedDisplay = computed({
+	get: () => performanceStore.currentDisplayMode,
+	set: (value: 'bar' | 'list') => performanceStore.setDisplayMode(value),
+});
+
+const compactMode = computed({
+	get: () => performanceStore.isCompactMode,
+	set: () => performanceStore.toggleCompactMode(),
+});
+
+// Methods for updating states
 const selectStock = (value: 'industry' | 'sector') => {
-	selectedStock.value = value;
+	performanceStore.setFilterType(value);
 };
 
 const selectDate = (value: 'today' | 'yesterday' | 'week') => {
-	selectedDate.value = value;
+	performanceStore.setTimeRange(value);
 };
 
 const selectDisplay = (value: 'bar' | 'list') => {
-	selectedDisplay.value = value;
+	performanceStore.setDisplayMode(value);
 };
 </script>
 
