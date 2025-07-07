@@ -11,6 +11,17 @@ export interface IDashboard {
 	widgets: IWidget[];
 }
 
+export interface IWidget {
+	id: string;
+	widgetType: string;
+	name: string;
+	description: string;
+	position: IPosition;
+	maxSize: ISize;
+	minSize: ISize;
+	defaultSize: ISize;
+}
+
 export interface IPosition {
 	x: number;
 	y: number;
@@ -21,17 +32,6 @@ export interface IPosition {
 export interface ISize {
 	w: number;
 	h: number;
-}
-
-export interface IWidget {
-	id: string;
-	widgetType: string;
-	name: string;
-	description: string;
-	position: IPosition;
-	maxSize: ISize;
-	minSize: ISize;
-	defaultSize: ISize;
 }
 
 export interface IWidgetPreset {
