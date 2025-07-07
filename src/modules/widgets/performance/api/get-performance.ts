@@ -139,39 +139,6 @@ async function getMockData(args: IGetPerformanceRequest): Promise<IPerformanceRe
 		},
 	];
 
-	const industriesData2: IPerformanceItem[] = [
-		{
-			id: '1',
-			name: 'AAPL',
-			change: 2.34,
-			type: 'industry',
-		},
-		{
-			id: '2',
-			name: 'GOOGL',
-			change: 1.87,
-			type: 'industry',
-		},
-		{
-			id: '3',
-			name: 'MSFT',
-			change: 1.45,
-			type: 'industry',
-		},
-		{
-			id: '4',
-			name: 'TSLA',
-			change: -0.78,
-			type: 'industry',
-		},
-		{
-			id: '5',
-			name: 'AMZN',
-			change: -1.23,
-			type: 'industry',
-		},
-	];
-
 	let data: IPerformanceItem[] = [];
 
 	switch (args.type) {
