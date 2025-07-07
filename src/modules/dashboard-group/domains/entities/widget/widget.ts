@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { IPosition } from './position';
 import type { ISize } from './size';
-import type { PresetWidget } from './widget-preset';
+import { PresetWidget } from './widget-preset';
 import type { WidgetType } from './widget-type';
 
 export class Widget {
@@ -49,6 +49,13 @@ export class Widget {
 	get defaultSize(): ISize {
 		return this._defaultSize;
 	}
+
+	static create(type: string, position: IPosition): Widget {
+		const preset = PresetWidget.create(type, position);
+
+		return Widget.createFromPreset(preset);
+	}
+
 
 	static createFromPreset(preset: PresetWidget): Widget {
 		return new Widget(

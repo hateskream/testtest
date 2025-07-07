@@ -36,6 +36,10 @@ export class Dashboard {
 		this._name = value;
 	}
 
+	addWidget(widget: Widget) {
+		this._widgets.push(widget);
+	}
+
 	static createMainDashboard(order = 0): Dashboard {
 		const cryptoPreset = [
 			PresetWidget.createHotMarkets({ x: 0, y: 0, w: 2, h: 4 }),

@@ -1,4 +1,7 @@
 import type { Dashboard } from '../dashboard/dashboard';
+import { Widget } from '../widget';
+import type { IPosition } from '../widget/position';
+import { NotFoundActiveDashboard } from './error';
 
 export class DashboardGroup {
 	private constructor(
@@ -14,17 +17,22 @@ export class DashboardGroup {
 		return this._activeDashboardId;
 	}
 
-	changeActiveDashboard(id: string) {
-		this._activeDashboardId = id;
+	addWidget(type: string, position: IPosition): string {
+		const dashboard = this.findActiveDashboard();
+		const widget = Widget.create(type, position);
+		dashboard.addWidget(widget);
+
+		return widget.id;
 	}
 
-	addDashboard(dashboard: Dashboard) {
-		this._dashboards.push(dashboard);
+	private findActiveDashboard(): Dashboard {
+		const foundedDashboard = this._dashboards
+			.find(dashboard => dashboard.id === this._activeDashboardId);
+
+		if (foundedDashboard) {
+			return foundedDashboard;
+		}
+
+		throw new NotFoundActiveDashboard();
 	}
-
-	// removeDashboard(id: string) {
-	// 	this._dashboards = this._dashboards.filter(dashboard => dashboard.id !== id);
-	// }
-
-	// static createNew()
 }

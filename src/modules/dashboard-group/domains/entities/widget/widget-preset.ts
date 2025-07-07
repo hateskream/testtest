@@ -1,6 +1,6 @@
 import type { IPosition } from './position';
 import type { ISize } from './size';
-import { WidgetType } from './widget-type';
+import { createWidgetTypeFromString, InvalidWidgetType, WidgetType } from './widget-type';
 
 export class PresetWidget {
 	private static readonly DEFAULT_MIN_SIZE = { w: 1, h: 2 };
@@ -108,12 +108,31 @@ export class PresetWidget {
 		return new PresetWidget(
 			WidgetType.HotMarkets,
 			'Hot Markets',
-			'Hot Markets',
+			'Favorite symbols',
 			pos,
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
 			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
+	}
+
+	static create(typeStr: string, pos: IPosition): PresetWidget {
+		const type = createWidgetTypeFromString(typeStr);
+
+		const creatorMapping: { [key in WidgetType]: (p: IPosition) => PresetWidget } = {
+			[WidgetType.FearGreed]: PresetWidget.createFearGreed,
+			[WidgetType.Market]: PresetWidget.createMarket,
+			[WidgetType.Price]: PresetWidget.createPrice,
+			[WidgetType.HotMarkets]: PresetWidget.createHotMarkets,
+			[WidgetType.Watchlist]: PresetWidget.createWatchlist,
+			[WidgetType.News]: PresetWidget.createNews,
+		};
+
+		if (type in creatorMapping) {
+			return creatorMapping[type](pos);
+		}
+
+		throw new InvalidWidgetType(typeStr);
 	}
 }
 
