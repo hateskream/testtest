@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { computed, useCssModule } from 'vue';
 
 interface IUiSkeletonProps {
 	width?: string;
-	height?: string;
+	height?: CSSProperties['height'];
 	shape?: 'circle' | 'rectangle';
 	size?: string | null;
-	borderRadius?: string;
+	borderRadius?: CSSProperties['borderRadius'];
 	animation?: 'wave' | 'none';
 	opacity?: number;
 }

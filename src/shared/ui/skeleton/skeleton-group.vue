@@ -1,14 +1,19 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { computed } from 'vue';
 
 import SkeletonComponent from './skeleton-component.vue';
 
 interface ISkeletonGroupProps {
 	count?: number;
+	height?: CSSProperties['height'];
+	borderRadius?: CSSProperties['borderRadius'];
 }
 
 const props = withDefaults(defineProps<ISkeletonGroupProps>(), {
 	count: 3,
+	height: '64px',
+	borderRadius: '16px',
 });
 
 const opacityValues = computed(() => {
@@ -31,8 +36,8 @@ const opacityValues = computed(() => {
 			v-for="(opacity, index) in opacityValues"
 			:key="index"
 			:opacity="opacity"
-			height="64px"
-			border-radius="16px"
+			:height="height"
+			:border-radius="borderRadius"
 		/>
 	</div>
 </template>
