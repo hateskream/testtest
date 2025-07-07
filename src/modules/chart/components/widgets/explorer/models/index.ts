@@ -128,4 +128,13 @@ export const chartWidgetRealSections = [
 		id:'quarterly-revenue',
 		title: 'Quarterly revenue',
 	},
+	{
+		id:'peer-analysis',
+		title: 'Peer analysis',
+	},
+	{
+		id:'insider-trading',
+		title: 'Insider trading',
+	},
+
 ];

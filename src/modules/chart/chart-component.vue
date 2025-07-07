@@ -19,7 +19,11 @@ import {
 	ChartSectionPriceTarget,
 	ChartSectionValuationsAndEstimates,
 } from './components/sections';
-import { ChartSectionInsightAndActivity } from '@/modules/chart/components/sections';
+import {
+	ChartSectionInsiderTrading,
+	ChartSectionInsightAndActivity,
+	ChartSectionPeerAnalysis,
+} from '@/modules/chart/components/sections';
 
 import ChartSectionQuarterlyRevenue
 	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
@@ -185,6 +189,14 @@ const explorerDate = computed(() => {
 					/>
 					<chart-section-quarterly-revenue
 						:section="chartWidgetRealSections[4]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-peer-analysis
+						:section="chartWidgetRealSections[5]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-insider-trading
+						:section="chartWidgetRealSections[6]"
 						:register-item-ref="registerItemRef"
 					/>
 					<chart-main-column-component

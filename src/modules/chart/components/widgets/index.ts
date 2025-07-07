@@ -6,6 +6,7 @@ import { ChartWidghetInsights } from './insights';
 import { ChartWidgetKeyIndicators } from './key-indicators';
 import { ChartWidgetFearGreed } from './fear-greed';
 import { ChartWidgetNews } from './news';
+import { ChartWidgetInsiderTrading } from './insider-trading';
 
 export {
 	ChartWidgetPricePerformance,
@@ -19,4 +20,5 @@ export {
 	ChartWidgetKeyIndicators,
 	ChartWidgetFearGreed,
 	ChartWidgetNews,
+	ChartWidgetInsiderTrading,
 };

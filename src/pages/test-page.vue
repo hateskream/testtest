@@ -6,6 +6,8 @@ import { LayoutComponent } from '@/modules/layout';
 import { ChartComponent } from '@/modules/chart';
 import { useChartStore } from '@/modules/chart/store';
 
+import TestUsage from '@/modules/table/test-usage.vue';
+
 const { setColor } = useChartStore();
 
 const r = ref(0);
@@ -20,13 +22,7 @@ const setColors = () => {
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<chart-component />
-			<div :class="classes.wrapper">
-				<input v-model='r' type="number" />
-				<input v-model="g" type="number" />
-				<input v-model="b" type="number" />
-				<button @click="setColors">Set colors</button>
-			</div>
+			<test-usage />
 		</template>
 	</layout-component>
 

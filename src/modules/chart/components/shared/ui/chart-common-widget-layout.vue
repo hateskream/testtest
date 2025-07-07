@@ -1,5 +1,9 @@
 <script setup lang="ts">
+interface IProps {
+	withoutPadding?: boolean;
+}
 
+const props = defineProps<IProps>();
 </script>
 
 <template>
@@ -16,7 +20,7 @@
 				</div>
 			</div>
 			<div
-				:class="classes.body"
+				:class="props.withoutPadding? '' : classes.body"
 			>
 				<slot name="body"></slot>
 			</div>
