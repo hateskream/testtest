@@ -1,7 +1,5 @@
-import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../domains/adapters/contract';
+import type { IRepository } from '../../domains/adapters/contract';
 import type { IAddWidgetUc } from '../../domains/uce-cases';
-
-interface IRepository extends IGetterDashboardGroup, ISetterDashboardGroup {}
 
 export function AddWidget(repo: IRepository): IAddWidgetUc {
 	return {

@@ -10,5 +10,5 @@ export interface IInChangeActiveTab {
 
 export interface IOutChangeActiveTab {
 	activeTabId: string;
-	dashboards: IDashboard[];
+	dashboard: IDashboard;
 }

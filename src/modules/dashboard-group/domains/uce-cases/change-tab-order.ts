@@ -1,12 +1,7 @@
 export interface IChangeTabOrderUc {
-	execute(in_: IInChangeTabOrder): Promise<IOutChangeTabOrder>;
+	execute(in_: IInChangeTabOrder): Promise<void>;
 }
 
 export interface IInChangeTabOrder {
-	dashboardsId: string;
-	tabIds: string[];
-}
-
-export interface IOutChangeTabOrder {
-	tabIds: string[];
+	ids: string[];
 }

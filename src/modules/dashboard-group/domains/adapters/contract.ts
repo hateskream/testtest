@@ -7,3 +7,5 @@ export interface IGetterDashboardGroup {
 export interface ISetterDashboardGroup {
 	Set(dashboardGroup: DashboardGroup): Promise<void>;
 }
+
+export interface IRepository extends IGetterDashboardGroup, ISetterDashboardGroup {}
