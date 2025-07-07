@@ -1,15 +1,11 @@
-import type { IGetterDashboardGroup } from '../../domains/adapters';
+import { allWidgets } from '../../domains/entities/widget';
 import type { IGetWidgetListUc } from '../../domains/uce-cases';
 
-interface IRepository extends IGetterDashboardGroup {}
-
-export function GetWidgetList(repo: IRepository): IGetWidgetListUc {
+export function GetWidgetList(): IGetWidgetListUc {
 	return {
 		async execute() {
-			const dashboardGroup = await repo.Get();
 
-			// TODO: реализовать получение списка виджетов
-			const widgets = dashboardGroup.getWidgetList();
+			const widgets = allWidgets();
 
 			return {
 				widgets,
