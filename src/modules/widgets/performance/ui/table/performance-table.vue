@@ -11,6 +11,8 @@ import { PERFORMANCE_COLORS } from '@/modules/widgets/performance/const';
 import type { IPerformanceItem } from '@/modules/widgets/performance/model';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 
+import PerformanceBarCell from './performance-bar-cell.vue';
+
 interface IPerformanceTableProps {
 	performanceData: IPerformanceItem[];
 	isCompact: boolean;
@@ -33,6 +35,14 @@ const getTimePeriodLabel = computed(() => {
 	}
 });
 
+// Calculate maximum absolute value for bar scaling
+const maxAbsValue = computed(() => {
+	if (props.performanceData.length === 0) {
+		return 100;
+	}
+	return Math.max(...props.performanceData.map(item => Math.abs(item.change)));
+});
+
 // Configuration for table columns - только 2 колонки
 const columns = computed<IGenericTableColumn[]>(() => [
 	{
@@ -43,7 +53,6 @@ const columns = computed<IGenericTableColumn[]>(() => [
 		sortable: true,
 		draggable: false,
 		visible: true,
-		// minWidth: 200,
 		type: 'string' as const,
 		group: {
 			name: 'general',
@@ -58,7 +67,6 @@ const columns = computed<IGenericTableColumn[]>(() => [
 		sortable: true,
 		draggable: false,
 		visible: true,
-		// width: 120,
 		type: 'percent' as const,
 		group: {
 			name: 'performance',
@@ -111,19 +119,20 @@ function formatChange(change: number): string {
 		:sticky-first-column="false"
 		:enable-row-actions="false"
 		:show-header="true"
-		:class="isCompact && classes.compactMode"
 	>
 		<!-- TODO: Custom cell content for symbol -->
 		<template #cell-symbol="{ value }">
-			<span class="symbol-name">{{ value }}</span>
+			<span>{{ value }}</span>
 		</template>
 
-		<!-- TODO: Custom cell content for change percentage -->
 		<template #cell-change="{ value }">
-			<span
-				class="change-value"
-				:style="{ color: getChangeColor(value) }"
-			>
+			<performance-bar-cell
+				v-if="performanceStore.currentDisplayMode === 'bar'"
+				:value="value"
+				:max-abs-value="maxAbsValue"
+			/>
+
+			<span v-else :style="{ color: getChangeColor(value) }">
 				{{ formatChange(value) }}
 			</span>
 		</template>
