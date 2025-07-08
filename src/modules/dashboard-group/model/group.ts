@@ -1,9 +1,9 @@
-import type { IDashboardItem } from './dashboard';
+import type { IWidget } from './dashboard';
 
 export interface IDashboardGroup {
 	id: string;
 	name: string;
-	items: IDashboardItem[];
+	items: IWidget[];
 	isActive: boolean;
 	isEditing: boolean;
 	market: string;

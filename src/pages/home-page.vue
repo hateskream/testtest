@@ -69,7 +69,7 @@ const handleAddTab = () => {
 		</template>
 		<template #content>
 			<dashboard-grid
-				:dashboards="activeGroup"
+				:widgets="activeGroup.items"
 				@add-widget="setNewStateInCurrentGroup"
 				@is-edit="updateIsEdit"
 			>

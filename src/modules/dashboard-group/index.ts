@@ -1,6 +1,6 @@
 export type {
 	IMeta,
-	IDashboardItem,
+	IWidget,
 	IDashboardGroup,
 	IPosition,
 	IDashboardTab,

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 
-import type { IDashboardItem, IMeta } from '@/modules/dashboard-group';
+import type { IWidget, IMeta } from '@/modules/dashboard-group';
 import { CurrentDashboardSymbol } from '../model';
 
 interface IPlaceholderResizeComponent {
-	dashboardItem: IDashboardItem;
+	dashboardItem: IWidget;
 	meta: IMeta;
 }
 

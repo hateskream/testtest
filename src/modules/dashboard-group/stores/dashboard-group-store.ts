@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import {
 	type IDashboardGroup,
-	type IDashboardItem,
+	type IWidget,
 	type IDashboardTab,
 	INIT_DASHBOARDS,
 } from '../model';
@@ -85,7 +85,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
-	function setNewStateInCurrentGroup(items: IDashboardItem[]) {
+	function setNewStateInCurrentGroup(items: IWidget[]) {
 		const group = dashboardGroups.value.find(g => g.isActive);
 
 		if (group) {

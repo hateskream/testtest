@@ -20,8 +20,7 @@ import {
 	useRebuildingGrid,
 } from '../composables';
 import {
-	type IDashboardGroup,
-	type IDashboardItem,
+	type IWidget,
 	type IMeta,
 } from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
@@ -43,7 +42,7 @@ interface IGridState {
 }
 
 interface IGridLayoutComponent {
-	dashboards: IDashboardGroup;
+	widgets: IWidget[];
 	isDnd: boolean;
 	columnsNum: number;
 	rowsNum: number;
@@ -57,7 +56,7 @@ const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
-	(e: 'add-widget', newItems: IDashboardItem[]): void;
+	(e: 'add-widget', newItems: IWidget[]): void;
 }>();
 
 
@@ -84,12 +83,12 @@ const gridState = reactive<IGridState>({
 const resizableWidgetId = ref<number | null>(null);
 const dndWidgetId = ref<number | null>(null);
 
-const isEmpty = computed(() => props.dashboards.items.length === 0);
+const isEmpty = computed(() => props.widgets.length === 0);
 
 const rawDashboards = computed((): IPosition[] =>
 	isEmpty.value ?
 		generateEmptyGrid(props.columnsNum, props.rowsNum) :
-		props.dashboards.items.map(el => ({ ...el.position, i: el.id })),
+		props.widgets.map(el => ({ ...el.position, i: el.id })),
 
 );
 
@@ -208,8 +207,8 @@ function onCreated() {
 
 onBeforeUnmount(unmountPlaceholderComponents);
 
-function getDashboardItemById(id: number): IDashboardItem {
-	const foundDashboard = props.dashboards.items.find(item => item.id === id);
+function getDashboardItemById(id: number): IWidget {
+	const foundDashboard = props.widgets.find(item => item.id === id);
 	if (foundDashboard) {
 		return foundDashboard;
 	}
@@ -233,7 +232,7 @@ function getMaxSize(id: number): { w: number; h: number } {
 		return dnDProvider.newDashboard.value.maxSize;
 	}
 
-	const foundDashboard = props.dashboards.items.find(item => item.id === id);
+	const foundDashboard = props.widgets.find(item => item.id === id);
 
 	if (!foundDashboard) {
 		throw new Error(`Dashboard with id ${id} not found 2`);
@@ -261,7 +260,7 @@ function getMinSize(id: number): { w: number; h: number } {
 		return dnDProvider.newDashboard.value.minSize;
 	}
 
-	const foundDashboard = props.dashboards.items.find(item => item.id === id);
+	const foundDashboard = props.widgets.find(item => item.id === id);
 
 	if (!foundDashboard) {
 		throw new Error(`Dashboard with id ${id} not found 2`);
@@ -274,7 +273,7 @@ function getMinSize(id: number): { w: number; h: number } {
 }
 
 function getMeta(id: number, isResizing = false): IMeta {
-	const foundDashboard = props.dashboards.items.find(item => item.id === id);
+	const foundDashboard = props.widgets.find(item => item.id === id);
 
 	if (!foundDashboard) {
 		throw new Error(`Dashboard with id ${id} not found 2`);
@@ -478,12 +477,12 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
-		const newItems: IDashboardItem = {
+		const newItems: IWidget = {
 			...dnDProvider.newDashboard.value,
 			position,
 		};
 
-		emit('add-widget', [newItems, ...updateDashboardItemsPositions(props.dashboards.items, layout.value)]);
+		emit('add-widget', [newItems, ...updateDashboardItemsPositions(props.widgets, layout.value)]);
 
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
 
@@ -494,9 +493,9 @@ function handlerDragEnd() {
 }
 
 function updateDashboardItemsPositions(
-	dashboardItems: IDashboardItem[],
+	dashboardItems: IWidget[],
 	positions: IPosition[],
-): IDashboardItem[] {
+): IWidget[] {
 	return dashboardItems.map(item => {
 		const matchingPosition = positions.find(pos => pos.i === item.id);
 		if (matchingPosition) {
@@ -521,7 +520,7 @@ function deleteDashboards(widgetId: number) {
 		return;
 	}
 
-	const updatedDashboards = props.dashboards.items.filter(item => item.id !== widgetId);
+	const updatedDashboards = props.widgets.filter(item => item.id !== widgetId);
 
 
 	gridLayoutRef.value.dragEvent('dragend', widgetId, 0, 0, 0, 0);
@@ -531,8 +530,8 @@ function deleteDashboards(widgetId: number) {
 	emit('add-widget', updatedDashboards);
 }
 
-function findDashboardItemById(id: number):IDashboardItem | undefined {
-	return props.dashboards.items.find(item => item.id === id);
+function findDashboardItemById(id: number):IWidget | undefined {
+	return props.widgets.find(item => item.id === id);
 }
 
 function initializeWidgetIdToSize(positions: IPosition[]) {

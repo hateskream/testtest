@@ -12,24 +12,24 @@ export interface ISize {
 	h: number;
 }
 
-export interface IDashboardItem {
+export interface IWidget {
 	name: string;
 	id: number;
 	description: string;
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
-	dashboardType: WidgetType;
+	widgetType: WidgetType;
 }
 
 const WIDGET_MIN_SIZE = { w: 1, h: 2 };
 const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
-export const INIT_DASHBOARDS: IDashboardItem[] = [
+export const INIT_DASHBOARDS: IWidget[] = [
 	{
 		id: 0,
 		name: 'Hot Markets',
-		dashboardType: WidgetType.HotMarkets,
+		widgetType: WidgetType.HotMarkets,
 		position: { x: 0, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -38,7 +38,7 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 1,
 		name: 'Fear & Greed',
-		dashboardType: WidgetType.FearGreed,
+		widgetType: WidgetType.FearGreed,
 		position: { x: 2, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: { w: 2, h: 6 },
@@ -47,7 +47,7 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 2,
 		name: 'Price',
-		dashboardType: WidgetType.Price,
+		widgetType: WidgetType.Price,
 		position: { x: 4, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -56,7 +56,7 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 3,
 		name: 'Market',
-		dashboardType: WidgetType.Market,
+		widgetType: WidgetType.Market,
 		position: { x: 0, y: 4, w: 3, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -65,7 +65,7 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 4,
 		name: 'News',
-		dashboardType: WidgetType.News,
+		widgetType: WidgetType.News,
 		position: { x: 3, y: 4, w: 3, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -74,7 +74,7 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 5,
 		name: 'Watchlist',
-		dashboardType: WidgetType.Watchlist,
+		widgetType: WidgetType.Watchlist,
 		position: { x: 0, y: 0, w: 6, h: 8 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -85,11 +85,11 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 
 const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };
 
-export const ALL_DASHBOARDS: IDashboardItem[] = [
+export const ALL_DASHBOARDS: IWidget[] = [
 	{
 		id: 13,
 		name: 'Market',
-		dashboardType: WidgetType.Market,
+		widgetType: WidgetType.Market,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -98,7 +98,7 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 11,
 		name: 'Fear & Greed',
-		dashboardType: WidgetType.FearGreed,
+		widgetType: WidgetType.FearGreed,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -107,7 +107,7 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 12,
 		name: 'Price',
-		dashboardType: WidgetType.Price,
+		widgetType: WidgetType.Price,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -116,7 +116,7 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 14,
 		name: 'News',
-		dashboardType: WidgetType.News,
+		widgetType: WidgetType.News,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -125,7 +125,7 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 10,
 		name: 'Watchlist',
-		dashboardType: WidgetType.Watchlist,
+		widgetType: WidgetType.Watchlist,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
@@ -134,7 +134,7 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
 		id: 15,
 		name: 'Market Cap',
-		dashboardType: WidgetType.MarketCap,
+		widgetType: WidgetType.MarketCap,
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,

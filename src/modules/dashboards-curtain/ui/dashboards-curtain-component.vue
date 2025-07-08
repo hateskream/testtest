@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type IDashboardItem, WidgetType } from '@/modules/dashboard-group';
+import { type IWidget, WidgetType } from '@/modules/dashboard-group';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import DraggableElement from './draggable-element.vue';
@@ -16,7 +16,7 @@ const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
 };
 
 interface IDashboardsCurtainComponentProps {
-	dashboards: IDashboardItem[];
+	dashboards: IWidget[];
 }
 
 const props = defineProps<IDashboardsCurtainComponentProps>();
@@ -26,11 +26,11 @@ const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true }
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
-	(e: 'new-dashboard', dashboard: IDashboardItem): void;
+	(e: 'new-dashboard', dashboard: IWidget): void;
 	(e: 'set-can-delete', value: boolean): void;
 }>();
 
-function onDrag(dashboard: IDashboardItem) {
+function onDrag(dashboard: IWidget) {
 	emit('drag');
 	emit('new-dashboard', dashboard);
 }
@@ -60,7 +60,7 @@ function fixCurtain() {
 							<dashboard-component
 								:title="dashboard.name"
 								:description="dashboard.description"
-								:icon="WIDGET_TYPE_TO_ICON[dashboard.dashboardType]"
+								:icon="WIDGET_TYPE_TO_ICON[dashboard.widgetType]"
 							/>
 						</template>
 						<template #ghost>

@@ -3,19 +3,19 @@ import { ref, watch } from 'vue';
 import type { GridLayout } from 'grid-layout-plus';
 
 import { responsiveGridLayout } from '../composables';
-import type { IDashboardItem, IDashboardGroup } from '@/modules/dashboard-group';
+import type { IWidget } from '@/modules/dashboard-group';
 
 import EditingGrid from './editing-grid.vue';
 import DashboardGrid from './dashboard-grid.vue';
 
 interface IProps {
-	dashboards: IDashboardGroup;
+	widgets: IWidget[];
 }
 
 const props = defineProps<IProps>();
 
 const emit = defineEmits<{
-	(e: 'add-widget', newItems: IDashboardItem[]): void;
+	(e: 'add-widget', newItems: IWidget[]): void;
 	(e: 'is-edit', value: boolean): void;
 }>();
 
@@ -66,7 +66,7 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 		<div :class="classes.content">
 			<dashboard-grid
 				:column-width="columnWidth"
-				:dashboards="props.dashboards"
+				:widgets="props.widgets"
 				:is-dnd="isEditState"
 				:columns-num="columnsNum"
 				:row-height="rowHeight"
