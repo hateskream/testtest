@@ -13,14 +13,7 @@ export interface ISize {
 	h: number;
 }
 
-export enum DashboardItemType {
-	Instance = 'instance',
-	Stack = 'stack',
-	Folder = 'folder',
-}
-
 export interface IDashboardItem {
-	type: DashboardItemType;
 	name: string;
 	id: number;
 	icon: IconIds;
@@ -28,29 +21,14 @@ export interface IDashboardItem {
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
-}
-
-export interface IDashboardInstance extends IDashboardItem {
-	type: DashboardItemType.Instance;
 	dashboardType: WidgetType;
-}
-
-export interface IDashboardStack extends IDashboardItem {
-	type: DashboardItemType.Stack;
-	items: (IDashboardInstance | IDashboardFolder)[];
-}
-
-export interface IDashboardFolder extends IDashboardItem {
-	type: DashboardItemType.Folder;
-	items: IDashboardInstance[];
 }
 
 const WIDGET_MIN_SIZE = { w: 1, h: 2 };
 const WIDGET_MAX_SIZE = { w: Infinity, h: Infinity };
 
-export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboardStack) [] = [
+export const INIT_DASHBOARDS: IDashboardItem[] = [
 	{
-		type: DashboardItemType.Instance,
 		id: 0,
 		name: 'Hot Markets',
 		dashboardType: WidgetType.HotMarkets,
@@ -61,7 +39,6 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		description: 'Hot Markets',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 1,
 		name: 'Fear & Greed',
 		dashboardType: WidgetType.FearGreed,
@@ -72,7 +49,6 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		description: 'Hot Markets',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 2,
 		name: 'Price',
 		dashboardType: WidgetType.Price,
@@ -83,7 +59,6 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		description: 'Hot Markets',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 3,
 		name: 'Market',
 		dashboardType: WidgetType.Market,
@@ -94,7 +69,6 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		description: 'Hot Markets',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 4,
 		name: 'News',
 		dashboardType: WidgetType.News,
@@ -105,7 +79,6 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 		description: 'Hot Markets',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 5,
 		name: 'Watchlist',
 		dashboardType: WidgetType.Watchlist,
@@ -120,9 +93,8 @@ export const INIT_DASHBOARDS: (IDashboardInstance | IDashboardFolder | IDashboar
 
 const NEW_DASHBOARD_MIN_SIZE: ISize = { w: 2, h: 4 };
 
-export const ALL_DASHBOARDS: IDashboardInstance[] = [
+export const ALL_DASHBOARDS: IDashboardItem[] = [
 	{
-		type: DashboardItemType.Instance,
 		id: 13,
 		name: 'Market',
 		dashboardType: WidgetType.Market,
@@ -133,7 +105,6 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		description: 'Candlestick formations and price action analysis.',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 11,
 		name: 'Fear & Greed',
 		dashboardType: WidgetType.FearGreed,
@@ -144,7 +115,6 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		description: 'Market sentiment index',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 12,
 		name: 'Price',
 		dashboardType: WidgetType.Price,
@@ -155,7 +125,6 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		description: 'Real-time crypto price and chart',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 14,
 		name: 'News',
 		dashboardType: WidgetType.News,
@@ -166,7 +135,6 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		description: 'Stay in the know',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 10,
 		name: 'Watchlist',
 		dashboardType: WidgetType.Watchlist,
@@ -177,7 +145,6 @@ export const ALL_DASHBOARDS: IDashboardInstance[] = [
 		description: 'Favorite symbols',
 	},
 	{
-		type: DashboardItemType.Instance,
 		id: 15,
 		name: 'Market Cap',
 		dashboardType: WidgetType.MarketCap,

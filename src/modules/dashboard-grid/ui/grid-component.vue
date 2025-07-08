@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import type { GridLayout } from 'grid-layout-plus';
 
 import { responsiveGridLayout } from '../composables';
-import type { IDashboardFolder, IDashboardGroup, IDashboardInstance, IDashboardStack } from '@/modules/dashboard-group';
+import type { IDashboardItem, IDashboardGroup } from '@/modules/dashboard-group';
 
 import EditingGrid from './editing-grid.vue';
 import DashboardGrid from './dashboard-grid.vue';
@@ -15,7 +15,7 @@ interface IProps {
 const props = defineProps<IProps>();
 
 const emit = defineEmits<{
-	(e: 'add-widget', newItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[]): void;
+	(e: 'add-widget', newItems: IDashboardItem[]): void;
 	(e: 'is-edit', value: boolean): void;
 }>();
 

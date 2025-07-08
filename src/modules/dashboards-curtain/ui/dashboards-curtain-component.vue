@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IDashboardInstance } from '@/modules/dashboard-group';
+import type { IDashboardItem } from '@/modules/dashboard-group';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import DraggableElement from './draggable-element.vue';
@@ -8,7 +8,7 @@ import SearchComponent from './search-component.vue';
 
 
 interface IDashboardsCurtainComponentProps {
-	dashboards: IDashboardInstance[];
+	dashboards: IDashboardItem[];
 }
 
 const props = defineProps<IDashboardsCurtainComponentProps>();
@@ -18,11 +18,11 @@ const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true }
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
-	(e: 'new-dashboard', dashboard: IDashboardInstance): void;
+	(e: 'new-dashboard', dashboard: IDashboardItem): void;
 	(e: 'set-can-delete', value: boolean): void;
 }>();
 
-function onDrag(dashboard: IDashboardInstance) {
+function onDrag(dashboard: IDashboardItem) {
 	emit('drag');
 	emit('new-dashboard', dashboard);
 }

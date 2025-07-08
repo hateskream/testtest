@@ -2,10 +2,8 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 import {
-	type IDashboardFolder,
 	type IDashboardGroup,
-	type IDashboardInstance,
-	type IDashboardStack,
+	type IDashboardItem,
 	type IDashboardTab,
 	INIT_DASHBOARDS,
 } from '../model';
@@ -87,7 +85,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		});
 	}
 
-	function setNewStateInCurrentGroup(items: (IDashboardInstance | IDashboardFolder | IDashboardStack)[]) {
+	function setNewStateInCurrentGroup(items: IDashboardItem[]) {
 		const group = dashboardGroups.value.find(g => g.isActive);
 
 		if (group) {

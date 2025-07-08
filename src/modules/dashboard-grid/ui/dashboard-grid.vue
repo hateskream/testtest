@@ -20,11 +20,8 @@ import {
 	useRebuildingGrid,
 } from '../composables';
 import {
-	type IDashboardFolder,
 	type IDashboardGroup,
-	type IDashboardInstance,
 	type IDashboardItem,
-	type IDashboardStack,
 	type IMeta,
 } from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
@@ -60,7 +57,7 @@ const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
-	(e: 'add-widget', newItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[]): void;
+	(e: 'add-widget', newItems: IDashboardItem[]): void;
 }>();
 
 
@@ -481,7 +478,7 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
-		const newItems: IDashboardInstance = {
+		const newItems: IDashboardItem = {
 			...dnDProvider.newDashboard.value,
 			position,
 		};
@@ -497,9 +494,9 @@ function handlerDragEnd() {
 }
 
 function updateDashboardItemsPositions(
-	dashboardItems: (IDashboardInstance | IDashboardFolder | IDashboardStack)[],
+	dashboardItems: IDashboardItem[],
 	positions: IPosition[],
-): (IDashboardInstance | IDashboardFolder | IDashboardStack)[] {
+): IDashboardItem[] {
 	return dashboardItems.map(item => {
 		const matchingPosition = positions.find(pos => pos.i === item.id);
 		if (matchingPosition) {
@@ -534,7 +531,7 @@ function deleteDashboards(widgetId: number) {
 	emit('add-widget', updatedDashboards);
 }
 
-function findDashboardItemById(id: number): IDashboardInstance | IDashboardFolder | IDashboardStack | undefined {
+function findDashboardItemById(id: number):IDashboardItem | undefined {
 	return props.dashboards.items.find(item => item.id === id);
 }
 
