@@ -15,6 +15,7 @@ export enum WidgetType {
 	Watchlist = 'watchlist',
 	Performance = 'performance',
 	Price2 = 'price-2',
+	AltcoinSeason = 'altcoin-season',
 }
 
 export class InvalidWidgetType extends DomainError {
