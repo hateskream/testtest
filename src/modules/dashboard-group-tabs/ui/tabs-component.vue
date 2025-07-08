@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { nextTick, useTemplateRef } from 'vue';
+import { ref, watch } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IDashboardTab } from '@/modules/dashboard-group';
+import type { ITab } from '../model';
 
 import TabItem from './tab-item.vue';
 import TabWrapper from './tab-wrapper.vue';
@@ -19,6 +20,27 @@ const emit = defineEmits<{
 	(event: 'rename-tab', id: string, name: string): void;
 }>();
 
+const localTabs = ref<ITab[]>(initTabs(props.tabs));
+
+watch(
+	() => [...props.tabs],
+	(newTabs) => {
+		const tabs = newTabs.map(tab => ({
+			...tab,
+			isEditing: !localTabs.value.find(localTab => localTab.id === tab.id),
+		}));
+
+		localTabs.value = tabs;
+	},
+);
+
+function initTabs(tabs: IDashboardTab[]): ITab[] {
+	return tabs.map(tab => ({
+		...tab,
+		isEditing: false,
+	}));
+}
+
 function onAddTab() {
 	emit('add-tab');
 }
@@ -30,27 +52,12 @@ function onSwitchTab(id: string) {
 function onRenameTab(id: string, name: string) {
 	emit('rename-tab', id, name);
 }
-
-const tabItemRefs = useTemplateRef('tabItemRefs');
-
-const renameTab = () => {
-	nextTick(() => {
-		props.tabs.forEach((tab, index) => {
-			if (tab.isEditing) {
-				tabItemRefs.value?.[index]?.startEditing();
-			}
-		});
-	});
-};
-
-defineExpose({ renameTab });
 </script>
 
 <template>
 	<div :class="classes.tabs">
 		<tab-item
-			v-for="tab in props.tabs"
-			ref="tabItemRefs"
+			v-for="tab in localTabs"
 			:key="tab.id"
 			:tab="tab"
 			@switch="onSwitchTab"

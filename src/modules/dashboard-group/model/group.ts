@@ -5,7 +5,6 @@ export interface IDashboardGroup {
 	name: string;
 	items: IWidget[];
 	isActive: boolean;
-	isEditing: boolean;
 	market: string;
 }
 
@@ -13,5 +12,4 @@ export interface IDashboardTab {
 	id: string;
 	name: string;
 	isActive: boolean;
-	isEditing: boolean;
 }

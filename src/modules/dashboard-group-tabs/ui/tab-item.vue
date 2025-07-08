@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 import { templateRef } from '@vueuse/core';
 
-import type { IDashboardTab } from '@/modules/dashboard-group/model';
+import type { ITab } from '../model';
 
 import TabWrapper from './tab-wrapper.vue';
 
 interface ITabItemProps {
-	tab: IDashboardTab;
+	tab: ITab;
 }
 
 const props = defineProps<ITabItemProps>();
@@ -17,13 +17,23 @@ const emit = defineEmits<{
 	rename: [id: string, name: string];
 }>();
 
-const editing = ref(false);
+const editing = ref(props.tab.isEditing);
 const tabName = ref(props.tab.name);
 const isInitialEdit = ref(true);
+
+watch(
+	() => props.tab.isActive,
+	(isActive) => {
+		if (!isActive) {
+			editing.value = false;
+		}
+	},
+);
 
 function startEditing() {
 	editing.value = true;
 	isInitialEdit.value = true;
+
 
 	nextTick(() => {
 		const input = document.querySelector('input') as HTMLInputElement;
@@ -73,8 +83,6 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	input.style.width = `${measurer.offsetWidth}px`;
 	document.body.removeChild(measurer);
 }
-
-defineExpose({ startEditing });
 </script>
 
 <template>
