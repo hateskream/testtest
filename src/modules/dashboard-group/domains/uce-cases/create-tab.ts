@@ -1,10 +1,11 @@
-import type { IWidgetPreset } from './dto';
+import type { IDashboard, IWidgetPreset } from './dto';
 
 export interface ICreateTabUc {
 	execute(): Promise<IOutCreateTab>;
 }
 
 export interface IOutCreateTab {
-	tabId: string;
+	activeDashboardId: string;
+	dashboard: IDashboard;
 	widgets: IWidgetPreset[];
 }

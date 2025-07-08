@@ -42,12 +42,12 @@ export class DashboardGroup {
 		});
 	}
 
-	createNewDashboard(): string {
+	createNewDashboard(): Dashboard {
 		this.lastOrder += 1;
 		const newDashboard = Dashboard.createEmpty(this.lastOrder);
 		this._dashboards.push(newDashboard);
 
-		return newDashboard.id;
+		return newDashboard;
 	}
 
 	deleteDashboard(id: string): Dashboard {

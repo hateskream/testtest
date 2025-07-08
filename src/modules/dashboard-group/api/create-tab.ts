@@ -1,10 +1,11 @@
 import { useLogger } from '@/shared/service/logger';
 import { useUsecase } from '../composables/use-usecase';
-import type { IWidgetPreset } from '../model';
-import { mapWidgetsPreset } from './mapping';
+import type { IDashboard, IWidgetPreset } from '../model';
+import { mapDashboard, mapWidgetsPreset } from './mapping';
 
 export interface ICreateTabRes {
-	tabId: string;
+	activeDashboardId: string;
+	dashboard: IDashboard;
 	widgets: IWidgetPreset[];
 }
 
@@ -15,7 +16,8 @@ export async function CreateTab(): Promise<ICreateTabRes> {
 		const response = await uc.CreateTabUc().execute();
 
 		return {
-			tabId: response.tabId,
+			activeDashboardId: response.activeDashboardId,
+			dashboard: mapDashboard(response.dashboard),
 			widgets: mapWidgetsPreset(response.widgets),
 		};
 	} catch (error) {

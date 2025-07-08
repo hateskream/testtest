@@ -6,15 +6,13 @@ import {
 	type IDashboardTab,
 	type IDashboard,
 	type IWidgetPreset,
-	ALL_DASHBOARDS,
 } from '../model';
-import { generateTimestampId } from '@/shared/lib';
-import { GetDashboards } from '../api';
+import { ChangeActiveTab, CreateTab, GetDashboards, GetWidgetList, RenameTab } from '../api';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const activeDashboardId = ref('group-1');
 
-	const preset = ref<IWidgetPreset[]>(ALL_DASHBOARDS);
+	const preset = ref<IWidgetPreset[]>([]);
 
 	const dashboards = ref<IDashboard[]>([]);
 
@@ -38,6 +36,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 
 	function onCreated() {
 		loadDashboards();
+		loadPreset();
 	}
 
 	async function loadDashboards() {
@@ -47,26 +46,30 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		activeDashboardId.value = response.dashboardGroup.activeDashboardId;
 	}
 
-	function addTab(name?: string) {
-		const newDashboard: IDashboard = {
-			id: generateTimestampId(),
-			name: name || 'Dashboard',
-			order: 0,
-			widgets: [],
-		};
-		dashboards.value.push(newDashboard);
-		switchTab(newDashboard.id);
+	async function loadPreset() {
+		const response = await GetWidgetList();
+		preset.value = response.widgets;
 	}
 
-	function renameTab(tabId: string, newName: string) {
+	async function addTab() {
+		const response = await CreateTab();
+
+		dashboards.value.push(response.dashboard);
+		activeDashboardId.value = response.activeDashboardId;
+	}
+
+	async function renameTab(tabId: string, newName: string) {
 		const group = dashboards.value.find(g => g.id === tabId);
 		if (group) {
 			group.name = newName;
 		}
+
+		await RenameTab({ tabId, name: newName });
 	}
 
-	function switchTab(tabId: string) {
+	async function switchTab(tabId: string) {
 		activeDashboardId.value = tabId;
+		await ChangeActiveTab({ tabId });
 	}
 
 	function setNewStateInCurrentGroup(items: IWidget[]) {
