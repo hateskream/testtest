@@ -18,7 +18,6 @@ export interface IWidget {
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
-	size: ISize;
 }
 
 export interface IPosition {
@@ -37,7 +36,6 @@ export interface IWidgetPreset {
 	widgetType: string;
 	name: string;
 	description: string;
-	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
 	defaultSize: ISize;

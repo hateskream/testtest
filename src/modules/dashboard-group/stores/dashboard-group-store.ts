@@ -23,10 +23,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		},
 	]);
 
-	// должен меняться при изменение состояния зареган/нет
-	// так же при смене должна происходить синхронизация стейтов локального и серверного
-	// const ucFactory = LocalFactory('dashboard-groups');
-
 	const tabs = computed<IDashboardTab[]>(() =>
 		dashboardGroups.value.map(group => ({
 			id: group.id,

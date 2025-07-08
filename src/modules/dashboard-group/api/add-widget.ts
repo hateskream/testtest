@@ -1,6 +1,6 @@
 import { useLogger } from '@/shared/service/logger';
 import { useUsecase } from '../composables/use-usecase';
-import type { IPosition } from './dto';
+import type { IPosition } from '../new-model/model';
 
 export interface IAddWidgetReq {
 	widgetType: string;

@@ -9,13 +9,8 @@ import type { WidgetType } from './widget-type';
 export class Widget {
 	private constructor(
 		private _id: string,
-		private _widgetType: WidgetType,
-		private _name: string,
-		private _description: string,
+		private readonly _preset: PresetWidget,
 		private _position: IPosition,
-		private _maxSize: ISize,
-		private _minSize: ISize,
-		private _size: ISize,
 	) {}
 
 	get id(): string {
@@ -23,15 +18,15 @@ export class Widget {
 	}
 
 	get widgetType(): WidgetType {
-		return this._widgetType;
+		return this._preset.widgetType;
 	}
 
 	get name(): string {
-		return this._name;
+		return this._preset.name;
 	}
 
 	get description(): string {
-		return this._description;
+		return this.description;
 	}
 
 	get position(): IPosition {
@@ -43,57 +38,34 @@ export class Widget {
 	}
 
 	get maxSize(): ISize {
-		return this._maxSize;
+		return this._preset.maxSize;
 	}
 
 	get minSize(): ISize {
-		return this._minSize;
-	}
-
-	get size(): ISize {
-		return this._size;
+		return this._preset.minSize;
 	}
 
 	static create(type: string, position: IPosition): Widget {
-		const preset = PresetWidget.create(type, position);
+		const preset = PresetWidget.create(type);
 
-		return Widget.createFromPreset(preset);
-	}
-
-	static createFromPreset(preset: PresetWidget): Widget {
 		return new Widget(
 			uuidv4(),
-			preset.widgetType,
-			preset.name,
-			preset.description,
-			preset.position,
-			preset.maxSize,
-			preset.minSize,
-			preset.defaultSize,
+			preset,
+			position,
 		);
-	}
-
-	static createFromPresets(presets: PresetWidget[]): Widget[] {
-		return presets.map((preset) => Widget.createFromPreset(preset));
 	}
 
 	static rehydrate(
 		id: string,
 		type: string,
 		position: IPosition,
-		size: ISize,
 	): Widget {
-		const preset = PresetWidget.create(type, position);
+		const preset = PresetWidget.create(type);
 
 		return new Widget(
 			id,
-			preset.widgetType,
-			preset.name,
-			preset.description,
-			preset.position,
-			preset.maxSize,
-			preset.minSize,
-			size,
+			preset,
+			position,
 		);
 	}
 }

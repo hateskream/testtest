@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-const SizeSchema = z.object({
-	w: z.number(),
-	h: z.number(),
-});
-
-export type Size = z.infer<typeof SizeSchema>;
-
 const PositionSchema = z.object({
 	x: z.number(),
 	y: z.number(),
@@ -20,7 +13,6 @@ const WidgetSchema = z.object({
 	id: z.string(),
 	type: z.string(),
 	position: PositionSchema,
-	size: SizeSchema,
 });
 
 export type Widget = z.infer<typeof WidgetSchema>;

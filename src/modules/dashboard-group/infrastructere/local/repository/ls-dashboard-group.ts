@@ -30,7 +30,7 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 					.map((d) => Dashboard
 						.rehydrate(d.id, d.name, d.order, d.widgets
 							.map(w => Widget
-								.rehydrate(w.id, w.type, w.position, w.size),
+								.rehydrate(w.id, w.type, w.position),
 							),
 						),
 					),
