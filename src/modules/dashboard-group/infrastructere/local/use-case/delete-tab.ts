@@ -1,6 +1,7 @@
 import type { IRepository } from '../../../domains/adapters';
 import { allWidgets } from '../../../domains/entities/widget';
 import type { IDeleteTabUc } from '../../../domains/uce-cases';
+import { mapDashboard, mapWidgetsPreset } from './mappers';
 
 
 export function DeleteTab(repo: IRepository): IDeleteTabUc {
@@ -15,8 +16,8 @@ export function DeleteTab(repo: IRepository): IDeleteTabUc {
 			const widgets = allWidgets();
 
 			return {
-				dashboard,
-				widgets,
+				dashboard: mapDashboard(dashboard),
+				widgets: mapWidgetsPreset(widgets),
 			};
 		},
 	};

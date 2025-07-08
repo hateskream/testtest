@@ -19,10 +19,14 @@ export function mapDashboard(dashboard: IDashboardDto): IDashboard {
 }
 
 export function mapWidgets(widgets: IWidgetDto[]): IWidget[] {
-	return widgets.map(w => ({
-		...w,
-		widgetType: w.widgetType as WidgetType,
-	}));
+	return widgets.map(mapWidget);
+}
+
+export function mapWidget(widget: IWidgetDto): IWidget {
+	return {
+		...widget,
+		widgetType: widget.widgetType as WidgetType,
+	};
 }
 
 export function mapWidgetsPreset(widgets: IWidgetPresetDto[]): IWidgetPreset[] {

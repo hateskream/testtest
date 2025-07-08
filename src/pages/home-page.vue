@@ -16,7 +16,7 @@ import { CurrentDashboard } from '@/modules/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
 const dashboardStore = useDashboardGroupsStore();
-const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardStore;
+const { addTab, switchTab, renameTab, addWidget, deleteWidget, changeDashboardState } = dashboardStore;
 const { tabs, activeDashboard, preset } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
@@ -63,7 +63,9 @@ function updateIsEdit(value: boolean) {
 			<dashboard-grid
 				v-if="activeDashboard"
 				:widgets="activeDashboard.widgets"
-				@add-widget="setNewStateInCurrentGroup"
+				@add-widget="addWidget"
+				@delete-widget="deleteWidget"
+				@change-dashboard-state="changeDashboardState"
 				@is-edit="updateIsEdit"
 			>
 				<template #dashboard-content="{ dashboardItem, meta }">

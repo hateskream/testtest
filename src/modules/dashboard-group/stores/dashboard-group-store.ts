@@ -2,12 +2,23 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 import {
-	type IWidget,
 	type IDashboardTab,
 	type IDashboard,
 	type IWidgetPreset,
+	WidgetType,
+	type IPosition,
+	type IWidgetState,
 } from '../model';
-import { ChangeActiveTab, CreateTab, GetDashboards, GetWidgetList, RenameTab } from '../api';
+import {
+	AddWidget,
+	ChangeActiveTab,
+	ChangeDashboardState,
+	CreateTab,
+	DeleteWidget,
+	GetDashboards,
+	GetWidgetList,
+	RenameTab,
+} from '../api';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const activeDashboardId = ref('group-1');
@@ -72,11 +83,45 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		await ChangeActiveTab({ tabId });
 	}
 
-	function setNewStateInCurrentGroup(items: IWidget[]) {
+	async function changeDashboardState(widgetsState: IWidgetState[]) {
+		console.log(widgetsState);
+		dashboards.value = getNewState(widgetsState);
+
+		await ChangeDashboardState({ dashboardState: widgetsState });
+	}
+
+	async function deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
+		dashboards.value = dashboards.value.map(d => ({
+			...d,
+			widgets: d.widgets.filter(w => w.id !== widgetId),
+		}));
+
+		dashboards.value = getNewState(widgetsState);
+
+		await DeleteWidget({ widgetId, dashboardState: widgetsState });
+	}
+
+	async function addWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
+		dashboards.value = getNewState(widgetsState);
+
+		const { widget: newWidget } = await AddWidget({ widgetType: type, position, widgetsState });
+
 		const group = dashboards.value.find(g => g.id === activeDashboardId.value);
 		if (group) {
-			group.widgets = items;
+			group.widgets.push(newWidget);
 		}
+	}
+
+	function getNewState(widgetsState: IWidgetState[]) {
+		return dashboards.value.map(d => ({
+			...d,
+			widgets: d.widgets.map(w => ({
+				...w,
+				position: widgetsState
+					.find(ws => ws.id === w.id)
+					?.position || w.position,
+			})),
+		}));
 	}
 
 	onCreated();
@@ -89,6 +134,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		renameTab,
 		switchTab,
 		activeDashboard,
-		setNewStateInCurrentGroup,
+		addWidget,
+		deleteWidget,
+		changeDashboardState,
 	};
 });

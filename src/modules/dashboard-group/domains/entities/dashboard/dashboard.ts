@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Widget, type IWidgetState } from '../widget';
 import { NotFoundWidget } from './error';
 import { WidgetType } from '@/modules/dashboard-group/model';
+import type { IPosition } from '../widget/position';
 export class Dashboard {
 	private constructor(
 		private _id: string,
@@ -60,8 +61,13 @@ export class Dashboard {
 		throw new NotFoundWidget('Widget with id ' + id + ' not found');
 	}
 
-	addWidget(widget: Widget) {
+	addWidget(type: string, position: IPosition, widgetsState: IWidgetState[]): Widget {
+		const widget = Widget.create(type, position);
+
 		this._widgets.push(widget);
+		this.changeWidgetsState(widgetsState);
+
+		return widget;
 	}
 
 	static createEmpty(order: number): Dashboard {

@@ -3,7 +3,8 @@ import { ref, watch } from 'vue';
 import type { GridLayout } from 'grid-layout-plus';
 
 import { responsiveGridLayout } from '../composables';
-import type { IWidget } from '@/modules/dashboard-group';
+import type { IPosition, IWidget, WidgetType } from '@/modules/dashboard-group';
+import type { IWidgetState } from '@/modules/dashboard-group/model';
 
 import EditingGrid from './editing-grid.vue';
 import DashboardGrid from './dashboard-grid.vue';
@@ -15,7 +16,9 @@ interface IProps {
 const props = defineProps<IProps>();
 
 const emit = defineEmits<{
-	(e: 'add-widget', newItems: IWidget[]): void;
+	(e: 'add-widget', type: WidgetType, position: IPosition, widgetsState: IWidgetState[]): void;
+	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
+	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
 	(e: 'is-edit', value: boolean): void;
 }>();
 
@@ -44,6 +47,14 @@ function updateIsShowGridState(value: boolean) {
 
 function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 	gridLayoutRef.value = gridLayout;
+}
+
+function emitAddWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
+	emit('add-widget', type, position, widgetsState);
+}
+
+function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
+	emit('delete-widget', widgetId, widgetsState);
 }
 </script>
 
@@ -76,7 +87,9 @@ function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
 				@update-is-show-grid-state="updateIsShowGridState"
 				@set-wrapper="setWrapper"
 				@set-grid-layout-ref="setGridLayoutRef"
-				@add-widget="emit('add-widget', $event)"
+				@add-widget="emitAddWidget"
+				@delete-widget="emitDeleteWidget"
+				@change-dashboard-state="emit('change-dashboard-state', $event)"
 			>
 				<template #dashboard-content="{ dashboardItem, meta }">
 					<slot

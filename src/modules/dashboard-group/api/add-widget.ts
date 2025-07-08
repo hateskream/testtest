@@ -1,14 +1,16 @@
 import { useLogger } from '@/shared/service/logger';
 import { useUsecase } from '../composables/use-usecase';
-import type { IPosition } from '../model';
+import type { IPosition, IWidget, IWidgetState } from '../model';
+import { mapWidget } from './mapping';
 
 export interface IAddWidgetReq {
 	widgetType: string;
 	position: IPosition;
+	widgetsState: IWidgetState[];
 }
 
 export interface IAddWidgetRes {
-	widgetId: string;
+	widget: IWidget;
 }
 
 export async function AddWidget(req: IAddWidgetReq): Promise<IAddWidgetRes> {
@@ -18,7 +20,9 @@ export async function AddWidget(req: IAddWidgetReq): Promise<IAddWidgetRes> {
 	try {
 		const response = await uc.AddWidgetUc().execute(req);
 
-		return response;
+		return {
+			widget: mapWidget(response.widget),
+		};
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;

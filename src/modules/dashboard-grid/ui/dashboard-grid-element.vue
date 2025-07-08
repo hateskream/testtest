@@ -29,6 +29,8 @@ const emit = defineEmits<{
 	(event: 'set-resizable-widget-id', value: string | null): void;
 	(event: 'set-dnd-widget-id', value: string | null): void;
 	(event: 'resize', i : string, newH: number, newW: number): void;
+	(event: 'resized'): void;
+	(event: 'moved'): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -123,6 +125,8 @@ function resize(i: string, newH: number, newW: number) {
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
 		@resize="resize"
+		@resized="emit('resized')"
+		@moved="emit('moved')"
 	>
 
 		<div :class="[classes.itemWrapper, classListItem]">

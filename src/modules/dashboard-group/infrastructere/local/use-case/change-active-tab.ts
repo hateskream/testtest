@@ -1,5 +1,6 @@
 import type { IRepository } from '../../../domains/adapters';
 import type { IChangeActiveTabUc } from '../../../domains/uce-cases';
+import { mapDashboard } from './mappers';
 
 export function ChangeActiveTab(repo: IRepository): IChangeActiveTabUc {
 	return {
@@ -12,7 +13,7 @@ export function ChangeActiveTab(repo: IRepository): IChangeActiveTabUc {
 
 			return {
 				activeTabId: _in.tabId,
-				dashboard,
+				dashboard: mapDashboard(dashboard),
 			};
 		},
 	};

@@ -17,15 +17,7 @@ export function mapDashboard(dashboard: Dashboard): IDashboard {
 }
 
 export function mapWidgets(widgets: Widget[]): IWidget[] {
-	return widgets.map(w => ({
-		id: w.id,
-		name: w.name,
-		description: w.description,
-		position: w.position,
-		maxSize: w.maxSize,
-		minSize: w.minSize,
-		widgetType: w.widgetType,
-	}));
+	return widgets.map(mapWidget);
 }
 
 export function mapWidgetsPreset(widgets: PresetWidget[]): IWidgetPreset[] {
@@ -37,4 +29,16 @@ export function mapWidgetsPreset(widgets: PresetWidget[]): IWidgetPreset[] {
 		minSize: w.minSize,
 		defaultSize: w.defaultSize,
 	}));
+}
+
+export function mapWidget(widget: Widget): IWidget {
+	return {
+		id: widget.id,
+		name: widget.name,
+		description: widget.description,
+		position: widget.position,
+		maxSize: widget.maxSize,
+		minSize: widget.minSize,
+		widgetType: widget.widgetType,
+	};
 }

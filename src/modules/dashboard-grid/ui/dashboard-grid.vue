@@ -22,11 +22,12 @@ import {
 import {
 	type IWidget,
 	type IMeta,
+	type IPosition as WidgetPosition,
 } from '@/modules/dashboard-group';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
 import type { IPosition } from '../model';
-import type { ISize } from '@/modules/dashboard-group/model';
+import type { ISize, IWidgetState, WidgetType } from '@/modules/dashboard-group/model';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -56,7 +57,10 @@ const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
 	(e: 'setWrapper', value: HTMLDivElement): void;
 	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
-	(e: 'add-widget', newItems: IWidget[]): void;
+	(e: 'add-widget', type: WidgetType, position: WidgetPosition, widgetsState: IWidgetState[]): void;
+	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
+	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
+
 }>();
 
 
@@ -341,6 +345,8 @@ function unmountPlaceholderComponents() {
 function updated() {
 	if (!gridState.isUserInteracted) {
 		gridState.isUserInteracted = true;
+
+		return;
 	}
 }
 
@@ -477,41 +483,23 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
-		const newItems: IWidget = {
-			...dnDProvider.newDashboard.value,
-			position,
-			id: newItemId,
-		};
-
-		emit('add-widget', [newItems, ...updateDashboardItemsPositions(props.widgets, layout.value)]);
-
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
 
-
+		emit('add-widget',
+			dnDProvider.newDashboard.value.widgetType,
+			position,
+			mapToWidgetState(layout.value.filter(item => item.i !== newItemId)),
+		);
 	} else {
 		layout.value = layout.value.filter(item => item.i !== dropId);
 	}
 }
 
-function updateDashboardItemsPositions(
-	dashboardItems: IWidget[],
-	positions: IPosition[],
-): IWidget[] {
-	return dashboardItems.map(item => {
-		const matchingPosition = positions.find(pos => pos.i === item.id);
-		if (matchingPosition) {
-			return {
-				...item,
-				position: {
-					x: matchingPosition.x,
-					y: matchingPosition.y,
-					w: matchingPosition.w,
-					h: matchingPosition.h,
-				},
-			};
-		}
-		return item;
-	});
+function mapToWidgetState(positions: IPosition[]): IWidgetState[] {
+	return positions.map(item => ({
+		position: item,
+		id: item.i,
+	}));
 }
 
 function deleteDashboards(widgetId: string) {
@@ -521,14 +509,15 @@ function deleteDashboards(widgetId: string) {
 		return;
 	}
 
-	const updatedDashboards = props.widgets.filter(item => item.id !== widgetId);
-
-
 	gridLayoutRef.value.dragEvent('dragend', widgetId, 0, 0, 0, 0);
 	gridState.isDnd = false;
 	dndWidgetId.value = null;
 
-	emit('add-widget', updatedDashboards);
+	emit(
+		'delete-widget',
+		widgetId,
+		mapToWidgetState(layout.value.filter(item => item.i !== widgetId)),
+	);
 }
 
 function findDashboardItemById(id: string):IWidget | undefined {
@@ -567,6 +556,10 @@ function onResize(i: string, newH: number, newW: number) {
 	};
 
 	setValueInWidgetIdToSize(updatedPosition);
+}
+
+function updateLayout() {
+	emit('change-dashboard-state', mapToWidgetState(layout.value));
 }
 
 onCreated();
@@ -609,6 +602,8 @@ onCreated();
 				@set-resizable-widget-id="setResizableWidgetId"
 				@set-dnd-widget-id="setDndWidgetId"
 				@resize="onResize"
+				@moved="updateLayout"
+				@delete="deleteDashboards"
 			>
 				<template #state-calm>
 					<slot

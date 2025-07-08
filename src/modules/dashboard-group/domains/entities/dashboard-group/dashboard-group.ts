@@ -18,12 +18,10 @@ export class DashboardGroup {
 		return this._activeDashboardId;
 	}
 
-	addWidget(type: string, position: IPosition): string {
-		const dashboard = this.findActiveDashboard();
-		const widget = Widget.create(type, position);
-		dashboard.addWidget(widget);
-
-		return widget.id;
+	addWidget(type: string, position: IPosition, widgetsState: IWidgetState[]): Widget {
+		return this
+			.findActiveDashboard()
+			.addWidget(type, position, widgetsState);
 	}
 
 	changeActiveDashboard(id: string): Dashboard {
