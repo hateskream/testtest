@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import type { IDashboardItem } from '@/modules/dashboard-group';
+import { type IDashboardItem, WidgetType } from '@/modules/dashboard-group';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import DraggableElement from './draggable-element.vue';
 import DashboardComponent from './dashboard-component.vue';
 import SearchComponent from './search-component.vue';
 
+const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
+	[WidgetType.Market]: IconIds.LogoWidgetMarket,
+	[WidgetType.FearGreed]: IconIds.LogoWidgetFearAndGreat,
+	[WidgetType.Price]: IconIds.LogoWidgetPrice,
+	[WidgetType.News]: IconIds.LogoWidgetNews,
+	[WidgetType.Watchlist]: IconIds.LogoWidgetWatchlist,
+	[WidgetType.MarketCap]: IconIds.LogoWidgetMarketCap,
+};
 
 interface IDashboardsCurtainComponentProps {
 	dashboards: IDashboardItem[];
@@ -52,7 +60,7 @@ function fixCurtain() {
 							<dashboard-component
 								:title="dashboard.name"
 								:description="dashboard.description"
-								:icon="dashboard.icon"
+								:icon="WIDGET_TYPE_TO_ICON[dashboard.dashboardType]"
 							/>
 						</template>
 						<template #ghost>

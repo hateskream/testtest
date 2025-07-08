@@ -5,7 +5,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 interface IDashboardComponentProps {
 	title: string;
 	description: string;
-	icon: IconIds;
+	icon: IconIds | undefined;
 }
 
 const props = defineProps<IDashboardComponentProps>();
@@ -16,6 +16,7 @@ const props = defineProps<IDashboardComponentProps>();
 	<div :class="classes.root">
 		<div :class="classes.icon">
 			<ui-icon
+				v-if="props.icon"
 				:id="props.icon"
 				width="20px"
 				height="20px"

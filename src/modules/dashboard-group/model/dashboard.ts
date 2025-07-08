@@ -1,4 +1,3 @@
-import { IconIds } from '@/shared/ui/icon';
 import { WidgetType } from './widgets';
 
 export interface IPosition {
@@ -16,7 +15,6 @@ export interface ISize {
 export interface IDashboardItem {
 	name: string;
 	id: number;
-	icon: IconIds;
 	description: string;
 	position: IPosition;
 	maxSize: ISize;
@@ -35,7 +33,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 0, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
 	{
@@ -45,7 +42,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 2, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: { w: 2, h: 6 },
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
 	{
@@ -55,7 +51,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 4, y: 0, w: 2, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
 	{
@@ -65,7 +60,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 0, y: 4, w: 3, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
 	{
@@ -75,7 +69,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 3, y: 4, w: 3, h: 4 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Hot Markets',
 	},
 	{
@@ -85,7 +78,6 @@ export const INIT_DASHBOARDS: IDashboardItem[] = [
 		position: { x: 0, y: 0, w: 6, h: 8 },
 		minSize: WIDGET_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Watchlist',
 	},
 
@@ -101,7 +93,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetMarket,
 		description: 'Candlestick formations and price action analysis.',
 	},
 	{
@@ -111,7 +102,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetFearAndGreat,
 		description: 'Market sentiment index',
 	},
 	{
@@ -121,7 +111,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetPrice,
 		description: 'Real-time crypto price and chart',
 	},
 	{
@@ -131,7 +120,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetNews,
 		description: 'Stay in the know',
 	},
 	{
@@ -141,7 +129,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetWatchlist,
 		description: 'Favorite symbols',
 	},
 	{
@@ -151,7 +138,6 @@ export const ALL_DASHBOARDS: IDashboardItem[] = [
 		position: { x: -1, y: -1, w: -1, h: -1 },
 		minSize: NEW_DASHBOARD_MIN_SIZE,
 		maxSize: WIDGET_MAX_SIZE,
-		icon: IconIds.LogoWidgetMarketCap,
 		description: 'Total value of all coins in circulation',
 	},
 ];
