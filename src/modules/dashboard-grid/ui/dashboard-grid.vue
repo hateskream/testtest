@@ -62,7 +62,7 @@ const emit = defineEmits<{
 
 let mountedPlaceholder: App<Element> | null = null;
 
-const widgetIdToSize = ref(new Map<number, ISize>());
+const widgetIdToSize = ref(new Map<string, ISize>());
 
 const { currentDashboard } = useInjectCurrentDashboardInject();
 
@@ -80,8 +80,8 @@ const gridState = reactive<IGridState>({
 	isAddWidget: false,
 });
 
-const resizableWidgetId = ref<number | null>(null);
-const dndWidgetId = ref<number | null>(null);
+const resizableWidgetId = ref<string | null>(null);
+const dndWidgetId = ref<string | null>(null);
 
 const isEmpty = computed(() => props.widgets.length === 0);
 
@@ -98,7 +98,7 @@ function generateEmptyGrid(columnsNum: number, rowsNum: number): IPosition[] {
 		y: Math.floor(index / columnsNum),
 		w: 1,
 		h: 1,
-		i: index + Date.now(),
+		i: String(index + Date.now()),
 	}));
 }
 
@@ -108,7 +108,7 @@ const rowsNum = computed(() => props.rowsNum);
 const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 
 const { mouseAt } = useMousePositionSync();
-const dropId = -1;
+const dropId = '-1';
 const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
 
 watch(
@@ -207,7 +207,7 @@ function onCreated() {
 
 onBeforeUnmount(unmountPlaceholderComponents);
 
-function getDashboardItemById(id: number): IWidget {
+function getDashboardItemById(id: string): IWidget {
 	const foundDashboard = props.widgets.find(item => item.id === id);
 	if (foundDashboard) {
 		return foundDashboard;
@@ -216,7 +216,7 @@ function getDashboardItemById(id: number): IWidget {
 	throw new Error(`Dashboard with id ${id} not found 1`);
 }
 
-function getMaxSize(id: number): { w: number; h: number } {
+function getMaxSize(id: string): { w: number; h: number } {
 	if (isEmpty.value) {
 		return {
 			w: 1,
@@ -244,7 +244,7 @@ function getMaxSize(id: number): { w: number; h: number } {
 	};
 }
 
-function getMinSize(id: number): { w: number; h: number } {
+function getMinSize(id: string): { w: number; h: number } {
 	if (isEmpty.value) {
 		return {
 			w: 1,
@@ -272,7 +272,7 @@ function getMinSize(id: number): { w: number; h: number } {
 	};
 }
 
-function getMeta(id: number, isResizing = false): IMeta {
+function getMeta(id: string, isResizing = false): IMeta {
 	const foundDashboard = props.widgets.find(item => item.id === id);
 
 	if (!foundDashboard) {
@@ -352,11 +352,11 @@ function onChangeResizeState(newValue: boolean) {
 	gridState.isResize = newValue;
 }
 
-function setResizableWidgetId(id: number | null) {
+function setResizableWidgetId(id: string | null) {
 	resizableWidgetId.value = id;
 }
 
-function setDndWidgetId(id: number | null) {
+function setDndWidgetId(id: string | null) {
 	dndWidgetId.value = id;
 }
 
@@ -463,7 +463,7 @@ function handlerDragEnd() {
 
 		layout.value = layout.value.filter(el => el.i !== dropId);
 
-		const newItemId = Date.now();
+		const newItemId = String(Date.now());
 
 		const position: IPosition = {
 			x: finalX,
@@ -480,6 +480,7 @@ function handlerDragEnd() {
 		const newItems: IWidget = {
 			...dnDProvider.newDashboard.value,
 			position,
+			id: newItemId,
 		};
 
 		emit('add-widget', [newItems, ...updateDashboardItemsPositions(props.widgets, layout.value)]);
@@ -513,7 +514,7 @@ function updateDashboardItemsPositions(
 	});
 }
 
-function deleteDashboards(widgetId: number) {
+function deleteDashboards(widgetId: string) {
 	if (!gridLayoutRef.value) {
 		// eslint-disable-next-line no-console
 		console.warn('GridLayoutRef is not available');
@@ -530,7 +531,7 @@ function deleteDashboards(widgetId: number) {
 	emit('add-widget', updatedDashboards);
 }
 
-function findDashboardItemById(id: number):IWidget | undefined {
+function findDashboardItemById(id: string):IWidget | undefined {
 	return props.widgets.find(item => item.id === id);
 }
 
@@ -551,7 +552,7 @@ function setValueInWidgetIdToSize(position: IPosition) {
 	}
 }
 
-function onResize(i: number, newH: number, newW: number) {
+function onResize(i: string, newH: number, newW: number) {
 	const foundDashboard = findDashboardItemById(i);
 
 	if (!foundDashboard) {

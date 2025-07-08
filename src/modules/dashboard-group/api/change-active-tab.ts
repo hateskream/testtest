@@ -1,6 +1,7 @@
 import { useLogger } from '@/shared/service/logger';
 import { useUsecase } from '../composables/use-usecase';
-import type { IDashboard } from '../new-model/model';
+import type { IDashboard } from '../model';
+import { mapDashboard } from './mapping';
 
 export interface IChangeActiveTabReq {
 	tabId: string;
@@ -16,7 +17,11 @@ export async function ChangeActiveTab(req: IChangeActiveTabReq): Promise<IChange
 	const logger = useLogger();
 	try {
 		const response = await uc.ChangeActiveTabUc().execute(req);
-		return response;
+
+		return {
+			activeTabId: response.activeTabId,
+			dashboard: mapDashboard(response.dashboard),
+		};
 	} catch (error) {
 		logger.error('Failed to change active tab', error as Error);
 		throw error;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { type IWidget, WidgetType } from '@/modules/dashboard-group';
+import { WidgetType } from '@/modules/dashboard-group';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type { IWidgetPreset } from '@/modules/dashboard-group/model';
 
 import DraggableElement from './draggable-element.vue';
 import DashboardComponent from './dashboard-component.vue';
@@ -16,7 +17,7 @@ const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
 };
 
 interface IDashboardsCurtainComponentProps {
-	dashboards: IWidget[];
+	preset: IWidgetPreset[];
 }
 
 const props = defineProps<IDashboardsCurtainComponentProps>();
@@ -26,11 +27,11 @@ const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true }
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
-	(e: 'new-dashboard', dashboard: IWidget): void;
+	(e: 'new-dashboard', dashboard: IWidgetPreset): void;
 	(e: 'set-can-delete', value: boolean): void;
 }>();
 
-function onDrag(dashboard: IWidget) {
+function onDrag(dashboard: IWidgetPreset) {
 	emit('drag');
 	emit('new-dashboard', dashboard);
 }
@@ -51,20 +52,20 @@ function fixCurtain() {
 
 				<div :class="classes.list">
 					<draggable-element
-						v-for="dashboard in props.dashboards"
-						:key="dashboard.id"
-						@drag="onDrag(dashboard)"
+						v-for="(widget, index) in props.preset"
+						:key="index"
+						@drag="onDrag(widget)"
 						@drag-end="emit('drag-end')"
 					>
 						<template #content>
 							<dashboard-component
-								:title="dashboard.name"
-								:description="dashboard.description"
-								:icon="WIDGET_TYPE_TO_ICON[dashboard.widgetType]"
+								:title="widget.name"
+								:description="widget.description"
+								:icon="WIDGET_TYPE_TO_ICON[widget.widgetType]"
 							/>
 						</template>
 						<template #ghost>
-							<slot name="ghost" :title="dashboard.name" />
+							<slot name="ghost" :title="widget.name" />
 						</template>
 					</draggable-element>
 				</div>

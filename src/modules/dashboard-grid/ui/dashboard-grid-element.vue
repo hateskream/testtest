@@ -8,7 +8,7 @@ interface IComponentState {
 }
 
 interface IGridElement {
-	i: number | string;
+	i: string;
 	x: number;
 	y: number;
 	w: number;
@@ -26,9 +26,9 @@ const props = defineProps<IGridElement>();
 const emit = defineEmits<{
 	(event: 'change-dnd-state', value: boolean): void;
 	(event: 'change-resize-state', value: boolean): void;
-	(event: 'set-resizable-widget-id', value: number | null): void;
-	(event: 'set-dnd-widget-id', value: number | null): void;
-	(event: 'resize', i : number, newH: number, newW: number): void;
+	(event: 'set-resizable-widget-id', value: string | null): void;
+	(event: 'set-dnd-widget-id', value: string | null): void;
+	(event: 'resize', i : string, newH: number, newW: number): void;
 }>();
 
 const classes = useCssModule('classes');
@@ -82,10 +82,7 @@ function updateResizeState(newValue: boolean) {
 	emit('change-resize-state', newValue);
 
 	if (newValue) {
-		const id = props.i;
-		const currentId = typeof id === 'number' ? id : parseInt(id, 10);
-
-		emit('set-resizable-widget-id', currentId);
+		emit('set-resizable-widget-id', props.i);
 	} else {
 		emit('set-resizable-widget-id', null);
 	}
@@ -96,10 +93,7 @@ function updateDndState(newValue: boolean) {
 	emit('change-dnd-state', newValue);
 
 	if (newValue) {
-		const id = props.i;
-		const currentId = typeof id === 'number' ? id : parseInt(id, 10);
-
-		emit('set-dnd-widget-id', currentId);
+		emit('set-dnd-widget-id', props.i);
 	} else {
 		setTimeout(() => {
 			emit('set-dnd-widget-id', null);
@@ -107,8 +101,8 @@ function updateDndState(newValue: boolean) {
 	}
 }
 
-function resize(i: number | string, newH: number, newW: number) {
-	emit('resize', Number(i), newH, newW);
+function resize(i: string, newH: number, newW: number) {
+	emit('resize', i, newH, newW);
 }
 </script>
 

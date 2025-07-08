@@ -3,5 +3,5 @@ export interface IPosition {
 	y: number;
 	w: number;
 	h: number;
-	i: number;
+	i: string;
 }

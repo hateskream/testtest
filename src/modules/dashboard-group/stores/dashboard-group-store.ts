@@ -2,34 +2,39 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 import {
-	type IDashboardGroup,
 	type IWidget,
 	type IDashboardTab,
 	INIT_DASHBOARDS,
+	type IDashboard,
+	type IWidgetPreset,
+	ALL_DASHBOARDS,
 } from '../model';
 import { generateTimestampId } from '@/shared/lib';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
-	const dashboardGroups = ref<IDashboardGroup[]>([
+	const activeDashboardId = ref('group-1');
+
+	const preset = ref<IWidgetPreset[]>(ALL_DASHBOARDS);
+
+	const dashboards = ref<IDashboard[]>([
 		{
 			id: 'group-1',
 			name: 'Standart',
-			isActive: true,
-			items: INIT_DASHBOARDS,
-			market: 'crypto',
+			order: 0,
+			widgets: INIT_DASHBOARDS,
 		},
 	]);
 
 	const tabs = computed<IDashboardTab[]>(() =>
-		dashboardGroups.value.map(group => ({
+		dashboards.value.map(group => ({
 			id: group.id,
 			name: group.name,
-			isActive: group.isActive,
+			isActive: group.id === activeDashboardId.value,
 		})),
 	);
 
-	const activeGroup = computed<IDashboardGroup>(() => {
-		const group = dashboardGroups.value.find(el => el.isActive);
+	const activeDashboard = computed<IDashboard>(() => {
+		const group = dashboards.value.find(el => el.id === activeDashboardId.value);
 
 		if (!group) {
 			throw new Error('No active group');
@@ -39,46 +44,42 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	});
 
 	function addTab(name?: string) {
-		const newGroup: IDashboardGroup = {
+		const newDashboard: IDashboard = {
 			id: generateTimestampId(),
 			name: name || 'Dashboard',
-			isActive: false,
-			items: [],
-			market: 'crypto',
-			// isEditing: true,
+			order: 0,
+			widgets: [],
 		};
-		dashboardGroups.value.push(newGroup);
-		switchTab(newGroup.id);
+		dashboards.value.push(newDashboard);
+		switchTab(newDashboard.id);
 	}
 
 	function renameTab(tabId: string, newName: string) {
-		const group = dashboardGroups.value.find(g => g.id === tabId);
+		const group = dashboards.value.find(g => g.id === tabId);
 		if (group) {
 			group.name = newName;
 		}
 	}
 
 	function switchTab(tabId: string) {
-		dashboardGroups.value.forEach(group => {
-			group.isActive = group.id === tabId;
-		});
+		activeDashboardId.value = tabId;
 	}
 
 	function setNewStateInCurrentGroup(items: IWidget[]) {
-		const group = dashboardGroups.value.find(g => g.isActive);
-
+		const group = dashboards.value.find(g => g.id === activeDashboardId.value);
 		if (group) {
-			group.items = items;
+			group.widgets = items;
 		}
 	}
 
 	return {
-		dashboardGroups,
+		preset,
+		dashboards,
 		tabs,
 		addTab,
 		renameTab,
 		switchTab,
-		activeGroup,
+		activeDashboard,
 		setNewStateInCurrentGroup,
 	};
 });

@@ -1,6 +1,6 @@
 import { useLogger } from '@/shared/service/logger';
 import { useUsecase } from '../composables/use-usecase';
-import type { IWidgetState } from '../new-model/model';
+import type { IWidgetState } from '../model';
 
 export interface IChangeDashboardStateReq {
 	dashboardState: IWidgetState[];

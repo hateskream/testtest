@@ -1,6 +1,6 @@
 import { inject, provide, readonly, ref, type Ref } from 'vue';
 
-import type { IWidget } from '@/modules/dashboard-group';
+import type { IWidgetPreset } from '@/modules/dashboard-group/model';
 
 const provideDndKey = Symbol('provideDndKey');
 
@@ -10,13 +10,13 @@ type SetterType = (func: DnDFuncType) => void;
 interface IDnDProvider {
 	setDrag: SetterType;
 	setDragEnd: SetterType;
-	newDashboard: Ref<IWidget | null>;
+	newDashboard: Ref<IWidgetPreset | null>;
 }
 
 export function useDndHandler() {
 	const drag = ref<DnDFuncType>(() => {});
 	const dragEnd = ref<DnDFuncType>(() => {});
-	const newDashboard = ref<IWidget | null>(null);
+	const newDashboard = ref<IWidgetPreset | null>(null);
 
 
 	function provideSetterDndHandler() {
@@ -35,7 +35,7 @@ export function useDndHandler() {
 		dragEnd.value = func;
 	}
 
-	function setNewDashboard(dashboard: IWidget | null) {
+	function setNewDashboard(dashboard: IWidgetPreset | null) {
 		newDashboard.value = dashboard;
 	}
 

@@ -14,12 +14,10 @@ import {
 } from '@/modules/dashboard-grid';
 import { CurrentDashboard } from '@/modules/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
-import { ALL_DASHBOARDS } from '@/modules/dashboard-group/model';
-
 
 const dashboardStore = useDashboardGroupsStore();
 const { addTab, switchTab, renameTab, setNewStateInCurrentGroup } = dashboardStore;
-const { tabs, activeGroup } = storeToRefs(dashboardStore);
+const { tabs, activeDashboard, preset } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
@@ -34,7 +32,7 @@ const pageState = reactive({
 	isEdit: false,
 });
 
-watch(() => activeGroup.value.items, (newValue) => {
+watch(() => activeDashboard.value.widgets, (newValue) => {
 	if (newValue.length === 0) {
 		pageState.isCurtainFixed = true;
 	} else {
@@ -59,7 +57,7 @@ function updateIsEdit(value: boolean) {
 		</template>
 		<template #content>
 			<dashboard-grid
-				:widgets="activeGroup.items"
+				:widgets="activeDashboard.widgets"
 				@add-widget="setNewStateInCurrentGroup"
 				@is-edit="updateIsEdit"
 			>
@@ -74,7 +72,7 @@ function updateIsEdit(value: boolean) {
 		<template #curtain>
 			<dashboards-curtain
 				v-model:is-curtain-fixed="pageState.isCurtainFixed"
-				:dashboards="ALL_DASHBOARDS"
+				:preset="preset"
 				@drag="onDrag"
 				@drag-end="onDragEnd"
 				@new-dashboard="setNewDashboard"
