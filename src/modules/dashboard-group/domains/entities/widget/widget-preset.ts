@@ -2,14 +2,13 @@ import type { ISize } from './size';
 import { createWidgetTypeFromString, InvalidWidgetType, WidgetType } from './widget-type';
 
 export class PresetWidget {
-	private static readonly DEFAULT_MIN_SIZE = { w: 1, h: 2 };
+	private readonly DEFAULT_MIN_SIZE = { w: 1, h: 2 };
 
 	private constructor(
 		private _widgetType: WidgetType,
 		private _name: string,
 		private _description: string,
 		private _maxSize: ISize,
-		private _minSize: ISize,
 		private _defaultSize: ISize,
 	) {}
 
@@ -30,7 +29,7 @@ export class PresetWidget {
 	}
 
 	get minSize(): ISize {
-		return this._minSize;
+		return this.DEFAULT_MIN_SIZE;
 	}
 
 	get defaultSize(): ISize {
@@ -43,7 +42,6 @@ export class PresetWidget {
 			'Fear & Greed',
 			'Market sentiment index',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}
@@ -54,7 +52,6 @@ export class PresetWidget {
 			'Market',
 			'Candlestick formations and price action analysis.',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}
@@ -65,7 +62,6 @@ export class PresetWidget {
 			'Price',
 			'Real-time crypto price and chart',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}
@@ -76,7 +72,6 @@ export class PresetWidget {
 			'News',
 			'Stay in the know',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}
@@ -87,7 +82,6 @@ export class PresetWidget {
 			'Watchlist',
 			'Watchlist',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}
@@ -98,7 +92,6 @@ export class PresetWidget {
 			'Hot Markets',
 			'Favorite symbols',
 			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			this.DEFAULT_MIN_SIZE,
 			{ w: 2, h: 4 }, // TODO сделать по дизайну
 		);
 	}

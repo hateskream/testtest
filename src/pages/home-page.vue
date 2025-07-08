@@ -32,8 +32,12 @@ const pageState = reactive({
 	isEdit: false,
 });
 
-watch(() => activeDashboard.value.widgets, (newValue) => {
-	if (newValue.length === 0) {
+watch(() => activeDashboard.value, (dashboard) => {
+	if (dashboard == null) {
+		return;
+	}
+
+	if (dashboard.widgets.length === 0) {
 		pageState.isCurtainFixed = true;
 	} else {
 		pageState.isCurtainFixed = false;
@@ -57,6 +61,7 @@ function updateIsEdit(value: boolean) {
 		</template>
 		<template #content>
 			<dashboard-grid
+				v-if="activeDashboard"
 				:widgets="activeDashboard.widgets"
 				@add-widget="setNewStateInCurrentGroup"
 				@is-edit="updateIsEdit"

@@ -22,7 +22,7 @@ export class InvalidWidgetType extends DomainError {
 }
 
 function isWidgetType(str: string): str is WidgetType {
-	return Object.values(str).includes(str);
+	return Object.values<string>(WidgetType).includes(str);
 }
 
 export function createWidgetTypeFromString(str: string): WidgetType {

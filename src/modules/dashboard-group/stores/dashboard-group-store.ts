@@ -4,26 +4,19 @@ import { computed, ref } from 'vue';
 import {
 	type IWidget,
 	type IDashboardTab,
-	INIT_DASHBOARDS,
 	type IDashboard,
 	type IWidgetPreset,
 	ALL_DASHBOARDS,
 } from '../model';
 import { generateTimestampId } from '@/shared/lib';
+import { GetDashboards } from '../api';
 
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const activeDashboardId = ref('group-1');
 
 	const preset = ref<IWidgetPreset[]>(ALL_DASHBOARDS);
 
-	const dashboards = ref<IDashboard[]>([
-		{
-			id: 'group-1',
-			name: 'Standart',
-			order: 0,
-			widgets: INIT_DASHBOARDS,
-		},
-	]);
+	const dashboards = ref<IDashboard[]>([]);
 
 	const tabs = computed<IDashboardTab[]>(() =>
 		dashboards.value.map(group => ({
@@ -33,15 +26,26 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		})),
 	);
 
-	const activeDashboard = computed<IDashboard>(() => {
+	const activeDashboard = computed<IDashboard | null>(() => {
 		const group = dashboards.value.find(el => el.id === activeDashboardId.value);
 
 		if (!group) {
-			throw new Error('No active group');
+			return null;
 		}
 
 		return group;
 	});
+
+	function onCreated() {
+		loadDashboards();
+	}
+
+	async function loadDashboards() {
+		const response = await GetDashboards({ userId: '1' });
+		dashboards.value = response.dashboardGroup.dashboards;
+
+		activeDashboardId.value = response.dashboardGroup.activeDashboardId;
+	}
 
 	function addTab(name?: string) {
 		const newDashboard: IDashboard = {
@@ -71,6 +75,8 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 			group.widgets = items;
 		}
 	}
+
+	onCreated();
 
 	return {
 		preset,

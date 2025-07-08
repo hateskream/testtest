@@ -18,34 +18,58 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 		const raw = localStorage.getItem(this.storageKey);
 
 		if (raw === null) {
-			this.cached = DashboardGroup.create();
+			const dashboardGroup = DashboardGroup.create();
+			this.Set(dashboardGroup);
 			return;
 		}
 
-		const data = this.tryParse(raw);
+		const data = JSON.parse(raw) as DashboardGroupModel;
 
-		this.cached = DashboardGroup
-			.rehydrate(data.activeDashboardId,
-				data.dashboards
-					.map((d) => Dashboard
-						.rehydrate(d.id, d.name, d.order, d.widgets
-							.map(w => Widget
-								.rehydrate(w.id, w.type, w.position),
-							),
-						),
-					),
-			);
+		this.cached = this.rehydrate(data);
 	}
 
-	private tryParse(raw: string): DashboardGroupModel {
-		const { data, success, error } = DashboardGroupSchema.safeParse(raw);
+	private check(data: DashboardGroupModel) {
+		const { success, error } = DashboardGroupSchema.safeParse(data);
 
 		if (!success) {
 			throw new FailedParse('Failed to parse DashboardGroup '
-				+ `\nError: ${error.message}`);
+				+ `\nError: ${error}`);
 		}
+	}
 
-		return data;
+	private rehydrate(data: DashboardGroupModel): DashboardGroup {
+		this.check(data);
+
+		return DashboardGroup.rehydrate(data.activeDashboardId,
+			data.dashboards
+				.map((d) => Dashboard
+					.rehydrate(d.id, d.name, d.order, d.widgets
+						.map(w => Widget
+							.rehydrate(w.id, w.type, w.position),
+						),
+					),
+				),
+		);
+	}
+
+	private hydrate(data: DashboardGroup): DashboardGroupModel {
+		const dg: DashboardGroupModel = {
+			activeDashboardId: data.activeDashboardId,
+			dashboards: data.dashboards.map(d => ({
+				id: d.id,
+				name: d.name,
+				order: d.order,
+				widgets: d.widgets.map(w => ({
+					id: w.id,
+					type: w.widgetType,
+					position: w.position,
+				})),
+			})),
+		};
+
+		this.check(dg);
+
+		return dg;
 	}
 
 	public Get(): Promise<DashboardGroup> {
@@ -57,12 +81,13 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	}
 
 	public Set(dashboardGroup: DashboardGroup): Promise<void> {
-		const raw = JSON.stringify(dashboardGroup);
-
-		this.tryParse(raw);
-		localStorage.setItem(this.storageKey, raw);
+		const hydrated = this.hydrate(dashboardGroup);
 
 		this.cached = dashboardGroup;
+
+		const raw = JSON.stringify(hydrated);
+
+		localStorage.setItem(this.storageKey, raw);
 
 		return Promise.resolve();
 	}

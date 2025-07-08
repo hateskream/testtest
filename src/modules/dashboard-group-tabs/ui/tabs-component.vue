@@ -25,6 +25,11 @@ const localTabs = ref<ITab[]>(initTabs(props.tabs));
 watch(
 	() => [...props.tabs],
 	(newTabs) => {
+		if (newTabs.length == 1) {
+			localTabs.value = initTabs(newTabs);
+			return;
+		}
+
 		const tabs = newTabs.map(tab => ({
 			...tab,
 			isEditing: !localTabs.value.find(localTab => localTab.id === tab.id),

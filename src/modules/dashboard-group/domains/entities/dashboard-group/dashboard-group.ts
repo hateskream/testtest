@@ -67,11 +67,12 @@ export class DashboardGroup {
 	}
 
 	private setDefaultState() {
-		const { activeDashboardId, dashboards, lastOrder } = DashboardGroup.create();
+		const emptyDashboard = Dashboard.createEmpty(0);
+		const dashboards = [emptyDashboard];
 
-		this._activeDashboardId = activeDashboardId;
+		this._activeDashboardId = emptyDashboard.id;
 		this._dashboards = dashboards;
-		this.lastOrder = lastOrder;
+		this.lastOrder = 0;
 	}
 
 	changeStateWidgets(widgetsState: IWidgetState[]) {
@@ -134,7 +135,7 @@ export class DashboardGroup {
 	}
 
 	static create(): DashboardGroup {
-		const emptyDashboard = Dashboard.createEmpty(0);
+		const emptyDashboard = Dashboard.createMainDashboard(0);
 		const dashboards = [emptyDashboard];
 
 		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);

@@ -26,7 +26,7 @@ export class Widget {
 	}
 
 	get description(): string {
-		return this.description;
+		return this._preset.description;
 	}
 
 	get position(): IPosition {
