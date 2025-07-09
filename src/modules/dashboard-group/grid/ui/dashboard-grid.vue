@@ -100,7 +100,7 @@ const {
 const isEditable = computed(() => !isEmpty.value || gridState.isAddWidget);
 
 const { mouseAt } = useMousePositionSync();
-const dragItem = ref<IPosition>({ x: -1, y: -1, w: 2, h: 2, i: '' });
+const dragItem = ref<IPosition>(ref<IPosition>({ x: -1, y: -1, w: 2, h: 2, i: '' }));
 
 watch(
 	() => gridState.isUserInteracted,
