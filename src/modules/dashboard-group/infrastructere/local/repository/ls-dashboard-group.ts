@@ -5,12 +5,16 @@ import { DashboardGroupSchema, type DashboardGroup as DashboardGroupModel } from
 import { FailedParse, NotInitialized } from './error';
 import { Widget } from '@/modules/dashboard-group/domains/entities/widget';
 
+export interface IOptions {
+	isSaveChange: boolean;
+}
+
 export class LSDashboardGroup implements
 IGetterDashboardGroup, ISetterDashboardGroup {
 	private readonly storageKey: string;
 	private cached: DashboardGroup | null = null;
 
-	constructor(storageKey: string) {
+	constructor(storageKey: string, private readonly options?: IOptions) {
 		this.storageKey = storageKey;
 	}
 
@@ -19,6 +23,7 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 
 		if (raw === null) {
 			const dashboardGroup = DashboardGroup.create();
+			this.cached = dashboardGroup;
 			this.Set(dashboardGroup);
 			return;
 		}
@@ -81,6 +86,10 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	}
 
 	public Set(dashboardGroup: DashboardGroup): Promise<void> {
+		if (!this.options?.isSaveChange) {
+			return Promise.resolve();
+		}
+
 		const hydrated = this.hydrate(dashboardGroup);
 
 		this.cached = dashboardGroup;

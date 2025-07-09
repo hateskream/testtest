@@ -9,7 +9,7 @@ import { ChangeTabOrder } from './use-case/change-tab-order';
 import { AddWidget } from './use-case/add-widget';
 import { GetWidgetList } from './use-case/get-widget-list';
 import { ChangeDashboardState } from './use-case/change-dashboard-state';
-import { LSDashboardGroup } from './repository/ls-dashboard-group';
+import { LSDashboardGroup, type IOptions } from './repository/ls-dashboard-group';
 import { DeleteTab } from './use-case/delete-tab';
 
 // использовать напрямую нельзя, без export ts дает ошибку
@@ -60,9 +60,9 @@ export class LocalFactoryImpl implements IUseCaseFactory {
 
 let LocalFactoryImplInstance : LocalFactoryImpl | null = null;
 
-export function LocalFactory(lsKey : string): LocalFactoryImpl {
+export function LocalFactory(lsKey : string, options?: IOptions): LocalFactoryImpl {
 	if (LocalFactoryImplInstance === null) {
-		const repo = new LSDashboardGroup(lsKey);
+		const repo = new LSDashboardGroup(lsKey, options);
 
 		repo.init();
 
