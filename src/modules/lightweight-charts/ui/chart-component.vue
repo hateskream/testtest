@@ -11,11 +11,12 @@ import {
 	type Time,
 	CandlestickSeries,
 	type CandlestickData,
+	type LogicalRangeChangeEventHandler,
 } from 'lightweight-charts';
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
-import { IndicatorsChart, RangeChart, TypeChart } from '../model/chart';
+import { IndicatorsChart, RangeChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS, RANGE_IN_SECONDS } from '../const';
@@ -27,13 +28,25 @@ interface IChartProps {
 	width: number;
 	height: number;
 	disableScroll: boolean;
+	isVisibleHistoryGraph?:boolean;
+	rangeList: RangeChart[];
+	isVisibleIndicators?: boolean;
 }
 
-defineProps<IChartProps>();
+const props = withDefaults(defineProps<IChartProps>(), {
+	isVisibleHistoryGraph: true,
+	isVisibleIndicators: true,
+});
 
 defineExpose({
 	regenerateData,
 });
+
+interface IChartEmits {
+	(e: 'update', data: IChartUpdateEmitData): void;
+}
+
+const emits = defineEmits<IChartEmits>();
 
 type IGroupedData = {
 	[x in RangeChart]: CandlestickData[]
@@ -55,13 +68,27 @@ const indicators = reactive<
 	}>
 >(new Map());
 
-const currentRange = ref<RangeChart>(RangeChart.ALL);
+const handlerSubscribeVisibleLogicalRangeChangeHistory: LogicalRangeChangeEventHandler = range => {
+	if (range) {
+		// debounceUpdate(targetChart, range);
+		chartHistory.value?.timeScale().setVisibleLogicalRange(range);
+	}
+};
+
+const handlerSubscribeVisibleLogicalRangeChange: LogicalRangeChangeEventHandler = range => {
+	if (range) {
+		// debounceUpdate(targetChart, range);
+		chart.value?.timeScale().setVisibleLogicalRange(range);
+	}
+};
+
+const currentRange = ref<RangeChart>(props.rangeList[props.rangeList.length - 1]);
 
 const listTypeGraph = Object.entries(TypeChart).map(([title, val]) => ({ title, val }));
 
 const currentTypeGraph = ref<TypeChart>(TypeChart.Line);
 
-const mainData = ref(generateCandleDataFromLineData(generateLineData(6000)));
+const mainData = ref(generateCandleDataFromLineData(generateLineData(4000)));
 
 watch(mainData, () => {
 	updateIndicators();
@@ -117,7 +144,12 @@ function updateIndicators() {
 	});
 
 	chart.value!.timeScale().fitContent();
-	chartHistory.value!.timeScale().fitContent();
+	chartHistory.value?.timeScale()?.fitContent?.();
+
+	emits('update', {
+		value: mainData.value[mainData.value.length - 1].close,
+		time: new Date(mainData.value[mainData.value.length - 1].time as number * 1000),
+	});
 }
 
 function updateTypeChart(type: TypeChart) {
@@ -149,46 +181,86 @@ function updateTypeChart(type: TypeChart) {
 }
 
 
+function updateHistoryChartPropChange() {
+	if (props.isVisibleHistoryGraph) {
+		if (!chartHistory.value) {
+			chartHistory.value = createChart(history.value as HTMLElement, {
+				autoSize: true,
+				crosshair: {
+					horzLine: {
+						visible: false,
+					},
+					vertLine: {
+						visible: false,
+					},
+				},
+				layout: {
+					textColor: '#9A9A9D',
+					background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
+				},
+
+				rightPriceScale: {
+					scaleMargins: {
+						top: 0.3, // leave some space for the legend
+						bottom: 0.25,
+					},
+
+
+					minimumWidth: 55,
+
+					borderVisible: false,
+				},
+
+
+				grid: {
+					horzLines: {
+						visible: false,
+					},
+					vertLines: {
+						color: '#37364E',
+					},
+				},
+			});
+
+
+			indicators.set('history',
+				{
+					series: chartHistory.value!.addSeries(AreaSeries, {
+						topColor: 'rgba(28, 42, 78, 0.35)',
+						bottomColor: 'rgba(4, 237, 160, 0.00)',
+						lineColor: '#6F81A9',
+						lineWidth: 2,
+						crosshairMarkerVisible: false,
+					}),
+					isActive: true,
+					calcSeries(data: ICalcSeriesData) {
+						return prepareSeries(data, 'Line');
+					},
+				},
+			);
+		}
+
+		chartHistory.value.timeScale()
+			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChange);
+		chart.value!.timeScale()
+			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChangeHistory);
+	} else {
+		chartHistory.value?.timeScale?.()
+			.unsubscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChange);
+		chart.value!.timeScale()
+			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChangeHistory);
+
+		chartHistory.value?.remove?.();
+
+	}
+
+	updateIndicators();
+}
+
+watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
+
+
 onMounted(() => {
-	chartHistory.value = createChart(history.value as HTMLElement, {
-		autoSize: true,
-		crosshair: {
-			horzLine: {
-				visible: false,
-			},
-			vertLine: {
-				visible: false,
-			},
-		},
-		layout: {
-			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
-		},
-
-		rightPriceScale: {
-			scaleMargins: {
-				top: 0.3, // leave some space for the legend
-				bottom: 0.25,
-			},
-
-
-			minimumWidth: 55,
-
-			borderVisible: false,
-		},
-
-
-		grid: {
-			horzLines: {
-				visible: false,
-			},
-			vertLines: {
-				color: '#37364E',
-			},
-		},
-	});
-
-
 	chart.value = createChart(container.value as HTMLElement, {
 		autoSize: true,
 		layout: {
@@ -205,7 +277,7 @@ onMounted(() => {
 			borderVisible: false,
 		},
 
-		handleScale: false,
+		handleScale: !props.disableScroll,
 
 		grid: {
 			vertLines: {
@@ -220,24 +292,6 @@ onMounted(() => {
 	chart.value!.timeScale().applyOptions({
 		borderColor: 'rgba(4, 237, 160, 0.00)',
 	});
-
-
-	indicators.set('history',
-		{
-			series: chartHistory.value!.addSeries(AreaSeries, {
-				topColor: 'rgba(28, 42, 78, 0.35)',
-				bottomColor: 'rgba(4, 237, 160, 0.00)',
-				lineColor: '#6F81A9',
-				lineWidth: 2,
-				crosshairMarkerVisible: false,
-			}),
-			isActive: true,
-			calcSeries(data: ICalcSeriesData) {
-				return prepareSeries(data, 'Line');
-			},
-		},
-	);
-
 
 	indicators.set(IndicatorsChart.Main,
 		{
@@ -262,23 +316,7 @@ onMounted(() => {
 
 	updateIndicators();
 
-	function syncVisibleRange(sourceChart: IChartApi, targetChart: IChartApi) {
-		// const debounceUpdate = useDebounceFn((c: IChartApi, range: LogicalRange) => {
-		// 	if (range ) {
-		// 		c.timeScale().setVisibleLogicalRange(range);
-		// 	}
-		// }, 150);
-
-		sourceChart.timeScale().subscribeVisibleLogicalRangeChange(range => {
-			if (range ) {
-				// debounceUpdate(targetChart, range);
-				targetChart.timeScale().setVisibleLogicalRange(range);
-			}
-		});
-	}
-
-	syncVisibleRange(chartHistory.value, chart.value);
-	syncVisibleRange(chart.value, chartHistory.value);
+	updateHistoryChartPropChange();
 });
 
 
@@ -286,7 +324,7 @@ onMounted(() => {
 
 <template>
 	<div :class="classes.wrapper" :style="{height: `${height}px`}">
-		<div :class="classes.instruments">
+		<div v-if="isVisibleIndicators" :class="classes.instruments">
 			<modal-badge>
 				<template #title>
 					Indicators
@@ -351,11 +389,15 @@ onMounted(() => {
 		<chart-range
 			:class="classes.range"
 			:active-range="currentRange"
-			:list="Object.values(RangeChart)"
+			:list="rangeList"
 			@select="selectRange"
 		/>
 
-		<div ref="history" :class="classes.chartHistory"></div>
+		<div
+			ref="history"
+			:class="classes.chartHistory"
+			:style="{ display: !!chartHistory ? 'block' : 'none'  }"
+		></div>
 	</div>
 </template>
 
@@ -369,14 +411,13 @@ onMounted(() => {
 .mainChart {
 	flex-grow: 1;
 	width: 100%;
-	height: 100%;
+	height: v-bind(`${chartHistory ? 'calc(100% - 180px)' : '100%'}`);
 }
 
 .chartHistory {
 	flex-grow: 1;
 	width: 100%;
 	height: 100%;
-	max-height: 96px;
 }
 
 .range {

@@ -1,114 +1,156 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 
-// import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+import type { IMeta } from '@/modules/dashboard-group';
+import { RangeChart, type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
+import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 
+interface ICellComponentProps {
+	meta: IMeta;
+}
+
+defineProps<ICellComponentProps>();
+
+const currentPrice = ref<IChartUpdateEmitData>({
+	value: 0,
+	time: new Date(),
+});
+
+function handleUpdateData(data: IChartUpdateEmitData) {
+	currentPrice.value = data;
+}
 </script>
 
 <template>
 	<div :class="classes.root">
-		<!-- <chart-component :height="400" /> -->
+		<div :class="classes.chartPrices">
+
+			<div>
+				<div :class="classes.chartPrice">
+					<div :class="classes.chartPriceTime">
+						At Close: {{ currentPrice.time.toUTCString() }}
+					</div>
+
+
+					<div :class="classes.chartPriceTitle">
+						<div :class="classes.chartPriceTitleValue">
+							$ {{ currentPrice.value.toFixed(2) }}
+						</div>
+
+						<div :class="classes.chartPriceTitleChange">
+							<div :class="classes.chartPriceTitleChangeIcon">
+								<ui-icon
+									:id="IconIds.Gainers"
+									height="12px"
+									width="12px"
+								/>
+							</div>
+
+							<div :class="classes.chartPriceTitleChangeValue">
+								0.93 (0.33%)
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div>
+				<div :class="classes.chartPrice">
+					<div :class="classes.chartPriceTime">
+						After Hours
+					</div>
+
+
+					<div :class="classes.chartPriceTitle">
+						<div :class="classes.chartPriceTitleValue">
+							$ {{ (+currentPrice.value + 5).toFixed(2) }}
+						</div>
+
+						<div :class="classes.chartPriceTitleChange">
+							<div :class="classes.chartPriceTitleChangeIcon">
+								<ui-icon
+									:id="IconIds.Gainers"
+									height="12px"
+									width="12px"
+								/>
+							</div>
+
+							<div :class="classes.chartPriceTitleChangeValue">
+								0.93 (0.33%)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<chart-component
+			:height="400"
+			:is-visible-history-graph="false"
+			:disable-scroll="false"
+			:is-visible-indicators="false"
+			:width="100"
+			:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+			@update="handleUpdateData"
+		/>
 	</div>
 </template>
 
 <style module="classes">
 .root {
-	display: flex;
-	align-items: center;
-	padding: 4px 8px;
-	font-size: 16px;
-	letter-spacing: 0.104px;
-	cursor: pointer;
-	gap: 4px;
-
-	&:hover {
-		.hoverActions {
-			display: flex;
-		}
-	}
+	padding: 10px 8px 10px 16px;
 }
 
-.hoverActions {
-	position: absolute;
-	top: 50%;
-	right: 4px;
-	display: none;
+.chartPriceTitleChangeIcon {
+	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 15%;
-	max-width: 56px;
-	height: 100%;
-	padding: 0 6px 0 12px;
-	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
-	transform: translateY(-50%);
-	cursor: default;
+	color: rgb(4 237 160 / 100%);
 }
 
-.hoverActionIcon {
-	color: var(--icon-color-base-300);
-}
-
-.root:hover .icon {
-	color: var(--icon-color-base-300);
-}
-
-.root:hover .content {
-	background-color: var(--bg-color-surface-02);
-}
-
-.icon {
-	color: transparent;
-	cursor: grab;
-}
-
-.icon:active {
-	cursor: grabbing;
-}
-
-.content {
+.chartPrices {
 	display: flex;
-	flex-grow: 1;
 	align-items: center;
-	padding: 4px;
-	border-radius: 16px;
+	margin-bottom: 20px;
+	gap: 28px;
 }
 
-.logo {
-	margin-right: 12px;
-}
-
-.container {
-	display: flex;
-	flex-grow: 1;
-	flex-direction: column;
-	gap: 4px;
-}
-
-.ticker {
-	display: inline-flex;
-	font-weight: 300;
-	line-height: 150%;
-	color: var(--text-color-base-100);
-	gap: 2px;
-}
-
-.containerSecond {
-	display: flex;
-	gap: 4px;
-	line-height: 125%;
-}
-
-.marketCap {
+.chartPriceTime {
+	margin-bottom: 12px;
 	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+}
+
+.chartPriceTitle {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.chartPriceTitleValue {
+	font-weight: 340;
+	font-size: 24px;
 	color: var(--text-color-base-500);
 }
 
-.change {
-	font-weight: 440;
-	color: rgb(178 242 211 / 100%);
+.chartPriceTitleChange {
+	display: flex;
+	align-items: center;
+	padding: 7px 9px 7px 7px;
+	background-color: var(--metrics-bg-control-300);
+	border-radius: 16px;
+	gap: 4px;
 }
 
-.chart {
-	margin-left: 42px;
+.chartPriceTitleChangeValue {
+	font-weight: 440;
+	font-size: 12px;
+	color: var(--metrics-color-positive-chart);
 }
+
 </style>

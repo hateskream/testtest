@@ -4,15 +4,15 @@ import type { LineData, Time } from 'lightweight-charts';
 let randomFactor = 125 + Math.random() * 125;
 export const samplePoint = (i: number) =>
 	i *
-	(0.5 +
-		Math.sin(i / 10) * 0.2 +
+	(1125 +
+		Math.sin(i / 10) +
 		Math.sin(i / 20) * 0.4 +
-		Math.sin(i / randomFactor) * 0.8 +
+		Math.sin(i / randomFactor) +
 		Math.sin(i / 500) * 0.5) +
 	350;
 
 export function generateLineData(numberOfPoints: number = 500, daySpace: number = 1): LineData[] {
-	randomFactor = 25 + Math.random() * 25;
+	randomFactor = 125 + Math.random() * 125;
 	const res = [];
 	const date = new Date(Date.UTC(1998, 0, 0, 12, 0, 0, 0));
 	for (let i = 0; i < numberOfPoints; ++i) {

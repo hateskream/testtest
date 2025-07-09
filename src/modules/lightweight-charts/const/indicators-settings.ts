@@ -6,7 +6,7 @@ export const MAIN_AREA_SETTINGS: DeepPartial<AreaStyleOptions & SeriesOptionsCom
 	bottomColor: 'rgba(4, 237, 160, 0.00)',
 	lineColor: 'rgb(4, 237, 160)',
 	lineWidth: 2,
-	priceLineColor: 'rgba(255, 255, 255, 0.30)',
+	priceLineColor: 'rgba(4, 237, 160, 1)',
 	lastPriceAnimation: LastPriceAnimationMode.Continuous,
 };
 

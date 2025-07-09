@@ -29,7 +29,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
-				:currencies="data"
+				:meta="meta"
 			/>
 		</template>
 		<template #rcm>

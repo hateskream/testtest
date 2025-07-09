@@ -24,6 +24,7 @@ import {
 	ChartSectionInsightAndActivity,
 	ChartSectionPeerAnalysis,
 } from '@/modules/chart/components/sections';
+import { RangeChart } from '../lightweight-charts/model';
 
 import ChartSectionQuarterlyRevenue
 	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
@@ -149,6 +150,7 @@ const explorerDate = computed(() => {
 					:width="chartWidth"
 					:height="chartHeight"
 					:disable-scroll="disableScroll"
+					:range-list="Object.values(RangeChart)"
 				/>
 			</div>
 		</template>

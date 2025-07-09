@@ -28,3 +28,7 @@ export const TypeChart = {
 export type TypeChart = (typeof TypeChart)[keyof typeof TypeChart];
 
 
+export interface IChartUpdateEmitData {
+	value: number;
+	time: Date;
+}
