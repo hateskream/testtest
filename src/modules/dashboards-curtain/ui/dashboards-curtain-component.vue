@@ -27,13 +27,19 @@ const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true }
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
-	(e: 'new-dashboard', dashboard: IWidgetPreset): void;
-	(e: 'set-can-delete', value: boolean): void;
+	(e: 'new-dashboard', dashboard: IWidgetPreset | null): void;
 }>();
 
-function onDrag(dashboard: IWidgetPreset) {
+function onDrag() {
 	emit('drag');
+}
+
+function onDragStart(dashboard: IWidgetPreset) {
 	emit('new-dashboard', dashboard);
+}
+
+function onDragEnd() {
+	emit('drag-end');
 }
 
 function fixCurtain() {
@@ -54,8 +60,9 @@ function fixCurtain() {
 					<draggable-element
 						v-for="(widget, index) in props.preset"
 						:key="index"
-						@drag="onDrag(widget)"
-						@drag-end="emit('drag-end')"
+						@drag="onDrag"
+						@drag-start="onDragStart(widget)"
+						@drag-end="onDragEnd"
 					>
 						<template #content>
 							<dashboard-component

@@ -60,7 +60,6 @@ const emit = defineEmits<{
 	(e: 'add-widget', type: WidgetType, position: WidgetPosition, widgetsState: IWidgetState[]): void;
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
-
 }>();
 
 
@@ -113,7 +112,7 @@ const { layout } = useRebuildingGrid(columnsNum, rowsNum, rawDashboards);
 
 const { mouseAt } = useMousePositionSync();
 const dropId = '-1';
-const dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
+const dragItem = ref<IPosition>({ x: -1, y: -1, w: 2, h: 2, i: '' });
 
 watch(
 	layout,
@@ -190,8 +189,8 @@ watch(widgetIdToSize, () => {
 
 watch(() => dnDProvider.newDashboard.value, newValue => {
 	if (newValue) {
-		dragItem.w = newValue.minSize.w;
-		dragItem.h = newValue.minSize.h;
+		dragItem.value.w = newValue.defaultSize.w;
+		dragItem.value.h = newValue.defaultSize.h;
 	}
 });
 
@@ -381,13 +380,13 @@ function handlerDrag() {
 		mouseAt.y < parentRect.bottom - 20;
 
 	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
-		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.w / 2);
-		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.h / 2);
+		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.value.w / 2);
+		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.value.h / 2);
 		layout.value.push({
-			x: Math.max(0, Math.min(centerX, columnsNum.value - dragItem.w)),
-			y: Math.max(0, Math.min(centerY, rowsNum.value - dragItem.h)),
-			w: dragItem.w,
-			h: dragItem.h,
+			x: Math.max(0, Math.min(centerX, columnsNum.value - dragItem.value.w)),
+			y: Math.max(0, Math.min(centerY, rowsNum.value - dragItem.value.h)),
+			w: dragItem.value.w,
+			h: dragItem.value.h,
 			i: dropId,
 		});
 	}
@@ -401,8 +400,8 @@ function handlerDrag() {
 			return;
 		}
 
-		const offsetX = (dragItem.w * props.columnWidth) / 2;
-		const offsetY = (dragItem.h * props.rowHeight) / 2;
+		const offsetX = (dragItem.value.w * props.columnWidth) / 2;
+		const offsetY = (dragItem.value.h * props.rowHeight) / 2;
 		Object.assign(item.state, {
 			top: mouseAt.y - parentRect.top - offsetY,
 			left: mouseAt.x - parentRect.left - offsetX,
@@ -419,20 +418,20 @@ function handlerDrag() {
 				dropId,
 				newPos.x,
 				newPos.y,
-				dragItem.h,
-				dragItem.w,
+				dragItem.value.h,
+				dragItem.value.w,
 			);
-			dragItem.i = index as unknown as string;
-			dragItem.x = layout.value[index].x;
-			dragItem.y = layout.value[index].y;
+			dragItem.value.i = index as unknown as string;
+			dragItem.value.x = layout.value[index].x;
+			dragItem.value.y = layout.value[index].y;
 		} else {
 			gridLayoutRef.value.dragEvent(
 				'dragend',
 				dropId,
 				newPos.x,
 				newPos.y,
-				dragItem.h,
-				dragItem.w,
+				dragItem.value.h,
+				dragItem.value.w,
 			);
 			layout.value = layout.value.filter(el => el.i !== dropId);
 		}
@@ -464,8 +463,8 @@ function handlerDragEnd() {
 			return;
 		}
 
-		const finalX = Math.max(0, Math.min(placeholder.x, columnsNum.value - dragItem.w));
-		const finalY = Math.max(0, Math.min(placeholder.y, rowsNum.value - dragItem.h + 1));
+		const finalX = Math.max(0, Math.min(placeholder.x, columnsNum.value - dragItem.value.w));
+		const finalY = Math.max(0, Math.min(placeholder.y, rowsNum.value - dragItem.value.h + 1));
 
 		layout.value = layout.value.filter(el => el.i !== dropId);
 
@@ -474,8 +473,8 @@ function handlerDragEnd() {
 		const position: IPosition = {
 			x: finalX,
 			y: finalY,
-			w: dragItem.w,
-			h: dragItem.h,
+			w: dragItem.value.w,
+			h: dragItem.value.h,
 			i: newItemId,
 		};
 
@@ -483,7 +482,7 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
-		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
+		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.value.h, dragItem.value.w);
 
 		if (isEmpty.value) {
 			emit('add-widget',

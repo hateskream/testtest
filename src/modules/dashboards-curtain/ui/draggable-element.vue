@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue';
 const emit = defineEmits<{
 	(e: 'drag'): void;
 	(e: 'drag-end'): void;
+	(e: 'drag-start'): void;
 }>();
 
 const INIT_LEFT = '-9999px';
@@ -31,6 +32,8 @@ function onDragStart(event: DragEvent) {
 
 		event.dataTransfer.setDragImage(customGhost.value, centerWidth, centerHeight);
 		event.dataTransfer.effectAllowed = 'move';
+
+		emit('drag-start');
 	}
 };
 
