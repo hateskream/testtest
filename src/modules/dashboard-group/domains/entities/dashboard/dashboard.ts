@@ -86,6 +86,7 @@ export class Dashboard {
 			Widget.create(WidgetType.Price2, { x: 6, y: 2, w: 3, h: 8 }),
 			Widget.create(WidgetType.Watchlist, { x: 6, y: 0, w: 3, h: 6 }),
 			Widget.create(WidgetType.AltcoinSeason, { x: 8, y: 0, w: 2, h: 3 }),
+			Widget.create(WidgetType.Price2, { x: 6, y: 2, w: 3, h: 8 }),
 		];
 
 		return new Dashboard(
