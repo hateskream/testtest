@@ -7,11 +7,11 @@ export enum WidgetType {
 	News = 'news',
 	Price = 'price',
 	HotMarkets = 'hot-markets',
-	// Search = 'search',
+	// Search = 'search', // delete
 	// Insiders = 'insiders',
 	// Events = 'events',
-	// Telegram = 'telegram',
-	// Chart = 'chart',
+	// Telegram = 'telegram', // delete
+	// Chart = 'chart', // delete
 	Watchlist = 'watchlist',
 	Performance = 'performance',
 }

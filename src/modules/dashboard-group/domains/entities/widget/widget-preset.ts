@@ -1,16 +1,120 @@
 import type { ISize } from './size';
-import { createWidgetTypeFromString, InvalidWidgetType, WidgetType } from './widget-type';
+import { createWidgetTypeFromString, WidgetType } from './widget-type';
+
+interface IPresetOptions {
+	widgetType: WidgetType;
+	name: string;
+	description: string;
+	minSize: ISize;
+	maxSize: ISize;
+	defaultSize: ISize;
+}
+
+const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
+	[WidgetType.FearGreed]: {
+		name: 'Fear & Greed',
+		description: 'Market sentiment index',
+		minSize: { w: 1, h: 2 },
+		maxSize: { w: 2, h: 6 },
+		defaultSize: { w: 1, h: 3 },
+	},
+	[WidgetType.Market]: {
+		name: 'Market',
+		description: 'Candlestick formations and price action analysis.',
+		minSize: { w: 2, h: 4 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 4, h: 6 },
+	},
+	[WidgetType.Price]: {
+		name: 'Price',
+		description: 'Real-time crypto price and chart',
+		minSize: { w: 1, h: 3 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 2, h: 4 },
+	},
+	[WidgetType.News]: {
+		name: 'News',
+		description: 'Stay in the know',
+		minSize: { w: 2, h: 4 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 2, h: 8 },
+	},
+	[WidgetType.Watchlist]: {
+		name: 'Watchlist',
+		description: 'Watchlist',
+		minSize: { w: 2, h: 4 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 2, h: 6 },
+	},
+	[WidgetType.HotMarkets]: {
+		name: 'Hot Markets',
+		description: 'Favorite symbols',
+		minSize: { w: 2, h: 4 }, // TODO сделать по дизайну
+		maxSize: { w: Infinity, h: Infinity }, // TODO сделать по дизайну
+		defaultSize: { w: 2, h: 6 }, // TODO сделать по дизайну
+	},
+	[WidgetType.Performance]: {
+		name: 'Performance',
+		description: 'Performance',
+		minSize: { w: 2, h: 4 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 4, h: 9 },
+	},
+};
+
+// размеры будущих виджетов
+
+/*
+		Exchanges
+		min 2 4
+		max Infinity
+		d 4 6
+	*/
+
+/*
+		MarketCap
+		min 1 3
+		max Infinity
+		d 2 7
+	*/
+
+/*
+		Bitcoin dominance
+		min 1 3
+		max Infinity
+		d 3 9
+	*/
+
+/*
+		alt season
+		min 2 3
+		max Infinity
+		d 2 14
+	*/
 
 export class PresetWidget {
-	private readonly DEFAULT_MIN_SIZE = { w: 1, h: 2 };
+	private readonly _widgetType: WidgetType;
+	private readonly _name: string;
+	private readonly _description: string;
+	private readonly _maxSize: ISize;
+	private readonly _minSize: ISize;
+	private readonly _defaultSize: ISize;
 
-	private constructor(
-		private _widgetType: WidgetType,
-		private _name: string,
-		private _description: string,
-		private _maxSize: ISize,
-		private _defaultSize: ISize,
-	) {}
+	private constructor({
+		widgetType,
+		name,
+		description,
+		maxSize,
+		minSize,
+		defaultSize,
+	}: IPresetOptions) {
+		this._widgetType = widgetType;
+		this._name = name;
+		this._description = description;
+		this._maxSize = maxSize;
+		this._minSize = minSize;
+		this._defaultSize = defaultSize;
+	}
 
 	get widgetType(): WidgetType {
 		return this._widgetType;
@@ -29,111 +133,27 @@ export class PresetWidget {
 	}
 
 	get minSize(): ISize {
-		return this.DEFAULT_MIN_SIZE;
+		return this._minSize;
 	}
 
 	get defaultSize(): ISize {
 		return this._defaultSize;
 	}
 
-	static createFearGreed(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.FearGreed,
-			'Fear & Greed',
-			'Market sentiment index',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createMarket(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.Market,
-			'Market',
-			'Candlestick formations and price action analysis.',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createPrice(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.Price,
-			'Price',
-			'Real-time crypto price and chart',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createNews(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.HotMarkets,
-			'News',
-			'Stay in the know',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createWatchlist(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.Watchlist,
-			'Watchlist',
-			'Watchlist',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createHotMarkets(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.HotMarkets,
-			'Hot Markets',
-			'Favorite symbols',
-			{ w: 2, h: 6 }, // TODO сделать по дизайну
-			{ w: 2, h: 4 }, // TODO сделать по дизайну
-		);
-	}
-
-	static createPerformance(): PresetWidget {
-		return new PresetWidget(
-			WidgetType.Performance,
-			'Performance',
-			'Performance',
-			{ w: 10, h: 10 }, // TODO сделать по дизайну
-			{ w: 6, h: 6 }, // TODO сделать по дизайну
-		);
+	private static getOptions(widgetType: WidgetType): IPresetOptions {
+		return {
+			...PRESETS[widgetType],
+			widgetType,
+		};
 	}
 
 	static create(typeStr: string): PresetWidget {
 		const type = createWidgetTypeFromString(typeStr);
 
-		const creatorMapping: { [key in WidgetType]: () => PresetWidget } = {
-			[WidgetType.FearGreed]: PresetWidget.createFearGreed,
-			[WidgetType.Market]: PresetWidget.createMarket,
-			[WidgetType.Price]: PresetWidget.createPrice,
-			[WidgetType.HotMarkets]: PresetWidget.createHotMarkets,
-			[WidgetType.Watchlist]: PresetWidget.createWatchlist,
-			[WidgetType.News]: PresetWidget.createNews,
-			[WidgetType.Performance]: PresetWidget.createPerformance,
-		};
-
-		if (type in creatorMapping) {
-			return creatorMapping[type]();
-		}
-
-		throw new InvalidWidgetType(typeStr);
+		return new PresetWidget(PresetWidget.getOptions(type));
 	}
-}
 
-export function allWidgets(): PresetWidget[] {
-	return [
-		PresetWidget.createFearGreed(),
-		PresetWidget.createMarket(),
-		PresetWidget.createPrice(),
-		PresetWidget.createNews(),
-		PresetWidget.createWatchlist(),
-		PresetWidget.createHotMarkets(),
-	];
+	static allWidgets(): PresetWidget[] {
+		return Object.values(WidgetType).map(PresetWidget.create);
+	}
 }

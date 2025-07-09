@@ -1,5 +1,5 @@
+import { PresetWidget } from '@/modules/dashboard-group/domains/entities/widget';
 import type { IRepository } from '../../../domains/adapters';
-import { allWidgets } from '../../../domains/entities/widget';
 import type { IDeleteTabUc } from '../../../domains/uce-cases';
 import { mapDashboard, mapWidgetsPreset } from './mappers';
 
@@ -13,7 +13,7 @@ export function DeleteTab(repo: IRepository): IDeleteTabUc {
 
 			await repo.Set(dashboardGroup);
 
-			const widgets = allWidgets();
+			const widgets = PresetWidget.allWidgets();
 
 			return {
 				dashboard: mapDashboard(dashboard),

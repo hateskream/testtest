@@ -1,5 +1,5 @@
+import { PresetWidget } from '@/modules/dashboard-group/domains/entities/widget';
 import type { IRepository } from '../../../domains/adapters';
-import { allWidgets } from '../../../domains/entities/widget';
 import type { ICreateTabUc } from '../../../domains/uce-cases';
 import { mapWidgetsPreset } from './mappers';
 
@@ -13,7 +13,7 @@ export function CreateTab(repo: IRepository): ICreateTabUc {
 
 			await repo.Set(dashboardGroup);
 
-			const widgets = allWidgets();
+			const widgets = PresetWidget.allWidgets();
 			return {
 				activeDashboardId: dashboardGroup.activeDashboardId,
 				dashboard: newDashboard,
