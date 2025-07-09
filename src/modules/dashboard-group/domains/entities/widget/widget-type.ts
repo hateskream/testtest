@@ -13,6 +13,7 @@ export enum WidgetType {
 	// Telegram = 'telegram',
 	// Chart = 'chart',
 	Watchlist = 'watchlist',
+	Performance = 'performance',
 }
 
 export class InvalidWidgetType extends DomainError {

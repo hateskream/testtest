@@ -96,6 +96,16 @@ export class PresetWidget {
 		);
 	}
 
+	static createPerformance(): PresetWidget {
+		return new PresetWidget(
+			WidgetType.Performance,
+			'Performance',
+			'Performance',
+			{ w: 10, h: 10 }, // TODO сделать по дизайну
+			{ w: 6, h: 6 }, // TODO сделать по дизайну
+		);
+	}
+
 	static create(typeStr: string): PresetWidget {
 		const type = createWidgetTypeFromString(typeStr);
 
@@ -106,6 +116,7 @@ export class PresetWidget {
 			[WidgetType.HotMarkets]: PresetWidget.createHotMarkets,
 			[WidgetType.Watchlist]: PresetWidget.createWatchlist,
 			[WidgetType.News]: PresetWidget.createNews,
+			[WidgetType.Performance]: PresetWidget.createPerformance,
 		};
 
 		if (type in creatorMapping) {
