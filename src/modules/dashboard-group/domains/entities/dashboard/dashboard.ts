@@ -1,10 +1,36 @@
 import { v4 as uuidv4 } from 'uuid';
 
 
-import { Widget, type IWidgetState } from '../widget';
+import { Widget, type IWidgetState, type ISize, type IPosition } from '../widget';
 import { NotFoundWidget } from './error';
 import { WidgetType } from '@/modules/dashboard-group/model';
-import type { IPosition } from '../widget/position';
+
+interface IPresetPosition {
+	x: number;
+	y: number;
+	size: ISize;
+}
+
+type IPreset = Partial<Record<WidgetType, IPresetPosition>>;
+
+type PresetName = 'Main';
+
+const MAIN_DASHBOARD_PRESET: IPreset = {
+	[WidgetType.HotMarkets]: { x: 0, y: 0, size: { w: 2, h: 4 } },
+	[WidgetType.FearGreed]: { x: 2, y: 0, size: { w: 2, h: 4 } },
+	[WidgetType.Price]: { x: 4, y: 0, size: { w: 2, h: 4 } },
+	[WidgetType.Market]: { x: 0, y: 4, size: { w: 3, h: 4 } },
+	[WidgetType.News]: { x: 3, y: 4, size: { w: 3, h: 4 } },
+	[WidgetType.Watchlist]: { x: 6, y: 0, size: { w: 2, h: 4 } },
+	[WidgetType.Performance]: { x: 6, y: 2, size: { w: 10, h: 10 } },
+	[WidgetType.AltcoinSeason]: { x: 8, y: 0, size: { w: 2, h: 3 } },
+	[WidgetType.Price2]: { x: 6, y: 2, size: { w: 3, h: 8 } },
+};
+
+const NAME_TO_PRESET: Record<PresetName, IPreset> = {
+	Main: MAIN_DASHBOARD_PRESET,
+};
+
 export class Dashboard {
 	private constructor(
 		private _id: string,
@@ -70,31 +96,30 @@ export class Dashboard {
 		return widget;
 	}
 
-	static createEmpty(order: number): Dashboard {
-		return new Dashboard(uuidv4(), 'Dashboard', order, []);
+	private static create(name: string, order: number, widgets: Widget[]): Dashboard {
+		return new Dashboard(uuidv4(), name, order, widgets);
 	}
 
-	static createMainDashboard(order = 0): Dashboard {
-		const widgets = [
-			Widget.create(WidgetType.HotMarkets, { x: 0, y: 0, w: 2, h: 4 }),
-			Widget.create(WidgetType.FearGreed, { x: 2, y: 0, w: 2, h: 4 }),
-			Widget.create(WidgetType.Price, { x: 4, y: 0, w: 2, h: 4 }),
-			Widget.create(WidgetType.Market, { x: 0, y: 4, w: 3, h: 4 }),
-			Widget.create(WidgetType.News, { x: 3, y: 4, w: 3, h: 4 }),
-			Widget.create(WidgetType.Watchlist, { x: 6, y: 0, w: 2, h: 4 }),
-			Widget.create(WidgetType.Performance, { x: 6, y: 2, w: 10, h: 10 }),
-			Widget.create(WidgetType.Price2, { x: 6, y: 2, w: 3, h: 8 }),
-			Widget.create(WidgetType.Watchlist, { x: 6, y: 0, w: 3, h: 6 }),
-			Widget.create(WidgetType.AltcoinSeason, { x: 8, y: 0, w: 2, h: 3 }),
-			Widget.create(WidgetType.Price2, { x: 6, y: 2, w: 3, h: 8 }),
-		];
+	static createEmpty(order: number): Dashboard {
+		return this.create('Dashboard', order, []);
+	}
 
-		return new Dashboard(
-			uuidv4(),
-			'Main',
-			order,
-			widgets,
-		);
+	static createFromPreset(presetName: PresetName, order: number): Dashboard {
+		const preset = NAME_TO_PRESET[presetName];
+
+		const widgets = Object
+			.entries(preset)
+			.map(([type, presetPosition]) => Widget
+				.create(type, {
+					x: presetPosition.x,
+					y: presetPosition.y,
+					w: presetPosition.size.w,
+					h: presetPosition.size.h,
+				},
+				),
+			);
+
+		return this.create(presetName, order, widgets);
 	}
 
 	static rehydrate(
