@@ -43,7 +43,9 @@ export class DashboardGroup {
 	createNewDashboard(): Dashboard {
 		this.lastOrder += 1;
 		const newDashboard = Dashboard.createEmpty(this.lastOrder);
+
 		this._dashboards.push(newDashboard);
+		this._activeDashboardId = newDashboard.id;
 
 		return newDashboard;
 	}

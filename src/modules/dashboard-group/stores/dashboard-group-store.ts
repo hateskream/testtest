@@ -84,7 +84,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	}
 
 	async function changeDashboardState(widgetsState: IWidgetState[]) {
-		console.log(widgetsState);
 		dashboards.value = getNewState(widgetsState);
 
 		await ChangeDashboardState({ dashboardState: widgetsState });

@@ -20,12 +20,13 @@ const emit = defineEmits<{
 	(event: 'rename-tab', id: string, name: string): void;
 }>();
 
-const localTabs = ref<ITab[]>(initTabs(props.tabs));
+const localTabs = ref<ITab[]>([]);
 
 watch(
 	() => [...props.tabs],
 	(newTabs) => {
-		if (newTabs.length == 1) {
+
+		if (localTabs.value.length === 0) {
 			localTabs.value = initTabs(newTabs);
 			return;
 		}
