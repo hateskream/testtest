@@ -73,4 +73,5 @@ export enum WidgetType {
 	Chart = 'chart',
 	Watchlist = 'watchlist',
 	Performance = 'performance',
+	Price2 = 'price-2',
 }

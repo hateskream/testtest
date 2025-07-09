@@ -60,6 +60,13 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		maxSize: { w: Infinity, h: Infinity },
 		defaultSize: { w: 4, h: 9 },
 	},
+	[WidgetType.Price2]: {
+		name: 'Price',
+		description: 'Price',
+		minSize: { w: 1, h: 3 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 3, h: 8 }, // так вставить в пресет дашборда
+	},
 };
 
 // размеры будущих виджетов

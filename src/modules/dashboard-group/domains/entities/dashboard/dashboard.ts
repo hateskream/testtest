@@ -83,6 +83,7 @@ export class Dashboard {
 			Widget.create(WidgetType.News, { x: 3, y: 4, w: 3, h: 4 }),
 			Widget.create(WidgetType.Watchlist, { x: 6, y: 0, w: 2, h: 4 }),
 			Widget.create(WidgetType.Performance, { x: 6, y: 2, w: 10, h: 10 }),
+			Widget.create(WidgetType.Price2, { x: 6, y: 2, w: 3, h: 8 }),
 		];
 
 		return new Dashboard(

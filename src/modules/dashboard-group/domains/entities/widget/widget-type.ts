@@ -14,6 +14,7 @@ export enum WidgetType {
 	// Chart = 'chart', // delete
 	Watchlist = 'watchlist',
 	Performance = 'performance',
+	Price2 = 'price-2',
 }
 
 export class InvalidWidgetType extends DomainError {
