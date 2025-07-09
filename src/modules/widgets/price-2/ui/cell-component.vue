@@ -1,15 +1,13 @@
 <script setup lang="ts">
 
-import type { ICurrency } from '../model';
-
-import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+// import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 
 
 </script>
 
 <template>
 	<div :class="classes.root">
-		<chart-component :height="400" />
+		<!-- <chart-component :height="400" /> -->
 	</div>
 </template>
 
