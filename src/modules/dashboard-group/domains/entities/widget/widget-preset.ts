@@ -82,6 +82,7 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		minSize: { w: 2, h: 3 },
 		maxSize: { w: 2, h: 3 },
 		defaultSize: { w: 2, h: 3 },
+	},
 	[WidgetType.Price2]: {
 		name: 'Price',
 		description: 'Price',
