@@ -5,12 +5,15 @@ import { storeToRefs } from 'pinia';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
+import type { IMeta } from '@/modules/dashboard-group';
 
 import CellComponent from './cell-component.vue';
 
 interface IViewComponentProps {
 	currencies: ICurrency[];
+	meta: IMeta;
 }
+
 
 const props = defineProps<IViewComponentProps>();
 
@@ -26,10 +29,12 @@ const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDes
 	storeToRefs(usePriceStore());
 
 const gridTemplateContent = computed(() => {
-	let minWidth = 190 + ((
-		+isShowChart.value +
+	const defaultMinWidth = props.meta.size.w > 1 ? 190 : 100;
+
+	let minWidth = defaultMinWidth + ((
+		(+(isShowChart.value && props.meta.size.w > 1)) +
 		+isShowPercentageChange.value +
-		+isShowLogo.value +
+		(+(isShowLogo.value && props.meta.size.w > 1)) +
 		+isShowTicker.value +
 		+isShowDescription.value
 	) * 30);
@@ -53,7 +58,7 @@ const gridTemplateContent = computed(() => {
 					:disabled="false"
 				>
 					<template #item="{ element }">
-						<cell-component :currency="element" />
+						<cell-component :currency="element" :meta="meta" />
 					</template>
 				</draggable-component>
 			</div>

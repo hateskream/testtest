@@ -8,10 +8,12 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
+import type { IMeta } from '@/modules/dashboard-group';
 
 
 interface ICellComponentProps {
 	currency: ICurrency;
+	meta: IMeta;
 }
 
 const props = defineProps<ICellComponentProps>();
@@ -32,7 +34,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 		/>
 		<div :class="[classes.content, 'price-no-drag']">
 			<ui-transition-fade>
-				<div v-if="isShowLogo" :class="classes.logo">
+				<div v-if="isShowLogo && meta.size.w > 1" :class="classes.logo">
 					<ticker-icon
 						v-if="props.currency.market !== 'forex' && !Array.isArray(props.currency.srcImage)"
 						:src="props.currency.srcImage"
@@ -69,7 +71,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 
 				<ui-transition-fade>
 					<div
-						v-if="isShowChart"
+						v-if="isShowChart && meta.size.w > 1"
 						:class="classes.chart"
 					>
 						<img
@@ -95,6 +97,7 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 
 <style module="classes">
 .root {
+	position: relative;
 	display: flex;
 	align-items: center;
 	padding: 4px 8px;
@@ -102,12 +105,10 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 	letter-spacing: 0.104px;
 	cursor: pointer;
 	gap: 4px;
+}
 
-	&:hover {
-		.hoverActions {
-			display: flex;
-		}
-	}
+.root:hover .hoverActions {
+	display: flex;
 }
 
 .hoverActions {

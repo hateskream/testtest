@@ -30,6 +30,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			<view-component
 				v-else-if="data"
 				:currencies="data"
+				:meta="meta"
 			/>
 		</template>
 		<template #rcm>
