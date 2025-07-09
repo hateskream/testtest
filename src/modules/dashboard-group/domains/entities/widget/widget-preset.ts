@@ -67,6 +67,22 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		maxSize: { w: Infinity, h: Infinity },
 		defaultSize: { w: 3, h: 8 }, // так вставить в пресет дашборда
 	},
+	[WidgetType.AltcoinSeason]: {
+		name: 'Altcoin Season',
+		description: 'Altcoin season',
+
+		/*
+			real sizes
+
+			minSize: { w: 2, h: 3 },
+			maxSize: { w: Infinity, h: Infinity },
+			defaultSize: { w: 2, h: 14 },
+		*/
+
+		minSize: { w: 2, h: 3 },
+		maxSize: { w: 2, h: 3 },
+		defaultSize: { w: 2, h: 3 },
+	},
 };
 
 // размеры будущих виджетов
@@ -91,14 +107,6 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		max Infinity
 		d 3 9
 	*/
-
-/*
-		alt season
-		min 2 3
-		max Infinity
-		d 2 14
-	*/
-
 export class PresetWidget {
 	private readonly _widgetType: WidgetType;
 	private readonly _name: string;
