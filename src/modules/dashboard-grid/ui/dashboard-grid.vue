@@ -485,6 +485,16 @@ function handlerDragEnd() {
 
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.h, dragItem.w);
 
+		if (isEmpty.value) {
+			emit('add-widget',
+				dnDProvider.newDashboard.value.widgetType,
+				position,
+				[],
+			);
+
+			return;
+		}
+
 		emit('add-widget',
 			dnDProvider.newDashboard.value.widgetType,
 			position,
