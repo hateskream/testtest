@@ -2,6 +2,8 @@
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/model';
 
+import BtcPerformance from './btc-performance/btc-performance.vue';
+
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
 }
@@ -18,7 +20,9 @@ const props = defineProps<IAltcoinSeasonWidgetProps>();
 		</template>
 
 		<template #content>
-			<!-- <btc-performance-rank-widget :meta="props.meta" /> -->
+			<div :class="classes.altcoinSeasonWidgetContent">
+				<btc-performance />
+			</div>
 		</template>
 	</base-dashboard-component>
 </template>
@@ -26,5 +30,9 @@ const props = defineProps<IAltcoinSeasonWidgetProps>();
 <style module="classes">
 .altcoinSeasonWidget {
 	display: flex;
+}
+
+.altcoinSeasonWidgetContent {
+	padding: 0 8px 8px;
 }
 </style>
