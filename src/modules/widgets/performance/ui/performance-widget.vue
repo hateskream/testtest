@@ -32,7 +32,6 @@ const { data, isLoading, isError } = useQueryPerformance(filters);
 		<template #content>
 			<performance-error v-if="isError" />
 			<performance-loader v-else-if="isLoading" />
-
 			<performance-view
 				v-else-if="data"
 				:performance-data="data"

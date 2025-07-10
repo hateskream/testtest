@@ -8,6 +8,8 @@ import { usePriceStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group';
 
 import CellComponent from './cell-component.vue';
+import PerformanceHeader from "@/modules/widgets/performance/ui/header/performance-header.vue";
+import PriceHeader from "@/modules/widgets/price/ui/header/price-header.vue";
 
 interface IViewComponentProps {
 	currencies: ICurrency[];
@@ -46,6 +48,7 @@ const gridTemplateContent = computed(() => {
 
 <template>
 	<div :class="classes.root">
+		<price-header />
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<draggable-component

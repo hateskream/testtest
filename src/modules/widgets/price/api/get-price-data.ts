@@ -55,11 +55,11 @@ function sendereRequestByType(
 				query: { market },
 			});
 		case TypeSendRequest.MockLocal:
-			return getMockData();
+			return getMockData(market);
 		case TypeSendRequest.MockServer:
 			return httpService.get<IGetPriceResponse>('/api/price');
 		default:
-			return getMockData();
+			return getMockData(market);
 	}
 }
 
@@ -76,8 +76,8 @@ function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
 	});
 }
 
-async function getMockData(): Promise<IGetPriceResponse> {
-	const mockData: ICurrency[] = [
+async function getMockData(market: string): Promise<IGetPriceResponse> {
+	const allMockData: ICurrency[] = [
 		{
 			ticker: 'BTC',
 			name: 'Bitcoin',
@@ -94,15 +94,6 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			marketCap: '$3.20T',
 			market: 'crypto',
 		},
-		// {
-		// 	ticker: 'EUR',
-		// 	name: 'EUR',
-		// 	price: '$1.03717',
-		// 	changeLastDay: '-2.34%',
-		// 	marketCap: '$29.3T',
-		// 	market: 'forex',
-		// 	domain: 'USD',
-		// },
 		{
 			ticker: 'BNB',
 			name: 'BNB',
@@ -120,12 +111,76 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			ticker: 'ETH',
+			name: 'Ethereum',
+			price: '$3,245.67',
+			changeLastDay: '2.87%',
+			marketCap: '$3.90T',
+			market: 'crypto',
+		},
+		{
+			ticker: 'TRX',
+			name: 'Tron',
+			price: '$2.4552',
+			changeLastDay: '4.73%',
+			marketCap: '$3.20T',
+			market: 'crypto',
+		},
+		{
+			ticker: 'AAPL',
+			name: 'Apple Inc.',
+			price: '$185.92',
+			changeLastDay: '1.23%',
+			marketCap: '$2.89T',
+			market: 'industry',
+		},
+		{
+			ticker: 'MSFT',
+			name: 'Microsoft Corp.',
+			price: '$342.15',
+			changeLastDay: '0.87%',
+			marketCap: '$2.54T',
+			market: 'industry',
+		},
+		{
+			ticker: 'GOOGL',
+			name: 'Alphabet Inc.',
+			price: '$138.45',
+			changeLastDay: '-0.45%',
+			marketCap: '$1.75T',
+			market: 'industry',
+		},
+		{
+			ticker: 'TSLA',
+			name: 'Tesla Inc.',
+			price: '$248.73',
+			changeLastDay: '3.21%',
+			marketCap: '$785B',
+			market: 'industry',
+		},
+		{
+			ticker: 'NVDA',
+			name: 'NVIDIA Corp.',
+			price: '$875.34',
+			changeLastDay: '2.14%',
+			marketCap: '$2.15T',
+			market: 'industry',
+		},
+		{
+			ticker: 'META',
+			name: 'Meta Platforms',
+			price: '$295.67',
+			changeLastDay: '1.87%',
+			marketCap: '$742B',
+			market: 'industry',
+		},
+		{
 			ticker: 'XAU',
 			name: 'Gold',
 			price: '$2,300.00',
 			changeLastDay: '0.45%',
 			marketCap: '$12.00T',
-			market: 'commodities',
+			market: 'something',
 		},
 		{
 			ticker: 'XAG',
@@ -133,7 +188,7 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$29.00',
 			changeLastDay: '1.10%',
 			marketCap: '$1.30T',
-			market: 'commodities',
+			market: 'something',
 		},
 		{
 			ticker: 'WTI',
@@ -141,64 +196,46 @@ async function getMockData(): Promise<IGetPriceResponse> {
 			price: '$75.00',
 			changeLastDay: '-0.80%',
 			marketCap: '$3.00T',
-			market: 'commodities',
+			market: 'something',
 		},
 		{
-			ticker: '2TRONN',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
+			ticker: 'EUR',
+			name: 'EUR/USD',
+			price: '$1.03717',
+			changeLastDay: '-0.34%',
+			marketCap: '$29.3T',
+			market: 'something',
+			domain: 'USD',
 		},
 		{
-			ticker: 'AASDD',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
+			ticker: 'GBP',
+			name: 'GBP/USD',
+			price: '$1.26534',
+			changeLastDay: '0.78%',
+			marketCap: '$15.8T',
+			market: 'something',
+			domain: 'USD',
 		},
 		{
-			ticker: 'STR4ON1',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			ticker: 'DTR4ON2',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			ticker: 'ATR4ON3',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			ticker: 'GTR4ON4',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
+			ticker: 'JPY',
+			name: 'USD/JPY',
+			price: '¥150.25',
+			changeLastDay: '-0.12%',
+			marketCap: '$18.2T',
+			market: 'something',
+			domain: 'USD',
 		},
 	];
 
 	await new Promise(resolve => {
-		setTimeout(resolve, 0);
+		setTimeout(resolve, 100); // Simulate network delay
 	});
 
+	// Filter data based on the requested market
+	const filteredData = allMockData.filter(currency => currency.market === market);
+
 	const response: IGetPriceResponse = {
-		data: mockData,
+		data: filteredData,
 	};
 
 	return response;

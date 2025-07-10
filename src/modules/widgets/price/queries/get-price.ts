@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/vue-query';
+import {keepPreviousData, useQuery} from '@tanstack/vue-query';
+import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
 import { getPrice } from '../api';
 
-export function useQueryPrice(market: string) {
+export function useQueryPrice(market: MaybeRefOrGetter<string>) {
 	return useQuery({
-		queryKey: ['price', market],
-		queryFn: () => getPrice({ market }),
+		queryKey: computed(() => ['price', toValue(market)]),
+		queryFn: () => getPrice({ market: toValue(market) }),
+		placeholderData: keepPreviousData,
 	});
 }
