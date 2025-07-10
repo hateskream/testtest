@@ -15,7 +15,6 @@ import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { Price2Dashboard } from '@/modules/widgets/price-2';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
-import { Price2Dashboard } from '@/modules/widgets/price-2';
 import { WidgetType } from '@/modules/dashboard-group';
 
 export function getWidgetComponent(type: WidgetType) {
@@ -35,7 +34,6 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Performance]: PerformanceWidget,
 		[WidgetType.Price2]: Price2Dashboard,
 		[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-		[WidgetType.Price2]: Price2Dashboard,
 	};
 
 	return components[type];

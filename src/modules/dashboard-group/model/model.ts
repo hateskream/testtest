@@ -75,5 +75,4 @@ export enum WidgetType {
 	Performance = 'performance',
 	Price2 = 'price-2',
 	AltcoinSeason = 'altcoin-season',
-	Price2 = 'price-2',
 }
