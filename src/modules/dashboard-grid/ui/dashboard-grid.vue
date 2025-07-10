@@ -87,6 +87,7 @@ const resizableWidgetId = ref<string | null>(null);
 const dndWidgetId = ref<string | null>(null);
 
 const isEmpty = computed(() => props.widgets.length === 0);
+const isEditable = computed(() => !isEmpty.value || gridState.isAddWidget);
 
 const rawDashboards = computed((): IPosition[] =>
 	isEmpty.value ?
@@ -584,8 +585,8 @@ onCreated();
 			:layout="layout"
 			:col-num="columnsNum"
 			:row-height="rowHeight"
-			:is-draggable="true"
-			:is-resizable="true"
+			:is-draggable="isEditable"
+			:is-resizable="isEditable"
 			:prevent-collision="false"
 			:use-css-transforms="false"
 			:margin="[0, 0]"
