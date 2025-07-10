@@ -2,7 +2,7 @@ import { onMounted, onUnmounted, reactive, readonly, ref, watch, type Ref } from
 
 import { calculateGrid, calculateRows } from '../utils';
 
-type CallbackType = (width: number) => void;
+type CallbackType = (width: number, height: number) => void;
 
 export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const rowsNum = ref(0);
@@ -14,14 +14,22 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	const gridState = reactive({
 		height: 0,
 		width: 0,
+		mountHeight: 0,
 	});
 
-	let disconectObserverFunc: () => void = () => {};
+	let disconnectObserverFunc: () => void = () => {};
 
 	watch(
 		() => gridState.width,
 		width => {
-			update(width, gridState.height);
+			update(width, gridState.mountHeight);
+		},
+	);
+
+	watch(
+		() => gridState.height,
+		height => {
+			updateColumnsNumGrid(height);
 		},
 	);
 
@@ -30,20 +38,21 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 			return;
 		}
 
-		gridState.height = grid.value.clientHeight;
+		gridState.mountHeight = grid.value.clientHeight;
 
-		const disconect = createResizeObserver(grid.value, width => {
+		const disconnect = createResizeObserver(grid.value, (width, height) => {
 			gridState.width = width;
+			gridState.height = height;
 		});
 
-		disconectObserverFunc = disconect;
+		disconnectObserverFunc = disconnect;
 	});
 
-	onUnmounted(disconectObserverFunc);
+	onUnmounted(disconnectObserverFunc);
 
 	function createResizeObserver(element: HTMLElement, setterCallback: CallbackType) {
 		const observer = new ResizeObserver(() => {
-			setterCallback(element.clientWidth);
+			setterCallback(element.clientWidth, element.clientHeight);
 		});
 
 		observer.observe(element);
@@ -65,12 +74,8 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 		rowNumGrid.value = rows;
 	}
 
-	function updateColumnsNumGrid() {
-		if (!grid.value) {
-			return;
-		}
-
-		const { rows } = calculateRows(grid.value.offsetHeight, rowHeight.value);
+	function updateColumnsNumGrid(height: number) {
+		const { rows } = calculateRows(height, rowHeight.value);
 
 		rowNumGrid.value = rows;
 	}

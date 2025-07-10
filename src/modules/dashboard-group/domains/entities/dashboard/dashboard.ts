@@ -22,8 +22,8 @@ const MAIN_DASHBOARD_PRESET: IPreset = {
 	[WidgetType.Price2]: { x: 5, y: 0, size: { w: 3, h: 8 } },
 	[WidgetType.News]: { x: 0, y: 3, size: { w: 2, h: 5 } },
 	[WidgetType.Performance]: { x: 2, y: 3, size: { w: 3, h: 5 } },
-	[WidgetType.Market]: { x: 0, y: 9, size: { w: 5, h: 4 } },
-	[WidgetType.Watchlist]: { x: 5, y: 9, size: { w: 3, h: 4 } },
+	[WidgetType.Market]: { x: 0, y: 9, size: { w: 5, h: 5 } },
+	[WidgetType.Watchlist]: { x: 5, y: 9, size: { w: 3, h: 5 } },
 };
 
 const NAME_TO_PRESET: Record<PresetName, IPreset> = {

@@ -55,8 +55,6 @@ const props = defineProps<IGridLayoutComponent>();
 
 const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
-	(e: 'setWrapper', value: HTMLDivElement): void;
-	(e: 'setGridLayoutRef', value: InstanceType<typeof GridLayout>): void;
 	(e: 'add-widget', type: WidgetType, position: WidgetPosition, widgetsState: IWidgetState[]): void;
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
@@ -121,30 +119,6 @@ watch(
 	{
 		deep: true,
 		immediate: true,
-	},
-);
-
-watch(
-	wrapperRef,
-	value => {
-		if (value) {
-			emit('setWrapper', value);
-		}
-	},
-	{
-		once: true,
-	},
-);
-
-watch(
-	gridLayoutRef,
-	value => {
-		if (value) {
-			emit('setGridLayoutRef', value);
-		}
-	},
-	{
-		once: true,
 	},
 );
 

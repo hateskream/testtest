@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { GridLayout } from 'grid-layout-plus';
 
 import { responsiveGridLayout } from '../composables';
 import type { IPosition, IWidget, WidgetType } from '@/modules/dashboard-group';
@@ -30,23 +29,12 @@ const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid } =
 
 const isEditState = ref(true);
 
-const wrapperRef = ref<HTMLDivElement | null>(null);
-const gridLayoutRef = ref<InstanceType<typeof GridLayout>>();
-
 watch(isEditState, value => {
 	emit('is-edit', value);
 });
 
-function setWrapper(wrapper: HTMLDivElement) {
-	wrapperRef.value = wrapper;
-}
-
 function updateIsShowGridState(value: boolean) {
 	isEditState.value = value;
-}
-
-function setGridLayoutRef(gridLayout: InstanceType<typeof GridLayout>) {
-	gridLayoutRef.value = gridLayout;
 }
 
 function emitAddWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
@@ -81,12 +69,10 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 				:is-dnd="isEditState"
 				:columns-num="columnsNum"
 				:row-height="rowHeight"
-				:rows-num="rowNumGrid"
+				:rows-num="rowsNum"
 				:col-width="columnWidth"
 				:row-num="rowsNum"
 				@update-is-show-grid-state="updateIsShowGridState"
-				@set-wrapper="setWrapper"
-				@set-grid-layout-ref="setGridLayoutRef"
 				@add-widget="emitAddWidget"
 				@delete-widget="emitDeleteWidget"
 				@change-dashboard-state="emit('change-dashboard-state', $event)"
