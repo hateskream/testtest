@@ -16,15 +16,14 @@ type IPreset = Partial<Record<WidgetType, IPresetPosition>>;
 type PresetName = 'Main';
 
 const MAIN_DASHBOARD_PRESET: IPreset = {
-	[WidgetType.HotMarkets]: { x: 0, y: 0, size: { w: 2, h: 4 } },
-	[WidgetType.FearGreed]: { x: 2, y: 0, size: { w: 2, h: 4 } },
-	[WidgetType.Price]: { x: 4, y: 0, size: { w: 2, h: 4 } },
-	[WidgetType.Market]: { x: 0, y: 4, size: { w: 3, h: 4 } },
-	[WidgetType.News]: { x: 3, y: 4, size: { w: 3, h: 4 } },
-	[WidgetType.Watchlist]: { x: 6, y: 0, size: { w: 2, h: 4 } },
-	[WidgetType.Performance]: { x: 6, y: 2, size: { w: 10, h: 10 } },
-	[WidgetType.AltcoinSeason]: { x: 8, y: 0, size: { w: 2, h: 3 } },
-	[WidgetType.Price2]: { x: 6, y: 2, size: { w: 3, h: 8 } },
+	[WidgetType.Price]: { x: 0, y: 0, size: { w: 2, h: 3 } },
+	[WidgetType.FearGreed]: { x: 2, y: 0, size: { w: 1, h: 3 } },
+	[WidgetType.AltcoinSeason]: { x: 3, y: 0, size: { w: 2, h: 3 } },
+	[WidgetType.Price2]: { x: 5, y: 0, size: { w: 3, h: 8 } },
+	[WidgetType.News]: { x: 0, y: 3, size: { w: 2, h: 5 } },
+	[WidgetType.Performance]: { x: 2, y: 3, size: { w: 3, h: 5 } },
+	[WidgetType.Market]: { x: 0, y: 9, size: { w: 5, h: 4 } },
+	[WidgetType.Watchlist]: { x: 5, y: 9, size: { w: 3, h: 4 } },
 };
 
 const NAME_TO_PRESET: Record<PresetName, IPreset> = {
