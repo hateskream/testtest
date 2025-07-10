@@ -5,14 +5,18 @@ import { widgetColor, widgetActiveColor } from '@/modules/widgets/altcoinSeason/
 
 const activeBar = ref(5);
 
+const generateRandomPlace = () => {
+	activeBar.value = Math.floor(Math.random() * 30) + 1;
+};
+
 // Mock
 onMounted(() => {
-	activeBar.value = Math.floor(Math.random() * 30) + 1;
+	generateRandomPlace();
 });
 </script>
 
 <template>
-	<div :class="classes.btcPerformanceChart">
+	<div :class="classes.btcPerformanceChart" @click="generateRandomPlace">
 		<div :class="classes.chart">
 			<div
 				v-for="i in 30"
