@@ -1,4 +1,4 @@
-import {keepPreviousData, useQuery} from '@tanstack/vue-query';
+import { keepPreviousData, useQuery } from '@tanstack/vue-query';
 import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
 import { getPrice } from '../api';
