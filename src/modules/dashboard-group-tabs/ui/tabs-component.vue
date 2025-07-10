@@ -38,6 +38,9 @@ watch(
 
 		localTabs.value = tabs;
 	},
+	{
+		immediate: true,
+	},
 );
 
 function initTabs(tabs: IDashboardTab[]): ITab[] {
