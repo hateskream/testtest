@@ -25,7 +25,6 @@ const localTabs = ref<ITab[]>([]);
 watch(
 	() => [...props.tabs],
 	(newTabs) => {
-
 		if (localTabs.value.length === 0) {
 			localTabs.value = initTabs(newTabs);
 			return;

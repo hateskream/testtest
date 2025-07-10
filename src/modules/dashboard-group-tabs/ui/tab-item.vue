@@ -22,11 +22,9 @@ const tabName = ref(props.tab.name);
 const isInitialEdit = ref(true);
 
 watch(
-	() => props.tab.isActive,
-	(isActive) => {
-		if (!isActive) {
-			editing.value = false;
-		}
+	() => props.tab.isEditing,
+	isEditing => {
+		editing.value = isEditing;
 	},
 );
 

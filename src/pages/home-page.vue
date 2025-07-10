@@ -42,7 +42,7 @@ watch(() => activeDashboard.value, (dashboard) => {
 	} else {
 		pageState.isCurtainFixed = false;
 	}
-});
+}, { deep: true });
 
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;

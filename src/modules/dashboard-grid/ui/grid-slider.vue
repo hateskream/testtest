@@ -14,6 +14,8 @@ type CallbackType = (width: number) => void;
 
 let disconnectObserverFunc: () => void = () => {};
 
+let isInit = false;
+
 interface IGridSliderProps {
 	activeDashboardId: string;
 	dashboards: IDashboard[];
@@ -35,18 +37,12 @@ const state = reactive({
 	dashboardMutedWidth: 0,
 });
 
-const dashboardStyles = computed(() => {
-	return {
-		width: `${state.dashboardMutedWidth}px`,
-	};
-});
-
 const activeIndex = computed(() => {
 	return props.dashboards.findIndex((dashboard) => dashboard.id === props.activeDashboardId);
 });
 
 const sliderStyle = computed(() => {
-	const translateX = (state.dashboardMountWidth + GAP) * activeIndex.value;
+	let translateX = (state.dashboardMountWidth + GAP) * activeIndex.value;
 
 	return {
 		transform: `translateX(${-translateX}px)`,
@@ -65,7 +61,10 @@ onMounted(() => {
 	state.dashboardMutedWidth = width;
 
 	disconnectObserverFunc = createResizeObserver(rootRef.value, mutWidth => {
-		state.dashboardMutedWidth = mutWidth;
+		if (!isInit && mutWidth !== width) {
+			state.dashboardMutedWidth = mutWidth;
+			isInit = true;
+		}
 	});
 });
 
@@ -104,7 +103,11 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
 					:widgets="dashboard.widgets"
-					:style="dashboardStyles"
+					:style="
+						dashboard.id === props.activeDashboardId && dashboard.widgets.length === 0
+							? {width : state.dashboardMutedWidth + 'px'}
+							: {width : state.dashboardMountWidth + 'px'}
+					"
 					@add-widget="emitAddWidget"
 					@delete-widget="emitDeleteWidget"
 					@change-dashboard-state="emit('change-dashboard-state', $event)"
@@ -139,6 +142,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 
 .list-s {
 	display: flex;
+	width: max-content;
 	height: 100%;
 	gap: v-bind(GAP_PX);
 }
