@@ -17,7 +17,7 @@ import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain
 
 const dashboardStore = useDashboardGroupsStore();
 const { addTab, switchTab, renameTab, addWidget, deleteWidget, changeDashboardState } = dashboardStore;
-const { tabs, activeDashboard, preset } = storeToRefs(dashboardStore);
+const { tabs, activeDashboard, preset, activeDashboardId, dashboards } = storeToRefs(dashboardStore);
 
 const { provideComponent } = useProvideCurrentDashboard();
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
@@ -61,8 +61,9 @@ function updateIsEdit(value: boolean) {
 		</template>
 		<template #content>
 			<dashboard-grid
-				v-if="activeDashboard"
-				:widgets="activeDashboard.widgets"
+				v-if="dashboards.length"
+				:active-dashboard-id="activeDashboardId"
+				:dashboards="dashboards"
 				@add-widget="addWidget"
 				@delete-widget="deleteWidget"
 				@change-dashboard-state="changeDashboardState"

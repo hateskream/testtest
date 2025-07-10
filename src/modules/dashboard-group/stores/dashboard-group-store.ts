@@ -126,6 +126,7 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	onCreated();
 
 	return {
+		activeDashboardId,
 		preset,
 		dashboards,
 		tabs,

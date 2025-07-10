@@ -1,5 +1,5 @@
-import GridComponent from './grid-component.vue';
+import GridSlider from './grid-slider.vue';
 import DraggableElement from './draggable-element.vue';
 import GhostComponentBase from './ghost-component-base.vue';
 
-export { GridComponent as DashboardGrid, DraggableElement, GhostComponentBase };
+export { GridSlider as DashboardGrid, DraggableElement, GhostComponentBase };
