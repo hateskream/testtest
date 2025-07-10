@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-import { widgetColor } from '@/modules/widgets/altcoinSeason/const';
+import { widgetColor, widgetActiveColor } from '@/modules/widgets/altcoinSeason/const';
 
 const activeBar = ref(5);
+
+// Mock
+onMounted(() => {
+	activeBar.value = Math.floor(Math.random() * 30) + 1;
+});
 </script>
 
 <template>
@@ -16,6 +21,19 @@ const activeBar = ref(5);
 			>
 				<div v-if="i === activeBar || i === 1 || i === 30" :class="classes.barIndex">{{ i }}</div>
 				<div
+					v-if="i === activeBar"
+					:class="classes.barIndex"
+					:style="{
+						color:
+							i <= 7
+								? widgetActiveColor.bitcoinSeason
+								: i <= 23
+									? widgetActiveColor.neutralSeason
+									: widgetActiveColor.altcoinSeason,
+					}"
+				>{{ i }}</div>
+				<div
+					v-if="i !== activeBar"
 					:class="[classes.bar, {[classes.active]: i === activeBar}]"
 					:style="{
 						backgroundColor:
@@ -24,6 +42,18 @@ const activeBar = ref(5);
 								: i <= 23
 									? widgetColor.neutralSeason
 									: widgetColor.altcoinSeason,
+					}"
+				/>
+				<div
+					v-else-if="i === activeBar"
+					:class="[classes.bar, {[classes.active]: i === activeBar}]"
+					:style="{
+						backgroundColor:
+							i <= 7
+								? widgetActiveColor.bitcoinSeason
+								: i <= 23
+									? widgetActiveColor.neutralSeason
+									: widgetActiveColor.altcoinSeason,
 					}"
 				/>
 			</div>

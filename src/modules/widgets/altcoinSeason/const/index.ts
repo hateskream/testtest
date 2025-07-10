@@ -1,3 +1,1 @@
-import { widgetColor } from './widget-color.const';
-
-export { widgetColor };
+export * from './widget-color.const';
