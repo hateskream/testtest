@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+// import { ref } from 'vue';
 
 import { ModalFilter, ModalItemNumber } from '@/modules/widgets/base';
-import { type Period } from '@/modules/widgets/altcoinSeason/model';
+// import { type Period } from '@/modules/widgets/altcoinSeason/model';
 
-const period = ref<Period>();
+// const period = ref<Period>('90D');
 </script>
 
 <template>

@@ -10,7 +10,7 @@ export interface IAltcoinSeasonConfig {
 }
 
 export interface IAltcoinSeason {
-	period: string | IPeriodTimestamps;
+	period: Period;
 	btcRank: number;
 	maxRank: number;
 }

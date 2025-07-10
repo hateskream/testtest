@@ -10,11 +10,11 @@ enum DataProvider {
 
 const dataProvider = DataProvider.MockLocal;
 
-export async function getAltcoinSeason({ market }: IAltcoinSeasonRequest): Promise<IAltcoinSeason[] | null> {
+export async function getAltcoinSeason({ market, period }: IAltcoinSeasonRequest): Promise<IAltcoinSeason[] | null> {
 	const logger = useLogger();
 
 	try {
-		const response = await sendRequestByProvider(dataProvider, { market });
+		const response = await sendRequestByProvider(dataProvider, { market, period });
 
 		return response;
 	} catch (error) {
