@@ -1,4 +1,4 @@
-import { PresetWidget } from '@/modules/dashboard-group/domains/entities/widget';
+import { PresetWidget } from '@/modules/dashboard-group/core/domains/entities/widget';
 import type { IRepository } from '../../../domains/adapters';
 import type { IDeleteTabUc } from '../../../domains/uce-cases';
 import { mapDashboard, mapWidgetsPreset } from './mappers';

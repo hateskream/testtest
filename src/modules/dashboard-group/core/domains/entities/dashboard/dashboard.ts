@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Widget, type IWidgetState, type ISize, type IPosition } from '../widget';
 import { NotFoundWidget } from './error';
-import { WidgetType } from '@/modules/dashboard-group/model';
+import { WidgetType } from '@/modules/dashboard-group';
 
 interface IPresetPosition {
 	x: number;

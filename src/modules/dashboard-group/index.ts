@@ -4,7 +4,9 @@ export type {
 	IDashboardGroup,
 	IPosition,
 	IDashboardTab,
-} from './model';
-export { WidgetType } from './model';
+	IWidgetPreset,
+	IWidgetState,
+} from './core/model';
+export { WidgetType } from './core/model';
 
-export { useDashboardGroupsStore } from './stores/dashboard-group-store';
+export { useDashboardGroupsStore } from './core/stores/dashboard-group-store';

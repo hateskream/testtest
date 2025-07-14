@@ -1,9 +1,9 @@
-import { Dashboard } from '@/modules/dashboard-group/domains/entities/dashboard';
+import { Dashboard } from '@/modules/dashboard-group/core/domains/entities/dashboard';
 import type { IGetterDashboardGroup, ISetterDashboardGroup } from '../../../domains/adapters';
 import { DashboardGroup } from '../../../domains/entities';
 import { DashboardGroupSchema, type DashboardGroup as DashboardGroupModel } from '../../validate';
 import { FailedParse, NotInitialized } from './error';
-import { Widget } from '@/modules/dashboard-group/domains/entities/widget';
+import { Widget } from '@/modules/dashboard-group/core/domains/entities/widget';
 
 export interface IOptions {
 	isSaveChange: boolean;

@@ -1,7 +1,7 @@
-import { Dashboard } from '@/modules/dashboard-group/domains/entities/dashboard';
-import { Widget } from '@/modules/dashboard-group/domains/entities/widget';
-import { PresetWidget } from '@/modules/dashboard-group/domains/entities/widget';
-import type { IDashboard, IWidget, IWidgetPreset } from '@/modules/dashboard-group/domains/uce-cases';
+import { Dashboard } from '@/modules/dashboard-group/core/domains/entities/dashboard';
+import { Widget } from '@/modules/dashboard-group/core/domains/entities/widget';
+import { PresetWidget } from '@/modules/dashboard-group/core/domains/entities/widget';
+import type { IDashboard, IWidget, IWidgetPreset } from '@/modules/dashboard-group/core/domains/uce-cases';
 
 export function mapDashboards(dashboards: Dashboard[]): IDashboard[] {
 	return dashboards.map(mapDashboard);

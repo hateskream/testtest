@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BaseDashboardComponent } from '../../base/index.ts';
-import type { IMeta } from '@/modules/dashboard-group/model';
+import type { IMeta } from '@/modules/dashboard-group';
 
 import BtcPerformance from './btc-performance/btc-performance.vue';
 import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';

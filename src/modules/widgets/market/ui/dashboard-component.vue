@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { useQueryMarket } from '../queries';
 import { useMarketStore } from '../stores';
-import type { IMeta } from '@/modules/dashboard-group/model';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base';
 
 import ErrorComponent from './error-component.vue';

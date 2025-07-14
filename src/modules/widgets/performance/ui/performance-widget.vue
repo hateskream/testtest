@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/model';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';

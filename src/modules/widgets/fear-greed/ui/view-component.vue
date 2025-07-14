@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 
-import { Tension, type ITension, type ITensionTextData } from '../model';
+import { Tension, type ISize, type ITension, type ITensionTextData } from '../model';
 import { useMapTension } from '../composables';
 import { useFearGreedStore } from '../stores';
 import { UiTransitionFade } from '@/shared/ui/transition';
-import type { ISize } from '@/modules/dashboard-group/model';
 
 export interface IViewComponentProps {
 	tension: ITension;
