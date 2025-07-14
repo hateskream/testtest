@@ -12,7 +12,7 @@ import {
 	useDelete,
 	GhostComponentBase,
 } from '@/modules/dashboard-group/grid';
-import { CurrentDashboard } from '@/modules/dashboards';
+import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
 const dashboardStore = useDashboardGroupsStore();
