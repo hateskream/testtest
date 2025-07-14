@@ -14,7 +14,6 @@ import { throttle, debounce } from '@vexip-ui/utils';
 
 import {
 	useInjectCanDelete,
-	useInjectCurrentDashboardInject,
 	useInjectSetterDndHandler,
 	useMousePositionSync,
 	useRebuildingGrid,
@@ -28,12 +27,14 @@ import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
 import type { IPosition, ISize } from '../model';
 import type { IWidgetState, WidgetType } from '@/modules/dashboard-group/core';
+import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
 import GhostMoveComponent from './ghost-move-component.vue';
 import PlaceholderResizeComponent from './placeholder-resize-component.vue';
 import PlaceholderDndComponent from './placeholder-dnd-component.vue';
+
 
 interface IGridState {
 	isDnd: boolean;
@@ -64,8 +65,6 @@ const emit = defineEmits<{
 let mountedPlaceholder: App<Element> | null = null;
 
 const widgetIdToSize = ref(new Map<string, ISize>());
-
-const { currentDashboard } = useInjectCurrentDashboardInject();
 
 const { dnDProvider } = useInjectSetterDndHandler();
 
@@ -281,7 +280,7 @@ function mountPlaceholderResize() {
 		meta: getMeta(resizableWidgetId.value, true),
 	});
 
-	mountedPlaceholder.provide(CurrentDashboardSymbol, currentDashboard);
+	mountedPlaceholder.provide(CurrentDashboardSymbol, CurrentDashboard);
 
 	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
 
@@ -590,13 +589,12 @@ onCreated();
 				@delete="deleteDashboards"
 			>
 				<template #state-calm>
-					<slot
+					<current-dashboard
 						v-if="!isEmpty"
 						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:meta="getMeta(item.i)"
 					/>
-					<div v-else class="mock" />
 				</template>
 				<template #state-dnd>
 					<ghost-move-component :title="getDashboardItemById(item.i).name" />

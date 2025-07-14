@@ -2,7 +2,6 @@ export {
 	DashboardGrid,
 	DraggableElement,
 	GhostComponentBase,
-	useProvideCurrentDashboard,
 	useDndHandler,
 	useDelete,
 } from './grid';

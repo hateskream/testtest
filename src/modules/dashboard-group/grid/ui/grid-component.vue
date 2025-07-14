@@ -76,15 +76,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 				@add-widget="emitAddWidget"
 				@delete-widget="emitDeleteWidget"
 				@change-dashboard-state="emit('change-dashboard-state', $event)"
-			>
-				<template #dashboard-content="{ dashboardItem, meta }">
-					<slot
-						name="dashboard-content"
-						:dashboard-item="dashboardItem"
-						:meta="meta"
-					/>
-				</template>
-			</dashboard-grid>
+			/>
 		</div>
 	</div>
 </template>

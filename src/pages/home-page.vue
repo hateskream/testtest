@@ -6,24 +6,20 @@ import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
-	useProvideCurrentDashboard,
 	useDndHandler,
 	useDelete,
 	GhostComponentBase,
 	useDashboardGroupsStore,
 } from '@/modules/dashboard-group';
-import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
 const dashboardStore = useDashboardGroupsStore();
 const { addTab, switchTab, renameTab, addWidget, deleteWidget, changeDashboardState } = dashboardStore;
 const { tabs, activeDashboard, preset, activeDashboardId, dashboards } = storeToRefs(dashboardStore);
 
-const { provideComponent } = useProvideCurrentDashboard();
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
 const { provideCanDelete, setCanDelete } = useDelete();
 
-provideComponent(CurrentDashboard);
 provideSetterDndHandler();
 provideCanDelete();
 
@@ -68,14 +64,7 @@ function updateIsEdit(value: boolean) {
 				@delete-widget="deleteWidget"
 				@change-dashboard-state="changeDashboardState"
 				@is-edit="updateIsEdit"
-			>
-				<template #dashboard-content="{ dashboardItem, meta }">
-					<current-dashboard
-						:dashboard-item="dashboardItem"
-						:meta="meta"
-					/>
-				</template>
-			</dashboard-grid>
+			/>
 		</template>
 		<template #curtain>
 			<dashboards-curtain
