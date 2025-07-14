@@ -14,5 +14,6 @@ export function useQueryNews(args: IGetNewsRequest) {
 			args.dateRange,
 		],
 		queryFn: () => getNews(args),
+		refetchOnMount: false,
 	});
 }

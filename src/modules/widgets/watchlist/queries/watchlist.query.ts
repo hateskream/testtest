@@ -20,6 +20,7 @@ export function useQueryWatchlistWidget(args:	IGetWatchlistWidgetRequest | Ref<I
 			() => unref(args).market,
 		],
 		queryFn: () => getWatchlistWidget(unref(args)),
+		refetchOnMount: false,
 	});
 }
 
@@ -44,5 +45,6 @@ export function useQueryWatchlistData(
 			return getWatchlistSections(argsValue);
 		},
 		enabled: options?.enabled,
+		refetchOnMount: false,
 	});
 }
