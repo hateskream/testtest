@@ -7,7 +7,6 @@ interface IPlaceholderResizeComponent {
 }
 
 const props = defineProps<IPlaceholderResizeComponent>();
-
 </script>
 
 <template>
