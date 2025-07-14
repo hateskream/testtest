@@ -17,6 +17,10 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
+
 const performanceStore = usePerformanceStore();
 
 // Reactive filter from store
@@ -40,7 +44,7 @@ const { data, isLoading, isError } = useQueryPerformance(filters);
 		</template>
 
 		<template #rcm>
-			<performance-rcm />
+			<performance-rcm @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

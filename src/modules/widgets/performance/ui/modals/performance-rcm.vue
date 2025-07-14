@@ -10,6 +10,10 @@ import {
 
 import PerformanceFilter from './performance-filters.vue';
 
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
+
 const performanceStore = usePerformanceStore();
 </script>
 
@@ -37,7 +41,7 @@ const performanceStore = usePerformanceStore();
 
 			<ui-driver />
 
-			<modal-item>Delete</modal-item>
+			<modal-item @click="emit('delete')">Delete</modal-item>
 		</template>
 	</modal-rcm>
 </template>

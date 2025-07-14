@@ -586,7 +586,6 @@ onCreated();
 				@set-dnd-widget-id="setDndWidgetId"
 				@resize="onResize"
 				@moved="updateLayout"
-				@delete="deleteDashboards"
 			>
 				<template #state-calm>
 					<current-dashboard
@@ -594,6 +593,7 @@ onCreated();
 						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:meta="getMeta(item.i)"
+						@delete="deleteDashboards(item.i)"
 					/>
 				</template>
 				<template #state-dnd>
