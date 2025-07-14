@@ -11,7 +11,7 @@ import {
 	useDndHandler,
 	useDelete,
 	GhostComponentBase,
-} from '@/modules/dashboard-grid';
+} from '@/modules/dashboard-group/grid';
 import { CurrentDashboard } from '@/modules/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
