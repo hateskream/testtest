@@ -6,6 +6,7 @@ export type {
 	IDashboardTab,
 	IWidgetPreset,
 	IWidgetState,
+	ISize,
 } from './model';
 export { WidgetType } from './model';
 

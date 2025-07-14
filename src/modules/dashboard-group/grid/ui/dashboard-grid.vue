@@ -277,7 +277,6 @@ function mountPlaceholderResize() {
 
 	mountedPlaceholder = createApp(PlaceholderResizeComponent, {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
-		meta: getMeta(resizableWidgetId.value, true),
 	});
 
 	mountedPlaceholder.provide(CurrentDashboardSymbol, CurrentDashboard);
@@ -590,9 +589,7 @@ onCreated();
 				<template #state-calm>
 					<current-dashboard
 						v-if="!isEmpty"
-						name="dashboard-content"
 						:dashboard-item="getDashboardItemById(item.i)"
-						:meta="getMeta(item.i)"
 						@delete="deleteDashboards(item.i)"
 					/>
 				</template>

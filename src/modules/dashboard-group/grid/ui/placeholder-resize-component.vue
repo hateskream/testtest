@@ -1,24 +1,20 @@
 <script setup lang="ts">
-import { inject } from 'vue';
-
-import type { IWidget, IMeta } from '@/modules/dashboard-group/core';
-import { CurrentDashboardSymbol } from '../model';
+import type { IWidget } from '@/modules/dashboard-group/core';
+import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 
 interface IPlaceholderResizeComponent {
 	dashboardItem: IWidget;
-	meta: IMeta;
 }
 
 const props = defineProps<IPlaceholderResizeComponent>();
 
-const CurrentDashboard = inject(CurrentDashboardSymbol);
 </script>
 
 <template>
 	<div :class="classes.root">
 		<current-dashboard
 			:dashboard-item="props.dashboardItem"
-			:meta="props.meta"
+			is-resizing
 		/>
 	</div>
 </template>
