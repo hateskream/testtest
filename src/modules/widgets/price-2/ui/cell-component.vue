@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core';
 import { RangeChart, type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 

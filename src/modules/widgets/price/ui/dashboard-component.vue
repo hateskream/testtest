@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryPrice } from '../queries';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core';
 import { usePriceStore } from '../stores';
 
 import ErrorComponent from './error-component.vue';

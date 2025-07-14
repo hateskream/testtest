@@ -15,7 +15,7 @@ import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { Price2Dashboard } from '@/modules/widgets/price-2';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
-import { WidgetType } from '@/modules/dashboard-group';
+import { WidgetType } from '../../core';
 
 export function getWidgetComponent(type: WidgetType) {
 	const components: Record<WidgetType, Component> = {

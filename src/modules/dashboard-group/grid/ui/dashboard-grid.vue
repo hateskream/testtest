@@ -23,11 +23,11 @@ import {
 	type IWidget,
 	type IMeta,
 	type IPosition as WidgetPosition,
-} from '@/modules/dashboard-group';
+} from '@/modules/dashboard-group/core';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
 import type { IPosition, ISize } from '../model';
-import type { IWidgetState, WidgetType } from '@/modules/dashboard-group';
+import type { IWidgetState, WidgetType } from '@/modules/dashboard-group/core';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';

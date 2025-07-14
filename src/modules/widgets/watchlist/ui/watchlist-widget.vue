@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BaseDashboardComponent } from '../../base/index.ts';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
 import WatchlistMain from './views/watchlist-main.vue';
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 
 interface IWidgetComponentProps {

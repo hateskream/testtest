@@ -2,7 +2,6 @@
 import { storeToRefs } from 'pinia';
 import { reactive, watch } from 'vue';
 
-import { useDashboardGroupsStore } from '@/modules/dashboard-group';
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
@@ -11,7 +10,8 @@ import {
 	useDndHandler,
 	useDelete,
 	GhostComponentBase,
-} from '@/modules/dashboard-group/grid';
+	useDashboardGroupsStore,
+} from '@/modules/dashboard-group';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 

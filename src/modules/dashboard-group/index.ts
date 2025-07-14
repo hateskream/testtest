@@ -1,12 +1,10 @@
-export type {
-	IMeta,
-	IWidget,
-	IDashboardGroup,
-	IPosition,
-	IDashboardTab,
-	IWidgetPreset,
-	IWidgetState,
-} from './core/model';
-export { WidgetType } from './core/model';
+export {
+	DashboardGrid,
+	DraggableElement,
+	GhostComponentBase,
+	useProvideCurrentDashboard,
+	useDndHandler,
+	useDelete,
+} from './grid';
 
-export { useDashboardGroupsStore } from './core/stores/dashboard-group-store';
+export { useDashboardGroupsStore } from './core';

@@ -5,7 +5,7 @@ import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
 import { useNewsStore } from '../stores';
 import type { IGetNewsRequest } from '../api';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core';
 
 import NewsFiltersPanel from './news-filters-panel-component.vue';
 import ErrorComponent from './error-component.vue';

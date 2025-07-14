@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core';
 
 import CellComponent from './cell-component.vue';
 import PriceHeader from './header/price-header.vue';

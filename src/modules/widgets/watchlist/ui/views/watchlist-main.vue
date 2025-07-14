@@ -5,7 +5,7 @@ import { useQueryWatchlistData, useQueryWatchlistWidget } from '../../queries/wa
 import { useWatchlistTabsStore, useWatchlistSectionStore } from '../../stores';
 import type { IWatchlistSection } from '../../model';
 import type { IGetWatchlistRequest } from '../../api';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
 import WatchlistError from './watchlist-error.vue';
 import WatchlistLoader from './watchlist-loader.vue';

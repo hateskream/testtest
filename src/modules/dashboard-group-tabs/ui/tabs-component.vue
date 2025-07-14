@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type IDashboardTab } from '@/modules/dashboard-group';
+import { type IDashboardTab } from '@/modules/dashboard-group/core';
 import type { ITab } from '../model';
 
 import TabItem from './tab-item.vue';

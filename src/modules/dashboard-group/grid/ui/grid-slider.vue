@@ -2,8 +2,8 @@
 import { computed, onMounted, onUnmounted, reactive, useTemplateRef } from 'vue';
 
 import type { IDashboard } from '../model';
-import type { IPosition, WidgetType } from '@/modules/dashboard-group';
-import type { IWidgetState } from '@/modules/dashboard-group';
+import type { IPosition, WidgetType } from '@/modules/dashboard-group/core';
+import type { IWidgetState } from '@/modules/dashboard-group/core';
 
 import GridComponent from './grid-component.vue';
 

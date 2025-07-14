@@ -2,7 +2,7 @@
 import {
 	type IWidget,
 	type IMeta,
-} from '@/modules/dashboard-group';
+} from '../../core';
 import { getWidgetComponent } from '../utils';
 
 interface IGroupComponentProps {

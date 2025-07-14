@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryPrice } from '../queries';
-import type { IMeta } from '@/modules/dashboard-group';
+import type { IMeta } from '@/modules/dashboard-group/core';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
