@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { RangeChart, type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
@@ -26,6 +26,7 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 <template>
 	<div :class="classes.root">
 		<div :class="classes.chartPrices">
+
 
 			<div>
 				<div :class="classes.chartPrice">
@@ -89,11 +90,11 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 		</div>
 
 		<chart-component
-			:height="400"
+			:width="210"
+			:height="230"
 			:is-visible-history-graph="false"
 			:disable-scroll="false"
 			:is-visible-indicators="false"
-			:width="100"
 			:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
 			@update="handleUpdateData"
 		/>
@@ -112,9 +113,14 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 	color: rgb(4 237 160 / 100%);
 }
 
+.chartPrice {
+	min-width: 210px;
+}
+
 .chartPrices {
 	display: flex;
 	align-items: center;
+	margin-top: 12px;
 	margin-bottom: 20px;
 	gap: 28px;
 }
@@ -152,5 +158,4 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 	font-size: 12px;
 	color: var(--metrics-color-positive-chart);
 }
-
 </style>

@@ -13,7 +13,6 @@ import { TelegramDashboard } from '@/modules/widgets/telegram';
 import { ChartDashboard } from '@/modules/widgets/chart';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
-import { Price2Dashboard } from '@/modules/widgets/price-2';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { WidgetType } from '../../core';
 
@@ -32,7 +31,6 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Chart]: ChartDashboard,
 		[WidgetType.Watchlist]: WatchlistDashboard,
 		[WidgetType.Performance]: PerformanceWidget,
-		[WidgetType.Price2]: Price2Dashboard,
 		[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	};
 

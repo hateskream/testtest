@@ -9,6 +9,7 @@ import type { IMeta } from '@/modules/dashboard-group/core';
 
 import CellComponent from './cell-component.vue';
 import PriceHeader from './header/price-header.vue';
+import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
 	currencies: ICurrency[];
@@ -43,6 +44,12 @@ const gridTemplateContent = computed(() => {
 
 	return `repeat(auto-fit, minmax(${minWidth}px, 1fr)) `;
 });
+
+const isShowPriceChart = ref(false);
+
+function showChart(_item: ICurrency) {
+	isShowPriceChart.value = true;
+}
 </script>
 
 <template>
@@ -50,19 +57,36 @@ const gridTemplateContent = computed(() => {
 		<price-header />
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
-				<draggable-component
-					v-model="layout"
-					item-key="ticker"
-					:filter="`.price-no-drag`"
-					:class="classes.contentWrapped"
-					:component-data="{ tag: 'div', name: 'flip-list', type: 'transition-group' }"
-					:animation="200"
-					:disabled="false"
+				<transition
+					:enter-active-class="classes.sectionEnterActive"
+					:leave-active-class="classes.sectionLeaveActive"
+					:enter-from-class="classes.sectionEnterFrom"
+					:leave-to-class="classes.sectionLeaveTo"
 				>
-					<template #item="{ element }">
-						<cell-component :currency="element" :meta="meta" />
-					</template>
-				</draggable-component>
+					<draggable-component
+						v-if="!isShowPriceChart"
+						v-model="layout"
+						item-key="ticker"
+						:filter="`.price-no-drag`"
+						:class="classes.contentWrapped"
+						:component-data="{ tag: 'div', name: 'flip-list', type: 'transition-group' }"
+						:animation="200"
+						:disabled="false"
+					>
+						<template #item="{ element }">
+							<cell-component
+								:currency="element"
+								:meta="meta"
+								@click="showChart(element)"
+							/>
+						</template>
+					</draggable-component>
+					<chart-price
+						v-else
+						:meta="meta"
+					/>
+				</transition>
+
 			</div>
 		</div>
 	</div>
@@ -96,6 +120,20 @@ const gridTemplateContent = computed(() => {
 	display: grid;
 	grid-template-columns: v-bind(gridTemplateContent);
 	width: 100%;
+}
+
+.sectionEnterActive,
+.sectionLeaveActive {
+	max-height: 700px;
+	opacity: 1;
+	transition: all 0.4s ease;
+}
+
+.sectionEnterFrom,
+.sectionLeaveTo {
+	max-height: 0;
+	transform: translateY(-10px);
+	opacity: 0;
 }
 </style>
 

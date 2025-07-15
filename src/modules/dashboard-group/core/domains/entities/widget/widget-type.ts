@@ -14,7 +14,6 @@ export enum WidgetType {
 	// Chart = 'chart', // delete
 	Watchlist = 'watchlist',
 	Performance = 'performance',
-	Price2 = 'price-2',
 	AltcoinSeason = 'altcoin-season',
 }
 
