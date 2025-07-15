@@ -80,7 +80,7 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		*/
 
 		minSize: { w: 2, h: 3 },
-		maxSize: { w: 2, h: 3 },
+		maxSize: { w: Infinity, h: Infinity },
 		defaultSize: { w: 2, h: 3 },
 	},
 };
