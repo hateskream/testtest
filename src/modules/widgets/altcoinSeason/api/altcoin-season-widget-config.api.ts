@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { type IPerformanceRank, type IAltcoinSeasonRequest } from '../model';
+import { type IAltcoinSeasonConfig, type IAltcoinSeasonRequest } from '../model';
 import { useLogger } from '@/shared/service/logger';
 
 enum DataProvider {
@@ -10,7 +10,7 @@ enum DataProvider {
 
 const dataProvider = DataProvider.MockLocal;
 
-export async function getAltcoinSeason({ market }: IAltcoinSeasonRequest): Promise<IPerformanceRank[] | null> {
+export async function getAltcoinSeasonWidgetConfig({ market }: IAltcoinSeasonRequest) {
 	const logger = useLogger();
 
 	try {
@@ -18,43 +18,43 @@ export async function getAltcoinSeason({ market }: IAltcoinSeasonRequest): Promi
 
 		return response;
 	} catch (error) {
-		logger.error('Failed to get altcoin season', error as Error);
+		logger.error('Failed to get altcoin season widget config', error as Error);
 		throw error;
 	}
 }
 
-function sendRequestByProvider(
-	type: DataProvider,
-	{ market }: IAltcoinSeasonRequest,
-): Promise<IPerformanceRank[]> {
+function sendRequestByProvider(type: DataProvider, { market }: IAltcoinSeasonRequest) {
 	const httpService = useHttpService();
 
 	switch (type) {
 		case DataProvider.Production:
-			return httpService.get<IPerformanceRank[]>('https://gateway.planet9.uk/altcoin-season', {
+			return httpService.get<IAltcoinSeasonConfig>('https://gateway.planet9.uk/altcoin-season', {
 				query: { market },
 			});
 		case DataProvider.MockLocal:
 			return getMockData();
 		case DataProvider.MockServer:
-			return httpService.get<IPerformanceRank[]>('/api/altcoin-season');
+			return httpService.get<IAltcoinSeasonConfig>('/api/altcoin-season');
 		default:
 			return getMockData();
 	}
 }
 
-async function getMockData(): Promise<IPerformanceRank[]> {
+async function getMockData() {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const mockData: IPerformanceRank[] = [
-		{
-			period: '90D',
-			btcRank: 1,
-			maxRank: 30,
+	const mockData: IAltcoinSeasonConfig = {
+		modules: {
+			performanceRank: true,
+			historicalValues: true,
+			highLow: true,
+			top100: true,
+			chart: true,
 		},
-	];
+		period: '90D',
+	};
 
 	return mockData;
 }

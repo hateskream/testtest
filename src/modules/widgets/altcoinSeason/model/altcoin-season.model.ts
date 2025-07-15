@@ -3,13 +3,13 @@ export interface IAltcoinSeasonConfig {
 		performanceRank: boolean;
 		historicalValues: boolean;
 		highLow: boolean;
-		performanceChart: boolean;
+		top100: boolean;
 		chart: boolean;
 	};
 	period: Period;
 }
 
-export interface IAltcoinSeason {
+export interface IPerformanceRank {
 	period: Period;
 	btcRank: number;
 	maxRank: number;
@@ -22,7 +22,6 @@ export interface IPeriodTimestamps {
 
 export interface IAltcoinSeasonRequest {
 	market: string;
-	period: Period;
 }
 
 export type Period = '1D' | '7D' | '30D' | '90D' | '365D' | IPeriodTimestamps;
