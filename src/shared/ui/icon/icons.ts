@@ -56,4 +56,6 @@ export enum IconIds {
 	Pin = 'pin',
 	Bars = 'bars',
 	List = 'list',
+	Cryptos = 'cryptos',
+	Back = 'back',
 }

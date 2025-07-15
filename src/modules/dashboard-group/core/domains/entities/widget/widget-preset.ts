@@ -67,6 +67,13 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 		maxSize: { w: Infinity, h: Infinity },
 		defaultSize: { w: 3, h: 8 }, // так вставить в пресет дашборда
 	},
+	[WidgetType.MarketCap]: {
+		name: 'MarketCap',
+		description: 'MarketCap',
+		minSize: { w: 1, h: 3 },
+		maxSize: { w: Infinity, h: Infinity },
+		defaultSize: { w: 3, h: 8 }, // так вставить в пресет дашборда
+	},
 	[WidgetType.AltcoinSeason]: {
 		name: 'Altcoin Season',
 		description: 'Altcoin season',
