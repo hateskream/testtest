@@ -1,29 +1,41 @@
 <script setup lang="ts">
-import { BaseDashboardComponent } from '../../base/index.ts';
+import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import { PerformanceWidget } from '@/modules/widgets/performance';
+import { useQueryAltcoinSeasonWidgetConfig } from '../queries';
 
 import BtcPerformance from './btc-performance/btc-performance.vue';
 import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';
+import WidgetLayout from './layouts/widget-layout.vue';
 
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
 }
 
 const props = defineProps<IAltcoinSeasonWidgetProps>();
+
+const { data: altcoinSeasonWidgetConfig } = useQueryAltcoinSeasonWidgetConfig({ market: props.meta.market });
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing" :class="classes.altcoinSeasonWidget">
-		<template #title>
-			<div :class="classes.titleContainer">
-				<span>{{ props.meta.name }}</span>
-			</div>
-		</template>
+	<base-dashboard-component
+		:is-resizing="props.meta.isResizing"
+		:meta="props.meta"
+		:class="classes.altcoinSeasonWidget"
+	>
+		<template #title>{{ props.meta }}</template>
 
 		<template #content>
-			<div :class="classes.altcoinSeasonWidgetContent">
-				<btc-performance />
-			</div>
+			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
+				<template #performanceRank>
+					<btc-performance  />
+				</template>
+
+				<template #top100>
+					<performance-widget :meta="props.meta" />
+				</template>
+
+			</widget-layout>
 		</template>
 
 		<template #rcm>
@@ -34,10 +46,6 @@ const props = defineProps<IAltcoinSeasonWidgetProps>();
 
 <style module="classes">
 .altcoinSeasonWidget {
-	display: flex;
-}
-
-.altcoinSeasonWidgetContent {
-	padding: 0 8px 8px;
+	/* todo: add styles */
 }
 </style>
