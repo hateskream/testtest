@@ -10,15 +10,23 @@ import { ChartWidgetFearGreed, ChartWidgetKeyIndicators, ChartWidgetNews } from 
 import { markdown } from './markdown.ts';
 import { IconIds } from '@/shared/ui/icon';
 
+import ChartWidgetLinks from '@/modules/chart/components/links/chart-widget-links.vue';
+
 const tabs = computed(() => [
 	{ id: 'insights-and-activity-insights', title: 'Insights' },
 	{ id: 'insights-and-activity-news', title: 'News' },
 ],
-)
-;
+);
+
+const smallTabs = computed(() => [
+	{ id: 'insights-and-activity-links', title: 'Links' },
+	{ id: 'insights-and-activity-about', title: 'About' },
+],
+);
 
 
 const { activeTab, tabList, setActiveTab } = useTabs(tabs);
+const { activeTab: smallActiveTab, tabList: smallTabList, setActiveTab: setSmallActiveTab } = useTabs(smallTabs);
 
 
 const marketDate = {
@@ -81,6 +89,23 @@ const keyIndicatorsData = {
 						:indicators="keyIndicatorsData.indicators"
 						:time="keyIndicatorsData.time"
 					/>
+				</template>
+
+			</chart-common-tabs-layout>
+			<chart-common-tabs-layout
+				:active-tab="smallActiveTab"
+				:tab-list="smallTabList"
+				:set-active-tab="setSmallActiveTab"
+			>
+				<template #insights-and-activity-links>
+
+					<chart-widget-links />
+
+				</template>
+				<template #insights-and-activity-about>
+
+					<chart-widget-links />
+
 				</template>
 
 			</chart-common-tabs-layout>
