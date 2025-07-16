@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model';
 import type { ISize } from '@/modules/dashboard-group/grid/model';
-import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/grid';
+import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
 
 interface IWidgetLayoutProps {
 	widgetConfig: IAltcoinSeasonConfig | null;
