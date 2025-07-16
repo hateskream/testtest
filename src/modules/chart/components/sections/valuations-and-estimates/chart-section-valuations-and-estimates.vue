@@ -53,27 +53,33 @@ onUnmounted(() => {
 </script>
 
 <template>
-
-
 	<chart-common-section-layout>
 		<template #refAnchor><div ref="itemRef"></div></template>
 		<template #title>{{props.section?.title}}</template>
 		<template #body>
-			<div :class="classes.section">
-				<chart-widgets-valuation
-					:values="valuationData"
-				/>
-				<chart-widgets-capital-structure :values="capitalStructureData" />
+			<div :class="classes.container">
+				<div :class="classes.section">
+					<chart-widgets-valuation :values="valuationData" />
+					<chart-widgets-capital-structure :values="capitalStructureData" />
+				</div>
 			</div>
 		</template>
 	</chart-common-section-layout>
 </template>
 
 <style module="classes">
+.container {
+	container-type: inline-size;
+}
+
 .section {
 	display: flex;
 	gap: 3px;
 }
 
-
+@container (max-width: 599px) {
+	.section {
+		flex-direction: column;
+	}
+}
 </style>
