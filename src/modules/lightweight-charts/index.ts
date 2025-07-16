@@ -6,6 +6,8 @@ import ChartStockBulk from './ui/chart-stock-bulk-component.vue';
 import ChartDividends from './ui/chart-dividends.vue';
 import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 import ChartIncomeStatement from './ui/chart-income-statement.vue';
+import ChartMarketCap from './ui/chart-market-cap.vue';
+
 
 export {
 	Chart,
@@ -16,4 +18,5 @@ export {
 	ChartDividends,
 	ChartBalanceSheet,
 	ChartIncomeStatement,
+	ChartMarketCap,
 };

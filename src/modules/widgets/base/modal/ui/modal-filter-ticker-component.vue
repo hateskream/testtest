@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
 
 interface IModalFilterTickerEmits {
 	(e: 'update:modelValue', data: IModalFilterTickerLists): void;
+	(e: 'select', data: IModalFilterTicker): void;
 }
 
 const emits = defineEmits<IModalFilterTickerEmits>();
@@ -67,14 +68,18 @@ function handleUpdateSelect(id: string, value: boolean) {
 
 	const newList = toValue(props.modelValue);
 
-
-	data.forEach(([group, list]) => {
+	for (const [group, list] of data) {
 		const toUpdateIdx = list.findIndex(item => compareStrings(item.id, id));
 
 		if (toUpdateIdx !== -1) {
 			newList[group][toUpdateIdx].isSelected = value;
+
+			emits('select', newList[group][toUpdateIdx]);
+
+			break;
 		}
-	});
+	}
+
 
 	emits('update:modelValue', newList);
 

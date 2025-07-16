@@ -1,30 +1,42 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { reactive, ref, useTemplateRef } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import type { IMarketCapDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalFilterTicker } from '../../base';
-import type { IModalFilterTicker, IModalFilterTickerLists } from '../../base/modal/model';
+import type { IModalFilterTicker } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
 import { RangeChart } from '@/modules/lightweight-charts/model';
+import { compareStrings, generateRandomColor, prettyNumberWithKey } from '@/shared/lib';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
+
+
+interface IModalFilterTickerWithColor extends IModalFilterTicker {
+	color: string;
+}
 
 interface IViewComponentProps {
 	meta: IMeta;
 	data: IMarketCapDomain[];
 }
+
 const props = defineProps<IViewComponentProps>();
+const chartMarketCapRef = useTemplateRef('chartMarketCap');
 
 const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 
 const listWithGroups = ref<{ [x: string]: IModalFilterTicker[] }>({});
+const mapper = reactive<Map<string, IMarketCapDomain>>(new Map());
 
 props.data.forEach((item) => {
 	if (!listWithGroups.value[item.type]) {
 		listWithGroups.value[item.type] = [];
 	}
+
+	mapper.set(item.id, item);
 
 	listWithGroups.value[item.type].push({
 		id: item.id,
@@ -35,14 +47,30 @@ props.data.forEach((item) => {
 	});
 });
 
-const activeList = computed<IModalFilterTicker[]>(() =>
-	Object.values(listWithGroups.value)
-		.flat()
-		.filter(item => item.isSelected),
-);
 
-function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
-	listWithGroups.value = list;
+const activeList = ref<IMarketCapDomain[]>([]);
+
+
+function formatFdv(fdv: string) {
+	const { value, suffix } = prettyNumberWithKey(fdv);
+
+	return `$${value}${suffix}`;
+}
+
+function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
+	if (item.isSelected) {
+		const foundItem = mapper.get(item.id)!;
+
+		activeList.value.push(foundItem);
+
+		chartMarketCapRef.value?.addTicker(foundItem.color, foundItem.symbol);
+	} else {
+		const idx = activeList.value.findIndex(singleItem => compareStrings(singleItem.id, item.id));
+
+		activeList.value.splice(idx, 1);
+
+		chartMarketCapRef.value?.removeTicker(idx);
+	}
 }
 </script>
 
@@ -55,11 +83,11 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 					<div :class="classes.listFiltersTitleImageWrapper">
 						<div
 							v-for="item in activeList.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)"
-							:key="item.ticker"
+							:key="item.symbol"
 							:class="classes.listFiltersTitleImage"
 						>
 							<ui-image
-								:src="item.image"
+								:src="item.srcValue"
 								replacement="/images/market/ADA.png"
 							/>
 						</div>
@@ -68,7 +96,7 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 
 					<div
 						v-if="
-							activeList.length  ===0
+							activeList.length  === 0
 						"
 					>
 						Crypto
@@ -84,15 +112,21 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 
 				<template #content>
 					<modal-filter-ticker
-						:model-value="listWithGroups"
-						@update:model-value="handleUpdateFilterTickerItem"
+						v-model="listWithGroups"
+						@select="handleUpdateFilterTickerItem"
 					/>
 				</template>
 			</modal-badge>
 		</div>
 
 
-		<div :class="classes.chartPrices">
+		<div
+			v-if="
+				activeList.length === 0
+			"
+
+			:class="classes.chartPrices"
+		>
 			<div>
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
@@ -155,20 +189,29 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 		</div>
 
 
-		<div>
-			<div :class="classes.marketCapCurrency">
+		<div :class="classes.marketCapCurrencyList">
+			<div
+				v-for="item in activeList"
+				:key="item.id"
+				:class="classes.marketCapCurrency"
+			>
 
 				<div :class="classes.marketCapCurrencyName">
-					<div></div>
-					<span>Crypto</span>
+					<div :style="{backgroundColor: item.color}"></div>
+					<span>{{ item.symbol }}</span>
 				</div>
 
 				<div :class="classes.marketCapCurrencyFdv">
-					$ 3.28 T
+					{{ formatFdv(item.fdv) }}
 				</div>
 
-				<div :class="classes.marketCapCurrencyChange">
-					- 0.93%
+				<div
+					:class="[classes.marketCapCurrencyChange,
+						item.change24h > 0 ?
+							classes.marketCapCurrencyChangePositive : classes.marketCapCurrencyChangeNegative
+					]"
+				>
+					{{ item.change24h }}%
 				</div>
 
 			</div>
@@ -176,11 +219,17 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 
 
 		<chart-component
+			v-show="activeList.length === 0"
 			:width="100"
 			:disable-scroll="true"
 			:is-visible-history-graph="false"
 			:is-visible-indicators="false"
 			:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+			:height="320"
+		/>
+		<chart-market-cap
+			v-show="activeList.length > 0"
+			ref="chartMarketCap"
 			:height="320"
 		/>
 	</div>
@@ -193,14 +242,13 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 	height: 100%;
 	padding: 0 16px 18px;
 	overflow: hidden;
+	gap: 16px;
 }
 
 
 .chartPrices {
 	display: flex;
 	align-items: center;
-	margin-top: 20px;
-	margin-bottom: 20px;
 	gap: 28px;
 }
 
@@ -270,6 +318,8 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 .marketCapCurrencyName {
 	display: flex;
 	align-items: center;
+	padding-right: 4px;
+	border-right: 1px solid var(--border-color-base-300);
 	gap: 6px;
 }
 
@@ -291,8 +341,22 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 	color: var(--text-color-base-500);
 }
 
+.marketCapCurrencyList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
 .marketCapCurrencyChange {
 	font-weight: 400;
 	font-size: 10px;
+}
+
+.marketCapCurrencyChangePositive {
+	color: rgb(4 237 160 / 100%);
+}
+
+.marketCapCurrencyChangeNegative {
+	color: rgb(252 74 107 / 100%);
 }
 </style>
