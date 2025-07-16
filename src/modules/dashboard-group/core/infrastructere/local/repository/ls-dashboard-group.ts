@@ -72,13 +72,27 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	private hydrate(data: DashboardGroup): DashboardGroupModel {
 		const dg: DashboardGroupModel = {
 			activeDashboardId: data.activeDashboardId,
-			dashboards: data.dashboards.map(d => ({
-				id: d.id,
-				name: d.name,
-				order: d.order,
-				activeColNum: d.activeColNum,
-				layout: Object.fromEntries(d.layout.values()),
-			})),
+			dashboards: data.dashboards
+				.map(d => ({
+					id: d.id,
+					name: d.name,
+					order: d.order,
+					activeColNum: d.activeColNum,
+					layout: Object
+						.fromEntries(
+							Array.from(d.layout.entries())
+								.map(([key, widgets]) =>
+									[
+										key,
+										widgets.map(widget => ({
+											id: widget.id,
+											type: widget.widgetType,
+											position: widget.position,
+										})),
+									],
+								),
+						),
+				})),
 		};
 
 		this.check(dg);
