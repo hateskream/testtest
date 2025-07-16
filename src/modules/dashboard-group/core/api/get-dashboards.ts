@@ -5,6 +5,7 @@ import { mapDashboards } from './mapping';
 
 export interface IGetDashboardsReq {
 	userId: string;
+	colNum: number;
 }
 
 export interface IGetDashboardsRes {

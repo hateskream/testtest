@@ -19,6 +19,11 @@ let isInit = false;
 interface IGridSliderProps {
 	activeDashboardId: string;
 	dashboards: IDashboard[];
+	rowsNum: number;
+	columnsNum: number;
+	rowHeight: number;
+	columnWidth: number;
+	rowNumGrid: number;
 }
 
 const props = defineProps<IGridSliderProps>();
@@ -103,6 +108,13 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
 					:widgets="dashboard.widgets"
+					:columns-num="props.columnsNum"
+					:row-height="props.rowHeight"
+					:rows-num="props.rowsNum"
+					:col-width="props.columnWidth"
+					:row-num="props.rowNumGrid"
+					:column-width="props.columnWidth"
+					:row-num-grid="props.rowNumGrid"
 					:style="
 						dashboard.id === props.activeDashboardId && dashboard.widgets.length === 0
 							? {width : state.dashboardMutedWidth + 'px'}

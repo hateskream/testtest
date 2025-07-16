@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { reactive, watch } from 'vue';
+import { reactive, watch, type ComponentPublicInstance } from 'vue';
+import { templateRef } from '@vueuse/core';
 
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
@@ -10,15 +11,43 @@ import {
 	useDelete,
 	GhostComponentBase,
 	useDashboardGroupsStore,
+	useGridLayout,
+	useLoadDashboard,
 } from '@/modules/dashboard-group';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
 const dashboardStore = useDashboardGroupsStore();
-const { addTab, switchTab, renameTab, addWidget, deleteWidget, changeDashboardState } = dashboardStore;
-const { tabs, activeDashboard, preset, activeDashboardId, dashboards } = storeToRefs(dashboardStore);
+const {
+	addTab,
+	switchTab,
+	renameTab,
+	addWidget,
+	deleteWidget,
+	changeDashboardState,
+	loadDashboards,
+} = dashboardStore;
+const {
+	tabs,
+	activeDashboard,
+	preset,
+	activeDashboardId,
+	dashboards,
+} = storeToRefs(dashboardStore);
 
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
 const { provideCanDelete, setCanDelete } = useDelete();
+
+const {
+	rowsNum,
+	columnsNum,
+	rowHeight,
+	columnWidth,
+	rowNumGrid,
+} = useGridLayout(
+	templateRef<ComponentPublicInstance>('dashboardGridRef'),
+);
+
+useLoadDashboard(columnsNum, loadDashboards);
 
 provideSetterDndHandler();
 provideCanDelete();
@@ -57,9 +86,16 @@ function updateIsEdit(value: boolean) {
 		</template>
 		<template #content>
 			<dashboard-grid
-				v-if="dashboards.length"
+				ref="dashboardGridRef"
 				:active-dashboard-id="activeDashboardId"
 				:dashboards="dashboards"
+				:columns-num="columnsNum"
+				:row-height="rowHeight"
+				:rows-num="rowsNum"
+				:col-width="columnWidth"
+				:row-num="rowNumGrid"
+				:column-width="columnWidth"
+				:row-num-grid="rowNumGrid"
 				@add-widget="addWidget"
 				@delete-widget="deleteWidget"
 				@change-dashboard-state="changeDashboardState"

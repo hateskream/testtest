@@ -6,6 +6,7 @@ export interface IGetDashboardsUc {
 
 export interface IInGetDashboards {
 	userId: string;
+	colNum: number;
 }
 
 export interface IOutGetDashboards {

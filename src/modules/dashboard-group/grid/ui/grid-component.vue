@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import { responsiveGridLayout } from '../composables';
 import type { IPosition, IWidget, WidgetType } from '@/modules/dashboard-group/core';
 import type { IWidgetState } from '@/modules/dashboard-group/core';
 
@@ -10,6 +9,11 @@ import DashboardGrid from './dashboard-grid.vue';
 
 interface IProps {
 	widgets: IWidget[];
+	rowsNum: number;
+	columnsNum: number;
+	rowHeight: number;
+	columnWidth: number;
+	rowNumGrid: number;
 }
 
 const props = defineProps<IProps>();
@@ -22,10 +26,6 @@ const emit = defineEmits<{
 }>();
 
 const gridRef = ref<HTMLDivElement | null>(null);
-
-
-const { rowsNum, columnsNum, rowHeight, columnWidth, rowNumGrid } =
-	responsiveGridLayout(gridRef);
 
 const isEditState = ref(true);
 

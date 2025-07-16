@@ -9,7 +9,7 @@ export function GetDashboards(repo: IRepository): IGetDashboardsUc {
 
 			return {
 				dashboardGroup: {
-					dashboards: mapDashboards(dashboardGroup.dashboards),
+					dashboards: mapDashboards(dashboardGroup.getDashboardsByColNum(_in.colNum)),
 					activeDashboardId: dashboardGroup.activeDashboardId,
 				},
 			};

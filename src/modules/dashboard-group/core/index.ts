@@ -11,3 +11,5 @@ export type {
 export { WidgetType } from './model';
 
 export { useDashboardGroupsStore } from './stores/dashboard-group-store';
+
+export { useGridLayout, useLoadDashboard } from './composables';

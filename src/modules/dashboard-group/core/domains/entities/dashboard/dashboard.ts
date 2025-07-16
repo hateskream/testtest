@@ -128,22 +128,33 @@ export class Dashboard {
 	static createFromPreset(presetName: PresetName, order: number): Dashboard {
 		const layoutPreset = NAME_TO_PRESET[presetName];
 
-		const layout = new Map(
-			Object
-				.entries(layoutPreset)
-				.map(([colNum, preset]) =>
-					[Number(colNum), Object
-						.entries(preset)
-						.map(([type, presetPosition]) =>
-							Widget.create(type, {
-								x: presetPosition.x,
-								y: presetPosition.y,
-								w: presetPosition.size.w,
-								h: presetPosition.size.h,
-							}),
-						)],
-				),
-		);
+		const layout = new Map<number, Widget[]>();
+
+		Object.entries(layoutPreset).forEach(([type, layouts]) => {
+			let widget: Widget | null = null;
+
+			Object.entries(layouts).forEach(([colNum, pos]) => {
+				if (!widget) {
+					widget = Widget.create(type, {
+						x: pos.x,
+						y: pos.y,
+						w: pos.size.w,
+						h: pos.size.h,
+					});
+				} else {
+					widget.position = {
+						x: pos.x,
+						y: pos.y,
+						w: pos.size.w,
+						h: pos.size.h,
+					};
+				}
+
+				layout.set(Number(colNum), [...layout.get(Number(colNum)) || [], widget]);
+			});
+
+			widget = null;
+		});
 
 		/*
 			я полагаю экземпляр после создания

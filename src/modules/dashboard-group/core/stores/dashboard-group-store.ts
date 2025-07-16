@@ -46,14 +46,13 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	});
 
 	function onCreated() {
-		loadDashboards();
 		loadPreset();
 	}
 
-	async function loadDashboards() {
-		const response = await GetDashboards({ userId: '1' });
-		dashboards.value = response.dashboardGroup.dashboards;
+	async function loadDashboards(colNum: number) {
+		const response = await GetDashboards({ userId: '1', colNum: colNum });
 
+		dashboards.value = response.dashboardGroup.dashboards;
 		activeDashboardId.value = response.dashboardGroup.activeDashboardId;
 	}
 
@@ -137,5 +136,6 @@ export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 		addWidget,
 		deleteWidget,
 		changeDashboardState,
+		loadDashboards,
 	};
 });

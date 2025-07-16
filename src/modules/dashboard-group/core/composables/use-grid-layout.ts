@@ -1,10 +1,10 @@
-import { onMounted, onUnmounted, reactive, readonly, ref, watch, type Ref } from 'vue';
+import { onMounted, onUnmounted, reactive, readonly, ref, watch, type ComponentPublicInstance, type Ref } from 'vue';
 
 import { calculateGrid, calculateRows } from '../utils';
 
 type CallbackType = (width: number, height: number) => void;
 
-export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
+export function useGridLayout(container: Ref<ComponentPublicInstance | null>) {
 	const rowsNum = ref(0);
 	const columnsNum = ref(0);
 	const rowHeight = ref(0);
@@ -34,13 +34,13 @@ export function responsiveGridLayout(grid: Ref<HTMLElement | null>) {
 	);
 
 	onMounted(() => {
-		if (!grid.value) {
+		if (!container.value?.$el) {
 			return;
 		}
 
-		gridState.mountHeight = grid.value.clientHeight;
+		gridState.mountHeight = container.value.$el.clientHeight;
 
-		const disconnect = createResizeObserver(grid.value, (width, height) => {
+		const disconnect = createResizeObserver(container.value.$el, (width, height) => {
 			gridState.width = width;
 			gridState.height = height;
 		});

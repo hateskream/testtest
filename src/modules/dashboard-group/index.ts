@@ -6,4 +6,4 @@ export {
 	useDelete,
 } from './grid';
 
-export { useDashboardGroupsStore } from './core';
+export { useDashboardGroupsStore, useGridLayout, useLoadDashboard } from './core';
