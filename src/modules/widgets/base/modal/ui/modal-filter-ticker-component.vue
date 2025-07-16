@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, toValue } from 'vue';
 
-import { ModalItemCheckbox, ModalSearch } from '..';
+import { ModalSearch } from '..';
 import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type {
 	IModalFilterTicker,
 	IModalFilterTickerLists,
-	IModalFilterTickerWithGroup,
 } from '../model';
 import { compareStrings } from '@/shared/lib';
+
+import ModalFilterTickerItemComponent from './modal-filter-ticker-item-component.vue';
 
 interface IModalFilterTickerProps {
 	modelValue: IModalFilterTickerLists;
@@ -26,11 +27,8 @@ interface IModalFilterTickerEmits {
 
 const emits = defineEmits<IModalFilterTickerEmits>();
 
-const selectedItems = computed<IModalFilterTickerWithGroup[]>(() =>
-	Object.entries(props.modelValue)
-		.map(([group, arr]) => arr.map(item => ({ ...item, group })))
-		.flat()
-		.filter(item => item.isSelected),
+const selectedItems = computed<IModalFilterTicker[]>(() =>
+	Object.values(props.modelValue).flat().filter(item => item.isSelected),
 );
 
 const totalItems = computed(() =>
@@ -47,14 +45,36 @@ const currentStage = ref<string>('');
 
 const selectedBadge = ref<'all' | 'selected'>('all');
 
-function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, value: boolean) {
-	const toUpdateIdx = props.modelValue[group].findIndex(item =>
-		compareStrings(item.ticker, toUpdateItem.ticker),
-	)!;
+const searchList = computed(() => {
+	return Object.fromEntries(
+		Object.entries(props.modelValue)
+			.map(
+				([group, list]) =>
+					[
+						group,
+						list.filter(
+							(item) => [item.name.toLowerCase(), item.ticker.toLowerCase()].some(
+								(str) => str.includes(search.value.toLowerCase()),
+							),
+						),
+					],
+			),
+	);
+});
+
+function handleUpdateSelect(id: string, value: boolean) {
+	const data = Object.entries(props.modelValue);
 
 	const newList = toValue(props.modelValue);
 
-	newList[group][toUpdateIdx].isSelected = value;
+
+	data.forEach(([group, list]) => {
+		const toUpdateIdx = list.findIndex(item => compareStrings(item.id, id));
+
+		if (toUpdateIdx !== -1) {
+			newList[group][toUpdateIdx].isSelected = value;
+		}
+	});
 
 	emits('update:modelValue', newList);
 
@@ -88,7 +108,7 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 				<div :class="classes.badgeTitle">
 					{{ item.ticker }}
 				</div>
-				<div @click="handleUpdateSelect(item, item.group, false)">
+				<div @click="handleUpdateSelect(item.id, false)">
 					<ui-icon
 						:id="IconIds.Close"
 						width="10"
@@ -128,21 +148,24 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 				v-if="currentStage === ''"
 			>
 				<div
-					v-for="(list, name) in modelValue"
+					v-for="(list, name) in searchList"
 					:key="name"
 				>
 					<div :class="classes.listItem">
 						<div :class="classes.listItemTitle" @click="currentStage = <string>name">{{ name }}</div>
 						<div>
-							<modal-item-checkbox
+
+							<modal-filter-ticker-item-component
 								v-for="item in list.slice(0, 3)"
 								:key="item.ticker"
-								:model-value="item.isSelected"
-								@update:model-value="
-									handleUpdateSelect(item, name as string, !item.isSelected)
+								:is-selected="item.isSelected"
+								:ticker="item.ticker"
+								:name="item.name"
+								@update="
+									handleUpdateSelect(item.id, !item.isSelected)
 								"
 							>
-								<div :class="classes.listItemData">
+								<template #image>
 									<div :class="classes.listItemDataImageWrapper">
 										<ui-image
 											:src="item.image"
@@ -151,17 +174,8 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 										/>
 									</div>
 
-									<div :class="classes.listItemDataNameWrapper">
-										<span :class="classes.listItemDataName">
-											{{ item.ticker }}
-										</span>
-										<span>·</span>
-										<span :class="classes.listItemDataSubName">
-											{{ item.name }}
-										</span>
-									</div>
-								</div>
-							</modal-item-checkbox>
+								</template>
+							</modal-filter-ticker-item-component>
 						</div>
 					</div>
 				</div>
@@ -173,12 +187,18 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 						{{ currentStage }}
 						<span>·</span>
 						<span :class="classes.listItemTitleBadge">
-							{{ modelValue[currentStage].length }}
+							{{ searchList[currentStage].length }}
 						</span>
 					</div>
 					<div>
-						<modal-item-checkbox v-model="selectAll[currentStage]">
-							<div :class="classes.listItemData">
+						<modal-filter-ticker-item-component
+							:is-selected="selectAll[currentStage]"
+							:name="`All ${ currentStage }`"
+							@update="
+								selectAll[currentStage] = $event
+							"
+						>
+							<template #image>
 								<div :class="classes.listItemDataImageWrapper">
 									<ui-icon
 										:id="IconIds.Cryptos"
@@ -186,22 +206,20 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 										replacement="/images/market/ADA.png"
 									/>
 								</div>
-								<div :class="classes.listItemDataNameWrapper">
-									<span :class="classes.listItemDataName">
-										All {{ currentStage }}
-									</span>
-								</div>
-							</div>
-						</modal-item-checkbox>
-						<modal-item-checkbox
-							v-for="item in modelValue[currentStage]"
+							</template>
+						</modal-filter-ticker-item-component>
+
+						<modal-filter-ticker-item-component
+							v-for="item in searchList[currentStage]"
 							:key="item.ticker"
-							:model-value="item.isSelected"
-							@update:model-value="
-								handleUpdateSelect(item, currentStage, !item.isSelected)
+							:is-selected="item.isSelected"
+							:ticker="item.ticker"
+							:name="item.name"
+							@update="
+								handleUpdateSelect(item.id, !item.isSelected)
 							"
 						>
-							<div :class="classes.listItemData">
+							<template #image>
 								<div :class="classes.listItemDataImageWrapper">
 									<ui-image
 										:src="item.image"
@@ -210,53 +228,35 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 									/>
 								</div>
 
-								<div :class="classes.listItemDataNameWrapper">
-									<span :class="classes.listItemDataName">
-										{{ item.ticker }}
-									</span>
-									<span>·</span>
-									<span :class="classes.listItemDataSubName">
-										{{ item.name }}
-									</span>
-								</div>
-							</div>
-						</modal-item-checkbox>
+							</template>
+						</modal-filter-ticker-item-component>
 					</div>
 				</div>
 			</template>
 		</template>
 		<template v-else>
 			<div :class="classes.listItem" style="margin-top: 15px;">
-				<div>
-					<modal-item-checkbox
-						v-for="item in selectedItems"
-						:key="item.ticker"
-						:model-value="item.isSelected"
-						@update:model-value="
-							handleUpdateSelect(item, item.group, !item.isSelected)
-						"
-					>
-						<div :class="classes.listItemData">
-							<div :class="classes.listItemDataImageWrapper">
-								<ui-image
-									:src="item.image"
-									:class="classes.listItemDataImage"
-									replacement="/images/market/ADA.png"
-								/>
-							</div>
-
-							<div :class="classes.listItemDataNameWrapper">
-								<span :class="classes.listItemDataName">
-									{{ item.ticker }}
-								</span>
-								<span>·</span>
-								<span :class="classes.listItemDataSubName">
-									{{ item.name }}
-								</span>
-							</div>
+				<modal-filter-ticker-item-component
+					v-for="item in selectedItems"
+					:key="item.ticker"
+					:is-selected="item.isSelected"
+					:ticker="item.ticker"
+					:name="item.name"
+					@update="
+						handleUpdateSelect(item.id, !item.isSelected)
+					"
+				>
+					<template #image>
+						<div :class="classes.listItemDataImageWrapper">
+							<ui-image
+								:src="item.image"
+								:class="classes.listItemDataImage"
+								replacement="/images/market/ADA.png"
+							/>
 						</div>
-					</modal-item-checkbox>
-				</div>
+
+					</template>
+				</modal-filter-ticker-item-component>
 			</div>
 		</template>
 	</div>
@@ -274,6 +274,20 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 
 .badgeRemoveIcon {
 	color: var(--icon-color-base-300);
+}
+
+
+.listItemTitle {
+	display: flex;
+	align-items: center;
+	padding: 12px 12px 10px;
+	font-style: normal;
+	font-weight: 300;
+	font-size: 13px;
+	color: var(--text-color-base-300);
+	text-transform: capitalize;
+	letter-spacing: 0.052px;
+	gap: 4px;
 }
 
 .badge {
@@ -305,74 +319,18 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 	border-radius: 100%;
 }
 
+.listItemDataImageWrapper {
+	width: 24px;
+	height: 24px;
+}
+
+
 .wrapper {
 	width: 286px;
 	padding: 6px;
 	background: var(--bg-modal-color-base);
 	border: 1px solid rgb(199 199 199 / 10%);
 	border-radius: 18px;
-}
-
-.listItemDataTitle {
-	width: 100%;
-	padding: 10px 12px;
-}
-
-.listItemDataNameWrapper {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-
-.listItemDataImageWrapper {
-	width: 24px;
-	height: 24px;
-}
-
-.listItemDataImage {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	padding: 4px;
-	border: 1px solid var(--border-color-base-300);
-	border-radius: 100px;
-}
-
-.listItemData {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-}
-
-.listItemDataName {
-	font-style: normal;
-	font-weight: 300;
-	font-size: 12px;
-	color: var(--text-color-base-500);
-	text-transform: uppercase;
-}
-
-.listItemDataSubName {
-	font-style: normal;
-	font-weight: 300;
-	font-size: 12px;
-	color: var(--text-color-base-300);
-	text-transform: capitalize;
-}
-
-.listItemTitle {
-	display: flex;
-	align-items: center;
-	padding: 12px 12px 10px;
-	font-style: normal;
-	font-weight: 300;
-	font-size: 13px;
-	color: var(--text-color-base-300);
-	text-transform: capitalize;
-	letter-spacing: 0.052px;
-	gap: 4px;
 }
 
 .search {
@@ -412,5 +370,16 @@ function handleUpdateSelect(toUpdateItem: IModalFilterTicker, group: string, val
 	gap: 6px;
 	align-items: center;
 	padding-inline: 12px;
+}
+
+.listItemDataImage {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+	padding: 4px;
+	border: 1px solid var(--border-color-base-300);
+	border-radius: 100px;
 }
 </style>

@@ -5,7 +5,7 @@ import type { IMeta } from '@/modules/dashboard-group';
 import type { IMarketCapDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalFilterTicker } from '../../base';
-import type { IModalFilterTicker, IModalFilterTickerLists, IModalFilterTickerWithGroup } from '../../base/modal/model';
+import type { IModalFilterTicker, IModalFilterTickerLists } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
 import { RangeChart } from '@/modules/lightweight-charts/model';
 
@@ -19,7 +19,6 @@ const props = defineProps<IViewComponentProps>();
 
 const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 
-
 const listWithGroups = ref<{ [x: string]: IModalFilterTicker[] }>({});
 
 props.data.forEach((item) => {
@@ -28,6 +27,7 @@ props.data.forEach((item) => {
 	}
 
 	listWithGroups.value[item.type].push({
+		id: item.id,
 		image: item.srcValue,
 		name: item.name,
 		ticker: item.symbol,
@@ -35,12 +35,10 @@ props.data.forEach((item) => {
 	});
 });
 
-const activeList = computed<IModalFilterTickerWithGroup[]>(() =>
-	Object.entries(listWithGroups.value)
-		.map(([group, arr]) => arr.map(item => ({ ...item, group })))
+const activeList = computed<IModalFilterTicker[]>(() =>
+	Object.values(listWithGroups.value)
 		.flat()
-		.filter(item => item.isSelected)
-		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW),
+		.filter(item => item.isSelected),
 );
 
 function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
@@ -56,7 +54,7 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 				<template #title>
 					<div :class="classes.listFiltersTitleImageWrapper">
 						<div
-							v-for="item in activeList"
+							v-for="item in activeList.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)"
 							:key="item.ticker"
 							:class="classes.listFiltersTitleImage"
 						>
@@ -157,6 +155,26 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 		</div>
 
 
+		<div>
+			<div :class="classes.marketCapCurrency">
+
+				<div :class="classes.marketCapCurrencyName">
+					<div></div>
+					<span>Crypto</span>
+				</div>
+
+				<div :class="classes.marketCapCurrencyFdv">
+					$ 3.28 T
+				</div>
+
+				<div :class="classes.marketCapCurrencyChange">
+					- 0.93%
+				</div>
+
+			</div>
+		</div>
+
+
 		<chart-component
 			:width="100"
 			:disable-scroll="true"
@@ -236,5 +254,45 @@ function handleUpdateFilterTickerItem(list: IModalFilterTickerLists) {
 
 .listFiltersTitleImageWrapper > .listFiltersTitleImage:first-child {
 	margin-left: 0;
+}
+
+.marketCapCurrency {
+	display: flex;
+	align-items: center;
+	width: max-content;
+	height: 17px;
+	background-color: var(--bg-color-surface-03);
+	border-radius: 16px;
+	gap: 6px;
+	padding-inline: 6px;
+}
+
+.marketCapCurrencyName {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.marketCapCurrencyName > div {
+	width: 4px;
+	height: 4px;
+	border-radius: 100%;
+}
+
+.marketCapCurrencyName > span {
+	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-300);
+}
+
+.marketCapCurrencyFdv {
+	font-weight: 440;
+	font-size: 10px;
+	color: var(--text-color-base-500);
+}
+
+.marketCapCurrencyChange {
+	font-weight: 400;
+	font-size: 10px;
 }
 </style>

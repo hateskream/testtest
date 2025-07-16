@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 import type {
+	IModalFilterTicker,
 	IModalFilterTickerLists,
-	IModalFilterTickerWithGroup,
 } from '../../base/modal/model';
 
 export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
@@ -13,9 +13,8 @@ export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 
 	const tickerLists = ref<IModalFilterTickerLists>({});
 
-	const activeTickersList = computed<IModalFilterTickerWithGroup[]>(() =>
-		Object.entries(tickerLists.value)
-			.map(([group, arr]) => arr.map(item => ({ ...item, group })))
+	const activeTickersList = computed<IModalFilterTicker[]>(() =>
+		Object.values(tickerLists.value)
 			.flat()
 			.filter(item => item.isSelected),
 	);

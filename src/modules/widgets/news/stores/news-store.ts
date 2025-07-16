@@ -7,8 +7,8 @@ import { compareStrings } from '@/shared/lib';
 import { getImagePath, ImageTypePath } from '@/shared/lib/get-image-path';
 import type {
 	IFilterList,
+	IModalFilterTicker,
 	IModalFilterTickerLists,
-	IModalFilterTickerWithGroup,
 } from '../../base/modal/model';
 
 export const useNewsStore = defineStore('dashboards-news', () => {
@@ -72,24 +72,28 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 	const tickerLists = ref<IModalFilterTickerLists>({
 		Cryptocurrencies: [
 			{
+				id: '1',
 				image: getImagePath('TRON', ImageTypePath.Currency),
 				name: 'Tron',
 				ticker: 'TRX',
 				isSelected: false,
 			},
 			{
+				id: '2',
 				image: getImagePath('ADA', ImageTypePath.Currency),
 				name: 'Cardano',
 				ticker: 'ADA',
 				isSelected: false,
 			},
 			{
+				id: '3',
 				image: getImagePath('BNB', ImageTypePath.Currency),
 				name: 'BNB',
 				ticker: 'BNB',
 				isSelected: false,
 			},
 			{
+				id: '4',
 				image: getImagePath('SOL', ImageTypePath.Currency),
 				name: 'Solana',
 				ticker: 'SOL',
@@ -99,18 +103,21 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 
 		Stocks: [
 			{
+				id: '5',
 				image: getImagePath('TSLA', ImageTypePath.Stock),
 				name: 'Tesla Inc',
 				ticker: 'TSLA',
 				isSelected: false,
 			},
 			{
+				id: '6',
 				image: getImagePath('META', ImageTypePath.Stock),
 				name: 'Meta Platforms',
 				ticker: 'META',
 				isSelected: false,
 			},
 			{
+				id: '7',
 				image: getImagePath('TSLA', ImageTypePath.Stock),
 				name: 'Apple Inc',
 				ticker: 'AAPL',
@@ -119,9 +126,8 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		],
 	});
 
-	const activeTickersList = computed<IModalFilterTickerWithGroup[]>(() =>
-		Object.entries(tickerLists.value)
-			.map(([group, arr]) => arr.map(item => ({ ...item, group })))
+	const activeTickersList = computed<IModalFilterTicker[]>(() =>
+		Object.values(tickerLists.value)
 			.flat()
 			.filter(item => item.isSelected),
 	);
