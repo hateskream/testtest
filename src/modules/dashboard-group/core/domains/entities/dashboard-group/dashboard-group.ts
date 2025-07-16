@@ -18,6 +18,10 @@ export class DashboardGroup {
 		return this._dashboards;
 	}
 
+	get dashboards(): Dashboard[] {
+		return this._dashboards;
+	}
+
 	get activeDashboardId(): string {
 		return this._activeDashboardId;
 	}

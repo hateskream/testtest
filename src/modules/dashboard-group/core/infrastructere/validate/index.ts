@@ -21,7 +21,8 @@ const DashboardSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	order: z.number(),
-	widgets: z.array(WidgetSchema),
+	activeColNum: z.number(),
+	layout:  z.record(z.array(WidgetSchema)),
 });
 
 export type Dashboard = z.infer<typeof DashboardSchema>;

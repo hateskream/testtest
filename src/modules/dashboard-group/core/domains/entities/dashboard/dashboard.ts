@@ -13,7 +13,7 @@ export class Dashboard {
 		private _name: string,
 		private _order: number,
 		private _activeColNum: number,
-		private _layouts: Layout,
+		private _layout: Layout,
 	) {}
 
 	get id(): string {
@@ -28,16 +28,24 @@ export class Dashboard {
 		return this._order;
 	}
 
+	get activeColNum(): number {
+		return this._activeColNum;
+	}
+
+	get layout(): Layout {
+		return this._layout;
+	}
+
 	set order(value: number) {
 		this._order = value;
 	}
 
 	get widgets(): Widget[] {
-		return this._layouts.get(this._activeColNum) || [];
+		return this._layout.get(this._activeColNum) || [];
 	}
 
 	private set widgets(widgets: Widget[]) {
-		this._layouts.set(this._activeColNum, widgets);
+		this._layout.set(this._activeColNum, widgets);
 	}
 
 	set activeColNum(value: number) {
@@ -48,9 +56,9 @@ export class Dashboard {
 		this._activeColNum = value;
 
 		const allWidgets = [
-			...this._layouts.get(value) || [],
+			...this._layout.get(value) || [],
 			...Array
-				.from(this._layouts.values())
+				.from(this._layout.values())
 				.flat(),
 		];
 
@@ -63,7 +71,7 @@ export class Dashboard {
 			return true;
 		});
 
-		this._layouts.set(value, uniqueWidgets);
+		this._layout.set(value, uniqueWidgets);
 	}
 
 	set name(value: string) {
@@ -79,9 +87,9 @@ export class Dashboard {
 	deleteWidget(id: string, widgetsState: IWidgetState[]) {
 		this.findWidgetById(id);
 
-		this._layouts.forEach((widgets, key) => {
+		this._layout.forEach((widgets, key) => {
 			const updatedWidgets = widgets.filter(widget => widget.id !== id);
-			this._layouts.set(key, updatedWidgets);
+			this._layout.set(key, updatedWidgets);
 		});
 
 		this.changeWidgetsState(widgetsState);
@@ -100,7 +108,7 @@ export class Dashboard {
 	addWidget(type: string, position: IPosition, widgetsState: IWidgetState[]): Widget {
 		const widget = Widget.create(type, position);
 
-		this._layouts.forEach(widgets => {
+		this._layout.forEach(widgets => {
 			widgets.push(widget);
 		});
 

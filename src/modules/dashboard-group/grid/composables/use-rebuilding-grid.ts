@@ -33,6 +33,8 @@ export function useRebuildingGrid(
 	watch([columnsNum, rowsNum], () => {
 		const newLayout = createGrid(columnsNum.value, rawWidgets.value.map(el => ({ ...el.position, i: el.id })));
 		layout.value = newLayout;
+	}, {
+		immediate: true,
 	});
 
 	function generateEmptyGrid(cn: number, rn: number): IPosition[] {
