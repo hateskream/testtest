@@ -25,3 +25,23 @@ export interface IAltcoinSeasonRequest {
 }
 
 export type Period = '1D' | '7D' | '30D' | '90D' | '365D' | IPeriodTimestamps;
+
+// Дополнительные типы для работы с модулями
+export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];
+
+export interface IAltcoinSeasonModuleLabels {
+	performanceRank: string;
+	historicalValues: string;
+	highLow: string;
+	top100: string;
+	chart: string;
+}
+
+// Константы для модулей
+export const ALTCOIN_SEASON_MODULE_LABELS: IAltcoinSeasonModuleLabels = {
+	performanceRank: 'Performance Rank',
+	historicalValues: 'Historical Values',
+	highLow: 'High/Low',
+	top100: 'Top 100',
+	chart: 'Chart',
+};

@@ -25,8 +25,6 @@ const gridConfig = computed(() => {
 		columns = 2;
 	}
 
-	console.log(`columns: ${columns}, rows: ${rows}`);
-
 	return {
 		columns,
 		rows,
@@ -42,9 +40,6 @@ const containerStyles = computed(() => {
 		'--grid-columns': columns.toString(),
 		'--grid-rows': rows.toString(),
 	};
-
-	console.log(styles);
-
 
 	return styles;
 });
@@ -96,7 +91,7 @@ const adaptiveGridAreas = computed(() => {
 			:style="{ gridArea: adaptiveGridAreas.period }"
 		>
 			<slot name="period">
-				Period
+
 			</slot>
 		</div>
 

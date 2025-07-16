@@ -23,6 +23,22 @@ export async function getAltcoinSeasonWidgetConfig({ market }: IAltcoinSeasonReq
 	}
 }
 
+export async function updateAltcoinSeasonWidgetConfig(
+	request: IAltcoinSeasonRequest,
+	config: IAltcoinSeasonConfig,
+) {
+	const logger = useLogger();
+
+	try {
+		const response = await sendUpdateRequestByProvider(dataProvider, request, config);
+
+		return response;
+	} catch (error) {
+		logger.error('Failed to update altcoin season widget config', error as Error);
+		throw error;
+	}
+}
+
 function sendRequestByProvider(type: DataProvider, { market }: IAltcoinSeasonRequest) {
 	const httpService = useHttpService();
 
@@ -37,6 +53,32 @@ function sendRequestByProvider(type: DataProvider, { market }: IAltcoinSeasonReq
 			return httpService.get<IAltcoinSeasonConfig>('/api/altcoin-season');
 		default:
 			return getMockData();
+	}
+}
+
+function sendUpdateRequestByProvider(
+	type: DataProvider,
+	{ market }: IAltcoinSeasonRequest,
+	config: IAltcoinSeasonConfig,
+) {
+	const httpService = useHttpService();
+
+	switch (type) {
+		case DataProvider.Production:
+			return httpService.put<IAltcoinSeasonConfig>(
+				'https://gateway.planet9.uk/altcoin-season',
+				config as unknown as Record<string, unknown>,
+				{ query: { market } },
+			);
+		case DataProvider.MockLocal:
+			return getMockUpdateResponse(config);
+		case DataProvider.MockServer:
+			return httpService.put<IAltcoinSeasonConfig>(
+				'/api/altcoin-season',
+				config as unknown as Record<string, unknown>,
+			);
+		default:
+			return getMockUpdateResponse(config);
 	}
 }
 
@@ -57,4 +99,17 @@ async function getMockData() {
 	};
 
 	return mockData;
+}
+
+async function getMockUpdateResponse(config: IAltcoinSeasonConfig) {
+	await new Promise(resolve => {
+		setTimeout(resolve, 200);
+	});
+
+	// Имитируем 90% вероятность ошибки для тестирования обработки ошибок
+	// if (Math.random() < 0.9) {
+	// 	throw new Error('Mock server error: Failed to update configuration');
+	// }
+
+	return config;
 }

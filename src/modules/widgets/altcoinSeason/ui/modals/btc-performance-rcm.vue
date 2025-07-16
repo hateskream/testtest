@@ -9,6 +9,7 @@ import {
 } from '@/modules/widgets/base';
 
 import AltcoinSeasonTimeFilter from './altcoin-season-time-filter.vue';
+import AltcoinSeasonWidgetConfig from './altcoin-season-widget-config.vue';
 
 const performanceStore = usePerformanceStore();
 </script>
@@ -29,7 +30,7 @@ const performanceStore = usePerformanceStore();
 			<modal-submenu>
 				<template #title>Change display</template>
 				<template #content>
-					<!-- <altcoin-season-time-filter /> -->
+					<altcoin-season-widget-config />
 				</template>
 			</modal-submenu>
 
