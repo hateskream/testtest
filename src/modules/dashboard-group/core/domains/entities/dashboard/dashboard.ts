@@ -32,10 +32,6 @@ export class Dashboard {
 		this._order = value;
 	}
 
-	get activeColNum(): number {
-		return this._activeColNum;
-	}
-
 	get widgets(): Widget[] {
 		return this._layouts.get(this._activeColNum) || [];
 	}
@@ -45,6 +41,10 @@ export class Dashboard {
 	}
 
 	set activeColNum(value: number) {
+		if (this._activeColNum === value) {
+			return;
+		}
+
 		this._activeColNum = value;
 
 		const allWidgets = [

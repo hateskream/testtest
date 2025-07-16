@@ -1,7 +1,7 @@
 import { Dashboard } from '../dashboard/dashboard';
 import { Widget, type IWidgetState } from '../widget';
 import type { IPosition } from '../widget/position';
-import { NotFoundDashboard } from './error';
+import { AttemptDeleteLastDashboard, NotFoundDashboard } from './error';
 export class DashboardGroup {
 	private lastOrder = 0;
 
@@ -10,7 +10,11 @@ export class DashboardGroup {
 		private _dashboards: Dashboard[],
 	) {}
 
-	get dashboards(): Dashboard[] {
+	getDashboardsByColNum(colNum: number): Dashboard[] {
+		this._dashboards.forEach(dashboard => {
+			dashboard.activeColNum = colNum;
+		});
+
 		return this._dashboards;
 	}
 
@@ -42,7 +46,10 @@ export class DashboardGroup {
 
 	createNewDashboard(): Dashboard {
 		this.lastOrder += 1;
-		const newDashboard = Dashboard.createEmpty(this.lastOrder);
+
+		const { activeColNum = 0 } = this._dashboards[0] || {};
+
+		const newDashboard = Dashboard.createEmpty(this.lastOrder, activeColNum);
 
 		this._dashboards.push(newDashboard);
 		this._activeDashboardId = newDashboard.id;
@@ -54,25 +61,15 @@ export class DashboardGroup {
 		this.findDashboardById(id);
 
 		if (this._dashboards.length === 1) {
-			this.setDefaultState();
-		} else {
-			this.selectNewActive(id);
-
-			this._dashboards = this._dashboards.filter(dashboard => dashboard.id !== id);
-
-			this.calculateOrder();
+			throw new AttemptDeleteLastDashboard('You cannot delete the last dashboard');
 		}
 
+		this.selectNewActive(id);
+		this._dashboards = this._dashboards.filter(dashboard => dashboard.id !== id);
+		this.calculateOrder();
+
+
 		return this.findActiveDashboard();
-	}
-
-	private setDefaultState() {
-		const emptyDashboard = Dashboard.createEmpty(0);
-		const dashboards = [emptyDashboard];
-
-		this._activeDashboardId = emptyDashboard.id;
-		this._dashboards = dashboards;
-		this.lastOrder = 0;
 	}
 
 	changeStateWidgets(widgetsState: IWidgetState[]) {
