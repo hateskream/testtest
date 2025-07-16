@@ -256,7 +256,7 @@ const formatRatio = (value: number) => {
 		<template #body>
 			<div v-if="totalItems > 0" :class="classes.tableContainer">
 				<generic-data-table
-					:unsorted-rows="unsortedRows"
+					:rows="unsortedRows"
 					:columns="tableColumns"
 					:sort-config="sortConfig"
 					:enable-drag-drop="true"
