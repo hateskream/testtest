@@ -122,7 +122,6 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 			"
 
 			:class="classes.chartPrices"
-			:style="{ marginTop: meta.size.h <= 3 ? 'auto' : '0'  }"
 		>
 			<div>
 				<div :class="classes.chartPrice">
@@ -136,7 +135,10 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 							$ 324B
 						</div>
 
-						<div v-if="marketCapStore.isShowChange" :class="classes.chartPriceTitleChange">
+						<div
+							v-if="marketCapStore.isShowChange && meta.size.w > 1"
+							:class="classes.chartPriceTitleChange"
+						>
 							<div :class="classes.chartPriceTitleChangeIcon">
 								<ui-icon
 									:id="IconIds.Gainers"
@@ -213,7 +215,6 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 
 			</div>
 		</div>
-
 
 		<div v-show="marketCapStore.isShowChart && meta.size.h > 3">
 			<chart-component
