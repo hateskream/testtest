@@ -18,6 +18,7 @@ export function adaptApiColumnsToStore(apiColumns: IWatchlistColumn[]): ITableCo
 		.map(apiCol => {
 			const uiCol = uiColumnsMap.get(apiCol.columnType);
 			if (!uiCol) {
+				// eslint-disable-next-line no-console
 				console.warn(`No UI configuration found for column type: ${apiCol.columnType}`);
 				return null;
 			}

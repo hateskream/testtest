@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import type { IGenericTableColumn } from '../type';
 import { useTableColumns } from '../composables/use-table-data.ts';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiPosition } from '@/shared/ui/position';
+import { UiDriver } from '@/shared/ui/driver';
+import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '@/modules/widgets/base';
 
 interface IProps {
 	allColumns: IGenericTableColumn[];
@@ -14,184 +18,219 @@ interface IEmits {
 	(e: 'update:columns', columns: IGenericTableColumn[]): void;
 }
 
+interface IGridLayoutCell extends LayoutItem {
+	data: IGenericTableColumn;
+}
+
 const props = defineProps<IProps>();
 const emit = defineEmits<IEmits>();
 
-const isOpen = ref(false);
-const { groupColumnsByCategory, toggleColumnVisibility } = useTableColumns();
+const { groupColumnsByCategory, toggleColumnVisibility, updateColumnPositions } = useTableColumns();
 
 const groupedColumns = computed(() => {
 	return groupColumnsByCategory(props.allColumns);
 });
+
+const draggableColumns = computed(() =>
+	props.visibleColumns.filter(column => column.draggable),
+);
+
+const layout = computed<IGridLayoutCell[]>(() =>
+	draggableColumns.value.map((column, index) => ({
+		x: 0,
+		y: index,
+		w: 12,
+		h: 1,
+		i: column.key,
+		static: false,
+		data: column,
+	})),
+);
+
+const gridConfig = {
+	colNum: 12,
+	rowHeight: 32,
+	margin: [0, 8],
+	isDraggable: true,
+	isResizable: false,
+};
 
 function handleToggleColumn(columnKey: string) {
 	const updatedColumns = toggleColumnVisibility(props.allColumns, columnKey);
 	emit('update:columns', updatedColumns);
 }
 
-function toggleModal() {
-	isOpen.value = !isOpen.value;
+function handleUpdatePositions(columnKey: string, _x: number, y: number) {
+	const positionMap = new Map();
+	layout.value.forEach(item => {
+		positionMap.set(item.data.key, item.data.key === columnKey ? y : item.y);
+	});
+
+	const updatedColumns = props.allColumns.map(column => {
+		if (positionMap.has(column.key)) {
+			return {
+				...column,
+				position: positionMap.get(column.key),
+			};
+		}
+		return column;
+	});
+
+	const finalColumns = updateColumnPositions(
+		updatedColumns.sort((a, b) =>
+			(positionMap.get(a.key) ?? a.position) - (positionMap.get(b.key) ?? b.position),
+		),
+	);
+
+	emit('update:columns', finalColumns);
 }
 </script>
 
 <template>
 	<div :class="classes.columnSettings">
-		<ui-icon
-			:id="IconIds.Tertiary"
-			:class="classes.iconTertiary"
-			width="20"
-			height="20"
-			@click="toggleModal"
-		/>
+		<ui-position position="right-start">
+			<template #default>
+				<ui-icon
+					:id="IconIds.Tertiary"
+					:class="classes.iconTertiary"
+					width="20"
+					height="20"
+				/>
+			</template>
 
-		<div
-			v-if="isOpen"
-			:class="classes.modal"
-			@click.self="toggleModal"
-		>
-			<div :class="classes.modalContent">
-				<div :class="classes.modalHeader">
-					<h3>Choose Metrics</h3>
-					<button :class="classes.closeButton" @click="toggleModal">
-						×
-					</button>
-				</div>
+			<template #content>
+				<modal-filter>
+					<template #title>Choose Metrics</template>
 
-				<div :class="classes.modalBody">
-					<div
-						v-for="(columns, groupName) in groupedColumns"
-						:key="groupName"
-						:class="classes.columnGroup"
-					>
-						<div :class="classes.groupTitle">
-							{{ groupName }}
-						</div>
-
-						<div :class="classes.columnTabs">
-							<button
-								v-for="column in columns"
-								:key="column.key"
-								:class="[
-									classes.columnTab,
-									{ [classes.columnTabActive]: column.visible }
-								]"
-								@click="handleToggleColumn(column.key)"
+					<template #content>
+						<div>
+							<div
+								v-for="(columns, groupName) in groupedColumns"
+								:key="groupName"
+								:class="classes.row"
 							>
-								{{ column.shortLabel || column.label }}
-							</button>
+								<div :class="classes.rowTitle">
+									{{ groupName }}
+								</div>
+
+								<div>
+									<div :class="classes.tabs">
+										<modal-filter-tab-wrapper
+											v-for="column in columns"
+											:key="column.key"
+											:is-active="column.visible"
+											@click="handleToggleColumn(column.key)"
+										>
+											{{ column.shortLabel || column.label }}
+										</modal-filter-tab-wrapper>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+
+						<ui-driver :class="classes.driver" />
+
+						<div>
+							<modal-filter-title>Column order</modal-filter-title>
+
+							<div>
+								<grid-layout
+									:layout="layout"
+									:col-num="gridConfig.colNum"
+									:row-height="gridConfig.rowHeight"
+									:margin="gridConfig.margin"
+									:is-draggable="gridConfig.isDraggable"
+									:is-resizable="gridConfig.isResizable"
+									:vertical-compact="true"
+									:class="classes.columnCellTabs"
+								>
+									<grid-item
+										v-for="item in layout"
+										:key="item.i"
+										:x="item.x"
+										:y="item.y"
+										:w="item.w"
+										:h="item.h"
+										:i="item.i"
+										:static="false"
+										:class="classes.columnCellTab"
+										@moved="(i, x, y) => handleUpdatePositions(i, x, y)"
+									>
+										<ui-icon
+											:id="IconIds.DoubleDrag"
+											:class="classes.icon"
+											width="10px"
+											height="14px"
+										/>
+										<modal-filter-tab-wrapper :class="classes.columnCellTabWrapper">
+											<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
+											<span>
+												{{ item.data.label }}
+											</span>
+										</modal-filter-tab-wrapper>
+									</grid-item>
+								</grid-layout>
+							</div>
+						</div>
+					</template>
+				</modal-filter>
+			</template>
+		</ui-position>
 	</div>
 </template>
 
 <style module="classes">
-.modal {
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 2000;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100vw;
-	height: 100vh;
-	background: rgb(0 0 0 / 50%);
-}
-
-.modalContent {
-	width: 90%;
-	max-width: 600px;
-	max-height: 80vh;
-	overflow: hidden;
-	background: var(--bg-color-surface-01, #1a1a1a);
-	border-radius: 12px;
-	box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%);
-}
-
-.modalHeader {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 20px 24px;
-	border-bottom: 1px solid var(--border-color-base-300, #444444);
-}
-
-.modalHeader h3 {
-	margin: 0;
-	font-weight: 600;
-	font-size: 18px;
-	color: var(--text-color-base-100, #ffffff);
-}
-
-.closeButton {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	padding: 0;
-	font-size: 24px;
-	color: var(--text-color-base-300, #9a9a9d);
-	background: none;
-	border: none;
-	cursor: pointer;
-}
-
-.closeButton:hover {
-	color: var(--text-color-base-100, #ffffff);
-}
-
-.modalBody {
-	max-height: 60vh;
-	padding: 24px;
-	overflow-y: auto;
-}
-
-.columnGroup {
+.columnSettings {
 	display: flex;
 	align-items: center;
-	padding: 8px 0;
-	gap: 16px;
 }
 
-.groupTitle {
-	flex: 0 0 100px;
-	font-size: 12px;
-	color: var(--text-color-base-300, #9a9a9d);
-	text-transform: capitalize;
+.driver {
+	margin: 28px 0 12px;
 }
 
-.columnTabs {
+.columnCellTabWrapper {
+	color: var(--text-color-base-500);
+}
+
+.columnCellTabOrder {
+	color: var(--text-color-base-300);
+}
+
+.columnCellTab {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	cursor: grab;
+}
+
+.columnCellTab:active {
+	cursor: grabbing;
+}
+
+.tabs {
 	display: flex;
 	gap: 8px;
 	flex-wrap: wrap;
 }
 
-.columnTab {
+.icon {
+	margin-left: 6px;
+	color: var(--icon-color-base-300);
+}
+
+.row {
 	display: flex;
 	align-items: center;
-	height: 32px;
-	padding: 7.5px 12px;
-	font-weight: 380;
-	font-size: 10px;
-	color: var(--text-color-base-300, #9a9a9d);
-	background-color: var(--bg-color-base-300, #333333);
-	border: none;
-	border-radius: 42px;
-	cursor: pointer;
-	transition: all 0.2s ease;
+	padding: 4px 12px;
 }
 
-.columnTab:hover {
-	background-color: rgb(64 64 64 / 40%);
-}
-
-.columnTabActive {
-	color: #ffffff;
-	background-color: rgb(51 51 51 / 80%);
+.rowTitle {
+	flex: 0 0 100px;
+	font-size: 12px;
+	text-align: left;
+	color: var(--text-color-base-300);
+	text-transform: capitalize;
 }
 
 .iconTertiary {
@@ -203,6 +242,4 @@ function toggleModal() {
 .iconTertiary:hover {
 	color: var(--icon-color-base-300-effect);
 }
-
-
 </style>

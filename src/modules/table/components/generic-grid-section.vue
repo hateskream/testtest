@@ -52,8 +52,8 @@ const handleSectionClick = (sectionId: string) => {
 	}, CLICK_DELAY);
 };
 
-const startRename = async (sectionId: string) => {
-	console.log(sectionId);
+const startRename = async () => {
+	//console.log(sectionId);
 	showRenameInput.value = true;
 	sectionName.value = props.section.title;
 
@@ -63,13 +63,13 @@ const startRename = async (sectionId: string) => {
 };
 
 
-const handleSectionDoubleClick = (sectionId: string) => {
+const handleSectionDoubleClick = () => {
 	if (clickTimeout.value) {
 		clearTimeout(clickTimeout.value);
 		clickTimeout.value = null;
 	}
 
-	startRename(sectionId);
+	startRename();
 };
 
 
@@ -116,7 +116,7 @@ const handleDeleteSection = (sectionId: string) => {
 			:class="[classes.sectionHeader, { [classes.sectionHeaderOpen]: !section.isCollapsed }]"
 			:style="{ gridTemplateColumns }"
 			@click="handleSectionClick(section.id)"
-			@dblclick="handleSectionDoubleClick(section.id)"
+			@dblclick="handleSectionDoubleClick"
 		>
 			<div :class="classes.sectionTitle">
 				<template v-if="!showRenameInput">

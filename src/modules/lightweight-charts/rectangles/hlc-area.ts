@@ -80,7 +80,7 @@ implements ICustomSeriesPaneRenderer {
 		for (
 			let i = this._data.visibleRange.from + 1;
 			i < this._data.visibleRange.to;
-			i++
+			i += 1
 		) {
 			const bar = bars[i];
 			lowLine.lineTo(bar.x, bar.low);
@@ -94,7 +94,7 @@ implements ICustomSeriesPaneRenderer {
 		for (
 			let i = this._data.visibleRange.to - 2;
 			i >= this._data.visibleRange.from;
-			i--
+			i -= 1
 		) {
 			const bar = bars[i];
 			closeLine.lineTo(bar.x, bar.close);

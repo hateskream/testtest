@@ -106,7 +106,7 @@ onMounted(() => {
 
 		let currentMax = mainData.value[mainData.value.length - 1].close;
 
-		for (let i = 0; i < days; i++) {
+		for (let i = 0; i < days; i+=1) {
 			const time = (d.getTime() / 1000) as Time;
 
 			samples.push({

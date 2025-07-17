@@ -114,11 +114,13 @@ export class TooltipElement {
 
 		const chartElementParent = chartElement.parentElement;
 		if (!chartElementParent) {
+			// eslint-disable-next-line no-console
 			console.error('Chart Element is not attached to the page.');
 			return;
 		}
 		const { position } = getComputedStyle(chartElementParent);
 		if (position !== 'relative' && position !== 'absolute') {
+			// eslint-disable-next-line no-console
 			console.error('Chart Element position is expected be `relative` or `absolute`.');
 		}
 	}
