@@ -10,6 +10,8 @@ export function useRebuildingGrid(
 	rawWidgets: Ref<IWidget[]>,
 ) {
 
+	const FAKE_ID_PREFIX = 'fake-id';
+
 	const layout = ref<IPosition[]>([]);
 
 	const isEmpty = computed(() => rawWidgets.value.length === 0);
@@ -43,12 +45,17 @@ export function useRebuildingGrid(
 			y: Math.floor(index / cn),
 			w: 1,
 			h: 1,
-			i: String(index + Date.now()),
+			i: String(FAKE_ID_PREFIX +index + Date.now()),
 		}));
+	}
+
+	function checkIsFake(id: string): boolean {
+		return id.startsWith(FAKE_ID_PREFIX);
 	}
 
 	return {
 		layout,
 		isEmpty,
+		checkIsFake,
 	};
 }

@@ -85,7 +85,7 @@ const columnsNum = computed(() => props.columnsNum);
 const rowsNum = computed(() => props.rowsNum);
 const rawWidgets = computed(() => props.widgets);
 
-const { layout, isEmpty } = useRebuildingGrid(columnsNum, rowsNum, rawWidgets);
+const { layout, isEmpty, checkIsFake } = useRebuildingGrid(columnsNum, rowsNum, rawWidgets);
 
 const isEditable = computed(() => !isEmpty.value || gridState.isAddWidget);
 
@@ -145,7 +145,7 @@ watch(
 );
 
 function onCreated() {
-	dnDProvider.setDrag(throttle(handlerDrag, 300));
+	dnDProvider.setDrag(throttle(handlerDrag));
 	dnDProvider.setDragEnd(debounce(handlerDragEnd));
 }
 
@@ -295,10 +295,10 @@ function handlerDrag() {
 	const mouseInGrid =
 		mouseAt.x > parentRect.left - 20 &&
 		mouseAt.x < parentRect.right - 20 &&
-		mouseAt.y > parentRect.top - 20 &&
-		mouseAt.y < parentRect.bottom - 20;
+		mouseAt.y > parentRect.top - 20;
 
 	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
+
 		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.value.w / 2);
 		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.value.h / 2);
 		layout.value.push({
@@ -316,6 +316,7 @@ function handlerDrag() {
 		const item = gridLayoutRef.value.getItem(dropId);
 
 		if (!item) {
+
 			return;
 		}
 
@@ -401,22 +402,33 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
+		// if (isEmpty.value) {
+		// 	emit('add-widget',
+		// 		dnDProvider.newDashboard.value.widgetType,
+		// 		position,
+		// 		[],
+		// 	);
+
+		// 	return;
+		// }
+
+		// emit('add-widget',
+		// 	dnDProvider.newDashboard.value.widgetType,
+		// 	position,
+		// 	mapToWidgetState(layout.value.filter(item => item.i !== newItemId)),
+		// );
+
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.value.h, dragItem.value.w);
 
-		if (isEmpty.value) {
-			emit('add-widget',
-				dnDProvider.newDashboard.value.widgetType,
-				position,
-				[],
-			);
 
-			return;
-		}
-
-		emit('add-widget',
+		emit(
+			'add-widget',
 			dnDProvider.newDashboard.value.widgetType,
 			position,
-			mapToWidgetState(layout.value.filter(item => item.i !== newItemId)),
+			mapToWidgetState(
+				layout.value
+					.filter(item => item.i !== newItemId && checkIsFake(item.i)),
+			),
 		);
 	} else {
 		layout.value = layout.value.filter(item => item.i !== dropId);

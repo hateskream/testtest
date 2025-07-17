@@ -100,7 +100,6 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 	>
 		<div class="wrapper-s">
 			<div
-				v-if="props.dashboards.length"
 				:style="sliderStyle"
 				class="list-s"
 			>
@@ -108,11 +107,9 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
 					:widgets="dashboard.widgets"
+					:rows-num="props.rowsNum"
 					:columns-num="props.columnsNum"
 					:row-height="props.rowHeight"
-					:rows-num="props.rowsNum"
-					:col-width="props.columnWidth"
-					:row-num="props.rowNumGrid"
 					:column-width="props.columnWidth"
 					:row-num-grid="props.rowNumGrid"
 					:style="
