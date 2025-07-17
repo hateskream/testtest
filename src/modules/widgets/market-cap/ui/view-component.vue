@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group';
 import type { IMarketCapDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalFilterTicker } from '../../base';
 import type { IModalFilterTicker } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
 import { RangeChart } from '@/modules/lightweight-charts/model';
-import { compareStrings, generateRandomColor, prettyNumberWithKey } from '@/shared/lib';
+import { compareStrings, prettyNumberWithKey } from '@/shared/lib';
 import { useMarketCapStore } from '../store/market-cap';
+import type { IMeta } from '@/modules/dashboard-group/core';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';

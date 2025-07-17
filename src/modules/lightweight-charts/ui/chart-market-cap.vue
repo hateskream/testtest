@@ -99,7 +99,7 @@ const externalTooltipHandler = (context: {
 		cont.style.padding = '8px';
 
 
-		bodyLines.forEach((body, i) => {
+		bodyLines.forEach((body) => {
 			const contItem = document.createElement('div');
 			const circle = document.createElement('div');
 

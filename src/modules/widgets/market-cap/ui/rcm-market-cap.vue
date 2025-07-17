@@ -10,8 +10,6 @@ import {
 } from '../../base';
 import { useMarketCapStore } from '../store/market-cap';
 
-import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
-
 const marketCapStore = useMarketCapStore();
 </script>
 
