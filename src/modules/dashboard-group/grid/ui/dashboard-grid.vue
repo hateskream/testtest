@@ -497,6 +497,7 @@ onCreated();
 				@set-resizable-widget-id="setResizableWidgetId"
 				@set-dnd-widget-id="setDndWidgetId"
 				@moved="updateLayout"
+				@resized="updateLayout"
 			>
 				<template #state-calm>
 					<current-dashboard
