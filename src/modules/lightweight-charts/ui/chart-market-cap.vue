@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, useTemplateRef } from 'vue';
+import { onMounted, shallowRef, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
 
 
@@ -26,13 +26,15 @@ const addTicker = (color: string, symbol: string) => {
 		borderWidth: 2,
 		pointStyle: false,
 		backgroundColor: 'rgba(217, 217, 217, 0.1)',
+		tension: 0.4,
+		cubicInterpolationMode: 'monotone',
 	});
 
 	chart.value!.update();
 };
 
 const removeTicker = (idx: number) => {
-	chart.value!.data.datasets.slice(idx, 1);
+	chart.value!.data.datasets.splice(idx, 1);
 
 	chart.value!.update();
 };
@@ -188,10 +190,42 @@ onMounted(() => {
 				mode: 'index',
 				intersect: false,
 			},
+			hover: {
+				mode: 'dataset',
+			},
+			// onHover: (_, activeElements, chartC) => {
+			// 	const { datasets } = chartC.config.data;
+
+			// 	if (activeElements[0]) {
+			// 		datasets.forEach(
+			// 			(ds, idx) => {
+			// 				if (idx !== activeElements[0].datasetIndex) {
+			// 					const color = ds.label?.split('-')[1];
+
+			// 					ds.borderColor = color?.replace(')', ', 0.1)');
+			// 				}
+			// 			},
+			// 		);
+			// 	} else {
+			// 		datasets.forEach(
+			// 			(ds ) => {
+			// 				const color = ds.label?.split('-')[1];
+
+			// 				ds.borderColor = color;
+			// 			},
+			// 		);
+			// 	}
+
+			// 	console.log(datasets);
+
+			// 	chartC.update();
+			// },
 			plugins: {
 				legend: {
 					display: false,
 				},
+
+
 				tooltip: {
 					enabled: false,
 					position: 'nearest',

@@ -8,6 +8,7 @@ import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ErrorComponent from './error-component.vue';
+import RcmMarketCap from './rcm-market-cap.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -36,6 +37,9 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 				:data="data"
 				:meta="meta"
 			/>
+		</template>
+		<template #rcm>
+			<rcm-market-cap />
 		</template>
 	</base-dashboard-component>
 </template>

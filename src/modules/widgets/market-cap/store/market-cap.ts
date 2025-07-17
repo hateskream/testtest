@@ -7,9 +7,9 @@ import type {
 } from '../../base/modal/model';
 
 export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
-	const isShowDate = ref(true);
+	const isShowChange = ref(true);
 
-	const isShowSentiment = ref(true);
+	const isShowChart = ref(true);
 
 	const tickerLists = ref<IModalFilterTickerLists>({});
 
@@ -23,22 +23,22 @@ export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 		tickerLists.value = newList;
 	}
 
-	function toggleShowDate() {
-		isShowDate.value = !isShowDate.value;
+	function toggleShowChange() {
+		isShowChange.value = !isShowChange.value;
 	}
 
-	function toggleShowSentiment() {
-		isShowSentiment.value = !isShowSentiment.value;
+	function toggleShowChart() {
+		isShowChart.value = !isShowChart.value;
 	}
 
 	function resetAll() {
-		isShowDate.value = true;
-		isShowSentiment.value = true;
+		isShowChange.value = true;
+		isShowChart.value = true;
 	}
 
 	return {
-		isShowDate,
-		isShowSentiment,
+		isShowChange,
+		isShowChart,
 
 		tickerLists,
 		activeTickersList,
@@ -46,7 +46,7 @@ export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 
 		resetAll,
 
-		toggleShowDate,
-		toggleShowSentiment,
+		toggleShowChange,
+		toggleShowChart,
 	};
 });

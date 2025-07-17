@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { useMarketStore } from '../stores';
 import {
 	ModalItem,
 	ModalItemCheckbox,
@@ -9,10 +8,11 @@ import {
 	ModalSubmenu,
 	ModalSubmenuContent,
 } from '../../base';
+import { useMarketCapStore } from '../store/market-cap';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 
-const marketStore = useMarketStore();
+const marketCapStore = useMarketCapStore();
 </script>
 
 <template>
@@ -34,24 +34,23 @@ const marketStore = useMarketStore();
 					<modal-submenu-content>
 						<template #content>
 							<modal-item-checkbox
-								:model-value="marketStore.isFavorites"
-								@update:model-value="marketStore.toggleFavorites"
+								:model-value="marketCapStore.isShowChart"
+								@update:model-value="marketCapStore.toggleShowChart"
 							>
-								Only favorites
+								Chart
 							</modal-item-checkbox>
-
-							<modal-submenu>
-								<template #title> Column metrics </template>
-								<template #content>
-									<table-columns-settings-component />
-								</template>
-							</modal-submenu>
+							<modal-item-checkbox
+								:model-value="marketCapStore.isShowChange"
+								@update:model-value="marketCapStore.toggleShowChange"
+							>
+								Change, %
+							</modal-item-checkbox>
 						</template>
 					</modal-submenu-content>
 				</template>
 			</modal-submenu>
 
-			<modal-item @click="marketStore.resetAll"> Reset all changes </modal-item>
+			<modal-item @click="marketCapStore.resetAll"> Reset all changes </modal-item>
 
 			<ui-driver />
 

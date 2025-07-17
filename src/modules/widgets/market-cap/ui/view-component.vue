@@ -9,14 +9,10 @@ import type { IModalFilterTicker } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
 import { RangeChart } from '@/modules/lightweight-charts/model';
 import { compareStrings, generateRandomColor, prettyNumberWithKey } from '@/shared/lib';
+import { useMarketCapStore } from '../store/market-cap';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
-
-
-interface IModalFilterTickerWithColor extends IModalFilterTicker {
-	color: string;
-}
 
 interface IViewComponentProps {
 	meta: IMeta;
@@ -49,7 +45,7 @@ props.data.forEach((item) => {
 
 
 const activeList = ref<IMarketCapDomain[]>([]);
-
+const marketCapStore = useMarketCapStore();
 
 function formatFdv(fdv: string) {
 	const { value, suffix } = prettyNumberWithKey(fdv);
@@ -126,20 +122,21 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 			"
 
 			:class="classes.chartPrices"
+			:style="{ marginTop: meta.size.h <= 3 ? 'auto' : '0'  }"
 		>
 			<div>
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
-						At Close: 0
+						Market cap
 					</div>
 
 
 					<div :class="classes.chartPriceTitle">
 						<div :class="classes.chartPriceTitleValue">
-							$ 324
+							$ 324B
 						</div>
 
-						<div :class="classes.chartPriceTitleChange">
+						<div v-if="marketCapStore.isShowChange" :class="classes.chartPriceTitleChange">
 							<div :class="classes.chartPriceTitleChangeIcon">
 								<ui-icon
 									:id="IconIds.Gainers"
@@ -161,15 +158,15 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 			<div>
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
-						After Hours
+						Volume
 					</div>
 
 
 					<div :class="classes.chartPriceTitle">
 						<div :class="classes.chartPriceTitleValue">
-							$ 324
+							$ 104B
 						</div>
-
+						<!--
 						<div :class="classes.chartPriceTitleChange">
 							<div :class="classes.chartPriceTitleChangeIcon">
 								<ui-icon
@@ -182,14 +179,14 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 							<div :class="classes.chartPriceTitleChangeValue">
 								0.93 (0.33%)
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
 		</div>
 
 
-		<div :class="classes.marketCapCurrencyList">
+		<div v-if="activeList.length  > 0" :class="classes.marketCapCurrencyList">
 			<div
 				v-for="item in activeList"
 				:key="item.id"
@@ -218,20 +215,23 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 		</div>
 
 
-		<chart-component
-			v-show="activeList.length === 0"
-			:width="100"
-			:disable-scroll="true"
-			:is-visible-history-graph="false"
-			:is-visible-indicators="false"
-			:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-			:height="320"
-		/>
-		<chart-market-cap
-			v-show="activeList.length > 0"
-			ref="chartMarketCap"
-			:height="320"
-		/>
+		<div v-show="marketCapStore.isShowChart && meta.size.h > 3">
+			<chart-component
+				v-show="activeList.length === 0"
+				:width="100"
+				:disable-scroll="true"
+				:is-visible-history-graph="false"
+				:is-visible-indicators="false"
+				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+				:height="320"
+				:is-visible-range="meta.size.w > 2"
+			/>
+			<chart-market-cap
+				v-show="activeList.length > 0"
+				ref="chartMarketCap"
+				:height="280"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -249,7 +249,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 .chartPrices {
 	display: flex;
 	align-items: center;
-	gap: 28px;
+	gap: 8px;
 }
 
 .chartPriceTime {
@@ -262,7 +262,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 .chartPriceTitle {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 6px;
 }
 
 .chartPriceTitleValue {
@@ -309,6 +309,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 	align-items: center;
 	width: max-content;
 	height: 17px;
+	margin-bottom: 4px;
 	background-color: var(--bg-color-surface-03);
 	border-radius: 16px;
 	gap: 6px;
@@ -342,9 +343,11 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 }
 
 .marketCapCurrencyList {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+	flex: 0 0 auto;
+	width: max-content;
+	height: 60px;
+	padding-right: 10px;
+	overflow-y: auto;
 }
 
 .marketCapCurrencyChange {

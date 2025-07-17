@@ -31,11 +31,13 @@ interface IChartProps {
 	isVisibleHistoryGraph?:boolean;
 	rangeList: RangeChart[];
 	isVisibleIndicators?: boolean;
+	isVisibleRange?: boolean;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleHistoryGraph: true,
 	isVisibleIndicators: true,
+	isVisibleRange: true,
 });
 
 defineExpose({
@@ -387,6 +389,7 @@ onMounted(() => {
 		<div ref="container" :class="classes.mainChart"></div>
 
 		<chart-range
+			v-if="isVisibleRange"
 			:class="classes.range"
 			:active-range="currentRange"
 			:list="rangeList"
