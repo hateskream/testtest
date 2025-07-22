@@ -9,6 +9,8 @@ import DashboardGrid from './dashboard-grid.vue';
 
 interface IProps {
 	widgets: IWidget[];
+	id: string;
+	activeId: string | null;
 	rowsNum: number;
 	columnsNum: number;
 	rowHeight: number;
@@ -64,6 +66,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 		</div>
 		<div :class="classes.content">
 			<dashboard-grid
+				v-if="props.id === props.activeId"
 				:column-width="columnWidth"
 				:widgets="props.widgets"
 				:is-dnd="isEditState"

@@ -106,6 +106,8 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 				<grid-component
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
+					:id="dashboard.id"
+					:active-id="props.activeDashboardId"
 					:widgets="dashboard.widgets"
 					:rows-num="props.rowsNum"
 					:columns-num="props.columnsNum"
