@@ -16,7 +16,7 @@ import {
 	useInjectCanDelete,
 	useInjectSetterDndHandler,
 	useMousePositionSync,
-	useRebuildingGrid,
+	useLayout,
 } from '../composables';
 import {
 	type IWidget,
@@ -85,12 +85,21 @@ const columnsNum = computed(() => props.columnsNum);
 const rowsNum = computed(() => props.rowsNum);
 const rawWidgets = computed(() => props.widgets);
 
-const { layout, isEmpty, checkIsFake } = useRebuildingGrid(columnsNum, rowsNum, rawWidgets);
+const {
+	layout,
+	isEmpty,
+	hasDropId,
+	checkIsFake,
+	DROP_ID,
+	addDropEl,
+	indexDropIdEl,
+	deleteDropEl,
+	dropEl,
+} = useLayout(columnsNum, rowsNum, rawWidgets);
 
 const isEditable = computed(() => !isEmpty.value || gridState.isAddWidget);
 
 const { mouseAt } = useMousePositionSync();
-const dropId = '-1';
 const dragItem = ref<IPosition>({ x: -1, y: -1, w: 2, h: 2, i: '' });
 
 watch(
@@ -297,23 +306,20 @@ function handlerDrag() {
 		mouseAt.x < parentRect.right - 20 &&
 		mouseAt.y > parentRect.top - 20;
 
-	if (mouseInGrid && !layout.value.find(item => item.i === dropId)) {
-
+	if (mouseInGrid && !hasDropId.value) {
 		const centerX = Math.floor(columnsNum.value / 2) - Math.floor(dragItem.value.w / 2);
 		const centerY = Math.floor(rowsNum.value / 2) - Math.floor(dragItem.value.h / 2);
-		layout.value.push({
-			x: Math.max(0, Math.min(centerX, columnsNum.value - dragItem.value.w)),
-			y: Math.max(0, Math.min(centerY, rowsNum.value - dragItem.value.h)),
-			w: dragItem.value.w,
-			h: dragItem.value.h,
-			i: dropId,
-		});
+
+		addDropEl(
+			Math.max(0, Math.min(centerX, columnsNum.value - dragItem.value.w)),
+			Math.max(0, Math.min(centerY, rowsNum.value - dragItem.value.h)),
+			dragItem.value.w,
+			dragItem.value.h,
+		);
 	}
 
-	const index = layout.value.findIndex(item => item.i === dropId);
-
-	if (index !== -1) {
-		const item = gridLayoutRef.value.getItem(dropId);
+	if (indexDropIdEl.value !== -1) {
+		const item = gridLayoutRef.value.getItem(DROP_ID);
 
 		if (!item) {
 
@@ -335,25 +341,25 @@ function handlerDrag() {
 		if (mouseInGrid) {
 			gridLayoutRef.value.dragEvent(
 				'dragstart',
-				dropId,
+				DROP_ID,
 				newPos.x,
 				newPos.y,
 				dragItem.value.h,
 				dragItem.value.w,
 			);
-			dragItem.value.i = index as unknown as string;
-			dragItem.value.x = layout.value[index].x;
-			dragItem.value.y = layout.value[index].y;
+			dragItem.value.i = indexDropIdEl.value as unknown as string;
+			dragItem.value.x = layout.value[indexDropIdEl.value].x;
+			dragItem.value.y = layout.value[indexDropIdEl.value].y;
 		} else {
 			gridLayoutRef.value.dragEvent(
 				'dragend',
-				dropId,
+				DROP_ID,
 				newPos.x,
 				newPos.y,
 				dragItem.value.h,
 				dragItem.value.w,
 			);
-			layout.value = layout.value.filter(el => el.i !== dropId);
+			deleteDropEl();
 		}
 	}
 }
@@ -363,7 +369,7 @@ function handlerDragEnd() {
 	const parentRect = wrapperRef.value?.getBoundingClientRect();
 
 	if (!parentRect || !gridLayoutRef.value) {
-		layout.value = layout.value.filter(item => item.i !== dropId);
+		deleteDropEl();
 		return;
 	}
 
@@ -374,19 +380,17 @@ function handlerDragEnd() {
 		mouseAt.y < parentRect.bottom;
 
 	if (mouseInGrid) {
-		const placeholder = layout.value.find(item => item.i === dropId);
+		const placeholder = dropEl.value;
 
 		if (!placeholder) {
-			// eslint-disable-next-line no-console
-			console.warn('Placeholder not found in layout:', dropId);
-			layout.value = layout.value.filter(item => item.i !== dropId);
+			deleteDropEl();
 			return;
 		}
 
 		const finalX = Math.max(0, Math.min(placeholder.x, columnsNum.value - dragItem.value.w));
 		const finalY = Math.max(0, Math.min(placeholder.y, rowsNum.value - dragItem.value.h + 1));
 
-		layout.value = layout.value.filter(el => el.i !== dropId);
+		deleteDropEl();
 
 		const newItemId = String(Date.now());
 
@@ -402,24 +406,7 @@ function handlerDragEnd() {
 			throw new Error('newDashboard is null');
 		}
 
-		// if (isEmpty.value) {
-		// 	emit('add-widget',
-		// 		dnDProvider.newDashboard.value.widgetType,
-		// 		position,
-		// 		[],
-		// 	);
-
-		// 	return;
-		// }
-
-		// emit('add-widget',
-		// 	dnDProvider.newDashboard.value.widgetType,
-		// 	position,
-		// 	mapToWidgetState(layout.value.filter(item => item.i !== newItemId)),
-		// );
-
 		gridLayoutRef.value.dragEvent('dragend', newItemId, finalX, finalY, dragItem.value.h, dragItem.value.w);
-
 
 		emit(
 			'add-widget',
@@ -427,11 +414,11 @@ function handlerDragEnd() {
 			position,
 			mapToWidgetState(
 				layout.value
-					.filter(item => item.i !== newItemId && checkIsFake(item.i)),
+					.filter(item => item.i !== newItemId && !checkIsFake(item.i)),
 			),
 		);
 	} else {
-		layout.value = layout.value.filter(item => item.i !== dropId);
+		deleteDropEl();
 	}
 }
 
@@ -491,7 +478,7 @@ onCreated();
 				:min-h="getMinSize(item.i).h"
 				:min-w="getMinSize(item.i).w"
 				:is-editing="props.isDnd"
-				:drop-id="dropId"
+				:drop-id="DROP_ID"
 				@change-dnd-state="onChangeDndState"
 				@change-resize-state="onChangeResizeState"
 				@set-resizable-widget-id="setResizableWidgetId"
