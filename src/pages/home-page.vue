@@ -12,7 +12,6 @@ import {
 	GhostComponentBase,
 	useDashboardGroupsStore,
 	useGridLayout,
-	useLoadDashboard,
 } from '@/modules/dashboard-group';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
@@ -47,8 +46,6 @@ const {
 	templateRef<ComponentPublicInstance>('dashboardGridRef'),
 );
 
-useLoadDashboard(columnsNum, loadDashboards);
-
 provideSetterDndHandler();
 provideCanDelete();
 
@@ -56,6 +53,19 @@ const pageState = reactive({
 	isCurtainFixed: false,
 	isEdit: false,
 });
+
+watch(
+	columnsNum,
+	cn => {
+		// баг при закрытие шторки вызывается сетевой запрос
+		// нужно обсудить с дизами, это бредовое состояние
+		if (pageState.isCurtainFixed) {
+			return;
+		}
+
+		loadDashboards(cn);
+	},
+);
 
 watch(() => activeDashboard.value, (dashboard) => {
 	if (dashboard == null) {

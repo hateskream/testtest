@@ -23,7 +23,7 @@ const emit = defineEmits<{
 const localTabs = ref<ITab[]>([]);
 
 watch(
-	() => [...props.tabs],
+	() => props.tabs,
 	(newTabs) => {
 		if (localTabs.value.length === 0) {
 			localTabs.value = initTabs(newTabs);
@@ -36,9 +36,6 @@ watch(
 		}));
 
 		localTabs.value = tabs;
-	},
-	{
-		immediate: true,
 	},
 );
 
