@@ -213,7 +213,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 			</div>
 		</div>
 
-		<div v-show="marketCapStore.isShowChart && meta.size.h > 3">
+		<div v-show="marketCapStore.isShowChart && meta.size.h > 3" :class="classes.chartWrapper">
 			<chart-component
 				v-show="activeList.length === 0"
 				:width="100"
@@ -221,13 +221,13 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 				:is-visible-history-graph="false"
 				:is-visible-indicators="false"
 				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-				:height="320"
+				:height="'100%'"
 				:is-visible-range="meta.size.w > 2"
 			/>
 			<chart-market-cap
 				v-show="activeList.length > 0"
 				ref="chartMarketCap"
-				:height="280"
+				:height="'100%'"
 			/>
 		</div>
 	</div>
@@ -243,6 +243,13 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 	gap: 16px;
 }
 
+
+.chartWrapper {
+	flex: 1;
+	height: 100%;
+
+	/* background-color: red; */
+}
 
 .chartPrices {
 	display: flex;

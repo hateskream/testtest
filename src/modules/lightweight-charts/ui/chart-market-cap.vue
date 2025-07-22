@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import { onMounted, shallowRef, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
 
 
 interface IChartProps {
-	height: number;
+	height: CSSProperties['height'];
 }
 
 defineProps<IChartProps>();

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
 import {
 	AreaSeries,
 	ColorType,
@@ -26,7 +27,7 @@ import ChartRange from '../components/chart-range.vue';
 
 interface IChartProps {
 	width: number;
-	height: number;
+	height: CSSProperties['height'];
 	disableScroll: boolean;
 	isVisibleHistoryGraph?:boolean;
 	rangeList: RangeChart[];
@@ -325,7 +326,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div :class="classes.wrapper" :style="{height: `${height}px`}">
+	<div :class="classes.wrapper" :style="{ height }">
 		<div v-if="isVisibleIndicators" :class="classes.instruments">
 			<modal-badge>
 				<template #title>
