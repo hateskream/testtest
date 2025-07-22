@@ -72,7 +72,10 @@ function adjustWidgetWidth(dashboards: IPosition[], colNum: number): IPosition[]
 export function createGrid(colNum: number, initDashboards: IPosition[]): IPosition[] {
 	let updatedDashboards = initDashboards;
 
+	let isModified = false;
+
 	while (isGridTooWide(updatedDashboards, colNum)) {
+		isModified = true;
 		const widget = updatedDashboards.find(w => isOffScreen(w, colNum));
 		if (!widget) {
 			break;
@@ -83,5 +86,9 @@ export function createGrid(colNum: number, initDashboards: IPosition[]): IPositi
 		updatedDashboards = updatedDashboards.map(w => (w.i === widget.i ? { ...w, x, y } : w));
 	}
 
-	return optimizeLayoutHeight(updatedDashboards, colNum);
+	if (isModified) {
+		return optimizeLayoutHeight(updatedDashboards, colNum);
+	} else {
+		return updatedDashboards;
+	}
 }

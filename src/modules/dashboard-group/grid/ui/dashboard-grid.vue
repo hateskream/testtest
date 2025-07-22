@@ -154,7 +154,7 @@ watch(
 );
 
 function onCreated() {
-	dnDProvider.setDrag(throttle(handlerDrag));
+	dnDProvider.setDrag(throttle(handlerDrag, 100));
 	dnDProvider.setDragEnd(debounce(handlerDragEnd));
 }
 
@@ -170,7 +170,7 @@ function getDashboardItemById(id: string): IWidget {
 }
 
 function getMaxSize(id: string): { w: number; h: number } {
-	if (isEmpty.value) {
+	if (checkIsFake(id)) {
 		return {
 			w: 1,
 			h: 1,
@@ -198,7 +198,7 @@ function getMaxSize(id: string): { w: number; h: number } {
 }
 
 function getMinSize(id: string): { w: number; h: number } {
-	if (isEmpty.value) {
+	if (checkIsFake(id)) {
 		return {
 			w: 1,
 			h: 1,
@@ -460,7 +460,6 @@ onCreated();
 			:is-draggable="isEditable"
 			:is-resizable="isEditable"
 			:prevent-collision="false"
-			:use-css-transforms="false"
 			:margin="[0, 0]"
 			class="dashboard-grid"
 			@layout-updated="updated"
@@ -488,7 +487,7 @@ onCreated();
 			>
 				<template #state-calm>
 					<current-dashboard
-						v-if="!isEmpty"
+						v-if="!checkIsFake(item.i)"
 						:dashboard-item="getDashboardItemById(item.i)"
 						@delete="deleteDashboards(item.i)"
 					/>

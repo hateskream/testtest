@@ -19,6 +19,17 @@ export function useLayout(
 	const indexDropIdEl = computed(() => layout.value.findIndex(item => item.i === DROP_ID));
 	const dropEl = computed(() => layout.value.find(item => item.i === DROP_ID));
 
+	watch(
+		[columnsNum, rowsNum, rawWidgets],
+		() => {
+			rebuildLayout();
+		},
+		{
+			deep: true,
+			immediate: true,
+		},
+	);
+
 	function generateEmptyGrid(columns: number, rows: number): IPosition[] {
 		const totalCells = columns * rows;
 
@@ -43,20 +54,10 @@ export function useLayout(
 				...widget.position,
 				i: widget.id,
 			}));
+
 			layout.value = createGrid(columnsNum.value, positions);
 		}
 	}
-
-	watch(
-		[columnsNum, rowsNum, rawWidgets],
-		() => {
-			rebuildLayout();
-		},
-		{
-			deep: true,
-			immediate: true,
-		},
-	);
 
 	function addDropEl(x: number, y: number, w: number, h : number) {
 		layout.value.push({

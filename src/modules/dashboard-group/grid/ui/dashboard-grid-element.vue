@@ -109,7 +109,6 @@ function resize(i: string, newH: number, newW: number) {
 </script>
 
 <template>
-
 	<grid-item
 		:key="props.i"
 		ref="gridItemRef"
