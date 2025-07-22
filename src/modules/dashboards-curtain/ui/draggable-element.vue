@@ -95,7 +95,7 @@ function onDragEnd() {
 
 <style module="classes">
 .droppable {
-	cursor: move;
+	cursor: grab;
 	user-select: none;
 }
 

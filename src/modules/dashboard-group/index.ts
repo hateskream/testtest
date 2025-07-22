@@ -1,6 +1,5 @@
 export {
 	DashboardGrid,
-	DraggableElement,
 	GhostComponentBase,
 	useDndHandler,
 	useDelete,
