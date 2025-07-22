@@ -460,6 +460,7 @@ onCreated();
 			:is-draggable="isEditable"
 			:is-resizable="isEditable"
 			:prevent-collision="false"
+			:use-css-transforms="false"
 			:margin="[0, 0]"
 			class="dashboard-grid"
 			@layout-updated="updated"

@@ -138,6 +138,7 @@ function resize(i: string, newH: number, newW: number) {
 			<div
 				v-else-if="componentState.isDnd"
 				:class="classes.item"
+				:style="{ cursor: 'grabbing' }"
 			>
 				<slot name="state-dnd" />
 			</div>

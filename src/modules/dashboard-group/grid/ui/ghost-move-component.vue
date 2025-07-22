@@ -27,8 +27,10 @@ const position = ref<IPosition>({ x: 0, y: 0 });
 const sizeGhostComponent = ref<ISize>({ height: 0, width: 0 });
 
 const styles = computed(() => ({
-	left: `${position.value.x - sizeGhostComponent.value.width / 2}px`,
-	top: `${position.value.y - sizeGhostComponent.value.height / 2}px`,
+	left: `${position.value.x - sizeGhostComponent.value.width / 2 + 14}px`,
+	top: `${position.value.y - sizeGhostComponent.value.height / 2 - 20}px`,
+	transform: 'translate(-50%, -50%)',
+	willChange: 'transform, left, top',
 }));
 
 const trottledUpdatePosition = throttle(updatePosition, 30);
@@ -51,9 +53,12 @@ onUnmounted(() => {
 });
 
 function updatePosition(event: MouseEvent) {
+	const scrollX = window.scrollX || window.pageXOffset;
+	const scrollY = window.scrollY || window.pageYOffset;
+
 	position.value = {
-		x: event.clientX,
-		y: event.clientY,
+		x: event.clientX + scrollX,
+		y: event.clientY + scrollY,
 	};
 }
 </script>
@@ -73,6 +78,5 @@ function updatePosition(event: MouseEvent) {
 <style module="classes">
 .root {
 	position: fixed;
-	pointer-events: none;
 }
 </style>
