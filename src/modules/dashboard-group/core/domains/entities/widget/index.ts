@@ -4,3 +4,4 @@ export { PresetWidget } from './widget-preset';
 export type { IPosition } from './position';
 export type { ISize } from './size';
 export { WidgetType } from './widget-type';
+export { WidgetTypeToFeature } from './widget-feature-map';
