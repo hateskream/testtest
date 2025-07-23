@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
 
-import { Widget, type IWidgetState, type IPosition } from '../widget';
+import { Widget, type IWidgetState, type IPosition, WidgetType, WidgetTypeToFeature } from '../widget';
 import { NotFoundWidget } from './error';
 import { NAME_TO_PRESET, type PresetName } from './presets';
+import { isFeatureEnabled } from '@/shared/lib/feature-toggle';
 
 type Layout = Map<number, Widget[]>;
 
@@ -135,10 +136,16 @@ export class Dashboard {
 
 	static createFromPreset(presetName: PresetName, order: number): Dashboard {
 		const layoutPreset = NAME_TO_PRESET[presetName];
-
 		const layout = new Map<number, Widget[]>();
 
 		Object.entries(layoutPreset).forEach(([type, layouts]) => {
+			const feature = WidgetTypeToFeature[type as WidgetType];
+			if (!feature || !isFeatureEnabled(feature)) {
+				// eslint-disable-next-line no-console
+				console.log('feature', feature, 'is under development');
+				return;
+			}
+
 			let widget: Widget | null = null;
 
 			Object.entries(layouts).forEach(([colNum, pos]) => {
