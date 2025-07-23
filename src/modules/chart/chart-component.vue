@@ -56,7 +56,7 @@ const chartWidth = computed(() => {
 
 const chartHeight = computed(() => {
 	const height = Math.floor(windowHeight.value * 0.5);
-	return height;
+	return `${height}px`;
 });
 
 const setChart = () => {
