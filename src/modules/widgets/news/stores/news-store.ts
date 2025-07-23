@@ -3,12 +3,11 @@ import { computed, ref } from 'vue';
 
 import { type IFilterNews, type INewsLocation, type INewsSort } from '../model';
 import { NEWS_LOCATIONS, NEWS_FILTERS } from '../const';
-import { compareStrings } from '@/shared/lib';
+import { compareStrings, generateTimestampId } from '@/shared/lib';
 import { getImagePath, ImageTypePath } from '@/shared/lib/get-image-path';
 import type {
 	IFilterList,
 	IModalFilterTicker,
-	IModalFilterTickerLists,
 } from '../../base/modal/model';
 
 export const useNewsStore = defineStore('dashboards-news', () => {
@@ -69,66 +68,97 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		sortBy.value.find(item => item.value === true),
 	);
 
-	const tickerLists = ref<IModalFilterTickerLists>({
-		Cryptocurrencies: [
-			{
-				id: '1',
-				image: getImagePath('TRON', ImageTypePath.Currency),
-				name: 'Tron',
-				ticker: 'TRX',
-				isSelected: false,
+	const tickerLists = ref<IModalFilterTicker[]>([
+		{
+			id: generateTimestampId(),
+			image: getImagePath('TRON', ImageTypePath.Currency),
+			name: 'Tron',
+			ticker: 'TRX',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'crypto',
+				name: 'Cryptocurrencies',
 			},
-			{
-				id: '2',
-				image: getImagePath('ADA', ImageTypePath.Currency),
-				name: 'Cardano',
-				ticker: 'ADA',
-				isSelected: false,
+		},
+		{
+			id: generateTimestampId(),
+			image: getImagePath('ADA', ImageTypePath.Currency),
+			name: 'Cardano',
+			ticker: 'ADA',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'crypto',
+				name: 'Cryptocurrencies',
 			},
-			{
-				id: '3',
-				image: getImagePath('BNB', ImageTypePath.Currency),
-				name: 'BNB',
-				ticker: 'BNB',
-				isSelected: false,
+		},
+		{
+			id: generateTimestampId(),
+			image: getImagePath('BNB', ImageTypePath.Currency),
+			name: 'BNB',
+			ticker: 'BNB',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'crypto',
+				name: 'Cryptocurrencies',
 			},
-			{
-				id: '4',
-				image: getImagePath('SOL', ImageTypePath.Currency),
-				name: 'Solana',
-				ticker: 'SOL',
-				isSelected: false,
+		},
+		{
+			id: generateTimestampId(),
+			image: getImagePath('SOL', ImageTypePath.Currency),
+			name: 'Solana',
+			ticker: 'SOL',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'crypto',
+				name: 'Cryptocurrencies',
 			},
-		],
+		},
 
-		Stocks: [
-			{
-				id: '5',
-				image: getImagePath('TSLA', ImageTypePath.Stock),
-				name: 'Tesla Inc',
-				ticker: 'TSLA',
-				isSelected: false,
+		{
+			id: generateTimestampId(),
+			image: getImagePath('TSLA', ImageTypePath.Stock),
+			name: 'Tesla Inc',
+			ticker: 'TSLA',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'stock',
+				name: 'Stocks',
 			},
-			{
-				id: '6',
-				image: getImagePath('META', ImageTypePath.Stock),
-				name: 'Meta Platforms',
-				ticker: 'META',
-				isSelected: false,
+		},
+		{
+			id: generateTimestampId(),
+			image: getImagePath('META', ImageTypePath.Stock),
+			name: 'Meta Platforms',
+			ticker: 'META',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'stock',
+				name: 'Stocks',
 			},
-			{
-				id: '7',
-				image: getImagePath('TSLA', ImageTypePath.Stock),
-				name: 'Apple Inc',
-				ticker: 'AAPL',
-				isSelected: false,
+		},
+		{
+			id: generateTimestampId(),
+			image: getImagePath('TSLA', ImageTypePath.Stock),
+			name: 'Apple Inc',
+			ticker: 'AAPL',
+			isSelected: false,
+			imageType: 'image',
+			type: {
+				value: 'stock',
+				name: 'Stocks',
 			},
-		],
-	});
+		},
+
+	]);
 
 	const activeTickersList = computed<IModalFilterTicker[]>(() =>
-		Object.values(tickerLists.value)
-			.flat()
+		tickerLists.value
 			.filter(item => item.isSelected),
 	);
 
@@ -153,7 +183,7 @@ export const useNewsStore = defineStore('dashboards-news', () => {
 		return countries;
 	});
 
-	function setTickerLists(newList: IModalFilterTickerLists) {
+	function setTickerLists(newList: IModalFilterTicker[]) {
 		tickerLists.value = newList;
 	}
 

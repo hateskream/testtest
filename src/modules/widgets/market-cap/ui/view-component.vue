@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
 import type { IMarketCapDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -24,25 +24,22 @@ const chartMarketCapRef = useTemplateRef('chartMarketCap');
 
 const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 
-const listWithGroups = ref<{ [x: string]: IModalFilterTicker[] }>({});
-const mapper = reactive<Map<string, IMarketCapDomain>>(new Map());
-
-props.data.forEach((item) => {
-	if (!listWithGroups.value[item.type]) {
-		listWithGroups.value[item.type] = [];
-	}
-
-	mapper.set(item.id, item);
-
-	listWithGroups.value[item.type].push({
-		id: item.id,
-		image: item.srcValue,
-		name: item.name,
-		ticker: item.symbol,
-		isSelected: false,
-	});
-});
-
+const listWithGroups = ref<IModalFilterTicker[]>(
+	props.data.map((item) => {
+		return {
+			id: item.id,
+			image:  item.srcValue,
+			name: item.name,
+			ticker: item.symbol,
+			imageType: 'image',
+			type: {
+				value: item.type,
+				name: '',
+			},
+			isSelected: false,
+		};
+	}),
+);
 
 const activeList = ref<IMarketCapDomain[]>([]);
 const marketCapStore = useMarketCapStore();
@@ -55,7 +52,7 @@ function formatFdv(fdv: string) {
 
 function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 	if (item.isSelected) {
-		const foundItem = mapper.get(item.id)!;
+		const foundItem = props.data.find(singleItem => compareStrings(singleItem.id, item.id) )!;
 
 		activeList.value.push(foundItem);
 

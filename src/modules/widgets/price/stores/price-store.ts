@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, readonly, ref } from 'vue';
 
 import { PRICE_STOCK_TYPES } from '../const';
+import type { ICurrency } from '../model';
 
 export interface IMarket {
 	name: string;
@@ -17,6 +18,11 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 
 	const markets = computed(()=> PRICE_STOCK_TYPES);
 	const activeMarket = ref({ name:'Crypto', value:'crypto' });
+	const activeCurrency = ref<ICurrency | null>(null);
+
+	function setActiveCurrency(currency:ICurrency | null) {
+		activeCurrency.value = currency;
+	}
 
 	function setActiveMarket(market:IMarket) {
 		activeMarket.value = market;
@@ -47,6 +53,7 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 	return {
 		markets,
 		activeMarket,
+		activeCurrency: readonly(activeCurrency),
 		isShowChart: readonly(isShowChart),
 		isShowPercentageChange: readonly(isShowPercentageChange),
 		isShowLogo: readonly(isShowLogo),
@@ -58,5 +65,6 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 		toggleShowTicker,
 		toggleShowDescription,
 		setActiveMarket,
+		setActiveCurrency,
 	};
 });

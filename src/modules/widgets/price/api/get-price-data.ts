@@ -1,7 +1,7 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { type ICurrency as ICurrencyDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath } from '@/shared/lib';
+import { generateTimestampId, getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 
 enum TypeSendRequest {
@@ -17,6 +17,7 @@ export interface IGetPriceRequest {
 }
 
 interface ICurrency {
+	id: string;
 	name: string;
 	ticker: string;
 	price: string;
@@ -30,11 +31,11 @@ export interface IGetPriceResponse {
 	data: ICurrency[];
 }
 
-export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyDomain[] | null> {
+export async function getPrice(): Promise<ICurrencyDomain[] | null> {
 	const logger = useLogger();
 
 	try {
-		const response = await sendereRequestByType(typeSendRequest, { market });
+		const response = await senderRequestByType(typeSendRequest);
 
 		return prepareResponse(response);
 	} catch (error) {
@@ -43,23 +44,20 @@ export async function getPrice({ market }: IGetPriceRequest): Promise<ICurrencyD
 	}
 }
 
-function sendereRequestByType(
+function senderRequestByType(
 	type: TypeSendRequest,
-	{ market }: IGetPriceRequest,
 ): Promise<IGetPriceResponse> {
 	const httpService = useHttpService();
 
 	switch (type) {
 		case TypeSendRequest.Prod:
-			return httpService.get<IGetPriceResponse>('https://gateway.planet9.uk/price', {
-				query: { market },
-			});
+			return httpService.get<IGetPriceResponse>('https://gateway.planet9.uk/price');
 		case TypeSendRequest.MockLocal:
-			return getMockData(market);
+			return getMockData();
 		case TypeSendRequest.MockServer:
 			return httpService.get<IGetPriceResponse>('/api/price');
 		default:
-			return getMockData(market);
+			return getMockData();
 	}
 }
 
@@ -67,18 +65,21 @@ function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
 	return response.data.map(currency => currency.market === 'forex' && currency.domain ? {
 		...currency,
 		srcImage: [
-			getImagePath(currency.ticker, ImageTypePath.Currency),
-			getImagePath(currency.domain, ImageTypePath.Currency),
+			getImagePath(currency.ticker, ImageTypePath.Stock),
+			getImagePath(currency.domain, ImageTypePath.Stock),
 		],
 	} : {
 		...currency,
-		srcImage: getImagePath(currency.ticker, ImageTypePath.Currency),
+		srcImage: currency.market !== 'crypto' ?
+			getImagePath(currency.ticker, ImageTypePath.Stock) :
+			getImagePath(currency.ticker, ImageTypePath.Currency),
 	});
 }
 
-async function getMockData(market: string): Promise<IGetPriceResponse> {
+async function getMockData(): Promise<IGetPriceResponse> {
 	const allMockData: ICurrency[] = [
 		{
+			id: generateTimestampId(),
 			ticker: 'BTC',
 			name: 'Bitcoin',
 			price: '$86,945.83',
@@ -87,6 +88,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'ADA',
 			name: 'Cardano',
 			price: '$2,166.88',
@@ -95,6 +97,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'BNB',
 			name: 'BNB',
 			price: '$583.99',
@@ -103,6 +106,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'SOL',
 			name: 'Solana',
 			price: '$143.08',
@@ -111,6 +115,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'ETH',
 			name: 'Ethereum',
 			price: '$3,245.67',
@@ -119,6 +124,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'TRX',
 			name: 'Tron',
 			price: '$2.4552',
@@ -127,6 +133,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'crypto',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'AAPL',
 			name: 'Apple Inc.',
 			price: '$185.92',
@@ -135,6 +142,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'MSFT',
 			name: 'Microsoft Corp.',
 			price: '$342.15',
@@ -143,6 +151,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'GOOGL',
 			name: 'Alphabet Inc.',
 			price: '$138.45',
@@ -151,6 +160,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'TSLA',
 			name: 'Tesla Inc.',
 			price: '$248.73',
@@ -159,6 +169,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'NVDA',
 			name: 'NVIDIA Corp.',
 			price: '$875.34',
@@ -167,6 +178,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'META',
 			name: 'Meta Platforms',
 			price: '$295.67',
@@ -175,6 +187,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'industry',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'XAU',
 			name: 'Gold',
 			price: '$2,300.00',
@@ -183,6 +196,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'something',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'XAG',
 			name: 'Silver',
 			price: '$29.00',
@@ -191,6 +205,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'something',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'WTI',
 			name: 'Crude Oil',
 			price: '$75.00',
@@ -199,6 +214,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			market: 'something',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'EUR',
 			name: 'EUR/USD',
 			price: '$1.03717',
@@ -208,6 +224,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			domain: 'USD',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'GBP',
 			name: 'GBP/USD',
 			price: '$1.26534',
@@ -217,6 +234,7 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 			domain: 'USD',
 		},
 		{
+			id: generateTimestampId(),
 			ticker: 'JPY',
 			name: 'USD/JPY',
 			price: '¥150.25',
@@ -231,11 +249,8 @@ async function getMockData(market: string): Promise<IGetPriceResponse> {
 		setTimeout(resolve, 100); // Simulate network delay
 	});
 
-	// Filter data based on the requested market
-	const filteredData = allMockData.filter(currency => currency.market === market);
-
 	const response: IGetPriceResponse = {
-		data: filteredData,
+		data: allMockData,
 	};
 
 	return response;

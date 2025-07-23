@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import draggableComponent from 'vuedraggable';
 import { storeToRefs } from 'pinia';
 
 import type { ICurrency } from '../model';
 import { usePriceStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { compareStrings } from '@/shared/lib';
 
 import CellComponent from './cell-component.vue';
 import PriceHeader from './header/price-header.vue';
@@ -16,15 +17,15 @@ interface IViewComponentProps {
 	meta: IMeta;
 }
 
-
 const props = defineProps<IViewComponentProps>();
+const priceStore = usePriceStore();
 
 const layout = ref(props.currencies);
 
-watch(() => props.currencies, (newVal) => {
-	layout.value = newVal;
+watch(() => priceStore.activeMarket.value, () => {
+	layout.value = props.currencies.filter((item) => compareStrings(item.market, priceStore.activeMarket.value));
 }, {
-	deep:true,
+	immediate: true,
 });
 
 const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDescription } =
@@ -47,14 +48,14 @@ const gridTemplateContent = computed(() => {
 
 const isShowPriceChart = ref(false);
 
-function showChart(_item: ICurrency) {
-	isShowPriceChart.value = true;
-}
+watchEffect(() => {
+	isShowPriceChart.value = !!priceStore.activeCurrency;
+});
 </script>
 
 <template>
 	<div :class="classes.root">
-		<price-header />
+		<price-header :currencies="currencies" :meta="meta" />
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<transition
@@ -64,7 +65,7 @@ function showChart(_item: ICurrency) {
 					:leave-to-class="classes.sectionLeaveTo"
 				>
 					<draggable-component
-						v-if="!isShowPriceChart"
+						v-if="!isShowPriceChart || (meta.size.w < 3 || meta.size.h < 8)"
 						v-model="layout"
 						item-key="ticker"
 						:filter="`.price-no-drag`"
@@ -77,7 +78,6 @@ function showChart(_item: ICurrency) {
 							<cell-component
 								:currency="element"
 								:meta="meta"
-								@click="showChart(element)"
 							/>
 						</template>
 					</draggable-component>

@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 
 import type {
 	IModalFilterTicker,
-	IModalFilterTickerLists,
 } from '../../base/modal/model';
 
 export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
@@ -11,15 +10,13 @@ export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 
 	const isShowChart = ref(true);
 
-	const tickerLists = ref<IModalFilterTickerLists>({});
+	const tickerLists = ref<IModalFilterTicker[]>([]);
 
 	const activeTickersList = computed<IModalFilterTicker[]>(() =>
-		Object.values(tickerLists.value)
-			.flat()
-			.filter(item => item.isSelected),
+		tickerLists.value.filter(item => item.isSelected),
 	);
 
-	function setTickerLists(newList: IModalFilterTickerLists) {
+	function setTickerLists(newList: IModalFilterTicker[]) {
 		tickerLists.value = newList;
 	}
 

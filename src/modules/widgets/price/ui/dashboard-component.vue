@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryPrice } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { usePriceStore } from '../stores';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -17,9 +15,8 @@ interface IWidgetComponentProps {
 }
 
 const props = defineProps<IWidgetComponentProps>();
-const { activeMarket } = storeToRefs(usePriceStore());
 
-const { data, isLoading, isError } = useQueryPrice(computed(() => activeMarket.value.value));
+const { data, isLoading, isError } = useQueryPrice();
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 </script>

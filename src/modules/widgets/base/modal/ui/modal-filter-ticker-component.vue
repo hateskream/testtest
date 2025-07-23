@@ -2,18 +2,17 @@
 import { computed, ref, toValue } from 'vue';
 
 import { ModalSearch } from '..';
-import { UiImage } from '@/shared/ui/image';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type {
 	IModalFilterTicker,
-	IModalFilterTickerLists,
 } from '../model';
 import { compareStrings } from '@/shared/lib';
 
 import ModalFilterTickerItemComponent from './modal-filter-ticker-item-component.vue';
+import TickerIcon from '@/shared/ui/ticker/ticker-icon.vue';
 
 interface IModalFilterTickerProps {
-	modelValue: IModalFilterTickerLists;
+	modelValue: IModalFilterTicker[];
 	isMultiSelect?: boolean;
 }
 
@@ -22,22 +21,35 @@ const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
 });
 
 interface IModalFilterTickerEmits {
-	(e: 'update:modelValue', data: IModalFilterTickerLists): void;
+	(e: 'update:modelValue', data: IModalFilterTicker[]): void;
 	(e: 'select', data: IModalFilterTicker): void;
 }
 
 const emits = defineEmits<IModalFilterTickerEmits>();
 
 const selectedItems = computed<IModalFilterTicker[]>(() =>
-	Object.values(props.modelValue).flat().filter(item => item.isSelected),
+	props.modelValue.filter(item => item.isSelected),
 );
 
 const totalItems = computed(() =>
-	Object.values(props.modelValue).reduce((acc, curr) => acc + curr.length, 0),
+	props.modelValue.length,
 );
 
+const listWithGroups = computed(() => {
+	return props.modelValue.reduce((acc, item) => {
+
+		if (!acc[item.type.value]) {
+			acc[item.type.value] = [];
+		}
+
+		acc[item.type.value].push(item);
+
+		return acc;
+	}, {} as { [x: string]: IModalFilterTicker[] });
+});
+
 const selectAll = ref<{ [x: string]: boolean }>(
-	Object.keys(props.modelValue).reduce((acc, curr)=> (acc[curr]= false, acc), {} as { [x: string]: boolean }),
+	Object.keys(listWithGroups.value).reduce((acc, curr) => (acc[curr] = false, acc), {} as { [x: string]: boolean }),
 );
 
 const search = ref('');
@@ -48,7 +60,7 @@ const selectedBadge = ref<'all' | 'selected'>('all');
 
 const searchList = computed(() => {
 	return Object.fromEntries(
-		Object.entries(props.modelValue)
+		Object.entries(listWithGroups.value)
 			.map(
 				([group, list]) =>
 					[
@@ -64,22 +76,28 @@ const searchList = computed(() => {
 });
 
 function handleUpdateSelect(id: string, value: boolean) {
-	const data = Object.entries(props.modelValue);
-
 	const newList = toValue(props.modelValue);
 
-	for (const [group, list] of data) {
-		const toUpdateIdx = list.findIndex(item => compareStrings(item.id, id));
+	// TODO: we can use selectedItems for unselect/select when non-multiple selecting used
+	for (let i = 0; i < newList.length; i += 1) {
+		const item = newList[i];
 
-		if (toUpdateIdx !== -1) {
-			newList[group][toUpdateIdx].isSelected = value;
+		if (props.isMultiSelect) {
+			if (compareStrings(item.id, id)) {
+				item.isSelected = value;
+				emits('select', item);
 
-			emits('select', newList[group][toUpdateIdx]);
+				break;
+			}
+		} else {
+			item.isSelected = false;
 
-			break;
+			if (compareStrings(item.id, id)) {
+				item.isSelected = value;
+				emits('select', item);
+			}
 		}
 	}
-
 
 	emits('update:modelValue', newList);
 
@@ -104,10 +122,12 @@ function handleUpdateSelect(id: string, value: boolean) {
 				:class="classes.badge"
 			>
 				<div :class="classes.badgeImageWrapper">
-					<ui-image
+
+					<ticker-icon
 						:src="item.image"
+						:ticker="item.ticker"
 						:class="classes.badgeImage"
-						replacement="/images/market/ADA.png"
+						:size="12"
 					/>
 				</div>
 				<div :class="classes.badgeTitle">
@@ -127,7 +147,7 @@ function handleUpdateSelect(id: string, value: boolean) {
 		<div :class="classes.listAllBadges">
 			<div
 				:class="[classes.listAllBadge,
-					{ [classes.listAllBadgeActive]: selectedBadge === 'all'}
+					{ [classes.listAllBadgeActive]: selectedBadge === 'all' }
 				]"
 				@click="selectedBadge = 'all'"
 			>
@@ -138,7 +158,7 @@ function handleUpdateSelect(id: string, value: boolean) {
 			<div
 				v-if="selectedItems.length > 0"
 				:class="[classes.listAllBadge,
-					{ [classes.listAllBadgeActive]: selectedBadge === 'selected'}
+					{ [classes.listAllBadgeActive]: selectedBadge === 'selected' }
 				]"
 				@click="selectedBadge = 'selected'"
 			>
@@ -149,13 +169,8 @@ function handleUpdateSelect(id: string, value: boolean) {
 		</div>
 
 		<template v-if="selectedBadge === 'all'">
-			<template
-				v-if="currentStage === ''"
-			>
-				<div
-					v-for="(list, name) in searchList"
-					:key="name"
-				>
+			<template v-if="currentStage === ''">
+				<div v-for="(list, name) in searchList" :key="name">
 					<div :class="classes.listItem">
 						<div :class="classes.listItemTitle" @click="currentStage = <string>name">{{ name }}</div>
 						<div>
@@ -172,13 +187,13 @@ function handleUpdateSelect(id: string, value: boolean) {
 							>
 								<template #image>
 									<div :class="classes.listItemDataImageWrapper">
-										<ui-image
+										<ticker-icon
 											:src="item.image"
+											:ticker="item.ticker"
 											:class="classes.listItemDataImage"
-											replacement="/images/market/ADA.png"
+											:size="24"
 										/>
 									</div>
-
 								</template>
 							</modal-filter-ticker-item-component>
 						</div>
@@ -198,7 +213,7 @@ function handleUpdateSelect(id: string, value: boolean) {
 					<div>
 						<modal-filter-ticker-item-component
 							:is-selected="selectAll[currentStage]"
-							:name="`All ${ currentStage }`"
+							:name="`All ${currentStage}`"
 							@update="
 								selectAll[currentStage] = $event
 							"
@@ -226,10 +241,11 @@ function handleUpdateSelect(id: string, value: boolean) {
 						>
 							<template #image>
 								<div :class="classes.listItemDataImageWrapper">
-									<ui-image
+									<ticker-icon
 										:src="item.image"
+										:ticker="item.ticker"
 										:class="classes.listItemDataImage"
-										replacement="/images/market/ADA.png"
+										:size="24"
 									/>
 								</div>
 
@@ -253,13 +269,13 @@ function handleUpdateSelect(id: string, value: boolean) {
 				>
 					<template #image>
 						<div :class="classes.listItemDataImageWrapper">
-							<ui-image
+							<ticker-icon
 								:src="item.image"
+								:ticker="item.ticker"
 								:class="classes.listItemDataImage"
-								replacement="/images/market/ADA.png"
+								:size="24"
 							/>
 						</div>
-
 					</template>
 				</modal-filter-ticker-item-component>
 			</div>
@@ -325,6 +341,9 @@ function handleUpdateSelect(id: string, value: boolean) {
 }
 
 .listItemDataImageWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	width: 24px;
 	height: 24px;
 }

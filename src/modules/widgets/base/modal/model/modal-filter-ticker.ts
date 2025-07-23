@@ -3,9 +3,10 @@ export interface IModalFilterTicker {
 	image: string;
 	name: string;
 	ticker: string;
+	imageType: 'icon' | 'image';
+	type: {
+		value: string;
+		name: string;
+	};
 	isSelected: boolean;
-}
-
-export interface IModalFilterTickerLists {
-	[x: string]: IModalFilterTicker[];
 }
