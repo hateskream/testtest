@@ -8,8 +8,11 @@ import 'virtual:svg-icons-register';
 
 import { router } from './router';
 import { queryClient } from '@/shared/service/query-client';
+import { validateConfig } from '@/shared/lib';
 
 import App from './app.vue';
+
+validateConfig();
 
 const app = createApp(App);
 
