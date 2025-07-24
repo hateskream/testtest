@@ -51,4 +51,11 @@ const periods = ['7D', '30D', '90D', '1Y'];
 		background: var(--color-bg-actived-base-300-actived, rgb(51 51 51 / 80%));
 	}
 }
+
+.periodItemText {
+	font-weight: 380;
+	font-size: var(--typography-headers-size-h-02, 10px);
+	color: var(--color-text-base-300, #9a9a9d);
+	letter-spacing: 0.04px;
+}
 </style>
