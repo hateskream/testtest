@@ -24,7 +24,7 @@ export interface IAltcoinSeasonRequest {
 	market: string;
 }
 
-export type Period = '1D' | '7D' | '30D' | '90D' | '365D' | IPeriodTimestamps;
+export type Period = '7D' | '30D' | '90D' | '1Y' | IPeriodTimestamps;
 
 // Дополнительные типы для работы с модулями
 export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];

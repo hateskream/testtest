@@ -9,6 +9,7 @@ import { useAltcoinSeasonStore } from '../stores';
 import BtcPerformance from './btc-performance/btc-performance.vue';
 import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';
 import WidgetLayout from './layouts/widget-layout.vue';
+import AltcoinSeasonPeriodGroup from './period-switch/altcoin-season-period-group.vue';
 
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
@@ -36,6 +37,10 @@ const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
 
 		<template #content>
 			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
+				<template #period>
+					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period!" />
+				</template>
+
 				<template #performanceRank>
 					<btc-performance  />
 				</template>

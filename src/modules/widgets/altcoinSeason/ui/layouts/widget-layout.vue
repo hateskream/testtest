@@ -78,6 +78,11 @@ const adaptiveGridAreas = computed(() => {
 	};
 });
 
+
+// const showPeriod = computed(() => {
+// 	const { columns, rows } = gridConfig.value;
+// 	return columns > 3 || rows > 3;
+// });
 </script>
 
 <template>
@@ -86,12 +91,14 @@ const adaptiveGridAreas = computed(() => {
 		:class="classes.widgetLayout"
 		:style="containerStyles"
 	>
+
+		<!-- v-if="showPeriod" -->
 		<div
 			:class="[classes.period, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.period }"
 		>
 			<slot name="period">
-
+				Period switch
 			</slot>
 		</div>
 
@@ -153,7 +160,7 @@ const adaptiveGridAreas = computed(() => {
 }
 
 .period {
-	background-color: #494949;
+	/* background-color: #494949; */
 }
 
 .performanceRank {
