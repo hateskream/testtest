@@ -40,7 +40,7 @@ build_stage:
     name: docker:28.3.2-dind
     pull_policy: if-not-present
   services:
-    - name: docker:28.3.2-dind
+    - name: docker:28.3.2dind
       pull_policy: if-not-present
   variables:
     DOCKER_TLS_CERTDIR: ""
@@ -83,7 +83,7 @@ deploy_prod:
     - echo "$DEPLOYMENT_PATH" > .git/info/sparse-checkout
     - git fetch origin main
     - git checkout -b main origin/main
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
     - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin main
