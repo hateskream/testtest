@@ -53,9 +53,9 @@ build_stage:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
-    - if: $DISABLE_BUILD == "true" || $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+      when: on_success
+    - when: never
 
 # тут отход от стандарта
 deploy_prod:
@@ -130,9 +130,9 @@ deploy_stage:
     - echo "IMAGE_TAG = $IMAGE_TAG"
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
-    - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+      when: on_success
+    - when: never
 
 
 
