@@ -37,8 +37,8 @@ const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
 
 		<template #content>
 			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
-				<template #period>
-					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period!" />
+				<template #period v-if="altcoinSeasonWidgetConfig?.period">
+					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period" />
 				</template>
 
 				<template #performanceRank>
