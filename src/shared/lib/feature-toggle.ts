@@ -6,8 +6,7 @@ function checkIsConfigValidated() {
 	}
 }
 
-export const ALL_FEATURES = [
-	'DASHBOARD_PRESETS',
+const ALL_WIDGETS = [
 	'WIDGET_ALTCOIN_SEASON',
 	'WIDGET_FEAR_GREED',
 	'WIDGET_HOT_MARKETS',
@@ -17,6 +16,13 @@ export const ALL_FEATURES = [
 	'WIDGET_PERFORMANCE',
 	'WIDGET_PRICE_LIST',
 	'WIDGET_WATCH_LIST',
+] as const;
+
+export type WidgetFeature = typeof ALL_WIDGETS[number];
+
+export const ALL_FEATURES = [
+	'DASHBOARD_PRESETS',
+	...ALL_WIDGETS,
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];
@@ -30,6 +36,10 @@ export function isFeatureEnabled(feature: FeatureName): boolean {
 
 	const envVar = import.meta.env[`VITE_FEATURE_${feature}`] as string;
 	return envVar.toLowerCase() === 'true';
+}
+
+export function getAllEnableWidgets(): WidgetFeature[] {
+	return ALL_WIDGETS.filter(feature => isFeatureEnabled(feature));
 }
 
 function validateFeatureConfig(): void {
@@ -66,9 +76,7 @@ export type EnvironmentName = typeof EnvironmentName[keyof typeof EnvironmentNam
 export function getEnvironmentName(): EnvironmentName {
 	checkIsConfigValidated();
 
-	const envVar = import.meta.env['VITE_ENVIRONMENT'] as string;
-
-	throw new Error(`Unknown environment: ${envVar}`);
+	return import.meta.env['VITE_ENVIRONMENT'] as EnvironmentName;
 }
 
 function validateEnvironmentConfig(): void {

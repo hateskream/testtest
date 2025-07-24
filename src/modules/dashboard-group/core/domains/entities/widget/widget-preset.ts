@@ -1,3 +1,4 @@
+import { EnvironmentName, getAllEnableWidgets, getEnvironmentName, type WidgetFeature } from '@/shared/lib';
 import type { ISize } from './size';
 import { createWidgetTypeFromString, WidgetType } from './widget-type';
 
@@ -10,68 +11,79 @@ interface IPresetOptions {
 	defaultSize: ISize;
 }
 
-const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
-	[WidgetType.FearGreed]: {
-		name: 'Fear & Greed',
-		description: 'Market sentiment index',
-		minSize: { w: 1, h: 2 },
-		maxSize: { w: 2, h: 6 },
-		defaultSize: { w: 1, h: 3 },
-	},
-	[WidgetType.Market]: {
-		name: 'Market',
-		description: 'Candlestick formations and price action analysis.',
-		minSize: { w: 2, h: 4 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 4, h: 6 },
-	},
-	[WidgetType.Price]: {
-		name: 'Price',
-		description: 'Real-time crypto price and chart',
-		minSize: { w: 1, h: 3 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 2, h: 4 },
-	},
-	[WidgetType.News]: {
-		name: 'News',
-		description: 'Stay in the know',
-		minSize: { w: 2, h: 4 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 2, h: 8 },
-	},
-	[WidgetType.Watchlist]: {
-		name: 'Watchlist',
-		description: 'Watchlist',
-		minSize: { w: 2, h: 4 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 2, h: 6 },
-	},
-	[WidgetType.HotMarkets]: {
-		name: 'Hot Markets',
-		description: 'Favorite symbols',
-		minSize: { w: 2, h: 4 }, // TODO сделать по дизайну
-		maxSize: { w: Infinity, h: Infinity }, // TODO сделать по дизайну
-		defaultSize: { w: 2, h: 6 }, // TODO сделать по дизайну
-	},
-	[WidgetType.Performance]: {
-		name: 'Performance',
-		description: 'Performance',
-		minSize: { w: 2, h: 4 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 4, h: 9 },
-	},
-	[WidgetType.MarketCap]: {
-		name: 'MarketCap',
-		description: 'MarketCap',
-		minSize: { w: 1, h: 3 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 3, h: 7 }, // так вставить в пресет дашборда
-	},
-	[WidgetType.AltcoinSeason]: {
-		name: 'Altcoin Season',
-		description: 'Altcoin season',
+type Preset = Omit<IPresetOptions, 'widgetType'>;
+type AllPresets = Record<WidgetType, Preset>;
+type Presets = Partial<Record<WidgetType, Preset>>;
 
-		/*
+const FearGreed: Preset = {
+	name: 'Fear & Greed',
+	description: 'Market sentiment index',
+	minSize: { w: 1, h: 2 },
+	maxSize: { w: 2, h: 6 },
+	defaultSize: { w: 1, h: 3 },
+};
+
+const Market: Preset = {
+	name: 'Market',
+	description: 'Candlestick formations and price action analysis.',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 4, h: 6 },
+};
+
+const Price: Preset = {
+	name: 'Price',
+	description: 'Real-time crypto price and chart',
+	minSize: { w: 1, h: 3 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 4 },
+};
+
+const News: Preset = {
+	name: 'News',
+	description: 'Stay in the know',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 8 },
+};
+
+const Watchlist: Preset = {
+	name: 'Watchlist',
+	description: 'Watchlist',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 6 },
+};
+
+const HotMarkets: Preset = {
+	name: 'Hot Markets',
+	description: 'Favorite symbols',
+	minSize: { w: 2, h: 4 }, // TODO сделать по дизайну
+	maxSize: { w: Infinity, h: Infinity }, // TODO сделать по дизайну
+	defaultSize: { w: 2, h: 6 }, // TODO сделать по дизайну
+};
+
+const Performance: Preset = {
+	name: 'Performance',
+	description: 'Performance',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 4, h: 9 },
+};
+
+const MarketCap: Preset = {
+	name: 'MarketCap',
+	description: 'MarketCap',
+	minSize: { w: 1, h: 3 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 3, h: 7 }, // так вставить в пресет дашборда
+};
+
+const AltcoinSeason: Preset = {
+	name: 'Altcoin Season',
+	description: 'Altcoin season',
+
+	/*
 			real sizes
 
 			minSize: { w: 2, h: 3 },
@@ -79,11 +91,87 @@ const PRESETS: Record<WidgetType, Omit<IPresetOptions, 'widgetType'>> = {
 			defaultSize: { w: 2, h: 14 },
 		*/
 
-		minSize: { w: 2, h: 3 },
-		maxSize: { w: Infinity, h: Infinity },
-		defaultSize: { w: 2, h: 3 },
-	},
+	minSize: { w: 2, h: 3 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 3 },
 };
+
+const ProdPresets: AllPresets = {
+	[WidgetType.FearGreed]: FearGreed,
+	[WidgetType.Market]: Market,
+	[WidgetType.Price]: Price,
+	[WidgetType.News]: News,
+	[WidgetType.Watchlist]: Watchlist,
+	[WidgetType.HotMarkets]: HotMarkets,
+	[WidgetType.Performance]: Performance,
+	[WidgetType.MarketCap]: MarketCap,
+	[WidgetType.AltcoinSeason]: AltcoinSeason,
+};
+
+const DevPresets: AllPresets = {
+	[WidgetType.FearGreed]: FearGreed,
+	[WidgetType.Market]: Market,
+	[WidgetType.Price]: Price,
+	[WidgetType.News]: News,
+	[WidgetType.Watchlist]: Watchlist,
+	[WidgetType.HotMarkets]: HotMarkets,
+	[WidgetType.Performance]: Performance,
+	[WidgetType.MarketCap]: MarketCap,
+	[WidgetType.AltcoinSeason]: AltcoinSeason,
+};
+
+const DemoPresets: AllPresets = {
+	[WidgetType.FearGreed]: FearGreed,
+	[WidgetType.Market]: Market,
+	[WidgetType.Price]: Price,
+	[WidgetType.News]: News,
+	[WidgetType.Watchlist]: Watchlist,
+	[WidgetType.HotMarkets]: HotMarkets,
+	[WidgetType.Performance]: Performance,
+	[WidgetType.MarketCap]: MarketCap,
+	[WidgetType.AltcoinSeason]: AltcoinSeason,
+};
+
+function getCurrentPresets(): AllPresets {
+	const environment = getEnvironmentName();
+
+	switch (environment) {
+		case EnvironmentName.DEV:
+			return DevPresets;
+		case EnvironmentName.DEMO:
+			return DemoPresets;
+		case EnvironmentName.PROD:
+			return ProdPresets;
+		default:
+			throw new Error(`Unknown environment: ${environment}`);
+	}
+}
+
+export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
+	'WIDGET_ALTCOIN_SEASON': WidgetType.AltcoinSeason,
+	'WIDGET_FEAR_GREED': WidgetType.FearGreed,
+	'WIDGET_HOT_MARKETS': WidgetType.HotMarkets,
+	'WIDGET_MARKET': WidgetType.Market,
+	'WIDGET_MARKET_CAP': WidgetType.MarketCap,
+	'WIDGET_NEWS': WidgetType.News,
+	'WIDGET_PERFORMANCE': WidgetType.Performance,
+	'WIDGET_PRICE_LIST': WidgetType.Price,
+	'WIDGET_WATCH_LIST': WidgetType.Watchlist,
+};
+
+function getPresets(): Presets {
+	const currentPresets = getCurrentPresets();
+	const enableWidgets = getAllEnableWidgets();
+
+	const result: Partial<AllPresets> = {};
+
+	for (const featureWidget of enableWidgets) {
+		const widgetType = FEATURE_TO_WIDGET_TYPE[featureWidget];
+		result[widgetType] = currentPresets[widgetType];
+	}
+
+	return result;
+}
 
 // размеры будущих виджетов
 
@@ -156,8 +244,13 @@ export class PresetWidget {
 	}
 
 	private static getOptions(widgetType: WidgetType): IPresetOptions {
+		const preset = getPresets()[widgetType];
+		if (!preset) {
+			throw new Error(`Preset not found for widget type: ${widgetType}`);
+		}
+
 		return {
-			...PRESETS[widgetType],
+			...preset,
 			widgetType,
 		};
 	}
@@ -169,6 +262,8 @@ export class PresetWidget {
 	}
 
 	static allWidgets(): PresetWidget[] {
-		return Object.values(WidgetType).map(PresetWidget.create);
+		const presets = getPresets();
+
+		return Object.keys(presets).map(PresetWidget.create);
 	}
 }
