@@ -4,6 +4,9 @@ import { DashboardGroup } from '../../../domains/entities';
 import { DashboardGroupSchema, type DashboardGroup as DashboardGroupModel } from '../../validate';
 import { FailedParse, NotInitialized } from './error';
 import { Widget } from '@/modules/dashboard-group/core/domains/entities/widget';
+import { useStorageVersion } from '@/shared/composables/use-storage-version';
+
+const { compareVersions, updateVersion, clearAllCookies, clearLocalStorage } = useStorageVersion();
 
 export interface IOptions {
 	isSaveChange: boolean;
@@ -19,7 +22,15 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	}
 
 	public init() {
-		const raw = localStorage.getItem(this.storageKey);
+		let raw = localStorage.getItem(this.storageKey);
+
+		if (!compareVersions()) {
+			clearAllCookies();
+			clearLocalStorage();
+
+			updateVersion();
+			raw = null;
+		}
 
 		if (raw === null) {
 			const dashboardGroup = DashboardGroup.create();
