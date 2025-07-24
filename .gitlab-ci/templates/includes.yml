@@ -30,7 +30,7 @@ build_prod:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
-    - if: if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_BUILD != "true" && $SKIP_ALL_JOBS != "true")'
+    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_BUILD != "true" && $SKIP_ALL_JOBS != "true")'
       when: never
     - when: on_success
 
