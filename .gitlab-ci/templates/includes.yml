@@ -2,7 +2,7 @@ stages:
   - setup
   - lint
   - build_and_deploy
-	- deploy
+  - deploy
   - dummy
 
 include:
