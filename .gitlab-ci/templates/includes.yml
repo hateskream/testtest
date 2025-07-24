@@ -72,7 +72,7 @@ deploy_prod:
     DEPLOYMENT_PATH: $DEPLOYMENT_PATH_PROD
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
-    - export IMAGE_TAG="$CI_PIPELINE_IID"
+#    - export IMAGE_TAG="$CI_PIPELINE_IID"
     - apk add --no-cache git
     - git init repo
     - cd repo
