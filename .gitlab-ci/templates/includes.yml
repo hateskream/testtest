@@ -8,6 +8,9 @@ include:
   - local: .gitlab-ci/snippets/setup.yml
   - local: .gitlab-ci/snippets/lint.yml
 
+variables:
+  DEPLOYMENT_PATH_PROD: "prod/frontend/deployment.yaml"
+
 build_prod:
   stage: build_and_deploy
   image:
@@ -71,7 +74,7 @@ deploy_prod:
     DEPLOYMENT_PATH: $DEPLOYMENT_PATH_PROD
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
-    - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
+    - export IMAGE_TAG="$CI_PIPELINE_IID"
     - apk add --no-cache git
     - git init repo
     - cd repo
@@ -107,8 +110,6 @@ deploy_stage:
       artifacts: false
   variables:
     IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-    ENVIRONMENT: stage
-    DEPLOYMENT_PATH: $DEPLOYMENT_PATH_STAGE
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
@@ -122,15 +123,15 @@ deploy_stage:
     - echo "$DEPLOYMENT_PATH" > .git/info/sparse-checkout
     - git fetch origin main
     - git checkout -b main origin/main
-    - 'echo "image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG| $DEPLOYMENT_PATH"'
-    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - 'echo "image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG| $DEPLOYMENT_PATH"'
+    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
     - git add "$DEPLOYMENT_PATH"
-    - git commit -m "Update image tag to $ENVIRONMENT-$IMAGE_TAG [ci skip]" || echo "No changes to commit"
+    - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin main
     - echo "Debug:"
     - echo "DEPLOYMENT_PATH = $DEPLOYMENT_PATH"
     - echo "CI_REGISTRY_IMAGE = $CI_REGISTRY_IMAGE"
-    - echo "IMAGE_TAG = $ENVIRONMENT-$IMAGE_TAG"
+    - echo "IMAGE_TAG = $IMAGE_TAG"
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
     - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
