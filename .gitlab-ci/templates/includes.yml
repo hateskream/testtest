@@ -8,6 +8,9 @@ include:
   - local: .gitlab-ci/snippets/setup.yml
   - local: .gitlab-ci/snippets/lint.yml
 
+variables:
+  DEPLOYMENT_PATH_PROD: "prod/frontend/deployment.yaml"
+
 build_prod:
   stage: build_and_deploy
   image:
@@ -18,19 +21,18 @@ build_prod:
       pull_policy: if-not-present
   variables:
     DOCKER_TLS_CERTDIR: ""
-    IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-    ENVIRONMENT: prod
+    IMAGE_TAG: prod-$CI_PIPELINE_IID
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
-    - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
-    - docker build -t $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG
+#    - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
+#    - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
+    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
-    - if: $DISABLE_BUILD == "true" || $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_BUILD != "true" && $SKIP_ALL_JOBS != "true")'
+      when: on_success
+    - when: never
 
 build_stage:
   stage: build_and_deploy
@@ -43,19 +45,19 @@ build_stage:
   variables:
     DOCKER_TLS_CERTDIR: ""
     IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-    ENVIRONMENT: stage
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
-    - docker build -t $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG
+    - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
     - if: $DISABLE_BUILD == "true" || $SKIP_ALL_JOBS == "true"
       when: never
     - when: on_success
 
+# тут отход от стандарта
 deploy_prod:
   stage: build_and_deploy
   image:
@@ -66,12 +68,10 @@ deploy_prod:
     - job: build_prod
       artifacts: false
   variables:
-    IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-    ENVIRONMENT: prod
-    DEPLOYMENT_PATH: $DEPLOYMENT_PATH_PROD
+    IMAGE_TAG: prod-$CI_PIPELINE_IID
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
-    - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
+#    - export IMAGE_TAG="$CI_PIPELINE_IID"
     - apk add --no-cache git
     - git init repo
     - cd repo
@@ -79,22 +79,22 @@ deploy_prod:
     - git config user.name "GitLab CI"
     - git remote add origin https://oauth2:$GITLAB_TOKEN@gitlab.planet9.uk/devops/k8s-manifests.git
     - git config core.sparseCheckout true
-    - echo "$DEPLOYMENT_PATH" > .git/info/sparse-checkout
+    - echo "$DEPLOYMENT_PATH_PROD" > .git/info/sparse-checkout
     - git fetch origin main
     - git checkout -b main origin/main
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:prod-$IMAGE_TAG|" $DEPLOYMENT_PATH'
-    - git add "$DEPLOYMENT_PATH"
-    - git commit -m "Update image tag to prod-$IMAGE_TAG [ci skip]" || echo "No changes to commit"
+    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - git add "$DEPLOYMENT_PATH_PROD"
+    - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin main
     - echo "Debug:"
-    - echo "DEPLOYMENT_PATH = $DEPLOYMENT_PATH"
+    - echo "DEPLOYMENT_PATH = $DEPLOYMENT_PATH_PROD"
     - echo "CI_REGISTRY_IMAGE = $CI_REGISTRY_IMAGE"
-    - echo "IMAGE_TAG = prod-$IMAGE_TAG"
+    - echo "IMAGE_TAG = $IMAGE_TAG"
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
-    - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
-      when: never
-    - when: on_success
+    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+      when: on_success
+    - when: never
 
 deploy_stage:
   stage: build_and_deploy
@@ -107,8 +107,6 @@ deploy_stage:
       artifacts: false
   variables:
     IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-    ENVIRONMENT: stage
-    DEPLOYMENT_PATH: $DEPLOYMENT_PATH_STAGE
   script:
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
@@ -122,15 +120,16 @@ deploy_stage:
     - echo "$DEPLOYMENT_PATH" > .git/info/sparse-checkout
     - git fetch origin main
     - git checkout -b main origin/main
-    - 'echo "image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG| $DEPLOYMENT_PATH"'
-    - 'sed -i "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$ENVIRONMENT-$IMAGE_TAG|" $DEPLOYMENT_PATH'
+    - echo "DEPLOYMENT_PATH = $DEPLOYMENT_PATH"
+    - 'echo "image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG| $DEPLOYMENT_PATH"'
+    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_PATH'
     - git add "$DEPLOYMENT_PATH"
-    - git commit -m "Update image tag to $ENVIRONMENT-$IMAGE_TAG [ci skip]" || echo "No changes to commit"
+    - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
     - git push origin main
     - echo "Debug:"
     - echo "DEPLOYMENT_PATH = $DEPLOYMENT_PATH"
     - echo "CI_REGISTRY_IMAGE = $CI_REGISTRY_IMAGE"
-    - echo "IMAGE_TAG = $ENVIRONMENT-$IMAGE_TAG"
+    - echo "IMAGE_TAG = $IMAGE_TAG"
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
     - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"

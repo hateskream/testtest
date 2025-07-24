@@ -1,10 +1,12 @@
 import path from 'path';
+import { readFileSync } from 'fs';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import vueDevTools from 'vite-plugin-vue-devtools';
 
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
@@ -15,6 +17,10 @@ export default defineConfig({
 		}),
 		vueDevTools(),
 	],
+	define: {
+		// eslint-disable-next-line @typescript-eslint/naming-convention
+		__APP_VERSION__: JSON.stringify(pkg.version),
+	},
 	resolve: {
 		alias: {
 			'@': path.resolve('src/'),
