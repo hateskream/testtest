@@ -9,7 +9,7 @@ include:
   - local: .gitlab-ci/snippets/lint.yml
 
 build_prod:
-    stage: build_and_deploy
+  stage: build_and_deploy
   image:
     name: docker:28.3.2-dind
     pull_policy: if-not-present
