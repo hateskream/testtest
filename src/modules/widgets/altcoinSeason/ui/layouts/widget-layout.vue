@@ -52,8 +52,8 @@ const adaptiveGridAreas = computed(() => {
 			period: '1 / 1 / 2 / -1',
 			performanceRank: '2 / 1 / 5 / 3',
 			historicalValues: '2 / 3 / 5 / 5',
-			top100: '2 / 5 / -1 / -1',
 			chart: '5 / 1 / -1 / 5',
+			top100: '2 / 5 / -1 / -1',
 		};
 	}
 
@@ -63,7 +63,7 @@ const adaptiveGridAreas = computed(() => {
 
 			performanceRank: '2 / 1 / 5 / 3',
 			historicalValues: '2 / 3 / 5 / -1',
-			chart: '8 / 1 / 13 / -1',
+			chart: '5 / 1 / -1 / -1',
 			top100: '13 / 1 / -1 / -1',
 		};
 	}
@@ -73,7 +73,7 @@ const adaptiveGridAreas = computed(() => {
 
 		performanceRank: '2 / 1 / 5 / -1',
 		historicalValues: '5 / 1 / 8 / -1',
-		chart: '8 / 1 / 13 / -1',
+		chart: '8 / 1 / -1 / -1',
 		top100: '13 / 1 / -1 / -1',
 	};
 });
