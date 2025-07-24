@@ -125,7 +125,7 @@ deploy_stage:
     - ls -l "$DEPLOYMENT_PATH"
     - cat $DEPLOYMENT_PATH
     - 'echo "image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG| $DEPLOYMENT_PATH"'
-    - 'sed -i "" "s|image: $(echo $CI_REGISTRY_IMAGE | sed 's/:/\\:/g'):.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" "$DEPLOYMENT_PATH" || (echo "sed failed" && exit 1)'
+    - 'sed -i "" "s|image: $(echo $CI_REGISTRY_IMAGE | sed 's/:/\\:/g'):.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" "$DEPLOYMENT_PATH"'
 #    - 'sed -i "" "s|image: $CI_REGISTRY_IMAGE:.*|image: $CI_REGISTRY_IMAGE:$IMAGE_TAG|" "$DEPLOYMENT_PATH"'
     - git add "$DEPLOYMENT_PATH"
     - git commit -m "Update image tag to $IMAGE_TAG [ci skip]" || echo "No changes to commit"
