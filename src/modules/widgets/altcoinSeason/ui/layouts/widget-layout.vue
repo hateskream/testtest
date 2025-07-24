@@ -44,45 +44,71 @@ const containerStyles = computed(() => {
 	return styles;
 });
 
+const showPeriod = computed(() => {
+	const { columns, rows } = gridConfig.value;
+	return columns > 3 || rows > 3;
+});
+
 const adaptiveGridAreas = computed(() => {
 	const { columns, rows } = gridConfig.value;
+	const periodVisible = showPeriod.value;
 
 	if (columns === 7 && rows >= 10) {
-		return {
-			period: '1 / 1 / 2 / -1',
-			performanceRank: '2 / 1 / 5 / 3',
-			historicalValues: '2 / 3 / 5 / 5',
-			chart: '5 / 1 / -1 / 5',
-			top100: '2 / 5 / -1 / -1',
-		};
+		if (periodVisible) {
+			return {
+				period: '1 / 1 / 2 / -1',
+				performanceRank: '2 / 1 / 5 / 3',
+				historicalValues: '2 / 3 / 5 / 5',
+				chart: '5 / 1 / -1 / 5',
+				top100: '2 / 5 / -1 / -1',
+			};
+		} else {
+			return {
+				performanceRank: '1 / 1 / 4 / 3',
+				historicalValues: '1 / 3 / 4 / 5',
+				chart: '4 / 1 / -1 / 5',
+				top100: '1 / 5 / -1 / -1',
+			};
+		}
 	}
 
 	if (columns === 4) {
-		return {
-			period: '1 / 1 / 2 / -1',
-
-			performanceRank: '2 / 1 / 5 / 3',
-			historicalValues: '2 / 3 / 5 / -1',
-			chart: '5 / 1 / -1 / -1',
-			top100: '13 / 1 / -1 / -1',
-		};
+		if (periodVisible) {
+			return {
+				period: '1 / 1 / 2 / -1',
+				performanceRank: '2 / 1 / 5 / 3',
+				historicalValues: '2 / 3 / 5 / -1',
+				chart: '5 / 1 / -1 / -1',
+				top100: '13 / 1 / -1 / -1',
+			};
+		} else {
+			return {
+				performanceRank: '1 / 1 / 4 / 3',
+				historicalValues: '1 / 3 / 4 / -1',
+				chart: '4 / 1 / -1 / -1',
+				top100: '12 / 1 / -1 / -1',
+			};
+		}
 	}
 
-	return {
-		period: '1 / 1 / 2 / -1',
-
-		performanceRank: '2 / 1 / 5 / -1',
-		historicalValues: '5 / 1 / 8 / -1',
-		chart: '8 / 1 / -1 / -1',
-		top100: '13 / 1 / -1 / -1',
-	};
+	// default (columns 2 or other)
+	if (periodVisible) {
+		return {
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / -1',
+			historicalValues: '5 / 1 / 8 / -1',
+			chart: '8 / 1 / -1 / -1',
+			top100: '13 / 1 / -1 / -1',
+		};
+	} else {
+		return {
+			performanceRank: '1 / 1 / 4 / -1',
+			historicalValues: '4 / 1 / 7 / -1',
+			chart: '7 / 1 / -1 / -1',
+			top100: '12 / 1 / -1 / -1',
+		};
+	}
 });
-
-
-// const showPeriod = computed(() => {
-// 	const { columns, rows } = gridConfig.value;
-// 	return columns > 3 || rows > 3;
-// });
 </script>
 
 <template>
@@ -92,8 +118,8 @@ const adaptiveGridAreas = computed(() => {
 		:style="containerStyles"
 	>
 
-		<!-- v-if="showPeriod" -->
 		<div
+			v-if="showPeriod"
 			:class="[classes.period, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.period }"
 		>
