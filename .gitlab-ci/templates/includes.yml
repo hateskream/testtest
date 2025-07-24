@@ -59,6 +59,7 @@ build_stage:
       when: never
     - when: on_success
 
+# тут отход от стандарта
 deploy_prod:
   stage: build_and_deploy
   image:
@@ -69,7 +70,7 @@ deploy_prod:
     - job: build_prod
       artifacts: false
   variables:
-    IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+    IMAGE_TAG: $CI_PIPELINE_IID
     ENVIRONMENT: prod
     DEPLOYMENT_PATH: $DEPLOYMENT_PATH_PROD
   script:
