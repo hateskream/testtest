@@ -40,7 +40,7 @@ build_stage:
     name: docker:28.3.2-dind
     pull_policy: if-not-present
   services:
-    - name: docker:28.3.2dind
+    - name: docker:28.3.2-dind
       pull_policy: if-not-present
   variables:
     DOCKER_TLS_CERTDIR: ""
