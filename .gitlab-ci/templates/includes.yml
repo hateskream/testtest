@@ -67,8 +67,8 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
 # временный костыль с cp
-    - ls .envs -AR
-    - cp .envs/front_config/.env.dev .env
+    - ls .gitlab-ci/ -AR
+    - cp .gitlab-ci/front_config/.env.dev .env
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
@@ -94,7 +94,7 @@ build_prod:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
 # временный костыль с cp
-    - cp .envs/front_config/.env.prod .env
+    - cp .gitlab-ci/front_config/.env.prod .env
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
@@ -117,7 +117,7 @@ build_stage:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
 # временный костыль с cp
-    - cp .envs/front_config/.env.stage .env
+    - cp .gitlab-ci/front_config/.env.stage .env
     - CI_COMMIT_SANITIZED="${CI_COMMIT_REF_NAME//\//-}"
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
