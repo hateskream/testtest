@@ -16,5 +16,6 @@ RUN npm run build
 # Stage 2
 FROM nginx:1.28.0-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder .gitlab-ci/envs/front_config /envs/front_config
 COPY .nginx/config.conf /etc/nginx/conf.d/config.conf
 EXPOSE 8082
