@@ -47,9 +47,9 @@ deploy:
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
 
   rules:
-    - if: '$CI_COMMIT_BRANCH != "main" && ($DISABLE_BUILD != "true" && $SKIP_ALL_JOBS != "true")'
-      when: on_success
-    - when: never
+    - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
+      when: never
+    - when: on_success
 
 build:
   stage: build_and_deploy
@@ -70,9 +70,9 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   rules:
-    - if: '$CI_COMMIT_BRANCH != "main" && ($DISABLE_BUILD != "true" && $SKIP_ALL_JOBS != "true")'
-      when: on_success
-    - when: never
+    - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
+      when: never
+    - when: on_success
 
 # тут отход от стандарта, надо в перспективе объединить *_prod и *_stage, т.к. разница только в одной переменной
 build_prod:
