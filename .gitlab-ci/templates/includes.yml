@@ -164,9 +164,9 @@ deploy_stage:
     name: alpine:3.22.1
     pull_policy: if-not-present
   dependencies: []
-   needs:
-     - job: build_stage
-       artifacts: false
+  needs:
+    - job: build_stage
+      artifacts: false
   variables:
     IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
   script:
