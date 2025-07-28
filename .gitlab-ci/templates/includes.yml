@@ -162,7 +162,8 @@ deploy_prod:
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
-      when: on_success
+      when: manual
+      allow_failure: false
     - when: never
 
 deploy_stage:
