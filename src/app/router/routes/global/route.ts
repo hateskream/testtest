@@ -21,4 +21,9 @@ export const testRoutes = [
 		name: RouteNames.Automobile,
 		component: () => import('@/pages/automobiles-page.vue'),
 	},
+	{
+		path: RoutePaths.Heatmap,
+		name: RouteNames.Heatmap,
+		component: () => import('@/pages/heatmap-page.vue'),
+	},
 ];
