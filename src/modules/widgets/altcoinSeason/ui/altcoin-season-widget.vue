@@ -10,6 +10,7 @@ import BtcPerformance from './btc-performance/btc-performance.vue';
 import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';
 import WidgetLayout from './layouts/widget-layout.vue';
 import AltcoinSeasonPeriodGroup from './period-switch/altcoin-season-period-group.vue';
+import HistoricalValue from './historical-value/historical-value.vue';
 
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
@@ -25,6 +26,14 @@ onMounted(() => {
 });
 
 const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
+
+
+const metaPerformance = computed(() => {
+	return {
+		...props.meta,
+		name: 'Top 100 coins performance',
+	};
+});
 </script>
 
 <template>
@@ -41,12 +50,16 @@ const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
 					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period" />
 				</template>
 
-				<template #performanceRank>
-					<btc-performance  />
+				<template #performanceRank="{ showPeriod }">
+					<btc-performance :show-period="showPeriod" />
 				</template>
 
 				<template #top100>
-					<performance-widget :meta="props.meta" />
+					<performance-widget :meta="metaPerformance" />
+				</template>
+
+				<template #historicalValues="{ showPeriod }">
+					<historical-value :show-period="showPeriod" />
 				</template>
 
 			</widget-layout>

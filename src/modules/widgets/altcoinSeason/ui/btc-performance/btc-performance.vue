@@ -2,11 +2,17 @@
 import BtcPerformanceHeading from './btc-performance-heading.vue';
 import BtcPerformanceSeason from './btc-performance-season.vue';
 import BtcPerformanceChart from './btc-performance-chart.vue';
+
+interface IBtcPerformanceProps {
+	showPeriod: boolean;
+}
+
+const props = defineProps<IBtcPerformanceProps>();
 </script>
 
 <template>
 	<div :class="classes.btcPerformance">
-		<btc-performance-heading />
+		<btc-performance-heading :show-period="props.showPeriod" />
 		<btc-performance-season />
 		<btc-performance-chart />
 	</div>

@@ -4,22 +4,22 @@ import { UiPosition } from '@/shared/ui/position';
 
 import AltcoinSeasonTimeFilter from '@/modules/widgets/altcoinSeason/ui/modals/altcoin-season-time-filter.vue';
 
-interface IBtcPerformanceHeadingProps {
+interface IHistoricalValueHeadingProps {
 	showPeriod: boolean;
 }
 
-const props = defineProps<IBtcPerformanceHeadingProps>();
+const props = defineProps<IHistoricalValueHeadingProps>();
 </script>
 
 <template>
 	<div :class="classes.heading">
 		<div :class="classes.headingTitle">
-			BTC performance rank
+			Historical values
 		</div>
 
 		<ui-position
 			v-if="props.showPeriod"
-			ref="btcPerformancePositionRef"
+			ref="historicalValuePositionRef"
 			position="bottom-start"
 		>
 			<template #default="{ isVisible }">
@@ -45,7 +45,7 @@ const props = defineProps<IBtcPerformanceHeadingProps>();
 </template>
 
 <style module="classes">
-.btcPerformanceRankHeading {
+.historicalValueHeading {
 	display: flex;
 }
 

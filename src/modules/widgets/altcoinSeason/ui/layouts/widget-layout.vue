@@ -133,7 +133,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.performanceRank, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.performanceRank }"
 		>
-			<slot name="performanceRank">
+			<slot name="performanceRank" :show-period="!showPeriod">
 				Performance Rank
 			</slot>
 		</div>
@@ -143,7 +143,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.historicalValues, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.historicalValues }"
 		>
-			<slot name="historicalValues">
+			<slot name="historicalValues" :show-period="!showPeriod">
 				Historical Values
 			</slot>
 		</div>
@@ -194,7 +194,7 @@ const adaptiveGridAreas = computed(() => {
 }
 
 .historicalValues {
-	background-color: #494949;
+	/* background-color: #494949; */
 }
 
 .top100 {
