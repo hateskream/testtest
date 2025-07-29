@@ -1,36 +1,48 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
+import { toRefs } from 'vue';
 
-import { useTreemapLayout, type ITreeMapItem } from '../composable';
-import { UiImage } from '../../image';
+import { useDepth, useTreemapLayout, type ITreeMapItem } from '../composable';
 
-interface IDataItem {
+interface IDataInput {
 	ticker: string;
 	logoUrl: string;
 	value: number;
 	percentage: number;
 }
 
-interface IDataItemWithPosition extends ITreeMapItem, IDataItem {}
-
+interface IDataItem extends ITreeMapItem, IDataInput {
+	color: string;
+}
 
 interface IUiTreemap {
-	data: IDataItem[];
+	data: IDataInput[];
+	depthRange: {
+		start: number;
+		end: number;
+	};
 }
 
 const props = defineProps<IUiTreemap>();
 
-const values = computed(() => props.data.map(({ ticker, value }) => ({ value, id: ticker })));
-
 const { treemap } = useTreemapLayout(
 	useTemplateRef<HTMLCanvasElement>('treemapCanvas'),
-	values,
+	computed(() => props.data.map(({ ticker, value }) => ({ value, id: ticker }))),
 );
 
-const treemapWithData = computed<IDataItemWithPosition[]>(() => treemap.value.map(item => ({
-	...item,
-	...props.data.find(({ ticker }) => ticker === item.id)!,
-})));
+const { getColorByValue } = useDepth(toRefs(props).depthRange);
+
+const treemapWithData = computed<IDataItem[]>(() =>
+	treemap.value.map(item => {
+		const dataItem = props.data.find(({ ticker }) => ticker === item.id)!;
+
+		return {
+			...item,
+			...dataItem,
+			color: getColorByValue(dataItem.percentage),
+		};
+	}),
+);
 
 </script>
 
@@ -45,10 +57,11 @@ const treemapWithData = computed<IDataItemWithPosition[]>(() => treemap.value.ma
 				top: item.top + 'px',
 				width: item.width + 'px',
 				height: item.height + 'px',
+				backgroundColor: item.color,
 			}"
 			class="item"
 		>
-			<ui-image :src="item.logoUrl" class="item-logo" />
+			<div class="item-logo" />
 			<div class="item-ticker">{{ item.ticker }}</div>
 			<div class="item-percentage">{{ item.percentage }} %</div>
 		</div>
