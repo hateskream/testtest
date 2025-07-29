@@ -1,9 +1,15 @@
-import { CategoryScale, Chart, LinearScale, type ChartConfiguration } from 'chart.js';
+import { CategoryScale, Chart, LinearScale, Tooltip, type ChartConfiguration } from 'chart.js';
 import { TreemapController, TreemapElement, type TreemapDataPoint } from 'chartjs-chart-treemap';
 import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 import { debounce } from '@vexip-ui/utils';
 
+interface IDataItem {
+	id: string;
+	value: number;
+}
+
 export interface ITreeMapItem {
+	id: string;
 	left: number;
 	top: number;
 	height: number;
@@ -12,9 +18,9 @@ export interface ITreeMapItem {
 
 export function useTreemapLayout(
 	treemapCanvas: Ref<HTMLCanvasElement | null>,
-	data: Ref<number[]>,
+	data: Ref<IDataItem[]>,
 ) {
-	Chart.register(TreemapController, TreemapElement, LinearScale, CategoryScale);
+	Chart.register(TreemapController, TreemapElement, LinearScale, CategoryScale, Tooltip);
 
 	const treemapRaw = ref<TreemapDataPoint[]>([]);
 
@@ -22,7 +28,11 @@ export function useTreemapLayout(
 	let ctx: CanvasRenderingContext2D | null = null;
 	let resizeObserver: ResizeObserver | null = null;
 
+	const preparedData = computed(() => data.value.map(el => el.value));
+	const valueToIdMap = computed(() => new Map(data.value.map(el => [el.value, el.id])));
+
 	const treemap = computed((): ITreeMapItem[] => treemapRaw.value.map(item => ({
+		id: valueToIdMap.value.get(item.v) as string,
 		left: item.x,
 		top: item.y,
 		width: item.w,
@@ -79,7 +89,7 @@ export function useTreemapLayout(
 			data: {
 				datasets: [
 					{
-						tree: data.value,
+						tree: preparedData.value,
 						data: [],
 					},
 				],
@@ -102,7 +112,7 @@ export function useTreemapLayout(
 			return [];
 		}
 
-		renderedChart.data.datasets[0].tree = data.value;
+		renderedChart.data.datasets[0].tree = preparedData.value,
 		renderedChart.update();
 		return extractData(renderedChart);
 	}
