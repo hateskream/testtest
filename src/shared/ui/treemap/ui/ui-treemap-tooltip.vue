@@ -6,6 +6,7 @@ import { computed, useTemplateRef, watch } from 'vue';
 import { prepareNumber, preparePercent } from '../utils';
 
 const SIZE_ACTIVATOR = 10;
+const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR / 2}px`;
 const DEBOUNCE_UPDATE_POSITION = 10;
 
 const colorMapping = {
@@ -98,36 +99,35 @@ function prepareNumberValue(value: number) {
 
 <template>
 	<div
+		v-show="props.isOpen"
 		ref="floating"
-		class="root"
+		class="container"
 		:style="floatingStyles"
 	>
-		<div v-show="props.isOpen" class="container">
-			<div class="header">
-				<div class="logo" />
-				<div class="ticker">{{ props.ticker }}</div>
+		<div class="header">
+			<div class="logo" />
+			<div class="ticker">{{ props.ticker }}</div>
+		</div>
+		<div class="line" />
+		<div class="info">
+			<div class="info-item">
+				<div class="value">Price</div>
+				<div class="value">{{ props.currencySymbol }} {{ props.price }}</div>
 			</div>
-			<div class="line" />
-			<div class="info">
-				<div class="info-item">
-					<div class="value">Price</div>
-					<div class="value">{{ props.currencySymbol }} {{ props.price }}</div>
+			<div class="info-item">
+				<div class="value">{{ props.sizeBy }}</div>
+				<div class="value">{{ prepareSizeBy }}</div>
+			</div>
+			<div class="info-item">
+				<div
+					class="value"
+				>
+					{{ props.colorBy }}
 				</div>
-				<div class="info-item">
-					<div class="value">{{ props.sizeBy }}</div>
-					<div class="value">{{ prepareSizeBy }}</div>
-				</div>
-				<div class="info-item">
-					<div
-						class="value"
-					>
-						{{ props.colorBy }}
-					</div>
-					<div
-						class="value"
-						:style="styleColorBy"
-					>{{ prepareColorBy }}</div>
-				</div>
+				<div
+					class="value"
+					:style="styleColorBy"
+				>{{ prepareColorBy }}</div>
 			</div>
 		</div>
 	</div>
@@ -138,7 +138,7 @@ function prepareNumberValue(value: number) {
 	display: flex;
 	flex-direction: column;
 	width: 224px;
-	margin: 0 0 5px 5px;
+	margin: v-bind(HALF_SIZE_ACTIVATOR_PX);
 	padding: 10px;
 	background-color: #161618;
 	border: 1px solid #c7c7c71a;
