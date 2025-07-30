@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const THOUSAND = 1_000;
-const MILLION = 1_000_000;
-const BILLION = 1_000_000_000;
-const TRILLION = 1_000_000_000_000;
+import { prepareNumber, preparePercent } from '../utils';
 
 interface IVisibleConfig {
 	isShowLogo: boolean;
@@ -29,28 +26,17 @@ interface IUiTreemapItem {
 
 const props = defineProps<IUiTreemapItem>();
 
+const emit = defineEmits<{
+	(e: 'hover', ticker: string): void;
+	(e: 'unhover'): void;
+}>();
+
 const preparedValue = computed(() => {
 	if (props.visibleConfig.isPercent) {
-		return `${props.value.toFixed(2)}%`;
+		return preparePercent(props.value);
 	}
 
-	if (props.value >= TRILLION) {
-		return `${(props.value / TRILLION).toFixed(2)} T`;
-	}
-
-	if (props.value >= BILLION) {
-		return `${(props.value / BILLION).toFixed(2)} B`;
-	}
-
-	if (props.value >= MILLION) {
-		return `${(props.value / MILLION).toFixed(2)} M`;
-	}
-
-	if (props.value >= THOUSAND) {
-		return `${(props.value / THOUSAND).toFixed(2)} K`;
-	}
-
-	return props.value.toFixed(2);
+	return prepareNumber(props.value);
 });
 
 </script>
@@ -64,6 +50,8 @@ const preparedValue = computed(() => {
 			backgroundColor: props.color,
 		}"
 		class="item"
+		@mouseenter="emit('hover', props.ticker)"
+		@mouseleave="emit('unhover')"
 	>
 		<div
 			v-if="props.visibleConfig.isShowLogo"
