@@ -16,7 +16,7 @@ export interface ISettings {
 	isPercent: boolean;
 }
 
-interface IColorBy {
+export interface IColorBy {
 	colorBy: ISettings;
 	colorDepth: IColorDepth[];
 }

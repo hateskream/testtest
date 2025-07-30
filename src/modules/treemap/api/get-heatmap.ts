@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { ITreemapItem } from '../model';
+import type { ITreemap, ITreemapItem } from '../model';
 
 enum DataProvider {
 	Production,
@@ -15,7 +15,7 @@ interface IGetHeatMapRequest {
 	excludeTickers: string[];
 }
 
-export async function getHeatmap(req: IGetHeatMapRequest): Promise<ITreemapItem[] | null> {
+export async function getHeatmap(req: IGetHeatMapRequest): Promise<ITreemap | null> {
 	const logger = useLogger();
 
 	try {
@@ -31,14 +31,14 @@ export async function getHeatmap(req: IGetHeatMapRequest): Promise<ITreemapItem[
 function sendRequestByProvider(
 	type: DataProvider,
 	req: IGetHeatMapRequest,
-): Promise<ITreemapItem[]> {
+): Promise<ITreemap> {
 	const httpService = useHttpService();
 
 	const preparedTickers = req.excludeTickers.join(',');
 
 	switch (type) {
 		case DataProvider.Production:
-			return httpService.get<ITreemapItem[]>('https://gateway.planet9.uk/heatmap/settings', {
+			return httpService.get<ITreemap>('https://gateway.planet9.uk/heatmap/settings', {
 				query: {
 					market: req.market,
 					excludeTickers: preparedTickers,
@@ -47,7 +47,7 @@ function sendRequestByProvider(
 		case DataProvider.MockLocal:
 			return getMockData();
 		case DataProvider.MockServer:
-			return httpService.get<ITreemapItem[]>('/api/heatmap/settings', {
+			return httpService.get<ITreemap>('/api/heatmap/settings', {
 				query: {
 					market: req.market,
 					excludeTickers: preparedTickers,
@@ -58,10 +58,27 @@ function sendRequestByProvider(
 	}
 }
 
-async function getMockData(): Promise<ITreemapItem[]> {
+async function getMockData(): Promise<ITreemap> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	return [];
+
+	const items: ITreemapItem[] = [
+		{
+			ticker: 'BTC',
+			name: 'Bitcoin',
+			logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/BTC_Logo.svg',
+			values: {
+				marketCap: 100000,
+				change24hPercent11: 0.1,
+				price: 1000,
+			},
+		},
+	];
+
+	return {
+		items: items,
+		currencySymbol: '$',
+	};
 }

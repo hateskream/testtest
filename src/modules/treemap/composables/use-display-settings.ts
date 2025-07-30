@@ -1,7 +1,13 @@
 import { computed, reactive, watch, type Ref } from 'vue';
 import { useUrlSearchParams } from '@vueuse/core';
 
-import type { IColorDepthSetting, IDisplaySettings, IMarketSettings, ISingleSetting } from '../model';
+import type {
+	IColorBy,
+	IColorDepthSetting,
+	IDisplaySettings,
+	IMarketSettings,
+	ISingleSetting,
+} from '../model';
 
 interface IParams {
 	market?: string | undefined;
@@ -46,7 +52,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		return settings.value.find(s => s.market.id === marketSettings.active) || settings.value[0];
 	});
 
-	const activeColorByOption = computed(() => {
+	const activeColorBy = computed((): IColorBy | null => {
 		const setting = activeDisplaySettings.value;
 		if (!setting) {
 			return null;
@@ -54,15 +60,21 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		return setting.colorBy.find(c => c.colorBy.key === colorBySettings.active) || setting.colorBy[0];
 	});
 
-	function setParamIfNotDefault(paramKey: keyof IParams, value: string, defaultValue: string) {
-		params[paramKey] = value !== defaultValue ? value : undefined;
-	}
+	const activeSizeBy = computed(() => {
+		const setting = activeDisplaySettings.value;
+		if (!setting) {
+			return null;
+		}
+		return setting.sizeBy.find(s => s.key === sizeBySettings.active) || setting.sizeBy[0];
+	});
 
-	function initActive<T>(param: string | undefined, values: T[], getKey: (item: T) => string): string {
-		const defaultValue = getKey(values[0]);
-		const active = param && values.some(v => getKey(v) === param) ? param : defaultValue;
-		return active;
-	}
+	const activeColorDepth = computed(() => {
+		const setting = activeColorBy.value;
+		if (!setting) {
+			return null;
+		}
+		return setting.colorDepth.find(c => c.id === colorDepthSettings.active) || setting.colorDepth[0];
+	});
 
 	watch(settings, newSettings => {
 		if (!newSettings?.length) {
@@ -88,7 +100,9 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		colorBySettings.values = setting.colorBy.map(c => c.colorBy);
 		displayValueSettings.values = setting.displayValue;
 
-		params.market = marketSettings.active;
+		const defaultMarket = settings.value![0].market.id;
+		setParamIfNotDefault('market', marketSettings.active, defaultMarket);
+
 		params.sizeBy = undefined;
 		params.colorBy = undefined;
 		params.colorDepth = undefined;
@@ -97,9 +111,8 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		sizeBySettings.active = initActive(params.sizeBy, setting.sizeBy, s => s.key);
 		colorBySettings.active = initActive(params.colorBy, setting.colorBy, c => c.colorBy.key);
 
-		const activeColorBy = setting.colorBy.find(c => c.colorBy.key === colorBySettings.active) || setting.colorBy[0];
-		colorDepthSettings.values = activeColorBy.colorDepth;
-		colorDepthSettings.active = initActive(params.colorDepth, activeColorBy.colorDepth, d => d.id);
+		colorDepthSettings.values = activeColorBy.value!.colorDepth;
+		colorDepthSettings.active = initActive(params.colorDepth, activeColorBy.value!.colorDepth, d => d.id);
 
 		displayValueSettings.active = initActive(params.displayValue, setting.displayValue, d => d.key);
 	});
@@ -130,7 +143,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 	});
 
 	watch(() => colorDepthSettings.active, (active) => {
-		const colorBy = activeColorByOption.value;
+		const colorBy = activeColorBy.value;
 		if (!colorBy) {
 			return;
 		}
@@ -145,11 +158,24 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		setParamIfNotDefault('displayValue', active, setting.displayValue[0].key);
 	});
 
+	function setParamIfNotDefault(paramKey: keyof IParams, value: string, defaultValue: string) {
+		params[paramKey] = value !== defaultValue ? value : undefined;
+	}
+
+	function initActive<T>(param: string | undefined, values: T[], getKey: (item: T) => string): string {
+		const defaultValue = getKey(values[0]);
+		const active = param && values.some(v => getKey(v) === param) ? param : defaultValue;
+		return active;
+	}
+
 	return {
 		marketSettings,
 		sizeBySettings,
 		colorBySettings,
 		colorDepthSettings,
 		displayValueSettings,
+		activeColorBy,
+		activeSizeBy,
+		activeColorDepth,
 	};
 }

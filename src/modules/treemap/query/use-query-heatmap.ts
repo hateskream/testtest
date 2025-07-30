@@ -1,16 +1,19 @@
 import { useQuery } from '@tanstack/vue-query';
+import { toValue, type MaybeRefOrGetter } from 'vue';
 
 import { getHeatmap } from '../api';
 
-interface IGetHeatMapRequest {
-	market: string;
-	excludeTickers: string[];
-}
-
-export function useQueryHeatmap(req: IGetHeatMapRequest) {
+export function useQueryHeatmap(
+	market: MaybeRefOrGetter<string>,
+	excludeTickers: MaybeRefOrGetter<string[]>,
+) {
 	return useQuery({
-		queryKey: ['heatmap', req.market, ...req.excludeTickers],
-		queryFn: () => getHeatmap(req),
+		queryKey: ['heatmap', market, ...toValue(excludeTickers)],
+		queryFn: () => getHeatmap({
+			market: toValue(market),
+			excludeTickers: toValue(excludeTickers),
+		}),
 		refetchOnMount: false,
+		enabled: !!toValue(market),
 	});
 }

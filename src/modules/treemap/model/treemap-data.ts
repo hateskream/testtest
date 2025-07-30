@@ -4,3 +4,8 @@ export interface ITreemapItem {
 	logoSrc: string;
 	values: Record<string, number>;
 }
+
+export interface ITreemap {
+	items: ITreemapItem[];
+	currencySymbol: string;
+}

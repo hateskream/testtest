@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { useQueryDisplaySettings } from '../query';
-import { useDisplaySettings } from '../composables/';
+import { ref, watch } from 'vue';
+
+import { useQueryDisplaySettings, useQueryHeatmap } from '../query';
+import { useDisplaySettings, useHeatmap } from '../composables/';
+import { UiTreemap } from '@/shared/ui/treemap';
 
 import SettingsComponent from './settings-component.vue';
 
@@ -12,7 +15,20 @@ const {
 	colorBySettings,
 	colorDepthSettings,
 	displayValueSettings,
+	activeColorBy,
+	activeSizeBy,
+	activeColorDepth,
 } = useDisplaySettings(settings);
+
+const excludeTickers = ref<string[]>([]);
+
+const { data: heatmapData, refetch } = useQueryHeatmap(marketSettings.active, excludeTickers);
+
+const { heatmap, isPercent } = useHeatmap(heatmapData, activeSizeBy, activeColorBy);
+
+watch(() => marketSettings.active, () => {
+	refetch();
+});
 </script>
 
 <template>
@@ -22,6 +38,19 @@ const {
 		:color-by="colorBySettings"
 		:color-depth="colorDepthSettings"
 		:display-value="displayValueSettings"
+	/>
+	<ui-treemap
+		v-if="heatmapData"
+		:currency-symbol="heatmapData.currencySymbol"
+		:color-by="activeColorBy!.colorBy.displayName"
+		:size-by="activeSizeBy!.displayName"
+		:depth-range="activeColorDepth!"
+		:visible-config="{
+			isShowLogo: true,
+			isShowTicker: true,
+			isPercent: isPercent,
+		}"
+		:data="heatmap"
 	/>
 </template>
 
