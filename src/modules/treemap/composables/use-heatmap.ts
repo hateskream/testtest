@@ -21,7 +21,6 @@ export function useHeatmap(
 	watch(
 		[rawHeatmap, sizeBy, colorBy],
 		([newHeatmap, newSizeBy, newColorBy]) => {
-			console.log('heatmap', newHeatmap, newSizeBy, newColorBy);
 			if (!newHeatmap?.items.length || !newSizeBy || !newColorBy) {
 				return;
 			}
