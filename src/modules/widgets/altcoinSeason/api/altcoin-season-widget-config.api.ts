@@ -91,7 +91,6 @@ async function getMockData() {
 		modules: {
 			performanceRank: true,
 			historicalValues: true,
-			highLow: true,
 			top100: true,
 			chart: true,
 		},

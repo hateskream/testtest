@@ -2,7 +2,6 @@ export interface IAltcoinSeasonConfig {
 	modules: {
 		performanceRank: boolean;
 		historicalValues: boolean;
-		highLow: boolean;
 		top100: boolean;
 		chart: boolean;
 	};
