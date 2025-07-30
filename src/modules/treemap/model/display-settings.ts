@@ -1,15 +1,16 @@
-export interface IDisplaySettingsByMarket {
-	stock: IDisplaySettings;
-	crypto: IDisplaySettings;
-}
-
 export interface IDisplaySettings {
+	market: IMarket;
 	sizeBy: ISettings[];
 	colorBy: IColorBy[];
 	displayValue: ISettings[];
 }
 
-interface ISettings {
+export interface IMarket {
+	displayName: string;
+	id: string;
+}
+
+export interface ISettings {
 	key: string;
 	displayName: string;
 	isPercent: boolean;
@@ -20,7 +21,8 @@ interface IColorBy {
 	colorDepth: IColorDepth[];
 }
 
-interface IColorDepth {
+export interface IColorDepth {
+	id: string;
 	start: number;
 	end: number;
 }
@@ -29,4 +31,20 @@ export enum TitleViewVariant {
 	TICKER = 'Ticker',
 	NAME = 'Name',
 	NONE = 'None',
+}
+
+
+export interface IMarketSettings {
+	active: string;
+	markets: IMarket[];
+}
+
+export interface ISingleSetting {
+	active: string;
+	values: ISettings[];
+}
+
+export interface IColorDepthSetting {
+	active: string;
+	values: IColorDepth[];
 }
