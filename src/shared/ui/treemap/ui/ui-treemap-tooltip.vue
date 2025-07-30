@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { flip, offset, shift, useFloating, type VirtualElement } from '@floating-ui/vue';
-import { useMouse } from '@vueuse/core';
+import { flip, useFloating, type VirtualElement } from '@floating-ui/vue';
+import { refDebounced, useMouse } from '@vueuse/core';
 import { computed, useTemplateRef, watch } from 'vue';
 
 import { prepareNumber, preparePercent } from '../utils';
 
 const SIZE_ACTIVATOR = 10;
+const DEBOUNCE_UPDATE_POSITION = 10;
 
 const colorMapping = {
 	zero: 'rgba(255, 255, 255, 1)',
@@ -34,6 +35,8 @@ interface IUiTreemapTooltipProps {
 const props = defineProps<IUiTreemapTooltipProps>();
 
 const { x, y } = useMouse({ touch: false });
+const debouncedX = refDebounced(x, DEBOUNCE_UPDATE_POSITION);
+const debouncedY = refDebounced(y, DEBOUNCE_UPDATE_POSITION);
 
 const { floatingStyles, update } = useFloating(
 	computed<VirtualElement>(() => ({
@@ -54,7 +57,7 @@ const { floatingStyles, update } = useFloating(
 	{
 		strategy: 'fixed',
 		placement: 'top-start',
-		middleware: [offset(6), flip(), shift({ padding: 5 })],
+		middleware: [flip()],
 	},
 );
 
@@ -85,7 +88,7 @@ const styleColorBy = computed(() => {
 	return {};
 });
 
-watch([x, y], update);
+watch([debouncedX, debouncedY], update);
 
 function prepareNumberValue(value: number) {
 	return `${props.currencySymbol} ${prepareNumber(value)}`;
@@ -99,36 +102,31 @@ function prepareNumberValue(value: number) {
 		class="root"
 		:style="floatingStyles"
 	>
-		<div
-			v-show="props.isOpen"
-			class="content"
-		>
-			<div class="container">
-				<div class="header">
-					<div class="logo" />
-					<div class="ticker">{{ props.ticker }}</div>
+		<div v-show="props.isOpen" class="container">
+			<div class="header">
+				<div class="logo" />
+				<div class="ticker">{{ props.ticker }}</div>
+			</div>
+			<div class="line" />
+			<div class="info">
+				<div class="info-item">
+					<div class="value">Price</div>
+					<div class="value">{{ props.currencySymbol }} {{ props.price }}</div>
 				</div>
-				<div class="line" />
-				<div class="info">
-					<div class="info-item">
-						<div class="value">Price</div>
-						<div class="value">{{ props.currencySymbol }} {{ props.price }}</div>
+				<div class="info-item">
+					<div class="value">{{ props.sizeBy }}</div>
+					<div class="value">{{ prepareSizeBy }}</div>
+				</div>
+				<div class="info-item">
+					<div
+						class="value"
+					>
+						{{ props.colorBy }}
 					</div>
-					<div class="info-item">
-						<div class="value">{{ props.sizeBy }}</div>
-						<div class="value">{{ prepareSizeBy }}</div>
-					</div>
-					<div class="info-item">
-						<div
-							class="value"
-						>
-							{{ props.colorBy }}
-						</div>
-						<div
-							class="value"
-							:style="styleColorBy"
-						>{{ prepareColorBy }}</div>
-					</div>
+					<div
+						class="value"
+						:style="styleColorBy"
+					>{{ prepareColorBy }}</div>
 				</div>
 			</div>
 		</div>
@@ -140,6 +138,7 @@ function prepareNumberValue(value: number) {
 	display: flex;
 	flex-direction: column;
 	width: 224px;
+	margin: 0 0 5px 5px;
 	padding: 10px;
 	background-color: #161618;
 	border: 1px solid #c7c7c71a;

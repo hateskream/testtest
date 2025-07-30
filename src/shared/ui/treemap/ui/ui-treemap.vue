@@ -137,7 +137,7 @@ function setTickerHovered(ticker: string | null) {
 <style scoped>
 .treemap-container {
 	position: relative;
-	height: 400px;
+	height: 100%;
 }
 
 .treemap {
