@@ -3,7 +3,7 @@ export interface IDisplaySettingsByMarket {
 	crypto: IDisplaySettings;
 }
 
-interface IDisplaySettings {
+export interface IDisplaySettings {
 	sizeBy: ISettings[];
 	colorBy: IColorBy[];
 	displayValue: ISettings[];
