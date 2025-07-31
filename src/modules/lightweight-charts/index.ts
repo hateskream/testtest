@@ -7,7 +7,7 @@ import ChartDividends from './ui/chart-dividends.vue';
 import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 import ChartIncomeStatement from './ui/chart-income-statement.vue';
 import ChartMarketCap from './ui/chart-market-cap.vue';
-
+import ChartBitcoinDominanc from './ui/chart-bitcoin-dominanc.vue';
 
 export {
 	Chart,
@@ -19,4 +19,5 @@ export {
 	ChartBalanceSheet,
 	ChartIncomeStatement,
 	ChartMarketCap,
+	ChartBitcoinDominanc,
 };

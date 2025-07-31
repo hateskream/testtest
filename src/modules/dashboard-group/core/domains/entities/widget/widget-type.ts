@@ -2,6 +2,7 @@ import { DomainError } from '../error/error';
 
 export enum WidgetType {
 	FearGreed = 'fear-greed',
+	BitcoinDominanc = 'bitcoin-dominanc',
 	Market = 'market',
 	MarketCap = 'market-cap',
 	News = 'news',

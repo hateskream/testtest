@@ -14,6 +14,7 @@ const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
 	[WidgetType.News]: IconIds.LogoWidgetNews,
 	[WidgetType.Watchlist]: IconIds.LogoWidgetWatchlist,
 	[WidgetType.MarketCap]: IconIds.LogoWidgetMarketCap,
+	[WidgetType.BitcoinDominanc]: IconIds.LogoWidgetMarketCap,
 };
 
 interface IDashboardsCurtainComponentProps {
