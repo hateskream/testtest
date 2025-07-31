@@ -391,7 +391,7 @@ const cancelAddSection = () => {
 	position: sticky !important;
 	left: 0 !important;
 	z-index: 10 !important;
-	background: transparent !important;
+	background: var(--bg-color-surface-01) !important;
 	border-right: 1px solid rgb(255 255 255 / 5%) !important;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;

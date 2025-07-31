@@ -261,19 +261,8 @@ const handleMove = (event: any) => {
 .header-cell.non-draggable {
 	position: relative;
 	cursor: default;
-	opacity: 0.7;
 }
 
-.header-cell.non-draggable::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background: rgb(255 255 255 / 5%);
-	pointer-events: none;
-}
 
 .sticky-first-column {
 	position: sticky !important;
