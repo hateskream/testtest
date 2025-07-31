@@ -156,7 +156,7 @@ export class DashboardGroup {
 	}
 
 	private static createProd(): DashboardGroup {
-		const emptyDashboard = Dashboard.createFromPreset('Main', 0);
+		const emptyDashboard = Dashboard.createFromPreset('MainProduction', 0);
 		const dashboards = [emptyDashboard];
 
 		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);
