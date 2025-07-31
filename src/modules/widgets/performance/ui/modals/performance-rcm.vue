@@ -23,7 +23,7 @@ const performanceStore = usePerformanceStore();
 
 		<template #content>
 			<modal-item-number :value="1">Duplicate</modal-item-number>
-			<modal-item-number :value="2">Open in new tab</modal-item-number>
+			<modal-item-number :value="2">Open full data</modal-item-number>
 			<modal-item-number :value="3">Wrap in stack</modal-item-number>
 
 			<modal-item>Move to</modal-item>

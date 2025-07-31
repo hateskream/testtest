@@ -18,6 +18,10 @@ interface IAltcoinSeasonWidgetProps {
 
 const props = defineProps<IAltcoinSeasonWidgetProps>();
 
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
+
 const altcoinSeasonStore = useAltcoinSeasonStore();
 
 // FIXME: remove init on mount coz it make useless request on widget dnd\resize
@@ -69,7 +73,7 @@ const metaPerformance = computed(() => {
 		</template>
 
 		<template #rcm>
-			<btc-performance-rcm :widget-config="altcoinSeasonWidgetConfig || null" />
+			<btc-performance-rcm :widget-config="altcoinSeasonWidgetConfig || null"  @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

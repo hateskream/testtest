@@ -8,7 +8,7 @@ import type { IMeta } from '@/modules/dashboard-group/core';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
-import RcmPriceComponent from './rcm-price-component.vue';
+import PriceListRcm from './price-list-rcm.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -19,6 +19,10 @@ const props = defineProps<IWidgetComponentProps>();
 const { data, isLoading, isError } = useQueryPrice();
 
 const isNotData = computed(() => !!data.value && isLoading.value);
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 </script>
 
 <template>
@@ -34,7 +38,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			/>
 		</template>
 		<template #rcm>
-			<rcm-price-component />
+			<price-list-rcm @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

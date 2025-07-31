@@ -23,6 +23,13 @@ export const useFearGreedStore = defineStore('dashboards-fear-greed', () => {
 		isShowDescription.value = !isShowDescription.value;
 	}
 
+	function resetAllChanges() {
+		isShowChart.value = true;
+		isShowName.value = true;
+		isShowDescription.value = true;
+		isShowPastValues.value = true;
+	}
+
 	return {
 		isShowChart,
 		isShowPastValues,
@@ -33,5 +40,7 @@ export const useFearGreedStore = defineStore('dashboards-fear-greed', () => {
 		toggleShowName,
 		toggleShowPastValues,
 		toggleShowDescription,
+
+		resetAllChanges,
 	};
 });

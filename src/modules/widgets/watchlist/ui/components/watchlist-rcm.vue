@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import {
 	ModalItem,
 	ModalItemNumber,
@@ -8,14 +7,10 @@ import {
 	ModalSubmenu,
 } from '@/modules/widgets/base';
 
-import AltcoinSeasonTimeFilter from './altcoin-season-time-filter.vue';
-import AltcoinSeasonWidgetConfig from './altcoin-season-widget-config.vue';
-
-const performanceStore = usePerformanceStore();
-
 const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
+
 </script>
 
 <template>
@@ -34,18 +29,10 @@ const emit = defineEmits<{
 			<modal-submenu>
 				<template #title>Change display</template>
 				<template #content>
-					<altcoin-season-widget-config />
 				</template>
 			</modal-submenu>
 
-			<modal-submenu>
-				<template #title>Filter</template>
-				<template #content>
-					<altcoin-season-time-filter />
-				</template>
-			</modal-submenu>
-
-			<modal-item @click="performanceStore.resetAll">Reset all changes</modal-item>
+			<modal-item @click="null">Reset all changes</modal-item>
 
 			<ui-driver />
 

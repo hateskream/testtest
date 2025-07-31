@@ -25,6 +25,10 @@ const { data, isLoading, isError } = useQueryMarket({
 });
 
 const isNotData = computed(() => !!data.value && isLoading.value);
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 </script>
 
 <template>
@@ -39,7 +43,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			/>
 		</template>
 		<template #rcm>
-			<rcm-market />
+			<rcm-market @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

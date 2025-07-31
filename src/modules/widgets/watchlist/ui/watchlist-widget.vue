@@ -3,9 +3,14 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
 import WatchlistMain from './views/watchlist-main.vue';
+import WatchlistRcm from './components/watchlist-rcm.vue';
 
 const props = defineProps<{
 	meta: IMeta;
+}>();
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
 }>();
 </script>
 
@@ -19,6 +24,11 @@ const props = defineProps<{
 
 		<template #content>
 			<watchlist-main :meta="props.meta" />
+		</template>
+
+
+		<template #rcm>
+			<watchlist-rcm @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

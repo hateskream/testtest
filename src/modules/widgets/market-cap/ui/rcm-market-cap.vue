@@ -11,6 +11,10 @@ import {
 import { useMarketCapStore } from '../store/market-cap';
 
 const marketCapStore = useMarketCapStore();
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 </script>
 
 <template>
@@ -18,15 +22,15 @@ const marketCapStore = useMarketCapStore();
 		<template #title> Market </template>
 		<template #content>
 			<modal-item-number :value="1">Duplicate</modal-item-number>
-			<modal-item-number :value="2">Open in new tab</modal-item-number>
+			<modal-item-number :value="2">Open full data</modal-item-number>
 			<modal-item-number :value="3">Wrap in stack</modal-item-number>
 
-			<modal-item>Turn into new dashboard</modal-item>
+			<modal-item>Move to</modal-item>
 
 			<ui-driver />
 
 			<modal-submenu>
-				<template #title> Change display </template>
+				<template #title>Change display</template>
 
 				<template #content>
 					<modal-submenu-content>
@@ -52,7 +56,7 @@ const marketCapStore = useMarketCapStore();
 
 			<ui-driver />
 
-			<modal-item> Delete </modal-item>
+			<modal-item @click="emit('delete')"> Delete </modal-item>
 		</template>
 
 		<modal-item>Delete</modal-item>

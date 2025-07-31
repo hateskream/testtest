@@ -5,7 +5,7 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryTension } from '../queries/use-query-tension.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
-import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
+import FearGreedRcm from './fear-greed-rcm.vue';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
@@ -19,6 +19,10 @@ const props = defineProps<IWidgetComponentProps>();
 const { data, isLoading, isError, refetch } = useQueryTension(props.meta.market);
 
 const isNotData = computed(() => !!data.value && isLoading.value);
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 
 </script>
 
@@ -40,7 +44,7 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 		</template>
 
 		<template #rcm>
-			<rcm-fear-greed-component />
+			<fear-greed-rcm @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

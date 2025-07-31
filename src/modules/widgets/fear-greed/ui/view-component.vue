@@ -76,6 +76,17 @@ const circleChart = computed(() => {
 const metricTextStyles = computed<CSSProperties>(() => ({
 	marginTop: fearGreedStore.isShowChart && props.size.h > 2 ? '-30px' : 0,
 }));
+
+const isShowChart = computed(() => fearGreedStore.isShowChart && props.size.h > 2);
+const isShowName = computed(() => fearGreedStore.isShowName);
+const isShowDescription = computed(() => fearGreedStore.isShowDescription && props.size.h > 2);
+const isShowPastValues = computed(() => {
+	return (
+		history.value.length > 0 &&
+		fearGreedStore.isShowPastValues &&
+		(props.size.h > 4 || (props.size.w >= 2 && props.size.h > 2))
+	);
+});
 </script>
 
 <template>
@@ -85,7 +96,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 			@click.stop.prevent="emits('updateInteractive')"
 		>
 			<div
-				v-if="fearGreedStore.isShowChart && size.h > 2"
+				v-if="isShowChart"
 				:class="classes.metricСhart"
 			>
 
@@ -131,10 +142,10 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 					{{ tension.tension }}
 				</h3>
 				<ui-transition-fade>
-					<h4 v-if="fearGreedStore.isShowName">{{ tensionText?.text.main }}</h4>
+					<h4 v-if="isShowName">{{ tensionText?.text.main }}</h4>
 				</ui-transition-fade>
 				<ui-transition-fade>
-					<small v-if="fearGreedStore.isShowDescription && props.size.h > 2">
+					<small v-if="isShowDescription">
 						{{ tensionText?.text.sub }}
 					</small>
 				</ui-transition-fade>
@@ -143,9 +154,7 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 
 		<ui-transition-fade>
 			<ul
-				v-if="
-					(history.length > 0 && fearGreedStore.isShowPastValues) &&
-						(size.h > 4 || (size.w >= 2 && size.h > 2))"
+				v-if="isShowPastValues"
 				:class="classes.history"
 			>
 				<li
