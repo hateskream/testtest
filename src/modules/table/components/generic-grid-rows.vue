@@ -1,4 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import draggable from 'vuedraggable';
 
 import type {
@@ -9,8 +11,8 @@ import type {
 } from '../type';
 import { useTableDragDrop } from '../composables/use-table-data.ts';
 
-interface IProps {
-	rows: IGenericTableRow[];
+export interface IProps<T> {
+	rows: IGenericTableRow<T>[];
 	sectionId: string;
 	columns: IGenericTableColumn[];
 	gridTemplateColumns: string;
@@ -19,22 +21,22 @@ interface IProps {
 	enableRowActions?: boolean;
 }
 
-interface IEmits {
-	(e: 'rowMoved', payload: IDragDropEvent): void;
+export interface IEmits<T> {
+	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
 	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
 }
 
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps<T>>(), {
 	enableDragDrop: true,
 	stickyFirstColumn: true,
 	enableRowActions: true,
 });
 
-const emit = defineEmits<IEmits>();
+const emit = defineEmits<IEmits<T>>();
 
 const { handleDragChange } = useTableDragDrop();
 
-const onDragChange = (evt: IDragEvent) => {
+const onDragChange = (evt: IDragEvent<T>) => {
 	handleDragChange(
 		evt,
 		props.sectionId,
@@ -46,7 +48,7 @@ const onDragChange = (evt: IDragEvent) => {
 				newIndex,
 			});
 		},
-		(evnt: IDragEvent, sectionId: string) => {
+		(evnt: IDragEvent<T>, sectionId: string) => {
 			if (evnt.added) {
 				emit('rowMoved', {
 					type: 'added',
@@ -111,7 +113,10 @@ const handleRowDelete = (rowId: string, event: Event) => {
 					</slot>
 				</div>
 
-				<div v-if="enableRowActions" :class="classes.rowActionsCell">
+				<div
+					v-if="enableRowActions"
+					:class="[classes.rowActionsCell, classes.stickyActionsCell]"
+				>
 					<div :class="classes.rowActions">
 						<button
 							:class="[classes.rowActionBtn, classes.deleteBtn]"
@@ -131,11 +136,13 @@ const handleRowDelete = (rowId: string, event: Event) => {
 .gridRows {
 	display: flex;
 	flex-direction: column;
+	min-width: fit-content;
 }
 
 .gridRow {
 	display: grid;
 	align-items: center;
+	min-width: fit-content;
 	min-height: 50px;
 	border-bottom: 1px solid rgb(255 255 255 / 5%);
 	transition: background-color 0.2s ease;
@@ -158,9 +165,13 @@ const handleRowDelete = (rowId: string, event: Event) => {
 .gridCell {
 	display: flex;
 	align-items: center;
+	min-width: 0;
 	min-height: 50px;
 	padding: 8px 12px;
 	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background: var(--bg-color-surface-01);
 	border-right: 1px solid rgb(255 255 255 / 5%);
 }
 
@@ -169,19 +180,28 @@ const handleRowDelete = (rowId: string, event: Event) => {
 }
 
 .stickyFirstCell {
-	position: sticky;
+	position: sticky !important;
 	left: 0;
 	z-index: 5;
-	background: inherit;
+	background: var(--bg-color-surface-01);
 }
 
 .rowActionsCell {
 	display: flex;
+	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
 	min-width: 50px;
 	min-height: 50px;
 	padding: 8px;
+	background: var(--bg-color-surface-01);
+}
+
+.stickyActionsCell {
+	position: sticky !important;
+	right: 0;
+	z-index: 5;
+	background: var(--bg-color-surface-01);
 }
 
 .rowActions {

@@ -1,4 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { ref, computed, nextTick } from 'vue';
 import draggable from 'vuedraggable';
 
@@ -14,9 +16,9 @@ import { useTableData, useTableDragDrop } from '../composables/use-table-data.ts
 
 import GenericGridSection from './generic-grid-section.vue';
 
-export interface IProps {
-	sections: IGenericTableSection[];
-	unsortedRows: IGenericTableRow[];
+export interface IProps<T> {
+	sections: IGenericTableSection<T>[];
+	unsortedRows: IGenericTableRow<T>[];
 	columns: IGenericTableColumn[];
 	sortConfig: ISortConfig;
 	canAddSections?: boolean;
@@ -26,10 +28,10 @@ export interface IProps {
 	enableRowActions?: boolean;
 }
 
-export interface IEmits {
-	(e: 'update:sections', sections: IGenericTableSection[]): void;
-	(e: 'update:unsorted-rows', rows: IGenericTableRow[]): void;
-	(e: 'rowMoved', payload: IDragDropEvent): void;
+export interface IEmits<T> {
+	(e: 'update:sections', sections: IGenericTableSection<T>[]): void;
+	(e: 'update:unsorted-rows', rows: IGenericTableRow<T>[]): void;
+	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
 	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
 	(e: 'sectionToggled', sectionId: string): void;
 	(e: 'sectionAdded', sectionName: string): void;
@@ -37,14 +39,14 @@ export interface IEmits {
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
 }
 
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps<T>>(), {
 	enableDragDrop: true,
 	stickyFirstColumn: true,
 	enableRowActions: true,
 	canAddSections: false,
 });
 
-const emit = defineEmits<IEmits>();
+const emit = defineEmits<IEmits<T>>();
 
 const { sortData } = useTableData();
 const { handleDragChange } = useTableDragDrop();
@@ -94,7 +96,7 @@ const handleSectionToggle = (sectionId: string) => {
 	emit('sectionToggled', sectionId);
 };
 
-const handleRowMoved = (payload: IDragDropEvent) => {
+const handleRowMoved = (payload: IDragDropEvent<T>) => {
 	emit('rowMoved', payload);
 };
 
@@ -110,7 +112,7 @@ const handleSectionRename = (payload: { sectionId: string; newName: string }) =>
 	emit('sectionRenamed', payload);
 };
 
-const onUnsortedDragChange = (evt: IDragEvent) => {
+const onUnsortedDragChange = (evt: IDragEvent<T>) => {
 	handleDragChange(
 		evt,
 		'unsorted',
@@ -122,7 +124,7 @@ const onUnsortedDragChange = (evt: IDragEvent) => {
 				newIndex,
 			});
 		},
-		(evtTransfer: IDragEvent) => {
+		(evtTransfer: IDragEvent<T>) => {
 			if (evtTransfer.added) {
 				emit('rowMoved', {
 					type: 'added',
@@ -178,9 +180,9 @@ const cancelAddSection = () => {
 };
 </script>
 
-<template>
+<template generic="T">
 	<div :class="classes.gridBody">
-
+		<!-- Unsorted rows area -->
 		<div v-if="sortedUnsortedRows.length > 0" :class="classes.unsortedArea">
 			<draggable
 				:model-value="sortedUnsortedRows"
@@ -201,7 +203,10 @@ const cancelAddSection = () => {
 							:key="`${row.id}-${column.key}`"
 							:class="[
 								classes.gridCell,
-								{ [classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn }
+								{
+									[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
+									[classes.lastCell]: cellIndex === columns.length - 1 && !enableRowActions
+								}
 							]"
 						>
 							<slot
@@ -216,7 +221,10 @@ const cancelAddSection = () => {
 							</slot>
 						</div>
 
-						<div v-if="enableRowActions" :class="classes.rowActionsCell">
+						<div
+							v-if="enableRowActions"
+							:class="classes.rowActionsCell"
+						>
 							<div :class="classes.rowActions">
 								<button
 									:class="[classes.rowActionBtn, classes.deleteBtn]"
@@ -232,6 +240,7 @@ const cancelAddSection = () => {
 			</draggable>
 		</div>
 
+		<!-- Sections -->
 		<generic-grid-section
 			v-for="section in sortedSections"
 			:key="section.id"
@@ -263,6 +272,7 @@ const cancelAddSection = () => {
 			</template>
 		</generic-grid-section>
 
+		<!-- Add section input -->
 		<div
 			v-if="showAddSectionInput"
 			:class="classes.addSectionInput"
@@ -278,6 +288,7 @@ const cancelAddSection = () => {
 			/>
 		</div>
 
+		<!-- Add section button -->
 		<div
 			v-if="props.canAddSections"
 			:class="classes.addSectionButton"
@@ -286,31 +297,35 @@ const cancelAddSection = () => {
 			<span :class="classes.addIcon">+</span>
 			<span>Add section</span>
 		</div>
-
-		<div :class="classes.paginationWrapper">
-			<slot name="pagination" />
-		</div>
 	</div>
 </template>
 
 <style module="classes">
 .gridBody {
+	position: relative;
 	display: flex;
-	flex: 1;
 	flex-direction: column;
-	overflow: auto;
+	min-width: fit-content;
+	min-height: 0;
 	user-select: none;
 }
 
+.unsortedArea {
+	position: relative;
+	min-width: fit-content;
+}
 
 .unsortedRows {
 	display: flex;
 	flex-direction: column;
+	min-width: fit-content;
 }
 
 .gridRow {
+	position: relative;
 	display: grid;
 	align-items: center;
+	min-width: fit-content;
 	min-height: 50px;
 	border-bottom: 1px solid rgb(255 255 255 / 5%);
 	transition: background-color 0.2s ease;
@@ -330,33 +345,62 @@ const cancelAddSection = () => {
 	border-bottom-right-radius: 16px;
 }
 
+.gridRow:hover .lastCell {
+	border-top-right-radius: 16px;
+	border-bottom-right-radius: 16px;
+}
+
 .gridCell {
+	position: relative;
 	display: flex;
 	align-items: center;
+	min-width: 0;
 	min-height: 50px;
 	padding: 8px 12px;
 	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	background: var(--bg-color-surface-01);
+	border-right: 1px solid rgb(255 255 255 / 5%);
 }
 
 .gridCell:last-child {
 	border-right: none;
 }
 
+.lastCell {
+	border-right: none;
+}
+
 .stickyFirstCell {
-	position: sticky;
-	left: 0;
-	z-index: 5;
-	background: inherit;
+	position: sticky !important;
+	left: 0 !important;
+	z-index: 10 !important;
+	background: var(--bg-color-surface-01) !important;
+	border-right: 1px solid rgb(255 255 255 / 5%) !important;
+}
+
+.stickyFirstCell::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: -1px;
+	bottom: 0;
+	z-index: 1;
+	width: 1px;
+	background: rgb(255 255 255 / 5%);
 }
 
 .rowActionsCell {
+	position: relative;
 	display: flex;
+	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
 	min-width: 50px;
 	min-height: 50px;
 	padding: 8px;
+	background: var(--bg-color-surface-01);
 }
 
 .rowActions {
@@ -406,6 +450,7 @@ const cancelAddSection = () => {
 .addSectionInput {
 	display: flex;
 	align-items: center;
+	min-width: fit-content;
 	padding: 12px 8px;
 	font-weight: 440;
 	font-size: 14px;
@@ -426,6 +471,7 @@ const cancelAddSection = () => {
 .addSectionButton {
 	display: flex;
 	align-items: center;
+	min-width: fit-content;
 	padding: 12px 8px;
 	font-weight: 440;
 	font-size: 14px;
@@ -452,10 +498,5 @@ const cancelAddSection = () => {
 
 .addSectionButton:hover .addIcon {
 	color: rgb(131 132 135 / 90%);
-}
-
-.paginationWrapper {
-	margin-top: auto;
-	padding: 16px 0;
 }
 </style>

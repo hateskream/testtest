@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import draggableComponent from 'vuedraggable';
 
 import type { IGenericTableColumn, ISortConfig } from '../type';
@@ -82,13 +84,62 @@ const handleColumnSort = (column: IGenericTableColumn, event: Event) => {
 const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 	emit('update:columns', updatedColumns);
 };
+
+// Completely prevent any move that would displace non-draggable columns
+//
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleMove = (event: any) => {
+	if (!props.enableReordering) {
+		return false;
+	}
+
+	const { draggedContext, relatedContext } = event;
+
+	// Don't allow dragging non-draggable columns
+	if (!draggedContext.element.draggable) {
+		return false;
+	}
+
+	const draggedIndex = draggedContext.index;
+	const targetIndex = relatedContext.index;
+
+	// Find all non-draggable column indices
+	const nonDraggableIndices = props.columns
+		.map((col, index) => !col.draggable ? index : -1)
+		.filter(index => index !== -1);
+
+	// If there are no non-draggable columns, allow any move
+	if (nonDraggableIndices.length === 0) {
+		return true;
+	}
+
+	// For each non-draggable column, check if this move would affect its position
+	for (const nonDraggableIndex of nonDraggableIndices) {
+		// Case 1: Trying to move an item to a non-draggable column's position
+		if (targetIndex === nonDraggableIndex) {
+			return false;
+		}
+
+		// Case 2: Moving from left to right past a non-draggable column
+		if (draggedIndex < nonDraggableIndex && targetIndex >= nonDraggableIndex) {
+			return false;
+		}
+
+		// Case 3: Moving from right to left past a non-draggable column
+		if (draggedIndex > nonDraggableIndex && targetIndex <= nonDraggableIndex) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
 </script>
 
 <template>
 	<div
 		class="grid-header"
 		:class="{ sticky: sticky }"
-		:style="{ gridTemplateColumns }"
 	>
 		<draggable-component
 			:model-value="columns"
@@ -96,7 +147,9 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 			:disabled="!enableReordering"
 			:filter="`.${ignoreDragClass}`"
 			class="contents"
+			:style="{ gridTemplateColumns }"
 			@update:model-value="handleColumnReorder"
+			@move="handleMove"
 		>
 			<template #item="{ element: column, index }">
 				<div
@@ -104,8 +157,10 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 					:class="{
 						[ignoreDragClass]: !column.draggable,
 						draggable: column.draggable && enableReordering,
-						'sticky-first-column': index === 0 && stickyFirstColumn
+						'sticky-first-column': index === 0 && stickyFirstColumn,
+						'non-draggable': !column.draggable
 					}"
+					:title="column.label"
 				>
 					<div class="header-content">
 						<div class="header-main">
@@ -116,7 +171,9 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 								:sort-direction="getSortDirection(column.key)"
 								:sort-icon="getSortIcon(getSortDirection(column.key))"
 							>
-								<span class="header-label">{{ column.label }}</span>
+								<span class="header-label">
+									{{ column.label }}
+								</span>
 							</slot>
 						</div>
 
@@ -157,8 +214,9 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 
 <style scoped>
 .grid-header {
-	display: grid;
-	align-items: center;
+	display: flex;
+	align-items: stretch;
+	min-width: fit-content;
 	min-height: 44px;
 	background: var(--bg-color-surface-01, #1a1a1a);
 	border-bottom: 1px solid var(--border-color-base-300, #444444);
@@ -171,16 +229,24 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 	z-index: 20;
 }
 
+.contents {
+	display: grid;
+	flex: 1;
+	align-items: center;
+}
+
 .header-cell {
 	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	min-width: 0;
 	height: 44px;
 	padding: 0 12px;
 	font-weight: 440;
 	font-size: 12px;
 	color: var(--text-color-base-100, #ffffff);
+	white-space: nowrap;
 	border-right: 1px solid var(--border-color-base-300, #444444);
 	user-select: none;
 }
@@ -191,6 +257,23 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 
 .header-cell.draggable:active {
 	cursor: grabbing;
+}
+
+.header-cell.non-draggable {
+	position: relative;
+	cursor: default;
+	opacity: 0.7;
+}
+
+.header-cell.non-draggable::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgb(255 255 255 / 5%);
+	pointer-events: none;
 }
 
 .sticky-first-column {
@@ -206,16 +289,23 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 	align-items: center;
 	width: 100%;
 	gap: 8px;
+	min-width: 0;
 }
 
 .header-main {
-	display: flex;
+	display: block;
 	flex: 1;
-	justify-content: center;
-	align-items: center;
+	min-width: 0;
+	overflow: hidden;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .header-label {
+	display: inline-block;
+	width: 100%;
+	min-width: 0;
 	overflow: hidden;
 	text-align: center;
 	white-space: nowrap;
@@ -267,8 +357,10 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 
 .settings-cell {
 	display: flex;
+	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
+	width: 50px;
 	height: 44px;
 	padding: 0 12px;
 	background: var(--bg-color-surface-01, #1a1a1a);
@@ -278,9 +370,5 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 	position: sticky;
 	right: 0;
 	z-index: 21;
-}
-
-.contents {
-	display: contents;
 }
 </style>

@@ -10,7 +10,8 @@ export function adaptApiColumnsToStore(apiColumns: IWatchlistColumn[]): ITableCo
 	// Создаем маппинг предустановленных UI колонок
 	const uiColumnsMap = new Map<string, ITableColumn>();
 	INITIAL_ALL_TABLE_COLUMNS.forEach(col => {
-		uiColumnsMap.set(col.columnType, col);
+		// FIXME: update constant: columnName -> columnType
+		uiColumnsMap.set(col.columnName, col);
 	});
 
 	// Адаптируем API колонки, дополняя их UI настройками

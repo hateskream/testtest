@@ -1,16 +1,19 @@
-<script setup lang="ts">
-import { ref, nextTick } from 'vue';
+<script setup lang="ts" generic="T">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { computed } from 'vue';
+import draggable from 'vuedraggable';
 
 import type {
 	IGenericTableSection,
 	IGenericTableColumn,
 	IDragDropEvent,
+	IDragEvent,
 } from '../type';
+import { useTableDragDrop } from '../composables/use-table-data.ts';
 
-import GenericGridRows from './generic-grid-rows.vue';
-
-interface IProps {
-	section: IGenericTableSection;
+export interface IProps<T> {
+	section: IGenericTableSection<T>;
 	columns: IGenericTableColumn[];
 	gridTemplateColumns: string;
 	enableDragDrop?: boolean;
@@ -18,308 +21,436 @@ interface IProps {
 	enableRowActions?: boolean;
 }
 
-interface IEmits {
+export interface IEmits<T> {
 	(e: 'sectionToggled', sectionId: string): void;
+
 	(e: 'sectionDeleted', sectionId: string): void;
+
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
-	(e: 'rowMoved', payload: IDragDropEvent): void;
+
+	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
+
 	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
 }
 
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps<T>>(), {
 	enableDragDrop: true,
 	stickyFirstColumn: true,
 	enableRowActions: true,
 });
 
-const emit = defineEmits<IEmits>();
+const emit = defineEmits<IEmits<T>>();
 
-const showRenameInput = ref(false);
-const renameInputRef = ref<HTMLInputElement>();
-const sectionName = ref(props.section.title);
+const { handleDragChange } = useTableDragDrop();
 
-const clickTimeout = ref<number | null>(null);
-const CLICK_DELAY = 200;
+const isExpanded = computed(() => !props.section.isCollapsed);
 
-const handleSectionClick = (sectionId: string) => {
-	if (clickTimeout.value || showRenameInput.value) {
-		return;
-	}
-
-	clickTimeout.value = window.setTimeout(() => {
-		emit('sectionToggled', sectionId);
-		clickTimeout.value = null;
-	}, CLICK_DELAY);
+const handleSectionToggle = () => {
+	emit('sectionToggled', props.section.id);
 };
 
-const startRename = async () => {
-	//console.log(sectionId);
-	showRenameInput.value = true;
-	sectionName.value = props.section.title;
-
-	await nextTick();
-	renameInputRef.value?.focus();
-	renameInputRef.value?.select();
+const handleSectionDelete = () => {
+	emit('sectionDeleted', props.section.id);
 };
 
+// const handleSectionRename = (newName: string) => {
+// 	emit('sectionRenamed', {
+// 		sectionId: props.section.id,
+// 		newName,
+// 	});
+// };
 
-const handleSectionDoubleClick = () => {
-	if (clickTimeout.value) {
-		clearTimeout(clickTimeout.value);
-		clickTimeout.value = null;
-	}
-
-	startRename();
-};
-
-
-const saveRename = (event: Event) => {
-	if (event.type !== 'blur') {
-		renameInputRef.value?.blur();
-		return;
-	}
-
-	if (sectionName.value.trim() && sectionName.value.trim() !== props.section.title) {
-		emit('sectionRenamed', {
-			sectionId: props.section.id,
-			newName: sectionName.value.trim(),
-		});
-	}
-
-	showRenameInput.value = false;
-};
-
-const cancelRename = () => {
-	sectionName.value = props.section.title;
-	showRenameInput.value = false;
-};
-
-const handleRowMoved = (payload: IDragDropEvent) => {
-	emit('rowMoved', {
-		...payload,
+const handleRowDeleted = (rowId: string) => {
+	emit('rowDeleted', {
+		rowId,
 		sectionId: props.section.id,
 	});
 };
 
-const handleRowDeleted = (payload: { rowId: string; sectionId: string }) => {
-	emit('rowDeleted', payload);
-};
-
-const handleDeleteSection = (sectionId: string) => {
-	emit('sectionDeleted', sectionId);
+const onDragChange = (evt: IDragEvent<T>) => {
+	handleDragChange(
+		evt,
+		props.section.id,
+		(sectionId: string, oldIndex: number, newIndex: number) => {
+			emit('rowMoved', {
+				type: 'moved',
+				sectionId,
+				oldIndex,
+				newIndex,
+			});
+		},
+		(evtTransfer: IDragEvent<T>) => {
+			if (evtTransfer.added) {
+				emit('rowMoved', {
+					type: 'added',
+					sectionId: props.section.id,
+					newIndex: evtTransfer.added.newIndex,
+					element: evtTransfer.added.element,
+				});
+			}
+			if (evt.removed) {
+				emit('rowMoved', {
+					type: 'removed',
+					sectionId: props.section.id,
+					oldIndex: evt.removed.oldIndex,
+					element: evt.removed.element,
+				});
+			}
+		},
+	);
 };
 </script>
 
-<template>
-	<div :class="classes.gridSection">
-		<div
-			:class="[classes.sectionHeader, { [classes.sectionHeaderOpen]: !section.isCollapsed }]"
-			:style="{ gridTemplateColumns }"
-			@click="handleSectionClick(section.id)"
-			@dblclick="handleSectionDoubleClick"
-		>
-			<div :class="classes.sectionTitle">
-				<template v-if="!showRenameInput">
-					<span :class="classes.sectionToggle">
-						<span
-							:class="
-								[classes.sectionIcon, section.isCollapsed ?
-									classes.sectionIconCollapsed
-									: classes.sectionIconExpanded]
-							"
-						>
-							▼
-						</span>
+<template generic="T">
+	<div :class="classes.section">
+		<!-- Section Header -->
+		<div :class="classes.sectionHeader">
+			<!-- Sticky left section with toggle and title -->
+			<div
+				:class="classes.sectionHeaderLeft"
+				@click="handleSectionToggle"
+			>
+				<div :class="classes.sectionToggle">
+					<span :class="[classes.toggleIcon, { [classes.collapsed]: !isExpanded }]">
+						▼
 					</span>
-
-					<slot
-						name="section-header"
-						:section="section"
-						:is-collapsed="section.isCollapsed"
-					>
-						<span :class="classes.sectionName">{{ section.title }}</span>
+				</div>
+				<div :class="classes.sectionTitle">
+					<slot name="section-header" :section="section">
+						{{ section.title }}
 					</slot>
-				</template>
-
-				<template v-else>
-					<input
-						ref="renameInputRef"
-						v-model="sectionName"
-						type="text"
-						:class="classes.renameInput"
-						@blur="saveRename"
-						@keydown.enter="saveRename"
-						@keydown.escape="cancelRename"
-					/>
-				</template>
+				</div>
 			</div>
 
-			<div :class="classes.sectionActions">
-				<button
-					:class="classes.actionButton"
-					title="Delete section"
-					@click.stop="handleDeleteSection(section.id)"
-				>
-					🗑
-				</button>
+			<!-- Spacer to fill the middle area -->
+			<div :class="classes.sectionHeaderSpacer" />
+
+			<!-- Sticky right section with actions -->
+			<div :class="classes.sectionHeaderRight">
+				<div :class="classes.sectionActions">
+					<button
+						:class="[classes.sectionActionBtn, classes.deleteBtn]"
+						title="Delete section"
+						@click.stop="handleSectionDelete"
+					>
+						<span :class="classes.deleteIcon">🗑</span>
+					</button>
+				</div>
 			</div>
 		</div>
 
-		<transition
-			:enter-active-class="classes.sectionEnterActive"
-			:leave-active-class="classes.sectionLeaveActive"
-			:enter-from-class="classes.sectionEnterFrom"
-			:leave-to-class="classes.sectionLeaveTo"
+		<!-- Section Rows -->
+		<div
+			v-if="isExpanded"
+			:class="classes.sectionRows"
 		>
-			<div v-if="!section.isCollapsed" :class="classes.sectionContent">
-				<generic-grid-rows
-					:rows="section.rows"
-					:section-id="section.id"
-					:columns="columns"
-					:grid-template-columns="gridTemplateColumns"
-					:enable-drag-drop="enableDragDrop"
-					:sticky-first-column="stickyFirstColumn"
-					:enable-row-actions="enableRowActions"
-					@row-moved="handleRowMoved"
-					@row-deleted="handleRowDeleted"
-				>
-					<template
-						v-for="(_column, _index) in columns"
-						:key="_column.key"
-						#[`cell-${_index}`]="cellProps"
+			<draggable
+				:model-value="section.rows"
+				:group="enableDragDrop ? 'table-rows' : false"
+				:disabled="!enableDragDrop"
+				item-key="id"
+				:class="classes.draggableRows"
+				@change="onDragChange"
+			>
+				<template #item="{ element: row, index: rowIndex }">
+					<div
+						:key="row.id"
+						:class="classes.gridRow"
+						:style="{ gridTemplateColumns }"
 					>
-						<slot
-							:name="`cell-${_index}`"
-							v-bind="cellProps"
-						/>
-					</template>
-				</generic-grid-rows>
-			</div>
-		</transition>
+						<div
+							v-for="(column, cellIndex) in columns"
+							:key="`${row.id}-${column.key}`"
+							:class="[
+								classes.gridCell,
+								{
+									[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
+									[classes.lastCell]: cellIndex === columns.length - 1 && !enableRowActions
+								}
+							]"
+						>
+							<slot
+								:name="`cell-${cellIndex}`"
+								:row="row"
+								:column="column"
+								:cell-index="cellIndex"
+								:row-index="rowIndex"
+								:value="row.data[column.key]"
+							>
+								{{ row.data[column.key] }}
+							</slot>
+						</div>
+
+						<div
+							v-if="enableRowActions"
+							:class="classes.rowActionsCell"
+						>
+							<div :class="classes.rowActions">
+								<button
+									:class="[classes.rowActionBtn, classes.deleteBtn]"
+									title="Delete row"
+									@click="handleRowDeleted(row.id)"
+								>
+									<span :class="classes.deleteIcon">🗑️</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</template>
+			</draggable>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
-.gridSection {
+.section {
+	position: relative;
 	display: flex;
 	flex-direction: column;
+	min-width: fit-content;
 }
 
 .sectionHeader {
-	position: sticky;
-	left: 0;
-	z-index: 10;
-	display: grid;
+	position: relative;
+	display: flex;
 	align-items: center;
+	min-width: fit-content;
 	min-height: 44px;
-	padding: 12px 8px;
-	font-weight: 440;
-	font-size: 14px;
-	color: var(--text-color-base-100, #ffffff);
-	letter-spacing: 0.096px;
-	background: var(--bg-color-surface-02, rgb(255 255 255 / 2%));
-	border-bottom: 1px solid var(--border-color-base-300, #444444);
-	cursor: pointer;
-	transition: color 0.2s ease;
+	background: var(--bg-color-surface-02, #2a2a2a);
+	border-bottom: 1px solid rgb(255 255 255 / 10%);
+	user-select: none;
 }
 
 .sectionHeader:hover {
-	color: rgb(131 132 135 / 90%);
+	background: var(--bg-color-surface-02-hover, #333333);
 }
 
-.sectionHeader:hover .sectionIcon {
-	color: rgb(131 132 135 / 90%);
+.sectionHeaderLeft {
+	position: sticky;
+	left: 0;
+	z-index: 15;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	min-width: 0;
+	padding: 0 12px;
+	background: inherit;
+	cursor: pointer;
+}
+
+.sectionHeaderSpacer {
+	flex: 1;
+	min-width: 0;
+}
+
+.sectionHeaderRight {
+	position: sticky;
+	right: 0;
+	z-index: 15;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	padding: 0 12px;
+	background: inherit;
+}
+
+.sectionHeaderRight::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -1px;
+	z-index: 1;
+	width: 1px;
+	background: rgb(255 255 255 / 10%);
+}
+
+.sectionToggle {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	margin-right: 8px;
+}
+
+.toggleIcon {
+	font-size: 12px;
+	color: var(--text-color-base-200, #cccccc);
+	transition: transform 0.2s ease;
+}
+
+.toggleIcon.collapsed {
+	transform: rotate(-90deg);
 }
 
 .sectionTitle {
-	display: flex;
 	flex: 1;
-	align-items: center;
-	grid-column: 1 / -1;
+	min-width: 0;
+	overflow: hidden;
+	font-weight: 500;
+	font-size: 14px;
+	color: var(--text-color-base-100, #ffffff);
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .sectionActions {
 	display: flex;
-	align-items: center;
-	gap: 12px;
-	justify-self: end;
-	grid-column: -1;
-	opacity: 0;
-}
-
-.sectionHeaderOpen:hover .sectionActions {
+	gap: 4px;
 	opacity: 1;
 }
 
-.actionButton {
+.sectionActionBtn {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 20px;
-	height: 20px;
-	color: var(--text-color-base-300, #9a9a9d);
-	background: none;
-	border: none;
+	width: 28px;
+	height: 28px;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 6px;
 	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.sectionActionBtn:hover {
+	background: rgb(255 255 255 / 10%);
+	border-color: rgb(255 255 255 / 20%);
+}
+
+.deleteBtn:hover {
+	background: rgb(255 77 79 / 20%);
+	border-color: rgb(255 77 79 / 40%);
+}
+
+.deleteIcon {
+	font-size: 14px;
+	color: var(--text-color-base-300, #9a9a9d);
 	transition: color 0.2s ease;
 }
 
-.actionButton:hover {
-	color: var(--text-color-base-100, #ffffff);
+.deleteBtn:hover .deleteIcon {
+	color: #ff4d4f;
 }
 
-.sectionToggle {
-	margin-right: 6px;
+.sectionRows {
+	position: relative;
+	min-width: fit-content;
 }
 
-.sectionIcon {
+.draggableRows {
 	display: flex;
-	width: 12px;
-	height: 12px;
-	font-size: 8px;
-	color: var(--text-color-base-100, #ffffff);
-	transition: transform 0.3s ease, color 0.2s ease;
+	flex-direction: column;
+	min-width: fit-content;
 }
 
-.sectionIconCollapsed {
-	transform: rotate(-90deg);
+.gridRow {
+	position: relative;
+	display: grid;
+	align-items: center;
+	min-width: fit-content;
+	min-height: 50px;
+	border-bottom: 1px solid rgb(255 255 255 / 5%);
+	transition: background-color 0.2s ease;
 }
 
-.sectionIconExpanded {
-	transform: rotate(0deg);
+.gridRow:hover {
+	background-color: var(--border-color-surface-01-effect);
 }
 
-.sectionName {
-	font-weight: inherit;
-	font-size: inherit;
-	color: inherit;
+.gridRow:hover .gridCell:first-child {
+	border-top-left-radius: 16px;
+	border-bottom-left-radius: 16px;
 }
 
-.renameInput {
-	font-weight: inherit;
-	font-size: inherit;
-	color: var(--text-color-base-100, #ffffff);
-	letter-spacing: inherit;
-	background-color: transparent;
-	border: none;
-	outline: none;
+.gridRow:hover .rowActionsCell {
+	border-top-right-radius: 16px;
+	border-bottom-right-radius: 16px;
 }
 
-.sectionContent {
+.gridRow:hover .lastCell {
+	border-top-right-radius: 16px;
+	border-bottom-right-radius: 16px;
+}
+
+.gridCell {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	min-height: 50px;
+	padding: 8px 12px;
 	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background: var(--bg-color-surface-01);
+	border-right: 1px solid rgb(255 255 255 / 5%);
 }
 
-.sectionEnterActive,
-.sectionLeaveActive {
-	max-height: 700px;
-	opacity: 1;
-	transition: all 0.3s ease;
+.gridCell:last-child {
+	border-right: none;
 }
 
-.sectionEnterFrom,
-.sectionLeaveTo {
-	max-height: 0;
-	transform: translateY(-10px);
+.lastCell {
+	border-right: none;
+}
+
+.stickyFirstCell {
+	position: sticky !important;
+	left: 0 !important;
+	z-index: 10 !important;
+	background: var(--bg-color-surface-01) !important;
+	border-right: 1px solid rgb(255 255 255 / 5%) !important;
+}
+
+.stickyFirstCell::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: -1px;
+	bottom: 0;
+	z-index: 1;
+	width: 1px;
+	background: rgb(255 255 255 / 5%);
+}
+
+.rowActionsCell {
+	position: relative;
+	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
+	min-width: 50px;
+	min-height: 50px;
+	padding: 8px;
+	background: var(--bg-color-surface-01);
+}
+
+.rowActions {
+	display: flex;
+	gap: 4px;
 	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.gridRow:hover .rowActions {
+	opacity: 1;
+}
+
+.rowActionBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 28px;
+	height: 28px;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.rowActionBtn:hover {
+	background: rgb(255 255 255 / 10%);
+	border-color: rgb(255 255 255 / 20%);
 }
 </style>

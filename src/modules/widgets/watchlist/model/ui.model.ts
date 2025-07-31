@@ -1,4 +1,4 @@
-import type { IWatchlistColumn, IWatchlistTab, TabMenuAction, ITableRowValueType } from '.';
+import type { ITableRowValueType, IWatchlistColumn, IWatchlistTab, TabMenuAction } from '.';
 
 // UI extension for columns with display properties
 export interface ITableColumn extends IWatchlistColumn {
