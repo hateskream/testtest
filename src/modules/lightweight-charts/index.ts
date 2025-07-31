@@ -8,6 +8,7 @@ import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 import ChartIncomeStatement from './ui/chart-income-statement.vue';
 import ChartMarketCap from './ui/chart-market-cap.vue';
 import ChartBitcoinDominanc from './ui/chart-bitcoin-dominanc.vue';
+import ChartAltcoinSeason from './ui/chart-altcoin-season.vue';
 
 export {
 	Chart,
@@ -20,4 +21,5 @@ export {
 	ChartIncomeStatement,
 	ChartMarketCap,
 	ChartBitcoinDominanc,
+	ChartAltcoinSeason,
 };

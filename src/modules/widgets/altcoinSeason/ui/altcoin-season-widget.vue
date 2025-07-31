@@ -46,8 +46,11 @@ const metaPerformance = computed(() => {
 
 		<template #content>
 			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
-				<template #period v-if="altcoinSeasonWidgetConfig?.period">
-					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period" />
+				<template #period>
+					<altcoin-season-period-group
+						v-if="altcoinSeasonWidgetConfig?.period"
+						:period="altcoinSeasonWidgetConfig?.period"
+					/>
 				</template>
 
 				<template #performanceRank="{ showPeriod }">

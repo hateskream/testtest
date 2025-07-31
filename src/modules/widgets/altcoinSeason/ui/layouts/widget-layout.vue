@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model';
 import type { ISize } from '@/modules/dashboard-group/grid/model';
 import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
+import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 
 interface IWidgetLayoutProps {
 	widgetConfig: IAltcoinSeasonConfig | null;
@@ -33,12 +34,13 @@ const gridConfig = computed(() => {
 
 const containerStyles = computed(() => {
 	const { columns, rows } = gridConfig.value;
+	const minimumRows = 12;
 
 	const styles = {
 		'--min-col-width': `${MIN_COL_WIDTH}px`,
 		'--min-row-height': `${MIN_ROW_HEIGHT}px`,
 		'--grid-columns': columns.toString(),
-		'--grid-rows': rows.toString(),
+		'--grid-rows': rows > minimumRows ? rows.toString() : minimumRows.toString(),
 	};
 
 	return styles;
@@ -55,19 +57,21 @@ const adaptiveGridAreas = computed(() => {
 
 	if (columns === 7 && rows >= 10) {
 		return {
-			performanceRank: '1 / 1 / 4 / 3',
-			historicalValues: '1 / 3 / 4 / 5',
-			chart: '4 / 1 / -1 / 5',
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / 3',
+			historicalValues: '2 / 3 / 5 / 5',
+			chart: '5 / 1 / -1 / 5',
 			top100: '1 / 5 / -1 / -1',
 		};
 	}
 
 	if (columns === 4) {
 		return {
-			performanceRank: '1 / 1 / 4 / 3',
-			historicalValues: '1 / 3 / 4 / -1',
-			chart: '4 / 1 / -1 / -1',
-			top100: '12 / 1 / -1 / -1',
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / 3',
+			historicalValues: '2 / 3 / 5 / -1',
+			chart: '5 / 1 / 9 / -1',
+			top100: '9 / 1 / -1 / -1',
 		};
 	}
 
@@ -75,9 +79,9 @@ const adaptiveGridAreas = computed(() => {
 	if (periodVisible) {
 		return {
 			period: '1 / 1 / 2 / -1',
-			performanceRank: '2 / 1 / 4 / -1',
-			historicalValues: '4 / 1 / 6 / -1',
-			chart: '6 / 1 / -1 / -1',
+			performanceRank: '2 / 1 / 5 / -1',
+			historicalValues: '5 / 1 / 8 / -1',
+			chart: '8 / 1 / -1 / -1',
 			top100: '14 / 1 / -1 / -1',
 		};
 	} else {
@@ -144,7 +148,7 @@ const adaptiveGridAreas = computed(() => {
 			:style="{ gridArea: adaptiveGridAreas.chart }"
 		>
 			<slot name="chart">
-				Chart
+				<chart-altcoin-season />
 			</slot>
 		</div>
 	</div>
@@ -182,7 +186,7 @@ const adaptiveGridAreas = computed(() => {
 }
 
 .chart {
-	background-color: #494949;
+	/* background-color: #494949; */
 }
 
 /* Адаптивные стили для разных размеров */
