@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
-import { onMounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { onMounted, shallowRef, useTemplateRef, watchEffect } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
 
 
@@ -220,21 +220,28 @@ const externalTooltipHandler = (context: {
 	tooltipEl.style.padding = context.tooltip.options.padding + 'px ' + context.tooltip.options.padding + 'px';
 };
 
-watch(() => props.hideAxis, (val) => {
-
-	if (chart.value ) {
-		if (!val) {
-			chart.value.options.scales = {};
+watchEffect(() => {
+	if (props.hideAxis) {
+		if (chart.value) {
+			chart.value.options.scales = {
+				x: {
+					display: false,
+				},
+				y: {
+					display: false,
+				},
+			};
 			chart.value?.update();
+		}
 
-		} else {
+	} else {
+		if (chart.value) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
+		// @ts-ignore
 			chart.value.options.scales = chartAxisOptions;
 			chart.value?.update();
 		}
 	}
-
 });
 
 onMounted(() => {
@@ -270,7 +277,14 @@ onMounted(() => {
 			},
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			scales: props.hideAxis ? {} : chartAxisOptions,
+			scales: props.hideAxis ? {
+				x: {
+					display: false,
+				},
+				y: {
+					display: false,
+				},
+			} : chartAxisOptions,
 		},
 	});
 });

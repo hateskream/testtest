@@ -193,18 +193,17 @@ onMounted(() => {
 
 		</div>
 
-
 		<div
 			v-show="
 				bitcoinDominancStore.isShowChart &&
-					meta.size.h >= 3 &&
+					meta.size.h >= 7 &&
 					activeListSorted.length > 0
 			"
 			:class="classes.chartWrapper"
 		>
 			<chart-bitcoin-dominanc
 				ref="chart"
-				:hide-axis="meta.size.w <=3 || meta.size.h <= 5"
+				:hide-axis="meta.size.w  <= 2 || meta.size.h <= 7"
 				:height="'85%'"
 			/>
 
