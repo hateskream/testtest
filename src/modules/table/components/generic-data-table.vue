@@ -104,7 +104,7 @@ const getBaseColumnWidths = (position: 'header' | 'body') => {
 
 
 		if (index === 0) {
-			const minColumnWidth = col.minWidth || 100;
+			const minColumnWidth = col.minWidth || 300; // Changed from 100 to 300
 			if (additionalWidth > 0) {
 				return `minmax(${minColumnWidth + additionalWidth}px, calc(1fr + ${additionalWidth}px))`;
 			} else {
@@ -119,7 +119,8 @@ const getBaseColumnWidths = (position: 'header' | 'body') => {
 		} else if (hasWidth && hasMinWidth) {
 			return `minmax(${col.minWidth! + additionalWidth}px, ${col.width! + additionalWidth}px)`;
 		} else {
-			return '1fr';
+			// Changed from '1fr' to use 150px default minWidth for non-first columns
+			return `minmax(${150 + additionalWidth}px, 1fr)`;
 		}
 	});
 	if (props.enableRowActions && position === 'body') {

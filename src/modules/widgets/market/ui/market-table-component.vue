@@ -31,7 +31,7 @@ const genericRows = computed(() =>
 			:rows="genericRows"
 			:enable-drag-drop="true"
 			:enable-column-reordering="true"
-			:enable-sorting="true"
+			:enable-sorting="false"
 			:enable-column-settings="true"
 			:sticky-header="true"
 			:sticky-first-column="true"

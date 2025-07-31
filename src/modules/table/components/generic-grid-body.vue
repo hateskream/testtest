@@ -51,6 +51,18 @@ const emit = defineEmits<IEmits<T>>();
 const { sortData } = useTableData();
 const { handleDragChange } = useTableDragDrop();
 
+// Track which row is currently being hovered
+const hoveredRowId = ref<string | null>(null);
+
+// Hover handlers for individual rows
+const handleRowMouseEnter = (rowId: string) => {
+	hoveredRowId.value = rowId;
+};
+
+const handleRowMouseLeave = () => {
+	hoveredRowId.value = null;
+};
+
 const showAddSectionInput = ref(false);
 const addSectionInputRef = ref<HTMLInputElement>();
 const newSectionName = ref('New section');
@@ -195,8 +207,10 @@ const cancelAddSection = () => {
 				<template #item="{ element: row, index: rowIndex }">
 					<div
 						:key="row.id"
-						:class="classes.gridRow"
+						:class="[classes.gridRow, { [classes.gridRowHovered]: hoveredRowId === row.id }]"
 						:style="{ gridTemplateColumns }"
+						@mouseenter="handleRowMouseEnter(row.id)"
+						@mouseleave="handleRowMouseLeave"
 					>
 						<div
 							v-for="(column, cellIndex) in columns"
@@ -205,6 +219,8 @@ const cancelAddSection = () => {
 								classes.gridCell,
 								{
 									[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
+									[classes.stickyFirstCellHovered]: cellIndex === 0 &&
+										stickyFirstColumn && hoveredRowId === row.id,
 									[classes.lastCell]: cellIndex === columns.length - 1 && !enableRowActions
 								}
 							]"
@@ -328,24 +344,23 @@ const cancelAddSection = () => {
 	min-width: fit-content;
 	min-height: 50px;
 	border-bottom: 1px solid rgb(255 255 255 / 5%);
-	transition: background-color 0.2s ease;
 }
 
-.gridRow:hover {
+.gridRowHovered {
 	background-color: var(--border-color-surface-01-effect);
 }
 
-.gridRow:hover .gridCell:first-child {
+.gridRowHovered .gridCell:first-child {
 	border-top-left-radius: 16px;
 	border-bottom-left-radius: 16px;
 }
 
-.gridRow:hover .rowActionsCell {
+.gridRowHovered .rowActionsCell {
 	border-top-right-radius: 16px;
 	border-bottom-right-radius: 16px;
 }
 
-.gridRow:hover .lastCell {
+.gridRowHovered .lastCell {
 	border-top-right-radius: 16px;
 	border-bottom-right-radius: 16px;
 }
@@ -360,7 +375,7 @@ const cancelAddSection = () => {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background: var(--bg-color-surface-01);
+	background: transparent;
 	border-right: 1px solid rgb(255 255 255 / 5%);
 }
 
@@ -376,8 +391,14 @@ const cancelAddSection = () => {
 	position: sticky !important;
 	left: 0 !important;
 	z-index: 10 !important;
-	background: var(--bg-color-surface-01) !important;
+	background: transparent !important;
 	border-right: 1px solid rgb(255 255 255 / 5%) !important;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.stickyFirstCellHovered {
+	background: rgb(32 32 32 / 100%) !important;
 }
 
 .stickyFirstCell::before {
@@ -410,7 +431,7 @@ const cancelAddSection = () => {
 	transition: opacity 0.2s ease;
 }
 
-.gridRow:hover .rowActions {
+.gridRowHovered .rowActions {
 	opacity: 1;
 }
 

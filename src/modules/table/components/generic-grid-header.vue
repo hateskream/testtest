@@ -247,7 +247,6 @@ const handleMove = (event: any) => {
 	font-size: 12px;
 	color: var(--text-color-base-100, #ffffff);
 	white-space: nowrap;
-	border-right: 1px solid var(--border-color-base-300, #444444);
 	user-select: none;
 }
 

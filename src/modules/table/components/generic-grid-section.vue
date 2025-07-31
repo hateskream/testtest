@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import type {
@@ -42,6 +42,18 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 const emit = defineEmits<IEmits<T>>();
 
 const { handleDragChange } = useTableDragDrop();
+
+// Track which row is currently being hovered
+const hoveredRowId = ref<string | null>(null);
+
+// Hover handlers for individual rows
+const handleRowMouseEnter = (rowId: string) => {
+	hoveredRowId.value = rowId;
+};
+
+const handleRowMouseLeave = () => {
+	hoveredRowId.value = null;
+};
 
 const isExpanded = computed(() => !props.section.isCollapsed);
 
@@ -155,8 +167,10 @@ const onDragChange = (evt: IDragEvent<T>) => {
 				<template #item="{ element: row, index: rowIndex }">
 					<div
 						:key="row.id"
-						:class="classes.gridRow"
+						:class="[classes.gridRow, { [classes.gridRowHovered]: hoveredRowId === row.id }]"
 						:style="{ gridTemplateColumns }"
+						@mouseenter="handleRowMouseEnter(row.id)"
+						@mouseleave="handleRowMouseLeave"
 					>
 						<div
 							v-for="(column, cellIndex) in columns"
@@ -165,6 +179,8 @@ const onDragChange = (evt: IDragEvent<T>) => {
 								classes.gridCell,
 								{
 									[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
+									[classes.stickyFirstCellHovered]: cellIndex === 0
+										&& stickyFirstColumn && hoveredRowId === row.id,
 									[classes.lastCell]: cellIndex === columns.length - 1 && !enableRowActions
 								}
 							]"
@@ -350,24 +366,23 @@ const onDragChange = (evt: IDragEvent<T>) => {
 	min-width: fit-content;
 	min-height: 50px;
 	border-bottom: 1px solid rgb(255 255 255 / 5%);
-	transition: background-color 0.2s ease;
 }
 
-.gridRow:hover {
+.gridRowHovered {
 	background-color: var(--border-color-surface-01-effect);
 }
 
-.gridRow:hover .gridCell:first-child {
+.gridRowHovered .gridCell:first-child {
 	border-top-left-radius: 16px;
 	border-bottom-left-radius: 16px;
 }
 
-.gridRow:hover .rowActionsCell {
+.gridRowHovered .rowActionsCell {
 	border-top-right-radius: 16px;
 	border-bottom-right-radius: 16px;
 }
 
-.gridRow:hover .lastCell {
+.gridRowHovered .lastCell {
 	border-top-right-radius: 16px;
 	border-bottom-right-radius: 16px;
 }
@@ -382,8 +397,7 @@ const onDragChange = (evt: IDragEvent<T>) => {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background: var(--bg-color-surface-01);
-	border-right: 1px solid rgb(255 255 255 / 5%);
+	background: transparent;
 }
 
 .gridCell:last-child {
@@ -398,19 +412,12 @@ const onDragChange = (evt: IDragEvent<T>) => {
 	position: sticky !important;
 	left: 0 !important;
 	z-index: 10 !important;
-	background: var(--bg-color-surface-01) !important;
+	background: transparent !important;
 	border-right: 1px solid rgb(255 255 255 / 5%) !important;
 }
 
-.stickyFirstCell::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	right: -1px;
-	bottom: 0;
-	z-index: 1;
-	width: 1px;
-	background: rgb(255 255 255 / 5%);
+.stickyFirstCellHovered {
+	background: rgb(32 32 32 / 100%) !important;
 }
 
 .rowActionsCell {
@@ -422,7 +429,7 @@ const onDragChange = (evt: IDragEvent<T>) => {
 	min-width: 50px;
 	min-height: 50px;
 	padding: 8px;
-	background: var(--bg-color-surface-01);
+	background: transparent;
 }
 
 .rowActions {
@@ -432,7 +439,7 @@ const onDragChange = (evt: IDragEvent<T>) => {
 	transition: opacity 0.2s ease;
 }
 
-.gridRow:hover .rowActions {
+.gridRowHovered .rowActions {
 	opacity: 1;
 }
 
