@@ -293,7 +293,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
+	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 	</div>
 </template>

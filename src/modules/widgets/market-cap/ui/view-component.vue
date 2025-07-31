@@ -221,13 +221,15 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 				:is-visible-history-graph="false"
 				:is-visible-indicators="false"
 				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-				:height="'100%'"
+				:height="'85%'"
 				:is-visible-range="meta.size.w > 2"
 			/>
 			<chart-market-cap
 				v-show="activeList.length > 0"
 				ref="chartMarketCap"
-				:height="'100%'"
+				:is-visible-range="meta.size.w > 2"
+				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+				:height="'75%'"
 			/>
 		</div>
 	</div>
@@ -245,10 +247,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 
 
 .chartWrapper {
-	flex: 1;
 	height: 100%;
-
-	/* background-color: red; */
 }
 
 .chartPrices {
