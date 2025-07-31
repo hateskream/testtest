@@ -23,12 +23,12 @@ interface IUiTreemapTooltipProps {
 	currencySymbol: string;
 
 	sizeValue: number;
-	colorValue: number;
-
-	colorValueIsPercent: boolean;
-
-	colorBy: string;
+	sizeValueIsPercent: boolean;
 	sizeBy: string;
+
+	displayValue: number;
+	displayValueIsPercent: boolean;
+	displayValueName: string;
 
 	isOpen: boolean;
 }
@@ -62,36 +62,33 @@ const { floatingStyles, update } = useFloating(
 	},
 );
 
-const prepareSizeBy = computed(() => prepareNumberValue(props.sizeValue));
+const prepareSizeBy = computed(() =>
+	prepareNumberValue(props.sizeValue, props.sizeValueIsPercent),
+);
+const prepareValueDisplay = computed(() =>
+	prepareNumberValue(props.displayValue, props.displayValueIsPercent),
+);
 
-const prepareColorBy = computed(() => {
-	if (props.colorValueIsPercent) {
-		return preparePercent(props.colorValue);
+const styleValueDisplay = computed(() => {
+	let color = colorMapping.zero;
+	if (props.displayValue > 0) {
+		color = colorMapping.moreZero;
+	} else if (props.displayValue < 0) {
+		color = colorMapping.lessZero;
 	}
 
-	return prepareNumberValue(props.colorValue);
-});
-
-const styleColorBy = computed(() => {
-	if (props.colorValueIsPercent) {
-		let color = colorMapping.zero;
-		if (props.colorValue > 0) {
-			color = colorMapping.moreZero;
-		} else if (props.colorValue < 0) {
-			color = colorMapping.lessZero;
-		}
-
-		return {
-			color,
-		};
-	}
-
-	return {};
+	return {
+		color,
+	};
 });
 
 watch([debouncedX, debouncedY], update);
 
-function prepareNumberValue(value: number) {
+function prepareNumberValue(value: number, isPercent: boolean) {
+	if (isPercent) {
+		return preparePercent(value);
+	}
+
 	return `${props.currencySymbol} ${prepareNumber(value)}`;
 }
 
@@ -122,12 +119,12 @@ function prepareNumberValue(value: number) {
 				<div
 					class="value"
 				>
-					{{ props.colorBy }}
+					{{ props.displayValueName }}
 				</div>
 				<div
 					class="value"
-					:style="styleColorBy"
-				>{{ prepareColorBy }}</div>
+					:style="styleValueDisplay"
+				>{{ prepareValueDisplay }}</div>
 			</div>
 		</div>
 	</div>

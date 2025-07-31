@@ -19,6 +19,7 @@ const {
 	activeColorBy,
 	activeSizeBy,
 	activeColorDepth,
+	activeDisplayValue,
 	isShowLogo,
 	titleSetting,
 } = useDisplaySettings(settings);
@@ -27,7 +28,17 @@ const excludeTickers = ref<string[]>([]);
 
 const { data: heatmapData, refetch } = useQueryHeatmap(marketSettings.active, excludeTickers);
 
-const { heatmap, isPercent } = useHeatmap(heatmapData, activeSizeBy, activeColorBy, titleSetting);
+const {
+	heatmap,
+	isSizeValuePercent,
+	isDisplayValuePercent,
+} = useHeatmap(
+	heatmapData,
+	activeSizeBy,
+	activeColorBy,
+	activeDisplayValue,
+	titleSetting,
+);
 
 watch(() => marketSettings.active, () => {
 	refetch();
@@ -48,13 +59,14 @@ watch(() => marketSettings.active, () => {
 		<ui-treemap
 			v-if="heatmapData"
 			:currency-symbol="heatmapData.currencySymbol"
-			:color-by="activeColorBy!.colorBy.displayName"
 			:size-by="activeSizeBy!.displayName"
+			:display-value-name="activeDisplayValue!.displayName"
 			:depth-range="activeColorDepth!"
 			:visible-config="{
 				isShowLogo: isShowLogo,
 				isShowTicker: titleSetting !== TitleViewVariant.NONE,
-				isPercent: isPercent,
+				isSizeValuePercent: isSizeValuePercent,
+				isDisplayValuePercent: isDisplayValuePercent,
 			}"
 			:data="heatmap"
 		/>

@@ -85,6 +85,14 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		return setting.colorDepth.find(c => c.id === colorDepthSettings.active) || setting.colorDepth[0];
 	});
 
+	const activeDisplayValue = computed(() => {
+		const setting = activeDisplaySettings.value;
+		if (!setting) {
+			return null;
+		}
+		return setting.displayValue.find(d => d.key === displayValueSettings.active) || setting.displayValue[0];
+	});
+
 	onCreated();
 
 	watch(settings, newSettings => {
@@ -169,18 +177,6 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		setParamIfNotDefault('displayValue', active, setting.displayValue[0].key);
 	});
 
-	// watch(() => [isShowLogo.value, titleSetting.value], ([logo, title]) => {
-	// 	// if (!created) {
-	// 	// 	created = true;
-	// 	// 	return;
-	// 	// }
-
-	// 	console.log(logo, title);
-
-	// 	setParamIfNotDefault('showLogo', String(logo), String(defaultShowLogo));
-	// 	setParamIfNotDefault('title', title as string, defaultTitleViewVariant);
-	// });
-
 	watch(isShowLogo, logo => {
 		setParamIfNotDefault('showLogo', String(logo), String(defaultShowLogo));
 	});
@@ -222,5 +218,6 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		activeColorDepth,
 		isShowLogo,
 		titleSetting,
+		activeDisplayValue,
 	};
 }

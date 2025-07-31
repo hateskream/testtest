@@ -12,6 +12,7 @@ interface IDataInput {
 	logoUrl: string;
 	sizeValue: number;
 	colorValue: number;
+	displayValue: number;
 	price: number;
 }
 
@@ -27,7 +28,8 @@ interface IDepthRange {
 interface IVisibleConfig {
 	isShowLogo: boolean;
 	isShowTicker: boolean;
-	isPercent: boolean;
+	isSizeValuePercent: boolean;
+	isDisplayValuePercent: boolean;
 }
 
 interface IUiTreemap {
@@ -35,7 +37,7 @@ interface IUiTreemap {
 	depthRange: IDepthRange;
 	visibleConfig: IVisibleConfig;
 	currencySymbol: string;
-	colorBy: string;
+	displayValueName: string;
 	sizeBy: string;
 }
 
@@ -43,25 +45,50 @@ const props = defineProps<IUiTreemap>();
 
 const { treemap } = useTreemapLayout(
 	useTemplateRef<HTMLCanvasElement>('treemapCanvas'),
-	computed(() => props.data.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker }))),
+	computed(() => props.data
+		.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker })),
+	),
 );
 
 const { getColorByValue } = useDepth(toRefs(props).depthRange);
 
 const tickerHovered = ref<string | null>(null);
 
+interface IUiTreemapTooltipProps {
+	logoUrl: string;
+	ticker: string;
+
+	price: number;
+	currencySymbol: string;
+
+	sizeValue: number;
+	sizeValueIsPercent: boolean;
+	sizeBy: string;
+
+	displayValue: number;
+	displayValueIsPercent: boolean;
+	displayValueName: string;
+
+	isOpen: boolean;
+}
+
 const dataForTooltip = computed(() => {
-	const empty = {
-		isOpen: false,
+	const empty: IUiTreemapTooltipProps = {
 		logoUrl: '',
 		ticker: '',
+
 		price: 0,
 		currencySymbol: props.currencySymbol,
+
 		sizeValue: 0,
-		colorValue: 0,
-		colorValueIsPercent: props.visibleConfig.isPercent,
-		colorBy: props.colorBy,
+		sizeValueIsPercent: props.visibleConfig.isSizeValuePercent,
 		sizeBy: props.sizeBy,
+
+		displayValue: 0,
+		displayValueIsPercent: props.visibleConfig.isDisplayValuePercent,
+		displayValueName: props.displayValueName,
+
+		isOpen: false,
 	};
 
 	const ticker = tickerHovered.value;
@@ -76,7 +103,7 @@ const dataForTooltip = computed(() => {
 	empty.logoUrl = data.logoUrl;
 	empty.price = data.price;
 	empty.sizeValue = data.sizeValue;
-	empty.colorValue = data.colorValue;
+	empty.displayValue = data.displayValue;
 
 	return empty;
 });
@@ -105,11 +132,15 @@ function setTickerHovered(ticker: string | null) {
 			<ui-treemap-item
 				v-for="(item, index) in treemapWithData"
 				:key="index"
-				:visible-config="visibleConfig"
+				:visible-config="{
+					isShowLogo: visibleConfig.isShowLogo,
+					isShowTicker: visibleConfig.isShowTicker,
+					isPercent: visibleConfig.isDisplayValuePercent,
+				}"
 				:color="item.color"
 				:logo-url="item.logoUrl"
 				:ticker="item.ticker"
-				:value="item.colorValue"
+				:value="item.displayValue"
 				:left="item.left"
 				:top="item.top"
 				:width="item.width"
@@ -120,16 +151,21 @@ function setTickerHovered(ticker: string | null) {
 		</div>
 
 		<ui-treemap-tooltip
-			:is-open="dataForTooltip.isOpen"
 			:logo-url="dataForTooltip.logoUrl"
 			:ticker="dataForTooltip.ticker"
+
 			:price="dataForTooltip.price"
 			:currency-symbol="dataForTooltip.currencySymbol"
+
 			:size-value="dataForTooltip.sizeValue"
-			:color-value="dataForTooltip.colorValue"
-			:color-value-is-percent="dataForTooltip.colorValueIsPercent"
-			:color-by="dataForTooltip.colorBy"
+			:size-value-is-percent="dataForTooltip.sizeValueIsPercent"
 			:size-by="dataForTooltip.sizeBy"
+
+			:display-value="dataForTooltip.displayValue"
+			:display-value-is-percent="dataForTooltip.displayValueIsPercent"
+			:display-value-name="dataForTooltip.displayValueName"
+
+			:is-open="dataForTooltip.isOpen"
 		/>
 	</div>
 </template>
