@@ -45,7 +45,7 @@ const activeColorDepth = computed(() => {
 		return '';
 	}
 
-	return `${acd.end} - ${acd.start}`;
+	return `${acd.start} to ${acd.end}`;
 });
 
 const activeDisplayValue = computed((): string =>

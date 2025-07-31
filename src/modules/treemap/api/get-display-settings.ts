@@ -46,49 +46,81 @@ const crypto: IDisplaySettings = {
 		displayName: 'Crypto',
 	},
 	sizeBy: [
-		{ key: 'marketCap', displayName: 'Market cap 333', isPercent: false },
+		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
+		{ key: 'volume', displayName: 'Volume', isPercent: false },
 	],
 	colorBy: [
 		{
-			colorBy: { key: 'change24hPercent11', displayName: 'Change 24h %11', isPercent: true },
+			colorBy:
+				{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
 			colorDepth: [
-				{ start: -3, end: 3, id: 'negative3' },
+				{ start: -0.6, end: 0.6, id: '0.6-change24hPercent' },
+				{ start: -3, end: 3, id: '3-change24hPercent' },
+				{ start: -6, end: 6, id: '6-change24hPercent' },
+				{ start: -15, end: 15, id: '15-change24hPercent' },
+				{ start: -30, end: 30, id: '30-change24hPercent' },
+			],
+		},
+		{
+			colorBy:
+				{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
+			colorDepth: [
+				{ start: -0.6, end: 0.6, id: '0.6-change24h' },
+				{ start: -3, end: 3, id: '3-change24h' },
+				{ start: -6, end: 6, id: '6-change24h' },
+				{ start: -15, end: 15, id: '15-change24h' },
+				{ start: -30, end: 30, id: '30-change24h' },
 			],
 		},
 	],
 	displayValue: [
-		{ key: 'marketCap 444', displayName: 'Market cap 444', isPercent: false },
+		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
+		{ key: 'volume', displayName: 'Volume', isPercent: false },
+		{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
+		{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
+		{ key: 'price', displayName: 'Price', isPercent: false },
 	],
 };
 
 const stock: IDisplaySettings = {
 	market: {
 		id: 'stock',
-		displayName: 'Stocks',
+		displayName: 'Stock',
 	},
 	sizeBy: [
-		{ key: 'marketCap3', displayName: 'Market cap3', isPercent: false },
-		{ key: 'marketCap1', displayName: 'Market cap1', isPercent: false },
-		{ key: 'marketCap2', displayName: 'Market cap2', isPercent: false },
+		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
+		{ key: 'volume', displayName: 'Volume', isPercent: false },
 	],
 	colorBy: [
 		{
-			colorBy: { key: 'change24hPercent', displayName: 'Change 24h %', isPercent: true },
+			colorBy:
+				{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
 			colorDepth: [
-				{ start: -3, end: 3, id: 'negative13' },
-				{ start: -4, end: 4, id: 'negative31' },
+				{ start: -0.6, end: 0.6, id: '0.6-change24hPercent' },
+				{ start: -3, end: 3, id: '3-change24hPercent' },
+				{ start: -6, end: 6, id: '6-change24hPercent' },
+				{ start: -15, end: 15, id: '15-change24hPercent' },
+				{ start: -30, end: 30, id: '30-change24hPercent' },
 			],
 		},
 		{
-			colorBy: { key: 'change24hPercent1', displayName: 'Change 24h %1', isPercent: true },
+			colorBy:
+				{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
 			colorDepth: [
-				{ start: -3, end: 3, id: 'negative21' },
-				{ start: -433, end: 433, id: 'negative32' },
+				{ start: -0.6, end: 0.6, id: '0.6-change24h' },
+				{ start: -3, end: 3, id: '3-change24h' },
+				{ start: -6, end: 6, id: '6-change24h' },
+				{ start: -15, end: 15, id: '15-change24h' },
+				{ start: -30, end: 30, id: '30-change24h' },
 			],
 		},
 	],
 	displayValue: [
-		{ key: 'marketCap 0', displayName: 'Market cap 0', isPercent: false },
+		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
+		{ key: 'volume', displayName: 'Volume', isPercent: false },
+		{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
+		{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
+		{ key: 'price', displayName: 'Price', isPercent: false },
 	],
 };
 
