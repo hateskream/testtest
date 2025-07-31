@@ -1,6 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from 'vue';
-import { Chart, type TooltipModel } from 'chart.js/auto';
+import { onBeforeMount, onMounted, ref, useTemplateRef } from 'vue';
+import { Chart, type TooltipModel } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
+
+Chart.register(annotationPlugin);
+interface IChartProps {
+	// width: number;
+	height: number;
+}
+
+defineProps<IChartProps>();
+
 
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
@@ -61,42 +71,44 @@ const externalTooltipHandler = (context: {
 
 
 		bodyLines.forEach((body, i) => {
-			const contItem = document.createElement('div');
-			const circle = document.createElement('div');
 
-			contItem.style.display = 'flex';
-			contItem.style.alignItems = 'center';
-			contItem.style.gap = '26px';
-			contItem.style.justifyContent = 'space-between';
-
-			const spanCircle = document.createElement('div');
-
-			spanCircle.style.borderWidth = '2px';
-			spanCircle.style.marginRight = '10px';
-			spanCircle.style.borderRadius = '20px';
-			spanCircle.style.height = '10px';
-			spanCircle.style.width = '10px';
-			spanCircle.style.display = 'inline-block';
-
-			const text = document.createElement('div');
-			text.style.fontSize = '12px';
-
-			const spanCircleText = document.createElement('span');
-			spanCircleText.style.fontSize = '10px';
 
 			if (i === 0) {
+				const contItem = document.createElement('div');
+				const circle = document.createElement('div');
+
+				contItem.style.display = 'flex';
+				contItem.style.alignItems = 'center';
+				contItem.style.gap = '26px';
+				contItem.style.justifyContent = 'space-between';
+
+				const spanCircle = document.createElement('div');
+
+				spanCircle.style.borderWidth = '2px';
+				spanCircle.style.marginRight = '10px';
+				spanCircle.style.borderRadius = '20px';
+				spanCircle.style.height = '10px';
+				spanCircle.style.width = '10px';
+				spanCircle.style.display = 'inline-block';
+
+				const text = document.createElement('div');
+				text.style.fontSize = '12px';
+
+				const spanCircleText = document.createElement('span');
+				spanCircleText.style.fontSize = '10px';
+
 				spanCircle.style.background = 'rgba(221, 246, 34, 1)';
 				spanCircleText.textContent = 'Data';
+
+				text.textContent = '$' + body[0].toString();
+
+				circle.appendChild(spanCircle);
+				circle.appendChild(spanCircleText);
+
+				contItem.appendChild(circle);
+				contItem.appendChild(text);
+				cont.appendChild(contItem);
 			}
-
-			text.textContent = '$' + body.toString();
-
-			circle.appendChild(spanCircle);
-			circle.appendChild(spanCircleText);
-
-			contItem.appendChild(circle);
-			contItem.appendChild(text);
-			cont.appendChild(contItem);
 		});
 
 
@@ -139,14 +151,62 @@ onMounted(() => {
 			labels,
 			datasets: [
 				{
+					data: [null, null, null, 10, null, null],
+					pointStyle: 'circle',
+					borderColor: '#000',
+					pointBorderWidth: 2,
+					backgroundColor: '#fff',
+					borderWidth: 1,
+				},
+				{
+					data: [null, null, null, 10, 10, 10],
+					borderColor: '#FEB358',
+					borderWidth: 1,
+					pointStyle: false,
+				},
+				{
+					data: [12, 12, 12, 12, 12, 12],
+					borderColor: '#D9D9D9',
+					borderWidth: 1,
+					borderDash: [3, 3],
+					pointStyle: false,
+					backgroundColor: 'rgba(0,0,0,0.5)',
+					fill: 'end',
+				},
+
+				{
+					data: [9.5, 9.5, 9.5, 9.5, 9.5, 9.5],
+					borderColor: '#D9D9D9',
+					borderWidth: 1,
+					borderDash: [3, 3],
+					pointStyle: false,
+					backgroundColor: 'rgba(0,0,0,0.5)',
+					fill: 'start',
+				},
+				{
+					data: [null, null, null, null, 14, null],
+					pointStyle: 'circle',
+					borderColor: '#000',
+					pointBorderWidth: 2,
+					backgroundColor: '#fff',
+					borderWidth: 1,
+				},
+				{
+					data: [null, null, null, null, 14, 14],
+					borderColor: 'rgba(255, 255, 255, 0.8)',
+					borderWidth: 1,
+					pointStyle: false,
+				},
+				{
 					data: [8, 10, 15, 10, 14, 12],
 					borderColor: '#FEB358',
 					borderWidth: 2,
 					pointStyle: false,
-					backgroundColor: 'rgba(254, 179, 88, 0.35)',
+					backgroundColor: 'rgba(254, 179, 88, 0.15)',
 					fill: 'start',
 					tension: 0.3,
 				},
+
 			],
 		},
 		options: {
@@ -158,6 +218,49 @@ onMounted(() => {
 				intersect: false,
 			},
 			plugins: {
+				annotation:  {
+					clip: false,
+					annotations: {
+						label1: {
+							type: 'label',
+							xValue: 5.2,
+							yValue: 10,
+							borderRadius: 24,
+							color: '#FEB358',
+							position: 'center',
+							backgroundColor: 'rgba(136, 93, 36, 1)',
+							content: ['Low'],
+							padding: {
+								top: 2,
+								bottom: 2,
+								left: 6,
+								right: 6,
+							},
+							font: {
+								size: 10,
+							},
+						},
+						label2: {
+							type: 'label',
+							xValue: 5.2,
+							yValue: 14,
+							borderRadius: 24,
+							color: '#fff',
+							position: 'center',
+							backgroundColor: '#4F4F4F',
+							content: ['Neutral'],
+							padding: {
+								top: 2,
+								bottom: 2,
+								left: 6,
+								right: 6,
+							},
+							font: {
+								size: 10,
+							},
+						},
+					},
+				},
 				legend: {
 					display: false,
 				},
@@ -179,6 +282,11 @@ onMounted(() => {
 					},
 
 					ticks: {
+						padding: 20,
+						autoSkip: true,
+						font: {
+							size: 10,
+						},
 						color: 'rgba(154, 154, 157, 1)',
 						callback: function (value) {
 							return value;
@@ -192,7 +300,7 @@ onMounted(() => {
 				},
 				x: {
 					ticks: {
-						padding: 20,
+						padding: 10,
 					},
 
 					grid: {

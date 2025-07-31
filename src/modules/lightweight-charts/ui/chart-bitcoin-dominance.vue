@@ -81,10 +81,6 @@ const chartAxisOptions = {
 	},
 
 	x: {
-		ticks: {
-			padding: 20,
-		},
-
 		grid: {
 			display: false,
 		},
