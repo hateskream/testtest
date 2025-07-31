@@ -11,4 +11,6 @@ export const WidgetTypeToFeature: Record<WidgetType, FeatureName> = {
 	[WidgetType.Watchlist]: 'WIDGET_WATCH_LIST',
 	[WidgetType.Performance]: 'WIDGET_PERFORMANCE',
 	[WidgetType.AltcoinSeason]: 'WIDGET_ALTCOIN_SEASON',
+	[WidgetType.TopIndices]: 'WIDGET_TOP_INDICES',
+	[WidgetType.BitcoinDominanc]: 'WIDGET_BITCOIN_DOMINANC',
 };
