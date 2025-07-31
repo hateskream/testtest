@@ -75,4 +75,5 @@ export enum WidgetType {
 	Watchlist = 'watchlist',
 	Performance = 'performance',
 	AltcoinSeason = 'altcoin-season',
+	TopIndices = 'top-indices',
 }

@@ -15,6 +15,7 @@ import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { BitcoinDominanc } from '@/modules/widgets/bitcoin-dominanc';
+import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { WidgetType } from '../../core';
 
 export function getWidgetComponent(type: WidgetType) {
@@ -34,6 +35,7 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.Performance]: PerformanceWidget,
 		[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 		[WidgetType.BitcoinDominanc]: BitcoinDominanc,
+		[WidgetType.TopIndices]: TopIndicesWidget,
 	};
 
 	return components[type];

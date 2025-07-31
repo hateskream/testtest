@@ -17,6 +17,7 @@ const ALL_WIDGETS = [
 	'WIDGET_PRICE_LIST',
 	'WIDGET_WATCH_LIST',
 	'WIDGET_BITCOIN_DOMINANC',
+	'WIDGET_TOP_INDICES',
 ] as const;
 
 export type WidgetFeature = typeof ALL_WIDGETS[number];
