@@ -4,7 +4,7 @@ import { ModalItem } from '../index';
 </script>
 
 <template>
-	<modal-item>
+	<modal-item :class="classes.root">
 		<slot />
 
 		<ui-icon
@@ -17,6 +17,10 @@ import { ModalItem } from '../index';
 </template>
 
 <style module="classes">
+.root {
+	cursor: pointer;
+}
+
 .iconArrowRight {
 	color: #7a7a7a;
 }

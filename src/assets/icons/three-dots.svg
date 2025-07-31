@@ -1,0 +1,25 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="20"
+	height="20"
+><mask
+	id="a"
+	width="20"
+	height="20"
+	x="0"
+	y="0"
+	maskUnits="userSpaceOnUse"
+	style="mask-type: alpha;"
+><circle
+	cx="16.75"
+	cy="10"
+	r="1.25"
+/><circle
+	cx="10"
+	cy="10"
+	r="1.25"
+/><circle
+	cx="3.25"
+	cy="10"
+	r="1.25"
+/></mask><g mask="url(#a)"><path d="M0 20h20V0H0v20Z" /></g></svg>

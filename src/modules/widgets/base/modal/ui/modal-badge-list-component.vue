@@ -1,6 +1,9 @@
 <template>
 	<div :class="classes.container">
-		<div :class="classes.title">
+		<div
+			v-if="$slots.title"
+			:class="classes.title"
+		>
 			<slot name="title" />
 		</div>
 

@@ -1,12 +1,13 @@
-import { computed, reactive, watch, type Ref } from 'vue';
+import { computed, reactive, ref, watch, type Ref } from 'vue';
 import { useUrlSearchParams } from '@vueuse/core';
 
-import type {
-	IColorBy,
-	IColorDepthSetting,
-	IDisplaySettings,
-	IMarketSettings,
-	ISingleSetting,
+import {
+	TitleViewVariant,
+	type IColorBy,
+	type IColorDepthSetting,
+	type IDisplaySettings,
+	type IMarketSettings,
+	type ISingleSetting,
 } from '../model';
 
 interface IParams {
@@ -15,6 +16,8 @@ interface IParams {
 	colorBy?: string | undefined;
 	colorDepth?: string | undefined;
 	displayValue?: string | undefined;
+	showLogo?: string | undefined;
+	title?: string | undefined;
 }
 
 export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | undefined>) {
@@ -44,6 +47,12 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		active: '',
 		values: [],
 	});
+
+	const defaultTitleViewVariant = TitleViewVariant.NAME;
+	const titleSetting = ref<TitleViewVariant>(defaultTitleViewVariant);
+
+	const defaultShowLogo = true;
+	const isShowLogo = ref(defaultShowLogo);
 
 	const activeDisplaySettings = computed(() => {
 		if (!settings.value?.length) {
@@ -75,6 +84,8 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		}
 		return setting.colorDepth.find(c => c.id === colorDepthSettings.active) || setting.colorDepth[0];
 	});
+
+	onCreated();
 
 	watch(settings, newSettings => {
 		if (!newSettings?.length) {
@@ -158,14 +169,46 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		setParamIfNotDefault('displayValue', active, setting.displayValue[0].key);
 	});
 
-	function setParamIfNotDefault(paramKey: keyof IParams, value: string, defaultValue: string) {
-		params[paramKey] = value !== defaultValue ? value : undefined;
-	}
+	// watch(() => [isShowLogo.value, titleSetting.value], ([logo, title]) => {
+	// 	// if (!created) {
+	// 	// 	created = true;
+	// 	// 	return;
+	// 	// }
+
+	// 	console.log(logo, title);
+
+	// 	setParamIfNotDefault('showLogo', String(logo), String(defaultShowLogo));
+	// 	setParamIfNotDefault('title', title as string, defaultTitleViewVariant);
+	// });
+
+	watch(isShowLogo, logo => {
+		setParamIfNotDefault('showLogo', String(logo), String(defaultShowLogo));
+	});
+
+	watch(titleSetting, title => {
+		setParamIfNotDefault('title', title, defaultTitleViewVariant);
+	});
 
 	function initActive<T>(param: string | undefined, values: T[], getKey: (item: T) => string): string {
 		const defaultValue = getKey(values[0]);
 		const active = param && values.some(v => getKey(v) === param) ? param : defaultValue;
 		return active;
+	}
+
+	function setParamIfNotDefault(paramKey: keyof IParams, value: string, defaultValue: string) {
+		params[paramKey] = value !== defaultValue ? value : undefined;
+	}
+
+	function onCreated() {
+		const { showLogo, title } = params;
+
+		if (showLogo) {
+			isShowLogo.value = showLogo === 'true';
+		}
+
+		if (title) {
+			titleSetting.value = title as TitleViewVariant;
+		}
 	}
 
 	return {
@@ -177,5 +220,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		activeColorBy,
 		activeSizeBy,
 		activeColorDepth,
+		isShowLogo,
+		titleSetting,
 	};
 }

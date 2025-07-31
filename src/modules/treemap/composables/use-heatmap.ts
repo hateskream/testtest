@@ -1,6 +1,6 @@
 import { ref, watch, type Ref } from 'vue';
 
-import type { IColorBy, ISettings, ITreemap } from '../model';
+import { TitleKey, TitleViewVariant, type IColorBy, type ISettings, type ITreemap } from '../model';
 
 interface IHeatmapItem {
 	ticker: string;
@@ -14,13 +14,14 @@ export function useHeatmap(
 	rawHeatmap: Ref<undefined, undefined> | Ref<ITreemap | null, ITreemap | null>,
 	sizeBy: Ref<ISettings | null>,
 	colorBy: Ref<IColorBy | null>,
+	titleSetting: Ref<TitleViewVariant>,
 ) {
 	const heatmap = ref<IHeatmapItem[]>([]);
 	const isPercent = ref(false);
 
 	watch(
-		[rawHeatmap, sizeBy, colorBy],
-		([newHeatmap, newSizeBy, newColorBy]) => {
+		[rawHeatmap, sizeBy, colorBy, titleSetting],
+		([newHeatmap, newSizeBy, newColorBy, newTitle]) => {
 			if (!newHeatmap?.items.length || !newSizeBy || !newColorBy) {
 				return;
 			}
@@ -39,11 +40,23 @@ export function useHeatmap(
 				return;
 			}
 
+			let currentKeyTicker = TitleKey.TICKER;
+			if (newTitle === TitleViewVariant.NAME) {
+				currentKeyTicker = TitleKey.NAME;
+			}
+
+			const foundTicker = newHeatmap.items.find(item => item[currentKeyTicker]);
+			if (!foundTicker) {
+				// eslint-disable-next-line no-console
+				console.log('notFoundTicker', foundTicker);
+				return;
+			}
+
 			isPercent.value = newSizeBy.isPercent || newColorBy.colorBy.isPercent;
 
 			heatmap.value = newHeatmap.items.map(item => ({
 				logoUrl: item.logoSrc,
-				ticker: item.ticker,
+				ticker: item[currentKeyTicker],
 				sizeValue: item.values[newSizeBy.key],
 				colorValue: item.values[newColorBy.colorBy.key],
 				price: item.values.price,

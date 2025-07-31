@@ -33,6 +33,11 @@ export enum TitleViewVariant {
 	NONE = 'None',
 }
 
+export enum TitleKey {
+	TICKER = 'ticker',
+	NAME = 'name',
+}
+
 
 export interface IMarketSettings {
 	active: string;
