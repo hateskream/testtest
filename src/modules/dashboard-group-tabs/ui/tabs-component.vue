@@ -85,5 +85,6 @@ function onRenameTab(id: string, name: string) {
 	display: flex;
 	gap: 10px;
 	justify-content: center;
+	width: 100%;
 }
 </style>

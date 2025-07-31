@@ -78,8 +78,7 @@ watch(() => marketSettings.active, () => {
 .root {
 	display: flex;
 	flex-direction: column;
-	padding-right: 20px;
-	padding-left: 20px;
+	width: 100%;
 	gap: 18px;
 }
 </style>

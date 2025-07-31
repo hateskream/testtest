@@ -42,11 +42,11 @@ const navigation: INavigationItem[] = [
 		id: IconIds.Chart,
 		routeName: RouteNames.Chart,
 	},
-	// {
-	// 	icon: IconIds.Calendar,
-	// 	id: IconIds.Calendar,
-	// 	routeName: RouteNames.Home,
-	// },
+	{
+		icon: IconIds.Heatmap,
+		id: IconIds.Heatmap,
+		routeName: RouteNames.Heatmap,
+	},
 ];
 
 const layoutState = reactive<ILayoutState>({

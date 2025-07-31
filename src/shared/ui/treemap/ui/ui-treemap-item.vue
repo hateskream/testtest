@@ -94,6 +94,7 @@ const preparedValue = computed(() => {
 .item-ticker {
 	font-size: 24px;
 	line-height: 150%;
+	text-align: center;
 }
 
 .item-value {
