@@ -9,7 +9,7 @@ import { BaseDashboardComponent } from '../../base';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
-import RcmMarket from './rcm-market.vue';
+import MarketContextMenu from './market-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -43,7 +43,7 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<rcm-market @delete="emit('delete')" />
+			<market-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
