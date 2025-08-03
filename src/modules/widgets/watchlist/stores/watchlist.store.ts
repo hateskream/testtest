@@ -109,6 +109,10 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 		activeTableColumns.value = setPositionColumns(newActiveTableColumns);
 	}
 
+	function resetAll() {
+		// TODO: Implement reset all
+	}
+
 	return {
 		activeTableColumns,
 		showTableColumns,
@@ -123,5 +127,6 @@ export const useWatchlistStore = defineStore('dashboards-watchlist', () => {
 		toggleActiveSort,
 		toggleShowActiveTableColumns,
 		updateActiveTableColumns,
+		resetAll,
 	};
 });

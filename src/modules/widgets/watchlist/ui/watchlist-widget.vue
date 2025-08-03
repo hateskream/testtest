@@ -3,7 +3,7 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
 import WatchlistMain from './views/watchlist-main.vue';
-import WatchlistRcm from './components/watchlist-rcm.vue';
+import WatchlistContextMenu from './components/watchlist-context-menu.vue';
 
 const props = defineProps<{
 	meta: IMeta;
@@ -17,9 +17,7 @@ const emit = defineEmits<{
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title>
-			<div :class="classes.titleContainer">
-				<span>{{ props.meta.name }}</span>
-			</div>
+			<span>{{ props.meta.name }}</span>
 		</template>
 
 		<template #content>
@@ -28,16 +26,7 @@ const emit = defineEmits<{
 
 
 		<template #rcm>
-			<watchlist-rcm @delete="emit('delete')" />
+			<watchlist-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
-
-<style module="classes">
-.titleContainer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-}
-</style>
