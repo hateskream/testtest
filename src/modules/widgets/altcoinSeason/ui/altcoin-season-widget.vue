@@ -7,7 +7,7 @@ import { PerformanceWidget } from '@/modules/widgets/performance';
 import { useAltcoinSeasonStore } from '../stores';
 
 import BtcPerformance from './btc-performance/btc-performance.vue';
-import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';
+import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import WidgetLayout from './layouts/widget-layout.vue';
 import AltcoinSeasonPeriodGroup from './period-switch/altcoin-season-period-group.vue';
 import HistoricalValue from './historical-value/historical-value.vue';
@@ -73,7 +73,11 @@ const metaPerformance = computed(() => {
 		</template>
 
 		<template #rcm>
-			<btc-performance-rcm :widget-config="altcoinSeasonWidgetConfig || null"  @delete="emit('delete')" />
+			<altcoin-season-context-menu
+				:title="props.meta.name"
+				:widget-config="altcoinSeasonWidgetConfig || null"
+				@delete="emit('delete')"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>
