@@ -9,7 +9,7 @@ import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import PerformanceError from './layouts/performance-error.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
 import PerformanceView from './layouts/performance-view.vue';
-import PerformanceRcm from './modals/performance-rcm.vue';
+import PerformanceContextMenu from './modals/performance-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -44,7 +44,7 @@ const { data, isLoading, isError } = useQueryPerformance(filters);
 		</template>
 
 		<template #rcm>
-			<performance-rcm @delete="emit('delete')" />
+			<performance-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
