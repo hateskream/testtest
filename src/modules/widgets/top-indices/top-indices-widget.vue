@@ -5,7 +5,7 @@ import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import TopIndicesLoader from '@/modules/widgets/top-indices/ui/layouts/top-indices-loader.vue';
 import TopIndicesError from '@/modules/widgets/top-indices/ui/layouts/top-indices-error.vue';
 import TopIndicesMain from '@/modules/widgets/top-indices/ui/layouts/top-indices-main.vue';
-import TopIndicesRcm from '@/modules/widgets/top-indices/ui/modals/top-indices-rcm.vue';
+import TopIndicesContextMenu from '@/modules/widgets/top-indices/ui/modals/top-indices-context-menu.vue';
 
 
 interface ITopIndicesWidgetProps {
@@ -43,7 +43,7 @@ const emit = defineEmits<{
 		</template>
 
 		<template #rcm>
-			<top-indices-rcm @delete="emit('delete')" />
+			<top-indices-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
