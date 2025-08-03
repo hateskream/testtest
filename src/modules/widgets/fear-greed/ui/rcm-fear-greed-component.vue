@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ModalItemSwitch, ModalRcm } from '../../base';
+import { ModalItemSwitch, ModalSubmenuContent } from '../../base';
 import { useFearGreedStore } from '../stores';
 
 const fearGreedStore = useFearGreedStore();
 </script>
 
 <template>
-	<modal-rcm>
+	<modal-submenu-content>
 		<template #title> Additional features </template>
 		<template #content>
 			<modal-item-switch
@@ -34,5 +34,5 @@ const fearGreedStore = useFearGreedStore();
 				Past values
 			</modal-item-switch>
 		</template>
-	</modal-rcm>
+	</modal-submenu-content>
 </template>

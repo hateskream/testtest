@@ -5,7 +5,7 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryTension } from '../queries/use-query-tension.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
-import FearGreedRcm from './fear-greed-rcm.vue';
+import FearGreedContextMenu from './fear-greed-context-menu.vue';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
@@ -44,7 +44,7 @@ const emit = defineEmits<{
 		</template>
 
 		<template #rcm>
-			<fear-greed-rcm @delete="emit('delete')" />
+			<fear-greed-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
