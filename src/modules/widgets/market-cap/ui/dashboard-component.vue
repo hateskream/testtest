@@ -8,7 +8,7 @@ import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ErrorComponent from './error-component.vue';
-import RcmMarketCap from './rcm-market-cap.vue';
+import MarketCapContextMenu from './market-cap-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -43,7 +43,7 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<rcm-market-cap @delete="emit('delete')" />
+			<market-cap-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
