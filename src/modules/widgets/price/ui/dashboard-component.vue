@@ -8,7 +8,7 @@ import type { IMeta } from '@/modules/dashboard-group/core';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
-import PriceListRcm from './price-list-rcm.vue';
+import PriceListContextMenu from './price-list-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -38,7 +38,7 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<price-list-rcm @delete="emit('delete')" />
+			<price-list-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>

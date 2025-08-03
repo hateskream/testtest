@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 
 import { usePriceStore } from '../stores';
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalItemSwitch, ModalRcm, ModalItemCheckbox } from '../../base';
+import { ModalItemSwitch, ModalItemCheckbox, ModalSubmenuContent } from '../../base';
 
 const priceStore = usePriceStore();
 
@@ -13,8 +13,7 @@ const select = reactive({
 </script>
 
 <template>
-	<modal-rcm>
-		<template #title> Additional features </template>
+	<modal-submenu-content>
 		<template #content>
 			<modal-item-switch
 				:model-value="priceStore.isShowChart"
@@ -53,5 +52,5 @@ const select = reactive({
 				Description
 			</modal-item-checkbox>
 		</template>
-	</modal-rcm>
+	</modal-submenu-content>
 </template>

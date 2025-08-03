@@ -50,6 +50,10 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 		isShowTicker.value = !isShowTicker.value;
 	}
 
+	function resetAll() {
+		// TODO: Implement reset all
+	}
+
 	return {
 		markets,
 		activeMarket,
@@ -66,5 +70,6 @@ export const usePriceStore = defineStore('dashboards-price', () => {
 		toggleShowDescription,
 		setActiveMarket,
 		setActiveCurrency,
+		resetAll,
 	};
 });
