@@ -5,6 +5,7 @@ import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { useAltcoinSeasonStore } from '../stores';
+import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 
 import BtcPerformance from './btc-performance/btc-performance.vue';
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
@@ -67,6 +68,10 @@ const metaPerformance = computed(() => {
 
 				<template #historicalValues="{ showPeriod }">
 					<historical-value :show-period="showPeriod" />
+				</template>
+
+				<template #chart>
+					<chart-altcoin-season />
 				</template>
 
 			</widget-layout>

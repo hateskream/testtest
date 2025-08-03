@@ -4,7 +4,6 @@ import { computed } from 'vue';
 import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model';
 import type { ISize } from '@/modules/dashboard-group/grid/model';
 import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
-import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 
 interface IWidgetLayoutProps {
 	widgetConfig: IAltcoinSeasonConfig | null;
@@ -30,20 +29,6 @@ const gridConfig = computed(() => {
 		columns,
 		rows,
 	};
-});
-
-const containerStyles = computed(() => {
-	const { columns, rows } = gridConfig.value;
-	const minimumRows = 12;
-
-	const styles = {
-		'--min-col-width': `${MIN_COL_WIDTH}px`,
-		'--min-row-height': `${MIN_ROW_HEIGHT}px`,
-		'--grid-columns': columns.toString(),
-		'--grid-rows': rows > minimumRows ? rows.toString() : minimumRows.toString(),
-	};
-
-	return styles;
 });
 
 const showPeriod = computed(() => {
@@ -75,7 +60,6 @@ const adaptiveGridAreas = computed(() => {
 		};
 	}
 
-	// default (columns 2 or other)
 	if (periodVisible) {
 		return {
 			period: '1 / 1 / 2 / -1',
@@ -93,6 +77,20 @@ const adaptiveGridAreas = computed(() => {
 		};
 	}
 });
+
+const containerStyles = computed(() => {
+	const { columns, rows } = gridConfig.value;
+	const minimumRows = 12;
+
+	const styles = {
+		'--min-col-width': `${MIN_COL_WIDTH}px`,
+		'--min-row-height': `${MIN_ROW_HEIGHT}px`,
+		'--grid-columns': columns.toString(),
+		'--grid-rows': rows > minimumRows ? rows.toString() : minimumRows.toString(),
+	};
+
+	return styles;
+});
 </script>
 
 <template>
@@ -101,15 +99,12 @@ const adaptiveGridAreas = computed(() => {
 		:class="classes.widgetLayout"
 		:style="containerStyles"
 	>
-
 		<div
 			v-if="showPeriod"
 			:class="[classes.period, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.period }"
 		>
-			<slot name="period">
-				Period switch
-			</slot>
+			<slot name="period" />
 		</div>
 
 		<div
@@ -117,9 +112,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.performanceRank, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.performanceRank }"
 		>
-			<slot name="performanceRank" :show-period="!showPeriod">
-				Performance Rank
-			</slot>
+			<slot name="performanceRank" :show-period="!showPeriod" />
 		</div>
 
 		<div
@@ -127,9 +120,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.historicalValues, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.historicalValues }"
 		>
-			<slot name="historicalValues" :show-period="!showPeriod">
-				Historical Values
-			</slot>
+			<slot name="historicalValues" :show-period="!showPeriod" />
 		</div>
 
 		<div
@@ -137,9 +128,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.top100, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.top100 }"
 		>
-			<slot name="top100">
-				Top 100 coins performance
-			</slot>
+			<slot name="top100" />
 		</div>
 
 		<div
@@ -147,9 +136,7 @@ const adaptiveGridAreas = computed(() => {
 			:class="[classes.chart, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.chart }"
 		>
-			<slot name="chart">
-				<chart-altcoin-season />
-			</slot>
+			<slot name="chart" />
 		</div>
 	</div>
 </template>
@@ -169,38 +156,16 @@ const adaptiveGridAreas = computed(() => {
 	padding: 4px;
 }
 
-.period {
-	/* background-color: #494949; */
-}
 
-.performanceRank {
-	/* Убираем статичные grid-area, используем динамические из :style */
-}
-
-.historicalValues {
-	/* background-color: #494949; */
-}
-
-.top100 {
-	/* some style */
-}
-
-.chart {
-	/* background-color: #494949; */
-}
-
-/* Адаптивные стили для разных размеров */
 .widgetLayout:has([style*='--grid-columns: 1']) .slot,
 .widgetLayout:has([style*='--grid-columns: 2']) .slot,
 .widgetLayout:has([style*='--grid-columns: 3']) .slot {
-	/* Увеличиваем padding для маленьких экранов */
 	padding: 8px;
 }
 
 .widgetLayout:has([style*='--grid-columns: 4']) .slot,
 .widgetLayout:has([style*='--grid-columns: 5']) .slot,
 .widgetLayout:has([style*='--grid-columns: 6']) .slot {
-	/* Средний padding для средних экранов */
 	padding: 6px;
 }
 </style>
