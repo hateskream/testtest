@@ -8,7 +8,6 @@ import ModalItemSwitchComponent from './ui/modal-switch-component.vue';
 import ModalItemNumberComponent from './ui/modal-number-component.vue';
 import ModalSubmenuComponent from './ui/modal-submenu-component.vue';
 import ModalSubmenuContentComponent from './ui/modal-submenu-content-component.vue';
-import ModalRcmComponent from './ui/modal-rcm-component.vue';
 import ModalFilterTickerComponent from './ui/modal-filter-ticker-component.vue';
 import ModalBadgeTitleComponent from './ui/modal-badge-title-component.vue';
 import ModalBadgeComponent from './ui/modal-badge-component.vue';
@@ -27,7 +26,6 @@ export {
 	ModalItemNumberComponent as ModalItemNumber,
 	ModalSubmenuComponent as ModalSubmenu,
 	ModalSubmenuContentComponent as ModalSubmenuContent,
-	ModalRcmComponent as ModalRcm,
 	ModalFilterTickerComponent as ModalFilterTicker,
 	ModalBadgeTitleComponent as ModalBadgeTitle,
 	ModalBadgeListComponent as ModalBadgeList,
