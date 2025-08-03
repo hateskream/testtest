@@ -11,7 +11,7 @@ import NewsFiltersPanel from './news-filters-panel-component.vue';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewNewsComponent from './view-news-component.vue';
-import RcmNewsComponent from './rcm-news-component.vue';
+import NewsContextMenu from './news-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -63,7 +63,7 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<rcm-news-component @delete="emit('delete')" />
+			<news-context-menu :title="props.meta.name" @delete="emit('delete')" />
 		</template>
 	</base-dashboard-component>
 </template>
