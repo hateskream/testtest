@@ -15,6 +15,7 @@ import ModalBadgeComponent from './ui/modal-badge-component.vue';
 import ModalItemInteractionComponent from './ui/modal-item-interaction-component.vue';
 import ModalSearchComponent from './ui/modal-search-component.vue';
 import ModalItemSelectorComponent from './ui/modal-item-selector-component.vue';
+import WidgetContextMenu from './ui/widget-context-menu.vue';
 
 export {
 	ModalFilterComponent as ModalFilter,
@@ -34,4 +35,5 @@ export {
 	ModalItemInteractionComponent as ModalItemInteraction,
 	ModalSearchComponent as ModalSearch,
 	ModalItemSelectorComponent as ModalItemSelector,
+	WidgetContextMenu,
 };
