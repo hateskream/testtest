@@ -1,0 +1,97 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+
+import { useHeatmapCrypto } from '../composables';
+import type {
+	IColorBy,
+	IColorDepth,
+	IColorDepthSetting,
+	IMarket,
+	IMarketSettings,
+	ISettings,
+	ISingleSetting,
+} from '../model';
+import { TitleViewVariant } from '../model';
+import { useQueryHeatmapCrypto } from '../query';
+import { UiTreemap } from '@/shared/ui/treemap';
+
+import SettingsBase from './settings-base.vue';
+import SizeBySetting from './size-by-setting.vue';
+
+interface ITreemapCryptoProps {
+	activeMarket: IMarket;
+	activeColorBy: IColorBy;
+	activeColorDepth: IColorDepth;
+	activeSizeBy: ISettings;
+	activeDisplayValue: ISettings;
+}
+
+const props = defineProps<ITreemapCryptoProps>();
+
+const market = defineModel<IMarketSettings>('market', { required: true });
+const sizeBy = defineModel<ISingleSetting>('sizeBy', { required: true });
+const colorBy = defineModel<ISingleSetting>('colorBy', { required: true });
+const colorDepth = defineModel<IColorDepthSetting>('colorDepth', { required: true });
+const displayValue = defineModel<ISingleSetting>('displayValue', { required: true });
+const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
+const title = defineModel<TitleViewVariant>('title', { required: true });
+
+const excludeTickers = ref<string[]>([]);
+
+const { data: heatmapData } = useQueryHeatmapCrypto(excludeTickers);
+
+const {
+	heatmap,
+	isSizeValuePercent,
+	isDisplayValuePercent,
+} = useHeatmapCrypto(
+	heatmapData,
+	computed(() => props.activeSizeBy),
+	computed(() => props.activeColorBy),
+	computed(() => props.activeDisplayValue),
+	title,
+);
+</script>
+
+<template>
+	<div :class="classes.root">
+		<settings-base
+			:market="market"
+			:color-by="colorBy"
+			:color-depth="colorDepth"
+			:display-value="displayValue"
+			:is-show-logo="isShowLogo"
+			:title="title"
+			:active-market="props.activeMarket"
+			:active-color-by="props.activeColorBy"
+			:active-color-depth="props.activeColorDepth"
+			:active-size-by="props.activeSizeBy"
+			:active-display-value="props.activeDisplayValue"
+		>
+			<size-by-setting :size-by="sizeBy" />
+		</settings-base>
+		<ui-treemap
+			v-if="heatmapData"
+			:currency-symbol="heatmapData.currencySymbol"
+			:size-by="activeSizeBy!.displayName"
+			:display-value-name="activeDisplayValue!.displayName"
+			:depth-range="activeColorDepth!"
+			:visible-config="{
+				isShowLogo: isShowLogo,
+				isShowTicker: title !== TitleViewVariant.NONE,
+				isSizeValuePercent: isSizeValuePercent,
+				isDisplayValuePercent: isDisplayValuePercent,
+			}"
+			:data="heatmap"
+		/>
+	</div>
+</template>
+
+<style module="classes">
+.root {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	gap: 18px;
+}
+</style>

@@ -11,11 +11,10 @@ enum DataProvider {
 const dataProvider = DataProvider.MockLocal;
 
 interface IGetHeatMapRequest {
-	market: string;
 	excludeTickers: string[];
 }
 
-export async function getHeatmap(req: IGetHeatMapRequest): Promise<ITreemap | null> {
+export async function getHeatmapCrypto(req: IGetHeatMapRequest): Promise<ITreemap | null> {
 	const logger = useLogger();
 
 	try {
@@ -40,7 +39,6 @@ function sendRequestByProvider(
 		case DataProvider.Production:
 			return httpService.get<ITreemap>('https://gateway.planet9.uk/heatmap/settings', {
 				query: {
-					market: req.market,
 					excludeTickers: preparedTickers,
 				},
 			});
@@ -49,7 +47,6 @@ function sendRequestByProvider(
 		case DataProvider.MockServer:
 			return httpService.get<ITreemap>('/api/heatmap/settings', {
 				query: {
-					market: req.market,
 					excludeTickers: preparedTickers,
 				},
 			});

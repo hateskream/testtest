@@ -54,6 +54,8 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 	const defaultShowLogo = true;
 	const isShowLogo = ref(defaultShowLogo);
 
+	const activeMarket = computed(() => marketSettings.markets.find(m => m.id === marketSettings.active));
+
 	const activeDisplaySettings = computed(() => {
 		if (!settings.value?.length) {
 			return null;
@@ -71,7 +73,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 
 	const activeSizeBy = computed(() => {
 		const setting = activeDisplaySettings.value;
-		if (!setting) {
+		if (!setting || !setting.sizeBy) {
 			return null;
 		}
 		return setting.sizeBy.find(s => s.key === sizeBySettings.active) || setting.sizeBy[0];
@@ -107,7 +109,9 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			: newSettings[0].market.id;
 
 		marketSettings.active = initialMarket;
-	}, { immediate: true });
+	});
+
+	let isInit = false;
 
 	watch(() => marketSettings.active, () => {
 		const setting = activeDisplaySettings.value;
@@ -115,25 +119,37 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			return;
 		}
 
-		sizeBySettings.values = setting.sizeBy;
-		colorBySettings.values = setting.colorBy.map(c => c.colorBy);
-		displayValueSettings.values = setting.displayValue;
+		if (setting.sizeBy) {
+			sizeBySettings.values = setting.sizeBy;
+		}
 
 		const defaultMarket = settings.value![0].market.id;
 		setParamIfNotDefault('market', marketSettings.active, defaultMarket);
 
-		params.sizeBy = undefined;
-		params.colorBy = undefined;
-		params.colorDepth = undefined;
-		params.displayValue = undefined;
+		colorBySettings.values = setting.colorBy.map(c => c.colorBy);
+		displayValueSettings.values = setting.displayValue;
 
-		sizeBySettings.active = initActive(params.sizeBy, setting.sizeBy, s => s.key);
-		colorBySettings.active = initActive(params.colorBy, setting.colorBy, c => c.colorBy.key);
 
-		colorDepthSettings.values = activeColorBy.value!.colorDepth;
-		colorDepthSettings.active = initActive(params.colorDepth, activeColorBy.value!.colorDepth, d => d.id);
+		if (!isInit) {
+			if (setting.sizeBy) {
+				sizeBySettings.active = initActive(params.sizeBy, setting.sizeBy, s => s.key);
+			}
 
-		displayValueSettings.active = initActive(params.displayValue, setting.displayValue, d => d.key);
+			colorBySettings.active = initActive(params.colorBy, setting.colorBy, c => c.colorBy.key);
+
+			colorDepthSettings.values = activeColorBy.value!.colorDepth;
+			colorDepthSettings.active = initActive(params.colorDepth, activeColorBy.value!.colorDepth, d => d.id);
+
+			displayValueSettings.active = initActive(params.displayValue, setting.displayValue, d => d.key);
+
+			isInit = true;
+			return;
+		} else {
+			params.sizeBy = undefined;
+			params.colorBy = undefined;
+			params.colorDepth = undefined;
+			params.displayValue = undefined;
+		}
 	});
 
 	watch(() => colorBySettings.active, () => {
@@ -155,7 +171,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 
 	watch(() => sizeBySettings.active, (active) => {
 		const setting = activeDisplaySettings.value;
-		if (!setting) {
+		if (!setting || !setting.sizeBy) {
 			return;
 		}
 		setParamIfNotDefault('sizeBy', active, setting.sizeBy[0].key);
@@ -209,6 +225,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 
 	return {
 		marketSettings,
+		activeMarket,
 		sizeBySettings,
 		colorBySettings,
 		colorDepthSettings,

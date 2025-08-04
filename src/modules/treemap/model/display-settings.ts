@@ -1,6 +1,6 @@
 export interface IDisplaySettings {
 	market: IMarket;
-	sizeBy: ISettings[];
+	sizeBy?: ISettings[];
 	colorBy: IColorBy[];
 	displayValue: ISettings[];
 }

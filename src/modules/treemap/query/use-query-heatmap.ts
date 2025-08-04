@@ -1,19 +1,16 @@
 import { useQuery } from '@tanstack/vue-query';
 import { toValue, type MaybeRefOrGetter } from 'vue';
 
-import { getHeatmap } from '../api';
+import { getHeatmapCrypto } from '../api';
 
-export function useQueryHeatmap(
-	market: MaybeRefOrGetter<string>,
+export function useQueryHeatmapCrypto(
 	excludeTickers: MaybeRefOrGetter<string[]>,
 ) {
 	return useQuery({
-		queryKey: ['heatmap', market, ...toValue(excludeTickers)],
-		queryFn: () => getHeatmap({
-			market: toValue(market),
+		queryKey: ['heatmap-crypto', ...toValue(excludeTickers)],
+		queryFn: () => getHeatmapCrypto({
 			excludeTickers: toValue(excludeTickers),
 		}),
 		refetchOnMount: false,
-		enabled: !!toValue(market),
 	});
 }

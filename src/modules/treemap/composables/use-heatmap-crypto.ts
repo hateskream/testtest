@@ -11,7 +11,7 @@ interface IHeatmapItem {
 	price: number;
 }
 
-export function useHeatmap(
+export function useHeatmapCrypto(
 	rawHeatmap: Ref<undefined, undefined> | Ref<ITreemap | null, ITreemap | null>,
 	sizeBy: Ref<ISettings | null>,
 	colorBy: Ref<IColorBy | null>,

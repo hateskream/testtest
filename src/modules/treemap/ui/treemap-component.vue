@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { useQueryDisplaySettings } from '../query';
+import { useDisplaySettings } from '../composables/';
 
-import { useQueryDisplaySettings, useQueryHeatmap } from '../query';
-import { useDisplaySettings, useHeatmap } from '../composables/';
-import { UiTreemap } from '@/shared/ui/treemap';
-import { TitleViewVariant } from '../model';
-
-import SettingsComponent from './settings-component.vue';
+import TreemapCrypto from './treemap-crypto.vue';
 
 const { data: settings } = useQueryDisplaySettings();
 
@@ -22,63 +18,25 @@ const {
 	activeDisplayValue,
 	isShowLogo,
 	titleSetting,
+	activeMarket,
 } = useDisplaySettings(settings);
-
-const excludeTickers = ref<string[]>([]);
-
-const { data: heatmapData, refetch } = useQueryHeatmap(marketSettings.active, excludeTickers);
-
-const {
-	heatmap,
-	isSizeValuePercent,
-	isDisplayValuePercent,
-} = useHeatmap(
-	heatmapData,
-	activeSizeBy,
-	activeColorBy,
-	activeDisplayValue,
-	titleSetting,
-);
-
-watch(() => marketSettings.active, () => {
-	refetch();
-});
 </script>
 
 <template>
-	<div :class="classes.root">
-		<settings-component
-			v-model:is-show-logo="isShowLogo"
-			v-model:market="marketSettings"
-			v-model:size-by="sizeBySettings"
-			v-model:color-by="colorBySettings"
-			v-model:color-depth="colorDepthSettings"
-			v-model:display-value="displayValueSettings"
-			v-model:title="titleSetting"
-		/>
-		<ui-treemap
-			v-if="heatmapData"
-			:currency-symbol="heatmapData.currencySymbol"
-			:size-by="activeSizeBy!.displayName"
-			:display-value-name="activeDisplayValue!.displayName"
-			:depth-range="activeColorDepth!"
-			:visible-config="{
-				isShowLogo: isShowLogo,
-				isShowTicker: titleSetting !== TitleViewVariant.NONE,
-				isSizeValuePercent: isSizeValuePercent,
-				isDisplayValuePercent: isDisplayValuePercent,
-			}"
-			:data="heatmap"
-		/>
-	</div>
-
+	<treemap-crypto
+		v-if="activeMarket"
+		:active-market="activeMarket!"
+		:active-color-by="activeColorBy!"
+		:active-color-depth="activeColorDepth!"
+		:active-size-by="activeSizeBy!"
+		:active-display-value="activeDisplayValue!"
+		:market="marketSettings"
+		:size-by="sizeBySettings"
+		:color-by="colorBySettings"
+		:color-depth="colorDepthSettings"
+		:display-value="displayValueSettings"
+		:is-show-logo="isShowLogo"
+		:title="titleSetting"
+	/>
 </template>
 
-<style module="classes">
-.root {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	gap: 18px;
-}
-</style>

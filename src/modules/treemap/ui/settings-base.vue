@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import {
 	ModalBadge,
 	ModalItemSelector,
@@ -8,57 +6,38 @@ import {
 	ModalItemInteraction,
 	ModalItemCheckbox,
 } from '@/modules/widgets/base';
-import type { IMarketSettings, ISingleSetting, IColorDepthSetting } from '../model';
+import type {
+	IMarketSettings,
+	ISingleSetting,
+	IColorDepthSetting,
+	IMarket,
+	IColorBy,
+	IColorDepth,
+	ISettings,
+} from '../model';
 import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
+interface ISettingsBase {
+	activeMarket: IMarket;
+	activeColorBy: IColorBy;
+	activeColorDepth: IColorDepth;
+	activeDisplayValue: ISettings;
+}
+
+const props = defineProps<ISettingsBase>();
+
 const market = defineModel<IMarketSettings>('market', { required: true });
-const sizeBy = defineModel<ISingleSetting>('sizeBy', { required: true });
 const colorBy = defineModel<ISingleSetting>('colorBy', { required: true });
 const colorDepth = defineModel<IColorDepthSetting>('colorDepth', { required: true });
 const displayValue = defineModel<ISingleSetting>('displayValue', { required: true });
 const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
 const title = defineModel<TitleViewVariant>('title', { required: true });
 
-const activeMarketName = computed(
-	() => market.value.markets
-		.find(m => m.id === market.value.active)?.displayName || '',
-);
-
-const activeSizeBy = computed(
-	() => sizeBy.value.values
-		.find(sb => sb.key === sizeBy.value.active)?.displayName || '',
-);
-
-const activeColorBy = computed(
-	() => colorBy.value.values
-		.find(cb => cb.key === colorBy.value.active)?.displayName || '',
-);
-
-const activeColorDepth = computed(() => {
-	const acd = colorDepth.value.values
-		.find(cd => cd.id === colorDepth.value.active);
-
-	if (!acd) {
-		return '';
-	}
-
-	return `${acd.start} to ${acd.end}`;
-});
-
-const activeDisplayValue = computed((): string =>
-	displayValue.value.values
-		.find(dv => dv.key === displayValue.value.active)?.displayName || '',
-);
-
 function updateMarket(newActiveId: string) {
 	market.value.active = newActiveId;;
-}
-
-function updateSizeBy(newSizeBy: string) {
-	sizeBy.value.active = newSizeBy;
 }
 
 function updateColorBy(newColorBy: string) {
@@ -83,7 +62,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 		<div class="right">
 			<modal-badge class="market">
 				<template #title>
-					{{ activeMarketName }}
+					{{ props.activeMarket.displayName }}
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
@@ -111,7 +90,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 			<modal-badge class="color">
 				<template #title>
-					{{ activeColorBy }}
+					{{ activeColorBy.colorBy.displayName }}
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
@@ -136,7 +115,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<ui-position>
 								<template #default>
 									<modal-item-interaction>
-										Color depth : {{ activeColorDepth }}
+										Color depth : {{ activeColorDepth.start }} to {{ activeColorDepth.end }}
 									</modal-item-interaction>
 								</template>
 								<template #content>
@@ -160,33 +139,9 @@ function updateTitle(newTitle: TitleViewVariant) {
 				</template>
 			</modal-badge>
 
-			<modal-badge>
-				<template #title>
-					{{ activeSizeBy }}
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-						class="icon"
-					/>
-				</template>
-				<template #content>
-					<modal-badge-list>
-						<template #title>Size by</template>
-						<template #default>
-							<modal-item-selector
-								v-for="sb in sizeBy.values"
-								:key="sb.key"
-								:model-value="sb.key === sizeBy.active"
-								@update:model-value="updateSizeBy(sb.key)"
-							>
-								{{ sb.displayName }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
+			<div class="other">
+				<slot />
+			</div>
 
 		</div>
 		<div class="left">
@@ -228,7 +183,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<template #default>
 								<modal-item-interaction>
 									<div>
-										Display value : {{ activeDisplayValue }}
+										Display value : {{ activeDisplayValue.displayName }}
 									</div>
 								</modal-item-interaction>
 							</template>
@@ -276,6 +231,12 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 .color {
 	margin-right: 4px;
+}
+
+.other {
+	display: flex;
+	align-items: center;
+	gap: 4px;
 }
 
 .icon {
