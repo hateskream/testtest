@@ -110,7 +110,7 @@ function setTickerHovered(ticker: string | null) {
 </script>
 
 <template>
-	<div>
+	<div :class="classes.root">
 		<ui-treemap-layout :data="data">
 			<template #default="{ item: { id } }">
 				<ui-treemap-item
@@ -152,5 +152,7 @@ function setTickerHovered(ticker: string | null) {
 <style module="classes">
 .root {
 	position: relative;
+	width: 100%;
+	height: 100%;
 }
 </style>

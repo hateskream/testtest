@@ -73,10 +73,10 @@ export function useHeatmapCrypto(
 			heatmap.value = newHeatmap.items.map(item => ({
 				logoUrl: item.logoSrc,
 				ticker: item[currentKeyTicker],
-				sizeValue: item.values[newSizeBy.key],
-				colorValue: item.values[newColorBy.colorBy.key],
-				displayValue: item.values[newDisplayValue.key],
-				price: item.values.price,
+				sizeValue: item.values[newSizeBy.key] as number,
+				colorValue: item.values[newColorBy.colorBy.key] as number,
+				displayValue: item.values[newDisplayValue.key] as number,
+				price: item.values.price as number,
 			}),
 			);
 		},

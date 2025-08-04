@@ -18,6 +18,7 @@ interface IParams {
 	displayValue?: string | undefined;
 	showLogo?: string | undefined;
 	title?: string | undefined;
+	groupBy?: string | undefined;
 }
 
 export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | undefined>) {
@@ -34,6 +35,11 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 	});
 
 	const colorBySettings = reactive<ISingleSetting>({
+		active: '',
+		values: [],
+	});
+
+	const groupBySettings = reactive<ISingleSetting>({
 		active: '',
 		values: [],
 	});
@@ -79,6 +85,14 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		return setting.sizeBy.find(s => s.key === sizeBySettings.active) || setting.sizeBy[0];
 	});
 
+	const activeGroupBy = computed(() => {
+		const setting = activeDisplaySettings.value;
+		if (!setting || !setting.groupBy) {
+			return null;
+		}
+		return setting.groupBy.find(g => g.key === groupBySettings.active) || setting.groupBy[0];
+	});
+
 	const activeColorDepth = computed(() => {
 		const setting = activeColorBy.value;
 		if (!setting) {
@@ -109,7 +123,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			: newSettings[0].market.id;
 
 		marketSettings.active = initialMarket;
-	});
+	}, { immediate: true });
 
 	let isInit = false;
 
@@ -117,10 +131,6 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		const setting = activeDisplaySettings.value;
 		if (!setting) {
 			return;
-		}
-
-		if (setting.sizeBy) {
-			sizeBySettings.values = setting.sizeBy;
 		}
 
 		const defaultMarket = settings.value![0].market.id;
@@ -133,6 +143,12 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		if (!isInit) {
 			if (setting.sizeBy) {
 				sizeBySettings.active = initActive(params.sizeBy, setting.sizeBy, s => s.key);
+				sizeBySettings.values = setting.sizeBy;
+			}
+
+			if (setting.groupBy) {
+				groupBySettings.active = initActive(params.groupBy, setting.groupBy, g => g.key);
+				groupBySettings.values = setting.groupBy;
 			}
 
 			colorBySettings.active = initActive(params.colorBy, setting.colorBy, c => c.colorBy.key);
@@ -149,6 +165,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			params.colorBy = undefined;
 			params.colorDepth = undefined;
 			params.displayValue = undefined;
+			params.groupBy = undefined;
 		}
 	});
 
@@ -191,6 +208,14 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			return;
 		}
 		setParamIfNotDefault('displayValue', active, setting.displayValue[0].key);
+	});
+
+	watch(() => groupBySettings.active, (active) => {
+		const setting = activeDisplaySettings.value;
+		if (!setting || !setting.groupBy) {
+			return;
+		}
+		setParamIfNotDefault('groupBy', active, setting.groupBy[0].key);
 	});
 
 	watch(isShowLogo, logo => {
@@ -236,5 +261,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		isShowLogo,
 		titleSetting,
 		activeDisplayValue,
+		groupBySettings,
+		activeGroupBy,
 	};
 }

@@ -1,6 +1,7 @@
 export interface IDisplaySettings {
 	market: IMarket;
 	sizeBy?: ISettings[];
+	groupBy?: ISettings[];
 	colorBy: IColorBy[];
 	displayValue: ISettings[];
 }
@@ -26,6 +27,12 @@ export interface IColorDepth {
 	start: number;
 	end: number;
 }
+
+export const NO_GROUP: ISettings = {
+	key: 'none',
+	displayName: 'No group',
+	isPercent: false,
+};
 
 export enum TitleViewVariant {
 	TICKER = 'Ticker',

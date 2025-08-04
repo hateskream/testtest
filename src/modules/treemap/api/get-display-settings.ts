@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { IDisplaySettings } from '../model';
+import { NO_GROUP, type IDisplaySettings } from '../model';
 
 enum DataProvider {
 	Production,
@@ -121,6 +121,12 @@ const stock: IDisplaySettings = {
 		{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
 		{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
 		{ key: 'price', displayName: 'Price', isPercent: false },
+	],
+	groupBy: [
+		{ key: 'industries', displayName: 'Industries', isPercent: false },
+		{ key: 'sector', displayName: 'Sector', isPercent: false },
+		{ key: 'country', displayName: 'Country', isPercent: false },
+		NO_GROUP,
 	],
 };
 

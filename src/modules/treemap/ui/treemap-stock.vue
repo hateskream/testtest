@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
-import { useHeatmapCrypto } from '../composables';
+import { useHeatmapStock } from '../composables';
 import type {
 	IColorBy,
 	IColorDepth,
@@ -11,9 +11,10 @@ import type {
 	ISettings,
 	ISingleSetting,
 } from '../model';
-import { TitleViewVariant } from '../model';
-import { useQueryHeatmapCrypto } from '../query';
+import { NO_GROUP, TitleViewVariant } from '../model';
+import { useQueryHeatmapStock } from '../query';
 import { UiTreemap } from '@/shared/ui/treemap';
+import { UiTreemapLayout } from '@/shared/ui/treemap/ui';
 
 import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
@@ -23,6 +24,7 @@ interface ITreemapCryptoProps {
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
 	activeSizeBy: ISettings;
+	activeGroupBy: ISettings;
 	activeDisplayValue: ISettings;
 }
 
@@ -30,25 +32,26 @@ const props = defineProps<ITreemapCryptoProps>();
 
 const market = defineModel<IMarketSettings>('market', { required: true });
 const sizeBy = defineModel<ISingleSetting>('sizeBy', { required: true });
+const groupBy = defineModel<ISingleSetting>('groupBy', { required: true });
 const colorBy = defineModel<ISingleSetting>('colorBy', { required: true });
 const colorDepth = defineModel<IColorDepthSetting>('colorDepth', { required: true });
 const displayValue = defineModel<ISingleSetting>('displayValue', { required: true });
 const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
 const title = defineModel<TitleViewVariant>('title', { required: true });
 
-const excludeTickers = ref<string[]>([]);
-
-const { data: heatmapData } = useQueryHeatmapCrypto(excludeTickers);
+const { data: heatmapData } = useQueryHeatmapStock();
 
 const {
 	heatmap,
+	group,
 	isSizeValuePercent,
 	isDisplayValuePercent,
-} = useHeatmapCrypto(
+} = useHeatmapStock(
 	heatmapData,
 	computed(() => props.activeSizeBy),
 	computed(() => props.activeColorBy),
 	computed(() => props.activeDisplayValue),
+	computed(() => props.activeGroupBy),
 	title,
 );
 </script>
@@ -72,21 +75,34 @@ const {
 				:setting="sizeBy"
 				:active="activeSizeBy"
 			/>
+			<setting-component
+				title="Group by"
+				:setting="groupBy"
+				:active="activeGroupBy"
+			/>
 		</settings-base>
-		<ui-treemap
-			v-if="heatmapData"
-			:currency-symbol="heatmapData.currencySymbol"
-			:size-by="activeSizeBy!.displayName"
-			:display-value-name="activeDisplayValue!.displayName"
-			:depth-range="activeColorDepth!"
-			:visible-config="{
-				isShowLogo: isShowLogo,
-				isShowTicker: title !== TitleViewVariant.NONE,
-				isSizeValuePercent: isSizeValuePercent,
-				isDisplayValuePercent: isDisplayValuePercent,
-			}"
-			:data="heatmap"
-		/>
+		<ui-treemap-layout :data="group">
+			<template  #default="{ item: { id } }">
+				<div :class="classes.group">
+					<div v-if="id !== NO_GROUP.key">{{ id }}</div>
+					<ui-treemap
+						v-if="heatmapData"
+						:currency-symbol="heatmapData.currencySymbol"
+						:size-by="activeSizeBy!.displayName"
+						:display-value-name="activeDisplayValue!.displayName"
+						:depth-range="activeColorDepth!"
+						:visible-config="{
+							isShowLogo: isShowLogo,
+							isShowTicker: title !== TitleViewVariant.NONE,
+							isSizeValuePercent: isSizeValuePercent,
+							isDisplayValuePercent: isDisplayValuePercent,
+						}"
+						:data="heatmap[id]"
+					/>
+				</div>
+
+			</template>
+		</ui-treemap-layout>
 	</div>
 </template>
 
@@ -96,5 +112,10 @@ const {
 	flex-direction: column;
 	width: 100%;
 	gap: 18px;
+}
+
+.group {
+	width: 100%;
+	height: 100%;
 }
 </style>
