@@ -14,11 +14,6 @@ interface IUiTreemapItem {
 	logoUrl: string;
 	value: number;
 
-	left: number;
-	top: number;
-	height: number;
-	width: number;
-
 	color: string;
 
 	visibleConfig: IVisibleConfig;
@@ -43,10 +38,6 @@ const preparedValue = computed(() => {
 <template>
 	<div
 		:style="{
-			left:props.left + 'px',
-			top: props.top + 'px',
-			width: props.width + 'px',
-			height: props.height + 'px',
 			backgroundColor: props.color,
 		}"
 		class="item"
@@ -74,13 +65,15 @@ const preparedValue = computed(() => {
 <style scoped>
 .item {
 	position: absolute;
-	container-type: size;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	width: 100%;
+	height: 100%;
 	color: #ffffff;
 	border: 1px solid #000000;
+	container-type: size;
 }
 
 .item-logo {

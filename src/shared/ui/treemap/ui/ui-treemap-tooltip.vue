@@ -68,6 +68,7 @@ const prepareSizeBy = computed(() =>
 const prepareValueDisplay = computed(() =>
 	prepareNumberValue(props.displayValue, props.displayValueIsPercent),
 );
+const preparePrice = computed(() => `${props.currencySymbol} ${props.price.toFixed(2)}`);
 
 const styleValueDisplay = computed(() => {
 	let color = colorMapping.zero;
@@ -109,7 +110,7 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 		<div class="info">
 			<div class="info-item">
 				<div class="value">Price</div>
-				<div class="value">{{ props.currencySymbol }} {{ props.price }}</div>
+				<div class="value">{{ preparePrice }}</div>
 			</div>
 			<div class="info-item">
 				<div class="value">{{ props.sizeBy }}</div>
