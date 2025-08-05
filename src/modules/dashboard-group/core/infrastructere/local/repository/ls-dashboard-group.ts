@@ -4,6 +4,9 @@ import { DashboardGroup } from '../../../domains/entities';
 import { DashboardGroupSchema, type DashboardGroup as DashboardGroupModel } from '../../validate';
 import { FailedParse, NotInitialized } from './error';
 import { Widget } from '@/modules/dashboard-group/core/domains/entities/widget';
+import { useStorageVersion } from '@/shared/composables/use-storage-version';
+
+const { compareVersions, updateVersion } = useStorageVersion();
 
 export interface IOptions {
 	isSaveChange: boolean;
@@ -19,18 +22,28 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	}
 
 	public init() {
-		const raw = localStorage.getItem(this.storageKey);
+		if (!compareVersions()) {
+			localStorage.removeItem(this.storageKey);
 
+			updateVersion();
+			this.initNew();
+			return;
+		}
+
+		const raw = localStorage.getItem(this.storageKey);
 		if (raw === null) {
-			const dashboardGroup = DashboardGroup.create();
-			this.cached = dashboardGroup;
-			this.Set(dashboardGroup);
+			this.initNew();
 			return;
 		}
 
 		const data = JSON.parse(raw) as DashboardGroupModel;
-
 		this.cached = this.rehydrate(data);
+	}
+
+	private initNew() {
+		const dashboardGroup = DashboardGroup.create();
+		this.cached = dashboardGroup;
+		this.Set(dashboardGroup);
 	}
 
 	private check(data: DashboardGroupModel) {

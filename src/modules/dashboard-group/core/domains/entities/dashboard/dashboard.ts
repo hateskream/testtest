@@ -1,12 +1,23 @@
 import { v4 as uuidv4 } from 'uuid';
 
 
-import { Widget, type IWidgetState, type IPosition } from '../widget';
+import {
+	Widget,
+	type IWidgetState,
+	type IPosition,
+	WidgetType,
+	FEATURE_TO_WIDGET_TYPE,
+} from '../widget';
 import { NotFoundWidget } from './error';
 import { NAME_TO_PRESET, type PresetName } from './presets';
+import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 
 type Layout = Map<number, Widget[]>;
 
+const enableWidgets = new Set(
+	getAllEnableWidgets()
+		.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
+);
 export class Dashboard {
 	private constructor(
 		private readonly _id: string,
@@ -135,10 +146,15 @@ export class Dashboard {
 
 	static createFromPreset(presetName: PresetName, order: number): Dashboard {
 		const layoutPreset = NAME_TO_PRESET[presetName];
-
 		const layout = new Map<number, Widget[]>();
 
 		Object.entries(layoutPreset).forEach(([type, layouts]) => {
+			if (!enableWidgets.has(type as WidgetType)) {
+				// eslint-disable-next-line no-console
+				console.warn(`Widget type ${type} is not enabled`);
+				return;
+			}
+
 			let widget: Widget | null = null;
 
 			Object.entries(layouts).forEach(([colNum, pos]) => {
