@@ -1,1 +1,1 @@
-export { UiTreemap } from './ui';
+export { UiTreemap, UiTreemapLayout, UiHeatmap } from './ui';

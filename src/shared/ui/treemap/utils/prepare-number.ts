@@ -30,5 +30,5 @@ export function preparePercent(value: number): string {
 		sign = '+';
 	}
 
-	return `${sign} ${value.toFixed(2)}%`;
+	return `${sign}${value.toFixed(2)}%`;
 }

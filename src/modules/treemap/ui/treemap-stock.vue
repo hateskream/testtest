@@ -13,8 +13,7 @@ import type {
 } from '../model';
 import { NO_GROUP, TitleViewVariant } from '../model';
 import { useQueryHeatmapStock } from '../query';
-import { UiTreemap } from '@/shared/ui/treemap';
-import { UiTreemapLayout } from '@/shared/ui/treemap/ui';
+import { UiTreemap, UiTreemapLayout } from '@/shared/ui/treemap';
 
 import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
@@ -100,7 +99,6 @@ const {
 						:data="heatmap[id]"
 					/>
 				</div>
-
 			</template>
 		</ui-treemap-layout>
 	</div>
