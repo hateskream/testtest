@@ -56,12 +56,12 @@ const {
 <template>
 	<div :class="classes.root">
 		<settings-base
-			:market="market"
-			:color-by="colorBy"
-			:color-depth="colorDepth"
-			:display-value="displayValue"
-			:is-show-logo="isShowLogo"
-			:title="title"
+			v-model:market="market"
+			v-model:color-by="colorBy"
+			v-model:color-depth="colorDepth"
+			v-model:display-value="displayValue"
+			v-model:is-show-logo="isShowLogo"
+			v-model:title="title"
 			:active-market="props.activeMarket"
 			:active-color-by="props.activeColorBy"
 			:active-color-depth="props.activeColorDepth"

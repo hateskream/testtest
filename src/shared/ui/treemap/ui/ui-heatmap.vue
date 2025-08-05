@@ -107,7 +107,10 @@ function prepareValue(value: number) {
 						v-if="props.visibleConfig.isShowLogo"
 						class="logo"
 					/>
-					<div>
+					<div
+						v-if="props.visibleConfig.isShowTicker"
+						class="ticker"
+					>
 						{{ item.ticker }}
 					</div>
 				</div>
@@ -121,7 +124,10 @@ function prepareValue(value: number) {
 							v-if="props.visibleConfig.isShowLogo"
 							class="logo"
 						/>
-						<div>
+						<div
+							v-if="props.visibleConfig.isShowTicker"
+							class="ticker"
+						>
 							{{ row.ticker }}
 						</div>
 					</div>
@@ -190,6 +196,13 @@ function prepareValue(value: number) {
 	background-color: #2c2727;
 	border: 1px solid #000000;
 	border-radius: 50%;
+}
+
+.ticker {
+	width: 70%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .sticky-header {
