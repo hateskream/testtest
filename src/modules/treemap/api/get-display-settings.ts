@@ -149,7 +149,7 @@ const forex: IDisplaySettings = {
 		},
 		{
 			colorBy:
-				{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
+				{ key: 'change', displayName: 'Change', isPercent: false },
 			colorDepth: [
 				{ start: -0.6, end: 0.6, id: '0.6-change24h' },
 				{ start: -3, end: 3, id: '3-change24h' },
@@ -160,11 +160,15 @@ const forex: IDisplaySettings = {
 		},
 	],
 	displayValue: [
-		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
-		{ key: 'volume', displayName: 'Volume', isPercent: false },
-		{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
-		{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
+		{ key: 'change1dPercent', displayName: 'Change 1D, %', isPercent: true },
+		{ key: 'change1d', displayName: 'Change 1D', isPercent: false },
 		{ key: 'price', displayName: 'Price', isPercent: false },
+		{ key: 'volume', displayName: 'Volume', isPercent: false },
+		{ key: 'averageVolume', displayName: 'Average volume', isPercent: false },
+		{ key: 'marketCap', displayName: 'Market cap', isPercent: false },
+		{ key: 'change', displayName: 'Change 24h', isPercent: false },
+		{ key: 'change24hPercent', displayName: 'Change 24h, %', isPercent: true },
+		{ key: 'beta', displayName: 'Beta', isPercent: false },
 	],
 };
 
