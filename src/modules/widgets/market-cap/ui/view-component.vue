@@ -45,10 +45,6 @@ const activeList = ref<IMarketCapDomain[]>([]);
 const marketCapStore = useMarketCapStore();
 
 function formatFdv(fdv: string) {
-	if (!fdv) {
-		return '';
-	}
-
 	const { value, suffix } = prettyNumberWithKey(fdv);
 
 	return `$${value}${suffix}`;
