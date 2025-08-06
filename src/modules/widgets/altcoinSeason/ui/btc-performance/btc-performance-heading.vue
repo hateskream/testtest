@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 
@@ -9,6 +12,10 @@ interface IBtcPerformanceHeadingProps {
 }
 
 const props = defineProps<IBtcPerformanceHeadingProps>();
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.period);
 </script>
 
 <template>
@@ -24,7 +31,7 @@ const props = defineProps<IBtcPerformanceHeadingProps>();
 		>
 			<template #default="{ isVisible }">
 				<div :class="classes.TimeFrameSelector">
-					90D
+					{{ period }}
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						:width="12"

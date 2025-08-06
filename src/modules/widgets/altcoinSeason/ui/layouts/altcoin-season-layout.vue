@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model';
 import type { ISize } from '@/modules/dashboard-group/grid/model';
 import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
 
 interface IWidgetLayoutProps {
-	widgetConfig: IAltcoinSeasonConfig | null;
 	sizeByCells: ISize;
 }
-
 const props = defineProps<IWidgetLayoutProps>();
+
+const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
 
 const gridConfig = computed(() => {
 	const { w: width, h: height } = props.sizeByCells;
@@ -108,7 +110,7 @@ const containerStyles = computed(() => {
 		</div>
 
 		<div
-			v-if="props.widgetConfig?.modules.performanceRank"
+			v-if="widgetConfig?.modules.performanceRank"
 			:class="[classes.performanceRank, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.performanceRank }"
 		>
@@ -116,7 +118,7 @@ const containerStyles = computed(() => {
 		</div>
 
 		<div
-			v-if="props.widgetConfig?.modules.historicalValues"
+			v-if="widgetConfig?.modules.historicalValues"
 			:class="[classes.historicalValues, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.historicalValues }"
 		>
@@ -124,7 +126,7 @@ const containerStyles = computed(() => {
 		</div>
 
 		<div
-			v-if="props.widgetConfig?.modules.top100"
+			v-if="widgetConfig?.modules.top100"
 			:class="[classes.top100, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.top100 }"
 		>
@@ -132,7 +134,7 @@ const containerStyles = computed(() => {
 		</div>
 
 		<div
-			v-if="props.widgetConfig?.modules.chart"
+			v-if="widgetConfig?.modules.chart"
 			:class="[classes.chart, classes.slot]"
 			:style="{ gridArea: adaptiveGridAreas.chart }"
 		>

@@ -1,1 +1,1 @@
-export * from './widget-color.const';
+export * from './altcoin-season.const';

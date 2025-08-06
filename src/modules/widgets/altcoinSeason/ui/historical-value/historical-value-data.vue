@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 
-// interface IHistoricalValueDataProps {
-// 	data: string;
-// }
+import { getActiveColorByRank } from '@/modules/widgets/altcoinSeason/const';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
-// const props = defineProps<IHistoricalValueDataProps>();
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+const historicalValues = computed(() => altcoinSeasonStore.widgetData.value.historicalValues);
 
 </script>
 
@@ -12,15 +14,24 @@
 	<div :class="classes.historicalValueData">
 		<div :class="classes.dataItem">
 			<div :class="classes.dataItemTitle">Today</div>
-			<div :class="classes.dataItemValue">23</div>
+			<div
+				:class="classes.dataItemValue"
+				:style="{ color: getActiveColorByRank(historicalValues?.today || 0) }"
+			>{{ historicalValues?.today }}</div>
 		</div>
 		<div :class="classes.dataItem">
 			<div :class="classes.dataItemTitle">Last week</div>
-			<div :class="classes.dataItemValue">24</div>
+			<div
+				:class="classes.dataItemValue"
+				:style="{ color: getActiveColorByRank(historicalValues?.lastWeek || 0) }"
+			>{{ historicalValues?.lastWeek }}</div>
 		</div>
 		<div :class="classes.dataItem">
 			<div :class="classes.dataItemTitle">Last month</div>
-			<div :class="classes.dataItemValue">26</div>
+			<div
+				:class="classes.dataItemValue"
+				:style="{ color: getActiveColorByRank(historicalValues?.lastMonth || 0) }"
+			>{{ historicalValues?.lastMonth }}</div>
 		</div>
 	</div>
 </template>
@@ -42,13 +53,5 @@
 	font-size: var(--typography-paragraph-size-p-01, 12px);
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.096px;
-}
-
-.dataItemValue {
-	color: #feb358;
-}
-
-.dataItem:nth-child(3) .dataItemValue {
-	color: var(--color-text-base-300, #9a9a9d);
 }
 </style>

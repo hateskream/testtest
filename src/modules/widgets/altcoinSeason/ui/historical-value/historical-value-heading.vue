@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 import AltcoinSeasonTimeFilter from '@/modules/widgets/altcoinSeason/ui/modals/altcoin-season-time-filter.vue';
 
@@ -9,6 +12,10 @@ interface IHistoricalValueHeadingProps {
 }
 
 const props = defineProps<IHistoricalValueHeadingProps>();
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.period);
 </script>
 
 <template>
@@ -24,7 +31,7 @@ const props = defineProps<IHistoricalValueHeadingProps>();
 		>
 			<template #default="{ isVisible }">
 				<div :class="classes.TimeFrameSelector">
-					90D
+					{{ period }}
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						:width="12"
