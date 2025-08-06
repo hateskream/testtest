@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 Chart.register(annotationPlugin);
-interface IChartProps {
-	// width: number;
-	height: number;
-}
-
-defineProps<IChartProps>();
-
 
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
