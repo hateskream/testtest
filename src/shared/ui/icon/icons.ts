@@ -60,4 +60,5 @@ export enum IconIds {
 	Back = 'back',
 	ThreeDots = 'three-dots',
 	Heatmap = 'heatmap',
+	Other = 'other',
 }

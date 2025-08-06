@@ -15,7 +15,7 @@ interface IUiTreemap {
 
 const props = defineProps<IUiTreemap>();
 
-const { treemap } = useTreemapLayout(
+const { treemap, other } = useTreemapLayout(
 	useTemplateRef<HTMLCanvasElement>('treemapCanvas'),
 	toRefs(props).data,
 );
@@ -36,7 +36,7 @@ const { treemap } = useTreemapLayout(
 				}"
 				:class="classes.item"
 			>
-				<slot :item="item" />
+				<slot :item="item" :other="other" />
 			</div>
 		</div>
 	</div>

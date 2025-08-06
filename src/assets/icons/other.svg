@@ -1,0 +1,14 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="7"
+	height="11"
+><mask
+	id="a"
+	width="7"
+	height="11"
+	x="0"
+	y="0"
+	maskUnits="userSpaceOnUse"
+	style="mask-type: alpha;"
+>
+	<path d="M.972.468a.75.75 0 0 1 1.06.004l3.675 3.705c.724.73.724 1.916 0 2.646l-3.675 3.705A.75.75 0 0 1 .968 9.472l3.674-3.704a.386.386 0 0 0 0-.536L.968 1.528A.75.75 0 0 1 .972.468 Z" /></mask><g mask="url(#a)"><path d="M-6.5 15.5h20v-20h-20v20 Z" /></g></svg>

@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { computed, ref, toRefs } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 
 import { useDepth } from '../composable';
 
-import UiTreemapItem from './ui-treemap-item.vue';
+import UiTreemapElement from './ui-treemap-element.vue';
 import UiTreemapTooltip from './ui-treemap-tooltip.vue';
 import UiTreemapLayout from './ui-treemap-layout.vue';
+
+interface IDataItem {
+	id: string;
+	value: number;
+}
 
 interface ITreeMapItem {
 	ticker: string;
 	logoUrl: string;
 	value: number;
-
 	color: string;
 }
 
@@ -49,24 +53,21 @@ const props = defineProps<IUiTreemap>();
 
 const { getColorByValue } = useDepth(toRefs(props).depthRange);
 
-const data = computed(() => props.data
-	.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker })),
-);
+const tickerHovered = ref<string | null>(null);
 
+const treemap = ref<IDataItem[]>([]);
 
 const idToPropsItem = computed((): Record<string, ITreeMapItem> =>
 	props.data.reduce((acc, item) => {
 		acc[item.ticker] = {
 			ticker: item.ticker,
 			logoUrl: item.logoUrl,
-			value: item.sizeValue,
+			value: item.displayValue,
 			color: getColorByValue(item.colorValue),
 		};
 		return acc;
 	}, {} as Record<string, ITreeMapItem>),
 );
-
-const tickerHovered = ref<string | null>(null);
 
 const dataForTooltip = computed(() => {
 	const empty = {
@@ -104,20 +105,32 @@ const dataForTooltip = computed(() => {
 	return empty;
 });
 
+watch(
+	() => props.data,
+	() => {
+		treemap.value = props.data
+			.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker }));
+	},
+	{ immediate: true },
+);
+
 function setTickerHovered(ticker: string | null) {
 	tickerHovered.value = ticker;
+}
+
+function onClickOther(other: IDataItem[]) {
+	treemap.value = other;
 }
 </script>
 
 <template>
 	<div :class="classes.root">
-		<ui-treemap-layout :data="data">
-			<template #default="{ item: { id } }">
-				<ui-treemap-item
-					:color="idToPropsItem[id].color"
-					:logo-url="idToPropsItem[id].logoUrl"
-					:ticker="idToPropsItem[id].ticker"
-					:value="idToPropsItem[id].value"
+		<ui-treemap-layout :data="treemap">
+			<template #default="{ item: { id, isOther }, other }">
+				<ui-treemap-element
+					:is-other="isOther"
+					:item="idToPropsItem[id]"
+					:other-count="other.length"
 					:visible-config="{
 						isShowLogo: visibleConfig.isShowLogo,
 						isShowTicker: visibleConfig.isShowTicker,
@@ -125,10 +138,13 @@ function setTickerHovered(ticker: string | null) {
 					}"
 					@hover="setTickerHovered(id)"
 					@unhover="setTickerHovered(null)"
+					@click-other="onClickOther(other)"
 				/>
 			</template>
 		</ui-treemap-layout>
+
 		<ui-treemap-tooltip
+			v-if="false"
 			:logo-url="dataForTooltip.logoUrl"
 			:ticker="dataForTooltip.ticker"
 

@@ -14,6 +14,7 @@ export interface ITreeMapItem {
 	top: number;
 	height: number;
 	width: number;
+	isOther: boolean;
 }
 
 export function useTreemapLayout(
@@ -31,13 +32,91 @@ export function useTreemapLayout(
 	const preparedData = computed(() => data.value.map(el => el.value));
 	const valueToIdMap = computed(() => new Map(data.value.map(el => [el.value, el.id])));
 
-	const treemap = computed((): ITreeMapItem[] => treemapRaw.value.map(item => ({
-		id: valueToIdMap.value.get(item.v) as string,
-		left: item.x,
-		top: item.y,
-		width: item.w,
-		height: item.h,
-	})));
+	const SHOW_MORE_AREA = 80 * 80;
+	const MIN_COUNT_OTHER_ELEMENTS = 10;
+
+	const treemap = computed((): ITreeMapItem[] => {
+		if (!treemapCanvas.value) {
+			return [];
+		}
+
+		if (treemapRaw.value.length === 0) {
+			return [];
+		}
+
+		let areaAccumulator = 0;
+		let otherCount = 0;
+
+		const prepared = treemapRaw.value
+			.map(item => ({
+				id: valueToIdMap.value.get(item.v)!,
+				left: item.x,
+				top: item.y,
+				width: item.w,
+				height: item.h,
+				area: item.w * item.h,
+			}))
+			.sort((a, b) => a.area - b.area)
+			.map(item => {
+				if (areaAccumulator + item.area < SHOW_MORE_AREA) {
+					areaAccumulator += item.area;
+					otherCount += 1;
+					return {
+						...item,
+						isOther: true,
+					};
+				} else {
+					return {
+						...item,
+						isOther: false,
+					};
+				}
+			});
+
+		let minLeftSmall = prepared[0].left;
+		let minTopSmall = prepared[0].top;
+
+		prepared.filter(item => item.isOther).forEach(item => {
+			if (minLeftSmall > item.left) {
+				minLeftSmall = item.left;
+			}
+
+			if (minTopSmall > item.top) {
+				minTopSmall = item.top;
+			}
+		});
+
+		const { width, height } = treemapCanvas.value.getBoundingClientRect();
+
+		const otherEl = {
+			width: width - minLeftSmall,
+			height: height - minTopSmall,
+			left: minLeftSmall,
+			top: minTopSmall,
+			isOther: true,
+			id: 'other',
+		};
+
+		return otherCount < MIN_COUNT_OTHER_ELEMENTS
+			? prepared.map(el => ({ ...el, isOther: false }))
+			: [
+				...prepared
+					.map(item =>
+						item.isOther
+							? item
+							: {
+								...item,
+								isOther: item.left === minLeftSmall && item.top >= minTopSmall,
+							},
+					)
+					.filter(item => !item.isOther),
+				otherEl,
+			];
+	});
+
+	const other = computed(() => {
+		return data.value.filter(el => !treemap.value.find(item => item.id === el.id));
+	});
 
 	watch(
 		() => data.value,
@@ -128,5 +207,6 @@ export function useTreemapLayout(
 
 	return {
 		treemap,
+		other,
 	};
 }

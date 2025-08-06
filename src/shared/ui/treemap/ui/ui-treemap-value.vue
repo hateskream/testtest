@@ -64,7 +64,6 @@ const preparedValue = computed(() => {
 
 <style scoped>
 .item {
-	position: absolute;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
