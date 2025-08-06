@@ -114,6 +114,13 @@ export function useTreemapLayout(
 			];
 	});
 
+	const largestElementId = computed(() => {
+		if (treemap.value.length < 2) {
+			return '';
+		}
+		return treemap.value[treemap.value.length - 2].id;
+	});
+
 	const other = computed(() => {
 		return data.value.filter(el => !treemap.value.find(item => item.id === el.id));
 	});
@@ -208,5 +215,6 @@ export function useTreemapLayout(
 	return {
 		treemap,
 		other,
+		largestElementId,
 	};
 }

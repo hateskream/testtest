@@ -61,7 +61,7 @@ async function getMockData(): Promise<ITreemap> {
 	});
 
 	return {
-		items: generateCryptoItems(100),
+		items: generateCryptoItems(500),
 		currencySymbol: '$',
 	};
 }

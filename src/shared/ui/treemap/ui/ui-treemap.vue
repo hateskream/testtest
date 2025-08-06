@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang="ts">
 import { computed, ref, toRefs, watch } from 'vue';
 
@@ -6,6 +7,7 @@ import { useDepth } from '../composable';
 import UiTreemapElement from './ui-treemap-element.vue';
 import UiTreemapTooltip from './ui-treemap-tooltip.vue';
 import UiTreemapLayout from './ui-treemap-layout.vue';
+import UiBreadcrumbs from './ui-breadcrumbs.vue';
 
 interface IDataItem {
 	id: string;
@@ -40,6 +42,11 @@ interface IVisibleConfig {
 	isDisplayValuePercent: boolean;
 }
 
+interface IBreadcrumb {
+	id: string;
+	name: string;
+}
+
 interface IUiTreemap {
 	data: IDataInput[];
 	depthRange: IDepthRange;
@@ -47,15 +54,25 @@ interface IUiTreemap {
 	currencySymbol: string;
 	displayValueName: string;
 	sizeBy: string;
+	originalBreadcrumbs?: IBreadcrumb[];
 }
 
-const props = defineProps<IUiTreemap>();
+const props = withDefaults(defineProps<IUiTreemap>(), {
+	originalBreadcrumbs: () => [],
+});
+
+const emit = defineEmits<{
+	(e: 'click-all'): void;
+	(e: 'click-original-breadcrumb', id: string): void;
+}>();
 
 const { getColorByValue } = useDepth(toRefs(props).depthRange);
 
 const tickerHovered = ref<string | null>(null);
 
 const treemap = ref<IDataItem[]>([]);
+
+const prevent = ref<string[]>([]);
 
 const idToPropsItem = computed((): Record<string, ITreeMapItem> =>
 	props.data.reduce((acc, item) => {
@@ -68,6 +85,25 @@ const idToPropsItem = computed((): Record<string, ITreeMapItem> =>
 		return acc;
 	}, {} as Record<string, ITreeMapItem>),
 );
+
+const breadcrumb = computed(() => {
+	return [
+		...props.originalBreadcrumbs
+			.map(el => ({
+				id: el.id,
+				name: el.name,
+				isOriginal: true,
+			})),
+		...prevent.value
+			.map(id =>
+				({
+					id,
+					name: idToPropsItem.value[id].ticker || '',
+					isOriginal: false,
+				}),
+			),
+	];
+});
 
 const dataForTooltip = computed(() => {
 	const empty = {
@@ -108,26 +144,68 @@ const dataForTooltip = computed(() => {
 watch(
 	() => props.data,
 	() => {
-		treemap.value = props.data
-			.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker }));
+		treemap.value = prepareData(props.data);
+
+		prevent.value = [];
 	},
 	{ immediate: true },
 );
+
+function prepareData(raw: IDataInput[]) {
+	return raw.map(({ ticker, sizeValue }) => ({ value: sizeValue, id: ticker }));
+}
 
 function setTickerHovered(ticker: string | null) {
 	tickerHovered.value = ticker;
 }
 
-function onClickOther(other: IDataItem[]) {
+function onClickOther(other: IDataItem[], largestElementId: string) {
 	treemap.value = other;
+	prevent.value.push(largestElementId);
+}
+
+function onClickNotOriginalBreadcrumb(id: string) {
+	const preparedData = prepareData(props.data);
+
+	const indexStartData =
+		preparedData
+			.sort((a, b) => b.value - a.value)
+			.findIndex(el => el.id === id);
+
+	if (indexStartData == -1) {
+		console.error('not found');
+		return;
+	}
+
+	treemap.value = preparedData.slice(indexStartData);
+
+	const indexBreadcrumb = breadcrumb.value.findIndex(el => el.id === id);
+
+	prevent.value = prevent.value.slice(0, indexBreadcrumb + 1);
+}
+
+function onCLickAll() {
+	if (props.originalBreadcrumbs.length) {
+		return;
+	}
+
+	treemap.value = prepareData(props.data);
+	prevent.value = [];
 }
 </script>
 
 <template>
 	<div :class="classes.root">
+		<ui-breadcrumbs
+			:breadcrumbs="breadcrumb"
+			@click-all="onCLickAll"
+			@click-original-breadcrumb="emit('click-original-breadcrumb', $event)"
+			@click-not-original-breadcrumb="onClickNotOriginalBreadcrumb"
+		/>
 		<ui-treemap-layout :data="treemap">
-			<template #default="{ item: { id, isOther }, other }">
+			<template #default="{ item: { id, isOther }, other, largestElementId }">
 				<ui-treemap-element
+					:id="id"
 					:is-other="isOther"
 					:item="idToPropsItem[id]"
 					:other-count="other.length"
@@ -138,7 +216,7 @@ function onClickOther(other: IDataItem[]) {
 					}"
 					@hover="setTickerHovered(id)"
 					@unhover="setTickerHovered(null)"
-					@click-other="onClickOther(other)"
+					@click-other="onClickOther(other, largestElementId)"
 				/>
 			</template>
 		</ui-treemap-layout>

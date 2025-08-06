@@ -15,7 +15,7 @@ interface IUiTreemap {
 
 const props = defineProps<IUiTreemap>();
 
-const { treemap, other } = useTreemapLayout(
+const { treemap, other, largestElementId } = useTreemapLayout(
 	useTemplateRef<HTMLCanvasElement>('treemapCanvas'),
 	toRefs(props).data,
 );
@@ -36,7 +36,11 @@ const { treemap, other } = useTreemapLayout(
 				}"
 				:class="classes.item"
 			>
-				<slot :item="item" :other="other" />
+				<slot
+					:item="item"
+					:other="other"
+					:largest-element-id="largestElementId"
+				/>
 			</div>
 		</div>
 	</div>
