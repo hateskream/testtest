@@ -7,7 +7,7 @@ import ChartDividends from './ui/chart-dividends.vue';
 import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
 import ChartIncomeStatement from './ui/chart-income-statement.vue';
 import ChartMarketCap from './ui/chart-market-cap.vue';
-import ChartBitcoinDominanc from './ui/chart-bitcoin-dominanc.vue';
+import ChartBitcoinDominance from './ui/chart-bitcoin-dominance.vue';
 import ChartAltcoinSeason from './ui/chart-altcoin-season.vue';
 import ChartTooltip from './ui/chart-tooltip.vue';
 import ChartEps from './ui/chart-eps.vue';
@@ -22,7 +22,7 @@ export {
 	ChartBalanceSheet,
 	ChartIncomeStatement,
 	ChartMarketCap,
-	ChartBitcoinDominanc,
+	ChartBitcoinDominance,
 	ChartAltcoinSeason,
 	ChartTooltip,
 	ChartEps,

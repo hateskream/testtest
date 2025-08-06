@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { useQueryBintcoinDominanc } from '../queries/use-query-bitcoin-dominanc.ts';
+import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
 
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -16,7 +16,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { data, isLoading, isError } = useQueryBintcoinDominanc({
+const { data, isLoading, isError } = useQueryBintcoinDominance({
 	market: props.meta.market,
 });
 

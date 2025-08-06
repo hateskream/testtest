@@ -149,7 +149,7 @@ export const MAIN_DASHBOARD_PRESET: PresetLayout = {
 		19:{ x: 4, y: 9, size: { w: 4, h: 9 } },
 		20:{ x: 4, y: 9, size: { w: 4, h: 9 } },
 	},
-	[WidgetType.BitcoinDominanc]:  {
+	[WidgetType.BitcoinDominance]:  {
 		2:{ x: 0, y: 0, size: { w: 2, h: 9 } },
 		3:{ x: 0, y: 0, size: { w: 2, h: 9 } },
 		4:{ x: 0, y: 0, size: { w: 2, h: 9 } },

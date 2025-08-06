@@ -61,7 +61,7 @@ export interface IMeta {
 
 export enum WidgetType {
 	FearGreed = 'fear-greed',
-	BitcoinDominanc = 'bitcoin-dominanc',
+	BitcoinDominance = 'bitcoin-dominance',
 	Market = 'market',
 	MarketCap = 'market-cap',
 	News = 'news',

@@ -5,7 +5,7 @@ import type {
 	IModalFilterTicker,
 } from '../../base/modal/model';
 
-export const useBitcoinDominancStore = defineStore('dashboards-bitcoin-dominanc', () => {
+export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominance', () => {
 	const isShowHistorical = ref(true);
 	const isShowIndicator = ref(true);
 	const isShowChart = ref(true);

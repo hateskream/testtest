@@ -87,9 +87,9 @@ const AltcoinSeason: Preset = {
 	defaultSize: { w: 2, h: 14 },
 };
 
-const BitcoinDominanc: Preset = {
-	name: 'Bitcoin Dominanc',
-	description: 'Bitcoin Dominanc',
+const BitcoinDominance: Preset = {
+	name: 'Bitcoin Dominance',
+	description: 'Bitcoin Dominance',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 3, h: 9 },
@@ -113,7 +113,7 @@ const ProdPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
-	[WidgetType.BitcoinDominanc]: BitcoinDominanc,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
 };
 
@@ -127,7 +127,7 @@ const DevPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
-	[WidgetType.BitcoinDominanc]: BitcoinDominanc,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
 };
 
@@ -141,7 +141,7 @@ const DemoPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
-	[WidgetType.BitcoinDominanc]: BitcoinDominanc,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
 };
 
@@ -170,7 +170,7 @@ export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_PERFORMANCE': WidgetType.Performance,
 	'WIDGET_PRICE_LIST': WidgetType.Price,
 	'WIDGET_WATCH_LIST': WidgetType.Watchlist,
-	'WIDGET_BITCOIN_DOMINANC': WidgetType.BitcoinDominanc,
+	'WIDGET_BITCOIN_DOMINANCE': WidgetType.BitcoinDominance,
 	'WIDGET_TOP_INDICES': WidgetType.TopIndices,
 };
 

@@ -5,9 +5,9 @@ import {
 	ModalSubmenu,
 	ModalSubmenuContent,
 } from '../../base';
-import { useBitcoinDominancStore } from '../store/bitcoin-dominanc';
+import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
 
-const bitcoinDominancStore = useBitcoinDominancStore();
+const bitcoinDominanceStore = useBitcoinDominanceStore();
 
 const props = defineProps<{
 	title: string;
@@ -22,7 +22,7 @@ const emit = defineEmits<{
 	<widget-context-menu
 		:title="props.title"
 		@delete="emit('delete')"
-		@reset="bitcoinDominancStore.resetAll"
+		@reset="bitcoinDominanceStore.resetAll"
 	>
 		<modal-submenu>
 			<template #title> Change display </template>
@@ -32,22 +32,22 @@ const emit = defineEmits<{
 					<template #content>
 
 						<modal-item-checkbox
-							:model-value="bitcoinDominancStore.isShowIndicator"
-							@update:model-value="bitcoinDominancStore.toggleShowIndicator"
+							:model-value="bitcoinDominanceStore.isShowIndicator"
+							@update:model-value="bitcoinDominanceStore.toggleShowIndicator"
 						>
 							Segmented indicator
 						</modal-item-checkbox>
 
 						<modal-item-checkbox
-							:model-value="bitcoinDominancStore.isShowHistorical"
-							@update:model-value="bitcoinDominancStore.toggleShowHistorical"
+							:model-value="bitcoinDominanceStore.isShowHistorical"
+							@update:model-value="bitcoinDominanceStore.toggleShowHistorical"
 						>
 							Historical values
 						</modal-item-checkbox>
 
 						<modal-item-checkbox
-							:model-value="bitcoinDominancStore.isShowChart"
-							@update:model-value="bitcoinDominancStore.toggleShowChart"
+							:model-value="bitcoinDominanceStore.isShowChart"
+							@update:model-value="bitcoinDominanceStore.toggleShowChart"
 						>
 							Chart
 						</modal-item-checkbox>

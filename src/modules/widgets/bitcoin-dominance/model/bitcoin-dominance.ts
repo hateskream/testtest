@@ -1,4 +1,4 @@
-export interface IBitcoinDominancCurrency {
+export interface IBitcoinDominanceCurrency {
 	id: string;
 	name: string;
 	symbol: string;
@@ -6,6 +6,6 @@ export interface IBitcoinDominancCurrency {
 	changeWeek: number;
 	changeYear: number;
 	color: string;
-	dominanc: number;
+	dominance: number;
 	type: 'stock' | 'crypto';
 }
