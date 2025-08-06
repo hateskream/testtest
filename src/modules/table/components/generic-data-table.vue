@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { computed, ref, watch } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
 import type {
 	IGenericTableColumn,
@@ -10,9 +11,11 @@ import type {
 	ISortConfig,
 	IDragDropEvent,
 } from '../type';
+import { useTableLayout } from '../table-common';
 
 import GenericGridHeader from './generic-grid-header.vue';
-import GenericGridBody from './generic-grid-body.vue';
+import SectionedTableContent from './sectioned-table-content.vue';
+import UnsectionedTableContent from './unsectioned-table-content.vue';
 
 export interface IProps<T> {
 	sections?: IGenericTableSection<T>[];
@@ -27,6 +30,7 @@ export interface IProps<T> {
 	stickyFirstColumn?: boolean;
 	enableRowActions?: boolean;
 	showHeader?: boolean;
+	canAddSections?: boolean;
 }
 
 export interface IEmits<T> {
@@ -40,7 +44,7 @@ export interface IEmits<T> {
 
 	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
 
-	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
+	(e: 'rowDeleted', payload: { rowId: string; sectionId?: string }): void;
 
 	(e: 'sectionToggled', sectionId: string): void;
 
@@ -65,9 +69,11 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	enableRowActions: true,
 	sortConfig: () => ({ columnKey: '', direction: 'none' }),
 	showHeader: true,
+	canAddSections: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
+const { getColumnStyles } = useTableLayout();
 
 const localColumns = ref<IGenericTableColumn[]>([...props.columns]);
 const localSections = ref<IGenericTableSection<T>[]>([...props.sections]);
@@ -80,71 +86,13 @@ const visibleColumns = computed(() =>
 		.sort((a, b) => a.position - b.position),
 );
 
-
-// Helper function to get base column widths
-// Helper function to get base column widths
-
-// Helper function to get base column widths
-const getBaseColumnWidths = (position: 'header' | 'body') => {
-	let addToLastColumn = 0;
-	if (position === 'body') {
-		if (props.enableColumnSettings && !props.enableRowActions) {
-			addToLastColumn = 50;
-		}
-	}
-	if (position === 'header') {
-		if (!props.enableColumnSettings && props.enableRowActions) {
-			addToLastColumn = 50;
-		}
-	}
-	const result = visibleColumns.value.map((col, index) => {
-		const hasWidth = col.width !== undefined && col.width !== null;
-		const hasMinWidth = col.minWidth !== undefined && col.minWidth !== null;
-		const additionalWidth = index === visibleColumns.value.length - 1 ? addToLastColumn : 0;
-
-
-		if (index === 0) {
-			const minColumnWidth = col.minWidth || 300; // Changed from 100 to 300
-			if (additionalWidth > 0) {
-				return `minmax(${minColumnWidth + additionalWidth}px, calc(1fr + ${additionalWidth}px))`;
-			} else {
-				return `minmax(${minColumnWidth}px, 1fr)`;
-			}
-		}
-
-		if (hasMinWidth && !hasWidth) {
-			return `minmax(${col.minWidth! + additionalWidth}px, 1fr)`;
-		} else if (hasWidth && !hasMinWidth) {
-			return `${col.width! + additionalWidth}px`;
-		} else if (hasWidth && hasMinWidth) {
-			return `minmax(${col.minWidth! + additionalWidth}px, ${col.width! + additionalWidth}px)`;
-		} else {
-			// Changed from '1fr' to use 150px default minWidth for non-first columns
-			return `minmax(${150 + additionalWidth}px, 1fr)`;
-		}
-	});
-	if (props.enableRowActions && position === 'body') {
-		result.push('50px');
-	}
-	if (props.enableRowActions && position === 'header') {
-		// result.push('50px')
-	}
-	return result;
-};
-
-// Helper function to expand last column width
-
-// Grid template for header
-const gridTemplateColumns = computed(() => {
-	const columnWidths = getBaseColumnWidths('header');
-
-	return columnWidths.join(' ');
+const columnStyles = computed(() => {
+	return getColumnStyles(visibleColumns.value);
 });
 
-// Grid template for body (rows and sections)
-const bodyGridTemplateColumns = computed(() => {
-	let columnWidths = getBaseColumnWidths('body');
-	return columnWidths.join(' ');
+// Determine if this is a sectioned table
+const isSectionedTable = computed(() => {
+	return localSections.value.length > 0;
 });
 
 watch(() => props.columns, (newColumns) => {
@@ -187,7 +135,8 @@ const handleSortUpdate = (config: ISortConfig) => {
 	});
 };
 
-const handleRowMoved = (payload: IDragDropEvent<T>) => {
+// Handle events from sectioned table
+const handleSectionedRowMoved = (payload: IDragDropEvent<T>) => {
 	if (payload.sectionId === 'unsorted') {
 		const updatedRows = [...localUnsortedRows.value];
 
@@ -203,23 +152,19 @@ const handleRowMoved = (payload: IDragDropEvent<T>) => {
 			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 		}
 	} else {
-
 		const updatedSections = [...localSections.value];
 
 		if (payload.type === 'added' && payload.element) {
-
 			const targetSection = updatedSections.find(s => s.id === payload.sectionId);
 			if (targetSection) {
 				targetSection.rows.splice(payload.newIndex!, 0, payload.element);
 			}
 		} else if (payload.type === 'removed') {
-
 			const sourceSection = updatedSections.find(s => s.id === payload.sectionId);
 			if (sourceSection) {
 				sourceSection.rows.splice(payload.oldIndex!, 1);
 			}
 		} else if (payload.type === 'moved') {
-
 			const section = updatedSections.find(s => s.id === payload.sectionId);
 			if (section) {
 				const [movedRow] = section.rows.splice(payload.oldIndex!, 1);
@@ -233,21 +178,46 @@ const handleRowMoved = (payload: IDragDropEvent<T>) => {
 	emit('rowMoved', payload);
 };
 
-const handleRowDeleted = (payload: { rowId: string; sectionId: string }) => {
-	if (payload.sectionId === 'unsorted') {
+// Handle events from unsectioned table
+const handleUnsectionedRowMoved = (payload: IDragDropEvent<T>) => {
+	const updatedRows = [...localUnsortedRows.value];
+
+	if (payload.type === 'moved') {
+		const [movedRow] = updatedRows.splice(payload.oldIndex!, 1);
+		updatedRows.splice(payload.newIndex!, 0, movedRow);
+		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
+	} else if (payload.type === 'added') {
+		updatedRows.splice(payload.newIndex!, 0, payload.element);
+		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
+	} else if (payload.type === 'removed') {
+		updatedRows.splice(payload.oldIndex!, 1);
+		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
+	}
+
+	emit('rowMoved', payload);
+};
+
+const handleRowDeleted = (payload: { rowId: string; sectionId?: string }) => {
+	if (isSectionedTable.value && payload.sectionId) {
+		if (payload.sectionId === 'unsorted') {
+			const updatedRows = localUnsortedRows.value.filter(row => row.id !== payload.rowId);
+			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
+		} else {
+			const updatedSections = localSections.value.map(section => {
+				if (section.id === payload.sectionId) {
+					return {
+						...section,
+						rows: section.rows.filter(row => row.id !== payload.rowId),
+					};
+				}
+				return section;
+			});
+			handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
+		}
+	} else {
+		// Unsectioned table
 		const updatedRows = localUnsortedRows.value.filter(row => row.id !== payload.rowId);
 		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
-	} else {
-		const updatedSections = localSections.value.map(section => {
-			if (section.id === payload.sectionId) {
-				return {
-					...section,
-					rows: section.rows.filter(row => row.id !== payload.rowId),
-				};
-			}
-			return section;
-		});
-		handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
 	}
 
 	emit('rowDeleted', payload);
@@ -282,103 +252,167 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
 	emit('sectionRenamed', payload);
 };
+
+/// need for child for hover rows
+
+const containerRef: Ref<HTMLDivElement | null> = ref(null);
+
+
+const {
+	width: containerWidth,
+
+}: {
+	width: Ref<number>;
+
+} = useElementSize(containerRef);
+
+
 </script>
 
 <template generic="T">
-	<div :class="classes.gridTable">
-
-		<div :class="classes.scrollContainer">
-			<generic-grid-header
-				v-if="props.showHeader"
-				:columns="visibleColumns"
-				:all-columns="localColumns"
-				:sort-config="localSortConfig"
-				:grid-template-columns="gridTemplateColumns"
-				:enable-reordering="enableColumnReordering"
-				:enable-sorting="enableSorting"
-				:enable-settings="enableColumnSettings"
-				:sticky="stickyHeader"
-				:sticky-first-column="stickyFirstColumn"
-				@update:columns="handleColumnsUpdate"
-				@update:sort="handleSortUpdate"
+	<div :class="classes.tableContainer">
+		<div ref="containerRef" :class="classes.scrollContainer">
+			<table
+				:class="classes.dataTable"
+				:style="columnStyles"
+				style=" width: 100%;min-width: max-content;"
 			>
-				<template
-					v-for="(column, index) in visibleColumns"
-					:key="column.key"
-					#[`header-${index}`]="headerProps"
+				<generic-grid-header
+					v-if="props.showHeader"
+					:columns="visibleColumns"
+					:all-columns="localColumns"
+					:sort-config="localSortConfig"
+					:enable-reordering="enableColumnReordering"
+					:enable-sorting="enableSorting"
+					:enable-column-settings="enableColumnSettings"
+					:enable-row-actions="enableRowActions"
+					:sticky="stickyHeader"
+					:sticky-first-column="stickyFirstColumn"
+					@update:columns="handleColumnsUpdate"
+					@update:sort="handleSortUpdate"
 				>
-					<slot
-						:name="`header-${column.key}`"
-						v-bind="headerProps"
+					<template
+						v-for="(column, index) in visibleColumns"
+						:key="column.key"
+						#[`header-${index}`]="headerProps"
 					>
 						<slot
-							:name="`header-${index}`"
+							:name="`header-${column.key}`"
 							v-bind="headerProps"
 						>
-							{{ column.label }}
+							<slot
+								:name="`header-${index}`"
+								v-bind="headerProps"
+							>
+								{{ column.label }}
+							</slot>
 						</slot>
-					</slot>
-				</template>
+					</template>
 
-				<template v-if="!enableColumnSettings" #header-settings>
-					<slot name="header-settings">
-					</slot>
-				</template>
-			</generic-grid-header>
+					<template
+						v-if="stickyFirstColumn && $slots['first-column-settings']"
+						#first-column-settings
+					>
 
-			<generic-grid-body
-				:sections="localSections"
-				:unsorted-rows="localUnsortedRows"
-				:columns="visibleColumns"
-				:sort-config="localSortConfig"
-				:grid-template-columns="bodyGridTemplateColumns"
-				:enable-drag-drop="enableDragDrop"
-				:sticky-first-column="stickyFirstColumn"
-				:enable-row-actions="enableRowActions"
-				@update:sections="handleSectionsUpdate"
-				@update:unsorted-rows="handleUnsortedRowsUpdate"
-				@row-moved="handleRowMoved"
-				@row-deleted="handleRowDeleted"
-				@section-toggled="handleSectionToggled"
-				@section-added="handleSectionAdded"
-				@section-deleted="handleSectionDeleted"
-				@section-renamed="handleSectionRenamed"
-			>
-				<template
-					v-for="(column, index) in visibleColumns"
-					:key="column.key"
-					#[`cell-${index}`]="cellProps"
+						<slot name="first-column-settings">
+
+						</slot>
+					</template>
+				</generic-grid-header>
+
+				<!-- Sectioned Table Content -->
+				<sectioned-table-content
+					v-if="isSectionedTable"
+					:sections="localSections"
+					:columns="visibleColumns"
+					:sort-config="localSortConfig"
+					:can-add-sections="canAddSections"
+					:enable-drag-drop="enableDragDrop"
+					:sticky-first-column="stickyFirstColumn"
+					:enable-row-actions="enableRowActions"
+					:enable-column-settings="enableColumnSettings"
+					@update:sections="handleSectionsUpdate"
+					@row-moved="handleSectionedRowMoved"
+					@row-deleted="handleRowDeleted"
+					@section-toggled="handleSectionToggled"
+					@section-added="handleSectionAdded"
+					@section-deleted="handleSectionDeleted"
+					@section-renamed="handleSectionRenamed"
 				>
-					<slot
-						:name="`cell-${column.key}`"
-						v-bind="cellProps"
+					<template
+						v-for="(column, index) in visibleColumns"
+						:key="column.key"
+						#[`cell-${index}`]="cellProps"
 					>
 						<slot
-							:name="`cell-${index}`"
+							:name="`cell-${column.key}`"
 							v-bind="cellProps"
 						>
-							{{ cellProps.row.data[column.key] }}
+							<slot
+								:name="`cell-${index}`"
+								v-bind="cellProps"
+							>
+								{{ cellProps.row.data[column.key] }}
+							</slot>
 						</slot>
-					</slot>
-				</template>
+					</template>
 
-				<template #section-header="sectionProps">
-					<slot name="section-header" v-bind="sectionProps">
-						{{ sectionProps.section.title }}
-					</slot>
-				</template>
-			</generic-grid-body>
+					<template #section-header="sectionProps">
+						<slot name="section-header" v-bind="sectionProps">
+							{{ sectionProps.section.title }}
+						</slot>
+					</template>
+				</sectioned-table-content>
+
+				<!-- Unsectioned Table Content -->
+				<unsectioned-table-content
+					v-else
+					:rows="localUnsortedRows"
+					:columns="visibleColumns"
+					:sort-config="localSortConfig"
+					:enable-drag-drop="enableDragDrop"
+					:sticky-first-column="stickyFirstColumn"
+					:enable-row-actions="enableRowActions"
+					:enable-column-settings="enableColumnSettings"
+					:container-width="containerWidth"
+					@update:rows="handleUnsortedRowsUpdate"
+					@row-moved="handleUnsectionedRowMoved"
+					@row-deleted="handleRowDeleted"
+				>
+					<template
+						v-for="(column, index) in visibleColumns"
+						:key="column.key"
+						#[`cell-${index}`]="cellProps"
+					>
+						<slot
+							:name="`cell-${column.key}`"
+							v-bind="cellProps"
+						>
+							<slot
+								:name="`cell-${index}`"
+								v-bind="cellProps"
+							>
+								{{ cellProps.row.data[column.key] }}
+							</slot>
+						</slot>
+					</template>
+					<template #row-actions>
+						<slot name="row-actions">
+						</slot>
+					</template>
+				</unsectioned-table-content>
+			</table>
 		</div>
 
 		<!-- Pagination outside scroll area -->
-		<div :class="classes.paginationWrapper">
+		<div v-if="$slots.pagination" :class="classes.paginationWrapper">
 			<slot name="pagination" />
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.gridTable {
+.tableContainer {
 	position: relative;
 	z-index: 1;
 	display: flex;
@@ -395,7 +429,6 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	scrollbar-width: thin;
 	scrollbar-color: rgb(255 255 255 / 30%) rgb(255 255 255 / 10%);
 }
-
 
 .scrollContainer::-webkit-scrollbar {
 	width: 12px;
@@ -421,10 +454,17 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	background: rgb(255 255 255 / 5%);
 }
 
+.dataTable {
+	width: 100%;
+	min-width: fit-content;
+	border-collapse: collapse;
+	table-layout: fixed;
+	background: var(--bg-color-surface-01, #1a1a1a);
+}
+
 .paginationWrapper {
 	flex-shrink: 0;
 	padding: 16px 0;
 	background: var(--bg-color-surface-01, #1a1a1a);
-	border-top: 1px solid var(--border-color-base-300, #444444);
 }
 </style>

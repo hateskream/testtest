@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, getCurrentInstance } from 'vue';
+import { computed, getCurrentInstance, ref } from 'vue';
 
 import { getComponentByType, CellType } from './cells/cell-types';
 import type {
@@ -13,6 +13,7 @@ import type {
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
 import type { IWatchlistTickerState } from '@/modules/widgets/watchlist/model';
+import { ModalFilterTabWrapper } from '@/modules/widgets/base';
 
 export interface IExtendedTableColumn extends IGenericTableColumn {
 	type?: string | undefined;
@@ -111,6 +112,34 @@ const handleSectionDeleted = (sectionId: string) => emit('sectionDeleted', secti
 const handleSectionRenamed = (payload: { sectionId: string; newName: string }) => emit('sectionRenamed', payload);
 const handleColumnSorted =
 	(payload: { columnKey: string; direction: 'asc' | 'desc' | 'none' }) => emit('columnSorted', payload);
+
+const showDescription = ref<boolean>(true);
+const showImage = ref<boolean>(true);
+
+const handleToggleDescription = () => {
+	if (showDescription.value) {
+		showImage.value = true;
+	}
+	showDescription.value = !showDescription.value;
+};
+
+const handleToggleImage = () => {
+	if (showImage.value) {
+		showDescription.value = true;
+	}
+	showImage.value = !showImage.value;
+};
+
+const tickerState = computed(() => {
+	return {
+		...props.tickerState,
+		isShowLogo: showImage.value,
+		isShowTicker: showDescription.value,
+		isShowDescription: showDescription.value,
+	};
+});
+
+
 </script>
 
 <template>
@@ -167,7 +196,7 @@ const handleColumnSorted =
 					:is="getCellComponent(column.type)"
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
 					:data="cellProps.row.data[column.key]"
-					:ticker-state="props.tickerState"
+					:ticker-state="tickerState"
 				/>
 				<component
 					:is="getCellComponent(column.type)"
@@ -190,8 +219,63 @@ const handleColumnSorted =
 		</template>
 
 		<!-- Forward header settings slot -->
-		<template #header-settings>
-			<slot name="header-settings" />
+		<template
+			#first-column-settings
+			v-if="props.stickyFirstColumn && ( columns[0]?.type === 'symbol' || columns[0].type === 'image-string')"
+		>
+			<div
+
+				:class="classes.row"
+			>
+				<div :class="classes.rowTitle">
+					{{ columns[0].label }}
+				</div>
+
+				<div>
+					<div :class="classes.tabs">
+						<modal-filter-tab-wrapper
+							:is-active="showImage"
+							@click="handleToggleImage"
+						>
+							Icon
+						</modal-filter-tab-wrapper>
+						<modal-filter-tab-wrapper
+							:is-active="showDescription"
+							@click="handleToggleDescription"
+						>
+							Description
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<!-- Forwarded row actions slot -->
+		<template #row-actions>
+			<slot name="row-actions">
+			</slot>
 		</template>
 	</generic-data-table>
 </template>
+
+<style module="classes">
+.row {
+	display: flex;
+	align-items: center;
+	padding: 4px 12px;
+}
+
+.rowTitle {
+	flex: 0 0 100px;
+	font-size: 12px;
+	text-align: left;
+	color: var(--text-color-base-300);
+	text-transform: capitalize;
+}
+
+.tabs {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+</style>

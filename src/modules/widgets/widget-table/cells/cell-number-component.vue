@@ -51,28 +51,30 @@ const trendClass = computed(() => {
 </script>
 
 <template>
-	<ui-tooltip :show-in-ms="100">
-		<template #default>
-			<div :class="[classes.number, classes[trendClass]]">
-				<span :class="classes.prefix">{{ formattedValue.prefix }}</span>
-				<span :class="classes.formatted">{{ formattedValue.value }}</span>
-				<span :class="classes.suffix">{{ formattedValue.suffix }}</span>
-			</div>
-		</template>
+	<div class="wrapper">
+		<ui-tooltip :show-in-ms="100">
+			<template #default>
+				<div :class="[classes.number, classes[trendClass]]" class="paragraph-p-00">
+					<span :class="classes.prefix">{{ formattedValue.prefix }}</span>
+					<span :class="classes.formatted">{{ formattedValue.value }}</span>
+					<span :class="classes.suffix">{{ formattedValue.suffix }}</span>
+				</div>
+			</template>
 
-		<template #content>
-			<div :class="classes.number">
-				<span>{{ formattedValue.prefix }}</span>
-				<span>{{ formattedValue.default }}</span>
-				<span>{{ formattedValue.suffix }}</span>
-			</div>
-		</template>
-	</ui-tooltip>
+			<template #content>
+				<div :class="classes.number" class="paragraph-p-00">
+					<span>{{ formattedValue.prefix }}</span>
+					<span>{{ formattedValue.default }}</span>
+					<span>{{ formattedValue.suffix }}</span>
+				</div>
+			</template>
+		</ui-tooltip>
+	</div>
 </template>
 
 <style module="classes">
 .prefix {
-	margin-right: 1px;
+	margin-right: 2px;
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13px;
@@ -88,15 +90,14 @@ const trendClass = computed(() => {
 }
 
 .formatted {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13px;
+	line-height: 1;
 	color: var(--text-color-base-500);
-	letter-spacing: 0.143px;
 }
 
 .number {
 	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 	width: 100%;
 }
 
@@ -110,5 +111,10 @@ const trendClass = computed(() => {
 
 .neutral {
 	color: var(--text-color-base-500);
+}
+
+.wrapper {
+	flex: 1;
+	width: 100%;
 }
 </style>

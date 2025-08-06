@@ -14,6 +14,7 @@ import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '@/modules/
 interface IProps {
 	allColumns: IGenericTableColumn[];
 	visibleColumns: IGenericTableColumn[];
+	hideFirstColumn?: boolean;
 }
 
 interface IEmits {
@@ -29,8 +30,16 @@ const emit = defineEmits<IEmits>();
 
 const { groupColumnsByCategory, toggleColumnVisibility, updateColumnPositions } = useTableColumns();
 
+const filteredColumns = computed(() => {
+	if (props.hideFirstColumn) {
+		return props.allColumns.slice(1);
+	}
+	return props.allColumns.slice(1);
+});
+
+
 const groupedColumns = computed(() => {
-	return groupColumnsByCategory(props.allColumns);
+	return groupColumnsByCategory(filteredColumns.value);
 });
 
 const draggableColumns = computed(() =>
@@ -95,8 +104,8 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 				<ui-icon
 					:id="IconIds.Tertiary"
 					:class="classes.iconTertiary"
-					width="20"
-					height="20"
+					width="18"
+					height="18"
 				/>
 			</template>
 
@@ -105,7 +114,10 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 					<template #title>Choose Metrics</template>
 
 					<template #content>
-						<div>
+						<div class="metricsWrapper">
+
+							<slot name="first-column-settings" />
+
 							<div
 								v-for="(columns, groupName) in groupedColumns"
 								:key="groupName"
@@ -184,6 +196,7 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 <style module="classes">
 .columnSettings {
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 

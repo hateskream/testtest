@@ -50,12 +50,18 @@ export function adaptMarketDataToGeneric(
 		data: columns.reduce((acc, col) => {
 			if (col.columnName === 'symbol') {
 				acc[col.columnName] = {
-					symbolType:'Crypto',
+					symbolType: 'Crypto',
 					srcImg: getImagePath(market[col.columnName], ImageTypePath.Currency),
-					ticker: market[col.columnName], blockchain: '' };
+					ticker: market[col.columnName],
+					blockchain: '',
+				};
 				return acc;
 			}
-			acc[col.columnName] = { value: market[col.columnName] };
+			acc[col.columnName] = {
+				value: market[col.columnName],
+				...(market[col.columnName + 'Symbol'] ? { currencySymbol: market[col.columnName + 'Symbol'] } : {}),
+				...(market[col.columnName + 'Magnitude'] ? { magnitude: market[col.columnName + 'Magnitude'] } : {}),
+			};
 			return acc;
 		}, {} as Record<string, unknown>),
 		metadata: {

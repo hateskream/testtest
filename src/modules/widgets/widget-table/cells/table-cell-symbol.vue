@@ -31,7 +31,8 @@ const props = defineProps<IProps>();
 			v-if="props.data.symbolType !== 'Forex' && props.data.srcImg && props.tickerState.isShowLogo"
 			:src="props.data.srcImg"
 			:ticker="props.data.ticker || ''"
-			:size="32"
+			:size="20"
+			:padding="6"
 		/>
 
 		<!-- Forex symbols -->
@@ -43,12 +44,17 @@ const props = defineProps<IProps>();
 			:src="[props.data.leftSrcImg, props.data.rightSrcImg]"
 			:ticker="`${props.data.leftTicker}/${props.data.rightTicker}`"
 			:domain="`${props.data.leftTicker}/${props.data.rightTicker}`"
-			:size="40"
+			:size="26"
+			:padding="0"
 		/>
 
 		<div :class="classes.tickerName">
 			<!-- Show ticker for all types -->
-			<span v-if="props.tickerState.isShowTicker && props.data.ticker">
+			<span
+				v-if="props.tickerState.isShowTicker && props.data.ticker"
+				class="paragraph-p-00"
+				:class="classes.tickerFullName"
+			>
 				{{ props.data.ticker }}
 			</span>
 
@@ -58,6 +64,7 @@ const props = defineProps<IProps>();
 					&& props.tickerState.isShowTicker
 					&& props.data.leftTicker
 					&& props.data.rightTicker"
+				class="paragraph-p-00"
 			>
 				{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
 			</span>
@@ -100,6 +107,10 @@ const props = defineProps<IProps>();
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 2px;
+
+	.tickerFullName {
+		line-height: 1;
+	}
 }
 
 .description {

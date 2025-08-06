@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { adaptMarketColumnsToGeneric, adaptMarketDataToGeneric } from '../utils';
 import { useMarketStore } from '../stores';
 import type { IMarketDomain } from '../api';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -25,7 +26,6 @@ const genericRows = computed(() =>
 
 <template>
 	<div :class="classes.scrollable">
-
 		<widget-typed-table
 			:columns="genericColumns"
 			:rows="genericRows"
@@ -37,7 +37,17 @@ const genericRows = computed(() =>
 			:sticky-first-column="true"
 			:enable-row-actions="true"
 			:show-header="true"
-		/>
+		>
+			<template #row-actions>
+				<div :class="classes.favorite">
+					<ui-icon
+						:id="IconIds.Favorite"
+						width="16px"
+						height="16px"
+					/>
+				</div>
+			</template>
+		</widget-typed-table>
 	</div>
 </template>
 
@@ -45,5 +55,20 @@ const genericRows = computed(() =>
 .scrollable {
 	position: relative;
 	height: 100%;
+}
+
+.favorite {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	color: var(--text-color-base-300);
+	cursor: pointer;
+	transition: color 0.2s ease-in;
+
+	&:hover {
+		color: var(--text-color-base-300-effect);
+	}
 }
 </style>

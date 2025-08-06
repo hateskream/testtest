@@ -9,19 +9,15 @@ const props = defineProps<IProps>();
 </script>
 
 <template>
-	<div :class="classes.text">
+	<div :class="classes.text" class="paragraph-p-00">
 		{{ props.data.value || '—' }}
 	</div>
 </template>
 
 <style module="classes">
 .text {
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13px;
+	line-height: 1;
+	text-align: right;
 	color: var(--text-color-base-500);
-	letter-spacing: 0.143px;
-	text-wrap: nowrap;
 }
 </style>

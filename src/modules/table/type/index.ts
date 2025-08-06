@@ -1,6 +1,3 @@
-// Table column type enum\
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import type { UnwrapRef } from 'vue';
 
 export enum TableColumnType {

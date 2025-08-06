@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { BaseDashboardComponent } from '@/modules/widgets/base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 
@@ -30,11 +32,11 @@ const emit = defineEmits<{
 
 		<template #content>
 			<top-indices-loader
-				v-if="true"
+				v-if="false"
 				:count="5"
 				:height="'48px'"
 			/>
-			<top-indices-error v-else-if="false" />
+			<top-indices-error v-else-if="props.meta.name === 'ASJDKALKISJDKASJDKAS'" />
 
 			<top-indices-main
 				v-else

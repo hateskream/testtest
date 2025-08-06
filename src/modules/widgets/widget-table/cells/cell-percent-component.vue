@@ -17,6 +17,9 @@ const displayValue = computed(() => {
 	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
 		return '—';
 	}
+	if (props.data.value === '0') {
+		return props.data.value;
+	}
 	return `${props.data.value}%`;
 });
 
@@ -31,23 +34,24 @@ const percentClasses = computed<string>(() => {
 </script>
 
 <template>
-	<div :class="[percentClasses, classes.percent]">{{ displayValue }}</div>
+	<div :class="[percentClasses, classes.percent]" class="paragraph-p-00">{{ displayValue }}</div>
 </template>
 
 <style module="classes">
-.commonly {
-	color: var(--text-color-base-300);
-}
-
-.positive {
-	color: var(--metrics-color-positive);
-}
-
-.negative {
-	color: var(--metrics-color-negative-500);
-}
-
 .percent {
-	width: 100%;
+	text-align: right;
+	color: var(--metrics-color-positive);
+
+	&.commonly {
+		color: var(--text-color-base-300);
+	}
+
+	&.positive {
+		color: var(--metrics-color-positive);
+	}
+
+	&.negative {
+		color: var(--metrics-color-negative-500);
+	}
 }
 </style>
