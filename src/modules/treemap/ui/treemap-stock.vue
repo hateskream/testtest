@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useHeatmapStock } from '../composables';
 import type {
@@ -40,6 +40,8 @@ const title = defineModel<TitleViewVariant>('title', { required: true });
 
 const { data: heatmapData } = useQueryHeatmapStock();
 
+const selectGroup = ref<string | null>(null);
+
 const {
 	heatmap,
 	group,
@@ -51,8 +53,17 @@ const {
 	computed(() => props.activeColorBy),
 	computed(() => props.activeDisplayValue),
 	computed(() => props.activeGroupBy),
+	selectGroup,
 	title,
 );
+
+const breadcrumbs = computed(() =>
+	selectGroup.value ? [{ id: selectGroup.value, name: selectGroup.value }]: [],
+);
+
+function setSelectGroup(id: string | null) {
+	selectGroup.value = id;
+}
 </script>
 
 <template>
@@ -83,9 +94,10 @@ const {
 		<ui-treemap-layout :data="group">
 			<template  #default="{ item: { id } }">
 				<div :class="classes.group">
-					<div v-if="id !== NO_GROUP.key">{{ id }}</div>
+					<div v-if="id !== NO_GROUP.key && !selectGroup" @click="setSelectGroup(id)">{{ id }}</div>
 					<ui-treemap
 						v-if="heatmapData"
+						:original-breadcrumbs="breadcrumbs"
 						:currency-symbol="heatmapData.currencySymbol"
 						:size-by="activeSizeBy!.displayName"
 						:display-value-name="activeDisplayValue!.displayName"
@@ -97,6 +109,7 @@ const {
 							isDisplayValuePercent: isDisplayValuePercent,
 						}"
 						:data="heatmap[id]"
+						@click-all="setSelectGroup(null)"
 					/>
 				</div>
 			</template>
@@ -113,6 +126,8 @@ const {
 }
 
 .group {
+	display: flex;
+	flex-direction: column;
 	width: 100%;
 	height: 100%;
 }

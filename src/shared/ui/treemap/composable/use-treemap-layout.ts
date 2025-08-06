@@ -1,7 +1,6 @@
 import { CategoryScale, Chart, LinearScale, Tooltip, type ChartConfiguration } from 'chart.js';
 import { TreemapController, TreemapElement, type TreemapDataPoint } from 'chartjs-chart-treemap';
 import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
-import { debounce } from '@vexip-ui/utils';
 
 interface IDataItem {
 	id: string;
@@ -32,17 +31,20 @@ export function useTreemapLayout(
 	const preparedData = computed(() => data.value.map(el => el.value));
 	const valueToIdMap = computed(() => new Map(data.value.map(el => [el.value, el.id])));
 
-	const SHOW_MORE_AREA = 80 * 80;
+	const SHARE_SHOW_MORE_AREA = 0.01;
 	const MIN_COUNT_OTHER_ELEMENTS = 10;
 
 	const treemap = computed((): ITreeMapItem[] => {
-		if (!treemapCanvas.value) {
+		if (
+			!treemapCanvas.value ||
+			treemapRaw.value.length === 0
+		) {
 			return [];
 		}
 
-		if (treemapRaw.value.length === 0) {
-			return [];
-		}
+		const { width, height } = treemapCanvas.value.getBoundingClientRect();
+
+		const showMoreArea = Math.ceil(width * height * SHARE_SHOW_MORE_AREA);
 
 		let areaAccumulator = 0;
 		let otherCount = 0;
@@ -58,7 +60,7 @@ export function useTreemapLayout(
 			}))
 			.sort((a, b) => a.area - b.area)
 			.map(item => {
-				if (areaAccumulator + item.area < SHOW_MORE_AREA) {
+				if (areaAccumulator + item.area < showMoreArea) {
 					areaAccumulator += item.area;
 					otherCount += 1;
 					return {
@@ -85,8 +87,6 @@ export function useTreemapLayout(
 				minTopSmall = item.top;
 			}
 		});
-
-		const { width, height } = treemapCanvas.value.getBoundingClientRect();
 
 		const otherEl = {
 			width: width - minLeftSmall,
@@ -128,7 +128,16 @@ export function useTreemapLayout(
 	watch(
 		() => data.value,
 		() => {
-			treemapRaw.value = updateChart();
+			if (!treemapCanvas.value) {
+				return;
+			}
+
+			ctx = treemapCanvas.value.getContext('2d');
+			if (!ctx) {
+				return;
+			}
+
+			treemapRaw.value = renderChart(ctx);
 		});
 
 	onMounted(() => {
@@ -144,7 +153,7 @@ export function useTreemapLayout(
 		treemapRaw.value = renderChart(ctx);
 
 		resizeObserver = watchCanvasSize(treemapCanvas.value, () => {
-			treemapRaw.value = updateChart();
+			treemapRaw.value = renderChart(ctx!);
 		});
 	});
 
@@ -159,7 +168,7 @@ export function useTreemapLayout(
 	});
 
 	function watchCanvasSize(element: HTMLCanvasElement, cb: () => void) {
-		const observer = new ResizeObserver(debounce(cb, 50));
+		const observer = new ResizeObserver(cb);
 
 		observer.observe(element);
 		return observer;
@@ -191,17 +200,17 @@ export function useTreemapLayout(
 		return extractData(renderedChart);
 	};
 
-	function updateChart(): TreemapDataPoint[] {
-		if (!renderedChart) {
-			// eslint-disable-next-line no-console
-			console.warn('renderedChart is null');
-			return [];
-		}
+	// function updateChart(): TreemapDataPoint[] {
+	// 	if (!renderedChart) {
+	// 		// eslint-disable-next-line no-console
+	// 		console.warn('renderedChart is null');
+	// 		return [];
+	// 	}
 
-		renderedChart.data.datasets[0].tree = preparedData.value,
-		renderedChart.update();
-		return extractData(renderedChart);
-	}
+	// 	renderedChart.data.datasets[0].tree = preparedData.value,
+	// 	renderedChart.update();
+	// 	return extractData(renderedChart);
+	// }
 
 	function extractData(chart: Chart<'treemap'>): TreemapDataPoint[] {
 		const [{ data: treemapRawData }] = chart.data.datasets;

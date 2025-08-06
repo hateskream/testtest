@@ -31,6 +31,7 @@ export function useHeatmapStock(
 	colorBy: Ref<IColorBy | null>,
 	displayValue: Ref<ISettings | null>,
 	groupBy: Ref<ISettings | null>,
+	selectGroup: Ref<string | null>,
 	titleSetting: Ref<TitleViewVariant>,
 ) {
 	const heatmap = ref<Record<GroupBy, IHeatmapItem[]>>({});
@@ -39,8 +40,8 @@ export function useHeatmapStock(
 	const isDisplayValuePercent = ref(false);
 
 	watch(
-		[rawHeatmap, sizeBy, colorBy, titleSetting, displayValue, groupBy],
-		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue, newGroupBy]) => {
+		[rawHeatmap, sizeBy, colorBy, titleSetting, displayValue, groupBy, selectGroup],
+		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue, newGroupBy, newSelectGroup]) => {
 			if (
 				!newHeatmap?.items.length ||
 				!newSizeBy ||
@@ -109,21 +110,17 @@ export function useHeatmapStock(
 			heatmap.value = {};
 			group.value = [];
 
+			const groupMap = new Map<GroupBy, number>();
+
 			newHeatmap.items.forEach(item => {
 				let groupId = NO_GROUP.key as GroupBy;
 				if (newGroupBy.key !== NO_GROUP.key) {
 					groupId = item.values[newGroupBy.key] as GroupBy;
 
-					group.value.push({
-						id: groupId,
-						value: item.values[groupByValueKey] as number,
-					});
+					groupMap.set(groupId, item.values[groupByValueKey] as number);
 				} else {
 					if (group.value.length === 0) {
-						group.value.push({
-							id: groupId,
-							value: 1,
-						});
+						groupMap.set(groupId, 1);
 					}
 				}
 
@@ -147,7 +144,19 @@ export function useHeatmapStock(
 					});
 				}
 			});
+
+			if (selectGroup.value) {
+				groupMap.clear();
+				groupMap.set(selectGroup.value, 1);
+
+				heatmap.value = {
+					[selectGroup.value]: heatmap.value[selectGroup.value],
+				};
+			}
+
+			group.value = Array.from(groupMap, ([key, value]) => ({ id: key, value: value }));
 		},
+
 		{ immediate: true },
 	);
 

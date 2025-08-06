@@ -186,9 +186,15 @@ function onClickNotOriginalBreadcrumb(id: string) {
 
 function onCLickAll() {
 	if (props.originalBreadcrumbs.length) {
+		emit('click-all');
 		return;
 	}
 
+	treemap.value = prepareData(props.data);
+	prevent.value = [];
+}
+
+function onClickOriginalBreadcrumb() {
 	treemap.value = prepareData(props.data);
 	prevent.value = [];
 }
@@ -199,7 +205,7 @@ function onCLickAll() {
 		<ui-breadcrumbs
 			:breadcrumbs="breadcrumb"
 			@click-all="onCLickAll"
-			@click-original-breadcrumb="emit('click-original-breadcrumb', $event)"
+			@click-original-breadcrumb="onClickOriginalBreadcrumb"
 			@click-not-original-breadcrumb="onClickNotOriginalBreadcrumb"
 		/>
 		<ui-treemap-layout :data="treemap">
@@ -246,6 +252,8 @@ function onCLickAll() {
 <style module="classes">
 .root {
 	position: relative;
+	display: flex;
+	flex-direction: column;
 	width: 100%;
 	height: 100%;
 }
