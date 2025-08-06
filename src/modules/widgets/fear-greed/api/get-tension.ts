@@ -30,7 +30,7 @@ function getRandomFromRange(max: number, min: number) {
 	return Math.round(Math.random() * (max - min) + min);
 }
 
-export async function getMockData(): Promise<ITension> {
+async function getMockData(): Promise<ITension> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});

@@ -46,7 +46,7 @@ function prepareResponse(data: IMarket[]): IMarketDomain[] {
 	}));
 }
 
-export async function getMockData(): Promise<IGetMarketResponse> {
+async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});

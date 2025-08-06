@@ -45,7 +45,7 @@ function prepareResponse(data: IMarketCapCurrency[]): IMarketCapDomain[] {
 	}));
 }
 
-export async function getMockData(): Promise<IGetMarketResponse> {
+async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});

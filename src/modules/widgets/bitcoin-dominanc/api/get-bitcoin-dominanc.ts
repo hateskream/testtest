@@ -45,7 +45,7 @@ function prepareResponse(data: IBitcoinDominancCurrency[]): IBitcoinDominancDoma
 	}));
 }
 
-export async function getMockData(): Promise<IGetMarketResponse> {
+async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});

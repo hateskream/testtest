@@ -5,7 +5,7 @@ import { getBitcoinDominanc, type IGetBitcoinDominancRequest } from '../api';
 
 export function useQueryBintcoinDominanc(args: IGetBitcoinDominancRequest) {
 	return useQuery({
-		queryKey: ['market-cap', args.market],
+		queryKey: ['bitcoin-dominance', args.market],
 		queryFn: () => getBitcoinDominanc(args),
 	});
 }
