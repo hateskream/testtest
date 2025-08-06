@@ -8,7 +8,7 @@ import InfoTooltip from '@/shared/ui/info-tooltip/info-tooltip.vue';
 	<div :class="classes.btcPerformanceRankSeason">
 		<div :class="classes.rank">
 			<span :class="classes.rankValue">22</span>
-			<span>/100</span>
+			<span>/30</span>
 			<info-tooltip text="Bitcoin current score" />
 		</div>
 

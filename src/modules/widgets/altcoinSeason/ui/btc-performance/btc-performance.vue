@@ -21,11 +21,10 @@ const props = defineProps<IBtcPerformanceProps>();
 <style module="classes">
 .btcPerformance {
 	display: flex;
-	flex: 1 0 0;
 	flex-direction: column;
-	align-items: flex-start;
+	justify-content: space-between;
+	height: 100%;
 	padding: 12px 8px;
-	gap: 12px;
 	color: var(--color-text-base-300, #9a9a9d);
 }
 

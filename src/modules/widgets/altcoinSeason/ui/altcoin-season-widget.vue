@@ -9,7 +9,7 @@ import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 
 import BtcPerformance from './btc-performance/btc-performance.vue';
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
-import WidgetLayout from './layouts/widget-layout.vue';
+import AltcoinSeasonLayout from './layouts/altcoin-season-layout.vue';
 import AltcoinSeasonPeriodGroup from './period-switch/altcoin-season-period-group.vue';
 import HistoricalValue from './historical-value/historical-value.vue';
 
@@ -48,9 +48,8 @@ const metaPerformance = computed(() => {
 		:class="classes.altcoinSeasonWidget"
 	>
 		<template #title>{{ props.meta.name }}</template>
-
 		<template #content>
-			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
+			<altcoin-season-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
 				<template #period>
 					<altcoin-season-period-group
 						v-if="altcoinSeasonWidgetConfig?.period"
@@ -74,7 +73,7 @@ const metaPerformance = computed(() => {
 					<chart-altcoin-season />
 				</template>
 
-			</widget-layout>
+			</altcoin-season-layout>
 		</template>
 
 		<template #rcm>
