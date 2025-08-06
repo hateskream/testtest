@@ -24,7 +24,7 @@ import {
 	ChartSectionInsightAndActivity,
 	ChartSectionPeerAnalysis,
 } from '@/modules/chart/components/sections';
-import { RangeChart } from '../lightweight-charts/model';
+import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartSectionQuarterlyRevenue
 	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';

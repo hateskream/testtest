@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { RangeChart, type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
+import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 

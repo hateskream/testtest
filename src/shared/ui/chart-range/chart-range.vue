@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { RangeChart } from '../model/chart';
+import type { RangeChart } from './types';
 
 interface IChartRangeProps {
 	activeRange: RangeChart;

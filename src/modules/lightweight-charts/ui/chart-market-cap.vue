@@ -3,9 +3,9 @@ import type { CSSProperties } from 'vue';
 import { onMounted, shallowRef, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
 
-import { RangeChart } from '../model';
+import { RangeChart } from '@/shared/ui/chart-range';
 
-import ChartRange from '../components/chart-range.vue';
+import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 
 interface IChartProps {

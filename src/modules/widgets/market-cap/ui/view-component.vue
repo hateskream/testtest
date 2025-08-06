@@ -6,10 +6,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalFilterTicker } from '../../base';
 import type { IModalFilterTicker } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
-import { RangeChart } from '@/modules/lightweight-charts/model';
 import { compareStrings, prettyNumberWithKey } from '@/shared/lib';
 import { useMarketCapStore } from '../store/market-cap';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';

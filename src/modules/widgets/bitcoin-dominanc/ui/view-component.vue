@@ -10,9 +10,10 @@ import { compareStrings } from '@/shared/lib';
 import { useBitcoinDominancStore } from '../store/bitcoin-dominanc';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { ChartBitcoinDominanc } from '@/modules/lightweight-charts';
-import { RangeChart } from '@/modules/lightweight-charts/model';
+import { RangeChart } from '@/shared/ui/chart-range';
 
-import ChartRange from '@/modules/lightweight-charts/components/chart-range.vue';
+import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
+
 
 interface IViewComponentProps {
 	meta: IMeta;
