@@ -5,7 +5,8 @@ import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annot
 
 Chart.register(annotationPlugin);
 
-import type { IChartTooltipData, RangeChart } from '../model';
+import type { IChartTooltipData } from '../model';
+import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartRange from '../components/chart-range.vue';
 
