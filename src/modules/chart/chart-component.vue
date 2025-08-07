@@ -33,6 +33,7 @@ import ChartSectionStockPeersBulk
 import ChartSectionDividends from './components/sections/dividends/chart-section-dividends.vue';
 import ChartSectionBalanceSheet from './components/sections/balance-sheet/chart-section-balance-sheet.vue';
 import ChartSectionIncomeStatement from './components/sections/income-statement/chart-section-income-statement.vue';
+import ChartSectionEps from './components/sections/eps/chart-section-eps.vue';
 
 const { randomizeExchanges } = useChartStore();
 
@@ -214,6 +215,10 @@ const explorerDate = computed(() => {
 					/>
 					<chart-section-income-statement
 						:section="chartWidgetRealSections[9]"
+						:register-item-ref="registerItemRef"
+					/>
+					<chart-section-eps
+						:section="chartWidgetRealSections[10]"
 						:register-item-ref="registerItemRef"
 					/>
 					<chart-main-column-component

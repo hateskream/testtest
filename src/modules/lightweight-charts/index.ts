@@ -10,6 +10,7 @@ import ChartMarketCap from './ui/chart-market-cap.vue';
 import ChartBitcoinDominanc from './ui/chart-bitcoin-dominanc.vue';
 import ChartAltcoinSeason from './ui/chart-altcoin-season.vue';
 import ChartTooltip from './ui/chart-tooltip.vue';
+import ChartEps from './ui/chart-eps.vue';
 
 export {
 	Chart,
@@ -24,4 +25,5 @@ export {
 	ChartBitcoinDominanc,
 	ChartAltcoinSeason,
 	ChartTooltip,
+	ChartEps,
 };

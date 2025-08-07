@@ -148,4 +148,8 @@ export const chartWidgetRealSections = [
 		id:'income-statement',
 		title: 'Income Statement',
 	},
+	{
+		id:'eps',
+		title: 'Earnings per Share',
+	},
 ];
