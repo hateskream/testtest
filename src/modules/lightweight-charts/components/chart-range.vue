@@ -6,9 +6,12 @@ import { RangeChart } from '../model/chart';
 interface IChartRangeProps {
 	activeRange: RangeChart;
 	list: RangeChart[];
+	type?: 'default' | 'light';
 }
 
-const props = defineProps<IChartRangeProps>();
+const props = withDefaults(defineProps<IChartRangeProps>(), {
+	type: 'default',
+});
 
 interface IChartRangeEmits {
 	(e: 'select', data: RangeChart): void;
@@ -31,7 +34,7 @@ function generateRandom() {
 </script>
 
 <template>
-	<div :class="'range'">
+	<div :class="['range', `range-${type}`]">
 		<div
 			v-for="item in ranges"
 			:key="item.val"
@@ -39,7 +42,7 @@ function generateRandom() {
 			@click="emits('select', item.val)"
 		>
 			<span class="rangeTitle">{{ item.title }}</span>
-			<span class="rangeChange">{{ item.num }}%</span>
+			<span v-if="type === 'default'" class="rangeChange">{{ item.num }}%</span>
 		</div>
 	</div>
 </template>
@@ -82,7 +85,29 @@ function generateRandom() {
 	gap: 4px;
 }
 
+
 .rangeItemActive {
 	background-color: var(--bg-color-base-300-activated);
+}
+
+
+.range-light {
+	padding: 16px 0;
+	background-color: inherit;
+	border-top: 1px solid rgb(97 97 97 / 30%);
+	border-radius: 0;
+}
+
+.range-light .rangeItem {
+	background-color: inherit !important;
+}
+
+.range-light .rangeItemActive .rangeTitle {
+	color: #ffffff;
+}
+
+.range-light .rangeTitle {
+	font-size: 15px;
+	color: var(--text-color-base-300);
 }
 </style>
