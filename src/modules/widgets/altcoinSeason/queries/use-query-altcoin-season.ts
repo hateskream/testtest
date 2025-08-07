@@ -4,7 +4,11 @@ import { getAltcoinSeason, type IAltcoinSeasonRequest } from '@/modules/widgets/
 
 export function useQueryAltcoinSeason(request: IAltcoinSeasonRequest) {
 	return useQuery({
-		queryKey: ['altcoin-season', request.market],
+		queryKey: [
+			'altcoin-season',
+			request.market,
+			request.period,
+		],
 		queryFn: () => getAltcoinSeason(request),
 		refetchOnMount: false,
 	});

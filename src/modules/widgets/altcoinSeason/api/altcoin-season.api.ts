@@ -13,6 +13,7 @@ const dataProvider = DataProvider.MockLocal;
 export interface IAltcoinSeasonRequest {
 	market: string;
 	period?: Period;
+	modules?: IAltcoinSeasonConfig['modules'];
 }
 
 
@@ -24,11 +25,11 @@ export interface IAltcoinSeasonDataResponse {
 	chart: unknown;
 }
 
-export async function getAltcoinSeason({ market }: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
+export async function getAltcoinSeason(request: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
 	const logger = useLogger();
 
 	try {
-		const response = await sendRequestByProvider(dataProvider, { market });
+		const response = await sendRequestByProvider(dataProvider, request);
 
 		return response;
 	} catch (error) {
@@ -39,32 +40,35 @@ export async function getAltcoinSeason({ market }: IAltcoinSeasonRequest): Promi
 
 function sendRequestByProvider(
 	type: DataProvider,
-	{ market }: IAltcoinSeasonRequest,
+	request: IAltcoinSeasonRequest,
 ): Promise<IAltcoinSeasonDataResponse> {
 	const httpService = useHttpService();
 
 	switch (type) {
 		case DataProvider.Production:
 			return httpService.get<IAltcoinSeasonDataResponse>('https://gateway.planet9.uk/altcoin-season', {
-				query: { market },
+				query: { market: request.market, period: request.period || '90D' },
 			});
 		case DataProvider.MockLocal:
-			return getMockData();
+			return getMockData(request);
 		case DataProvider.MockServer:
 			return httpService.get<IAltcoinSeasonDataResponse>('/api/altcoin-season');
 		default:
-			return getMockData();
+			return getMockData(request);
 	}
 }
 
-async function getMockData(): Promise<IAltcoinSeasonDataResponse> {
+async function getMockData(request: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
 	await new Promise(resolve => {
-		setTimeout(resolve, 0);
+		setTimeout(resolve, 200);
 	});
 
+	const btcRank = Math.floor(Math.random() * 30) + 1;
+	const fetchPeriod = request.period || '90D';
+
 	const widgetConfigMockData: IAltcoinSeasonConfig = {
-		period: '90D',
-		modules: {
+		period: fetchPeriod,
+		modules: request.modules || {
 			performanceRank: true,
 			historicalValues: true,
 			top100: true,
@@ -72,14 +76,11 @@ async function getMockData(): Promise<IAltcoinSeasonDataResponse> {
 		},
 	};
 
-
-	const btcRank = Math.floor(Math.random() * 30) + 1;
-
 	const performanceRankMockData: IPerformanceRank =
 		{
 			btcRank: btcRank,
 			maxRank: 30,
-			period: '90D',
+			period: fetchPeriod,
 		};
 
 	const historicalValuesMockData: IHistoricalValue = {

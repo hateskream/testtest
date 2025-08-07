@@ -19,7 +19,6 @@ const emit = defineEmits<{
 }>();
 
 const resetAll = () => {
-	altcoinSeasonStore.setPeriod('90D');
 	altcoinSeasonStore.refetch();
 	performanceStore.resetAll();
 };

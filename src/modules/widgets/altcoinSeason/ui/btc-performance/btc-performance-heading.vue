@@ -15,7 +15,8 @@ const props = defineProps<IBtcPerformanceHeadingProps>();
 
 const altcoinSeasonStore = useAltcoinSeasonStore();
 
-const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.period);
+// const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.period);
+const period = computed(() => altcoinSeasonStore.selectedPeriod);
 </script>
 
 <template>
