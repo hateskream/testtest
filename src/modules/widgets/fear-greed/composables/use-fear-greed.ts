@@ -1,16 +1,17 @@
-import { computed, reactive } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-import { useQueryTension } from '../queries';
+import { useGetSettings, useQueryTension, useUpdateSettings } from '../queries';
+import { getDefaultViewState, type ISettings } from '../model';
 
-export function useFearGreed() {
-	const viewState = reactive({
-		isShowChart: true,
-		isShowName: true,
-		isShowDescription: true,
-		isShowPastValues: true,
-	});
+export function useFearGreed(widgetId: string) {
+	const viewState = ref<ISettings>(getDefaultViewState());
 
 	const { data, isLoading, isError } = useQueryTension();
+	const {
+		data: dataSettings,
+		isLoading: isLoadingSettings,
+	} = useGetSettings(widgetId);
+	const { mutate } = useUpdateSettings(widgetId);
 
 	const dataState = computed(() => ({
 		data: data.value,
@@ -18,29 +19,21 @@ export function useFearGreed() {
 		isError: isError.value,
 	}));
 
-	const isNotData = computed(() => !!data.value && isLoading.value);
+	const isNotData = computed(() => !!data.value && isLoading.value && !isLoadingSettings.value);
 
-	function toggleShowChart() {
-		viewState.isShowChart = !viewState.isShowChart;
-	}
+	watch(dataSettings, newSettings => {
+		if (newSettings) {
+			viewState.value = { ...newSettings };
+		}
 
-	function toggleShowName() {
-		viewState.isShowName = !viewState.isShowName;
-	}
+	}, { immediate: true });
 
-	function toggleShowPastValues() {
-		viewState.isShowPastValues = !viewState.isShowPastValues;
-	}
-
-	function toggleShowDescription() {
-		viewState.isShowDescription = !viewState.isShowDescription;
-	}
+	watch(viewState, newSettings => {
+		mutate(newSettings);
+	}, { deep: true });
 
 	function resetAllChanges() {
-		viewState.isShowChart = true;
-		viewState.isShowName = true;
-		viewState.isShowDescription = true;
-		viewState.isShowPastValues = true;
+		viewState.value = getDefaultViewState();
 	}
 
 	return {
@@ -48,10 +41,6 @@ export function useFearGreed() {
 		dataState,
 		isNotData,
 
-		toggleShowChart,
-		toggleShowName,
-		toggleShowPastValues,
-		toggleShowDescription,
 		resetAllChanges,
 	};
 }

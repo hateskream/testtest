@@ -1,20 +1,13 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 
-import { Tension, type ISize, type ITension, type ITensionTextData } from '../model';
+import { Tension, type ISettings, type ISize, type ITension, type ITensionTextData } from '../model';
 import { useMapTension } from '../composables';
 import { UiTransitionFade } from '@/shared/ui/transition';
 
-interface IViewState {
-	isShowChart: boolean;
-	isShowName: boolean;
-	isShowDescription: boolean;
-	isShowPastValues: boolean;
-}
-
 export interface IViewComponentProps {
 	tension: ITension;
-	viewState: IViewState;
+	viewState: ISettings;
 	size: ISize;
 }
 

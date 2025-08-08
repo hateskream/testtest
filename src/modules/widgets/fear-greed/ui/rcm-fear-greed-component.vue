@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { ModalItemSwitch, ModalSubmenuContent } from '../../base';
+import type { ISettings } from '../model';
 
-interface ISettingsModel {
-	isShowChart: boolean;
-	isShowName: boolean;
-	isShowDescription: boolean;
-	isShowPastValues: boolean;
-}
-
-const settings = defineModel<ISettingsModel>({ required: true });
+const settings = defineModel<ISettings>({ required: true });
 
 function toggleShowChart() {
 	settings.value.isShowChart = !settings.value.isShowChart;

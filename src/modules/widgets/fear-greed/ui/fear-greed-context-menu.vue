@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { ModalSubmenu, WidgetContextMenu } from '@/modules/widgets/base';
+import type { ISettings } from '../model';
 
 import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
-
-interface ISettingsModel {
-	isShowChart: boolean;
-	isShowName: boolean;
-	isShowDescription: boolean;
-	isShowPastValues: boolean;
-}
 
 interface IFearGreedContextMenu {
 	title: string;
@@ -16,7 +10,7 @@ interface IFearGreedContextMenu {
 
 const props = defineProps<IFearGreedContextMenu>();
 
-const settings = defineModel<ISettingsModel>({ required: true });
+const settings = defineModel<ISettings>({ required: true });
 
 const emit = defineEmits<{
 	(e: 'delete'): void;

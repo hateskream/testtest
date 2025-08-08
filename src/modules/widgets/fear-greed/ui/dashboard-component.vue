@@ -15,7 +15,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { viewState, dataState, isNotData, resetAllChanges } = useFearGreed();
+const { viewState, dataState, isNotData, resetAllChanges } = useFearGreed(props.meta.widgetId);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
