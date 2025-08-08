@@ -1,8 +1,30 @@
 <script setup lang="ts">
 import { ModalItemSwitch, ModalSubmenuContent } from '../../base';
-import { useFearGreedStore } from '../stores';
 
-const fearGreedStore = useFearGreedStore();
+interface ISettingsModel {
+	isShowChart: boolean;
+	isShowName: boolean;
+	isShowDescription: boolean;
+	isShowPastValues: boolean;
+}
+
+const settings = defineModel<ISettingsModel>({ required: true });
+
+function toggleShowChart() {
+	settings.value.isShowChart = !settings.value.isShowChart;
+}
+
+function toggleShowName() {
+	settings.value.isShowName = !settings.value.isShowName;
+}
+
+function toggleShowPastValues() {
+	settings.value.isShowPastValues = !settings.value.isShowPastValues;
+}
+
+function toggleShowDescription() {
+	settings.value.isShowDescription = !settings.value.isShowDescription;
+}
 </script>
 
 <template>
@@ -10,26 +32,26 @@ const fearGreedStore = useFearGreedStore();
 		<template #title> Additional features </template>
 		<template #content>
 			<modal-item-switch
-				:model-value="fearGreedStore.isShowChart"
-				@update:model-value="fearGreedStore.toggleShowChart"
+				:model-value="settings.isShowChart"
+				@update:model-value="toggleShowChart"
 			>
 				Chart
 			</modal-item-switch>
 			<modal-item-switch
-				:model-value="fearGreedStore.isShowName"
-				@update:model-value="fearGreedStore.toggleShowName"
+				:model-value="settings.isShowName"
+				@update:model-value="toggleShowName"
 			>
 				Name
 			</modal-item-switch>
 			<modal-item-switch
-				:model-value="fearGreedStore.isShowDescription"
-				@update:model-value="fearGreedStore.toggleShowDescription"
+				:model-value="settings.isShowDescription"
+				@update:model-value="toggleShowDescription"
 			>
 				Description
 			</modal-item-switch>
 			<modal-item-switch
-				:model-value="fearGreedStore.isShowPastValues"
-				@update:model-value="fearGreedStore.toggleShowPastValues"
+				:model-value="settings.isShowPastValues"
+				@update:model-value="toggleShowPastValues"
 			>
 				Past values
 			</modal-item-switch>

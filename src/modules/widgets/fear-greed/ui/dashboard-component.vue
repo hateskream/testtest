@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { useQueryTension } from '../queries/use-query-tension.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import { useFearGreed } from '../composables';
 
 import FearGreedContextMenu from './fear-greed-context-menu.vue';
 import ErrorComponent from './error-component.vue';
@@ -16,9 +15,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { data, isLoading, isError, refetch } = useQueryTension(props.meta.market);
-
-const isNotData = computed(() => !!data.value && isLoading.value);
+const { viewState, dataState, isNotData, resetAllChanges } = useFearGreed();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -33,18 +30,23 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<error-component v-if="isError" />
+			<error-component v-if="dataState.isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data"
-				:tension="data"
+				v-else-if="dataState.data"
+				:view-state="viewState"
+				:tension="dataState.data"
 				:size="meta.size"
-				@update-interactive="refetch"
 			/>
 		</template>
 
 		<template #rcm>
-			<fear-greed-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<fear-greed-context-menu
+				v-model="viewState"
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

@@ -3,11 +3,18 @@ import { computed, type CSSProperties } from 'vue';
 
 import { Tension, type ISize, type ITension, type ITensionTextData } from '../model';
 import { useMapTension } from '../composables';
-import { useFearGreedStore } from '../stores';
 import { UiTransitionFade } from '@/shared/ui/transition';
+
+interface IViewState {
+	isShowChart: boolean;
+	isShowName: boolean;
+	isShowDescription: boolean;
+	isShowPastValues: boolean;
+}
 
 export interface IViewComponentProps {
 	tension: ITension;
+	viewState: IViewState;
 	size: ISize;
 }
 
@@ -20,8 +27,6 @@ const props = defineProps<IViewComponentProps>();
 const emits = defineEmits<IViewComponentEmits>();
 
 const { mapTension } = useMapTension();
-
-const fearGreedStore = useFearGreedStore();
 
 const tensionText = computed<ITensionTextData>(() => mapTension(props.tension.tension ?? 0));
 const history = computed(() =>
@@ -74,16 +79,15 @@ const circleChart = computed(() => {
 });
 
 const metricTextStyles = computed<CSSProperties>(() => ({
-	marginTop: fearGreedStore.isShowChart && props.size.h > 2 ? '-30px' : 0,
+	marginTop: props.viewState.isShowChart && props.size.h > 2 ? '-30px' : 0,
 }));
 
-const isShowChart = computed(() => fearGreedStore.isShowChart && props.size.h > 2);
-const isShowName = computed(() => fearGreedStore.isShowName);
-const isShowDescription = computed(() => fearGreedStore.isShowDescription && props.size.h > 2);
+const isShowChart = computed(() => props.viewState.isShowChart && props.size.h > 2);
+const isShowDescription = computed(() => props.viewState.isShowDescription && props.size.h > 2);
 const isShowPastValues = computed(() => {
 	return (
 		history.value.length > 0 &&
-		fearGreedStore.isShowPastValues &&
+		props.viewState.isShowPastValues &&
 		(props.size.h > 4 || (props.size.w >= 2 && props.size.h > 2))
 	);
 });
@@ -142,7 +146,7 @@ const isShowPastValues = computed(() => {
 					{{ tension.tension }}
 				</h3>
 				<ui-transition-fade>
-					<h4 v-if="isShowName">{{ tensionText?.text.main }}</h4>
+					<h4 v-if="props.viewState.isShowName">{{ tensionText?.text.main }}</h4>
 				</ui-transition-fade>
 				<ui-transition-fade>
 					<small v-if="isShowDescription">

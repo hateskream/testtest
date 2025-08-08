@@ -5,10 +5,6 @@ import { useLogger } from '@/shared/service/logger';
 const IS_USE_MOCK = false;
 let mockCurrentTension = 85;
 
-export interface IGetTensionRequest {
-	market: string;
-}
-
 interface IGetTensionResponse {
 	data: {
 		current_value: number;
@@ -24,8 +20,7 @@ interface IGetTensionResponse {
 	};
 }
 
-// eslint-disable-next-line no-empty-pattern
-export async function getTension({ }: IGetTensionRequest): Promise<ITension> {
+export async function getTension(): Promise<ITension> {
 	const logger = useLogger();
 	try {
 		const response = IS_USE_MOCK
