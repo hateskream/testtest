@@ -29,10 +29,9 @@ export default defineConfig({
 	server: {
 		proxy: {
 			'/api': {
-				target: 'http://localhost:1488/',
+				target: 'https://gateway.planet9.uk',
 				changeOrigin: true,
-				prependPath: true,
-				rewrite: pathUri => pathUri.replace(/^\/api/, ''),
+				secure: true,
 			},
 		},
 	},
