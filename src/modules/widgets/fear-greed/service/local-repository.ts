@@ -26,8 +26,7 @@ export class LocalRepository extends BaseRepository {
 		widgetId: string,
 		private readonly options?: IOptions,
 	) {
-		super(widgetId);
-
+		super();
 		this.storageKey = `${this._storageKey}${widgetId}`;
 	}
 

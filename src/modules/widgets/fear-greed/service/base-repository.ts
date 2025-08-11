@@ -6,8 +6,6 @@ export abstract class BaseRepository {
 	protected abstract getter(): Promise<ISettings>;
 	protected abstract setter(settings: ISettings): Promise<void>;
 
-	constructor(protected readonly widgetId: string) {}
-
 	protected check(data: ISettingsSchema): void {
 		const { success, error } = settingsSchema.safeParse(data);
 

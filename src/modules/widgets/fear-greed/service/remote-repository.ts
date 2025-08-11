@@ -9,9 +9,9 @@ export class RemoteRepository extends BaseRepository {
 
 	private constructor(
 		private readonly userId: string,
-		widgetId: string,
+		private readonly widgetId: string,
 	) {
-		super(widgetId);
+		super();
 	}
 
 	public static create(userId: string, widgetId: string): RemoteRepository {
