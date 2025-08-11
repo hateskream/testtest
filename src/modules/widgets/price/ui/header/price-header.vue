@@ -5,17 +5,20 @@ import {
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
-import { usePriceStore } from '@/modules/widgets/price/stores';
+import { getAllMarkets, getMarketLabel, type MarketType } from '../../model';
 
+const activeMarket = defineModel<MarketType>({ required: true });
 
-const performanceStore = usePriceStore();
+function updateMarket(market: MarketType) {
+	activeMarket.value = market;
+}
 </script>
 
 <template>
 	<div :class="classes.performanceHeader">
 		<modal-badge>
 			<template #title>
-				{{ performanceStore.activeMarket.name }}
+				{{ getMarketLabel(activeMarket) }}
 				<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 			</template>
 
@@ -23,12 +26,12 @@ const performanceStore = usePriceStore();
 				<modal-badge-list>
 					<template #title>Stock</template>
 
-					<template v-for="market in performanceStore.markets" :key="market.value">
+					<template v-for="market in getAllMarkets()" :key="market.type">
 						<modal-item-selector
-							:model-value="performanceStore.activeMarket.value === market.value"
-							@update:model-value="performanceStore.setActiveMarket(market)"
+							:model-value="activeMarket === market.type"
+							@update:model-value="updateMarket(market.type)"
 						>
-							{{ market.name }}
+							{{ market.label }}
 						</modal-item-selector>
 					</template>
 				</modal-badge-list>

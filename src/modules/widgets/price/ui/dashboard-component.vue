@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { BaseDashboardComponent } from '../../base';
 import { useQueryPrice } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { usePrice } from '../composables';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -15,6 +16,8 @@ interface IWidgetComponentProps {
 }
 
 const props = defineProps<IWidgetComponentProps>();
+
+const { activeMarket, currentSettings, resetAllChanges } = usePrice();
 
 const fakeReq = computed(() => ({
 	market: '',
@@ -40,12 +43,19 @@ const emit = defineEmits<{
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
+				v-model="activeMarket"
 				:tickers="data.tickers"
+				:settings="currentSettings"
 				:meta="meta"
 			/>
 		</template>
 		<template #rcm>
-			<price-list-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<price-list-context-menu
+				v-model="currentSettings"
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

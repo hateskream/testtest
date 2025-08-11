@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
 
-import type { ITicker } from '../model';
-import { usePriceStore } from '../stores';
+import type { ISettings, ITicker, MarketType } from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
 
 import CellComponent from './cell-component.vue';
@@ -12,40 +10,35 @@ import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
 	tickers: ITicker[];
+	settings: ISettings;
 	meta: IMeta;
 }
 
-const props = defineProps<IViewComponentProps>();
-const priceStore = usePriceStore();
+const activeMarket = defineModel<MarketType>({ required: true });
 
-const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDescription } =
-	storeToRefs(usePriceStore());
+const props = defineProps<IViewComponentProps>();
 
 const gridTemplateContent = computed(() => {
 	const defaultMinWidth = props.meta.size.w > 1 ? 190 : 100;
 
 	let minWidth = defaultMinWidth + ((
-		(+(isShowChart.value && props.meta.size.w > 1)) +
-		+isShowPercentageChange.value +
-		(+(isShowLogo.value && props.meta.size.w > 1)) +
-		+isShowTicker.value +
-		+isShowDescription.value
+		(+(props.settings.isShowChart && props.meta.size.w > 1)) +
+		+props.settings.isShowPercentageChange +
+		(+(props.settings.isShowLogo && props.meta.size.w > 1)) +
+		+props.settings.isShowTicker +
+		+props.settings.isShowDescription
 	) * 30);
 
 
 	return `repeat(auto-fit, minmax(${minWidth}px, 1fr)) `;
 });
 
-const isShowPriceChart = ref(false);
-
-watchEffect(() => {
-	isShowPriceChart.value = !!priceStore.activeCurrency;
-});
+const isShowPriceChart = ref(false); // разнесут на 2 виджета
 </script>
 
 <template>
 	<div :class="classes.root">
-		<price-header />
+		<price-header v-model="activeMarket" />
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<transition
@@ -61,6 +54,7 @@ watchEffect(() => {
 						<cell-component
 							v-for="ticker in props.tickers"
 							:key="ticker.tickerId"
+							:settings="props.settings"
 							:ticker="ticker"
 							:meta="meta"
 						/>

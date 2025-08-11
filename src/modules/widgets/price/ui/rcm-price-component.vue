@@ -1,53 +1,62 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
-
-import { usePriceStore } from '../stores';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalItemSwitch, ModalItemCheckbox, ModalSubmenuContent } from '../../base';
+import type { ISettings } from '../model';
 
-const priceStore = usePriceStore();
+const settings = defineModel<ISettings>({ required: true });
 
-const select = reactive({
-	favorites: false,
-});
+function toggleShowChart() {
+	settings.value.isShowChart = !settings.value.isShowChart;
+}
+
+function toggleShowPercentageChange() {
+	settings.value.isShowPercentageChange = !settings.value.isShowPercentageChange;
+}
+
+function toggleShowLogo() {
+	settings.value.isShowLogo = !settings.value.isShowLogo;
+}
+
+function changeTextDisplay() {
+	settings.value.isShowTicker = !settings.value.isShowTicker;
+	settings.value.isShowDescription = !settings.value.isShowDescription;
+}
 </script>
 
 <template>
 	<modal-submenu-content>
 		<template #content>
 			<modal-item-switch
-				:model-value="priceStore.isShowChart"
-				@update:model-value="priceStore.toggleShowChart"
+				:model-value="settings.isShowChart"
+				@update:model-value="toggleShowChart"
 			>
 				Chart
 			</modal-item-switch>
 			<modal-item-switch
-				:model-value="priceStore.isShowPercentageChange"
-				@update:model-value="priceStore.toggleShowPercentageChange"
+				:model-value="settings.isShowPercentageChange"
+				@update:model-value="toggleShowPercentageChange"
 			>
 				Change, %
 			</modal-item-switch>
 			<modal-item-switch
-				:model-value="priceStore.isShowLogo"
-				@update:model-value="priceStore.toggleShowLogo"
+				:model-value="settings.isShowLogo"
+				@update:model-value="toggleShowLogo"
 			>
 				Logo
 			</modal-item-switch>
 
-			<modal-item-checkbox v-model="select.favorites"> Only favorites </modal-item-checkbox>
-
 			<ui-driver />
 
 			<modal-item-checkbox
-				:model-value="priceStore.isShowTicker"
-				@update:model-value="priceStore.toggleShowTicker"
+				:model-value="settings.isShowTicker"
+				@update:model-value="changeTextDisplay"
 			>
 				Ticker
 			</modal-item-checkbox>
 
 			<modal-item-checkbox
-				:model-value="priceStore.isShowDescription"
-				@update:model-value="priceStore.toggleShowDescription"
+				:model-value="settings.isShowDescription"
+				@update:model-value="changeTextDisplay"
 			>
 				Description
 			</modal-item-checkbox>

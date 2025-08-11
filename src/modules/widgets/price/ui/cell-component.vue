@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import { usePriceStore } from '../stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import type { ITicker } from '../model';
+import type { ISettings, ITicker } from '../model';
 import {
 	getNumberText,
 	getPercentData,
@@ -20,16 +18,14 @@ import {
 
 interface ICellComponentProps {
 	ticker: ITicker;
+	settings: ISettings;
 	meta: IMeta;
 }
 
 const props = defineProps<ICellComponentProps>();
 
-const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
-	storeToRefs(usePriceStore());
-
 const label = computed(() =>
-	isShowTicker.value ? getTickerDescription(props.ticker.symbol) : getTickerName(props.ticker.symbol),
+	props.settings.isShowTicker ? getTickerDescription(props.ticker.symbol) : getTickerName(props.ticker.symbol),
 );
 
 const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPercent));
@@ -45,7 +41,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 		/>
 		<div :class="classes.content">
 			<ui-transition-fade>
-				<div v-if="isShowLogo && meta.size.w > 1" :class="classes.logo">
+				<div v-if="props.settings.isShowLogo && meta.size.w > 1" :class="classes.logo">
 					<ticker-icon
 						v-if="!isForexSymbolCell(props.ticker.symbol)"
 						:src="props.ticker.symbol.srcImg"
@@ -70,7 +66,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						<div :class="classes.price">{{ getNumberText(props.ticker.priceCurrent) }}</div>
 						<ui-transition-fade>
 							<div
-								v-if="isShowPercentageChange"
+								v-if="props.settings.isShowPercentageChange"
 								:class="classes.change"
 								:style="{
 									color: priceChange.color
@@ -83,7 +79,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 				</div>
 				<ui-transition-fade>
 					<div
-						v-if="isShowChart && meta.size.w > 1"
+						v-if="props.settings.isShowChart && meta.size.w > 1"
 						:class="classes.chart"
 					>
 						<img
