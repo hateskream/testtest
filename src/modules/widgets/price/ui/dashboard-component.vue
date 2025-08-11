@@ -16,7 +16,14 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { data, isLoading, isError } = useQueryPrice();
+const fakeReq = computed(() => ({
+	market: '',
+	pined: [],
+	offset: 0,
+	limit: 0,
+}));
+
+const { data, isLoading, isError } = useQueryPrice(fakeReq);
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 
@@ -33,7 +40,7 @@ const emit = defineEmits<{
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
-				:currencies="data"
+				:tickers="data.tickers"
 				:meta="meta"
 			/>
 		</template>

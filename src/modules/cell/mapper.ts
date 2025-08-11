@@ -103,6 +103,8 @@ export function mapNumber(dto: CellDto): INumberCell | IEmptyCell {
 			cellType: CellType.Number,
 			columnType: dto.columnType,
 			magnitude: dto.magnitude,
+			currencySymbol: dto.currencySymbol,
+			value: dto.value,
 			trend: dto.trend,
 		} as INumberCell;
 	}

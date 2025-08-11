@@ -1,8 +1,28 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { type ICurrency as ICurrencyDomain } from '../model';
+import { type ITicker as ITickerDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
-import { generateTimestampId, getImagePath } from '@/shared/lib';
-import { ImageTypePath } from '@/shared/lib/get-image-path';
+import { arrayToString, generateTimestampId } from '@/shared/lib';
+import {
+	CellType,
+	ColumnType,
+	isEmptyCell,
+	Magnitude,
+	mapNumber,
+	mapPercent,
+	mapSvgChart,
+	mapSymbol,
+	SymbolType,
+	Trend,
+	type IEmptyCell,
+	type INumberCell,
+	type IPercentCell,
+	type ISvgChartCell,
+	type ISymbolCell,
+	type NumberDto,
+	type PercentDto,
+	type SvgChartDto,
+	type SymbolDto,
+} from '@/modules/cell';
 
 enum TypeSendRequest {
 	Prod,
@@ -12,245 +32,161 @@ enum TypeSendRequest {
 
 const typeSendRequest = TypeSendRequest.MockLocal;
 
-export interface IGetPriceRequest {
+interface IGetPriceRequest {
 	market: string;
+	pined: string[];
+	offset: number;
+	limit: number;
 }
 
-interface ICurrency {
-	id: string;
-	name: string;
-	ticker: string;
-	price: string;
-	changeLastDay: string;
-	marketCap: string;
-	market: string;
-	domain?: string;
+interface ITicker {
+	tickerId: string;
+	symbol: SymbolDto;
+	priceCurrent: NumberDto;
+	changePrice24hPercent: PercentDto;
+	price24hChart: SvgChartDto;
+}
+
+interface IPagination {
+	total: number;
+	offset: number;
+	limit: number;
+}
+
+interface IData {
+	tickers: ITicker[];
+	// pinedTickers: ITicker[];
+	pagination: IPagination;
 }
 
 export interface IGetPriceResponse {
-	data: ICurrency[];
+	data: IData;
 }
 
-export async function getPrice(): Promise<ICurrencyDomain[] | null> {
+export interface IGetPricePreparedResponse {
+	tickers: ITickerDomain[];
+	pagination: IPagination;
+}
+
+export async function getPrice(req: IGetPriceRequest): Promise<IGetPricePreparedResponse | null> {
 	const logger = useLogger();
 
 	try {
-		const response = await senderRequestByType(typeSendRequest);
+		const response = await senderRequestByType(typeSendRequest, req);
 
-		return prepareResponse(response);
+		return prepare(response);
 	} catch (error) {
 		logger.error('Failed to get price', error as Error);
 		throw error;
 	}
 }
 
+function prepare({ data }: IGetPriceResponse): IGetPricePreparedResponse {
+	return {
+		pagination: data.pagination,
+		tickers: data.tickers
+			.map(ticker => ({
+				tickerId: ticker.tickerId,
+				symbol: mapSymbol(ticker.symbol),
+				priceCurrent: mapNumber(ticker.priceCurrent),
+				changePrice24hPercent: mapPercent(ticker.changePrice24hPercent),
+				price24hChart: mapSvgChart(ticker.price24hChart),
+			}))
+			.filter(isNotEmptyTicker),
+	};
+}
+
+function isNotEmptyTicker(ticker: {
+	tickerId: string;
+	symbol: ISymbolCell | IEmptyCell;
+	priceCurrent: INumberCell | IEmptyCell;
+	changePrice24hPercent: IPercentCell | IEmptyCell;
+	price24hChart: ISvgChartCell | IEmptyCell;
+}): ticker is ITickerDomain {
+	return (
+		!isEmptyCell(ticker.symbol) &&
+		!isEmptyCell(ticker.priceCurrent) &&
+		!isEmptyCell(ticker.changePrice24hPercent) &&
+		!isEmptyCell(ticker.price24hChart)
+	);
+}
+
 function senderRequestByType(
 	type: TypeSendRequest,
+	req: IGetPriceRequest,
 ): Promise<IGetPriceResponse> {
 	const httpService = useHttpService();
 
+	const query = {
+		market: req.market,
+		pined: arrayToString(req.pined),
+		offset: req.offset,
+		limit: req.limit,
+	};
+
 	switch (type) {
 		case TypeSendRequest.Prod:
-			return httpService.get<IGetPriceResponse>('https://gateway.planet9.uk/price');
+			return httpService.get<IGetPriceResponse>('https://gateway.planet9.uk/price', {
+				query,
+			});
 		case TypeSendRequest.MockLocal:
-			return getMockData();
+			return getMockData(req.offset, req.limit);
 		case TypeSendRequest.MockServer:
-			return httpService.get<IGetPriceResponse>('/api/price');
+			return httpService.get<IGetPriceResponse>('/api/price', {
+				query,
+			});
 		default:
-			return getMockData();
+			return getMockData(req.offset, req.limit);
 	}
 }
 
-function prepareResponse(response: IGetPriceResponse): ICurrencyDomain[] {
-	return response.data.map(currency => currency.market === 'forex' && currency.domain ? {
-		...currency,
-		srcImage: [
-			getImagePath(currency.ticker, ImageTypePath.Stock),
-			getImagePath(currency.domain, ImageTypePath.Stock),
-		],
-	} : {
-		...currency,
-		srcImage: currency.market !== 'crypto' ?
-			getImagePath(currency.ticker, ImageTypePath.Stock) :
-			getImagePath(currency.ticker, ImageTypePath.Currency),
-	});
-}
-
-async function getMockData(): Promise<IGetPriceResponse> {
-	const allMockData: ICurrency[] = [
+async function getMockData(offset: number, limit: number): Promise<IGetPriceResponse> {
+	const allMockData: ITicker[] = [
 		{
-			id: generateTimestampId(),
-			ticker: 'BTC',
-			name: 'Bitcoin',
-			price: '$86,945.83',
-			changeLastDay: '1.54%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'ADA',
-			name: 'Cardano',
-			price: '$2,166.88',
-			changeLastDay: '2.34%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'BNB',
-			name: 'BNB',
-			price: '$583.99',
-			changeLastDay: '2.23%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'SOL',
-			name: 'Solana',
-			price: '$143.08',
-			changeLastDay: '1.31%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'ETH',
-			name: 'Ethereum',
-			price: '$3,245.67',
-			changeLastDay: '2.87%',
-			marketCap: '$3.90T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'TRX',
-			name: 'Tron',
-			price: '$2.4552',
-			changeLastDay: '4.73%',
-			marketCap: '$3.20T',
-			market: 'crypto',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'AAPL',
-			name: 'Apple Inc.',
-			price: '$185.92',
-			changeLastDay: '1.23%',
-			marketCap: '$2.89T',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'MSFT',
-			name: 'Microsoft Corp.',
-			price: '$342.15',
-			changeLastDay: '0.87%',
-			marketCap: '$2.54T',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'GOOGL',
-			name: 'Alphabet Inc.',
-			price: '$138.45',
-			changeLastDay: '-0.45%',
-			marketCap: '$1.75T',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'TSLA',
-			name: 'Tesla Inc.',
-			price: '$248.73',
-			changeLastDay: '3.21%',
-			marketCap: '$785B',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'NVDA',
-			name: 'NVIDIA Corp.',
-			price: '$875.34',
-			changeLastDay: '2.14%',
-			marketCap: '$2.15T',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'META',
-			name: 'Meta Platforms',
-			price: '$295.67',
-			changeLastDay: '1.87%',
-			marketCap: '$742B',
-			market: 'industry',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'XAU',
-			name: 'Gold',
-			price: '$2,300.00',
-			changeLastDay: '0.45%',
-			marketCap: '$12.00T',
-			market: 'something',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'XAG',
-			name: 'Silver',
-			price: '$29.00',
-			changeLastDay: '1.10%',
-			marketCap: '$1.30T',
-			market: 'something',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'WTI',
-			name: 'Crude Oil',
-			price: '$75.00',
-			changeLastDay: '-0.80%',
-			marketCap: '$3.00T',
-			market: 'something',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'EUR',
-			name: 'EUR/USD',
-			price: '$1.03717',
-			changeLastDay: '-0.34%',
-			marketCap: '$29.3T',
-			market: 'something',
-			domain: 'USD',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'GBP',
-			name: 'GBP/USD',
-			price: '$1.26534',
-			changeLastDay: '0.78%',
-			marketCap: '$15.8T',
-			market: 'something',
-			domain: 'USD',
-		},
-		{
-			id: generateTimestampId(),
-			ticker: 'JPY',
-			name: 'USD/JPY',
-			price: '¥150.25',
-			changeLastDay: '-0.12%',
-			marketCap: '$18.2T',
-			market: 'something',
-			domain: 'USD',
+			tickerId: generateTimestampId(),
+			symbol:  {
+				cellType: CellType.Symbol,
+				columnType: ColumnType.Symbol,
+				symbolType: SymbolType.Crypto,
+				srcImg: '1',
+				ticker: 'BTC',
+				blockchain: 'Bitcoin',
+			},
+			priceCurrent:  {
+				cellType: CellType.Number,
+				columnType: ColumnType.PriceCurrent,
+				value: '86945.83',
+				trend: Trend.NEUTRAL,
+				currencySymbol: '$',
+				magnitude: Magnitude.TRILLION,
+			},
+			changePrice24hPercent:   {
+				cellType: CellType.Percent,
+				columnType: ColumnType.ChangePrice24hPercent,
+				value: '1.54',
+				trend: Trend.UP,
+			},
+			price24hChart: {
+				cellType: CellType.SvgChart,
+				columnType: ColumnType.Price24hChart,
+				src: '',
+			},
 		},
 	];
 
 	await new Promise(resolve => {
-		setTimeout(resolve, 100); // Simulate network delay
+		setTimeout(resolve, 100);
 	});
 
 	const response: IGetPriceResponse = {
-		data: allMockData,
+		data: {
+			pagination: {
+				offset: offset,
+				limit: limit,
+				total: 100,
+			},
+			tickers: allMockData,
+		},
 	};
 
 	return response;

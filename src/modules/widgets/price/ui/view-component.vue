@@ -1,32 +1,22 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
-import draggableComponent from 'vuedraggable';
+import { computed, ref, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import type { ICurrency } from '../model';
+import type { ITicker } from '../model';
 import { usePriceStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { compareStrings } from '@/shared/lib';
 
 import CellComponent from './cell-component.vue';
 import PriceHeader from './header/price-header.vue';
 import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
-	currencies: ICurrency[];
+	tickers: ITicker[];
 	meta: IMeta;
 }
 
 const props = defineProps<IViewComponentProps>();
 const priceStore = usePriceStore();
-
-const layout = ref(props.currencies);
-
-watch(() => priceStore.activeMarket.value, () => {
-	layout.value = props.currencies.filter((item) => compareStrings(item.market, priceStore.activeMarket.value));
-}, {
-	immediate: true,
-});
 
 const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDescription } =
 	storeToRefs(usePriceStore());
@@ -55,7 +45,7 @@ watchEffect(() => {
 
 <template>
 	<div :class="classes.root">
-		<price-header :currencies="currencies" :meta="meta" />
+		<price-header />
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<transition
@@ -64,29 +54,22 @@ watchEffect(() => {
 					:enter-from-class="classes.sectionEnterFrom"
 					:leave-to-class="classes.sectionLeaveTo"
 				>
-					<draggable-component
+					<div
 						v-if="!isShowPriceChart || (meta.size.w < 3 || meta.size.h < 8)"
-						v-model="layout"
-						item-key="ticker"
-						:filter="`.price-no-drag`"
 						:class="classes.contentWrapped"
-						:component-data="{ tag: 'div', name: 'flip-list', type: 'transition-group' }"
-						:animation="200"
-						:disabled="false"
 					>
-						<template #item="{ element }">
-							<cell-component
-								:currency="element"
-								:meta="meta"
-							/>
-						</template>
-					</draggable-component>
+						<cell-component
+							v-for="ticker in props.tickers"
+							:key="ticker.tickerId"
+							:ticker="ticker"
+							:meta="meta"
+						/>
+					</div>
 					<chart-price
 						v-else
 						:meta="meta"
 					/>
 				</transition>
-
 			</div>
 		</div>
 	</div>
