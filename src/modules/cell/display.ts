@@ -11,6 +11,7 @@ export function getMagnitudeText(magnitude: Magnitude): string {
 			return 'B';
 		case Magnitude.TRILLION:
 			return 'T';
+		case Magnitude.NONE:
 		default:
 			return '';
 	}

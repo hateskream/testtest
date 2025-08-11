@@ -6,4 +6,6 @@ export interface ITicker {
 	priceCurrent: INumberCell;
 	changePrice24hPercent: IPercentCell;
 	price24hChart: ISvgChartCell;
+	isPined: boolean;
+	isShow: boolean;
 }

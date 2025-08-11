@@ -24,8 +24,12 @@ interface ICellComponentProps {
 
 const props = defineProps<ICellComponentProps>();
 
+const emit = defineEmits<{
+	(e: 'togglePin', tickerId: string): void;
+}>();
+
 const label = computed(() =>
-	props.settings.isShowTicker ? getTickerDescription(props.ticker.symbol) : getTickerName(props.ticker.symbol),
+	props.settings.isShowTicker ? getTickerName(props.ticker.symbol) : getTickerDescription(props.ticker.symbol),
 );
 
 const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPercent));
@@ -91,7 +95,17 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 			</div>
 		</div>
 
-		<div :class="classes.hoverActions">
+		<div
+			:class="classes.hoverActions"
+			:style="
+				props.ticker.isPined
+					? {
+						display: 'flex',
+					}
+					: {}
+			"
+			@click="emit('togglePin', props.ticker.tickerId)"
+		>
 			<ui-icon
 				:id="IconIds.Pin"
 				:width="20"
@@ -131,7 +145,6 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	padding: 0 6px 0 12px;
 	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
 	transform: translateY(-50%);
-	cursor: default;
 }
 
 .hoverActionIcon {

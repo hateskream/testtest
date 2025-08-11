@@ -69,6 +69,7 @@ export enum Magnitude {
 	MILLION = 'million',
 	BILLION = 'billion',
 	TRILLION = 'trillion',
+	NONE = 'none',
 }
 
 interface IBaseCell {

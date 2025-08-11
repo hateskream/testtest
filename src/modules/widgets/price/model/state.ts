@@ -38,7 +38,7 @@ export interface ISettings {
 	isShowDescription: boolean;
 }
 
-type SettingsByMarketType = Record<MarketType, ISettings>;
+type SettingsByMarketType = Record<MarketType, { display: ISettings; pinned: string[] }>;
 
 export interface IState {
 	activeMarket: MarketType;
@@ -61,11 +61,26 @@ export function getDefaultsState(): IState {
 	return {
 		activeMarket: MarketType.Crypto,
 		settings: {
-			[MarketType.Crypto]: getDefaultsSettings(),
-			[MarketType.Stock]: getDefaultsSettings(),
-			[MarketType.Forex]: getDefaultsSettings(),
-			[MarketType.Commodities]: getDefaultsSettings(),
-			[MarketType.Indices]: getDefaultsSettings(),
+			[MarketType.Crypto]: {
+				display: getDefaultsSettings(),
+				pinned: [],
+			},
+			[MarketType.Stock]: {
+				display: getDefaultsSettings(),
+				pinned: [],
+			},
+			[MarketType.Forex]: {
+				display: getDefaultsSettings(),
+				pinned: [],
+			},
+			[MarketType.Commodities]: {
+				display: getDefaultsSettings(),
+				pinned: [],
+			},
+			[MarketType.Indices]: {
+				display: getDefaultsSettings(),
+				pinned: [],
+			},
 		},
 	};
 }

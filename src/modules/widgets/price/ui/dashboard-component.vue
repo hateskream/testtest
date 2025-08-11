@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import { BaseDashboardComponent } from '../../base';
-import { useQueryPrice } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { usePrice } from '../composables';
 
@@ -17,18 +14,15 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { activeMarket, currentSettings, resetAllChanges } = usePrice();
-
-const fakeReq = computed(() => ({
-	market: '',
-	pined: [],
-	offset: 0,
-	limit: 0,
-}));
-
-const { data, isLoading, isError } = useQueryPrice(fakeReq);
-
-const isNotData = computed(() => !!data.value && isLoading.value);
+const {
+	activeMarket,
+	currentSettings,
+	tickers,
+	fetchTickersError,
+	isNotData,
+	resetAllChanges,
+	togglePin,
+} = usePrice();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -39,14 +33,15 @@ const emit = defineEmits<{
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
-			<error-component v-if="isError" />
+			<error-component v-if="fetchTickersError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data"
+				v-else
 				v-model="activeMarket"
-				:tickers="data.tickers"
+				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"
+				@toggle-pin="togglePin"
 			/>
 		</template>
 		<template #rcm>

@@ -1,26 +1,33 @@
-import { keepPreviousData, useQuery } from '@tanstack/vue-query';
-import { computed, toValue, type MaybeRefOrGetter } from 'vue';
+import { useInfiniteQuery } from '@tanstack/vue-query';
+import { computed, toValue, type Ref } from 'vue';
 
 import { getPrice } from '../api';
+import type { MarketType } from '../model';
 
-interface IGetPriceRequest {
-	market: string;
-	pined: string[];
-	offset: number;
-	limit: number;
-}
+export function useQueryPrice(
+	market: Ref<MarketType>,
+	pined: Ref<string[]>,
+	limit: number,
+) {
 
-export function useQueryPrice(req: MaybeRefOrGetter<IGetPriceRequest>) {
-	const { market, pined, offset, limit } = toValue(req);
+	return useInfiniteQuery({
+		queryKey: computed(() => ['price', market.value]),
+		queryFn: ({ pageParam = 0 }) =>
+			getPrice({
+				market: toValue(market),
+				pined: toValue(pined),
+				offset: pageParam,
+				limit: toValue(limit),
+			}),
+		initialPageParam: 0,
+		getNextPageParam: (lastPage) => {
+			if (!lastPage) {
+				return undefined;
+			}
 
-	return useQuery({
-		queryKey: computed(() => ['price', market, offset, limit]),
-		queryFn: () => getPrice({
-			market,
-			pined,
-			offset,
-			limit,
-		}),
-		placeholderData: keepPreviousData,
+			const { total, offset } = lastPage.pagination;
+			const nextOffset = offset + limit;
+			return nextOffset < total ? nextOffset : undefined;
+		},
 	});
 }

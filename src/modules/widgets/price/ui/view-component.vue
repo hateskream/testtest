@@ -18,6 +18,10 @@ const activeMarket = defineModel<MarketType>({ required: true });
 
 const props = defineProps<IViewComponentProps>();
 
+const emit = defineEmits<{
+	(e: 'togglePin', tickerId: string): void;
+}>();
+
 const gridTemplateContent = computed(() => {
 	const defaultMinWidth = props.meta.size.w > 1 ? 190 : 100;
 
@@ -57,6 +61,7 @@ const isShowPriceChart = ref(false); // разнесут на 2 виджета
 							:settings="props.settings"
 							:ticker="ticker"
 							:meta="meta"
+							@toggle-pin="emit('togglePin', $event)"
 						/>
 					</div>
 					<chart-price
