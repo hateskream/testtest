@@ -22,7 +22,7 @@ const {
 	isNotData,
 	resetAllChanges,
 	togglePin,
-} = usePrice();
+} = usePrice(props.meta.widgetId);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;

@@ -6,20 +6,32 @@ import type { ISettings } from '../model';
 const settings = defineModel<ISettings>({ required: true });
 
 function toggleShowChart() {
-	settings.value.isShowChart = !settings.value.isShowChart;
+	settings.value = { ...settings.value, isShowChart: !settings.value.isShowChart };
 }
 
 function toggleShowPercentageChange() {
-	settings.value.isShowPercentageChange = !settings.value.isShowPercentageChange;
+	settings.value = {
+		...settings.value,
+		isShowPercentageChange: !settings.value.isShowPercentageChange,
+	};
 }
 
 function toggleShowLogo() {
-	settings.value.isShowLogo = !settings.value.isShowLogo;
+	settings.value = {
+		...settings.value,
+		isShowLogo: !settings.value.isShowLogo,
+	};
 }
 
 function changeTextDisplay() {
-	settings.value.isShowTicker = !settings.value.isShowTicker;
-	settings.value.isShowDescription = !settings.value.isShowDescription;
+	const isShowTicker = !settings.value.isShowTicker;
+	const isShowDescription = !settings.value.isShowDescription;
+
+	settings.value = {
+		...settings.value,
+		isShowTicker,
+		isShowDescription,
+	};
 }
 </script>
 

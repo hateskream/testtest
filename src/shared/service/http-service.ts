@@ -67,7 +67,7 @@ class HttpService {
 			});
 		} catch (error) {
 			throw new Error(
-				`HTTP ${method} request failed: 
+				`HTTP ${method} request failed:
 				${error instanceof Error ? error.message : String(error)}`,
 			);
 		}

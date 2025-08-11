@@ -2,8 +2,9 @@ import { computed, ref, watch } from 'vue';
 
 import { getDefaultsSettings, getDefaultsState, MarketType, type ISettings, type IState } from '../model';
 import { useQueryPrice } from '../queries';
+import { useGetState, useUpdateState } from '../queries/use-query-widget-state';
 
-export function usePrice() {
+export function usePrice(widgetId: string) {
 	const state = ref<IState>(getDefaultsState());
 	const currentSettings = ref<ISettings>(getDefaultsSettings());
 	const pinnedTickers = ref<string[]>([]);
@@ -30,7 +31,13 @@ export function usePrice() {
 		limit,
 	);
 
-	const isNotData = computed(() => !!dataResponse.value && isLoading.value);
+	const {
+		data: dataState,
+		isLoading: isLoadingState,
+	} = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
+	const isNotData = computed(() => !!dataResponse.value && isLoading.value && !isLoadingState.value);
 
 	const tickers = computed(() => {
 		if (!dataResponse.value) {
@@ -70,6 +77,18 @@ export function usePrice() {
 		];
 	});
 
+	watch(dataState, newState => {
+		if (newState) {
+			state.value = JSON.parse(JSON.stringify(newState));
+			currentSettings.value = state.value.settings[state.value.activeMarket].display;
+			pinnedTickers.value = state.value.settings[state.value.activeMarket].pinned;
+		}
+	}, { immediate: true });
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
+
 	watch(
 		() => state.value.activeMarket,
 		newMarket => {
@@ -81,7 +100,7 @@ export function usePrice() {
 	watch(
 		currentSettings,
 		newSettings => {
-			state.value.settings[state.value.activeMarket].display = newSettings;
+			state.value.settings[state.value.activeMarket].display = { ...newSettings };
 		},
 	);
 
@@ -124,5 +143,6 @@ export function usePrice() {
 		loadMore,
 		isNotData,
 		togglePin,
+		state,
 	};
 }
