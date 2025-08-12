@@ -19,10 +19,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTableColumns.value.filter(column => column.isDraggable),
 	);
 
-	const favorites = ref<string[]>([]);
-
-	const isFavorites = ref<boolean>(false);
-
 	const filterCategories = ref([
 		{
 			name: 'Crypto',
@@ -69,30 +65,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 
 			return { ...item, isSelect: false };
 		});
-	}
-
-	function addToFavorites(id: string) {
-		favorites.value.push(id);
-	}
-
-	function removeFromFavorites(id: string) {
-		const idx = favorites.value.findIndex(item => item === id);
-
-		if (idx > -1) {
-			favorites.value.splice(idx, 1);
-		}
-	}
-
-	function toggleFavorites() {
-		isFavorites.value = !isFavorites.value;
-	}
-
-	function toggleFavoriteItem(id: string) {
-		if (favorites.value.includes(id)) {
-			removeFromFavorites(id);
-		} else {
-			addToFavorites(id);
-		}
 	}
 
 	function setActiveTabSort(args: IActiveTabSort) {
@@ -185,8 +157,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 			direction: 0,
 			sortTab: 'all',
 		};
-
-		isFavorites.value = false;
 	}
 
 	function updateActiveTableColumns(newActiveTableColumns: ITableColumn[]) {
@@ -201,16 +171,10 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTabSort,
 		setActiveTabSort,
 		showTableColumns,
-		toggleFavorites,
 		toggleFilterCategory,
 		filterCategories,
 		activeFilterCategory,
-		isFavorites,
 		resetAll,
-		favorites,
-		addToFavorites,
-		removeFromFavorites,
-		toggleFavoriteItem,
 		showTableColumnsDraggable,
 		updateActiveTableColumns,
 	};

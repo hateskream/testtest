@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useMarketStore } from '../stores';
 import {
-	ModalItemCheckbox,
 	WidgetContextMenu,
 	ModalSubmenu,
 	ModalSubmenuContent,
@@ -32,13 +31,6 @@ const emit = defineEmits<{
 			<template #content>
 				<modal-submenu-content>
 					<template #content>
-						<modal-item-checkbox
-							:model-value="marketStore.isFavorites"
-							@update:model-value="marketStore.toggleFavorites"
-						>
-							Only favorites
-						</modal-item-checkbox>
-
 						<modal-submenu>
 							<template #title> Column metrics </template>
 							<template #content>
