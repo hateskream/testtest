@@ -94,7 +94,7 @@ function handleToggleTab(columnName: string) {
 								:is-active="marketStore.showTableColumns.includes(tab.columnType)"
 								@click="handleToggleTab(tab.columnType)"
 							>
-								{{ tab.displayShortColumnName }}
+								{{ tab.displayShortColumnName }} d
 							</modal-filter-tab-wrapper>
 						</div>
 					</div>

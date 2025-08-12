@@ -136,7 +136,6 @@ const activeTabs = computed(() =>
 					classes.tab,
 					{ [classes.tabActive]: marketStore.activeTabSort.sortTab === tab.sortTab },
 				]"
-				@click="marketStore.setActiveTabSort(tab)"
 			>
 				<ui-icon
 					v-if="tab.icon"

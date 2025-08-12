@@ -4,9 +4,8 @@ import { computed, ref } from 'vue';
 import {
 	INITIAL_ACTIVE_TABLE_COLUMNS,
 } from '../const';
-import { getNextDirectionSort } from '../utils';
 import { compareStrings } from '@/shared/lib';
-import type { IActiveSortColumn, IActiveTabSort, ITableColumn } from '../model';
+import type { IActiveTabSort, ITableColumn } from '../model';
 
 export const useMarketStore = defineStore('dashboards-market', () => {
 	const activeTableColumns = ref(INITIAL_ACTIVE_TABLE_COLUMNS);
@@ -44,11 +43,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 
 	const activeFilterCategory = computed(() => filterCategories.value.find(item => item.isSelect));
 
-	const activeSort = ref<IActiveSortColumn>({
-		columnName: '',
-		direction: 0,
-	});
-
 	const activeTabSort = ref<IActiveTabSort>({
 		direction: 0,
 		sortTab: 'all',
@@ -65,52 +59,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 
 			return { ...item, isSelect: false };
 		});
-	}
-
-	function setActiveTabSort(args: IActiveTabSort) {
-		if (args.columnName) {
-			let { direction } = args;
-
-			if (activeTabSort.value.sortTab === args.sortTab) {
-				direction = getNextDirectionSort(activeSort.value.direction);
-			}
-
-			activeSort.value = {
-				direction,
-				columnName: args.columnName,
-			};
-		} else {
-			activeSort.value = {
-				columnName: '',
-				direction: 0,
-			};
-		}
-
-		activeTabSort.value = args;
-	}
-
-	function toggleActiveSort(_: ITableColumn) {
-		// if (activeTabSort.value.columnName) {
-		// 	return;
-		// }
-
-		// if (ACCEPT_COLUMNS_TYPES_SORT.includes(column.type)) {
-		// 	if (activeSort.value.columnName !== column.columnName) {
-		// 		activeSort.value = {
-		// 			columnName: column.columnName,
-		// 			direction: -1,
-		// 		};
-
-		// 		return;
-		// 	}
-
-		// 	const nextDirection = getNextDirectionSort(activeSort.value.direction);
-
-		// 	activeSort.value = {
-		// 		columnName: column.columnName,
-		// 		direction: nextDirection,
-		// 	};
-		// }
 	}
 
 	function toggleShowActiveTableColumns(_: string) {
@@ -148,11 +96,6 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 	function resetAll() {
 		updateActiveTableColumns(INITIAL_ACTIVE_TABLE_COLUMNS);
 
-		activeSort.value = {
-			columnName: '',
-			direction: 0,
-		};
-
 		activeTabSort.value = {
 			direction: 0,
 			sortTab: 'all',
@@ -166,10 +109,7 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 	return {
 		activeTableColumns,
 		toggleShowActiveTableColumns,
-		toggleActiveSort,
-		activeSort,
 		activeTabSort,
-		setActiveTabSort,
 		showTableColumns,
 		toggleFilterCategory,
 		filterCategories,

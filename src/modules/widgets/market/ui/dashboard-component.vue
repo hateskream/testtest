@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import { useQueryMarket } from '../queries';
-import { useMarketStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '../../base';
 
@@ -17,11 +16,8 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const marketStore = useMarketStore();
-
 const { data, isLoading, isError } = useQueryMarket({
 	market: props.meta.market,
-	sort: marketStore.activeTabSort.sortTab,
 });
 
 const isNotData = computed(() => !!data.value && isLoading.value);

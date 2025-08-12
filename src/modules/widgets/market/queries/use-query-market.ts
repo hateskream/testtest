@@ -4,7 +4,7 @@ import { getMarket, type IGetMarketRequest } from '../api';
 
 export function useQueryMarket(args: IGetMarketRequest) {
 	return useQuery({
-		queryKey: ['market', args.market, args.sort],
+		queryKey: ['market', args.market],
 		queryFn: () => getMarket(args),
 		refetchOnMount: false,
 	});
