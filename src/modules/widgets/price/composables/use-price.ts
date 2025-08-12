@@ -1,8 +1,9 @@
 import { computed, ref, watch } from 'vue';
 
-import { getDefaultsSettings, getDefaultsState, MarketType, type ISettings, type IState } from '../model';
+import { getDefaultsSettings, getDefaultsState, type ISettings, type IState } from '../model';
 import { useQueryPrice } from '../queries';
 import { useGetState, useUpdateState } from '../queries/use-query-widget-state';
+import type { MarketType } from '@/modules/market';
 
 export function usePrice(widgetId: string) {
 	const state = ref<IState>(getDefaultsState());

@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/vue-query';
 import { computed, toValue, type Ref } from 'vue';
 
 import { getPrice } from '../api';
-import type { MarketType } from '../model';
+import type { MarketType } from '@/modules/market';
 
 export function useQueryPrice(
 	market: Ref<MarketType>,

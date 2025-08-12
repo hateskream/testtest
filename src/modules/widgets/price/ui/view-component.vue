@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import type { ISettings, ITicker, MarketType } from '../model';
+import {
+	MarketBadge,
+} from '@/modules/widgets/base';
+import type { ISettings, ITicker } from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import type { MarketType } from '@/modules/market';
 
 import CellComponent from './cell-component.vue';
-import PriceHeader from './header/price-header.vue';
 import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
@@ -42,7 +45,8 @@ const isShowPriceChart = ref(false); // разнесут на 2 виджета
 
 <template>
 	<div :class="classes.root">
-		<price-header v-model="activeMarket" />
+		<market-badge v-model="activeMarket" :class="classes.priceHeader" />
+
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<transition
@@ -80,6 +84,10 @@ const isShowPriceChart = ref(false); // разнесут на 2 виджета
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
+}
+
+.priceHeader {
+	margin-inline: 12px;
 }
 
 .scrollable {

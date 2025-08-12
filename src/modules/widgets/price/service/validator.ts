@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MarketType } from '../model';
+import { MarketType } from '@/modules/market';
 
 const ISettingsSchema = z.object({
 	isShowChart: z.boolean(),

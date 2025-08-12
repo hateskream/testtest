@@ -5,7 +5,7 @@ import {
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
-import { getAllMarkets, getMarketLabel, type MarketType } from '../../model';
+import { getAllMarkets, getMarketLabel, type MarketType } from '@/modules/market';
 
 const activeMarket = defineModel<MarketType>({ required: true });
 
@@ -15,38 +15,32 @@ function updateMarket(market: MarketType) {
 </script>
 
 <template>
-	<div :class="classes.performanceHeader">
-		<modal-badge>
-			<template #title>
-				{{ getMarketLabel(activeMarket) }}
-				<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
-			</template>
+	<modal-badge>
+		<template #title>
+			{{ getMarketLabel(activeMarket) }}
+			<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
+		</template>
 
-			<template #content>
-				<modal-badge-list>
-					<template #title>Stock</template>
+		<template #content>
+			<modal-badge-list>
+				<template #title>Stock</template>
 
-					<template v-for="market in getAllMarkets()" :key="market.type">
-						<modal-item-selector
-							:model-value="activeMarket === market.type"
-							@update:model-value="updateMarket(market.type)"
-						>
-							{{ market.label }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge>
-	</div>
+				<template v-for="market in getAllMarkets()" :key="market.type">
+					<modal-item-selector
+						:model-value="activeMarket === market.type"
+						@update:model-value="updateMarket(market.type)"
+					>
+						{{ market.label }}
+					</modal-item-selector>
+				</template>
+			</modal-badge-list>
+		</template>
+	</modal-badge>
 </template>
 
 <style module="classes">
 .listFiltersTitle {
 	text-transform: capitalize;
-}
-
-.performanceHeader {
-	margin-inline: 12px;
 }
 
 .listFiltersTitleImageWrapper {

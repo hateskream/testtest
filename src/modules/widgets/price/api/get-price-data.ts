@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { MarketType, type ITicker as ITickerDomain } from '../model';
+import { type ITicker as ITickerDomain } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import { arrayToString } from '@/shared/lib';
 import {
@@ -23,6 +23,7 @@ import {
 	type SvgChartDto,
 	type SymbolDto,
 } from '@/modules/cell';
+import { MarketType } from '@/modules/market';
 
 enum TypeSendRequest {
 	Prod,
