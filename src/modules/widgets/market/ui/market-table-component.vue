@@ -53,12 +53,12 @@ function mapRow(ticker: IMarketDomain) {
 	return {
 		id: ticker.tickerId,
 		data: {
-			[ColumnType.Symbol]: mapSymbolToTable(ticker.symbol),
-			[ColumnType.PriceCurrent]: mapNumberToTable(ticker.priceCurrent),
-			[ColumnType.ChangePrice24hPercent]: mapPercentToTable(ticker.changePrice24hPercent),
-			[ColumnType.Volume24h]: mapNumberToTable(ticker.volume24h),
-			[ColumnType.MarketCap24h]: mapNumberToTable(ticker.marketCap),
-			[ColumnType.ListingDate]: mapTextToTable(ticker.listingDate),
+			[ColumnType.Symbol]: mapSymbolToTable(ticker[ColumnType.Symbol]),
+			[ColumnType.PriceCurrent]: mapNumberToTable(ticker[ColumnType.PriceCurrent]),
+			[ColumnType.ChangePrice24hPercent]: mapPercentToTable(ticker[ColumnType.ChangePrice24hPercent]),
+			[ColumnType.Volume24h]: mapNumberToTable(ticker[ColumnType.Volume24h]),
+			[ColumnType.MarketCap24h]: mapNumberToTable(ticker[ColumnType.MarketCap24h]),
+			[ColumnType.ListingDate]: mapTextToTable(ticker[ColumnType.ListingDate]),
 		},
 	};
 }

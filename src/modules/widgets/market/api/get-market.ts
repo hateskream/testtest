@@ -32,12 +32,12 @@ export interface IGetMarketRequest {
 
 interface ITicker {
 	tickerId: string;
-	symbol: SymbolDto;
-	priceCurrent: NumberDto;
-	changePrice24hPercent: PercentDto;
-	volume24h: NumberDto;
-	marketCap: NumberDto;
-	listingDate: TextDto;
+	[ColumnType.Symbol]: SymbolDto;
+	[ColumnType.PriceCurrent]: NumberDto;
+	[ColumnType.ChangePrice24hPercent]: PercentDto;
+	[ColumnType.Volume24h]: NumberDto;
+	[ColumnType.MarketCap24h]: NumberDto;
+	[ColumnType.ListingDate]: TextDto;
 }
 
 export interface IGetMarketResponse {
@@ -46,12 +46,12 @@ export interface IGetMarketResponse {
 
 export interface IMarketDomain {
 	tickerId: string;
-	symbol: ISymbolCell;
-	priceCurrent: INumberCell;
-	changePrice24hPercent: IPercentCell;
-	volume24h: INumberCell;
-	marketCap: INumberCell;
-	listingDate: ITextCell;
+	[ColumnType.Symbol]: ISymbolCell;
+	[ColumnType.PriceCurrent]: INumberCell;
+	[ColumnType.ChangePrice24hPercent]: IPercentCell;
+	[ColumnType.Volume24h]: INumberCell;
+	[ColumnType.MarketCap24h]: INumberCell;
+	[ColumnType.ListingDate]: ITextCell;
 }
 
 export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[]> {
@@ -78,38 +78,38 @@ function prepareResponse(tickers: ITicker[]): IMarketDomain[] {
 	return tickers
 		.map(ticker => ({
 			tickerId: ticker.tickerId,
-			symbol: mapSymbol(ticker.symbol),
-			priceCurrent: mapNumber(ticker.priceCurrent),
-			changePrice24hPercent: mapPercent(ticker.changePrice24hPercent),
-			volume24h: mapNumber(ticker.volume24h),
-			marketCap: mapNumber(ticker.marketCap),
-			listingDate: mapText(ticker.listingDate),
+			[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
+			[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
+			[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
+			[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
+			[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
+			[ColumnType.ListingDate]: mapText(ticker[ColumnType.ListingDate]),
 		}))
 		.filter(isNotEmptyTicker) satisfies IMarketDomain[];
 }
 
 function isNotEmptyTicker(ticker: {
-	symbol: ISymbolCell | IEmptyCell;
-	priceCurrent: INumberCell | IEmptyCell;
-	changePrice24hPercent: IPercentCell | IEmptyCell;
-	volume24h: INumberCell | IEmptyCell;
-	marketCap: INumberCell | IEmptyCell;
-	listingDate: ITextCell | IEmptyCell;
+	[ColumnType.Symbol]: ISymbolCell | IEmptyCell;
+	[ColumnType.PriceCurrent]: INumberCell | IEmptyCell;
+	[ColumnType.ChangePrice24hPercent]: IPercentCell | IEmptyCell;
+	[ColumnType.Volume24h]: INumberCell | IEmptyCell;
+	[ColumnType.MarketCap24h]: INumberCell | IEmptyCell;
+	[ColumnType.ListingDate]: ITextCell | IEmptyCell;
 }): ticker is IMarketDomain {
 	return (
-		!isEmptyCell(ticker.symbol) &&
-		!isEmptyCell(ticker.priceCurrent) &&
-		!isEmptyCell(ticker.changePrice24hPercent) &&
-		!isEmptyCell(ticker.volume24h) &&
-		!isEmptyCell(ticker.marketCap) &&
-		!isEmptyCell(ticker.listingDate)
+		!isEmptyCell(ticker[ColumnType.Symbol]) &&
+		!isEmptyCell(ticker[ColumnType.PriceCurrent]) &&
+		!isEmptyCell(ticker[ColumnType.ChangePrice24hPercent]) &&
+		!isEmptyCell(ticker[ColumnType.Volume24h]) &&
+		!isEmptyCell(ticker[ColumnType.MarketCap24h]) &&
+		!isEmptyCell(ticker[ColumnType.ListingDate])
 	);
 }
 
 const mockData: ITicker[] = [
 	{
 		tickerId: '1',
-		symbol: {
+		[ColumnType.Symbol]: {
 			cellType: CellType.Symbol,
 			columnType: ColumnType.Symbol,
 			symbolType: SymbolType.Crypto,
@@ -117,7 +117,7 @@ const mockData: ITicker[] = [
 			ticker: 'ADA',
 			blockchain: 'Example Blockchain',
 		},
-		priceCurrent: {
+		[ColumnType.PriceCurrent]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.PriceCurrent,
 			value: '137.4',
@@ -125,13 +125,13 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		changePrice24hPercent: {
+		[ColumnType.ChangePrice24hPercent]: {
 			cellType: CellType.Percent,
 			columnType: ColumnType.ChangePrice24hPercent,
 			value: '0',
 			trend: Trend.NEUTRAL,
 		},
-		volume24h: {
+		[ColumnType.Volume24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.Volume24h,
 			value: '11723737.43',
@@ -139,7 +139,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		marketCap: {
+		[ColumnType.MarketCap24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.MarketCap24h,
 			value: '22737283.45',
@@ -147,7 +147,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		listingDate: {
+		[ColumnType.ListingDate]: {
 			cellType: CellType.Text,
 			columnType: ColumnType.ListingDate,
 			value: new Date('2024-04-30').toString(),
@@ -155,7 +155,7 @@ const mockData: ITicker[] = [
 	},
 	{
 		tickerId: '2',
-		symbol: {
+		[ColumnType.Symbol]: {
 			cellType: CellType.Symbol,
 			columnType: ColumnType.Symbol,
 			symbolType: SymbolType.Crypto,
@@ -163,7 +163,7 @@ const mockData: ITicker[] = [
 			ticker: 'BNB',
 			blockchain: 'Example Blockchain',
 		},
-		priceCurrent: {
+		[ColumnType.PriceCurrent]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.PriceCurrent,
 			value: '137.4',
@@ -171,13 +171,13 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		changePrice24hPercent: {
+		[ColumnType.ChangePrice24hPercent]: {
 			cellType: CellType.Percent,
 			columnType: ColumnType.ChangePrice24hPercent,
 			value: '0',
 			trend: Trend.NEUTRAL,
 		},
-		volume24h: {
+		[ColumnType.Volume24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.Volume24h,
 			value: '11723737.43',
@@ -185,7 +185,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		marketCap: {
+		[ColumnType.MarketCap24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.MarketCap24h,
 			value: '22737283.45',
@@ -193,7 +193,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		listingDate: {
+		[ColumnType.ListingDate]: {
 			cellType: CellType.Text,
 			columnType: ColumnType.ListingDate,
 			value: new Date('2024-04-30').toString(),
@@ -201,7 +201,7 @@ const mockData: ITicker[] = [
 	},
 	{
 		tickerId: '3',
-		symbol: {
+		[ColumnType.Symbol]: {
 			cellType: CellType.Symbol,
 			columnType: ColumnType.Symbol,
 			symbolType: SymbolType.Crypto,
@@ -209,7 +209,7 @@ const mockData: ITicker[] = [
 			ticker: 'BNB',
 			blockchain: 'Example Blockchain',
 		},
-		priceCurrent: {
+		[ColumnType.PriceCurrent]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.PriceCurrent,
 			value: '137.4',
@@ -217,13 +217,13 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		changePrice24hPercent: {
+		[ColumnType.ChangePrice24hPercent]: {
 			cellType: CellType.Percent,
 			columnType: ColumnType.ChangePrice24hPercent,
 			value: '0',
 			trend: Trend.NEUTRAL,
 		},
-		volume24h: {
+		[ColumnType.Volume24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.Volume24h,
 			value: '11723737.43',
@@ -231,7 +231,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		marketCap: {
+		[ColumnType.MarketCap24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.MarketCap24h,
 			value: '22737283.45',
@@ -239,7 +239,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		listingDate: {
+		[ColumnType.ListingDate]: {
 			cellType: CellType.Text,
 			columnType: ColumnType.ListingDate,
 			value: new Date('2024-04-30').toString(),
@@ -247,7 +247,7 @@ const mockData: ITicker[] = [
 	},
 	{
 		tickerId: '4',
-		symbol: {
+		[ColumnType.Symbol]: {
 			cellType: CellType.Symbol,
 			columnType: ColumnType.Symbol,
 			symbolType: SymbolType.Crypto,
@@ -255,7 +255,7 @@ const mockData: ITicker[] = [
 			ticker: 'BNB',
 			blockchain: 'Example Blockchain',
 		},
-		priceCurrent: {
+		[ColumnType.PriceCurrent]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.PriceCurrent,
 			value: '137.4',
@@ -263,13 +263,13 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		changePrice24hPercent: {
+		[ColumnType.ChangePrice24hPercent]: {
 			cellType: CellType.Percent,
 			columnType: ColumnType.ChangePrice24hPercent,
 			value: '0.3',
 			trend: Trend.UP,
 		},
-		volume24h: {
+		[ColumnType.Volume24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.Volume24h,
 			value: '11723737.43',
@@ -277,7 +277,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		marketCap: {
+		[ColumnType.MarketCap24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.MarketCap24h,
 			value: '22737283.45',
@@ -285,7 +285,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		listingDate: {
+		[ColumnType.ListingDate]: {
 			cellType: CellType.Text,
 			columnType: ColumnType.ListingDate,
 			value: new Date('2024-04-30').toString(),
@@ -293,7 +293,7 @@ const mockData: ITicker[] = [
 	},
 	{
 		tickerId: '5',
-		symbol: {
+		[ColumnType.Symbol]: {
 			cellType: CellType.Symbol,
 			columnType: ColumnType.Symbol,
 			symbolType: SymbolType.Crypto,
@@ -301,7 +301,7 @@ const mockData: ITicker[] = [
 			ticker: 'BNB',
 			blockchain: 'Example Blockchain',
 		},
-		priceCurrent: {
+		[ColumnType.PriceCurrent]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.PriceCurrent,
 			value: '137.4',
@@ -309,13 +309,13 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		changePrice24hPercent: {
+		[ColumnType.ChangePrice24hPercent]: {
 			cellType: CellType.Percent,
 			columnType: ColumnType.ChangePrice24hPercent,
 			value: '1',
 			trend: Trend.NEUTRAL,
 		},
-		volume24h: {
+		[ColumnType.Volume24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.Volume24h,
 			value: '11723737.43',
@@ -323,7 +323,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		marketCap: {
+		[ColumnType.MarketCap24h]: {
 			cellType: CellType.Number,
 			columnType: ColumnType.MarketCap24h,
 			value: '22737283.45',
@@ -331,7 +331,7 @@ const mockData: ITicker[] = [
 			magnitude: Magnitude.BILLION,
 			trend: Trend.UP,
 		},
-		listingDate: {
+		[ColumnType.ListingDate]: {
 			cellType: CellType.Text,
 			columnType: ColumnType.ListingDate,
 			value: new Date('2024-04-30').toString(),
