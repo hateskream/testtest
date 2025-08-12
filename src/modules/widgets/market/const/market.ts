@@ -1,118 +1,66 @@
-import type { ITableColumn, ITableRowValueType } from '../model';
-import { setPositionColumns } from '../utils';
+import { ColumnType } from '@/modules/cell';
+import { buildColumns, getShow, type ITableColumn, type ITableRowValueType } from '../model';
 
-export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] = setPositionColumns([
-	{
-		columnName: 'symbol',
-		displayColumnName: 'Symbol',
-		displayShortColumnName: 'Symbol',
-		isToggleable: false,
-		isDraggable: false,
-		isShow: true,
-		position: 0,
-		type: 'image-string',
-		group: {
-			name: 'symbol',
+export const INITIAL_ALL_TABLE_COLUMNS: ITableColumn[] =
+	buildColumns([
+		{
+			columnType: ColumnType.Symbol,
+			isToggleable: false,
+			isDraggable: false,
+			isShow: true,
+			group: {
+				name: 'symbol',
+			},
 		},
-	},
-	{
-		columnName: 'price',
-		displayColumnName: 'Price',
-		displayShortColumnName: 'Price',
-		group: {
-			name: 'price',
+		{
+			columnType: ColumnType.PriceCurrent,
+			group: {
+				name: 'price',
+			},
+			isShow: true,
+			isToggleable: true,
+			isDraggable: true,
 		},
-		isShow: true,
-		isToggleable: true,
-		isDraggable: true,
-		position: 1,
-		type: 'number',
-	},
-	{
-		columnName: 'chg24h',
-		displayColumnName: 'Change 24h%',
-		displayShortColumnName: 'Chg 24h%',
-		isShow: true,
-		isToggleable: true,
-		isDraggable: true,
-		position: 2,
-		type: 'percent',
-		group: {
-			name: 'change',
-			order: 2,
+		{
+			columnType: ColumnType.ChangePrice24hPercent,
+			isShow: true,
+			isToggleable: true,
+			isDraggable: true,
+			group: {
+				name: 'change',
+				order: 2,
+			},
 		},
-	},
-	{
-		columnName: 'chg1h',
-		displayColumnName: 'Change 1h%',
-		displayShortColumnName: 'Chg 1h%',
-		isShow: false,
-		isToggleable: true,
-		isDraggable: true,
-		position: 3,
-		type: 'percent',
-		group: {
-			name: 'change',
-			order: 1,
+		{
+			columnType: ColumnType.Volume24h,
+			isShow: true,
+			isToggleable: true,
+			isDraggable: true,
+			group: {
+				name: 'volume',
+			},
 		},
-	},
-	{
-		columnName: 'chg7d',
-		displayColumnName: 'Change 7d%',
-		displayShortColumnName: 'Chg 7d%',
-		isShow: false,
-		isToggleable: true,
-		isDraggable: true,
-		position: 4,
-		type: 'percent',
-		group: {
-			name: 'change',
+		{
+			columnType: ColumnType.MarketCap24h,
+			isShow: true,
+			isToggleable: true,
+			isDraggable: true,
+			group: {
+				name: 'MCap',
+			},
 		},
-	},
-	{
-		columnName: 'volume24h',
-		displayColumnName: 'Volume 24h',
-		displayShortColumnName: 'Vol 24h',
-		isShow: true,
-		isToggleable: true,
-		isDraggable: true,
-		position: 5,
-		type: 'number',
-		group: {
-			name: 'volume',
+		{
+			columnType: ColumnType.ListingDate,
+			isShow: true,
+			isToggleable: true,
+			isDraggable: true,
+			group: {
+				name: 'Date',
+			},
 		},
-	},
-	{
-		columnName: 'marketCap24h',
-		displayColumnName: 'Market cap 24h',
-		displayShortColumnName: 'MCap 24h',
-		isShow: true,
-		isToggleable: true,
-		isDraggable: true,
-		position: 6,
-		type: 'number',
-		group: {
-			name: 'MCap',
-		},
-	},
-	{
-		columnName: 'listingDate',
-		displayColumnName: 'Listing Date',
-		displayShortColumnName: 'Listing Date',
-		isShow: true,
-		isToggleable: true,
-		isDraggable: true,
-		position: 7,
-		type: 'date',
-		group: {
-			name: 'Date',
-		},
-	},
-]);
+	]);
 
-export const INITIAL_ACTIVE_TABLE_COLUMNS: ITableColumn[] = setPositionColumns(
-	INITIAL_ALL_TABLE_COLUMNS.filter(item => item.isShow),
-);
+export const INITIAL_ACTIVE_TABLE_COLUMNS: ITableColumn[] = getShow(INITIAL_ALL_TABLE_COLUMNS);
 
 export const ACCEPT_COLUMNS_TYPES_SORT: ITableRowValueType[] = [
 	'image-string',

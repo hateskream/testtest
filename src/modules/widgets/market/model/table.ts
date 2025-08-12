@@ -1,3 +1,5 @@
+import { CellType, columnDisplay, columnToCell, type ColumnType } from '@/modules/cell';
+
 export type ITableRowValueType =
 	| 'image'
 	| 'image-string'
@@ -30,8 +32,47 @@ export interface ITableColumn {
 		order?: number;
 		name: string;
 	};
-	columnName: string;
-	type: ITableRowValueType;
+	columnType: ColumnType;
+	type: CellType;
+}
+
+interface INotFullCol {
+	isShow: boolean;
+	isToggleable: boolean;
+	isDraggable: boolean;
+	group: {
+		order?: number;
+		name: string;
+	};
+	columnType: ColumnType;
+}
+
+function createTableColumn(col: INotFullCol): ITableColumn {
+	const display = columnDisplay[col.columnType];
+
+	return {
+		...col,
+		type: columnToCell[col.columnType],
+		position: 0,
+		displayColumnName: display.name,
+		displayShortColumnName: display.shortName,
+	};
+}
+
+export function buildColumns(cols: INotFullCol[]) {
+	return cols.map((item, idx) => ({
+		...createTableColumn(item),
+		position: idx,
+	}));
+}
+
+export function getShow(cols: ITableColumn[]) {
+	return cols
+		.filter(item => item.isShow)
+		.map((item, idx) => ({
+			...item,
+			position: idx,
+		}));
 }
 
 export type ITableRowValue = string;

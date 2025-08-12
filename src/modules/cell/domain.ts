@@ -179,3 +179,53 @@ export type Cell =
 	| ISvgChartCell
 	| ITextCell
 	| IRangeCell;
+
+export const columnToCell: Record<ColumnType, CellType> = {
+	[ColumnType.Symbol]: CellType.Symbol,
+
+	[ColumnType.PriceCurrent]: CellType.Number,
+	[ColumnType.PriceMin24h]: CellType.Number,
+	[ColumnType.PriceMax24h]: CellType.Number,
+	[ColumnType.PriceMin1y]: CellType.Number,
+	[ColumnType.PriceMax1y]: CellType.Number,
+	[ColumnType.PriceAvg50d]: CellType.Number,
+	[ColumnType.PriceAvg200d]: CellType.Number,
+	[ColumnType.Price1yRange]: CellType.Range,
+
+	[ColumnType.Price24hChart]: CellType.SvgChart,
+	[ColumnType.Price7dChart]: CellType.SvgChart,
+	[ColumnType.Price30dChart]: CellType.SvgChart,
+
+	[ColumnType.ChangePrice24h]: CellType.Number,
+	[ColumnType.ChangePrice1hPercent]: CellType.Percent,
+	[ColumnType.ChangePrice24hPercent]: CellType.Percent,
+	[ColumnType.ChangePrice7dPercent]: CellType.Percent,
+	[ColumnType.ChangePrice30dPercent]: CellType.Percent,
+
+	[ColumnType.Volume24h]: CellType.Number,
+	[ColumnType.VolumeRel10d]: CellType.Number,
+	[ColumnType.VolumeAvg10d]: CellType.Number,
+
+	[ColumnType.MarketCap24h]: CellType.Number,
+
+	[ColumnType.RSIValue]: CellType.Number,
+	[ColumnType.RSIChart]: CellType.SvgChart,
+
+	[ColumnType.Beta5y]: CellType.Number,
+
+	[ColumnType.LastDividend]: CellType.Number,
+
+	[ColumnType.Employees]: CellType.Number,
+	[ColumnType.IpODate]: CellType.Text,
+	[ColumnType.Sector]: CellType.Text,
+	[ColumnType.Industry]: CellType.Text,
+
+	[ColumnType.Source]: CellType.Text,
+
+	[ColumnType.ListingDate]: CellType.Text,
+
+	[ColumnType.UpdateDate]: CellType.Text,
+
+	[ColumnType.OpenPrice]: CellType.Number,
+	[ColumnType.ClosePrice]: CellType.Number,
+};

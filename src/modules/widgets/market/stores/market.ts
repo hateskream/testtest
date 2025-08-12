@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia';
-import { computed, ref, toValue } from 'vue';
+import { computed, ref } from 'vue';
 
 import {
-	ACCEPT_COLUMNS_TYPES_SORT,
 	INITIAL_ACTIVE_TABLE_COLUMNS,
-	INITIAL_ALL_TABLE_COLUMNS,
 } from '../const';
-import { getNextDirectionSort, setPositionColumns } from '../utils';
+import { getNextDirectionSort } from '../utils';
 import { compareStrings } from '@/shared/lib';
 import type { IActiveSortColumn, IActiveTabSort, ITableColumn } from '../model';
 
@@ -14,7 +12,7 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 	const activeTableColumns = ref(INITIAL_ACTIVE_TABLE_COLUMNS);
 
 	const showTableColumns = computed(() =>
-		activeTableColumns.value.map(column => column.columnName),
+		activeTableColumns.value.map(column => column.displayColumnName),
 	);
 
 	const showTableColumnsDraggable = computed(() =>
@@ -119,60 +117,60 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 		activeTabSort.value = args;
 	}
 
-	function toggleActiveSort(column: ITableColumn) {
-		if (activeTabSort.value.columnName) {
-			return;
-		}
+	function toggleActiveSort(_: ITableColumn) {
+		// if (activeTabSort.value.columnName) {
+		// 	return;
+		// }
 
-		if (ACCEPT_COLUMNS_TYPES_SORT.includes(column.type)) {
-			if (activeSort.value.columnName !== column.columnName) {
-				activeSort.value = {
-					columnName: column.columnName,
-					direction: -1,
-				};
+		// if (ACCEPT_COLUMNS_TYPES_SORT.includes(column.type)) {
+		// 	if (activeSort.value.columnName !== column.columnName) {
+		// 		activeSort.value = {
+		// 			columnName: column.columnName,
+		// 			direction: -1,
+		// 		};
 
-				return;
-			}
+		// 		return;
+		// 	}
 
-			const nextDirection = getNextDirectionSort(activeSort.value.direction);
+		// 	const nextDirection = getNextDirectionSort(activeSort.value.direction);
 
-			activeSort.value = {
-				columnName: column.columnName,
-				direction: nextDirection,
-			};
-		}
+		// 	activeSort.value = {
+		// 		columnName: column.columnName,
+		// 		direction: nextDirection,
+		// 	};
+		// }
 	}
 
-	function toggleShowActiveTableColumns(columnName: string) {
-		const idxAllTableColumnItem = INITIAL_ALL_TABLE_COLUMNS.findIndex(column =>
-			compareStrings(columnName, column.columnName),
-		)!;
+	function toggleShowActiveTableColumns(_: string) {
+		// const idxAllTableColumnItem = INITIAL_ALL_TABLE_COLUMNS.findIndex(column =>
+		// 	compareStrings(columnName, column.columnName),
+		// )!;
 
-		const settingsItem = INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem];
+		// const settingsItem = INITIAL_ALL_TABLE_COLUMNS[idxAllTableColumnItem];
 
-		if (settingsItem.isToggleable) {
-			const idxActiveTableColumnItem = activeTableColumns.value.findIndex(column =>
-				compareStrings(columnName, column.columnName),
-			);
+		// if (settingsItem.isToggleable) {
+		// 	const idxActiveTableColumnItem = activeTableColumns.value.findIndex(column =>
+		// 		compareStrings(columnName, column.columnName),
+		// 	);
 
-			const data = toValue(activeTableColumns.value);
+		// 	const data = toValue(activeTableColumns.value);
 
-			if (idxActiveTableColumnItem > -1) {
-				setActiveTabSort({
-					direction: 0,
-					sortTab: 'all',
-				});
+		// 	if (idxActiveTableColumnItem > -1) {
+		// 		setActiveTabSort({
+		// 			direction: 0,
+		// 			sortTab: 'all',
+		// 		});
 
-				data.splice(idxActiveTableColumnItem, 1);
-			} else {
-				data.splice(settingsItem.position, 0, {
-					...settingsItem,
-					isShow: true,
-				});
-			}
+		// 		data.splice(idxActiveTableColumnItem, 1);
+		// 	} else {
+		// 		data.splice(settingsItem.position, 0, {
+		// 			...settingsItem,
+		// 			isShow: true,
+		// 		});
+		// 	}
 
-			activeTableColumns.value = setPositionColumns(data);
-		}
+		// 	activeTableColumns.value = setPositionColumns(data);
+		// }
 	}
 
 	function resetAll() {

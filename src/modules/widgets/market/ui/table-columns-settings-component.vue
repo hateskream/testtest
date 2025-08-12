@@ -36,7 +36,7 @@ const layout = computed<IGridLayoutCell[]>(() =>
 		y: index + 1,
 		w: 12,
 		h: 1,
-		i: item.columnName,
+		i: item.columnType,
 		static: !item.isDraggable,
 		data: item,
 	})),
@@ -58,7 +58,7 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 			marketStore.activeTableColumns[0],
 			...layout.value.map(item => ({
 				...item.data,
-				position: item.data.columnName === columnName ? y : item.y,
+				position: item.data.columnType === columnName ? y : item.y,
 			})),
 		].sort((a, b) => a.position - b.position),
 	);
@@ -90,9 +90,9 @@ function handleToggleTab(columnName: string) {
 						<div :class="classes.tabs">
 							<modal-filter-tab-wrapper
 								v-for="tab in columns"
-								:key="tab.columnName"
-								:is-active="marketStore.showTableColumns.includes(tab.columnName)"
-								@click="handleToggleTab(tab.columnName)"
+								:key="tab.columnType"
+								:is-active="marketStore.showTableColumns.includes(tab.columnType)"
+								@click="handleToggleTab(tab.columnType)"
 							>
 								{{ tab.displayShortColumnName }}
 							</modal-filter-tab-wrapper>
