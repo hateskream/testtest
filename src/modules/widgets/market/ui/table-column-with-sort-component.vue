@@ -18,7 +18,7 @@ const iconStyles = computed(() => ({
 
 const columnStyles = computed(() => ({
 	justifyContent:
-		['image', 'image-string'].includes(props.column.type) || props.column.position === 0
+		['image', 'image-string'].includes(props.column.type) || props.column.order === 0
 			? 'flex-start'
 			: 'flex-end',
 }));

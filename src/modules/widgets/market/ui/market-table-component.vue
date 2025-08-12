@@ -2,22 +2,18 @@
 import { computed } from 'vue';
 
 import { useMarketStore } from '../stores';
-import type { IMarketDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	ColumnType,
-	mapNumberToTable,
-	mapPercentToTable,
-	mapSymbolToTable,
-	mapTextToTable,
+	mapCellToTable,
 	mapToTableColumnType,
 } from '@/modules/cell';
-import type { ITableColumn } from '../model';
+import type { ITableColumn, TableRow } from '../model';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
 interface IViewComponentProps {
-	markets: IMarketDomain[];
+	markets: TableRow[];
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -37,7 +33,7 @@ function mapColumn(marketColumns: ITableColumn[]) {
 		key: col.columnType.toString(),
 		label: col.displayColumnName,
 		shortLabel: col.displayShortColumnName,
-		position: col.position,
+		position: col.order,
 		sortable: true,
 		draggable: col.isDraggable,
 		visible: col.isShow,
@@ -49,17 +45,21 @@ function mapColumn(marketColumns: ITableColumn[]) {
 	}));
 }
 
-function mapRow(ticker: IMarketDomain) {
+function mapRow(ticker: TableRow) {
+	const data = Object.values(ColumnType).reduce((acc, columnType) => {
+		if (columnType in ticker) {
+			const cell = ticker[columnType as keyof TableRow];
+			if (typeof cell === 'string' || cell === undefined) {
+				return acc;
+			}
+			acc[columnType] = mapCellToTable(cell);
+		}
+		return acc;
+	}, {} as Record<ColumnType, unknown>);
+
 	return {
 		id: ticker.tickerId,
-		data: {
-			[ColumnType.Symbol]: mapSymbolToTable(ticker[ColumnType.Symbol]),
-			[ColumnType.PriceCurrent]: mapNumberToTable(ticker[ColumnType.PriceCurrent]),
-			[ColumnType.ChangePrice24hPercent]: mapPercentToTable(ticker[ColumnType.ChangePrice24hPercent]),
-			[ColumnType.Volume24h]: mapNumberToTable(ticker[ColumnType.Volume24h]),
-			[ColumnType.MarketCap24h]: mapNumberToTable(ticker[ColumnType.MarketCap24h]),
-			[ColumnType.ListingDate]: mapTextToTable(ticker[ColumnType.ListingDate]),
-		},
+		data,
 	};
 }
 </script>

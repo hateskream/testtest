@@ -60,7 +60,7 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 				...item.data,
 				position: item.data.columnType === columnName ? y : item.y,
 			})),
-		].sort((a, b) => a.position - b.position),
+		].sort((a, b) => a.order - b.order),
 	);
 
 	marketStore.updateActiveTableColumns(activeTableColumns);

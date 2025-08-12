@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { IMarketDomain } from '../api';
+import type { TableRow } from '../model';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import MarketTableComponent from './market-table-component.vue';
 
 interface IViewComponentProps {
-	markets: IMarketDomain[];
+	markets: TableRow[];
 }
 
 defineProps<IViewComponentProps>();

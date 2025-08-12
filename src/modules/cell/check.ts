@@ -7,8 +7,13 @@ import {
 	type IEmptyCell,
 	type IForexSymbolCell,
 	type IIndexSymbolCell,
+	type INumberCell,
+	type IPercentCell,
+	type IRangeCell,
 	type IStockSymbolCell,
+	type ISvgChartCell,
 	type ISymbolCell,
+	type ITextCell,
 } from './domain';
 
 export function isEmptyCell(cell: Cell): cell is IEmptyCell {
@@ -33,4 +38,28 @@ export function isStockSymbolCell(cell: ISymbolCell): cell is IStockSymbolCell {
 
 export function isForexSymbolCell(cell: ISymbolCell): cell is IForexSymbolCell {
 	return cell.symbolType === SymbolType.Forex;
+}
+
+export function isSymbolCell(cell: Cell): cell is ISymbolCell {
+	return cell.cellType === CellType.Symbol;
+}
+
+export function isTextCell(cell: Cell): cell is ITextCell {
+	return cell.cellType === CellType.Text;
+}
+
+export function isNumberCell(cell: Cell): cell is INumberCell {
+	return cell.cellType === CellType.Number;
+}
+
+export function isPercentCell(cell: Cell): cell is IPercentCell {
+	return cell.cellType === CellType.Percent;
+}
+
+export function isSvgChartCell(cell: Cell): cell is ISvgChartCell {
+	return cell.cellType === CellType.SvgChart;
+}
+
+export function isRangeCell(cell: Cell): cell is IRangeCell {
+	return cell.cellType === CellType.Range;
 }

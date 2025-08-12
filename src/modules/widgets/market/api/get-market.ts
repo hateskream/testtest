@@ -22,6 +22,7 @@ import {
 	isEmptyCell,
 	mapText,
 } from '@/modules/cell';
+import type { CryptoTableRow } from '../model/crypto';
 
 const IS_USE_MOCK = true;
 
@@ -44,17 +45,7 @@ export interface IGetMarketResponse {
 	data: ITicker[];
 }
 
-export interface IMarketDomain {
-	tickerId: string;
-	[ColumnType.Symbol]: ISymbolCell;
-	[ColumnType.PriceCurrent]: INumberCell;
-	[ColumnType.ChangePrice24hPercent]: IPercentCell;
-	[ColumnType.Volume24h]: INumberCell;
-	[ColumnType.MarketCap24h]: INumberCell;
-	[ColumnType.ListingDate]: ITextCell;
-}
-
-export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[]> {
+export async function getMarket(args: IGetMarketRequest): Promise<CryptoTableRow[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
@@ -74,7 +65,7 @@ export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[
 	}
 }
 
-function prepareResponse(tickers: ITicker[]): IMarketDomain[] {
+function prepareResponse(tickers: ITicker[]): CryptoTableRow[] {
 	return tickers
 		.map(ticker => ({
 			tickerId: ticker.tickerId,
@@ -85,7 +76,7 @@ function prepareResponse(tickers: ITicker[]): IMarketDomain[] {
 			[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
 			[ColumnType.ListingDate]: mapText(ticker[ColumnType.ListingDate]),
 		}))
-		.filter(isNotEmptyTicker) satisfies IMarketDomain[];
+		.filter(isNotEmptyTicker) satisfies CryptoTableRow[];
 }
 
 function isNotEmptyTicker(ticker: {
@@ -95,7 +86,7 @@ function isNotEmptyTicker(ticker: {
 	[ColumnType.Volume24h]: INumberCell | IEmptyCell;
 	[ColumnType.MarketCap24h]: INumberCell | IEmptyCell;
 	[ColumnType.ListingDate]: ITextCell | IEmptyCell;
-}): ticker is IMarketDomain {
+}): ticker is CryptoTableRow {
 	return (
 		!isEmptyCell(ticker[ColumnType.Symbol]) &&
 		!isEmptyCell(ticker[ColumnType.PriceCurrent]) &&

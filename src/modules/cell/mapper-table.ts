@@ -4,9 +4,23 @@ import {
 	isStockSymbolCell,
 	isIndexSymbolCell,
 	isCommoditySymbolCell,
+	isSymbolCell,
+	isNumberCell,
+	isPercentCell,
+	isEmptyCell,
+	isRangeCell,
+	isSvgChartCell,
 } from './check';
 import { getMagnitudeText } from './display';
-import { CellType, type ISymbolCell, type INumberCell, type IPercentCell, Trend, type ITextCell } from './domain';
+import {
+	CellType,
+	type ISymbolCell,
+	type INumberCell,
+	type IPercentCell,
+	Trend,
+	type ITextCell,
+	type Cell,
+} from './domain';
 
 
 export const mapToTableColumnType: Record<CellType, TableColumnType> = {
@@ -21,7 +35,31 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Empty]: TableColumnType.DATE,
 };
 
-export function mapSymbolToTable(cell: ISymbolCell) {
+export function mapCellToTable(cell: Cell) {
+	if (
+		isEmptyCell(cell) ||
+		isSvgChartCell(cell) ||
+		isRangeCell(cell)
+	) {
+		throw new Error(`Not supported ${cell.cellType} cell`);
+	}
+
+	if (isSymbolCell(cell)) {
+		return mapSymbolToTable(cell);
+	}
+
+	if (isNumberCell(cell)) {
+		return mapNumberToTable(cell);
+	}
+
+	if (isPercentCell(cell)) {
+		return mapPercentToTable(cell);
+	}
+
+	return mapTextToTable(cell);
+}
+
+function mapSymbolToTable(cell: ISymbolCell) {
 	if (isCryptoSymbolCell(cell)) {
 		return {
 			symbolType: cell.symbolType,
@@ -68,7 +106,7 @@ export function mapSymbolToTable(cell: ISymbolCell) {
 	};
 }
 
-export function mapNumberToTable(cell: INumberCell) {
+function mapNumberToTable(cell: INumberCell) {
 	return {
 		value: cell.value,
 		currencySymbol: cell.currencySymbol,
@@ -76,13 +114,13 @@ export function mapNumberToTable(cell: INumberCell) {
 	};
 }
 
-export function mapPercentToTable(cell: IPercentCell) {
+function mapPercentToTable(cell: IPercentCell) {
 	return {
 		value: cell.trend === Trend.UP || cell.trend === Trend.NEUTRAL ? cell.value : `-${cell.value}`,
 	};
 }
 
-export function mapTextToTable(cell: ITextCell) {
+function mapTextToTable(cell: ITextCell) {
 	return {
 		value: cell.value,
 	};

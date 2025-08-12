@@ -72,7 +72,7 @@ export enum Magnitude {
 	NONE = 'none',
 }
 
-interface IBaseCell {
+export interface IBaseCell {
 	cellType: CellType;
 	columnType: ColumnType;
 }
