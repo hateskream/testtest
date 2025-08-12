@@ -221,7 +221,10 @@ const tickerState = computed(() => {
 		<!-- Forward header settings slot -->
 		<template
 			#first-column-settings
-			v-if="props.stickyFirstColumn && ( columns[0]?.type === 'symbol' || columns[0].type === 'image-string')"
+			v-if="
+				props.stickyFirstColumn &&
+					columns.length > 0 &&
+					( columns[0]?.type === 'symbol' || columns[0].type === 'image-string')"
 		>
 			<div
 

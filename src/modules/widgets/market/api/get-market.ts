@@ -1,8 +1,27 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { IMarket } from '../model';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
-import { ImageTypePath } from '@/shared/lib/get-image-path';
+import { removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import {
+	type SymbolDto,
+	type NumberDto,
+	type PercentDto,
+	type TextDto,
+	CellType,
+	ColumnType,
+	SymbolType,
+	Trend,
+	type ISymbolCell,
+	type INumberCell,
+	type IPercentCell,
+	type ITextCell,
+	Magnitude,
+	mapSymbol,
+	mapNumber,
+	mapPercent,
+	type IEmptyCell,
+	isEmptyCell,
+	mapText,
+} from '@/modules/cell';
 
 const IS_USE_MOCK = true;
 
@@ -11,12 +30,28 @@ export interface IGetMarketRequest {
 	sort?: string;
 }
 
-export interface IGetMarketResponse {
-	data: IMarket[];
+interface ITicker {
+	tickerId: string;
+	symbol: SymbolDto;
+	priceCurrent: NumberDto;
+	changePrice24hPercent: PercentDto;
+	volume24h: NumberDto;
+	marketCap: NumberDto;
+	listingDate: TextDto;
 }
 
-export interface IMarketDomain extends IMarket {
-	srcValue: string;
+export interface IGetMarketResponse {
+	data: ITicker[];
+}
+
+export interface IMarketDomain {
+	tickerId: string;
+	symbol: ISymbolCell;
+	priceCurrent: INumberCell;
+	changePrice24hPercent: IPercentCell;
+	volume24h: INumberCell;
+	marketCap: INumberCell;
+	listingDate: ITextCell;
 }
 
 export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[]> {
@@ -39,87 +74,275 @@ export async function getMarket(args: IGetMarketRequest): Promise<IMarketDomain[
 	}
 }
 
-function prepareResponse(data: IMarket[]): IMarketDomain[] {
-	return data.map(item => ({
-		...item,
-		srcValue: getImagePath(item.symbol, ImageTypePath.Currency),
-	}));
+function prepareResponse(tickers: ITicker[]): IMarketDomain[] {
+	return tickers
+		.map(ticker => ({
+			tickerId: ticker.tickerId,
+			symbol: mapSymbol(ticker.symbol),
+			priceCurrent: mapNumber(ticker.priceCurrent),
+			changePrice24hPercent: mapPercent(ticker.changePrice24hPercent),
+			volume24h: mapNumber(ticker.volume24h),
+			marketCap: mapNumber(ticker.marketCap),
+			listingDate: mapText(ticker.listingDate),
+		}))
+		.filter(isNotEmptyTicker) satisfies IMarketDomain[];
 }
+
+function isNotEmptyTicker(ticker: {
+	symbol: ISymbolCell | IEmptyCell;
+	priceCurrent: INumberCell | IEmptyCell;
+	changePrice24hPercent: IPercentCell | IEmptyCell;
+	volume24h: INumberCell | IEmptyCell;
+	marketCap: INumberCell | IEmptyCell;
+	listingDate: ITextCell | IEmptyCell;
+}): ticker is IMarketDomain {
+	return (
+		!isEmptyCell(ticker.symbol) &&
+		!isEmptyCell(ticker.priceCurrent) &&
+		!isEmptyCell(ticker.changePrice24hPercent) &&
+		!isEmptyCell(ticker.volume24h) &&
+		!isEmptyCell(ticker.marketCap) &&
+		!isEmptyCell(ticker.listingDate)
+	);
+}
+
+const mockData: ITicker[] = [
+	{
+		tickerId: '1',
+		symbol: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'ADA',
+			blockchain: 'Example Blockchain',
+		},
+		priceCurrent: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		changePrice24hPercent: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '0',
+			trend: Trend.NEUTRAL,
+		},
+		volume24h: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11723737.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		marketCap: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '22737283.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		listingDate: {
+			cellType: CellType.Text,
+			columnType: ColumnType.ListingDate,
+			value: new Date('2024-04-30').toString(),
+		},
+	},
+	{
+		tickerId: '2',
+		symbol: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'BNB',
+			blockchain: 'Example Blockchain',
+		},
+		priceCurrent: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		changePrice24hPercent: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '0',
+			trend: Trend.NEUTRAL,
+		},
+		volume24h: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11723737.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		marketCap: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '22737283.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		listingDate: {
+			cellType: CellType.Text,
+			columnType: ColumnType.ListingDate,
+			value: new Date('2024-04-30').toString(),
+		},
+	},
+	{
+		tickerId: '3',
+		symbol: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'BNB',
+			blockchain: 'Example Blockchain',
+		},
+		priceCurrent: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		changePrice24hPercent: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '0',
+			trend: Trend.NEUTRAL,
+		},
+		volume24h: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11723737.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		marketCap: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '22737283.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		listingDate: {
+			cellType: CellType.Text,
+			columnType: ColumnType.ListingDate,
+			value: new Date('2024-04-30').toString(),
+		},
+	},
+	{
+		tickerId: '4',
+		symbol: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'BNB',
+			blockchain: 'Example Blockchain',
+		},
+		priceCurrent: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		changePrice24hPercent: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '0.3',
+			trend: Trend.UP,
+		},
+		volume24h: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11723737.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		marketCap: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '22737283.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		listingDate: {
+			cellType: CellType.Text,
+			columnType: ColumnType.ListingDate,
+			value: new Date('2024-04-30').toString(),
+		},
+	},
+	{
+		tickerId: '5',
+		symbol: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'BNB',
+			blockchain: 'Example Blockchain',
+		},
+		priceCurrent: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		changePrice24hPercent: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '1',
+			trend: Trend.NEUTRAL,
+		},
+		volume24h: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11723737.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		marketCap: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '22737283.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		listingDate: {
+			cellType: CellType.Text,
+			columnType: ColumnType.ListingDate,
+			value: new Date('2024-04-30').toString(),
+		},
+	},
+];
 
 async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
-
-	const mockData: IMarket[] = [
-		{
-			id: '1',
-			chg24h: '0',
-			price: '137.4',
-			priceSymbol: '$',
-			priceMagnitude: 'M',
-			volume24h: '11723737.43',
-			volume24hSymbol: '$',
-			volume24hMagnitude: 'M',
-			marketCap24h: '22737283.45',
-			marketCap24hSymbol: '$',
-			marketCap24hMagnitude: 'M',
-			symbol: 'ADA',
-			listingDate: new Date('2024-04-30').toString(),
-			chg1h: '12',
-			chg7d: '15',
-		},
-		{
-			id: '2',
-			chg24h: '-2.93',
-			price: '635.4',
-			priceSymbol: '$',
-			volume24h: '323737.43',
-			volume24hSymbol: '$',
-			volume24hMagnitude: 'K',
-			marketCap24h: '37283.45',
-			marketCap24hSymbol: '$',
-			marketCap24hMagnitude: 'K',
-			symbol: 'BNB',
-			listingDate: new Date('2025-04-12').toString(),
-			chg1h: '32',
-			chg7d: '-42',
-		},
-		{
-			id: '3',
-			chg24h: '0.86',
-			price: '97432.7',
-			priceSymbol: '$',
-			priceMagnitude: 'K',
-			volume24h: '32374523437.43',
-			volume24hSymbol: '$',
-			volume24hMagnitude: 'M',
-			marketCap24h: '372853453.45',
-			marketCap24hSymbol: '$',
-			marketCap24hMagnitude: 'M',
-			symbol: 'BTC',
-			listingDate: new Date('2023-06-15').toString(),
-			chg1h: '-12',
-			chg7d: '49',
-		},
-		{
-			id: '4',
-			chg24h: '2.33',
-			price: '0.24743',
-			priceSymbol: '$',
-			volume24h: '13123743437.43',
-			volume24hSymbol: '$',
-			volume24hMagnitude: 'M',
-			marketCap24h: '1233453.45',
-			marketCap24hSymbol: '$',
-			marketCap24hMagnitude: 'M',
-			symbol: 'TRON',
-			listingDate: new Date('2025-01-24').toString(),
-			chg1h: '-5',
-			chg7d: '25',
-		},
-	];
-
 
 	const response: IGetMarketResponse = {
 		data: mockData,
