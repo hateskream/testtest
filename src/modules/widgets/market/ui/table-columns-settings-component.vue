@@ -3,12 +3,12 @@ import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import { useMarketStore } from '../stores';
-import { INITIAL_ALL_TABLE_COLUMNS } from '../const';
 import type { ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { setPositionColumns } from '../utils';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
+import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
@@ -19,7 +19,7 @@ const marketStore = useMarketStore();
 const groupedTableColumns = computed(() => {
 	const grouped: { [x: string]: ITableColumn[] } = {};
 
-	INITIAL_ALL_TABLE_COLUMNS.forEach(column => {
+	CRYPTO_ALL_COLUMNS.forEach(column => {
 		if (!Array.isArray(grouped[column.group.name])) {
 			grouped[column.group.name] = [column];
 		} else {

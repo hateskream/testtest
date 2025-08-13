@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import {
-	INITIAL_ACTIVE_TABLE_COLUMNS,
-} from '../const';
 import { compareStrings } from '@/shared/lib';
 import type { IActiveTabSort, ITableColumn } from '../model';
+import { CRYPTO_DEFAULT_SHOW_COLUMNS } from '../model/crypto';
 
 export const useMarketStore = defineStore('dashboards-market', () => {
-	const activeTableColumns = ref(INITIAL_ACTIVE_TABLE_COLUMNS);
+	const activeTableColumns = ref(CRYPTO_DEFAULT_SHOW_COLUMNS);
 
 	const showTableColumns = computed(() =>
 		activeTableColumns.value.map(column => column.displayColumnName),
@@ -94,7 +92,7 @@ export const useMarketStore = defineStore('dashboards-market', () => {
 	}
 
 	function resetAll() {
-		updateActiveTableColumns(INITIAL_ACTIVE_TABLE_COLUMNS);
+		updateActiveTableColumns(CRYPTO_DEFAULT_SHOW_COLUMNS);
 
 		activeTabSort.value = {
 			direction: 0,
