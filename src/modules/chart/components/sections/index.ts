@@ -11,7 +11,7 @@ import { ChartSectionDividends } from './dividends';
 import { ChartSectionBalanceSheet } from './balance-sheet';
 import { ChartSectionIncomeStatement } from './income-statement';
 import { ChartSectionPricePerformance } from './price-performance';
-
+import { ChartSectionPriceEarnings } from './price-earnings';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -20,6 +20,7 @@ export {
 	ChartSectionValuationsAndEstimates,
 	ChartSectionYearlyRevenue,
 	ChartSectionPeerAnalysis,
+	ChartSectionPriceEarnings,
 	ChartSectionInsiderTrading,
 	ChartSectionEps,
 	ChartSectionStockPeersBulk,
