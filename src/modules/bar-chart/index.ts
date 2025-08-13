@@ -1,3 +1,3 @@
-import SparklineBarChart from './bar-chart.vue';
+import BarChart from './bar-chart.vue';
 
-export { SparklineBarChart };
+export { BarChart };

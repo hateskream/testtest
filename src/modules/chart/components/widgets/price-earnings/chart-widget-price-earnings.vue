@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import type { IBarChartModel } from '@/modules/bar-chart/bar-chart.model';
-import { SparklineBarChart } from '@/modules/bar-chart';
+import { BarChart } from '@/modules/bar-chart';
 
 // TODO: move to models
 export interface IPriceEarningsProps {
@@ -56,7 +56,7 @@ const colorByStatus = computed(() => {
 				</div>
 
 				<div :class="classes.chartColumn">
-					<sparkline-bar-chart
+					<bar-chart
 						:class="classes.chart"
 						:min-value="props.tickerChart.minValue"
 						:max-value="props.tickerChart.maxValue"
@@ -65,7 +65,7 @@ const colorByStatus = computed(() => {
 						:compact="props.tickerChart.compact"
 					/>
 
-					<sparkline-bar-chart
+					<bar-chart
 						:class="classes.chart"
 						:min-value="props.pncChart.minValue"
 						:max-value="props.pncChart.maxValue"
@@ -74,7 +74,7 @@ const colorByStatus = computed(() => {
 						:compact="props.pncChart.compact"
 					/>
 
-					<sparkline-bar-chart
+					<bar-chart
 						:class="classes.chart"
 						:min-value="props.cChart.minValue"
 						:max-value="props.cChart.maxValue"
@@ -83,7 +83,7 @@ const colorByStatus = computed(() => {
 						:compact="props.cChart.compact"
 					/>
 
-					<sparkline-bar-chart
+					<bar-chart
 						:class="classes.chart"
 						:min-value="props.msChart.minValue"
 						:max-value="props.msChart.maxValue"

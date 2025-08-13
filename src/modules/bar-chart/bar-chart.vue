@@ -18,8 +18,8 @@ const activeIndex = computed(() => Math.round(props.currentValue));
 </script>
 
 <template>
-	<div :class="classes.sparklineBarChart">
-		<div :class="classes.sparklineBarChartWrapper">
+	<div :class="classes.barChart">
+		<div :class="classes.barChartWrapper">
 			<div
 				v-for="index in props.maxValue"
 				:key="index"
@@ -38,12 +38,13 @@ const activeIndex = computed(() => Math.round(props.currentValue));
 </template>
 
 <style module="classes">
-.sparklineBarChart {
+.barChart {
 	display: flex;
 	flex-grow: 1;
+	align-self: stretch;
 }
 
-.sparklineBarChartWrapper {
+.barChartWrapper {
 	display: flex;
 	flex-grow: 1;
 	justify-content: space-between;
