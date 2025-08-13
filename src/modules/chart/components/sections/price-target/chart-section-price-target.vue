@@ -2,23 +2,14 @@
 
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import type { ISectionItem } from '@/modules/chart/components';
+
 import { useTabs } from '@/modules/chart/components/shared/composables';
-import { ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
+import { ChartCommonTabsLayout, ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
+import { ChartWidgetPriceTarget, ChartWidgetYearlyRevenue } from '@/modules/chart/components/widgets';
+import type { ISectionProps } from '@/modules/chart/models';
 
-import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
-import ChartWidgetPriceTarget from '@/modules/chart/components/widgets/price-target/chart-widget-price-target.vue';
-import ChartWidgetYearlyRevenue
-	from '@/modules/chart/components/widgets/yearly-revenue/chart-widget-yearly-revenue.vue';
 
-interface IChartSectionValuationsProps {
-	section: ISectionItem;
-	activeSection?: string | null;
-	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
-	selectedItem?: string | null;
-}
-
-const props = defineProps<IChartSectionValuationsProps>();
+const props = defineProps<ISectionProps>();
 
 
 const itemRef = ref<HTMLElement | null>(null);

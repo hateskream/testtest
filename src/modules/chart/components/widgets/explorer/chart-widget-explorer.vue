@@ -4,7 +4,7 @@ import { useScroll, useEventListener } from '@vueuse/core';
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { ISectionItem } from './models';
+import type { ISectionItem } from '../../../models';
 
 interface IChartWidgetsExplorerProps {
 	sections: ISectionItem[];

@@ -9,7 +9,7 @@ import { ChartComponent } from '@/modules/chart';
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<chart-component />
+			<chart-component type="stock" />
 		</template>
 	</layout-component>
 </template>

@@ -1,6 +1,4 @@
-import type { ISectionItem, IWidgetItem } from './models';
-import { chartWidgetTestSections } from './models';
 
-import ChartWidgetsExplorer from './chart-widgets-explorer.vue';
+import ChartWidgetExplorer from './chart-widget-explorer.vue';
 
-export { ChartWidgetsExplorer, type ISectionItem, type IWidgetItem, chartWidgetTestSections };
+export { ChartWidgetExplorer };

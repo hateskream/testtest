@@ -2,10 +2,9 @@
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import type { ISectionProps } from '@/modules/chart/models';
+import { ChartWidgetPricePerformance } from '@/modules/chart/components/widgets';
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
-import { ChartWidgetStockPeersBulk } from '@/modules/chart/components/widgets';
-
+import type { ISectionProps } from '@/modules/chart/models';
 
 const props = defineProps<ISectionProps>();
 
@@ -32,18 +31,32 @@ onUnmounted(() => {
 </script>
 
 <template>
-
-
 	<chart-common-section-layout>
 		<template #refAnchor><div ref="itemRef"></div></template>
 		<template #title>{{props.section?.title}}</template>
 		<template #body>
-			<chart-widget-stock-peers-bulk />
+			<div :class="classes.container">
+				<div :class="classes.section">
+					<chart-widget-price-performance />
+				</div>
+			</div>
 		</template>
 	</chart-common-section-layout>
 </template>
 
 <style module="classes">
+.container {
+	container-type: inline-size;
+}
 
+.section {
+	display: flex;
+	gap: 3px;
+}
 
+@container (max-width: 599px) {
+	.section {
+		flex-direction: column;
+	}
+}
 </style>

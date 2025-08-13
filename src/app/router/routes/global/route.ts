@@ -8,10 +8,16 @@ export const globalRoutes =
 			component: () => import('@/pages/home-page.vue'),
 		},
 		{
-			path: RoutePaths.Chart,
-			name: RouteNames.Chart,
-			component: () => import('@/pages/chart-page.vue'),
+			path: RoutePaths.ChartStock,
+			name: RouteNames.ChartStock,
+			component: () => import('@/pages/chart-stock-page.vue'),
 		},
+		{
+			path: RoutePaths.ChartCrypto,
+			name: RouteNames.ChartCrypto,
+			component: () => import('@/pages/chart-crypto-page.vue'),
+		},
+
 		{
 			path: RoutePaths.Test,
 			name: RouteNames.Test,

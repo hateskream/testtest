@@ -40,7 +40,12 @@ const navigation: INavigationItem[] = [
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
-		routeName: RouteNames.Chart,
+		routeName: RouteNames.ChartStock,
+	},
+	{
+		icon: IconIds.Chart,
+		id: IconIds.Chart,
+		routeName: RouteNames.ChartCrypto,
 	},
 	// {
 	// 	icon: IconIds.Calendar,
