@@ -3,10 +3,9 @@ import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import { useMarketStore } from '../stores';
-import type { ITableColumn } from '../model';
+import { setPositionColumns, type ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
-import { setPositionColumns } from '../utils';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
 

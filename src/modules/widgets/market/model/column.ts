@@ -93,18 +93,21 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 	};
 }
 
+export function setPositionColumns(cols: ITableColumn[]) {
+	return cols.map((item, idx) => ({ ...item, position: idx }));
+}
+
 export function buildColumns(cols: INotFullCol[]): ITableColumn[] {
-	return cols.map((item, idx) => ({
-		...createTableColumn(item),
-		order: idx,
-	}));
+	return setPositionColumns(
+		cols
+			.map(item => (
+				{
+					...createTableColumn(item),
+				}),
+			),
+	);
 }
 
 export function getShow(cols: ITableColumn[]) {
-	return cols
-		.filter(item => item.isShow)
-		.map((item, idx) => ({
-			...item,
-			order: idx,
-		}));
+	return setPositionColumns(cols.filter(item => item.isShow));
 }
