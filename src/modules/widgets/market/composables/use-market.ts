@@ -11,8 +11,15 @@ import {
 	type ITableColumn,
 } from '../model';
 import type { MarketType } from '@/modules/market';
+import { useGetState, useUpdateState } from '../queries';
 
-export function useMarket() {
+export function useMarket(widgetId: string) {
+	const {
+		data: dataState,
+		isLoading: isLoadingState,
+	} = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
 	const state = ref<IState>(getDefaultState());
 
 	const currentSettings = ref<ISettings>(getDefaultSettings());
@@ -73,6 +80,17 @@ export function useMarket() {
 				);
 		},
 	});
+
+	watch(dataState, newState => {
+		if (newState) {
+			state.value = JSON.parse(JSON.stringify(newState));
+			currentSettings.value = state.value.settings[state.value.activeMarket];
+		}
+	}, { immediate: true });
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
 
 	watch(
 		() => state.value.activeMarket,

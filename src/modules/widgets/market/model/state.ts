@@ -11,7 +11,7 @@ export interface ISettings {
 	filters: Filters;
 }
 
-type SettingsByMarket = Partial<Record<MarketType, ISettings>>;
+type SettingsByMarket = Record<MarketType, ISettings>;
 
 export interface IState {
 	activeMarket: MarketType;
@@ -25,6 +25,26 @@ const DEFAULT_STATE: IState = {
 			column: CRYPTO_ALL_COLUMNS,
 			sort: null,
 			filters: CRYPTO_FILTERS,
+		},
+		[MarketType.Stock]: {
+			column: [],
+			sort: null,
+			filters: {},
+		},
+		[MarketType.Forex]: {
+			column: [],
+			sort: null,
+			filters: {},
+		},
+		[MarketType.Commodities]: {
+			column: [],
+			sort: null,
+			filters: {},
+		},
+		[MarketType.Indices]: {
+			column: [],
+			sort: null,
+			filters: {},
 		},
 	},
 };
@@ -41,13 +61,43 @@ export function getDefaultSettings(): ISettings {
 	};
 }
 
-interface IColumnHydrateState {
+interface IPreset {
+	filters: Filters;
+	columns: ITableColumn[];
+}
+
+type Presets = Record<MarketType, IPreset>;
+
+export interface IColumnHydrateState {
 	columnType: ColumnType;
 	isShow: boolean;
 	order: number;
 }
 
-interface IFilterHydrateState {
+export const PRESETS: Presets = {
+	[MarketType.Crypto]: {
+		filters: CRYPTO_FILTERS,
+		columns: CRYPTO_ALL_COLUMNS,
+	},
+	[MarketType.Stock]: {
+		filters: {},
+		columns: [],
+	},
+	[MarketType.Forex]: {
+		filters: {},
+		columns: [],
+	},
+	[MarketType.Commodities]: {
+		filters: {},
+		columns: [],
+	},
+	[MarketType.Indices]: {
+		filters: {},
+		columns: [],
+	},
+};
+
+export interface IFilterHydrateState {
 	filterType: string;
 	selected: string;
 }
