@@ -10,7 +10,6 @@ const props = withDefaults(defineProps<IBarChartModel>(), {
 	currentValue: 0,
 	barColor: '#D7D7D7',
 	compact: true,
-	// TODO: Add index rendering mode
 });
 
 
