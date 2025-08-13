@@ -16,7 +16,17 @@ export interface IFilterState {
 	isFlat: boolean;
 }
 
-export type Filters = Record<string, { state: IFilterState; readonly values: IFilterValue[] }>;
+type FilterType = string;
 
-export type FiltersValues = Record<string, IFilterValue[]>;
-export type FiltersState = Record<string, IFilterState>;
+export type Filters = Record<FilterType, { state: IFilterState; readonly values: IFilterValue[] }>;
+
+export type FiltersValues = Record<FilterType, IFilterValue[]>;
+export type FiltersState = Record<FilterType, IFilterState>;
+
+export interface ISelectedFilter {
+	filter: FilterType;
+	value: string;
+}
+
+export const NONE_SET_FILTER = 'none';
+

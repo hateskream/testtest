@@ -1,6 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import { removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import {
 	type SymbolDto,
 	type NumberDto,
@@ -23,11 +22,17 @@ import {
 	mapText,
 } from '@/modules/cell';
 import type { CryptoTableRow } from '../model/crypto';
+import type { MarketType } from '@/modules/market';
+import type { ISelectedFilter, ISort } from '../model';
 
 const IS_USE_MOCK = true;
 
-export interface IGetMarketRequest {
-	market: string;
+interface IGetMarketRequest {
+	market: MarketType;
+	sort: ISort | null;
+	filters: ISelectedFilter[];
+	limit: number;
+	offset: number;
 }
 
 interface ITicker {
@@ -40,21 +45,36 @@ interface ITicker {
 	[ColumnType.ListingDate]: TextDto;
 }
 
-export interface IGetMarketResponse {
-	data: ITicker[];
+interface IPagination {
+	total: number;
+	offset: number;
+	limit: number;
 }
 
-export async function getMarket(args: IGetMarketRequest): Promise<CryptoTableRow[]> {
+interface IData {
+	tickers: ITicker[];
+	pagination: IPagination;
+}
+interface IGetMarketResponse {
+	data: IData;
+}
+
+export interface IPreparedResponse {
+	tickers: CryptoTableRow[];
+	pagination: IPagination;
+}
+
+export async function getMarketCrypto(_: IGetMarketRequest): Promise<IPreparedResponse> {
 	const httpService = useHttpService();
 	const logger = useLogger();
-
-	const query = removeUndefinedPropertiesFromObject(args);
 
 	try {
 		const response = IS_USE_MOCK
 			? await getMockData()
 			: await httpService.get<IGetMarketResponse>('/api/market', {
-				query,
+				query: {
+
+				},
 			});
 
 		return prepareResponse(response.data);
@@ -64,18 +84,21 @@ export async function getMarket(args: IGetMarketRequest): Promise<CryptoTableRow
 	}
 }
 
-function prepareResponse(tickers: ITicker[]): CryptoTableRow[] {
-	return tickers
-		.map(ticker => ({
-			tickerId: ticker.tickerId,
-			[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
-			[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
-			[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
-			[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
-			[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
-			[ColumnType.ListingDate]: mapText(ticker[ColumnType.ListingDate]),
-		}))
-		.filter(isNotEmptyTicker) satisfies CryptoTableRow[];
+function prepareResponse({ tickers, pagination }: IData): IPreparedResponse {
+	return {
+		tickers: tickers
+			.map(ticker => ({
+				tickerId: ticker.tickerId,
+				[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
+				[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
+				[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
+				[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
+				[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
+				[ColumnType.ListingDate]: mapText(ticker[ColumnType.ListingDate]),
+			}))
+			.filter(isNotEmptyTicker) satisfies CryptoTableRow[],
+		pagination,
+	};
 }
 
 function isNotEmptyTicker(ticker: {
@@ -335,7 +358,14 @@ async function getMockData(): Promise<IGetMarketResponse> {
 	});
 
 	const response: IGetMarketResponse = {
-		data: mockData,
+		data: {
+			pagination: {
+				offset: 0,
+				limit: 10,
+				total: 10,
+			},
+			tickers: mockData,
+		},
 	};
 
 	return response;

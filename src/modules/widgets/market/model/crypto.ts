@@ -1,7 +1,7 @@
 import { ColumnType, type ISymbolCell, type INumberCell, type IPercentCell, type ITextCell } from '@/modules/cell';
 import type { TableRow } from './row';
 import { type ITableColumn, buildColumns } from './column';
-import type { Filters, IFilterValue, IFilterState, IIcon } from './filter';
+import { type Filters, type IFilterValue, type IFilterState, type IIcon } from './filter';
 import { IconIds } from '@/shared/ui/icon';
 
 export type CryptoTableRow = TableRow<{
@@ -62,7 +62,7 @@ enum Status {
 	Losers = 'Losers',
 	New = 'New',
 	Upcoming = 'Upcoming',
-	All = 'All',
+	All = 'none',
 }
 
 const StatusToName: Record<Status, string> = {

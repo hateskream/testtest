@@ -5,6 +5,7 @@ import { useQueryMarket } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '../../base';
 import { useMarket } from '../composables';
+import { NONE_SET_FILTER } from '../model';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -17,21 +18,34 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { data, isLoading, isError } = useQueryMarket({
-	market: props.meta.market,
-});
-
 const {
 	columns,
 	activeMarket,
-	// activeSort,
+	activeSort,
 	filtersValues,
 	filtersState,
 
 	resetAllChanges,
-} = useMarket();
+} = useMarket(props.meta.widgetId);
 
-const isNotData = computed(() => !!data.value && isLoading.value);
+const { data, isLoading, isError } = useQueryMarket(
+	activeMarket,
+	activeSort,
+	computed(
+		() => Object
+			.entries(filtersState.value)
+			.map(([filter, { selected: value }]) => ({
+				filter,
+				value,
+			}))
+			.filter(({ value }) => value === NONE_SET_FILTER),
+	),
+	10,
+);
+
+const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
+
+const isNotData = computed(() => !!rows.value.length && isLoading.value);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -50,7 +64,7 @@ const emit = defineEmits<{
 				v-model:market="activeMarket"
 				v-model:columns="columns"
 				:filters-values="filtersValues"
-				:rows="data"
+				:rows="rows"
 			/>
 		</template>
 		<template #rcm>

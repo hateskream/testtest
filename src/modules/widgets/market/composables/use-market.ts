@@ -14,10 +14,7 @@ import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
 
 export function useMarket(widgetId: string) {
-	const {
-		data: dataState,
-		isLoading: isLoadingState,
-	} = useGetState(widgetId);
+	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
 	const state = ref<IState>(getDefaultState());
