@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { BarChart } from '@/modules/bar-chart';
+import { BarChartFilled } from '@/modules/bar-chart';
 import type { IBarChartModel } from '@/modules/bar-chart/bar-chart.model';
 
 // TODO: move to models
@@ -30,8 +30,8 @@ const summaryColor = computed(() => {
 		'var(--text-color-negative-500)' : 'var(--text-color-positive-500)';
 });
 
-const colorByChartStatus = (chart: IChartData) => {
-	return chart.coloredStatus === 'negative' ?
+const colorByChartData = (chart: IChartData) => {
+	return chart.currentValue < 0 ?
 		'var(--text-color-negative-500)' : 'var(--text-color-positive-500)';
 };
 </script>
@@ -59,11 +59,11 @@ const colorByChartStatus = (chart: IChartData) => {
 				>
 					<div :class="classes.tradingVolumeBarChartTitle">
 						<span :class="classes.period">{{ chart.period }}</span>
-						<span :class="classes.value" :style="{color: colorByChartStatus(chart)}">
+						<span :class="classes.value" :style="{color: colorByChartData(chart)}">
 							{{ chart.value }}
 						</span>
 					</div>
-					<bar-chart v-bind="chart" />
+					<bar-chart-filled v-bind="chart" />
 				</div>
 			</div>
 		</template>
@@ -112,6 +112,7 @@ const colorByChartStatus = (chart: IChartData) => {
 }
 
 .tradingVolumeBarChartTitle {
+	padding-inline: 2px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
