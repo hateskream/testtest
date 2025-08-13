@@ -12,6 +12,7 @@ import { ChartSectionBalanceSheet } from './balance-sheet';
 import { ChartSectionIncomeStatement } from './income-statement';
 import { ChartSectionPricePerformance } from './price-performance';
 import { ChartSectionPriceEarnings } from './price-earnings';
+import { ChartSectionTradingVolume } from './trading-volume';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -28,4 +29,5 @@ export {
 	ChartSectionBalanceSheet,
 	ChartSectionIncomeStatement,
 	ChartSectionPricePerformance,
+	ChartSectionTradingVolume,
 };
