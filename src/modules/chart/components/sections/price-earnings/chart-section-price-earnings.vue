@@ -3,15 +3,14 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
 import { ChartWidgetPriceEarnings } from '@/modules/chart/components/widgets/price-earnings';
-import type { ISectionItem } from '@/modules/chart/components';
+import type { ISectionProps } from '@/modules/chart/models';
 
-interface IChartSectionValuationsProps {
-	section: ISectionItem;
-	selectedItem?: string | null;
-	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
-}
+// TODO: move to models
+// eslint-disable-next-line @stylistic/max-len
+import type { IPriceEarningsProps } from '@/modules/chart/components/widgets/price-earnings/chart-widget-price-earnings.vue';
 
-const props = defineProps<IChartSectionValuationsProps>();
+
+const props = defineProps<ISectionProps>();
 
 
 const itemRef = ref<HTMLElement | null>(null);
@@ -33,6 +32,81 @@ onUnmounted(() => {
 	});
 });
 
+
+const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps1: IPriceEarningsProps = {
+	widgetData: {
+		title: 'P/E',
+		summary: '51% above sector average',
+		status: 'negative',
+		ticker: 'TSLA',
+	},
+	tickerChart: {
+		title: 'TSLA',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 12.9,
+		compact: true,
+	},
+	pncChart: {
+		title: 'PNC',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 11.7,
+		compact: true,
+	},
+	cChart: {
+		title: 'C',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 10.7,
+		compact: true,
+	},
+	msChart: {
+		title: 'MS',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 14.3,
+		compact: true,
+	},
+};
+
+const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2: IPriceEarningsProps = {
+	widgetData: {
+		title: 'P/E',
+		summary: '12% below sector average',
+		status: 'positive',
+		ticker: 'TRON',
+	},
+	tickerChart: {
+		title: 'TRON',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 3.9,
+		compact: true,
+	},
+	pncChart: {
+		title: 'PNC',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 22.7,
+		compact: true,
+	},
+	cChart: {
+		title: 'C',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 17.7,
+		compact: true,
+	},
+	msChart: {
+		title: 'MS',
+		minValue: 0,
+		maxValue: 30,
+		currentValue: 12.3,
+		compact: true,
+	},
+};
+
 </script>
 <template>
 	<chart-common-section-layout>
@@ -41,11 +115,30 @@ onUnmounted(() => {
 		</template>
 		<template #title>{{ props.section?.title }}</template>
 		<template #body>
-			<chart-widget-price-earnings />
+			<div :class="classes.container">
+				<div :class="classes.peGroup">
+					<chart-widget-price-earnings v-bind="idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps1" />
+					<chart-widget-price-earnings v-bind="idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2" />
+				</div>
+			</div>
 		</template>
 	</chart-common-section-layout>
 </template>
 
 <style module="classes">
+.peGroup {
+	display: flex;
+	flex-direction: row;
+	gap: 4px;
+}
 
+.container {
+	container-type: inline-size;
+}
+
+@container (max-width: 599px) {
+	.peGroup {
+		flex-direction: column;
+	}
+}
 </style>

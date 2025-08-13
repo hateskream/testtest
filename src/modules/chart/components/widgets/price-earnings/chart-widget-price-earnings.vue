@@ -5,60 +5,25 @@ import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import type { IBarChartModel } from '@/modules/bar-chart/bar-chart.model';
 import { SparklineBarChart } from '@/modules/bar-chart';
 
-// TODO: remove defaults and make all props required
-interface IPriceEarningsProps {
-	widgetData?: {
+// TODO: move to models
+export interface IPriceEarningsProps {
+	widgetData: {
 		title: string;
 		summary: string;
 		ticker: string;
 		status: 'negative' | 'positive' | 'neutral';
 	};
-	tickerChart?: IChartData;
-	pncChart?: IChartData;
-	cChart?: IChartData;
-	msChart?: IChartData;
+	tickerChart: IChartData;
+	pncChart: IChartData;
+	cChart: IChartData;
+	msChart: IChartData;
 }
 
 interface IChartData extends IBarChartModel {
 	title: string;
 }
 
-const props = withDefaults(defineProps<IPriceEarningsProps>(), {
-	widgetData: () => ({
-		title: 'P/E',
-		summary: '51% above sector average',
-		status: 'negative',
-		ticker: 'TSLA',
-	}),
-	tickerChart: () => ({
-		title: 'TSLA',
-		minValue: 0,
-		maxValue: 30,
-		currentValue: 12.9,
-		compact: true,
-	}),
-	pncChart: () => ({
-		title: 'PNC',
-		minValue: 0,
-		maxValue: 30,
-		currentValue: 11.7,
-		compact: true,
-	}),
-	cChart: () => ({
-		title: 'C',
-		minValue: 0,
-		maxValue: 30,
-		currentValue: 10.7,
-		compact: true,
-	}),
-	msChart: () => ({
-		title: 'MS',
-		minValue: 0,
-		maxValue: 30,
-		currentValue: 14.3,
-		compact: true,
-	}),
-});
+const props = defineProps<IPriceEarningsProps>();
 
 
 const colorByStatus = computed(() => {
