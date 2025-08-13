@@ -93,7 +93,7 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 	};
 }
 
-export function setPositionColumns(cols: ITableColumn[]) {
+export function setPositionColumns(cols: ITableColumn[]): ITableColumn[] {
 	return cols.map((item, idx) => ({ ...item, position: idx }));
 }
 

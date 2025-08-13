@@ -1,6 +1,6 @@
 import type { ColumnType } from '@/modules/cell';
 
-enum SortDirection {
+export enum SortDirection {
 	ASC = 'asc',
 	DESC = 'desc',
 	NONE= 'none',

@@ -2,65 +2,31 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	ModalBadge,
-	ModalBadgeList,
-	ModalItemSelector,
 } from '@/modules/widgets/base';
-import { getAllMarkets, getMarketLabel, type MarketType } from '@/modules/market';
+import { getMarketLabel, type MarketType } from '@/modules/market';
+
+import MarketBadgeList from './market-badge-list.vue';
+
+interface IMarketBadgeProps {
+	title?: string;
+}
+
+const props = withDefaults(defineProps<IMarketBadgeProps>(), {
+	title: 'Market',
+});
 
 const activeMarket = defineModel<MarketType>({ required: true });
-
-function updateMarket(market: MarketType) {
-	activeMarket.value = market;
-}
 </script>
 
 <template>
 	<modal-badge>
 		<template #title>
 			{{ getMarketLabel(activeMarket) }}
-			<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
+			<ui-icon :id="IconIds.DropdownDown" />
 		</template>
 
 		<template #content>
-			<modal-badge-list>
-				<template #title>Stock</template>
-
-				<template v-for="market in getAllMarkets()" :key="market.type">
-					<modal-item-selector
-						:model-value="activeMarket === market.type"
-						@update:model-value="updateMarket(market.type)"
-					>
-						{{ market.label }}
-					</modal-item-selector>
-				</template>
-			</modal-badge-list>
+			<market-badge-list v-model="activeMarket" :title="props.title" />
 		</template>
 	</modal-badge>
 </template>
-
-<style module="classes">
-.listFiltersTitle {
-	text-transform: capitalize;
-}
-
-.listFiltersTitleImageWrapper {
-	display: flex;
-}
-
-.listFiltersTitleImage {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 28px;
-	height: 28px;
-	margin-left: -12px;
-	overflow: hidden;
-	background-color: #222223;
-	border: 2px solid #222223;
-	border-radius: 100%;
-}
-
-.listFiltersTitleImageWrapper > .listFiltersTitleImage:first-child {
-	margin-left: 0;
-}
-</style>

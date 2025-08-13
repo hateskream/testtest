@@ -2,18 +2,26 @@
 import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
-import { useMarketStore } from '../stores';
 import { setPositionColumns, type ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
+import type { ColumnType } from '@/modules/cell';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
 }
 
-const marketStore = useMarketStore();
+const columns = defineModel<ITableColumn[]>({ required: true });
+
+const showTableColumns = computed(() =>
+	columns.value.map(column => column.displayColumnName),
+);
+
+const showTableColumnsDraggable = computed(() =>
+	columns.value.filter(column => column.isDraggable),
+);
 
 const groupedTableColumns = computed(() => {
 	const grouped: { [x: string]: ITableColumn[] } = {};
@@ -30,7 +38,7 @@ const groupedTableColumns = computed(() => {
 });
 
 const layout = computed<IGridLayoutCell[]>(() =>
-	marketStore.showTableColumnsDraggable.map((item, index) => ({
+	showTableColumnsDraggable.value.map((item, index) => ({
 		x: 0,
 		y: index + 1,
 		w: 12,
@@ -54,7 +62,7 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 
 	const activeTableColumns = setPositionColumns(
 		[
-			marketStore.activeTableColumns[0],
+			columns.value[0],
 			...layout.value.map(item => ({
 				...item.data,
 				position: item.data.columnType === columnName ? y : item.y,
@@ -62,11 +70,20 @@ function handleUpdatePositionsColumns(columnName: string, _x: number, y: number)
 		].sort((a, b) => a.order - b.order),
 	);
 
-	marketStore.updateActiveTableColumns(activeTableColumns);
+	columns.value = activeTableColumns;
 }
 
-function handleToggleTab(columnName: string) {
-	marketStore.toggleShowActiveTableColumns(columnName);
+function toggleShowActiveTableColumns(columnType: ColumnType) {
+	columns.value = columns.value.map(column => {
+		if (column.columnType === columnType) {
+			return {
+				...column,
+				isShow: !column.isShow,
+			};
+		} else {
+			return column;
+		}
+	});
 }
 </script>
 
@@ -77,7 +94,7 @@ function handleToggleTab(columnName: string) {
 		<template #content>
 			<div>
 				<div
-					v-for="(columns, key) in groupedTableColumns"
+					v-for="(cols, key) in groupedTableColumns"
 					:key="key"
 					:class="classes.row"
 				>
@@ -88,10 +105,10 @@ function handleToggleTab(columnName: string) {
 					<div>
 						<div :class="classes.tabs">
 							<modal-filter-tab-wrapper
-								v-for="tab in columns"
+								v-for="tab in cols"
 								:key="tab.columnType"
-								:is-active="marketStore.showTableColumns.includes(tab.columnType)"
-								@click="handleToggleTab(tab.columnType)"
+								:is-active="showTableColumns.includes(tab.columnType)"
+								@click="toggleShowActiveTableColumns(tab.columnType)"
 							>
 								{{ tab.displayShortColumnName }} d
 							</modal-filter-tab-wrapper>

@@ -1,6 +1,6 @@
 import { ColumnType, type ISymbolCell, type INumberCell, type IPercentCell, type ITextCell } from '@/modules/cell';
 import type { TableRow } from './row';
-import { type ITableColumn, buildColumns, getShow } from './column';
+import { type ITableColumn, buildColumns } from './column';
 import type { Filters, IFilterValue, IFilterState, IIcon } from './filter';
 import { IconIds } from '@/shared/ui/icon';
 
@@ -52,8 +52,6 @@ export const CRYPTO_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 		},
 	]);
-
-export const CRYPTO_DEFAULT_SHOW_COLUMNS: ITableColumn[] = getShow(CRYPTO_ALL_COLUMNS);
 
 enum CryptoFilters {
 	Status = 'status',

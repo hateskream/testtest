@@ -17,3 +17,6 @@ export interface IFilterState {
 }
 
 export type Filters = Record<string, { state: IFilterState; readonly values: IFilterValue[] }>;
+
+export type FiltersValues = Record<string, IFilterValue[]>;
+export type FiltersState = Record<string, IFilterState>;

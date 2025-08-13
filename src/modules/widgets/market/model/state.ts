@@ -5,13 +5,13 @@ import type { ISort } from './sort';
 import type { Filters } from './filter';
 import { CRYPTO_ALL_COLUMNS, CRYPTO_FILTERS } from './crypto';
 
-interface ITableSettings {
+export interface ISettings {
 	column: ITableColumn[];
 	sort: ISort | null;
 	filters: Filters;
 }
 
-type SettingsByMarket = Partial<Record<MarketType, ITableSettings>>;
+type SettingsByMarket = Partial<Record<MarketType, ISettings>>;
 
 export interface IState {
 	activeMarket: MarketType;
@@ -29,8 +29,16 @@ const DEFAULT_STATE: IState = {
 	},
 };
 
-export function getDefaultsState(): IState {
+export function getDefaultState(): IState {
 	return structuredClone(DEFAULT_STATE);
+}
+
+export function getDefaultSettings(): ISettings {
+	return {
+		column: CRYPTO_ALL_COLUMNS,
+		sort: null,
+		filters: CRYPTO_FILTERS,
+	};
 }
 
 interface IColumnHydrateState {

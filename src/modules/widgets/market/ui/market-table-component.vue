@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { useMarketStore } from '../stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	ColumnType,
@@ -13,19 +12,19 @@ import type { ITableColumn, TableRow } from '../model';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
 interface IViewComponentProps {
-	markets: TableRow[];
+	rows: TableRow[];
 }
 
 const props = defineProps<IViewComponentProps>();
-const marketStore = useMarketStore();
 
+const columns = defineModel<ITableColumn[]>('columns', { required: true });
 
 const genericColumns = computed(() =>
-	mapColumn(marketStore.activeTableColumns),
+	mapColumn(columns.value),
 );
 
 const genericRows = computed(() =>
-	props.markets.map(ticker => mapRow(ticker)),
+	props.rows.map(ticker => mapRow(ticker)),
 );
 
 function mapColumn(marketColumns: ITableColumn[]) {

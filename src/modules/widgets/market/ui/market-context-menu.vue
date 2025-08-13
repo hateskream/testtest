@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { useMarketStore } from '../stores';
 import {
 	WidgetContextMenu,
 	ModalSubmenu,
 	ModalSubmenuContent,
 } from '../../base';
+import type { ITableColumn } from '../model';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
-
-const marketStore = useMarketStore();
 
 const props = defineProps<{
 	title: string;
 }>();
 
+const columns = defineModel<ITableColumn[]>({ required: true });
+
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'reset'): void;
 }>();
 </script>
 
@@ -23,7 +24,7 @@ const emit = defineEmits<{
 	<widget-context-menu
 		:title="props.title"
 		@delete="emit('delete')"
-		@reset="marketStore.resetAll"
+		@reset="emit('reset')"
 	>
 		<modal-submenu>
 			<template #title>Change display</template>
@@ -34,7 +35,7 @@ const emit = defineEmits<{
 						<modal-submenu>
 							<template #title> Column metrics </template>
 							<template #content>
-								<table-columns-settings-component />
+								<table-columns-settings-component v-model="columns" />
 							</template>
 						</modal-submenu>
 					</template>
