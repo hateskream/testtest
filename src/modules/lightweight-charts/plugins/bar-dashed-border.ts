@@ -29,18 +29,21 @@ export const barDashedBorderPlugin = {
 		args.meta.data.forEach(function (element) {
 			const { ctx } = chart;
 
+			// @ts-expect-error non-error, cause empty object provides by default
 			const half = element.width / 2;
 			const left = element.x - half;
 			const right = element.x + half;
 			const top = element.y;
 			const width = right - left;
+
+			// @ts-expect-error non-error, cause empty object provides by default
 			const { height } = element;
 
 			ctx.beginPath();
 			ctx.lineWidth = element.options.borderWidth;
 			ctx.strokeStyle = element.options.borderColor;
 
-			ctx.setLineDash([5, 5]);
+			ctx.setLineDash([3, 3]);
 
 			drawRoundedRect(ctx, left, top, width, height, element.options.borderRadius);
 
