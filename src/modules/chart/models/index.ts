@@ -218,21 +218,6 @@ export const chartStockSections: IChartWidgetSections = {
 			],
 		},
 		{
-			id: 'technicals',
-			title: 'Technicals',
-			component: CHART_SECTION_COMPONENT.TECHNICALS,
-			items: [
-				{
-					id: 'oscillators',
-					title: 'Oscillators',
-				},
-				{
-					id: 'moving-averages',
-					title: 'Moving Averages',
-				},
-			],
-		},
-		{
 			id: 'price-target',
 			title: 'Price Target',
 			component: CHART_SECTION_COMPONENT.PRICE_TARGET,
@@ -315,6 +300,21 @@ export const chartCryptoSections: IChartWidgetSections = {
 		},
 	],
 	center: [
+		{
+			id: 'technicals',
+			title: 'Technicals',
+			component: CHART_SECTION_COMPONENT.TECHNICALS,
+			items: [
+				{
+					id: 'oscillators',
+					title: 'Oscillators',
+				},
+				{
+					id: 'moving-averages',
+					title: 'Moving Averages',
+				},
+			],
+		},
 		{
 			id: 'valuation-and-estimates',
 			title: 'CAN BE REMOVED',
