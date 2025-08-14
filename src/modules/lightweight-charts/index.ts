@@ -13,6 +13,7 @@ import ChartTooltip from './ui/chart-tooltip.vue';
 import ChartEps from './ui/chart-eps.vue';
 import ChartTransactionAvg from './ui/chart-transaction-avg.vue';
 import ChartTransactionAvgTotal from './ui/chart-transaction-avg-total.vue';
+import ChartAnnualMarginTrends from './ui/chart-annual-margin-trends.vue';
 
 export {
 	Chart,
@@ -30,4 +31,5 @@ export {
 	ChartEps,
 	ChartTransactionAvg,
 	ChartTransactionAvgTotal,
+	ChartAnnualMarginTrends,
 };

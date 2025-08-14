@@ -19,7 +19,9 @@ import {
 	ChartSectionTechnicals,
 	SectionHoldings,
 	SectionTransactions,
+	ChartSectionAnnualMarginTrends,
 } from '@/modules/chart/components/sections';
+
 
 // Define enum for chart section components
 export enum CHART_SECTION_COMPONENT {
@@ -42,6 +44,7 @@ export enum CHART_SECTION_COMPONENT {
 	TECHNICALS = 'TECHNICALS',
 	HOLDINGS = 'HOLDINGS',
 	TRANSACTIONS = 'TRANSACTIONS',
+	ANNUAL_MARGIN_TRENDS = 'ANNUAL_MARGIN_TRENDS',
 }
 
 // Create mapping from enum to actual components
@@ -65,6 +68,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.TECHNICALS]: ChartSectionTechnicals,
 	[CHART_SECTION_COMPONENT.HOLDINGS]: SectionHoldings,
 	[CHART_SECTION_COMPONENT.TRANSACTIONS]: SectionTransactions,
+	[CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS]: ChartSectionAnnualMarginTrends,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -283,6 +287,11 @@ export const chartStockSections: IChartWidgetSections = {
 			title: 'Earnings per Share',
 			component: CHART_SECTION_COMPONENT.EPS,
 		},
+		{
+			id: 'annual-margin-trends',
+			title: 'Annual Margin Trends',
+			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
+		},
 	],
 	right: [
 		{
@@ -405,6 +414,11 @@ export const chartCryptoSections: IChartWidgetSections = {
 			id: 'transactions',
 			title: 'Transactions',
 			component: CHART_SECTION_COMPONENT.TRANSACTIONS,
+		},
+		{
+			id: 'annual-margin-trends',
+			title: 'CAN BE REMOVED',
+			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
 		},
 	],
 	right: [

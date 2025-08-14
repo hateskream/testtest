@@ -17,6 +17,7 @@ import { ChartSectionAnnualReturns } from './annual-returns';
 import { ChartSectionTechnicals } from './technicals';
 import { SectionTransactions } from './transactions';
 import { SectionHoldings } from './holdings';
+import { ChartSectionAnnualMarginTrends } from './annual-margin-trends';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -38,4 +39,5 @@ export {
 	ChartSectionTechnicals,
 	SectionHoldings,
 	SectionTransactions,
+	ChartSectionAnnualMarginTrends,
 };
