@@ -415,11 +415,6 @@ export const chartCryptoSections: IChartWidgetSections = {
 			title: 'Transactions',
 			component: CHART_SECTION_COMPONENT.TRANSACTIONS,
 		},
-		{
-			id: 'annual-margin-trends',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
-		},
 	],
 	right: [
 		{
