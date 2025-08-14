@@ -2,12 +2,9 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
-// import { ChartWidgetAnnualReturns } from '@/modules/chart/components/widgets/annual-returns';
+import { ChartWidgetOscillators } from '@/modules/chart/components/widgets/oscillators';
+import { ChartWidgetMovingAverages } from '@/modules/chart/components/widgets/moving-averages';
 import type { ISectionProps } from '@/modules/chart/models';
-
-// TODO: move to models
-
-// import type { IAnnualReturnsProps } from '@/modules/chart/components/widgets/annual-returns/chart-widget-annual-returns.vue';
 
 
 const props = defineProps<ISectionProps>();
@@ -42,8 +39,8 @@ onUnmounted(() => {
 		<template #body>
 			<div :class="classes.container">
 				<div :class="classes.peGroup">
-					<!-- <chart-widget-annual-returns /> -->
-					<!-- <chart-widget-annual-returns /> -->
+					<chart-widget-oscillators />
+					<chart-widget-moving-averages />
 				</div>
 			</div>
 		</template>

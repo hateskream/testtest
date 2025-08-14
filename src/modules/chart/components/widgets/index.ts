@@ -18,6 +18,8 @@ import { ChartWidgetStockPeersBulk } from './stock-peers-bulk';
 import { ChartWidgetValuation } from './valuation';
 import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
+import { ChartWidgetOscillators } from './oscillators';
+import { ChartWidgetMovingAverages } from './moving-averages';
 
 
 export {
@@ -41,4 +43,6 @@ export {
 	ChartWidgetValuation,
 	ChartWidgetYearlyRevenue,
 	ChartWidgetLinks,
+	ChartWidgetOscillators,
+	ChartWidgetMovingAverages,
 };
