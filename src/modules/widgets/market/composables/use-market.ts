@@ -92,14 +92,7 @@ export function useMarket(widgetId: string) {
 	watch(
 		() => state.value.activeMarket,
 		newMarket => {
-			const newSettings = state.value.settings[newMarket];
-			if (!newSettings) {
-				// eslint-disable-next-line no-console
-				console.error('No settings for market', newMarket);
-				return;
-			}
-
-			currentSettings.value = newSettings;
+			currentSettings.value = state.value.settings[newMarket];
 		},
 	), { immediate: true };
 

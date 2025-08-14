@@ -15,9 +15,17 @@ export interface ITableColumn {
 }
 
 enum Group {
-	Symbol = 'symbol',
-	Price = 'price',
-	Other = 'other',
+	Symbol = 'Symbol',
+	Price = 'Price',
+	PriceChart = 'Price chart',
+	PriceChange = 'Price change',
+	MarketCap = 'Market cap',
+	LastDividend = 'Last dividend',
+	Beta = 'Beta',
+	Volume = 'Volume',
+	Company = 'Company',
+	Source = 'Source',
+	Other = 'Other',
 }
 
 const columnTypeToGroup: Record<ColumnType, Group> = {
@@ -32,35 +40,36 @@ const columnTypeToGroup: Record<ColumnType, Group> = {
 	[ColumnType.PriceAvg200d]: Group.Other,
 	[ColumnType.Price1yRange]: Group.Other,
 
-	[ColumnType.Price24hChart]: Group.Other,
-	[ColumnType.Price7dChart]: Group.Other,
-	[ColumnType.Price30dChart]: Group.Other,
+	[ColumnType.Price24hChart]: Group.PriceChart,
+	[ColumnType.Price7dChart]: Group.PriceChart,
+	[ColumnType.Price30dChart]: Group.PriceChart,
 
-	[ColumnType.ChangePrice24h]: Group.Other,
-	[ColumnType.ChangePrice1hPercent]: Group.Other,
-	[ColumnType.ChangePrice24hPercent]: Group.Other,
-	[ColumnType.ChangePrice7dPercent]: Group.Other,
-	[ColumnType.ChangePrice30dPercent]: Group.Other,
+	[ColumnType.ChangePrice24h]: Group.PriceChange,
+	[ColumnType.ChangePrice1hPercent]: Group.PriceChange,
+	[ColumnType.ChangePrice24hPercent]: Group.PriceChange,
+	[ColumnType.ChangePrice7dPercent]: Group.PriceChange,
+	[ColumnType.ChangePrice30dPercent]: Group.PriceChange,
 
-	[ColumnType.Volume24h]: Group.Other,
-	[ColumnType.VolumeRel10d]: Group.Other,
-	[ColumnType.VolumeAvg10d]: Group.Other,
+	[ColumnType.Volume24h]: Group.Volume,
+	[ColumnType.VolumeRel10d]: Group.Volume,
+	[ColumnType.VolumeAvg10d]: Group.Volume,
+	[ColumnType.VolumeAvg50d]: Group.Volume,
 
-	[ColumnType.MarketCap24h]: Group.Other,
+	[ColumnType.MarketCap24h]: Group.MarketCap,
 
 	[ColumnType.RSIValue]: Group.Other,
 	[ColumnType.RSIChart]: Group.Other,
 
-	[ColumnType.Beta5y]: Group.Other,
+	[ColumnType.Beta5y]: Group.Beta,
 
-	[ColumnType.LastDividend]: Group.Other,
+	[ColumnType.LastDividend]: Group.LastDividend,
 
-	[ColumnType.Employees]: Group.Other,
-	[ColumnType.IpODate]: Group.Other,
-	[ColumnType.Sector]: Group.Other,
-	[ColumnType.Industry]: Group.Other,
+	[ColumnType.Employees]: Group.Company,
+	[ColumnType.IpODate]: Group.Company,
+	[ColumnType.Sector]: Group.Company,
+	[ColumnType.Industry]: Group.Company,
 
-	[ColumnType.Source]: Group.Other,
+	[ColumnType.Source]: Group.Source,
 
 	[ColumnType.ListingDate]: Group.Other,
 

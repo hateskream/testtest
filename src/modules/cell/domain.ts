@@ -23,6 +23,8 @@ export enum ColumnType {
 	Volume24h = 'volume24h',
 	VolumeRel10d = 'volumeRel10d',
 	VolumeAvg10d = 'volumeAvg10d',
+	VolumeAvg50d = 'volumeAvg50d',
+
 
 	MarketCap24h = 'marketCap24h',
 
@@ -205,6 +207,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Volume24h]: CellType.Number,
 	[ColumnType.VolumeRel10d]: CellType.Number,
 	[ColumnType.VolumeAvg10d]: CellType.Number,
+	[ColumnType.VolumeAvg50d]: CellType.Number,
 
 	[ColumnType.MarketCap24h]: CellType.Number,
 

@@ -5,25 +5,20 @@ import {
 	type NumberDto,
 	type PercentDto,
 	type TextDto,
-	CellType,
 	ColumnType,
-	SymbolType,
-	Trend,
-	type ISymbolCell,
-	type INumberCell,
-	type IPercentCell,
-	type ITextCell,
-	Magnitude,
 	mapSymbol,
 	mapNumber,
 	mapPercent,
-	type IEmptyCell,
 	isEmptyCell,
 	mapText,
+	mapRange,
+	type SvgChartDto,
+	mapSvgChart,
 } from '@/modules/cell';
 import type { CryptoTableRow } from '../model/crypto';
 import type { MarketType } from '@/modules/market';
 import type { ISelectedFilter, ISort } from '../model';
+import { mockTickers } from './mock/crypto';
 
 const IS_USE_MOCK = true;
 
@@ -35,14 +30,25 @@ interface IGetMarketRequest {
 	offset: number;
 }
 
-interface ITicker {
+export interface ITicker {
 	tickerId: string;
 	[ColumnType.Symbol]: SymbolDto;
 	[ColumnType.PriceCurrent]: NumberDto;
 	[ColumnType.ChangePrice24hPercent]: PercentDto;
 	[ColumnType.Volume24h]: NumberDto;
+	[ColumnType.PriceAvg50d]: NumberDto;
+	// [ColumnType.Price1yRange]: RangeDto;
 	[ColumnType.MarketCap24h]: NumberDto;
-	[ColumnType.ListingDate]: TextDto;
+	[ColumnType.Beta5y]: NumberDto;
+	[ColumnType.LastDividend]: NumberDto;
+	[ColumnType.ChangePrice24h]: NumberDto;
+	[ColumnType.VolumeAvg10d]: NumberDto;
+	[ColumnType.Employees]: TextDto;
+	[ColumnType.IpODate]: TextDto;
+	[ColumnType.Sector]: TextDto;
+	[ColumnType.Industry]: TextDto;
+	[ColumnType.Source]: TextDto;
+	[ColumnType.Price24hChart]: SvgChartDto;
 }
 
 interface IPagination {
@@ -93,264 +99,36 @@ function prepareResponse({ tickers, pagination }: IData): IPreparedResponse {
 				[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
 				[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
 				[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
+				[ColumnType.PriceAvg50d]: mapNumber(ticker[ColumnType.PriceAvg50d]),
+				// [ColumnType.Price1yRange]: mapRange(ticker[ColumnType.Price1yRange]),
 				[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
-				[ColumnType.ListingDate]: mapText(ticker[ColumnType.ListingDate]),
+				[ColumnType.Beta5y]: mapNumber(ticker[ColumnType.Beta5y]),
+				[ColumnType.LastDividend]: mapNumber(ticker[ColumnType.LastDividend]),
+				[ColumnType.ChangePrice24h]: mapNumber(ticker[ColumnType.ChangePrice24h]),
+				[ColumnType.VolumeAvg10d]: mapNumber(ticker[ColumnType.VolumeAvg10d]),
+				[ColumnType.Employees]: mapText(ticker[ColumnType.Employees]),
+				[ColumnType.IpODate]: mapText(ticker[ColumnType.IpODate]),
+				[ColumnType.Sector]: mapText(ticker[ColumnType.Sector]),
+				[ColumnType.Industry]: mapText(ticker[ColumnType.Industry]),
+				[ColumnType.Source]: mapText(ticker[ColumnType.Source]),
+				[ColumnType.Price24hChart]: mapSvgChart(ticker[ColumnType.Price24hChart]),
 			}))
-			.filter(isNotEmptyTicker) satisfies CryptoTableRow[],
+			.filter(
+				ticker =>
+					Object
+						.values(ticker)
+						.map((maybeCell) => {
+							if (typeof maybeCell === 'string') {
+								return null;
+							}
+							return maybeCell;
+						})
+						.filter(el => el !== null)
+						.every(cell => !isEmptyCell(cell)),
+			) as CryptoTableRow[],
 		pagination,
 	};
 }
-
-function isNotEmptyTicker(ticker: {
-	[ColumnType.Symbol]: ISymbolCell | IEmptyCell;
-	[ColumnType.PriceCurrent]: INumberCell | IEmptyCell;
-	[ColumnType.ChangePrice24hPercent]: IPercentCell | IEmptyCell;
-	[ColumnType.Volume24h]: INumberCell | IEmptyCell;
-	[ColumnType.MarketCap24h]: INumberCell | IEmptyCell;
-	[ColumnType.ListingDate]: ITextCell | IEmptyCell;
-}): ticker is CryptoTableRow {
-	return (
-		!isEmptyCell(ticker[ColumnType.Symbol]) &&
-		!isEmptyCell(ticker[ColumnType.PriceCurrent]) &&
-		!isEmptyCell(ticker[ColumnType.ChangePrice24hPercent]) &&
-		!isEmptyCell(ticker[ColumnType.Volume24h]) &&
-		!isEmptyCell(ticker[ColumnType.MarketCap24h]) &&
-		!isEmptyCell(ticker[ColumnType.ListingDate])
-	);
-}
-
-const mockData: ITicker[] = [
-	{
-		tickerId: '1',
-		[ColumnType.Symbol]: {
-			cellType: CellType.Symbol,
-			columnType: ColumnType.Symbol,
-			symbolType: SymbolType.Crypto,
-			srcImg: '1',
-			ticker: 'ADA',
-			blockchain: 'Example Blockchain',
-		},
-		[ColumnType.PriceCurrent]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.PriceCurrent,
-			value: '137.4',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ChangePrice24hPercent]: {
-			cellType: CellType.Percent,
-			columnType: ColumnType.ChangePrice24hPercent,
-			value: '0',
-			trend: Trend.NEUTRAL,
-		},
-		[ColumnType.Volume24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.Volume24h,
-			value: '11723737.43',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.MarketCap24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.MarketCap24h,
-			value: '22737283.45',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ListingDate]: {
-			cellType: CellType.Text,
-			columnType: ColumnType.ListingDate,
-			value: new Date('2024-04-30').toString(),
-		},
-	},
-	{
-		tickerId: '2',
-		[ColumnType.Symbol]: {
-			cellType: CellType.Symbol,
-			columnType: ColumnType.Symbol,
-			symbolType: SymbolType.Crypto,
-			srcImg: '1',
-			ticker: 'BNB',
-			blockchain: 'Example Blockchain',
-		},
-		[ColumnType.PriceCurrent]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.PriceCurrent,
-			value: '137.4',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ChangePrice24hPercent]: {
-			cellType: CellType.Percent,
-			columnType: ColumnType.ChangePrice24hPercent,
-			value: '0',
-			trend: Trend.NEUTRAL,
-		},
-		[ColumnType.Volume24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.Volume24h,
-			value: '11723737.43',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.MarketCap24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.MarketCap24h,
-			value: '22737283.45',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ListingDate]: {
-			cellType: CellType.Text,
-			columnType: ColumnType.ListingDate,
-			value: new Date('2024-04-30').toString(),
-		},
-	},
-	{
-		tickerId: '3',
-		[ColumnType.Symbol]: {
-			cellType: CellType.Symbol,
-			columnType: ColumnType.Symbol,
-			symbolType: SymbolType.Crypto,
-			srcImg: '1',
-			ticker: 'BNB',
-			blockchain: 'Example Blockchain',
-		},
-		[ColumnType.PriceCurrent]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.PriceCurrent,
-			value: '137.4',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ChangePrice24hPercent]: {
-			cellType: CellType.Percent,
-			columnType: ColumnType.ChangePrice24hPercent,
-			value: '0',
-			trend: Trend.NEUTRAL,
-		},
-		[ColumnType.Volume24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.Volume24h,
-			value: '11723737.43',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.MarketCap24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.MarketCap24h,
-			value: '22737283.45',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ListingDate]: {
-			cellType: CellType.Text,
-			columnType: ColumnType.ListingDate,
-			value: new Date('2024-04-30').toString(),
-		},
-	},
-	{
-		tickerId: '4',
-		[ColumnType.Symbol]: {
-			cellType: CellType.Symbol,
-			columnType: ColumnType.Symbol,
-			symbolType: SymbolType.Crypto,
-			srcImg: '1',
-			ticker: 'BNB',
-			blockchain: 'Example Blockchain',
-		},
-		[ColumnType.PriceCurrent]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.PriceCurrent,
-			value: '137.4',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ChangePrice24hPercent]: {
-			cellType: CellType.Percent,
-			columnType: ColumnType.ChangePrice24hPercent,
-			value: '0.3',
-			trend: Trend.UP,
-		},
-		[ColumnType.Volume24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.Volume24h,
-			value: '11723737.43',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.MarketCap24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.MarketCap24h,
-			value: '22737283.45',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ListingDate]: {
-			cellType: CellType.Text,
-			columnType: ColumnType.ListingDate,
-			value: new Date('2024-04-30').toString(),
-		},
-	},
-	{
-		tickerId: '5',
-		[ColumnType.Symbol]: {
-			cellType: CellType.Symbol,
-			columnType: ColumnType.Symbol,
-			symbolType: SymbolType.Crypto,
-			srcImg: '1',
-			ticker: 'BNB',
-			blockchain: 'Example Blockchain',
-		},
-		[ColumnType.PriceCurrent]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.PriceCurrent,
-			value: '137.4',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ChangePrice24hPercent]: {
-			cellType: CellType.Percent,
-			columnType: ColumnType.ChangePrice24hPercent,
-			value: '1',
-			trend: Trend.NEUTRAL,
-		},
-		[ColumnType.Volume24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.Volume24h,
-			value: '11723737.43',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.MarketCap24h]: {
-			cellType: CellType.Number,
-			columnType: ColumnType.MarketCap24h,
-			value: '22737283.45',
-			currencySymbol: '$',
-			magnitude: Magnitude.BILLION,
-			trend: Trend.UP,
-		},
-		[ColumnType.ListingDate]: {
-			cellType: CellType.Text,
-			columnType: ColumnType.ListingDate,
-			value: new Date('2024-04-30').toString(),
-		},
-	},
-];
 
 async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
@@ -364,7 +142,7 @@ async function getMockData(): Promise<IGetMarketResponse> {
 				limit: 10,
 				total: 10,
 			},
-			tickers: mockData,
+			tickers: mockTickers,
 		},
 	};
 

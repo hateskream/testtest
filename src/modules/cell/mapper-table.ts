@@ -7,9 +7,9 @@ import {
 	isSymbolCell,
 	isNumberCell,
 	isPercentCell,
-	isEmptyCell,
 	isRangeCell,
 	isSvgChartCell,
+	isTextCell,
 } from './check';
 import { getMagnitudeText } from './display';
 import {
@@ -36,14 +36,6 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 };
 
 export function mapCellToTable(cell: Cell) {
-	if (
-		isEmptyCell(cell) ||
-		isSvgChartCell(cell) ||
-		isRangeCell(cell)
-	) {
-		throw new Error(`Not supported ${cell.cellType} cell`);
-	}
-
 	if (isSymbolCell(cell)) {
 		return mapSymbolToTable(cell);
 	}
@@ -56,7 +48,19 @@ export function mapCellToTable(cell: Cell) {
 		return mapPercentToTable(cell);
 	}
 
-	return mapTextToTable(cell);
+	if (isTextCell(cell)) {
+		return mapTextToTable(cell);
+	}
+
+	if (isSvgChartCell(cell)) {
+		return mapSvgChartToTable(cell);
+	}
+
+	if (isRangeCell(cell)) {
+		return mapRangeToTable(cell);
+	}
+
+	return mapEmptyToTable(cell);
 }
 
 function mapSymbolToTable(cell: ISymbolCell) {
@@ -96,7 +100,6 @@ function mapSymbolToTable(cell: ISymbolCell) {
 		};
 	}
 
-	// isForexSymbolCell
 	return {
 		symbolType: cell.symbolType,
 		rightSrcImg: cell.rightSrcImg,
@@ -123,5 +126,23 @@ function mapPercentToTable(cell: IPercentCell) {
 function mapTextToTable(cell: ITextCell) {
 	return {
 		value: cell.value,
+	};
+}
+
+function mapSvgChartToTable(_: Cell) {
+	return {
+		value: '-',
+	};
+}
+
+function mapRangeToTable(_: Cell) {
+	return {
+		value: '-',
+	};
+}
+
+function mapEmptyToTable(_: Cell) {
+	return {
+		value: '-',
 	};
 }

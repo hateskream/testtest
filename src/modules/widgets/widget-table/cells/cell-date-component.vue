@@ -9,7 +9,14 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const formattedValue = computed(() => new Date(props.data.value).toLocaleDateString('ru-RU'));
+const formattedValue = computed(() => {
+	try {
+		return new Date(props.data.value).toLocaleDateString('ru-RU');
+	} catch {
+		console.log('error date', props.data);
+		return '—';
+	}
+});
 </script>
 
 <template>

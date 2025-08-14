@@ -1,0 +1,126 @@
+import { CellType, ColumnType, Magnitude, SymbolType, Trend } from '@/modules/cell';
+import type { ITicker } from '../get-market';
+
+
+export const mockTickers: ITicker[] = [
+	{
+		tickerId: 'BTC',
+		[ColumnType.Symbol]: {
+			cellType: CellType.Symbol,
+			columnType: ColumnType.Symbol,
+			symbolType: SymbolType.Crypto,
+			srcImg: '1',
+			ticker: 'ADA',
+			blockchain: 'Example Blockchain',
+		},
+		[ColumnType.PriceCurrent]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.PriceCurrent,
+			value: '137.4',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.ChangePrice24hPercent]: {
+			cellType: CellType.Percent,
+			columnType: ColumnType.ChangePrice24hPercent,
+			value: '0',
+			trend: Trend.NEUTRAL,
+		},
+		[ColumnType.Volume24h]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '11.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.PriceAvg50d]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.Volume24h,
+			value: '37.43',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		// [ColumnType.Price1yRange]: {
+		// 	cellType: CellType.Range,
+		// 	columnType: ColumnType.Price1yRange,
+		// 	currencySymbol: '$',
+		// 	startValue: '11723737.43',
+		// 	endValue: '11723737.43',
+		// 	startMagnitude: Magnitude.BILLION,
+		// 	endMagnitude: Magnitude.BILLION,
+		// },
+		[ColumnType.MarketCap24h]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '72.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.Beta5y]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '37.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.LastDividend]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '72.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.ChangePrice24h]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.MarketCap24h,
+			value: '72.45',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.VolumeAvg10d]: {
+			cellType: CellType.Number,
+			columnType: ColumnType.VolumeAvg10d,
+			value: '23',
+			currencySymbol: '$',
+			magnitude: Magnitude.BILLION,
+			trend: Trend.UP,
+		},
+		[ColumnType.Employees]: {
+			cellType: CellType.Text,
+			columnType: ColumnType.Employees,
+			value: '2',
+		},
+		[ColumnType.IpODate]: {
+			cellType: CellType.Text,
+			columnType: ColumnType.IpODate,
+			value: '27.09.2002',
+		},
+		[ColumnType.Sector]: {
+			cellType: CellType.Text,
+			columnType: ColumnType.Sector,
+			value: 'Some sector',
+		},
+		[ColumnType.Industry]: {
+			cellType: CellType.Text,
+			columnType: ColumnType.Industry,
+			value: 'Some industry',
+		},
+		[ColumnType.Source]: {
+			cellType: CellType.Text,
+			columnType: ColumnType.Source,
+			value: 'Some source',
+		},
+		[ColumnType.Price24hChart]: {
+			cellType: CellType.SvgChart,
+			columnType: ColumnType.Price24hChart,
+			src: '-',
+		},
+	},
+];
