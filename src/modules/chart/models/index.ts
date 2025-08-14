@@ -287,11 +287,6 @@ export const chartStockSections: IChartWidgetSections = {
 			title: 'Earnings per Share',
 			component: CHART_SECTION_COMPONENT.EPS,
 		},
-		{
-			id: 'annual-margin-trends',
-			title: 'Annual Margin Trends',
-			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
-		},
 	],
 	right: [
 		{
