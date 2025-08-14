@@ -62,7 +62,7 @@ const filledColor = computed(() => {
 			<div
 				v-for="index in chartZones.leftBar"
 				:key="index"
-				:class="[classes.bar, { [classes.outlineActive]: isNegative }]"
+				:class="[classes.bar, { [classes.activeBar]: isNegative }]"
 			/>
 
 			<div
@@ -76,7 +76,7 @@ const filledColor = computed(() => {
 			<div
 				v-for="index in chartZones.rightBar"
 				:key="index"
-				:class="[classes.bar, { [classes.outlineActive]: isPositive }]"
+				:class="[classes.bar, { [classes.activeBar]: isPositive }]"
 			/>
 		</div>
 	</div>
@@ -113,7 +113,7 @@ const filledColor = computed(() => {
 	filter: brightness(90%);
 }
 
-.outlineActive {
+.activeBar {
 	background: v-bind(filledColor);
 	filter: brightness(60%), contrast(10%);
 }
