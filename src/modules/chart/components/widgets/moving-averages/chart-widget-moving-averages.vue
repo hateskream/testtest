@@ -2,30 +2,38 @@
 import { computed, ref } from 'vue';
 
 import { ChartCommonWidgetLayout } from '../../shared/ui';
+import type { IMovingAveragesSignal } from './models/moving-averages';
+import { getDefaultMovingAveragesViewState } from './models/moving-averages';
 
-import FearGreedDashboard from '@/modules/widgets/fear-greed/ui/view-component.vue';
+import MovingAveragesChart from './moving-averages-chart.vue';
 
-const tension = ref(22);
-const status = ref('negative');
-const summary = ref('Sell');
-const randomTension = () => {
-	tension.value = Math.floor(Math.random() * 100) + 1;
-	if (tension.value < 25) {
-		status.value = 'negative';
-		summary.value = 'Sell';
-	} else if (tension.value > 75) {
-		status.value = 'positive';
-		summary.value = 'Buy';
+const signal = ref<IMovingAveragesSignal>({
+	signal: 22,
+	summary: 'Sell',
+});
+
+const randomSignal = () => {
+	const newSignal = Math.floor(Math.random() * 100) + 1;
+	signal.value.signal = newSignal;
+
+	if (newSignal <= 20) {
+		signal.value.summary = 'Strong Sell';
+	} else if (newSignal <= 40) {
+		signal.value.summary = 'Sell';
+	} else if (newSignal <= 60) {
+		signal.value.summary = 'Neutral';
+	} else if (newSignal <= 80) {
+		signal.value.summary = 'Buy';
 	} else {
-		status.value = 'neutral';
-		summary.value = 'Hold';
+		signal.value.summary = 'Strong Buy';
 	}
 };
 
 const colorByStatus = computed(() => {
-	return status.value === 'negative' ?
+	const { summary } = signal.value;
+	return summary === 'Strong Sell' || summary === 'Sell' ?
 		'var(--text-color-negative-500)' :
-		status.value === 'positive' ?
+		summary === 'Strong Buy' || summary === 'Buy' ?
 			'var(--text-color-positive-500)' :
 			'var(--text-color-base-500)';
 });
@@ -40,16 +48,16 @@ const colorByStatus = computed(() => {
 					:class="classes.summary"
 					:style="{color: colorByStatus}"
 				>
-					{{ summary }}
+					{{ signal.summary }}
 				</div>
 			</div>
 		</template>
 		<template #body>
-			<fear-greed-dashboard
-				:tension="{tension:tension}"
+			<moving-averages-chart
+				:signal="signal"
 				:size="{h:3, w:3}"
-				:view-state="{isShowChart: true, isShowDescription: true, isShowPastValues: true, isShowName: true}"
-				@update-interactive="randomTension"
+				:view-state="getDefaultMovingAveragesViewState()"
+				@update-interactive="randomSignal"
 			/>
 		</template>
 	</chart-common-widget-layout>
