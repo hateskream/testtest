@@ -13,6 +13,7 @@ import { ChartSectionIncomeStatement } from './income-statement';
 import { ChartSectionPricePerformance } from './price-performance';
 import { ChartSectionPriceEarnings } from './price-earnings';
 import { ChartSectionTradingVolume } from './trading-volume';
+import { ChartSectionAnnualReturns } from './annual-returns';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -30,4 +31,5 @@ export {
 	ChartSectionIncomeStatement,
 	ChartSectionPricePerformance,
 	ChartSectionTradingVolume,
+	ChartSectionAnnualReturns,
 };

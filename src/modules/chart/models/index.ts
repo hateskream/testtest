@@ -15,6 +15,7 @@ import {
 	ChartSectionPricePerformance,
 	ChartSectionPriceEarnings,
 	ChartSectionTradingVolume,
+	ChartSectionAnnualReturns,
 } from '@/modules/chart/components/sections';
 
 // Define enum for chart section components
@@ -34,6 +35,7 @@ export enum CHART_SECTION_COMPONENT {
 	PRICE_PERFORMANCE = 'PRICE_PERFORMANCE',
 	PRICE_EARNINGS = 'PRICE_EARNINGS',
 	TRADING_VOLUME = 'TRADING_VOLUME',
+	ANNUAL_RETURNS = 'ANNUAL_RETURNS',
 }
 
 // Create mapping from enum to actual components
@@ -53,6 +55,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.PRICE_PERFORMANCE]: ChartSectionPricePerformance,
 	[CHART_SECTION_COMPONENT.PRICE_EARNINGS]: ChartSectionPriceEarnings,
 	[CHART_SECTION_COMPONENT.TRADING_VOLUME]: ChartSectionTradingVolume,
+	[CHART_SECTION_COMPONENT.ANNUAL_RETURNS]: ChartSectionAnnualReturns,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -193,6 +196,21 @@ export const chartStockSections: IChartWidgetSections = {
 				{
 					id: 'trading-volume-2',
 					title: 'Trading Volume',
+				},
+			],
+		},
+		{
+			id: 'annual-returns',
+			title: 'Annual Returns',
+			component: CHART_SECTION_COMPONENT.ANNUAL_RETURNS,
+			items: [
+				{
+					id: 'annual-returns-1',
+					title: 'Annual Returns',
+				},
+				{
+					id: 'annual-returns-2',
+					title: 'Annual Returns',
 				},
 			],
 		},
