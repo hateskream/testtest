@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import { useElementSize, useWindowSize } from '@vueuse/core';
 
 import { useChartStore } from '@/modules/chart/store';
@@ -15,15 +15,16 @@ import {
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
 
-const { randomizeExchanges } = useChartStore();
+const { randomizeExchanges, setMode } = useChartStore();
 
 
 export interface IChartComponentProps {
 	type: 'stock' | 'crypto';
 }
+
 const props = defineProps<IChartComponentProps>();
 
-const chartWidgetSections = computed(()=> {
+const chartWidgetSections = computed(() => {
 	if (props.type === 'stock') {
 		return chartStockSections;
 	}
@@ -115,6 +116,15 @@ const explorerData = computed(() => {
 const leftSections = computed(() => chartWidgetSections.value.left);
 const centerSections = computed(() => chartWidgetSections.value.center);
 const rightSections = computed(() => chartWidgetSections.value.right);
+
+onMounted(() => {
+	if (props.type === 'stock') {
+		setMode('stock');
+	} else {
+		setMode('crypto');
+	}
+});
+
 </script>
 
 <template>
@@ -125,7 +135,7 @@ const rightSections = computed(() => chartWidgetSections.value.right);
 		@animation-end="endDisableScroll"
 	>
 		<template #header>
-			<chart-header-component />
+			<chart-header-component :type="props.type" />
 		</template>
 
 		<template #topContent>

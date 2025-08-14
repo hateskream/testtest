@@ -306,7 +306,7 @@ export const chartCryptoSections: IChartWidgetSections = {
 	left: [
 		{
 			id: 'price-performance',
-			title: 'CAN BE REMOVED',
+			title: 'Price performance',
 			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
 		},
 		{
@@ -331,81 +331,6 @@ export const chartCryptoSections: IChartWidgetSections = {
 			],
 		},
 		{
-			id: 'valuation-and-estimates',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.VALUATIONS_AND_ESTIMATES,
-			items: [
-				{
-					id: 'valuation-metrics',
-					title: 'CAN BE REMOVED',
-				},
-				{
-					id: 'capital-structure',
-					title: 'CAN BE REMOVED',
-				},
-			],
-		},
-		{
-			id: 'price-target',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.PRICE_TARGET,
-			items: [
-				{
-					id: 'price-target-history',
-					title: 'CAN BE REMOVED',
-				},
-				{
-					id: 'price-target-analysis',
-					title: 'CAN BE REMOVED',
-				},
-			],
-		},
-		{
-			id: 'yearly-revenue',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.YEARLY_REVENUE,
-		},
-		{
-			id: 'chart-peers-bulks',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.STOCK_PEERS_BULK,
-		},
-		{
-			id: 'quarterly-revenue',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.QUARTERLY_REVENUE,
-		},
-		{
-			id: 'peer-analysis',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.PEER_ANALYSIS,
-		},
-		{
-			id: 'insider-trading',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.INSIDER_TRADING,
-		},
-		{
-			id: 'dividends',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.DIVIDENDS,
-		},
-		{
-			id: 'balance-sheet',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.BALANCE_SHEET,
-		},
-		{
-			id: 'income-statement',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.INCOME_STATEMENT,
-		},
-		{
-			id: 'eps',
-			title: 'CAN BE REMOVED',
-			component: CHART_SECTION_COMPONENT.EPS,
-		},
-		{
 			id: 'holdings',
 			title: 'Holdings',
 			component: CHART_SECTION_COMPONENT.HOLDINGS,
@@ -419,7 +344,7 @@ export const chartCryptoSections: IChartWidgetSections = {
 	right: [
 		{
 			id: 'insight-and-activity',
-			title: 'CAN BE REMOVED',
+			title: 'Insights and activity',
 			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
 		},
 	],

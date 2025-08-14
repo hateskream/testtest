@@ -4,12 +4,18 @@ import { ref, computed } from 'vue';
 import { IconIds } from '@/shared/ui/icon';
 import type { IPeriodData, IPriceRange, IExchange } from '../models';
 
+export type StoreMode = 'crypto' | 'stock';
+
 export const useChartStore = defineStore('chart', () => {
-	// Color state
+	// Mode state
+	const mode = ref<StoreMode>('stock');
+
+	// Color state - default to stock colors since we start in stock mode
 	const bgColor = ref('230, 23, 53');
 	const bgColorShadow = ref('230 23 53 /');
 
-	const exchanges = ref<IExchange[]>([
+	// Stock exchanges (Tesla)
+	const stockExchanges = ref<IExchange[]>([
 		{
 			id: 1,
 			source: 'NASDAQ',
@@ -548,8 +554,350 @@ export const useChartStore = defineStore('chart', () => {
 		},
 	]);
 
-	const activeExchangeId = ref(
-		exchanges.value.find(exchange => exchange.isPrimary)?.id || 1,
+	// Crypto exchanges (Bitcoin)
+	const cryptoExchanges = ref<IExchange[]>([
+		{
+			id: 1,
+			source: 'BINANCE',
+			fullName: 'Binance',
+			symbol: 'BTCUSDT',
+			currency: 'USDT',
+			currency_symbol: '$',
+			displaySymbol: 'BTC/USDT',
+			isPrimary: true,
+			price: 91234.56,
+			change: {
+				points: 1234.56,
+				percentage: 1.37,
+			},
+			openTime: '00:00:00',
+			closeTime: '23:59:59',
+			iconId: IconIds.TSX,
+			periods: {
+				'1D': {
+					min: 89123.45,
+					max: 92456.78,
+					current: 91234.56,
+					start: 90000.00,
+					symbol: '$',
+				},
+				'1W': {
+					min: 87500.00,
+					max: 94000.00,
+					current: 91234.56,
+					start: 88750.00,
+					symbol: '$',
+				},
+				'1M': {
+					min: 82000.00,
+					max: 98500.00,
+					current: 91234.56,
+					start: 85200.00,
+					symbol: '$',
+				},
+				'3M': {
+					min: 75000.00,
+					max: 105000.00,
+					current: 91234.56,
+					start: 78900.00,
+					symbol: '$',
+				},
+				'1Y': {
+					min: 42000.00,
+					max: 108000.00,
+					current: 91234.56,
+					start: 45300.00,
+					symbol: '$',
+				},
+			},
+			allTime: {
+				high: {
+					value: 108135.83,
+					date: '2024-12-17',
+					percentage: -15.63,
+				},
+				low: {
+					value: 15476.20,
+					date: '2022-11-21',
+					percentage: 489.34,
+				},
+			},
+		},
+		{
+			id: 2,
+			source: 'COINBASE',
+			fullName: 'Coinbase Pro',
+			symbol: 'BTC-USD',
+			currency: 'USD',
+			currency_symbol: '$',
+			displaySymbol: 'BTC/USD',
+			isPrimary: false,
+			price: 91187.23,
+			change: {
+				points: 1187.23,
+				percentage: 1.32,
+			},
+			openTime: '00:00:00',
+			closeTime: '23:59:59',
+			iconId: IconIds.TSX,
+			periods: {
+				'1D': {
+					min: 89076.12,
+					max: 92409.45,
+					current: 91187.23,
+					start: 89952.77,
+					symbol: '$',
+				},
+				'1W': {
+					min: 87452.33,
+					max: 93952.88,
+					current: 91187.23,
+					start: 88702.55,
+					symbol: '$',
+				},
+				'1M': {
+					min: 81952.44,
+					max: 98452.11,
+					current: 91187.23,
+					start: 85152.66,
+					symbol: '$',
+				},
+				'3M': {
+					min: 74952.77,
+					max: 104952.33,
+					current: 91187.23,
+					start: 78852.88,
+					symbol: '$',
+				},
+				'1Y': {
+					min: 41952.11,
+					max: 107952.44,
+					current: 91187.23,
+					start: 45252.55,
+					symbol: '$',
+				},
+			},
+			allTime: {
+				high: {
+					value: 108088.50,
+					date: '2024-12-17',
+					percentage: -15.61,
+				},
+				low: {
+					value: 15428.87,
+					date: '2022-11-21',
+					percentage: 491.12,
+				},
+			},
+		},
+		{
+			id: 3,
+			source: 'KRAKEN',
+			fullName: 'Kraken',
+			symbol: 'XBTUSD',
+			currency: 'USD',
+			currency_symbol: '$',
+			displaySymbol: 'XBT/USD',
+			isPrimary: false,
+			price: 91156.78,
+			change: {
+				points: 1156.78,
+				percentage: 1.29,
+			},
+			openTime: '00:00:00',
+			closeTime: '23:59:59',
+			iconId: IconIds.TSX,
+			periods: {
+				'1D': {
+					min: 89045.67,
+					max: 92378.90,
+					current: 91156.78,
+					start: 89922.34,
+					symbol: '$',
+				},
+				'1W': {
+					min: 87421.89,
+					max: 93922.45,
+					current: 91156.78,
+					start: 88672.12,
+					symbol: '$',
+				},
+				'1M': {
+					min: 81922.01,
+					max: 98421.67,
+					current: 91156.78,
+					start: 85122.23,
+					symbol: '$',
+				},
+				'3M': {
+					min: 74922.34,
+					max: 104921.89,
+					current: 91156.78,
+					start: 78822.45,
+					symbol: '$',
+				},
+				'1Y': {
+					min: 41921.67,
+					max: 107922.01,
+					current: 91156.78,
+					start: 45222.12,
+					symbol: '$',
+				},
+			},
+			allTime: {
+				high: {
+					value: 108057.92,
+					date: '2024-12-17',
+					percentage: -15.63,
+				},
+				low: {
+					value: 15398.45,
+					date: '2022-11-21',
+					percentage: 492.01,
+				},
+			},
+		},
+		{
+			id: 4,
+			source: 'BYBIT',
+			fullName: 'Bybit',
+			symbol: 'BTCUSDT',
+			currency: 'USDT',
+			currency_symbol: '$',
+			displaySymbol: 'BTC/USDT',
+			isPrimary: false,
+			price: 91245.67,
+			change: {
+				points: 1245.67,
+				percentage: 1.38,
+			},
+			openTime: '00:00:00',
+			closeTime: '23:59:59',
+			iconId: IconIds.TSX,
+			periods: {
+				'1D': {
+					min: 89134.56,
+					max: 92467.89,
+					current: 91245.67,
+					start: 90011.11,
+					symbol: '$',
+				},
+				'1W': {
+					min: 87511.22,
+					max: 94011.44,
+					current: 91245.67,
+					start: 88761.33,
+					symbol: '$',
+				},
+				'1M': {
+					min: 82011.33,
+					max: 98511.00,
+					current: 91245.67,
+					start: 85211.44,
+					symbol: '$',
+				},
+				'3M': {
+					min: 75011.11,
+					max: 105011.22,
+					current: 91245.67,
+					start: 78911.33,
+					symbol: '$',
+				},
+				'1Y': {
+					min: 42011.00,
+					max: 108011.11,
+					current: 91245.67,
+					start: 45311.22,
+					symbol: '$',
+				},
+			},
+			allTime: {
+				high: {
+					value: 108146.94,
+					date: '2024-12-17',
+					percentage: -15.61,
+				},
+				low: {
+					value: 15487.92,
+					date: '2022-11-21',
+					percentage: 489.12,
+				},
+			},
+		},
+		{
+			id: 5,
+			source: 'OKEX',
+			fullName: 'OKX',
+			symbol: 'BTC-USDT',
+			currency: 'USDT',
+			currency_symbol: '$',
+			displaySymbol: 'BTC/USDT',
+			isPrimary: false,
+			price: 91198.45,
+			change: {
+				points: 1198.45,
+				percentage: 1.33,
+			},
+			openTime: '00:00:00',
+			closeTime: '23:59:59',
+			iconId: IconIds.TSX,
+			periods: {
+				'1D': {
+					min: 89087.34,
+					max: 92420.67,
+					current: 91198.45,
+					start: 89963.89,
+					symbol: '$',
+				},
+				'1W': {
+					min: 87463.67,
+					max: 93963.12,
+					current: 91198.45,
+					start: 88713.78,
+					symbol: '$',
+				},
+				'1M': {
+					min: 81963.78,
+					max: 98463.34,
+					current: 91198.45,
+					start: 85163.89,
+					symbol: '$',
+				},
+				'3M': {
+					min: 74963.89,
+					max: 104963.67,
+					current: 91198.45,
+					start: 78863.78,
+					symbol: '$',
+				},
+				'1Y': {
+					min: 41963.34,
+					max: 107963.78,
+					current: 91198.45,
+					start: 45263.67,
+					symbol: '$',
+				},
+			},
+			allTime: {
+				high: {
+					value: 108099.73,
+					date: '2024-12-17',
+					percentage: -15.60,
+				},
+				low: {
+					value: 15439.26,
+					date: '2022-11-21',
+					percentage: 490.78,
+				},
+			},
+		},
+	]);
+
+	const activeExchangeId = ref(1);
+
+	// Computed properties that switch based on mode
+	const exchanges = computed(() =>
+		mode.value === 'crypto' ? cryptoExchanges.value : stockExchanges.value,
 	);
 
 	const activeExchange = computed(() =>
@@ -577,6 +925,35 @@ export const useChartStore = defineStore('chart', () => {
 		return activeExchange.value?.allTime || null;
 	});
 
+	// Asset name computed property
+	const assetName = computed(() => {
+		return mode.value === 'crypto' ? 'Bitcoin' : 'Tesla Stock';
+	});
+
+	// Route path computed property
+	const routePath = computed(() => {
+		if (mode.value === 'crypto') {
+			return ['Home', 'Cryptocurrencies', 'Bitcoin', 'BTCUSDT.P'];
+		} else {
+			return ['Home', 'Stocks', 'Tesla', 'TSLA'];
+		}
+	});
+
+	function setMode(newMode: StoreMode) {
+		mode.value = newMode;
+		// Reset to primary exchange when switching modes
+		const primaryExch = exchanges.value.find(exchange => exchange.isPrimary);
+		if (primaryExch) {
+			activeExchangeId.value = primaryExch.id;
+		}
+		// Update colors based on mode
+		if (newMode === 'crypto') {
+			setColor(247, 147, 26);
+		} else {
+			setColor(230, 23, 53);
+		}
+	}
+
 	function setActiveExchange(id: number) {
 		const exchange = exchanges.value.find(singleExchange => singleExchange.id === id);
 		if (exchange) {
@@ -590,6 +967,11 @@ export const useChartStore = defineStore('chart', () => {
 		const exchange = exchanges.value.find(e => e.id === exchangeId);
 		if (!exchange) {
 			return false;
+		}
+
+		// Crypto markets are always open
+		if (mode.value === 'crypto') {
+			return true;
 		}
 
 		const now = new Date();
@@ -631,55 +1013,67 @@ export const useChartStore = defineStore('chart', () => {
 		bgColorShadow.value = `${r} ${g} ${b} /`;
 	}
 
-	function setColor(r: number, g:number, b:number) {
+	function setColor(r: number, g: number, b: number) {
 		bgColor.value = `${r}, ${g}, ${b}`;
 		bgColorShadow.value = `${r} ${g} ${b} /`;
 	}
 
 	function randomizeExchanges() {
-		const priceRanges: Record<string, IPriceRange> = {
-			'USD': { min: 200, max: 300 },
-			'EUR': { min: 180, max: 280 },
-			'CAD': { min: 280, max: 400 },
-			'ARS': { min: 200000, max: 250000 },
-			'BRL': { min: 1100, max: 1400 },
-			'JPY': { min: 35000, max: 40000 },
-			'AUD': { min: 320, max: 420 },
-		};
+		const currentExchanges = mode.value === 'crypto' ? cryptoExchanges : stockExchanges;
 
-		exchanges.value = exchanges.value.map(exchange => {
-			let range = { min: 200, max: 300 };
-			if (exchange.currency === 'USD') {
-				range = priceRanges['USD'];
-			} else if (exchange.currency === 'EUR') {
-				range = priceRanges['EUR'];
-			} else if (exchange.currency === 'CAD') {
-				range = priceRanges['CAD'];
-			} else if (exchange.currency === 'ARS') {
-				range = priceRanges['ARS'];
-			} else if (exchange.currency === 'BRL') {
-				range = priceRanges['BRL'];
-			} else if (exchange.currency === 'JPY') {
-				range = priceRanges['JPY'];
-			} else if (exchange.currency === 'AUD') {
-				range = priceRanges['AUD'];
+		let priceRanges: Record<string, IPriceRange>;
+
+		if (mode.value === 'crypto') {
+			priceRanges = {
+				'USDT': { min: 85000, max: 95000 },
+				'USD': { min: 85000, max: 95000 },
+				'EUR': { min: 78000, max: 88000 },
+				'BTC': { min: 1, max: 1 }, // For BTC pairs
+			};
+		} else {
+			priceRanges = {
+				'USD': { min: 200, max: 300 },
+				'EUR': { min: 180, max: 280 },
+				'CAD': { min: 280, max: 400 },
+				'ARS': { min: 200000, max: 250000 },
+				'BRL': { min: 1100, max: 1400 },
+				'JPY': { min: 35000, max: 40000 },
+				'AUD': { min: 320, max: 420 },
+			};
+		}
+
+		currentExchanges.value = currentExchanges.value.map(exchange => {
+			let range = mode.value === 'crypto'
+				? priceRanges['USDT']
+				: priceRanges['USD'];
+
+			if (priceRanges[exchange.currency]) {
+				range = priceRanges[exchange.currency];
 			}
 
 			const newPrice = parseFloat((Math.random() * (range.max - range.min) + range.min).toFixed(2));
 
-			const changePercentage = parseFloat((Math.random() * 3 - 1.5).toFixed(2));
+			const changePercentage = parseFloat((Math.random() * 6 - 3).toFixed(2)); // More volatile for crypto
 			const changePoints = parseFloat((newPrice * changePercentage / 100).toFixed(2));
 
-			const tradingDuration = Math.floor(Math.random() * 4) + 6;
-			const startHour = Math.floor(Math.random() * 24);
-			const endHour = (startHour + tradingDuration) % 24;
+			let openTime, closeTime;
+			if (mode.value === 'crypto') {
+				// Crypto markets are 24/7
+				openTime = '00:00:00';
+				closeTime = '23:59:59';
+			} else {
+				// Stock market hours
+				const tradingDuration = Math.floor(Math.random() * 4) + 6;
+				const startHour = Math.floor(Math.random() * 24);
+				const endHour = (startHour + tradingDuration) % 24;
 
-			function formatTime(hour: number) {
-				return `${hour.toString().padStart(2, '0')}:00:00`;
+				function formatTime(hour: number) {
+					return `${hour.toString().padStart(2, '0')}:00:00`;
+				}
+
+				openTime = formatTime(startHour);
+				closeTime = formatTime(endHour);
 			}
-
-			const openTime = formatTime(startHour);
-			const closeTime = formatTime(endHour);
 
 			function generatePeriodData(basePrice: number, volatility: number): IPeriodData {
 				const min = parseFloat((basePrice * (1 - volatility)).toFixed(2));
@@ -695,12 +1089,15 @@ export const useChartStore = defineStore('chart', () => {
 				};
 			}
 
+			// Crypto has higher volatility
+			const baseVolatility = mode.value === 'crypto' ? 0.1 : 0.05;
+
 			const periods = {
-				'1D': generatePeriodData(newPrice, 0.05),
-				'1W': generatePeriodData(newPrice, 0.12),
-				'1M': generatePeriodData(newPrice, 0.25),
-				'3M': generatePeriodData(newPrice, 0.35),
-				'1Y': generatePeriodData(newPrice, 0.45),
+				'1D': generatePeriodData(newPrice, baseVolatility),
+				'1W': generatePeriodData(newPrice, baseVolatility * 2.4),
+				'1M': generatePeriodData(newPrice, baseVolatility * 5),
+				'3M': generatePeriodData(newPrice, baseVolatility * 7),
+				'1Y': generatePeriodData(newPrice, baseVolatility * 9),
 			};
 
 			const allPeriodMaxes = Object.values(periods).map(period => period.max);
@@ -743,11 +1140,17 @@ export const useChartStore = defineStore('chart', () => {
 	}
 
 	return {
+		// Mode state
+		mode,
+		assetName,
+		routePath,
 		// Color state
 		bgColor,
 		bgColorShadow,
 		// Exchange data
 		exchanges,
+		stockExchanges,
+		cryptoExchanges,
 		activeExchangeId,
 		activeExchange,
 		allExchanges,
@@ -756,6 +1159,7 @@ export const useChartStore = defineStore('chart', () => {
 		activeExchangePeriods,
 		activeExchangeAllTime,
 		// Methods
+		setMode,
 		setActiveExchange,
 		setColor,
 		isMarketOpen,
