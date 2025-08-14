@@ -31,6 +31,8 @@ import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
 import { ChartWidgetDailyNetFlows } from './daily-net-flows';
 import { ChartWidgetPortfolioTable } from './portfolio';
 import { ChartWidgetTrailingReturns } from './trailing-returns';
+import { ChartWidgetSnp } from './snp-500';
+import { ChartWidgetHistoricalEps } from './historical-eps';
 
 export {
 	ChartWidgetPricePerformance,
@@ -68,4 +70,6 @@ export {
 	ChartWidgetPortfolioTable,
 	ChartWidgetTrailingReturns,
 	WidgetHoldingsDiagram,
+	ChartWidgetSnp,
+	ChartWidgetHistoricalEps,
 };

@@ -25,6 +25,8 @@ import {
 	ChartSectionDividendsAndCapitalGains, ChartSectionHoldingsEtf,
 	ChartSectionPortfolioComposition,
 	SectionTrailingReturns,
+	ChartSectionSnp,
+	ChartSectionHistoricalEps,
 } from '@/modules/chart/components/sections';
 
 
@@ -66,6 +68,8 @@ export enum CHART_SECTION_COMPONENT {
 	PORTFOLIO_COMPOSITION = 'PORTFOLIO_COMPOSITION',
 	TRAILING_RETURNS = 'TRAILING_RETURNS',
 	HOLDINGS_DIAGRAM = 'HOLDINGS_DIAGRAM',
+	SNP_500 = 'SNP_500',
+	HISTORICAL_EPS = 'HISTORICAL_EPS',
 }
 
 // Create mapping from enum to actual components
@@ -96,6 +100,8 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.PORTFOLIO_COMPOSITION]: ChartSectionPortfolioComposition,
 	[CHART_SECTION_COMPONENT.TRAILING_RETURNS]: SectionTrailingReturns,
 	[CHART_SECTION_COMPONENT.HOLDINGS_DIAGRAM]: SectionHoldingsDigram,
+	[CHART_SECTION_COMPONENT.HISTORICAL_EPS]: ChartSectionHistoricalEps,
+	[CHART_SECTION_COMPONENT.SNP_500]: ChartSectionSnp,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -329,6 +335,17 @@ export const chartStockSections: IChartWidgetSections = {
 			id: 'annual-margin-trends',
 			title: 'Annual Margin Trends',
 			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
+
+		},
+		{
+			id: 'historical-eps',
+			title: 'Historical EPS',
+			component: CHART_SECTION_COMPONENT.HISTORICAL_EPS,
+		},
+		{
+			id: 'snp-500',
+			title: 'SNP 500',
+			component: CHART_SECTION_COMPONENT.SNP_500,
 		},
 		{
 			id: 'daily-net-flows',

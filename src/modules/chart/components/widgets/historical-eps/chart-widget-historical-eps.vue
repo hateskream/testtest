@@ -2,8 +2,6 @@
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 
 import ChartHistoricalEps from '@/modules/lightweight-charts/ui/chart-historical-eps.vue';
-
-
 </script>
 
 

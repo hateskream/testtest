@@ -23,6 +23,8 @@ import { ChartSectionDividendsAndCapitalGains } from './dividends-and-capital-ga
 import { ChartSectionHoldingsEtf } from './holdings-etf';
 import { ChartSectionPortfolioComposition } from './portfolio-composition';
 import { SectionTrailingReturns } from './trailing-returns';
+import { ChartSectionHistoricalEps } from './historical-eps';
+import { ChartSectionSnp } from './snp-500';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -51,4 +53,6 @@ export {
 	ChartSectionHoldingsEtf,
 	ChartSectionPortfolioComposition,
 	SectionTrailingReturns,
+	ChartSectionSnp,
+	ChartSectionHistoricalEps,
 };

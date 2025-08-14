@@ -2,18 +2,12 @@
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import type { ISectionItem } from '@/modules/chart/components';
 
-import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
-import ChartWidgetSnp from '../../widgets/snp-500/chart-widget-snp.vue';
+import { type ISectionProps } from '@/modules/chart/models';
+import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
+import { ChartWidgetSnp } from '../../widgets';
 
-interface IChartSectionValuationsProps {
-	section: ISectionItem;
-	selectedItem?: string | null;
-	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
-}
-
-const props = defineProps<IChartSectionValuationsProps>();
+const props = defineProps<ISectionProps>();
 
 
 const itemRef = ref<HTMLElement | null>(null);
@@ -34,6 +28,7 @@ onUnmounted(() => {
 		props.registerItemRef(item.id, null);
 	});
 });
+
 
 </script>
 
