@@ -21,6 +21,7 @@ import { ChartWidgetLinks } from './links';
 import { ChartWidgetOscillators } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
 import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings } from './holdings';
+import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal } from './transactions';
 
 
 export {
@@ -49,4 +50,6 @@ export {
 	WidgetAddressesHoldings,
 	WidgetHeldHoldings,
 	WidgetWhaleHoldings,
+	ChartWidgetTransactionAvg,
+	ChartWidgetTransactionAvgTotal,
 };

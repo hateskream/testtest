@@ -7,10 +7,12 @@ interface IChartRangeProps {
 	activeRange: RangeChart;
 	list: RangeChart[];
 	type?: 'default' | 'light';
+	disableChange?: boolean;
 }
 
 const props = withDefaults(defineProps<IChartRangeProps>(), {
 	type: 'default',
+	disableChange: false,
 });
 
 interface IChartRangeEmits {
@@ -42,7 +44,7 @@ function generateRandom() {
 			@click="emits('select', item.val)"
 		>
 			<span class="rangeTitle">{{ item.title }}</span>
-			<span v-if="type === 'default'" class="rangeChange">{{ item.num }}%</span>
+			<span v-if="type === 'default' && !disableChange" class="rangeChange">{{ item.num }}%</span>
 		</div>
 	</div>
 </template>

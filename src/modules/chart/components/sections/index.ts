@@ -15,6 +15,7 @@ import { ChartSectionPriceEarnings } from './price-earnings';
 import { ChartSectionTradingVolume } from './trading-volume';
 import { ChartSectionAnnualReturns } from './annual-returns';
 import { ChartSectionTechnicals } from './technicals';
+import { SectionTransactions } from './transactions';
 import { SectionHoldings } from './holdings';
 
 export {
@@ -36,4 +37,5 @@ export {
 	ChartSectionAnnualReturns,
 	ChartSectionTechnicals,
 	SectionHoldings,
+	SectionTransactions,
 };

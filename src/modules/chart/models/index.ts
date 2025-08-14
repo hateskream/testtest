@@ -18,6 +18,7 @@ import {
 	ChartSectionAnnualReturns,
 	ChartSectionTechnicals,
 	SectionHoldings,
+	SectionTransactions,
 } from '@/modules/chart/components/sections';
 
 // Define enum for chart section components
@@ -40,6 +41,7 @@ export enum CHART_SECTION_COMPONENT {
 	ANNUAL_RETURNS = 'ANNUAL_RETURNS',
 	TECHNICALS = 'TECHNICALS',
 	HOLDINGS = 'HOLDINGS',
+	TRANSACTIONS = 'TRANSACTIONS',
 }
 
 // Create mapping from enum to actual components
@@ -62,6 +64,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.ANNUAL_RETURNS]: ChartSectionAnnualReturns,
 	[CHART_SECTION_COMPONENT.TECHNICALS]: ChartSectionTechnicals,
 	[CHART_SECTION_COMPONENT.HOLDINGS]: SectionHoldings,
+	[CHART_SECTION_COMPONENT.TRANSACTIONS]: SectionTransactions,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -397,6 +400,11 @@ export const chartCryptoSections: IChartWidgetSections = {
 			id: 'holdings',
 			title: 'Holdings',
 			component: CHART_SECTION_COMPONENT.HOLDINGS,
+		},
+		{
+			id: 'transactions',
+			title: 'Transactions',
+			component: CHART_SECTION_COMPONENT.TRANSACTIONS,
 		},
 	],
 	right: [
