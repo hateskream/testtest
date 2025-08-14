@@ -20,6 +20,7 @@ import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
 import { ChartWidgetOscillators } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
+import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings } from './holdings';
 
 
 export {
@@ -45,4 +46,7 @@ export {
 	ChartWidgetLinks,
 	ChartWidgetOscillators,
 	ChartWidgetMovingAverages,
+	WidgetAddressesHoldings,
+	WidgetHeldHoldings,
+	WidgetWhaleHoldings,
 };
