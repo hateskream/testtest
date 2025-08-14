@@ -11,11 +11,10 @@ import {
 	mapPercent,
 	isEmptyCell,
 	mapText,
-	mapRange,
 	type SvgChartDto,
 	mapSvgChart,
 } from '@/modules/cell';
-import type { CryptoTableRow } from '../model/crypto';
+import type { CryptoTableRow } from '../model';
 import type { MarketType } from '@/modules/market';
 import type { ISelectedFilter, ISort } from '../model';
 import { mockTickers } from './mock/crypto';

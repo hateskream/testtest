@@ -4,6 +4,10 @@ import type { ITableColumn } from './column';
 import type { ISort } from './sort';
 import type { Filters } from './filter';
 import { CRYPTO_ALL_COLUMNS, CRYPTO_FILTERS } from './crypto';
+import { STOCK_ALL_COLUMNS, STOCK_FILTERS } from './stock';
+import { FOREX_ALL_COLUMNS } from './forex';
+import { COMMODITIES_ALL_COLUMNS, COMMODITIES_FILTERS } from './commodities';
+import { INDICES_ALL_COLUMNS } from './indices';
 
 export interface ISettings {
 	column: ITableColumn[];
@@ -27,22 +31,22 @@ const DEFAULT_STATE: IState = {
 			filters: CRYPTO_FILTERS,
 		},
 		[MarketType.Stock]: {
-			column: [],
+			column: STOCK_ALL_COLUMNS,
 			sort: null,
-			filters: {},
+			filters: STOCK_FILTERS,
 		},
 		[MarketType.Forex]: {
-			column: [],
+			column: FOREX_ALL_COLUMNS,
 			sort: null,
 			filters: {},
 		},
 		[MarketType.Commodities]: {
-			column: [],
+			column: COMMODITIES_ALL_COLUMNS,
 			sort: null,
-			filters: {},
+			filters: COMMODITIES_FILTERS,
 		},
 		[MarketType.Indices]: {
-			column: [],
+			column: INDICES_ALL_COLUMNS,
 			sort: null,
 			filters: {},
 		},
@@ -80,20 +84,20 @@ export const PRESETS: Presets = {
 		columns: CRYPTO_ALL_COLUMNS,
 	},
 	[MarketType.Stock]: {
-		filters: {},
-		columns: [],
+		filters: STOCK_FILTERS,
+		columns: STOCK_ALL_COLUMNS,
 	},
 	[MarketType.Forex]: {
 		filters: {},
-		columns: [],
+		columns: FOREX_ALL_COLUMNS,
 	},
 	[MarketType.Commodities]: {
-		filters: {},
-		columns: [],
+		filters: COMMODITIES_FILTERS,
+		columns: COMMODITIES_ALL_COLUMNS,
 	},
 	[MarketType.Indices]: {
 		filters: {},
-		columns: [],
+		columns: INDICES_ALL_COLUMNS,
 	},
 };
 

@@ -1,6 +1,6 @@
 import { MarketType } from '@/modules/market';
 import type { ISort, ISelectedFilter, TableRow } from '../model';
-import { getMarketCrypto } from '../api';
+import { getMarketCommodities, getMarketCrypto, getMarketForex, getMarketIndices, getMarketStock } from '../api';
 
 interface IGetMarketRequest {
 	market: MarketType;
@@ -26,10 +26,10 @@ type Getter = (req: IGetMarketRequest) => Promise<IPreparedResponse>;
 
 const marketToGetter: Record<MarketType, Getter> = {
 	[MarketType.Crypto]: getMarketCrypto,
-	[MarketType.Stock]: getMarketCrypto,
-	[MarketType.Forex]: getMarketCrypto,
-	[MarketType.Commodities]: getMarketCrypto,
-	[MarketType.Indices]: getMarketCrypto,
+	[MarketType.Stock]: getMarketStock,
+	[MarketType.Forex]: getMarketForex,
+	[MarketType.Commodities]: getMarketCommodities,
+	[MarketType.Indices]: getMarketIndices,
 };
 
 export function useGetMarket(req: IGetMarketRequest) {

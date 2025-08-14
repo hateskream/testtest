@@ -11,7 +11,7 @@ import { type ITableColumn, buildColumns } from './column';
 import { type Filters, type IFilterValue, type IFilterState, type IIcon } from './filter';
 import { IconIds } from '@/shared/ui/icon';
 
-export type CryptoTableRow = TableRow<{
+export type StockTableRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;
 	[ColumnType.PriceCurrent]: INumberCell;
 	[ColumnType.ChangePrice24hPercent]: IPercentCell;
@@ -31,7 +31,7 @@ export type CryptoTableRow = TableRow<{
 	[ColumnType.Price24hChart]: ISvgChartCell;
 }>;
 
-export const CRYPTO_ALL_COLUMNS: ITableColumn[] =
+export const STOCK_ALL_COLUMNS: ITableColumn[] =
 	buildColumns([
 		{
 			columnType: ColumnType.Symbol,
@@ -137,7 +137,7 @@ export const CRYPTO_ALL_COLUMNS: ITableColumn[] =
 		},
 	]);
 
-enum CryptoFilters {
+enum StockFilters {
 	Status = 'status',
 }
 
@@ -198,8 +198,8 @@ const STATUS_FILTER_DEFAULT: IFilterState = {
 	isFlat: true,
 };
 
-export const CRYPTO_FILTERS: Filters = {
-	[CryptoFilters.Status]: {
+export const STOCK_FILTERS: Filters = {
+	[StockFilters.Status]: {
 		values: STATUS_FILTER_VALUES,
 		state: STATUS_FILTER_DEFAULT,
 	},
