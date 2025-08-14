@@ -137,30 +137,6 @@ const externalTooltipHandler = (context: {
 	tooltipEl.style.padding = context.tooltip.options.padding + 'px ' + context.tooltip.options.padding + 'px';
 };
 
-function maxValue(ctx) {
-	let max = 0;
-
-	const [dataset] = ctx.chart.data.datasets;
-
-	dataset.data.forEach((el) => {
-		max = Math.max(max, el);
-	});
-
-	return max;
-}
-
-function maxIndex(ctx) {
-	const max = maxValue(ctx);
-
-	const [dataset] = ctx.chart.data.datasets;
-
-	return dataset.data.indexOf(max);
-}
-
-function maxLabel(ctx) {
-	return ctx.chart.data.labels[maxIndex(ctx)];
-}
-
 onMounted(() => {
 	const labels = ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024', 'Q1 2025'];
 
