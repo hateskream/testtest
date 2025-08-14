@@ -15,9 +15,9 @@ import ChartEps from '@/modules/lightweight-charts/ui/chart-eps.vue';
 					Earnings per Share
 				</div>
 
-				<!-- <div :class="classes.potential">
-					$638.35 (+12.92%) potential
-				</div> -->
+				<div :class="classes.potential">
+					EPS forecast up 5.17%
+				</div>
 			</div>
 		</template>
 		<template #body>
@@ -30,8 +30,10 @@ import ChartEps from '@/modules/lightweight-charts/ui/chart-eps.vue';
 <style module="classes">
 .wrapperTitle {
 	display: flex;
-	gap: 8px;
+	justify-content: space-between;
 	align-items: center;
+	width: 100%;
+	gap: 8px;
 }
 
 .title {

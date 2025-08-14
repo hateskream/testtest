@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
+import annotationPlugin from 'chartjs-plugin-annotation';
+Chart.register(annotationPlugin);
 
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
@@ -135,6 +137,30 @@ const externalTooltipHandler = (context: {
 	tooltipEl.style.padding = context.tooltip.options.padding + 'px ' + context.tooltip.options.padding + 'px';
 };
 
+function maxValue(ctx) {
+	let max = 0;
+
+	const [dataset] = ctx.chart.data.datasets;
+
+	dataset.data.forEach((el) => {
+		max = Math.max(max, el);
+	});
+
+	return max;
+}
+
+function maxIndex(ctx) {
+	const max = maxValue(ctx);
+
+	const [dataset] = ctx.chart.data.datasets;
+
+	return dataset.data.indexOf(max);
+}
+
+function maxLabel(ctx) {
+	return ctx.chart.data.labels[maxIndex(ctx)];
+}
+
 onMounted(() => {
 	const labels = ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024', 'Q1 2025'];
 
@@ -225,6 +251,105 @@ onMounted(() => {
 					position: 'nearest',
 					external: externalTooltipHandler,
 				},
+
+				annotation: {
+					clip: false,
+					annotations: {
+						label1: {
+							type: 'label',
+							content: () => 'beat',
+							font: {
+								size: 14,
+							},
+							color: '#04EDA0',
+							xValue: 4,
+							yValue: 65,
+						},
+
+						point1: {
+							type: 'point',
+							backgroundColor: '#04EDA0',
+							borderColor: '#04EDA0',
+							borderWidth: 1,
+							pointStyle: 'triangle',
+							rotation: 180,
+							radius: 5,
+							xValue: 4,
+							yValue: 63,
+						},
+
+						label2: {
+							type: 'label',
+							content: () => 'beat',
+
+							font: {
+								size: 14,
+							},
+							color: '#04EDA0',
+							xValue: 8,
+							yValue: 65,
+						},
+
+						point2: {
+							type: 'point',
+							backgroundColor: '#04EDA0',
+							borderColor: '#04EDA0',
+							borderWidth: 1,
+							pointStyle: 'triangle',
+							rotation: 180,
+							radius: 5,
+							xValue: 8,
+							yValue: 63,
+						},
+
+						label3: {
+							type: 'label',
+							content: () => 'beat',
+							font: {
+								size: 14,
+							},
+							color: '#04EDA0',
+							xValue: 12,
+							yValue: 65,
+						},
+
+
+						point3: {
+							type: 'point',
+							backgroundColor: '#04EDA0',
+							borderColor: '#04EDA0',
+							borderWidth: 1,
+							pointStyle: 'triangle',
+							rotation: 180,
+							radius: 5,
+							xValue: 12,
+							yValue: 63,
+						},
+
+						label4: {
+							type: 'label',
+							content: () => 'beat',
+							font: {
+								size: 14,
+							},
+							color: '#04EDA0',
+							xValue: 16,
+							yValue: 65,
+						},
+
+						point4: {
+							type: 'point',
+							backgroundColor: '#04EDA0',
+							borderColor: '#04EDA0',
+							borderWidth: 1,
+							pointStyle: 'triangle',
+							rotation: 180,
+							radius: 5,
+							xValue: 16,
+							yValue: 63,
+						},
+					},
+				},
 			},
 
 			scales: {
@@ -237,6 +362,7 @@ onMounted(() => {
 
 					ticks: {
 						padding: 20,
+						count: 6,
 						color: 'rgba(154, 154, 157, 1)',
 						callback: function (value) {
 							return value;
