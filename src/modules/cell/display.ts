@@ -222,4 +222,8 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		name: 'Close Price',
 		shortName: 'Close',
 	},
+	[ColumnType.VolumeAvg50d]: {
+		name: '50d Avg Volume',
+		shortName: 'Avg50d',
+	},
 };
