@@ -16,7 +16,7 @@ const data = ref<{
 	value: number;
 }[]>([]);
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 50; i += 1) {
 	data.value.push({
 		value: Math.random() * (100 - 10) - 10,
 		date,
@@ -48,7 +48,13 @@ for (let i = 0; i < 50; i++) {
 					text: 'Neutral'
 				}"
 				:data="data"
-				:range-list="[RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart['ALL']]"
+				:range-list="[
+					RangeChart['1D'],
+					RangeChart['1W'],
+					RangeChart['1M'],
+					RangeChart['1Y'],
+					RangeChart['ALL']
+				]"
 			>
 				<template #title>
 					S&P 500
