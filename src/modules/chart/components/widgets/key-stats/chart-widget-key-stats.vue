@@ -97,7 +97,7 @@ const formatMarketCap = (value: number | string): string => {
 			<div :class="classes.sectorTitle" class="paragraph-p-02">Sector</div>
 			<router-link
 				:class="classes.sectorLink"
-				:to="{name:RouteNames.Automobile}"
+				:to="{name:RouteNames.Test}"
 				class="header-h00"
 			>
 				<span :class="classes.sectorName" class="paragraph-p-01">

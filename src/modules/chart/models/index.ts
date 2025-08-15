@@ -31,14 +31,6 @@ export enum TickerType {
 	ETF = 'etf',
 }
 
-export enum RouteTickerType {
-	CRYPTO = 'crypto',
-	STOCK = 'stock',
-	FOREX = 'forex',
-	COMMODITIES = 'commodities',
-	INDICES = 'indices',
-	ETF = 'etf',
-}
 
 // Define enum for chart section components
 export enum CHART_SECTION_COMPONENT {
