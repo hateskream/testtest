@@ -1,14 +1,13 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { IconIds } from '@/shared/ui/icon';
-import type { IPeriodData, IPriceRange, IExchange } from '../models';
+import { type IExchange, type IPeriodData, type IPriceRange, TickerType } from '../models';
 
-export type StoreMode = 'crypto' | 'stock';
 
 export const useChartStore = defineStore('chart', () => {
 	// Mode state
-	const mode = ref<StoreMode>('stock');
+	const mode = ref<TickerType>(TickerType.STOCK);
 
 	// Color state - default to stock colors since we start in stock mode
 	const bgColor = ref('230, 23, 53');
@@ -939,7 +938,7 @@ export const useChartStore = defineStore('chart', () => {
 		}
 	});
 
-	function setMode(newMode: StoreMode) {
+	function setMode(newMode: TickerType) {
 		mode.value = newMode;
 		// Reset to primary exchange when switching modes
 		const primaryExch = exchanges.value.find(exchange => exchange.isPrimary);
@@ -947,7 +946,7 @@ export const useChartStore = defineStore('chart', () => {
 			activeExchangeId.value = primaryExch.id;
 		}
 		// Update colors based on mode
-		if (newMode === 'crypto') {
+		if (newMode === TickerType.CRYPTO) {
 			setColor(247, 147, 26);
 		} else {
 			setColor(230, 23, 53);

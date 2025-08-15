@@ -14,6 +14,7 @@ interface INavigationItem {
 	icon: IconIds;
 	id: IconIds;
 	routeName: string;
+	routeParams?: Record<string, string | number>;
 }
 
 interface ILayoutState {
@@ -40,12 +41,38 @@ const navigation: INavigationItem[] = [
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
-		routeName: RouteNames.ChartStock,
+		routeName: RouteNames.TickerStock,
+		routeParams: { id: 1 },
 	},
 	{
 		icon: IconIds.Chart,
 		id: IconIds.Chart,
-		routeName: RouteNames.ChartCrypto,
+		routeName: RouteNames.TickerCrypto,
+		routeParams: { id: 1 },
+	},
+	{
+		icon: IconIds.Chart,
+		id: IconIds.Chart,
+		routeName: RouteNames.TickerIndices,
+		routeParams: { id: 1 },
+	},
+	{
+		icon: IconIds.Chart,
+		id: IconIds.Chart,
+		routeName: RouteNames.TickerForex,
+		routeParams: { id: 1 },
+	},
+	{
+		icon: IconIds.Chart,
+		id: IconIds.Chart,
+		routeName: RouteNames.TickerCommodities,
+		routeParams: { id: 1 },
+	},
+	{
+		icon: IconIds.Chart,
+		id: IconIds.Chart,
+		routeName: RouteNames.TickerETF,
+		routeParams: { id: 1 },
 	},
 	// {
 	// 	icon: IconIds.Calendar,
@@ -83,6 +110,12 @@ const centerContentStyle = computed((): Partial<CSSProperties> => {
 		marginRight: `${pannelWidth.right}px`,
 	};
 });
+
+const createRouteObject = (item: INavigationItem) => {
+	return item.routeParams
+		? { name: item.routeName, params: item.routeParams }
+		: { name: item.routeName };
+};
 
 watch(isControlOpenCurtainHovered, newValue => {
 	if (newValue) {
@@ -141,8 +174,8 @@ function unFixCurtain() {
 			<nav>
 				<router-link
 					v-for="item in navigation"
-					:key="item.icon"
-					:to="{name:item.routeName}"
+					:key="`${item.routeName}-${item.id}`"
+					:to="createRouteObject(item)"
 					:class="classes.iconWrapper"
 					:active-class="classes.activeLink"
 				>
@@ -164,7 +197,6 @@ function unFixCurtain() {
 			</header-panel>
 			<div :class="classes.content">
 				<slot name="content" />
-
 			</div>
 		</div>
 		<panel-component
@@ -217,7 +249,6 @@ function unFixCurtain() {
 			<slot name="curtain" />
 			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>
-
 	</div>
 </template>
 
@@ -285,7 +316,6 @@ function unFixCurtain() {
 .leftPanel > :first-child {
 	margin-bottom: 12px;
 }
-
 
 .rightPanel {
 	display: flex;

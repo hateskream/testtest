@@ -12,7 +12,7 @@ import { ChartHeaderLayout, ChartHeaderTickerImageItemTesla, ChartHeaderTickerIm
 const { bgColor, bgColorShadow } = storeToRefs(useChartStore());
 
 interface IChartHeaderProps {
-	type: 'stock' | 'crypto';
+	type: string;
 }
 
 const props = defineProps<IChartHeaderProps>();
@@ -37,7 +37,7 @@ const tickerName = computed(()=>{
 				:shadow="bgColorShadow"
 			/>
 			<chart-header-ticker-image-item-bitcoin
-				v-if="props.type === 'crypto'"
+				v-else
 				:fill="bgColor"
 				:shadow="bgColorShadow"
 			/>

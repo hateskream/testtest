@@ -22,6 +22,23 @@ import {
 	ChartSectionAnnualMarginTrends,
 } from '@/modules/chart/components/sections';
 
+export enum TickerType {
+	CRYPTO = 'crypto',
+	STOCK = 'stock',
+	FOREX = 'forex',
+	COMMODITIES = 'commodities',
+	INDICES = 'indices',
+	ETF = 'etf',
+}
+
+export enum RouteTickerType {
+	CRYPTO = 'crypto',
+	STOCK = 'stock',
+	FOREX = 'forex',
+	COMMODITIES = 'commodities',
+	INDICES = 'indices',
+	ETF = 'etf',
+}
 
 // Define enum for chart section components
 export enum CHART_SECTION_COMPONENT {
@@ -144,6 +161,7 @@ export interface IPriceRange {
 	min: number;
 	max: number;
 }
+
 export interface IChartWidgetSections {
 	left: ISectionItem[];
 	center: ISectionItem[];
@@ -340,6 +358,26 @@ export const chartCryptoSections: IChartWidgetSections = {
 			title: 'Transactions',
 			component: CHART_SECTION_COMPONENT.TRANSACTIONS,
 		},
+		{
+			id: 'balance-sheet',
+			title: 'Balance Sheet',
+			component: CHART_SECTION_COMPONENT.BALANCE_SHEET,
+		},
+		{
+			id: 'income-statement',
+			title: 'Income Statement',
+			component: CHART_SECTION_COMPONENT.INCOME_STATEMENT,
+		},
+		{
+			id: 'eps',
+			title: 'Earnings per Share',
+			component: CHART_SECTION_COMPONENT.EPS,
+		},
+		{
+			id: 'annual-margin-trends',
+			title: 'Annual Margin Trends',
+			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
+		},
 	],
 	right: [
 		{
@@ -349,3 +387,104 @@ export const chartCryptoSections: IChartWidgetSections = {
 		},
 	],
 } as const;
+
+export const chartForexSections: IChartWidgetSections = {
+	left: [
+		{
+			id: 'price-performance',
+			title: 'Performance',
+			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
+		},
+		{
+			id: 'explorer',
+			title: 'Explorer',
+		},
+	],
+	center: [],
+	right: [
+		{
+			id: 'insight-and-activity',
+			title: 'Insight',
+			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
+		},
+	],
+} as const;
+
+export const chartCommoditiesSections: IChartWidgetSections = {
+	left: [
+		{
+			id: 'price-performance',
+			title: 'Performance',
+			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
+		},
+		{
+			id: 'explorer',
+			title: 'Explorer',
+		},
+	],
+	center: [],
+	right: [
+		{
+			id: 'insight-and-activity',
+			title: 'Insight',
+			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
+		},
+	],
+} as const;
+
+export const chartIndicesSections: IChartWidgetSections = {
+	left: [
+		{
+			id: 'price-performance',
+			title: 'Performance',
+			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
+		},
+		{
+			id: 'explorer',
+			title: 'Explorer',
+		},
+	],
+	center: [],
+	right: [
+		{
+			id: 'insight-and-activity',
+			title: 'Insight',
+			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
+		},
+	],
+} as const;
+
+export const chartEtfSections: IChartWidgetSections = {
+	left: [
+		{
+			id: 'price-performance',
+			title: 'Performance',
+			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
+		},
+		{
+			id: 'explorer',
+			title: 'Explorer',
+		},
+	],
+	center: [],
+	right: [
+		{
+			id: 'insight-and-activity',
+			title: 'Insight',
+			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
+		},
+	],
+} as const;
+
+export const CHART_SECTIONS_BY_TYPE = {
+	[TickerType.STOCK]: chartStockSections,
+	[TickerType.CRYPTO]: chartCryptoSections,
+	[TickerType.FOREX]: chartForexSections,
+	[TickerType.COMMODITIES]: chartCommoditiesSections,
+	[TickerType.INDICES]: chartIndicesSections,
+	[TickerType.ETF]: chartEtfSections,
+} as const;
+
+export const getChartSectionsByType = (tickerType: TickerType): IChartWidgetSections => {
+	return CHART_SECTIONS_BY_TYPE[tickerType];
+};

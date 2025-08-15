@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { useElementSize, useWindowSize } from '@vueuse/core';
+
 
 import { useChartStore } from '@/modules/chart/store';
 import { Chart } from '@/modules/lightweight-charts';
 import { ChartHeaderComponent } from './components/header';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 import {
-	chartStockSections,
-	chartCryptoSections,
 	CHART_COMPONENT_MAP,
-	type CHART_SECTION_COMPONENT,
+	type CHART_SECTION_COMPONENT, TickerType, getChartSectionsByType,
 } from './models';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
@@ -19,16 +18,14 @@ const { randomizeExchanges, setMode } = useChartStore();
 
 
 export interface IChartComponentProps {
-	type: 'stock' | 'crypto';
+	type: TickerType;
+	id: number;
 }
 
 const props = defineProps<IChartComponentProps>();
 
 const chartWidgetSections = computed(() => {
-	if (props.type === 'stock') {
-		return chartStockSections;
-	}
-	return chartCryptoSections;
+	return getChartSectionsByType(props.type);
 });
 
 const viewMode = ref('mixed');
@@ -117,13 +114,13 @@ const leftSections = computed(() => chartWidgetSections.value.left);
 const centerSections = computed(() => chartWidgetSections.value.center);
 const rightSections = computed(() => chartWidgetSections.value.right);
 
-onMounted(() => {
-	if (props.type === 'stock') {
-		setMode('stock');
+watch(() => props.type, (newType) => {
+	if (newType === TickerType.STOCK) {
+		setMode(TickerType.STOCK);
 	} else {
-		setMode('crypto');
+		setMode(TickerType.CRYPTO);
 	}
-});
+}, { immediate: true });
 
 </script>
 

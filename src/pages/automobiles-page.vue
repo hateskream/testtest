@@ -8,7 +8,7 @@ const router = useRouter();
 
 function goBack() {
 
-	router.push({ name: RouteNames.ChartCrypto });
+	router.push({ name: RouteNames.TickerCrypto });
 
 }
 </script>
