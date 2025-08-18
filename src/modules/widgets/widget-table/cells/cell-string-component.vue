@@ -10,7 +10,7 @@ const props = defineProps<IProps>();
 
 <template>
 	<div :class="classes.text" class="paragraph-p-00">
-		{{ props.data.value || '—' }}
+		{{ props.data?.value ?? '—' }}
 	</div>
 </template>
 

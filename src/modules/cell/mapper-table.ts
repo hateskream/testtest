@@ -26,13 +26,13 @@ import {
 export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Symbol]: TableColumnType.IMAGE_STRING,
 	[CellType.Number]: TableColumnType.NUMBER,
-	[CellType.Text]: TableColumnType.DATE,
+	[CellType.Text]: TableColumnType.TEXT,
 	[CellType.Percent]: TableColumnType.PERCENT,
 
 	// нет отображения - заглушка
-	[CellType.SvgChart]: TableColumnType.DATE,
-	[CellType.Range]: TableColumnType.DATE,
-	[CellType.Empty]: TableColumnType.DATE,
+	[CellType.SvgChart]: TableColumnType.TEXT,
+	[CellType.Range]: TableColumnType.TEXT,
+	[CellType.Empty]: TableColumnType.TEXT,
 };
 
 export function mapCellToTable(cell: Cell) {
@@ -131,18 +131,18 @@ function mapTextToTable(cell: ITextCell) {
 
 function mapSvgChartToTable(_: Cell) {
 	return {
-		value: '-',
+		value: '—',
 	};
 }
 
 function mapRangeToTable(_: Cell) {
 	return {
-		value: '-',
+		value: '—',
 	};
 }
 
 function mapEmptyToTable(_: Cell) {
 	return {
-		value: '-',
+		value: '—',
 	};
 }

@@ -48,6 +48,8 @@ export enum ColumnType {
 
 	OpenPrice = 'openPrice',
 	ClosePrice = 'closePrice',
+
+	SvgChart = 'svgChart',
 }
 
 export enum CellType {
@@ -218,7 +220,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 
 	[ColumnType.LastDividend]: CellType.Number,
 
-	[ColumnType.Employees]: CellType.Number,
+	[ColumnType.Employees]: CellType.Text,
 	[ColumnType.IpODate]: CellType.Text,
 	[ColumnType.Sector]: CellType.Text,
 	[ColumnType.Industry]: CellType.Text,
@@ -231,4 +233,6 @@ export const columnToCell: Record<ColumnType, CellType> = {
 
 	[ColumnType.OpenPrice]: CellType.Number,
 	[ColumnType.ClosePrice]: CellType.Number,
+
+	[ColumnType.SvgChart]: CellType.SvgChart,
 };

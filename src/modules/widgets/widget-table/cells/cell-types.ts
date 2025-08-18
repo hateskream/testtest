@@ -4,38 +4,36 @@ import { type Component } from 'vue';
 import TableCellSymbol from './table-cell-symbol.vue';
 import StringCellComponent from './cell-string-component.vue';
 import CellEmptyStateComponent from './cell-empty-state-component.vue';
-import CellImageComponent from './cell-image-component.vue';
 import CellNumberComponent from './cell-number-component.vue';
 import CellPercentComponent from './cell-percent-component.vue';
-import CellDateComponent from './cell-date-component.vue';
 import CellPlate from './cell-plate.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
-	// SYMBOL = 'image-string',
 	NUMBER = 'number',
 	PERCENT = 'percent',
 	CHART = 'chart',
 	RANGE = 'range',
 	TEXT = 'text',
-	IMAGE = 'image',
-	DATE = 'date',
 	IMAGE_STRING = 'image-string',
 	PLATE = 'plate',
+	EMPTY = 'empty',
 }
 
+
 const components: Record<CellType, Component> = {
-	// [CellType.SYMBOL]: CellImageComponent,
+	// FIXME: Why there is so many items for symbol?
 	[CellType.SYMBOL]: TableCellSymbol,
+	[CellType.IMAGE_STRING]: TableCellSymbol,
 	[CellType.NUMBER]: CellNumberComponent,
 	[CellType.PERCENT]: CellPercentComponent,
-	[CellType.CHART]: StringCellComponent,
-	[CellType.RANGE]: StringCellComponent,
+	// TODO: add range component and add it here instead CellEmptyStateComponent
+	[CellType.RANGE]: CellEmptyStateComponent,
 	[CellType.TEXT]: StringCellComponent,
-	[CellType.IMAGE]: CellImageComponent,
-	[CellType.DATE]: CellDateComponent,
-	[CellType.IMAGE_STRING]: TableCellSymbol,
 	[CellType.PLATE]: CellPlate,
+	// TODO: add chart component and add it here in
+	[CellType.CHART]: CellEmptyStateComponent,
+	[CellType.EMPTY]: CellEmptyStateComponent,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

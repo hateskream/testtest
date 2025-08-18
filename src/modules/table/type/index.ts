@@ -1,11 +1,14 @@
 import type { UnwrapRef } from 'vue';
 
 export enum TableColumnType {
-	STRING = 'string',
+	TEXT = 'text',
 	NUMBER = 'number',
 	DATE = 'date',
 	PERCENT = 'percent',
 	IMAGE_STRING = 'image-string',
+	CHART = 'chart',
+	RANGE = 'range',
+	EMPTY = 'empty',
 }
 
 export type SortDirection = 'asc' | 'desc' | 'none';
