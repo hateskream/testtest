@@ -77,6 +77,8 @@ const columnTypeToGroup: Record<ColumnType, Group> = {
 
 	[ColumnType.OpenPrice]: Group.Other,
 	[ColumnType.ClosePrice]: Group.Other,
+
+	[ColumnType.SvgChart]: Group.Other,
 };
 
 interface INotFullCol {

@@ -5,6 +5,7 @@ import {
 	type IPercentCell,
 	type ITextCell,
 	type ISvgChartCell,
+	type IRangeCell,
 } from '@/modules/cell';
 import type { TableRow } from './row';
 import { type ITableColumn, buildColumns } from './column';
@@ -12,23 +13,22 @@ import { type Filters, type IFilterValue, type IFilterState, type IIcon } from '
 import { IconIds } from '@/shared/ui/icon';
 
 export type StockTableRow = TableRow<{
-	[ColumnType.Symbol]: ISymbolCell;
-	[ColumnType.PriceCurrent]: INumberCell;
-	[ColumnType.ChangePrice24hPercent]: IPercentCell;
-	[ColumnType.Volume24h]: INumberCell;
-	[ColumnType.PriceAvg50d]: INumberCell;
-	// [ColumnType.Price1yRange]: IRangeCell;
-	[ColumnType.MarketCap24h]: INumberCell;
-	[ColumnType.Beta5y]: INumberCell;
-	[ColumnType.LastDividend]: INumberCell;
-	[ColumnType.ChangePrice24h]: INumberCell;
-	[ColumnType.VolumeAvg10d]: INumberCell;
-	[ColumnType.Employees]: ITextCell;
-	[ColumnType.IpODate]: ITextCell;
-	[ColumnType.Sector]: ITextCell;
-	[ColumnType.Industry]: ITextCell;
-	[ColumnType.Source]: ITextCell;
-	[ColumnType.Price24hChart]: ISvgChartCell;
+	[ColumnType.Symbol]:ISymbolCell;
+	[ColumnType.PriceCurrent]:INumberCell;
+	[ColumnType.Price1yRange]:IRangeCell;
+	[ColumnType.MarketCap24h]:INumberCell;
+	[ColumnType.Beta5y]:INumberCell;
+	[ColumnType.LastDividend]:INumberCell;
+	[ColumnType.ChangePrice24hPercent]:IPercentCell;
+	[ColumnType.ChangePrice24h]:INumberCell;
+	[ColumnType.Volume24h]:INumberCell;
+	[ColumnType.VolumeAvg50d]:INumberCell;
+	[ColumnType.Employees]:ITextCell;
+	[ColumnType.IpODate]:ITextCell;
+	[ColumnType.Industry]:ITextCell;
+	[ColumnType.Sector]:ITextCell;
+	[ColumnType.Source]:ITextCell;
+	[ColumnType.Price24hChart]:ISvgChartCell;
 }>;
 
 export const STOCK_ALL_COLUMNS: ITableColumn[] =
@@ -44,24 +44,6 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 			isShow: true,
 			isDraggable: true,
-		},
-		{
-			columnType: ColumnType.ChangePrice24hPercent,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
-		},
-		{
-			columnType: ColumnType.Volume24h,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
-		},
-		{
-			columnType: ColumnType.PriceAvg50d,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
 		},
 		{
 			columnType: ColumnType.Price1yRange,
@@ -88,13 +70,25 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 		},
 		{
+			columnType: ColumnType.ChangePrice24hPercent,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
 			columnType: ColumnType.ChangePrice24h,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.VolumeAvg10d,
+			columnType: ColumnType.Volume24h,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.VolumeAvg50d,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
@@ -112,13 +106,13 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Sector,
+			columnType: ColumnType.Industry,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Industry,
+			columnType: ColumnType.Sector,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
