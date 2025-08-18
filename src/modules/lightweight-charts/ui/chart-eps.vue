@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
-import annotationPlugin from 'chartjs-plugin-annotation';
-Chart.register(annotationPlugin);
 
 const container = useTemplateRef('container');
 const chart = ref<Chart>();

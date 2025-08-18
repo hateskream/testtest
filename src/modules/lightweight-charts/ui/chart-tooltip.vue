@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js';
-import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annotation';
-
-Chart.register(annotationPlugin);
+import { type PartialEventContext } from 'chartjs-plugin-annotation';
 
 import type { IChartTooltipData } from '../model';
 import type { RangeChart } from '@/shared/ui/chart-range';
