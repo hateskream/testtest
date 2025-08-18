@@ -20,7 +20,7 @@ interface IChartProps {
 
 const props = defineProps<IChartProps>();
 
-const activeRange = defineModel<RangeChart>('active-range', {
+const activeRange = defineModel<RangeChart>('activeRange', {
 	required: true,
 });
 
