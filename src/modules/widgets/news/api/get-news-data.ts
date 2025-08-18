@@ -1,30 +1,17 @@
 import { useHttpService } from '@/shared/service/http-service';
 import {
-	NewsScore,
-	NewsSegment,
-	NewsSentiment,
-	NewsSource,
+	Sentiment,
+	Source,
 	type INews as INewsDomain,
 	type INewsStock,
 } from '../model';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
+import { MarketType } from '@/modules/market';
 
 const IS_USE_MOCK = true;
 
-export interface IGetNewsRequest {
-	segment?: NewsSegment[];
-	source?: NewsSource[];
-	sentiment?: NewsSentiment[];
-	score?: NewsScore[];
-	dateRange?: string | 'all';
-	sortBy?: {
-		name: string;
-		order: string;
-	};
-	locations?: string;
-}
 
 type INews = Omit<INewsDomain, 'stocks' | 'srcSourceImage'> & {
 	stocks: Omit<INewsStock, 'srcImage'>[];
@@ -34,42 +21,20 @@ export interface IGetNewsResponse {
 	data: INews[];
 }
 
-export async function getNews(args: IGetNewsRequest): Promise<INewsDomain[] | null> {
+export async function getNews(): Promise<INewsDomain[] | null> {
 	const httpService = useHttpService();
 	const logger = useLogger();
-
-	const query = prepareRequest(args);
 
 	try {
 		const response = IS_USE_MOCK
 			? await getMockData()
-			: await httpService.get<IGetNewsResponse>('/api/news', {
-				query,
-			});
+			: await httpService.get<IGetNewsResponse>('/api/news');
 
 		return prepareResponse(response);
 	} catch (error) {
 		logger.error('Failed to get news', error as Error);
 		throw error;
 	}
-}
-
-function prepareRequest(args: IGetNewsRequest): { [x: string]: string | boolean | number } {
-	const query: { [x: string]: string | boolean | number } = {};
-
-	const cleanArgs = removeUndefinedPropertiesFromObject(args);
-
-	Object.entries(cleanArgs).forEach(([key, item]) => {
-		if (Array.isArray(item)) {
-			query[key] = item.join(',');
-		} else if (typeof item === 'object') {
-			query[key] = JSON.stringify(item);
-		} else {
-			query[key] = item;
-		}
-	});
-
-	return query;
 }
 
 function prepareResponse(response: IGetNewsResponse): INewsDomain[] {
@@ -94,8 +59,8 @@ async function getMockData(): Promise<IGetNewsResponse> {
 				code: 'us',
 			},
 			score: 50,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+			sentiment: Sentiment.Neutral,
+			source: Source.InvestingCom,
 			stocks: [
 				{
 					name: 'Tesla Inc',
@@ -106,7 +71,7 @@ async function getMockData(): Promise<IGetNewsResponse> {
 					ticker: 'META',
 				},
 			],
-			segment: NewsSegment.Crypto,
+			segment: MarketType.Crypto,
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
 		},
@@ -120,8 +85,8 @@ async function getMockData(): Promise<IGetNewsResponse> {
 				code: 'us',
 			},
 			score: 76,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+			sentiment: Sentiment.Neutral,
+			source: Source.InvestingCom,
 			stocks: [
 				{
 					name: 'Tesla Inc',
@@ -132,7 +97,7 @@ async function getMockData(): Promise<IGetNewsResponse> {
 					ticker: 'META',
 				},
 			],
-			segment: NewsSegment.Crypto,
+			segment: MarketType.Crypto,
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
 		},
@@ -146,8 +111,8 @@ async function getMockData(): Promise<IGetNewsResponse> {
 				code: 'us',
 			},
 			score: 32,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+			sentiment: Sentiment.Neutral,
+			source: Source.InvestingCom,
 			stocks: [
 				{
 					name: 'Tesla Inc',
@@ -158,7 +123,7 @@ async function getMockData(): Promise<IGetNewsResponse> {
 					ticker: 'META',
 				},
 			],
-			segment: NewsSegment.Crypto,
+			segment: MarketType.Crypto,
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
 		},
@@ -172,8 +137,8 @@ async function getMockData(): Promise<IGetNewsResponse> {
 				code: 'us',
 			},
 			score: 10,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+			sentiment: Sentiment.Neutral,
+			source: Source.InvestingCom,
 			stocks: [
 				{
 					name: 'Tesla Inc',
@@ -184,7 +149,7 @@ async function getMockData(): Promise<IGetNewsResponse> {
 					ticker: 'META',
 				},
 			],
-			segment: NewsSegment.Crypto,
+			segment: MarketType.Crypto,
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
 		},

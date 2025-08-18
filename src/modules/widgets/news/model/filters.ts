@@ -31,3 +31,28 @@ export const sourceToName: Readonly<Record<Source, string>> = {
 	[Source.InvestingCom]: 'Investing.com',
 	[Source.Benzinga]: 'Benzinga',
 };
+
+export function toggleFilter<T>(selected: Set<T>, value: T): Set<T> {
+	const newSet = new Set(selected);
+	newSet.has(value) ? newSet.delete(value) : newSet.add(value);
+	return newSet;
+}
+
+export function titleGenerator<T extends string>(
+	selectedSet: Set<T>,
+	mappingObject: Record<T, string>,
+): string {
+	if (selectedSet.size === 0) {
+		return '';
+	}
+
+	const firstElementName = mappingObject[Array.from(selectedSet)[0]];
+
+	const otherSelectedCount = selectedSet.size - 1;
+
+	if (otherSelectedCount === 0) {
+		return firstElementName;
+	}
+
+	return `${firstElementName} +${otherSelectedCount}`;
+}

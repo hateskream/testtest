@@ -1,29 +1,55 @@
 <script setup lang="ts">
-import { useNewsStore } from '../stores';
+import type { MarketType } from '@/modules/market';
 import {
 	ModalItemSwitch,
 	WidgetContextMenu,
 	ModalSubmenu,
 } from '../../base';
+import {
+	Score,
+	Sentiment,
+	Source,
+	toggleSetting,
+	type IDisplaySettings,
+	type ILocation,
+	type SettingKey,
+	type SortState,
+} from '../model';
 
 import NewsFilters from './news-filters-component.vue';
 
-const newsStore = useNewsStore();
-
-const props = defineProps<{
+interface INewsContextMenuProps {
 	title: string;
-}>();
+}
+
+const props = defineProps<INewsContextMenuProps>();
+
+const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
+const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
+const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
+const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
+
+const sortBy = defineModel<SortState>('sortBy', { required: true });
+
+const displaySettings = defineModel<IDisplaySettings>('displaySettings', { required: true });
+
+const locations = defineModel<ILocation[]>('locations', { required: true });
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'reset'): void;
 }>();
+
+function toggleDisplaySettings(settingsKey: SettingKey) {
+	displaySettings.value = toggleSetting(displaySettings.value, settingsKey);
+}
 </script>
 
 <template>
 	<widget-context-menu
 		:title="props.title"
 		@delete="emit('delete')"
-		@reset="newsStore.resetAll"
+		@reset="emit('reset')"
 	>
 		<modal-submenu>
 			<template #title> Change display </template>
@@ -31,44 +57,44 @@ const emit = defineEmits<{
 			<template #content>
 				<div :class="classes.changeDisplayWrapper">
 					<modal-item-switch
-						:model-value="newsStore.isShowDate"
-						@update:model-value="newsStore.toggleShowDate"
+						:model-value="displaySettings.isShowDate"
+						@update:model-value="toggleDisplaySettings('isShowDate')"
 					>
 						Date
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowSource"
-						@update:model-value="newsStore.toggleShowSource"
+						:model-value="displaySettings.isShowSource"
+						@update:model-value="toggleDisplaySettings('isShowSource')"
 					>
 						Source
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowSentiment"
-						@update:model-value="newsStore.toggleShowSentiment"
+						:model-value="displaySettings.isShowSentiment"
+						@update:model-value="toggleDisplaySettings('isShowSentiment')"
 					>
 						Sentiment
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowDesc"
-						@update:model-value="newsStore.toggleShowDesc"
+						:model-value="displaySettings.isShowDesc"
+						@update:model-value="toggleDisplaySettings('isShowDesc')"
 					>
 						Description
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowAuthor"
-						@update:model-value="newsStore.toggleShowAuthor"
+						:model-value="displaySettings.isShowAuthor"
+						@update:model-value="toggleDisplaySettings('isShowAuthor')"
 					>
 						Author
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowSymbols"
-						@update:model-value="newsStore.toggleShowSymbols"
+						:model-value="displaySettings.isShowSymbols"
+						@update:model-value="toggleDisplaySettings('isShowSymbols')"
 					>
 						Symbols
 					</modal-item-switch>
 					<modal-item-switch
-						:model-value="newsStore.isShowScore"
-						@update:model-value="newsStore.toggleShowScore"
+						:model-value="displaySettings.isShowScore"
+						@update:model-value="toggleDisplaySettings('isShowScore')"
 					>
 						Score
 					</modal-item-switch>
@@ -80,7 +106,14 @@ const emit = defineEmits<{
 			<template #title> Filter & Sort </template>
 
 			<template #content>
-				<news-filters />
+				<news-filters
+					v-model:selected-scores="selectedScores"
+					v-model:selected-segments="selectedSegments"
+					v-model:selected-sentiment="selectedSentiment"
+					v-model:selected-sources="selectedSources"
+					v-model:sort-by="sortBy"
+					v-model:locations="locations"
+				/>
 			</template>
 		</modal-submenu>
 	</widget-context-menu>

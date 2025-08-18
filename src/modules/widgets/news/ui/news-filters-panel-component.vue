@@ -1,38 +1,59 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useNewsStore } from '../stores';
-import { compareStrings } from '@/shared/lib';
 import { UiPosition } from '@/shared/ui/position';
 import {
 	ModalBadgeList,
 	ModalBadge,
-	ModalFilterTicker,
 	ModalItemSelector,
-	ModalItemCheckbox,
 } from '../../base';
-import type { IFilterList } from '../../base/modal/model';
-import { UiImage } from '@/shared/ui/image';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+import { marketToLabel, type MarketType } from '@/modules/market';
+import {
+	type Score,
+	type Sentiment,
+	type Source,
+	type SortState,
+	toggleFilter,
+	scoreToName,
+	titleGenerator,
+	sentimentToName,
+	sourceToName,
+	type ILocation,
+} from '../model';
 
 import NewsFilters from './news-filters-component.vue';
 
-const newsStore = useNewsStore();
+const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
+const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
+const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
+const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
 
-function getTitleFilterList(
-	filterName: string,
-	value: string[],
-	list: IFilterList<string>['list'],
-) {
-	if (value.length === 0) {
-		return filterName;
-	}
+const sortBy = defineModel<SortState>('sortBy', { required: true });
 
-	const { label } = list.find(item => compareStrings(item.value, value[0]))!;
+const locations = defineModel<ILocation[]>('locations', { required: true });
 
-	return `${label} ${value.length > 1 ? `+${value.length - 1}` : ''}`;
+const titleScore = computed((): string => titleGenerator(selectedScores.value, scoreToName));
+const titleSegment = computed((): string => titleGenerator(selectedSegments.value, marketToLabel));
+const titleSentiment = computed((): string => titleGenerator(selectedSentiment.value, sentimentToName));
+const titleSource = computed((): string => titleGenerator(selectedSources.value, sourceToName));
+
+function toggleScore(score: Score) {
+	selectedScores.value = toggleFilter(selectedScores.value, score);
 }
 
-const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
+function toggleSegment(segment: MarketType) {
+	selectedSegments.value = toggleFilter(selectedSegments.value, segment);
+}
+
+function toggleSentiment(sentiment: Sentiment) {
+	selectedSentiment.value = toggleFilter(selectedSentiment.value, sentiment);
+}
+
+function toggleSource(source: Source) {
+	selectedSources.value = toggleFilter(selectedSources.value, source);
+}
 </script>
 
 <template>
@@ -49,7 +70,14 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 				</template>
 
 				<template #content>
-					<news-filters />
+					<news-filters
+						v-model:selected-scores="selectedScores"
+						v-model:selected-segments="selectedSegments"
+						v-model:selected-sentiment="selectedSentiment"
+						v-model:selected-sources="selectedSources"
+						v-model:sort-by="sortBy"
+						v-model:locations="locations"
+					/>
 				</template>
 			</ui-position>
 		</div>
@@ -57,7 +85,7 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 		<ui-delimiter />
 
 		<div :class="classes.listFilters">
-			<div
+			<!-- <div
 				v-if="newsStore.activeTickersList.length > 0"
 				:class="classes.listFilterWithDelimiter"
 			>
@@ -106,16 +134,15 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 					</template>
 				</modal-badge>
 				<ui-delimiter />
-			</div>
-
+			</div> -->
+			<ui-delimiter v-if="selectedScores.size > 0" />
 			<div
-				v-for="(filter, key, idx) in newsStore.activeFilters"
-				:key="key"
+				v-if="selectedScores.size > 0"
 				:class="classes.listFilterWithDelimiter"
 			>
 				<modal-badge>
 					<template #title>
-						{{ getTitleFilterList(filter.name, filter.value, filter.list) }}
+						{{ titleScore }}
 
 						<ui-icon
 							:id="IconIds.DropdownDown"
@@ -128,46 +155,142 @@ const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
 					<template #content>
 						<modal-badge-list>
 							<template #title>
-								{{ key }}
+								Score
 							</template>
 
 							<template
-								v-for="item in filter.list"
-								:key="item.value"
+								v-for="(name, key) in scoreToName"
+								:key="key"
 							>
-								<modal-item-checkbox
-									v-if="filter.multiple"
-									:model-value="
-										(newsStore.activeFilters[key].value as string[]).includes(
-											item.value,
-										)
-									"
-									@update:model-value="
-										newsStore.toggleFiltersList(key as string, item.value)
-									"
-								>
-									{{ item.label }}
-								</modal-item-checkbox>
-
 								<modal-item-selector
-									v-else
-									:model-value="
-										(newsStore.activeFilters[key].value as string[]).includes(
-											item.value,
-										)
-									"
-									@update:model-value="
-										newsStore.toggleFiltersList(key as string, item.value)
-									"
+									:model-value="selectedScores.has(key)"
+									@update:model-value="toggleScore(key)"
 								>
-									{{ item.label }}
+									{{ name }}
 								</modal-item-selector>
 							</template>
 						</modal-badge-list>
 					</template>
 				</modal-badge>
 
-				<ui-delimiter v-if="idx !== Object.keys(newsStore.activeFilters).length - 1" />
+			</div>
+
+			<ui-delimiter v-if="selectedSegments.size > 0" />
+			<div
+				v-if="selectedSegments.size > 0"
+				:class="classes.listFilterWithDelimiter"
+			>
+				<modal-badge>
+					<template #title>
+						{{ titleSegment }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</template>
+
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Segment
+							</template>
+
+							<template
+								v-for="(name, key) in marketToLabel"
+								:key="key"
+							>
+								<modal-item-selector
+									:model-value="selectedSegments.has(key)"
+									@update:model-value="toggleSegment(key)"
+								>
+									{{ name }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+
+			</div>
+
+			<ui-delimiter v-if="selectedSentiment.size > 0" />
+			<div
+				v-if="selectedSentiment.size > 0"
+				:class="classes.listFilterWithDelimiter"
+			>
+				<modal-badge>
+					<template #title>
+						{{ titleSentiment }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</template>
+
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Sentiment
+							</template>
+
+							<template
+								v-for="(name, key) in sentimentToName"
+								:key="key"
+							>
+								<modal-item-selector
+									:model-value="selectedSentiment.has(key)"
+									@update:model-value="toggleSentiment(key)"
+								>
+									{{ name }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+			</div>
+
+			<ui-delimiter v-if="selectedSources.size > 0" />
+			<div
+				v-if="selectedSources.size > 0"
+				:class="classes.listFilterWithDelimiter"
+			>
+				<modal-badge>
+					<template #title>
+						{{ titleSource }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="12"
+							height="12"
+							:class="classes.icon"
+						/>
+					</template>
+
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Source
+							</template>
+
+							<template
+								v-for="(name, key) in sourceToName"
+								:key="key"
+							>
+								<modal-item-selector
+									:model-value="selectedSources.has(key)"
+									@update:model-value="toggleSource(key)"
+								>
+									{{ name }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
 			</div>
 		</div>
 	</div>

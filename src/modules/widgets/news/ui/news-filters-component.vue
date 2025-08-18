@@ -1,20 +1,58 @@
 <script setup lang="ts">
-import { useNewsStore } from '../stores';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import {
 	ModalFilter,
 	ModalFilterTabWrapper,
-	ModalFilterTicker,
 	ModalFilterTitle,
 	ModalItemInteraction,
 	ModalItemSelector,
 } from '../../base';
-import { FilterType } from '../../base/modal/model';
+import {
+	scoreToName,
+	sentimentToName,
+	sortToName,
+	sourceToName,
+	toggleFilter,
+	toggleSort,
+	type ILocation,
+	type Score,
+	type Sentiment,
+	type SortState,
+	type Source,
+} from '../model';
+import { getAllMarkets, type MarketType } from '@/modules/market';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
-const newsStore = useNewsStore();
+const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
+const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
+const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
+const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
+
+const sortBy = defineModel<SortState>('sortBy', { required: true });
+
+const locations = defineModel<ILocation[]>('locations', { required: true });
+
+function toggleScore(score: Score) {
+	selectedScores.value = toggleFilter(selectedScores.value, score);
+}
+
+function toggleSegment(segment: MarketType) {
+	selectedSegments.value = toggleFilter(selectedSegments.value, segment);
+}
+
+function toggleSentiment(sentiment: Sentiment) {
+	selectedSentiment.value = toggleFilter(selectedSentiment.value, sentiment);
+}
+
+function toggleSource(source: Source) {
+	selectedSources.value = toggleFilter(selectedSources.value, source);
+}
+
+function toggleSortBy(sort: SortState) {
+	sortBy.value = toggleSort(sortBy.value, sort);
+}
 </script>
 
 <template>
@@ -24,27 +62,91 @@ const newsStore = useNewsStore();
 		<template #content>
 			<div :class="classes.rowWrapper">
 				<div
-					v-for="(filter, key) in newsStore.filters"
-					:key="key"
 					:class="classes.row"
 				>
 					<div :class="classes.rowTitle">
-						{{ filter.name }}
+						Score
 					</div>
 
 					<div
-						v-if="filter.type === FilterType.List"
 						:class="classes.tabs"
 					>
 						<modal-filter-tab-wrapper
-							v-for="item in filter.list"
-							:key="`filter-${key}-${item.value}`"
-							:is-active="
-								(newsStore.filters[key].value as string[]).includes(item.value)
-							"
-							@click="newsStore.toggleFiltersList(key, item.value)"
+							v-for="(name, key) in scoreToName"
+							:key="key"
+							:is-active="selectedScores.has(key)"
+							@click="toggleScore(key)"
 						>
-							{{ item.label }}
+							{{ name }}
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+			</div>
+
+			<div :class="classes.rowWrapper">
+				<div
+					:class="classes.row"
+				>
+					<div :class="classes.rowTitle">
+						Segment
+					</div>
+
+					<div
+						:class="classes.tabs"
+					>
+						<modal-filter-tab-wrapper
+							v-for="{type, label} in getAllMarkets()"
+							:key="type"
+							:is-active="selectedSegments.has(type)"
+							@click="toggleSegment(type)"
+						>
+							{{ label }}
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+			</div>
+
+			<div :class="classes.rowWrapper">
+				<div
+					:class="classes.row"
+				>
+					<div :class="classes.rowTitle">
+						Sentiment
+					</div>
+
+					<div
+						:class="classes.tabs"
+					>
+						<modal-filter-tab-wrapper
+							v-for="(name, key) in sentimentToName"
+							:key="key"
+							:is-active="selectedSentiment.has(key)"
+							@click="toggleSentiment(key)"
+						>
+							{{ name }}
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
+			</div>
+
+			<div :class="classes.rowWrapper">
+				<div
+					:class="classes.row"
+				>
+					<div :class="classes.rowTitle">
+						Source
+					</div>
+
+					<div
+						:class="classes.tabs"
+					>
+						<modal-filter-tab-wrapper
+							v-for="(name, key) in sourceToName"
+							:key="key"
+							:is-active="selectedSources.has(key)"
+							@click="toggleSource(key)"
+						>
+							{{ name }}
 						</modal-filter-tab-wrapper>
 					</div>
 				</div>
@@ -59,7 +161,7 @@ const newsStore = useNewsStore();
 				</template>
 
 				<template #content>
-					<news-location-filter-component />
+					<news-location-filter-component v-model:locations="locations" />
 				</template>
 			</ui-position>
 
@@ -72,25 +174,25 @@ const newsStore = useNewsStore();
 				</template>
 
 				<template #content>
-					<modal-filter-ticker
+					<!-- <modal-filter-ticker
 						:model-value="newsStore.tickerLists"
 						@update:model-value="newsStore.setTickerLists"
-					/>
+					/> -->
 				</template>
 			</ui-position>
 
 			<ui-driver />
 
 			<div>
-				<modal-filter-title> Sort By </modal-filter-title>
+				<modal-filter-title> Sort By</modal-filter-title>
 
 				<modal-item-selector
-					v-for="sort in newsStore.sortBy"
-					:key="sort.key"
-					:model-value="sort.value"
-					@update:model-value="newsStore.setSort(sort)"
+					v-for="(name, key) in sortToName"
+					:key="key"
+					:model-value="sortBy === key"
+					@update:model-value="toggleSortBy(key)"
 				>
-					{{ sort.name }}
+					{{ name }}
 				</modal-item-selector>
 			</div>
 		</template>

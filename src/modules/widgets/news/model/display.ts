@@ -8,7 +8,7 @@ export interface IDisplaySettings {
 	isShowSentiment: boolean;
 }
 
-type SettingKey = keyof IDisplaySettings;
+export type SettingKey = keyof IDisplaySettings;
 
 export function toggleSetting(settings: IDisplaySettings, key: SettingKey): IDisplaySettings {
 	return { ...settings, [key]: !settings[key] };

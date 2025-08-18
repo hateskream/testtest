@@ -3,9 +3,8 @@ import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
-import { useNewsStore } from '../stores';
-import type { IGetNewsRequest } from '../api';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { useNews } from '../composables';
 
 import NewsFiltersPanel from './news-filters-panel-component.vue';
 import ErrorComponent from './error-component.vue';
@@ -19,24 +18,19 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const newsStore = useNewsStore();
+const {
+	selectedScores,
+	selectedSegments,
+	selectedSentiment,
+	selectedSources,
+	displaySettings,
+	locations,
+	sortBy,
 
-const newsArguments = computed<IGetNewsRequest>(() => ({
-	source: newsStore.filters.source.value,
-	score: newsStore.filters.score.value,
-	segment: newsStore.filters.segment.value,
-	sentiment: newsStore.filters.sentiment.value,
-	dateRange: 'newsStore.filters.dateRange.value',
-	sortBy: newsStore.activeSort
-		? {
-			name: newsStore.activeSort.key,
-			order: newsStore.activeSort.order.toUpperCase(),
-		}
-		: undefined,
-	locations: JSON.stringify(newsStore.activeLocationFilters),
-}));
+	resetAllChanges,
+} = useNews();
 
-const { data, isLoading, isError } = useQueryNews(newsArguments.value);
+const { data, isLoading, isError } = useQueryNews();
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 
@@ -54,16 +48,35 @@ const emit = defineEmits<{
 
 		</template>
 		<template #content>
-			<news-filters-panel />
+			<news-filters-panel
+				v-model:selected-scores="selectedScores"
+				v-model:selected-segments="selectedSegments"
+				v-model:selected-sentiment="selectedSentiment"
+				v-model:selected-sources="selectedSources"
+				v-model:locations="locations"
+				v-model:sort-by="sortBy"
+			/>
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-news-component
 				v-else-if="data"
 				:news="data"
+				:display-settings="displaySettings"
 			/>
 		</template>
 		<template #rcm>
-			<news-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<news-context-menu
+				v-model:display-settings="displaySettings"
+				v-model:selected-scores="selectedScores"
+				v-model:selected-segments="selectedSegments"
+				v-model:selected-sentiment="selectedSentiment"
+				v-model:selected-sources="selectedSources"
+				v-model:sort-by="sortBy"
+				v-model:locations="locations"
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

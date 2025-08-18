@@ -6,7 +6,7 @@ export enum MarketType {
 	Indices = 'indices',
 }
 
-const marketToLabel: Record<MarketType, string> = {
+export const marketToLabel: Record<MarketType, string> = {
 	[MarketType.Crypto]: 'Crypto',
 	[MarketType.Stock]: 'Stock',
 	[MarketType.Forex]: 'Forex',

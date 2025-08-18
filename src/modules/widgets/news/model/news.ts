@@ -1,35 +1,5 @@
-import type { IFilterList } from '../../base/modal/model';
-
-export const NewsSegment = {
-	Crypto: 'crypto',
-	Stock: 'stock',
-	Forex: 'forex',
-} as const;
-
-export type NewsSegment = (typeof NewsSegment)[keyof typeof NewsSegment];
-
-export const NewsSource = {
-	InvestingCom: 'investing.com',
-	Benzinga: 'benzinga',
-} as const;
-
-export type NewsSource = (typeof NewsSource)[keyof typeof NewsSource];
-
-export const NewsSentiment = {
-	Optimistic: 'optimistic',
-	Neutral: 'neutral',
-	Pessimistic: 'pessimistic',
-} as const;
-
-export type NewsSentiment = (typeof NewsSentiment)[keyof typeof NewsSentiment];
-
-export const NewsScore = {
-	Low: 'low',
-	Medium: 'medium',
-	High: 'high',
-} as const;
-
-export type NewsScore = (typeof NewsScore)[keyof typeof NewsScore];
+import type { MarketType } from '@/modules/market';
+import type { Sentiment, Source } from './filters';
 
 export interface INewsStock {
 	ticker: string;
@@ -45,48 +15,12 @@ export interface INews {
 	title: string;
 	stocks: INewsStock[];
 	score: number;
-	segment: NewsSegment;
-	source: NewsSource;
+	segment: MarketType;
+	source: Source;
 	srcSourceImage: string;
-	sentiment: NewsSentiment;
+	sentiment: Sentiment;
 	location: {
 		name: string;
 		code: string;
 	};
-}
-
-export interface IFilterNews {
-	segment: IFilterList<NewsSegment>;
-	source: IFilterList<NewsSource>;
-	sentiment: IFilterList<NewsSentiment>;
-	score: IFilterList<NewsScore>;
-	// dateRange: IFilterDateRange;
-}
-
-export interface INewsLocationCountry {
-	name: string;
-	code: string;
-	isActive: boolean;
-}
-
-export interface INewsLocation {
-	region: string;
-	isActive: boolean;
-	isCanAllSwitch: boolean;
-	countries: INewsLocationCountry[];
-}
-
-export interface INewsCryptoCurrency {
-	id: string;
-	ticker: string;
-	name: string;
-	srcImage: string;
-}
-
-export interface INewsSort {
-	key: string;
-	order: string;
-	value: boolean;
-	name: string;
-	span?: string;
 }

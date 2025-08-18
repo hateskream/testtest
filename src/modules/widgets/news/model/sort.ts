@@ -10,6 +10,8 @@ export const sortToName: Readonly<Record<Sort, string>> = {
 	[Sort.Importance]: 'Importance',
 };
 
-export function getSortName(sort: Sort) {
-	return sortToName[sort];
+export type SortState = Sort | null;
+
+export function toggleSort(prevSort: SortState, newSort: SortState): SortState {
+	return prevSort === newSort ? null : newSort;
 }
