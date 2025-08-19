@@ -25,6 +25,8 @@ enum Group {
 	Volume = 'Volume',
 	Company = 'Company',
 	Source = 'Source',
+	AllTimeHigh = 'ATH Price',
+	AllTimeLow = 'ATL Price',
 	Other = 'Other',
 }
 
@@ -56,6 +58,20 @@ const columnTypeToGroup: Record<ColumnType, Group> = {
 	[ColumnType.VolumeAvg50d]: Group.Volume,
 
 	[ColumnType.MarketCap24h]: Group.MarketCap,
+	[ColumnType.MarketCapRank]: Group.MarketCap,
+	[ColumnType.MarketCapFullyDiluted]: Group.MarketCap,
+	[ColumnType.MarketCapChange24h]: Group.MarketCap,
+	[ColumnType.MarketCapChange24hPercent]: Group.MarketCap,
+	[ColumnType.CirculatingSupply]: Group.MarketCap,
+	[ColumnType.TotalSupply]: Group.MarketCap,
+	[ColumnType.MaxSupply]: Group.MarketCap,
+
+	[ColumnType.AllTimeHigh]: Group.AllTimeHigh,
+	[ColumnType.AllTimeHighChangePercent]: Group.AllTimeHigh,
+	[ColumnType.AllTimeHighDate]: Group.AllTimeHigh,
+	[ColumnType.AllTimeLow]: Group.AllTimeLow,
+	[ColumnType.AllTimeLowChangePercent]: Group.AllTimeLow,
+	[ColumnType.AllTimeLowDate]: Group.AllTimeLow,
 
 	[ColumnType.RSIValue]: Group.Other,
 	[ColumnType.RSIChart]: Group.Other,
@@ -75,10 +91,8 @@ const columnTypeToGroup: Record<ColumnType, Group> = {
 
 	[ColumnType.UpdateDate]: Group.Other,
 
-	[ColumnType.OpenPrice]: Group.Other,
-	[ColumnType.ClosePrice]: Group.Other,
-
-	[ColumnType.SvgChart]: Group.Other,
+	[ColumnType.PriceOpen]: Group.Other,
+	[ColumnType.PriceClose]: Group.Other,
 };
 
 interface INotFullCol {
@@ -99,8 +113,10 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 		},
 		type: columnToCell[col.columnType],
 		order: 0,
-		displayColumnName: display.name,
-		displayShortColumnName: display.shortName,
+		displayColumnName: display.columnName,
+		displayShortColumnName: display.settingsName,
+		// TODO: tooltip
+		// tooltip: display.tooltip,
 	};
 }
 
