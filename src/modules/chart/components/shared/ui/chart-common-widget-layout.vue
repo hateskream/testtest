@@ -36,9 +36,9 @@ const props = defineProps<IProps>();
 
 .widget {
 	width: 100%;
+	overflow: hidden;
 	background: #131315;
 	border-radius: 18px;
-	overflow: hidden;
 }
 
 .header {

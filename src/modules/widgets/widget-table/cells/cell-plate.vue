@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {computed} from 'vue';
+import { computed } from 'vue';
 
 interface IProps {
 	data: {
 		value: 'sale'
-			| 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell'
-	}
+			| 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell';
+	};
 }
 
 
@@ -52,12 +52,11 @@ const currentStatus = computed(() => {
 </template>
 
 <style module="classes">
-
 .plateWrapper {
 	display: flex;
-	width: 100%;
-	align-items: center;
 	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
 }
 
 .plate {

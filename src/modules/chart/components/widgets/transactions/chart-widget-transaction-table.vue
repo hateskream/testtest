@@ -236,8 +236,8 @@ const rows = [
 }
 
 .scrollable {
-	height: 100%;
 	position: relative;
+	height: 100%;
 	overflow: auto;
 }
 </style>

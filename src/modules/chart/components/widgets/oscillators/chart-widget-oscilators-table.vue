@@ -1,100 +1,99 @@
 <script setup lang="ts">
-import {ChartCommonWidgetLayout} from '@/modules/chart/components/shared/ui';
-import {WidgetTypedTable, CellType} from '@/modules/widgets/widget-table';
+import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
 type TSignal = 'buy' | 'sell' | 'neutral';
 
 
-// Direct constants instead of props
 const title = 'Oscillators Table';
 const overall: TSignal = 'neutral';
 const items = [
 	{
 		id: 'rsi',
 		data: {
-			name: {value: 'Relative Strength Index (14)'},
-			value: {value: '38.8435', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Relative Strength Index (14)' },
+			value: { value: '38.8435', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'stoch',
 		data: {
-			name: {value: 'Stochastic %K (14, 3, 3)'},
-			value: {value: '12.5290', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Stochastic %K (14, 3, 3)' },
+			value: { value: '12.5290', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'cci',
 		data: {
-			name: {value: 'Commodity Channel Index (20)'},
-			value: {value: '-128.2618', magnitude: null},
-			signal: {value: 'buy' as TSignal},
+			name: { value: 'Commodity Channel Index (20)' },
+			value: { value: '-128.2618', magnitude: null },
+			signal: { value: 'buy' as TSignal },
 		},
 	},
 	{
 		id: 'adx',
 		data: {
-			name: {value: 'Average Directional Index (14)'},
-			value: {value: '24.8059', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Average Directional Index (14)' },
+			value: { value: '24.8059', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'ao',
 		data: {
-			name: {value: 'Awesome Oscillator'},
-			value: {value: '-0.4316', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Awesome Oscillator' },
+			value: { value: '-0.4316', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'mom',
 		data: {
-			name: {value: 'Momentum (10)'},
-			value: {value: '-0.5793', magnitude: null},
-			signal: {value: 'sell' as TSignal},
+			name: { value: 'Momentum (10)' },
+			value: { value: '-0.5793', magnitude: null },
+			signal: { value: 'sell' as TSignal },
 		},
 	},
 	{
 		id: 'macd',
 		data: {
-			name: {value: 'MACD Level (12, 26)'},
-			value: {value: '-0.1221', magnitude: null},
-			signal: {value: 'sell' as TSignal},
+			name: { value: 'MACD Level (12, 26)' },
+			value: { value: '-0.1221', magnitude: null },
+			signal: { value: 'sell' as TSignal },
 		},
 	},
 	{
 		id: 'stoch_rsi',
 		data: {
-			name: {value: 'Stochastic RSI Fast (3, 3, 14, 14)'},
-			value: {value: '12.9350', magnitude: null},
-			signal: {value: 'buy' as TSignal},
+			name: { value: 'Stochastic RSI Fast (3, 3, 14, 14)' },
+			value: { value: '12.9350', magnitude: null },
+			signal: { value: 'buy' as TSignal },
 		},
 	},
 	{
 		id: 'wpr',
 		data: {
-			name: {value: 'Williams Percent Range (14)'},
-			value: {value: '-75.6284', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Williams Percent Range (14)' },
+			value: { value: '-75.6284', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'bbp',
 		data: {
-			name: {value: 'Bull Bear Power'},
-			value: {value: '-0.5912', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Bull Bear Power' },
+			value: { value: '-0.5912', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 	{
 		id: 'uo',
 		data: {
-			name: {value: 'Ultimate Oscillator (7, 14, 28)'},
-			value: {value: '47.4630', magnitude: null},
-			signal: {value: 'neutral' as TSignal},
+			name: { value: 'Ultimate Oscillator (7, 14, 28)' },
+			value: { value: '47.4630', magnitude: null },
+			signal: { value: 'neutral' as TSignal },
 		},
 	},
 ];
@@ -110,7 +109,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.TEXT,
-		group: {name: 'Osc', displayName: 'Osc'},
+		group: { name: 'Osc', displayName: 'Osc' },
 	},
 	{
 		key: 'value',
@@ -121,7 +120,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.NUMBER,
-		group: {name: 'Osc', displayName: 'Osc'},
+		group: { name: 'Osc', displayName: 'Osc' },
 	},
 	{
 		key: 'signal',
@@ -132,7 +131,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.PLATE,
-		group: {name: 'Osc', displayName: 'Osc'},
+		group: { name: 'Osc', displayName: 'Osc' },
 	},
 ];
 
@@ -184,19 +183,13 @@ const columns = [
 </template>
 
 <style module="classes">
-.header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 8px;
-}
+
 
 .left {
 	text-align: left;
 	color: var(--text-color-base-500);
 }
 
-/* pill like screenshot */
 .pill {
 	display: inline-flex;
 	align-items: center;
