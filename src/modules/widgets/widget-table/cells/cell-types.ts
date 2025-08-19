@@ -8,6 +8,7 @@ import CellImageComponent from './cell-image-component.vue';
 import CellNumberComponent from './cell-number-component.vue';
 import CellPercentComponent from './cell-percent-component.vue';
 import CellDateComponent from './cell-date-component.vue';
+import CellPlate from './cell-plate.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -20,6 +21,7 @@ export enum CellType {
 	IMAGE = 'image',
 	DATE = 'date',
 	IMAGE_STRING = 'image-string',
+	PLATE = 'plate',
 }
 
 const components: Record<CellType, Component> = {
@@ -33,6 +35,7 @@ const components: Record<CellType, Component> = {
 	[CellType.IMAGE]: CellImageComponent,
 	[CellType.DATE]: CellDateComponent,
 	[CellType.IMAGE_STRING]: TableCellSymbol,
+	[CellType.PLATE]: CellPlate,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

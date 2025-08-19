@@ -3,9 +3,9 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import type { ISectionProps } from '@/modules/chart/models';
-import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal } from '../../widgets';
+import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetTransactionTable } from '../../widgets';
+import { ChartCommonSectionLayout } from '@/modules/chart/components/shared';
 
-import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
 
 const props = defineProps<ISectionProps>();
 
@@ -35,10 +35,13 @@ onUnmounted(() => {
 
 
 	<chart-common-section-layout>
-		<template #refAnchor><div ref="itemRef"></div></template>
-		<template #title>{{props.section?.title}}</template>
+		<template #refAnchor>
+			<div ref="itemRef"></div>
+		</template>
+		<template #title>{{ props.section?.title }}</template>
 		<template #body>
 			<chart-widget-transaction-avg />
+			<chart-widget-transaction-table />
 			<chart-widget-transaction-avg-total />
 		</template>
 	</chart-common-section-layout>

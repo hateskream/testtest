@@ -80,13 +80,17 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 
 const emit = defineEmits<IEmits<T>>();
 
-// Computed property to check which columns have custom slots from parent
+// Computed property to check which columns have custom header/cell slots from parent
 const hasCustomSlots = computed(() => {
 	const slots = getCurrentInstance()?.slots || {};
-	return props.columns.reduce((acc, column) => {
-		acc[column.key] = !!(slots[`cell-${column.key}`] || slots[`header-${column.key}`]);
-		return acc;
-	}, {} as Record<string, boolean>);
+	return props.columns.reduce(
+		(acc, column) => {
+			acc.header[column.key] = !!slots[`header-${column.key}`];
+			acc.cell[column.key] = !!slots[`cell-${column.key}`];
+			return acc;
+		},
+		{ header: {} as Record<string, boolean>, cell: {} as Record<string, boolean> },
+	);
 });
 
 // Function to get the appropriate component for a column type
@@ -138,8 +142,6 @@ const tickerState = computed(() => {
 		isShowDescription: showDescription.value,
 	};
 });
-
-
 </script>
 
 <template>
@@ -177,21 +179,14 @@ const tickerState = computed(() => {
 			:key="`cell-${column.key}`"
 			#[`cell-${column.key}`]="cellProps"
 		>
-			<!-- If parent provides a custom slot, use it -->
+			<!-- Only treat as custom if a cell slot is actually provided -->
 			<slot
-				v-if="hasCustomSlots[column.key]"
+				v-if="hasCustomSlots.cell[column.key]"
 				:name="`cell-${column.key}`"
 				v-bind="cellProps"
 			/>
 			<!-- Otherwise, use the component based on column type -->
 			<template v-else>
-				<!-- {{ cellProps.row.data[column.key].value }} -->
-				<!-- {{ cellProps.row.data[column.key]  }} -->
-				<!-- {{column.type}} -->
-
-				<!-- {{ cellProps.row.data }} -->
-				<!-- {{ cellProps.row.data[column.key] }} -->
-				<!-- {{ getCellComponent(column.type).__name }} -->
 				<component
 					:is="getCellComponent(column.type)"
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
@@ -227,7 +222,6 @@ const tickerState = computed(() => {
 					( columns[0]?.type === 'symbol' || columns[0].type === 'image-string')"
 		>
 			<div
-
 				:class="classes.row"
 			>
 				<div :class="classes.rowTitle">

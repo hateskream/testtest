@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
-import { ChartWidgetOscillators } from '@/modules/chart/components/widgets/oscillators';
+import { ChartWidgetOscillators, ChartWidgetOscillatorsTable } from '@/modules/chart/components/widgets/oscillators';
 import { ChartWidgetMovingAverages } from '@/modules/chart/components/widgets/moving-averages';
 import type { ISectionProps } from '@/modules/chart/models';
 
@@ -41,6 +41,9 @@ onUnmounted(() => {
 				<div :class="classes.peGroup">
 					<chart-widget-oscillators />
 					<chart-widget-moving-averages />
+				</div>
+				<div>
+					<chart-widget-oscillators-table />
 				</div>
 			</div>
 		</template>

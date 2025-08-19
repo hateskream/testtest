@@ -18,10 +18,10 @@ import { ChartWidgetStockPeersBulk } from './stock-peers-bulk';
 import { ChartWidgetValuation } from './valuation';
 import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
-import { ChartWidgetOscillators } from './oscillators';
+import { ChartWidgetOscillators, ChartWidgetOscillatorsTable } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
 import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings } from './holdings';
-import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal } from './transactions';
+import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetTransactionTable } from './transactions';
 import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
 
 
@@ -54,4 +54,6 @@ export {
 	ChartWidgetTransactionAvg,
 	ChartWidgetTransactionAvgTotal,
 	ChartWidgetAnnualMarginTrends,
+	ChartWidgetTransactionTable,
+	ChartWidgetOscillatorsTable,
 };

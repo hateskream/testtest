@@ -38,6 +38,7 @@ const props = defineProps<IProps>();
 	width: 100%;
 	background: #131315;
 	border-radius: 18px;
+	overflow: hidden;
 }
 
 .header {

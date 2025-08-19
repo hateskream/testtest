@@ -1,41 +1,65 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {computed} from 'vue';
 
 interface IProps {
-	data: 'red' | 'gray' | 'yellow' | 'green';
+	data: {
+		value: 'sale'
+			| 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell'
+	}
 }
+
 
 const props = defineProps<IProps>();
 
 const statusConfig = {
-	red: {
+	sale: {
 		text: 'Sale',
 		class: 'red',
 	},
-	yellow: {
+	volatile: {
 		text: 'Volatile',
 		class: 'yellow',
 	},
-	green: {
+	purchases: {
 		text: 'Purchase',
-		class: 'green',
+		class: 'red',
 	},
-	gray: {
+	neutral: {
 		text: 'Neutral',
 		class: 'gray',
 	},
+	buy: {
+		text: 'Buy',
+		class: 'green',
+	},
+	sell: {
+		text: 'Sell',
+		class: 'red',
+	},
 } as const;
 
-const currentStatus = computed(() => statusConfig[props.data]);
+const currentStatus = computed(() => {
+	return statusConfig[props.data.value] ? statusConfig[props.data.value] : statusConfig.neutral;
+});
 </script>
 
 <template>
-	<div :class="[classes.plate, classes[currentStatus.class]]">
-		{{ currentStatus.text }}
+	<div :class="classes.plateWrapper">
+		<div :class="[classes.plate, classes[currentStatus.class]]">
+			{{currentStatus.text}}
+		</div>
 	</div>
 </template>
 
 <style module="classes">
+
+.plateWrapper {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-end;
+}
+
 .plate {
 	display: flex;
 	flex-direction: column;

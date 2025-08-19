@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {computed} from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import {IconIds, UiIcon} from '@/shared/ui/icon';
 import {
 	ColumnType,
 	mapCellToTable,
 	mapToTableColumnType,
 } from '@/modules/cell';
-import type { ITableColumn, TableRow } from '../model';
+import type {ITableColumn, TableRow} from '../model';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -17,7 +17,7 @@ interface IViewComponentProps {
 
 const props = defineProps<IViewComponentProps>();
 
-const columns = defineModel<ITableColumn[]>('columns', { required: true });
+const columns = defineModel<ITableColumn[]>('columns', {required: true});
 
 const genericColumns = computed(() =>
 	mapColumn(columns.value),
@@ -66,7 +66,6 @@ function mapRow(ticker: TableRow) {
 <template>
 
 	<div :class="classes.scrollable">
-
 		<widget-typed-table
 			:columns="genericColumns"
 			:rows="genericRows"

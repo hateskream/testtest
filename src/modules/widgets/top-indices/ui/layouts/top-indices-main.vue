@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
@@ -26,7 +25,7 @@ interface IIndicesData {
 			value: string;
 		};
 		status: {
-			value: 'red' | 'yellow' | 'green' | 'gray';
+			value: 'sale' | 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell';
 		};
 	};
 }
@@ -89,7 +88,7 @@ const columns = computed(() => [
 		sortable: false,
 		draggable: true,
 		visible: true,
-		type: 'status-plate', // Custom type for our status plate
+		type: 'plate', // Custom type for our status plate
 		group: {
 			name: 'status',
 			displayName: 'Status',
@@ -97,7 +96,7 @@ const columns = computed(() => [
 	},
 ]);
 
-// Convert props.indices to the format expected by WidgetTypedTable
+// Convert props.meta to the format expected by WidgetTypedTable
 const genericRows = computed(() =>
 	props.meta.map(item => ({
 		id: item.id,
@@ -126,7 +125,7 @@ const sampleData = computed((): IIndicesData[] => [
 				value: '+38.0',
 			},
 			status: {
-				value: 'yellow',
+				value: 'volatile',
 			},
 		},
 	},
@@ -140,13 +139,13 @@ const sampleData = computed((): IIndicesData[] => [
 				country: 'Germany',
 			},
 			percentage: {
-				value: '1.00',
+				value: '2.50',
 			},
 			priceChange: {
-				value: '+38.0',
+				value: '+45.2',
 			},
 			status: {
-				value: 'yellow',
+				value: 'buy',
 			},
 		},
 	},
@@ -160,13 +159,13 @@ const sampleData = computed((): IIndicesData[] => [
 				country: 'Italy',
 			},
 			percentage: {
-				value: '1.00',
+				value: '-0.75',
 			},
 			priceChange: {
-				value: '+38.0',
+				value: '-12.3',
 			},
 			status: {
-				value: 'yellow',
+				value: 'sell',
 			},
 		},
 	},
@@ -180,13 +179,13 @@ const sampleData = computed((): IIndicesData[] => [
 				country: 'Brazil',
 			},
 			percentage: {
-				value: '1.00',
+				value: '0.00',
 			},
 			priceChange: {
-				value: '+38.0',
+				value: '0.0',
 			},
 			status: {
-				value: 'yellow',
+				value: 'neutral',
 			},
 		},
 	},
@@ -200,20 +199,20 @@ const sampleData = computed((): IIndicesData[] => [
 				country: 'Sweden',
 			},
 			percentage: {
-				value: '1.00',
+				value: '3.25',
 			},
 			priceChange: {
-				value: '+38.0',
+				value: '+67.8',
 			},
 			status: {
-				value: 'yellow',
+				value: 'sale',
 			},
 		},
 	},
 ]);
 
 // Use provided data or sample data
-const displayData = computed(() => props.indices?.length > 0 ? genericRows.value :
+const displayData = computed(() => props.meta?.length > 0 ? genericRows.value :
 	sampleData.value.map(item => ({
 		id: item.id,
 		data: item.data,
@@ -226,6 +225,7 @@ const displayData = computed(() => props.indices?.length > 0 ? genericRows.value
 
 <template>
 	<div :class="classes.root">
+
 		<div :class="classes.scrollable">
 			<widget-typed-table
 				:columns="columns"
@@ -238,12 +238,7 @@ const displayData = computed(() => props.indices?.length > 0 ? genericRows.value
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:show-header="false"
-			>
-				<!-- Custom slot for status plate column -->
-				<template #cell-status="{ row }">
-					<cell-plate :data="row.data.status.value" />
-				</template>
-			</widget-typed-table>
+			/>
 		</div>
 	</div>
 
