@@ -1,6 +1,8 @@
 import { computed, ref } from 'vue';
+import { watch } from 'vue';
 
 import {
+	cloneState,
 	getActiveLocations,
 	getDefaultState,
 	Score,
@@ -12,8 +14,12 @@ import {
 	type SortState,
 } from '../model';
 import type { MarketType } from '@/modules/market';
+import { useGetState, useUpdateState } from '../queries';
 
-export function useNews() {
+export function useNews(widgetId: string) {
+	const { data: dataState } = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
 	const state = ref<IState>(getDefaultState());
 
 	const selectedScores = computed({
@@ -73,6 +79,16 @@ export function useNews() {
 	});
 
 	const activeLocations = computed(() => getActiveLocations(locations.value));
+
+	watch(dataState, newState => {
+		if (newState) {
+			state.value = cloneState(newState);
+		}
+	}, { immediate: true });
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
 
 	function resetAllChanges() {
 		state.value = getDefaultState();

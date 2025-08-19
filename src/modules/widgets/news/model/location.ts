@@ -97,6 +97,37 @@ export function getActiveLocations(locationFilters: ILocation[]): IActiveLocatio
 	return countries;
 }
 
+export function rehydrateLocations(locationFilters: ILocation[], activeLocations: IActiveLocation[]): ILocation[] {
+	if (activeLocations.length === 0) {
+		return locationFilters;
+	}
+
+	const updatedLocations = JSON.parse(JSON.stringify(locationFilters)) as ILocation[];
+
+	updatedLocations.forEach(location => {
+		location.isActive = false;
+		location.countries.forEach(country => {
+			country.isActive = false;
+		});
+	});
+
+	activeLocations.forEach(activeLocation => {
+		const locationToUpdate = updatedLocations.find(loc => loc.region === activeLocation.region);
+		if (locationToUpdate) {
+			locationToUpdate.isActive = true;
+
+			activeLocation.countries.forEach(countryCode => {
+				const countryToUpdate = locationToUpdate.countries.find(country => country.code === countryCode);
+				if (countryToUpdate) {
+					countryToUpdate.isActive = true;
+				}
+			});
+		}
+	});
+
+	return updatedLocations;
+}
+
 
 export const LOCATIONS_DEFAULT: ILocation[] = [
 	{
