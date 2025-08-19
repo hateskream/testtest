@@ -88,88 +88,146 @@ interface IColumnDisplay {
 export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 	[ColumnType.Symbol]: {
 		name: 'Symbol',
-		shortName: 'Sym',
+		shortName: 'Symbol',
 	},
 	[ColumnType.PriceCurrent]: {
-		name: 'Current Price',
-		shortName: 'Curr',
+		name: 'Current price',
+		shortName: 'Price',
 	},
 	[ColumnType.PriceMin24h]: {
-		name: '24h Min Price',
-		shortName: '24h Min',
+		name: 'Low price, 24 hours',
+		shortName: 'Low, 24h',
 	},
 	[ColumnType.PriceMax24h]: {
-		name: '24h Max Price',
-		shortName: '24h Max',
+		name: 'High price, 24 hours',
+		shortName: 'High, 24h',
 	},
 	[ColumnType.PriceMin1y]: {
-		name: '1y Min Price',
-		shortName: '1y Min',
+		name: 'Low price, 1 year',
+		shortName: 'Low, 1y',
 	},
 	[ColumnType.PriceMax1y]: {
-		name: '1y Max Price',
-		shortName: '1y Max',
+		name: 'High price, 1year',
+		shortName: 'High, 1y',
 	},
 	[ColumnType.PriceAvg50d]: {
-		name: '50d Avg Price',
-		shortName: '50d Avg',
+		name: 'Average price, 50 days',
+		shortName: ' Avg, 50d',
 	},
 	[ColumnType.PriceAvg200d]: {
-		name: '200d Avg Price',
-		shortName: '200d Avg',
+		name: 'Average price, 200 days',
+		shortName: 'Avg, 200d',
 	},
-	[ColumnType.Price1yRange]: {
-		name: '1y Price Range',
-		shortName: '1y Range',
+	[ColumnType.Price1yRange]: { // Range, 1y
+		name: '1y Price Range', // Price range
+		shortName: '1y Range', // Range
 	},
 	[ColumnType.Price24hChart]: {
-		name: '24h Price Chart',
-		shortName: '24h Chart',
+		name: 'Price chart, 24 hours',
+		shortName: 'Price, 24h',
 	},
 	[ColumnType.Price7dChart]: {
-		name: '7d Price Chart',
-		shortName: '7d Chart',
+		name: 'Price chart, 7 days',
+		shortName: 'Price, 7d',
 	},
 	[ColumnType.Price30dChart]: {
-		name: '30d Price Chart',
-		shortName: '30d Chart',
+		name: 'Price chart, 30 days',
+		shortName: 'Price, 30d',
 	},
 	[ColumnType.ChangePrice24h]: {
-		name: '24h Price Change',
-		shortName: 'Δ24h',
+		name: 'Price change, 24 hours',
+		shortName: 'Chg, 24h',
 	},
 	[ColumnType.ChangePrice1hPercent]: {
-		name: '1h Price Change (%)',
-		shortName: 'Δ1h%',
+		name: 'Price change, 1 hour',
+		shortName: 'Chg, 1h',
 	},
 	[ColumnType.ChangePrice24hPercent]: {
-		name: '24h Price Change (%)',
-		shortName: 'Δ24h%',
+		name: 'Price change %, 24 hours',
+		shortName: 'Chg%, 24h',
 	},
 	[ColumnType.ChangePrice7dPercent]: {
-		name: '7d Price Change (%)',
-		shortName: 'Δ7d%',
+		name: 'Price change, 7 days',
+		shortName: 'Chg%, 7d',
 	},
 	[ColumnType.ChangePrice30dPercent]: {
-		name: '30d Price Change (%)',
-		shortName: 'Δ30d%',
+		name: 'Price change, 30 days',
+		shortName: 'Chg%, 30d',
 	},
 	[ColumnType.Volume24h]: {
-		name: '24h Volume',
-		shortName: 'Vol24h',
+		name: 'Volume, 24 hours',
+		shortName: 'Volume, 24h',
 	},
+	// FIXME: Кто такой этот relative volume? Из какого маркета? Я не нашел в макете
 	[ColumnType.VolumeRel10d]: {
-		name: 'Relative 10d Volume',
-		shortName: 'Rel10d',
+		name: 'Relative volume, 10 days',
+		shortName: 'Rel vol, 10d',
 	},
 	[ColumnType.VolumeAvg10d]: {
-		name: '10d Avg Volume',
-		shortName: 'Avg10d',
+		name: 'Average daily volume, 10 days',
+		shortName: 'Avg volume, 10d',
+	},
+	[ColumnType.VolumeAvg50d]: {
+		name: 'Average daily volume, 50 days',
+		shortName: 'Avg volume, 50d',
 	},
 	[ColumnType.MarketCap24h]: {
-		name: '24h Market Cap',
-		shortName: 'MCap24h',
+		name: 'Market capitalization',
+		shortName: 'Market cap',
 	},
+	[ColumnType.MarketCapRank]: {
+		name: 'Market capitalization rank',
+		shortName: 'Mcap rank',
+	},
+	[ColumnType.MarketCapFullyDiluted]: {
+		name: 'Fully diluted market cap',
+		shortName: 'FD market cap',
+	},
+	[ColumnType.MarketCapChange24h]: {
+		name: 'Market cap change, 24 hours',
+		shortName: 'Mcap chg, 24h',
+	},
+	[ColumnType.MarketCapChange24hPercent]: {
+		name: 'Market cap change %, 24 hours',
+		shortName: 'Mcap chg%, 24h',
+	},
+	[ColumnType.CirculatingSupply]: {
+		name: 'Circulating supply',
+		shortName: 'Circ supply',
+	},
+	[ColumnType.TotalSupply]: {
+		name: 'Total supply',
+		shortName: 'Total supply',
+	},
+	[ColumnType.MaxSupply]: {
+		name: 'Max supply',
+		shortName: 'Max supply',
+	},
+	[ColumnType.AllTimeHigh]: {
+		name: 'All time high',
+		shortName: 'ATH',
+	},
+	[ColumnType.AllTimeHighChangePercent]: {
+		name: 'All time high change %',
+		shortName: 'ATH Chg%',
+	},
+	[ColumnType.AllTimeHighDate]: {
+		name: 'All time high date',
+		shortName: 'ATH Date',
+	},
+	[ColumnType.AllTimeLow]: {
+		name: 'All Time Low',
+		shortName: 'ATL',
+	},
+	[ColumnType.AllTimeLowChangePercent]: {
+		name: 'All time low change %',
+		shortName: 'ATL Chg%',
+	},
+	[ColumnType.AllTimeLowDate]: {
+		name: 'All time low date',
+		shortName: 'ATL date',
+	},
+	// FIXME: А эти два столбца откуда родились? Не могу найти в макете
 	[ColumnType.RSIValue]: {
 		name: 'RSI Value',
 		shortName: 'RSI',
@@ -179,51 +237,47 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		shortName: 'RSI Chart',
 	},
 	[ColumnType.Beta5y]: {
-		name: '5y Beta',
-		shortName: 'Beta5y',
+		name: 'Beta, 5 years',
+		shortName: 'Beta, 5y',
 	},
 	[ColumnType.LastDividend]: {
-		name: 'Last Dividend',
-		shortName: 'Div',
+		name: 'Last dividend per share',
+		shortName: 'Last dividend',
 	},
 	[ColumnType.Employees]: {
-		name: 'Employees',
-		shortName: 'Emp',
+		name: 'Number of employees',
+		shortName: 'Empoyees',
 	},
 	[ColumnType.IpODate]: {
-		name: 'IPO Date',
-		shortName: 'IPO',
+		name: 'Initial public offering date',
+		shortName: 'IPO date',
 	},
 	[ColumnType.Sector]: {
 		name: 'Sector',
-		shortName: 'Sec',
+		shortName: 'Sector',
 	},
 	[ColumnType.Industry]: {
 		name: 'Industry',
-		shortName: 'Ind',
+		shortName: 'Industry',
 	},
 	[ColumnType.Source]: {
 		name: 'Source',
-		shortName: 'Src',
+		shortName: 'Source',
 	},
 	[ColumnType.ListingDate]: {
 		name: 'Listing Date',
 		shortName: 'List',
 	},
 	[ColumnType.UpdateDate]: {
-		name: 'Update Date',
-		shortName: 'Upd',
+		name: 'Data updated',
+		shortName: 'Updated',
 	},
-	[ColumnType.OpenPrice]: {
-		name: 'Open Price',
+	[ColumnType.PriceOpen]: {
+		name: 'Open',
 		shortName: 'Open',
 	},
-	[ColumnType.ClosePrice]: {
-		name: 'Close Price',
+	[ColumnType.PriceClose]: {
+		name: 'Previous close',
 		shortName: 'Close',
-	},
-	[ColumnType.VolumeAvg50d]: {
-		name: '50d Avg Volume',
-		shortName: 'Avg50d',
 	},
 };

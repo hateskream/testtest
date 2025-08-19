@@ -9,6 +9,12 @@ export enum ColumnType {
 	PriceAvg50d = 'priceAvg50d',
 	PriceAvg200d = 'priceAvg200d',
 	Price1yRange = 'price1yRange',
+	PriceOpen = 'priceOpen',
+	PriceClose = 'priceClose',
+	// I replaced open and close price with priceOpen and priceClose
+	// because I think it's more clear and consistent.
+	// OpenPrice = 'openPrice',
+	// ClosePrice = 'closePrice',
 
 	Price24hChart = 'price24hChart',
 	Price7dChart = 'price7dChart',
@@ -25,8 +31,23 @@ export enum ColumnType {
 	VolumeAvg10d = 'volumeAvg10d',
 	VolumeAvg50d = 'volumeAvg50d',
 
+	AllTimeHigh = 'allTimeHigh',
+	AllTimeHighChangePercent = 'allTimeHighChangePercent',
+	AllTimeHighDate = 'allTimeHighDate',
+
+	AllTimeLow = 'allTimeLow',
+	AllTimeLowChangePercent = 'allTimeLowChangePercent',
+	AllTimeLowDate = 'allTimeLowDate',
 
 	MarketCap24h = 'marketCap24h',
+	MarketCapRank = 'marketCapRank',
+	MarketCapChange24h = 'marketCapChange24h',
+	MarketCapChange24hPercent = 'marketCapChange24hPercent',
+	MarketCapFullyDiluted = 'marketCapFullyDiluted',
+
+	CirculatingSupply = 'circulatingSupply',
+	TotalSupply = 'totalSupply',
+	MaxSupply = 'maxSupply',
 
 	RSIValue = 'rsiValue',
 	RSIChart = 'rsiChart',
@@ -45,11 +66,6 @@ export enum ColumnType {
 	ListingDate = 'listingDate',
 
 	UpdateDate = 'updateDate',
-
-	OpenPrice = 'openPrice',
-	ClosePrice = 'closePrice',
-
-	SvgChart = 'svgChart',
 }
 
 export enum CellType {
@@ -212,6 +228,20 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.VolumeAvg50d]: CellType.Number,
 
 	[ColumnType.MarketCap24h]: CellType.Number,
+	[ColumnType.MarketCapRank]: CellType.Text,
+	[ColumnType.MarketCapFullyDiluted]: CellType.Number,
+	[ColumnType.MarketCapChange24h]: CellType.Number,
+	[ColumnType.MarketCapChange24hPercent]: CellType.Percent,
+	[ColumnType.CirculatingSupply]: CellType.Number,
+	[ColumnType.TotalSupply]: CellType.Number,
+	[ColumnType.MaxSupply]: CellType.Number,
+
+	[ColumnType.AllTimeHigh]: CellType.Number,
+	[ColumnType.AllTimeHighChangePercent]: CellType.Percent,
+	[ColumnType.AllTimeHighDate]: CellType.Text,
+	[ColumnType.AllTimeLow]: CellType.Number,
+	[ColumnType.AllTimeLowChangePercent]: CellType.Percent,
+	[ColumnType.AllTimeLowDate]: CellType.Text,
 
 	[ColumnType.RSIValue]: CellType.Number,
 	[ColumnType.RSIChart]: CellType.SvgChart,
@@ -231,8 +261,6 @@ export const columnToCell: Record<ColumnType, CellType> = {
 
 	[ColumnType.UpdateDate]: CellType.Text,
 
-	[ColumnType.OpenPrice]: CellType.Number,
-	[ColumnType.ClosePrice]: CellType.Number,
-
-	[ColumnType.SvgChart]: CellType.SvgChart,
+	[ColumnType.PriceOpen]: CellType.Number,
+	[ColumnType.PriceClose]: CellType.Number,
 };
