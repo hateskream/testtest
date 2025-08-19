@@ -128,6 +128,44 @@ export function rehydrateLocations(locationFilters: ILocation[], activeLocations
 	return updatedLocations;
 }
 
+export function compareLocations(locations1: ILocation[], locations2: ILocation[]): boolean {
+	if (locations1.length !== locations2.length) {
+		return false;
+	}
+	for (let i = 0; i < locations1.length; i++) {
+		if (!compareLocation(locations1[i], locations2[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function compareLocation(location1: ILocation, location2: ILocation): boolean {
+	if (
+		location1.region !== location2.region ||
+        location1.isActive !== location2.isActive ||
+        location1.isCanAllSwitch !== location2.isCanAllSwitch
+	) {
+		return false;
+	}
+	return compareCountries(location1.countries, location2.countries);
+}
+
+function compareCountries(countries1: ICountry[], countries2: ICountry[]): boolean {
+	if (countries1.length !== countries2.length) {
+		return false;
+	}
+	for (let i = 0; i < countries1.length; i++) {
+		if (
+			countries1[i].name !== countries2[i].name ||
+            countries1[i].code !== countries2[i].code ||
+            countries1[i].isActive !== countries2[i].isActive
+		) {
+			return false;
+		}
+	}
+	return true;
+}
 
 export const LOCATIONS_DEFAULT: ILocation[] = [
 	{

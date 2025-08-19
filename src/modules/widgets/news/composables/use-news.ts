@@ -2,7 +2,7 @@ import { computed, ref } from 'vue';
 import { watch } from 'vue';
 
 import {
-	cloneState,
+	compareState,
 	getActiveLocations,
 	getDefaultState,
 	Score,
@@ -81,8 +81,8 @@ export function useNews(widgetId: string) {
 	const activeLocations = computed(() => getActiveLocations(locations.value));
 
 	watch(dataState, newState => {
-		if (newState) {
-			state.value = cloneState(newState);
+		if (newState && !compareState(state.value, newState)) {
+			state.value = { ...newState };
 		}
 	}, { immediate: true });
 

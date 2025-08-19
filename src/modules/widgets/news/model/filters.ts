@@ -56,3 +56,15 @@ export function titleGenerator<T extends string>(
 
 	return `${firstElementName} +${otherSelectedCount}`;
 }
+
+export function compareFilter<T>(filter1: Set<T>, filter2: Set<T>): boolean {
+	if (filter1.size !== filter2.size) {
+		return false;
+	}
+	for (const item of filter1) {
+		if (!filter2.has(item)) {
+			return false;
+		}
+	}
+	return true;
+}

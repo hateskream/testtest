@@ -30,7 +30,7 @@ const {
 	sortBy,
 
 	resetAllChanges,
-} = useNews();
+} = useNews(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryNews(computed(() => ({
 	score: selectedScores.value,

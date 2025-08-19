@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { useRepository } from '../composables';
 import type { IState } from '../model';
 
-const SETTINGS_QUERY_KEY = 'market-settings';
+const SETTINGS_QUERY_KEY = 'news-settings';
 
 export const useGetState = (widgetId: string) => {
 	const repository = useRepository(widgetId);
