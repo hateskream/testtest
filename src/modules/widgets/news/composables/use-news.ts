@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue';
 
 import {
+	getActiveLocations,
 	getDefaultState,
 	Score,
 	Sentiment,
@@ -71,6 +72,8 @@ export function useNews() {
 		},
 	});
 
+	const activeLocations = computed(() => getActiveLocations(locations.value));
+
 	function resetAllChanges() {
 		state.value = getDefaultState();
 	}
@@ -84,6 +87,7 @@ export function useNews() {
 		displaySettings,
 		locations,
 		sortBy,
+		activeLocations,
 
 		resetAllChanges,
 	};

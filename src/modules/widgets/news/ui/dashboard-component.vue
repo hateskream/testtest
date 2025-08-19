@@ -25,14 +25,27 @@ const {
 	selectedSources,
 	displaySettings,
 	locations,
+	activeLocations,
+	selectedTickers,
 	sortBy,
 
 	resetAllChanges,
 } = useNews();
 
-const { data, isLoading, isError } = useQueryNews();
+const { data, isLoading, isError } = useQueryNews(computed(() => ({
+	score: selectedScores.value,
+	segment: selectedSegments.value,
+	sentiment: selectedSentiment.value,
+	source: selectedSources.value,
+	locations: activeLocations.value,
+	activeSort: sortBy.value,
+	selectedTickers: selectedTickers.value,
+	limit: 10,
+})));
 
 const isNotData = computed(() => !!data.value && isLoading.value);
+
+const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -59,8 +72,8 @@ const emit = defineEmits<{
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-news-component
-				v-else-if="data"
-				:news="data"
+				v-else-if="news"
+				:news="news"
 				:display-settings="displaySettings"
 			/>
 		</template>

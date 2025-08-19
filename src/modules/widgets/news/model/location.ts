@@ -71,6 +71,33 @@ export function toggleLocationCountry(locationFilters: ILocation[], region: stri
 	return [...locationFilters];
 }
 
+export interface IActiveLocation {
+	region: string;
+	countries: string[];
+}
+
+export function getActiveLocations(locationFilters: ILocation[]): IActiveLocation[] {
+	const countries: { region: string; countries: string[] }[] = [];
+
+	locationFilters.forEach(location => {
+		if (location.isActive) {
+			const countryActiveCodes: string[] = [];
+
+			location.countries.forEach(country => {
+				country.isActive && countryActiveCodes.push(country.code);
+			});
+
+			countries.push({
+				region: location.region,
+				countries: countryActiveCodes,
+			});
+		}
+	});
+
+	return countries;
+}
+
+
 export const LOCATIONS_DEFAULT: ILocation[] = [
 	{
 		countries: [

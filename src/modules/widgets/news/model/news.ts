@@ -1,7 +1,4 @@
-import type { MarketType } from '@/modules/market';
-import type { Sentiment, Source } from './filters';
-
-export interface INewsStock {
+export interface ITicker {
 	ticker: string;
 	name: string;
 	srcImage: string;
@@ -13,14 +10,7 @@ export interface INews {
 	timestamp: number;
 	author: string;
 	title: string;
-	stocks: INewsStock[];
+	stocks: ITicker[];
 	score: number;
-	segment: MarketType;
-	source: Source;
 	srcSourceImage: string;
-	sentiment: Sentiment;
-	location: {
-		name: string;
-		code: string;
-	};
 }
