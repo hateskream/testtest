@@ -183,8 +183,6 @@ const columns = [
 </template>
 
 <style module="classes">
-
-
 .left {
 	text-align: left;
 	color: var(--text-color-base-500);
@@ -195,25 +193,25 @@ const columns = [
 	align-items: center;
 	height: 24px;
 	padding: 0 10px;
-	border-radius: 8px;
 	font-size: 12px;
 	line-height: 1;
 	white-space: nowrap;
+	border-radius: 8px;
 }
 
 .buy {
 	color: #0fe18b;
-	background: rgba(22, 163, 74, 0.18);
+	background: rgb(22 163 74 / 18%);
 }
 
 .sell {
 	color: #ff6b6b;
-	background: rgba(220, 38, 38, 0.18);
+	background: rgb(220 38 38 / 18%);
 }
 
 .neutral {
 	color: var(--text-color-base-300);
-	background: rgba(140, 140, 155, 0.12);
+	background: rgb(140 140 155 / 12%);
 }
 
 .header {
