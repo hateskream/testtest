@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { BaseDashboardComponent } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { useQueryTopIndices } from '../queries/get-top-indices';
+import { ALL_COLUMNS } from '../model';
 
 import TopIndicesMain from './layouts/main-layout.vue';
+import TopIndicesError from './layouts/error-layout.vue';
+import TopIndicesLoader from './layouts/loader-layout.vue';
 import TopIndicesContextMenu from './modals/context-menu.vue';
 
 
@@ -12,6 +18,11 @@ interface ITopIndicesWidgetProps {
 
 const props = defineProps<ITopIndicesWidgetProps>();
 
+const { data, isLoading, isError } = useQueryTopIndices(10);
+
+const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
+
+const isNotData = computed(() => !!rows.value.length && isLoading.value);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -27,15 +38,16 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<!-- <top-indices-loader
-				v-if="false"
+			<top-indices-error v-if="isError" />
+			<top-indices-loader
+				v-else-if="isNotData"
 				:count="5"
 				:height="'48px'"
-			/> -->
-			<!-- <top-indices-error v-else-if="false" /> -->
+			/>
 
 			<top-indices-main
-				:meta="props.meta"
+				:rows="rows"
+				:columns="ALL_COLUMNS"
 			/>
 		</template>
 

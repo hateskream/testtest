@@ -26,9 +26,9 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Number]: TableColumnType.NUMBER,
 	[CellType.Text]: TableColumnType.TEXT,
 	[CellType.Percent]: TableColumnType.PERCENT,
+	[CellType.Label]: TableColumnType.PLATE,
 
 	// нет отображения - заглушка
-	[CellType.Label]: TableColumnType.TEXT,
 	[CellType.SvgChart]: TableColumnType.TEXT,
 	[CellType.Range]: TableColumnType.TEXT,
 	[CellType.Empty]: TableColumnType.TEXT,

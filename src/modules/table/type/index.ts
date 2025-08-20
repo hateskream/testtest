@@ -9,6 +9,7 @@ export enum TableColumnType {
 	CHART = 'chart',
 	RANGE = 'range',
 	EMPTY = 'empty',
+	PLATE = 'plate',
 }
 
 export type SortDirection = 'asc' | 'desc' | 'none';
