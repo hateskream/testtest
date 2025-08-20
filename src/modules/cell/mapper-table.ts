@@ -9,6 +9,7 @@ import {
 	isPercentCell,
 	isTextCell,
 	isLabelCell,
+	isRangeCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -27,10 +28,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Text]: TableColumnType.TEXT,
 	[CellType.Percent]: TableColumnType.PERCENT,
 	[CellType.Label]: TableColumnType.PLATE,
-
-	// нет отображения - заглушка
-	[CellType.SvgChart]: TableColumnType.TEXT,
-	[CellType.Range]: TableColumnType.TEXT,
+	[CellType.Range]: TableColumnType.RANGE,
 	[CellType.Empty]: TableColumnType.TEXT,
 };
 
@@ -150,9 +148,17 @@ function mapSvgChartToTable(_: Cell) {
 	};
 }
 
-function mapRangeToTable(_: Cell) {
+function mapRangeToTable(cell: Cell) {
+	if (!isRangeCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	return {
-		value: '—',
+		startValue: cell.startValue,
+		endValue: cell.endValue,
+		currencySymbol: cell.currencySymbol,
+		startMagnitude: getMagnitudeText(cell.startMagnitude),
+		endMagnitude: getMagnitudeText(cell.endMagnitude),
 	};
 }
 
