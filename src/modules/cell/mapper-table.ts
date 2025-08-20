@@ -8,6 +8,7 @@ import {
 	isNumberCell,
 	isPercentCell,
 	isTextCell,
+	isLabelCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -133,6 +134,16 @@ function mapTextToTable(cell: Cell) {
 	};
 }
 
+function mapLabelToTable(cell: Cell) {
+	if (!isLabelCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
+	return {
+		value: cell.value,
+	};
+}
+
 function mapSvgChartToTable(_: Cell) {
 	return {
 		value: '—',
@@ -146,12 +157,6 @@ function mapRangeToTable(_: Cell) {
 }
 
 function mapEmptyToTable(_: Cell) {
-	return {
-		value: '—',
-	};
-}
-
-function mapLabelToTable(_: Cell) {
 	return {
 		value: '—',
 	};

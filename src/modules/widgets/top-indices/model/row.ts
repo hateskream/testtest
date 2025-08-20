@@ -7,7 +7,7 @@ import type {
 	TableRow,
 } from '@/modules/cell';
 
-export type CryptoTableRow = TableRow<{
+export type TopIndicesTableRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;
 	[ColumnType.ChangePrice24hPercent]: IPercentCell;
 	[ColumnType.ChangePrice24h]: INumberCell;

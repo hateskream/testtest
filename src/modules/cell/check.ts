@@ -7,6 +7,7 @@ import {
 	type IEmptyCell,
 	type IForexSymbolCell,
 	type IIndexSymbolCell,
+	type ILableCell,
 	type INumberCell,
 	type IPercentCell,
 	type IRangeCell,
@@ -64,6 +65,6 @@ export function isRangeCell(cell: Cell): cell is IRangeCell {
 	return cell.cellType === CellType.Range;
 }
 
-export function isLabelCell(cell: Cell): cell is IEmptyCell {
+export function isLabelCell(cell: Cell): cell is ILableCell {
 	return cell.cellType === CellType.Label;
 }
