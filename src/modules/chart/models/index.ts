@@ -20,6 +20,7 @@ import {
 	SectionHoldings,
 	SectionTransactions,
 	ChartSectionAnnualMarginTrends,
+	ChartSectionDailyNetFlows,
 } from '@/modules/chart/components/sections';
 
 export enum TickerType {
@@ -54,6 +55,7 @@ export enum CHART_SECTION_COMPONENT {
 	HOLDINGS = 'HOLDINGS',
 	TRANSACTIONS = 'TRANSACTIONS',
 	ANNUAL_MARGIN_TRENDS = 'ANNUAL_MARGIN_TRENDS',
+	DAILY_NET_FLOWS = 'DAILY_NET_FLOWS',
 }
 
 // Create mapping from enum to actual components
@@ -78,6 +80,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.HOLDINGS]: SectionHoldings,
 	[CHART_SECTION_COMPONENT.TRANSACTIONS]: SectionTransactions,
 	[CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS]: ChartSectionAnnualMarginTrends,
+	[CHART_SECTION_COMPONENT.DAILY_NET_FLOWS]: ChartSectionDailyNetFlows,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -301,6 +304,11 @@ export const chartStockSections: IChartWidgetSections = {
 			id: 'annual-margin-trends',
 			title: 'Annual Margin Trends',
 			component: CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS,
+		},
+		{
+			id: 'daily-net-flows',
+			title: 'Daily net flows',
+			component: CHART_SECTION_COMPONENT.DAILY_NET_FLOWS,
 		},
 	],
 	right: [

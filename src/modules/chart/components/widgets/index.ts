@@ -23,6 +23,7 @@ import { ChartWidgetMovingAverages } from './moving-averages';
 import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings } from './holdings';
 import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetTransactionTable } from './transactions';
 import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
+import { ChartWidgetDailyNetFlows } from './daily-net-flows';
 
 
 export {
@@ -56,4 +57,5 @@ export {
 	ChartWidgetAnnualMarginTrends,
 	ChartWidgetTransactionTable,
 	ChartWidgetOscillatorsTable,
+	ChartWidgetDailyNetFlows,
 };

@@ -14,6 +14,8 @@ import ChartEps from './ui/chart-eps.vue';
 import ChartTransactionAvg from './ui/chart-transaction-avg.vue';
 import ChartTransactionAvgTotal from './ui/chart-transaction-avg-total.vue';
 import ChartAnnualMarginTrends from './ui/chart-annual-margin-trends.vue';
+import ChartDailyNetFlows from './ui/chart-daily-net-flows.vue';
+
 
 export {
 	Chart,
@@ -32,4 +34,5 @@ export {
 	ChartTransactionAvg,
 	ChartTransactionAvgTotal,
 	ChartAnnualMarginTrends,
+	ChartDailyNetFlows,
 };
