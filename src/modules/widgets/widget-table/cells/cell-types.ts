@@ -7,6 +7,7 @@ import CellEmptyStateComponent from './cell-empty-state-component.vue';
 import CellNumberComponent from './cell-number-component.vue';
 import CellPercentComponent from './cell-percent-component.vue';
 import CellPlate from './cell-plate.vue';
+import TableCellChart from './table-cell-chart.vue';
 import TableCellRange from './table-cell-range.vue';
 
 export enum CellType {
@@ -33,7 +34,7 @@ const components: Record<CellType, Component> = {
 	[CellType.TEXT]: StringCellComponent,
 	[CellType.PLATE]: CellPlate,
 	// TODO: add chart component and add it here in
-	[CellType.CHART]: CellEmptyStateComponent,
+	[CellType.CHART]: TableCellChart,
 	[CellType.EMPTY]: CellEmptyStateComponent,
 };
 

@@ -9,6 +9,7 @@ import {
 	isPercentCell,
 	isTextCell,
 	isLabelCell,
+	isSvgChartCell,
 	isRangeCell,
 } from './check';
 import type { ITableColumn } from './column';
@@ -28,6 +29,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Text]: TableColumnType.TEXT,
 	[CellType.Percent]: TableColumnType.PERCENT,
 	[CellType.Label]: TableColumnType.PLATE,
+	[CellType.SvgChart]: TableColumnType.CHART,
 	[CellType.Range]: TableColumnType.RANGE,
 	[CellType.Empty]: TableColumnType.TEXT,
 };
@@ -142,9 +144,13 @@ function mapLabelToTable(cell: Cell) {
 	};
 }
 
-function mapSvgChartToTable(_: Cell) {
+function mapSvgChartToTable(cell: Cell) {
+	if (!isSvgChartCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	return {
-		value: '—',
+		src: cell.src,
 	};
 }
 
