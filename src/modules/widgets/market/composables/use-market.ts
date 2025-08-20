@@ -8,10 +8,10 @@ import {
 	type ISettings,
 	type ISort,
 	type IState,
-	type ITableColumn,
 } from '../model';
 import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
+import type { ITableColumn } from '@/modules/cell';
 
 export function useMarket(widgetId: string) {
 	const { data: dataState } = useGetState(widgetId);

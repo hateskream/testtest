@@ -6,8 +6,9 @@ import {
 	type ITextCell,
 	type ISvgChartCell,
 	type TableRow,
+	type ITableColumn,
+	buildColumns,
 } from '@/modules/cell';
-import { type ITableColumn, buildColumns } from './column';
 import { type Filters, type IFilterValue, type IFilterState, type IIcon } from './filter';
 import { IconIds } from '@/shared/ui/icon';
 

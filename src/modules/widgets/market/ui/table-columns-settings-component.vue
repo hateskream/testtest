@@ -2,12 +2,11 @@
 import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
-import { setPositionColumns, type ITableColumn } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
-import type { ColumnType } from '@/modules/cell';
+import { setPositionColumns, type ColumnType, type ITableColumn } from '@/modules/cell';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;

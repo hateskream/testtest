@@ -6,8 +6,9 @@ import {
 	type ITextCell,
 	type ISvgChartCell,
 	type TableRow,
+	type ITableColumn,
+	buildColumns,
 } from '@/modules/cell';
-import { type ITableColumn, buildColumns } from './column';
 
 export type ForexTableRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;

@@ -2,7 +2,6 @@ import {
 	CellType,
 	ColumnType,
 	columnToCell,
-	type TableRow,
 } from './domain';
 import {
 	mapSymbol,
@@ -12,6 +11,7 @@ import {
 	mapSvgChart,
 	mapRange,
 	isEmptyCell,
+	type TableRow,
 } from '.';
 import type { CellDto } from './dto';
 

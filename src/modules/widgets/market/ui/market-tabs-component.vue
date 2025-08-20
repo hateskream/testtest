@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { FiltersState, FiltersValues, ITableColumn } from '../model';
+import type { FiltersState, FiltersValues } from '../model';
 import { UiPosition } from '@/shared/ui/position';
 import { MarketBadge } from '../../base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import type { MarketType } from '@/modules/market';
+import type { ITableColumn } from '@/modules/cell';
 
 import MarketFiltersComponent from './market-filters-component.vue';
 

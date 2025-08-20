@@ -2,7 +2,7 @@
 import { UiPosition } from '@/shared/ui/position';
 import { MarketBadgeList, ModalBadgeList, ModalItem, ModalItemInteraction } from '../../base';
 import type { MarketType } from '@/modules/market';
-import type { ITableColumn } from '../model';
+import type { ITableColumn } from '@/modules/cell';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 

@@ -11,6 +11,7 @@ import {
 	isSvgChartCell,
 	isTextCell,
 } from './check';
+import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
 import {
 	CellType,
@@ -20,7 +21,9 @@ import {
 	Trend,
 	type ITextCell,
 	type Cell,
+	ColumnType,
 } from './domain';
+import type { TableRow } from './row';
 
 
 export const mapToTableColumnType: Record<CellType, TableColumnType> = {
@@ -35,7 +38,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Empty]: TableColumnType.TEXT,
 };
 
-export function mapCellToTable(cell: Cell) {
+function mapCellToTable(cell: Cell) {
 	if (isSymbolCell(cell)) {
 		return mapSymbolToTable(cell);
 	}
@@ -144,5 +147,40 @@ function mapRangeToTable(_: Cell) {
 function mapEmptyToTable(_: Cell) {
 	return {
 		value: '—',
+	};
+}
+
+export function mapColumn(marketColumns: ITableColumn[]) {
+	return marketColumns.map(col => ({
+		key: col.columnType.toString(),
+		label: col.displayColumnName,
+		shortLabel: col.displayShortColumnName,
+		position: col.order,
+		sortable: true,
+		draggable: col.isDraggable,
+		visible: col.isShow,
+		type: mapToTableColumnType[col.type],
+		group: {
+			name: col.group.name,
+			displayName: col.group.name.charAt(0).toUpperCase() + col.group.name.slice(1),
+		},
+	}));
+}
+
+export function mapRow(ticker: TableRow) {
+	const data = Object.values(ColumnType).reduce((acc, columnType) => {
+		if (columnType in ticker) {
+			const cell = ticker[columnType as keyof TableRow];
+			if (typeof cell === 'string' || cell === undefined) {
+				return acc;
+			}
+			acc[columnType] = mapCellToTable(cell);
+		}
+		return acc;
+	}, {} as Record<ColumnType, unknown>);
+
+	return {
+		id: ticker.tickerId,
+		data,
 	};
 }

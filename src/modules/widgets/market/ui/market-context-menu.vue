@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import type { ITableColumn } from '@/modules/cell';
 import {
 	WidgetContextMenu,
 	ModalSubmenu,
 	ModalSubmenuContent,
 } from '../../base';
-import type { ITableColumn } from '../model';
 
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 
