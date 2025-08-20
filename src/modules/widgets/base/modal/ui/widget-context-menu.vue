@@ -4,8 +4,11 @@ import { ModalItem, ModalItemNumber } from '@/modules/widgets/base';
 
 interface IWidgetContextMenuProps {
 	title: string;
+	hasReset?: boolean;
 }
-const props = defineProps<IWidgetContextMenuProps>();
+const props = withDefaults(defineProps<IWidgetContextMenuProps>(), {
+	hasReset: true,
+});
 
 const emits = defineEmits<{
 	(e: 'duplicate'): void;
@@ -31,9 +34,14 @@ const emits = defineEmits<{
 
 		<slot />
 
-		<modal-item @click="emits('reset')">Reset all changes</modal-item>
+		<modal-item
+			v-if="props.hasReset"
+			@click="emits('reset')"
+		>
+			Reset all changes
+		</modal-item>
 
-		<ui-driver />
+		<ui-driver v-if="props.hasReset" />
 		<modal-item @click="emits('delete')">Delete</modal-item>
 	</div>
 </template>

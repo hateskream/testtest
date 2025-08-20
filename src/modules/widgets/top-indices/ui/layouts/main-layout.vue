@@ -1,42 +1,11 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { computed } from 'vue';
 
 import { getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path.ts';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
-import CellPlate from '@/modules/widgets/widget-table/cells/cell-plate.vue';
 
-interface IIndicesData {
-	id: string;
-	data: {
-		symbol: {
-			symbolType: string;
-			srcImg: string;
-			ticker: string;
-			country: string;
-		};
-		percentage: {
-			value: string;
-		};
-		priceChange: {
-			value: string;
-		};
-		status: {
-			value: 'sale' | 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell';
-		};
-	};
-}
-
-interface IProps {
-	meta: IIndicesData[];
-}
-
-const props = defineProps<IProps>();
-
-// Define columns for the indices table
 const columns = computed(() => [
 	{
 		key: 'symbol',
@@ -96,19 +65,7 @@ const columns = computed(() => [
 	},
 ]);
 
-// Convert props.meta to the format expected by WidgetTypedTable
-const genericRows = computed(() =>
-	props.meta.map(item => ({
-		id: item.id,
-		data: item.data,
-		metadata: {
-			srcValue: item.data.symbol.srcImg,
-		},
-	})),
-);
-
-// Sample data for demonstration (you can remove this and use only props)
-const sampleData = computed((): IIndicesData[] => [
+const sampleData = computed(() => [
 	{
 		id: '1',
 		data: {
@@ -211,8 +168,7 @@ const sampleData = computed((): IIndicesData[] => [
 	},
 ]);
 
-// Use provided data or sample data
-const displayData = computed(() => props.meta?.length > 0 ? genericRows.value :
+const displayData = computed(() =>
 	sampleData.value.map(item => ({
 		id: item.id,
 		data: item.data,

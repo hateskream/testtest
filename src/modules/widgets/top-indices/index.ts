@@ -1,3 +1,3 @@
-import TopIndicesWidget from './top-indices-widget.vue';
+import TopIndicesWidget from './ui/dashboard-component.vue';
 
 export { TopIndicesWidget };

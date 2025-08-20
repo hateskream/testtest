@@ -1,13 +1,9 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { BaseDashboardComponent } from '@/modules/widgets/base/index.ts';
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import { BaseDashboardComponent } from '@/modules/widgets/base/';
+import type { IMeta } from '@/modules/dashboard-group/core';
 
-import TopIndicesLoader from '@/modules/widgets/top-indices/ui/layouts/top-indices-loader.vue';
-import TopIndicesError from '@/modules/widgets/top-indices/ui/layouts/top-indices-error.vue';
-import TopIndicesMain from '@/modules/widgets/top-indices/ui/layouts/top-indices-main.vue';
-import TopIndicesContextMenu from '@/modules/widgets/top-indices/ui/modals/top-indices-context-menu.vue';
+import TopIndicesMain from './layouts/main-layout.vue';
+import TopIndicesContextMenu from './modals/context-menu.vue';
 
 
 interface ITopIndicesWidgetProps {
@@ -31,15 +27,14 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<top-indices-loader
+			<!-- <top-indices-loader
 				v-if="false"
 				:count="5"
 				:height="'48px'"
-			/>
-			<top-indices-error v-else-if="props.meta.name === 'ASJDKALKISJDKASJDKAS'" />
+			/> -->
+			<!-- <top-indices-error v-else-if="false" /> -->
 
 			<top-indices-main
-				v-else
 				:meta="props.meta"
 			/>
 		</template>
