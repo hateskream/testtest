@@ -7,19 +7,13 @@ import {
 	isSymbolCell,
 	isNumberCell,
 	isPercentCell,
-	isRangeCell,
-	isSvgChartCell,
 	isTextCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
 import {
 	CellType,
-	type ISymbolCell,
-	type INumberCell,
-	type IPercentCell,
 	Trend,
-	type ITextCell,
 	type Cell,
 	ColumnType,
 } from './domain';
@@ -33,40 +27,35 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Percent]: TableColumnType.PERCENT,
 
 	// нет отображения - заглушка
+	[CellType.Label]: TableColumnType.TEXT,
 	[CellType.SvgChart]: TableColumnType.TEXT,
 	[CellType.Range]: TableColumnType.TEXT,
 	[CellType.Empty]: TableColumnType.TEXT,
 };
 
-function mapCellToTable(cell: Cell) {
-	if (isSymbolCell(cell)) {
-		return mapSymbolToTable(cell);
+const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => unknown> = {
+	[CellType.Symbol]: mapSymbolToTable,
+	[CellType.Number]: mapNumberToTable,
+	[CellType.Percent]: mapPercentToTable,
+	[CellType.Text]: mapTextToTable,
+	[CellType.SvgChart]: mapSvgChartToTable,
+	[CellType.Range]: mapRangeToTable,
+	[CellType.Label]: mapLabelToTable,
+};
+
+function mapCellToTable(cell: Cell): unknown {
+	if (cell.cellType === CellType.Empty) {
+		return mapEmptyToTable(cell);
 	}
 
-	if (isNumberCell(cell)) {
-		return mapNumberToTable(cell);
-	}
-
-	if (isPercentCell(cell)) {
-		return mapPercentToTable(cell);
-	}
-
-	if (isTextCell(cell)) {
-		return mapTextToTable(cell);
-	}
-
-	if (isSvgChartCell(cell)) {
-		return mapSvgChartToTable(cell);
-	}
-
-	if (isRangeCell(cell)) {
-		return mapRangeToTable(cell);
-	}
-
-	return mapEmptyToTable(cell);
+	return cellTypeToTableMapper[cell.cellType](cell);
 }
 
-function mapSymbolToTable(cell: ISymbolCell) {
+function mapSymbolToTable(cell: Cell) {
+	if (!isSymbolCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	if (isCryptoSymbolCell(cell)) {
 		return {
 			symbolType: cell.symbolType,
@@ -112,7 +101,11 @@ function mapSymbolToTable(cell: ISymbolCell) {
 	};
 }
 
-function mapNumberToTable(cell: INumberCell) {
+function mapNumberToTable(cell: Cell) {
+	if (!isNumberCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	return {
 		value: cell.value,
 		currencySymbol: cell.currencySymbol,
@@ -120,13 +113,21 @@ function mapNumberToTable(cell: INumberCell) {
 	};
 }
 
-function mapPercentToTable(cell: IPercentCell) {
+function mapPercentToTable(cell: Cell) {
+	if (!isPercentCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	return {
 		value: cell.trend === Trend.UP || cell.trend === Trend.NEUTRAL ? cell.value : `-${cell.value}`,
 	};
 }
 
-function mapTextToTable(cell: ITextCell) {
+function mapTextToTable(cell: Cell) {
+	if (!isTextCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
 	return {
 		value: cell.value,
 	};
@@ -145,6 +146,12 @@ function mapRangeToTable(_: Cell) {
 }
 
 function mapEmptyToTable(_: Cell) {
+	return {
+		value: '—',
+	};
+}
+
+function mapLabelToTable(_: Cell) {
 	return {
 		value: '—',
 	};

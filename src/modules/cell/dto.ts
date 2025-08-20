@@ -1,4 +1,4 @@
-import type { CellType, ColumnType, Magnitude, SymbolType, Trend } from './domain';
+import type { CellType, ColumnType, Magnitude, Status, SymbolType, Trend } from './domain';
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null | undefined };
 
@@ -88,5 +88,11 @@ export type RangeDto = BaseDto &
 		endMagnitude: Magnitude;
 	}>;
 
+export type LabelDto = BaseDto &
+	Nullable<{
+		value: string;
+		status: Status;
+	}>;
 
-export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto;
+
+export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto | LabelDto;

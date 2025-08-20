@@ -2,6 +2,7 @@ import {
 	CellType,
 	ColumnType,
 	columnToCell,
+	type Cell,
 } from './domain';
 import {
 	mapSymbol,
@@ -12,6 +13,7 @@ import {
 	mapRange,
 	isEmptyCell,
 	type TableRow,
+	mapLabel,
 } from '.';
 import type { CellDto } from './dto';
 
@@ -87,22 +89,20 @@ export function prepareMarketResponse<T extends TableRow>(
 	};
 }
 
+const cellTypeToMapper: Record<Exclude<CellType, 'Empty'>, (dto: CellDto) => Cell> = {
+	[CellType.Symbol]: mapSymbol,
+	[CellType.Number]: mapNumber,
+	[CellType.Percent]: mapPercent,
+	[CellType.Text]: mapText,
+	[CellType.SvgChart]: mapSvgChart,
+	[CellType.Range]: mapRange,
+	[CellType.Label]: mapLabel,
+};
+
 function mapDtoToCell(cellType: CellType, dto: CellDto) {
-	switch (cellType) {
-		case CellType.Symbol:
-			return mapSymbol(dto);
-		case CellType.Number:
-			return mapNumber(dto);
-		case CellType.Percent:
-			return mapPercent(dto);
-		case CellType.Text:
-			return mapText(dto);
-		case CellType.SvgChart:
-			return mapSvgChart(dto);
-		case CellType.Range:
-			return mapRange(dto);
-		default:
-			// Handle unknown cell types gracefully
-			return null;
+	if (cellType === CellType.Empty) {
+		return null;
 	}
+
+	return cellTypeToMapper[cellType](dto);
 }

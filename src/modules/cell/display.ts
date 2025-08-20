@@ -330,4 +330,9 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		tooltip: 'Previous close',
 		settingsName: 'Previous day',
 	},
+	[ColumnType.Volatility]: {
+		columnName: 'Volatility',
+		tooltip: 'Volatility',
+		settingsName: 'Volatility',
+	},
 };

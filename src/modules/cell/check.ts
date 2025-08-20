@@ -63,3 +63,7 @@ export function isSvgChartCell(cell: Cell): cell is ISvgChartCell {
 export function isRangeCell(cell: Cell): cell is IRangeCell {
 	return cell.cellType === CellType.Range;
 }
+
+export function isLabelCell(cell: Cell): cell is IEmptyCell {
+	return cell.cellType === CellType.Label;
+}

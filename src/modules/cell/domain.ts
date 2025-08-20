@@ -66,6 +66,8 @@ export enum ColumnType {
 	ListingDate = 'listingDate',
 
 	UpdateDate = 'updateDate',
+
+	Volatility = 'volatility',
 }
 
 export enum CellType {
@@ -76,6 +78,7 @@ export enum CellType {
 	Text = 'Text',
 	Range = 'Range',
 	Empty = 'Empty',
+	Label = 'Label',
 }
 
 export enum Trend {
@@ -90,6 +93,13 @@ export enum Magnitude {
 	BILLION = 'billion',
 	TRILLION = 'trillion',
 	NONE = 'none',
+}
+
+export enum Status {
+	POSITIVE = 'positive',
+	NEGATIVE = 'negative',
+	NEUTRAL = 'neutral',
+	CAUTION = 'caution',
 }
 
 export interface IBaseCell {
@@ -191,6 +201,12 @@ export interface IRangeCell extends IBaseCell {
 	endMagnitude: Magnitude;
 }
 
+export interface ILableCell extends IBaseCell {
+	cellType: CellType.Label;
+	value: string;
+	status: Status;
+}
+
 export type Cell =
 	| IEmptyCell
 	| ISymbolCell
@@ -198,6 +214,7 @@ export type Cell =
 	| IPercentCell
 	| ISvgChartCell
 	| ITextCell
+	| ILableCell
 	| IRangeCell;
 
 export const columnToCell: Record<ColumnType, CellType> = {
@@ -263,5 +280,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 
 	[ColumnType.PriceOpen]: CellType.Number,
 	[ColumnType.PriceClose]: CellType.Number,
+
+	[ColumnType.Volatility]: CellType.Label,
 };
 

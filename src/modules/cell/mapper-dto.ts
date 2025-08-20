@@ -6,6 +6,7 @@ import {
 	type IEmptyCell,
 	type IForexSymbolCell,
 	type IIndexSymbolCell,
+	type ILableCell,
 	type INumberCell,
 	type IPercentCell,
 	type IRangeCell,
@@ -21,6 +22,7 @@ import type {
 	IForexSymbolDto,
 	IIndexSymbolDto,
 	IStockSymbolDto,
+	LabelDto,
 	NumberDto,
 	PercentDto,
 	RangeDto,
@@ -191,6 +193,25 @@ export function mapSvgChart(dto: CellDto): ISvgChartCell | IEmptyCell {
 	return createEmpty(dto);
 }
 
+export function mapLabel(dto: CellDto): ILableCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+
+	if (isLabelDto(dto)) {
+		return {
+			cellType: CellType.Label,
+			columnType: dto.columnType,
+			value: dto.value,
+			status: dto.status,
+		} as ILableCell;
+	}
+
+	// eslint-disable-next-line no-console
+	console.error('Cell not match Label', dto);
+	return createEmpty(dto);
+}
+
 function isIndexSymbolDto(dto: CellDto): dto is IIndexSymbolDto {
 	return (
 		dto.cellType === CellType.Symbol &&
@@ -253,6 +274,10 @@ function isTextDto(dto: CellDto): dto is TextDto {
 
 function isRangeDto(dto: CellDto): dto is RangeDto {
 	return dto.cellType === CellType.Range;
+}
+
+function isLabelDto(dto: CellDto): dto is LabelDto {
+	return dto.cellType === CellType.Label;
 }
 
 function createEmpty(dto: CellDto): IEmptyCell {
