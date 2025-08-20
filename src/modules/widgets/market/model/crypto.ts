@@ -14,20 +14,32 @@ import { IconIds } from '@/shared/ui/icon';
 export type CryptoTableRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;
 	[ColumnType.PriceCurrent]: INumberCell;
+	[ColumnType.PriceMin24h]: INumberCell;
+	[ColumnType.PriceMax24h]: INumberCell;
+	[ColumnType.PriceMin1y]: INumberCell;
+	[ColumnType.PriceMax1y]: INumberCell;
+	[ColumnType.PriceAvg50d]: INumberCell;
+	[ColumnType.PriceAvg200d]: INumberCell;
+	[ColumnType.PriceOpen]: INumberCell;
+	[ColumnType.PriceClose]: INumberCell;
+	[ColumnType.AllTimeHigh]: INumberCell;
+	[ColumnType.AllTimeHighChangePercent]: IPercentCell;
+	[ColumnType.AllTimeHighDate]: ITextCell;
+	[ColumnType.AllTimeLow]: INumberCell;
+	[ColumnType.AllTimeLowChangePercent]: IPercentCell;
+	[ColumnType.AllTimeLowDate]: ITextCell;
+	[ColumnType.ChangePrice24h]: INumberCell;
 	[ColumnType.ChangePrice24hPercent]: IPercentCell;
 	[ColumnType.Volume24h]: INumberCell;
-	[ColumnType.PriceAvg50d]: INumberCell;
-	// [ColumnType.Price1yRange]: IRangeCell;
 	[ColumnType.MarketCap24h]: INumberCell;
-	[ColumnType.Beta5y]: INumberCell;
-	[ColumnType.LastDividend]: INumberCell;
-	[ColumnType.ChangePrice24h]: INumberCell;
-	[ColumnType.VolumeAvg10d]: INumberCell;
-	[ColumnType.Employees]: ITextCell;
-	[ColumnType.IpODate]: ITextCell;
-	[ColumnType.Sector]: ITextCell;
-	[ColumnType.Industry]: ITextCell;
-	[ColumnType.Source]: ITextCell;
+	[ColumnType.MarketCapRank]: ITextCell;
+	[ColumnType.MarketCapFullyDiluted]: INumberCell;
+	[ColumnType.MarketCapChange24h]: INumberCell;
+	[ColumnType.MarketCapChange24hPercent]: IPercentCell;
+	[ColumnType.CirculatingSupply]: INumberCell;
+	[ColumnType.TotalSupply]: INumberCell;
+	[ColumnType.MaxSupply]: INumberCell;
+	[ColumnType.UpdateDate]: ITextCell;
 	[ColumnType.Price24hChart]: ISvgChartCell;
 }>;
 
@@ -46,6 +58,96 @@ export const CRYPTO_ALL_COLUMNS: ITableColumn[] =
 			isDraggable: true,
 		},
 		{
+			columnType: ColumnType.PriceMin24h,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceMax24h,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceMin1y,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceMax1y,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceAvg50d,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceAvg200d,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceOpen,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.PriceClose,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeHigh,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeHighChangePercent,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeHighDate,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeLow,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeLowChangePercent,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.AllTimeLowDate,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
+			columnType: ColumnType.ChangePrice24h,
+			isShow: true,
+			isDraggable: true,
+			groupOrder: 0,
+		},
+		{
 			columnType: ColumnType.ChangePrice24hPercent,
 			isShow: true,
 			isDraggable: true,
@@ -58,73 +160,55 @@ export const CRYPTO_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.PriceAvg50d,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
-		},
-		{
-			columnType: ColumnType.Price1yRange,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
-		},
-		{
 			columnType: ColumnType.MarketCap24h,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Beta5y,
+			columnType: ColumnType.MarketCapRank,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.LastDividend,
+			columnType: ColumnType.MarketCapFullyDiluted,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.ChangePrice24h,
+			columnType: ColumnType.MarketCapChange24h,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.VolumeAvg10d,
+			columnType: ColumnType.MarketCapChange24hPercent,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Employees,
+			columnType: ColumnType.CirculatingSupply,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.IpODate,
+			columnType: ColumnType.TotalSupply,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Sector,
+			columnType: ColumnType.MaxSupply,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.Industry,
-			isShow: true,
-			isDraggable: true,
-			groupOrder: 0,
-		},
-		{
-			columnType: ColumnType.Source,
+			columnType: ColumnType.UpdateDate,
 			isShow: true,
 			isDraggable: true,
 			groupOrder: 0,
