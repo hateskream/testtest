@@ -32,20 +32,18 @@ export interface ITicker {
 	tickerId: string;
 	[ColumnType.Symbol]: SymbolDto;
 	[ColumnType.PriceCurrent]: NumberDto;
+	[ColumnType.ChangePrice24h]: NumberDto;
 	[ColumnType.ChangePrice24hPercent]: PercentDto;
 	[ColumnType.Volume24h]: NumberDto;
+	[ColumnType.PriceMin24h]: NumberDto;
+	[ColumnType.PriceMax24h]: NumberDto;
+	[ColumnType.PriceMin1y]: NumberDto;
+	[ColumnType.PriceMax1y]: NumberDto;
 	[ColumnType.PriceAvg50d]: NumberDto;
-	// [ColumnType.Price1yRange]: RangeDto;
-	[ColumnType.MarketCap24h]: NumberDto;
-	[ColumnType.Beta5y]: NumberDto;
-	[ColumnType.LastDividend]: NumberDto;
-	[ColumnType.ChangePrice24h]: NumberDto;
-	[ColumnType.VolumeAvg10d]: NumberDto;
-	[ColumnType.Employees]: TextDto;
-	[ColumnType.IpODate]: TextDto;
-	[ColumnType.Sector]: TextDto;
-	[ColumnType.Industry]: TextDto;
-	[ColumnType.Source]: TextDto;
+	[ColumnType.PriceAvg200d]: NumberDto;
+	[ColumnType.PriceOpen]: NumberDto;
+	[ColumnType.PriceClose]: NumberDto;
+	[ColumnType.UpdateDate]: TextDto;
 	[ColumnType.Price24hChart]: SvgChartDto;
 }
 
@@ -95,20 +93,18 @@ function prepareResponse({ tickers, pagination }: IData): IPreparedResponse {
 				tickerId: ticker.tickerId,
 				[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
 				[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
+				[ColumnType.ChangePrice24h]: mapNumber(ticker[ColumnType.ChangePrice24h]),
 				[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
 				[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
+				[ColumnType.PriceMin24h]: mapNumber(ticker[ColumnType.PriceMin24h]),
+				[ColumnType.PriceMax24h]: mapNumber(ticker[ColumnType.PriceMax24h]),
+				[ColumnType.PriceMin1y]: mapNumber(ticker[ColumnType.PriceMin1y]),
+				[ColumnType.PriceMax1y]: mapNumber(ticker[ColumnType.PriceMax1y]),
 				[ColumnType.PriceAvg50d]: mapNumber(ticker[ColumnType.PriceAvg50d]),
-				// [ColumnType.Price1yRange]: mapRange(ticker[ColumnType.Price1yRange]),
-				[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
-				[ColumnType.Beta5y]: mapNumber(ticker[ColumnType.Beta5y]),
-				[ColumnType.LastDividend]: mapNumber(ticker[ColumnType.LastDividend]),
-				[ColumnType.ChangePrice24h]: mapNumber(ticker[ColumnType.ChangePrice24h]),
-				[ColumnType.VolumeAvg10d]: mapNumber(ticker[ColumnType.VolumeAvg10d]),
-				[ColumnType.Employees]: mapText(ticker[ColumnType.Employees]),
-				[ColumnType.IpODate]: mapText(ticker[ColumnType.IpODate]),
-				[ColumnType.Sector]: mapText(ticker[ColumnType.Sector]),
-				[ColumnType.Industry]: mapText(ticker[ColumnType.Industry]),
-				[ColumnType.Source]: mapText(ticker[ColumnType.Source]),
+				[ColumnType.PriceAvg200d]: mapNumber(ticker[ColumnType.PriceAvg200d]),
+				[ColumnType.PriceOpen]: mapNumber(ticker[ColumnType.PriceOpen]),
+				[ColumnType.PriceClose]: mapNumber(ticker[ColumnType.PriceClose]),
+				[ColumnType.UpdateDate]: mapText(ticker[ColumnType.UpdateDate]),
 				[ColumnType.Price24hChart]: mapSvgChart(ticker[ColumnType.Price24hChart]),
 			}))
 			.filter(
