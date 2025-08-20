@@ -11,6 +11,7 @@ import {
 	isLabelCell,
 	isSvgChartCell,
 	isRangeCell,
+	isForexSymbolCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -93,12 +94,19 @@ function mapSymbolToTable(cell: Cell) {
 		};
 	}
 
+	if (isForexSymbolCell(cell)) {
+		return {
+			symbolType: cell.symbolType,
+			rightSrcImg: cell.rightSrcImg,
+			leftSrcImg: cell.leftSrcImg,
+			rightTicker: cell.rightTicker,
+			leftTicker: cell.leftTicker,
+		};
+	}
+
 	return {
 		symbolType: cell.symbolType,
-		rightSrcImg: cell.rightSrcImg,
-		leftSrcImg: cell.leftSrcImg,
-		rightTicker: cell.rightTicker,
-		leftTicker: cell.leftTicker,
+		text: cell.text,
 	};
 }
 

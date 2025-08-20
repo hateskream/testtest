@@ -48,6 +48,14 @@ const props = defineProps<IProps>();
 			:padding="0"
 		/>
 
+		<div
+			v-if="props.data.symbolType === 'PlainText'
+				&& props.data.text"
+			:class="[classes.text, 'paragraph-p-00']"
+		>
+			{{ props.data.text }}
+		</div>
+
 		<div :class="classes.tickerName">
 			<!-- Show ticker for all types -->
 			<span
@@ -117,5 +125,10 @@ const props = defineProps<IProps>();
 	font-size: 11px;
 	line-height: 1.2;
 	color: var(--text-color-base-300);
+}
+
+.text {
+	text-align: right;
+	color: var(--text-color-base-500);
 }
 </style>

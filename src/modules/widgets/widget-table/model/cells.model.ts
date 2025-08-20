@@ -12,6 +12,7 @@ export interface ITableSymbolCell {
 	leftSrcImg?: string; // Optional: used by Forex
 	rightTicker?: string; // Optional: used by Forex
 	leftTicker?: string; // Optional: used by Forex
+	text?: string; // Optional: used by PlainText
 }
 
 export interface ITableNumberCell {

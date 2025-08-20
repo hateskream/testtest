@@ -48,12 +48,19 @@ export type IForexSymbolDto = BaseDto & Nullable<{
 	leftTicker: string;
 }>;
 
+export type IPlaneTextSymbolDto = BaseDto & Nullable<{
+	cellType: CellType.Symbol;
+	symbolType: SymbolType.PlaneText;
+	text: string;
+}>;
+
 export type SymbolDto =
 	| IIndexSymbolDto
 	| ICommoditySymbolDto
 	| IStockSymbolDto
 	| ICryptoSymbolDto
-	| IForexSymbolDto;
+	| IForexSymbolDto
+	| IPlaneTextSymbolDto;
 
 export type NumberDto = BaseDto &
 	Nullable<{

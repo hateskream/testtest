@@ -117,6 +117,7 @@ export enum SymbolType {
 	Stock = 'Stock',
 	Crypto = 'Crypto',
 	Forex = 'Forex',
+	PlaneText = 'PlainText',
 }
 
 export interface ISymbolCellBase extends IBaseCell {
@@ -161,12 +162,18 @@ export interface IForexSymbolCell extends ISymbolCellBase {
 	leftTicker: string;
 }
 
+export interface IPlaneTextSymbolCell extends ISymbolCellBase {
+	symbolType: SymbolType.PlaneText;
+	text: string;
+}
+
 export type ISymbolCell =
   | IIndexSymbolCell
   | ICommoditySymbolCell
   | IStockSymbolCell
   | ICryptoSymbolCell
-  | IForexSymbolCell;
+  | IForexSymbolCell
+	| IPlaneTextSymbolCell;
 
 export interface INumberCell extends IBaseCell {
 	cellType: CellType.Number;
