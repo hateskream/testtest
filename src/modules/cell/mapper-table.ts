@@ -121,6 +121,7 @@ function mapPercentToTable(cell: Cell) {
 
 	return {
 		value: cell.trend === Trend.UP || cell.trend === Trend.NEUTRAL ? cell.value : `-${cell.value}`,
+		maxAbsValue: cell.maxAbsValue,
 	};
 }
 

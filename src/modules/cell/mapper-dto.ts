@@ -127,6 +127,7 @@ export function mapPercent(dto: CellDto): IPercentCell | IEmptyCell {
 			columnType: dto.columnType,
 			value: dto.value,
 			trend: dto.trend,
+			maxAbsValue: dto.maxAbsValue,
 		} as IPercentCell;
 	}
 

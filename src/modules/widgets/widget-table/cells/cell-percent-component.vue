@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
+import { computed } from 'vue';
 
-import { type IWatchlistPercentCell } from '@/modules/widgets/watchlist/model';
-import { getPercentTrendClass } from '@/modules/widgets/watchlist/const';
+const COLORS = {
+	POSITIVE: '#04EDA0',
+	NEGATIVE: '#FC4A6B',
+} as const;
 
+export interface IPercentData {
+	value?: string;
+	trend?: string;
+	maxAbsValue?: number;
+}
 
 interface IProps {
-	data: IWatchlistPercentCell;
+	data: IPercentData;
 }
 
 const props = defineProps<IProps>();
-
-const classes = useCssModule('classes');
 
 const displayValue = computed(() => {
 	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
@@ -23,35 +28,65 @@ const displayValue = computed(() => {
 	return `${props.data.value}%`;
 });
 
-const percentClasses = computed<string>(() => {
-	if (!props.data.value) {
-		return classes.commonly;
+const barWidth = computed(() => {
+	const { value, maxAbsValue } = props.data;
+	if (!value || !maxAbsValue || isNaN(+value)) {
+		return 0;
 	}
 
-	const trendClass = getPercentTrendClass(props.data.value, props.data.trend);
-	return classes[trendClass] || classes.commonly;
+	const absValue = Math.abs(+value);
+	const maxAbs = maxAbsValue;
+	return Math.min((absValue / maxAbs) * 100, 100);
+});
+
+const barColor = computed(() => {
+	return props.data.value ?? 0 >= 0 ? COLORS.POSITIVE : COLORS.NEGATIVE;
 });
 </script>
 
 <template>
-	<div :class="[percentClasses, classes.percent]" class="paragraph-p-00">{{ displayValue }}</div>
+	<div :class="classes.rootBarCell">
+		<div
+			v-if="props.data.maxAbsValue"
+			:class="classes.barContainer"
+		>
+			<div
+				:class="classes.bar"
+				:style="{
+					width: `${barWidth}%`,
+					backgroundColor: barColor
+				}"
+			/>
+		</div>
+		<span
+			:class="classes.valueText"
+			:style="{ color: barColor }"
+		>
+			{{ displayValue }}
+		</span>
+	</div>
 </template>
 
 <style module="classes">
-.percent {
-	text-align: right;
-	color: var(--metrics-color-positive);
+.rootBarCell {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	min-height: 24px;
+}
 
-	&.commonly {
-		color: var(--text-color-base-300);
-	}
+.barContainer {
+	position: relative;
+	flex: 1;
+	min-width: 80px;
+	height: 8px;
+	border-radius: 2px;
+}
 
-	&.positive {
-		color: var(--metrics-color-positive);
-	}
-
-	&.negative {
-		color: var(--metrics-color-negative-500);
-	}
+.bar {
+	min-width: 8px;
+	height: 100%;
+	border-radius: 4px;
 }
 </style>

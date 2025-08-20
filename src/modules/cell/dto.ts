@@ -67,6 +67,7 @@ export type PercentDto = BaseDto &
 	Nullable<{
 		value: string;
 		trend: Trend;
+		maxAbsValue?: number;
 	}>;
 
 export type SvgChartDto = BaseDto &

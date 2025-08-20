@@ -180,6 +180,7 @@ export interface IPercentCell extends IBaseCell {
 	cellType: CellType.Percent;
 	value: string;
 	trend: Trend;
+	maxAbsValue?: number;
 }
 
 export interface ISvgChartCell extends IBaseCell {
