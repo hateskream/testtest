@@ -1,5 +1,5 @@
 import { CellType, ColumnType, Magnitude, SymbolType, Trend } from '@/modules/cell';
-import type { ITicker } from '../get-market-crypto';
+import type { ITicker } from '../get-market-indices';
 
 
 export const mockTickers: ITicker[] = [
