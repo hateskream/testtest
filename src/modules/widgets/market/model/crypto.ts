@@ -5,8 +5,8 @@ import {
 	type IPercentCell,
 	type ITextCell,
 	type ISvgChartCell,
+	type TableRow,
 } from '@/modules/cell';
-import type { TableRow } from './row';
 import { type ITableColumn, buildColumns } from './column';
 import { type Filters, type IFilterValue, type IFilterState, type IIcon } from './filter';
 import { IconIds } from '@/shared/ui/icon';

@@ -8,13 +8,8 @@ import {
 	type RangeDto,
 	type SvgChartDto,
 	ColumnType,
-	mapSymbol,
-	mapNumber,
-	mapPercent,
-	isEmptyCell,
-	mapText,
-	mapSvgChart,
-	mapRange,
+	prepareMarketResponse,
+	type TableRowDto,
 } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 import type { ISelectedFilter, ISort } from '../model';
@@ -31,8 +26,7 @@ interface IGetMarketRequest {
 	offset: number;
 }
 
-export interface ITicker {
-	tickerId: string;
+export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
 	[ColumnType.PriceCurrent]: NumberDto;
 	[ColumnType.Price1yRange]: RangeDto;
@@ -49,7 +43,7 @@ export interface ITicker {
 	[ColumnType.Sector]: TextDto;
 	[ColumnType.Source]: TextDto;
 	[ColumnType.Price24hChart]: SvgChartDto;
-}
+}>;
 
 interface IPagination {
 	total: number;
@@ -58,7 +52,7 @@ interface IPagination {
 }
 
 interface IData {
-	tickers: ITicker[];
+	tickers: TickerDto[];
 	pagination: IPagination;
 }
 interface IGetMarketResponse {
@@ -83,51 +77,13 @@ export async function getMarketStock(_: IGetMarketRequest): Promise<IPreparedRes
 				},
 			});
 
-		return prepareResponse(response.data);
+		return prepareMarketResponse<StockTableRow>(response.data);
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
 }
 
-function prepareResponse({ tickers, pagination }: IData): IPreparedResponse {
-	return {
-		tickers: tickers
-			.map(ticker => ({
-				tickerId: ticker.tickerId,
-				[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
-				[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
-				[ColumnType.Price1yRange]: mapRange(ticker[ColumnType.Price1yRange]),
-				[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
-				[ColumnType.Beta5y]: mapNumber(ticker[ColumnType.Beta5y]),
-				[ColumnType.LastDividend]: mapNumber(ticker[ColumnType.LastDividend]),
-				[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
-				[ColumnType.ChangePrice24h]: mapNumber(ticker[ColumnType.ChangePrice24h]),
-				[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
-				[ColumnType.VolumeAvg50d]: mapNumber(ticker[ColumnType.VolumeAvg50d]),
-				[ColumnType.Employees]: mapText(ticker[ColumnType.Employees]),
-				[ColumnType.IpODate]: mapText(ticker[ColumnType.IpODate]),
-				[ColumnType.Industry]: mapText(ticker[ColumnType.Industry]),
-				[ColumnType.Sector]: mapText(ticker[ColumnType.Sector]),
-				[ColumnType.Source]: mapText(ticker[ColumnType.Source]),
-				[ColumnType.Price24hChart]: mapSvgChart(ticker[ColumnType.Price24hChart]),
-			}))
-			.filter(
-				ticker =>
-					Object
-						.values(ticker)
-						.map((maybeCell) => {
-							if (typeof maybeCell === 'string') {
-								return null;
-							}
-							return maybeCell;
-						})
-						.filter(el => el !== null)
-						.every(cell => !isEmptyCell(cell)),
-			) as StockTableRow[],
-		pagination,
-	};
-}
 
 async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {

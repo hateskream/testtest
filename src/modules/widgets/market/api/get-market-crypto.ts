@@ -5,14 +5,10 @@ import {
 	type NumberDto,
 	type PercentDto,
 	type TextDto,
-	ColumnType,
-	mapSymbol,
-	mapNumber,
-	mapPercent,
-	isEmptyCell,
-	mapText,
 	type SvgChartDto,
-	mapSvgChart,
+	ColumnType,
+	prepareMarketResponse,
+	type TableRowDto,
 } from '@/modules/cell';
 import type { CryptoTableRow } from '../model';
 import type { MarketType } from '@/modules/market';
@@ -29,8 +25,7 @@ interface IGetMarketRequest {
 	offset: number;
 }
 
-export interface ITicker {
-	tickerId: string;
+export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
 	[ColumnType.PriceCurrent]: NumberDto;
 	[ColumnType.PriceMin24h]: NumberDto;
@@ -60,7 +55,7 @@ export interface ITicker {
 	[ColumnType.MaxSupply]: NumberDto;
 	[ColumnType.UpdateDate]: TextDto;
 	[ColumnType.Price24hChart]: SvgChartDto;
-}
+}>;
 
 interface IPagination {
 	total: number;
@@ -69,7 +64,7 @@ interface IPagination {
 }
 
 interface IData {
-	tickers: ITicker[];
+	tickers: TickerDto[];
 	pagination: IPagination;
 }
 interface IGetMarketResponse {
@@ -94,64 +89,13 @@ export async function getMarketCrypto(_: IGetMarketRequest): Promise<IPreparedRe
 				},
 			});
 
-		return prepareResponse(response.data);
+		return prepareMarketResponse<CryptoTableRow>(response.data);
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
 }
 
-function prepareResponse({ tickers, pagination }: IData): IPreparedResponse {
-	return {
-		tickers: tickers
-			.map(ticker => ({
-				tickerId: ticker.tickerId,
-				[ColumnType.Symbol]: mapSymbol(ticker[ColumnType.Symbol]),
-				[ColumnType.PriceCurrent]: mapNumber(ticker[ColumnType.PriceCurrent]),
-				[ColumnType.PriceMin24h]: mapNumber(ticker[ColumnType.PriceMin24h]),
-				[ColumnType.PriceMax24h]: mapNumber(ticker[ColumnType.PriceMax24h]),
-				[ColumnType.PriceMin1y]: mapNumber(ticker[ColumnType.PriceMin1y]),
-				[ColumnType.PriceMax1y]: mapNumber(ticker[ColumnType.PriceMax1y]),
-				[ColumnType.PriceAvg50d]: mapNumber(ticker[ColumnType.PriceAvg50d]),
-				[ColumnType.PriceAvg200d]: mapNumber(ticker[ColumnType.PriceAvg200d]),
-				[ColumnType.PriceOpen]: mapNumber(ticker[ColumnType.PriceOpen]),
-				[ColumnType.PriceClose]: mapNumber(ticker[ColumnType.PriceClose]),
-				[ColumnType.AllTimeHigh]: mapNumber(ticker[ColumnType.AllTimeHigh]),
-				[ColumnType.AllTimeHighChangePercent]: mapPercent(ticker[ColumnType.AllTimeHighChangePercent]),
-				[ColumnType.AllTimeHighDate]: mapText(ticker[ColumnType.AllTimeHighDate]),
-				[ColumnType.AllTimeLow]: mapNumber(ticker[ColumnType.AllTimeLow]),
-				[ColumnType.AllTimeLowChangePercent]: mapPercent(ticker[ColumnType.AllTimeLowChangePercent]),
-				[ColumnType.AllTimeLowDate]: mapText(ticker[ColumnType.AllTimeLowDate]),
-				[ColumnType.ChangePrice24h]: mapNumber(ticker[ColumnType.ChangePrice24h]),
-				[ColumnType.ChangePrice24hPercent]: mapPercent(ticker[ColumnType.ChangePrice24hPercent]),
-				[ColumnType.Volume24h]: mapNumber(ticker[ColumnType.Volume24h]),
-				[ColumnType.MarketCap24h]: mapNumber(ticker[ColumnType.MarketCap24h]),
-				[ColumnType.MarketCapRank]: mapText(ticker[ColumnType.MarketCapRank]),
-				[ColumnType.MarketCapFullyDiluted]: mapNumber(ticker[ColumnType.MarketCapFullyDiluted]),
-				[ColumnType.MarketCapChange24h]: mapNumber(ticker[ColumnType.MarketCapChange24h]),
-				[ColumnType.MarketCapChange24hPercent]: mapPercent(ticker[ColumnType.MarketCapChange24hPercent]),
-				[ColumnType.CirculatingSupply]: mapNumber(ticker[ColumnType.CirculatingSupply]),
-				[ColumnType.TotalSupply]: mapNumber(ticker[ColumnType.TotalSupply]),
-				[ColumnType.MaxSupply]: mapNumber(ticker[ColumnType.MaxSupply]),
-				[ColumnType.UpdateDate]: mapText(ticker[ColumnType.UpdateDate]),
-				[ColumnType.Price24hChart]: mapSvgChart(ticker[ColumnType.Price24hChart]),
-			}))
-			.filter(
-				ticker =>
-					Object
-						.values(ticker)
-						.map((maybeCell) => {
-							if (typeof maybeCell === 'string') {
-								return null;
-							}
-							return maybeCell;
-						})
-						.filter(el => el !== null)
-						.every(cell => !isEmptyCell(cell)),
-			) as CryptoTableRow[],
-		pagination,
-	};
-}
 
 async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {

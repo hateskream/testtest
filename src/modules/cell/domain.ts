@@ -264,3 +264,8 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.PriceOpen]: CellType.Number,
 	[ColumnType.PriceClose]: CellType.Number,
 };
+
+// Table row type for market data
+export type TableRow<T = Partial<Record<ColumnType, Cell>>> = {
+	tickerId: string;
+} & T;

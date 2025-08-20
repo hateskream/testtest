@@ -1,8 +1,8 @@
 import { CellType, ColumnType, Magnitude, SymbolType, Trend } from '@/modules/cell';
-import type { ITicker } from '../get-market-forex';
+import type { TickerDto } from '../get-market-forex';
 
 
-export const mockTickers: ITicker[] = [
+export const mockTickers: TickerDto[] = [
 	{
 		tickerId: 'EURUSD',
 		[ColumnType.Symbol]: {

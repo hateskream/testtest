@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { FiltersState, FiltersValues, ITableColumn, TableRow } from '../model';
+import type { FiltersState, FiltersValues, ITableColumn } from '../model';
+import type { TableRow } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 
 import MarketTabsComponent from './market-tabs-component.vue';

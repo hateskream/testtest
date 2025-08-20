@@ -5,8 +5,8 @@ import {
 	type IPercentCell,
 	type ITextCell,
 	type ISvgChartCell,
+	type TableRow,
 } from '@/modules/cell';
-import type { TableRow } from './row';
 import { type ITableColumn, buildColumns } from './column';
 
 export type IndicesTableRow = TableRow<{

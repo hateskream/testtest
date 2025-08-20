@@ -1,5 +1,6 @@
 import { MarketType } from '@/modules/market';
-import type { ISort, ISelectedFilter, TableRow } from '../model';
+import type { ISort, ISelectedFilter } from '../model';
+import type { TableRow } from '@/modules/cell';
 import { getMarketCommodities, getMarketCrypto, getMarketForex, getMarketIndices, getMarketStock } from '../api';
 
 interface IGetMarketRequest {

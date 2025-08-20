@@ -6,8 +6,9 @@ import {
 	ColumnType,
 	mapCellToTable,
 	mapToTableColumnType,
+	type TableRow,
 } from '@/modules/cell';
-import type { ITableColumn, TableRow } from '../model';
+import type { ITableColumn } from '../model';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
