@@ -13,6 +13,7 @@ import {
 	getTickerDescription,
 	getTickerName,
 	isForexSymbolCell,
+	isPlaneTextSymbolCell,
 } from '@/modules/cell';
 
 
@@ -47,7 +48,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 			<ui-transition-fade>
 				<div v-if="props.settings.isShowLogo && meta.size.w > 1" :class="classes.logo">
 					<ticker-icon
-						v-if="!isForexSymbolCell(props.ticker.symbol)"
+						v-if="!isForexSymbolCell(props.ticker.symbol) && !isPlaneTextSymbolCell(props.ticker.symbol)"
 						:src="props.ticker.symbol.srcImg"
 						:ticker="props.ticker.symbol.ticker"
 					/>

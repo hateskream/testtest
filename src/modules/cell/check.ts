@@ -10,6 +10,7 @@ import {
 	type ILableCell,
 	type INumberCell,
 	type IPercentCell,
+	type IPlaneTextSymbolCell,
 	type IRangeCell,
 	type IStockSymbolCell,
 	type ISvgChartCell,
@@ -39,6 +40,10 @@ export function isStockSymbolCell(cell: ISymbolCell): cell is IStockSymbolCell {
 
 export function isForexSymbolCell(cell: ISymbolCell): cell is IForexSymbolCell {
 	return cell.symbolType === SymbolType.Forex;
+}
+
+export function isPlaneTextSymbolCell(cell: ISymbolCell): cell is IPlaneTextSymbolCell {
+	return cell.symbolType === SymbolType.PlaneText;
 }
 
 export function isSymbolCell(cell: Cell): cell is ISymbolCell {
