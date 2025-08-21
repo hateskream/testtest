@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 
 import { type IWatchlistTextCell } from '@/modules/widgets/watchlist/model';
 
@@ -10,8 +10,8 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const alignmentStyle = computed(() => {
-	return props.align === 'left' ? { 'text-align': 'left' } : { 'text-align': 'right' };
+const alignmentStyle = computed((): CSSProperties => {
+	return props.align === 'left' ? { textAlign: 'left' } : {};
 });
 </script>
 

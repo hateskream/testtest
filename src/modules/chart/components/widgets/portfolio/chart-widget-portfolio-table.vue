@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ChartCommonWidgetLayout} from '@/modules/chart/components/shared/ui';
-import {WidgetTypedTable, CellType} from '@/modules/widgets/widget-table';
+import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
 import CellStringComponent from '@/modules/widgets/widget-table/cells/cell-string-component.vue';
 
@@ -123,7 +123,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.TEXT,
-		group: {name: 'Info', displayName: 'Info'},
+		group: { name: 'Info', displayName: 'Info' },
 	},
 	{
 		key: 'dia',
@@ -134,7 +134,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.TEXT,
-		group: {name: 'Info', displayName: 'Info'},
+		group: { name: 'Info', displayName: 'Info' },
 	},
 	{
 		key: 'sp500',
@@ -145,7 +145,7 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.TEXT,
-		group: {name: 'Info', displayName: 'Info'},
+		group: { name: 'Info', displayName: 'Info' },
 	},
 ];
 
@@ -166,7 +166,7 @@ const columns = [
 				:show-header="true"
 			>
 				<template #[`cell-characteristic`]="{ row }">
-					<cell-string-component :align="`left`" :data="row.data.characteristic"/>
+					<cell-string-component :align="`left`" :data="row.data.characteristic" />
 				</template>
 			</widget-typed-table>
 		</template>
