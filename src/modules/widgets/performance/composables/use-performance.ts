@@ -1,8 +1,14 @@
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { type IState, getDefaultState, type Stock, type DateRange, type DisplayVariant } from '../model';
+import { useGetState, useUpdateState } from '../queries';
 
-export function usePerformance() {
+export function usePerformance(widgetId: string) {
+	const {
+		data: dataState,
+	} = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
 	const state = ref<IState>(getDefaultState());
 
 	const currentStock = computed({
@@ -32,6 +38,17 @@ export function usePerformance() {
 			state.value.isCompactMode = val;
 		},
 	});
+
+	watch(dataState, newState => {
+		if (newState) {
+			state.value = { ...newState };
+		}
+
+	}, { immediate: true });
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
 
 	function resetAllChanges() {
 		state.value = getDefaultState();

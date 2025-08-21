@@ -27,9 +27,8 @@ const {
 	currentDate,
 	currentDisplayVariant,
 	isCompactMode,
-
 	resetAllChanges,
-} = usePerformance();
+} = usePerformance(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryPerformance(
 	currentStock,
