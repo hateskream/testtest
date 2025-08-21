@@ -19,6 +19,9 @@ import { SectionTransactions } from './transactions';
 import { SectionHoldings } from './holdings';
 import { ChartSectionAnnualMarginTrends } from './annual-margin-trends';
 import { ChartSectionDailyNetFlows } from './daily-net-flows';
+import { ChartSectionDividendsAndCapitalGains } from './dividends-and-capital-gains';
+import { ChartSectionHoldingsEtf } from './holdings-etf';
+import { ChartSectionPortfolioComposition } from './portfolio-composition';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -42,4 +45,7 @@ export {
 	SectionTransactions,
 	ChartSectionAnnualMarginTrends,
 	ChartSectionDailyNetFlows,
+	ChartSectionDividendsAndCapitalGains,
+	ChartSectionHoldingsEtf,
+	ChartSectionPortfolioComposition,
 };

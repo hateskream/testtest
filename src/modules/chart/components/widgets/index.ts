@@ -9,7 +9,7 @@ import { ChartWidgetNews } from './news';
 import { ChartWidgetInsiderTrading } from './insider-trading';
 import { ChartWidgetBalanceSheet } from './balance-sheet';
 import { ChartWidgetsCapitalStructure } from './capital-structure';
-import { ChartWidgetDividends } from './dividends';
+import { ChartWidgetDividends, ChartWidgetDividendsTable } from './dividends';
 import { ChartWidgetEps } from './eps';
 import { ChartWidgetIncomeStatement } from './income-statement';
 import { ChartWidgetPeerAnalysis } from './peer-analysis';
@@ -20,10 +20,11 @@ import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
 import { ChartWidgetOscillators, ChartWidgetOscillatorsTable } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
-import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings } from './holdings';
+import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings, ChartWidgetHoldingsTable } from './holdings';
 import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetTransactionTable } from './transactions';
 import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
 import { ChartWidgetDailyNetFlows } from './daily-net-flows';
+import { ChartWidgetPortfolioTable } from './portfolio';
 
 
 export {
@@ -58,4 +59,7 @@ export {
 	ChartWidgetTransactionTable,
 	ChartWidgetOscillatorsTable,
 	ChartWidgetDailyNetFlows,
+	ChartWidgetDividendsTable,
+	ChartWidgetHoldingsTable,
+	ChartWidgetPortfolioTable,
 };

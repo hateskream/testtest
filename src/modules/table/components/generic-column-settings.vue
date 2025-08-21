@@ -141,51 +141,53 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 								</div>
 							</div>
 						</div>
+						<template v-if="Array.isArray(layout) && layout.length > 0">
+							<ui-driver :class="classes.driver" />
 
-						<ui-driver :class="classes.driver" />
+							<div class="columnOrderWrapper">
+								<modal-filter-title>Column order</modal-filter-title>
 
-						<div>
-							<modal-filter-title>Column order</modal-filter-title>
-
-							<div>
-								<grid-layout
-									:layout="layout"
-									:col-num="gridConfig.colNum"
-									:row-height="gridConfig.rowHeight"
-									:margin="gridConfig.margin"
-									:is-draggable="gridConfig.isDraggable"
-									:is-resizable="gridConfig.isResizable"
-									:vertical-compact="true"
-									:class="classes.columnCellTabs"
-								>
-									<grid-item
-										v-for="item in layout"
-										:key="item.i"
-										:x="item.x"
-										:y="item.y"
-										:w="item.w"
-										:h="item.h"
-										:i="item.i"
-										:static="false"
-										:class="classes.columnCellTab"
-										@moved="(i, x, y) => handleUpdatePositions(i, x, y)"
+								<div>
+									<grid-layout
+										:layout="layout"
+										:col-num="gridConfig.colNum"
+										:row-height="gridConfig.rowHeight"
+										:margin="gridConfig.margin"
+										:is-draggable="gridConfig.isDraggable"
+										:is-resizable="gridConfig.isResizable"
+										:vertical-compact="true"
+										:class="classes.columnCellTabs"
 									>
-										<ui-icon
-											:id="IconIds.DoubleDrag"
-											:class="classes.icon"
-											width="10px"
-											height="14px"
-										/>
-										<modal-filter-tab-wrapper :class="classes.columnCellTabWrapper">
-											<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
-											<span>
-												{{ item.data.label }}
-											</span>
-										</modal-filter-tab-wrapper>
-									</grid-item>
-								</grid-layout>
+										<grid-item
+											v-for="item in layout"
+											:key="item.i"
+											:x="item.x"
+											:y="item.y"
+											:w="item.w"
+											:h="item.h"
+											:i="item.i"
+											:static="false"
+											:class="classes.columnCellTab"
+											@moved="(i, x, y) => handleUpdatePositions(i, x, y)"
+										>
+											<ui-icon
+												:id="IconIds.DoubleDrag"
+												:class="classes.icon"
+												width="10px"
+												height="14px"
+											/>
+											<modal-filter-tab-wrapper :class="classes.columnCellTabWrapper">
+												<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
+												<span>
+													{{ item.data.label }}
+												</span>
+											</modal-filter-tab-wrapper>
+										</grid-item>
+									</grid-layout>
+								</div>
 							</div>
-						</div>
+						</template>
+						<div v-else :class="classes.separator" />
 					</template>
 				</modal-filter>
 			</template>
@@ -256,5 +258,10 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 
 .iconTertiary:hover {
 	color: var(--icon-color-base-300-effect);
+}
+
+.separator {
+	width: 100%;
+	height: 12px;
 }
 </style>

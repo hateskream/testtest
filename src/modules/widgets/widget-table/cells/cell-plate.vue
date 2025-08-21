@@ -4,7 +4,7 @@ import { computed } from 'vue';
 interface IProps {
 	data: {
 		value: 'sale'
-			| 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell';
+			| 'volatile' | 'purchases' | 'neutral' | 'buy' | 'sell' | 'cash';
 	};
 }
 
@@ -35,6 +35,10 @@ const statusConfig = {
 	sell: {
 		text: 'Sell',
 		class: 'red',
+	},
+	cash: {
+		text: 'Cash',
+		class: 'green',
 	},
 } as const;
 

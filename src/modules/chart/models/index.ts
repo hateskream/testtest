@@ -21,7 +21,10 @@ import {
 	SectionTransactions,
 	ChartSectionAnnualMarginTrends,
 	ChartSectionDailyNetFlows,
+	ChartSectionDividendsAndCapitalGains, ChartSectionHoldingsEtf,
+	ChartSectionPortfolioComposition,
 } from '@/modules/chart/components/sections';
+
 
 export enum TickerType {
 	CRYPTO = 'crypto',
@@ -56,6 +59,9 @@ export enum CHART_SECTION_COMPONENT {
 	TRANSACTIONS = 'TRANSACTIONS',
 	ANNUAL_MARGIN_TRENDS = 'ANNUAL_MARGIN_TRENDS',
 	DAILY_NET_FLOWS = 'DAILY_NET_FLOWS',
+	DIVIDENDS_AND_CAPITAL_GAINS = 'DIVIDENDS_AND_CAPITAL_GAINS',
+	HOLDINGS_ETF = 'HOLDINGS_ETF',
+	PORTFOLIO_COMPOSITION = 'PORTFOLIO_COMPOSITION',
 }
 
 // Create mapping from enum to actual components
@@ -81,6 +87,9 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.TRANSACTIONS]: SectionTransactions,
 	[CHART_SECTION_COMPONENT.ANNUAL_MARGIN_TRENDS]: ChartSectionAnnualMarginTrends,
 	[CHART_SECTION_COMPONENT.DAILY_NET_FLOWS]: ChartSectionDailyNetFlows,
+	[CHART_SECTION_COMPONENT.DIVIDENDS_AND_CAPITAL_GAINS]: ChartSectionDividendsAndCapitalGains,
+	[CHART_SECTION_COMPONENT.HOLDINGS_ETF]: ChartSectionHoldingsEtf,
+	[CHART_SECTION_COMPONENT.PORTFOLIO_COMPOSITION]: ChartSectionPortfolioComposition,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -466,7 +475,23 @@ export const chartEtfSections: IChartWidgetSections = {
 			title: 'Explorer',
 		},
 	],
-	center: [],
+	center: [
+		{
+			id: 'dividends-and-capital-gains',
+			title: 'Dividends & Capital Gains',
+			component: CHART_SECTION_COMPONENT.DIVIDENDS_AND_CAPITAL_GAINS,
+		},
+		{
+			id: 'holdings-etf',
+			title: 'Holdings Summary',
+			component: CHART_SECTION_COMPONENT.HOLDINGS_ETF,
+		},
+		{
+			id: 'portfolio-composition',
+			title: 'Portfolio Composition',
+			component: CHART_SECTION_COMPONENT.PORTFOLIO_COMPOSITION,
+		},
+	],
 	right: [
 		{
 			id: 'insight-and-activity',
