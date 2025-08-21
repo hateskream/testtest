@@ -24,7 +24,7 @@ import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetT
 import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
 import { ChartWidgetDailyNetFlows } from './daily-net-flows';
 import { ChartWidgetPortfolioTable } from './portfolio';
-
+import { ChartWidgetTrailingReturns } from './trailing-returns';
 
 export {
 	ChartWidgetPricePerformance,
@@ -60,4 +60,5 @@ export {
 	ChartWidgetDividendsTable,
 	ChartWidgetHoldingsTable,
 	ChartWidgetPortfolioTable,
+	ChartWidgetTrailingReturns,
 };

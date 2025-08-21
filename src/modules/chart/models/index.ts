@@ -23,6 +23,7 @@ import {
 	ChartSectionDailyNetFlows,
 	ChartSectionDividendsAndCapitalGains, ChartSectionHoldingsEtf,
 	ChartSectionPortfolioComposition,
+	SectionTrailingReturns,
 } from '@/modules/chart/components/sections';
 
 
@@ -62,6 +63,7 @@ export enum CHART_SECTION_COMPONENT {
 	DIVIDENDS_AND_CAPITAL_GAINS = 'DIVIDENDS_AND_CAPITAL_GAINS',
 	HOLDINGS_ETF = 'HOLDINGS_ETF',
 	PORTFOLIO_COMPOSITION = 'PORTFOLIO_COMPOSITION',
+	TRAILING_RETURNS = 'TRAILING_RETURNS',
 }
 
 // Create mapping from enum to actual components
@@ -90,6 +92,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.DIVIDENDS_AND_CAPITAL_GAINS]: ChartSectionDividendsAndCapitalGains,
 	[CHART_SECTION_COMPONENT.HOLDINGS_ETF]: ChartSectionHoldingsEtf,
 	[CHART_SECTION_COMPONENT.PORTFOLIO_COMPOSITION]: ChartSectionPortfolioComposition,
+	[CHART_SECTION_COMPONENT.TRAILING_RETURNS]: SectionTrailingReturns,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -248,6 +251,11 @@ export const chartStockSections: IChartWidgetSections = {
 					title: 'Annual Returns',
 				},
 			],
+		},
+		{
+			id: 'trailing-returns',
+			title: 'Trailing Returns',
+			component: CHART_SECTION_COMPONENT.TRAILING_RETURNS,
 		},
 		{
 			id: 'price-target',

@@ -15,6 +15,7 @@ import ChartTransactionAvg from './ui/chart-transaction-avg.vue';
 import ChartTransactionAvgTotal from './ui/chart-transaction-avg-total.vue';
 import ChartAnnualMarginTrends from './ui/chart-annual-margin-trends.vue';
 import ChartDailyNetFlows from './ui/chart-daily-net-flows.vue';
+import ChartTrailingReturns from './ui/chart-trailing-returns.vue';
 
 
 export {
@@ -35,4 +36,5 @@ export {
 	ChartTransactionAvgTotal,
 	ChartAnnualMarginTrends,
 	ChartDailyNetFlows,
+	ChartTrailingReturns,
 };

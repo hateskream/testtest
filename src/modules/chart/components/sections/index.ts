@@ -22,6 +22,7 @@ import { ChartSectionDailyNetFlows } from './daily-net-flows';
 import { ChartSectionDividendsAndCapitalGains } from './dividends-and-capital-gains';
 import { ChartSectionHoldingsEtf } from './holdings-etf';
 import { ChartSectionPortfolioComposition } from './portfolio-composition';
+import { SectionTrailingReturns } from './trailing-returns';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -48,4 +49,5 @@ export {
 	ChartSectionDividendsAndCapitalGains,
 	ChartSectionHoldingsEtf,
 	ChartSectionPortfolioComposition,
+	SectionTrailingReturns,
 };
