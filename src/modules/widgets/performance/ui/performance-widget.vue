@@ -5,6 +5,7 @@ import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import { ALL_COLUMNS } from '../model';
 
 import PerformanceError from './layouts/performance-error.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
@@ -23,10 +24,11 @@ const emit = defineEmits<{
 
 const performanceStore = usePerformanceStore();
 
-// Reactive filter from store
 const filters = computed(() => performanceStore.currentFilter);
 
 const { data, isLoading, isError } = useQueryPerformance(filters);
+
+const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 </script>
 
 <template>
@@ -38,8 +40,8 @@ const { data, isLoading, isError } = useQueryPerformance(filters);
 			<performance-loader v-else-if="isLoading" />
 			<performance-view
 				v-else-if="data"
-				:performance-data="data"
-				:size="{ width: meta.size.w, height: meta.size.h }"
+				:rows="rows"
+				:columns="ALL_COLUMNS"
 			/>
 		</template>
 

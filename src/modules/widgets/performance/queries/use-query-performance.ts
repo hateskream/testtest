@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/vue-query';
+import { useInfiniteQuery } from '@tanstack/vue-query';
 import type { MaybeRefOrGetter } from 'vue';
 import { computed, toValue } from 'vue';
 
@@ -16,11 +16,18 @@ export function useQueryPerformance(args: MaybeRefOrGetter<IGetPerformanceReques
 		return () => getPerformance(value);
 	});
 
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey,
 		queryFn,
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		gcTime: 10 * 60 * 1000, // 10 minutes
-		refetchOnMount: false,
+		initialPageParam: 0,
+		getNextPageParam: (lastPage) => {
+			if (!lastPage) {
+				return undefined;
+			}
+
+			const { total, offset } = lastPage.pagination;
+			const nextOffset = offset + 10;
+			return nextOffset < total ? nextOffset : undefined;
+		},
 	});
 }

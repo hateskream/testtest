@@ -9,6 +9,7 @@ import {
 	type ILableCell,
 	type INumberCell,
 	type IPercentCell,
+	type IPlaneTextSymbolCell,
 	type IRangeCell,
 	type IStockSymbolCell,
 	type ISvgChartCell,
@@ -21,6 +22,7 @@ import type {
 	ICryptoSymbolDto,
 	IForexSymbolDto,
 	IIndexSymbolDto,
+	IPlaneTextSymbolDto,
 	IStockSymbolDto,
 	LabelDto,
 	NumberDto,
@@ -88,6 +90,14 @@ export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 				leftTicker: dto.leftTicker!,
 			} as IForexSymbolCell;
 		}
+
+		if (isPlaneTextSymbolDto(dto)) {
+			return {
+				...base,
+				text: dto.text!,
+			} as IPlaneTextSymbolCell;
+		}
+
 	}
 
 	// eslint-disable-next-line no-console
@@ -250,6 +260,14 @@ function isForexSymbolDto(dto: CellDto): dto is IForexSymbolDto {
 		dto.cellType === CellType.Symbol &&
 		'symbolType' in dto &&
 		dto.symbolType === SymbolType.Forex
+	);
+}
+
+function isPlaneTextSymbolDto(dto: CellDto): dto is IPlaneTextSymbolDto {
+	return (
+		dto.cellType === CellType.Symbol &&
+		'symbolType' in dto &&
+		dto.symbolType === SymbolType.PlaneText
 	);
 }
 

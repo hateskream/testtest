@@ -1,24 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
-import type { IPerformanceItem } from '@/modules/widgets/performance/model';
+import type { ITableColumn, TableRow } from '@/modules/cell';
 
 import PerformanceHeader from '../header/performance-header.vue';
 import PerformanceTable from '../table/performance-table.vue';
 
 interface IViewComponentProps {
-	performanceData: IPerformanceItem[];
-	size: { width: number; height: number };
+	rows: TableRow[];
+	columns: ITableColumn[];
 }
 
 const props = defineProps<IViewComponentProps>();
-
-const performanceStore = usePerformanceStore();
-
-const sortedData = computed(() => {
-	return [...props.performanceData].sort((a, b) => b.change - a.change);
-});
 </script>
 
 <template>
@@ -27,9 +18,8 @@ const sortedData = computed(() => {
 
 		<div :class="classes.performanceContent">
 			<performance-table
-				:performance-data="sortedData"
-				:is-compact="performanceStore.isCompactMode"
-				:size="props.size"
+				:rows="props.rows"
+				:columns="props.columns"
 			/>
 		</div>
 	</div>

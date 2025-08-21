@@ -12,7 +12,6 @@ interface IViewComponentProps {
 
 const props = defineProps<IViewComponentProps>();
 
-
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
