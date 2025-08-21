@@ -98,6 +98,23 @@ onMounted(() => {
 				tooltip: {
 					enabled: true,
 					position: 'nearest',
+					padding: 12,
+					backgroundColor: 'rgba(22, 22, 24, 0.60)',
+					bodyFont: {
+						size: 16,
+					},
+					caretSize: 0,
+					displayColors: false,
+					callbacks: {
+						label: function (context) {
+							let label = context.dataset.label || '';
+
+							if (context.parsed !== null) {
+								label = `${context.parsed}%`;
+							}
+							return label;
+						},
+					},
 				},
 
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
