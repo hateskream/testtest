@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { ITableColumn, TableRow } from '@/modules/cell';
-import type { DisplayVariant, Stock, DateRange } from '../../model';
+import type { ITableColumn } from '@/modules/cell';
+import type { DisplayVariant, Stock, DateRange, PerformanceTableRow } from '../../model';
 
 import PerformanceHeader from '../header/performance-header.vue';
 import PerformanceTable from '../table/performance-table.vue';
 
 interface IViewComponentProps {
-	rows: TableRow[];
+	rows: PerformanceTableRow[];
 	columns: ITableColumn[];
 }
 
@@ -31,6 +31,7 @@ const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 			<performance-table
 				:rows="props.rows"
 				:columns="props.columns"
+				:display-variant="displayVariant"
 			/>
 		</div>
 	</div>

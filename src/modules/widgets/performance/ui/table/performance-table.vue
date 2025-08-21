@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapColumn, mapRow, type ITableColumn, type TableRow } from '@/modules/cell';
+import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell';
+import { DisplayVariant, type PerformanceTableRow } from '../../model';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
 
 interface IPerformanceTableProps {
-	rows: TableRow[];
+	rows: PerformanceTableRow[];
 	columns: ITableColumn[];
+	displayVariant: DisplayVariant;
 }
 
 const props = defineProps<IPerformanceTableProps>();
@@ -18,7 +20,18 @@ const genericColumns = computed(() =>
 );
 
 const genericRows = computed(() =>
-	props.rows.map(ticker => mapRow(ticker)),
+	props.rows.map(ticker => {
+		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
+
+		if (props.displayVariant === DisplayVariant.List) {
+			percent.maxAbsValue = undefined;
+		}
+
+		return mapRow({
+			...ticker,
+			[ColumnType.ChangePrice24hPercent]: percent,
+		});
+	}),
 );
 </script>
 

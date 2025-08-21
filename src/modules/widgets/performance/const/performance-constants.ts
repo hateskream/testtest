@@ -1,8 +1,3 @@
-export const PERFORMANCE_COLORS = {
-	POSITIVE: '#04EDA0',
-	NEGATIVE: '#FC4A6B',
-} as const;
-
 export const PERFORMANCE_STOCK_TYPES = [
 	{ name: 'Industry', value: 'industry' },
 	{ name: 'Sector', value: 'sector' },
