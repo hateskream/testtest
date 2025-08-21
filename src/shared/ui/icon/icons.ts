@@ -60,4 +60,5 @@ export enum IconIds {
 	Cryptos = 'cryptos',
 	Back = 'back',
 	Arrow = 'arrow',
+	Flash = 'flash',
 }
