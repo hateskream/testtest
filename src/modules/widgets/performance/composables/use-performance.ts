@@ -1,8 +1,6 @@
 import { computed, ref } from 'vue';
 
-import { type IState, getDefaultState } from '../model/state';
-import type { DateRange, Stock } from '../model/filters';
-import type { DisplayVariant } from '../model/display';
+import { type IState, getDefaultState, type Stock, type DateRange, type DisplayVariant } from '../model';
 
 export function usePerformance() {
 	const state = ref<IState>(getDefaultState());

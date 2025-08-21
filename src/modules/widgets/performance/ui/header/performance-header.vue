@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
@@ -10,21 +7,23 @@ import {
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
+import { stockToLabel, DateRange, Stock, dateToLabel, DisplayVariant } from '../../model';
 
 import PerformanceFilters from '../modals/performance-filters.vue';
 import ViewToggle from './view-toggle.vue';
 
-const performanceStore = usePerformanceStore();
+const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
+const stock = defineModel<Stock>('stock', { required: true });
+const date = defineModel<DateRange>('date', { required: true });
+const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 
-const currentFilterTypeLabel = computed(() => {
-	const currentType = performanceStore.currentFilter.type;
-	return performanceStore.filterTypes.find(type => type.value === currentType)?.name || 'Industry';
-});
+function updateStock(s: Stock) {
+	stock.value = s;
+}
 
-const currentTimeRangeLabel = computed(() => {
-	const currentRange = performanceStore.currentFilter.timeRange;
-	return performanceStore.timeRanges.find(range => range.value === currentRange)?.name || 'Today';
-});
+function updateDate(v: DateRange) {
+	date.value = v;
+}
 </script>
 
 <template>
@@ -41,7 +40,12 @@ const currentTimeRangeLabel = computed(() => {
 				</template>
 
 				<template #content>
-					<performance-filters />
+					<performance-filters
+						v-model:is-compact-mode="isCompactMode"
+						v-model:display-variant="displayVariant"
+						v-model:stock="stock"
+						v-model:date="date"
+					/>
 				</template>
 			</ui-position>
 
@@ -49,7 +53,8 @@ const currentTimeRangeLabel = computed(() => {
 
 			<modal-badge>
 				<template #title>
-					{{ currentFilterTypeLabel }}
+					{{stock}}
+					<!-- {{ stockToLabel[stock] }} -->
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
@@ -57,12 +62,12 @@ const currentTimeRangeLabel = computed(() => {
 					<modal-badge-list>
 						<template #title>Stock</template>
 
-						<template v-for="type in performanceStore.filterTypes" :key="type.value">
+						<template v-for="s in Stock" :key="s">
 							<modal-item-selector
-								:model-value="performanceStore.currentFilter.type === type.value"
-								@update:model-value="performanceStore.setFilterType(type.value)"
+								:model-value="s === stock"
+								@update:model-value="updateStock(s)"
 							>
-								{{ type.name }}
+								{{ stockToLabel[s] }}
 							</modal-item-selector>
 						</template>
 					</modal-badge-list>
@@ -71,7 +76,8 @@ const currentTimeRangeLabel = computed(() => {
 
 			<modal-badge>
 				<template #title>
-					{{ currentTimeRangeLabel }}
+					{{date}}
+					<!-- {{ dateToLabel[date] }} -->
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
@@ -79,19 +85,19 @@ const currentTimeRangeLabel = computed(() => {
 					<modal-badge-list>
 						<template #title>Date</template>
 
-						<template v-for="range in performanceStore.timeRanges" :key="range.value">
+						<template v-for="r in DateRange" :key="r">
 							<modal-item-selector
-								:model-value="performanceStore.currentFilter.timeRange === range.value"
-								@update:model-value="performanceStore.setTimeRange(range.value)"
+								:model-value="r === date"
+								@update:model-value="updateDate(r)"
 							>
-								{{ range.name }}
+								{{ dateToLabel[r] }}
 							</modal-item-selector>
 						</template>
 					</modal-badge-list>
 				</template>
 			</modal-badge>
 		</div>
-		<view-toggle />
+		<view-toggle v-model:display-variant="displayVariant" />
 	</div>
 </template>
 

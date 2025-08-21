@@ -1,7 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import { removeUndefinedPropertiesFromObject } from '@/shared/lib';
-import type { IGetPerformanceRequest } from '../model';
 import {
 	CellType,
 	ColumnType,
@@ -13,6 +12,7 @@ import {
 	type TableRowDto,
 } from '@/modules/cell';
 import type { PerformanceTableRow } from '../model/row';
+import type { DateRange, Stock } from '../model';
 
 const IS_USE_MOCK = true;
 
@@ -38,6 +38,13 @@ interface IGetPerformanceResponse {
 export interface IPreparedResponse {
 	tickers: PerformanceTableRow[];
 	pagination: IPagination;
+}
+
+export interface IGetPerformanceRequest {
+	stock?: Stock;
+	date?: DateRange;
+	offset: number;
+	limit: number;
 }
 
 export async function getPerformance(args: IGetPerformanceRequest): Promise<IPreparedResponse> {

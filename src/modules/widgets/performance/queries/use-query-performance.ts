@@ -3,22 +3,24 @@ import type { MaybeRefOrGetter } from 'vue';
 import { computed, toValue } from 'vue';
 
 import { getPerformance } from '../api';
-import type { IGetPerformanceRequest } from '../model';
+import type { DateRange, Stock } from '../model';
 
-export function useQueryPerformance(args: MaybeRefOrGetter<IGetPerformanceRequest>) {
-	const queryKey = computed(() => {
-		const value = toValue(args);
-		return ['performance', value.type, value.timeRange] as const;
-	});
-
-	const queryFn = computed(() => {
-		const value = toValue(args);
-		return () => getPerformance(value);
-	});
-
+export function useQueryPerformance(
+	stock: MaybeRefOrGetter<Stock>,
+	date: MaybeRefOrGetter<DateRange>,
+	limit: number,
+) {
 	return useInfiniteQuery({
-		queryKey,
-		queryFn,
+		queryKey: computed(() => {
+			return ['performance', toValue(stock), toValue(date)];
+		}),
+		queryFn: ({ pageParam = 0 }) => getPerformance({
+			stock: toValue(stock),
+			date: toValue(date),
+			offset: pageParam,
+			limit,
+		}),
+
 		initialPageParam: 0,
 		getNextPageParam: (lastPage) => {
 			if (!lastPage) {
@@ -26,7 +28,7 @@ export function useQueryPerformance(args: MaybeRefOrGetter<IGetPerformanceReques
 			}
 
 			const { total, offset } = lastPage.pagination;
-			const nextOffset = offset + 10;
+			const nextOffset = offset + limit;
 			return nextOffset < total ? nextOffset : undefined;
 		},
 	});
