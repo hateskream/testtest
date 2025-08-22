@@ -8,6 +8,9 @@ import { breadCrumbsData } from './components/breadcrumbs/models';
 import { ChartHeaderBreadcrumbs, ChartHeaderStockInfo } from './components';
 import { ChartHeaderLayout, ChartHeaderTickerImageItemTesla, ChartHeaderTickerImageItemBitcoin } from './ui';
 
+import ChartHeaderTickerImageItemSpdr
+	from '@/modules/chart/components/header/ui/chart-header-ticker-image-item-spdr.vue';
+
 
 const { bgColor, bgColorShadow } = storeToRefs(useChartStore());
 
@@ -21,6 +24,9 @@ const tickerName = computed(()=>{
 	if (props.type === 'stock') {
 		return 'Tesla';
 	}
+	if (props.type === 'etf') {
+		return 'DIA ETF Trust';
+	}
 	return 'Bitcoin';
 });
 
@@ -33,6 +39,11 @@ const tickerName = computed(()=>{
 		<template #logo>
 			<chart-header-ticker-image-item-tesla
 				v-if="props.type === 'stock'"
+				:fill="bgColor"
+				:shadow="bgColorShadow"
+			/>
+			<chart-header-ticker-image-item-spdr
+				v-else-if="props.type === 'etf'"
 				:fill="bgColor"
 				:shadow="bgColorShadow"
 			/>
