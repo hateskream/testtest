@@ -1,64 +1,27 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import type { TableRow, ITableColumn } from '@/modules/cell';
+import type { ISection } from '../../model';
 
-import { useQueryWatchlistData, useQueryWatchlistWidget } from '../../queries/watchlist.query.ts';
-import { useWatchlistTabsStore, useWatchlistSectionStore } from '../../stores';
-import type { IWatchlistSection } from '../../model';
-import type { IGetWatchlistRequest } from '../../api';
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
-
-import WatchlistError from './watchlist-error.vue';
-import WatchlistLoader from './watchlist-loader.vue';
 import WatchlistTable from '../components/table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
 
-const sectionsStore = useWatchlistSectionStore();
-const tabsStore = useWatchlistTabsStore();
+interface IWatchlistMainProps {
+	tickers: TableRow[];
+	columns: ITableColumn[];
+	sections: ISection[];
+}
 
-const props = defineProps<{
-	meta: IMeta;
-}>();
-
-// eslint-disable-next-line @stylistic/max-len
-const { data: widgetData, isLoading: isWidgetLoading, isError: isWidgetError } = useQueryWatchlistWidget({ market: props.meta.market });
-
-const watchlistDataArgs = computed<IGetWatchlistRequest | null>(() => {
-	if (!widgetData.value?.config?.activeTabId) {
-		return null;
-	};
-
-	return {
-		tabId: tabsStore.currentTabId,
-	};
-});
-
-const { data: tableData, isLoading: isTableLoading, isError: isTableError } = useQueryWatchlistData(
-	watchlistDataArgs,
-	{ enabled: computed(() => watchlistDataArgs.value !== null) },
-);
-
-const loaderRow = computed(() => isWidgetLoading.value ? 6 : 5);
-const hasError = computed(() => isWidgetError.value || isTableError.value);
-
-watch(widgetData, newVal => {
-	if (newVal && newVal.config) {
-		tabsStore.setupTabs(newVal.config);
-	}
-}, { once: true });
-
-watch(tableData, (newVal) => {
-	sectionsStore.setSections((newVal ?? []) as IWatchlistSection[]);
-}, { immediate: true });
+const props = defineProps<IWatchlistMainProps>();
 </script>
 
 <template>
 	<div :class="classes.root">
-		<watchlist-error v-if="hasError" />
-
-		<watchlist-tabs-toolbar v-if="widgetData && !hasError" />
-		<watchlist-table v-if="tableData && !hasError" :watchlist-table="tableData" />
-
-		<watchlist-loader v-if="isWidgetLoading || isTableLoading" :count="loaderRow" />
+		<watchlist-tabs-toolbar />
+		<watchlist-table
+			:columns="props.columns"
+			:sections="props.sections"
+			:tickers="props.tickers"
+		/>
 	</div>
 </template>
 

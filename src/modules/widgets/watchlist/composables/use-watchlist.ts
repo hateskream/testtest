@@ -63,6 +63,8 @@ export function useWatchlist() {
 
 	const tabs = computed(() => state.value.tabs);
 
+	const sections = computed(() => table.value?.sections || []);
+
 	watch(
 		() => state.value.activeTabId,
 		newActiveTabId => {
@@ -77,7 +79,8 @@ export function useWatchlist() {
 
 			table.value = foundedTab.table;
 		},
-	), { immediate: true };
+		{ immediate: true },
+	);
 
 	function handlerAddNewTab(name: string) {
 		state.value = addNewTab(state.value, name);
@@ -181,6 +184,7 @@ export function useWatchlist() {
 		tabs,
 		columns,
 		activeSort,
+		sections,
 
 		handlerAddNewTab,
 		handlerRenameTab,

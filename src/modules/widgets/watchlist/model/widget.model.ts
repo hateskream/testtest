@@ -1,3 +1,4 @@
+
 import type { IWatchlistTab, IWatchlistColumn, IWatchlistSection } from '.';
 
 // Widget full configuration

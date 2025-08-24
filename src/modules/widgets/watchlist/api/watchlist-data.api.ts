@@ -5,11 +5,13 @@ import {
 	type IWatchlistTable,
 	type IWatchlistColumn,
 	type IWatchlistTickerState,
+	type Ticker,
 } from '../model';
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { useWatchlistTabsStore } from '../stores';
-import { ColumnType } from '../const';
+import { ColumnType as old } from '../const';
+import { SymbolType, Magnitude, Trend, CellType, ColumnType } from '@/modules/cell';
 
 const IS_USE_MOCK = true;
 
@@ -19,9 +21,10 @@ export interface IGetWatchlistRequest {
 
 export interface IGetWatchlistResponse {
 	data: IWatchlistTable;
+	tickers: Ticker[];
 }
 
-export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<IWatchlistTable> {
+export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<IGetWatchlistResponse> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
@@ -34,7 +37,7 @@ export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<
 				query,
 			});
 
-		return response.data;
+		return response;
 	} catch (error) {
 		logger.error('Failed to get watchlist', error as Error);
 		throw error;
@@ -50,25 +53,25 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 
 	// Mock columns configuration
 	const mockColumns: IWatchlistColumn[] = [
-		{ id: '1', columnType: ColumnType.SYMBOL, isShow: true, order: 1 },
-		{ id: '2', columnType: ColumnType.PRICE_CURRENT, isShow: true, order: 2 },
-		{ id: '3', columnType: ColumnType.CHANGE_PRICE_24H, isShow: true, order: 3 },
-		{ id: '7', columnType: ColumnType.CHANGE_PRICE_1H_PERCENT, isShow: true, order: 4 },
-		{ id: '8', columnType: ColumnType.CHANGE_PRICE_7D_PERCENT, isShow: true, order: 5 },
-		{ id: '4', columnType: ColumnType.VOLUME_24H, isShow: true, order: 6 },
-		{ id: '5', columnType: ColumnType.MARKET_CAP24H, isShow: true, order: 7 },
-		{ id: '6', columnType: ColumnType.LISTING_DATE, isShow: true, order: 8, width: 80 },
-		{ id: '9', columnType: ColumnType.PRICE_24H_CHART, isShow: true, order: 9 },
-		{ id: '10', columnType: ColumnType.PRICE_7D_CHART, isShow: true, order: 10 },
-		{ id: '11', columnType: ColumnType.PRICE_30D_CHART, isShow: true, order: 11 },
-		{ id: '12', columnType: ColumnType.PRICE_1Y_RANGE, isShow: true, order: 12 },
-		{ id: '13', columnType: ColumnType.LAST_DIVIDEND, isShow: true, order: 13 },
-		{ id: '14', columnType: ColumnType.COMPANY_EMPLOYEES, isShow: true, order: 14 },
-		{ id: '15', columnType: ColumnType.COMPANY_IPO_DATE, isShow: true, order: 15 },
-		{ id: '16', columnType: ColumnType.COMPANY_SECTOR, isShow: true, order: 16 },
-		{ id: '17', columnType: ColumnType.COMPANY_INDUSTRY, isShow: true, order: 17 },
-		{ id: '18', columnType: ColumnType.SOURCE, isShow: true, order: 18 },
-		{ id: '20', columnType: ColumnType.UPDATE_DATE, isShow: true, order: 20 },
+		{ id: '1', columnType: old.SYMBOL, isShow: true, order: 1 },
+		{ id: '2', columnType: old.PRICE_CURRENT, isShow: true, order: 2 },
+		// { id: '3', columnType: old.CHANGE_PRICE_24H, isShow: true, order: 3 },
+		// { id: '7', columnType: old.CHANGE_PRICE_1H_PERCENT, isShow: true, order: 4 },
+		// { id: '8', columnType: old.CHANGE_PRICE_7D_PERCENT, isShow: true, order: 5 },
+		// { id: '4', columnType: old.VOLUME_24H, isShow: true, order: 6 },
+		// { id: '5', columnType: old.MARKET_CAP24H, isShow: true, order: 7 },
+		// { id: '6', columnType: old.LISTING_DATE, isShow: true, order: 8, width: 80 },
+		// { id: '9', columnType: old.PRICE_24H_CHART, isShow: true, order: 9 },
+		// { id: '10', columnType: old.PRICE_7D_CHART, isShow: true, order: 10 },
+		// { id: '11', columnType: old.PRICE_30D_CHART, isShow: true, order: 11 },
+		// { id: '12', columnType: old.PRICE_1Y_RANGE, isShow: true, order: 12 },
+		// { id: '13', columnType: old.LAST_DIVIDEND, isShow: true, order: 13 },
+		// { id: '14', columnType: old.COMPANY_EMPLOYEES, isShow: true, order: 14 },
+		// { id: '15', columnType: old.COMPANY_IPO_DATE, isShow: true, order: 15 },
+		// { id: '16', columnType: old.COMPANY_SECTOR, isShow: true, order: 16 },
+		// { id: '17', columnType: old.COMPANY_INDUSTRY, isShow: true, order: 17 },
+		// { id: '18', columnType: old.SOURCE, isShow: true, order: 18 },
+		// { id: '20', columnType: old.UPDATE_DATE, isShow: true, order: 20 },
 	];
 
 	// Mock ticker state
@@ -793,8 +796,88 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 		}
 	});
 
+	const tickers: Ticker[] = [
+		{
+			tickerId: '1',
+			[ColumnType.Symbol]: {
+				cellType: CellType.Symbol,
+				columnType: ColumnType.Symbol,
+				symbolType: SymbolType.Stock,
+				srcImg: '1',
+				ticker: 'TSLA 1',
+				companyName: 'Tesla,Inc. 1',
+			},
+			[ColumnType.PriceCurrent]: {
+				cellType: CellType.Number,
+				columnType: ColumnType.PriceCurrent,
+				value: '182.24',
+				currencySymbol: '$',
+				magnitude: Magnitude.NONE,
+				trend: Trend.UP,
+			},
+		},
+		{
+			tickerId: '2',
+			[ColumnType.Symbol]: {
+				cellType: CellType.Symbol,
+				columnType: ColumnType.Symbol,
+				symbolType: SymbolType.Stock,
+				srcImg: '1',
+				ticker: 'TSLA 2',
+				companyName: 'Tesla,Inc. 2',
+			},
+			[ColumnType.PriceCurrent]: {
+				cellType: CellType.Number,
+				columnType: ColumnType.PriceCurrent,
+				value: '182.24',
+				currencySymbol: '$',
+				magnitude: Magnitude.NONE,
+				trend: Trend.UP,
+			},
+		},
+		{
+			tickerId: '3',
+			[ColumnType.Symbol]: {
+				cellType: CellType.Symbol,
+				columnType: ColumnType.Symbol,
+				symbolType: SymbolType.Stock,
+				srcImg: '1',
+				ticker: 'TSLA 3',
+				companyName: 'Tesla,Inc. 3',
+			},
+			[ColumnType.PriceCurrent]: {
+				cellType: CellType.Number,
+				columnType: ColumnType.PriceCurrent,
+				value: '182.24',
+				currencySymbol: '$',
+				magnitude: Magnitude.NONE,
+				trend: Trend.UP,
+			},
+		},
+		{
+			tickerId: '4',
+			[ColumnType.Symbol]: {
+				cellType: CellType.Symbol,
+				columnType: ColumnType.Symbol,
+				symbolType: SymbolType.Stock,
+				srcImg: '1',
+				ticker: 'TSLA 4',
+				companyName: 'Tesla,Inc. 4',
+			},
+			[ColumnType.PriceCurrent]: {
+				cellType: CellType.Number,
+				columnType: ColumnType.PriceCurrent,
+				value: '182.24',
+				currencySymbol: '$',
+				magnitude: Magnitude.NONE,
+				trend: Trend.UP,
+			},
+		},
+	];
+
 	const response: IGetWatchlistResponse = {
 		data: selectedData,
+		tickers,
 	};
 	return response;
 }

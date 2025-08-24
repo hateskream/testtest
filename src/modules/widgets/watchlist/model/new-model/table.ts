@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import type { ISort, ITableColumn } from '@/modules/cell';
-import { isCustom, newCustomSection, type ISection } from './section';
+import { getMockSectionsFirst, getMockSectionsSecond, isCustom, newCustomSection, type ISection } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
 
@@ -14,6 +14,26 @@ export interface ITable {
 }
 
 const MAX_COUNT_CUSTOM_SECTIONS = 5;
+
+export function getMockTableFirst(): ITable {
+	return {
+		id: '1',
+		columns: ALL_COLUMNS,
+		sections: getMockSectionsFirst(),
+		sort: null,
+		tickerState: getDefaultTickerState(),
+	};
+}
+
+export function getMockTableSecond(): ITable {
+	return {
+		id: '1',
+		columns: ALL_COLUMNS,
+		sections: getMockSectionsSecond(),
+		sort: null,
+		tickerState: getDefaultTickerState(),
+	};
+}
 
 export function createEmptyTable(): ITable {
 	return {

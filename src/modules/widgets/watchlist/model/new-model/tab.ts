@@ -9,6 +9,15 @@ export interface ITab {
 	table: ITable;
 }
 
+export function createMockTab(id: string, name: string, order: number, table: ITable): ITab {
+	return {
+		id,
+		name,
+		order,
+		table,
+	};
+}
+
 export function createEmptyTab(name: string, order: number): ITab {
 	return {
 		id: uuidv4(),

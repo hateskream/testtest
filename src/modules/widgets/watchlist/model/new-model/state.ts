@@ -1,5 +1,5 @@
-import { createEmptyTab, updateTable, type ITab } from './tab';
-import type { ITable } from './table';
+import { createEmptyTab, createMockTab, updateTable, type ITab } from './tab';
+import { getMockTableFirst, getMockTableSecond, type ITable } from './table';
 
 export interface IState {
 	activeTabId: string | null;
@@ -8,13 +8,15 @@ export interface IState {
 
 const MAX_TAB_COUNT = 10;
 
-const initialState: IState = {
-	activeTabId: null,
-	tabs: [],
-};
-
 export function getDefaultState(): IState {
-	return { ...initialState };
+	const tab1 = createMockTab('tab1', 'Tab 1', 0, getMockTableFirst());
+	const tab2 = createMockTab('tab2', 'Tab 2', 1, getMockTableSecond());
+
+	return {
+		activeTabId: tab1.id,
+
+		tabs: [tab1, tab2],
+	};
 }
 
 export function changeActiveTab(state: IState, newActiveTabId: string): IState {
