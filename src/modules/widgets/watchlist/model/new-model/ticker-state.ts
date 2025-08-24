@@ -4,6 +4,14 @@ export interface ITickerState {
 	isShowDescription: boolean;
 }
 
+export function getDefaultTickerState(): ITickerState {
+	return {
+		isShowLogo: true,
+		isShowTicker: true,
+		isShowDescription: false,
+	};
+}
+
 export function toggleShowLogo(state: ITickerState): ITickerState {
 	return {
 		...state,

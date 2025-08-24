@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { ISort, ITableColumn } from '@/modules/cell';
 import { isCustom, newCustomSection, type ISection } from './section';
-import type { ITickerState } from './ticker-state';
+import { getDefaultTickerState, type ITickerState } from './ticker-state';
+import { ALL_COLUMNS } from './column';
 
 export interface ITable {
 	id: string;
@@ -17,14 +18,10 @@ const MAX_COUNT_CUSTOM_SECTIONS = 5;
 export function createEmptyTable(): ITable {
 	return {
 		id: uuidv4(),
-		columns: [],
+		columns: ALL_COLUMNS,
 		sections: [],
 		sort: null,
-		tickerState: {
-			isShowLogo: true,
-			isShowTicker: true,
-			isShowDescription: true,
-		},
+		tickerState: getDefaultTickerState(),
 	};
 }
 

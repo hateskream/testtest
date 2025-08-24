@@ -19,6 +19,10 @@ export interface ISection {
 
 const MAX_COUNT_TICKERS = 100;
 
+export function newCustomSection(): ISection {
+	return newSection('Custom', SpecificSectionType.Custom);
+}
+
 export function newSection(name: string, type: SectionType): ISection {
 	return {
 		id: uuidv4(),
@@ -27,10 +31,6 @@ export function newSection(name: string, type: SectionType): ISection {
 		type,
 		rows: [],
 	};
-}
-
-export function newCustomSection(): ISection {
-	return newSection('Custom', SpecificSectionType.Custom);
 }
 
 export function isCustom(section: ISection): boolean {

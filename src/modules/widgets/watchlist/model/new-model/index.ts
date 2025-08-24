@@ -5,3 +5,4 @@ export * from './section';
 export * from './tab';
 export * from './state';
 export * from './ticker-state';
+export * from './ticker';
