@@ -7,11 +7,11 @@ import {
 	rehydrateFilters,
 	type IColumnHydrateState,
 	type IFilterHydrateState,
-	type ISort,
 	type IState,
 } from '../model';
 import { FailedParse } from './error';
 import { stateSchema, type StateSchemaType } from './validator';
+import type { ISort } from '@/modules/cell';
 
 export abstract class BaseRepository {
 	protected abstract getter(): Promise<StateSchemaType>;

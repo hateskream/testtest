@@ -1,5 +1,4 @@
 export * from './filter';
-export * from './sort';
 export * from './state';
 
 export type { CryptoTableRow } from './crypto';

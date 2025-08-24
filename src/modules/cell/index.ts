@@ -7,3 +7,4 @@ export * from './mapper-table';
 export * from './mapper-dto-to-table';
 export * from './column';
 export * from './row';
+export * from './sort';

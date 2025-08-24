@@ -6,12 +6,11 @@ import {
 	type FiltersState,
 	type FiltersValues,
 	type ISettings,
-	type ISort,
 	type IState,
 } from '../model';
 import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
-import type { ITableColumn } from '@/modules/cell';
+import type { ITableColumn, ISort } from '@/modules/cell';
 
 export function useMarket(widgetId: string) {
 	const { data: dataState } = useGetState(widgetId);

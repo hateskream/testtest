@@ -1,3 +1,5 @@
+import type { LayoutItem } from 'grid-layout-plus';
+
 import { columnDisplay } from './display';
 import { ColumnType, CellType, columnToCell } from './domain';
 
@@ -13,6 +15,7 @@ export interface ITableColumn {
 	};
 	columnType: ColumnType;
 	type: CellType;
+	width?: number;
 }
 
 interface INotFullCol {
@@ -40,7 +43,7 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 	};
 }
 
-export function setPositionColumns(cols: ITableColumn[]): ITableColumn[] {
+function setPositionColumns(cols: ITableColumn[]): ITableColumn[] {
 	return cols.map((item, idx) => ({ ...item, position: idx }));
 }
 
@@ -57,4 +60,39 @@ export function buildColumns(cols: INotFullCol[]): ITableColumn[] {
 
 export function getShow(cols: ITableColumn[]) {
 	return setPositionColumns(cols.filter(item => item.isShow));
+}
+
+export function toggleShowTableColumns(
+	cols: ITableColumn[],
+	columnType: ColumnType,
+): ITableColumn[] {
+	return cols.map(column =>
+		column.columnType === columnType
+			? {
+				...column,
+				isShow: !column.isShow,
+			}
+			: column,
+	);
+}
+
+export interface IGridLayoutColumn extends LayoutItem {
+	data: ITableColumn;
+}
+
+export function updatePositionsColumns(
+	columns: ITableColumn[],
+	layout: IGridLayoutColumn[],
+	columnName: string,
+	y: number,
+): ITableColumn[] {
+	return setPositionColumns(
+		[
+			columns[0],
+			...layout.map(item => ({
+				...item.data,
+				position: item.data.columnType === columnName ? y : item.y,
+			})),
+		].sort((a, b) => a.order - b.order),
+	);
 }

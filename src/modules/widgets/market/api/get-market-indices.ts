@@ -9,9 +9,10 @@ import {
 	ColumnType,
 	prepareMarketResponse,
 	type TableRowDto,
+	type ISort,
 } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
-import type { IndicesTableRow, ISelectedFilter, ISort } from '../model';
+import type { IndicesTableRow, ISelectedFilter } from '../model';
 import { mockTickers } from './mock/indices';
 
 const IS_USE_MOCK = true;

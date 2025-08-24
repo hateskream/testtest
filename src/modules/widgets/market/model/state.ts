@@ -1,6 +1,5 @@
-import type { ColumnType, ITableColumn } from '@/modules/cell';
+import type { ColumnType, ISort, ITableColumn } from '@/modules/cell';
 import { MarketType } from '@/modules/market';
-import type { ISort } from './sort';
 import type { Filters } from './filter';
 import { CRYPTO_ALL_COLUMNS, CRYPTO_FILTERS } from './crypto';
 import { STOCK_ALL_COLUMNS, STOCK_FILTERS } from './stock';

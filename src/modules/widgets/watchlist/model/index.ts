@@ -11,3 +11,5 @@ export * from './widget.model';
 
 // UI layer
 export * from './ui.model';
+
+export * from './new-model';

@@ -2,8 +2,9 @@ import { useInfiniteQuery } from '@tanstack/vue-query';
 import { computed, toValue, type Ref } from 'vue';
 
 import type { MarketType } from '@/modules/market';
-import type { ISelectedFilter, ISort } from '../model';
+import type { ISelectedFilter } from '../model';
 import { useGetMarket } from '../composables/use-get-market';
+import type { ISort } from '@/modules/cell';
 
 export function useQueryMarket(
 	market: Ref<MarketType>,

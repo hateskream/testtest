@@ -6,7 +6,12 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
-import { setPositionColumns, type ColumnType, type ITableColumn } from '@/modules/cell';
+import {
+	toggleShowTableColumns,
+	updatePositionsColumns,
+	type ColumnType,
+	type ITableColumn,
+} from '@/modules/cell';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
@@ -57,32 +62,16 @@ const gridConfig = {
 };
 
 function handleUpdatePositionsColumns(columnName: string, _x: number, y: number) {
-	// TODO: fix with isDragging and first element
-
-	const activeTableColumns = setPositionColumns(
-		[
-			columns.value[0],
-			...layout.value.map(item => ({
-				...item.data,
-				position: item.data.columnType === columnName ? y : item.y,
-			})),
-		].sort((a, b) => a.order - b.order),
+	columns.value = updatePositionsColumns(
+		columns.value,
+		layout.value,
+		columnName,
+		y,
 	);
-
-	columns.value = activeTableColumns;
 }
 
 function toggleShowActiveTableColumns(columnType: ColumnType) {
-	columns.value = columns.value.map(column => {
-		if (column.columnType === columnType) {
-			return {
-				...column,
-				isShow: !column.isShow,
-			};
-		} else {
-			return column;
-		}
-	});
+	columns.value = toggleShowTableColumns(columns.value, columnType);
 }
 </script>
 

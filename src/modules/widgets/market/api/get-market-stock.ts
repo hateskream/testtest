@@ -10,9 +10,10 @@ import {
 	ColumnType,
 	prepareMarketResponse,
 	type TableRowDto,
+	type ISort,
 } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
-import type { ISelectedFilter, ISort } from '../model';
+import type { ISelectedFilter } from '../model';
 import { mockTickers } from './mock/stock';
 import type { StockTableRow } from '../model/stock';
 

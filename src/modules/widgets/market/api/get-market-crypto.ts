@@ -9,10 +9,11 @@ import {
 	ColumnType,
 	prepareMarketResponse,
 	type TableRowDto,
+	type ISort,
 } from '@/modules/cell';
 import type { CryptoTableRow } from '../model';
 import type { MarketType } from '@/modules/market';
-import type { ISelectedFilter, ISort } from '../model';
+import type { ISelectedFilter } from '../model';
 import { mockTickers } from './mock/crypto';
 
 const IS_USE_MOCK = true;
