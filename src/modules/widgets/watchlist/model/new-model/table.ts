@@ -42,6 +42,13 @@ export function changeColumnsState(table: ITable, columns: ITableColumn[]): ITab
 	};
 }
 
+export function updateSort(table: ITable, sort: ISort | null): ITable {
+	return {
+		...table,
+		sort,
+	};
+}
+
 export function changeSectionsVisibility(table: ITable, sectionId: string, isOpen: boolean): ITable {
 	return updateSection(table, sectionId, section => ({
 		...section,

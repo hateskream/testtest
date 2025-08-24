@@ -1,4 +1,5 @@
-import { createEmptyTab, type ITab } from './tab';
+import { createEmptyTab, updateTable, type ITab } from './tab';
+import type { ITable } from './table';
 
 export interface IState {
 	activeTabId: string | null;
@@ -6,6 +7,15 @@ export interface IState {
 }
 
 const MAX_TAB_COUNT = 10;
+
+const initialState: IState = {
+	activeTabId: null,
+	tabs: [],
+};
+
+export function getDefaultState(): IState {
+	return { ...initialState };
+}
 
 export function changeActiveTab(state: IState, newActiveTabId: string): IState {
 	return {
@@ -77,12 +87,68 @@ export function changeTabOrder(state: IState, tabIds: string[]): IState {
 }
 
 export function renameTab(state: IState, tabId: string, newName: string): IState {
+	return updateTab(
+		state,
+		tabId,
+		tab => ({
+			...tab,
+			name: newName,
+		}),
+	);
+}
+
+export function updateActiveTab(state: IState, tab: ITab): IState {
+	if (state.activeTabId === null) {
+		return state;
+	}
+
+	return updateTab(
+		state,
+		state.activeTabId,
+		() => ({
+			...tab,
+		}),
+	);
+}
+
+export function getActiveTab(state: IState): ITab | null {
+	if (state.activeTabId === null) {
+		return null;
+	}
+
+	return findTab(state, state.activeTabId) ?? null;
+}
+
+export function updateTableState(
+	state: IState,
+	table: ITable | null,
+	activeTab: ITab | null,
+	updateFn: (t: ITable) => ITable,
+): IState {
+	if (activeTab === null || table === null) {
+		return state;
+	}
+
+	return updateActiveTab(
+		state,
+		updateTable(
+			activeTab,
+			updateFn(table),
+		),
+	);
+}
+
+function updateTab(
+	state: IState,
+	tabId: string,
+	transform: (section: ITab) => ITab,
+): IState {
 	return {
 		...state,
 		tabs: state.tabs
 			.map(tab =>
 				tab.id === tabId
-					? { ...tab, name: newName }
+					? transform(tab)
 					: tab,
 			),
 	};
@@ -112,6 +178,6 @@ function reorderTabs(tabs: ITab[]): ITab[] {
 	return tabs.map((t, i) => ({ ...t, order: i }));
 }
 
-function findTab(state: IState, tabId: string): ITab | undefined {
+export function findTab(state: IState, tabId: string): ITab | undefined {
 	return state.tabs.find(t => t.id === tabId);
 }

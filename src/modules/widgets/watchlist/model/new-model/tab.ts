@@ -17,3 +17,10 @@ export function createEmptyTab(name: string, order: number): ITab {
 		table: createEmptyTable(),
 	};
 }
+
+export function updateTable(tab: ITab, table: ITable): ITab {
+	return {
+		...tab,
+		table,
+	};
+}
