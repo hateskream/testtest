@@ -194,6 +194,10 @@ export function useWatchlist(widgetId: string) {
 		);
 	}
 
+	function resetAllChanges() {
+		state.value = getDefaultState();
+	}
+
 	return {
 		tabs,
 		columns,
@@ -212,5 +216,7 @@ export function useWatchlist(widgetId: string) {
 		handlerMoveRowBetweenSections,
 		handlerDeleteSection,
 		handlerAddCustomSection,
+
+		resetAllChanges,
 	};
 }

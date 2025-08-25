@@ -7,6 +7,7 @@ import { UiDriver } from '@/shared/ui/driver';
 import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
 import {
+	groupTableColumns,
 	toggleShowTableColumns,
 	updatePositionsColumns,
 	type ColumnType,
@@ -27,19 +28,7 @@ const showTableColumnsDraggable = computed(() =>
 	columns.value.filter(column => column.isDraggable),
 );
 
-const groupedTableColumns = computed(() => {
-	const grouped: { [x: string]: ITableColumn[] } = {};
-
-	CRYPTO_ALL_COLUMNS.forEach(column => {
-		if (!Array.isArray(grouped[column.group.name])) {
-			grouped[column.group.name] = [column];
-		} else {
-			grouped[column.group.name].push(column);
-		}
-	});
-
-	return grouped;
-});
+const groupedTableColumns = computed(() => groupTableColumns(CRYPTO_ALL_COLUMNS));
 
 const layout = computed<IGridLayoutCell[]>(() =>
 	showTableColumnsDraggable.value.map((item, index) => ({

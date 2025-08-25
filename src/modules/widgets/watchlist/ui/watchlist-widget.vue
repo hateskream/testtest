@@ -25,6 +25,8 @@ const {
 	handlerAddNewTab,
 	handlerRenameTab,
 	handlerSwitchTab,
+
+	resetAllChanges,
 } = useWatchlist(props.meta.widgetId);
 
 const { data: tableData, isLoading: isTableLoading, isError: isTableError } = useQueryWatchlistData(
@@ -57,7 +59,11 @@ const { data: tableData, isLoading: isTableLoading, isError: isTableError } = us
 		</template>
 
 		<template #rcm>
-			<watchlist-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<watchlist-context-menu
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

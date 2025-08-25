@@ -97,8 +97,6 @@ function openModal(index: number) {
 					<template #content>
 						<modal-badge-list>
 							<template #title>{{ tab.name }}</template>
-							<!-- 								@click="onTabMenuAction(tab.id, action.name)"
- -->
 							<modal-item
 								v-for="(title, key) in tabActionToTitle"
 								:key="key"

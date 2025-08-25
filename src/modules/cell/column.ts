@@ -97,6 +97,22 @@ export function updatePositionsColumns(
 	);
 }
 
+type GroupedTableColumns = Record<string, ITableColumn[]>;
+
+export function groupTableColumns(cols: ITableColumn[]): GroupedTableColumns {
+	const grouped: { [x: string]: ITableColumn[] } = {};
+
+	cols.forEach(column => {
+		if (!Array.isArray(grouped[column.group.name])) {
+			grouped[column.group.name] = [column];
+		} else {
+			grouped[column.group.name].push(column);
+		}
+	});
+
+	return grouped;
+}
+
 export interface IHydratedColumn {
 	columnType: ColumnType;
 	isShow: boolean;
