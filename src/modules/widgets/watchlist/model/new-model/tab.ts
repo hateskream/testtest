@@ -1,12 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { createEmptyTable, type ITable } from './table';
+import { createEmptyTable, hydrateTable, rehydrateTable, type IHydratedTable, type ITable } from './table';
 
 export interface ITab {
 	id: string;
 	name: string;
 	order: number;
 	table: ITable;
+}
+
+export interface IHydratedTab {
+	id: string;
+	name: string;
+	order: number;
+	table: IHydratedTable;
 }
 
 export interface ITabUi {
@@ -31,6 +38,20 @@ export const tabActionToTitle: Readonly<Record<TabAction, string>> = {
 	[TabAction.AddAlert]: 'Add alert',
 	[TabAction.AddSymbolsToList]: 'Add symbols to list',
 };
+
+export function hydrateTab(tab: ITab): IHydratedTab {
+	return {
+		...tab,
+		table: hydrateTable(tab.table),
+	};
+}
+
+export function rehydrateTab(tab: IHydratedTab): ITab {
+	return {
+		...tab,
+		table: rehydrateTable(tab.table),
+	};
+}
 
 export function createMockTab(id: string, name: string, order: number, table: ITable): ITab {
 	return {

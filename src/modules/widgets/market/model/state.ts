@@ -1,4 +1,4 @@
-import type { ColumnType, ISort, ITableColumn } from '@/modules/cell';
+import type { ISort, ITableColumn } from '@/modules/cell';
 import { MarketType } from '@/modules/market';
 import type { Filters } from './filter';
 import { CRYPTO_ALL_COLUMNS, CRYPTO_FILTERS } from './crypto';
@@ -70,12 +70,6 @@ interface IPreset {
 
 type Presets = Record<MarketType, IPreset>;
 
-export interface IColumnHydrateState {
-	columnType: ColumnType;
-	isShow: boolean;
-	order: number;
-}
-
 export const PRESETS: Presets = {
 	[MarketType.Crypto]: {
 		filters: CRYPTO_FILTERS,
@@ -141,40 +135,5 @@ function findFilter(states: IFilterHydrateState[], filterType: string): IFilterH
 	}
 
 	throw new Error(`Filter ${filterType} not found`);
-}
-
-export function hydrateColumns(columns: ITableColumn[]): IColumnHydrateState[] {
-	return columns.map(item => ({
-		columnType: item.columnType,
-		isShow: item.isShow,
-		order: item.order,
-	}));
-}
-
-export function rehydrateColumns(states: IColumnHydrateState[], preset: ITableColumn[]): ITableColumn[] {
-	try {
-		return preset.map(item => {
-			const state = findColumn(states, item.columnType);
-
-			return {
-				...item,
-				order: state.order,
-				isShow: state.isShow,
-			};
-		});
-	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.log(e);
-		return preset;
-	}
-}
-
-function findColumn(states: IColumnHydrateState[], columnType: ColumnType): IColumnHydrateState {
-	const state = states.find(col => col.columnType === columnType);
-	if (state) {
-		return state;
-	}
-
-	throw new Error(`Column ${columnType} not found`);
 }
 

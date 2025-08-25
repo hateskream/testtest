@@ -1,17 +1,14 @@
 import type { MarketType } from '@/modules/market';
 import {
-	hydrateColumns,
 	hydrateFilters,
 	PRESETS,
-	rehydrateColumns,
 	rehydrateFilters,
-	type IColumnHydrateState,
 	type IFilterHydrateState,
 	type IState,
 } from '../model';
 import { FailedParse } from './error';
 import { stateSchema, type StateSchemaType } from './validator';
-import type { ISort } from '@/modules/cell';
+import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort } from '@/modules/cell';
 
 export abstract class BaseRepository {
 	protected abstract getter(): Promise<StateSchemaType>;
@@ -56,7 +53,7 @@ export abstract class BaseRepository {
 	protected hydrate(data: IState): StateSchemaType {
 		type SettingsType = {
 			[key in MarketType]: {
-				column: IColumnHydrateState[];
+				column: IHydratedColumn[];
 				filters: IFilterHydrateState[];
 				sort: ISort | null;
 			};

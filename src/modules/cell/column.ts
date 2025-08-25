@@ -96,3 +96,44 @@ export function updatePositionsColumns(
 		].sort((a, b) => a.order - b.order),
 	);
 }
+
+export interface IHydratedColumn {
+	columnType: ColumnType;
+	isShow: boolean;
+	order: number;
+}
+
+export function hydrateColumns(columns: ITableColumn[]): IHydratedColumn[] {
+	return columns.map(item => ({
+		columnType: item.columnType,
+		isShow: item.isShow,
+		order: item.order,
+	}));
+}
+
+export function rehydrateColumns(states: IHydratedColumn[], preset: ITableColumn[]): ITableColumn[] {
+	try {
+		return preset.map(item => {
+			const state = findColumn(states, item.columnType);
+
+			return {
+				...item,
+				order: state.order,
+				isShow: state.isShow,
+			};
+		});
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.log(e);
+		return preset;
+	}
+}
+
+function findColumn(states: IHydratedColumn[], columnType: ColumnType): IHydratedColumn {
+	const state = states.find(col => col.columnType === columnType);
+	if (state) {
+		return state;
+	}
+
+	throw new Error(`Column ${columnType} not found`);
+}

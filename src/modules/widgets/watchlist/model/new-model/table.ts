@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import type { ISort, ITableColumn } from '@/modules/cell';
+import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, type ITableColumn } from '@/modules/cell';
 import { getMockSectionsFirst, getMockSectionsSecond, isCustom, newCustomSection, type ISection } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
@@ -12,8 +12,29 @@ export interface ITable {
 	tickerState: ITickerState;
 	sort: ISort | null;
 }
+export interface IHydratedTable {
+	id: string;
+	columns: IHydratedColumn[];
+	sections: ISection[];
+	tickerState: ITickerState;
+	sort: ISort | null;
+}
 
 const MAX_COUNT_CUSTOM_SECTIONS = 5;
+
+export function hydrateTable(table: ITable): IHydratedTable {
+	return {
+		...table,
+		columns: hydrateColumns(table.columns),
+	};
+}
+
+export function rehydrateTable(table: IHydratedTable): ITable {
+	return {
+		...table,
+		columns: rehydrateColumns(table.columns, ALL_COLUMNS),
+	};
+}
 
 export function getMockTableFirst(): ITable {
 	return {

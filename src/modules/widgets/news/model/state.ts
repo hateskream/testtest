@@ -45,7 +45,7 @@ export function getDefaultState(): IState {
 	return { ...DEFAULT_STATE };
 }
 
-export interface IHydrationState {
+export interface IHydratedState {
 	score: Score[];
 	segment: MarketType[];
 	sentiment: Sentiment[];
@@ -65,7 +65,7 @@ export function hydrateState({
 	activeSort,
 	displaySettings,
 	locations,
-}: IState): IHydrationState {
+}: IState): IHydratedState {
 	return {
 		score: Array.from(score),
 		segment: Array.from(segment),
@@ -87,7 +87,7 @@ export function rehydrateState({
 	activeSort,
 	displaySettings,
 	locations,
-}: IHydrationState,
+}: IHydratedState,
 ): IState {
 	return {
 		score: new Set(score),

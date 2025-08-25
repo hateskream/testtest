@@ -1,4 +1,13 @@
-import { createEmptyTab, createMockTab, updateTable, type ITab, type ITabUi } from './tab';
+import {
+	createEmptyTab,
+	createMockTab,
+	hydrateTab,
+	rehydrateTab,
+	updateTable,
+	type IHydratedTab,
+	type ITab,
+	type ITabUi,
+} from './tab';
 import { getMockTableFirst, getMockTableSecond, type ITable } from './table';
 
 export interface IState {
@@ -6,7 +15,26 @@ export interface IState {
 	tabs: ITab[];
 }
 
+export interface IHydratedState {
+	activeTabId: string | null;
+	tabs: IHydratedTab[];
+}
+
 const MAX_TAB_COUNT = 10;
+
+export function hydrateState(state: IState): IHydratedState {
+	return {
+		...state,
+		tabs: state.tabs.map(t => hydrateTab(t)),
+	};
+}
+
+export function rehydrateState(state: IHydratedState): IState {
+	return {
+		...state,
+		tabs: state.tabs.map(t => rehydrateTab(t)),
+	};
+}
 
 export function getDefaultState(): IState {
 	const tab1 = createMockTab('tab1', 'Tab 1', 0, getMockTableFirst());
