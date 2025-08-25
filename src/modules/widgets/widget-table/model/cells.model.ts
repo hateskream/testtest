@@ -42,3 +42,47 @@ export interface ITableRangeCell {
 	startMagnitude?: string;
 	endMagnitude?: string;
 }
+
+enum TrendType {
+	UP = 'up',
+	DOWN = 'down',
+	NEUTRAL = 'neutral',
+}
+
+enum TrendCssClass {
+	POSITIVE = 'positive',
+	NEGATIVE = 'negative',
+	NEUTRAL = 'neutral',
+}
+
+const TREND_TO_CLASS: Record<TrendType, TrendCssClass> = {
+	[TrendType.UP]: TrendCssClass.POSITIVE,
+	[TrendType.DOWN]: TrendCssClass.NEGATIVE,
+	[TrendType.NEUTRAL]: TrendCssClass.NEUTRAL,
+};
+
+const getTrendClass = (trend?: string): TrendCssClass => {
+	if (!trend) {
+		return TrendCssClass.NEUTRAL;
+	}
+	return TREND_TO_CLASS[trend as TrendType] || TrendCssClass.NEUTRAL;
+};
+
+export const getNumberTrendClass = (value?: string, trend?: string): TrendCssClass => {
+	if (trend) {
+		return getTrendClass(trend);
+	}
+
+	if (!value) {
+		return TrendCssClass.NEUTRAL;
+	}
+
+	const numValue = parseFloat(value);
+	if (numValue > 0) {
+		return TrendCssClass.POSITIVE;
+	}
+	if (numValue < 0) {
+		return TrendCssClass.NEGATIVE;
+	}
+	return TrendCssClass.NEUTRAL;
+};

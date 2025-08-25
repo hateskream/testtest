@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 
-import { type IWatchlistTextCell } from '@/modules/widgets/watchlist/model';
+export interface ITextCell {
+	value?: string;
+}
 
 interface IProps {
-	data: IWatchlistTextCell;
+	data: ITextCell;
 	align?: 'left' | 'right';
 }
 

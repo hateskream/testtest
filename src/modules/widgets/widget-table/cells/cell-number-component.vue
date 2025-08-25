@@ -3,11 +3,17 @@ import { computed } from 'vue';
 
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiTooltip } from '@/shared/ui/tooltip';
-import { type IWatchlistNumberCell } from '@/modules/widgets/watchlist/model';
-import { getNumberTrendClass } from '@/modules/widgets/watchlist/const';
+import { getNumberTrendClass } from '../model';
+
+export interface INumberCell {
+	value?: string;
+	trend?: string;
+	currencySymbol?: string;
+	magnitude?: string;
+}
 
 interface IProps {
-	data: IWatchlistNumberCell;
+	data: INumberCell;
 	format?: 'pretty-with-key' | 'default';
 }
 

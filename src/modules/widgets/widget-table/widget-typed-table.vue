@@ -12,7 +12,6 @@ import type {
 	IDragDropEvent,
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
-import type { IWatchlistTickerState } from '@/modules/widgets/watchlist/model';
 import { ModalFilterTabWrapper } from '@/modules/widgets/base';
 
 export interface IExtendedTableColumn extends IGenericTableColumn {
@@ -32,7 +31,7 @@ export interface IProps<T> {
 	stickyFirstColumn?: boolean;
 	enableRowActions?: boolean;
 	showHeader?: boolean;
-	tickerState?: IWatchlistTickerState;
+	tickerState?: ITickerState;
 }
 
 export interface IEmits<T> {
@@ -57,6 +56,12 @@ export interface IEmits<T> {
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
 
 	(e: 'columnSorted', payload: { columnKey: string; direction: 'asc' | 'desc' | 'none' }): void;
+}
+
+interface ITickerState {
+	isShowLogo: boolean;
+	isShowTicker: boolean;
+	isShowDescription: boolean;
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {

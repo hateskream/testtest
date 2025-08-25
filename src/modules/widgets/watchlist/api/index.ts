@@ -1,1 +1,1 @@
-export * from './watchlist-data.api';
+export * from './get-tickers';

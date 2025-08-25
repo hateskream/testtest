@@ -31,7 +31,7 @@ export interface IGetWatchlistResponse {
 	};
 }
 
-export async function getWatchlistSections({ tickerIds }: IGetWatchlistRequest): Promise<Ticker[]> {
+export async function getTickers({ tickerIds }: IGetWatchlistRequest): Promise<Ticker[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 

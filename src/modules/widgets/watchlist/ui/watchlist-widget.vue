@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { BaseDashboardComponent } from '../../base/index.ts';
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
-import { useQueryWatchlistData } from '../queries';
+import { BaseDashboardComponent } from '../../base';
+import type { IMeta } from '@/modules/dashboard-group/core';
+import { useQueryTickers } from '../queries';
 import { useWatchlist } from '../composables';
 
 import WatchlistError from './views/watchlist-error.vue';
@@ -32,7 +32,7 @@ const {
 	resetAllChanges,
 } = useWatchlist(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryWatchlistData(tickerIds);
+const { data, isLoading, isError } = useQueryTickers(tickerIds);
 
 const isNotData = computed(() => !!data?.value && isLoading.value);
 </script>
