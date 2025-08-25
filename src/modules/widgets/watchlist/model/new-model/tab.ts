@@ -9,6 +9,29 @@ export interface ITab {
 	table: ITable;
 }
 
+export interface ITabUi {
+	id: string;
+	name: string;
+	isActive: boolean;
+	order: number;
+}
+
+export enum TabAction {
+	Rename = 'rename',
+	Share = 'share',
+	Duplicate = 'duplicate',
+	AddAlert = 'addAlert',
+	AddSymbolsToList = 'addSymbolsToList',
+}
+
+export const tabActionToTitle: Readonly<Record<TabAction, string>> = {
+	[TabAction.Rename]: 'Rename',
+	[TabAction.Share]: 'Share',
+	[TabAction.Duplicate]: 'Duplicate',
+	[TabAction.AddAlert]: 'Add alert',
+	[TabAction.AddSymbolsToList]: 'Add symbols to list',
+};
+
 export function createMockTab(id: string, name: string, order: number, table: ITable): ITab {
 	return {
 		id,

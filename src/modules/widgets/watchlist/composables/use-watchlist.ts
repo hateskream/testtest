@@ -13,6 +13,7 @@ import {
 	findTab,
 	getActiveTab,
 	getDefaultState,
+	getUiTabs,
 	moveRowBetweenSections,
 	moveRowInSection,
 	removeTab,
@@ -27,13 +28,8 @@ export function useWatchlist() {
 	const state = ref<IState>(getDefaultState());
 
 	const table = ref<ITable | null>(null);
-
-	const activeTabId = computed({
-		get: () => state.value.activeTabId,
-		set: (val: string) => {
-			state.value = changeActiveTab(state.value, val);
-		},
-	});
+	const tabs = computed(() => getUiTabs(state.value));
+	const sections = computed(() => table.value?.sections || []);
 
 	const activeTab = computed(() => getActiveTab(state.value));
 
@@ -61,10 +57,6 @@ export function useWatchlist() {
 		},
 	});
 
-	const tabs = computed(() => state.value.tabs);
-
-	const sections = computed(() => table.value?.sections || []);
-
 	watch(
 		() => state.value.activeTabId,
 		newActiveTabId => {
@@ -82,8 +74,8 @@ export function useWatchlist() {
 		{ immediate: true },
 	);
 
-	function handlerAddNewTab(name: string) {
-		state.value = addNewTab(state.value, name);
+	function handlerAddNewTab() {
+		state.value = addNewTab(state.value, 'New tab');
 	}
 
 	function handlerRenameTab(tabId: string, newName: string) {
@@ -96,6 +88,10 @@ export function useWatchlist() {
 
 	function handlerRemoveTab(tabId: string) {
 		state.value = removeTab(state.value, tabId);
+	}
+
+	function handlerSwitchTab(tabId: string) {
+		state.value = changeActiveTab(state.value, tabId);
 	}
 
 	function handlerChangeSectionsVisibility(sectionId: string, isOpen: boolean) {
@@ -180,7 +176,6 @@ export function useWatchlist() {
 	}
 
 	return {
-		activeTabId,
 		tabs,
 		columns,
 		activeSort,
@@ -190,6 +185,7 @@ export function useWatchlist() {
 		handlerRenameTab,
 		handlerChangeTabOrder,
 		handlerRemoveTab,
+		handlerSwitchTab,
 
 		handlerChangeSectionsVisibility,
 		handlerRenameSection,

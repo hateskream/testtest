@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISection } from '../../model';
+import type { ISection, ITabUi } from '../../model';
 
 import WatchlistTable from '../components/table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
@@ -9,14 +9,38 @@ interface IWatchlistMainProps {
 	tickers: TableRow[];
 	columns: ITableColumn[];
 	sections: ISection[];
+	tabs: ITabUi[];
 }
 
 const props = defineProps<IWatchlistMainProps>();
+
+const emit = defineEmits<{
+	(event: 'add-tab'): void;
+	(event: 'switch-tab', id: string): void;
+	(event: 'rename-tab', id: string, name: string): void;
+}>();
+
+function onAddTab() {
+	emit('add-tab');
+}
+
+function onSwitchTab(id: string) {
+	emit('switch-tab', id);
+}
+
+function onRenameTab(id: string, name: string) {
+	emit('rename-tab', id, name);
+}
 </script>
 
 <template>
 	<div :class="classes.root">
-		<watchlist-tabs-toolbar />
+		<watchlist-tabs-toolbar
+			:tabs="props.tabs"
+			@add-tab="onAddTab"
+			@rename-tab="onRenameTab"
+			@switch-tab="onSwitchTab"
+		/>
 		<watchlist-table
 			:columns="props.columns"
 			:sections="props.sections"

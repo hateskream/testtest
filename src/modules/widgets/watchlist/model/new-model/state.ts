@@ -1,4 +1,4 @@
-import { createEmptyTab, createMockTab, updateTable, type ITab } from './tab';
+import { createEmptyTab, createMockTab, updateTable, type ITab, type ITabUi } from './tab';
 import { getMockTableFirst, getMockTableSecond, type ITable } from './table';
 
 export interface IState {
@@ -138,6 +138,19 @@ export function updateTableState(
 			updateFn(table),
 		),
 	);
+}
+
+export function getUiTabs(state: IState): ITabUi[] {
+	if (state.activeTabId === null) {
+		return [];
+	}
+
+	return state.tabs
+		.map(t => ({
+			...t,
+			isActive: t.id === state.activeTabId,
+		}))
+		.sort((a, b) => a.order - b.order);
 }
 
 function updateTab(

@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef, useCssModule } from 'vue';
 
-import type { IWatchlistTabUI } from '@/modules/widgets/watchlist/model';
+import type { ITabUi } from '@/modules/widgets/watchlist/model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { useWatchlistTabsStore } from '@/modules/widgets/watchlist/stores/watchlist-tabs.store';
 
-const tabsStore = useWatchlistTabsStore();
+interface ITabWithEditing extends ITabUi {
+	isEditing: boolean;
+}
 
 interface IWatchlistTabProps {
-	tab: IWatchlistTabUI;
+	tab: ITabWithEditing;
 	isOpen?: boolean;
 }
 
 const props = defineProps<IWatchlistTabProps>();
 
-const emits = defineEmits<{
-	(event: 'click', value: string): void;
+const emit = defineEmits<{
+	switch: [id: string];
+	rename: [id: string, name: string];
+	openModal: [id: string];
 }>();
 
-const CLICK_DELAY = 200; // ms
+const CLICK_DELAY = 200;
 const clickTimeout = ref<number | null>(null);
 
 const tabRenameInputRef = useTemplateRef<HTMLInputElement>('tabRenameInputRef');
@@ -45,9 +48,9 @@ const finishEditing = (event: Event) => {
 		return;
 	}
 
-	tabsStore.renameTab(props.tab.id, inputModel.value);
-	inputModel.value = '';
-	tabsStore.stopRenameState();
+	if (inputModel.value.trim()) {
+		emit('rename', props.tab.id, inputModel.value.trim());
+	}
 
 	isEditing.value = false;
 	inputModel.value = props.tab.name;
@@ -95,10 +98,10 @@ const onSingleClick = () => {
 
 	clickTimeout.value = window.setTimeout(() => {
 		if (props.tab.isActive) {
-			emits('click', props.tab.id);
+			emit('openModal', props.tab.id);
 		}
 
-		tabsStore.switchTab(props.tab.id);
+		emit('switch', props.tab.id);
 
 		clickTimeout.value = null;
 	}, CLICK_DELAY);

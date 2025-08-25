@@ -1,98 +1,109 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 
 
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
-import type { ITabMenuActions, TabMenuAction } from '@/modules/widgets/watchlist/model';
+import {
+	tabActionToTitle,
+	type ITabUi,
+} from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useWatchlistTabsStore } from '../../../stores';
 
 import WatchlistTab from './watchlist-tab.vue';
 
-const tabsStore = useWatchlistTabsStore();
+interface ITabWithEditing extends ITabUi {
+	isEditing: boolean;
+}
 
-const tabs = ref(tabsStore.tabs);
+interface ITabsComponentProps {
+	tabs: ITabUi[];
+}
+
+const props = defineProps<ITabsComponentProps>();
+
+const emit = defineEmits<{
+	(event: 'add-tab'): void;
+	(event: 'switch-tab', id: string): void;
+	(event: 'rename-tab', id: string, name: string): void;
+}>();
+
 const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
-const watchlistTabRefs = useTemplateRef<InstanceType<typeof WatchlistTab>[]>('watchlistTabRefs');
-const tabMenuActions = ref<ITabMenuActions[]>([
-	{ name: 'rename', title: 'Rename' },
-	{ name: 'share', title: 'Share' },
-	{ name: 'duplicate', title: 'Duplicate' },
-	{ name: 'addAlert', title: 'Add alert' },
-	{ name: 'addSymbolsToList', title: 'Add symbols to list' },
-]);
 
+const localTabs = ref<ITabWithEditing[]>([]);
 
-const handleRenameTab = async (index?: number) => {
-	await nextTick();
-	if (!watchlistTabRefs.value) {
-		return;
-	}
+watch(
+	() => props.tabs,
+	(newTabs) => {
+		if (localTabs.value.length === 0) {
+			localTabs.value = initTabs(newTabs);
+			return;
+		}
 
-	const idx = index ?? watchlistTabRefs.value.length - 1;
-	watchlistTabRefs.value[idx]?.openRenameInput();
-};
+		const tabs = newTabs.map(tab => ({
+			...tab,
+			isEditing: !localTabs.value.find(localTab => localTab.id === tab.id),
+		}));
 
-const onTabMenuAction = (tabId: string, actionName: TabMenuAction) => {
-	// eslint-disable-next-line no-console
-	console.log(`Tab id: ${tabId};\nAction name: ${actionName}`);
+		localTabs.value = tabs;
+	},
+	{
+		immediate: true,
+	},
+);
 
-	const actions: Record<TabMenuAction, () => void> = {
-		rename: () => {
-			tabsStore.startRenameState(tabId);
-			tabsStore.tabs.forEach((tab, index) => {
-				tab.id === tabId && handleRenameTab(index);
-			});
-		},
-		share: () => null,
-		duplicate: () => tabsStore.duplicateTab(tabId),
-		addAlert: () => null,
-		addSymbolsToList: () => null,
-	};
+function initTabs(tabs: ITabUi[]): ITabWithEditing[] {
+	return tabs.map(tab => ({
+		...tab,
+		isEditing: false,
+	}));
+}
 
-	actions[actionName]();
-};
+function onAddTab() {
+	emit('add-tab');
+}
 
-const handleAddTab = async () => {
-	tabsStore.addTab();
+function onSwitchTab(id: string) {
+	emit('switch-tab', id);
+}
 
-	handleRenameTab();
-};
+function onRenameTab(id: string, name: string) {
+	emit('rename-tab', id, name);
+}
 
-const onTabClick = (index: number) => {
+function openModal(index: number) {
 	positionRefs.value?.[index].handleClick();
 };
-
 </script>
 
 <template>
 	<div :class="classes.watchlistToolbar">
 		<div :class="classes.tabGroup">
-			<div v-for="(tab, index) in tabs" :key="tab.id">
+			<div v-for="(tab, index) in localTabs" :key="tab.id">
 				<ui-position
 					ref="positionRefs"
 					position="bottom-start"
 				>
 					<template #default="{ isVisible }">
 						<watchlist-tab
-							ref="watchlistTabRefs"
 							:tab="tab"
 							:is-open="isVisible"
-							@click="onTabClick(index)"
+							@rename="onRenameTab"
+							@switch="onSwitchTab"
+							@open-modal="openModal(index)"
 						/>
 					</template>
 
 					<template #content>
 						<modal-badge-list>
 							<template #title>{{ tab.name }}</template>
-
+							<!-- 								@click="onTabMenuAction(tab.id, action.name)"
+ -->
 							<modal-item
-								v-for="action in tabMenuActions"
-								:key="action.name"
-								@click="onTabMenuAction(tab.id, action.name)"
+								v-for="(title, key) in tabActionToTitle"
+								:key="key"
 							>
-								<span :class="classes.menuActionTitle">{{ action.title }}</span>
+								<span :class="classes.menuActionTitle">{{ title }}</span>
 							</modal-item>
 						</modal-badge-list>
 					</template>
@@ -105,7 +116,7 @@ const onTabClick = (index: number) => {
 					:class="classes.addTabActionIcon"
 					width="20px"
 					height="20px"
-					@click="handleAddTab"
+					@click="onAddTab"
 				/>
 			</div>
 		</div>

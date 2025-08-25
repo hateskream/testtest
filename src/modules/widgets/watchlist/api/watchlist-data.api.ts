@@ -9,7 +9,6 @@ import {
 } from '../model';
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
-import { useWatchlistTabsStore } from '../stores';
 import { ColumnType as old } from '../const';
 import { SymbolType, Magnitude, Trend, CellType, ColumnType } from '@/modules/cell';
 
@@ -44,12 +43,10 @@ export async function getWatchlistSections(args: IGetWatchlistRequest): Promise<
 	}
 }
 
-async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
+async function getMockData(_: string): Promise<IGetWatchlistResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 200);
 	});
-
-	const tabsStore = useWatchlistTabsStore();
 
 	// Mock columns configuration
 	const mockColumns: IWatchlistColumn[] = [
@@ -788,13 +785,7 @@ async function getMockData(tabId?: string): Promise<IGetWatchlistResponse> {
 	const mockTables = [mockTable1, mockTable2, mockTable3];
 
 	// eslint-disable-next-line prefer-destructuring
-	let selectedData: IWatchlistTable = mockTables[2];
-
-	tabsStore.tabs.forEach((tab, idx) => {
-		if (idx <= 2 && tabId === tab.id) {
-			selectedData = mockTables[idx];
-		}
-	});
+	const selectedData: IWatchlistTable = mockTables[1];
 
 	const tickers: Ticker[] = [
 		{
