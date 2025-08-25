@@ -10,6 +10,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 interface IProps {
 	title: string;
 	active: ISettings;
+	icon?: IconIds;
 }
 
 const props = defineProps<IProps>();
@@ -24,6 +25,12 @@ function update(newValue: string) {
 <template>
 	<modal-badge class="setting-modal">
 		<template #title="{ isVisible }">
+			<ui-icon
+				v-if="props.icon"
+				:id="props.icon"
+				width="12"
+				height="12"
+			/>
 			{{ props.active.displayName }}
 
 			<ui-icon

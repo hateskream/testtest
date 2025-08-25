@@ -14,6 +14,7 @@ import type {
 import { TitleViewVariant } from '../model';
 import { useQueryHeatmapCrypto } from '../query';
 import { UiTreemap } from '@/shared/ui/treemap';
+import { IconIds } from '@/shared/ui/icon';
 
 import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
@@ -71,6 +72,7 @@ const {
 				title="Size by"
 				:setting="sizeBy"
 				:active="activeSizeBy"
+				:icon="IconIds.Size"
 			/>
 		</settings-base>
 		<ui-treemap

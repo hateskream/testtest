@@ -123,7 +123,8 @@ const stock: IDisplaySettings = {
 		{ key: 'price', displayName: 'Price', isPercent: false },
 	],
 	groupBy: [
-		{ key: 'industries', displayName: 'Industries', isPercent: false },
+		// FIXME: WATAHELL why when i change key to industry, it doesnt work
+		{ key: 'industries', displayName: 'Industry', isPercent: false },
 		{ key: 'sector', displayName: 'Sector', isPercent: false },
 		{ key: 'country', displayName: 'Country', isPercent: false },
 		NO_GROUP,

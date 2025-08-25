@@ -19,6 +19,7 @@ import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiDelimiter } from '@/shared/ui/delimiter';
 
 interface ISettingsBase {
 	activeMarket: IMarket;
@@ -92,9 +93,15 @@ function updateTitle(newTitle: TitleViewVariant) {
 				</template>
 			</modal-badge>
 
+			<ui-delimiter class="delimiter" />
+
 			<modal-badge class="color-modal">
 				<template #title="{ isVisible }">
-
+					<ui-icon
+						:id="IconIds.Color"
+						width="12"
+						height="12"
+					/>
 					{{ props.activeColorBy.colorBy.displayName }}
 
 					<ui-icon
@@ -121,7 +128,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 								<template #default>
 									<modal-item-interaction>
 										<!-- eslint-disable-next-line @stylistic/max-len -->
-										Color depth : {{ props.activeColorDepth.start }} to {{ props.activeColorDepth.end }}
+										Color depth <span class="dot" /> {{ props.activeColorDepth.start }} to {{ props.activeColorDepth.end }}
 									</modal-item-interaction>
 								</template>
 								<template #content>
@@ -189,7 +196,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<template #default>
 								<modal-item-interaction>
 									<div>
-										Display value : {{ props.activeDisplayValue.displayName }}
+										Display value <span class="dot" /> {{ props.activeDisplayValue.displayName }}
 									</div>
 								</modal-item-interaction>
 							</template>
@@ -224,6 +231,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 .start-group {
 	display: flex;
+	align-items: center;
 }
 
 .end-group {
@@ -231,9 +239,6 @@ function updateTitle(newTitle: TitleViewVariant) {
 	align-items: center;
 }
 
-.market-modal {
-	margin-right: 24px;
-}
 
 .color-modal {
 	margin-right: 4px;
@@ -260,5 +265,16 @@ function updateTitle(newTitle: TitleViewVariant) {
 	&.rotated {
 		transform: rotate(-180deg);
 	}
+}
+
+.dot {
+	width: 1px;
+	height: 1px;
+	border: 1px solid var(--color-text-base-300, #9a9a9d);
+	border-radius: 100%;
+}
+
+.delimiter {
+	margin-inline: 12px;
 }
 </style>
