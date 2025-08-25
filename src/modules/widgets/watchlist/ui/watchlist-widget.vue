@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { useQueryWatchlistData } from '../queries';
@@ -21,6 +23,7 @@ const {
 	tabs,
 	columns,
 	sections,
+	tickerIds,
 
 	handlerAddNewTab,
 	handlerRenameTab,
@@ -29,11 +32,9 @@ const {
 	resetAllChanges,
 } = useWatchlist(props.meta.widgetId);
 
-const { data: tableData, isLoading: isTableLoading, isError: isTableError } = useQueryWatchlistData(
-	{
-		tabId: '',
-	},
-);
+const { data, isLoading, isError } = useQueryWatchlistData(tickerIds);
+
+const isNotData = computed(() => !!data?.value && isLoading.value);
 </script>
 
 <template>
@@ -43,14 +44,14 @@ const { data: tableData, isLoading: isTableLoading, isError: isTableError } = us
 		</template>
 
 		<template #content>
-			<watchlist-error v-if="isTableError" />
+			<watchlist-error v-if="isError" />
 
-			<watchlist-loader v-if="isTableError || isTableLoading" :count="5" />
+			<watchlist-loader v-if="isNotData" :count="5" />
 			<watchlist-main
-				v-if="tableData && !isTableError"
+				v-if="data"
 				:columns="columns"
 				:sections="sections"
-				:tickers="tableData.tickers"
+				:tickers="data"
 				:tabs="tabs"
 				@add-tab="handlerAddNewTab"
 				@rename-tab="handlerRenameTab"

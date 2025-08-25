@@ -37,6 +37,17 @@ export function useWatchlist(widgetId: string) {
 
 	const activeTab = computed(() => getActiveTab(state.value));
 
+	const tickerIds = computed(() =>
+		table.value?.sections
+			.reduce((acc, section) =>
+				[
+					...acc,
+					...section.rows
+						.map(row => row.id),
+				], [] as string[],
+			) || [],
+	);
+
 	const columns = computed({
 		get: () => table.value?.columns || [],
 		set: (cols: ITableColumn[]) => {
@@ -203,6 +214,7 @@ export function useWatchlist(widgetId: string) {
 		columns,
 		activeSort,
 		sections,
+		tickerIds,
 
 		handlerAddNewTab,
 		handlerRenameTab,

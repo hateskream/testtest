@@ -1,35 +1,14 @@
 import { useQuery } from '@tanstack/vue-query';
-import { unref, type Ref, type ComputedRef } from 'vue';
+import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import {
-	getWatchlistSections,
-	type IGetWatchlistRequest,
-} from '../api';
+import { getWatchlistSections } from '../api';
 
-interface IUseQueryOptions {
-	enabled?: Ref<boolean> | ComputedRef<boolean>;
-}
-
-export function useQueryWatchlistData(
-	args: IGetWatchlistRequest | Ref<IGetWatchlistRequest | null> | ComputedRef<IGetWatchlistRequest | null>,
-	options?: IUseQueryOptions,
-) {
+export function useQueryWatchlistData(tickerIds: MaybeRefOrGetter<string[]>) {
 	return useQuery({
-		queryKey: [
-			'watchlist-data',
-			() => {
-				const argsValue = unref(args);
-				return argsValue ? argsValue.tabId : null;
-			},
-		],
-		queryFn: () => {
-			const argsValue = unref(args);
-			if (!argsValue) {
-				throw new Error('No arguments provided for watchlist data query');
-			}
-			return getWatchlistSections(argsValue);
-		},
-		enabled: options?.enabled,
+		queryKey: computed(() => ['watchlist', toValue(tickerIds)]),
+		queryFn: () => getWatchlistSections({
+			tickerIds: toValue(tickerIds),
+		}),
 		refetchOnMount: false,
 	});
 }
