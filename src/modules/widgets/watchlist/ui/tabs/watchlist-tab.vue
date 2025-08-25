@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef, useCssModule } from 'vue';
+import { nextTick, ref, useTemplateRef, useCssModule, watch } from 'vue';
 
 import type { ITabUi } from '@/modules/widgets/watchlist/model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
@@ -30,6 +30,15 @@ const inputModel = ref(props.tab.name);
 
 const classes = useCssModule('classes');
 
+watch(
+	() => props.tab.isEditing,
+	newState => {
+		if (newState) {
+			openRenameInput();
+		}
+	},
+);
+
 function adjustInputWidth(input: HTMLInputElement, text: string) {
 	const measurer = document.createElement('span');
 	measurer.style.visibility = 'hidden';
@@ -42,7 +51,7 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	document.body.removeChild(measurer);
 }
 
-const finishEditing = (event: Event) => {
+function finishEditing(event: Event) {
 	if (event?.type !== 'blur') {
 		tabRenameInputRef.value?.blur();
 		return;
@@ -56,7 +65,7 @@ const finishEditing = (event: Event) => {
 	inputModel.value = props.tab.name;
 };
 
-const openRenameInput = async () => {
+async function openRenameInput() {
 	isEditing.value = true;
 
 	await nextTick();
@@ -74,7 +83,7 @@ const openRenameInput = async () => {
 	});
 };
 
-const onDoubleClick = async () => {
+function onDoubleClick() {
 	if (clickTimeout.value) {
 		clearTimeout(clickTimeout.value);
 		clickTimeout.value = null;
@@ -87,7 +96,7 @@ const onDoubleClick = async () => {
 	openRenameInput();
 };
 
-const onSingleClick = () => {
+function onSingleClick() {
 	if (clickTimeout.value) {
 		return;
 	}

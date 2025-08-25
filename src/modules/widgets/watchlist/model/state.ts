@@ -1,6 +1,7 @@
 import {
 	createEmptyTab,
 	createMockTab,
+	duplicate,
 	hydrateTab,
 	rehydrateTab,
 	updateTable,
@@ -68,6 +69,29 @@ export function addNewTab(state: IState, name: string): IState {
 		...state,
 		activeTabId: newTab.id,
 		tabs: [...state.tabs, newTab],
+	};
+}
+
+export function duplicateTab(state: IState, tabId: string): IState {
+	const tab = findTab(state, tabId);
+	if (tab === undefined) {
+		return state;
+	}
+
+	const newTab = duplicate(tab);
+
+	const currentIndex = state.tabs.findIndex((t) => t.id === tabId);
+
+	return {
+		...state,
+		activeTabId: newTab.id,
+		tabs: reorderTabs(
+			[
+				...state.tabs.slice(0, currentIndex + 1),
+				newTab,
+				...state.tabs.slice(currentIndex + 1),
+			],
+		),
 	};
 }
 

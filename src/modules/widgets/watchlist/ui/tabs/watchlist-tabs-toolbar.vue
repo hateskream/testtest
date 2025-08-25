@@ -5,6 +5,7 @@ import { ref, useTemplateRef, watch } from 'vue';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import {
+	TabAction,
 	tabActionToTitle,
 	type ITabUi,
 } from '@/modules/widgets/watchlist/model';
@@ -26,7 +27,16 @@ const emit = defineEmits<{
 	(event: 'add-tab'): void;
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
+	(event: 'duplicate-tab', id: string): void;
 }>();
+
+const actionToCb: Record<TabAction, (id: string) => void> = {
+	[TabAction.Duplicate]: (id: string) => emit('duplicate-tab', id),
+	[TabAction.Rename]: startEditing,
+	[TabAction.Share]: (_: string) => {},
+	[TabAction.AddAlert]: (_: string) => {},
+	[TabAction.AddSymbolsToList]: (_: string) => {},
+};
 
 const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
 
@@ -59,6 +69,17 @@ function initTabs(tabs: ITabUi[]): ITabWithEditing[] {
 	}));
 }
 
+function startEditing(tabId: string) {
+	localTabs.value = localTabs.value.map(tab => ({
+		...tab,
+		isEditing: tab.id === tabId,
+	}));
+}
+
+function onClickAction(action: TabAction, tabId: string) {
+	actionToCb[action](tabId);
+}
+
 function onAddTab() {
 	emit('add-tab');
 }
@@ -74,6 +95,7 @@ function onRenameTab(id: string, name: string) {
 function openModal(index: number) {
 	positionRefs.value?.[index].handleClick();
 };
+
 </script>
 
 <template>
@@ -100,6 +122,7 @@ function openModal(index: number) {
 							<modal-item
 								v-for="(title, key) in tabActionToTitle"
 								:key="key"
+								@click="onClickAction(key, tab.id)"
 							>
 								<span :class="classes.menuActionTitle">{{ title }}</span>
 							</modal-item>

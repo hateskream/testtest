@@ -10,6 +10,7 @@ import {
 	changeSectionsVisibility,
 	changeTabOrder,
 	deleteSection,
+	duplicateTab,
 	findTab,
 	getActiveTab,
 	getDefaultState,
@@ -124,6 +125,10 @@ export function useWatchlist(widgetId: string) {
 		state.value = changeActiveTab(state.value, tabId);
 	}
 
+	function handlerDuplicateTab(tabId: string) {
+		state.value = duplicateTab(state.value, tabId);
+	}
+
 	function handlerChangeSectionsVisibility(sectionId: string, isOpen: boolean) {
 		state.value = updateTableState(
 			state.value,
@@ -221,6 +226,7 @@ export function useWatchlist(widgetId: string) {
 		handlerChangeTabOrder,
 		handlerRemoveTab,
 		handlerSwitchTab,
+		handlerDuplicateTab,
 
 		handlerChangeSectionsVisibility,
 		handlerRenameSection,

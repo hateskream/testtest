@@ -28,6 +28,7 @@ const {
 	handlerAddNewTab,
 	handlerRenameTab,
 	handlerSwitchTab,
+	handlerDuplicateTab,
 
 	resetAllChanges,
 } = useWatchlist(props.meta.widgetId);
@@ -56,6 +57,7 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				@add-tab="handlerAddNewTab"
 				@rename-tab="handlerRenameTab"
 				@switch-tab="handlerSwitchTab"
+				@duplicate-tab="handlerDuplicateTab"
 			/>
 		</template>
 

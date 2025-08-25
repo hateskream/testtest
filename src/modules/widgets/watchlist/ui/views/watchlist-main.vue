@@ -18,15 +18,8 @@ const emit = defineEmits<{
 	(event: 'add-tab'): void;
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
+	(event: 'duplicate-tab', id: string): void;
 }>();
-
-function onAddTab() {
-	emit('add-tab');
-}
-
-function onSwitchTab(id: string) {
-	emit('switch-tab', id);
-}
 
 function onRenameTab(id: string, name: string) {
 	emit('rename-tab', id, name);
@@ -37,9 +30,10 @@ function onRenameTab(id: string, name: string) {
 	<div :class="classes.root">
 		<watchlist-tabs-toolbar
 			:tabs="props.tabs"
-			@add-tab="onAddTab"
+			@add-tab="emit('add-tab')"
 			@rename-tab="onRenameTab"
-			@switch-tab="onSwitchTab"
+			@switch-tab="emit('switch-tab', $event)"
+			@duplicate-tab="emit('duplicate-tab', $event)"
 		/>
 		<watchlist-table
 			:columns="props.columns"

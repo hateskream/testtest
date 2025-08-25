@@ -53,6 +53,13 @@ export function rehydrateTab(tab: IHydratedTab): ITab {
 	};
 }
 
+export function duplicate(tab: ITab): ITab {
+	return {
+		...tab,
+		id: uuidv4(),
+	};
+}
+
 export function createMockTab(id: string, name: string, order: number, table: ITable): ITab {
 	return {
 		id,
