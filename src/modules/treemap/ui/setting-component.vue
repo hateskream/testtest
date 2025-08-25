@@ -22,15 +22,15 @@ function update(newValue: string) {
 </script>
 
 <template>
-	<modal-badge>
-		<template #title>
+	<modal-badge class="setting-modal">
+		<template #title="{ isVisible }">
 			{{ props.active.displayName }}
 
 			<ui-icon
 				:id="IconIds.DropdownDown"
 				width="12"
 				height="12"
-				class="icon"
+				:class="['dropdown-icon', { 'rotated': isVisible }]"
 			/>
 		</template>
 		<template #content>
@@ -50,3 +50,21 @@ function update(newValue: string) {
 		</template>
 	</modal-badge>
 </template>
+
+<style scoped>
+.dropdown-icon {
+	transition: transform 0.3s ease;
+
+	&.rotated {
+		transform: rotate(-180deg);
+	}
+}
+
+.setting-modal {
+	&:hover {
+		.dropdown-icon {
+			color: rgb(255 255 255 / 100%);
+		}
+	}
+}
+</style>

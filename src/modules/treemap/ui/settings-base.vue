@@ -37,7 +37,7 @@ const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
 const title = defineModel<TitleViewVariant>('title', { required: true });
 
 function updateMarket(newActiveId: string) {
-	market.value.active = newActiveId;;
+	market.value.active = newActiveId;
 }
 
 function updateColorBy(newColorBy: string) {
@@ -58,17 +58,17 @@ function updateTitle(newTitle: TitleViewVariant) {
 </script>
 
 <template>
-	<div class="root">
-		<div class="right">
-			<modal-badge class="market">
-				<template #title>
+	<div class="heatmap-toolbar">
+		<div class="start-group">
+			<modal-badge class="market-modal">
+				<template #title="{ isVisible }">
 					{{ props.activeMarket.displayName }}
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						width="12"
 						height="12"
-						class="icon"
+						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
 				</template>
 				<template #content>
@@ -88,15 +88,16 @@ function updateTitle(newTitle: TitleViewVariant) {
 				</template>
 			</modal-badge>
 
-			<modal-badge class="color">
-				<template #title>
-					{{ activeColorBy.colorBy.displayName }}
+			<modal-badge class="color-modal">
+				<template #title="{ isVisible }">
+
+					{{ props.activeColorBy.colorBy.displayName }}
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						width="12"
 						height="12"
-						class="icon"
+						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
 				</template>
 				<template #content>
@@ -115,7 +116,8 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<ui-position>
 								<template #default>
 									<modal-item-interaction>
-										Color depth : {{ activeColorDepth.start }} to {{ activeColorDepth.end }}
+										<!-- eslint-disable-next-line @stylistic/max-len -->
+										Color depth : {{ props.activeColorDepth.start }} to {{ props.activeColorDepth.end }}
 									</modal-item-interaction>
 								</template>
 								<template #content>
@@ -144,7 +146,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 			</div>
 
 		</div>
-		<div class="left">
+		<div class="end-group">
 			<ui-position position="right-start">
 				<template #default>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
@@ -183,7 +185,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<template #default>
 								<modal-item-interaction>
 									<div>
-										Display value : {{ activeDisplayValue.displayName }}
+										Display value : {{ props.activeDisplayValue.displayName }}
 									</div>
 								</modal-item-interaction>
 							</template>
@@ -210,27 +212,36 @@ function updateTitle(newTitle: TitleViewVariant) {
 </template>
 
 <style scoped>
-.root {
+.heatmap-toolbar {
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
 }
 
-.right {
+.start-group {
 	display: flex;
 }
 
-.left {
+.end-group {
 	display: flex;
 	align-items: center;
 }
 
-.market {
+.market-modal {
 	margin-right: 24px;
 }
 
-.color {
+.color-modal {
 	margin-right: 4px;
+}
+
+.color-modal,
+.market-modal {
+	&:hover {
+		.dropdown-icon {
+			color: rgb(255 255 255 / 100%);
+		}
+	}
 }
 
 .other {
@@ -239,12 +250,11 @@ function updateTitle(newTitle: TitleViewVariant) {
 	gap: 4px;
 }
 
-.icon {
-	color: rgb(100 101 104 / 100%);
-	cursor: pointer;
-}
+.dropdown-icon {
+	transition: transform 0.3s ease;
 
-.icon:hover {
-	color: rgb(255 255 255 / 100%);
+	&.rotated {
+		transform: rotate(-180deg);
+	}
 }
 </style>
