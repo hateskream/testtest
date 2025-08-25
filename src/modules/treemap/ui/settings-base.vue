@@ -60,7 +60,11 @@ function updateTitle(newTitle: TitleViewVariant) {
 <template>
 	<div class="heatmap-toolbar">
 		<div class="start-group">
-			<modal-badge class="market-modal">
+			<modal-badge
+				class="market-modal"
+				background-color="var(--color-bg-contrast-300, #DCDCDF)"
+				color="var(--color-text-contrast-500, #0C0C0E)"
+			>
 				<template #title="{ isVisible }">
 					{{ props.activeMarket.displayName }}
 
