@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
-import { useWatchlistStore } from '../../../../stores';
-import { INITIAL_ALL_TABLE_COLUMNS } from '../../../../const';
-import type { ITableColumn } from '../../../../model';
+import { useWatchlistStore } from '../../../stores';
+import { INITIAL_ALL_TABLE_COLUMNS } from '../../../const';
+import type { ITableColumn } from '../../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
-import { setPositionColumns } from '../../../../utils';
-import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../../../../base';
+import { setPositionColumns } from '../../../utils';
+import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../../../base';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;

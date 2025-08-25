@@ -6,7 +6,7 @@ import { useWatchlist } from '../composables';
 
 import WatchlistError from './views/watchlist-error.vue';
 import WatchlistLoader from './views/watchlist-loader.vue';
-import WatchlistContextMenu from './components/watchlist-context-menu.vue';
+import WatchlistContextMenu from './watchlist-context-menu.vue';
 import WatchlistMain from './views/watchlist-main.vue';
 
 const props = defineProps<{

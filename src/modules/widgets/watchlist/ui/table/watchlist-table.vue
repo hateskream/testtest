@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapSections, type ISection } from '../../../model';
+import { mapSections, type ISection } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 
-import WatchlistEmptyState from '../watchlist-empty-state.vue';
+import WatchlistEmptyState from './watchlist-empty-state.vue';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
 interface IWatchlistTableProps {

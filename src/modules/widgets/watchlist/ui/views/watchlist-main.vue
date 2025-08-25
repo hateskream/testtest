@@ -2,8 +2,8 @@
 import type { TableRow, ITableColumn } from '@/modules/cell';
 import type { ISection, ITabUi } from '../../model';
 
-import WatchlistTable from '../components/table/watchlist-table.vue';
-import WatchlistTabsToolbar from '../components/tabs/watchlist-tabs-toolbar.vue';
+import WatchlistTable from '../table/watchlist-table.vue';
+import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
 
 interface IWatchlistMainProps {
 	tickers: TableRow[];

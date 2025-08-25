@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ModalSubmenu, WidgetContextMenu } from '@/modules/widgets/base';
-import { useWatchlistStore } from '../../stores';
+import { useWatchlistStore } from '../stores';
 
 const watchlistStore = useWatchlistStore();
 
