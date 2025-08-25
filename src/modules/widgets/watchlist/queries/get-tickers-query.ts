@@ -3,27 +3,12 @@ import { unref, type Ref, type ComputedRef } from 'vue';
 
 import {
 	getWatchlistSections,
-	getWatchlistWidget,
 	type IGetWatchlistRequest,
-	type IGetWatchlistWidgetRequest,
 } from '../api';
 
 interface IUseQueryOptions {
 	enabled?: Ref<boolean> | ComputedRef<boolean>;
 }
-
-// eslint-disable-next-line @stylistic/max-len
-export function useQueryWatchlistWidget(args:	IGetWatchlistWidgetRequest | Ref<IGetWatchlistWidgetRequest> | ComputedRef<IGetWatchlistWidgetRequest>) {
-	return useQuery({
-		queryKey: [
-			'watchlist-widget',
-			() => unref(args).market,
-		],
-		queryFn: () => getWatchlistWidget(unref(args)),
-		refetchOnMount: false,
-	});
-}
-
 
 export function useQueryWatchlistData(
 	args: IGetWatchlistRequest | Ref<IGetWatchlistRequest | null> | ComputedRef<IGetWatchlistRequest | null>,

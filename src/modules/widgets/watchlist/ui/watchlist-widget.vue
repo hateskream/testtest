@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
-import { useQueryWatchlistData } from '../queries/watchlist.query.ts';
+import { useQueryWatchlistData } from '../queries';
 import { useWatchlist } from '../composables';
 
 import WatchlistError from './views/watchlist-error.vue';
@@ -25,7 +25,7 @@ const {
 	handlerAddNewTab,
 	handlerRenameTab,
 	handlerSwitchTab,
-} = useWatchlist();
+} = useWatchlist(props.meta.widgetId);
 
 const { data: tableData, isLoading: isTableLoading, isError: isTableError } = useQueryWatchlistData(
 	{

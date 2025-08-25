@@ -4,7 +4,7 @@ import { MarketType } from '@/modules/market';
 import type { IRow } from './row';
 import { mapRow, type TableRow } from '@/modules/cell';
 
-enum SpecificSectionType {
+export enum SpecificSectionType {
 	Custom = 'custom',
 }
 

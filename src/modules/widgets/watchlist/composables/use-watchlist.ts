@@ -23,8 +23,12 @@ import {
 	updateTableState,
 } from '../model';
 import type { ISort, ITableColumn } from '@/modules/cell';
+import { useGetState, useUpdateState } from '../queries';
 
-export function useWatchlist() {
+export function useWatchlist(widgetId: string) {
+	const { data: dataState } = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
 	const state = ref<IState>(getDefaultState());
 
 	const table = ref<ITable | null>(null);
@@ -57,22 +61,37 @@ export function useWatchlist() {
 		},
 	});
 
+	watch(dataState, newState => {
+		if (newState) {
+			state.value = JSON.parse(JSON.stringify(newState));
+			setTable(state.value, state.value.activeTabId);
+		}
+	}, { immediate: true });
+
 	watch(
 		() => state.value.activeTabId,
 		newActiveTabId => {
-			if (newActiveTabId === null) {
-				return;
-			}
-
-			const foundedTab = findTab(state.value, newActiveTabId);
-			if (foundedTab === undefined) {
-				return;
-			}
-
-			table.value = foundedTab.table;
+			setTable(state.value, newActiveTabId);
 		},
 		{ immediate: true },
 	);
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
+
+	function setTable(newState: IState, newActiveTabId: string | null) {
+		if (newActiveTabId === null) {
+			return;
+		}
+
+		const foundedTab = findTab(newState, newActiveTabId);
+		if (foundedTab === undefined) {
+			return;
+		}
+
+		table.value = foundedTab.table;
+	}
 
 	function handlerAddNewTab() {
 		state.value = addNewTab(state.value, 'New tab');
