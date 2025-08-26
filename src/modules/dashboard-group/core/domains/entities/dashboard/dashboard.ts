@@ -14,10 +14,18 @@ import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 
 type Layout = Map<number, Widget[]>;
 
-const enableWidgets = new Set(
-	getAllEnableWidgets()
-		.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
-);
+// Lazy initialization of enabled widgets to avoid circular dependency issues
+let enableWidgets: Set<WidgetType> | null = null;
+
+function getEnabledWidgets(): Set<WidgetType> {
+	if (enableWidgets === null) {
+		enableWidgets = new Set(
+			getAllEnableWidgets()
+				.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
+		);
+	}
+	return enableWidgets;
+}
 export class Dashboard {
 	private constructor(
 		private readonly _id: string,
@@ -149,7 +157,7 @@ export class Dashboard {
 		const layout = new Map<number, Widget[]>();
 
 		Object.entries(layoutPreset).forEach(([type, layouts]) => {
-			if (!enableWidgets.has(type as WidgetType)) {
+			if (!getEnabledWidgets().has(type as WidgetType)) {
 				// eslint-disable-next-line no-console
 				console.warn(`Widget type ${type} is not enabled`);
 				return;
