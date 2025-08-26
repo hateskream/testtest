@@ -1,11 +1,7 @@
-import { EnvironmentName, getEnvironmentName } from '@/shared/lib';
 import { Dashboard } from '../dashboard/dashboard';
 import { Widget, type IWidgetState } from '../widget';
 import type { IPosition } from '../widget/position';
 import { AttemptDeleteLastDashboard, NotFoundDashboard } from './error';
-
-// const
-
 
 export class DashboardGroup {
 	private lastOrder = 0;
@@ -141,47 +137,11 @@ export class DashboardGroup {
 	}
 
 	static create(): DashboardGroup {
-		const env = getEnvironmentName();
+		const mainDashboard = Dashboard.createFromPreset('Main', 0);
 
-		switch (env) {
-			case EnvironmentName.DEV:
-				return this.createDev();
-			case EnvironmentName.DEMO:
-				return this.createDemo();
-			case EnvironmentName.PROD:
-				return this.createProd();
-			default:
-				throw new Error(`Unknown environment: ${env}`);
-		}
-	}
+		const dashboards = [mainDashboard];
 
-	private static createProd(): DashboardGroup {
-		const emptyDashboard = Dashboard.createFromPreset('MainProduction', 0);
-		const dashboards = [emptyDashboard];
-
-		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);
-
-		dashboardGroup.lastOrder = 0;
-
-		return dashboardGroup;
-	}
-
-	private static createDemo(): DashboardGroup {
-		const emptyDashboard = Dashboard.createFromPreset('Main', 0);
-		const dashboards = [emptyDashboard];
-
-		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);
-
-		dashboardGroup.lastOrder = 0;
-
-		return dashboardGroup;
-	}
-
-	private static createDev(): DashboardGroup {
-		const emptyDashboard = Dashboard.createFromPreset('Main', 0);
-		const dashboards = [emptyDashboard];
-
-		const dashboardGroup = new DashboardGroup(emptyDashboard.id, dashboards);
+		const dashboardGroup = new DashboardGroup(mainDashboard.id, dashboards);
 
 		dashboardGroup.lastOrder = 0;
 

@@ -145,7 +145,7 @@ export class Dashboard {
 	}
 
 	static createFromPreset(presetName: PresetName, order: number): Dashboard {
-		const layoutPreset = NAME_TO_PRESET[presetName];
+		const layoutPreset = NAME_TO_PRESET()[presetName];
 		const layout = new Map<number, Widget[]>();
 
 		Object.entries(layoutPreset).forEach(([type, layouts]) => {
