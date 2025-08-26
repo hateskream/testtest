@@ -185,6 +185,7 @@ function prepareValue(value: number) {
 }
 
 .logo {
+	flex-shrink: 0;
 	width: 32px;
 	height: 32px;
 	background-color: #2c2727;

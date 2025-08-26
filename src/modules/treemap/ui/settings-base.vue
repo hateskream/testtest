@@ -102,7 +102,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 						width="12"
 						height="12"
 					/>
-					{{ props.activeColorBy.colorBy.displayName }}
+					<span class="color-modal-text">{{ props.activeColorBy.colorBy.displayName }}</span>
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
@@ -227,6 +227,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
+	container-type: inline-size;
 }
 
 .start-group {
@@ -276,5 +277,15 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 .delimiter {
 	margin-inline: 12px;
+}
+
+@container (max-width: 600px) {
+	.color-modal-text {
+		display: none;
+	}
+
+	.other :deep(.setting-text) {
+		display: none;
+	}
 }
 </style>

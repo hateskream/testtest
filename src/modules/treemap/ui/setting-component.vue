@@ -31,7 +31,7 @@ function update(newValue: string) {
 				width="12"
 				height="12"
 			/>
-			{{ props.active.displayName }}
+			<span class="setting-text">{{ props.active.displayName }}</span>
 
 			<ui-icon
 				:id="IconIds.DropdownDown"
