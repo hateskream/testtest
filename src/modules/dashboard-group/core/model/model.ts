@@ -12,12 +12,14 @@ export interface IDashboard {
 
 export interface IWidget {
 	id: string;
+	instanceId?: string;
 	widgetType: WidgetType;
 	name: string;
 	description: string;
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
+	config?: Record<string, unknown>;
 }
 
 export interface IPosition {
