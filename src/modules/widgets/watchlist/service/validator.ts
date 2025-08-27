@@ -36,7 +36,6 @@ const sectionSchema = z.object({
 });
 
 const tableSchema = z.object({
-	id: z.string(),
 	columns: z.array(columnSchema),
 	sections: z.array(sectionSchema),
 	tickerState: tickerStateSchema,

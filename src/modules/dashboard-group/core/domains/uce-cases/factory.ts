@@ -5,6 +5,7 @@ import type { IChangeTabOrderUc } from './change-tab-order';
 import type { ICreateTabUc } from './create-tab';
 import type { IDeleteTabUc } from './delete-tab';
 import type { IDeleteWidgetUc } from './delete-widget';
+import type { IGetAllWidgetIdsUc } from './get-all-widget-ids';
 import type { IGetDashboardsUc } from './get-dashboards';
 import type { IGetWidgetListUc } from './get-widget-list';
 import type { IRenameTabUc } from './rename-tab';
@@ -20,5 +21,6 @@ export interface IUseCaseFactory {
 	DeleteWidgetUc: () => IDeleteWidgetUc;
 	GetWidgetListUc: () => IGetWidgetListUc;
 	ChangeDashboardStateUc: () => IChangeDashboardStateUc;
+	GetAllWidgetIds: () => IGetAllWidgetIdsUc;
 }
 

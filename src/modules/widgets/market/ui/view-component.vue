@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FiltersState, FiltersValues } from '../model';
+import type { FiltersState, FiltersValues, IWatchlist } from '../model';
 import type { ITableColumn, TableRow } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 
@@ -9,14 +9,22 @@ import MarketTableComponent from './market-table-component.vue';
 interface IViewComponentProps {
 	rows: TableRow[];
 	filtersValues: FiltersValues;
+	wachlists: IWatchlist[];
 }
 
 const props = defineProps<IViewComponentProps>();
+
+const emits = defineEmits<{
+	(e: 'add-to-watchlist', wachlists: IWatchlist, tickerId: string): void;
+}>();
 
 const market = defineModel<MarketType>('market', { required: true });
 const filters = defineModel<FiltersState>('filters', { required: true });
 const columns = defineModel<ITableColumn[]>('columns', { required: true });
 
+function handleAddToWatchlist(wachlists: IWatchlist, tickerId: string) {
+	emits('add-to-watchlist', wachlists, tickerId);
+}
 </script>
 
 <template>
@@ -30,6 +38,8 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 		<market-table-component
 			v-model:columns="columns"
 			:rows="props.rows"
+			:wachlists="props.wachlists"
+			@add-to-watchlist="handleAddToWatchlist"
 		/>
 	</div>
 </template>

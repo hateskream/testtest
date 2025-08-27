@@ -93,6 +93,12 @@ export class Dashboard {
 		this._name = value;
 	}
 
+	getAllWidgetIds(type: WidgetType): string[] {
+		return this.widgets
+			.filter(widget => widget.widgetType === type)
+			.map(widget => widget.id);
+	}
+
 	changeWidgetsState(widgetsState: IWidgetState[]) {
 		widgetsState.forEach(({ id, position }) => {
 			this.findWidgetById(id).position = position;

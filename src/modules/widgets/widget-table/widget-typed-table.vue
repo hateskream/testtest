@@ -253,8 +253,8 @@ const tickerState = computed(() => {
 		</template>
 
 		<!-- Forwarded row actions slot -->
-		<template #row-actions>
-			<slot name="row-actions">
+		<template #row-actions="{tickerId}">
+			<slot name="row-actions" :ticker-id="tickerId">
 			</slot>
 		</template>
 	</generic-data-table>

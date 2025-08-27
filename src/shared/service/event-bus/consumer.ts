@@ -10,15 +10,15 @@ export class Consumer<Events extends Record<EventType, unknown>> {
 		this.emitter = EventEmitter.getInstance<Events>();
 	}
 
-	on(event: EventType, handler: Handler<Events[EventType]>) {
-		if (this.allowedEvents.has(event)) {
-			this.emitter.on(event, handler);
+	on<EventKey extends keyof Events>(event: EventKey, handler: Handler<Events[EventKey]>) {
+		if (this.allowedEvents.has(event as EventType)) {
+			this.emitter.on(event as EventType, handler as Handler<unknown>);
 		}
 	}
 
-	off(event: EventType, handler: Handler<Events[EventType]>) {
-		if (this.allowedEvents.has(event)) {
-			this.emitter.off(event, handler);
+	off<EventKey extends keyof Events>(event: EventKey, handler: Handler<Events[EventKey]>) {
+		if (this.allowedEvents.has(event as EventType)) {
+			this.emitter.off(event as EventType, handler as Handler<unknown>);
 		}
 	}
 }

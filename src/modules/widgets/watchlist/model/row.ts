@@ -2,6 +2,12 @@ export interface IRow {
 	id: string;
 }
 
+export function createRow(tickerId: string): IRow {
+	return {
+		id: tickerId,
+	};
+}
+
 // export interface IWatchlistRow {
 // 	tickerID: string;
 // 	symbol: IWatchlistSymbolCell;

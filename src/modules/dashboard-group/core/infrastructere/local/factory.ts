@@ -11,11 +11,15 @@ import { GetWidgetList } from './use-case/get-widget-list';
 import { ChangeDashboardState } from './use-case/change-dashboard-state';
 import { LSDashboardGroup, type IOptions } from './repository/ls-dashboard-group';
 import { DeleteTab } from './use-case/delete-tab';
+import { GetAllWidgetIds } from './use-case/get-all-widget-ids';
 
 // использовать напрямую нельзя, без export ts дает ошибку
 //Property 'repo' of exported anonymous class type may not be private or protected.ts(4094)
 export class LocalFactoryImpl implements IUseCaseFactory {
 	constructor(private readonly repo : IRepository) {}
+	GetAllWidgetIds() {
+		return GetAllWidgetIds(this.repo);
+	}
 
 	GetDashboardsUc() {
 		return GetDashboards(this.repo);

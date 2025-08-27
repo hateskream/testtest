@@ -1,3 +1,3 @@
 export type EventType = string;
 
-export type Handler<T = unknown> = (event: T) => void;
+export type Handler<T> = (event: T) => void;

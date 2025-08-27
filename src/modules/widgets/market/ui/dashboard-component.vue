@@ -24,8 +24,10 @@ const {
 	activeSort,
 	filtersValues,
 	filtersState,
+	wachlists,
 
 	resetAllChanges,
+	addToWatchlist,
 } = useMarket(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryMarket(
@@ -65,6 +67,8 @@ const emit = defineEmits<{
 				v-model:columns="columns"
 				:filters-values="filtersValues"
 				:rows="rows"
+				:wachlists="wachlists"
+				@add-to-watchlist="addToWatchlist"
 			/>
 		</template>
 		<template #rcm>

@@ -396,8 +396,8 @@ const {
 							</slot>
 						</slot>
 					</template>
-					<template #row-actions>
-						<slot name="row-actions">
+					<template #row-actions="{ tickerId }">
+						<slot name="row-actions" :ticker-id="tickerId">
 						</slot>
 					</template>
 				</unsectioned-table-content>

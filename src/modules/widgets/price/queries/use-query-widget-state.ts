@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 
 import { useRepository } from '../composables';
 import type { IState } from '../model';
+import { queryClient } from '@/shared/service/query-client';
 
 const SETTINGS_QUERY_KEY = 'price-settings';
 
@@ -16,7 +17,6 @@ export const useGetState = (widgetId: string) => {
 };
 
 export const useUpdateState = (widgetId: string) => {
-	const queryClient = useQueryClient();
 	const repository = useRepository(widgetId);
 
 	return useMutation<void, Error, IState>({

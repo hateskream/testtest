@@ -7,12 +7,30 @@ import {
 	type FiltersValues,
 	type ISettings,
 	type IState,
+	type IWatchlist,
 } from '../model';
 import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
 import type { ITableColumn, ISort } from '@/modules/cell';
+import { Producer } from '@/shared/service/event-bus';
+import { useWatchlistPublic } from '../../watchlist';
+
+type Event = 'addToWatchlist';
+
+interface IPayload {
+	tickerId: string;
+	tickerType: MarketType;
+	watchlistId: string;
+	tabId: string;
+}
+
+type Events = Record<Event, IPayload>;
 
 export function useMarket(widgetId: string) {
+	const { wachlists } = useWatchlistPublic();
+
+	const producer = new Producer<Events>(['addToWatchlist']);
+
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
@@ -106,13 +124,24 @@ export function useMarket(widgetId: string) {
 		state.value = getDefaultState();
 	}
 
+	function addToWatchlist({ watchlistId, tabId }: IWatchlist, tickerId: string) {
+		producer.emit('addToWatchlist', {
+			tickerId,
+			watchlistId,
+			tabId,
+			tickerType: activeMarket.value,
+		});
+	}
+
 	return {
 		columns,
 		activeMarket,
 		activeSort,
 		filtersValues,
 		filtersState,
+		wachlists,
 
 		resetAllChanges,
+		addToWatchlist,
 	};
 }

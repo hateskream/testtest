@@ -1,3 +1,4 @@
+import type { MarketType } from '@/modules/market';
 import {
 	createEmptyTab,
 	createMockTab,
@@ -9,7 +10,7 @@ import {
 	type ITab,
 	type ITabUi,
 } from './tab';
-import { getMockTableFirst, getMockTableSecond, type ITable } from './table';
+import { addTickerInTable, getMockTableFirst, getMockTableSecond, type ITable } from './table';
 
 export interface IState {
 	activeTabId: string | null;
@@ -21,7 +22,21 @@ export interface IHydratedState {
 	tabs: IHydratedTab[];
 }
 
+export interface IPublicState {
+	watchlistId: string;
+	tabId: string;
+	name: string;
+}
+
 const MAX_TAB_COUNT = 10;
+
+export function getPublicState(state: IState, watchlistId: string): IPublicState[] {
+	return state.tabs.map(t => ({
+		watchlistId,
+		tabId: t.id,
+		name: t.name,
+	}));
+}
 
 export function hydrateState(state: IState): IHydratedState {
 	return {
@@ -203,6 +218,22 @@ export function getUiTabs(state: IState): ITabUi[] {
 			isActive: t.id === state.activeTabId,
 		}))
 		.sort((a, b) => a.order - b.order);
+}
+
+export function addTickerInTab(
+	state: IState,
+	tickerId: string,
+	tickerType: MarketType,
+	tabId: string,
+): IState {
+	return updateTab(
+		state,
+		tabId,
+		tab => ({
+			...tab,
+			table: addTickerInTable(tab.table, tickerId, tickerType),
+		}),
+	);
 }
 
 function updateTab(

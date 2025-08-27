@@ -95,14 +95,14 @@ export function isCustom(section: ISection): boolean {
 	return section.type === SpecificSectionType.Custom;
 }
 
-export function addTicker(section: ISection, ticker: IRow): ISection {
+export function addRow(section: ISection, row: IRow): ISection {
 	if (section.rows.length >= MAX_COUNT_TICKERS) {
 		return section;
 	}
 
 	return {
 		...section,
-		rows: [...section.rows, ticker],
+		rows: [...section.rows, row],
 	};
 }
 

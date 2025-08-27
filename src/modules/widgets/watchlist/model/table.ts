@@ -1,19 +1,24 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, type ITableColumn } from '@/modules/cell';
-import { getMockSectionsFirst, getMockSectionsSecond, isCustom, newCustomSection, type ISection } from './section';
+import {
+	addRow,
+	getMockSectionsFirst,
+	getMockSectionsSecond,
+	isCustom,
+	newCustomSection,
+	type ISection,
+} from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
+import type { MarketType } from '@/modules/market';
+import { createRow } from './row';
 
 export interface ITable {
-	id: string;
 	columns: ITableColumn[];
 	sections: ISection[];
 	tickerState: ITickerState;
 	sort: ISort | null;
 }
 export interface IHydratedTable {
-	id: string;
 	columns: IHydratedColumn[];
 	sections: ISection[];
 	tickerState: ITickerState;
@@ -38,7 +43,6 @@ export function rehydrateTable(table: IHydratedTable): ITable {
 
 export function getMockTableFirst(): ITable {
 	return {
-		id: '1',
 		columns: ALL_COLUMNS,
 		sections: getMockSectionsFirst(),
 		sort: null,
@@ -48,7 +52,6 @@ export function getMockTableFirst(): ITable {
 
 export function getMockTableSecond(): ITable {
 	return {
-		id: '1',
 		columns: ALL_COLUMNS,
 		sections: getMockSectionsSecond(),
 		sort: null,
@@ -58,7 +61,6 @@ export function getMockTableSecond(): ITable {
 
 export function createEmptyTable(): ITable {
 	return {
-		id: uuidv4(),
 		columns: ALL_COLUMNS,
 		sections: [],
 		sort: null,
@@ -203,6 +205,24 @@ export function addCustomSection(table: ITable): ITable {
 
 function getCountCustomSections(table: ITable): number {
 	return table.sections.filter(section => isCustom(section)).length;
+}
+
+export function addTickerInTable(
+	table: ITable,
+	tickerId: string,
+	_: MarketType,
+): ITable {
+	// если я забыл это исправить я пидарас
+	return {
+		...table,
+		sections: [
+			...table.sections,
+			addRow(
+				newCustomSection(),
+				createRow(tickerId),
+			),
+		],
+	};
 }
 
 function updateSection(

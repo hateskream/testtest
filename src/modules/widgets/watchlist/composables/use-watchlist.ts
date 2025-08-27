@@ -1,10 +1,12 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
+import z from 'zod';
 
 import {
 	type IState,
 	type ITable,
 	addCustomSection,
 	addNewTab,
+	addTickerInTab,
 	changeActiveTab,
 	changeColumnsState,
 	changeSectionsVisibility,
@@ -25,8 +27,36 @@ import {
 } from '../model';
 import type { ISort, ITableColumn } from '@/modules/cell';
 import { useGetState, useUpdateState } from '../queries';
+import { Consumer } from '@/shared/service/event-bus';
+import { MarketType } from '@/modules/market';
+
+type Event = 'addToWatchlist';
+
+const payloadSchema = z.object({
+	tickerId: z
+		.string()
+		.min(1, { message: 'tickerId is required and must be a non-empty string' }),
+	tickerType: z.nativeEnum(
+		MarketType,
+		{ message: 'tickerType is required and must be a MarketType' },
+	),
+	watchlistId: z
+		.string()
+		.min(1, { message: 'watchlistId is required and must be a non-empty string' }),
+	tabId: z
+		.string()
+		.min(1, { message: 'tabId is required and must be a non-empty string' }),
+});
+
+type IPayload = z.infer<typeof payloadSchema>;
+
+type Events = Record<Event, IPayload>;
 
 export function useWatchlist(widgetId: string) {
+	const producer = new Consumer<Events>(['addToWatchlist']);
+
+	producer.on('addToWatchlist', addToWatchlist);
+
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
@@ -71,6 +101,10 @@ export function useWatchlist(widgetId: string) {
 				t => updateSort(t, sort),
 			);
 		},
+	});
+
+	onUnmounted(() => {
+		producer.off('addToWatchlist', addToWatchlist);
 	});
 
 	watch(dataState, newState => {
@@ -212,6 +246,33 @@ export function useWatchlist(widgetId: string) {
 
 	function resetAllChanges() {
 		state.value = getDefaultState();
+	}
+
+	function addToWatchlist(rawPayload: IPayload) {
+		const payload = validatePayload(rawPayload);
+		if (payload === null) {
+			return;
+		}
+
+		const { watchlistId, tickerType, tickerId, tabId } = payload;
+
+		if (watchlistId !== widgetId) {
+			return;
+		}
+
+		state.value = addTickerInTab(state.value, tickerId, tickerType, tabId);
+	}
+
+	function validatePayload(input: unknown): IPayload | null {
+		try {
+			return payloadSchema.parse(input);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				// eslint-disable-next-line no-console
+				console.error('Validation failed:', error.issues);
+			}
+			return null;
+		}
 	}
 
 	return {

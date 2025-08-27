@@ -173,7 +173,7 @@ const onRowDragChange = (evt: IDragEvent<T>) => {
 						[classes.rowActions, classes.tableCell, {[classes.rowActionsHovered]: hoveredRowId === row.id}]
 					"
 				>
-					<slot name="row-actions" />
+					<slot name="row-actions" :ticker-id="row.id" />
 				</td>
 			</tr>
 		</template>

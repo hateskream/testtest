@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 
 import { useRepository } from '../composables';
 import type { ISettings } from '../model';
+import { queryClient } from '@/shared/service/query-client';
 
 const SETTINGS_QUERY_KEY = 'fear-greed-settings';
 
@@ -16,7 +17,6 @@ export const useGetSettings = (widgetId: string) => {
 };
 
 export const useUpdateSettings = (widgetId: string) => {
-	const queryClient = useQueryClient();
 	const repository = useRepository(widgetId);
 
 	return useMutation<void, Error, ISettings>({

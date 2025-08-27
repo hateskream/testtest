@@ -12,4 +12,5 @@ export * from './delete-widget';
 export * from './get-dashboards';
 export * from './get-widget-list';
 export * from './rename-tab';
+export * from './get-all-widget-ids';
 export * from './dto';

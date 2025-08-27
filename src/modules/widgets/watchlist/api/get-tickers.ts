@@ -58,7 +58,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 
 	const tickers: Ticker[] = [
 		{
-			tickerId: '1',
+			tickerId: 'BTC',
 			[ColumnType.Symbol]: {
 				cellType: CellType.Symbol,
 				columnType: ColumnType.Symbol,
@@ -77,7 +77,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 			},
 		},
 		{
-			tickerId: '2',
+			tickerId: 'ETH',
 			[ColumnType.Symbol]: {
 				cellType: CellType.Symbol,
 				columnType: ColumnType.Symbol,
@@ -96,7 +96,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 			},
 		},
 		{
-			tickerId: '3',
+			tickerId: 'USDT',
 			[ColumnType.Symbol]: {
 				cellType: CellType.Symbol,
 				columnType: ColumnType.Symbol,
@@ -115,7 +115,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 			},
 		},
 		{
-			tickerId: '4',
+			tickerId: 'BNB',
 			[ColumnType.Symbol]: {
 				cellType: CellType.Symbol,
 				columnType: ColumnType.Symbol,
