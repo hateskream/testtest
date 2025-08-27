@@ -138,8 +138,11 @@ export class DashboardGroup {
 
 	static create(): DashboardGroup {
 		const mainDashboard = Dashboard.createFromPreset('Main', 0);
+		const cryptoDashboard = Dashboard.createFromPreset('Crypto', 1);
+		const stockDashboard = Dashboard.createFromPreset('Stock', 2);
+		const forexDashboard = Dashboard.createFromPreset('Forex', 3);
 
-		const dashboards = [mainDashboard];
+		const dashboards = [mainDashboard, cryptoDashboard, stockDashboard, forexDashboard];
 
 		const dashboardGroup = new DashboardGroup(mainDashboard.id, dashboards);
 
