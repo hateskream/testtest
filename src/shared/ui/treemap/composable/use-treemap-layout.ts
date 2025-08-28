@@ -2,7 +2,7 @@ import { CategoryScale, Chart, LinearScale, Tooltip, type ChartConfiguration } f
 import { TreemapController, TreemapElement, type TreemapDataPoint } from 'chartjs-chart-treemap';
 import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue';
 
-interface IDataItem {
+export interface IDataItem {
 	id: string;
 	value: number;
 }

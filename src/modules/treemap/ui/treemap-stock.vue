@@ -32,7 +32,7 @@ const props = defineProps<ITreemapCryptoProps>();
 
 const market = defineModel<IMarketSettings>('market', { required: true });
 const sizeBy = defineModel<ISingleSetting>('sizeBy', { required: true });
-const groupBy = defineModel<ISingleSetting>('groupBy', { required: true });
+// const groupBy = defineModel<ISingleSetting>('groupBy', { required: true });
 const colorBy = defineModel<ISingleSetting>('colorBy', { required: true });
 const colorDepth = defineModel<IColorDepthSetting>('colorDepth', { required: true });
 const displayValue = defineModel<ISingleSetting>('displayValue', { required: true });
@@ -87,12 +87,12 @@ function setSelectGroup(id: string | null) {
 				:active="activeSizeBy"
 				:icon="IconIds.Size"
 			/>
-			<setting-component
+			<!-- <setting-component
 				title="Group by"
 				:setting="groupBy"
 				:active="activeGroupBy"
 				:icon="IconIds.GroupBy"
-			/>
+			/> -->
 		</settings-base>
 		<ui-treemap-layout :data="group">
 			<template  #default="{ item: { id } }">

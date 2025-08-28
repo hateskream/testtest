@@ -41,7 +41,7 @@ export function useHeatmapStock(
 
 	watch(
 		[rawHeatmap, sizeBy, colorBy, titleSetting, displayValue, groupBy, selectGroup],
-		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue, newGroupBy, newSelectGroup]) => {
+		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue, newGroupBy]) => {
 			if (
 				!newHeatmap?.items.length ||
 				!newSizeBy ||
