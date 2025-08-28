@@ -16,12 +16,13 @@ import { ChartSectionTradingVolume } from './trading-volume';
 import { ChartSectionAnnualReturns } from './annual-returns';
 import { ChartSectionTechnicals } from './technicals';
 import { SectionTransactions } from './transactions';
-import { SectionHoldings } from './holdings';
+import { SectionHoldings, SectionHoldingsDigram } from './holdings';
 import { ChartSectionAnnualMarginTrends } from './annual-margin-trends';
 import { ChartSectionDailyNetFlows } from './daily-net-flows';
 import { ChartSectionDividendsAndCapitalGains } from './dividends-and-capital-gains';
 import { ChartSectionHoldingsEtf } from './holdings-etf';
 import { ChartSectionPortfolioComposition } from './portfolio-composition';
+import { SectionTrailingReturns } from './trailing-returns';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -42,10 +43,12 @@ export {
 	ChartSectionAnnualReturns,
 	ChartSectionTechnicals,
 	SectionHoldings,
+	SectionHoldingsDigram,
 	SectionTransactions,
 	ChartSectionAnnualMarginTrends,
 	ChartSectionDailyNetFlows,
 	ChartSectionDividendsAndCapitalGains,
 	ChartSectionHoldingsEtf,
 	ChartSectionPortfolioComposition,
+	SectionTrailingReturns,
 };

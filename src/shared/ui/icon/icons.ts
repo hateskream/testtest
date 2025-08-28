@@ -65,4 +65,5 @@ export enum IconIds {
 	Size = 'size-icon',
 	GroupBy = 'group-by',
 	Arrow = 'arrow',
+	Flash = 'flash',
 }

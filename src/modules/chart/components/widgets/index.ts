@@ -19,12 +19,18 @@ import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
 import { ChartWidgetOscillators, ChartWidgetOscillatorsTable } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
-import { WidgetAddressesHoldings, WidgetHeldHoldings, WidgetWhaleHoldings, ChartWidgetHoldingsTable } from './holdings';
+import {
+	WidgetAddressesHoldings,
+	WidgetHeldHoldings,
+	WidgetWhaleHoldings,
+	WidgetHoldingsDiagram,
+	ChartWidgetHoldingsTable,
+} from './holdings';
 import { ChartWidgetTransactionAvg, ChartWidgetTransactionAvgTotal, ChartWidgetTransactionTable } from './transactions';
 import { ChartWidgetAnnualMarginTrends } from './annual-margin-trends';
 import { ChartWidgetDailyNetFlows } from './daily-net-flows';
 import { ChartWidgetPortfolioTable } from './portfolio';
-
+import { ChartWidgetTrailingReturns } from './trailing-returns';
 
 export {
 	ChartWidgetPricePerformance,
@@ -60,4 +66,6 @@ export {
 	ChartWidgetDividendsTable,
 	ChartWidgetHoldingsTable,
 	ChartWidgetPortfolioTable,
+	ChartWidgetTrailingReturns,
+	WidgetHoldingsDiagram,
 };
