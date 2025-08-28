@@ -1,2 +1,2 @@
-import ChartSectionYearlyRevenue from './chart-section-dividends.vue';
-export { ChartSectionYearlyRevenue };
+import ChartSectionDividends from './chart-section-dividends.vue';
+export { ChartSectionDividends };

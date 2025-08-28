@@ -11,6 +11,7 @@ interface IForexTickerIconProps {
 	ticker: string;
 	domain: string;
 	size?: number;
+	padding?:number;
 }
 
 const props = defineProps<IForexTickerIconProps>();
@@ -25,13 +26,13 @@ const wrapperSize = computed(() => {
 	// This is used to set the size of the wrapper div
 	// to ensure the icon is centered and has padding
 	return {
-		width: props.size ? `${props.size}px` : '40px',
-		height: props.size ? `${props.size}px` : '40px',
+		width: props.size ? `${props.size + (props.padding? props.padding :8)}px` : '40px',
+		height: props.size ? `${props.size + (props.padding? props.padding: 8)}px` : '40px',
 	};
 });
 
 const iconsSize = computed(() => {
-	return props.size ? `${props.size - 12}px` : '28px';
+	return props.size ? `${props.size - 5}px` : '28px';
 });
 
 </script>

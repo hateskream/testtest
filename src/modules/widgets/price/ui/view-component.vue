@@ -1,61 +1,52 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
-import draggableComponent from 'vuedraggable';
-import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
 
-import type { ICurrency } from '../model';
-import { usePriceStore } from '../stores';
+import {
+	MarketBadge,
+} from '@/modules/widgets/base';
+import type { ISettings, ITicker } from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { compareStrings } from '@/shared/lib';
+import type { MarketType } from '@/modules/market';
 
 import CellComponent from './cell-component.vue';
-import PriceHeader from './header/price-header.vue';
 import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
-	currencies: ICurrency[];
+	tickers: ITicker[];
+	settings: ISettings;
 	meta: IMeta;
 }
 
+const activeMarket = defineModel<MarketType>({ required: true });
+
 const props = defineProps<IViewComponentProps>();
-const priceStore = usePriceStore();
 
-const layout = ref(props.currencies);
-
-watch(() => priceStore.activeMarket.value, () => {
-	layout.value = props.currencies.filter((item) => compareStrings(item.market, priceStore.activeMarket.value));
-}, {
-	immediate: true,
-});
-
-const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker, isShowDescription } =
-	storeToRefs(usePriceStore());
+const emit = defineEmits<{
+	(e: 'togglePin', tickerId: string): void;
+}>();
 
 const gridTemplateContent = computed(() => {
 	const defaultMinWidth = props.meta.size.w > 1 ? 190 : 100;
 
 	let minWidth = defaultMinWidth + ((
-		(+(isShowChart.value && props.meta.size.w > 1)) +
-		+isShowPercentageChange.value +
-		(+(isShowLogo.value && props.meta.size.w > 1)) +
-		+isShowTicker.value +
-		+isShowDescription.value
+		(+(props.settings.isShowChart && props.meta.size.w > 1)) +
+		+props.settings.isShowPercentageChange +
+		(+(props.settings.isShowLogo && props.meta.size.w > 1)) +
+		+props.settings.isShowTicker +
+		+props.settings.isShowDescription
 	) * 30);
 
 
 	return `repeat(auto-fit, minmax(${minWidth}px, 1fr)) `;
 });
 
-const isShowPriceChart = ref(false);
-
-watchEffect(() => {
-	isShowPriceChart.value = !!priceStore.activeCurrency;
-});
+const isShowPriceChart = ref(false); // разнесут на 2 виджета
 </script>
 
 <template>
 	<div :class="classes.root">
-		<price-header :currencies="currencies" :meta="meta" />
+		<market-badge v-model="activeMarket" :class="classes.priceHeader" />
+
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<transition
@@ -64,29 +55,24 @@ watchEffect(() => {
 					:enter-from-class="classes.sectionEnterFrom"
 					:leave-to-class="classes.sectionLeaveTo"
 				>
-					<draggable-component
+					<div
 						v-if="!isShowPriceChart || (meta.size.w < 3 || meta.size.h < 8)"
-						v-model="layout"
-						item-key="ticker"
-						:filter="`.price-no-drag`"
 						:class="classes.contentWrapped"
-						:component-data="{ tag: 'div', name: 'flip-list', type: 'transition-group' }"
-						:animation="200"
-						:disabled="false"
 					>
-						<template #item="{ element }">
-							<cell-component
-								:currency="element"
-								:meta="meta"
-							/>
-						</template>
-					</draggable-component>
+						<cell-component
+							v-for="ticker in props.tickers"
+							:key="ticker.tickerId"
+							:settings="props.settings"
+							:ticker="ticker"
+							:meta="meta"
+							@toggle-pin="emit('togglePin', $event)"
+						/>
+					</div>
 					<chart-price
 						v-else
 						:meta="meta"
 					/>
 				</transition>
-
 			</div>
 		</div>
 	</div>
@@ -98,6 +84,10 @@ watchEffect(() => {
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
+}
+
+.priceHeader {
+	margin-inline: 12px;
 }
 
 .scrollable {

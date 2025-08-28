@@ -1,0 +1,173 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+import type { ISize } from '@/modules/dashboard-group/grid/model';
+import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+interface IWidgetLayoutProps {
+	sizeByCells: ISize;
+}
+const props = defineProps<IWidgetLayoutProps>();
+
+const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
+
+const gridConfig = computed(() => {
+	const { w: width, h: height } = props.sizeByCells;
+	let columns = 0;
+	let rows = height;
+
+	if (width >= 7 && height >= 10) {
+		columns = 7;
+	} else if (width >=4) {
+		columns = 4;
+	} else {
+		columns = 2;
+	}
+
+	return {
+		columns,
+		rows,
+	};
+});
+
+const showPeriod = computed(() => {
+	const { columns, rows } = gridConfig.value;
+	return columns > 3 || rows > 3;
+});
+
+const adaptiveGridAreas = computed(() => {
+	const { columns, rows } = gridConfig.value;
+	const periodVisible = showPeriod.value;
+
+	if (columns === 7 && rows >= 10) {
+		return {
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / 3',
+			historicalValues: '2 / 3 / 5 / 5',
+			chart: '5 / 1 / -1 / 5',
+			top100: '1 / 5 / -1 / -1',
+		};
+	}
+
+	if (columns === 4) {
+		return {
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / 3',
+			historicalValues: '2 / 3 / 5 / -1',
+			chart: '5 / 1 / 9 / -1',
+			top100: '9 / 1 / -1 / -1',
+		};
+	}
+
+	if (periodVisible) {
+		return {
+			period: '1 / 1 / 2 / -1',
+			performanceRank: '2 / 1 / 5 / -1',
+			historicalValues: '5 / 1 / 8 / -1',
+			chart: '8 / 1 / -1 / -1',
+			top100: '14 / 1 / -1 / -1',
+		};
+	} else {
+		return {
+			performanceRank: '1 / 1 / 4 / -1',
+			historicalValues: '4 / 1 / 7 / -1',
+			chart: '7 / 1 / -1 / -1',
+			top100: '14 / 1 / -1 / -1',
+		};
+	}
+});
+
+const containerStyles = computed(() => {
+	const { columns, rows } = gridConfig.value;
+	const minimumRows = 12;
+
+	const styles = {
+		'--min-col-width': `${MIN_COL_WIDTH}px`,
+		'--min-row-height': `${MIN_ROW_HEIGHT}px`,
+		'--grid-columns': columns.toString(),
+		'--grid-rows': rows > minimumRows ? rows.toString() : minimumRows.toString(),
+	};
+
+	return styles;
+});
+</script>
+
+<template>
+	<div
+		ref="widgetLayoutRef"
+		:class="classes.widgetLayout"
+		:style="containerStyles"
+	>
+		<div
+			v-if="showPeriod"
+			:class="[classes.period, classes.slot]"
+			:style="{ gridArea: adaptiveGridAreas.period }"
+		>
+			<slot name="period" />
+		</div>
+
+		<div
+			v-if="widgetConfig?.modules.performanceRank"
+			:class="[classes.performanceRank, classes.slot]"
+			:style="{ gridArea: adaptiveGridAreas.performanceRank }"
+		>
+			<slot name="performanceRank" :show-period="!showPeriod" />
+		</div>
+
+		<div
+			v-if="widgetConfig?.modules.historicalValues"
+			:class="[classes.historicalValues, classes.slot]"
+			:style="{ gridArea: adaptiveGridAreas.historicalValues }"
+		>
+			<slot name="historicalValues" :show-period="!showPeriod" />
+		</div>
+
+		<div
+			v-if="widgetConfig?.modules.top100"
+			:class="[classes.top100, classes.slot]"
+			:style="{ gridArea: adaptiveGridAreas.top100 }"
+		>
+			<slot name="top100" />
+		</div>
+
+		<div
+			v-if="widgetConfig?.modules.chart"
+			:class="[classes.chart, classes.slot]"
+			:style="{ gridArea: adaptiveGridAreas.chart }"
+		>
+			<slot name="chart" />
+		</div>
+	</div>
+</template>
+
+<style module="classes">
+.widgetLayout {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	grid-template-columns: repeat(var(--grid-columns, 7), minmax(var(--min-col-width), 1fr));
+	grid-template-rows: 35px repeat(var(--grid-rows, 9), minmax(var(--min-row-height), 1fr));
+	grid-gap: 8px;
+	overflow-y: auto;
+}
+
+.slot {
+	padding: 4px;
+}
+
+
+.widgetLayout:has([style*='--grid-columns: 1']) .slot,
+.widgetLayout:has([style*='--grid-columns: 2']) .slot,
+.widgetLayout:has([style*='--grid-columns: 3']) .slot {
+	padding: 8px;
+}
+
+.widgetLayout:has([style*='--grid-columns: 4']) .slot,
+.widgetLayout:has([style*='--grid-columns: 5']) .slot,
+.widgetLayout:has([style*='--grid-columns: 6']) .slot {
+	padding: 6px;
+}
+</style>

@@ -22,6 +22,7 @@ const randomTension = () => {
 				<fear-greed-dashboard
 					:tension="{tension:tension}"
 					:size="{h:3, w:3}"
+					:view-state="{isShowChart: true, isShowDescription: true, isShowPastValues: true, isShowName: true}"
 					@update-interactive="randomTension"
 				/>
 			</template>

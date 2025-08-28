@@ -2,42 +2,33 @@
 import { ref, computed, watch, nextTick } from 'vue';
 import { useElementSize, useWindowSize } from '@vueuse/core';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+
 import { useChartStore } from '@/modules/chart/store';
 import { Chart } from '@/modules/lightweight-charts';
-import {
-	ChartHeaderComponent,
-	ChartWidgetPricePerformance,
-	ChartWidgetsExplorer,
-	chartWidgetTestSections,
-	ChartMainColumnComponent,
-} from './components';
+import { ChartHeaderComponent } from './components/header';
 import { ChartColumnsLayout, ChartLayout } from './ui';
-import { chartWidgetRealSections } from '@/modules/chart/components/widgets/explorer/models';
 import {
-	ChartSectionYearlyRevenue,
-	ChartSectionPriceTarget,
-	ChartSectionValuationsAndEstimates,
-} from './components/sections';
-import {
-	ChartSectionInsiderTrading,
-	ChartSectionInsightAndActivity,
-	ChartSectionPeerAnalysis,
-} from '@/modules/chart/components/sections';
-import { RangeChart } from '../lightweight-charts/model';
+	CHART_COMPONENT_MAP,
+	type CHART_SECTION_COMPONENT, TickerType, getChartSectionsByType,
+} from './models';
+import { RangeChart } from '@/shared/ui/chart-range';
+import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
 
-import ChartSectionQuarterlyRevenue
-	from '@/modules/chart/components/sections/quarterly-revenue/chart-section-quarterly-revenue.vue';
-import ChartSectionStockPeersBulk
-	from '@/modules/chart/components/sections/stock-peers-bulk/chart-section-stock-peers-bulk.vue';
-import ChartSectionDividends from './components/sections/dividends/chart-section-dividends.vue';
-import ChartSectionBalanceSheet from './components/sections/balance-sheet/chart-section-balance-sheet.vue';
-import ChartSectionIncomeStatement from './components/sections/income-statement/chart-section-income-statement.vue';
+const { randomizeExchanges, setMode } = useChartStore();
 
-const { randomizeExchanges } = useChartStore();
+
+export interface IChartComponentProps {
+	type: TickerType;
+	id: number;
+}
+
+const props = defineProps<IChartComponentProps>();
+
+const chartWidgetSections = computed(() => {
+	return getChartSectionsByType(props.type);
+});
 
 const viewMode = ref('mixed');
-
 const activeSection = ref<string | null>(null);
 const selectedItem = ref<string | null>(null);
 
@@ -58,6 +49,12 @@ const chartHeight = computed(() => {
 	const height = Math.floor(windowHeight.value * 0.5);
 	return `${height}px`;
 });
+
+
+const getComponent = (componentType?: CHART_SECTION_COMPONENT) => {
+	return componentType ? CHART_COMPONENT_MAP[componentType] : null;
+};
+
 
 const setChart = () => {
 	chartLayoutEl.value?.setMixedViewMode();
@@ -96,7 +93,6 @@ const registerItemRef = (itemId: string, element: HTMLElement | null) => {
 	}
 };
 
-
 watch(selectedItem, async (newItemId) => {
 	if (newItemId) {
 		await nextTick();
@@ -109,37 +105,36 @@ watch(selectedItem, async (newItemId) => {
 		}
 	}
 });
-// TODO recheck if highlights will be needed or back side  relations , dont delete
-// watch(activeSection, async (newItemId) => {
-// 	if (newItemId && !selectedItem.value) {
-// 		await nextTick();
-// 		const itemElement = itemRefs.value.get(newItemId);
-// 		if (itemElement) {
-// 			itemElement.scrollIntoView({
-// 				behavior: 'smooth',
-// 				block: 'start',
-// 			});
-// 		}
-// 	}
-// });
 
-
-const explorerDate = computed(() => {
-	return [...chartWidgetRealSections, ...chartWidgetTestSections];
+const explorerData = computed(() => {
+	return [...chartWidgetSections.value.center, ...chartWidgetSections.value.right];
 });
+
+const leftSections = computed(() => chartWidgetSections.value.left);
+const centerSections = computed(() => chartWidgetSections.value.center);
+const rightSections = computed(() => chartWidgetSections.value.right);
+
+watch(() => props.type, (newType) => {
+	if (newType === TickerType.STOCK) {
+		setMode(TickerType.STOCK);
+	} else {
+		setMode(TickerType.CRYPTO);
+	}
+}, { immediate: true });
 
 </script>
 
 <template>
 	<chart-layout
 		ref="chartLayoutEl"
-		@change-view="viewMode=$event"
+		@change-view="viewMode = $event"
 		@animation-start="startDisableScroll"
 		@animation-end="endDisableScroll"
 	>
 		<template #header>
-			<chart-header-component />
+			<chart-header-component :type="props.type" />
 		</template>
+
 		<template #topContent>
 			<div
 				ref="chartContainerEl"
@@ -154,91 +149,86 @@ const explorerDate = computed(() => {
 				/>
 			</div>
 		</template>
+
 		<template #botContent>
 			<chart-columns-layout :disable-scroll="disableScroll">
-
+				<!-- Left Column -->
 				<template #leftCol>
-					<div :class="classes.columnTitle">
-						<ui-icon
-							:id="IconIds.Deals"
-							:class="classes.titleIcon"
-							width="20px"
-							height="20px"
+					<template
+						v-for="section in leftSections"
+						:key="section.id"
+					>
+						<template v-if="section.component">
+							<component
+								:is="getComponent(section.component)"
+								:section="section"
+								:register-item-ref="registerItemRef"
+								:active-section="activeSection"
+								:selected-item="selectedItem"
+							/>
+						</template>
+						<chart-widget-explorer
+							v-else-if="section.id === 'explorer'"
+							:sections="explorerData"
+							@item-selected="handleSelected"
 						/>
-						<span>Overview</span>
-					</div>
-					<chart-widget-price-performance />
-					<chart-widgets-explorer
-						:sections="explorerDate"
-						@item-selected="handleSelected"
-					/>
+					</template>
 				</template>
+
+				<!-- Main/Center Column -->
 				<template #mainCol>
-					<chart-section-valuations-and-estimates
-						:register-item-ref="registerItemRef"
-						:section="chartWidgetRealSections[0]"
-					/>
-					<chart-section-price-target
-						:section="chartWidgetRealSections[1]"
-						:register-item-ref="registerItemRef"
-						:active-section="activeSection"
-						:selected-item="selectedItem"
-					/>
-					<chart-section-yearly-revenue
-						:section="chartWidgetRealSections[2]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-stock-peers-bulk
-						:section="chartWidgetRealSections[3]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-quarterly-revenue
-						:section="chartWidgetRealSections[4]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-peer-analysis
-						:section="chartWidgetRealSections[5]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-insider-trading
-						:section="chartWidgetRealSections[6]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-dividends
-						:section="chartWidgetRealSections[7]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-balance-sheet
-						:section="chartWidgetRealSections[8]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-section-income-statement
-						:section="chartWidgetRealSections[9]"
-						:register-item-ref="registerItemRef"
-					/>
-					<chart-main-column-component
-						:sections="chartWidgetTestSections"
-						:active-section="activeSection"
-						:selected-item="selectedItem"
-						:register-item-ref="registerItemRef"
-					/>
-
-
+					<template
+						v-for="section in centerSections"
+						:key="section.id"
+					>
+						<component
+							:is="getComponent(section.component)"
+							v-if="section.component"
+							:section="section"
+							:register-item-ref="registerItemRef"
+							:active-section="activeSection"
+							:selected-item="selectedItem"
+						/>
+					</template>
 				</template>
+
+				<!-- Right Column -->
 				<template #rightCol>
-					<chart-section-insight-and-activity />
+					<template
+						v-for="section in rightSections"
+						:key="section.id"
+					>
+						<component
+							:is="getComponent(section.component)"
+							v-if="section.component"
+							:section="section"
+							:register-item-ref="registerItemRef"
+							:active-section="activeSection"
+							:selected-item="selectedItem"
+						/>
+					</template>
 				</template>
 			</chart-columns-layout>
 		</template>
 	</chart-layout>
+
 	<div :class="classes.navigation">
-		<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='mixed'}]" @click="setChart">
+		<button
+			:class="[classes.navigationBtn, { [classes.active]: viewMode === 'mixed' }]"
+			@click="setChart"
+		>
 			Mixed
 		</button>
-		<button :class="[classes.navigationBtn,{[classes.active]:viewMode==='reports'}]" @click="setReports">
+		<button
+			:class="[classes.navigationBtn, { [classes.active]: viewMode === 'reports' }]"
+			@click="setReports"
+		>
 			Reports
 		</button>
-		<button :class="classes.navigationBtn" @click="handleRandomize">
+		<button
+			:class="classes.navigationBtn"
+			@click="handleRandomize"
+		>
 			Randomize
 		</button>
 	</div>
@@ -252,7 +242,6 @@ const explorerDate = computed(() => {
 	width: 100%;
 	min-height: 30svh;
 }
-
 
 .navigation {
 	position: fixed;

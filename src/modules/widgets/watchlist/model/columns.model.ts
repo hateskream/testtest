@@ -1,9 +1,10 @@
+import type { ColumnType } from '../const';
 import type { ITableColumnDirection } from './core.model';
 
 // Base business model for watchlist columns
 export interface IWatchlistColumn {
 	id: string;
-	columnType: string;
+	columnType: ColumnType;
 	isShow: boolean;
 	order: number;
 	sort?: string;

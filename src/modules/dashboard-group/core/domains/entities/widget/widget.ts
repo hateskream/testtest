@@ -11,10 +11,20 @@ export class Widget {
 		private readonly _id: string,
 		private readonly _preset: PresetWidget,
 		private _position: IPosition,
+		private readonly _instanceId?: string,
+		private readonly _config?: Record<string, unknown>,
 	) {}
 
 	get id(): string {
 		return this._id;
+	}
+
+	get instanceId(): string | undefined {
+		return this._instanceId;
+	}
+
+	get config(): Record<string, unknown> | undefined {
+		return this._config;
 	}
 
 	get widgetType(): WidgetType {
@@ -55,10 +65,29 @@ export class Widget {
 		);
 	}
 
+	static createWithInstanceId(
+		instanceId: string,
+		type: string,
+		position: IPosition,
+		config?: Record<string, unknown>,
+	): Widget {
+		const preset = PresetWidget.create(type);
+
+		return new Widget(
+			uuidv4(),
+			preset,
+			position,
+			instanceId,
+			config,
+		);
+	}
+
 	static rehydrate(
 		id: string,
 		type: string,
 		position: IPosition,
+		instanceId?: string,
+		config?: Record<string, unknown>,
 	): Widget {
 		const preset = PresetWidget.create(type);
 
@@ -66,6 +95,8 @@ export class Widget {
 			id,
 			preset,
 			position,
+			instanceId,
+			config,
 		);
 	}
 }

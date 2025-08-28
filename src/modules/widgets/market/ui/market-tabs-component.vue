@@ -1,84 +1,33 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule } from 'vue';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useMarketStore } from '../stores';
-import type { ITableColumnDirection } from '../model';
+import type { FiltersState, FiltersValues } from '../model';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadge } from '../../base';
+import { MarketBadge } from '../../base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+import type { MarketType } from '@/modules/market';
+import type { ITableColumn } from '@/modules/cell';
 
 import MarketFiltersComponent from './market-filters-component.vue';
-import MarketFilterCategoriesComponent from './market-filter-categories-component.vue';
 
-const marketStore = useMarketStore();
-
-interface ITab {
-	name: string;
-	sortTab: string;
-	columnName?: string;
-	direction: ITableColumnDirection;
-	iconColorClass?: string;
-
-	icon?: {
-		name: IconIds;
-		iconColorClass: string;
-		width: string;
-		height: string;
-	};
+interface IMarketTabsComponentProps {
+	filtersValues: FiltersValues;
 }
 
-const classes = useCssModule('classes');
+const props = defineProps<IMarketTabsComponentProps>();
 
-const tabs = ref<ITab[]>([
-	{
-		name: 'All',
-		sortTab: 'all',
-		direction: 0,
-	},
-	{
-		name: 'Gainers',
-		icon: {
-			name: IconIds.Gainers,
-			height: '14',
-			width: '14',
-			iconColorClass: classes.iconGainersColor,
-		},
-		iconColorClass: classes.iconGainersColor,
-		sortTab: 'gainers',
-		columnName: 'chg24h',
-		direction: -1,
-	},
-	{
-		name: 'Losers',
-		icon: {
-			name: IconIds.Loosers,
-			height: '46',
-			width: '14',
-			iconColorClass: classes.iconLoosersColor,
-		},
-		sortTab: 'losers',
-		columnName: 'chg24h',
-		direction: 1,
-	},
-	{
-		name: 'New',
-		sortTab: 'new',
-		columnName: 'listingDate',
-		direction: -1,
-	},
-	{
-		name: 'Upcoming',
-		sortTab: 'upcoming',
-		direction: 0,
-	},
-]);
+const market = defineModel<MarketType>('market', { required: true });
+const filters = defineModel<FiltersState>('filters', { required: true });
+const columns = defineModel<ITableColumn[]>('columns', { required: true });
 
-const activeTabs = computed(() =>
-	tabs.value.filter(
-		tab => !tab.columnName || marketStore.showTableColumns.includes(tab.columnName),
-	),
-);
+function updateFilter(filterKey: string, filterValue: string) {
+	filters.value = {
+		...filters.value,
+		[filterKey]: {
+			...filters.value[filterKey],
+			selected: filterValue,
+		},
+	};
+}
 </script>
 <template>
 	<div :class="classes.container">
@@ -94,7 +43,10 @@ const activeTabs = computed(() =>
 				</template>
 
 				<template #content>
-					<market-filters-component />
+					<market-filters-component
+						v-model:market="market"
+						v-model:columns="columns"
+					/>
 				</template>
 			</ui-position>
 		</div>
@@ -104,24 +56,10 @@ const activeTabs = computed(() =>
 			<ui-delimiter />
 		</div>
 
-		<div>
-			<modal-badge v-if="marketStore.activeFilterCategory">
-				<template #title>
-					{{ marketStore.activeFilterCategory.name }}
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-						:class="classes.icon"
-					/>
-				</template>
-
-				<template #content>
-					<market-filter-categories-component />
-				</template>
-			</modal-badge>
-		</div>
+		<market-badge
+			v-model="market"
+			title="Categories"
+		/>
 
 		<div :class="classes.lineDelimiterGroup">
 			<ui-delimiter />
@@ -129,24 +67,29 @@ const activeTabs = computed(() =>
 
 		<div :class="classes.tabs">
 			<div
-				v-for="tab in activeTabs"
-				:key="tab.name"
-				:is-active="marketStore.activeTabSort.sortTab === tab.sortTab"
-				:class="[
-					classes.tab,
-					{ [classes.tabActive]: marketStore.activeTabSort.sortTab === tab.sortTab },
-				]"
-				@click="marketStore.setActiveTabSort(tab)"
+				v-for="(filterState, filterKey) in filters"
+				:key="filterKey"
+				:class="classes.tabs"
 			>
-				<ui-icon
-					v-if="tab.icon"
-					:id="tab.icon.name"
-					:width="tab.icon.width"
-					:height="tab.icon.height"
-					:class="[classes.iconWrapper, tab.icon.iconColorClass]"
-				/>
+				<div
+					v-for="filterValue in props.filtersValues[filterKey]"
+					:key="filterValue.value"
+					:is-active="filterValue.value === filterState.selected"
+					:class="[
+						classes.tab,
+						{ [classes.tabActive]: filterValue.value === filterState.selected },
+					]"
+					@click="updateFilter(filterKey, filterValue.value)"
+				>
+					<ui-icon
+						v-if="filterValue.icon"
+						:id="filterValue.icon.id"
+						:class="[classes.iconWrapper]"
+						:style="{ color: filterValue.icon.color }"
+					/>
 
-				{{ tab.name }}
+					{{ filterValue.name }}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -204,6 +147,7 @@ const activeTabs = computed(() =>
 .tabActive {
 	background: var(--bg-color-base-300-activated);
 	border-radius: 28px;
+	pointer-events: none;
 }
 
 .iconWrapper {

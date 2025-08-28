@@ -1,146 +1,71 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { GenericDataTable } from '@/modules/table';
-import type {
-	IGenericTableColumn,
-	IGenericTableRow,
-	ISortConfig,
-} from '@/modules/table';
-import { PERFORMANCE_COLORS } from '@/modules/widgets/performance/const';
-import type { IPerformanceItem } from '@/modules/widgets/performance/model';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell';
+import { DisplayVariant, type PerformanceTableRow } from '../../model';
 
-import PerformanceBarCell from './performance-bar-cell.vue';
+import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
+
 
 interface IPerformanceTableProps {
-	performanceData: IPerformanceItem[];
-	isCompact: boolean;
-	size: { width: number; height: number };
+	rows: PerformanceTableRow[];
+	columns: ITableColumn[];
+	displayVariant: DisplayVariant;
 }
 
 const props = defineProps<IPerformanceTableProps>();
 
-const performanceStore = usePerformanceStore();
-
-// Helper function to get time period label
-const getTimePeriodLabel = computed(() => {
-	const { timeRange } = performanceStore.currentFilter;
-	switch (timeRange) {
-		case 'today': return '24h';
-		case 'yesterday': return 'Yesterday';
-		case 'week': return '7d';
-		case 'custom': return 'Custom';
-		default: return '24h';
-	}
-});
-
-// Calculate maximum absolute value for bar scaling
-const maxAbsValue = computed(() => {
-	if (props.performanceData.length === 0) {
-		return 100;
-	}
-	return Math.max(...props.performanceData.map(item => Math.abs(item.change)));
-});
-
-// Configuration for table columns - только 2 колонки
-const columns = computed<IGenericTableColumn[]>(() => [
-	{
-		key: 'symbol',
-		label: 'Symbol',
-		shortLabel: 'Symbol',
-		position: 0,
-		sortable: true,
-		draggable: false,
-		visible: true,
-		type: 'string' as const,
-		group: {
-			name: 'general',
-			displayName: 'General',
-		},
-	},
-	{
-		key: 'change',
-		label: `Chg%, ${getTimePeriodLabel.value}`,
-		shortLabel: 'Chg%',
-		position: 1,
-		sortable: true,
-		draggable: false,
-		visible: true,
-		type: 'percent' as const,
-		group: {
-			name: 'performance',
-			displayName: 'Performance',
-		},
-	},
-]);
-
-// Convert performance data to table rows
-const tableRows = computed<IGenericTableRow[]>(() =>
-	props.performanceData.map(item => ({
-		id: item.id,
-		data: {
-			symbol: item.name,
-			change: item.change,
-		},
-		metadata: {
-			original: item,
-		},
-	})),
+const genericColumns = computed(() =>
+	mapColumn(props.columns),
 );
 
-// Sort configuration - по умолчанию сортируем по изменению по убыванию
-const sortConfig = computed<ISortConfig>(() => ({
-	columnKey: 'change',
-	direction: 'desc',
-}));
+const genericRows = computed(() =>
+	props.rows.map(ticker => {
+		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
 
-// Helper functions for formatting
-function getChangeColor(change: number): string {
-	return change >= 0 ? PERFORMANCE_COLORS.POSITIVE : PERFORMANCE_COLORS.NEGATIVE;
-}
+		if (props.displayVariant === DisplayVariant.List) {
+			percent.maxAbsValue = undefined;
+		}
 
-function formatChange(change: number): string {
-	const sign = change >= 0 ? '+' : '';
-	return `${sign}${change.toFixed(2)}%`;
-}
+		return mapRow({
+			...ticker,
+			[ColumnType.ChangePrice24hPercent]: percent,
+		});
+	}),
+);
 </script>
 
 <template>
-	<generic-data-table
-		:columns="columns"
-		:rows="tableRows"
-		:sort-config="sortConfig"
-		:enable-drag-drop="false"
-		:enable-column-reordering="false"
-		:enable-sorting="true"
-		:enable-column-settings="false"
-		:sticky-header="false"
-		:sticky-first-column="false"
-		:enable-row-actions="false"
-		:show-header="true"
-	>
-		<!-- TODO: Custom cell content for symbol -->
-		<template #cell-symbol="{ value }">
-			<span>{{ value }}</span>
-		</template>
-
-		<template #cell-change="{ value }">
-			<performance-bar-cell
-				v-if="performanceStore.currentDisplayMode === 'bar'"
-				:value="value"
-				:max-abs-value="maxAbsValue"
+	<div :class="classes.root">
+		<div :class="classes.scrollable">
+			<widget-typed-table
+				:columns="genericColumns"
+				:rows="genericRows"
+				:enable-drag-drop="false"
+				:enable-column-reordering="true"
+				:enable-sorting="false"
+				:enable-column-settings="false"
+				:sticky-header="true"
+				:sticky-first-column="true"
+				:enable-row-actions="false"
+				:show-header="true"
 			/>
-
-			<span v-else :style="{ color: getChangeColor(value) }">
-				{{ formatChange(value) }}
-			</span>
-		</template>
-	</generic-data-table>
+		</div>
+	</div>
 </template>
 
 <style module="classes">
-.compactMode {
-	/* TODO: add styles */
+.root {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0 16px 18px;
+	overflow: hidden;
+}
+
+.scrollable {
+	position: relative;
+	height: 100%;
+	overflow: auto;
 }
 </style>

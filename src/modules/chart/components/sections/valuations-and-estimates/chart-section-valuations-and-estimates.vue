@@ -2,20 +2,13 @@
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import type { ISectionItem } from '@/modules/chart/components';
+import { type ISectionProps } from '@/modules/chart/models';
+import { ChartWidgetValuation, ChartWidgetsCapitalStructure } from '@/modules/chart/components/widgets';
+import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
 
-import ChartWidgetsValuation from '@/modules/chart/components/widgets/valuation/chart-widgets-valuation.vue';
-import ChartWidgetsCapitalStructure
-	from '@/modules/chart/components/widgets/capital-structure/chart-widgets-capital-structure.vue';
-import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
 
-interface IChartSectionValuationsProps {
-	section: ISectionItem;
-	selectedItem?: string | null;
-	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
-}
+const props = defineProps<ISectionProps>();
 
-const props = defineProps<IChartSectionValuationsProps>();
 
 const valuationData = {
 	pe: { ltm: '161.4', ntm: '132.7' },
@@ -59,7 +52,7 @@ onUnmounted(() => {
 		<template #body>
 			<div :class="classes.container">
 				<div :class="classes.section">
-					<chart-widgets-valuation :values="valuationData" />
+					<chart-widget-valuation :values="valuationData" />
 					<chart-widgets-capital-structure :values="capitalStructureData" />
 				</div>
 			</div>

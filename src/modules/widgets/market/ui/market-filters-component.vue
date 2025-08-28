@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadgeList, ModalItem, ModalItemInteraction } from '../../base';
+import { MarketBadgeList, ModalBadgeList, ModalItem, ModalItemInteraction } from '../../base';
+import type { MarketType } from '@/modules/market';
+import type { ITableColumn } from '@/modules/cell';
 
-import MarketFilterCategories from './market-filter-categories-component.vue';
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
+
+const market = defineModel<MarketType>('market', { required: true });
+const columns = defineModel<ITableColumn[]>('columns', { required: true });
 </script>
 
 <template>
@@ -19,7 +23,7 @@ import TableColumnsSettingsComponent from './table-columns-settings-component.vu
 			</template>
 
 			<template #content>
-				<market-filter-categories />
+				<market-badge-list v-model="market" title="Categories" />
 			</template>
 		</ui-position>
 
@@ -32,7 +36,7 @@ import TableColumnsSettingsComponent from './table-columns-settings-component.vu
 			</template>
 
 			<template #content>
-				<table-columns-settings-component />
+				<table-columns-settings-component v-model="columns" />
 			</template>
 		</ui-position>
 

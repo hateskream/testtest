@@ -1,63 +1,66 @@
 import { ref, type Ref } from 'vue';
 import { useEventListener } from '@vueuse/core';
 
-type ScrollCallback = (offset: number) => void;
+type ScrollCallback = (delta: number) => void;
 
 function getScrollableAncestor(el: HTMLElement | null, container: HTMLElement): HTMLElement | null {
-	let curEL = el;
-	while (curEL && curEL !== container) {
-		const style = getComputedStyle(curEL);
-		const { overflowY } = style;
-		if ((overflowY === 'auto' || overflowY === 'scroll') && curEL.scrollHeight > curEL.clientHeight) {
-			return curEL;
+	let current = el;
+	while (current && current !== container) {
+		const { overflowY } = getComputedStyle(current);
+		if ((overflowY === 'auto' || overflowY === 'scroll') && current.scrollHeight > current.clientHeight) {
+			return current;
 		}
-		curEL = curEL.parentElement;
+		current = current.parentElement;
 	}
 	return null;
 }
+
 export function useCustomScroll(container: Ref<HTMLElement | null>, onScroll: ScrollCallback) {
 	const lastTouchY = ref<number | null>(null);
 
-	const handleScroll = (delta: number) => {
-		onScroll(delta);
-	};
-	const onWheel = (e: WheelEvent) => {
-		const target = e.target as HTMLElement;
-		const scrollableAncestor = getScrollableAncestor(target, container.value!);
+	const handleWheel = (e: WheelEvent) => {
+		if (!container.value) {
+			return;
+		}
 
-		if (scrollableAncestor) {
-			const atTop = scrollableAncestor.scrollTop === 0 && e.deltaY < 0;
-			const atBottom =
-				scrollableAncestor.scrollTop + scrollableAncestor.clientHeight >= scrollableAncestor.scrollHeight &&
-				e.deltaY > 0;
+		const scrollable = getScrollableAncestor(e.target as HTMLElement, container.value);
+
+		if (scrollable) {
+			const atTop = scrollable.scrollTop === 0 && e.deltaY < 0;
+			const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight && e.deltaY > 0;
 			if (!atTop && !atBottom) {
 				return;
 			}
 		}
 
 		e.preventDefault();
-		handleScroll(e.deltaY);
+		onScroll(e.deltaY);
 	};
 
-	const onTouchStart = (e: TouchEvent) => {
+	const handleTouchStart = (e: TouchEvent) => {
+		if (!container.value) {
+			return;
+		}
 		lastTouchY.value = e.touches[0].clientY;
 	};
 
-	const onTouchMove = (e: TouchEvent) => {
+	const handleTouchMove = (e: TouchEvent) => {
+		if (!container.value || lastTouchY.value === null) {
+			return;
+		}
+
 		e.preventDefault();
 		const currentY = e.touches[0].clientY;
-		if (lastTouchY.value !== null) {
-			handleScroll(lastTouchY.value - currentY);
-		}
+		onScroll(lastTouchY.value - currentY);
 		lastTouchY.value = currentY;
 	};
 
-	const onTouchEnd = () => {
+	const handleTouchEnd = () => {
 		lastTouchY.value = null;
 	};
 
-	useEventListener(container, 'wheel', onWheel, { passive: false });
-	useEventListener(container, 'touchstart', onTouchStart, { passive: false });
-	useEventListener(container, 'touchmove', onTouchMove, { passive: false });
-	useEventListener(container, 'touchend', onTouchEnd, { passive: false });
+	useEventListener(container, 'wheel', handleWheel, { passive: false });
+	useEventListener(container, 'touchstart', handleTouchStart, { passive: false });
+	useEventListener(container, 'touchmove', handleTouchMove, { passive: false });
+	useEventListener(container, 'touchend', handleTouchEnd, { passive: false });
 }

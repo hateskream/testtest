@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ModalItemSwitch, ModalBadgeList } from '@/modules/widgets/base/modal';
+import {
+	ModalItemSwitch,
+	ModalBadgeList,
+} from '@/modules/widgets/base/modal';
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 import { ALTCOIN_SEASON_MODULE_LABELS, type AltcoinSeasonModuleKey } from '@/modules/widgets/altcoinSeason/model';
 
 const altcoinSeasonStore = useAltcoinSeasonStore();
 
-const modules = computed(() => altcoinSeasonStore.modules);
-const isSaving = computed(() => altcoinSeasonStore.isSaving);
-// const saveError = computed(() => altcoinSeasonStore.saveError);
+const modules = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.modules);
 
 async function handleModuleToggle(moduleKey: string, value: boolean) {
 	try {
@@ -35,7 +36,6 @@ async function handleModuleToggle(moduleKey: string, value: boolean) {
 			v-for="(value, key) in modules"
 			:key="key"
 			:model-value="value"
-			:disabled="isSaving"
 			@update:model-value="(newValue) => handleModuleToggle(key, newValue)"
 		>
 			{{ ALTCOIN_SEASON_MODULE_LABELS[key as AltcoinSeasonModuleKey] || key }}

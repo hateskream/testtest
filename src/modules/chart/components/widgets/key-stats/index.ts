@@ -1,2 +1,2 @@
-import ChartWidgetsKeyStats from './chart-widgets-key-stats.vue';
-export { ChartWidgetsKeyStats };
+import ChartWidgetKeyStats from './chart-widget-key-stats.vue';
+export { ChartWidgetKeyStats };

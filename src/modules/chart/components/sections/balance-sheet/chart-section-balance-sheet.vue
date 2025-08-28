@@ -2,18 +2,12 @@
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import type { ISectionItem } from '@/modules/chart/components';
+import type { ISectionProps } from '@/modules/chart/models';
+import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
+import { ChartWidgetBalanceSheet } from '@/modules/chart/components/widgets';
 
-import ChartCommonSectionLayout from '@/modules/chart/components/shared/ui/chart-common-section-layout.vue';
-import ChartWidgetBalanceSheet from '../../widgets/balance-sheet/chart-widget-balance-sheet.vue';
 
-interface IChartSectionValuationsProps {
-	section: ISectionItem;
-	selectedItem?: string | null;
-	registerItemRef: (itemId: string, element: HTMLElement | null) => void;
-}
-
-const props = defineProps<IChartSectionValuationsProps>();
+const props = defineProps<ISectionProps>();
 
 
 const itemRef = ref<HTMLElement | null>(null);
@@ -41,8 +35,10 @@ onUnmounted(() => {
 
 
 	<chart-common-section-layout>
-		<template #refAnchor><div ref="itemRef"></div></template>
-		<template #title>{{props.section?.title}}</template>
+		<template #refAnchor>
+			<div ref="itemRef"></div>
+		</template>
+		<template #title>{{ props.section?.title }}</template>
 		<template #body>
 			<chart-widget-balance-sheet />
 		</template>

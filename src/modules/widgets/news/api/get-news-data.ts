@@ -1,51 +1,53 @@
 import { useHttpService } from '@/shared/service/http-service';
 import {
-	NewsScore,
-	NewsSegment,
-	NewsSentiment,
-	NewsSource,
-	type INews as INewsDomain,
-	type INewsStock,
+	Score,
+	Sentiment,
+	Source,
+	type IActiveLocation,
+	type INews,
+	type SortState,
 } from '../model';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { arrayToString, getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
+import type { MarketType } from '@/modules/market';
 
 const IS_USE_MOCK = true;
 
 export interface IGetNewsRequest {
-	segment?: NewsSegment[];
-	source?: NewsSource[];
-	sentiment?: NewsSentiment[];
-	score?: NewsScore[];
-	dateRange?: string | 'all';
-	sortBy?: {
-		name: string;
-		order: string;
-	};
-	locations?: string;
+	offset: number;
+	limit: number;
+	score: Set<Score>;
+	segment: Set<MarketType>;
+	sentiment: Set<Sentiment>;
+	source: Set<Source>;
+	selectedTickers: string[];
+	activeSort: SortState;
+	locations: IActiveLocation[];
 }
 
-type INews = Omit<INewsDomain, 'stocks' | 'srcSourceImage'> & {
-	stocks: Omit<INewsStock, 'srcImage'>[];
-};
+
+export interface IPagination {
+	total: number;
+	offset: number;
+	limit: number;
+}
 
 export interface IGetNewsResponse {
 	data: INews[];
+	pagination: IPagination;
 }
 
-export async function getNews(args: IGetNewsRequest): Promise<INewsDomain[] | null> {
+export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
-	const query = prepareRequest(args);
+	const query = createQuery(req);
 
 	try {
 		const response = IS_USE_MOCK
 			? await getMockData()
-			: await httpService.get<IGetNewsResponse>('/api/news', {
-				query,
-			});
+			: await httpService.get<IGetNewsResponse>(`/api/news?${query}`);
 
 		return prepareResponse(response);
 	} catch (error) {
@@ -54,34 +56,70 @@ export async function getNews(args: IGetNewsRequest): Promise<INewsDomain[] | nu
 	}
 }
 
-function prepareRequest(args: IGetNewsRequest): { [x: string]: string | boolean | number } {
-	const query: { [x: string]: string | boolean | number } = {};
-
-	const cleanArgs = removeUndefinedPropertiesFromObject(args);
-
-	Object.entries(cleanArgs).forEach(([key, item]) => {
-		if (Array.isArray(item)) {
-			query[key] = item.join(',');
-		} else if (typeof item === 'object') {
-			query[key] = JSON.stringify(item);
-		} else {
-			query[key] = item;
-		}
+function createQuery({
+	offset,
+	limit,
+	score,
+	segment,
+	sentiment,
+	source,
+	selectedTickers,
+	activeSort,
+	locations,
+}: IGetNewsRequest): string {
+	const params = new URLSearchParams({
+		offset: offset.toString(),
+		limit: 	limit.toString(),
 	});
 
-	return query;
+	locations.forEach(item => {
+		params.append('region', item.region);
+		item.countries.forEach(country => {
+			params.append('countries', country);
+		});
+	});
+
+	if (score.size) {
+		params.append('score', arrayToString(Array.from(score)));
+	}
+
+	if (segment.size) {
+		params.append('segment', arrayToString(Array.from(segment)));
+	}
+
+	if (sentiment.size) {
+		params.append('sentiment', arrayToString(Array.from(sentiment)));
+	}
+
+	if (source.size) {
+		params.append('source', arrayToString(Array.from(source)));
+	}
+
+	if (selectedTickers.length) {
+		params.append('tickers', arrayToString(selectedTickers));
+	}
+
+	if (activeSort) {
+		params.append('sort', activeSort);
+	}
+
+	return params.toString();
 }
 
-function prepareResponse(response: IGetNewsResponse): INewsDomain[] {
-	return response.data.map(item => ({
-		...item,
-		srcSourceImage: getImagePath(item.source, ImageTypePath.Stock),
-		stocks: item.stocks.map(stock => ({
-			...stock,
-			srcImage: getImagePath(stock.ticker, ImageTypePath.Stock),
+function prepareResponse({ data, pagination }: IGetNewsResponse): IGetNewsResponse {
+	return {
+		pagination,
+		data: data.map(item => ({
+			...item,
+			srcSourceImage: '',
+			stocks: item.stocks.map(stock => ({
+				...stock,
+				srcImage: getImagePath(stock.ticker, ImageTypePath.Stock),
+			})),
 		})),
-	}));
+	};
 }
+
 
 async function getMockData(): Promise<IGetNewsResponse> {
 	const mockData: INews[] = [
@@ -89,104 +127,96 @@ async function getMockData(): Promise<IGetNewsResponse> {
 			author: 'Jesse Choafohen-Phosteghedos',
 			description: 'As we navigate through 2025, the landscape of technology stocks presents',
 			id: '1',
-			location: {
-				name: 'United States',
-				code: 'us',
-			},
 			score: 50,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+
 			stocks: [
 				{
 					name: 'Tesla Inc',
 					ticker: 'TSLA',
+					srcImage: '1',
 				},
 				{
 					name: 'Meta Platforms',
 					ticker: 'META',
+					srcImage: '1',
 				},
 			],
-			segment: NewsSegment.Crypto,
+
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
+			srcSourceImage: '1',
 		},
 
 		{
 			author: 'Jesse Cohen',
 			description: 'As we navigate through 2025, the landscape of technology stocks presents',
 			id: '2',
-			location: {
-				name: 'United States',
-				code: 'us',
-			},
 			score: 76,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+
 			stocks: [
 				{
 					name: 'Tesla Inc',
 					ticker: 'TSLA',
+					srcImage: '1',
 				},
 				{
 					name: 'Meta Platforms',
 					ticker: 'META',
+					srcImage: '1',
 				},
 			],
-			segment: NewsSegment.Crypto,
+
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
+			srcSourceImage: '1',
 		},
 
 		{
 			author: 'Jesse Cohen',
 			description: 'As we navigate through 2025, the landscape of technology stocks presents',
 			id: '2',
-			location: {
-				name: 'United States',
-				code: 'us',
-			},
 			score: 32,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+
 			stocks: [
 				{
 					name: 'Tesla Inc',
 					ticker: 'TSLA',
+					srcImage: '1',
 				},
 				{
 					name: 'Meta Platforms',
 					ticker: 'META',
+					srcImage: '1',
 				},
 			],
-			segment: NewsSegment.Crypto,
+
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
+			srcSourceImage: '1',
 		},
 
 		{
 			author: 'Jesse Cohen',
 			description: 'As we navigate through 2025, the landscape of technology stocks presents',
 			id: '2',
-			location: {
-				name: 'United States',
-				code: 'us',
-			},
 			score: 10,
-			sentiment: NewsSentiment.Neutral,
-			source: NewsSource.InvestingCom,
+
 			stocks: [
 				{
 					name: 'Tesla Inc',
 					ticker: 'TSLA',
+					srcImage: '1',
 				},
 				{
 					name: 'Meta Platforms',
 					ticker: 'META',
+					srcImage: '1',
 				},
 			],
-			segment: NewsSegment.Crypto,
+
 			title: '2 AI Stocks Down More Than 20% YTD to Buy Before They Soar',
 			timestamp: new Date().getTime(),
+			srcSourceImage: '1',
 		},
 	];
 
@@ -196,6 +226,11 @@ async function getMockData(): Promise<IGetNewsResponse> {
 
 	const response: IGetNewsResponse = {
 		data: mockData,
+		pagination: {
+			offset: 0,
+			limit: 10,
+			total: 10,
+		},
 	};
 
 	return response;

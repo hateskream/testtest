@@ -16,10 +16,10 @@ const tabs = ref(tabsStore.tabs);
 const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
 const watchlistTabRefs = useTemplateRef<InstanceType<typeof WatchlistTab>[]>('watchlistTabRefs');
 const tabMenuActions = ref<ITabMenuActions[]>([
-	{ name: 'rename',	title: 'Rename' },
+	{ name: 'rename', title: 'Rename' },
 	{ name: 'share', title: 'Share' },
-	{ name:'duplicate', title: 'Duplicate' },
-	{ name:'addAlert', title: 'Add alert' },
+	{ name: 'duplicate', title: 'Duplicate' },
+	{ name: 'addAlert', title: 'Add alert' },
 	{ name: 'addSymbolsToList', title: 'Add symbols to list' },
 ]);
 
@@ -115,6 +115,8 @@ const onTabClick = (index: number) => {
 <style module="classes">
 .watchlistToolbar {
 	display: flex;
+	align-items: center;
+	height: 40px;
 	overflow: hidden;
 	border-radius: 9999px;
 }

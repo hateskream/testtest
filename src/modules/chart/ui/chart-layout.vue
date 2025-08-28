@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { computed, type Ref, ref } from 'vue';
+import { computed, type Ref, ref, watch, nextTick, onUnmounted } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
-type ViewMode = 'mixed' | 'reports';
 import { useCustomScroll } from '@/shared/composables/scroll.ts';
 
+type ViewMode = 'mixed' | 'reports';
 
 const contentShift = ref(0);
 const topContentEl = ref<HTMLElement>();
 const container = ref<HTMLElement>();
 const viewMode = ref<ViewMode>('mixed');
+const delayedActionTimeout = ref<number | null>(null);
+
+const { height: topContentHeight } = useElementSize(topContentEl);
 
 const emit = defineEmits<{
 	(event: 'change-view', value: ViewMode): void;
@@ -16,58 +20,114 @@ const emit = defineEmits<{
 	(event: 'animation-end'): void;
 }>();
 
-const maxShift = computed(()=>{
-	return topContentEl.value?.offsetHeight;
-});
-useCustomScroll(container as Ref<HTMLElement | null>, (delta)=>{
-	if (!maxShift.value) {
-		return;
-	}
-	const autoScrollThreshold = maxShift.value/5;
-	if (delta > 0&&(contentShift.value+delta)>autoScrollThreshold) {
-		contentShift.value = maxShift.value;
-		viewMode.value = 'reports';
-		emit('change-view', 'reports');
-		emit('animation-start');
-		setTimeout(() => {
-			emit('animation-end');
-		}, 1000);
-		return;
-	}
-	if (delta < 0&&(contentShift.value+delta)<(maxShift.value-autoScrollThreshold)) {
-		contentShift.value = 0;
-		viewMode.value = 'mixed';
-		emit('change-view', 'mixed');
-		return;
-	}
-	contentShift.value = Math.max(0, Math.min(maxShift.value, contentShift.value+delta));
-});
+const maxShift = computed(() => topContentEl.value?.offsetHeight || 0);
 
-const opacityTop = computed(()=>{
-	if (!maxShift.value||!contentShift.value) {
+const opacityTop = computed(() => {
+	if (!topContentHeight.value || !contentShift.value) {
 		return 1;
 	}
-	return 1-contentShift.value/maxShift.value;
+	return Math.max(0, 1 - contentShift.value / topContentHeight.value);
 });
 
+watch(maxShift, (newMax, oldMax) => {
+	if (!oldMax || !newMax || oldMax === newMax) {
+		return;
+	}
+
+	const ratio = contentShift.value / oldMax;
+	contentShift.value = Math.min(newMax, ratio * newMax);
+
+	if (viewMode.value === 'reports' && ratio > 0.8) {
+		contentShift.value = newMax;
+	}
+});
+
+function clearDelayedAction() {
+	if (delayedActionTimeout.value) {
+		clearTimeout(delayedActionTimeout.value);
+		delayedActionTimeout.value = null;
+	}
+}
+
+function setDelayedAction(action: () => void, delay = 1000) {
+	clearDelayedAction();
+	delayedActionTimeout.value = setTimeout(() => {
+		action();
+		delayedActionTimeout.value = null;
+	}, delay);
+}
+
+function finishScrollToBottom() {
+	clearDelayedAction();
+	if (!topContentHeight.value) {
+		return;
+	}
+
+	contentShift.value = topContentHeight.value;
+	viewMode.value = 'reports';
+	emit('change-view', 'reports');
+	emit('animation-start');
+	setTimeout(() => emit('animation-end'), 1000);
+}
+
+function finishScrollToTop() {
+	clearDelayedAction();
+	contentShift.value = 0;
+	viewMode.value = 'mixed';
+	emit('change-view', 'mixed');
+}
+
+onUnmounted(() => {
+	clearDelayedAction();
+});
+
+useCustomScroll(container as Ref<HTMLElement | null>, (delta) => {
+	if (!topContentHeight.value) {
+		return;
+	}
+
+	clearDelayedAction();
+	const threshold = topContentHeight.value / 5;
+
+	if (delta > 0) {
+		if (contentShift.value + delta > threshold) {
+			finishScrollToBottom();
+			return;
+		}
+		setDelayedAction(finishScrollToTop);
+	}
+
+	if (delta < 0) {
+		if (contentShift.value + delta < topContentHeight.value - threshold) {
+			finishScrollToTop();
+			return;
+		}
+		setDelayedAction(finishScrollToBottom);
+	}
+
+	contentShift.value = Math.max(0, Math.min(topContentHeight.value, contentShift.value + delta));
+});
 
 const setMixedViewMode = () => {
+	clearDelayedAction();
 	contentShift.value = 0;
 	viewMode.value = 'mixed';
 	emit('change-view', 'mixed');
 };
+
 const setReportsViewMode = async () => {
+	clearDelayedAction();
 	if (!container.value) {
 		return;
 	}
-	if (topContentEl.value) {
-		contentShift.value = topContentEl.value.offsetHeight;
-	}
+
+	await nextTick();
+	contentShift.value = topContentHeight.value;
 	viewMode.value = 'reports';
 	emit('change-view', 'reports');
 };
-defineExpose({ setMixedViewMode, setReportsViewMode });
 
+defineExpose({ setMixedViewMode, setReportsViewMode });
 </script>
 
 <template>
@@ -75,18 +135,17 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 		<div
 			ref="topContentEl"
 			:class="classes.topContent"
-			:style="{opacity:`${opacityTop}`}"
+			:style="{ opacity: opacityTop }"
 		>
-			<slot name="header"></slot>
+			<slot name="header" />
 			<slot name="topContent">Graph</slot>
 		</div>
 		<div
 			ref="botContentEl"
-			:class="[classes.botContent,{[classes.locked]:viewMode!=='reports'}]"
-			:style="{transform: `translateY(-${contentShift}px)`}"
+			:class="[classes.botContent, { [classes.locked]: viewMode !== 'reports' }]"
+			:style="{ transform: `translateY(-${contentShift}px)` }"
 		>
-			<slot name="botContent">
-			</slot>
+			<slot name="botContent" />
 		</div>
 	</div>
 </template>
@@ -101,16 +160,14 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 	margin-bottom: 30px;
 	padding-bottom: 26px;
 	border-bottom: 2px solid var(--border-color-surface-02);
-	opacity: 1;
 	transition: opacity 0.5s ease-in-out;
 }
 
 .botContent {
-	transition: 0.4s ease-in-out;
+	transition: transform 0.4s ease-in-out;
 }
 
 .locked {
 	pointer-events: none;
 }
-
 </style>

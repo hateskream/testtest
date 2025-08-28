@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
 import { widgetColor, widgetActiveColor } from '@/modules/widgets/altcoinSeason/const';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
-const activeBar = ref(5);
+const altcoinSeasonStore = useAltcoinSeasonStore();
 
-const generateRandomPlace = () => {
-	activeBar.value = Math.floor(Math.random() * 30) + 1;
-};
-
-// Mock
-onMounted(() => {
-	generateRandomPlace();
-});
+const activeBar = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.btcRank);
+const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.maxRank);
 </script>
 
 <template>
-	<div :class="classes.btcPerformanceChart" @click="generateRandomPlace">
+	<div :class="classes.btcPerformanceChart">
 		<div :class="classes.chart">
 			<div
-				v-for="i in 30"
+				v-for="i in maxRank"
 				:key="i"
 				:class="classes.chartBar"
 			>
-				<div v-if="i === activeBar || i === 1 || i === 30" :class="classes.barIndex">{{ i }}</div>
+				<div v-if="i === activeBar || i === 1 || i === maxRank" :class="classes.barIndex">{{ i }}</div>
 				<div
 					v-if="i === activeBar"
 					:class="classes.barIndex"

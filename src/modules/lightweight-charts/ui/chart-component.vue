@@ -17,13 +17,14 @@ import {
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
-import { IndicatorsChart, RangeChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
+import { IndicatorsChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS, RANGE_IN_SECONDS } from '../const';
+import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { prepareLineDataFromCandlestick, prepareSeries } from '../utils/prepare-series';
+import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 
-import ChartRange from '../components/chart-range.vue';
+import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 interface IChartProps {
 	width: number;

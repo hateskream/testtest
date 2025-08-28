@@ -1,49 +1,28 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import {
 	ModalFilter,
 	ModalFilterTabWrapper,
 	ModalItemSwitch,
 } from '@/modules/widgets/base/modal';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import { DateRange, dateToLabel, DisplayVariant, Stock, stockToLabel } from '../../model';
 
-const performanceStore = usePerformanceStore();
+const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
+const stock = defineModel<Stock>('stock', { required: true });
+const date = defineModel<DateRange>('date', { required: true });
+const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 
-// Computed properties from store
-const selectedStock = computed({
-	get: () => performanceStore.currentFilter.type,
-	set: (value: 'industry' | 'sector') => performanceStore.setFilterType(value),
-});
+function updateDisplayVariant(value: DisplayVariant) {
+	displayVariant.value = value;
+}
 
-const selectedDate = computed({
-	get: () => performanceStore.currentFilter.timeRange,
-	set: (value: 'today' | 'yesterday' | 'week') => performanceStore.setTimeRange(value),
-});
+function updateStock(value: Stock) {
+	stock.value = value;
+}
 
-const selectedDisplay = computed({
-	get: () => performanceStore.currentDisplayMode,
-	set: (value: 'bar' | 'list') => performanceStore.setDisplayMode(value),
-});
-
-const compactMode = computed({
-	get: () => performanceStore.isCompactMode,
-	set: () => performanceStore.toggleCompactMode(),
-});
-
-// Methods for updating states
-const selectStock = (value: 'industry' | 'sector') => {
-	performanceStore.setFilterType(value);
-};
-
-const selectDate = (value: 'today' | 'yesterday' | 'week') => {
-	performanceStore.setTimeRange(value);
-};
-
-const selectDisplay = (value: 'bar' | 'list') => {
-	performanceStore.setDisplayMode(value);
-};
+function updateDate(value: DateRange) {
+	date.value = value;
+}
 </script>
 
 <template>
@@ -59,16 +38,16 @@ const selectDisplay = (value: 'bar' | 'list') => {
 					<div :class="classes.rowTitle">Stock</div>
 					<div :class="classes.tabs">
 						<modal-filter-tab-wrapper
-							:is-active="selectedStock === 'industry'"
-							@click="selectStock('industry')"
+							:is-active="stock === Stock.Industry"
+							@click="updateStock(Stock.Industry)"
 						>
-							Industry
+							{{ stockToLabel[Stock.Industry] }}
 						</modal-filter-tab-wrapper>
 						<modal-filter-tab-wrapper
-							:is-active="selectedStock === 'sector'"
-							@click="selectStock('sector')"
+							:is-active="stock === Stock.Sector"
+							@click="updateStock(Stock.Sector)"
 						>
-							Sector
+							{{ stockToLabel[Stock.Sector] }}
 						</modal-filter-tab-wrapper>
 					</div>
 				</div>
@@ -78,23 +57,23 @@ const selectDisplay = (value: 'bar' | 'list') => {
 					<div :class="classes.rowTitle">Date</div>
 					<div :class="classes.tabs">
 						<modal-filter-tab-wrapper
-							:is-active="selectedDate === 'today'"
-							@click="selectDate('today')"
+							:is-active="date === DateRange.Today"
+							@click="updateDate(DateRange.Today)"
 						>
-							Today
+							{{ dateToLabel[ DateRange.Today] }}
 						</modal-filter-tab-wrapper>
 						<modal-filter-tab-wrapper
-							:is-active="selectedDate === 'yesterday'"
-							@click="selectDate('yesterday')"
+							:is-active="date === DateRange.Yesterday"
+							@click="updateDate(DateRange.Yesterday)"
 						>
-							Yesterday
+							{{ dateToLabel[ DateRange.Yesterday] }}
 						</modal-filter-tab-wrapper>
 						<modal-filter-tab-wrapper
-							:is-active="selectedDate === 'week'"
-							@click="selectDate('week')"
+							:is-active="date === DateRange.Week"
+							@click="updateDate(DateRange.Week)"
 						>
 							<div :class="classes.dateOption">
-								A week ago
+								{{ dateToLabel[ DateRange.Week] }}
 								<ui-icon :id="IconIds.Calendar" :class="classes.calendarIcon" />
 							</div>
 						</modal-filter-tab-wrapper>
@@ -106,8 +85,8 @@ const selectDisplay = (value: 'bar' | 'list') => {
 					<div :class="classes.rowTitle">Display</div>
 					<div :class="classes.tabs">
 						<modal-filter-tab-wrapper
-							:is-active="selectedDisplay === 'bar'"
-							@click="selectDisplay('bar')"
+							:is-active="displayVariant === DisplayVariant.Bar"
+							@click="updateDisplayVariant(DisplayVariant.Bar)"
 						>
 							<div :class="classes.displayOption">
 								<ui-icon :id="IconIds.Bars" :class="classes.displayIcon" />
@@ -115,8 +94,8 @@ const selectDisplay = (value: 'bar' | 'list') => {
 							</div>
 						</modal-filter-tab-wrapper>
 						<modal-filter-tab-wrapper
-							:is-active="selectedDisplay === 'list'"
-							@click="selectDisplay('list')"
+							:is-active="displayVariant === DisplayVariant.List"
+							@click="updateDisplayVariant(DisplayVariant.List)"
 						>
 							<div :class="classes.displayOption">
 								<ui-icon :id="IconIds.List" :class="classes.displayIcon" />
@@ -131,7 +110,7 @@ const selectDisplay = (value: 'bar' | 'list') => {
 					<div :class="classes.rowTitle">Settings</div>
 					<div :class="classes.settingsContent">
 						<modal-item-switch
-							v-model="compactMode"
+							v-model="isCompactMode"
 						>
 							Compact mode
 						</modal-item-switch>

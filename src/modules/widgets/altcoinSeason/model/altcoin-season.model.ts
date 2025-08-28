@@ -2,7 +2,6 @@ export interface IAltcoinSeasonConfig {
 	modules: {
 		performanceRank: boolean;
 		historicalValues: boolean;
-		highLow: boolean;
 		top100: boolean;
 		chart: boolean;
 	};
@@ -20,11 +19,7 @@ export interface IPeriodTimestamps {
 	endTimestamp: number;
 }
 
-export interface IAltcoinSeasonRequest {
-	market: string;
-}
-
-export type Period = '7D' | '30D' | '90D' | '1Y' | IPeriodTimestamps;
+export type Period = '7D' | '30D' | '90D' | '1Y';
 
 // Дополнительные типы для работы с модулями
 export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];
@@ -32,16 +27,21 @@ export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];
 export interface IAltcoinSeasonModuleLabels {
 	performanceRank: string;
 	historicalValues: string;
-	highLow: string;
 	top100: string;
 	chart: string;
 }
+
+export interface IHistoricalValue {
+	today: number;
+	lastWeek: number;
+	lastMonth: number;
+}
+
 
 // Константы для модулей
 export const ALTCOIN_SEASON_MODULE_LABELS: IAltcoinSeasonModuleLabels = {
 	performanceRank: 'Performance Rank',
 	historicalValues: 'Historical Values',
-	highLow: 'High/Low',
 	top100: 'Top 100',
 	chart: 'Chart',
 };
