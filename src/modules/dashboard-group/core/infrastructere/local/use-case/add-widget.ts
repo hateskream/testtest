@@ -1,8 +1,8 @@
-import type { IRepository } from '../../../domains/adapters';
+import type { IAddWidgetPort, IRepository } from '../../../domains/adapters';
 import type { IAddWidgetUc } from '../../../domains/uce-cases';
 import { mapWidget } from './mappers';
 
-export function AddWidget(repo: IRepository): IAddWidgetUc {
+export function AddWidget(repo: IRepository, producer: IAddWidgetPort): IAddWidgetUc {
 	return {
 		async execute(_in) {
 			const dashboardGroup = await repo.Get();
@@ -11,6 +11,7 @@ export function AddWidget(repo: IRepository): IAddWidgetUc {
 
 			await repo.Set(dashboardGroup);
 
+			producer.produceAdd(widget.widgetType, widget.id);
 			return {
 				widget: mapWidget(widget),
 			};

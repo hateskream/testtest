@@ -54,10 +54,10 @@ type IPayload = z.infer<typeof payloadSchema>;
 type Events = Record<Event, IPayload>;
 
 export function useWatchlist(widgetId: string) {
-	const producer = new Consumer<Events>(['addToWatchlist', 'removeFromWatchlist']);
+	const consumer = new Consumer<Events>(['addToWatchlist', 'removeFromWatchlist']);
 
-	producer.on('addToWatchlist', addToWatchlist);
-	producer.on('removeFromWatchlist', removeFromWatchlist);
+	consumer.on('addToWatchlist', addToWatchlist);
+	consumer.on('removeFromWatchlist', removeFromWatchlist);
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
@@ -106,8 +106,8 @@ export function useWatchlist(widgetId: string) {
 	});
 
 	onUnmounted(() => {
-		producer.off('addToWatchlist', addToWatchlist);
-		producer.off('removeFromWatchlist', removeFromWatchlist);
+		consumer.off('addToWatchlist', addToWatchlist);
+		consumer.off('removeFromWatchlist', removeFromWatchlist);
 	});
 
 	watch(dataState, newState => {
@@ -252,7 +252,7 @@ export function useWatchlist(widgetId: string) {
 	}
 
 	function addToWatchlist(payload: IPayload) {
-		if (!isPayloadValid(payload)) {
+		if (!isPayloadAccept(payload)) {
 			return;
 		}
 
@@ -262,7 +262,7 @@ export function useWatchlist(widgetId: string) {
 	}
 
 	function removeFromWatchlist(payload: IPayload) {
-		if (!isPayloadValid(payload)) {
+		if (!isPayloadAccept(payload)) {
 			return;
 		}
 
@@ -271,7 +271,7 @@ export function useWatchlist(widgetId: string) {
 		state.value = deleteTickerInTab(state.value, tickerId, tickerType, tabId);
 	}
 
-	function isPayloadValid(input: unknown): boolean {
+	function isPayloadAccept(input: unknown): boolean {
 		try {
 			const payload = payloadSchema.parse(input);
 

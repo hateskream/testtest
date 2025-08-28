@@ -81,8 +81,8 @@ export class DashboardGroup {
 		this.findActiveDashboard().changeWidgetsState(widgetsState);
 	}
 
-	deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
-		this.findActiveDashboard().deleteWidget(widgetId, widgetsState);
+	deleteWidget(widgetId: string, widgetsState: IWidgetState[]): Widget {
+		return this.findActiveDashboard().deleteWidget(widgetId, widgetsState);
 	}
 
 	renameDashboard(id: string, name: string) {

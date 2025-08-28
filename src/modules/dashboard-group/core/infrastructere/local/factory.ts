@@ -1,4 +1,4 @@
-import type { IRepository } from '../../domains/adapters';
+import type { IRepository, IWidgetProducer } from '../../domains/adapters';
 import type { IUseCaseFactory } from '../../domains/uce-cases';
 import { CreateTab } from './use-case/create-tab';
 import { DeleteWidget } from './use-case/delete-widget';
@@ -12,11 +12,16 @@ import { ChangeDashboardState } from './use-case/change-dashboard-state';
 import { LSDashboardGroup, type IOptions } from './repository/ls-dashboard-group';
 import { DeleteTab } from './use-case/delete-tab';
 import { GetAllWidgetIds } from './use-case/get-all-widget-ids';
+import { WidgetProducer } from './producer';
 
 // использовать напрямую нельзя, без export ts дает ошибку
 //Property 'repo' of exported anonymous class type may not be private or protected.ts(4094)
 export class LocalFactoryImpl implements IUseCaseFactory {
-	constructor(private readonly repo : IRepository) {}
+	constructor(
+		private readonly repo : IRepository,
+		private readonly widgetProducer : IWidgetProducer,
+	) {}
+
 	GetAllWidgetIds() {
 		return GetAllWidgetIds(this.repo);
 	}
@@ -46,11 +51,11 @@ export class LocalFactoryImpl implements IUseCaseFactory {
 	}
 
 	AddWidgetUc() {
-		return AddWidget(this.repo);
+		return AddWidget(this.repo, this.widgetProducer);
 	}
 
 	DeleteWidgetUc() {
-		return DeleteWidget(this.repo);
+		return DeleteWidget(this.repo, this.widgetProducer);
 	}
 
 	GetWidgetListUc() {
@@ -68,9 +73,11 @@ export function LocalFactory(lsKey : string, options?: IOptions): LocalFactoryIm
 	if (LocalFactoryImplInstance === null) {
 		const repo = new LSDashboardGroup(lsKey, options);
 
+		const widgetProducer = new WidgetProducer();
+
 		repo.init();
 
-		LocalFactoryImplInstance = new LocalFactoryImpl(repo);
+		LocalFactoryImplInstance = new LocalFactoryImpl(repo, widgetProducer);
 	}
 
 	return LocalFactoryImplInstance;

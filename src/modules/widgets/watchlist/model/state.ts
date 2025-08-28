@@ -58,8 +58,8 @@ export function rehydrateState(state: IHydratedState): IState {
 }
 
 export function getDefaultState(): IState {
-	const tab1 = createMockTab('tab1', 'Tab 1', 0, getMockTableFirst());
-	const tab2 = createMockTab('tab2', 'Tab 2', 1, getMockTableSecond());
+	const tab1 = createMockTab('Tab 1', 0, getMockTableFirst());
+	const tab2 = createMockTab('Tab 2', 1, getMockTableSecond());
 
 	return {
 		activeTabId: tab1.id,

@@ -60,9 +60,9 @@ export function duplicate(tab: ITab): ITab {
 	};
 }
 
-export function createMockTab(id: string, name: string, order: number, table: ITable): ITab {
+export function createMockTab(name: string, order: number, table: ITable): ITab {
 	return {
-		id,
+		id: uuidv4(),
 		name,
 		order,
 		table,

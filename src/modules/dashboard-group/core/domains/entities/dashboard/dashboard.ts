@@ -105,15 +105,17 @@ export class Dashboard {
 		});
 	}
 
-	deleteWidget(id: string, widgetsState: IWidgetState[]) {
-		this.findWidgetById(id);
+	deleteWidget(id: string, widgetsState: IWidgetState[]): Widget {
+		const widget = this.findWidgetById(id);
 
 		this._layout.forEach((widgets, key) => {
-			const updatedWidgets = widgets.filter(widget => widget.id !== id);
+			const updatedWidgets = widgets.filter(w => w.id !== id);
 			this._layout.set(key, updatedWidgets);
 		});
 
 		this.changeWidgetsState(widgetsState);
+
+		return widget;
 	}
 
 	private findWidgetById(id: string): Widget {
