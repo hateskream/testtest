@@ -115,6 +115,7 @@ const centerSections = computed(() => chartWidgetSections.value.center);
 const rightSections = computed(() => chartWidgetSections.value.right);
 
 watch(() => props.type, (newType) => {
+	selectedItem.value = null;
 	if (newType === TickerType.STOCK) {
 		setMode(TickerType.STOCK);
 	} else {
