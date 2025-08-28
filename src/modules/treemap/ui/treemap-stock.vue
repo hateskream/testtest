@@ -24,7 +24,7 @@ interface ITreemapCryptoProps {
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
 	activeSizeBy: ISettings;
-	activeGroupBy: ISettings;
+	activeGroupBy: ISettings | null;
 	activeDisplayValue: ISettings;
 }
 
