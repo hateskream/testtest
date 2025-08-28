@@ -112,7 +112,7 @@ defineProps<IProps>();
 .tabContent {
 	display: flex;
 	flex-direction: column;
-	background:  var(--bg-color-surface-01);
+	background: var(--bg-color-surface-01);
 	border-radius: 0 18px 18px;
 	gap: 8px;
 }
