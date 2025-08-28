@@ -133,7 +133,7 @@ const formatMarketCap = (value: number | string): string => {
 	flex-direction: column;
 	align-items: center;
 	padding: 10px 16px;
-	background: var(--metrics-bg-temp);
+	background: var(--bg-color-surface-01);
 	border-radius: 12px;
 	gap: 1px;
 }

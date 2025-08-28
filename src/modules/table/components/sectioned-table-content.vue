@@ -514,7 +514,7 @@ const canMoveItem = (evt: unknown) => {
 }
 
 .sectionHeader:hover {
-	background: var(--bg-color-surface-02-hover, #333333);
+	background: var(--bg-color-surface-02-effect, #333333);
 }
 
 .sectionHeaderContent {
@@ -535,7 +535,7 @@ const canMoveItem = (evt: unknown) => {
 
 .toggleIcon {
 	font-size: 12px;
-	color: var(--text-color-base-200, #cccccc);
+	color: var(--text-color-base-300, #cccccc);
 }
 
 .toggleIcon.collapsed {
@@ -668,7 +668,7 @@ const canMoveItem = (evt: unknown) => {
 }
 
 .ghostCell {
-	color: var(--text-color-base-200) !important;
+	color: var(--text-color-base-300) !important;
 	background: transparent !important;
 	border: none !important;
 }

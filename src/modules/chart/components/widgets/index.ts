@@ -2,7 +2,6 @@ import { ChartWidgetPricePerformance } from './price-performance';
 import { ChartWidgetExplorer } from './explorer';
 import { ChartWidgetKeyStats } from './key-stats';
 import { ChartWidgetPriceTarget } from './price-target';
-import { ChartWidghetInsights } from './insights';
 import { ChartWidgetKeyIndicators } from './key-indicators';
 import { ChartWidgetFearGreed } from './fear-greed';
 import { ChartWidgetNews } from './news';
@@ -32,7 +31,6 @@ export {
 	ChartWidgetExplorer,
 	ChartWidgetKeyStats,
 	ChartWidgetPriceTarget,
-	ChartWidghetInsights,
 	ChartWidgetKeyIndicators,
 	ChartWidgetFearGreed,
 	ChartWidgetNews,
