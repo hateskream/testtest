@@ -1,3 +1,19 @@
+import type { UnwrapRef } from 'vue';
+
+export enum TableColumnType {
+	TEXT = 'text',
+	NUMBER = 'number',
+	DATE = 'date',
+	PERCENT = 'percent',
+	IMAGE_STRING = 'image-string',
+	CHART = 'chart',
+	RANGE = 'range',
+	EMPTY = 'empty',
+	PLATE = 'plate',
+}
+
+export type SortDirection = 'asc' | 'desc' | 'none';
+
 export interface IGenericTableColumn {
 	key: string;
 	label: string;
@@ -8,24 +24,11 @@ export interface IGenericTableColumn {
 	visible: boolean;
 	width?: number;
 	minWidth?: number;
-	type: 'string' | 'number' | 'date' | 'percent' | 'image-string';
+	type: TableColumnType;
 	group?: {
 		name: string;
 		displayName: string;
 	};
-}
-
-export interface IGenericTableRow {
-	id: string;
-	data: Record<string, unknown>;
-	metadata?: Record<string, unknown>;
-}
-
-export interface IGenericTableSection {
-	id: string;
-	title: string;
-	isCollapsed: boolean;
-	rows: IGenericTableRow[];
 }
 
 export interface ISortConfig {
@@ -33,37 +36,49 @@ export interface ISortConfig {
 	direction: 'asc' | 'desc' | 'none';
 }
 
-export type SortDirection = 'asc' | 'desc' | 'none';
+// Cell wrapper interface for consistent data structure
+export interface ICellWrapper {
+	sortValue: unknown;
+	displayValue?: unknown;
+	srcValue?: string;
+	domain?: string;
+	market?: string;
+	id?: string;
+}
 
-export interface IDragDropEvent {
+// Generic types using cell wrapper structure
+export interface IGenericTableRow<T = Record<string, ICellWrapper>> {
+	id: string;
+	data: UnwrapRef<T>;
+}
+
+export interface IGenericTableSection<T = Record<string, ICellWrapper>> {
+	id: string;
+	title: string;
+	rows: IGenericTableRow<T>[];
+	isCollapsed?: boolean;
+}
+
+export interface IDragDropEvent<T = Record<string, ICellWrapper>> {
 	type: 'moved' | 'added' | 'removed';
 	sectionId: string;
 	oldIndex?: number;
 	newIndex?: number;
-	element?: IGenericTableRow;
+	element?: IGenericTableRow<T>;
 }
 
-export interface ICellData {
-	type: string;
-	value: unknown;
-	srcValue?: string;
-	domain?: string;
-	market?: string;
-	id: string;
-}
-
-export interface IDragEvent {
+export interface IDragEvent<T = Record<string, ICellWrapper>> {
 	added?: {
 		newIndex: number;
-		element: IGenericTableRow;
+		element: IGenericTableRow<T>;
 	};
 	removed?: {
 		oldIndex: number;
-		element: IGenericTableRow;
+		element: IGenericTableRow<T>;
 	};
 	moved?: {
 		oldIndex: number;
 		newIndex: number;
-		element: IGenericTableRow;
+		element: IGenericTableRow<T>;
 	};
 }

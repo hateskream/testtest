@@ -10,10 +10,9 @@ import {
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { generateCandleDataFromLineData, generateLineData, groupSeriesByRange, prepareSeries } from '../utils';
-import { RangeChart } from '../model';
-import { RANGE_IN_SECONDS } from '../const';
+import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 
-import ChartRange from '../components/chart-range.vue';
+import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 interface IChartProps {
 	// width: number;

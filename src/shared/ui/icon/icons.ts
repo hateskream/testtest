@@ -45,6 +45,7 @@ export enum IconIds {
 	LogoWidgetNews = 'logo-widget-news',
 	LogoWidgetPrice = 'logo-widget-price',
 	LogoWidgetMarketCap = 'logo-widget-market-cap',
+	LogoWidgetBitcoinDominance = 'logo-widget-bitcoin-dominance',
 	TrashClose = 'trash-close',
 	TrashOpen = 'trash-open',
 	ArrowToTopRight = 'arrow-to-top-right',
@@ -63,4 +64,5 @@ export enum IconIds {
 	Color = 'color-icon',
 	Size = 'size-icon',
 	GroupBy = 'group-by',
+	Arrow = 'arrow',
 }

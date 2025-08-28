@@ -6,7 +6,7 @@ export function removeUndefinedPropertiesFromObject<T extends object>(args: T): 
 	const temp = { ...JSON.parse(JSON.stringify(args)) };
 
 	Object.keys(temp).forEach(key => {
-		if (temp[key] === undefined) {
+		if (temp[key] === undefined || temp[key] === null) {
 			delete temp[key];
 		}
 	});

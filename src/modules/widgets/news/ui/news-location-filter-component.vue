@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { BaseSwitch, ModalFilter, ModalFilterTabWrapper } from '../../base';
-import { useNewsStore } from '../stores';
+import { toggleLocationCountry, toggleLocationRegion, type ILocation } from '../model';
 
-const newsStore = useNewsStore();
+const locations = defineModel<ILocation[]>('locations', { required: true });
+
+function toggleRegion(region: string) {
+	locations.value = toggleLocationRegion(locations.value, region);
+}
+
+function toggleCountry(region: string, countryCode: string) {
+	locations.value = toggleLocationCountry(locations.value, region, countryCode);
+}
 </script>
 
 <template>
@@ -12,7 +20,7 @@ const newsStore = useNewsStore();
 		<template #content>
 			<div>
 				<div
-					v-for="location in newsStore.locationFilters"
+					v-for="location in locations"
 					:key="location.region"
 					:class="classes.row"
 				>
@@ -25,7 +33,7 @@ const newsStore = useNewsStore();
 							v-if="location.isCanAllSwitch"
 							:class="classes.switch"
 							:is-active="location.isActive"
-							@click="newsStore.toggleLocationRegionFilter(location.region)"
+							@click="toggleRegion(location.region)"
 						/>
 
 						<div v-if="location.countries.length > 0">
@@ -35,7 +43,7 @@ const newsStore = useNewsStore();
 									:key="country.code"
 									:is-active="country.isActive"
 									@click.stop.prevent="
-										newsStore.toggleLocationCountryFilter(
+										toggleCountry(
 											location.region,
 											country.code,
 										)

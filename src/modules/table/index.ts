@@ -7,7 +7,6 @@ import type {
 	IDragDropEvent,
 	IGenericTableSection,
 	ISortConfig,
-	ICellData,
 } from './type';
 
 export { GenericDataTable };
@@ -19,5 +18,4 @@ export type {
 	IGenericTableSection,
 	IDragDropEvent,
 	ISortConfig,
-	ICellData,
 };

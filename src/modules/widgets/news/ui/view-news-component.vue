@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { INews } from '../model';
+import type { IDisplaySettings, INews } from '../model';
 
 import NewsComponent from './news-component.vue';
 
 interface IViewNewsComponentProps {
 	news: INews[];
+	displaySettings: IDisplaySettings;
 }
 
 const props = defineProps<IViewNewsComponentProps>();
@@ -17,7 +18,8 @@ const props = defineProps<IViewNewsComponentProps>();
 				<news-component
 					v-for="item in props.news"
 					:key="item.id"
-					v-bind="item"
+					:news="item"
+					:display-settings="props.displaySettings"
 				/>
 			</div>
 		</div>

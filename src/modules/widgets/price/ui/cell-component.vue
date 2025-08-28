@@ -1,27 +1,39 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import type { ICurrency } from '../model';
-import { usePriceStore } from '../stores';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import type { ISettings, ITicker } from '../model';
+import {
+	getNumberText,
+	getPercentData,
+	getTickerDescription,
+	getTickerName,
+	isForexSymbolCell,
+	isPlaneTextSymbolCell,
+} from '@/modules/cell';
 
 
 interface ICellComponentProps {
-	currency: ICurrency;
+	ticker: ITicker;
+	settings: ISettings;
 	meta: IMeta;
 }
 
 const props = defineProps<ICellComponentProps>();
 
-const { isShowChart, isShowPercentageChange, isShowLogo, isShowTicker } =
-	storeToRefs(usePriceStore());
+const emit = defineEmits<{
+	(e: 'togglePin', tickerId: string): void;
+}>();
 
-const label = computed(() => (isShowTicker.value ? props.currency.ticker : props.currency.name));
+const label = computed(() =>
+	props.settings.isShowTicker ? getTickerName(props.ticker.symbol) : getTickerDescription(props.ticker.symbol),
+);
+
+const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPercent));
 </script>
 
 <template>
@@ -32,20 +44,20 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 			height="12px"
 			:class="[classes.icon]"
 		/>
-		<div :class="[classes.content, 'price-no-drag']">
+		<div :class="classes.content">
 			<ui-transition-fade>
-				<div v-if="isShowLogo && meta.size.w > 1" :class="classes.logo">
+				<div v-if="props.settings.isShowLogo && meta.size.w > 1" :class="classes.logo">
 					<ticker-icon
-						v-if="props.currency.market !== 'forex' && !Array.isArray(props.currency.srcImage)"
-						:src="props.currency.srcImage"
-						:ticker="props.currency.ticker"
+						v-if="!isForexSymbolCell(props.ticker.symbol) && !isPlaneTextSymbolCell(props.ticker.symbol)"
+						:src="props.ticker.symbol.srcImg"
+						:ticker="props.ticker.symbol.ticker"
 					/>
 
 					<forex-ticker-icon
-						v-else-if="Array.isArray(props.currency.srcImage) && props.currency.domain"
-						:src="props.currency.srcImage"
-						:ticker="props.currency.ticker"
-						:domain="props.currency.domain"
+						v-else-if="isForexSymbolCell(props.ticker.symbol)"
+						:src="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
+						:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
+						:domain="props.ticker.symbol.rightTicker"
 					/>
 				</div>
 			</ui-transition-fade>
@@ -54,37 +66,47 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 				<div :class="classes.desc">
 					<div :class="classes.ticker">
 						<span>{{ label }}</span>
-						<span v-if="props.currency.market === 'forex'">{{ props.currency.domain }}</span>
 					</div>
 					<div :class="classes.containerSecond">
-						<div :class="classes.marketCap">{{ props.currency.marketCap }}</div>
+						<div :class="classes.price">{{ getNumberText(props.ticker.priceCurrent) }}</div>
 						<ui-transition-fade>
 							<div
-								v-if="isShowPercentageChange"
+								v-if="props.settings.isShowPercentageChange"
 								:class="classes.change"
+								:style="{
+									color: priceChange.color
+								}"
 							>
-								{{ props.currency.changeLastDay }}
+								{{ priceChange.value }}
 							</div>
 						</ui-transition-fade>
 					</div>
 				</div>
-
 				<ui-transition-fade>
 					<div
-						v-if="isShowChart && meta.size.w > 1"
+						v-if="props.settings.isShowChart && meta.size.w > 1"
 						:class="classes.chart"
 					>
 						<img
 							:src="MockChart"
 							style="  width: 90px; height: 40px; object-fit: contain;"
 						/>
-
 					</div>
 				</ui-transition-fade>
 			</div>
 		</div>
 
-		<div :class="classes.hoverActions">
+		<div
+			:class="classes.hoverActions"
+			:style="
+				props.ticker.isPined
+					? {
+						display: 'flex',
+					}
+					: {}
+			"
+			@click="emit('togglePin', props.ticker.tickerId)"
+		>
 			<ui-icon
 				:id="IconIds.Pin"
 				:width="20"
@@ -124,7 +146,6 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 	padding: 0 6px 0 12px;
 	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
 	transform: translateY(-50%);
-	cursor: default;
 }
 
 .hoverActionIcon {
@@ -189,13 +210,12 @@ const label = computed(() => (isShowTicker.value ? props.currency.ticker : props
 	line-height: 125%;
 }
 
-.marketCap {
+.price {
 	font-weight: 440;
 	color: var(--text-color-base-500);
 }
 
 .change {
 	font-weight: 440;
-	color: rgb(178 242 211 / 100%);
 }
 </style>

@@ -4,12 +4,13 @@ import { computed } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import { ALL_COLUMNS } from '../model';
+import { usePerformance } from '../composables';
 
 import PerformanceError from './layouts/performance-error.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
 import PerformanceView from './layouts/performance-view.vue';
-import PerformanceRcm from './modals/performance-rcm.vue';
+import PerformanceContextMenu from './modals/performance-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -21,12 +22,21 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
-const performanceStore = usePerformanceStore();
+const {
+	currentStock,
+	currentDate,
+	currentDisplayVariant,
+	isCompactMode,
+	resetAllChanges,
+} = usePerformance(props.meta.widgetId);
 
-// Reactive filter from store
-const filters = computed(() => performanceStore.currentFilter);
+const { data, isLoading, isError } = useQueryPerformance(
+	currentStock,
+	currentDate,
+	10,
+);
 
-const { data, isLoading, isError } = useQueryPerformance(filters);
+const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 </script>
 
 <template>
@@ -38,13 +48,25 @@ const { data, isLoading, isError } = useQueryPerformance(filters);
 			<performance-loader v-else-if="isLoading" />
 			<performance-view
 				v-else-if="data"
-				:performance-data="data"
-				:size="{ width: meta.size.w, height: meta.size.h }"
+				v-model:is-compact-mode="isCompactMode"
+				v-model:display-variant="currentDisplayVariant"
+				v-model:stock="currentStock"
+				v-model:date="currentDate"
+				:rows="rows"
+				:columns="ALL_COLUMNS"
 			/>
 		</template>
 
 		<template #rcm>
-			<performance-rcm @delete="emit('delete')" />
+			<performance-context-menu
+				v-model:is-compact-mode="isCompactMode"
+				v-model:display-variant="currentDisplayVariant"
+				v-model:stock="currentStock"
+				v-model:date="currentDate"
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

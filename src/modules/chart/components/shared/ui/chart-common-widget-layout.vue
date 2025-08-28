@@ -36,7 +36,8 @@ const props = defineProps<IProps>();
 
 .widget {
 	width: 100%;
-	background: #131315;
+	overflow: hidden;
+	background: var(--bg-color-surface-01);
 	border-radius: 18px;
 }
 

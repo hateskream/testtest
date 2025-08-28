@@ -82,18 +82,25 @@ const MarketCap: Preset = {
 const AltcoinSeason: Preset = {
 	name: 'Altcoin Season',
 	description: 'Altcoin season',
-
-	/*
-			real sizes
-
-			minSize: { w: 2, h: 3 },
-			maxSize: { w: Infinity, h: Infinity },
-			defaultSize: { w: 2, h: 14 },
-		*/
-
 	minSize: { w: 2, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
-	defaultSize: { w: 2, h: 3 },
+	defaultSize: { w: 2, h: 14 },
+};
+
+const BitcoinDominance: Preset = {
+	name: 'Bitcoin Dominance',
+	description: 'Bitcoin Dominance',
+	minSize: { w: 1, h: 3 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 3, h: 9 },
+};
+
+const TopIndices: Preset = {
+	name: 'Top Indices YTD',
+	description: 'Top Indices',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 6 },
 };
 
 const ProdPresets: AllPresets = {
@@ -106,6 +113,8 @@ const ProdPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.TopIndices]: TopIndices,
 };
 
 const DevPresets: AllPresets = {
@@ -118,6 +127,8 @@ const DevPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.TopIndices]: TopIndices,
 };
 
 const DemoPresets: AllPresets = {
@@ -130,6 +141,8 @@ const DemoPresets: AllPresets = {
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.TopIndices]: TopIndices,
 };
 
 function getCurrentPresets(): AllPresets {
@@ -157,6 +170,8 @@ export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_PERFORMANCE': WidgetType.Performance,
 	'WIDGET_PRICE_LIST': WidgetType.Price,
 	'WIDGET_WATCH_LIST': WidgetType.Watchlist,
+	'WIDGET_BITCOIN_DOMINANCE': WidgetType.BitcoinDominance,
+	'WIDGET_TOP_INDICES': WidgetType.TopIndices,
 };
 
 function getPresets(): Presets {

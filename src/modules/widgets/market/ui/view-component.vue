@@ -1,20 +1,36 @@
 <script setup lang="ts">
-import type { IMarketDomain } from '../api';
+import type { FiltersState, FiltersValues } from '../model';
+import type { ITableColumn, TableRow } from '@/modules/cell';
+import type { MarketType } from '@/modules/market';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import MarketTableComponent from './market-table-component.vue';
 
 interface IViewComponentProps {
-	markets: IMarketDomain[];
+	rows: TableRow[];
+	filtersValues: FiltersValues;
 }
 
-defineProps<IViewComponentProps>();
+const props = defineProps<IViewComponentProps>();
+
+const market = defineModel<MarketType>('market', { required: true });
+const filters = defineModel<FiltersState>('filters', { required: true });
+const columns = defineModel<ITableColumn[]>('columns', { required: true });
+
 </script>
 
 <template>
 	<div :class="classes.root">
-		<market-tabs-component />
-		<market-table-component :markets="markets" />
+		<market-tabs-component
+			v-model:filters="filters"
+			v-model:market="market"
+			v-model:columns="columns"
+			:filters-values="props.filtersValues"
+		/>
+		<market-table-component
+			v-model:columns="columns"
+			:rows="props.rows"
+		/>
 	</div>
 </template>
 

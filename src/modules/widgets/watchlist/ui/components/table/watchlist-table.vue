@@ -1,23 +1,27 @@
 <script setup lang="ts">
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 
-import type { IWatchlistTable } from '../../../model';
-import { useResizeBackground } from '@/modules/widgets/base/common/composables/use-resize-background';
+import type {
+	IGenericTableColumn,
+	IGenericTableSection,
+} from '@/modules/table';
+import type { IWatchlistRow, IWatchlistTable } from '../../../model';
 import { useWatchlistSectionStore, useWatchlistStore } from '../../../stores';
-import { adaptApiColumnsToStore, updateStoreColumnsWithApiData } from '../../../utils';
+import {
+	adaptApiColumnsToStore,
+	updateStoreColumnsWithApiData,
+	adaptWatchlistColumnsToGeneric,
+	adaptWatchlistSectionsToGeneric,
+} from '../../../utils';
 
-import WatchlistTableHeader from './header/watchlist-table-header.vue';
-import WatchlistTableSection from './watchlist-table-section.vue';
-import watchlistEmptyState from '../watchlist-empty-state.vue';
-
-
+import WatchlistEmptyState from '../watchlist-empty-state.vue';
+import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 interface IWatchlistTableProps {
 	watchlistTable: IWatchlistTable;
 }
 
 const props = defineProps<IWatchlistTableProps>();
 
-const { backgroundStyle } = useResizeBackground();
 const watchlistSectionStore = useWatchlistSectionStore();
 const watchlistStore = useWatchlistStore();
 
@@ -45,41 +49,96 @@ watch(() => props.watchlistTable.columns, (newColumns) => {
 		}
 	}
 }, { immediate: true });
+
+
+// export interface IGenericTableColumn {
+// 	key: string;
+// 	label: string;
+// 	shortLabel?: string;
+// 	position: number;
+// 	sortable: boolean;
+// 	draggable: boolean;
+// 	visible: boolean;
+// 	width?: number;
+// 	minWidth?: number;
+// 	type: 'string' | 'number' | 'date' | 'percent' | 'image-string';
+// 	group?: {
+// 		name: string;
+// 		displayName: string;
+// 	};
+// }
+
+// export interface ITableColumn extends IWatchlistColumn {
+// id: string;
+// columnType: string;
+// isShow: boolean;
+// order: number;
+// sort?: string;
+// width?: number;
+// ___
+// 	position: number;
+// 	displayColumnName: string;
+// 	displayShortColumnName: string;
+// 	isToggleable: boolean;
+// 	isDraggable: boolean;
+// 	group: {
+// 		order?: number;
+// 		name: string;
+// 	};
+// 	columnName: string;
+// }
+
+// Адаптированные данные для GenericDataTable
+const genericColumns = computed<IGenericTableColumn[]>(() => {
+	return adaptWatchlistColumnsToGeneric(watchlistStore.activeTableColumns);
+});
+
+const genericSections = computed<IGenericTableSection<IWatchlistRow>[]>(() => {
+	return adaptWatchlistSectionsToGeneric(watchlistSectionStore.sections);
+});
 </script>
 
 <template>
 	<div :class="classes.watchlistTable">
-		<template v-if="props.watchlistTable.sections.length > 0">
-			<watchlist-table-header
-				:class="classes.tableHeader"
-				:style="backgroundStyle"
-			/>
-			<watchlist-table-section
-				:watchlist-sections="props.watchlistTable.sections"
-				:columns="watchlistStore.activeTableColumns"
-				:ticker-state="props.watchlistTable.tickerState"
-			/>
-		</template>
+		<widget-typed-table
+			v-if="genericSections.length > 0"
+			:sections="genericSections"
+			:columns="genericColumns"
+			:enable-drag-drop="true"
+			:enable-column-reordering="true"
+			:enable-sorting="false"
+			:enable-column-settings="true"
+			:sticky-header="true"
+			:sticky-first-column="true"
+			:enable-row-actions="false"
+			:show-header="true"
+		/>
+		<!-- <template #cell-symbol="{ value }">
+			<span>{{ value }}</span>
+		</template> -->
 
-		<watchlist-empty-state v-else :class="classes.emptyState" />
+		<!-- <template #cell-change="{ value }">
+			<performance-bar-cell
+				v-if="performanceStore.currentDisplayMode === 'bar'"
+				:value="value"
+				:max-abs-value="maxAbsValue"
+			/>
+
+			<span v-else :style="{ color: getChangeColor(value) }">
+				{{ formatChange(value) }}
+			</span>
+		</template> -->
+		<watchlist-empty-state v-else />
 	</div>
 </template>
 
 <style module="classes">
 .watchlistTable {
 	position: relative;
-	z-index: 1;
-	flex: 1;
-
-	/* padding: 0 6px 6px; */
-	overflow-x: auto;
-	overflow-y: auto;
-}
-
-.tableHeader {
-	position: sticky;
-	top: 0;
-	z-index: 21;
-	flex: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
 }
 </style>

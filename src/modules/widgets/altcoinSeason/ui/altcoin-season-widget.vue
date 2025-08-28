@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 
-import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { PerformanceWidget } from '@/modules/widgets/performance';
-import { useAltcoinSeasonStore } from '../stores';
+import { BaseDashboardComponent } from '@/modules/widgets/base';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
-import BtcPerformance from './btc-performance/btc-performance.vue';
-import BtcPerformanceRcm from './modals/btc-performance-rcm.vue';
-import WidgetLayout from './layouts/widget-layout.vue';
-import AltcoinSeasonPeriodGroup from './period-switch/altcoin-season-period-group.vue';
+import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
+import AltcoinSeasonMain from './layouts/altcoin-season-main.vue';
+import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
+import AltcoinSeasonError from './layouts/altcoin-season-error.vue';
 
+const altcoinSeasonStore = useAltcoinSeasonStore();
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
 }
 
 const props = defineProps<IAltcoinSeasonWidgetProps>();
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 
-// FIXME: remove init on mount coz it make useless request on widget dnd\resize
-onMounted(() => {
-	altcoinSeasonStore.initializeConfig();
-});
-
-const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
+const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
+const isLoading = computed(() => altcoinSeasonStore.isLoading.value);
+const isError = computed(() => altcoinSeasonStore.isError.value);
 </script>
 
 <template>
@@ -34,26 +33,19 @@ const altcoinSeasonWidgetConfig = computed(() => altcoinSeasonStore.config);
 		:class="classes.altcoinSeasonWidget"
 	>
 		<template #title>{{ props.meta.name }}</template>
-
 		<template #content>
-			<widget-layout :size-by-cells="props.meta.size" :widget-config="altcoinSeasonWidgetConfig || null">
-				<template #period v-if="altcoinSeasonWidgetConfig?.period">
-					<altcoin-season-period-group :period="altcoinSeasonWidgetConfig?.period" />
-				</template>
+			<altcoin-season-loader v-if="isLoading" :count="6" />
+			<altcoin-season-error v-else-if="isError" />
+			<altcoin-season-main v-else :meta="props.meta" />
 
-				<template #performanceRank>
-					<btc-performance  />
-				</template>
-
-				<template #top100>
-					<performance-widget :meta="props.meta" />
-				</template>
-
-			</widget-layout>
 		</template>
 
 		<template #rcm>
-			<btc-performance-rcm :widget-config="altcoinSeasonWidgetConfig || null" />
+			<altcoin-season-context-menu
+				:title="props.meta.name"
+				:widget-config="widgetConfig || null"
+				@delete="emit('delete')"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

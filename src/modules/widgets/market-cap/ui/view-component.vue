@@ -6,10 +6,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalFilterTicker } from '../../base';
 import type { IModalFilterTicker } from '../../base/modal/model';
 import { UiImage } from '@/shared/ui/image';
-import { RangeChart } from '@/modules/lightweight-charts/model';
 import { compareStrings, prettyNumberWithKey } from '@/shared/lib';
 import { useMarketCapStore } from '../store/market-cap';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
@@ -221,13 +221,15 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 				:is-visible-history-graph="false"
 				:is-visible-indicators="false"
 				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-				:height="'100%'"
+				:height="'85%'"
 				:is-visible-range="meta.size.w > 2"
 			/>
 			<chart-market-cap
 				v-show="activeList.length > 0"
 				ref="chartMarketCap"
-				:height="'100%'"
+				:is-visible-range="meta.size.w > 2"
+				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+				:height="'75%'"
 			/>
 		</div>
 	</div>
@@ -245,10 +247,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 
 
 .chartWrapper {
-	flex: 1;
 	height: 100%;
-
-	/* background-color: red; */
 }
 
 .chartPrices {

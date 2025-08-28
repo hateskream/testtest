@@ -4,17 +4,20 @@ import { computed } from 'vue';
 import { UiImage } from '@/shared/ui/image';
 import { type INews } from '../model/news';
 import { UiTransitionFade } from '@/shared/ui/transition';
-import { useNewsStore } from '../stores';
 import { UiTooltip } from '@/shared/ui/tooltip';
+import type { IDisplaySettings } from '../model';
 
 import NewsIconScoreComponent from './news-icon-score-component.vue';
 
-const props = defineProps<INews>();
+interface INewsComponent {
+	news: INews;
+	displaySettings: IDisplaySettings;
+}
 
-const newsStore = useNewsStore();
+const props = defineProps<INewsComponent>();
 
 const time = computed(() =>
-	new Date(props.timestamp).toLocaleDateString('en-US', {
+	new Date(props.news.timestamp).toLocaleDateString('en-US', {
 		day: '2-digit',
 		month: 'short',
 		hour12: true,
@@ -29,30 +32,30 @@ const time = computed(() =>
 		<div :class="classes.newsLeftImageWrapper">
 			<ui-image
 				:class="classes.newsLeftImage"
-				:src="srcSourceImage"
+				:src="props.news.srcSourceImage"
 				replacement="/images/market/ADA.png"
 			/>
 		</div>
 
 		<div :class="classes.newsContent">
 			<div :class="classes.newsTitle">
-				<h3>{{ title }}</h3>
+				<h3>{{ props.news.title }}</h3>
 			</div>
 
 			<ui-transition-fade>
 				<div
-					v-if="newsStore.isShowDesc"
+					v-if="props.displaySettings.isShowDesc"
 					:class="classes.newsDesc"
 				>
 					<p>
-						{{ description }}
+						{{ props.news.description }}
 					</p>
 				</div>
 			</ui-transition-fade>
 
 			<div :class="classes.newsOther">
 				<ui-transition-fade>
-					<div v-if="newsStore.isShowDate">
+					<div v-if="props.displaySettings.isShowDate">
 						<time
 							:class="classes.newsOtherText"
 							:datetime="time"
@@ -64,7 +67,7 @@ const time = computed(() =>
 
 				<ui-transition-fade>
 					<span
-						v-if="newsStore.isShowDate && newsStore.isShowAuthor"
+						v-if="props.displaySettings.isShowDate && props.displaySettings.isShowAuthor"
 						:class="classes.newsOtherText"
 					>
 						·
@@ -72,20 +75,20 @@ const time = computed(() =>
 				</ui-transition-fade>
 
 				<ui-transition-fade>
-					<div v-if="newsStore.isShowAuthor">
+					<div v-if="props.displaySettings.isShowAuthor">
 						<small :class="[classes.newsOtherText, classes.newsOtherAuthorText]">
-							{{ author }}
+							{{ props.news.author }}
 						</small>
 					</div>
 				</ui-transition-fade>
 
 				<ui-transition-fade>
 					<div
-						v-if="newsStore.isShowSymbols"
+						v-if="props.displaySettings.isShowSymbols"
 						:class="classes.newsStocks"
 					>
 						<template
-							v-for="stock in stocks"
+							v-for="stock in props.news.stocks"
 							:key="stock.ticker"
 						>
 							<ui-tooltip>
@@ -107,8 +110,8 @@ const time = computed(() =>
 
 				<ui-transition-fade>
 					<news-icon-score-component
-						v-if="newsStore.isShowScore"
-						:score="score"
+						v-if="props.displaySettings.isShowScore"
+						:score="props.news.score"
 					/>
 				</ui-transition-fade>
 			</div>

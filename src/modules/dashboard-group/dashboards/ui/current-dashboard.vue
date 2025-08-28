@@ -23,6 +23,7 @@ const emit = defineEmits<{
 
 const meta = computed((): IMeta => ({
 	market: '',
+	widgetId: props.dashboardItem.id,
 	isResizing: props.isResizing,
 	size: {
 		h: props.dashboardItem.position.h,

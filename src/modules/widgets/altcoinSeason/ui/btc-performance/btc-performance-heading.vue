@@ -1,8 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 
 import AltcoinSeasonTimeFilter from '@/modules/widgets/altcoinSeason/ui/modals/altcoin-season-time-filter.vue';
+
+interface IBtcPerformanceHeadingProps {
+	showPeriod: boolean;
+}
+
+const props = defineProps<IBtcPerformanceHeadingProps>();
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+// const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.period);
+const period = computed(() => altcoinSeasonStore.selectedPeriod);
 </script>
 
 <template>
@@ -12,12 +26,13 @@ import AltcoinSeasonTimeFilter from '@/modules/widgets/altcoinSeason/ui/modals/a
 		</div>
 
 		<ui-position
+			v-if="props.showPeriod"
 			ref="btcPerformancePositionRef"
 			position="bottom-start"
 		>
 			<template #default="{ isVisible }">
 				<div :class="classes.TimeFrameSelector">
-					90D
+					{{ period }}
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						:width="12"

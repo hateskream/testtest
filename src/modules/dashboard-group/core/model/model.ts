@@ -12,12 +12,14 @@ export interface IDashboard {
 
 export interface IWidget {
 	id: string;
+	instanceId?: string;
 	widgetType: WidgetType;
 	name: string;
 	description: string;
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
+	config?: Record<string, unknown>;
 }
 
 export interface IPosition {
@@ -53,6 +55,7 @@ export interface IDashboardTab {
 }
 
 export interface IMeta {
+	widgetId: string;
 	isResizing: boolean;
 	market: string;
 	name: string;
@@ -61,6 +64,7 @@ export interface IMeta {
 
 export enum WidgetType {
 	FearGreed = 'fear-greed',
+	BitcoinDominance = 'bitcoin-dominance',
 	Market = 'market',
 	MarketCap = 'market-cap',
 	News = 'news',
@@ -74,4 +78,5 @@ export enum WidgetType {
 	Watchlist = 'watchlist',
 	Performance = 'performance',
 	AltcoinSeason = 'altcoin-season',
+	TopIndices = 'top-indices',
 }

@@ -63,6 +63,7 @@ function handleMouseleave() {
 				ref="floating"
 				:style="floatingStyles"
 				:class="classes.content"
+				class="content-anchor"
 			>
 				<slot name="content" />
 			</div>

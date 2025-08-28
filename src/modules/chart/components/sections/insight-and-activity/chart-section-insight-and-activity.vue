@@ -3,14 +3,19 @@
 
 import { computed, ref } from 'vue';
 
-import { ChartWidgetsKeyStats } from '../../widgets';
-import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '../../shared/ui';
+import type { ISectionProps } from '@/modules/chart/models';
+import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
 import { useTabs } from '../../shared/composables';
-import { ChartWidgetFearGreed, ChartWidgetKeyIndicators, ChartWidgetNews } from '@/modules/chart/components/widgets';
+import {
+	ChartWidgetFearGreed,
+	ChartWidgetKeyIndicators,
+	ChartWidgetNews, ChartWidgetKeyStats, ChartWidgetLinks,
+} from '@/modules/chart/components/widgets';
 import { markdown } from './markdown.ts';
 import { IconIds } from '@/shared/ui/icon';
 
-import ChartWidgetLinks from '@/modules/chart/components/links/chart-widget-links.vue';
+
+const props = defineProps<ISectionProps>();
 
 const tabs = computed(() => [
 	{ id: 'insights-and-activity-insights', title: 'Insights' },
@@ -66,9 +71,9 @@ const keyIndicatorsData = {
 </script>
 <template>
 	<chart-common-section-layout>
-		<template #title><span>Insights & Activity</span></template>
+		<template #title><span>{{ props.section.title }}</span></template>
 		<template #body>
-			<chart-widgets-key-stats :market-data="marketDate" />
+			<chart-widget-key-stats :market-data="marketDate" />
 			<chart-common-tabs-layout
 				:active-tab="activeTab"
 				:tab-list="tabList"

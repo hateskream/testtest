@@ -2,14 +2,15 @@
 import { computed } from 'vue';
 
 import { useQueryMarket } from '../queries';
-import { useMarketStore } from '../stores';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '../../base';
+import { useMarket } from '../composables';
+import { NONE_SET_FILTER } from '../model';
 
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
-import RcmMarket from './rcm-market.vue';
+import MarketContextMenu from './market-context-menu.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -17,14 +18,38 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const marketStore = useMarketStore();
+const {
+	columns,
+	activeMarket,
+	activeSort,
+	filtersValues,
+	filtersState,
 
-const { data, isLoading, isError } = useQueryMarket({
-	market: props.meta.market,
-	sort: marketStore.activeTabSort.sortTab,
-});
+	resetAllChanges,
+} = useMarket(props.meta.widgetId);
 
-const isNotData = computed(() => !!data.value && isLoading.value);
+const { data, isLoading, isError } = useQueryMarket(
+	activeMarket,
+	activeSort,
+	computed(
+		() => Object
+			.entries(filtersState.value)
+			.map(([filter, { selected: value }]) => ({
+				filter,
+				value,
+			}))
+			.filter(({ value }) => value === NONE_SET_FILTER),
+	),
+	10,
+);
+
+const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
+
+const isNotData = computed(() => !!rows.value.length && isLoading.value);
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 </script>
 
 <template>
@@ -35,11 +60,20 @@ const isNotData = computed(() => !!data.value && isLoading.value);
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
-				:markets="data"
+				v-model:filters="filtersState"
+				v-model:market="activeMarket"
+				v-model:columns="columns"
+				:filters-values="filtersValues"
+				:rows="rows"
 			/>
 		</template>
 		<template #rcm>
-			<rcm-market />
+			<market-context-menu
+				v-model="columns"
+				:title="props.meta.name"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

@@ -17,5 +17,8 @@
 	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true,
 	"files.encoding": "utf8",
-	"files.eol": "\n"
+	"files.eol": "\n",
+	"yaml.schemas": {
+		"https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json": "file:///c%3A/repo/i88-frontend-9/.gitlab-ci/templates/includes.yml"
+	}
 }

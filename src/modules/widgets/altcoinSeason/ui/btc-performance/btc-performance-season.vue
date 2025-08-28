@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { widgetColor } from '@/modules/widgets/altcoinSeason/const';
+import { computed } from 'vue';
+
+import { getColorByRank, getSeasonNameByRank } from '@/modules/widgets/altcoinSeason/const';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 import InfoTooltip from '@/shared/ui/info-tooltip/info-tooltip.vue';
+
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
+const btcRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.btcRank);
+const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.maxRank);
 </script>
 
 <template>
 	<div :class="classes.btcPerformanceRankSeason">
 		<div :class="classes.rank">
-			<span :class="classes.rankValue">22</span>
-			<span>/100</span>
+			<span :class="classes.rankValue">{{ btcRank }}</span>
+			<span>/{{ maxRank }}</span>
 			<info-tooltip text="Bitcoin current score" />
 		</div>
 
-		<div :class="classes.seasonLabel" :style="{ color: widgetColor.bitcoinSeason }">
-			Bitcoin season
+		<div :class="classes.seasonLabel" :style="{ color: getColorByRank(btcRank || 0) }">
+			{{ getSeasonNameByRank(btcRank || 0) }}
 		</div>
 	</div>
 </template>

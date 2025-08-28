@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import { DisplayVariant } from '../../model';
 
-const performanceStore = usePerformanceStore();
+const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
+
+function updateDisplayVariant(value: DisplayVariant) {
+	displayVariant.value = value;
+}
 </script>
 
 <template>
 	<div :class="classes.viewToggle">
 		<button
-			:class="[classes.toggleButton, { [classes.active]: performanceStore.currentDisplayMode === 'bar' }]"
+			:class="[classes.toggleButton, { [classes.active]: displayVariant === DisplayVariant.Bar }]"
 			title="Bar view"
-			@click="performanceStore.setDisplayMode('bar')"
+			@click="updateDisplayVariant(DisplayVariant.Bar)"
 		>
 			<ui-icon
 				:id="IconIds.Bars"
@@ -21,9 +25,9 @@ const performanceStore = usePerformanceStore();
 		</button>
 
 		<button
-			:class="[classes.toggleButton, { [classes.active]: performanceStore.currentDisplayMode === 'list' }]"
+			:class="[classes.toggleButton, { [classes.active]: displayVariant === DisplayVariant.List }]"
 			title="List view"
-			@click="performanceStore.setDisplayMode('list')"
+			@click="updateDisplayVariant(DisplayVariant.List)"
 		>
 			<ui-icon
 				:id="IconIds.List"

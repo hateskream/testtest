@@ -6,15 +6,22 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ChartHeaderOpenClose, ChartHeaderStockSelect } from './components';
 import { ChartHeaderStockBadge } from './ui';
 
-const tickerName = 'Tesla inc';
+;
 const { isActiveMarketOpen, activeExchange } = storeToRefs(useChartStore());
+
+interface IStockInfoProps {
+	tickerName:string;
+}
+
+const props = defineProps<IStockInfoProps>();
+
 
 </script>
 
 <template>
 
 	<div :class="classes.stockInfoWrapper">
-		<div :class="classes.tickerName" class="header-h01">{{ tickerName }}</div>
+		<div :class="classes.tickerName" class="header-h01">{{ props.tickerName }}</div>
 		<div :class="classes.marketData">
 			<chart-header-stock-select />
 			<chart-header-open-close :is-open="isActiveMarketOpen" :market="activeExchange" />

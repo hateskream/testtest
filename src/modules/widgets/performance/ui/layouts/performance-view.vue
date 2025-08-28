@@ -1,35 +1,37 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import { usePerformanceStore } from '@/modules/widgets/performance/stores';
-import type { IPerformanceItem } from '@/modules/widgets/performance/model';
+import type { ITableColumn } from '@/modules/cell';
+import type { DisplayVariant, Stock, DateRange, PerformanceTableRow } from '../../model';
 
 import PerformanceHeader from '../header/performance-header.vue';
 import PerformanceTable from '../table/performance-table.vue';
 
 interface IViewComponentProps {
-	performanceData: IPerformanceItem[];
-	size: { width: number; height: number };
+	rows: PerformanceTableRow[];
+	columns: ITableColumn[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
-const performanceStore = usePerformanceStore();
-
-const sortedData = computed(() => {
-	return [...props.performanceData].sort((a, b) => b.change - a.change);
-});
+const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
+const stock = defineModel<Stock>('stock', { required: true });
+const date = defineModel<DateRange>('date', { required: true });
+const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 </script>
 
 <template>
 	<div :class="classes.performanceView">
-		<performance-header />
+		<performance-header
+			v-model:is-compact-mode="isCompactMode"
+			v-model:display-variant="displayVariant"
+			v-model:stock="stock"
+			v-model:date="date"
+		/>
 
 		<div :class="classes.performanceContent">
 			<performance-table
-				:performance-data="sortedData"
-				:is-compact="performanceStore.isCompactMode"
-				:size="props.size"
+				:rows="props.rows"
+				:columns="props.columns"
+				:display-variant="displayVariant"
 			/>
 		</div>
 	</div>

@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { type Period } from '@/modules/widgets/altcoinSeason/model/altcoin-season.model';
+import { computed } from 'vue';
 
-interface IAltcoinSeasonPeriodGroupProps {
-	period: Period;
-}
+import { type Period } from '@/modules/widgets/altcoinSeason/model';
+import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
-const props = defineProps<IAltcoinSeasonPeriodGroupProps>();
+const altcoinSeasonStore = useAltcoinSeasonStore();
 
 // TODO: get from API
-const periods = ['7D', '30D', '90D', '1Y'];
+const periods = ['7D', '30D', '90D', '1Y'] as Period[];
 
+// FIXME: get from widget config but its too deep for reactivity
+const selectedPeriod = computed(() => altcoinSeasonStore.selectedPeriod.value);
+
+const handlePeriodClick = (periodItem: Period) => {
+	altcoinSeasonStore.handlePeriodChange(periodItem);
+};
 </script>
 
 <template>
@@ -17,7 +22,8 @@ const periods = ['7D', '30D', '90D', '1Y'];
 		<div
 			v-for="periodItem in periods"
 			:key="periodItem"
-			:class="[classes.periodItem, { [classes.active]: periodItem === props.period }]"
+			:class="[classes.periodItem, { [classes.active]: periodItem === selectedPeriod }]"
+			@click="handlePeriodClick(periodItem)"
 		>
 			<span :class="classes.periodItemText">
 				{{ periodItem }}

@@ -3,12 +3,20 @@ import type { CSSProperties } from 'vue';
 import { onMounted, shallowRef, useTemplateRef } from 'vue';
 import { Chart, type TooltipModel } from 'chart.js/auto';
 
+import { RangeChart } from '@/shared/ui/chart-range';
+
+import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
+
 
 interface IChartProps {
 	height: CSSProperties['height'];
+	isVisibleRange?: boolean;
+	rangeList: RangeChart[];
 }
 
-defineProps<IChartProps>();
+withDefaults(defineProps<IChartProps>(), {
+	isVisibleRange: true,
+});
 
 
 const generateRandomBars = () => {
@@ -270,8 +278,16 @@ onMounted(() => {
 </script>
 
 <template>
-	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
+	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
+
+		<chart-range
+			v-if="isVisibleRange"
+			:class="classes.range"
+			:active-range="RangeChart['ALL']"
+			:list="rangeList"
+		/>
+
 	</div>
 </template>
 
@@ -280,12 +296,18 @@ onMounted(() => {
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	height: v-bind(height);
 }
 
 .mainChart {
 	flex-grow: 1;
 	width: 100%;
-	height: 90% !important;
+	height: 100%;
 }
+
+.range {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 </style>

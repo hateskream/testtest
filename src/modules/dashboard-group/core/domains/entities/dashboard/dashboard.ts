@@ -14,10 +14,18 @@ import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 
 type Layout = Map<number, Widget[]>;
 
-const enableWidgets = new Set(
-	getAllEnableWidgets()
-		.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
-);
+// Lazy initialization of enabled widgets to avoid circular dependency issues
+let enableWidgets: Set<WidgetType> | null = null;
+
+function getEnabledWidgets(): Set<WidgetType> {
+	if (enableWidgets === null) {
+		enableWidgets = new Set(
+			getAllEnableWidgets()
+				.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
+		);
+	}
+	return enableWidgets;
+}
 export class Dashboard {
 	private constructor(
 		private readonly _id: string,
@@ -66,19 +74,15 @@ export class Dashboard {
 
 		this._activeColNum = value;
 
-		const allWidgets = [
-			...this._layout.get(value) || [],
-			...Array
-				.from(this._layout.values())
-				.flat(),
-		];
+		const activeColWidgets = this._layout.get(value) || [];
 
 		const seen = new Set<string>();
-		const uniqueWidgets = allWidgets.filter(widget => {
-			if (seen.has(widget.id)) {
+		const uniqueWidgets = activeColWidgets.filter(widget => {
+			const key = widget.instanceId || widget.id;
+			if (seen.has(key)) {
 				return false;
 			}
-			seen.add(widget.id);
+			seen.add(key);
 			return true;
 		});
 
@@ -116,8 +120,16 @@ export class Dashboard {
 		throw new NotFoundWidget('Widget with id ' + id + ' not found');
 	}
 
-	addWidget(type: string, position: IPosition, widgetsState: IWidgetState[]): Widget {
-		const widget = Widget.create(type, position);
+	addWidget(
+		type: string,
+		position: IPosition,
+		widgetsState: IWidgetState[],
+		instanceId?: string,
+		config?: Record<string, unknown>,
+	): Widget {
+		const widget = instanceId
+			? Widget.createWithInstanceId(instanceId, type, position, config)
+			: Widget.create(type, position);
 
 		this._layout.forEach(widgets => {
 			widgets.push(widget);
@@ -145,39 +157,29 @@ export class Dashboard {
 	}
 
 	static createFromPreset(presetName: PresetName, order: number): Dashboard {
-		const layoutPreset = NAME_TO_PRESET[presetName];
+		const preset = NAME_TO_PRESET()[presetName];
 		const layout = new Map<number, Widget[]>();
 
-		Object.entries(layoutPreset).forEach(([type, layouts]) => {
-			if (!enableWidgets.has(type as WidgetType)) {
-				// eslint-disable-next-line no-console
-				console.warn(`Widget type ${type} is not enabled`);
-				return;
+		Object.entries(preset).forEach(([colNum, instances]) => {
+			const widgets = instances
+				.filter(instance => getEnabledWidgets().has(instance.type))
+				.map(instance => {
+					return Widget.createWithInstanceId(
+						instance.id,
+						instance.type,
+						{
+							x: instance.position.x,
+							y: instance.position.y,
+							w: instance.position.size.w,
+							h: instance.position.size.h,
+						},
+						instance.config,
+					);
+				});
+
+			if (widgets.length > 0) {
+				layout.set(Number(colNum), widgets);
 			}
-
-			let widget: Widget | null = null;
-
-			Object.entries(layouts).forEach(([colNum, pos]) => {
-				if (!widget) {
-					widget = Widget.create(type, {
-						x: pos.x,
-						y: pos.y,
-						w: pos.size.w,
-						h: pos.size.h,
-					});
-				} else {
-					widget.position = {
-						x: pos.x,
-						y: pos.y,
-						w: pos.size.w,
-						h: pos.size.h,
-					};
-				}
-
-				layout.set(Number(colNum), [...layout.get(Number(colNum)) || [], widget]);
-			});
-
-			widget = null;
 		});
 
 		/*
