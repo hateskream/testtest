@@ -6,12 +6,18 @@ import { useRepository } from './use-repository';
 import { queryClient } from '@/shared/service/query-client';
 import { getStateCacheKey } from '../queries';
 
+type WidgetId = string;
+
 export function useWatchlistPublic() {
 	const dashboardUc = useUsecase();
 
-	const watchlistMap = ref<Map<string, IPublicState[]>>(new Map());
+	const watchlistMap = ref<Map<WidgetId, IPublicState[]>>(new Map());
 
-	const wachlists = computed(() => Array.from(watchlistMap.value.values()).flatMap(states => states));
+	const wachlists = computed(() =>
+		Array
+			.from(watchlistMap.value.values())
+			.flatMap(states => states),
+	);
 
 	const updateCacheSubscribers: (() => void)[] = [];
 
@@ -56,10 +62,10 @@ export function useWatchlistPublic() {
 		});
 
 
-		fetchPublicStates(widgetIds);
+		fetchStates(widgetIds);
 	}
 
-	async function fetchPublicState(widgetId: string): Promise<IPublicState[]> {
+	async function fetchState(widgetId: string) {
 		let state: IState | null = null;
 
 		const cachedState = queryClient.getQueryData<IState>(getStateCacheKey(widgetId));
@@ -72,12 +78,14 @@ export function useWatchlistPublic() {
 			state = await repo.get();
 		}
 
-		return getPublicState(state, widgetId);
+		return {
+			state,
+			widgetId,
+		};
 	}
 
-	async function fetchPublicStates(widgetIds: string[]) {
-		const allStates = await Promise.allSettled(widgetIds.map(fetchPublicState));
-
+	async function fetchStates(widgetIds: string[]) {
+		const allStates = await Promise.allSettled(widgetIds.map(fetchState));
 
 		allStates
 			.forEach(state => {
@@ -85,13 +93,15 @@ export function useWatchlistPublic() {
 					return;
 				}
 
-				state.value.forEach(s => {
-					if (watchlistMap.value.has(s.watchlistId)) {
-						watchlistMap.value.get(s.watchlistId)?.push(s);
-					} else {
-						watchlistMap.value.set(s.watchlistId, [s]);
-					}
-				});
+				getPublicState(state.value.state, state.value.widgetId)
+					.forEach(s => {
+						if (watchlistMap.value.has(s.watchlistId)) {
+							watchlistMap.value.get(s.watchlistId)?.push(s);
+						} else {
+							watchlistMap.value.set(s.watchlistId, [s]);
+						}
+					});
+
 			});
 	}
 

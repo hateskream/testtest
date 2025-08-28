@@ -64,7 +64,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 				columnType: ColumnType.Symbol,
 				symbolType: SymbolType.Stock,
 				srcImg: '1',
-				ticker: 'TSLA 1',
+				ticker: 'BTC',
 				companyName: 'Tesla,Inc. 1',
 			},
 			[ColumnType.PriceCurrent]: {
@@ -83,7 +83,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 				columnType: ColumnType.Symbol,
 				symbolType: SymbolType.Stock,
 				srcImg: '1',
-				ticker: 'TSLA 2',
+				ticker: 'ETH',
 				companyName: 'Tesla,Inc. 2',
 			},
 			[ColumnType.PriceCurrent]: {
@@ -102,7 +102,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 				columnType: ColumnType.Symbol,
 				symbolType: SymbolType.Stock,
 				srcImg: '1',
-				ticker: 'TSLA 3',
+				ticker: 'USDT',
 				companyName: 'Tesla,Inc. 3',
 			},
 			[ColumnType.PriceCurrent]: {
@@ -121,7 +121,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 				columnType: ColumnType.Symbol,
 				symbolType: SymbolType.Stock,
 				srcImg: '1',
-				ticker: 'TSLA 4',
+				ticker: 'BNB',
 				companyName: 'Tesla,Inc. 4',
 			},
 			[ColumnType.PriceCurrent]: {

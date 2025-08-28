@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FiltersState, FiltersValues, IWatchlist } from '../model';
+import type { FiltersState, FiltersValues, IWatchlistAction, IWatchlistData } from '../model';
 import type { ITableColumn, TableRow } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 
@@ -9,22 +9,19 @@ import MarketTableComponent from './market-table-component.vue';
 interface IViewComponentProps {
 	rows: TableRow[];
 	filtersValues: FiltersValues;
-	wachlists: IWatchlist[];
+	wachlists: IWatchlistData[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlists: IWatchlist, tickerId: string): void;
+	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
 }>();
 
 const market = defineModel<MarketType>('market', { required: true });
 const filters = defineModel<FiltersState>('filters', { required: true });
 const columns = defineModel<ITableColumn[]>('columns', { required: true });
-
-function handleAddToWatchlist(wachlists: IWatchlist, tickerId: string) {
-	emits('add-to-watchlist', wachlists, tickerId);
-}
 </script>
 
 <template>
@@ -39,7 +36,8 @@ function handleAddToWatchlist(wachlists: IWatchlist, tickerId: string) {
 			v-model:columns="columns"
 			:rows="props.rows"
 			:wachlists="props.wachlists"
-			@add-to-watchlist="handleAddToWatchlist"
+			@add-to-watchlist="emits('add-to-watchlist', $event)"
+			@remove-from-watchlist="emits('remove-from-watchlist', $event)"
 		/>
 	</div>
 </template>

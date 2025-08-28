@@ -7,7 +7,7 @@ import {
 	type FiltersValues,
 	type ISettings,
 	type IState,
-	type IWatchlist,
+	type IWatchlistAction,
 } from '../model';
 import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
@@ -15,7 +15,7 @@ import type { ITableColumn, ISort } from '@/modules/cell';
 import { Producer } from '@/shared/service/event-bus';
 import { useWatchlistPublic } from '../../watchlist';
 
-type Event = 'addToWatchlist';
+type Event = 'addToWatchlist' | 'removeFromWatchlist';
 
 interface IPayload {
 	tickerId: string;
@@ -29,7 +29,7 @@ type Events = Record<Event, IPayload>;
 export function useMarket(widgetId: string) {
 	const { wachlists } = useWatchlistPublic();
 
-	const producer = new Producer<Events>(['addToWatchlist']);
+	const producer = new Producer<Events>(['addToWatchlist', 'removeFromWatchlist']);
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
@@ -124,8 +124,17 @@ export function useMarket(widgetId: string) {
 		state.value = getDefaultState();
 	}
 
-	function addToWatchlist({ watchlistId, tabId }: IWatchlist, tickerId: string) {
+	function addToWatchlist({ watchlistId, tabId, tickerId }: IWatchlistAction) {
 		producer.emit('addToWatchlist', {
+			tickerId,
+			watchlistId,
+			tabId,
+			tickerType: activeMarket.value,
+		});
+	}
+
+	function removeFromWatchlist({ watchlistId, tabId, tickerId }: IWatchlistAction) {
+		producer.emit('removeFromWatchlist', {
 			tickerId,
 			watchlistId,
 			tabId,
@@ -139,9 +148,12 @@ export function useMarket(widgetId: string) {
 		activeSort,
 		filtersValues,
 		filtersState,
+
 		wachlists,
 
 		resetAllChanges,
+
 		addToWatchlist,
+		removeFromWatchlist,
 	};
 }

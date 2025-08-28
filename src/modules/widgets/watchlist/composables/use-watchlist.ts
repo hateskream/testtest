@@ -12,6 +12,7 @@ import {
 	changeSectionsVisibility,
 	changeTabOrder,
 	deleteSection,
+	deleteTickerInTab,
 	duplicateTab,
 	findTab,
 	getActiveTab,
@@ -30,7 +31,7 @@ import { useGetState, useUpdateState } from '../queries';
 import { Consumer } from '@/shared/service/event-bus';
 import { MarketType } from '@/modules/market';
 
-type Event = 'addToWatchlist';
+type Event = 'addToWatchlist' | 'removeFromWatchlist';
 
 const payloadSchema = z.object({
 	tickerId: z
@@ -53,9 +54,10 @@ type IPayload = z.infer<typeof payloadSchema>;
 type Events = Record<Event, IPayload>;
 
 export function useWatchlist(widgetId: string) {
-	const producer = new Consumer<Events>(['addToWatchlist']);
+	const producer = new Consumer<Events>(['addToWatchlist', 'removeFromWatchlist']);
 
 	producer.on('addToWatchlist', addToWatchlist);
+	producer.on('removeFromWatchlist', removeFromWatchlist);
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
@@ -105,6 +107,7 @@ export function useWatchlist(widgetId: string) {
 
 	onUnmounted(() => {
 		producer.off('addToWatchlist', addToWatchlist);
+		producer.off('removeFromWatchlist', removeFromWatchlist);
 	});
 
 	watch(dataState, newState => {
@@ -248,30 +251,43 @@ export function useWatchlist(widgetId: string) {
 		state.value = getDefaultState();
 	}
 
-	function addToWatchlist(rawPayload: IPayload) {
-		const payload = validatePayload(rawPayload);
-		if (payload === null) {
+	function addToWatchlist(payload: IPayload) {
+		if (!isPayloadValid(payload)) {
 			return;
 		}
 
-		const { watchlistId, tickerType, tickerId, tabId } = payload;
-
-		if (watchlistId !== widgetId) {
-			return;
-		}
+		const { tickerType, tickerId, tabId } = payload;
 
 		state.value = addTickerInTab(state.value, tickerId, tickerType, tabId);
 	}
 
-	function validatePayload(input: unknown): IPayload | null {
+	function removeFromWatchlist(payload: IPayload) {
+		if (!isPayloadValid(payload)) {
+			return;
+		}
+
+		const { tickerType, tickerId, tabId } = payload;
+
+		state.value = deleteTickerInTab(state.value, tickerId, tickerType, tabId);
+	}
+
+	function isPayloadValid(input: unknown): boolean {
 		try {
-			return payloadSchema.parse(input);
+			const payload = payloadSchema.parse(input);
+
+			const { watchlistId } = payload;
+
+			if (watchlistId !== widgetId) {
+				return false;
+			}
+
+			return true;
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				// eslint-disable-next-line no-console
 				console.error('Validation failed:', error.issues);
 			}
-			return null;
+			return false;
 		}
 	}
 

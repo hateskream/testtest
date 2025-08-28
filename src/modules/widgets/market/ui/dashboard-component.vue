@@ -24,10 +24,13 @@ const {
 	activeSort,
 	filtersValues,
 	filtersState,
+
 	wachlists,
 
 	resetAllChanges,
+
 	addToWatchlist,
+	removeFromWatchlist,
 } = useMarket(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryMarket(
@@ -69,6 +72,7 @@ const emit = defineEmits<{
 				:rows="rows"
 				:wachlists="wachlists"
 				@add-to-watchlist="addToWatchlist"
+				@remove-from-watchlist="removeFromWatchlist"
 			/>
 		</template>
 		<template #rcm>

@@ -10,7 +10,7 @@ import {
 	type ITab,
 	type ITabUi,
 } from './tab';
-import { addTickerInTable, getMockTableFirst, getMockTableSecond, type ITable } from './table';
+import { addTickerInTable, deleteTickerInTable, getMockTableFirst, getMockTableSecond, type ITable } from './table';
 
 export interface IState {
 	activeTabId: string | null;
@@ -26,6 +26,7 @@ export interface IPublicState {
 	watchlistId: string;
 	tabId: string;
 	name: string;
+	tickers: string[];
 }
 
 const MAX_TAB_COUNT = 10;
@@ -35,6 +36,10 @@ export function getPublicState(state: IState, watchlistId: string): IPublicState
 		watchlistId,
 		tabId: t.id,
 		name: t.name,
+		tickers: t.table.sections
+			.map(s => s.rows
+				.map(r => r.id))
+			.flatMap(r => r),
 	}));
 }
 
@@ -232,6 +237,22 @@ export function addTickerInTab(
 		tab => ({
 			...tab,
 			table: addTickerInTable(tab.table, tickerId, tickerType),
+		}),
+	);
+}
+
+export function deleteTickerInTab(
+	state: IState,
+	tickerId: string,
+	tickerType: MarketType,
+	tabId: string,
+): IState {
+	return updateTab(
+		state,
+		tabId,
+		tab => ({
+			...tab,
+			table: deleteTickerInTable(tab.table, tickerId, tickerType),
 		}),
 	);
 }

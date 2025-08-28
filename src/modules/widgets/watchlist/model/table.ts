@@ -1,10 +1,12 @@
 import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, type ITableColumn } from '@/modules/cell';
 import {
 	addRow,
+	deleteRow,
 	getMockSectionsFirst,
 	getMockSectionsSecond,
 	isCustom,
-	newCustomSection,
+	newSectionByType,
+	SpecificSectionType,
 	type ISection,
 } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
@@ -198,7 +200,7 @@ export function addCustomSection(table: ITable): ITable {
 		...table,
 		sections: [
 			...table.sections,
-			newCustomSection(),
+			newSectionByType(SpecificSectionType.Custom),
 		],
 	};
 }
@@ -210,18 +212,48 @@ function getCountCustomSections(table: ITable): number {
 export function addTickerInTable(
 	table: ITable,
 	tickerId: string,
-	_: MarketType,
+	market: MarketType,
 ): ITable {
-	// если я забыл это исправить я пидарас
+	const row = createRow(tickerId);
+
 	return {
 		...table,
-		sections: [
-			...table.sections,
-			addRow(
-				newCustomSection(),
-				createRow(tickerId),
-			),
-		],
+		sections:
+			table.sections
+				.find(section => section.type === market)
+				? table.sections
+					.map(section =>
+						section.type === market
+							? addRow(
+								section,
+								row,
+							)
+							: section,
+					)
+				: [
+					...table.sections,
+					addRow(
+						newSectionByType(market),
+						row,
+					),
+				],
+	};
+}
+
+export function deleteTickerInTable(
+	table: ITable,
+	tickerId: string,
+	market: MarketType,
+): ITable {
+	return {
+		...table,
+		sections:
+			table.sections
+				.map(section =>
+					section.type === market
+						? deleteRow(section, tickerId)
+						: section,
+				),
 	};
 }
 

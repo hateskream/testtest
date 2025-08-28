@@ -81,7 +81,24 @@ export function newCustomSection(): ISection {
 	return newSection('Custom', SpecificSectionType.Custom);
 }
 
-export function newSection(name: string, type: SectionType): ISection {
+export function newSectionByType(type: SectionType): ISection {
+	switch (type) {
+		case MarketType.Crypto:
+			return newSection('Crypto', MarketType.Crypto);
+		case MarketType.Stock:
+			return newSection('Stocks', MarketType.Stock);
+		case MarketType.Forex:
+			return newSection('Forex', MarketType.Forex);
+		case MarketType.Commodities:
+			return newSection('Commodity', MarketType.Commodities);
+		case MarketType.Indices:
+			return newSection('Indices', MarketType.Indices);
+		case SpecificSectionType.Custom:
+			return newSection('Custom', SpecificSectionType.Custom);
+	}
+}
+
+function newSection(name: string, type: SectionType): ISection {
 	return {
 		id: uuidv4(),
 		name,
@@ -103,6 +120,13 @@ export function addRow(section: ISection, row: IRow): ISection {
 	return {
 		...section,
 		rows: [...section.rows, row],
+	};
+}
+
+export function deleteRow(section: ISection, rowId: string): ISection {
+	return {
+		...section,
+		rows: section.rows.filter(row => row.id !== rowId),
 	};
 }
 

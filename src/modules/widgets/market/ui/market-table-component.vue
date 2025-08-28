@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
@@ -13,24 +13,23 @@ import {
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
-import type { IWatchlist } from '../model';
+import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
 interface IViewComponentProps {
 	rows: TableRow[];
-	wachlists: IWatchlist[];
+	wachlists: IWatchlistData[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlists: IWatchlist, tickerId: string): void;
+	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
 }>();
 
 const columns = defineModel<ITableColumn[]>('columns', { required: true });
-
-const selectedWatchlist = ref<IWatchlist | null>(null);
 
 const genericColumns = computed(() =>
 	mapColumn(columns.value),
@@ -40,10 +39,18 @@ const genericRows = computed(() =>
 	props.rows.map(ticker => mapRow(ticker)),
 );
 
-function handleAddToWatchlist(wachlists: IWatchlist, tickerId: string) {
-	selectedWatchlist.value = wachlists;
+function handleAddToWatchlist(watchlist: IWatchlistData, tickerId: string) {
+	const payload: IWatchlistAction = {
+		watchlistId: watchlist.watchlistId,
+		tabId: watchlist.tabId,
+		tickerId,
+	};
 
-	emits('add-to-watchlist', wachlists, tickerId);
+	if (isOnWatchlist(watchlist, tickerId)) {
+		emits('remove-from-watchlist', payload);
+	} else {
+		emits('add-to-watchlist', payload);
+	}
 }
 </script>
 
@@ -81,7 +88,7 @@ function handleAddToWatchlist(wachlists: IWatchlist, tickerId: string) {
 
 							<template v-for="watchlist in props.wachlists" :key="watchlist.tabId">
 								<modal-item-selector
-									:model-value="watchlist === selectedWatchlist"
+									:model-value="isOnWatchlist(watchlist, tickerId)"
 									@update:model-value="handleAddToWatchlist(watchlist, tickerId)"
 								>
 									{{ watchlist.name }}
