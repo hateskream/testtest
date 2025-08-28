@@ -33,6 +33,8 @@ import { ChartWidgetPortfolioTable } from './portfolio';
 import { ChartWidgetTrailingReturns } from './trailing-returns';
 import { ChartWidgetSnp } from './snp-500';
 import { ChartWidgetHistoricalEps } from './historical-eps';
+import { ChartWidgetStylebox } from './stylebox';
+
 
 export {
 	ChartWidgetPricePerformance,
@@ -72,4 +74,5 @@ export {
 	WidgetHoldingsDiagram,
 	ChartWidgetSnp,
 	ChartWidgetHistoricalEps,
+	ChartWidgetStylebox,
 };

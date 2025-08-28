@@ -4,9 +4,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
-import { ChartWidgetPortfolioTable } from '@/modules/chart/components/widgets';
+import { ChartWidgetPortfolioTable, ChartWidgetStylebox } from '@/modules/chart/components/widgets';
 import type { ISectionProps } from '@/modules/chart/models';
-
 
 const props = defineProps<ISectionProps>();
 
@@ -41,7 +40,10 @@ onUnmounted(() => {
 		</template>
 		<template #title>{{ props.section?.title }}</template>
 		<template #body>
-			<chart-widget-portfolio-table />
+			<div :class="classes.wrapper">
+				<chart-widget-stylebox :class="classes.stylebox" />
+				<chart-widget-portfolio-table :class="classes.table" />
+			</div>
 		</template>
 	</chart-common-section-layout>
 </template>
@@ -52,5 +54,12 @@ onUnmounted(() => {
 	gap: 3px;
 }
 
+.wrapper {
+	display: flex;
+	align-items: center;
+}
 
+.stylebox {
+	flex: 0 0 50%;
+}
 </style>

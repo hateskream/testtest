@@ -17,6 +17,7 @@ import ChartAnnualMarginTrends from './ui/chart-annual-margin-trends.vue';
 import ChartDailyNetFlows from './ui/chart-daily-net-flows.vue';
 import ChartTrailingReturns from './ui/chart-trailing-returns.vue';
 import ChartHoldingsDiagram from './ui/chart-holdings-diagram.vue';
+import ChartStylebox from './ui/chart-stylebox.vue';
 
 
 export {
@@ -39,4 +40,5 @@ export {
 	ChartDailyNetFlows,
 	ChartTrailingReturns,
 	ChartHoldingsDiagram,
+	ChartStylebox,
 };
