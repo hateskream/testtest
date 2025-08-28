@@ -4,8 +4,8 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
-import { ChartWidgetPeerAnalysis } from '@/modules/chart/components/widgets/peer-analysis';
 import type { ISectionProps } from '@/modules/chart/models';
+import { ChartWidgetStockPeersBulk, ChartWidgetPeerAnalysis } from '@/modules/chart/components/widgets';
 
 
 const props = defineProps<ISectionProps>();
@@ -39,6 +39,7 @@ onUnmounted(() => {
 		<template #title>{{ props.section?.title }}</template>
 		<template #body>
 			<chart-widget-peer-analysis />
+			<chart-widget-stock-peers-bulk />
 		</template>
 	</chart-common-section-layout>
 </template>

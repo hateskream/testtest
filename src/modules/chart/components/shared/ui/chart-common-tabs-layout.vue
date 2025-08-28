@@ -5,6 +5,7 @@
 			<div
 				v-for="tab in tabList"
 				:key="tab.id"
+				class="header-h01"
 				:class="[
 					classes.tabHeader,
 					{
@@ -77,7 +78,7 @@ defineProps<IProps>();
 	display: flex;
 	width: fit-content;
 	text-wrap: nowrap;
-	border-radius: 12px;
+	border-radius: 18px;
 }
 
 .tabHeader {
@@ -89,7 +90,7 @@ defineProps<IProps>();
 		linear-gradient(0deg, #050505, #050505),
 		linear-gradient(64.97deg, #000000 3.91%, #0c0c0d 97.73%);
 	border: none;
-	border-radius: 8px 8px 0 0;
+	border-radius: 18px 18px 0 0;
 	cursor: pointer;
 	transition: all 0.2s ease;
 }

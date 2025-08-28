@@ -34,9 +34,11 @@ import { ChartWidgetTrailingReturns } from './trailing-returns';
 import { ChartWidgetSnp } from './snp-500';
 import { ChartWidgetHistoricalEps } from './historical-eps';
 import { ChartWidgetStylebox } from './stylebox';
+import { ChartWidgetTradingVolume } from './trading-volume';
 
 
 export {
+	ChartWidgetTradingVolume,
 	ChartWidgetPricePerformance,
 	ChartWidgetExplorer,
 	ChartWidgetKeyStats,

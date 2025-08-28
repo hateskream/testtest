@@ -8,6 +8,7 @@ import type { ISectionProps } from '@/modules/chart/models';
 // TODO: move to models
 // eslint-disable-next-line @stylistic/max-len
 import type { IPriceEarningsProps } from '@/modules/chart/components/widgets/price-earnings/chart-widget-price-earnings.vue';
+import {ChartWidgetEps, ChartWidgetHistoricalEps} from "@/modules/chart/components/widgets";
 
 
 const props = defineProps<ISectionProps>();
@@ -115,12 +116,15 @@ const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2: IPriceEarningsProps 
 		</template>
 		<template #title>{{ props.section?.title }}</template>
 		<template #body>
+			<chart-widget-eps />
 			<div :class="classes.container">
 				<div :class="classes.peGroup">
 					<chart-widget-price-earnings v-bind="idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps1" />
 					<chart-widget-price-earnings v-bind="idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2" />
 				</div>
 			</div>
+			<chart-widget-historical-eps />
+
 		</template>
 	</chart-common-section-layout>
 </template>

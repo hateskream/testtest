@@ -1,10 +1,15 @@
 <script setup lang="ts">
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { type ISectionProps } from '@/modules/chart/models';
-import { ChartWidgetValuation, ChartWidgetsCapitalStructure } from '@/modules/chart/components/widgets';
-import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
+import {
+	ChartWidgetValuation,
+	ChartWidgetsCapitalStructure,
+	ChartWidgetYearlyRevenue, ChartWidgetPriceTarget, ChartWidgetQuarterlyRevenue,
+} from '@/modules/chart/components/widgets';
+import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
+import { useTabs } from '@/modules/chart/components/shared/composables';
 
 
 const props = defineProps<ISectionProps>();
@@ -25,6 +30,49 @@ const capitalStructureData = {
 };
 
 const itemRef = ref<HTMLElement | null>(null);
+
+const tabsFirst = computed(() => {
+	if (!props.section?.items || !Array.isArray(props.section.items)) {
+		return [];
+	}
+
+	return props.section.items.filter(el => el.group === 'tab-group-1');
+});
+
+const { activeTab:activeTabFirst, tabList:tabListFirst, setActiveTab:setActiveTabFirst } = useTabs(tabsFirst);
+
+const tabsSecond = computed(() => {
+	if (!props.section?.items || !Array.isArray(props.section.items)) {
+		return [];
+	}
+
+	return props.section.items.filter(el => el.group === 'tab-group-2');
+});
+
+
+
+
+const { activeTab:activeTabSecond, tabList:tabListSecond, setActiveTab:setActiveTabSecond } = useTabs(tabsSecond);
+
+
+watch(() => props.selectedItem, (newSelectedItem) => {
+	if (!newSelectedItem) {
+		return;
+	}
+	let newTab = tabsFirst.value.find(el => el.id === newSelectedItem);
+	if (newTab) {
+		setActiveTabFirst(newTab.id);
+		return;
+	}
+
+	newTab = tabsSecond.value.find(el => el.id === newSelectedItem);
+	if (newTab) {
+		setActiveTabSecond(newTab.id);
+		return;
+	}
+
+
+});
 
 // Register the ref when component mounts
 onMounted(() => {
@@ -56,6 +104,23 @@ onUnmounted(() => {
 					<chart-widgets-capital-structure :values="capitalStructureData" />
 				</div>
 			</div>
+			<chart-common-tabs-layout
+				:active-tab="activeTabFirst"
+				:tab-list="tabListFirst"
+				:set-active-tab="setActiveTabFirst"
+			>
+				<template #price-target-history><chart-widget-price-target /></template>
+				<template #price-target-analysis><chart-widget-yearly-revenue /></template>
+			</chart-common-tabs-layout>
+			<div :class="classes.split" />
+			<chart-common-tabs-layout
+				:active-tab="activeTabSecond"
+				:tab-list="tabListSecond"
+				:set-active-tab="setActiveTabSecond"
+			>
+				<template #quarterly-revenue><chart-widget-quarterly-revenue /></template>
+				<template #yearly-revenue><chart-widget-yearly-revenue /></template>
+			</chart-common-tabs-layout>
 		</template>
 	</chart-common-section-layout>
 </template>
@@ -69,7 +134,10 @@ onUnmounted(() => {
 	display: flex;
 	gap: 3px;
 }
-
+.split {
+	height: 3px;
+	width:0;
+}
 @container (max-width: 599px) {
 	.section {
 		flex-direction: column;
