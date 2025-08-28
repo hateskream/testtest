@@ -56,7 +56,6 @@ onUnmounted(() => {
 
 .wrapper {
 	display: flex;
-	align-items: center;
 }
 
 .stylebox {
