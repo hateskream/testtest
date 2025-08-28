@@ -4,11 +4,10 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
 import { ChartWidgetPriceEarnings } from '@/modules/chart/components/widgets/price-earnings';
 import type { ISectionProps } from '@/modules/chart/models';
+import { ChartWidgetEps, ChartWidgetHistoricalEps } from '@/modules/chart/components/widgets';
 
-// TODO: move to models
-// eslint-disable-next-line @stylistic/max-len
-import type { IPriceEarningsProps } from '@/modules/chart/components/widgets/price-earnings/chart-widget-price-earnings.vue';
-import {ChartWidgetEps, ChartWidgetHistoricalEps} from "@/modules/chart/components/widgets";
+import type { IPriceEarningsProps } from
+	'@/modules/chart/components/widgets/price-earnings/chart-widget-price-earnings.vue';
 
 
 const props = defineProps<ISectionProps>();

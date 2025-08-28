@@ -10,11 +10,7 @@ import {
 	ChartWidgetIncomeStatement,
 } from '@/modules/chart/components/widgets';
 import { ChartWidgetAnnualReturns } from '@/modules/chart/components/widgets/annual-returns';
-import type { IBarChartModel } from '@/modules/bar-chart/bar-chart.model.ts';
-interface IChartData extends IBarChartModel {
-	period: string;
-	value: string;
-}
+import type { ILineChartModel } from '@/modules/bar-chart/line-chart.model.ts';
 export interface IAnnualReturnsProps {
 	widgetData: {
 		title: string;
@@ -23,6 +19,10 @@ export interface IAnnualReturnsProps {
 		status: 'negative' | 'positive' | 'neutral';
 	};
 	charts: IChartData[];
+}
+
+interface IChartData extends ILineChartModel {
+	label: string;
 }
 
 

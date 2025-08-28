@@ -50,8 +50,6 @@ const tabsSecond = computed(() => {
 });
 
 
-
-
 const { activeTab:activeTabSecond, tabList:tabListSecond, setActiveTab:setActiveTabSecond } = useTabs(tabsSecond);
 
 
@@ -134,10 +132,12 @@ onUnmounted(() => {
 	display: flex;
 	gap: 3px;
 }
+
 .split {
+	width: 0;
 	height: 3px;
-	width:0;
 }
+
 @container (max-width: 599px) {
 	.section {
 		flex-direction: column;

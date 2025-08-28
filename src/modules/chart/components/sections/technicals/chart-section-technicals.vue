@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, ref, watch} from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
 import { ChartWidgetMovingAverages, ChartWidgetOscillators, ChartWidgetOscillatorsTable } from

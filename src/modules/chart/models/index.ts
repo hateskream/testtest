@@ -445,12 +445,6 @@ export const chartEtfSections: IChartWidgetSections = {
 			component: CHART_SECTION_COMPONENT.HOLDINGS_DIAGRAM,
 		},
 
-
-		{
-			id: 'historical-eps',
-			title: 'Historical EPS',
-			component: CHART_SECTION_COMPONENT.HISTORICAL_EPS,
-		},
 		{
 			id: 'snp-500',
 			title: 'SNP 500',
