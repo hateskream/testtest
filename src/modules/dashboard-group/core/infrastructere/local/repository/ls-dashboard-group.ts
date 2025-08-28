@@ -22,22 +22,47 @@ IGetterDashboardGroup, ISetterDashboardGroup {
 	}
 
 	public init() {
-		if (!compareVersions()) {
-			localStorage.removeItem(this.storageKey);
+		const savedVersion = localStorage.getItem('app_version');
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const currentVersion = (globalThis as any).__APP_VERSION__ || 'unknown';
 
+		console.log('[LSDashboardGroup] Init:', {
+			storageKey: this.storageKey,
+			savedVersion,
+			currentVersion,
+			versionsMatch: savedVersion === currentVersion,
+		});
+
+		if (!compareVersions()) {
+			const existingData = localStorage.getItem(this.storageKey);
+			console.log('[LSDashboardGroup] Version mismatch - clearing data:', {
+				hadExistingData: !!existingData,
+				existingDataSize: existingData?.length || 0,
+			});
+
+			localStorage.removeItem(this.storageKey);
 			updateVersion();
+
+			console.log('[LSDashboardGroup] Updated version to:', currentVersion);
 			this.initNew();
 			return;
 		}
 
 		const raw = localStorage.getItem(this.storageKey);
+		console.log('[LSDashboardGroup] Loading existing data:', {
+			hasData: !!raw,
+			dataSize: raw?.length || 0,
+		});
+
 		if (raw === null) {
+			console.log('[LSDashboardGroup] No existing data found');
 			this.initNew();
 			return;
 		}
 
 		const data = JSON.parse(raw) as DashboardGroupModel;
 		this.cached = this.rehydrate(data);
+		console.log('[LSDashboardGroup] Successfully rehydrated existing data');
 	}
 
 	private initNew() {
