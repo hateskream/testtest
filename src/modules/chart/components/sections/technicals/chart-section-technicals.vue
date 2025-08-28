@@ -2,8 +2,13 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
-import { ChartWidgetMovingAverages, ChartWidgetOscillators, ChartWidgetOscillatorsTable } from
-	'@/modules/chart/components/widgets';
+import {
+	ChartWidgetMovingAverages,
+	ChartWidgetMovingAveragesTable,
+	ChartWidgetOscillators,
+	ChartWidgetOscillatorsTable
+} from
+		'@/modules/chart/components/widgets';
 import type { ISectionProps } from '@/modules/chart/models';
 import { useTabs } from '@/modules/chart/components/shared/composables';
 
@@ -70,7 +75,7 @@ onUnmounted(() => {
 					:set-active-tab="setActiveTabFirst"
 				>
 					<template #oscillators><chart-widget-oscillators-table /></template>
-					<template #moving-averages><chart-widget-oscillators-table /></template>
+					<template #moving-averages><chart-widget-moving-averages-table /></template>
 				</chart-common-tabs-layout>
 
 

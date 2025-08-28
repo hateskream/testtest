@@ -17,7 +17,7 @@ import { ChartWidgetStockPeersBulk } from './stock-peers-bulk';
 import { ChartWidgetValuation } from './valuation';
 import { ChartWidgetYearlyRevenue } from './yearly-revenue';
 import { ChartWidgetLinks } from './links';
-import { ChartWidgetOscillators, ChartWidgetOscillatorsTable } from './oscillators';
+import { ChartWidgetOscillators, ChartWidgetOscillatorsTable, ChartWidgetMovingAveragesTable } from './oscillators';
 import { ChartWidgetMovingAverages } from './moving-averages';
 import {
 	WidgetAddressesHoldings,
@@ -77,4 +77,5 @@ export {
 	ChartWidgetSnp,
 	ChartWidgetHistoricalEps,
 	ChartWidgetStylebox,
+	ChartWidgetMovingAveragesTable,
 };
