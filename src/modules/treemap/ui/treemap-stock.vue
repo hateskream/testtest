@@ -14,6 +14,7 @@ import type {
 import { NO_GROUP, TitleViewVariant } from '../model';
 import { useQueryHeatmapStock } from '../query';
 import { UiTreemap, UiTreemapLayout } from '@/shared/ui/treemap';
+import { IconIds } from '@/shared/ui/icon';
 
 import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
@@ -84,11 +85,13 @@ function setSelectGroup(id: string | null) {
 				title="Size by"
 				:setting="sizeBy"
 				:active="activeSizeBy"
+				:icon="IconIds.Size"
 			/>
 			<setting-component
 				title="Group by"
 				:setting="groupBy"
 				:active="activeGroupBy"
+				:icon="IconIds.GroupBy"
 			/>
 		</settings-base>
 		<ui-treemap-layout :data="group">

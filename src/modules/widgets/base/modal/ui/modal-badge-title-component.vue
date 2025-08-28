@@ -1,5 +1,20 @@
+<script setup lang="ts">
+import { computed, type CSSProperties } from 'vue';
+
+interface IProps {
+	backgroundColor?: CSSProperties['backgroundColor'];
+	color?: CSSProperties['color'];
+}
+const props = defineProps<IProps>();
+
+const badgeColors = computed(() => ({
+	backgroundColor: props.backgroundColor ?? 'var(--bg-color-base-300)',
+	color: props.color ?? 'var(--text-color-base-300)',
+}));
+</script>
+
 <template>
-	<div :class="classes.title">
+	<div :class="classes.title" :style="badgeColors">
 		<slot />
 	</div>
 </template>
@@ -14,8 +29,6 @@
 	font-weight: 300;
 	font-size: 10px;
 	text-align: left;
-	color: var(--text-color-base-300);
-	background-color: var(--bg-color-base-300);
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;

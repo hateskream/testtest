@@ -47,7 +47,10 @@ const preparedValue = computed(() => {
 		<div
 			v-if="props.visibleConfig.isShowLogo"
 			class="item-logo"
-		/>
+		>
+			<!-- <img src="@/assets/images/currency/BTC.png" class="item-logo-image" /> -->
+			<img :src="props.logoUrl" class="item-logo-image" />
+		</div>
 		<div
 			v-if="props.visibleConfig.isShowTicker"
 			class="item-ticker"
@@ -76,11 +79,20 @@ const preparedValue = computed(() => {
 }
 
 .item-logo {
+	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
 	width: 40px;
 	height: 40px;
 	margin-bottom: 6px;
+	background: var(--color-bg-surface-02, #161618);
 	border: 1px solid #000000;
 	border-radius: 50%;
+
+	img {
+		flex-shrink: 0;
+	}
 }
 
 .item-ticker {

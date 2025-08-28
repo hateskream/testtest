@@ -19,6 +19,7 @@ import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiDelimiter } from '@/shared/ui/delimiter';
 
 interface ISettingsBase {
 	activeMarket: IMarket;
@@ -37,7 +38,7 @@ const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
 const title = defineModel<TitleViewVariant>('title', { required: true });
 
 function updateMarket(newActiveId: string) {
-	market.value.active = newActiveId;;
+	market.value.active = newActiveId;
 }
 
 function updateColorBy(newColorBy: string) {
@@ -58,17 +59,21 @@ function updateTitle(newTitle: TitleViewVariant) {
 </script>
 
 <template>
-	<div class="root">
-		<div class="right">
-			<modal-badge class="market">
-				<template #title>
+	<div class="heatmap-toolbar">
+		<div class="start-group">
+			<modal-badge
+				class="market-modal"
+				background-color="var(--color-bg-contrast-300, #DCDCDF)"
+				color="var(--color-text-contrast-500, #0C0C0E)"
+			>
+				<template #title="{ isVisible }">
 					{{ props.activeMarket.displayName }}
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						width="12"
 						height="12"
-						class="icon"
+						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
 				</template>
 				<template #content>
@@ -88,15 +93,22 @@ function updateTitle(newTitle: TitleViewVariant) {
 				</template>
 			</modal-badge>
 
-			<modal-badge class="color">
-				<template #title>
-					{{ activeColorBy.colorBy.displayName }}
+			<ui-delimiter class="delimiter" />
+
+			<modal-badge class="color-modal">
+				<template #title="{ isVisible }">
+					<ui-icon
+						:id="IconIds.Color"
+						width="12"
+						height="12"
+					/>
+					<span class="color-modal-text">{{ props.activeColorBy.colorBy.displayName }}</span>
 
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						width="12"
 						height="12"
-						class="icon"
+						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
 				</template>
 				<template #content>
@@ -115,7 +127,8 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<ui-position>
 								<template #default>
 									<modal-item-interaction>
-										Color depth : {{ activeColorDepth.start }} to {{ activeColorDepth.end }}
+										<!-- eslint-disable-next-line @stylistic/max-len -->
+										Color depth <span class="dot" /> {{ props.activeColorDepth.start }} to {{ props.activeColorDepth.end }}
 									</modal-item-interaction>
 								</template>
 								<template #content>
@@ -144,7 +157,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 			</div>
 
 		</div>
-		<div class="left">
+		<div class="end-group">
 			<ui-position position="right-start">
 				<template #default>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
@@ -183,7 +196,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 							<template #default>
 								<modal-item-interaction>
 									<div>
-										Display value : {{ activeDisplayValue.displayName }}
+										Display value <span class="dot" /> {{ props.activeDisplayValue.displayName }}
 									</div>
 								</modal-item-interaction>
 							</template>
@@ -210,27 +223,35 @@ function updateTitle(newTitle: TitleViewVariant) {
 </template>
 
 <style scoped>
-.root {
+.heatmap-toolbar {
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
+	container-type: inline-size;
 }
 
-.right {
-	display: flex;
-}
-
-.left {
+.start-group {
 	display: flex;
 	align-items: center;
 }
 
-.market {
-	margin-right: 24px;
+.end-group {
+	display: flex;
+	align-items: center;
 }
 
-.color {
+
+.color-modal {
 	margin-right: 4px;
+}
+
+.color-modal,
+.market-modal {
+	&:hover {
+		.dropdown-icon {
+			color: rgb(255 255 255 / 100%);
+		}
+	}
 }
 
 .other {
@@ -239,12 +260,32 @@ function updateTitle(newTitle: TitleViewVariant) {
 	gap: 4px;
 }
 
-.icon {
-	color: rgb(100 101 104 / 100%);
-	cursor: pointer;
+.dropdown-icon {
+	transition: transform 0.3s ease;
+
+	&.rotated {
+		transform: rotate(-180deg);
+	}
 }
 
-.icon:hover {
-	color: rgb(255 255 255 / 100%);
+.dot {
+	width: 1px;
+	height: 1px;
+	border: 1px solid var(--color-text-base-300, #9a9a9d);
+	border-radius: 100%;
+}
+
+.delimiter {
+	margin-inline: 12px;
+}
+
+@container (max-width: 600px) {
+	.color-modal-text {
+		display: none;
+	}
+
+	.other :deep(.setting-text) {
+		display: none;
+	}
 }
 </style>

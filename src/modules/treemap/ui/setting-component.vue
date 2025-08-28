@@ -10,6 +10,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 interface IProps {
 	title: string;
 	active: ISettings;
+	icon?: IconIds;
 }
 
 const props = defineProps<IProps>();
@@ -22,15 +23,21 @@ function update(newValue: string) {
 </script>
 
 <template>
-	<modal-badge>
-		<template #title>
-			{{ props.active.displayName }}
+	<modal-badge class="setting-modal">
+		<template #title="{ isVisible }">
+			<ui-icon
+				v-if="props.icon"
+				:id="props.icon"
+				width="12"
+				height="12"
+			/>
+			<span class="setting-text">{{ props.active.displayName }}</span>
 
 			<ui-icon
 				:id="IconIds.DropdownDown"
 				width="12"
 				height="12"
-				class="icon"
+				:class="['dropdown-icon', { 'rotated': isVisible }]"
 			/>
 		</template>
 		<template #content>
@@ -50,3 +57,21 @@ function update(newValue: string) {
 		</template>
 	</modal-badge>
 </template>
+
+<style scoped>
+.dropdown-icon {
+	transition: transform 0.3s ease;
+
+	&.rotated {
+		transform: rotate(-180deg);
+	}
+}
+
+.setting-modal {
+	&:hover {
+		.dropdown-icon {
+			color: rgb(255 255 255 / 100%);
+		}
+	}
+}
+</style>
