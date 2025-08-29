@@ -1,5 +1,10 @@
 <script setup lang="ts">
+// import type { ITickerAction } from '../../model';
 
+// const emit = defineEmits<{
+// 	(event: 'add-ticker', payload: ITickerAction): void;
+// 	(event: 'remove-ticker', payload: ITickerAction): void;
+// }>();
 </script>
 
 <template>

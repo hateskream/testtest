@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISection, ITabUi } from '../../model';
+import type { ISection, ITabUi, ITickerAction } from '../../model';
 
 import WatchlistTable from '../table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
@@ -19,6 +19,8 @@ const emit = defineEmits<{
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
 	(event: 'duplicate-tab', id: string): void;
+	(event: 'add-ticker', payload: ITickerAction): void;
+	(event: 'remove-ticker', payload: ITickerAction): void;
 }>();
 
 function onRenameTab(id: string, name: string) {
@@ -39,6 +41,8 @@ function onRenameTab(id: string, name: string) {
 			:columns="props.columns"
 			:sections="props.sections"
 			:tickers="props.tickers"
+			@add-ticker="emit('add-ticker', $event)"
+			@remove-ticker="emit('remove-ticker', $event)"
 		/>
 	</div>
 </template>

@@ -31,6 +31,9 @@ const {
 	handlerDuplicateTab,
 
 	resetAllChanges,
+
+	handlerAddToWatchlist,
+	handlerRemoveFromWatchlist,
 } = useWatchlist(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryTickers(tickerIds);
@@ -58,6 +61,8 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				@rename-tab="handlerRenameTab"
 				@switch-tab="handlerSwitchTab"
 				@duplicate-tab="handlerDuplicateTab"
+				@add-ticker="handlerAddToWatchlist"
+				@remove-ticker="handlerRemoveFromWatchlist"
 			/>
 		</template>
 

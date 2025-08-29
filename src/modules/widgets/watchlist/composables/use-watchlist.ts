@@ -4,6 +4,7 @@ import z from 'zod';
 import {
 	type IState,
 	type ITable,
+	type ITickerAction,
 	addCustomSection,
 	addNewTab,
 	addTickerInTab,
@@ -31,7 +32,7 @@ import { useGetState, useUpdateState } from '../queries';
 import { Consumer } from '@/shared/service/event-bus';
 import { MarketType } from '@/modules/market';
 
-type Event = 'addToWatchlist' | 'removeFromWatchlist';
+type Event = 'subscribeAddToWatchlist' | 'removeFromWatchlist';
 
 const payloadSchema = z.object({
 	tickerId: z
@@ -54,10 +55,10 @@ type IPayload = z.infer<typeof payloadSchema>;
 type Events = Record<Event, IPayload>;
 
 export function useWatchlist(widgetId: string) {
-	const consumer = new Consumer<Events>(['addToWatchlist', 'removeFromWatchlist']);
+	const consumer = new Consumer<Events>(['subscribeAddToWatchlist', 'removeFromWatchlist']);
 
-	consumer.on('addToWatchlist', addToWatchlist);
-	consumer.on('removeFromWatchlist', removeFromWatchlist);
+	consumer.on('subscribeAddToWatchlist', subscribeAddToWatchlist);
+	consumer.on('removeFromWatchlist', subscribeRemoveFromWatchlist);
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
@@ -106,8 +107,8 @@ export function useWatchlist(widgetId: string) {
 	});
 
 	onUnmounted(() => {
-		consumer.off('addToWatchlist', addToWatchlist);
-		consumer.off('removeFromWatchlist', removeFromWatchlist);
+		consumer.off('subscribeAddToWatchlist', subscribeAddToWatchlist);
+		consumer.off('removeFromWatchlist', subscribeRemoveFromWatchlist);
 	});
 
 	watch(dataState, newState => {
@@ -143,7 +144,7 @@ export function useWatchlist(widgetId: string) {
 	}
 
 	function handlerAddNewTab() {
-		state.value = addNewTab(state.value, 'New tab');
+		state.value = addNewTab(state.value);
 	}
 
 	function handlerRenameTab(tabId: string, newName: string) {
@@ -251,7 +252,7 @@ export function useWatchlist(widgetId: string) {
 		state.value = getDefaultState();
 	}
 
-	function addToWatchlist(payload: IPayload) {
+	function subscribeAddToWatchlist(payload: IPayload) {
 		if (!isPayloadAccept(payload)) {
 			return;
 		}
@@ -261,7 +262,20 @@ export function useWatchlist(widgetId: string) {
 		state.value = addTickerInTab(state.value, tickerId, tickerType, tabId);
 	}
 
-	function removeFromWatchlist(payload: IPayload) {
+	function handlerAddToWatchlist({ tickerId, tickerType }: ITickerAction) {
+		if (activeTab.value === null) {
+			return;
+		}
+
+		state.value = addTickerInTab(
+			state.value,
+			tickerId,
+			tickerType,
+			activeTab.value.id,
+		);
+	}
+
+	function subscribeRemoveFromWatchlist(payload: IPayload) {
 		if (!isPayloadAccept(payload)) {
 			return;
 		}
@@ -269,6 +283,19 @@ export function useWatchlist(widgetId: string) {
 		const { tickerType, tickerId, tabId } = payload;
 
 		state.value = deleteTickerInTab(state.value, tickerId, tickerType, tabId);
+	}
+
+	function handlerRemoveFromWatchlist({ tickerId, tickerType }: ITickerAction) {
+		if (activeTab.value === null) {
+			return;
+		}
+
+		state.value = deleteTickerInTab(
+			state.value,
+			tickerId,
+			tickerType,
+			activeTab.value.id,
+		);
 	}
 
 	function isPayloadAccept(input: unknown): boolean {
@@ -313,5 +340,8 @@ export function useWatchlist(widgetId: string) {
 		handlerAddCustomSection,
 
 		resetAllChanges,
+
+		handlerAddToWatchlist,
+		handlerRemoveFromWatchlist,
 	};
 }

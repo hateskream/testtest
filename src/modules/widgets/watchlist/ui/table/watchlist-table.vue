@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapSections, type ISection } from '../../model';
+import { mapSections, type ISection, type ITickerAction } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
@@ -14,6 +14,11 @@ interface IWatchlistTableProps {
 }
 
 const props = defineProps<IWatchlistTableProps>();
+
+const emit = defineEmits<{
+	(event: 'add-ticker', payload: ITickerAction): void;
+	(event: 'remove-ticker', payload: ITickerAction): void;
+}>();
 
 const genericColumns = computed(() => mapColumn(props.columns));
 
@@ -35,7 +40,11 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 			:enable-row-actions="false"
 			:show-header="true"
 		/>
-		<watchlist-empty-state v-else />
+		<watchlist-empty-state
+			v-else
+			@add-ticker="emit('add-ticker', $event)"
+			@remove-ticker="emit('remove-ticker', $event)"
+		/>
 	</div>
 </template>
 
