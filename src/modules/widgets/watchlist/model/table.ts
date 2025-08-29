@@ -2,8 +2,6 @@ import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, typ
 import {
 	addRow,
 	deleteRow,
-	getMockSectionsFirst,
-	getMockSectionsSecond,
 	isCustom,
 	newSectionByType,
 	SpecificSectionType,
@@ -40,24 +38,6 @@ export function rehydrateTable(table: IHydratedTable): ITable {
 	return {
 		...table,
 		columns: rehydrateColumns(table.columns, ALL_COLUMNS),
-	};
-}
-
-export function getMockTableFirst(): ITable {
-	return {
-		columns: ALL_COLUMNS,
-		sections: getMockSectionsFirst(),
-		sort: null,
-		tickerState: getDefaultTickerState(),
-	};
-}
-
-export function getMockTableSecond(): ITable {
-	return {
-		columns: ALL_COLUMNS,
-		sections: getMockSectionsSecond(),
-		sort: null,
-		tickerState: getDefaultTickerState(),
 	};
 }
 

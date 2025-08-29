@@ -1,7 +1,6 @@
 import type { MarketType } from '@/modules/market';
 import {
 	createEmptyTab,
-	createMockTab,
 	duplicate,
 	hydrateTab,
 	rehydrateTab,
@@ -10,7 +9,7 @@ import {
 	type ITab,
 	type ITabUi,
 } from './tab';
-import { addTickerInTable, deleteTickerInTable, getMockTableFirst, getMockTableSecond, type ITable } from './table';
+import { addTickerInTable, deleteTickerInTable, type ITable } from './table';
 
 export interface IState {
 	activeTabId: string | null;
@@ -58,13 +57,11 @@ export function rehydrateState(state: IHydratedState): IState {
 }
 
 export function getDefaultState(): IState {
-	const tab1 = createMockTab('Tab 1', 0, getMockTableFirst());
-	const tab2 = createMockTab('Tab 2', 1, getMockTableSecond());
+	const tab = createEmptyTab(0);
 
 	return {
-		activeTabId: tab1.id,
-
-		tabs: [tab1, tab2],
+		activeTabId: tab.id,
+		tabs: [tab],
 	};
 }
 
@@ -75,13 +72,12 @@ export function changeActiveTab(state: IState, newActiveTabId: string): IState {
 	};
 }
 
-export function addNewTab(state: IState, name: string): IState {
+export function addNewTab(state: IState): IState {
 	if (state.tabs.length >= MAX_TAB_COUNT) {
 		return state;
 	}
 
 	const newTab = createEmptyTab(
-		name,
 		getLastTabOrder(state) + 1,
 	);
 

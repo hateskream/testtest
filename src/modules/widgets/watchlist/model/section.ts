@@ -20,63 +20,6 @@ export interface ISection {
 
 const MAX_COUNT_TICKERS = 100;
 
-export function getMockSectionsFirst(): ISection[] {
-	return [
-		{
-			id: '1',
-			name: 'Crypto',
-			type: MarketType.Crypto,
-			isOpen: true,
-			rows: [
-				{
-					id: '1',
-				},
-				{
-					id: '2',
-				},
-			],
-		},
-		{
-			id: '2',
-			name: 'Stocks',
-			type: MarketType.Stock,
-			isOpen: true,
-			rows: [
-				{
-					id: '3',
-				},
-			],
-		},
-		{
-			id: '3',
-			name: 'Forex',
-			type: MarketType.Forex,
-			isOpen: true,
-			rows: [
-				{
-					id: '4',
-				},
-			],
-		},
-	];
-}
-
-export function getMockSectionsSecond(): ISection[] {
-	return [
-		{
-			id: '4',
-			name: 'Commodity',
-			type: MarketType.Commodities,
-			isOpen: true,
-			rows: [
-				{
-					id: '5',
-				},
-			],
-		},
-	];
-}
-
 export function newCustomSection(): ISection {
 	return newSection('Custom', SpecificSectionType.Custom);
 }
