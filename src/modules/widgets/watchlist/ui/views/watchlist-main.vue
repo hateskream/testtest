@@ -21,6 +21,7 @@ const emit = defineEmits<{
 	(event: 'duplicate-tab', id: string): void;
 	(event: 'add-ticker', payload: ITickerAction): void;
 	(event: 'remove-ticker', payload: ITickerAction): void;
+	(event: 'delete-tab', id: string): void;
 }>();
 
 function onRenameTab(id: string, name: string) {
@@ -36,6 +37,7 @@ function onRenameTab(id: string, name: string) {
 			@rename-tab="onRenameTab"
 			@switch-tab="emit('switch-tab', $event)"
 			@duplicate-tab="emit('duplicate-tab', $event)"
+			@delete-tab="emit('delete-tab', $event)"
 		/>
 		<watchlist-table
 			:columns="props.columns"

@@ -10,6 +10,7 @@ import {
 	type ITabUi,
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiDriver } from '@/shared/ui/driver';
 
 import WatchlistTab from './watchlist-tab.vue';
 
@@ -28,14 +29,14 @@ const emit = defineEmits<{
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
 	(event: 'duplicate-tab', id: string): void;
+	(event: 'delete-tab', id: string): void;
 }>();
 
 const actionToCb: Record<TabAction, (id: string) => void> = {
 	[TabAction.Duplicate]: (id: string) => emit('duplicate-tab', id),
 	[TabAction.Rename]: startEditing,
-	[TabAction.Share]: (_: string) => {},
-	[TabAction.AddAlert]: (_: string) => {},
-	[TabAction.AddSymbolsToList]: (_: string) => {},
+	[TabAction.AddSymbolsToList]: (_: string) => { },
+	[TabAction.Delete]: (id: string) => emit('delete-tab', id),
 };
 
 const positionRefs = useTemplateRef<InstanceType<typeof UiPosition>[]>('positionRefs');
@@ -120,11 +121,35 @@ function openModal(index: number) {
 						<modal-badge-list>
 							<template #title>{{ tab.name }}</template>
 							<modal-item
-								v-for="(title, key) in tabActionToTitle"
-								:key="key"
-								@click="onClickAction(key, tab.id)"
+								@click="onClickAction(TabAction.Rename, tab.id)"
 							>
-								<span :class="classes.menuActionTitle">{{ title }}</span>
+								<span :class="classes.menuActionTitle">
+									{{ tabActionToTitle[TabAction.Rename] }}
+								</span>
+							</modal-item>
+							<modal-item
+								@click="onClickAction(TabAction.Duplicate, tab.id)"
+							>
+								<span :class="classes.menuActionTitle">
+									{{ tabActionToTitle[TabAction.Duplicate] }}
+								</span>
+							</modal-item>
+							<modal-item
+								@click="onClickAction(TabAction.AddSymbolsToList, tab.id)"
+							>
+								<span :class="classes.menuActionTitle">
+									{{ tabActionToTitle[TabAction.AddSymbolsToList] }}
+								</span>
+							</modal-item>
+
+							<ui-driver />
+
+							<modal-item
+								@click="onClickAction(TabAction.Delete, tab.id)"
+							>
+								<span :class="classes.menuActionTitle">
+									{{ tabActionToTitle[TabAction.Delete] }}
+								</span>
 							</modal-item>
 						</modal-badge-list>
 					</template>

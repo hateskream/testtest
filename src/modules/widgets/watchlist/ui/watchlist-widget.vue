@@ -29,6 +29,7 @@ const {
 	handlerRenameTab,
 	handlerSwitchTab,
 	handlerDuplicateTab,
+	handlerRemoveTab,
 
 	resetAllChanges,
 
@@ -63,6 +64,7 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				@duplicate-tab="handlerDuplicateTab"
 				@add-ticker="handlerAddToWatchlist"
 				@remove-ticker="handlerRemoveFromWatchlist"
+				@delete-tab="handlerRemoveTab"
 			/>
 		</template>
 

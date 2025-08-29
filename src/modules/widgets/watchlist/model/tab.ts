@@ -25,18 +25,16 @@ export interface ITabUi {
 
 export enum TabAction {
 	Rename = 'rename',
-	Share = 'share',
 	Duplicate = 'duplicate',
-	AddAlert = 'addAlert',
 	AddSymbolsToList = 'addSymbolsToList',
+	Delete = 'delete',
 }
 
 export const tabActionToTitle: Readonly<Record<TabAction, string>> = {
 	[TabAction.Rename]: 'Rename',
-	[TabAction.Share]: 'Share',
 	[TabAction.Duplicate]: 'Duplicate',
-	[TabAction.AddAlert]: 'Add alert',
 	[TabAction.AddSymbolsToList]: 'Add symbols to list',
+	[TabAction.Delete]: 'Delete',
 };
 
 export function hydrateTab(tab: ITab): IHydratedTab {

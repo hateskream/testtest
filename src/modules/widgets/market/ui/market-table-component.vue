@@ -39,7 +39,7 @@ const genericRows = computed(() =>
 	props.rows.map(ticker => mapRow(ticker)),
 );
 
-function handleAddToWatchlist(watchlist: IWatchlistData, tickerId: string) {
+function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 	const payload: IWatchlistAction = {
 		watchlistId: watchlist.watchlistId,
 		tabId: watchlist.tabId,
@@ -51,6 +51,10 @@ function handleAddToWatchlist(watchlist: IWatchlistData, tickerId: string) {
 	} else {
 		emits('add-to-watchlist', payload);
 	}
+}
+
+function clickNewWatchlist(tickerId: string) {
+	console.log('clickNewWatchlist', tickerId);
 }
 </script>
 
@@ -89,11 +93,15 @@ function handleAddToWatchlist(watchlist: IWatchlistData, tickerId: string) {
 							<template v-for="watchlist in props.wachlists" :key="watchlist.tabId">
 								<modal-item-selector
 									:model-value="isOnWatchlist(watchlist, tickerId)"
-									@update:model-value="handleAddToWatchlist(watchlist, tickerId)"
+									@update:model-value="clickRowAction(watchlist, tickerId)"
 								>
 									{{ watchlist.name }}
 								</modal-item-selector>
 							</template>
+
+							<div @click="clickNewWatchlist(tickerId)">
+								Add new watchlist
+							</div>
 						</modal-badge-list>
 					</template>
 				</modal-badge>
