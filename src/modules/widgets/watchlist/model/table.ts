@@ -9,7 +9,7 @@ import {
 } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import { createRow } from './row';
 
 export interface ITable {
@@ -45,6 +45,44 @@ export function createEmptyTable(): ITable {
 	return {
 		columns: ALL_COLUMNS,
 		sections: [],
+		sort: null,
+		tickerState: getDefaultTickerState(),
+	};
+}
+
+export function createTableWithMockData(): ITable {
+	const cryptoSection = newSectionByType(MarketType.Crypto);
+	const stockSection = newSectionByType(MarketType.Stock);
+	const forexSection = newSectionByType(MarketType.Forex);
+	const commoditySection = newSectionByType(MarketType.Commodities);
+	const indexSection = newSectionByType(MarketType.Indices);
+
+	const cryptoWithBTC = addRow(cryptoSection, createRow('BTC'));
+	const cryptoWithETH = addRow(cryptoWithBTC, createRow('ETH'));
+	const cryptoWithSOL = addRow(cryptoWithETH, createRow('SOL'));
+	const cryptoSectionFinal = addRow(cryptoWithSOL, createRow('ADA'));
+
+	const stockWithTSLA = addRow(stockSection, createRow('TSLA'));
+	const stockSectionFinal = addRow(stockWithTSLA, createRow('AAPL'));
+
+	const forexWithEURUSD = addRow(forexSection, createRow('EURUSD'));
+	const forexSectionFinal = addRow(forexWithEURUSD, createRow('GBPUSD'));
+
+	const commodityWithGold = addRow(commoditySection, createRow('XAUUSD'));
+	const commoditySectionFinal = addRow(commodityWithGold, createRow('USOIL'));
+
+	const indexWithSPY = addRow(indexSection, createRow('SPY'));
+	const indexSectionFinal = addRow(indexWithSPY, createRow('QQQ'));
+
+	return {
+		columns: ALL_COLUMNS,
+		sections: [
+			cryptoSectionFinal,
+			stockSectionFinal,
+			forexSectionFinal,
+			commoditySectionFinal,
+			indexSectionFinal,
+		],
 		sort: null,
 		tickerState: getDefaultTickerState(),
 	};

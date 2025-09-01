@@ -32,7 +32,7 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 		...col,
 		group: {
 			order: col.groupOrder,
-			name: display.settingsName,
+			name: display.groupName,
 		},
 		type: columnToCell[col.columnType],
 		order: 0,

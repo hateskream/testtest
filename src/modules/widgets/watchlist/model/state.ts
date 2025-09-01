@@ -1,6 +1,7 @@
 import type { MarketType } from '@/modules/market';
 import {
 	createEmptyTab,
+	// createInitialTabWithMockData,
 	duplicate,
 	hydrateTab,
 	rehydrateTab,
@@ -58,6 +59,7 @@ export function rehydrateState(state: IHydratedState): IState {
 
 export function getDefaultState(): IState {
 	const tab = createEmptyTab(0);
+	// const tab = createInitialTabWithMockData(0);
 
 	return {
 		activeTabId: tab.id,

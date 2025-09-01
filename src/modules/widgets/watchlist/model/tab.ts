@@ -1,6 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { createEmptyTable, hydrateTable, rehydrateTable, type IHydratedTable, type ITable } from './table';
+import {
+	createEmptyTable,
+	createTableWithMockData,
+	hydrateTable,
+	rehydrateTable,
+	type IHydratedTable,
+	type ITable,
+} from './table';
 
 export interface ITab {
 	id: string;
@@ -64,6 +71,15 @@ export function createEmptyTab(order: number): ITab {
 		name: 'Favorites',
 		order,
 		table: createEmptyTable(),
+	};
+}
+
+export function createInitialTabWithMockData(order: number): ITab {
+	return {
+		id: uuidv4(),
+		name: 'Favorites',
+		order,
+		table: createTableWithMockData(),
 	};
 }
 
