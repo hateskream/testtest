@@ -31,7 +31,7 @@ const wrapper = useTemplateRef('wrapper');
 const { floatingStyles } = useFloating(reference, floating, {
 	strategy: 'fixed',
 	placement: props.position,
-	middleware: [offset(props.positionOffset), flip()],
+	middleware: [offset(props.positionOffset), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
 });
 
@@ -100,7 +100,6 @@ defineExpose({ isVisible, handleClick });
 			<div
 				v-show="isVisible"
 				ref="floating"
-				id="rrr"
 				:class="classes.content"
 				:style="floatingStyles"
 			>
@@ -111,13 +110,7 @@ defineExpose({ isVisible, handleClick });
 </template>
 
 <style module="classes">
-.wrapper {
-	position: relative;
-}
-
 .content {
-	position: relative;
-	top: -25px !important;
 	z-index: 101;
 }
 </style>

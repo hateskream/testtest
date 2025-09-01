@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
-import { TrendType } from '@/modules/widgets/watchlist/const';
 
+enum TrendType {
+	UP = 'up',
+	DOWN = 'down',
+	NEUTRAL = 'neutral',
+}
 
 const items = [
 	{
