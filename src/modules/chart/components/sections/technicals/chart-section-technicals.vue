@@ -6,9 +6,9 @@ import {
 	ChartWidgetMovingAverages,
 	ChartWidgetMovingAveragesTable,
 	ChartWidgetOscillators,
-	ChartWidgetOscillatorsTable
+	ChartWidgetOscillatorsTable,
 } from
-		'@/modules/chart/components/widgets';
+	'@/modules/chart/components/widgets';
 import type { ISectionProps } from '@/modules/chart/models';
 import { useTabs } from '@/modules/chart/components/shared/composables';
 
