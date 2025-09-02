@@ -18,7 +18,7 @@ import ChartDailyNetFlows from './ui/chart-daily-net-flows.vue';
 import ChartTrailingReturns from './ui/chart-trailing-returns.vue';
 import ChartHoldingsDiagram from './ui/chart-holdings-diagram.vue';
 import ChartStylebox from './ui/chart-stylebox.vue';
-
+import ChartSeasonals from './ui/chart-seasonals.vue';
 
 export {
 	Chart,
@@ -41,4 +41,5 @@ export {
 	ChartTrailingReturns,
 	ChartHoldingsDiagram,
 	ChartStylebox,
+	ChartSeasonals,
 };
