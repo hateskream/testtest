@@ -362,6 +362,11 @@ const {
 							{{ sectionProps.section.title }}
 						</slot>
 					</template>
+
+					<template #row-actions="{ tickerId }">
+						<slot name="row-actions" :ticker-id="tickerId">
+						</slot>
+					</template>
 				</sectioned-table-content>
 
 				<!-- Unsectioned Table Content -->

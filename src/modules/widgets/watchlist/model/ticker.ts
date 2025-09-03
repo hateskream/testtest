@@ -84,8 +84,11 @@ export type Ticker = TableRow<{
 }>;
 
 
-export interface ITickerAction {
+export interface ITickerAddPayload {
 	tickerType: MarketType;
-	watchlistId: string;
+	tickerId: string;
+}
+
+export interface ITickerRemovePayload {
 	tickerId: string;
 }

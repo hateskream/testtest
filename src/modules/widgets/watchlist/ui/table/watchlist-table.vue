@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type ITickerAction, mapSections, type ISectionUi } from '../../model';
+import { mapSections, type ISectionUi, type ITickerAddPayload, type ITickerRemovePayload } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
@@ -16,8 +17,8 @@ interface IWatchlistTableProps {
 const props = defineProps<IWatchlistTableProps>();
 
 const emit = defineEmits<{
-	(event: 'add-ticker', payload: ITickerAction): void;
-	(event: 'remove-ticker', payload: ITickerAction): void;
+	(event: 'add-ticker', payload: ITickerAddPayload): void;
+	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 }>();
 
 const genericColumns = computed(() => mapColumn(props.columns));
@@ -37,9 +38,16 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 			:enable-column-settings="true"
 			:sticky-header="true"
 			:sticky-first-column="true"
-			:enable-row-actions="false"
+			:enable-row-actions="true"
 			:show-header="true"
-		/>
+		>
+			<template #row-actions="{tickerId} : {tickerId: string}">
+				<ui-icon
+					:id="IconIds.TrashOutline"
+					@click="emit('remove-ticker', { tickerId })"
+				/>
+			</template>
+		</widget-typed-table>
 		<watchlist-empty-state
 			v-else
 			@add-ticker="emit('add-ticker', $event)"

@@ -5,7 +5,8 @@ import {
 	type IState,
 	type ITab,
 	type ITable,
-	type ITickerAction,
+	type ITickerAddPayload,
+	type ITickerRemovePayload,
 	changeActiveTable,
 	changeColumnsState,
 	createTablesFromWatchlists,
@@ -109,12 +110,20 @@ export function useWatchlistWidget(widgetId: string) {
 		state.value = changeActiveTable(state.value, tabId);
 	}
 
-	function handlerAddToWatchlist({ watchlistId, tickerId, tickerType }: ITickerAction) {
-		addToWatchlist(watchlistId, tickerId, tickerType);
+	function handlerAddToWatchlist({ tickerId, tickerType }: ITickerAddPayload) {
+		if (!table.value) {
+			return;
+		}
+
+		addToWatchlist(table.value.id, tickerId, tickerType);
 	}
 
-	function handlerRemoveFromWatchlist({ watchlistId, tickerId }: ITickerAction) {
-		removeFromWatchlist(watchlistId, tickerId);
+	function handlerRemoveFromWatchlist({ tickerId }: ITickerRemovePayload) {
+		if (!table.value) {
+			return;
+		}
+
+		removeFromWatchlist(table.value.id, tickerId);
 	}
 
 	function resetAllChanges() {

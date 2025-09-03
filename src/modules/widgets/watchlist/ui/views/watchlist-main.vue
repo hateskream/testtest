@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISectionUi, ITab, ITickerAction } from '../../model';
+import type { ISectionUi, ITab, ITickerAddPayload, ITickerRemovePayload } from '../../model';
 
 import WatchlistTable from '../table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
@@ -19,8 +19,8 @@ const emit = defineEmits<{
 	(event: 'switch-tab', id: string): void;
 	(event: 'rename-tab', id: string, name: string): void;
 	(event: 'duplicate-tab', id: string): void;
-	(event: 'add-ticker', payload: ITickerAction): void;
-	(event: 'remove-ticker', payload: ITickerAction): void;
+	(event: 'add-ticker', payload: ITickerAddPayload): void;
+	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 	(event: 'delete-tab', id: string): void;
 }>();
 

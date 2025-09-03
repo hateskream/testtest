@@ -362,7 +362,7 @@ const canMoveItem = (evt: unknown) => {
 					>
 						<slot
 							name="row-actions"
-							:row="item.row!"
+							:ticker-id="item.id"
 							:section-id="item.sectionId!"
 						/>
 					</td>

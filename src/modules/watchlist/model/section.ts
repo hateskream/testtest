@@ -109,7 +109,8 @@ export function deleteTicker(sections: ISection[], tickerId: string): ISection[]
 		.map(section => ({
 			...section,
 			tickerIds: section.tickerIds.filter(id => id !== tickerId),
-		}));
+		}))
+		.filter(section => section.tickerIds.length > 0);
 }
 
 export function moveRowInSection(
