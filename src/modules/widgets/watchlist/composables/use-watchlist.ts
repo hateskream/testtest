@@ -5,6 +5,7 @@ import {
 	type IState,
 	type ITab,
 	type ITable,
+	type ITickerAction,
 	changeActiveTable,
 	changeColumnsState,
 	createTablesFromWatchlists,
@@ -12,6 +13,7 @@ import {
 	getDefaultState,
 	getSections,
 	getTabsFromWatchlists,
+	selectNewActiveTableId,
 	updateSort,
 	updateTableState,
 } from '../model';
@@ -35,10 +37,7 @@ export function useWatchlistWidget(widgetId: string) {
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
-	const state = ref<IState>({
-		activeTableId: null,
-		tables: [],
-	});
+	const state = ref<IState>(getDefaultState());
 
 	const table = ref<ITable | null>(null);
 	const tabs = computed((): ITab[] =>
@@ -84,29 +83,14 @@ export function useWatchlistWidget(widgetId: string) {
 		{ immediate: true },
 	);
 
-	watch(
-		() => [...watchlists.value],
+	watch(watchlists,
 		(newWatchlists, oldWatchlists) => {
-			let { activeTableId } = state.value;
-
-			if (newWatchlists.length > oldWatchlists.length) {
-				activeTableId = newWatchlists[newWatchlists.length - 1].id;
-			}
-
-			if (activeTableId === null && newWatchlists.length > 0) {
-				activeTableId = newWatchlists[0].id;
-			}
-
-			if (activeTableId === null) {
-				return;
-			}
-
 			state.value = {
-				activeTableId,
+				activeTableId: selectNewActiveTableId(newWatchlists, oldWatchlists, state.value.activeTableId),
 				tables: createTablesFromWatchlists(newWatchlists, state.value.tables),
 			};
 		},
-	), { immediate: true };
+	), { immediate: true, deep: true };
 
 	watch(state, newState => {
 		mutate(newState);
@@ -123,6 +107,14 @@ export function useWatchlistWidget(widgetId: string) {
 
 	function handlerSwitchTab(tabId: string) {
 		state.value = changeActiveTable(state.value, tabId);
+	}
+
+	function handlerAddToWatchlist({ watchlistId, tickerId, tickerType }: ITickerAction) {
+		addToWatchlist(watchlistId, tickerId, tickerType);
+	}
+
+	function handlerRemoveFromWatchlist({ watchlistId, tickerId }: ITickerAction) {
+		removeFromWatchlist(watchlistId, tickerId);
 	}
 
 	function resetAllChanges() {
@@ -145,7 +137,7 @@ export function useWatchlistWidget(widgetId: string) {
 
 		resetAllChanges,
 
-		handlerAddToWatchlist: addToWatchlist,
-		handlerRemoveFromWatchlist: removeFromWatchlist,
+		handlerAddToWatchlist,
+		handlerRemoveFromWatchlist,
 	};
 }

@@ -14,12 +14,25 @@ export function fromWatchlistToUiSections(sections: ISectionWatchlist[]): ISecti
 	return sections.map(section => ({ ...section, isOpen: false }));
 }
 
+export function createSectionsFromWatchlists(
+	wsections: ISectionWatchlist[], sections: ISection[],
+): ISectionUi[] {
+	return wsections.map(section => {
+		const { isOpen = true } = sections.find(s => s.id === section.id) || {};
+
+		return {
+			...section,
+			isOpen,
+		};
+	});
+}
+
 export function mapSections(sections: ISectionUi[], tickers: TableRow[]) {
 	return sections
 		.map(({ id, name, isOpen, tickerIds }) => ({
 			id,
 			title: name,
-			isCollapsed: !isOpen,
+			isCollapsed: isOpen,
 			rows: tickerIds
 				.map(tickerId => {
 					const row = tickers.find(t => t.tickerId === tickerId);

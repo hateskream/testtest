@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISection, ITab, ITickerAction } from '../../model';
+import type { ISectionUi, ITab, ITickerAction } from '../../model';
 
 import WatchlistTable from '../table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
@@ -8,7 +8,7 @@ import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
 interface IWatchlistMainProps {
 	tickers: TableRow[];
 	columns: ITableColumn[];
-	sections: ISection[];
+	sections: ISectionUi[];
 	tabs: ITab[];
 }
 

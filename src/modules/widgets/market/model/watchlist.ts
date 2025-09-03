@@ -1,12 +1,10 @@
 export interface IWatchlistAction {
 	watchlistId: string;
-	tabId: string;
 	tickerId: string;
 }
 
 export interface IWatchlistData {
 	watchlistId: string;
-	tabId: string;
 	name: string;
 	tickers: string[];
 }

@@ -12,24 +12,14 @@ import {
 import type { MarketType } from '@/modules/market';
 import { useGetState, useUpdateState } from '../queries';
 import type { ITableColumn, ISort } from '@/modules/cell';
-import { Producer } from '@/shared/service/event-bus';
-import { useWatchlistPublic } from '../../watchlist';
-
-type Event = 'addToWatchlist' | 'removeFromWatchlist';
-
-interface IPayload {
-	tickerId: string;
-	tickerType: MarketType;
-	watchlistId: string;
-	tabId: string;
-}
-
-type Events = Record<Event, IPayload>;
+import { useWatchlist } from '@/modules/watchlist';
 
 export function useMarket(widgetId: string) {
-	const { wachlists } = useWatchlistPublic();
-
-	const producer = new Producer<Events>(['addToWatchlist', 'removeFromWatchlist']);
+	const {
+		actionableWatchlists: wachlists,
+		addToWatchlist,
+		removeFromWatchlist,
+	} = useWatchlist();
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
@@ -124,22 +114,12 @@ export function useMarket(widgetId: string) {
 		state.value = getDefaultState();
 	}
 
-	function addToWatchlist({ watchlistId, tabId, tickerId }: IWatchlistAction) {
-		producer.emit('addToWatchlist', {
-			tickerId,
-			watchlistId,
-			tabId,
-			tickerType: activeMarket.value,
-		});
+	function handleAddToWatchlist({ watchlistId, tickerId }: IWatchlistAction) {
+		addToWatchlist(watchlistId, tickerId, activeMarket.value);
 	}
 
-	function removeFromWatchlist({ watchlistId, tabId, tickerId }: IWatchlistAction) {
-		producer.emit('removeFromWatchlist', {
-			tickerId,
-			watchlistId,
-			tabId,
-			tickerType: activeMarket.value,
-		});
+	function handleRemoveFromWatchlist({ watchlistId, tickerId }: IWatchlistAction) {
+		removeFromWatchlist(watchlistId, tickerId);
 	}
 
 	return {
@@ -153,7 +133,7 @@ export function useMarket(widgetId: string) {
 
 		resetAllChanges,
 
-		addToWatchlist,
-		removeFromWatchlist,
+		handleAddToWatchlist,
+		handleRemoveFromWatchlist,
 	};
 }

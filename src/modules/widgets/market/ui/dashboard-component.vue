@@ -29,8 +29,8 @@ const {
 
 	resetAllChanges,
 
-	addToWatchlist,
-	removeFromWatchlist,
+	handleAddToWatchlist,
+	handleRemoveFromWatchlist,
 } = useMarket(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryMarket(
@@ -71,8 +71,8 @@ const emit = defineEmits<{
 				:filters-values="filtersValues"
 				:rows="rows"
 				:wachlists="wachlists"
-				@add-to-watchlist="addToWatchlist"
-				@remove-from-watchlist="removeFromWatchlist"
+				@add-to-watchlist="handleAddToWatchlist"
+				@remove-from-watchlist="handleRemoveFromWatchlist"
 			/>
 		</template>
 		<template #rcm>

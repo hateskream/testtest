@@ -42,7 +42,6 @@ const genericRows = computed(() =>
 function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 	const payload: IWatchlistAction = {
 		watchlistId: watchlist.watchlistId,
-		tabId: watchlist.tabId,
 		tickerId,
 	};
 

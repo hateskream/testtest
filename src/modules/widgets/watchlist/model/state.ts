@@ -39,6 +39,40 @@ export function getDefaultState(): IState {
 	};
 }
 
+export function selectNewActiveTableId(
+	watchlistsNew: IWatchlist[],
+	watchlistsOld: IWatchlist[],
+	currentTableId: string | null,
+): string | null {
+	if (watchlistsNew.length > watchlistsOld.length) {
+		return watchlistsNew[watchlistsNew.length - 1].id;
+	}
+
+	if (watchlistsNew.length < watchlistsOld.length) {
+		const deletedId = watchlistsOld.find(oldItem => !watchlistsNew.some(newItem => newItem.id === oldItem.id))?.id;
+
+		if (deletedId === currentTableId) {
+			const currentIndex = watchlistsOld.findIndex(item => item.id === deletedId);
+
+			if (currentIndex < watchlistsOld.length - 1) {
+				return watchlistsOld[currentIndex + 1].id;
+			}
+
+			if (currentIndex > 0) {
+				return watchlistsOld[currentIndex - 1].id;
+			}
+
+			return null;
+		}
+	}
+
+	if (currentTableId === null && watchlistsOld.length === 0 && watchlistsNew.length > 0) {
+		return watchlistsNew[0].id;
+	}
+
+	return currentTableId;
+}
+
 export function changeActiveTable(state: IState, newActiveTableId: string): IState {
 	return {
 		...state,

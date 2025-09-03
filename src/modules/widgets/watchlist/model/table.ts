@@ -1,6 +1,6 @@
 import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, type ITableColumn } from '@/modules/cell';
 import { type ISection as ISectionWatchlist, type IWatchlist } from '@/modules/watchlist';
-import type { ISection } from './section';
+import { createSectionsFromWatchlists, type ISection } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
 
@@ -68,10 +68,7 @@ function createTableFromWatchlistSections(
 	return {
 		id,
 		columns,
-		sections: sectionsWatchlist.map((section, idx) => ({
-			...section,
-			isOpen: sections[idx].isOpen,
-		})),
+		sections: createSectionsFromWatchlists(sectionsWatchlist, sections),
 		sort,
 		tickerState,
 	};

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type ITickerAction, mapSections, type ISection } from '../../model';
+import { type ITickerAction, mapSections, type ISectionUi } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
@@ -10,7 +10,7 @@ import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.
 interface IWatchlistTableProps {
 	tickers: TableRow[];
 	columns: ITableColumn[];
-	sections: ISection[];
+	sections: ISectionUi[];
 }
 
 const props = defineProps<IWatchlistTableProps>();

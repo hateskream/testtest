@@ -12,12 +12,28 @@ export interface IWatchlist {
 	sections: ISection[];
 }
 
+export interface IActionableWatchlist {
+	watchlistId: string;
+	name: string;
+	tickers: string[];
+}
+
 const MAX_WATCHLIST_COUNT = 10;
 
 export function getDefaultState(): IWatchlist[] {
 	return [
 		createEmptyWatchlist(),
 	];
+}
+
+export function getActionableWatchlists(watchlists: IWatchlist[]): IActionableWatchlist[] {
+	return watchlists
+		.map(({ id, name, sections }) => ({
+			watchlistId: id,
+			name,
+			tickers: sections
+				.flatMap(section => section.tickerIds),
+		}));
 }
 
 export function addNewWatchlist(watchlists: IWatchlist[]): IWatchlist[] {
