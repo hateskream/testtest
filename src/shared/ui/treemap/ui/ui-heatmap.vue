@@ -57,7 +57,8 @@ const heightCell = computed(() => {
 
 const wrapperStyle = computed(() => {
 	return {
-		height: `${Math.ceil(height.value / heightCell.value) * heightCell.value}px`,
+		// height: `${Math.ceil(height.value / heightCell.value) * heightCell.value}px`,
+		height: `${height.value}px`,
 		width: `${width.value}px`,
 	};
 });

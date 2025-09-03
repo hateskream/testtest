@@ -32,6 +32,7 @@ export function useTreemapLayout(
 	const valueToIdMap = computed(() => new Map(data.value.map(el => [el.value, el.id])));
 
 	const SHARE_SHOW_MORE_AREA = 0.01;
+	const SHOW_MORE_AREA_MIN_SIZE = 2500;
 	const MIN_COUNT_OTHER_ELEMENTS = 10;
 
 	const treemap = computed((): ITreeMapItem[] => {
@@ -43,8 +44,8 @@ export function useTreemapLayout(
 		}
 
 		const { width, height } = treemapCanvas.value.getBoundingClientRect();
-
-		const showMoreArea = Math.ceil(width * height * SHARE_SHOW_MORE_AREA);
+		// if calculated size is less than SHOW_MORE_AREA_MIN_SIZE, use SHOW_MORE_AREA_MIN_SIZE
+		const showMoreArea = Math.max(Math.ceil(width * height * SHARE_SHOW_MORE_AREA), SHOW_MORE_AREA_MIN_SIZE);
 
 		let areaAccumulator = 0;
 		let otherCount = 0;
