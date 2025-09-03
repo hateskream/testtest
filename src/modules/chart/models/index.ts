@@ -50,7 +50,7 @@ export enum CHART_SECTION_COMPONENT {
 	TRAILING_RETURNS = 'TRAILING_RETURNS',
 	HOLDINGS_DIAGRAM = 'HOLDINGS_DIAGRAM',
 	SNP_500 = 'SNP_500',
-	SEASONALS = 'SEASONALS'
+	SEASONALS = 'SEASONALS',
 }
 
 // Create mapping from enum to actual components
@@ -73,7 +73,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.TRAILING_RETURNS]: SectionTrailingReturns,
 	[CHART_SECTION_COMPONENT.HOLDINGS_DIAGRAM]: SectionHoldingsDigram,
 	[CHART_SECTION_COMPONENT.SNP_500]: ChartSectionSnp,
-	[CHART_SECTION_COMPONENT.SEASONALS]: ChartSectionSeasonals
+	[CHART_SECTION_COMPONENT.SEASONALS]: ChartSectionSeasonals,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
