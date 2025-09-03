@@ -65,6 +65,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 				class="market-modal"
 				background-color="var(--color-bg-contrast-300, #DCDCDF)"
 				color="var(--color-text-contrast-500, #0C0C0E)"
+				strategy="absolute"
 			>
 				<template #title="{ isVisible }">
 					{{ props.activeMarket.displayName }}
@@ -95,7 +96,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 			<ui-delimiter class="delimiter" />
 
-			<modal-badge class="color-modal">
+			<modal-badge class="color-modal" strategy="absolute">
 				<template #title="{ isVisible }">
 					<ui-icon
 						:id="IconIds.Color"
@@ -158,7 +159,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 
 		</div>
 		<div class="end-group">
-			<ui-position position="right-start">
+			<ui-position position="right-start" strategy="absolute">
 				<template #default>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>

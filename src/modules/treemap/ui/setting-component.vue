@@ -23,7 +23,7 @@ function update(newValue: string) {
 </script>
 
 <template>
-	<modal-badge class="setting-modal">
+	<modal-badge class="setting-modal" strategy="absolute">
 		<template #title="{ isVisible }">
 			<ui-icon
 				v-if="props.icon"

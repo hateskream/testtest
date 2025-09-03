@@ -7,6 +7,7 @@ import { ModalBadgeTitle } from '../index';
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
 	color?: CSSProperties['color'];
+	strategy?: 'fixed' | 'absolute';
 }
 const props = defineProps<IProps>();
 
@@ -17,7 +18,11 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 </script>
 
 <template>
-	<ui-position ref="position" position="bottom-start">
+	<ui-position
+		ref="position"
+		position="bottom-start"
+		:strategy="props.strategy"
+	>
 		<template #default>
 			<modal-badge-title :background-color="props.backgroundColor" :color="props.color">
 				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->

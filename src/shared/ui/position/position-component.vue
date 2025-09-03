@@ -8,6 +8,7 @@ interface IPositionComponentProps {
 	trigger?: 'hover' | 'click';
 	showInMs?: number;
 	positionOffset?: number;
+	strategy?: 'fixed' | 'absolute';
 }
 
 interface IPositionComponentEmits {
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<IPositionComponentProps>(), {
 	trigger: 'click',
 	showInMs: 100,
 	positionOffset: 6,
+	strategy: 'fixed',
 });
 
 const emits = defineEmits<IPositionComponentEmits>();
@@ -29,7 +31,7 @@ const floating = useTemplateRef('floating');
 const wrapper = useTemplateRef('wrapper');
 
 const { floatingStyles } = useFloating(reference, floating, {
-	strategy: 'fixed',
+	strategy: props.strategy,
 	placement: props.position,
 	middleware: [offset(props.positionOffset), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
