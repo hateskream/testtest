@@ -1,11 +1,19 @@
 .lint_configuration:
   stage: lint
   image:
-    name: node:24.4.1-alpine
+    name: node:24.7.0-alpine
     pull_policy: if-not-present
 
   dependencies:
     - install_dependencies
+
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+    policy: pull
 
 lint_uscode:
   extends: .lint_configuration
