@@ -4,6 +4,8 @@ import { addTicker, deleteTicker, type ISection } from './section';
 import { updateById } from '@/shared/lib';
 import type { MarketType } from '@/modules/market';
 
+export type IState = IWatchlist[];
+
 export interface IWatchlist {
 	id: string;
 	name: string;
@@ -11,6 +13,12 @@ export interface IWatchlist {
 }
 
 const MAX_WATCHLIST_COUNT = 10;
+
+export function getDefaultState(): IWatchlist[] {
+	return [
+		createEmptyWatchlist(),
+	];
+}
 
 export function addNewWatchlist(watchlists: IWatchlist[]): IWatchlist[] {
 	if (watchlists.length >= MAX_WATCHLIST_COUNT) {

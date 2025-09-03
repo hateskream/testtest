@@ -1,9 +1,11 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import z from 'zod';
+import { watch } from 'vue';
 
-import type { IWatchlist } from '../model';
+import { type IWatchlist, addNewWatchlist as addNewWatchlistModel } from '../model';
 import { MarketType } from '@/modules/market';
 import { Consumer } from '@/shared/service/event-bus';
+import { useGetState, useUpdateState } from '../queries';
 
 export interface ITickerAction {
 	tickerType: MarketType;
@@ -33,20 +35,23 @@ type Events = Record<Event, IPayload>;
 const consumer = new Consumer<Events>(['subscribeAddToWatchlist', 'removeFromWatchlist']);
 
 export function useWatchlist() {
-
 	consumer.on('subscribeAddToWatchlist', subscribeAddToWatchlist);
 	consumer.on('removeFromWatchlist', subscribeRemoveFromWatchlist);
 
+	const { data: watchlistsData } = useGetState();
+	const { mutate } = useUpdateState();
+
 	const watchlists = ref<IWatchlist[]>([]);
 
+	watch(watchlistsData, newState => {
+		if (newState) {
+			watchlists.value = [...newState];
+		}
+	}, { immediate: true });
 
-	onMounted(() => {
-		watchlists.value = [{
-			id: 'ss',
-			name: 'Favorites',
-			sections: [],
-		}];
-	});
+	watch(watchlists, () => {
+		mutate(watchlists.value);
+	}, { deep: true });
 
 	onUnmounted(() => {
 		consumer.off('subscribeAddToWatchlist', subscribeAddToWatchlist);
@@ -54,7 +59,7 @@ export function useWatchlist() {
 	});
 
 	function addNewWatchlist() {
-
+		watchlists.value = addNewWatchlistModel(watchlists.value);
 	}
 
 	function renameWatchlist(tabId: string, newName: string) {

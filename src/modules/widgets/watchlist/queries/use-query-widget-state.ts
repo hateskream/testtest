@@ -4,7 +4,7 @@ import { useRepository } from '../composables';
 import type { IState } from '../model';
 import { queryClient } from '@/shared/service/query-client';
 
-const SETTINGS_QUERY_KEY = 'watchlist-settings';
+const SETTINGS_QUERY_KEY = 'watchlist-widget-settings';
 
 export function getStateCacheKey(widgetId: string) {
 	return [SETTINGS_QUERY_KEY, widgetId];

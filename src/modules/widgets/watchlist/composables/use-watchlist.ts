@@ -87,8 +87,6 @@ export function useWatchlistWidget(widgetId: string) {
 	watch(
 		() => [...watchlists.value],
 		(newWatchlists, oldWatchlists) => {
-			console.log('sddscsdcds');
-
 			let { activeTableId } = state.value;
 
 			if (newWatchlists.length > oldWatchlists.length) {
@@ -107,22 +105,6 @@ export function useWatchlistWidget(widgetId: string) {
 				activeTableId,
 				tables: createTablesFromWatchlists(newWatchlists, state.value.tables),
 			};
-
-			console.log('activeTableId', activeTableId);
-			console.log('newWatchlists', newWatchlists);
-
-			// setTable(
-			// 	createStateFromWatchlists(
-			// 		watchlists.value,
-			// 		{
-			// 			activeTableId,
-			// 			tables: state.value.tables,
-			// 		},
-			// 	),
-			// 	activeTableId,
-			// );
-
-			console.log('state.value', state.value);
 		},
 	), { immediate: true };
 
