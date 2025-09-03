@@ -7,6 +7,7 @@ import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
 import type { ISectionProps } from '@/modules/chart/models';
 import { WidgetHoldingsDiagram } from '../../widgets';
 import { UiBanner } from '@/shared/ui/banner';
+import { ChartWidgetSectors } from '@/modules/chart/components/widgets';
 
 const props = defineProps<ISectionProps>();
 
@@ -36,8 +37,10 @@ onUnmounted(() => {
 
 
 	<chart-common-section-layout>
-		<template #refAnchor><div ref="itemRef"></div></template>
-		<template #title>{{props.section?.title}}</template>
+		<template #refAnchor>
+			<div ref="itemRef"></div>
+		</template>
+		<template #title>{{ props.section?.title }}</template>
 		<template #body>
 			<div :class="classes.diagram">
 				<widget-holdings-diagram />
@@ -87,6 +90,7 @@ onUnmounted(() => {
 					</template>
 				</ui-banner>
 			</div>
+			<chart-widget-sectors />
 		</template>
 	</chart-common-section-layout>
 </template>

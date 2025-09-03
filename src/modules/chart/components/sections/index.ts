@@ -15,6 +15,7 @@ import { ChartSectionHoldingsEtf } from './holdings-etf';
 import { ChartSectionPortfolioComposition } from './portfolio-composition';
 import { SectionTrailingReturns } from './trailing-returns';
 import { ChartSectionSnp } from './snp-500';
+import { ChartSectionSeasonals } from './sesonals';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -35,4 +36,5 @@ export {
 	ChartSectionPortfolioComposition,
 	SectionTrailingReturns,
 	ChartSectionSnp,
+	ChartSectionSeasonals,
 };

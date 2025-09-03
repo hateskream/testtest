@@ -98,16 +98,18 @@ defineExpose({ isVisible, handleClick });
 				:is-visible="isVisible"
 			/>
 		</div>
-		<transition name="fade">
-			<div
-				v-show="isVisible"
-				ref="floating"
-				:class="classes.content"
-				:style="floatingStyles"
-			>
-				<slot name="content" />
-			</div>
-		</transition>
+		<teleport to="body">
+			<transition name="fade">
+				<div
+					v-show="isVisible"
+					ref="floating"
+					:class="classes.content"
+					:style="floatingStyles"
+				>
+					<slot name="content" />
+				</div>
+			</transition>
+		</teleport>
 	</div>
 </template>
 
