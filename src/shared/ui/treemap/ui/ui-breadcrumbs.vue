@@ -30,15 +30,18 @@ function onClickBreadcrumb(breadcrumb: IBreadcrumb): void {
 
 <template>
 	<div v-if="props.breadcrumbs.length" class="breadcrumbs">
-		<div @click="emit('click-all')"> All |</div>
+		<div class="all" @click="emit('click-all')"> All <span class="separator">/</span></div>
 		<div
 			v-for="(breadcrumb, index) in props.breadcrumbs"
 			:key="breadcrumb.id"
 		>
-			<div v-if="index !== props.breadcrumbs.length - 1"  @click="onClickBreadcrumb(breadcrumb)">
-				{{ breadcrumb.name }} |
+			<div
+				v-if="index !== props.breadcrumbs.length - 1"
+				@click="onClickBreadcrumb(breadcrumb)"
+			>
+				{{ breadcrumb.name }} /
 			</div>
-			<div v-else>
+			<div v-else class="current">
 				{{ breadcrumb.name }}
 			</div>
 		</div>
@@ -50,6 +53,24 @@ function onClickBreadcrumb(breadcrumb: IBreadcrumb): void {
 	display: flex;
 	align-items: center;
 	height: 40px;
-	gap: 10px;
+	gap: 4px;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-02, 10px);
+	color: var(--color-text-base-300, #9a9a9d);
+}
+
+.all {
+	font-weight: 440;
+}
+
+.current {
+	padding: 2px 6px;
+	color: var(--color-text-hover-base-300-hover, rgb(245 245 245 / 90%));
+	background: var(--color-bg-base-500, rgb(77 77 77 / 50%));
+	border-radius: 6px;
+}
+
+.separator {
+	padding: 0 4px;
 }
 </style>
