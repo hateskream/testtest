@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISection, ITabUi, ITickerAction } from '../../model';
+import type { ISection, ITab, ITickerAction } from '../../model';
 
 import WatchlistTable from '../table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
@@ -9,7 +9,7 @@ interface IWatchlistMainProps {
 	tickers: TableRow[];
 	columns: ITableColumn[];
 	sections: ISection[];
-	tabs: ITabUi[];
+	tabs: ITab[];
 }
 
 const props = defineProps<IWatchlistMainProps>();

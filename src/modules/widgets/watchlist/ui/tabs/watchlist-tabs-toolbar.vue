@@ -7,19 +7,19 @@ import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import {
 	TabAction,
 	tabActionToTitle,
-	type ITabUi,
+	type ITab,
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 
 import WatchlistTab from './watchlist-tab.vue';
 
-interface ITabWithEditing extends ITabUi {
+interface ITabWithEditing extends ITab {
 	isEditing: boolean;
 }
 
 interface ITabsComponentProps {
-	tabs: ITabUi[];
+	tabs: ITab[];
 }
 
 const props = defineProps<ITabsComponentProps>();
@@ -63,7 +63,7 @@ watch(
 	},
 );
 
-function initTabs(tabs: ITabUi[]): ITabWithEditing[] {
+function initTabs(tabs: ITab[]): ITabWithEditing[] {
 	return tabs.map(tab => ({
 		...tab,
 		isEditing: false,

@@ -1,33 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import {
-	createEmptyTable,
-	createTableWithMockData,
-	hydrateTable,
-	rehydrateTable,
-	type IHydratedTable,
-	type ITable,
-} from './table';
+import type { IWatchlist } from '@/modules/watchlist';
 
 export interface ITab {
 	id: string;
 	name: string;
-	order: number;
-	table: ITable;
-}
-
-export interface IHydratedTab {
-	id: string;
-	name: string;
-	order: number;
-	table: IHydratedTable;
-}
-
-export interface ITabUi {
-	id: string;
-	name: string;
 	isActive: boolean;
-	order: number;
 }
 
 export enum TabAction {
@@ -44,48 +20,14 @@ export const tabActionToTitle: Readonly<Record<TabAction, string>> = {
 	[TabAction.Delete]: 'Delete',
 };
 
-export function hydrateTab(tab: ITab): IHydratedTab {
-	return {
-		...tab,
-		table: hydrateTable(tab.table),
-	};
-}
 
-export function rehydrateTab(tab: IHydratedTab): ITab {
-	return {
-		...tab,
-		table: rehydrateTable(tab.table),
-	};
-}
-
-export function duplicate(tab: ITab): ITab {
-	return {
-		...tab,
-		id: uuidv4(),
-	};
-}
-
-export function createEmptyTab(order: number): ITab {
-	return {
-		id: uuidv4(),
-		name: 'Favorites',
-		order,
-		table: createEmptyTable(),
-	};
-}
-
-export function createInitialTabWithMockData(order: number): ITab {
-	return {
-		id: uuidv4(),
-		name: 'Favorites',
-		order,
-		table: createTableWithMockData(),
-	};
-}
-
-export function updateTable(tab: ITab, table: ITable): ITab {
-	return {
-		...tab,
-		table,
-	};
+export function getTabsFromWatchlists(watchlists: IWatchlist[], activeTableId: string | null): ITab[] {
+	return activeTableId
+		? watchlists
+			.map((watchlist) => ({
+				id: watchlist.id,
+				name: watchlist.name,
+				isActive: watchlist.id === activeTableId,
+			}))
+		: [];
 }

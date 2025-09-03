@@ -1,92 +1,33 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import { MarketType } from '@/modules/market';
-import type { IRow } from './row';
 import { mapRow, type TableRow } from '@/modules/cell';
+import type { ISection as ISectionWatchlist } from '@/modules/watchlist';
 
-export enum SpecificSectionType {
-	Custom = 'custom',
+export interface ISectionUi extends ISectionWatchlist {
+	isOpen: boolean;
 }
-
-export type SectionType = MarketType | SpecificSectionType;
 
 export interface ISection {
 	id: string;
-	name: string;
 	isOpen: boolean;
-	type: SectionType;
-	rows: IRow[];
 }
 
-const MAX_COUNT_TICKERS = 100;
-
-export function newCustomSection(): ISection {
-	return newSection('Custom', SpecificSectionType.Custom);
+export function fromWatchlistToUiSections(sections: ISectionWatchlist[]): ISectionUi[] {
+	return sections.map(section => ({ ...section, isOpen: false }));
 }
 
-export function newSectionByType(type: SectionType): ISection {
-	switch (type) {
-		case MarketType.Crypto:
-			return newSection('Crypto', MarketType.Crypto);
-		case MarketType.Stock:
-			return newSection('Stocks', MarketType.Stock);
-		case MarketType.Forex:
-			return newSection('Forex', MarketType.Forex);
-		case MarketType.Commodities:
-			return newSection('Commodity', MarketType.Commodities);
-		case MarketType.Indices:
-			return newSection('Indices', MarketType.Indices);
-		case SpecificSectionType.Custom:
-			return newSection('Custom', SpecificSectionType.Custom);
-	}
-}
-
-function newSection(name: string, type: SectionType): ISection {
-	return {
-		id: uuidv4(),
-		name,
-		isOpen: true,
-		type,
-		rows: [],
-	};
-}
-
-export function isCustom(section: ISection): boolean {
-	return section.type === SpecificSectionType.Custom;
-}
-
-export function addRow(section: ISection, row: IRow): ISection {
-	if (section.rows.length >= MAX_COUNT_TICKERS) {
-		return section;
-	}
-
-	return {
-		...section,
-		rows: [...section.rows, row],
-	};
-}
-
-export function deleteRow(section: ISection, rowId: string): ISection {
-	return {
-		...section,
-		rows: section.rows.filter(row => row.id !== rowId),
-	};
-}
-
-export function mapSections(sections: ISection[], tickers: TableRow[]) {
+export function mapSections(sections: ISectionUi[], tickers: TableRow[]) {
 	return sections
-		.map(({ id, name, isOpen, rows }) => ({
+		.map(({ id, name, isOpen, tickerIds }) => ({
 			id,
 			title: name,
 			isCollapsed: !isOpen,
-			rows: rows
-				.map(row => {
-					const ticker = tickers.find(t => t.tickerId === row.id);
-					if (ticker === undefined) {
+			rows: tickerIds
+				.map(tickerId => {
+					const row = tickers.find(t => t.tickerId === tickerId);
+					if (row === undefined) {
 						return;
 					}
 
-					return mapRow(ticker);
+					return mapRow(row);
 				})
 				.filter(el => el !== undefined),
 		}));

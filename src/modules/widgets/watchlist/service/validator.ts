@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
 import { ColumnType, SortDirection } from '@/modules/cell';
-import { MarketType } from '@/modules/market';
-import { SpecificSectionType } from '../model';
 
 const sortSchema = z.object({
 	columnType: z.nativeEnum(ColumnType),
@@ -21,37 +19,22 @@ const columnSchema = z.object({
 	order: z.number(),
 });
 
-const sectionTypeSchema = z.union([z.nativeEnum(MarketType), z.nativeEnum(SpecificSectionType)]);
-
-const rowSchema = z.object({
-	id: z.string(),
-});
-
 const sectionSchema = z.object({
 	id: z.string(),
-	name: z.string(),
 	isOpen: z.boolean(),
-	type: sectionTypeSchema,
-	rows: z.array(rowSchema),
 });
 
 const tableSchema = z.object({
+	id: z.string(),
 	columns: z.array(columnSchema),
 	sections: z.array(sectionSchema),
 	tickerState: tickerStateSchema,
 	sort: sortSchema.nullable(),
 });
 
-const tabSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	order: z.number(),
-	table: tableSchema,
-});
-
 export const stateSchema = z.object({
-	activeTabId: z.string().nullable(),
-	tabs: z.array(tabSchema),
+	activeTableId: z.string().nullable(),
+	tables: z.array(tableSchema),
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;

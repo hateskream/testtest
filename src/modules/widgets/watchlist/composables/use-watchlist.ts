@@ -1,94 +1,59 @@
-import { computed, onUnmounted, ref, watch } from 'vue';
-import z from 'zod';
+import { computed, ref, watch } from 'vue';
 
 import {
+	type ISectionUi,
 	type IState,
+	type ITab,
 	type ITable,
-	type ITickerAction,
-	addCustomSection,
-	addNewTab,
-	addTickerInTab,
-	changeActiveTab,
+	changeActiveTable,
 	changeColumnsState,
-	changeSectionsVisibility,
-	changeTabOrder,
-	deleteSection,
-	deleteTickerInTab,
-	duplicateTab,
-	findTab,
-	getActiveTab,
+	createTablesFromWatchlists,
+	findTable,
 	getDefaultState,
-	getUiTabs,
-	moveRowBetweenSections,
-	moveRowInSection,
-	removeTab,
-	renameSection,
-	renameTab,
+	getSections,
+	getTabsFromWatchlists,
 	updateSort,
 	updateTableState,
 } from '../model';
 import type { ISort, ITableColumn } from '@/modules/cell';
 import { useGetState, useUpdateState } from '../queries';
-import { Consumer } from '@/shared/service/event-bus';
-import { MarketType } from '@/modules/market';
+import { useWatchlist } from '@/modules/watchlist';
 
-type Event = 'subscribeAddToWatchlist' | 'removeFromWatchlist';
+export function useWatchlistWidget(widgetId: string) {
+	const {
+		watchlists,
 
-const payloadSchema = z.object({
-	tickerId: z
-		.string()
-		.min(1, { message: 'tickerId is required and must be a non-empty string' }),
-	tickerType: z.nativeEnum(
-		MarketType,
-		{ message: 'tickerType is required and must be a MarketType' },
-	),
-	watchlistId: z
-		.string()
-		.min(1, { message: 'watchlistId is required and must be a non-empty string' }),
-	tabId: z
-		.string()
-		.min(1, { message: 'tabId is required and must be a non-empty string' }),
-});
+		addNewWatchlist,
+		renameWatchlist,
+		removeWatchlist,
+		duplicateWatchlist,
 
-type IPayload = z.infer<typeof payloadSchema>;
-
-type Events = Record<Event, IPayload>;
-
-export function useWatchlist(widgetId: string) {
-	const consumer = new Consumer<Events>(['subscribeAddToWatchlist', 'removeFromWatchlist']);
-
-	consumer.on('subscribeAddToWatchlist', subscribeAddToWatchlist);
-	consumer.on('removeFromWatchlist', subscribeRemoveFromWatchlist);
+		addToWatchlist,
+		removeFromWatchlist,
+	} = useWatchlist();
 
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
-	const state = ref<IState>(getDefaultState());
+	const state = ref<IState>({
+		activeTableId: null,
+		tables: [],
+	});
 
 	const table = ref<ITable | null>(null);
-	const tabs = computed(() => getUiTabs(state.value));
-	const sections = computed(() => table.value?.sections || []);
-
-	const activeTab = computed(() => getActiveTab(state.value));
-
-	const tickerIds = computed(() =>
-		table.value?.sections
-			.reduce((acc, section) =>
-				[
-					...acc,
-					...section.rows
-						.map(row => row.id),
-				], [] as string[],
-			) || [],
+	const tabs = computed((): ITab[] =>
+		getTabsFromWatchlists(watchlists.value, state.value.activeTableId),
 	);
+
+	const sections = computed((): ISectionUi[] => getSections(state.value, watchlists.value));
+
+	const tickerIds = computed(() => []);
 
 	const columns = computed({
 		get: () => table.value?.columns || [],
 		set: (cols: ITableColumn[]) => {
 			state.value = updateTableState(
 				state.value,
-				table.value,
-				activeTab.value,
 				t => changeColumnsState(t, cols),
 			);
 		},
@@ -99,223 +64,87 @@ export function useWatchlist(widgetId: string) {
 		set: (sort: ISort | null) => {
 			state.value = updateTableState(
 				state.value,
-				table.value,
-				activeTab.value,
 				t => updateSort(t, sort),
 			);
 		},
 	});
 
-	onUnmounted(() => {
-		consumer.off('subscribeAddToWatchlist', subscribeAddToWatchlist);
-		consumer.off('removeFromWatchlist', subscribeRemoveFromWatchlist);
-	});
-
 	watch(dataState, newState => {
 		if (newState) {
 			state.value = JSON.parse(JSON.stringify(newState));
-			setTable(state.value, state.value.activeTabId);
+			setTable(state.value, state.value.activeTableId);
 		}
 	}, { immediate: true });
 
 	watch(
-		() => state.value.activeTabId,
-		newActiveTabId => {
-			setTable(state.value, newActiveTabId);
+		() => state.value.activeTableId,
+		newActiveTableId => {
+			setTable(state.value, newActiveTableId);
 		},
 		{ immediate: true },
 	);
+
+	watch(
+		() => [...watchlists.value],
+		(newWatchlists, oldWatchlists) => {
+			console.log('sddscsdcds');
+
+			let { activeTableId } = state.value;
+
+			if (newWatchlists.length > oldWatchlists.length) {
+				activeTableId = newWatchlists[newWatchlists.length - 1].id;
+			}
+
+			if (activeTableId === null && newWatchlists.length > 0) {
+				activeTableId = newWatchlists[0].id;
+			}
+
+			if (activeTableId === null) {
+				return;
+			}
+
+			state.value = {
+				activeTableId,
+				tables: createTablesFromWatchlists(newWatchlists, state.value.tables),
+			};
+
+			console.log('activeTableId', activeTableId);
+			console.log('newWatchlists', newWatchlists);
+
+			// setTable(
+			// 	createStateFromWatchlists(
+			// 		watchlists.value,
+			// 		{
+			// 			activeTableId,
+			// 			tables: state.value.tables,
+			// 		},
+			// 	),
+			// 	activeTableId,
+			// );
+
+			console.log('state.value', state.value);
+		},
+	), { immediate: true };
 
 	watch(state, newState => {
 		mutate(newState);
 	}, { deep: true });
 
-	function setTable(newState: IState, newActiveTabId: string | null) {
-		if (newActiveTabId === null) {
+	function setTable(newState: IState, newActiveTableId: string | null) {
+		if (newActiveTableId === null) {
+			table.value = null;
 			return;
 		}
 
-		const foundedTab = findTab(newState, newActiveTabId);
-		if (foundedTab === undefined) {
-			return;
-		}
-
-		table.value = foundedTab.table;
-	}
-
-	function handlerAddNewTab() {
-		state.value = addNewTab(state.value);
-	}
-
-	function handlerRenameTab(tabId: string, newName: string) {
-		state.value = renameTab(state.value, tabId, newName);
-	}
-
-	function handlerChangeTabOrder(tabIds: string[]) {
-		state.value = changeTabOrder(state.value, tabIds);
-	}
-
-	function handlerRemoveTab(tabId: string) {
-		state.value = removeTab(state.value, tabId);
+		table.value = findTable(newState, newActiveTableId);
 	}
 
 	function handlerSwitchTab(tabId: string) {
-		state.value = changeActiveTab(state.value, tabId);
-	}
-
-	function handlerDuplicateTab(tabId: string) {
-		state.value = duplicateTab(state.value, tabId);
-	}
-
-	function handlerChangeSectionsVisibility(sectionId: string, isOpen: boolean) {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => changeSectionsVisibility(
-				t,
-				sectionId,
-				isOpen,
-			),
-		);
-	}
-
-	function handlerRenameSection(sectionId: string, newName: string) {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => renameSection(
-				t,
-				sectionId,
-				newName,
-			),
-		);
-	}
-
-	function handlerMoveRowInSection(sectionId: string, oldIndex: number, newIndex: number) {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => moveRowInSection(
-				t,
-				sectionId,
-				oldIndex,
-				newIndex,
-			),
-		);
-	}
-
-	function handlerMoveRowBetweenSections(
-		fromSectionId: string,
-		toSectionId: string,
-		rowId: string,
-		toIndex: number,
-	) {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => moveRowBetweenSections(
-				t,
-				fromSectionId,
-				toSectionId,
-				rowId,
-				toIndex,
-			),
-		);
-	}
-
-	function handlerDeleteSection(sectionId: string) {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => deleteSection(
-				t,
-				sectionId,
-			),
-		);
-	}
-
-	function handlerAddCustomSection() {
-		state.value = updateTableState(
-			state.value,
-			table.value,
-			activeTab.value,
-			t => addCustomSection(t),
-		);
+		state.value = changeActiveTable(state.value, tabId);
 	}
 
 	function resetAllChanges() {
 		state.value = getDefaultState();
-	}
-
-	function subscribeAddToWatchlist(payload: IPayload) {
-		if (!isPayloadAccept(payload)) {
-			return;
-		}
-
-		const { tickerType, tickerId, tabId } = payload;
-
-		state.value = addTickerInTab(state.value, tickerId, tickerType, tabId);
-	}
-
-	function handlerAddToWatchlist({ tickerId, tickerType }: ITickerAction) {
-		if (activeTab.value === null) {
-			return;
-		}
-
-		state.value = addTickerInTab(
-			state.value,
-			tickerId,
-			tickerType,
-			activeTab.value.id,
-		);
-	}
-
-	function subscribeRemoveFromWatchlist(payload: IPayload) {
-		if (!isPayloadAccept(payload)) {
-			return;
-		}
-
-		const { tickerType, tickerId, tabId } = payload;
-
-		state.value = deleteTickerInTab(state.value, tickerId, tickerType, tabId);
-	}
-
-	function handlerRemoveFromWatchlist({ tickerId, tickerType }: ITickerAction) {
-		if (activeTab.value === null) {
-			return;
-		}
-
-		state.value = deleteTickerInTab(
-			state.value,
-			tickerId,
-			tickerType,
-			activeTab.value.id,
-		);
-	}
-
-	function isPayloadAccept(input: unknown): boolean {
-		try {
-			const payload = payloadSchema.parse(input);
-
-			const { watchlistId } = payload;
-
-			if (watchlistId !== widgetId) {
-				return false;
-			}
-
-			return true;
-		} catch (error) {
-			if (error instanceof z.ZodError) {
-				// eslint-disable-next-line no-console
-				console.error('Validation failed:', error.issues);
-			}
-			return false;
-		}
 	}
 
 	return {
@@ -325,23 +154,16 @@ export function useWatchlist(widgetId: string) {
 		sections,
 		tickerIds,
 
-		handlerAddNewTab,
-		handlerRenameTab,
-		handlerChangeTabOrder,
-		handlerRemoveTab,
-		handlerSwitchTab,
-		handlerDuplicateTab,
+		addNewWatchlist,
+		renameWatchlist,
+		removeWatchlist,
+		duplicateWatchlist,
 
-		handlerChangeSectionsVisibility,
-		handlerRenameSection,
-		handlerMoveRowInSection,
-		handlerMoveRowBetweenSections,
-		handlerDeleteSection,
-		handlerAddCustomSection,
+		handlerSwitchTab,
 
 		resetAllChanges,
 
-		handlerAddToWatchlist,
-		handlerRemoveFromWatchlist,
+		handlerAddToWatchlist: addToWatchlist,
+		handlerRemoveFromWatchlist: removeFromWatchlist,
 	};
 }

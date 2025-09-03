@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapSections, type ISection, type ITickerAction } from '../../model';
+import { type ITickerAction, mapSections, type ISection } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';

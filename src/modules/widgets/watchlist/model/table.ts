@@ -1,31 +1,23 @@
 import { hydrateColumns, rehydrateColumns, type IHydratedColumn, type ISort, type ITableColumn } from '@/modules/cell';
-import {
-	addRow,
-	deleteRow,
-	isCustom,
-	newSectionByType,
-	SpecificSectionType,
-	type ISection,
-} from './section';
+import { type ISection as ISectionWatchlist, type IWatchlist } from '@/modules/watchlist';
+import type { ISection } from './section';
 import { getDefaultTickerState, type ITickerState } from './ticker-state';
 import { ALL_COLUMNS } from './column';
-import { MarketType } from '@/modules/market';
-import { createRow } from './row';
 
 export interface ITable {
+	id: string;
 	columns: ITableColumn[];
 	sections: ISection[];
 	tickerState: ITickerState;
 	sort: ISort | null;
 }
 export interface IHydratedTable {
+	id: string;
 	columns: IHydratedColumn[];
 	sections: ISection[];
 	tickerState: ITickerState;
 	sort: ISort | null;
 }
-
-const MAX_COUNT_CUSTOM_SECTIONS = 5;
 
 export function hydrateTable(table: ITable): IHydratedTable {
 	return {
@@ -41,8 +33,9 @@ export function rehydrateTable(table: IHydratedTable): ITable {
 	};
 }
 
-export function createEmptyTable(): ITable {
+export function createTable(id: string): ITable {
 	return {
+		id,
 		columns: ALL_COLUMNS,
 		sections: [],
 		sort: null,
@@ -50,41 +43,37 @@ export function createEmptyTable(): ITable {
 	};
 }
 
-export function createTableWithMockData(): ITable {
-	const cryptoSection = newSectionByType(MarketType.Crypto);
-	const stockSection = newSectionByType(MarketType.Stock);
-	const forexSection = newSectionByType(MarketType.Forex);
-	const commoditySection = newSectionByType(MarketType.Commodities);
-	const indexSection = newSectionByType(MarketType.Indices);
+export function createTablesFromWatchlists( watchlists: IWatchlist[], tables: ITable[]) {
+	return watchlists
+		.map(({ sections, id }, i) => {
+			const table = tables[i];
+			if (table) {
+				return createTableFromWatchlistSections(id, sections, tables[i]);
+			}
 
-	const cryptoWithBTC = addRow(cryptoSection, createRow('BTC'));
-	const cryptoWithETH = addRow(cryptoWithBTC, createRow('ETH'));
-	const cryptoWithSOL = addRow(cryptoWithETH, createRow('SOL'));
-	const cryptoSectionFinal = addRow(cryptoWithSOL, createRow('ADA'));
+			return createTable(id);
+		});
+}
 
-	const stockWithTSLA = addRow(stockSection, createRow('TSLA'));
-	const stockSectionFinal = addRow(stockWithTSLA, createRow('AAPL'));
-
-	const forexWithEURUSD = addRow(forexSection, createRow('EURUSD'));
-	const forexSectionFinal = addRow(forexWithEURUSD, createRow('GBPUSD'));
-
-	const commodityWithGold = addRow(commoditySection, createRow('XAUUSD'));
-	const commoditySectionFinal = addRow(commodityWithGold, createRow('USOIL'));
-
-	const indexWithSPY = addRow(indexSection, createRow('SPY'));
-	const indexSectionFinal = addRow(indexWithSPY, createRow('QQQ'));
-
+function createTableFromWatchlistSections(
+	id: string,
+	sectionsWatchlist: ISectionWatchlist[],
+	{
+		sections,
+		columns,
+		sort,
+		tickerState,
+	}: ITable,
+): ITable {
 	return {
-		columns: ALL_COLUMNS,
-		sections: [
-			cryptoSectionFinal,
-			stockSectionFinal,
-			forexSectionFinal,
-			commoditySectionFinal,
-			indexSectionFinal,
-		],
-		sort: null,
-		tickerState: getDefaultTickerState(),
+		id,
+		columns,
+		sections: sectionsWatchlist.map((section, idx) => ({
+			...section,
+			isOpen: sections[idx].isOpen,
+		})),
+		sort,
+		tickerState,
 	};
 }
 
@@ -110,187 +99,11 @@ export function updateSort(table: ITable, sort: ISort | null): ITable {
 }
 
 export function changeSectionsVisibility(table: ITable, sectionId: string, isOpen: boolean): ITable {
-	return updateSection(table, sectionId, section => ({
-		...section,
-		isOpen,
-	}));
-}
-
-export function renameSection(table: ITable, sectionId: string, newName: string): ITable {
-	return updateSection(table, sectionId, section => ({
-		...section,
-		name: newName,
-	}));
-}
-
-export function moveRowInSection(
-	table: ITable,
-	sectionId: string,
-	oldIndex: number,
-	newIndex: number,
-): ITable {
-	const sectionIdx = findSectionIndex(table, sectionId);
-	if (sectionIdx === -1) {
-		return table;
-	}
-
-	const section = table.sections[sectionIdx];
-	const updatedRows = [...section.rows];
-
-	if (
-		oldIndex < 0 ||
-		newIndex < 0 ||
-		oldIndex >= updatedRows.length ||
-		newIndex >= updatedRows.length
-	) {
-		return table;
-	}
-
-	const [moved] = updatedRows.splice(oldIndex, 1);
-	updatedRows.splice(newIndex, 0, moved);
-
-	return updateSection(
-		table,
-		sectionId,
-		sec => ({
-			...sec,
-			rows: updatedRows,
-		}),
-	);
-};
-
-export function moveRowBetweenSections(
-	table: ITable,
-	fromSectionId: string,
-	toSectionId: string,
-	rowId: string,
-	toIndex: number,
-): ITable {
-	const fromSectionIdx = findSectionIndex(table, fromSectionId);
-	const toSectionIdx = findSectionIndex(table, toSectionId);
-	if (fromSectionIdx === -1 || toSectionIdx === -1) {
-		return table;
-	}
-
-	const fromSection = table.sections[fromSectionIdx];
-	const toSection = table.sections[toSectionIdx];
-
-	const fromRows = [...fromSection.rows];
-	const toRows = [...toSection.rows];
-
-	const rowIdx = fromRows.findIndex(m => m.id === rowId);
-	if (rowIdx === -1) {
-		return table;
-	}
-
-	const [moved] = fromRows.splice(rowIdx, 1);
-	toRows.splice(toIndex, 0, moved);
-
 	return {
 		...table,
-		sections: table.sections.map((s, idx) => {
-			if (idx === fromSectionIdx) {
-				return { ...s, rows: fromRows };
-			}
-			if (idx === toSectionIdx) {
-				return { ...s, rows: toRows };
-			}
-			return s;
-		}),
+		sections: table.sections.map(section => ({
+			...section,
+			isOpen: section.id === sectionId ? isOpen : section.isOpen,
+		})),
 	};
-};
-
-export function deleteSection(table: ITable, sectionId: string): ITable {
-	return {
-		...table,
-		sections: table.sections.filter(section => section.id !== sectionId),
-	};
-}
-
-export function addCustomSection(table: ITable): ITable {
-	if (
-		getCountCustomSections(table) >= MAX_COUNT_CUSTOM_SECTIONS
-	) {
-		return table;
-	}
-
-	return {
-		...table,
-		sections: [
-			...table.sections,
-			newSectionByType(SpecificSectionType.Custom),
-		],
-	};
-}
-
-function getCountCustomSections(table: ITable): number {
-	return table.sections.filter(section => isCustom(section)).length;
-}
-
-export function addTickerInTable(
-	table: ITable,
-	tickerId: string,
-	market: MarketType,
-): ITable {
-	const row = createRow(tickerId);
-
-	return {
-		...table,
-		sections:
-			table.sections
-				.find(section => section.type === market)
-				? table.sections
-					.map(section =>
-						section.type === market
-							? addRow(
-								section,
-								row,
-							)
-							: section,
-					)
-				: [
-					...table.sections,
-					addRow(
-						newSectionByType(market),
-						row,
-					),
-				],
-	};
-}
-
-export function deleteTickerInTable(
-	table: ITable,
-	tickerId: string,
-	market: MarketType,
-): ITable {
-	return {
-		...table,
-		sections:
-			table.sections
-				.map(section =>
-					section.type === market
-						? deleteRow(section, tickerId)
-						: section,
-				),
-	};
-}
-
-function updateSection(
-	table: ITable,
-	sectionId: string,
-	transform: (section: ISection) => ISection,
-): ITable {
-	return {
-		...table,
-		sections: table.sections
-			.map(sec =>
-				sec.id === sectionId
-					? transform(sec)
-					: sec,
-			),
-	};
-}
-
-function findSectionIndex(table: ITable, sectionId: string): number {
-	return table.sections.findIndex(s => s.id === sectionId);
 }

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { useQueryTickers } from '../queries';
-import { useWatchlist } from '../composables';
+import { useWatchlistWidget } from '../composables';
 
 import WatchlistError from './views/watchlist-error.vue';
 import WatchlistLoader from './views/watchlist-loader.vue';
@@ -25,17 +25,17 @@ const {
 	sections,
 	tickerIds,
 
-	handlerAddNewTab,
-	handlerRenameTab,
+	addNewWatchlist,
+	renameWatchlist,
 	handlerSwitchTab,
-	handlerDuplicateTab,
-	handlerRemoveTab,
+	duplicateWatchlist,
+	removeWatchlist,
 
 	resetAllChanges,
 
 	handlerAddToWatchlist,
 	handlerRemoveFromWatchlist,
-} = useWatchlist(props.meta.widgetId);
+} = useWatchlistWidget(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryTickers(tickerIds);
 
@@ -58,13 +58,13 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				:sections="sections"
 				:tickers="data"
 				:tabs="tabs"
-				@add-tab="handlerAddNewTab"
-				@rename-tab="handlerRenameTab"
+				@add-tab="addNewWatchlist"
+				@rename-tab="renameWatchlist"
 				@switch-tab="handlerSwitchTab"
-				@duplicate-tab="handlerDuplicateTab"
+				@duplicate-tab="duplicateWatchlist"
 				@add-ticker="handlerAddToWatchlist"
 				@remove-ticker="handlerRemoveFromWatchlist"
-				@delete-tab="handlerRemoveTab"
+				@delete-tab="removeWatchlist"
 			/>
 		</template>
 

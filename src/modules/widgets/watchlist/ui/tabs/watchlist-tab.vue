@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef, useCssModule, watch } from 'vue';
 
-import type { ITabUi } from '@/modules/widgets/watchlist/model';
+import type { ITab } from '@/modules/widgets/watchlist/model';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
-interface ITabWithEditing extends ITabUi {
+interface ITabWithEditing extends ITab {
 	isEditing: boolean;
 }
 
