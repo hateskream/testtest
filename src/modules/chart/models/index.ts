@@ -207,6 +207,10 @@ export const chartStockSections: IChartWidgetSections = {
 					title: 'Yearly revenue',
 					group: 'tab-group-2',
 				},
+				{
+					id: 'analyst-ratings',
+					title: 'Analyst Ratings',
+				},
 			],
 		},
 		{

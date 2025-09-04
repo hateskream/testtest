@@ -7,6 +7,7 @@ import {
 	ChartWidgetValuation,
 	ChartWidgetsCapitalStructure,
 	ChartWidgetYearlyRevenue, ChartWidgetPriceTarget, ChartWidgetQuarterlyRevenue,
+	ChartWidgetAnalystRatings,
 } from '@/modules/chart/components/widgets';
 import { ChartCommonSectionLayout, ChartCommonTabsLayout } from '@/modules/chart/components/shared/ui';
 import { useTabs } from '@/modules/chart/components/shared/composables';
@@ -119,6 +120,13 @@ onUnmounted(() => {
 				<template #quarterly-revenue><chart-widget-quarterly-revenue /></template>
 				<template #yearly-revenue><chart-widget-yearly-revenue /></template>
 			</chart-common-tabs-layout>
+
+			<div :class="classes.container">
+				<div :class="classes.section">
+					<chart-widget-analyst-ratings />
+				</div>
+			</div>
+
 		</template>
 	</chart-common-section-layout>
 </template>

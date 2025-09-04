@@ -38,6 +38,7 @@ import { ChartWidgetTradingVolume } from './trading-volume';
 import { ChartWidgetSectors } from './sectors';
 import { ChartWidgetEpsTile } from './eps-revenue-tile';
 import type { IChartWidgetEpsTileProps } from './eps-revenue-tile';
+import { ChartWidgetAnalystRatings } from './analyst-rating';
 
 
 export {
@@ -84,4 +85,5 @@ export {
 	ChartWidgetSectors,
 	ChartWidgetEpsTile,
 	type IChartWidgetEpsTileProps,
+	ChartWidgetAnalystRatings,
 };
