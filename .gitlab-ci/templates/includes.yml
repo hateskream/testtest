@@ -29,10 +29,26 @@ app_build:
     - MAJOR_MINOR=$(echo $VERSION | cut -d. -f1,2)
     - NEW_VERSION="$MAJOR_MINOR.$CI_PIPELINE_IID"
     - npm version $NEW_VERSION --no-git-tag-version
-    - npm run build
+    - |
+      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
+        cp .gitlab-ci/envs/front_config/.env.dev .env || true
+        npm run build
+      fi
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        # Сборка для stage
+        cp .gitlab-ci/envs/front_config/.env.stage .env || true
+        npm run build
+        mv dist dist-stage
+        cp .gitlab-ci/envs/front_config/.env.prod .env || true
+        npm run build
+        mv dist dist-prod
+      fi
   artifacts:
     paths:
       - dist/
+      - dist-stage/
+      - dist-prod/
     expire_in: 1h
   rules:
     - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
@@ -60,25 +76,23 @@ build:
 # Сборка для всех веток (кроме main) с .env.dev
     - |
       if [ "$CI_COMMIT_BRANCH" != "main" ]; then
-        cp .gitlab-ci/envs/front_config/.env.dev .env || true
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
       fi
-    # Дополнительные сборки для main
+# Дополнительные сборки для main
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
-        cp .gitlab-ci/envs/front_config/.env.stage .env || true
+        mv dist-stage dist
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
-
-        cp .gitlab-ci/envs/front_config/.env.prod .env || true
+        mv dist-prod dist
         docker build -t $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID .
         docker push $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID
       fi
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 1h
+  # artifacts:
+  #   paths:
+  #     - dist/
+  #   expire_in: 1h
   rules:
     - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
       when: never
@@ -159,7 +173,8 @@ deploy:
     - echo "IMAGE_TAG = $IMAGE_TAG"
     - echo "CI_PIPELINE_SOURCE = $CI_PIPELINE_SOURCE"
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+    # - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+    - if: $DISABLE_DEPLOY == "true" || $SKIP_ALL_JOBS == "true"
       when: never
     - when: on_success
 
