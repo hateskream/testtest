@@ -17,6 +17,7 @@ import {
 	ChartSectionPortfolioComposition,
 	SectionTrailingReturns,
 	ChartSectionSnp, ChartSectionSeasonals,
+	ChartSectionTop10Weight,
 } from '@/modules/chart/components/sections';
 
 
@@ -51,6 +52,7 @@ export enum CHART_SECTION_COMPONENT {
 	HOLDINGS_DIAGRAM = 'HOLDINGS_DIAGRAM',
 	SNP_500 = 'SNP_500',
 	SEASONALS = 'SEASONALS',
+	TOP10_WEIGHTS = 'TOP10_WEIGHTS',
 }
 
 // Create mapping from enum to actual components
@@ -74,6 +76,7 @@ export const CHART_COMPONENT_MAP = {
 	[CHART_SECTION_COMPONENT.HOLDINGS_DIAGRAM]: SectionHoldingsDigram,
 	[CHART_SECTION_COMPONENT.SNP_500]: ChartSectionSnp,
 	[CHART_SECTION_COMPONENT.SEASONALS]: ChartSectionSeasonals,
+	[CHART_SECTION_COMPONENT.TOP10_WEIGHTS]: ChartSectionTop10Weight,
 } as const;
 
 export type ChartComponentType = typeof CHART_COMPONENT_MAP[keyof typeof CHART_COMPONENT_MAP];
@@ -444,6 +447,11 @@ export const chartEtfSections: IChartWidgetSections = {
 			id: 'holdings-etf',
 			title: 'Holdings Summary',
 			component: CHART_SECTION_COMPONENT.HOLDINGS_ETF,
+		},
+		{
+			id: 'top10-weights',
+			title: 'Top 10 Weights',
+			component: CHART_SECTION_COMPONENT.TOP10_WEIGHTS,
 		},
 		{
 			id: 'portfolio-composition',

@@ -16,6 +16,7 @@ import { ChartSectionPortfolioComposition } from './portfolio-composition';
 import { SectionTrailingReturns } from './trailing-returns';
 import { ChartSectionSnp } from './snp-500';
 import { ChartSectionSeasonals } from './sesonals';
+import { ChartSectionTop10Weight } from './top10-weight';
 
 export {
 	ChartSectionInsightAndActivity,
@@ -37,4 +38,5 @@ export {
 	SectionTrailingReturns,
 	ChartSectionSnp,
 	ChartSectionSeasonals,
+	ChartSectionTop10Weight,
 };

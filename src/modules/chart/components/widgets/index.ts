@@ -39,6 +39,7 @@ import { ChartWidgetSectors } from './sectors';
 import { ChartWidgetEpsTile } from './eps-revenue-tile';
 import type { IChartWidgetEpsTileProps } from './eps-revenue-tile';
 import { ChartWidgetAnalystRatings } from './analyst-rating';
+import { Top10WeightsWidget } from './top10-weight';
 
 
 export {
@@ -86,4 +87,5 @@ export {
 	ChartWidgetEpsTile,
 	type IChartWidgetEpsTileProps,
 	ChartWidgetAnalystRatings,
+	Top10WeightsWidget,
 };
