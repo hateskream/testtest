@@ -36,6 +36,8 @@ import { ChartWidgetHistoricalEps } from './historical-eps';
 import { ChartWidgetStylebox } from './stylebox';
 import { ChartWidgetTradingVolume } from './trading-volume';
 import { ChartWidgetSectors } from './sectors';
+import { ChartWidgetEpsTile } from './eps-revenue-tile';
+import type { IChartWidgetEpsTileProps } from './eps-revenue-tile';
 
 
 export {
@@ -80,4 +82,6 @@ export {
 	ChartWidgetStylebox,
 	ChartWidgetMovingAveragesTable,
 	ChartWidgetSectors,
+	ChartWidgetEpsTile,
+	type IChartWidgetEpsTileProps,
 };

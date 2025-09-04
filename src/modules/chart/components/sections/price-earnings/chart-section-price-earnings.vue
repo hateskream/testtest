@@ -4,11 +4,14 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { ChartCommonSectionLayout } from '@/modules/chart/components/shared/ui';
 import { ChartWidgetPriceEarnings } from '@/modules/chart/components/widgets/price-earnings';
 import type { ISectionProps } from '@/modules/chart/models';
-import { ChartWidgetEps, ChartWidgetHistoricalEps } from '@/modules/chart/components/widgets';
+import {
+	ChartWidgetEps, ChartWidgetEpsTile, ChartWidgetHistoricalEps,
+	type IChartWidgetEpsTileProps,
+} from '@/modules/chart/components/widgets';
+
 
 import type { IPriceEarningsProps } from
 	'@/modules/chart/components/widgets/price-earnings/chart-widget-price-earnings.vue';
-
 
 const props = defineProps<ISectionProps>();
 
@@ -107,7 +110,45 @@ const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2: IPriceEarningsProps 
 	},
 };
 
+const epsTileData: IChartWidgetEpsTileProps[] = [
+	{
+		quarter: 'Q1 2025',
+		actualEps: 8.41,
+		revenue: '$12.73B',
+		percentage: '0.14%',
+		status: 'success',
+		beat: true,
+	},
+	{
+		quarter: 'Q2 2025',
+		actualEps: 10.41,
+		revenue: '$13.45B',
+		percentage: '2.17%',
+		status: 'success',
+		beat: true,
+	},
+	{
+		quarter: 'Q3 2025',
+		actualEps: 12.41,
+		revenue: '$14.22B',
+		percentage: '3.11%',
+		status: 'success',
+		beat: true,
+	},
+	{
+		quarter: 'Q4 2025',
+		estimatedEps: 12.57,
+		revenue: '$14.99B',
+		percentage: '',
+		status: 'future',
+		event: {
+			date: 'Apr 14, 8:30 PM',
+			time: '8:30 PM',
+		},
+	},
+];
 </script>
+
 <template>
 	<chart-common-section-layout>
 		<template #refAnchor>
@@ -116,6 +157,16 @@ const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2: IPriceEarningsProps 
 		<template #title>{{ props.section?.title }}</template>
 		<template #body>
 			<chart-widget-eps />
+			<div :class="classes.tileContainer">
+				<div :class="classes.grid">
+					<chart-widget-eps-tile
+						v-for="data in epsTileData"
+						:key="data.quarter"
+						:data="data"
+					/>
+				</div>
+
+			</div>
 			<div :class="classes.container">
 				<div :class="classes.peGroup">
 					<chart-widget-price-earnings v-bind="idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps1" />
@@ -129,19 +180,38 @@ const idkHowToPassDataIntoWidgetsSoIWillJustPassItAsProps2: IPriceEarningsProps 
 </template>
 
 <style module="classes">
-.peGroup {
-	display: flex;
-	flex-direction: row;
-	gap: 4px;
-}
-
 .container {
 	container-type: inline-size;
-}
 
-@container (max-width: 599px) {
 	.peGroup {
-		flex-direction: column;
+		display: flex;
+		flex-direction: row;
+		gap: 4px;
+	}
+
+	@container (max-width: 599px) {
+		.peGroup {
+			flex-direction: column;
+		}
 	}
 }
+
+
+.tileContainer {
+	container-type: inline-size;
+	width: 100%;
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@container (max-width: 600px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+
 </style>
