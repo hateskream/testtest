@@ -12,6 +12,7 @@ import {
 	ModalBadge,
 	ModalBadgeList,
 	ModalItemSelector,
+	ModalItem,
 } from '@/modules/widgets/base';
 import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
 
@@ -27,6 +28,7 @@ const props = defineProps<IViewComponentProps>();
 const emits = defineEmits<{
 	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
 	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'add-to-new-watchlist', tickerId: string): void;
 }>();
 
 const columns = defineModel<ITableColumn[]>('columns', { required: true });
@@ -50,10 +52,6 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 	} else {
 		emits('add-to-watchlist', payload);
 	}
-}
-
-function clickNewWatchlist(tickerId: string) {
-	console.log('clickNewWatchlist', tickerId);
 }
 </script>
 
@@ -98,9 +96,14 @@ function clickNewWatchlist(tickerId: string) {
 								</modal-item-selector>
 							</template>
 
-							<div @click="clickNewWatchlist(tickerId)">
-								Add new watchlist
-							</div>
+							<modal-item @click="emits('add-to-new-watchlist', tickerId)">
+								<div :class="classes.new">
+									<ui-icon
+										:id="IconIds.Plus"
+									/>
+									New
+								</div>
+							</modal-item>
 						</modal-badge-list>
 					</template>
 				</modal-badge>
@@ -129,5 +132,12 @@ function clickNewWatchlist(tickerId: string) {
 	&:hover {
 		color: var(--text-color-base-300-effect);
 	}
+}
+
+.new {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
 }
 </style>

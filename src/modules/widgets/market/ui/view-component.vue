@@ -17,6 +17,7 @@ const props = defineProps<IViewComponentProps>();
 const emits = defineEmits<{
 	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
 	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'add-to-new-watchlist', tickerId: string): void;
 }>();
 
 const market = defineModel<MarketType>('market', { required: true });
@@ -38,6 +39,7 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 			:wachlists="props.wachlists"
 			@add-to-watchlist="emits('add-to-watchlist', $event)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event)"
+			@add-to-new-watchlist="emits('add-to-new-watchlist', $event)"
 		/>
 	</div>
 </template>

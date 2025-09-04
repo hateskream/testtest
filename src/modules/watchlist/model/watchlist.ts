@@ -74,6 +74,23 @@ export function removeWatchlist(watchlists: IWatchlist[], watchlistId: string): 
 	return watchlists.filter(w => w.id !== watchlistId);
 }
 
+export function addTickerInNewWatchlist(
+	watchlists: IWatchlist[],
+	tickerId: string,
+	market: MarketType,
+): IWatchlist[] {
+	return [
+		...watchlists,
+		{
+			...createEmptyWatchlist(),
+			sections: addTicker(
+				[],
+				tickerId, market,
+			),
+		},
+	];
+}
+
 export function addTickerInWatchlist(
 	watchlists: IWatchlist[],
 	watchlistId: string,

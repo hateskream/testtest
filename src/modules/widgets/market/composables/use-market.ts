@@ -19,6 +19,7 @@ export function useMarket(widgetId: string) {
 		actionableWatchlists: wachlists,
 		addToWatchlist,
 		removeFromWatchlist,
+		addTickerInNewWatchlist,
 	} = useWatchlist();
 
 	const { data: dataState } = useGetState(widgetId);
@@ -122,6 +123,10 @@ export function useMarket(widgetId: string) {
 		removeFromWatchlist(watchlistId, tickerId);
 	}
 
+	function handleAddTickerInNewWatchlist(tickerId: string) {
+		addTickerInNewWatchlist(tickerId, activeMarket.value);
+	}
+
 	return {
 		columns,
 		activeMarket,
@@ -135,5 +140,6 @@ export function useMarket(widgetId: string) {
 
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,
+		handleAddTickerInNewWatchlist,
 	};
 }

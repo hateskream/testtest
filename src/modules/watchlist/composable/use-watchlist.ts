@@ -8,6 +8,7 @@ import {
 	renameWatchlist as renameWatchlistModel,
 	removeWatchlist as removeWatchlistModel,
 	duplicateWatchlist as duplicateWatchlistModel,
+	addTickerInNewWatchlist as addTickerInNewWatchlistModel,
 	addTickerInWatchlist,
 	deleteTickerFromWatchlist,
 	getActionableWatchlists,
@@ -55,6 +56,10 @@ export function useWatchlist() {
 		watchlists.value = addTickerInWatchlist(watchlists.value, watchlistId, tickerId, market);
 	}
 
+	function addTickerInNewWatchlist(tickerId: string, market: MarketType) {
+		watchlists.value = addTickerInNewWatchlistModel(watchlists.value, tickerId, market);
+	}
+
 	function removeFromWatchlist(watchlistId: string, tickerId: string) {
 		watchlists.value = deleteTickerFromWatchlist(watchlists.value, watchlistId, tickerId);
 	}
@@ -70,5 +75,6 @@ export function useWatchlist() {
 
 		addToWatchlist,
 		removeFromWatchlist,
+		addTickerInNewWatchlist,
 	};
 }
