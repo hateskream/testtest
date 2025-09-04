@@ -130,6 +130,10 @@ export function useWatchlistWidget(widgetId: string) {
 		state.value = getDefaultState(watchlists.value);
 	}
 
+	function createNewWatchlist() {
+		addNewWatchlist();
+	}
+
 	return {
 		tabs,
 		columns,
@@ -148,5 +152,7 @@ export function useWatchlistWidget(widgetId: string) {
 
 		handlerAddToWatchlist,
 		handlerRemoveFromWatchlist,
+
+		createNewWatchlist,
 	};
 }

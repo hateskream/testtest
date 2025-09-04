@@ -67,4 +67,5 @@ export enum IconIds {
 	Arrow = 'arrow',
 	Flash = 'flash',
 	Other = 'other',
+	EmptyWatchlist = 'empty-watchlist',
 }

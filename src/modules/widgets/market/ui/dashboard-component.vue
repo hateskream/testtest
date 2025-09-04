@@ -85,5 +85,6 @@ const emit = defineEmits<{
 				@reset="resetAllChanges"
 			/>
 		</template>
+
 	</base-dashboard-component>
 </template>
