@@ -13,7 +13,7 @@ export function getStateCacheKey(widgetId: string) {
 export const useGetState = (widgetId: string) => {
 	const repository = useRepository(widgetId);
 
-	return useQuery<IState>({
+	return useQuery<IState | null>({
 		queryKey: getStateCacheKey(widgetId),
 		queryFn: () => repository.get(),
 		refetchOnMount: false,

@@ -7,7 +7,7 @@ import { FailedParse } from './error';
 import { stateSchema, type StateSchemaType } from './validator';
 
 export abstract class BaseRepository {
-	protected abstract getter(): Promise<StateSchemaType>;
+	protected abstract getter(): Promise<StateSchemaType | null>;
 	protected abstract setter(state: StateSchemaType): Promise<void>;
 
 	protected check(data: StateSchemaType): void {
@@ -32,8 +32,13 @@ export abstract class BaseRepository {
 		return hydrated;
 	}
 
-	public async get(): Promise<IState> {
+	public async get(): Promise<IState | null> {
 		const data = await this.getter();
+
+		if (data === null) {
+			return null;
+		}
+
 		return this.rehydrate(data);
 	}
 

@@ -38,7 +38,7 @@ export function useWatchlistWidget(widgetId: string) {
 	const { data: dataState } = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
-	const state = ref<IState>(getDefaultState());
+	const state = ref<IState>(getDefaultState(watchlists.value));
 
 	const table = ref<ITable | null>(null);
 	const tabs = computed((): ITab[] =>
@@ -74,7 +74,7 @@ export function useWatchlistWidget(widgetId: string) {
 			state.value = JSON.parse(JSON.stringify(newState));
 			setTable(state.value, state.value.activeTableId);
 		}
-	}, { immediate: true });
+	});
 
 	watch(
 		() => state.value.activeTableId,
@@ -84,7 +84,7 @@ export function useWatchlistWidget(widgetId: string) {
 		{ immediate: true },
 	);
 
-	watch(watchlists,
+	watch(() => [...watchlists.value],
 		(newWatchlists, oldWatchlists) => {
 			state.value = {
 				activeTableId: selectNewActiveTableId(newWatchlists, oldWatchlists, state.value.activeTableId),
@@ -127,7 +127,7 @@ export function useWatchlistWidget(widgetId: string) {
 	}
 
 	function resetAllChanges() {
-		state.value = getDefaultState();
+		state.value = getDefaultState(watchlists.value);
 	}
 
 	return {

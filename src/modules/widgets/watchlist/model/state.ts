@@ -1,5 +1,6 @@
 import { updateById } from '@/shared/lib';
 import {
+	createTablesFromWatchlists,
 	hydrateTable,
 	rehydrateTable,
 	type IHydratedTable,
@@ -32,10 +33,10 @@ export function rehydrateState(state: IHydratedState): IState {
 	};
 }
 
-export function getDefaultState(): IState {
+export function getDefaultState(watchlists: IWatchlist[]): IState {
 	return {
-		activeTableId: null,
-		tables: [],
+		activeTableId: getLastWatchlistIdOrNull(watchlists),
+		tables: createTablesFromWatchlists(watchlists, []),
 	};
 }
 
@@ -71,6 +72,10 @@ export function selectNewActiveTableId(
 	}
 
 	return currentTableId;
+}
+
+function getLastWatchlistIdOrNull(watchlists: IWatchlist[]): string | null {
+	return watchlists[watchlists.length - 1]?.id || null;
 }
 
 export function changeActiveTable(state: IState, newActiveTableId: string): IState {

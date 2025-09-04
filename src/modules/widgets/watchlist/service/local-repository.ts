@@ -1,4 +1,3 @@
-import { getDefaultState } from '../model';
 import { BaseRepository } from './base-repository';
 import type { StateSchemaType } from './validator';
 
@@ -30,13 +29,10 @@ export class LocalRepository extends BaseRepository {
 		this.storageKey = `${this._storageKey}${widgetId}`;
 	}
 
-	protected async getter(): Promise<StateSchemaType> {
+	protected async getter(): Promise<StateSchemaType | null> {
 		const raw = localStorage.getItem(this.storageKey);
 		if (raw === null) {
-			const state = getDefaultState();
-			const hydrated = await this.set(state);
-
-			return hydrated;
+			return null;
 		}
 
 		const data = JSON.parse(raw) as StateSchemaType;
