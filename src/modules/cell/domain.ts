@@ -292,3 +292,71 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Volatility]: CellType.Label,
 };
 
+type ColumnToCell = {
+	[ColumnType.Symbol]: ISymbolCell;
+
+	[ColumnType.PriceCurrent]: INumberCell;
+	[ColumnType.PriceMin24h]: INumberCell;
+	[ColumnType.PriceMax24h]: INumberCell;
+	[ColumnType.PriceMin1y]: INumberCell;
+	[ColumnType.PriceMax1y]: INumberCell;
+	[ColumnType.PriceAvg50d]: INumberCell;
+	[ColumnType.PriceAvg200d]: INumberCell;
+	[ColumnType.Price1yRange]: IRangeCell;
+
+	[ColumnType.Price24hChart]: ISvgChartCell;
+	[ColumnType.Price7dChart]: ISvgChartCell;
+	[ColumnType.Price30dChart]: ISvgChartCell;
+
+	[ColumnType.ChangePrice24h]: INumberCell;
+	[ColumnType.ChangePrice1hPercent]: IPercentCell;
+	[ColumnType.ChangePrice24hPercent]: IPercentCell;
+	[ColumnType.ChangePrice7dPercent]: IPercentCell;
+	[ColumnType.ChangePrice30dPercent]: IPercentCell;
+
+	[ColumnType.Volume24h]: INumberCell;
+	[ColumnType.VolumeRel10d]: INumberCell;
+	[ColumnType.VolumeAvg10d]: INumberCell;
+	[ColumnType.VolumeAvg50d]: INumberCell;
+
+	[ColumnType.MarketCap24h]: INumberCell;
+	[ColumnType.MarketCapRank]: ITextCell;
+	[ColumnType.MarketCapFullyDiluted]: INumberCell;
+	[ColumnType.MarketCapChange24h]: INumberCell;
+	[ColumnType.MarketCapChange24hPercent]: IPercentCell;
+	[ColumnType.CirculatingSupply]: INumberCell;
+	[ColumnType.TotalSupply]: INumberCell;
+	[ColumnType.MaxSupply]: INumberCell;
+
+	[ColumnType.AllTimeHigh]: INumberCell;
+	[ColumnType.AllTimeHighChangePercent]: IPercentCell;
+	[ColumnType.AllTimeHighDate]: ITextCell;
+	[ColumnType.AllTimeLow]: INumberCell;
+	[ColumnType.AllTimeLowChangePercent]: IPercentCell;
+	[ColumnType.AllTimeLowDate]: ITextCell;
+
+	[ColumnType.RSIValue]: INumberCell;
+	[ColumnType.RSIChart]: ISvgChartCell;
+
+	[ColumnType.Beta5y]: INumberCell;
+
+	[ColumnType.LastDividend]: INumberCell;
+
+	[ColumnType.Employees]: ITextCell;
+	[ColumnType.IpODate]: ITextCell;
+	[ColumnType.Sector]: ITextCell;
+	[ColumnType.Industry]: ITextCell;
+
+	[ColumnType.Source]: ITextCell;
+
+	[ColumnType.ListingDate]: ITextCell;
+
+	[ColumnType.UpdateDate]: ITextCell;
+
+	[ColumnType.PriceOpen]: INumberCell;
+	[ColumnType.PriceClose]: INumberCell;
+
+	[ColumnType.Volatility]: ILableCell;
+};
+
+export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

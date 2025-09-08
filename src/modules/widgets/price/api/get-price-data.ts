@@ -64,13 +64,13 @@ export interface IGetPriceResponse {
 	data: IData;
 }
 
-export interface IGetPricePreparedResponse {
+export interface IPriceData {
 	tickers: ITickerDomain[];
 	pinedTickers: ITickerDomain[];
 	pagination: IPagination;
 }
 
-export async function getPrice(req: IGetPriceRequest): Promise<IGetPricePreparedResponse> {
+export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 	const logger = useLogger();
 
 	try {
@@ -83,7 +83,7 @@ export async function getPrice(req: IGetPriceRequest): Promise<IGetPricePrepared
 	}
 }
 
-function prepare({ data }: IGetPriceResponse): IGetPricePreparedResponse {
+function prepare({ data }: IGetPriceResponse): IPriceData {
 	return {
 		pagination: data.pagination,
 		tickers: prepareTickers(data.tickers),
