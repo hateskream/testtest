@@ -22,6 +22,13 @@ export function useQueryPrice(
 		);
 	});
 
+	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
+		queryClient.setQueryData(
+			['price', market.value],
+			oldData => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
+		);
+	});
+
 	watch(market, newMarket => {
 		queryClient.invalidateQueries({ queryKey: ['price', newMarket] });
 	});
