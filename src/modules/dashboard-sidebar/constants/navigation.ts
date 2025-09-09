@@ -15,4 +15,10 @@ export const navigation: INavigationItem[] = [
 		routeName: RouteNames.Heatmap,
 		routeLabels: RouteLabels.Heatmap,
 	},
+	{
+		icon: IconIds.Calendar,
+		id: IconIds.Calendar,
+		routeName: RouteNames.Calendar,
+		routeLabels: RouteLabels.Calendar,
+	},
 ];

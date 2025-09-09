@@ -86,6 +86,11 @@ export const globalRoutes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: RoutePaths.Calendar,
+		name: RouteNames.Calendar,
+		component: () => import('@/pages/calendar-page.vue'),
+	},
 ];
 
 export const testRoutes: RouteRecordRaw[] = [
