@@ -29,10 +29,6 @@ export function useQueryPrice(
 		);
 	});
 
-	watch(market, newMarket => {
-		queryClient.invalidateQueries({ queryKey: ['price', newMarket] });
-	});
-
 	onUnmounted(() => {
 		cellUpdater.disconnect();
 	});

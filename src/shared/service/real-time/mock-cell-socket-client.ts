@@ -25,7 +25,7 @@ export class MockSocketClient implements ISocketClient {
 						return;
 					}
 
-					const interval = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
+					const interval = Math.floor(Math.random() * (15_000 - 1_000 + 1)) + 1_000;
 
 					const id = setInterval(() => {
 						this.emit(columnType, {

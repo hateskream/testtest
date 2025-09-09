@@ -10,10 +10,12 @@ import {
 	prepareMarketResponse,
 	type TableRowDto,
 	type ISort,
+	type ColumnWithoutSymbol,
+	SymbolType,
 } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 import type { CommoditiesTableRow, ISelectedFilter } from '../model';
-import { mockTickers } from './mock/commodities';
+import { generateRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -67,13 +69,11 @@ export async function getMarketCommodities(_: IGetMarketRequest): Promise<IPrepa
 	const logger = useLogger();
 
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData()
-			: await httpService.get<IGetMarketResponse>('/api/market', {
-				query: {
+		if (IS_USE_MOCK) {
+			return getMockData();
+		}
 
-				},
-			});
+		const response = await httpService.get<IGetMarketResponse>('/api/market');
 
 		return prepareMarketResponse<CommoditiesTableRow>(response.data);
 	} catch (error) {
@@ -82,21 +82,36 @@ export async function getMarketCommodities(_: IGetMarketRequest): Promise<IPrepa
 	}
 }
 
+const columnTypes: ColumnWithoutSymbol[] = [
+	ColumnType.PriceCurrent,
+	ColumnType.ChangePrice24h,
+	ColumnType.ChangePrice24hPercent,
+	ColumnType.Volume24h,
+	ColumnType.PriceMin24h,
+	ColumnType.PriceMax24h,
+	ColumnType.PriceMin1y,
+	ColumnType.PriceMax1y,
+	ColumnType.PriceAvg50d,
+	ColumnType.PriceAvg200d,
+	ColumnType.PriceOpen,
+	ColumnType.PriceClose,
+	ColumnType.UpdateDate,
+	ColumnType.Price24hChart,
+];
 
-async function getMockData(): Promise<IGetMarketResponse> {
+async function getMockData(): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const response: IGetMarketResponse = {
-		data: {
-			pagination: {
-				offset: 0,
-				limit: 10,
-				total: 10,
-			},
-			tickers: mockTickers,
+	const response: IPreparedResponse = {
+
+		pagination: {
+			offset: 0,
+			limit: 10,
+			total: 10,
 		},
+		tickers: generateRows(SymbolType.Commodity, columnTypes),
 	};
 
 	return response;

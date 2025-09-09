@@ -1,4 +1,11 @@
-export type QueryData<T> ={
+import type { ColumnWithoutSymbol, TableRow } from '@/modules/cell';
+import type { Message } from '../service/real-time';
+
+export interface IData {
+	tickers: TableRow[];
+}
+
+export type QueryData<T = IData> ={
 	pages: T[];
 	pageParams: number[];
 };
@@ -11,4 +18,26 @@ export function updateInfiniteQueryData<TPage>(
 		...oldData,
 		pages: oldData.pages.map(updatePage),
 	};
+}
+
+export function updateQueryData<T extends ColumnWithoutSymbol>(
+	oldData:QueryData<IData>,
+	updatedData: Message<T>,
+) {
+	if (!oldData) {
+		return oldData;
+	}
+
+	return updateInfiniteQueryData(oldData, (page) => ({
+		...page,
+		tickers: page.tickers
+			.map((ticker) =>
+				ticker.tickerId === updatedData.tickerId
+					? {
+						...ticker,
+						...updatedData,
+					}
+					: ticker,
+			),
+	}));
 }
