@@ -68,4 +68,10 @@ export enum IconIds {
 	Flash = 'flash',
 	Other = 'other',
 	EmptyWatchlist = 'empty-watchlist',
+	GlobusLogo = 'globus-logo',
+	BottomLinkNav = 'bottom-link-nav',
+	BottomLinkPay = 'bottom-link-pay',
+	BottomLinkGgp = 'bottom-link-ggp',
+	BottomLinkGlobus = 'bottom-link-globus',
+	BottomLinkI88 = 'bottom-link-i88',
 }

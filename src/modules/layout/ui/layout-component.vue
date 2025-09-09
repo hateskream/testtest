@@ -1,27 +1,22 @@
 <script setup lang="ts">
-import { reactive, ref, useTemplateRef, watch, computed } from 'vue';
-import { useElementHover } from '@vueuse/core';
 import type { CSSProperties } from 'vue';
+import { computed, reactive, ref, useTemplateRef, watch } from 'vue';
+import { useElementHover } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { RouteNames } from '@/types/route.d';
-import { usePanelWidth, useMousePosition } from '../composables';
+import { useMousePosition, usePanelWidth } from '../composables';
 import { ReleaseNotes } from '@/modules/release-notes';
 import { EnvironmentName, getEnvironmentName } from '@/shared/lib';
+import { SidebarExpanded, SidebarMinified } from '@/modules/dashboard-sidebar';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
 
-interface INavigationItem {
-	icon: IconIds;
-	id: IconIds;
-	routeName: string;
-	routeParams?: Record<string, string | number>;
-}
 
 interface ILayoutState {
 	isOpenCurtain: boolean;
 	isCurtainFixed: boolean;
+	isSidebarExpanded: boolean;
 }
 
 interface ILayoutComponentProps {
@@ -36,22 +31,10 @@ const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
-const navigation: INavigationItem[] = [
-	{
-		icon: IconIds.Home,
-		id: IconIds.Home,
-		routeName: RouteNames.Home,
-	},
-	{
-		icon: IconIds.Heatmap,
-		id: IconIds.Heatmap,
-		routeName: RouteNames.Heatmap,
-	},
-];
-
 const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
 	isCurtainFixed: isCurtainFixed.value,
+	isSidebarExpanded: true,
 });
 
 const activeItem = ref(IconIds.Home);
@@ -78,12 +61,6 @@ const centerContentStyle = computed((): Partial<CSSProperties> => {
 		marginRight: `${pannelWidth.right}px`,
 	};
 });
-
-const createRouteObject = (item: INavigationItem) => {
-	return item.routeParams
-		? { name: item.routeName, params: item.routeParams }
-		: { name: item.routeName };
-};
 
 watch(isControlOpenCurtainHovered, newValue => {
 	if (newValue) {
@@ -123,6 +100,14 @@ function closeCurtain() {
 function unFixCurtain() {
 	isCurtainFixed.value = false;
 }
+
+function expandSidebar() {
+	layoutState.isSidebarExpanded = true;
+}
+
+function minifySidebar() {
+	layoutState.isSidebarExpanded = false;
+}
 </script>
 
 <template>
@@ -132,32 +117,16 @@ function unFixCurtain() {
 			:class="classes.leftPanel"
 			varinat="left"
 		>
-			<div :class="classes.iconWrapper">
-				<ui-icon
-					:id="IconIds.Logo"
-					width="40px"
-					height="12px"
-				/>
-			</div>
-			<nav>
-				<router-link
-					v-for="item in navigation"
-					:key="`${item.routeName}-${item.id}`"
-					:to="createRouteObject(item)"
-					:class="classes.iconWrapper"
-					:active-class="classes.activeLink"
-				>
-					<ui-icon
-						:id="item.icon"
-						:class="[
-							classes.iconWrapper,
-							{ [classes.iconNotActive]: item.id !== activeItem },
-						]"
-						width="20px"
-						height="20px"
-					/>
-				</router-link>
-			</nav>
+			<sidebar-minified
+				v-if="!layoutState.isSidebarExpanded"
+				:active-item="activeItem"
+				@expand="expandSidebar"
+			/>
+			<sidebar-expanded
+				v-else
+				:active-item="activeItem"
+				@minify="minifySidebar"
+			/>
 		</panel-component>
 		<div :class="classes.center" :style="centerContentStyle">
 			<header-panel v-if="$slots.header" :class="classes.header">

@@ -12,6 +12,19 @@ export enum RouteNames {
 	Heatmap = 'Heatmap',
 }
 
+export enum RouteLabels {
+	Home = 'Dashboard',
+	Heatmap = 'Heatmap',
+	TickerCrypto = 'Ticker Crypto',
+	TickerStock = 'Ticker Stock',
+	TickerForex = 'Ticker Forex',
+	TickerCommodities = 'Ticker Commodities',
+	TickerIndices = 'Ticker Indices',
+	TickerETF = 'Ticker Etf',
+	Test = 'Test',
+	Automobile = 'Automobile',
+}
+
 export enum RoutePaths {
 	Home = '/',
 	Ticker = '/ticker',
