@@ -30,14 +30,20 @@ export function updateQueryData<T extends ColumnWithoutSymbol>(
 
 	return updateInfiniteQueryData(oldData, (page) => ({
 		...page,
-		tickers: page.tickers
-			.map((ticker) =>
-				ticker.tickerId === updatedData.tickerId
-					? {
-						...ticker,
-						...updatedData,
-					}
-					: ticker,
-			),
+		tickers: updateTickers(page.tickers, updatedData),
 	}));
+}
+
+export function updateTickers<T extends ColumnWithoutSymbol>(
+	tickers: TableRow[],
+	updatedData: Message<T>,
+) {
+	return tickers.map((ticker) =>
+		ticker.tickerId === updatedData.tickerId
+			? {
+				...ticker,
+				...updatedData,
+			}
+			: ticker,
+	);
 }

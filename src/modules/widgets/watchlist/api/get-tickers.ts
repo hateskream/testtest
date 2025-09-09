@@ -14,7 +14,7 @@ import {
 	type LabelDto,
 	mapTickersToTableRows,
 } from '@/modules/cell';
-import { mockTickers } from './mock-tickers';
+import { generateAllRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -129,7 +129,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 
 	const response: IGetWatchlistResponse = {
 		data: {
-			tickers: mockTickers,
+			tickers: generateAllRows(),
 		},
 	};
 	return response;
