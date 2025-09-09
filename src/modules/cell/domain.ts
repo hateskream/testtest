@@ -360,3 +360,50 @@ type ColumnToCell = {
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];
+
+export function createTickerId(symbolCell: ISymbolCell): string {
+	const { symbolType } = symbolCell;
+	let idPayload = '';
+
+	switch (symbolCell.symbolType) {
+		case SymbolType.Crypto:
+			idPayload = createTickerIdCrypto(symbolCell);
+			break;
+		case SymbolType.Stock:
+			idPayload = createTickerIdStock(symbolCell);
+			break;
+		case SymbolType.Index:
+			idPayload = createTickerIdIndex(symbolCell);
+			break;
+		case SymbolType.Commodity:
+			idPayload = createTickerIdCommodity(symbolCell);
+			break;
+		case SymbolType.Forex:
+			idPayload = createTickerIdForex(symbolCell);
+			break;
+		default:
+			idPayload = symbolCell.text;
+	}
+
+	return `${symbolType}-${idPayload}`;
+}
+
+function createTickerIdCrypto(symbolCell: ICryptoSymbolCell): string {
+	return symbolCell.ticker + symbolCell.blockchain;
+}
+
+function createTickerIdStock(symbolCell: IStockSymbolCell): string {
+	return symbolCell.ticker;
+}
+
+function createTickerIdIndex(symbolCell: IIndexSymbolCell): string {
+	return symbolCell.ticker;
+}
+
+function createTickerIdCommodity(symbolCell: ICommoditySymbolCell): string {
+	return symbolCell.ticker;
+}
+
+function createTickerIdForex(symbolCell: IForexSymbolCell): string {
+	return symbolCell.leftTicker + symbolCell.rightTicker;
+}

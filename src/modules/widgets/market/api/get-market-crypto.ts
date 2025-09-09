@@ -10,11 +10,13 @@ import {
 	prepareMarketResponse,
 	type TableRowDto,
 	type ISort,
+	SymbolType,
+	type ColumnWithoutSymbol,
 } from '@/modules/cell';
 import type { CryptoTableRow } from '../model';
 import type { MarketType } from '@/modules/market';
 import type { ISelectedFilter } from '../model';
-import { mockTickers } from './mock/crypto';
+import { generateRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -82,13 +84,11 @@ export async function getMarketCrypto(_: IGetMarketRequest): Promise<IPreparedRe
 	const logger = useLogger();
 
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData()
-			: await httpService.get<IGetMarketResponse>('/api/market', {
-				query: {
+		if (IS_USE_MOCK) {
+			return getMockData();
+		}
 
-				},
-			});
+		const response = await httpService.get<IGetMarketResponse>('/api/market');
 
 		return prepareMarketResponse<CryptoTableRow>(response.data);
 	} catch (error) {
@@ -98,20 +98,50 @@ export async function getMarketCrypto(_: IGetMarketRequest): Promise<IPreparedRe
 }
 
 
-async function getMockData(): Promise<IGetMarketResponse> {
+async function getMockData(): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const response: IGetMarketResponse = {
-		data: {
-			pagination: {
-				offset: 0,
-				limit: 10,
-				total: 10,
-			},
-			tickers: mockTickers,
+	const columnTypes: ColumnWithoutSymbol[] = [
+		ColumnType.PriceCurrent,
+		ColumnType.PriceMin24h,
+		ColumnType.PriceMax24h,
+		ColumnType.PriceMin1y,
+		ColumnType.PriceMax1y,
+		ColumnType.PriceAvg50d,
+		ColumnType.PriceAvg200d,
+		ColumnType.PriceOpen,
+		ColumnType.PriceClose,
+		ColumnType.AllTimeHigh,
+		ColumnType.AllTimeHighChangePercent,
+		ColumnType.AllTimeHighDate,
+		ColumnType.AllTimeLow,
+		ColumnType.AllTimeLowChangePercent,
+		ColumnType.AllTimeLowDate,
+		ColumnType.ChangePrice24h,
+		ColumnType.ChangePrice24hPercent,
+		ColumnType.Volume24h,
+		ColumnType.MarketCap24h,
+		ColumnType.MarketCapRank,
+		ColumnType.MarketCapFullyDiluted,
+		ColumnType.MarketCapChange24h,
+		ColumnType.MarketCapChange24hPercent,
+		ColumnType.CirculatingSupply,
+		ColumnType.TotalSupply,
+		ColumnType.MaxSupply,
+		ColumnType.UpdateDate,
+		ColumnType.Price24hChart,
+	];
+
+	const response: IPreparedResponse = {
+
+		pagination: {
+			offset: 0,
+			limit: 10,
+			total: 10,
 		},
+		tickers: generateRows(SymbolType.Crypto, columnTypes),
 	};
 
 	return response;
