@@ -1,11 +1,13 @@
-import type { ISymbolCell, INumberCell, IPercentCell, ISvgChartCell } from '@/modules/cell';
+import type { ISymbolCell, INumberCell, IPercentCell, ISvgChartCell, TableRow, ColumnType } from '@/modules/cell';
 
-export interface ITicker {
-	tickerId: string;
-	symbol: ISymbolCell;
-	priceCurrent: INumberCell;
-	changePrice24hPercent: IPercentCell;
-	price24hChart: ISvgChartCell;
+export type TickerWithoutState = TableRow<{
+	[ColumnType.Symbol]: ISymbolCell;
+	[ColumnType.PriceCurrent]: INumberCell;
+	[ColumnType.ChangePrice24hPercent]: IPercentCell;
+	[ColumnType.Price24hChart]: ISvgChartCell;
+}>;
+
+export type ITicker = TickerWithoutState & {
 	isPined: boolean;
 	isShow: boolean;
-}
+};

@@ -1,14 +1,16 @@
-import type { CellByColumn, ColumnType } from '@/modules/cell';
+import type { CellByColumn, ColumnWithoutSymbol } from '@/modules/cell';
 import { SocketClient, type ISocketClient } from './socket-client';
 import { MockSocketClient } from './mock-cell-socket-client';
 
-export type Message<T extends ColumnType> = {
+export type Message<T extends ColumnWithoutSymbol = ColumnWithoutSymbol> = {
 	tickerId: string;
-} & {
-	[K in T]: CellByColumn<K>;
-};
+} & Partial<
+	{
+		[K in T]: CellByColumn<K>;
+	}
+>;
 
-export type MessageCallback<T extends ColumnType> = (msg: Message<T>) => void;
+export type MessageCallback<T extends ColumnWithoutSymbol> = (msg: Message<T>) => void;
 
 let countInstance = 0;
 
@@ -35,7 +37,7 @@ export class CellUpdater {
 		return CellUpdater.instance;
 	}
 
-	public register<T extends ColumnType>(colType: T, cb: MessageCallback<T>) {
+	public register<T extends ColumnWithoutSymbol>(colType: T, cb: MessageCallback<T>) {
 		this.SocketClient.subscribe<Message<T>>(colType, cb);
 	}
 

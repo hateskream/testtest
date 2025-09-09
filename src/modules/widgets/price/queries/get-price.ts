@@ -3,7 +3,7 @@ import { computed, onUnmounted, toValue, watch, type Ref } from 'vue';
 
 import { getPrice, type IPriceData } from '../api';
 import type { MarketType } from '@/modules/market';
-import { ColumnType } from '@/modules/cell';
+import { ColumnType, type ColumnWithoutSymbol } from '@/modules/cell';
 import { CellUpdater, type Message } from '@/shared/service/real-time';
 import { updateInfiniteQueryData, type QueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
@@ -52,7 +52,7 @@ export function useQueryPrice(
 	});
 }
 
-function updateQueryData<T extends ColumnType>(
+function updateQueryData<T extends ColumnWithoutSymbol>(
 	oldData:QueryData<IPriceData>,
 	updatedData: Message<T>,
 ) {

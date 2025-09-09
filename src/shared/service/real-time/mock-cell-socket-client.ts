@@ -1,47 +1,42 @@
-import { CellType, ColumnType, Trend, Magnitude, type CellByColumn } from '@/modules/cell';
+import { ColumnType, type CellByColumn, type ColumnWithoutSymbol } from '@/modules/cell';
 import { type ISocketClient, type MessageCallback } from './socket-client';
+import { generateAllRows, randomizeCellData } from '@/shared/mock';
 
-type Message = {
+type Message<T extends ColumnWithoutSymbol = ColumnWithoutSymbol> = {
 	tickerId: string;
-	[ColumnType.PriceCurrent]: CellByColumn<ColumnType.PriceCurrent>;
-};
+} & Partial<
+	{
+		[K in T]: CellByColumn<K>;
+	}
+>;
 
 export class MockSocketClient implements ISocketClient {
 	private callbacks: Partial<Record<ColumnType, MessageCallback<Message>[]>> = {};
-	private intervalId: number | null = null;
+	private intervalIds: number[] = [];
 
 	connect() {
-		this.intervalId = setInterval(() => {
-			const updatedTicker: Message = {
-				tickerId: 'BTC 1',
-				priceCurrent: {
-					cellType: CellType.Number,
-					columnType: ColumnType.PriceCurrent,
-					value: (86000 + Math.random() * 2000).toFixed(2),
-					trend: Trend.NEUTRAL,
-					currencySymbol: '$',
-					magnitude: Magnitude.TRILLION,
-				},
-			};
+		generateAllRows()
+			.forEach(row => {
 
-			this.emit(ColumnType.PriceCurrent, updatedTicker);
-		}, 3000);
+				const { tickerId } = row;
 
-		this.intervalId = setInterval(() => {
-			const updatedTicker: Message = {
-				tickerId: 'AAPL 1',
-				priceCurrent: {
-					cellType: CellType.Number,
-					columnType: ColumnType.PriceCurrent,
-					value: (86000 + Math.random() * 2000).toFixed(2),
-					trend: Trend.NEUTRAL,
-					currencySymbol: '$',
-					magnitude: Magnitude.TRILLION,
-				},
-			};
+				Object.values(ColumnType).forEach(columnType => {
+					if (columnType === ColumnType.Symbol) {
+						return;
+					}
 
-			this.emit(ColumnType.PriceCurrent, updatedTicker);
-		}, 3000);
+					const interval = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
+
+					const id = setInterval(() => {
+						this.emit(columnType, {
+							tickerId,
+							[columnType]:  randomizeCellData(row[columnType]),
+						});
+					}, interval);
+
+					this.intervalIds.push(id);
+				});
+			});
 	}
 
 	subscribe<T>(event: string, callback: MessageCallback<T>) {
@@ -52,11 +47,7 @@ export class MockSocketClient implements ISocketClient {
 	}
 
 	disconnect() {
-		if (this.intervalId) {
-			clearInterval(this.intervalId);
-			this.intervalId = null;
-		}
-		this.callbacks = {};
+		this.intervalIds.forEach(clearInterval);
 	}
 
 	private emit(event: ColumnType, data: Message) {

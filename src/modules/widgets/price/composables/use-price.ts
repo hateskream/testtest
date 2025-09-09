@@ -17,7 +17,7 @@ export function usePrice(widgetId: string) {
 		},
 	});
 
-	const limit = 20;
+	const limit = 50;
 
 	const {
 		data: dataResponse,

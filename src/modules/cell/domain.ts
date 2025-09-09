@@ -292,7 +292,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Volatility]: CellType.Label,
 };
 
-type ColumnToCell = {
+export type ColumnToCell = {
 	[ColumnType.Symbol]: ISymbolCell;
 
 	[ColumnType.PriceCurrent]: INumberCell;

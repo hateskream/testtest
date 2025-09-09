@@ -17,6 +17,10 @@ import {
 	type TableRow,
 	Trend,
 	type ColumnWithoutSymbol,
+	type ColumnToCell,
+	type INumberCell,
+	type IPercentCell,
+	type IRangeCell,
 } from '@/modules/cell';
 
 const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
@@ -356,54 +360,54 @@ interface ITickerData {
 
 const allTickers: Record<SymbolType, ITickerData[]> = {
 	[SymbolType.Crypto]: [
-		{ left: 'BTCUSDT', right: 'Bitcoin' },
-		{ left: 'ETHUSDT', right: 'Ethereum' },
-		{ left: 'BNBUSDT', right: 'Binance Coin' },
-		{ left: 'XRPUSDT', right: 'XRP (Ripple)' },
-		{ left: 'ADAUSDT', right: 'Cardano' },
-		{ left: 'SOLUSDT', right: 'Solana' },
-		{ left: 'DOGEUSDT', right: 'Dogecoin' },
-		{ left: 'DOTUSDT', right: 'Polkadot' },
-		{ left: 'MATICUSDT', right: 'Polygon' },
-		{ left: 'LTCUSDT', right: 'Litecoin' },
-		{ left: 'TRXUSDT', right: 'TRON' },
-		{ left: 'SHIBUSDT', right: 'Shiba Inu' },
-		{ left: 'AVAXUSDT', right: 'Avalanche' },
-		{ left: 'UNIUSDT', right: 'Uniswap' },
-		{ left: 'LINKUSDT', right: 'Chainlink' },
-		{ left: 'XLMUSDT', right: 'Stellar' },
-		{ left: 'ATOMUSDT', right: 'Cosmos' },
-		{ left: 'ETCUSDT', right: 'Ethereum Classic' },
-		{ left: 'TONUSDT', right: 'Toncoin' },
-		{ left: 'XMRUSDT', right: 'Monero' },
-		{ left: 'BCHUSDT', right: 'Bitcoin Cash' },
-		{ left: 'APTUSDT', right: 'Aptos' },
-		{ left: 'NEARUSDT', right: 'NEAR Protocol' },
-		{ left: 'QNTUSDT', right: 'Quant' },
-		{ left: 'VETUSDT', right: 'VeChain' },
-		{ left: 'FILUSDT', right: 'Filecoin' },
-		{ left: 'ALGOUSDT', right: 'Algorand' },
-		{ left: 'HBARUSDT', right: 'Hedera' },
-		{ left: 'ICPUSDT', right: 'Internet Computer' },
-		{ left: 'GRTUSDT', right: 'The Graph' },
-		{ left: 'AAVEUSDT', right: 'Aave' },
-		{ left: 'EOSUSDT', right: 'EOS' },
-		{ left: 'SANDUSDT', right: 'The Sandbox' },
-		{ left: 'MANAUSDT', right: 'Decentraland' },
-		{ left: 'XTZUSDT', right: 'Tezos' },
-		{ left: 'AXSUSDT', right: 'Axie Infinity' },
-		{ left: 'THETAUSDT', right: 'Theta' },
-		{ left: 'FTMUSDT', right: 'Fantom' },
-		{ left: 'EGLDUSDT', right: 'Elrond (MultiversX)' },
-		{ left: 'KAVAUSDT', right: 'Kava' },
-		{ left: 'RUNEUSDT', right: 'THORChain' },
-		{ left: 'NEOUSDT', right: 'NEO' },
-		{ left: 'FLOWUSDT', right: 'Flow' },
-		{ left: 'ZECUSDT', right: 'Zcash' },
-		{ left: 'CHZUSDT', right: 'Chiliz' },
-		{ left: 'CRVUSDT', right: 'Curve DAO' },
-		{ left: 'SNXUSDT', right: 'Synthetix' },
-		{ left: '1INCHUSDT', right: '1inch' },
+		{ left: 'BTC', right: 'Bitcoin' },
+		{ left: 'ETH', right: 'Ethereum' },
+		{ left: 'BNB', right: 'Binance Coin' },
+		{ left: 'XRP', right: 'XRP (Ripple)' },
+		{ left: 'ADA', right: 'Cardano' },
+		{ left: 'SOL', right: 'Solana' },
+		{ left: 'DOGE', right: 'Dogecoin' },
+		{ left: 'DOT', right: 'Polkadot' },
+		{ left: 'MATIC', right: 'Polygon' },
+		{ left: 'LTC', right: 'Litecoin' },
+		{ left: 'TRX', right: 'TRON' },
+		{ left: 'SHIB', right: 'Shiba Inu' },
+		{ left: 'AVAX', right: 'Avalanche' },
+		{ left: 'UNI', right: 'Uniswap' },
+		{ left: 'LINK', right: 'Chainlink' },
+		{ left: 'XLM', right: 'Stellar' },
+		{ left: 'ATOM', right: 'Cosmos' },
+		{ left: 'ETC', right: 'Ethereum Classic' },
+		{ left: 'TON', right: 'Toncoin' },
+		{ left: 'XMR', right: 'Monero' },
+		{ left: 'BCH', right: 'Bitcoin Cash' },
+		{ left: 'APT', right: 'Aptos' },
+		{ left: 'NEAR', right: 'NEAR Protocol' },
+		{ left: 'QNT', right: 'Quant' },
+		{ left: 'VET', right: 'VeChain' },
+		{ left: 'FIL', right: 'Filecoin' },
+		{ left: 'ALGO', right: 'Algorand' },
+		{ left: 'HBAR', right: 'Hedera' },
+		{ left: 'ICP', right: 'Internet Computer' },
+		{ left: 'GRT', right: 'The Graph' },
+		{ left: 'AAVE', right: 'Aave' },
+		{ left: 'EOS', right: 'EOS' },
+		{ left: 'SAND', right: 'The Sandbox' },
+		{ left: 'MANA', right: 'Decentraland' },
+		{ left: 'XTZ', right: 'Tezos' },
+		{ left: 'AXS', right: 'Axie Infinity' },
+		{ left: 'THETA', right: 'Theta' },
+		{ left: 'FTM', right: 'Fantom' },
+		{ left: 'EGLD', right: 'Elrond (MultiversX)' },
+		{ left: 'KAVA', right: 'Kava' },
+		{ left: 'RUNE', right: 'THORChain' },
+		{ left: 'NEO', right: 'NEO' },
+		{ left: 'FLOW', right: 'Flow' },
+		{ left: 'ZEC', right: 'Zcash' },
+		{ left: 'CHZ', right: 'Chiliz' },
+		{ left: 'CRV', right: 'Curve DAO' },
+		{ left: 'SNX', right: 'Synthetix' },
+		{ left: '1INCH', right: '1inch' },
 	],
 
 	[SymbolType.Stock]: [
@@ -666,7 +670,7 @@ const allTickers: Record<SymbolType, ITickerData[]> = {
 
 const tickerCount = 50;
 
-export function generateRows<T extends RowCells>(
+export function generateRows<T extends RowCells = RowCells>(
 	type: SymbolType,
 	cols: ColumnWithoutSymbol[],
 	countRows = tickerCount,
@@ -686,6 +690,57 @@ export function generateRows<T extends RowCells>(
 					),
 			} as TableRow<T>;
 		});
+}
+
+type AllRows = {
+	tickerId: string;
+} & ColumnToCell;
+
+export function generateAllRows() {
+	return Object
+		.values(SymbolType)
+		.flatMap(type =>
+			generateRows(
+				type,
+				Object
+					.keys(allCellByColumn) as ColumnWithoutSymbol[],
+			),
+		) as AllRows[];
+}
+
+export function randomizeCellData(cell: Cell): Cell {
+	switch (cell.cellType) {
+		case CellType.Number:
+			return randomizeNumberCell(cell as INumberCell);
+		case CellType.Percent:
+			return randomizePercentCell(cell as IPercentCell);
+		case CellType.Range:
+			return randomizeRangeCell(cell as IRangeCell);
+		default:
+			return cell;
+	}
+}
+
+function randomizeNumberCell(cell: INumberCell): INumberCell {
+	return {
+		...cell,
+		value: (86000 + Math.random() * 2000).toFixed(2),
+	};
+}
+
+function randomizePercentCell(cell: IPercentCell): IPercentCell {
+	return {
+		...cell,
+		value: (Math.random() * 100).toFixed(2),
+	};
+}
+
+function randomizeRangeCell(cell: IRangeCell): IRangeCell {
+	return {
+		...cell,
+		startValue: (86000 + Math.random() * 2000).toFixed(2),
+		endValue: (86000 + Math.random() * 2000).toFixed(2),
+	};
 }
 
 const symbolTypeToCell: Record<SymbolType, (td: ITickerData) => ISymbolCell> = {
