@@ -6,6 +6,8 @@ import type { CSSProperties } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { RouteNames } from '@/types/route.d';
 import { usePanelWidth, useMousePosition } from '../composables';
+import { ReleaseNotes } from '@/modules/release-notes';
+import { EnvironmentName, getEnvironmentName } from '@/shared/lib';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
@@ -25,6 +27,8 @@ interface ILayoutState {
 interface ILayoutComponentProps {
 	isEditMode?: boolean;
 }
+
+const env = getEnvironmentName();
 
 const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 	isEditMode: false,
@@ -250,6 +254,7 @@ function unFixCurtain() {
 			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>
 	</div>
+	<release-notes v-if="env !== EnvironmentName.PROD" />
 </template>
 
 <style module="classes">

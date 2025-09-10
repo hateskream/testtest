@@ -200,12 +200,12 @@ function handleDrop(event: DragEvent) {
 			:class="[classes.modal, classList]"
 		>
 			<div :class="classes.inner">
-				<!-- <div
+				<div
 					:class="props.isNotFullShield ? classes.notFullShield : classes.fullShield"
 					tabindex="-1"
 					@click="closeModal"
 				/>
-				<div :class="classes.focusguard" tabindex="0" /> -->
+				<div :class="classes.focusguard" tabindex="0" />
 				<div
 					ref="rootDialog"
 					:class="[classes.dialog, classes[props.position]]"
