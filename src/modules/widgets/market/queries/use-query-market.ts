@@ -4,7 +4,7 @@ import { computed, onUnmounted, toValue, type Ref } from 'vue';
 import type { MarketType } from '@/modules/market';
 import type { ISelectedFilter } from '../model';
 import { useGetMarket } from '../composables/use-get-market';
-import { ColumnType, type ColumnWithoutSymbol, type ISort, type TableRow } from '@/modules/cell';
+import { ColumnType, type ColumnWithoutSymbol, type ISort } from '@/modules/cell';
 import { updateQueryData, type QueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { CellUpdater } from '@/shared/service/real-time';
@@ -38,10 +38,6 @@ const realTimeColumns: ColumnWithoutSymbol[] = [
 	ColumnType.LastDividend,
 	ColumnType.VolumeAvg50d,
 ];
-
-export interface IData {
-	tickers: TableRow[];
-}
 
 export function useQueryMarket(
 	market: Ref<MarketType>,
