@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { computed, onUnmounted, toValue, watch, type Ref } from 'vue';
+import { computed, onUnmounted, toValue, type Ref } from 'vue';
 
 import { getPrice, type IPriceData } from '../api';
 import type { MarketType } from '@/modules/market';
