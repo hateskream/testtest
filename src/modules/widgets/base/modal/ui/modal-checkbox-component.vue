@@ -45,8 +45,8 @@ const classesList = computed(() => ({
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 18px;
-	height: 18px;
+	width: 12px;
+	height: 12px;
 	padding: 4px;
 	color: var(--icon-color-base-500);
 	border-width: 1px;

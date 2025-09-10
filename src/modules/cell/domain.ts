@@ -26,6 +26,10 @@ export enum ColumnType {
 	ChangePrice7dPercent = 'changePrice7dPercent',
 	ChangePrice30dPercent = 'changePrice30dPercent',
 
+	Dominance24hPercent = 'dominance24hPercent',
+	Dominance7dPercent = 'dominance7dPercent',
+	Dominance30dPercent = 'dominance30dPercent',
+
 	Volume24h = 'volume24h',
 	VolumeRel10d = 'volumeRel10d',
 	VolumeAvg10d = 'volumeAvg10d',
@@ -68,6 +72,8 @@ export enum ColumnType {
 	UpdateDate = 'updateDate',
 
 	Volatility = 'volatility',
+
+	Color = 'color',
 }
 
 export enum CellType {
@@ -165,6 +171,11 @@ export interface IForexSymbolCell extends ISymbolCellBase {
 export interface IPlaneTextSymbolCell extends ISymbolCellBase {
 	symbolType: SymbolType.PlaneText;
 	text: string;
+}
+
+export interface IColorCell extends IBaseCell {
+	cellType: CellType.Text;
+	value: string;
 }
 
 export type ISymbolCell =
@@ -290,6 +301,11 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.PriceClose]: CellType.Number,
 
 	[ColumnType.Volatility]: CellType.Label,
+	[ColumnType.Color]: CellType.Text,
+
+	[ColumnType.Dominance24hPercent]: CellType.Percent,
+	[ColumnType.Dominance7dPercent]: CellType.Percent,
+	[ColumnType.Dominance30dPercent]: CellType.Percent,
 };
 
 export type ColumnToCell = {

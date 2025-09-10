@@ -1,11 +1,11 @@
 
 <script setup lang="ts">
-import { ModalItemCheckbox } from '..';
+import { ModalItemCheckbox } from '@/modules/widgets/base';
 
 interface IProps {
 	isSelected:boolean;
-	ticker?: string;
-	name?: string;
+	ticker?: string | null;
+	name?: string | null;
 }
 
 defineProps<IProps>();

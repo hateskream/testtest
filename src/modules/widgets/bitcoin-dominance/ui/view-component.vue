@@ -1,122 +1,66 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
-import type { IBitcoinDominanceDomain } from '../api';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalFilterTicker } from '../../base';
-import type { IModalFilterTicker } from '../../base/modal/model';
-import { UiImage } from '@/shared/ui/image';
-import { compareStrings } from '@/shared/lib';
+import type { TickerDto } from '../api';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
+import { ModalTickerSelectorWithBadge } from '../../ticker-selector';
+import { getTickerName } from '@/modules/cell';
+import type { TickerTableRow } from '../model';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 
 interface IViewComponentProps {
 	meta: IMeta;
-	data: IBitcoinDominanceDomain[];
+	data: TickerTableRow[];
 }
 
 const props = defineProps<IViewComponentProps>();
 const chartMarketCapRef = useTemplateRef('chart');
 
-const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
-
-const listWithGroups = ref<IModalFilterTicker[]>(
-	props.data.map((item, idx) => {
-		return {
-			id: item.id,
-			image:  item.srcValue,
-			name: item.name,
-			ticker: item.symbol,
-			imageType: 'image',
-			type: {
-				value: item.type,
-				name: '',
-			},
-			isSelected: idx === 0,
-		};
-	}),
-);
-
-const activeList = ref<IBitcoinDominanceDomain[]>([]);
 const activeListSorted = computed(() => {
-	return [...activeList.value].sort((a, b) => b.dominance-a.dominance );
+	return [...props.data].sort((a, b) => +b.dominance24hPercent.value - +a.dominance24hPercent.value );
 });
+
 const totalOtherDominance = computed(() => {
-	return (100 - activeListSorted.value.reduce((acc, item) => acc + item.dominance, 0)).toFixed(2);
+	return (100 - activeListSorted.value.reduce((acc, item) => acc + +item.dominance24hPercent.value, 0)).toFixed(2);
 });
+
 const bitcoinDominanceStore = useBitcoinDominanceStore();
 
-function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
-	if (item.isSelected) {
-		const foundItem = props.data.find(singleItem => compareStrings(singleItem.id, item.id) )!;
+const prevIds = ref<string[]>([]);
 
-		activeList.value.push(foundItem);
+watch(
+	() => props.data,
+	async (newData: TickerDto[]) => {
+		await nextTick();
+		const chart = chartMarketCapRef.value;
+		if (!chart) {
+			return;
+		}
 
-		chartMarketCapRef.value?.addTicker(foundItem.color, foundItem.symbol);
-	} else {
-		const idx = activeList.value.findIndex(singleItem => compareStrings(singleItem.id, item.id));
+		for (let i = prevIds.value.length - 1; i >= 0; i--) {
+			chart.removeTicker(i);
+		}
 
-		activeList.value.splice(idx, 1);
+		for (const d of newData) {
+			chart.addTicker(d.color.value!, d.tickerId);
+		}
 
-		chartMarketCapRef.value?.removeTicker(idx);
-	}
-}
-onMounted(() => {
-	handleUpdateFilterTickerItem(
-		listWithGroups.value[0]!,
-	);
-});
+		prevIds.value = newData.map(d => d.tickerId);
+	},
+	{ immediate: true, flush: 'post' },
+);
 </script>
 
 <template>
 	<div :class="classes.root">
-
-		<div>
-			<modal-badge>
-				<template #title>
-					<div :class="classes.listFiltersTitleImageWrapper">
-						<div
-							v-for="item in activeListSorted.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)"
-							:key="item.symbol"
-							:class="classes.listFiltersTitleImage"
-						>
-							<ui-image
-								:src="item.srcValue"
-								replacement="/images/market/ADA.png"
-							/>
-						</div>
-					</div>
-
-
-					<div
-						v-if="
-							activeListSorted.length  === 0
-						"
-					>
-						Crypto
-					</div>
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-						:class="classes.icon"
-					/>
-				</template>
-
-				<template #content>
-					<modal-filter-ticker
-						v-model="listWithGroups"
-						@select="handleUpdateFilterTickerItem"
-					/>
-				</template>
-			</modal-badge>
-		</div>
+		<modal-ticker-selector-with-badge
+			v-model="bitcoinDominanceStore.selectedTickers"
+		/>
 
 
 		<div v-if="activeListSorted.length  > 0" :class="classes.marketCapCurrencyAllData">
@@ -124,16 +68,18 @@ onMounted(() => {
 				<div  :class="classes.marketCapCurrencyDominanceList">
 					<div
 						v-for="item in activeListSorted"
-						:key="item.id"
+						:key="item.tickerId"
 						:class="classes.marketCapCurrencyDominanceItem"
 					>
 						<div :class="classes.marketCapCurrencyDominanceName">
-							<div :style="{backgroundColor: item.color}"></div>
-							<span>{{ item.symbol }}</span>
+							<div :style="{backgroundColor: item.color.value}"></div>
+							<span>
+								{{ getTickerName(item.symbol)}}
+							</span>
 						</div>
 
 						<div :class="classes.marketCapCurrencyDominanceValue">
-							{{ item.dominance }}%
+							{{ item.dominance24hPercent.value }}%
 						</div>
 					</div>
 
@@ -146,7 +92,7 @@ onMounted(() => {
 						</div>
 
 						<div :class="classes.marketCapCurrencyDominanceValue">
-							{{ totalOtherDominance	 }}%
+							{{ totalOtherDominance }}%
 						</div>
 					</div>
 				</div>
@@ -154,9 +100,9 @@ onMounted(() => {
 				<div v-if="bitcoinDominanceStore.isShowIndicator" :class="classes.marketCapDominanceLine">
 					<div
 						v-for="item in activeListSorted"
-						:key="item.id"
+						:key="item.tickerId"
 						:class="classes.marketCapDominanceLineItem"
-						:style="{background: item.color, width: `${item.dominance}%`}"
+						:style="{background: item.color.value, width: `${item.dominance24hPercent.value}%`}"
 					/>
 					<div
 						:class="classes.marketCapDominanceLineItem"
@@ -168,26 +114,28 @@ onMounted(() => {
 			<div v-if="bitcoinDominanceStore.isShowHistorical" :class="classes.marketCapCurrencyList">
 				<div
 					v-for="item in activeListSorted"
-					:key="item.id"
+					:key="item.tickerId"
 					:class="classes.marketCapCurrency"
 				>
 
 					<div :class="classes.marketCapCurrencyName">
-						<div :style="{backgroundColor: item.color}"></div>
-						<span>{{ item.symbol }}</span>
+						<div :style="{backgroundColor: item.color.value}"></div>
+						<span>
+							{{ getTickerName(item.symbol) }}
+						</span>
 					</div>
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeYerstaday }}%
+						{{ item.dominance24hPercent.value }}%
 					</div>
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeWeek }}%
+						{{ item.dominance7dPercent.value }}%
 					</div>
 
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeYear }}%
+						{{ item.dominance30dPercent.value }}%
 					</div>
 				</div>
 			</div>
@@ -262,24 +210,6 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	width: 80px;
-}
-
-.listFiltersTitleImageWrapper {
-	display: flex;
-}
-
-.listFiltersTitleImage {
-	width: 28px;
-	height: 28px;
-	margin-left: -12px;
-	overflow: hidden;
-	background-color: #222223;
-	border: 2px solid #222223;
-	border-radius: 100%;
-}
-
-.listFiltersTitleImageWrapper > .listFiltersTitleImage:first-child {
-	margin-left: 0;
 }
 
 .marketCapCurrency {
