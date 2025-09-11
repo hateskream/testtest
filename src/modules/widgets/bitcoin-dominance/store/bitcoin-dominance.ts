@@ -1,25 +1,24 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import type { ITickerMapped } from '../../ticker-selector';
-import { SymbolType } from '@/modules/cell';
+import type {
+	IModalFilterTicker,
+} from '../../base/modal/model';
 
 export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominance', () => {
 	const isShowHistorical = ref(true);
 	const isShowIndicator = ref(true);
 	const isShowChart = ref(true);
 
-	const selectedTickers = ref<ITickerMapped[]>([
-		{
-			tickerId: 'BTC',
-			ticker: 'BTC',
-			name: 'Bitcoin',
-			symbolType: SymbolType.Crypto,
-			srcImage: '3',
-		},
-	]);
+	const tickerLists = ref<IModalFilterTicker[]>([]);
 
-	const selectedTickersIds = computed(() => selectedTickers.value.map(item => item.tickerId).join(',') );
+	const activeTickersList = computed<IModalFilterTicker[]>(() =>
+		tickerLists.value.filter(item => item.isSelected),
+	);
+
+	function setTickerLists(newList: IModalFilterTicker[]) {
+		tickerLists.value = newList;
+	}
 
 	function toggleShowHistorical() {
 		isShowHistorical.value = !isShowHistorical.value;
@@ -44,8 +43,9 @@ export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominanc
 		isShowChart,
 		isShowIndicator,
 
-		selectedTickers,
-		selectedTickersIds,
+		tickerLists,
+		activeTickersList,
+		setTickerLists,
 
 		resetAll,
 

@@ -77,11 +77,6 @@ export type PercentDto = BaseDto &
 		maxAbsValue?: number;
 	}>;
 
-export type ColorDto = BaseDto &
-	Nullable<{
-		value: string;
-	}>;
-
 export type SvgChartDto = BaseDto &
 	Nullable<{
 		src: string;

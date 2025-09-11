@@ -1,14 +1,11 @@
 import { useQuery } from '@tanstack/vue-query';
-import { toValue, type MaybeRefOrGetter } from 'vue';
 
-import { getMarketCap } from '../api';
+import { getMarketCap, type IGetMarketCapRequest } from '../api';
 
 
-export function useQueryMarketCap(tickersIds: MaybeRefOrGetter<string>) {
+export function useQueryMarketCap(args: IGetMarketCapRequest) {
 	return useQuery({
-		queryKey:  ['market-cap', tickersIds],
-		queryFn: () => getMarketCap({
-			tickersIds: toValue(tickersIds),
-		}),
+		queryKey: ['market-cap', args.market],
+		queryFn: () => getMarketCap(args),
 	});
 }

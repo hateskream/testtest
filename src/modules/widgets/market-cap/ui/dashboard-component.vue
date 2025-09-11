@@ -4,7 +4,6 @@ import { computed } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
-import { useMarketCapStore } from '../store/market-cap.ts';
 
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -15,11 +14,12 @@ interface IWidgetComponentProps {
 	meta: IMeta;
 }
 
+
 const props = defineProps<IWidgetComponentProps>();
 
-const marketCap = useMarketCapStore();
-
-const { data, isLoading, isError } = useQueryMarketCap(computed(() => marketCap.selectedTickersIds));
+const { data, isLoading, isError } = useQueryMarketCap({
+	market: props.meta.market,
+});
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 
@@ -37,8 +37,8 @@ const emit = defineEmits<{
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data?.tickers"
-				:data="data.tickers"
+				v-else-if="data"
+				:data="data"
 				:meta="meta"
 			/>
 		</template>

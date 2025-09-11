@@ -4,7 +4,6 @@ import { computed } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
-import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
 
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
@@ -17,11 +16,9 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const bitcoinDominanceStore = useBitcoinDominanceStore();
-
-const { data, isLoading, isError } = useQueryBintcoinDominance(
-	computed(() => bitcoinDominanceStore.selectedTickersIds),
-);
+const { data, isLoading, isError } = useQueryBintcoinDominance({
+	market: props.meta.market,
+});
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 
@@ -39,8 +36,8 @@ const emit = defineEmits<{
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data?.tickers"
-				:data="data.tickers"
+				v-else-if="data"
+				:data="data"
 				:meta="meta"
 			/>
 		</template>

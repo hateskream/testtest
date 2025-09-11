@@ -1,14 +1,11 @@
 import { useQuery } from '@tanstack/vue-query';
-import { toValue, type MaybeRefOrGetter } from 'vue';
 
-import { getBitcoinDominance } from '../api';
+import { getBitcoinDominance, type IGetBitcoinDominanceRequest } from '../api';
 
 
-export function useQueryBintcoinDominance(tickersIds: MaybeRefOrGetter<string>) {
+export function useQueryBintcoinDominance(args: IGetBitcoinDominanceRequest) {
 	return useQuery({
-		queryKey:  ['bitcoin-dominance', tickersIds],
-		queryFn: () => getBitcoinDominance({
-			tickersIds: toValue(tickersIds),
-		}),
+		queryKey: ['bitcoin-dominance', args.market],
+		queryFn: () => getBitcoinDominance(args),
 	});
 }

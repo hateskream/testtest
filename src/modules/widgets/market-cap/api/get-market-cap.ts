@@ -1,73 +1,97 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import {
-	type SymbolDto,
-	ColumnType,
-	type TableRowDto,
-	type NumberDto,
-	type ColorDto,
-	mapTickersToTableRows,
-	type PercentDto,
-} from '@/modules/cell';
-import { mockTickers } from './mock';
-import type { TickerTableRow } from '../model/market-cap';
+import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { ImageTypePath } from '@/shared/lib/get-image-path';
+import type { IMarketCapCurrency } from '../model/market-cap';
 
 const IS_USE_MOCK = true;
 
-export type TickerDto = TableRowDto<{
-	[ColumnType.Symbol]: SymbolDto;
-	[ColumnType.Color]: ColorDto;
-	[ColumnType.MarketCap24h]: NumberDto;
-	[ColumnType.MarketCapChange24hPercent]: PercentDto;
-}>;
-
-export interface IMarketCapRequest {
-	tickersIds: string;
+export interface IGetMarketCapRequest {
+	market: string;
 }
 
-interface IGetResponse {
-	data: {
-		tickers: TickerDto[];
-	};
+export interface IGetMarketResponse {
+	data: IMarketCapCurrency[];
 }
 
-export interface IPreparedResponse {
-	tickers: TickerTableRow[];
+export interface IMarketCapDomain extends IMarketCapCurrency {
+	srcValue: string;
 }
 
-export async function getMarketCap(query: IMarketCapRequest): Promise<IPreparedResponse> {
+export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketCapDomain[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
+	const query = removeUndefinedPropertiesFromObject(args);
+
 	try {
 		const response = IS_USE_MOCK
-			? await getMockData(query)
-			: await httpService.get<IGetResponse>('/api/market-cap', {
-				query: {
-					tickerIds: query.tickersIds,
-				},
+			? await getMockData()
+			: await httpService.get<IGetMarketResponse>('/api/market', {
+				query,
 			});
 
-		return {
-			tickers: mapTickersToTableRows<TickerTableRow>(response.data.tickers),
-		};
+		return prepareResponse(response.data);
 	} catch (error) {
-		logger.error('Failed to get market-cap', error as Error);
+		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
 }
 
+function prepareResponse(data: IMarketCapCurrency[]): IMarketCapDomain[] {
+	return data.map(item => ({
+		...item,
+		srcValue: getImagePath(item.symbol, item.type === 'crypto' ? ImageTypePath.Currency : ImageTypePath.Stock),
+	}));
+}
 
-async function getMockData(query: IMarketCapRequest): Promise<IGetResponse> {
+async function getMockData(): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const tickers = query.tickersIds.split(',');
-
-	return {
-		data:{
-			tickers: mockTickers.filter((item) => tickers.includes(item.tickerId)),
+	const mockData: IMarketCapCurrency[] = [
+		{
+			id: '1',
+			symbol: 'ADA',
+			name: 'Cardano',
+			type: 'crypto',
+			change24h: 0.93,
+			color: ' rgb(247, 169, 104)',
+			fdv: '84232834934324.45',
 		},
+		{
+			id: '2',
+			symbol: 'TRON',
+			name: 'TRX',
+			type: 'crypto',
+			change24h: 12,
+			color: ' rgb(42, 135, 211)',
+			fdv: '8743253453.45',
+		},
+		{
+			id: '3',
+			symbol: 'SOL',
+			name: 'Solana',
+			type: 'crypto',
+			change24h: -0.5,
+			color: ' rgb(42, 211, 98)',
+			fdv: '943299.45',
+		},
+		{
+			id: '4',
+			symbol: 'TSLA',
+			name: 'Tesla Inc',
+			type: 'stock',
+			change24h: -4,
+			color: ' rgb(211, 67, 42)',
+			fdv: '44883234838.45',
+		},
+	];
+
+	const response: IGetMarketResponse = {
+		data: mockData,
 	};
+
+	return response;
 }
