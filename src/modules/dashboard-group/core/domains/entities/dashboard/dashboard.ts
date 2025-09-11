@@ -78,7 +78,7 @@ export class Dashboard {
 
 		const seen = new Set<string>();
 		const uniqueWidgets = activeColWidgets.filter(widget => {
-			const key = widget.instanceId || widget.id;
+			const key = widget.id;
 			if (seen.has(key)) {
 				return false;
 			}
@@ -132,12 +132,8 @@ export class Dashboard {
 		type: string,
 		position: IPosition,
 		widgetsState: IWidgetState[],
-		instanceId?: string,
-		config?: Record<string, unknown>,
 	): Widget {
-		const widget = instanceId
-			? Widget.createWithInstanceId(instanceId, type, position, config)
-			: Widget.create(type, position);
+		const widget = Widget.create(type, position);
 
 		this._layout.forEach(widgets => {
 			widgets.push(widget);
@@ -172,8 +168,7 @@ export class Dashboard {
 			const widgets = instances
 				.filter(instance => getEnabledWidgets().has(instance.type))
 				.map(instance => {
-					return Widget.createWithInstanceId(
-						instance.id,
+					return Widget.create(
 						instance.type,
 						{
 							x: instance.position.x,
@@ -181,7 +176,7 @@ export class Dashboard {
 							w: instance.position.size.w,
 							h: instance.position.size.h,
 						},
-						instance.config,
+						instance.defaultStateType,
 					);
 				});
 

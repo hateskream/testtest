@@ -18,6 +18,7 @@ export interface IWidget {
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
+	defaultStateType: string;
 }
 
 export interface IPosition {

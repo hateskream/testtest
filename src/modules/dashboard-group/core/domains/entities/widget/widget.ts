@@ -11,20 +11,11 @@ export class Widget {
 		private readonly _id: string,
 		private readonly _preset: PresetWidget,
 		private _position: IPosition,
-		private readonly _instanceId?: string,
-		private readonly _config?: Record<string, unknown>,
+		private readonly _defaultStateType = '',
 	) {}
 
 	get id(): string {
 		return this._id;
-	}
-
-	get instanceId(): string | undefined {
-		return this._instanceId;
-	}
-
-	get config(): Record<string, unknown> | undefined {
-		return this._config;
 	}
 
 	get widgetType(): WidgetType {
@@ -43,6 +34,10 @@ export class Widget {
 		return this._position;
 	}
 
+	get defaultStateType(): string {
+		return this._defaultStateType;
+	}
+
 	set position(value: IPosition) {
 		this._position = value;
 	}
@@ -55,30 +50,14 @@ export class Widget {
 		return this._preset.minSize;
 	}
 
-	static create(type: string, position: IPosition): Widget {
+	static create(type: string, position: IPosition, defaultStateType = ''): Widget {
 		const preset = PresetWidget.create(type);
 
 		return new Widget(
 			uuidv4(),
 			preset,
 			position,
-		);
-	}
-
-	static createWithInstanceId(
-		instanceId: string,
-		type: string,
-		position: IPosition,
-		config?: Record<string, unknown>,
-	): Widget {
-		const preset = PresetWidget.create(type);
-
-		return new Widget(
-			uuidv4(),
-			preset,
-			position,
-			instanceId,
-			config,
+			defaultStateType,
 		);
 	}
 
@@ -86,8 +65,6 @@ export class Widget {
 		id: string,
 		type: string,
 		position: IPosition,
-		instanceId?: string,
-		config?: Record<string, unknown>,
 	): Widget {
 		const preset = PresetWidget.create(type);
 
@@ -95,8 +72,6 @@ export class Widget {
 			id,
 			preset,
 			position,
-			instanceId,
-			config,
 		);
 	}
 }

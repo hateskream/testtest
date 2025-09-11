@@ -6,8 +6,8 @@ import { queryClient } from '@/shared/service/query-client';
 
 const SETTINGS_QUERY_KEY = 'price-settings';
 
-export const useGetState = (widgetId: string) => {
-	const repository = useRepository(widgetId);
+export const useGetState = (widgetId: string, defaultStateType: string) => {
+	const repository = useRepository(widgetId, defaultStateType);
 
 	return useQuery<IState>({
 		queryKey: [SETTINGS_QUERY_KEY, widgetId],
@@ -16,8 +16,8 @@ export const useGetState = (widgetId: string) => {
 	});
 };
 
-export const useUpdateState = (widgetId: string) => {
-	const repository = useRepository(widgetId);
+export const useUpdateState = (widgetId: string, defaultStateType: string) => {
+	const repository = useRepository(widgetId, defaultStateType);
 
 	return useMutation<void, Error, IState>({
 

@@ -5,8 +5,8 @@ import { useQueryPrice } from '../queries';
 import { useGetState, useUpdateState } from '../queries/use-query-widget-state';
 import type { MarketType } from '@/modules/market';
 
-export function usePrice(widgetId: string) {
-	const state = ref<IState>(getDefaultsState());
+export function usePrice(widgetId: string, defaultStateType: string) {
+	const state = ref<IState>(getDefaultsState(defaultStateType));
 	const currentSettings = ref<ISettings>(getDefaultsSettings());
 	const pinnedTickers = ref<string[]>([]);
 
@@ -35,8 +35,8 @@ export function usePrice(widgetId: string) {
 	const {
 		data: dataState,
 		isLoading: isLoadingState,
-	} = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	} = useGetState(widgetId, defaultStateType);
+	const { mutate } = useUpdateState(widgetId, defaultStateType);
 
 	const isNotData = computed(() => !!dataResponse.value && isLoading.value && !isLoadingState.value);
 
@@ -106,7 +106,7 @@ export function usePrice(widgetId: string) {
 	);
 
 	function resetAllChanges() {
-		state.value = getDefaultsState();
+		state.value = getDefaultsState(defaultStateType);
 	}
 
 	function loadMore() {

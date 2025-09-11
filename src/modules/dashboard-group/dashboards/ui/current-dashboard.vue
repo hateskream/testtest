@@ -30,6 +30,7 @@ const meta = computed((): IMeta => ({
 		w: props.dashboardItem.position.w,
 	},
 	name: props.dashboardItem.name,
+	defaultStateType: props.dashboardItem.defaultStateType,
 }));
 
 </script>

@@ -9,8 +9,8 @@ export interface IPresetPosition {
 export interface IWidgetInstancePreset {
 	id: string;
 	type: WidgetType;
-	config?: Record<string, unknown>;
 	position: IPresetPosition;
+	defaultStateType?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -27,30 +27,50 @@ export function getDefaultsSettings(): ISettings {
 	return { ...defaultSettings };
 }
 
-export function getDefaultsState(): IState {
+const defaultSettingsByMarket: SettingsByMarketType = {
+	[MarketType.Crypto]: {
+		display: getDefaultsSettings(),
+		pinned: [],
+	},
+	[MarketType.Stock]: {
+		display: getDefaultsSettings(),
+		pinned: [],
+	},
+	[MarketType.Forex]: {
+		display: getDefaultsSettings(),
+		pinned: [],
+	},
+	[MarketType.Commodities]: {
+		display: getDefaultsSettings(),
+		pinned: [],
+	},
+	[MarketType.Indices]: {
+		display: getDefaultsSettings(),
+		pinned: [],
+	},
+};
+
+export function getDefaultsState(defaultStateType: string): IState {
+	let activeMarket: MarketType = MarketType.Crypto;
+
+	if (defaultStateType === 'stock') {
+		activeMarket = MarketType.Stock;
+	}
+
+	if (defaultStateType === 'forex') {
+		activeMarket = MarketType.Forex;
+	}
+
+	if (defaultStateType === 'commodities') {
+		activeMarket = MarketType.Commodities;
+	}
+
+	if (defaultStateType === 'indices') {
+		activeMarket = MarketType.Indices;
+	}
+
 	return {
-		activeMarket: MarketType.Crypto,
-		settings: {
-			[MarketType.Crypto]: {
-				display: getDefaultsSettings(),
-				pinned: [],
-			},
-			[MarketType.Stock]: {
-				display: getDefaultsSettings(),
-				pinned: [],
-			},
-			[MarketType.Forex]: {
-				display: getDefaultsSettings(),
-				pinned: [],
-			},
-			[MarketType.Commodities]: {
-				display: getDefaultsSettings(),
-				pinned: [],
-			},
-			[MarketType.Indices]: {
-				display: getDefaultsSettings(),
-				pinned: [],
-			},
-		},
+		activeMarket,
+		settings: { ...defaultSettingsByMarket },
 	};
 }

@@ -40,5 +40,6 @@ export function mapWidget(widget: Widget): IWidget {
 		maxSize: widget.maxSize,
 		minSize: widget.minSize,
 		widgetType: widget.widgetType,
+		defaultStateType: widget.defaultStateType,
 	};
 }

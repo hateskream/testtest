@@ -13,10 +13,16 @@ export class LocalRepository extends BaseRepository {
 	public static create(
 		storageKey: string,
 		widgetId: string,
+		defaultStateType: string,
 		options?: IOptions,
 	): LocalRepository {
 		if (!this.instances.has(widgetId)) {
-			this.instances.set(widgetId, new LocalRepository(storageKey, widgetId, options));
+			this.instances.set(widgetId, new LocalRepository(
+				storageKey,
+				widgetId,
+				defaultStateType,
+				options),
+			);
 		}
 		return this.instances.get(widgetId)!;
 	}
@@ -24,6 +30,7 @@ export class LocalRepository extends BaseRepository {
 	private constructor(
 		private readonly _storageKey: string,
 		widgetId: string,
+		private readonly defaultStateType: string,
 		private readonly options?: IOptions,
 	) {
 		super();
@@ -33,7 +40,7 @@ export class LocalRepository extends BaseRepository {
 	protected async getter(): Promise<IState> {
 		const raw = localStorage.getItem(this.storageKey);
 		if (raw === null) {
-			const state = getDefaultsState();
+			const state = getDefaultsState(this.defaultStateType);
 			await this.set(state);
 			return state;
 		}

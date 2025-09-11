@@ -12,14 +12,13 @@ export interface IDashboard {
 
 export interface IWidget {
 	id: string;
-	instanceId?: string;
 	widgetType: WidgetType;
 	name: string;
 	description: string;
 	position: IPosition;
 	maxSize: ISize;
 	minSize: ISize;
-	config?: Record<string, unknown>;
+	defaultStateType: string;
 }
 
 export interface IPosition {
@@ -60,6 +59,7 @@ export interface IMeta {
 	market: string;
 	name: string;
 	size: ISize;
+	defaultStateType: string;
 }
 
 export enum WidgetType {
