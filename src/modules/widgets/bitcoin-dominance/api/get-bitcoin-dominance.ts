@@ -7,9 +7,11 @@ import {
 	type ColorDto,
 	mapTickersToTableRows,
 	type PercentDto,
+	type ColumnWithoutSymbol,
+	SymbolType,
 } from '@/modules/cell';
-import { mockTickers } from './mock';
-import type { TickerTableRow } from '../model';
+import type { TickerRow } from '../model';
+import { generateRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -32,7 +34,7 @@ interface IGetResponse {
 }
 
 export interface IPreparedResponse {
-	tickers: TickerTableRow[];
+	tickers: TickerRow[];
 }
 
 export async function getBitcoinDominance(query: IGetRequest): Promise<IPreparedResponse> {
@@ -40,16 +42,19 @@ export async function getBitcoinDominance(query: IGetRequest): Promise<IPrepared
 	const logger = useLogger();
 
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData(query)
-			: await httpService.get<IGetResponse>('/api/bitcoin-dominance', {
-				query: {
-					tickerIds: query.tickersIds,
-				},
-			});
+
+		if (IS_USE_MOCK) {
+			return await getMockData(query);
+		}
+
+		const response = await httpService.get<IGetResponse>('/api/bitcoin-dominance', {
+			query: {
+				tickerIds: query.tickersIds,
+			},
+		});
 
 		return {
-			tickers: mapTickersToTableRows<TickerTableRow>(response.data.tickers),
+			tickers: mapTickersToTableRows<TickerRow>(response.data.tickers),
 		};
 	} catch (error) {
 		logger.error('Failed to get bitcoin-dominance', error as Error);
@@ -58,7 +63,23 @@ export async function getBitcoinDominance(query: IGetRequest): Promise<IPrepared
 }
 
 
-async function getMockData(query: IGetRequest): Promise<IGetResponse> {
+const columnTypes: ColumnWithoutSymbol[] = [
+	ColumnType.Color,
+	ColumnType.Dominance24hPercent,
+	ColumnType.Dominance7dPercent,
+	ColumnType.Dominance30dPercent,
+];
+
+const mockTickers = [
+	...generateRows<TickerRow>(SymbolType.Crypto, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Commodity, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Forex, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Index, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Stock, columnTypes, 20),
+];
+
+
+async function getMockData(query: IGetRequest): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
@@ -66,8 +87,6 @@ async function getMockData(query: IGetRequest): Promise<IGetResponse> {
 	const tickers = query.tickersIds.split(',');
 
 	return {
-		data:{
-			tickers: mockTickers.filter((item) => tickers.includes(item.tickerId)),
-		},
+		tickers: mockTickers.filter((item) => tickers.includes(item.tickerId)),
 	};
 }

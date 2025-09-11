@@ -373,6 +373,12 @@ export type ColumnToCell = {
 	[ColumnType.PriceClose]: INumberCell;
 
 	[ColumnType.Volatility]: ILableCell;
+
+	[ColumnType.Dominance24hPercent]: IPercentCell;
+	[ColumnType.Dominance7dPercent]: IPercentCell;
+	[ColumnType.Dominance30dPercent]: IPercentCell;
+
+	[ColumnType.Color]: ITextCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

@@ -8,14 +8,14 @@ import { ModalTickerSelectorWithBadge } from '../../ticker-selector';
 import type { TickerDto } from '../api';
 import { getNumberText, getTickerName, Trend } from '@/modules/cell';
 import { useMarketCapStore } from '../store/market-cap.ts';
-import type { TickerTableRow } from '../model/market-cap.ts';
+import type { TickerRow } from '../model/market-cap.ts';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
 
 interface IViewComponentProps {
 	meta: IMeta;
-	data: TickerTableRow[];
+	data: TickerRow[];
 }
 
 const props = defineProps<IViewComponentProps>();

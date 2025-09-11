@@ -1,6 +1,6 @@
 import type { TableRow, ColumnType, ISymbolCell, INumberCell, IColorCell, IPercentCell } from '@/modules/cell';
 
-export type TickerTableRow = TableRow<{
+export type TickerRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;
 	[ColumnType.Color]: IColorCell;
 	[ColumnType.MarketCapChange24hPercent]: IPercentCell;
