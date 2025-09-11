@@ -40,6 +40,7 @@ export interface IEmits<T> {
 	(e: 'sectionAdded', sectionName: string): void;
 	(e: 'sectionDeleted', sectionId: string): void;
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
+	(e: 'click-on-row', tickerId: string): void;
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {
@@ -340,6 +341,7 @@ const canMoveItem = (evt: unknown) => {
 							...(cellIndex !== 0 ? {width: `var(--col-${cellIndex}-width)`} : {}),
 							minWidth: `var(--col-${cellIndex}-min-width)`
 						}"
+						@click="emit('click-on-row', row.id)"
 					>
 						<slot
 							:name="`cell-${cellIndex}`"

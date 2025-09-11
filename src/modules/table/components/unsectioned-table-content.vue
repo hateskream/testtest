@@ -30,6 +30,8 @@ export interface IEmits<T> {
 	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
 
 	(e: 'rowDeleted', payload: { rowId: string }): void;
+
+	(e: 'click-on-row', tickerId: string): void;
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {
@@ -137,6 +139,7 @@ const onRowDragChange = (evt: IDragEvent<T>) => {
 				:class="[classes.tableRow, { [classes.tableRowHovered]: hoveredRowId === row.id }]"
 				@mouseenter="handleRowMouseEnter(row.id)"
 				@mouseleave="handleRowMouseLeave"
+				@click="emit('click-on-row', row.id)"
 			>
 				<td
 					v-for="(column, cellIndex) in columns"

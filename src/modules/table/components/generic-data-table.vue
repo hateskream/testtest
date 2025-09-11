@@ -55,6 +55,8 @@ export interface IEmits<T> {
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
 
 	(e: 'columnSorted', payload: { columnKey: string; direction: 'asc' | 'desc' | 'none' }): void;
+
+	(e: 'click-on-row', tickerId: string): void;
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {
@@ -338,6 +340,7 @@ const {
 					@section-added="handleSectionAdded"
 					@section-deleted="handleSectionDeleted"
 					@section-renamed="handleSectionRenamed"
+					@click-on-row="emit('click-on-row', $event)"
 				>
 					<template
 						v-for="(column, index) in visibleColumns"
@@ -383,6 +386,7 @@ const {
 					@update:rows="handleUnsortedRowsUpdate"
 					@row-moved="handleUnsectionedRowMoved"
 					@row-deleted="handleRowDeleted"
+					@click-on-row="emit('click-on-row', $event)"
 				>
 					<template
 						v-for="(column, index) in visibleColumns"

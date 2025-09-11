@@ -53,6 +53,10 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 		emits('add-to-watchlist', payload);
 	}
 }
+
+function clickOnRow(tickerId: string) {
+	console.log(tickerId);
+}
 </script>
 
 <template>
@@ -69,6 +73,7 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 			:sticky-first-column="true"
 			:enable-row-actions="true"
 			:show-header="true"
+			@click-on-row="clickOnRow"
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">
 				<modal-badge>

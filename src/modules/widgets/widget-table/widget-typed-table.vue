@@ -56,6 +56,8 @@ export interface IEmits<T> {
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
 
 	(e: 'columnSorted', payload: { columnKey: string; direction: 'asc' | 'desc' | 'none' }): void;
+
+	(e: 'click-on-row', tickerId: string): void;
 }
 
 interface ITickerState {
@@ -163,6 +165,7 @@ const tickerState = computed(() => {
 		@section-deleted="handleSectionDeleted"
 		@section-renamed="handleSectionRenamed"
 		@column-sorted="handleColumnSorted"
+		@click-on-row="emit('click-on-row', $event)"
 	>
 		<!-- Forward header slots from parent or use default -->
 		<template
