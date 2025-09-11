@@ -11,7 +11,7 @@ export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominanc
 
 	const selectedTickers = ref<ITickerMapped[]>([
 		{
-			tickerId: 'Crypto-BTCBitcoin',
+			tickerId: 'BTC',
 			ticker: 'BTC',
 			name: 'Bitcoin',
 			symbolType: SymbolType.Crypto,

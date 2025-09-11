@@ -2,10 +2,9 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import {
 	mapTickersToTableRows,
-	SymbolType,
 } from '@/modules/cell';
+import { mockTickers } from './mock';
 import type { TickerDto, TickerRow } from '../model';
-import { generateRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -24,11 +23,9 @@ export async function getAssetsTickerSelector(): Promise<IPreparedResponse> {
 	const logger = useLogger();
 
 	try {
-		if (IS_USE_MOCK) {
-			return await getMockData();
-		}
-
-		const response = await httpService.get<IGetResponse>('/api/ticker-selector');
+		const response = IS_USE_MOCK
+			? await getMockData()
+			: await httpService.get<IGetResponse>('/api/ticker-selector');
 
 		return {
 			tickers: mapTickersToTableRows<TickerRow>(response.data.tickers),
@@ -39,21 +36,15 @@ export async function getAssetsTickerSelector(): Promise<IPreparedResponse> {
 	}
 }
 
-const mockTickers = [
-	...generateRows<TickerRow>(SymbolType.Crypto, [], 20),
-	...generateRows<TickerRow>(SymbolType.Commodity, [], 20),
-	...generateRows<TickerRow>(SymbolType.Forex, [], 20),
-	...generateRows<TickerRow>(SymbolType.Index, [], 20),
-	...generateRows<TickerRow>(SymbolType.Stock, [], 20),
-];
 
-
-async function getMockData(): Promise<IPreparedResponse> {
+async function getMockData(): Promise<IGetResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
 	return {
-		tickers: mockTickers,
+		data:{
+			tickers: mockTickers,
+		},
 	};
 }

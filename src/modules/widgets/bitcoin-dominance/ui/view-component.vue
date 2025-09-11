@@ -8,14 +8,14 @@ import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ModalTickerSelectorWithBadge } from '../../ticker-selector';
 import { getTickerName } from '@/modules/cell';
-import type { TickerRow } from '../model';
+import type { TickerTableRow } from '../model';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 
 interface IViewComponentProps {
 	meta: IMeta;
-	data: TickerRow[];
+	data: TickerTableRow[];
 }
 
 const props = defineProps<IViewComponentProps>();
