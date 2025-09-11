@@ -43,42 +43,6 @@ const navigation: INavigationItem[] = [
 		routeName: RouteNames.Home,
 	},
 	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerStock,
-		routeParams: { id: 1 },
-	},
-	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerCrypto,
-		routeParams: { id: 1 },
-	},
-	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerIndices,
-		routeParams: { id: 1 },
-	},
-	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerForex,
-		routeParams: { id: 1 },
-	},
-	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerCommodities,
-		routeParams: { id: 1 },
-	},
-	{
-		icon: IconIds.Chart,
-		id: IconIds.Chart,
-		routeName: RouteNames.TickerETF,
-		routeParams: { id: 1 },
-	},
-	{
 		icon: IconIds.Heatmap,
 		id: IconIds.Heatmap,
 		routeName: RouteNames.Heatmap,

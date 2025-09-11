@@ -1,235 +1,55 @@
-/* eslint-disable @stylistic/max-len */
+
 import type { IWeekGroup } from './types';
 
 export const notes: IWeekGroup[] = [
 	{
-		week: '2025-W35',
+		week: '04-11 09 2025',
 		items: [
 			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
+				id: '1',
+				title: 'Обновление модального окна выбора тикеров',
 				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
+          'Проведен редизайн компонента, переписан api ' +
+					'слой с контрактами по примеру виджета маркет, сделано 2 ' +
+					'вариации, с бэйджиком и без него, сделано так чтобы данные прокидывались ' +
+					'через v-model и расчёты все содержал только модальное окно',
+				// productLink: 'https://example.com/feature/auth',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=33153-124699&t=hu4zY15PtdN4mCAV-1',
 			},
 			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
+				id: '2',
+				title: 'Виджет top 10 weights',
 				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
+          'Создан новый виджет на странице eth-тикера',
+				productLink: '/ticker/etf/1',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=33377-180770&t=mWep67d5KdrOdh8o-11',
 			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
 			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
+				id: '3',
+				title: 'Обновления данных в реальном времени',
 				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
+          'Обновление данных тикера в табличных виджетах на стр дашборд',
+				productLink: '/',
+
+				// figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=33377-180770&t=mWep67d5KdrOdh8o-11',
 			},
 			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
+				id: '4',
+				title: 'Навигация на страницу тикера',
 				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
+          'Переход из виджетов в дашборде на страницу тикера',
+				productLink: '/',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=9738-229053&p=f&m=dev',
 			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
 			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
+				id: '4',
+				title: 'Обновление пересетов дашбордов',
 				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
-			},
-			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
-				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
-			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
-			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
-				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
-			},
-			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
-				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
-			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
-			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
-				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
-			},
-			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
-				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
-			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
-			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
-				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
-			},
-			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
-				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
-			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
-			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
-			},
-		],
-	},
-	{
-		week: '2025-W35',
-		items: [
-			{
-				id: 'n-1',
-				title: 'Новый поток авторизации',
-				description:
-          'Добавили новый поток авторизации с поддержкой SSO и улучшенной валидацией полей. Исправили баги с редиректами и добавили более точные сообщения об ошибках.',
-				productLink: 'https://example.com/feature/auth',
-				figmaLink: 'https://www.figma.com/file/xxx/auth-flow',
-			},
-			{
-				id: 'n-2',
-				title: 'UI: Сборная карточек на дашборде',
-				description:
-          'Реорганизовали карточки на дашборде: добавили группирование, lazy-load для изображений и placeholderы. Это уменьшило время первого рендера на ~20%.',
-				productLink: 'https://example.com/product/dashboard',
-				figmaLink: 'https://www.figma.com/file/xxx/dashboard',
-			},
-		],
-	},
-	{
-		week: '2025-W34',
-		items: [
-			{
-				id: 'n-3',
-				title: 'Экспорт данных в CSV',
-				description: 'Добавлена возможность выгружать таблицы в CSV с выбором столбцов и фильтров.',
-				productLink: 'https://example.com/product/export',
-				figmaLink: '',
+          'Раньше можно было задать только одно состояние по умолчанию (при первом заходе пользователя) ' +
+					'у виджета, к примеру price, теперь не ограниченное количество',
 			},
 		],
 	},

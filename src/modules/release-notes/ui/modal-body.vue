@@ -13,9 +13,9 @@ const emit = defineEmits<{
 	<div class="release-notes-root">
 		<header class="rn-header">
 			<div class="header-left">
-				<h2>Release notes — по неделям</h2>
+				<h2>Release notes</h2>
 				<p class="rn-sub">
-					Заполняется вручную внутри компонента или передаётся через пропс <code>weeks</code>
+					Еженедельные заметки о новых функциях и исправлениях в продукте
 				</p>
 
 			</div>
