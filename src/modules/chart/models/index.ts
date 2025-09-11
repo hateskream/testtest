@@ -20,7 +20,6 @@ import {
 	ChartSectionTop10Weight,
 } from '@/modules/chart/components/sections';
 
-
 export enum TickerType {
 	CRYPTO = 'crypto',
 	STOCK = 'stock',

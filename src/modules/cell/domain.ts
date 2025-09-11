@@ -383,6 +383,28 @@ export type ColumnToCell = {
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];
 
+export interface IDecodeTickerId {
+	symbolType: SymbolType;
+	tickerId: string;
+}
+
+export function decodeTickerId(tickerId: string): IDecodeTickerId | null {
+	const [symbolType, id] = tickerId.split('-');
+
+	if (symbolType && id && isValidSymbolType(symbolType)) {
+		return {
+			symbolType,
+			tickerId: id,
+		};
+	}
+
+	return null;
+}
+
+function isValidSymbolType(value: string): value is SymbolType {
+	return Object.values(SymbolType).includes(value as SymbolType);
+}
+
 export function createTickerId(symbolCell: ISymbolCell): string {
 	const { symbolType } = symbolCell;
 	let idPayload = '';

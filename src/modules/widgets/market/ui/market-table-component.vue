@@ -15,6 +15,7 @@ import {
 	ModalItem,
 } from '@/modules/widgets/base';
 import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
+import { useGoToTickerPage } from '@/modules/chart';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -32,6 +33,8 @@ const emits = defineEmits<{
 }>();
 
 const columns = defineModel<ITableColumn[]>('columns', { required: true });
+
+const { goToTickerPage } = useGoToTickerPage();
 
 const genericColumns = computed(() =>
 	mapColumn(columns.value),
@@ -53,10 +56,6 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 		emits('add-to-watchlist', payload);
 	}
 }
-
-function clickOnRow(tickerId: string) {
-	console.log(tickerId);
-}
 </script>
 
 <template>
@@ -73,7 +72,7 @@ function clickOnRow(tickerId: string) {
 			:sticky-first-column="true"
 			:enable-row-actions="true"
 			:show-header="true"
-			@click-on-row="clickOnRow"
+			@click-on-row="goToTickerPage"
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">
 				<modal-badge>
