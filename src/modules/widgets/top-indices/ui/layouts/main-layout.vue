@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { mapColumn, mapRow, type ITableColumn, type TableRow } from '@/modules/cell';
+import { useGoToTickerPage } from '@/modules/chart';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -11,6 +12,8 @@ interface IViewComponentProps {
 }
 
 const props = defineProps<IViewComponentProps>();
+
+const { goToTickerPage } = useGoToTickerPage();
 
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
@@ -36,6 +39,7 @@ const genericRows = computed(() =>
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:show-header="false"
+				@click-on-ticker="goToTickerPage"
 			/>
 		</div>
 	</div>

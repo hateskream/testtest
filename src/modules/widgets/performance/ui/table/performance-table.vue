@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell';
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
+import { useGoToTickerPage } from '@/modules/chart';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -14,6 +15,8 @@ interface IPerformanceTableProps {
 }
 
 const props = defineProps<IPerformanceTableProps>();
+
+const { goToTickerPage } = useGoToTickerPage();
 
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
@@ -49,6 +52,7 @@ const genericRows = computed(() =>
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:show-header="true"
+				@click-on-ticker="goToTickerPage"
 			/>
 		</div>
 	</div>

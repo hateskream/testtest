@@ -58,6 +58,8 @@ export interface IEmits<T> {
 	(e: 'columnSorted', payload: { columnKey: string; direction: 'asc' | 'desc' | 'none' }): void;
 
 	(e: 'click-on-row', tickerId: string): void;
+
+	(e: 'click-on-ticker', tickerId: string): void;
 }
 
 interface ITickerState {
@@ -165,7 +167,6 @@ const tickerState = computed(() => {
 		@section-deleted="handleSectionDeleted"
 		@section-renamed="handleSectionRenamed"
 		@column-sorted="handleColumnSorted"
-		@click-on-row="emit('click-on-row', $event)"
 	>
 		<!-- Forward header slots from parent or use default -->
 		<template
@@ -200,6 +201,7 @@ const tickerState = computed(() => {
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
 					:data="cellProps.row.data[column.key]"
 					:ticker-state="tickerState"
+					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component
 					:is="getCellComponent(column.type)"

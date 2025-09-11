@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { mapSections, type ISectionUi, type ITickerAddPayload, type ITickerRemovePayload } from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { useGoToTickerPage } from '@/modules/chart';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
@@ -20,6 +21,8 @@ const emit = defineEmits<{
 	(event: 'add-ticker', payload: ITickerAddPayload): void;
 	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 }>();
+
+const { goToTickerPage } = useGoToTickerPage();
 
 const genericColumns = computed(() => mapColumn(props.columns));
 
@@ -40,6 +43,7 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 			:sticky-first-column="true"
 			:enable-row-actions="true"
 			:show-header="true"
+			@click-on-ticker="goToTickerPage"
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">
 				<ui-icon

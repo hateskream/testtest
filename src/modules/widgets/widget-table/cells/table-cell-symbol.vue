@@ -13,15 +13,11 @@ interface IProps {
 	};
 }
 
-// {
-//   "symbolType": "Crypto",
-//   "srcImg": "http://localhost:5173/src/assets/images/currency/ADA.png",
-//   "ticker": "ADA",
-//   "blockchain": "Cardano"
-// }
-
 const props = defineProps<IProps>();
-// const { data: props } = toRefs(propses);
+
+const emits = defineEmits<{
+	(e: 'click-symbol'): void;
+}>();
 </script>
 
 <template>
@@ -33,6 +29,7 @@ const props = defineProps<IProps>();
 			:ticker="props.data.ticker || ''"
 			:size="20"
 			:padding="6"
+			@click="emits('click-symbol')"
 		/>
 
 		<!-- Forex symbols -->
@@ -46,17 +43,19 @@ const props = defineProps<IProps>();
 			:domain="`${props.data.leftTicker}/${props.data.rightTicker}`"
 			:size="26"
 			:padding="0"
+			@click="emits('click-symbol')"
 		/>
 
 		<div
 			v-if="props.data.symbolType === 'PlainText'
 				&& props.data.text"
 			:class="[classes.text, 'paragraph-p-00']"
+			@click="emits('click-symbol')"
 		>
 			{{ props.data.text }}
 		</div>
 
-		<div :class="classes.tickerName">
+		<div :class="classes.tickerName" @click="emits('click-symbol')">
 			<!-- Show ticker for all types -->
 			<span
 				v-if="props.tickerState.isShowTicker && props.data.ticker"
@@ -108,6 +107,7 @@ const props = defineProps<IProps>();
 	display: flex;
 	align-items: center;
 	gap: 8px;
+	cursor: pointer;
 }
 
 .tickerName {
@@ -119,6 +119,12 @@ const props = defineProps<IProps>();
 	.tickerFullName {
 		line-height: 1;
 	}
+
+	cursor: pointer;
+}
+
+.tickerName :first-child:hover {
+	text-decoration: underline;
 }
 
 .description {
