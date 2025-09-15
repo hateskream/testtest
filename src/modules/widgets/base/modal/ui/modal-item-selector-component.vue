@@ -36,8 +36,8 @@ const classesList = computed(() => ({
 
 <style module="classes">
 .icon {
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	color: var(--icon-color-base-500);
 	border-style: solid;
 	border-color: var(--bg-modal-color-base);
@@ -50,6 +50,7 @@ const classesList = computed(() => ({
 }
 
 .iconActive {
+	box-sizing: border-box;
 	border-width: 6px !important;
 	border-color: rgb(115 115 116);
 }
