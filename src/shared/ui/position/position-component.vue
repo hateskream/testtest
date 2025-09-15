@@ -116,6 +116,8 @@ defineExpose({ isVisible, handleClick });
 <style module="classes">
 .content {
 	z-index: 101;
+	max-height: 80svh;
+	overflow-y: auto;
 }
 </style>
 

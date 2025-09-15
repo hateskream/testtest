@@ -28,8 +28,8 @@ const classList = computed(() => ({
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 32px;
-	padding: 7.5px 12px;
+	height: auto;
+	padding: 8px 12px;
 	font-weight: 380;
 	font-size: 10px;
 	line-height: 170%;
