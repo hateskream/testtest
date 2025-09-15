@@ -32,5 +32,6 @@ const badgeColors = computed(() => ({
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;
+	flex-wrap:wrap;
 }
 </style>

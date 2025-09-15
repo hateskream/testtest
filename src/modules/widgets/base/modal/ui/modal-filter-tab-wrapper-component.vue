@@ -39,6 +39,7 @@ const classList = computed(() => ({
 	border-radius: 42px;
 	cursor: pointer;
 	gap: 6px;
+	white-space: nowrap;
 }
 
 .tab.active {
