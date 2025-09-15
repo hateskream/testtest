@@ -22,6 +22,7 @@ const badgeColors = computed(() => ({
 <style module="classes">
 .title {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	width: max-content;
 	height: auto;
@@ -32,6 +33,5 @@ const badgeColors = computed(() => ({
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;
-	flex-wrap:wrap;
 }
 </style>

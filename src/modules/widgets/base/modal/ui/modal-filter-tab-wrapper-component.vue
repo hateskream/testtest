@@ -35,11 +35,11 @@ const classList = computed(() => ({
 	line-height: 170%;
 	color: #adadad;
 	letter-spacing: 0.04px;
+	white-space: nowrap;
 	background-color: var(--bg-color-base-300);
 	border-radius: 42px;
 	cursor: pointer;
 	gap: 6px;
-	white-space: nowrap;
 }
 
 .tab.active {

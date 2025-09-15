@@ -55,10 +55,10 @@ const isVisible = ref(false);
 const showTimeout = ref<number | null>(null);
 const hideTimeout = ref<number | null>(null);
 
-const parentContext = inject<IFloatingContext>('floating-context', null);
+const parentContext = inject<IFloatingContext | null>('floating-context', null);
 const floatingElements = ref(new Set<HTMLElement>());
 
-const context: FloatingContext = {
+const context: IFloatingContext = {
 	registerFloating: (element: HTMLElement) => {
 		floatingElements.value.add(element);
 		parentContext?.registerFloating(element);
