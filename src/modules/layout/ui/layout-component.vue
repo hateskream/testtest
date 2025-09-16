@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 import { computed, reactive, ref, useTemplateRef, watch } from 'vue';
-import { useElementHover } from '@vueuse/core';
+import { useElementHover, useWindowSize } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useMousePosition, usePanelWidth } from '../composables';
@@ -31,10 +31,12 @@ const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
 
+const { width } = useWindowSize();
+
 const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
-	isCurtainFixed: isCurtainFixed.value,
-	isSidebarExpanded: true,
+	isCurtainFixed: isLargestScreen(),
+	isSidebarExpanded: isLargestScreen(),
 });
 
 const activeItem = ref(IconIds.Home);
@@ -69,6 +71,12 @@ watch(isControlOpenCurtainHovered, newValue => {
 });
 
 watch(() => isCurtainFixed.value, newValue => {
+	if (isLargestScreen()) {
+		isCurtainFixed.value = true;
+		layoutState.isCurtainFixed = true;
+		return;
+	}
+
 	layoutState.isCurtainFixed = newValue;
 });
 
@@ -85,6 +93,14 @@ watch(isMouseInElement, newValue => {
 	}
 });
 
+watch(() => width.value, () => {
+	if (!isLargestScreen()) {
+		return;
+	}
+	layoutState.isCurtainFixed = true;
+	layoutState.isSidebarExpanded = true;
+}, { immediate: true });
+
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
 		return;
@@ -98,6 +114,9 @@ function closeCurtain() {
 }
 
 function unFixCurtain() {
+	if (isLargestScreen()) {
+		return;
+	}
 	isCurtainFixed.value = false;
 }
 
@@ -106,7 +125,14 @@ function expandSidebar() {
 }
 
 function minifySidebar() {
+	if (isLargestScreen()) {
+		return;
+	}
 	layoutState.isSidebarExpanded = false;
+}
+
+function isLargestScreen() {
+	return width.value >= 90;
 }
 </script>
 
@@ -117,15 +143,15 @@ function minifySidebar() {
 			:class="classes.leftPanel"
 			varinat="left"
 		>
-			<sidebar-minified
-				v-if="!layoutState.isSidebarExpanded"
-				:active-item="activeItem"
-				@expand="expandSidebar"
-			/>
 			<sidebar-expanded
-				v-else
+				v-if="layoutState.isSidebarExpanded"
 				:active-item="activeItem"
 				@minify="minifySidebar"
+			/>
+			<sidebar-minified
+				v-else
+				:active-item="activeItem"
+				@expand="expandSidebar"
 			/>
 		</panel-component>
 		<div :class="classes.center" :style="centerContentStyle">

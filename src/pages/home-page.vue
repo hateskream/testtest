@@ -50,7 +50,7 @@ provideSetterDndHandler();
 provideCanDelete();
 
 const pageState = reactive({
-	isCurtainFixed: false,
+	isCurtainFixed: true,
 	isEdit: false,
 });
 
@@ -59,7 +59,7 @@ watch(
 	cn => {
 		// баг при закрытие шторки вызывается сетевой запрос
 		// нужно обсудить с дизами, это бредовое состояние
-		if (pageState.isCurtainFixed) {
+		if (pageState.isCurtainFixed && activeDashboard.value != null) {
 			return;
 		}
 
@@ -82,10 +82,14 @@ watch(() => activeDashboard.value, (dashboard) => {
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;
 }
+
 </script>
 
 <template>
-	<layout-component v-model:is-curtain-fixed="pageState.isCurtainFixed" :is-edit-mode="pageState.isEdit">
+	<layout-component
+		v-model:is-curtain-fixed="pageState.isCurtainFixed"
+		:is-edit-mode="pageState.isEdit"
+	>
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
