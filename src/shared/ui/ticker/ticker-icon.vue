@@ -20,8 +20,8 @@ const wrapperSize = computed(() => {
 	// This is used to set the size of the wrapper div
 	// to ensure the icon is centered and has padding
 	return {
-		width: props.size ? `${props.size + (props.padding? props.padding :8)}px` : '40px',
-		height: props.size ? `${props.size + (props.padding? props.padding: 8)}px` : '40px',
+		width: props.size ? `${props.size + (props.padding !== undefined ? props.padding :8)}px` : '40px',
+		height: props.size ? `${props.size + (props.padding !== undefined ? props.padding: 8)}px` : '40px',
 	};
 });
 

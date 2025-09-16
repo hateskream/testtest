@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { DatePicker } from 'v-calendar';
-import { ref } from 'vue';
 
-const selectedDate = ref<Date | null>(new Date());
+const selectedDate = defineModel<Date>({ required: true });
+
+const emits = defineEmits<{
+	'update-week': [Date];
+}>();
 </script>
 
 <template>
@@ -19,7 +22,22 @@ const selectedDate = ref<Date | null>(new Date());
 			:masks="{ title: 'MMMM yyyy' }"
 			:locale="{ firstDayOfWeek: 1 }"
 			:class="classes.calendar"
-		/>
+			@update:model-value="emits('update-week', $event)"
+		>
+			<template #day-content="{ day }">
+				<div
+					class="day-cell"
+					:class="[
+						classes.cell,
+						day.isToday && classes.today,
+						selectedDate && day.date.toDateString() === selectedDate.toDateString() && classes.active
+					]"
+					@click="selectedDate = day.date"
+				>
+					{{ day.day }}
+				</div>
+			</template>
+		</date-picker>
 	</div>
 </template>
 
@@ -33,16 +51,27 @@ const selectedDate = ref<Date | null>(new Date());
 	width: 100%;
 }
 
-/* :global(.vc-container) {
-	--vc-bg: transparent;
-	--vc-border: transparent;
-	--vc-text: var(--text-color-base-500);
+.cell {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 2rem;
+	height: 2rem;
+	margin: 0 auto;
+	line-height: 0;
+	border-radius: 50%;
+	cursor: pointer;
+}
 
-	--vc-hover-bg: var(--bg-color-surface-01);
-	--vc-today-bg: transparent;
+.today {
+	border: 1px solid #ffffff;
+}
 
-	--vc-focus-ring: 0 0 0 2px rgb(255 255 255 / 12%);
+.active {
+	background-color: rgb(230 0 0 / 100%);
+}
 
-	border-radius: 16px;
-} */
+:global(.vc-highlights) {
+	display: none;
+}
 </style>

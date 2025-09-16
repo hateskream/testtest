@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 
-import { generateRandomColor } from '@/shared/lib/generate-random-color';
-
 interface IWeeklyDayInfo {
 	date: Date;
 	dayNumber: number;
@@ -13,66 +11,24 @@ interface IWeeklyDayInfo {
 	colorDots: { color: CSSProperties['color'] }[];
 }
 
-interface ICalendarWeeklyInfoProps {
-	locale?: string;
-	weekStartsOn?: 'monday' | 'sunday';
-}
+const props = defineProps<{
+	weekDays: IWeeklyDayInfo[];
+	selectedDate: Date;
+}>();
 
-const props = withDefaults(defineProps<ICalendarWeeklyInfoProps>(), {
-	locale: typeof navigator !== 'undefined' ? navigator.language : 'en-US',
-	weekStartsOn: 'monday',
-});
-
-function getStartOfWeek(date: Date, weekStartsOn: 'monday' | 'sunday'): Date {
-	const jsDayOfWeek = date.getDay(); // 0..6 (Sun..Sat)
-	const startOffset = weekStartsOn === 'monday' ? (jsDayOfWeek + 6) % 7 : jsDayOfWeek;
-	const start = new Date(date);
-	start.setHours(0, 0, 0, 0);
-	start.setDate(date.getDate() - startOffset);
-	return start;
-}
+const emits = defineEmits<{
+	'select-day': [Date];
+}>();
 
 function isSameCalendarDay(a: Date, b: Date): boolean {
-	return (
-		a.getFullYear() === b.getFullYear() &&
+	return a.getFullYear() === b.getFullYear() &&
 		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate()
-	);
+		a.getDate() === b.getDate();
 }
 
-const today = new Date();
-const startOfWeek = getStartOfWeek(today, props.weekStartsOn);
-
-const shortFormatter = new Intl.DateTimeFormat(props.locale, { weekday: 'short' });
-const longFormatter = new Intl.DateTimeFormat(props.locale, { weekday: 'long' });
-
-const weekDays: IWeeklyDayInfo[] = Array.from({ length: 7 }, (_, index) => {
-	const d = new Date(startOfWeek);
-	d.setDate(startOfWeek.getDate() + index);
-	return {
-		date: d,
-		dayNumber: d.getDate(),
-		weekdayShort: shortFormatter.format(d),
-		weekdayLong: longFormatter.format(d),
-		isToday: isSameCalendarDay(d, today),
-		metrics: [
-			{
-				label: 'Economic',
-				value: Math.round(Math.random() * 100) },
-			{
-				label: 'Earnings',
-				value: Math.round(Math.random() * 100) },
-			{
-				label: 'Dividends',
-				value: Math.round(Math.random() * 1000) },
-		],
-		colorDots: Math.random() > 0.7 ? [{ color: generateRandomColor() }] : Math.random() > 0.7 ? [
-			{ color: generateRandomColor() },
-			{ color: generateRandomColor() },
-		] : [],
-	};
-});
-
+function isSelected(date: Date) {
+	return isSameCalendarDay(date, props.selectedDate);
+}
 </script>
 
 <template>
@@ -80,7 +36,12 @@ const weekDays: IWeeklyDayInfo[] = Array.from({ length: 7 }, (_, index) => {
 		<div
 			v-for="dayItem in weekDays"
 			:key="dayItem.dayNumber + '-' + dayItem.weekdayShort"
-			:class="[classes.dayCard, dayItem.isToday ? classes.dayCardToday : '']"
+			:class="[
+				classes.dayCard,
+				dayItem.isToday ? classes.today : '',
+				isSelected(dayItem.date) ? classes.selected : ''
+			]"
+			@click="emits('select-day', dayItem.date)"
 		>
 			<div :class="classes.dayTitle">
 				{{ dayItem.weekdayShort }} {{ dayItem.dayNumber }}
@@ -134,8 +95,12 @@ const weekDays: IWeeklyDayInfo[] = Array.from({ length: 7 }, (_, index) => {
 	border-radius: 18px;
 }
 
-.dayCardToday {
+.today {
 	background: var(--color-bg-surface-02, #161618);
+}
+
+.selected {
+	border: 1px solid var(--color-border-base-300, rgb(97 97 97));
 }
 
 .dayTitle {
