@@ -13,6 +13,7 @@ import { generateCandleDataFromLineData, generateLineData, groupSeriesByRange, p
 import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
+import ChartLegends from './chart-legends.vue';
 
 interface IChartProps {
 	// width: number;
@@ -124,7 +125,19 @@ onMounted(() => {
 	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
 		<div ref="container" :class="classes.mainChart"></div>
 
-		<div :class="classes.instruments">
+
+		<chart-legends
+			:list="[
+				{
+					color: '#d9d9d9',
+					text: 'TSLA $204.70'
+				},
+				{
+					color: '#ff7f35',
+					text: 'Peers Avg $185.50'
+				},
+			]"
+		>
 			<chart-range
 				:class="classes.range"
 				:active-range="currentRange"
@@ -132,20 +145,7 @@ onMounted(() => {
 				@select="selectRange"
 			/>
 
-			<div :class="classes.legend">
-
-				<div :class="classes.legendItem">
-					<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
-					<span>TSLA $204.70</span>
-				</div>
-
-				<div :class="classes.legendItem">
-					<div :class="[classes.legendCircle, classes.legendCircleEstimate]"></div>
-					<span>Peers Avg $185.50</span>
-				</div>
-
-			</div>
-		</div>
+		</chart-legends>
 	</div>
 </template>
 
@@ -162,53 +162,7 @@ onMounted(() => {
 	height: 100%;
 }
 
-.legend {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	width: calc(100% - 56px);
-	padding: 17px 16px;
-	gap: 31px;
-}
-
-.legendItem {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.legendItem span {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
-}
-
-.legendCircle {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-}
-
-.legendCircleReport {
-	background-color: #d9d9d9;
-}
-
-.legendCircleEstimate {
-	background-color: #ff7f35;
-}
-
-.instruments {
-	display: flex;
-	align-items: center;
-	border-top: 1px solid var(--border-color-base-300);
-}
-
 .range {
 	max-width: 92px;
-}
-
-:global(a#tv-attr-logo) {
-	display: none !important;
 }
 </style>

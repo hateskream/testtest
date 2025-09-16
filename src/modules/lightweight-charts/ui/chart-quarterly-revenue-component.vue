@@ -2,6 +2,8 @@
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js/auto';
 
+import ChartLegends from './chart-legends.vue';
+
 interface IChartProps {
 	// width: number;
 	height: number;
@@ -107,19 +109,18 @@ onMounted(() => {
 	<div :class="classes.wrapper" :style="{ height: `${height}px` }">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 
-
-		<div :class="classes.legend">
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
-				<span>Reported</span>
-			</div>
-
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleEstimate]"></div>
-				<span>Estimate</span>
-			</div>
-
-		</div>
+		<chart-legends
+			:list="[
+				{
+					color: '#d9d9d9',
+					text: 'Reported'
+				},
+				{
+					color: '#ff7f35',
+					text: 'Estimate'
+				},
+			]"
+		/>
 	</div>
 </template>
 
@@ -135,47 +136,5 @@ onMounted(() => {
 	flex-grow: 1;
 	width: 100%;
 	height: 90% !important;
-}
-
-.legend {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	width: 100%;
-	padding: 17px 16px;
-	border-top: 1px solid var(--border-color-base-300);
-	gap: 31px;
-}
-
-.legendItem {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.legendItem span {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
-}
-
-.legendCircle {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-}
-
-.legendCircleReport {
-	background-color: #d9d9d9;
-}
-
-.legendCircleEstimate {
-	background-color: #ff7f35;
-}
-
-
-:global(a#tv-attr-logo) {
-	display: none !important;
 }
 </style>

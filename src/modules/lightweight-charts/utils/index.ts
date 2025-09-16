@@ -6,3 +6,4 @@ export * from './position-box';
 export * from './prepare-series';
 export * from './position-line';
 export * from './time';
+export * from './get-tooltip';

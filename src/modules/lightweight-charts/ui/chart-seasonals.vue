@@ -2,6 +2,8 @@
 import { onMounted, ref, shallowRef, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js/auto';
 
+import ChartLegends from './chart-legends.vue';
+
 const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
@@ -305,23 +307,22 @@ function onPointerDown(e: PointerEvent, side: 'left'|'right') {
 
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 
-
-		<div :class="classes.legend">
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
-				<span>2023</span>
-			</div>
-
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleOther]"></div>
-				<span>2024</span>
-			</div>
-
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleOther2]"></div>
-				<span>2025</span>
-			</div>
-		</div>
+		<chart-legends
+			:list="[
+				{
+					color: 'rgb(255 255 255 / 100%)',
+					text: '2023'
+				},
+				{
+					color: '#fb4afb',
+					text: '2024'
+				},
+				{
+					color: 'rgb(4 237 160 / 100%)',
+					text: '2025'
+				},
+			]"
+		/>
 	</div>
 </template>
 
@@ -423,54 +424,5 @@ function onPointerDown(e: PointerEvent, side: 'left'|'right') {
 	flex-grow: 1;
 	width: 100%;
 	height: 100% !important;
-}
-
-.legend {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	width: calc(100% - 30px);
-	margin: 0 auto;
-	padding: 17px 16px;
-	border-top: 1px solid var(--border-color-base-300);
-	gap: 31px;
-}
-
-.legendItem {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.legendItem span {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
-}
-
-.legendCircle {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-}
-
-.legendCircleReport {
-	background-color: rgb(255 255 255 / 100%);
-}
-
-.legendCircleOther {
-	background-color: #fb4afb;
-}
-
-
-.legendCircleOther2 {
-	background-color: rgb(4 237 160 / 100%);
-}
-
-.instruments {
-	display: flex;
-	align-items: center;
-	border-top: 1px solid var(--border-color-base-300);
 }
 </style>

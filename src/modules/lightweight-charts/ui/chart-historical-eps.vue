@@ -4,6 +4,8 @@ import { Chart } from 'chart.js/auto';
 
 import { barDashedBorderPlugin } from '../plugins/bar-dashed-border';
 
+import ChartLegends from './chart-legends.vue';
+
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
 
@@ -99,18 +101,18 @@ onMounted(() => {
 	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 
-
-		<div :class="classes.legend">
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleReport]"></div>
-				<span>Forecast</span>
-			</div>
-
-			<div :class="classes.legendItem">
-				<div :class="[classes.legendCircle, classes.legendCircleEstimate]"></div>
-				<span>Reported</span>
-			</div>
-		</div>
+		<chart-legends
+			:list="[
+				{
+					color: '#ff7f35',
+					text: 'Forecast'
+				},
+				{
+					color: 'rgb(255 255 255 / 100%)',
+					text: 'Reported'
+				},
+			]"
+		/>
 	</div>
 </template>
 
@@ -126,42 +128,5 @@ onMounted(() => {
 	flex-grow: 1;
 	width: 100%;
 	height: 350px !important;
-}
-
-.legend {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	width: 100%;
-	padding: 17px 16px;
-	border-top: 1px solid var(--border-color-base-300);
-	gap: 31px;
-}
-
-.legendItem {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.legendItem span {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
-}
-
-.legendCircle {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-}
-
-.legendCircleReport {
-	background-color: #ff7f35;
-}
-
-.legendCircleEstimate {
-	background-color: #ffffff;
 }
 </style>
