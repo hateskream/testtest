@@ -74,4 +74,6 @@ export enum IconIds {
 	BottomLinkGgp = 'bottom-link-ggp',
 	BottomLinkGlobus = 'bottom-link-globus',
 	BottomLinkI88 = 'bottom-link-i88',
+	GraphIcon = 'graph-icon',
+	ShareIcon = 'share-icon',
 }
