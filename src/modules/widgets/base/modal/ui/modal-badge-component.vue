@@ -24,7 +24,10 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 		:strategy="props.strategy"
 	>
 		<template #default>
-			<modal-badge-title :background-color="props.backgroundColor" :color="props.color">
+			<modal-badge-title
+				:background-color="props.backgroundColor"
+				:color="props.color"
+			>
 				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->
 				<slot name="title" :is-visible="isVisible" />
 			</modal-badge-title>

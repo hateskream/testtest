@@ -70,6 +70,11 @@ export type NumberDto = BaseDto &
 		magnitude: Magnitude;
 	}>;
 
+export type ColorDto = BaseDto &
+	Nullable<{
+		value: string;
+	}>;
+
 export type PercentDto = BaseDto &
 	Nullable<{
 		value: string;

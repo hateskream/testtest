@@ -1,24 +1,18 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
-
-import type {
-	IModalFilterTicker,
-} from '../../base/modal/model';
+import { ref, watch } from 'vue';
 
 export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominance', () => {
 	const isShowHistorical = ref(true);
 	const isShowIndicator = ref(true);
 	const isShowChart = ref(true);
 
-	const tickerLists = ref<IModalFilterTicker[]>([]);
+	const selectedTickers = ref<string[]>(['Crypto-BTCBitcoin']);
 
-	const activeTickersList = computed<IModalFilterTicker[]>(() =>
-		tickerLists.value.filter(item => item.isSelected),
-	);
-
-	function setTickerLists(newList: IModalFilterTicker[]) {
-		tickerLists.value = newList;
-	}
+	watch(selectedTickers, (newVal) => {
+		if (newVal.length === 0) {
+			selectedTickers.value = ['Crypto-BTCBitcoin'];
+		}
+	});
 
 	function toggleShowHistorical() {
 		isShowHistorical.value = !isShowHistorical.value;
@@ -43,9 +37,7 @@ export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominanc
 		isShowChart,
 		isShowIndicator,
 
-		tickerLists,
-		activeTickersList,
-		setTickerLists,
+		selectedTickers,
 
 		resetAll,
 

@@ -1,116 +1,92 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
-import { ImageTypePath } from '@/shared/lib/get-image-path';
-import type { IBitcoinDominanceCurrency } from '../model/bitcoin-dominance';
+import {
+	type SymbolDto,
+	ColumnType,
+	type TableRowDto,
+	type ColorDto,
+	mapTickersToTableRows,
+	type PercentDto,
+	type ColumnWithoutSymbol,
+	SymbolType,
+} from '@/modules/cell';
+import type { TickerRow } from '../model';
+import { generateRows } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
-export interface IGetBitcoinDominanceRequest {
-	market: string;
+export type TickerDto = TableRowDto<{
+	[ColumnType.Symbol]: SymbolDto;
+	[ColumnType.Color]: ColorDto;
+	[ColumnType.Dominance24hPercent]: PercentDto;
+	[ColumnType.Dominance7dPercent]: PercentDto;
+	[ColumnType.Dominance30dPercent]: PercentDto;
+}>;
+
+export interface IGetRequest {
+	tickersIds: string;
 }
 
-export interface IGetDominanceResponse {
-	data: IBitcoinDominanceCurrency[];
+interface IGetResponse {
+	data: {
+		tickers: TickerDto[];
+	};
 }
 
-export interface IBitcoinDominanceDomain extends IBitcoinDominanceCurrency {
-	srcValue: string;
+export interface IPreparedResponse {
+	tickers: TickerRow[];
 }
 
-export async function getBitcoinDominance(args: IGetBitcoinDominanceRequest): Promise<IBitcoinDominanceDomain[]> {
+export async function getBitcoinDominance(query: IGetRequest): Promise<IPreparedResponse> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
-	const query = removeUndefinedPropertiesFromObject(args);
-
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData()
-			: await httpService.get<IGetDominanceResponse>('/api/market', {
-				query,
-			});
 
-		return prepareResponse(response.data);
+		if (IS_USE_MOCK) {
+			return await getMockData(query);
+		}
+
+		const response = await httpService.get<IGetResponse>('/api/bitcoin-dominance', {
+			query: {
+				tickerIds: query.tickersIds,
+			},
+		});
+
+		return {
+			tickers: mapTickersToTableRows<TickerRow>(response.data.tickers),
+		};
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get bitcoin-dominance', error as Error);
 		throw error;
 	}
 }
 
-function prepareResponse(data: IBitcoinDominanceCurrency[]): IBitcoinDominanceDomain[] {
-	return data.map(item => ({
-		...item,
-		srcValue: getImagePath(item.symbol, item.type === 'crypto' ? ImageTypePath.Currency : ImageTypePath.Stock),
-	}));
-}
 
-export async function getMockData(): Promise<IGetDominanceResponse> {
+const columnTypes: ColumnWithoutSymbol[] = [
+	ColumnType.Color,
+	ColumnType.Dominance24hPercent,
+	ColumnType.Dominance7dPercent,
+	ColumnType.Dominance30dPercent,
+];
+
+const mockTickers = [
+	...generateRows<TickerRow>(SymbolType.Crypto, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Commodity, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Forex, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Index, columnTypes, 20),
+	...generateRows<TickerRow>(SymbolType.Stock, columnTypes, 20),
+];
+
+
+async function getMockData(query: IGetRequest): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const mockData: IBitcoinDominanceCurrency[] = [
-		{
-			id: '1',
-			symbol: 'BTC',
-			name: 'Bitcoin',
-			type: 'crypto',
-			changeYerstaday: 35,
-			changeWeek: 10,
-			changeYear: -5,
-			color: ' rgb(247, 169, 104)',
-			dominance: 65,
-		},
-		{
-			id: '2',
-			symbol: 'ADA',
-			name: 'Cardano',
-			type: 'crypto',
-			changeYerstaday: 35,
-			changeWeek: 10,
-			changeYear: -5,
-			color: ' rgba(30, 75, 173, 1)',
-			dominance: 4,
-		},
-		{
-			id: '3',
-			symbol: 'TRON',
-			name: 'TRX',
-			type: 'crypto',
-			changeYerstaday: 50,
-			changeWeek: 20,
-			changeYear: 10,
-			color: ' rgb(42, 135, 211)',
-			dominance: 6,
-		},
-		{
-			id: '4',
-			symbol: 'SOL',
-			name: 'Solana',
-			type: 'crypto',
-			changeYerstaday: -4,
-			changeWeek: 25,
-			changeYear: 30,
-			color: ' rgb(42, 211, 98)',
-			dominance: 9.86,
-		},
-		{
-			id: '5',
-			symbol: 'TSLA',
-			name: 'Tesla Inc',
-			type: 'stock',
-			changeYerstaday: -2,
-			changeWeek: -5,
-			changeYear: 15,
-			color: ' rgb(211, 67, 42)',
-			dominance: 6.7,
-		},
-	];
+	const tickers = query.tickersIds.split(',');
 
-	const response: IGetDominanceResponse = {
-		data: mockData,
+	return {
+		tickers: mockTickers.filter((item) => tickers.includes(item.tickerId)),
 	};
-
-	return response;
 }

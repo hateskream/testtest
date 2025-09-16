@@ -1,9 +1,8 @@
-export interface IMarketCapCurrency {
-	id: string;
-	name: string;
-	symbol: string;
-	change24h: number;
-	color: string;
-	fdv: string;
-	type: 'stock' | 'crypto';
-}
+import type { TableRow, ColumnType, ISymbolCell, INumberCell, IColorCell, IPercentCell } from '@/modules/cell';
+
+export type TickerRow = TableRow<{
+	[ColumnType.Symbol]: ISymbolCell;
+	[ColumnType.Color]: IColorCell;
+	[ColumnType.MarketCapChange24hPercent]: IPercentCell;
+	[ColumnType.MarketCap24h]: INumberCell;
+}>;

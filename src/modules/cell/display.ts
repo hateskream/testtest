@@ -385,4 +385,29 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Volatility',
 		groupName: 'Other',
 	},
+	[ColumnType.Color]: {
+		columnName: 'Color',
+		tooltip: 'Color',
+		settingsName: 'Color',
+		groupName: 'Other',
+	},
+	[ColumnType.Dominance24hPercent]: {
+		columnName: 'Dominance chg%, 24h',
+		tooltip: 'Dominance change 24h %',
+		settingsName: '24h, %',
+		groupName: 'Dominance',
+	},
+	[ColumnType.Dominance7dPercent]: {
+		columnName: 'Dominance chg%, 7d',
+		tooltip: 'Dominance change 7d %',
+		settingsName: '7d, %',
+		groupName: 'Dominance',
+	},
+	[ColumnType.Dominance30dPercent]: {
+		columnName: 'Dominance chg%, 30d',
+		tooltip: 'Dominance change 30d %',
+		settingsName: '30d, %',
+		groupName: 'Dominance',
+	},
+
 };

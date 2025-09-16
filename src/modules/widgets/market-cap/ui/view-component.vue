@@ -1,123 +1,60 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { nextTick, ref, useTemplateRef, watch } from 'vue';
 
-import type { IMarketCapDomain } from '../api';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalFilterTicker } from '../../base';
-import type { IModalFilterTicker } from '../../base/modal/model';
-import { UiImage } from '@/shared/ui/image';
-import { compareStrings, prettyNumberWithKey } from '@/shared/lib';
-import { useMarketCapStore } from '../store/market-cap';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { RangeChart } from '@/shared/ui/chart-range';
+import type { TickerDto } from '../api';
+import { getNumberText, getTickerName, Trend } from '@/modules/cell';
+import { useMarketCapStore } from '../store/market-cap.ts';
+import type { TickerRow } from '../model/market-cap.ts';
+import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector/index.ts';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
-
 interface IViewComponentProps {
 	meta: IMeta;
-	data: IMarketCapDomain[];
+	data: TickerRow[];
 }
 
 const props = defineProps<IViewComponentProps>();
 const chartMarketCapRef = useTemplateRef('chartMarketCap');
 
-const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
+const marketCapStore = useMarketCapStore();
+const prevIds = ref<string[]>([]);
 
-const listWithGroups = ref<IModalFilterTicker[]>(
-	props.data.map((item) => {
-		return {
-			id: item.id,
-			image:  item.srcValue,
-			name: item.name,
-			ticker: item.symbol,
-			imageType: 'image',
-			type: {
-				value: item.type,
-				name: '',
-			},
-			isSelected: false,
-		};
-	}),
+watch(
+	() => props.data,
+	async (newData: TickerDto[]) => {
+		await nextTick();
+		const chart = chartMarketCapRef.value;
+		if (!chart) {
+			return;
+		}
+
+		for (let i = prevIds.value.length - 1; i >= 0; i--) {
+			chart.removeTicker(i);
+		}
+
+		for (const d of newData) {
+			chart.addTicker(d.color.value!, d.tickerId);
+		}
+
+		prevIds.value = newData.map(d => d.tickerId);
+	},
+	{ immediate: true, flush: 'post' },
 );
 
-const activeList = ref<IMarketCapDomain[]>([]);
-const marketCapStore = useMarketCapStore();
-
-function formatFdv(fdv: string) {
-	const { value, suffix } = prettyNumberWithKey(fdv);
-
-	return `$${value}${suffix}`;
-}
-
-function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
-	if (item.isSelected) {
-		const foundItem = props.data.find(singleItem => compareStrings(singleItem.id, item.id) )!;
-
-		activeList.value.push(foundItem);
-
-		chartMarketCapRef.value?.addTicker(foundItem.color, foundItem.symbol);
-	} else {
-		const idx = activeList.value.findIndex(singleItem => compareStrings(singleItem.id, item.id));
-
-		activeList.value.splice(idx, 1);
-
-		chartMarketCapRef.value?.removeTicker(idx);
-	}
-}
 </script>
 
 <template>
 	<div :class="classes.root">
-
-		<div>
-			<modal-badge>
-				<template #title>
-					<div :class="classes.listFiltersTitleImageWrapper">
-						<div
-							v-for="item in activeList.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)"
-							:key="item.symbol"
-							:class="classes.listFiltersTitleImage"
-						>
-							<ui-image
-								:src="item.srcValue"
-								replacement="/images/market/ADA.png"
-							/>
-						</div>
-					</div>
-
-
-					<div
-						v-if="
-							activeList.length  === 0
-						"
-					>
-						Crypto
-					</div>
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-						:class="classes.icon"
-					/>
-				</template>
-
-				<template #content>
-					<modal-filter-ticker
-						v-model="listWithGroups"
-						@select="handleUpdateFilterTickerItem"
-					/>
-				</template>
-			</modal-badge>
-		</div>
-
+		<modal-ticker-selector-with-badge
+			v-model="marketCapStore.selectedTickers"
+		/>
 
 		<div
-			v-if="
-				activeList.length === 0
-			"
-
+			v-if="data.length === 0"
 			:class="classes.chartPrices"
 		>
 			<div>
@@ -185,29 +122,31 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 		</div>
 
 
-		<div v-if="activeList.length  > 0" :class="classes.marketCapCurrencyList">
+		<div v-if="data.length > 0" :class="classes.marketCapCurrencyList">
 			<div
-				v-for="item in activeList"
-				:key="item.id"
+				v-for="item in data"
+				:key="item.tickerId"
 				:class="classes.marketCapCurrency"
 			>
 
 				<div :class="classes.marketCapCurrencyName">
-					<div :style="{backgroundColor: item.color}"></div>
-					<span>{{ item.symbol }}</span>
+					<div :style="{backgroundColor: item.color.value}"></div>
+					<span>
+						{{ getTickerName(item.symbol) }}
+					</span>
 				</div>
 
 				<div :class="classes.marketCapCurrencyFdv">
-					{{ formatFdv(item.fdv) }}
+					{{ getNumberText(item.marketCap24h) }}
 				</div>
 
 				<div
 					:class="[classes.marketCapCurrencyChange,
-						item.change24h > 0 ?
+						item.marketCapChange24hPercent.trend === Trend.UP ?
 							classes.marketCapCurrencyChangePositive : classes.marketCapCurrencyChangeNegative
 					]"
 				>
-					{{ item.change24h }}%
+					{{ item.marketCapChange24hPercent.value }}%
 				</div>
 
 			</div>
@@ -215,7 +154,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 
 		<div v-show="marketCapStore.isShowChart && meta.size.h > 3" :class="classes.chartWrapper">
 			<chart-component
-				v-show="activeList.length === 0"
+				v-show="data.length === 0"
 				:width="100"
 				:disable-scroll="true"
 				:is-visible-history-graph="false"
@@ -225,7 +164,7 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 				:is-visible-range="meta.size.w > 2"
 			/>
 			<chart-market-cap
-				v-show="activeList.length > 0"
+				v-show="data.length > 0"
 				ref="chartMarketCap"
 				:is-visible-range="meta.size.w > 2"
 				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
@@ -288,24 +227,6 @@ function handleUpdateFilterTickerItem(item: IModalFilterTicker) {
 	font-weight: 440;
 	font-size: 12px;
 	color: var(--metrics-color-positive-chart);
-}
-
-.listFiltersTitleImageWrapper {
-	display: flex;
-}
-
-.listFiltersTitleImage {
-	width: 28px;
-	height: 28px;
-	margin-left: -12px;
-	overflow: hidden;
-	background-color: #222223;
-	border: 2px solid #222223;
-	border-radius: 100%;
-}
-
-.listFiltersTitleImageWrapper > .listFiltersTitleImage:first-child {
-	margin-left: 0;
 }
 
 .marketCapCurrency {

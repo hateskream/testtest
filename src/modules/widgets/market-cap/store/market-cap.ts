@@ -1,24 +1,12 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
-
-import type {
-	IModalFilterTicker,
-} from '../../base/modal/model';
+import { ref } from 'vue';
 
 export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 	const isShowChange = ref(true);
 
 	const isShowChart = ref(true);
 
-	const tickerLists = ref<IModalFilterTicker[]>([]);
-
-	const activeTickersList = computed<IModalFilterTicker[]>(() =>
-		tickerLists.value.filter(item => item.isSelected),
-	);
-
-	function setTickerLists(newList: IModalFilterTicker[]) {
-		tickerLists.value = newList;
-	}
+	const selectedTickers = ref<string[]>([]);
 
 	function toggleShowChange() {
 		isShowChange.value = !isShowChange.value;
@@ -34,12 +22,10 @@ export const useMarketCapStore = defineStore('dashboards-market-cap', () => {
 	}
 
 	return {
+		selectedTickers,
+
 		isShowChange,
 		isShowChart,
-
-		tickerLists,
-		activeTickersList,
-		setTickerLists,
 
 		resetAll,
 
