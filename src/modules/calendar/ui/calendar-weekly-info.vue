@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-
-interface IWeeklyDayInfo {
-	date: Date;
-	dayNumber: number;
-	weekdayShort: string;
-	weekdayLong: string;
-	isToday: boolean;
-	metrics: { label: string; value: number }[];
-	colorDots: { color: CSSProperties['color'] }[];
-}
+import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
 
 const props = defineProps<{
 	weekDays: IWeeklyDayInfo[];

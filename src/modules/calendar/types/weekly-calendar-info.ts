@@ -6,6 +6,6 @@ export interface IWeeklyDayInfo {
 	weekdayShort: string;
 	weekdayLong: string;
 	isToday: boolean;
-	metrics: { label: string; value: number }[];
+	metrics: { label: string; value: number | 'N/A' }[];
 	colorDots: { color: CSSProperties['color'] }[];
 }

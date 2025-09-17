@@ -2,16 +2,30 @@
 import { computed, reactive, ref } from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
-import { CalendarLayout, EventType, Impact, type IToolbarUserState, markets } from '@/modules/calendar';
+import {
+	CalendarLayout,
+	EventType,
+	Impact,
+	type IToolbarUserState,
+	markets,
+	toWeekDays,
+	useDailyCalendarGetState,
+} from '@/modules/calendar';
 import { CalendarComponent, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
-import { generateRandomColor } from '@/shared/lib';
-import type { IWeeklyDayInfo } from '@/modules/calendar/types/calendar.ts';
+import { useWatchlist } from '@/modules/watchlist';
+import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
+
+const { watchlists } = useWatchlist();
 
 const toolbarState = reactive<IToolbarUserState>({
 	market: markets[0],
 	impact: Impact.All,
 	eventType: EventType.All,
+	watchlist: {
+		selectedId: null,
+		selectedSectionId: null,
+	},
 });
 
 interface ICalendarWeeklyContainerProps {
@@ -26,65 +40,17 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	initialDate: () => new Date(),
 });
 
+const { data, isLoading } = useDailyCalendarGetState();
+
 const baseDate = ref(new Date(props.initialDate));
 const selectedDate = ref(new Date(baseDate.value));
 
-const shortFormatter = computed(
-	() => new Intl.DateTimeFormat(props.locale, { weekday: 'short' }),
-);
-const longFormatter = computed(
-	() => new Intl.DateTimeFormat(props.locale, { weekday: 'long' }),
-);
-
-function getStartOfWeek(date: Date): Date {
-	const jsDayOfWeek = date.getDay();
-	const startOffset = props.weekStartsOn === 'monday' ? (jsDayOfWeek + 6) % 7 : jsDayOfWeek;
-	const start = new Date(date);
-	start.setHours(0, 0, 0, 0);
-	start.setDate(date.getDate() - startOffset);
-	return start;
-}
-
-function isSameCalendarDay(a: Date, b: Date): boolean {
-	return (
-		a.getFullYear() === b.getFullYear() &&
-		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate()
-	);
-}
-
-function isSameWeek(a: Date, b: Date): boolean {
-	const startA = getStartOfWeek(a);
-	const startB = getStartOfWeek(b);
-	return isSameCalendarDay(startA, startB);
-}
-
-const today = new Date();
-
 const weekDays = computed<IWeeklyDayInfo[]>(() => {
-	const startOfWeek = getStartOfWeek(baseDate.value);
+	if (isLoading.value || !data.value) {
+		return [];
+	}
 
-	return Array.from({ length: 7 }, (_, index) => {
-		const d = new Date(startOfWeek);
-		d.setDate(startOfWeek.getDate() + index);
-
-		return {
-			date: d,
-			dayNumber: d.getDate(),
-			weekdayShort: shortFormatter.value.format(d),
-			weekdayLong: longFormatter.value.format(d),
-			isToday: isSameCalendarDay(d, today),
-			isCurrentWeek: isSameWeek(baseDate.value, today),
-			metrics: [
-				{ label: 'Economic', value: Math.round(Math.random() * 100) },
-				{ label: 'Earnings', value: Math.round(Math.random() * 100) },
-				{ label: 'Dividends', value: Math.round(Math.random() * 1000) },
-			],
-			colorDots:
-				Math.random() > 0.7 ? [{ color: generateRandomColor() }] :
-					Math.random() > 0.7 ? [{ color: generateRandomColor() }, { color: generateRandomColor() }] : [],
-		};
-	});
+	return toWeekDays(data.value, baseDate.value, props.locale);
 });
 
 function setSelected(date: Date) {
@@ -106,7 +72,7 @@ function nextWeek() {
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
+	<layout-component v-if="!isLoading" :is-curtain-fixed="false">
 		<template #header>
 			<div :class="classes.header">Calendar</div>
 		</template>
@@ -121,6 +87,7 @@ function nextWeek() {
 						:impacts="Object.values(Impact)"
 						:week-days="weekDays"
 						:locale="props.locale"
+						:watchlists="watchlists"
 						@next-week="nextWeek"
 						@prev-week="prevWeek"
 					/>

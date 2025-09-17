@@ -4,23 +4,26 @@ import { computed } from 'vue';
 import {
 	ModalBadge,
 	ModalBadgeList,
+	ModalItemCheckbox,
 	ModalItemSelector,
 	ModalSubmenuContent,
-	ModalItemCheckbox,
 } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { CalendarComponent } from '@/modules/calendar/ui';
+import { ModalTitle } from '@/shared/ui/modal-title';
+import { UiDriver } from '@/shared/ui/driver';
 import type { IMarketData, IToolbarUserState } from '@/modules/calendar/types';
 import { tickerIcon } from '@/shared/ui/ticker';
 import { EventType, Impact } from '@/modules/calendar';
+import type { IWatchlist } from '@/modules/watchlist';
 
 interface ICalendarProps {
 	markets: IMarketData[];
 	eventTypes: EventType[];
 	impacts: Impact[];
-
 	weekDays: { date: Date }[];
 	locale?: string;
+	watchlists: IWatchlist[];
 }
 
 const props = defineProps<ICalendarProps>();
@@ -33,7 +36,26 @@ const emits = defineEmits<{
 const state = defineModel<IToolbarUserState>('state', { required: true });
 const selectedDate = defineModel<Date>('selectedDate', { required: true });
 
-const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
+const selectedWatchlist = computed(() => {
+	return props.watchlists.find(v => v.id === state.value.watchlist.selectedId);
+});
+
+function updateSelectedWatchlist(id: string) {
+	if (state.value.watchlist.selectedId === id) {
+		state.value.watchlist.selectedSectionId = null;
+		state.value.watchlist.selectedId = null; return;
+	}
+
+	state.value.watchlist.selectedId = id;
+	state.value.watchlist.selectedSectionId = null;
+}
+function updateSelectedSection(id: string) {
+	if (state.value.watchlist.selectedSectionId === id) {
+		state.value.watchlist.selectedSectionId = null; return;
+	}
+
+	state.value.watchlist.selectedSectionId = id;
+}
 
 const startDate = computed(() => props.weekDays[0].date);
 const endDate = computed(() => props.weekDays[props.weekDays.length - 1].date);
@@ -48,6 +70,8 @@ const label = computed(() => {
 
 	return `${left} — ${right}`;
 });
+
+const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 </script>
 
 <template>
@@ -105,6 +129,7 @@ const label = computed(() => {
 			</modal-badge>
 
 			<modal-badge
+				v-if="watchlists.length"
 				class="watchlist-modal"
 				strategy="absolute"
 			>
@@ -116,6 +141,37 @@ const label = computed(() => {
 						height="12"
 						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
+				</template>
+				<template #content>
+					<modal-badge-list>
+						<modal-title>
+							Watchlist
+						</modal-title>
+						<modal-item-selector
+							v-for="watchlist in watchlists"
+							:key="watchlist.id"
+							:model-value="watchlist.id === state.watchlist.selectedId"
+							@click="updateSelectedWatchlist(watchlist.id)"
+						>
+							{{watchlist.name}}
+						</modal-item-selector>
+
+						<ui-driver />
+
+						<template v-if="selectedWatchlist">
+							<modal-title>
+								Created Lists
+							</modal-title>
+							<modal-item-selector
+								v-for="section in selectedWatchlist.sections"
+								:key="section.id"
+								:model-value="state.watchlist.selectedSectionId === section.id"
+								@click="updateSelectedSection(section.id)"
+							>
+								{{section.name}}
+							</modal-item-selector>
+						</template>
+					</modal-badge-list>
 				</template>
 			</modal-badge>
 
@@ -135,9 +191,6 @@ const label = computed(() => {
 
 				<template #content>
 					<modal-badge-list>
-						<template #title>
-							Event type
-						</template>
 						<template #default>
 							<modal-item-checkbox
 								v-for="(event, index) in props.eventTypes"
