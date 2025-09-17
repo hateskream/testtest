@@ -251,7 +251,9 @@ function mountPlaceholderComponents(placeholderComponent: App<Element>) {
 		return;
 	}
 
-	const placeholder = gridLayoutRef.value.$el.querySelector(
+	const el = gridLayoutRef.value.$el as HTMLElement;
+
+	const placeholder = el.querySelector(
 		'.dashboard-grid > .vgl-item--placeholder',
 	);
 
@@ -259,7 +261,12 @@ function mountPlaceholderComponents(placeholderComponent: App<Element>) {
 		return;
 	}
 
-	placeholderComponent.mount(placeholder);
+	const mountTarget = document.createElement('div');
+	mountTarget.style.height = '100%';
+
+	placeholder.appendChild(mountTarget);
+
+	placeholderComponent.mount(mountTarget);
 }
 
 function unmountPlaceholderComponents() {

@@ -74,7 +74,10 @@ watch(
 			pageState.isCurtainFixed = false;
 		}
 	},
-	{ deep: true },
+	{
+		deep: true,
+		immediate: true,
+	},
 );
 
 function updateIsEdit(value: boolean) {
