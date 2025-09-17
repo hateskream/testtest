@@ -52,7 +52,6 @@ provideCanDelete();
 const pageState = reactive({
 	isCurtainFixed: true,
 	isEdit: false,
-	forceCurtainFixed: false,
 });
 
 watch(
@@ -66,31 +65,47 @@ watch(
 	},
 );
 
-watch(() => activeDashboard.value, (dashboard) => {
-	if (dashboard == null) {
-		return;
-	}
-
-	if (dashboard.widgets.length === 0) {
-		pageState.isCurtainFixed = true;
-		pageState.forceCurtainFixed = true;
-	} else {
-		pageState.isCurtainFixed = false;
-		pageState.forceCurtainFixed = true;
-	}
-}, { deep: true });
+watch(
+	activeDashboard,
+	() => {
+		if (isCurtainMustFixed()) {
+			pageState.isCurtainFixed = true;
+		} else {
+			pageState.isCurtainFixed = false;
+		}
+	},
+	{ deep: true },
+);
 
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;
+}
+
+function updateStateCurtainFixed(value: boolean) {
+	if (isCurtainMustFixed()) {
+		pageState.isCurtainFixed = true;
+		return;
+	}
+	pageState.isCurtainFixed = value;
+}
+
+function isCurtainMustFixed(): boolean {
+	const dashboard = activeDashboard.value;
+
+	if (dashboard == null) {
+		return false;
+	}
+
+	return dashboard.widgets.length === 0;
 }
 
 </script>
 
 <template>
 	<layout-component
-		v-model:is-curtain-fixed="pageState.isCurtainFixed"
+		:is-curtain-fixed="pageState.isCurtainFixed"
 		:is-edit-mode="pageState.isEdit"
-		:force-curtain-fixed="pageState.forceCurtainFixed"
+		@update:is-curtain-fixed="updateStateCurtainFixed"
 	>
 		<template #header>
 			<dashboard-group-tabs
@@ -118,8 +133,9 @@ function updateIsEdit(value: boolean) {
 		</template>
 		<template #curtain>
 			<dashboards-curtain
-				v-model:is-curtain-fixed="pageState.isCurtainFixed"
+				:is-curtain-fixed="pageState.isCurtainFixed"
 				:preset="preset"
+				@update:is-curtain-fixed="updateStateCurtainFixed"
 				@drag="onDrag"
 				@drag-end="onDragEnd"
 				@new-dashboard="setNewDashboard"

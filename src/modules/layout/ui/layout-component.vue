@@ -21,14 +21,12 @@ interface ILayoutState {
 
 interface ILayoutComponentProps {
 	isEditMode?: boolean;
-	isForceCurtainFixed?: boolean;
 }
 
 const env = getEnvironmentName();
 
 const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 	isEditMode: false,
-	isForceCurtainFixed: false,
 });
 
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
@@ -37,8 +35,8 @@ const { width } = useWindowSize();
 
 const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
-	isCurtainFixed: isCurtainMustFixed(),
-	isSidebarExpanded: isCurtainMustFixed(),
+	isCurtainFixed: isLargestScreen(),
+	isSidebarExpanded: isLargestScreen(),
 });
 
 const activeItem = ref(IconIds.Home);
@@ -73,7 +71,7 @@ watch(isControlOpenCurtainHovered, newValue => {
 });
 
 watch(() => isCurtainFixed.value, newValue => {
-	if (isCurtainMustFixed()) {
+	if (isLargestScreen()) {
 		isCurtainFixed.value = true;
 		layoutState.isCurtainFixed = true;
 		return;
@@ -96,7 +94,7 @@ watch(isMouseInElement, newValue => {
 });
 
 watch(() => width.value, () => {
-	if (!isCurtainMustFixed()) {
+	if (!isLargestScreen()) {
 		return;
 	}
 	layoutState.isCurtainFixed = true;
@@ -116,7 +114,7 @@ function closeCurtain() {
 }
 
 function unFixCurtain() {
-	if (isCurtainMustFixed()) {
+	if (isLargestScreen()) {
 		return;
 	}
 	isCurtainFixed.value = false;
@@ -127,14 +125,14 @@ function expandSidebar() {
 }
 
 function minifySidebar() {
-	if (isCurtainMustFixed()) {
+	if (isLargestScreen()) {
 		return;
 	}
 	layoutState.isSidebarExpanded = false;
 }
 
-function isCurtainMustFixed() {
-	return width.value >= 2560 || props.isForceCurtainFixed;
+function isLargestScreen() {
+	return width.value >= 2560;
 }
 </script>
 
