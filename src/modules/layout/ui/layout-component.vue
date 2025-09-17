@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
-import { computed, reactive, ref, useTemplateRef, watch } from 'vue';
+import { computed, reactive, useTemplateRef, watch } from 'vue';
 import { useElementHover, useWindowSize } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -11,7 +11,6 @@ import { SidebarExpanded, SidebarMinified } from '@/modules/dashboard-sidebar';
 
 import HeaderPanel from './header-panel.vue';
 import PanelComponent from './panel-component.vue';
-
 
 interface ILayoutState {
 	isOpenCurtain: boolean;
@@ -38,8 +37,6 @@ const layoutState = reactive<ILayoutState>({
 	isCurtainFixed: isLargestScreen(),
 	isSidebarExpanded: isLargestScreen(),
 });
-
-const activeItem = ref(IconIds.Home);
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
 const curtainGuardRef = useTemplateRef<HTMLElement>('curtainGuardRef');
@@ -145,12 +142,10 @@ function isLargestScreen() {
 		>
 			<sidebar-expanded
 				v-if="layoutState.isSidebarExpanded"
-				:active-item="activeItem"
 				@minify="minifySidebar"
 			/>
 			<sidebar-minified
 				v-else
-				:active-item="activeItem"
 				@expand="expandSidebar"
 			/>
 		</panel-component>

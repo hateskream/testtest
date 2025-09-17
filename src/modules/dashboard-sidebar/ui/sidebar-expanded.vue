@@ -3,16 +3,13 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { bottomNavigation, navigation } from '../constants';
 import { createRouteObject } from '../helpers';
-
-interface ISidebarExpandedProps {
-	activeItem: IconIds;
-}
-
-const props = defineProps<ISidebarExpandedProps>();
+import { useActiveLink } from '../composables';
 
 const emits = defineEmits<{
 	minify: [];
 }>();
+
+const { isActive } = useActiveLink();
 </script>
 
 <template>
@@ -45,8 +42,8 @@ const emits = defineEmits<{
 					<ui-icon
 						:id="item.icon"
 						:class="[
-							classes.linkIcon,
-							{ [classes.iconNotActive]: item.id !== props.activeItem },
+							classes.iconWrapper,
+							{ [classes.active]: isActive(item.routeName) },
 						]"
 						width="20px"
 						height="20px"

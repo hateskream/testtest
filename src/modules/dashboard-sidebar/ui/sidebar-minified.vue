@@ -2,16 +2,13 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { navigation } from '../constants';
 import { createRouteObject } from '../helpers';
-
-interface IMinifiedSidebarProps {
-	activeItem: IconIds;
-}
-
-const props = defineProps<IMinifiedSidebarProps>();
+import { useActiveLink } from '../composables';
 
 const emits = defineEmits<{
 	expand: [];
 }>();
+
+const { isActive } = useActiveLink();
 </script>
 
 <template>
@@ -35,7 +32,7 @@ const emits = defineEmits<{
 					:id="item.icon"
 					:class="[
 						classes.iconWrapper,
-						{ [classes.iconNotActive]: item.id !== props.activeItem },
+						{ [classes.active]: isActive(item.routeName) },
 					]"
 					width="20px"
 					height="20px"
@@ -59,5 +56,9 @@ const emits = defineEmits<{
 	&:hover {
 		color: var(--icon-color-base-500);
 	}
+}
+
+.active {
+	color: #ffffff;
 }
 </style>
