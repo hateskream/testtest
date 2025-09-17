@@ -52,13 +52,12 @@ provideCanDelete();
 const pageState = reactive({
 	isCurtainFixed: true,
 	isEdit: false,
+	forceCurtainFixed: false,
 });
 
 watch(
 	columnsNum,
 	cn => {
-		// баг при закрытие шторки вызывается сетевой запрос
-		// нужно обсудить с дизами, это бредовое состояние
 		if (pageState.isCurtainFixed && activeDashboard.value != null) {
 			return;
 		}
@@ -74,8 +73,10 @@ watch(() => activeDashboard.value, (dashboard) => {
 
 	if (dashboard.widgets.length === 0) {
 		pageState.isCurtainFixed = true;
+		pageState.forceCurtainFixed = true;
 	} else {
 		pageState.isCurtainFixed = false;
+		pageState.forceCurtainFixed = true;
 	}
 }, { deep: true });
 
@@ -89,6 +90,7 @@ function updateIsEdit(value: boolean) {
 	<layout-component
 		v-model:is-curtain-fixed="pageState.isCurtainFixed"
 		:is-edit-mode="pageState.isEdit"
+		:force-curtain-fixed="pageState.forceCurtainFixed"
 	>
 		<template #header>
 			<dashboard-group-tabs
@@ -103,18 +105,11 @@ function updateIsEdit(value: boolean) {
 				ref="dashboardGridRef"
 				:active-dashboard-id="activeDashboardId"
 				:dashboards="dashboards"
+				:rows-num="rowsNum"
 				:columns-num="columnsNum"
 				:row-height="rowHeight"
-				:rows-num="rowsNum"
-				:col-width="columnWidth"
-				:row-num="rowNumGrid"
 				:column-width="columnWidth"
 				:row-num-grid="rowNumGrid"
-				:data-dashboard-grid="true"
-				:data-grid-columns="columnsNum"
-				:data-grid-rows="rowsNum"
-				:data-row-height="rowHeight"
-				:data-column-width="columnWidth"
 				@add-widget="addWidget"
 				@delete-widget="deleteWidget"
 				@change-dashboard-state="changeDashboardState"

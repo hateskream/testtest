@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
 import type { IDashboard } from '../model';
 import type { IPosition, WidgetType } from '@/modules/dashboard-group/core';
@@ -9,12 +10,6 @@ import GridComponent from './grid-component.vue';
 
 const GAP = 20;
 const GAP_PX = GAP + 'px';
-
-type CallbackType = (width: number) => void;
-
-let disconnectObserverFunc: () => void = () => {};
-
-let isInit = false;
 
 interface IGridSliderProps {
 	activeDashboardId: string;
@@ -35,54 +30,20 @@ const emit = defineEmits<{
 	(e: 'is-edit', value: boolean): void;
 }>();
 
-const rootRef = useTemplateRef('rootRef');
-
-const state = reactive({
-	dashboardMountWidth: 0,
-	dashboardMutedWidth: 0,
-});
+const { width } = useElementSize(useTemplateRef('rootRef'));
 
 const activeIndex = computed(() => {
 	return props.dashboards.findIndex((dashboard) => dashboard.id === props.activeDashboardId);
 });
 
 const sliderStyle = computed(() => {
-	let translateX = (state.dashboardMountWidth + GAP) * activeIndex.value;
+	let translateX = (width.value + GAP) * activeIndex.value;
 
 	return {
 		transform: `translateX(${-translateX}px)`,
 		transition: `transform ${300}ms`,
 	};
 });
-
-onMounted(() => {
-	if (!rootRef.value) {
-		return;
-	}
-
-	const width = rootRef.value.clientWidth;
-
-	state.dashboardMountWidth = width;
-	state.dashboardMutedWidth = width;
-
-	disconnectObserverFunc = createResizeObserver(rootRef.value, mutWidth => {
-		if (!isInit && mutWidth !== width) {
-			state.dashboardMutedWidth = mutWidth;
-			isInit = true;
-		}
-	});
-});
-
-onUnmounted(disconnectObserverFunc);
-
-function createResizeObserver(element: HTMLElement, setterCallback: CallbackType) {
-	const observer = new ResizeObserver(() => {
-		setterCallback(element.clientWidth);
-	});
-
-	observer.observe(element);
-	return () => observer.disconnect();
-}
 
 function emitAddWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
 	emit('add-widget', type, position, widgetsState);
@@ -107,6 +68,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
 					:id="dashboard.id"
+					data-test="123"
 					:active-id="props.activeDashboardId"
 					:widgets="dashboard.widgets"
 					:rows-num="props.rowsNum"
@@ -115,9 +77,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					:column-width="props.columnWidth"
 					:row-num-grid="props.rowNumGrid"
 					:style="
-						dashboard.id === props.activeDashboardId && dashboard.widgets.length === 0
-							? {width : state.dashboardMutedWidth + 'px'}
-							: {width : state.dashboardMountWidth + 'px'}
+						{width : width + 'px'}
 					"
 					@add-widget="emitAddWidget"
 					@delete-widget="emitDeleteWidget"
