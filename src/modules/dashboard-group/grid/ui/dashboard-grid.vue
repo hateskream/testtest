@@ -35,6 +35,7 @@ import GhostMoveComponent from './ghost-move-component.vue';
 import PlaceholderResizeComponent from './placeholder-resize-component.vue';
 import PlaceholderDndComponent from './placeholder-dnd-component.vue';
 
+const MOUNT_TARGET_ID = 'placeholder-mount-target';
 
 interface IGridState {
 	isDnd: boolean;
@@ -262,6 +263,7 @@ function mountPlaceholderComponents(placeholderComponent: App<Element>) {
 	}
 
 	const mountTarget = document.createElement('div');
+	mountTarget.id = MOUNT_TARGET_ID;
 	mountTarget.style.height = '100%';
 
 	placeholder.appendChild(mountTarget);
@@ -270,9 +272,16 @@ function mountPlaceholderComponents(placeholderComponent: App<Element>) {
 }
 
 function unmountPlaceholderComponents() {
-	if (mountedPlaceholder) {
-		mountedPlaceholder.unmount();
-		mountedPlaceholder = null;
+	if (!mountedPlaceholder) {
+		return;
+	}
+
+	mountedPlaceholder.unmount();
+	mountedPlaceholder = null;
+
+	const mountTarget = document.getElementById(MOUNT_TARGET_ID);
+	if (mountTarget && mountTarget.parentNode) {
+		mountTarget.parentNode.removeChild(mountTarget);
 	}
 }
 

@@ -54,5 +54,6 @@ onMounted(() => {
 .root {
 	position: absolute;
 	z-index: 9999;
+	pointer-events: none;
 }
 </style>
