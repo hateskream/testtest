@@ -94,7 +94,7 @@ watch(() => width.value, () => {
 	if (!isLargestScreen()) {
 		return;
 	}
-	layoutState.isCurtainFixed = true;
+	isCurtainFixed.value = true;
 	layoutState.isSidebarExpanded = true;
 }, { immediate: true });
 
@@ -129,7 +129,7 @@ function minifySidebar() {
 }
 
 function isLargestScreen() {
-	return width.value >= 2560;
+	return width.value >= 9000;
 }
 </script>
 
@@ -162,12 +162,11 @@ function isLargestScreen() {
 			:class="classes.rightPanel"
 			varinat="right"
 		>
-			<div
+			<template
 				v-if="layoutState.isCurtainFixed"
-				:class="classes.curtainFixed"
 			>
 				<slot name="curtain" />
-			</div>
+			</template>
 			<div :class="classes.rightPanelControls">
 				<div
 					ref="curtainIconRef"
@@ -204,6 +203,7 @@ function isLargestScreen() {
 			ref="curtainRef"
 			:class="classes.curtainOpen"
 		>
+			ttt
 			<slot name="curtain" />
 			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>

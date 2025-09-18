@@ -50,7 +50,7 @@ provideSetterDndHandler();
 provideCanDelete();
 
 const pageState = reactive({
-	isCurtainFixed: true,
+	isCurtainFixed: isCurtainMustFixed(),
 	isEdit: false,
 });
 
@@ -76,7 +76,6 @@ watch(
 	},
 	{
 		deep: true,
-		immediate: true,
 	},
 );
 
