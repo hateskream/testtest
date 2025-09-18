@@ -51,7 +51,7 @@ const { data, isLoading, isError } = useQueryMarket(
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 
-const isNotData = computed(() => !!rows.value.length && isLoading.value);
+const isNotData = computed(() => !rows.value.length && isLoading.value);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -65,7 +65,7 @@ const emit = defineEmits<{
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data"
+				v-else
 				v-model:filters="filtersState"
 				v-model:market="activeMarket"
 				v-model:columns="columns"

@@ -57,37 +57,24 @@ onMounted(() => {
 	const element = gridItemRef.value.$el as HTMLElement;
 
 	observer = new MutationObserver(mutations => {
-		mutations.forEach(mutation => {
+		for (const mutation of mutations) {
 			if (mutation.attributeName === 'class') {
-				const isResizing = element.classList.contains('vgl-item--resizing');
-
-				updateResizeState(isResizing);
-
-				const isDragging = element.classList.contains('vgl-item--dragging');
-
-				updateDndState(isDragging);
+				updateResizeState(element.classList.contains('vgl-item--resizing'));
+				updateDndState(element.classList.contains('vgl-item--dragging'));
 			}
-		});
+		}
 	});
-
 	observer.observe(element, { attributes: true, attributeFilter: ['class'] });
 });
 
 onBeforeUnmount(() => {
-	if (observer) {
-		observer.disconnect();
-	}
+	observer?.disconnect();
 });
 
 function updateResizeState(newValue: boolean) {
 	componentState.isResize = newValue;
 	emit('change-resize-state', newValue);
-
-	if (newValue) {
-		emit('set-resizable-widget-id', props.i);
-	} else {
-		emit('set-resizable-widget-id', null);
-	}
+	emit('set-resizable-widget-id', newValue ? props.i : null);
 }
 
 function updateDndState(newValue: boolean) {
@@ -97,9 +84,7 @@ function updateDndState(newValue: boolean) {
 	if (newValue) {
 		emit('set-dnd-widget-id', props.i);
 	} else {
-		setTimeout(() => {
-			emit('set-dnd-widget-id', null);
-		});
+		setTimeout(() => emit('set-dnd-widget-id', null));
 	}
 }
 
@@ -127,7 +112,6 @@ function resize(i: string, newH: number, newW: number) {
 		@resized="emit('resized')"
 		@moved="emit('moved')"
 	>
-
 		<div :class="[classes.itemWrapper, classListItem]">
 			<div
 				v-if="componentState.isResize"
@@ -135,18 +119,24 @@ function resize(i: string, newH: number, newW: number) {
 			>
 				<slot name="state-resize" />
 			</div>
+
 			<div
-				v-else-if="componentState.isDnd"
+				v-if="componentState.isDnd"
 				:class="classes.item"
 				:style="{ cursor: 'grabbing' }"
 			>
 				<slot name="state-dnd" />
 			</div>
-			<div v-else-if="props.dropId === props.i" :class="classes.item">
+
+			<div
+				v-if="props.dropId === props.i"
+				:class="classes.item"
+			>
 				<slot name="state-add-widget" />
 			</div>
+
 			<div
-				v-else
+				v-show="!componentState.isResize && !componentState.isDnd && props.dropId !== props.i"
 				:class="classes.item"
 			>
 				<slot name="state-calm" />

@@ -10,6 +10,8 @@ type Message<T extends ColumnWithoutSymbol = ColumnWithoutSymbol> = {
 	}
 >;
 
+const IS_USE_REALTIME = false;
+
 export class MockSocketClient implements ISocketClient {
 	private callbacks: Partial<Record<ColumnType, MessageCallback<Message>[]>> = {};
 	private intervalIds: number[] = [];
@@ -17,30 +19,9 @@ export class MockSocketClient implements ISocketClient {
 	private batchIntervalId: number | null = null;
 
 	connect() {
-		generateAllRows().forEach(row => {
-			const { tickerId } = row;
-
-			Object.values(ColumnType).forEach(columnType => {
-				if (columnType === ColumnType.Symbol) {
-					return;
-				}
-
-				const interval = Math.floor(Math.random() * (5_000 - 1_000 + 1)) + 1_000;
-
-				const id = setInterval(() => {
-					this.queueEmit(columnType, {
-						tickerId,
-						[columnType]: randomizeCellData(row[columnType]),
-					});
-				}, interval);
-
-				this.intervalIds.push(id);
-			});
-		});
-
-		this.batchIntervalId = setInterval(() => {
-			this.flushBatch();
-		}, 300);
+		if (IS_USE_REALTIME) {
+			this.setup();
+		}
 	}
 
 	subscribe<T>(event: string, callback: MessageCallback<T>) {
@@ -55,6 +36,34 @@ export class MockSocketClient implements ISocketClient {
 		if (this.batchIntervalId) {
 			clearInterval(this.batchIntervalId);
 		}
+	}
+
+	private setup() {
+		generateAllRows()
+			.forEach(row => {
+				const { tickerId } = row;
+
+				Object.values(ColumnType).forEach(columnType => {
+					if (columnType === ColumnType.Symbol) {
+						return;
+					}
+
+					const interval = Math.floor(Math.random() * (5_000 - 1_000 + 1)) + 1_000;
+
+					const id = setInterval(() => {
+						this.queueEmit(columnType, {
+							tickerId,
+							[columnType]: randomizeCellData(row[columnType]),
+						});
+					}, interval);
+
+					this.intervalIds.push(id);
+				});
+			});
+
+		this.batchIntervalId = setInterval(() => {
+			this.flushBatch();
+		}, 300);
 	}
 
 	private queueEmit(event: ColumnType, data: Message) {

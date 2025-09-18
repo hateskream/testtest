@@ -105,7 +105,7 @@ const columnTypes: ColumnWithoutSymbol[] = [
 
 async function getMockData(): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
-		setTimeout(resolve, 0);
+		setTimeout(resolve, 500);
 	});
 
 	const response: IPreparedResponse = {
@@ -115,7 +115,7 @@ async function getMockData(): Promise<IPreparedResponse> {
 			limit: 10,
 			total: 10,
 		},
-		tickers: generateRows(SymbolType.Stock, columnTypes),
+		tickers: generateRows(SymbolType.Stock, columnTypes, 12),
 	};
 
 	return response;
