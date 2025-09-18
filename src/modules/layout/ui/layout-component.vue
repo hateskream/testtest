@@ -129,7 +129,7 @@ function minifySidebar() {
 }
 
 function isLargestScreen() {
-	return width.value >= 9000;
+	return width.value >= 2560;
 }
 </script>
 
@@ -203,7 +203,6 @@ function isLargestScreen() {
 			ref="curtainRef"
 			:class="classes.curtainOpen"
 		>
-			ttt
 			<slot name="curtain" />
 			<div ref="curtainGuardRef" :class="classes.curtainGuard" />
 		</div>

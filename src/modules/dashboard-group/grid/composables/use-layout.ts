@@ -43,7 +43,11 @@ export function useLayout(
 	}
 
 	function checkIsFake(id: string): boolean {
-		return id.startsWith(FAKE_ID_PREFIX);
+		if (!id) {
+			return false;
+		}
+
+		return id.startsWith(FAKE_ID_PREFIX) || id === DROP_ID;
 	}
 
 	function rebuildLayout() {
