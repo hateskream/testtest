@@ -319,7 +319,7 @@ const canMoveItem = (evt: unknown) => {
 							</slot>
 						</div>
 						<div :class="classes.sectionActions">
-							<slot name="section-actions" :section="item.section!" />
+							<slot name="section-actions" :section="item.section.id!" />
 						</div>
 					</div>
 				</td>
@@ -502,13 +502,9 @@ const canMoveItem = (evt: unknown) => {
 		);
 }
 
-.sectionHeaderRow {
-	border-bottom: 1px solid rgb(255 255 255 / 10%);
-}
-
 .sectionHeader {
 	padding: 0;
-	background: var(--bg-color-surface-02, #2a2a2a);
+	background: transparent;
 	border: none;
 	cursor: pointer;
 	transition: background-color 0.2s ease;

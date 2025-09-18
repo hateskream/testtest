@@ -218,6 +218,7 @@ const tickerState = computed(() => {
 			</slot>
 		</template>
 
+
 		<!-- Forward pagination slot -->
 		<template #pagination>
 			<slot name="pagination" />
@@ -255,6 +256,11 @@ const tickerState = computed(() => {
 					</div>
 				</div>
 			</div>
+		</template>
+
+		<template #section-actions="sectionId : string">
+			<slot name="section-actions" v-bind="sectionId">
+			</slot>
 		</template>
 
 		<!-- Forwarded row actions slot -->

@@ -51,6 +51,28 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 					@click="emit('remove-ticker', { tickerId })"
 				/>
 			</template>
+			<template #section-actions="{ sectionId }">
+				<button
+					class="action-button"
+					:title="sectionId"
+				>
+					✏️
+				</button>
+
+				<button
+					class="action-button"
+					:title="sectionId"
+				>
+					📋
+				</button>
+
+				<button
+					class="action-button delete-button"
+					:title="sectionId"
+				>
+					🗑️
+				</button>
+			</template>
 		</widget-typed-table>
 		<watchlist-empty-state
 			v-else
