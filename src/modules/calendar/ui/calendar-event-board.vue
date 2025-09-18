@@ -1,51 +1,41 @@
 <script setup lang="ts">
+import type { IEventBoard } from '@/modules/calendar';
+
 import CalendarEventCard from './calendar-event-card.vue';
-// interface ICalendarEventBoardProps {
-// 	data: string;
-// }
 
-// const props = defineProps<ICalendarEventBoardProps>();
+interface ICalendarEventBoardProps {
+	eventBoard: IEventBoard[];
+}
 
+const props = defineProps<ICalendarEventBoardProps>();
 </script>
 
 <template>
 	<div :class="classes.calendarEventBoard">
-		<div :class="classes.boardDate">
-			Thu 11
-		</div>
+		<template v-for="day in props.eventBoard" :key="day.date">
+			<div v-if="day.events.length" :class="classes.eventSection">
+				<div :class="classes.boardDate">
+					{{ day.date }}
+				</div>
 
-		<div :class="classes.dayBoard">
-			<!-- TODO: v-for events -->
-			<calendar-event-card
-				event-title="TSLA Earnings Report"
-				event-type="Splits"
-				:metrics="[
-					{ label: 'Ratio', value: '1:6.66' },
-				]"
-			/>
-
-			<calendar-event-card
-				event-title="APPL Earnings Report"
-				event-type="Ipo’s"
-				:metrics="[
-					{ label: 'IPO Value', value: '172.45 B' },
-					{ label: 'IPO Price', value: '5.91' },
-					{ label: 'Last Price', value: '5.95' },
-				]"
-			/>
-
-			<calendar-event-card
-				event-title="RAI"
-				event-title-description="Unlock"
-				event-type="Crypto"
-				:metrics="[
-					{ label: 'Amount', value: '$0.21' },
-					{ label: 'Ex-date', value: 'Sep 10, 2025' },
-					{ label: 'Pay date', value: 'Sep 21, 2025' },
-					{ label: 'Div. yield', value: '3.57%' },
-				]"
-			/>
-		</div>
+				<div :class="classes.dayBoard">
+					<calendar-event-card
+						v-for="(ev, i) in day.events"
+						:key="`${day.date}-${i}`"
+						:event-title="ev.eventTitle"
+						:event-title-description="ev.eventTitleDescription"
+						:event-type="ev.eventType as unknown as string"
+						:event-datetime="ev.eventDatetime"
+						:event-summary="ev.eventSummary"
+						:metrics="ev.metrics"
+						:ticker="ev.ticker"
+						:text="ev.text"
+						:link="ev.link"
+						:link-text="ev.linkText"
+					/>
+				</div>
+			</div>
+		</template>
 	</div>
 </template>
 
@@ -58,7 +48,7 @@ import CalendarEventCard from './calendar-event-card.vue';
 	padding: 16px;
 	background: var(--color-bg-surface-01, #0c0c0d);
 	border-radius: 18px;
-	gap: 4px;
+	gap: 12px;
 }
 
 .boardDate {

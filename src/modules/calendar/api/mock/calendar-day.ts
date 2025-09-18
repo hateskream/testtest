@@ -1,7 +1,9 @@
 import type { IDailyCalendarInfo } from '../../types';
 
-function toUtcIso(d: Date): string {
-	return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0] + 'T00:00:00.000Z';
+function toUtcIsoDate(d: Date): string {
+	return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+		.toISOString()
+		.split('T')[0];
 }
 
 export function createMockApiDays(past = 21, future = 42): IDailyCalendarInfo[] {
@@ -14,7 +16,7 @@ export function createMockApiDays(past = 21, future = 42): IDailyCalendarInfo[] 
 		d.setDate(today.getDate() + offset);
 
 		out.push({
-			date: toUtcIso(d),
+			date: toUtcIsoDate(d),
 			metrics: {
 				economic: Math.round(Math.random() * 100),
 				earnings: Math.round(Math.random() * 100),

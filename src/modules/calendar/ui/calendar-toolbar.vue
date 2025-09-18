@@ -9,7 +9,7 @@ import {
 	ModalSubmenuContent,
 } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { CalendarComponent } from '@/modules/calendar/ui';
+import { CalendarDaySelect } from '@/modules/calendar/ui';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import { UiDriver } from '@/shared/ui/driver';
 import type { IMarketData, IToolbarUserState } from '@/modules/calendar/types';
@@ -253,7 +253,11 @@ const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 				<template #content>
 					<modal-submenu-content>
 						<template #content>
-							<calendar-component v-model="selectedDate" @update-week="selectedDate = $event" />
+							<calendar-day-select
+								v-model="selectedDate"
+								view="weekly"
+								@update-week="selectedDate = $event"
+							/>
 						</template>
 
 					</modal-submenu-content>

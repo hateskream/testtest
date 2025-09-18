@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { DatePicker } from 'v-calendar';
 
-const selectedDate = defineModel<Date>({ required: true });
+interface ICalendarComponentProps {
+	view?: 'weekly' | 'monthly';
+}
+
+const props = withDefaults(defineProps<ICalendarComponentProps>(), {
+	view: 'monthly',
+});
 
 const emits = defineEmits<{
 	'update-week': [Date];
 }>();
+
+const selectedDate = defineModel<Date>({ required: true });
 </script>
 
 <template>
@@ -21,6 +29,7 @@ const emits = defineEmits<{
 			:highlight-today="true"
 			:masks="{ title: 'MMMM yyyy' }"
 			:locale="{ firstDayOfWeek: 1 }"
+			:view="props.view"
 			:class="classes.calendar"
 			@update:model-value="emits('update-week', $event)"
 		>
@@ -30,7 +39,7 @@ const emits = defineEmits<{
 					:class="[
 						classes.cell,
 						day.isToday && classes.today,
-						selectedDate && day.date.toDateString() === selectedDate.toDateString() && classes.active
+						day.date.toDateString() === selectedDate.toDateString() && classes.active
 					]"
 					@click="selectedDate = day.date"
 				>

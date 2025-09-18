@@ -1,1 +1,1 @@
-export * from './toWeekDays.ts';
+export * from './to-week-days.ts';

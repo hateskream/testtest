@@ -10,8 +10,9 @@ import {
 	markets,
 	toWeekDays,
 	useDailyCalendarGetState,
+	useEventBoardGetState,
 } from '@/modules/calendar';
-import { CalendarComponent, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
 import { useWatchlist } from '@/modules/watchlist';
 import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
@@ -40,17 +41,22 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	initialDate: () => new Date(),
 });
 
-const { data, isLoading } = useDailyCalendarGetState();
+const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
+const { data: eventBoardData, isLoading: isEventBoardLoading } = useEventBoardGetState({
+	from: '2025-09-01',
+	to: '2025-11-30',
+	filters: toolbarState,
+});
 
 const baseDate = ref(new Date(props.initialDate));
 const selectedDate = ref(new Date(baseDate.value));
 
 const weekDays = computed<IWeeklyDayInfo[]>(() => {
-	if (isLoading.value || !data.value) {
+	if (isDailyCalendarLoading.value || !dailyCalendarData.value) {
 		return [];
 	}
 
-	return toWeekDays(data.value, baseDate.value, props.locale);
+	return toWeekDays(dailyCalendarData.value, baseDate.value, props.locale);
 });
 
 function setSelected(date: Date) {
@@ -72,7 +78,7 @@ function nextWeek() {
 </script>
 
 <template>
-	<layout-component v-if="!isLoading" :is-curtain-fixed="false">
+	<layout-component v-if="!isDailyCalendarLoading && !isEventBoardLoading" :is-curtain-fixed="false">
 		<template #header>
 			<div :class="classes.header">Calendar</div>
 		</template>
@@ -98,11 +104,14 @@ function nextWeek() {
 						@select-day="setSelected"
 					/>
 
-					<calendar-event-board />
+					<calendar-event-board
+						v-if="eventBoardData"
+						:event-board="eventBoardData"
+					/>
 				</template>
 
 				<template #calendar-sidebar>
-					<calendar-component
+					<calendar-day-select
 						v-model="selectedDate"
 						@update-week="setSelected"
 					/>

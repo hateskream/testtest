@@ -9,7 +9,7 @@ enum DataProvider {
 	MockServer,
 }
 
-const dataProvider: DataProvider = DataProvider.MockLocal;
+const dataProvider = DataProvider.MockLocal;
 
 export async function getCalendarDays(): Promise<IDailyCalendarInfo[]> {
 	const logger = useLogger();

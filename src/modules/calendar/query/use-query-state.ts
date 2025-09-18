@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/vue-query';
 
-import type { IDailyCalendarInfo } from '@/modules/calendar';
-import { getCalendarDays } from '@/modules/calendar/api';
+import type { ICreateEventBoardOptions, IDailyCalendarInfo, IEventBoard } from '@/modules/calendar';
+import { getCalendarDays, getEventBoard } from '@/modules/calendar/api';
 
 const SETTINGS_QUERY_KEY = 'calendar-settings';
 
@@ -11,8 +11,16 @@ export function getStateCacheKey() {
 
 export const useDailyCalendarGetState = () => {
 	return useQuery<IDailyCalendarInfo[]>({
-		queryKey: getStateCacheKey(),
+		queryKey: [getStateCacheKey(), 'daily-calendar'],
 		queryFn: () => getCalendarDays(),
+		refetchOnMount: false,
+	});
+};
+
+export const useEventBoardGetState = (options: ICreateEventBoardOptions) => {
+	return useQuery<IEventBoard[]>({
+		queryKey: [getStateCacheKey(), 'event-board'],
+		queryFn: () => getEventBoard(options),
 		refetchOnMount: false,
 	});
 };

@@ -1,4 +1,3 @@
-// eslint-disable-next-line github/filenames-match-regex
 import type { IDailyCalendarInfo, IWeeklyDayInfo } from '../types';
 
 function localDateKey(d: Date): string {
