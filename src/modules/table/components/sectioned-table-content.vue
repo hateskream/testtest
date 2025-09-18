@@ -308,17 +308,19 @@ const canMoveItem = (evt: unknown) => {
 					:colspan="totalColumnSpan"
 				>
 					<div :class="classes.sectionHeaderContent">
-						<div :class="classes.sectionToggle">
-							<span :class="[classes.toggleIcon, { [classes.collapsed]: item.section!.isCollapsed }]">
-								⌄
-							</span>
+						<div :class="classes.sectionHeaderLeft">
+							<div :class="classes.sectionToggle">
+								<span :class="[classes.toggleIcon, { [classes.collapsed]: item.section!.isCollapsed }]">
+									⌄
+								</span>
+							</div>
+							<div :class="classes.sectionTitle">
+								<slot name="section-header" :section="item.section!">
+									{{ item.section!.title }} ({{ item.section!.rows?.length || 0 }} rows)
+								</slot>
+							</div>
 						</div>
-						<div :class="classes.sectionTitle">
-							<slot name="section-header" :section="item.section!">
-								{{ item.section!.title }} ({{ item.section!.rows?.length || 0 }} rows)
-							</slot>
-						</div>
-						<div :class="classes.sectionActions">
+						<div :class="classes.sectionHeaderRight" @click.stop>
 							<slot name="section-actions" :section="item.section.id!" />
 						</div>
 					</div>
@@ -513,15 +515,41 @@ const canMoveItem = (evt: unknown) => {
 
 .sectionHeader:hover {
 	background: var(--bg-color-surface-02-effect, #333333);
+
+	.sectionHeaderRight {
+		opacity: 1;
+	}
 }
 
 .sectionHeaderContent {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	width: 100%;
 	min-height: 44px;
 	padding: 0 12px;
 	transition: all 0.2s ease;
+}
+
+.sectionHeaderLeft {
+	position: sticky;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	min-width: 0;
+}
+
+.sectionHeaderRight {
+	position: sticky;
+	top: 0;
+	right: 0;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	opacity: 0;
+	gap: 4px;
 }
 
 .sectionToggle {
@@ -533,14 +561,14 @@ const canMoveItem = (evt: unknown) => {
 
 .toggleIcon {
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
 	width: 12px;
 	height: 12px;
 	font-size: 12px;
 	color: var(--text-color-base-300, #cccccc);
-	transition: transform 0.2s ease;
 	transform: translateY(-2px);
+	transition: transform 0.2s ease;
 }
 
 .toggleIcon.collapsed {
@@ -556,12 +584,6 @@ const canMoveItem = (evt: unknown) => {
 	color: var(--text-color-base-100, #ffffff);
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-
-.sectionActions {
-	display: flex;
-	gap: 4px;
-	margin-left: auto;
 }
 
 .actionsCell {
