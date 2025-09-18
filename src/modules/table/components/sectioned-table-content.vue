@@ -310,7 +310,7 @@ const canMoveItem = (evt: unknown) => {
 					<div :class="classes.sectionHeaderContent">
 						<div :class="classes.sectionToggle">
 							<span :class="[classes.toggleIcon, { [classes.collapsed]: item.section!.isCollapsed }]">
-								▼
+								⌄
 							</span>
 						</div>
 						<div :class="classes.sectionTitle">
@@ -532,12 +532,19 @@ const canMoveItem = (evt: unknown) => {
 }
 
 .toggleIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 12px;
+	height: 12px;
 	font-size: 12px;
 	color: var(--text-color-base-300, #cccccc);
+	transition: transform 0.2s ease;
+	transform: translateY(-2px);
 }
 
 .toggleIcon.collapsed {
-	transform: rotate(-90deg);
+	transform: translateX(-2px) rotate(-90deg);
 }
 
 .sectionTitle {
