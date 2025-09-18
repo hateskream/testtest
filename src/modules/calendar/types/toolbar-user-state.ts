@@ -1,7 +1,7 @@
-import { EventType, Impact, markets } from '@/modules/calendar/models';
+import { EventType, Impact, MarketIds } from '@/modules/calendar/models';
 
 export interface IToolbarUserState {
-	market: typeof markets[number];
+	marketId: MarketIds;
 	eventType: EventType;
 	impact: Impact;
 	watchlist: {

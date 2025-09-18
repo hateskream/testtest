@@ -1,12 +1,24 @@
 import type { IMarketData } from '../types';
+import { IconIds } from '@/shared/ui/icon';
+
+export enum MarketIds {
+	EntireWorld,
+	USA,
+	India,
+	Germany,
+	Japan,
+	Canada,
+	HongKong,
+	UnitedKingdom,
+}
 
 export const markets: IMarketData[] = [
-	{ label: 'Entire World', icon: '' },
-	{ label: 'USA', icon: '' },
-	{ label: 'India', icon: '' },
-	{ label: 'Germany', icon: '' },
-	{ label: 'Japan', icon: '' },
-	{ label: 'Canada', icon: '' },
-	{ label: 'Hong Kong, China', icon: '' },
-	{ label: 'United Kingdom', icon: '' },
+	{ id: MarketIds.EntireWorld, label: 'Entire World', icon: IconIds.Globus },
+	{ id: MarketIds.USA, label: 'USA', icon: IconIds.USA },
+	{ id: MarketIds.India, label: 'India', icon: IconIds.India },
+	{ id: MarketIds.Germany, label: 'Germany', icon: IconIds.Germany },
+	{ id: MarketIds.Japan, label: 'Japan', icon: IconIds.Japan },
+	{ id: MarketIds.Canada, label: 'Canada', icon: IconIds.Canada },
+	{ id: MarketIds.HongKong, label: 'Hong Kong, China', icon: IconIds.HongKong },
+	{ id: MarketIds.UnitedKingdom, label: 'United Kingdom', icon: IconIds.UnitedKingdom },
 ] as const;

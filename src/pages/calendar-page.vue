@@ -7,6 +7,7 @@ import {
 	EventType,
 	Impact,
 	type IToolbarUserState,
+	MarketIds,
 	markets,
 	toWeekDays,
 	useDailyCalendarGetState,
@@ -20,7 +21,7 @@ import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-in
 const { watchlists } = useWatchlist();
 
 const toolbarState = reactive<IToolbarUserState>({
-	market: markets[0],
+	marketId: MarketIds.EntireWorld,
 	impact: Impact.All,
 	eventType: EventType.All,
 	watchlist: {

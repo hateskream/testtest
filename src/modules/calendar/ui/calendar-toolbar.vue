@@ -13,7 +13,6 @@ import { CalendarDaySelect } from '@/modules/calendar/ui';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import { UiDriver } from '@/shared/ui/driver';
 import type { IMarketData, IToolbarUserState } from '@/modules/calendar/types';
-import { tickerIcon } from '@/shared/ui/ticker';
 import { EventType, Impact } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
 
@@ -36,6 +35,15 @@ const emits = defineEmits<{
 const state = defineModel<IToolbarUserState>('state', { required: true });
 const selectedDate = defineModel<Date>('selectedDate', { required: true });
 
+const selectedMarket = computed({
+	set: (market: IMarketData) => {
+		state.value.marketId = market.id;
+	},
+	get: () => {
+		return props.markets[state.value.marketId];
+	},
+});
+
 const selectedWatchlist = computed(() => {
 	return props.watchlists.find(v => v.id === state.value.watchlist.selectedId);
 });
@@ -49,6 +57,7 @@ function updateSelectedWatchlist(id: string) {
 	state.value.watchlist.selectedId = id;
 	state.value.watchlist.selectedSectionId = null;
 }
+
 function updateSelectedSection(id: string) {
 	if (state.value.watchlist.selectedSectionId === id) {
 		state.value.watchlist.selectedSectionId = null; return;
@@ -70,8 +79,6 @@ const label = computed(() => {
 
 	return `${left} — ${right}`;
 });
-
-const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 </script>
 
 <template>
@@ -82,15 +89,13 @@ const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 				strategy="absolute"
 			>
 				<template #title="{ isVisible }">
-					<ticker-icon
-						:id="IconIds.Home"
-						:src="src"
-						:size="12"
-						:padding="0"
-						:ticker="state.market.label"
+					<ui-icon
+						:id="selectedMarket.icon"
+						width="10px"
+						height="10px"
 					/>
 					<span>
-						{{state.market.label}}
+						{{selectedMarket.label}}
 					</span>
 					<ui-icon
 						:id="IconIds.DropdownDown"
@@ -106,18 +111,17 @@ const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 							<modal-item-selector
 								v-for="market in props.markets"
 								:key="market.label"
-								:model-value="state.market.label === market.label"
-								@update:model-value="state.market = market"
+								:model-value="selectedMarket.id === market.id"
+								@update:model-value="selectedMarket = market"
 							>
 								<div :class="classes.modalItem">
-									<ticker-icon
-										:id="IconIds.Home"
-										:src="src"
-										:size="18"
-										:padding="3"
-										:ticker="market.label"
-										:class="classes.tickerIcon"
-									/>
+									<div :class="classes.iconWrapper">
+										<ui-icon
+											:id="market.icon"
+											width="14px"
+											height="14px"
+										/>
+									</div>
 									<span>
 										{{market.label}}
 									</span>
@@ -307,8 +311,13 @@ const src = new URL('@/assets/icons/globus.svg', import.meta.url).href;
 	gap: 6px;
 }
 
-.tickerIcon {
-	padding: 1px;
+.iconWrapper {
+	display: grid;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	outline: 1px solid rgb(44 44 44 / 100%);
+	place-items: center;
 }
 
 .toolbarEnd {

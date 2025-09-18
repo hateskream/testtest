@@ -76,4 +76,12 @@ export enum IconIds {
 	BottomLinkI88 = 'bottom-link-i88',
 	GraphIcon = 'graph-icon',
 	ShareIcon = 'share-icon',
+	Globus = 'globus',
+	USA = 'USA',
+	India = 'india',
+	Germany = 'germany',
+	Japan = 'japan',
+	Canada = 'canada',
+	HongKong = 'hong-kong',
+	UnitedKingdom = 'united-kingdom',
 }
