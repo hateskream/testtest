@@ -27,7 +27,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceCurrent]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceCurrent,
-		value: '45632.18',
+		value: '45632',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.UP,
@@ -35,7 +35,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceMin24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceMin24h,
-		value: '44892.50',
+		value: '44892',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
@@ -43,7 +43,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceMax24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceMax24h,
-		value: '46120.00',
+		value: '46120',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
@@ -51,7 +51,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceMin1y]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceMin1y,
-		value: '15476.00',
+		value: '15476',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -59,7 +59,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceMax1y]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceMax1y,
-		value: '73750.00',
+		value: '73750',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -67,7 +67,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceAvg50d]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceAvg50d,
-		value: '42150.30',
+		value: '42150',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -75,7 +75,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceAvg200d]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceAvg200d,
-		value: '38925.15',
+		value: '38925',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -83,7 +83,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceOpen]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceOpen,
-		value: '45120.80',
+		value: '45120',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -91,7 +91,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceClose]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.PriceClose,
-		value: '45632.18',
+		value: '45632',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -100,8 +100,8 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 		cellType: CellType.Range,
 		columnType: ColumnType.Price1yRange,
 		currencySymbol: '$',
-		startValue: '15476.00',
-		endValue: '73750.00',
+		startValue: '15476',
+		endValue: '73750',
 		startMagnitude: Magnitude.THOUSAND,
 		endMagnitude: Magnitude.THOUSAND,
 	},
@@ -123,7 +123,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.ChangePrice24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.ChangePrice24h,
-		value: '511.38',
+		value: '511',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.UP,
@@ -131,31 +131,31 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.ChangePrice1hPercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.ChangePrice1hPercent,
-		value: '0.12',
+		value: '12',
 		trend: Trend.UP,
 	},
 	[ColumnType.ChangePrice24hPercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.ChangePrice24hPercent,
-		value: '1.13',
+		value: '13',
 		trend: Trend.UP,
 	},
 	[ColumnType.ChangePrice7dPercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.ChangePrice7dPercent,
-		value: '3.25',
+		value: '25',
 		trend: Trend.UP,
 	},
 	[ColumnType.ChangePrice30dPercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.ChangePrice30dPercent,
-		value: '12.47',
+		value: '47',
 		trend: Trend.UP,
 	},
 	[ColumnType.Volume24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.Volume24h,
-		value: '28.42',
+		value: '42',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.UP,
@@ -163,7 +163,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.VolumeRel10d]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.VolumeRel10d,
-		value: '1.15',
+		value: '15',
 		currencySymbol: '',
 		magnitude: Magnitude.NONE,
 		trend: Trend.UP,
@@ -171,7 +171,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.VolumeAvg10d]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.VolumeAvg10d,
-		value: '24.73',
+		value: '73',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.NEUTRAL,
@@ -179,7 +179,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.VolumeAvg50d]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.VolumeAvg50d,
-		value: '22.18',
+		value: '18',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.NEUTRAL,
@@ -187,7 +187,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.MarketCap24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.MarketCap24h,
-		value: '896.50',
+		value: '50',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.UP,
@@ -200,7 +200,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.MarketCapFullyDiluted]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.MarketCapFullyDiluted,
-		value: '957.88',
+		value: '957',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.UP,
@@ -208,7 +208,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.MarketCapChange24h]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.MarketCapChange24h,
-		value: '10.05',
+		value: '10',
 		currencySymbol: '$',
 		magnitude: Magnitude.BILLION,
 		trend: Trend.UP,
@@ -216,13 +216,13 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.MarketCapChange24hPercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.MarketCapChange24hPercent,
-		value: '1.13',
+		value: '13',
 		trend: Trend.UP,
 	},
 	[ColumnType.CirculatingSupply]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.CirculatingSupply,
-		value: '19.65',
+		value: '65',
 		currencySymbol: '',
 		magnitude: Magnitude.MILLION,
 		trend: Trend.NEUTRAL,
@@ -230,7 +230,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.TotalSupply]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.TotalSupply,
-		value: '19.65',
+		value: '19',
 		currencySymbol: '',
 		magnitude: Magnitude.MILLION,
 		trend: Trend.NEUTRAL,
@@ -238,7 +238,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.MaxSupply]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.MaxSupply,
-		value: '21.00',
+		value: '21',
 		currencySymbol: '',
 		magnitude: Magnitude.MILLION,
 		trend: Trend.NEUTRAL,
@@ -246,7 +246,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.AllTimeHigh]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.AllTimeHigh,
-		value: '73750.07',
+		value: '73750',
 		currencySymbol: '$',
 		magnitude: Magnitude.THOUSAND,
 		trend: Trend.NEUTRAL,
@@ -254,7 +254,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.AllTimeHighChangePercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.AllTimeHighChangePercent,
-		value: '-38.15',
+		value: '38',
 		trend: Trend.DOWN,
 	},
 	[ColumnType.AllTimeHighDate]: {
@@ -265,7 +265,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.AllTimeLow]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.AllTimeLow,
-		value: '67.81',
+		value: '81',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
@@ -273,7 +273,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.AllTimeLowChangePercent]: {
 		cellType: CellType.Percent,
 		columnType: ColumnType.AllTimeLowChangePercent,
-		value: '67206.81',
+		value: '81',
 		trend: Trend.UP,
 	},
 	[ColumnType.AllTimeLowDate]: {
@@ -284,7 +284,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.RSIValue]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.RSIValue,
-		value: '58.42',
+		value: '58',
 		currencySymbol: '',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
@@ -297,7 +297,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.Beta5y]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.Beta5y,
-		value: '1.23',
+		value: '23',
 		currencySymbol: '',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
@@ -305,7 +305,7 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.LastDividend]: {
 		cellType: CellType.Number,
 		columnType: ColumnType.LastDividend,
-		value: '0.00',
+		value: '54',
 		currencySymbol: '$',
 		magnitude: Magnitude.NONE,
 		trend: Trend.NEUTRAL,
