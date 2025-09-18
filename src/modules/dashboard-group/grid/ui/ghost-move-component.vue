@@ -52,7 +52,7 @@ onMounted(() => {
 
 <style module="classes">
 .root {
-	position: absolute;
+	position: fixed;
 	z-index: 9999;
 	pointer-events: none;
 }
