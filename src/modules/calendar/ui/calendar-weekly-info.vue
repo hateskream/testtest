@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
+import { isSameCalendarDay } from '@/modules/calendar';
 
 const props = defineProps<{
 	weekDays: IWeeklyDayInfo[];
@@ -10,50 +11,46 @@ const emits = defineEmits<{
 	'select-day': [Date];
 }>();
 
-function isSameCalendarDay(a: Date, b: Date): boolean {
-	return a.getFullYear() === b.getFullYear() &&
-		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate();
-}
-
 function isSelected(date: Date) {
 	return isSameCalendarDay(date, props.selectedDate);
 }
 </script>
 
 <template>
-	<div :class="classes.calendarWeeklyInfo">
-		<div
-			v-for="dayItem in weekDays"
-			:key="dayItem.dayNumber + '-' + dayItem.weekdayShort"
-			:class="[
-				classes.dayCard,
-				dayItem.isToday ? classes.today : '',
-				isSelected(dayItem.date) ? classes.selected : ''
-			]"
-			@click="emits('select-day', dayItem.date)"
-		>
-			<div :class="classes.dayTitle">
-				{{ dayItem.weekdayShort }} {{ dayItem.dayNumber }}
-				<div
-					v-for="dot in dayItem.colorDots"
-					:key="dot.color"
-					:class="classes.colorDot"
-					:style="{ backgroundColor: dot.color }"
-				/>
-			</div>
+	<div :class="classes.calendarScrollWrapper">
+		<div :class="classes.calendarWeeklyInfo">
+			<div
+				v-for="dayItem in weekDays"
+				:key="dayItem.dayNumber + '-' + dayItem.weekdayShort"
+				:class="[
+					classes.dayCard,
+					dayItem.isToday ? classes.today : '',
+					isSelected(dayItem.date) ? classes.selected : ''
+				]"
+				@click="emits('select-day', dayItem.date)"
+			>
+				<div :class="classes.dayTitle">
+					{{ dayItem.weekdayShort }} {{ dayItem.dayNumber }}
+					<div
+						v-for="dot in dayItem.colorDots"
+						:key="dot.color"
+						:class="classes.colorDot"
+						:style="{ backgroundColor: dot.color }"
+					/>
+				</div>
 
-			<div :class="classes.dayMetrics">
-				<div
-					v-for="metric in dayItem.metrics"
-					:key="metric.label"
-					:class="classes.metric"
-				>
-					<div :class="classes.metricLabel">
-						{{ metric.label }}:
-					</div>
-					<div :class="classes.metricValue">
-						{{ metric.value }}
+				<div :class="classes.dayMetrics">
+					<div
+						v-for="metric in dayItem.metrics"
+						:key="metric.label"
+						:class="classes.metric"
+					>
+						<div :class="classes.metricLabel">
+							{{ metric.label }}:
+						</div>
+						<div :class="classes.metricValue">
+							{{ metric.value }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -62,12 +59,16 @@ function isSelected(date: Date) {
 </template>
 
 <style module="classes">
+.calendarScrollWrapper {
+	width: 100%;
+	overflow-x: auto;
+}
+
 .calendarWeeklyInfo {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-self: stretch;
-	min-width: 850px;
 	gap: 8px;
 
 	/* TODO: Add horizontal scrollbar for smaller screens */
@@ -79,10 +80,10 @@ function isSelected(date: Date) {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: flex-start;
-	gap: 24px;
 	padding: 12px;
 	border: 1px solid var(--color-border-base-300, rgb(97 97 97 / 30%));
 	border-radius: 18px;
+	gap: 24px;
 }
 
 .today {

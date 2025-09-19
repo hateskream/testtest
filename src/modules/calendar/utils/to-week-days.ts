@@ -1,30 +1,11 @@
 import type { IDailyCalendarInfo, IWeeklyDayInfo } from '../types';
+import { getStartOfWeek, isSameCalendarDay, isSameWeek } from '@/modules/calendar';
 
 function localDateKey(d: Date): string {
 	const y = d.getFullYear();
 	const m = String(d.getMonth() + 1).padStart(2, '0');
 	const dd = String(d.getDate()).padStart(2, '0');
 	return `${y}-${m}-${dd}`;
-}
-function getStartOfWeekMonday(date: Date): Date {
-	const js = date.getDay();
-	const off = (js + 6) % 7;
-	const start = new Date(date);
-	start.setHours(0, 0, 0, 0);
-	start.setDate(date.getDate() - off);
-	return start;
-}
-
-function isSameCalendarDay(a: Date, b: Date): boolean {
-	return a.getFullYear() === b.getFullYear() &&
-		a.getMonth() === b.getMonth() &&
-		a.getDate() === b.getDate();
-}
-
-function isSameWeek(a: Date, b: Date): boolean {
-	const sa = getStartOfWeekMonday(a);
-	const sb = getStartOfWeekMonday(b);
-	return isSameCalendarDay(sa, sb);
 }
 
 export function toWeekDays(
@@ -44,7 +25,7 @@ export function toWeekDays(
 		apiMap.set(localDateKey(dt), item);
 	}
 
-	const start = getStartOfWeekMonday(baseDateSource);
+	const start = getStartOfWeek(baseDateSource);
 	const currentWeek = isSameWeek(baseDateSource, today);
 
 	return Array.from({ length: 7 }, (_, i) => {

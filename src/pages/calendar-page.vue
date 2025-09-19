@@ -1,26 +1,43 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
 import {
 	CalendarLayout,
 	EventType,
+	getEndOfWeek,
+	getStartOfWeek,
+	type IEventBoardFilters,
+	type IEventBoardRange,
 	Impact,
-	type IToolbarUserState,
 	MarketIds,
 	markets,
+	toUtcIsoDate,
 	toWeekDays,
 	useDailyCalendarGetState,
-	useEventBoardGetState,
+	useEventBoard,
 } from '@/modules/calendar';
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
 import { useWatchlist } from '@/modules/watchlist';
 import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
 
-const { watchlists } = useWatchlist();
+interface ICalendarWeeklyContainerProps {
+	locale?: string;
+	weekStartsOn?: 'monday' | 'sunday';
+	initialDate?: Date;
+}
 
-const toolbarState = reactive<IToolbarUserState>({
+const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
+	locale: 'en-US',
+	weekStartsOn: 'monday',
+	initialDate: () => new Date(),
+});
+
+const baseDate = ref(new Date(props.initialDate));
+const selectedDate = ref(new Date(baseDate.value));
+
+const toolbarState = reactive<IEventBoardFilters>({
 	marketId: MarketIds.EntireWorld,
 	impact: Impact.All,
 	eventType: EventType.All,
@@ -30,27 +47,29 @@ const toolbarState = reactive<IToolbarUserState>({
 	},
 });
 
-interface ICalendarWeeklyContainerProps {
-	locale?: string;
-	weekStartsOn?: 'monday' | 'sunday';
-	initialDate?: Date | string | number;
-}
-
-const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
-	locale: 'en-US',
-	weekStartsOn: 'monday',
-	initialDate: () => new Date(),
+const weekRange = reactive<IEventBoardRange>({
+	from: toUtcIsoDate(getStartOfWeek(baseDate.value)),
+	to: toUtcIsoDate(getEndOfWeek(baseDate.value)),
 });
 
-const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
-const { data: eventBoardData, isLoading: isEventBoardLoading } = useEventBoardGetState({
-	from: '2025-09-01',
-	to: '2025-11-30',
+watch(baseDate, newValue => {
+	weekRange.from = toUtcIsoDate(getStartOfWeek(newValue));
+	weekRange.to = toUtcIsoDate(getEndOfWeek(newValue));
+});
+
+function resetWeek() {
+	baseDate.value = props.initialDate;
+	weekRange.from = toUtcIsoDate(getStartOfWeek(props.initialDate));
+	weekRange.to = toUtcIsoDate(getEndOfWeek(props.initialDate));
+}
+
+const { watchlists } = useWatchlist();
+const { eventBoard } = useEventBoard({
+	range: weekRange,
 	filters: toolbarState,
 });
 
-const baseDate = ref(new Date(props.initialDate));
-const selectedDate = ref(new Date(baseDate.value));
+const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 
 const weekDays = computed<IWeeklyDayInfo[]>(() => {
 	if (isDailyCalendarLoading.value || !dailyCalendarData.value) {
@@ -68,18 +87,20 @@ function setSelected(date: Date) {
 function prevWeek() {
 	const d = new Date(baseDate.value);
 	d.setDate(d.getDate() - 7);
+
 	baseDate.value = d;
 }
 
 function nextWeek() {
 	const d = new Date(baseDate.value);
 	d.setDate(d.getDate() + 7);
+
 	baseDate.value = d;
 }
 </script>
 
 <template>
-	<layout-component v-if="!isDailyCalendarLoading && !isEventBoardLoading" :is-curtain-fixed="false">
+	<layout-component v-if="!isDailyCalendarLoading" :is-curtain-fixed="false">
 		<template #header>
 			<div :class="classes.header">Calendar</div>
 		</template>
@@ -88,7 +109,7 @@ function nextWeek() {
 				<template #content>
 					<calendar-toolbar
 						v-model:state="toolbarState"
-						v-model:selected-date="selectedDate"
+						v-model:range="weekRange"
 						:markets="markets"
 						:event-types="Object.values(EventType)"
 						:impacts="Object.values(Impact)"
@@ -97,6 +118,7 @@ function nextWeek() {
 						:watchlists="watchlists"
 						@next-week="nextWeek"
 						@prev-week="prevWeek"
+						@reset-week="resetWeek"
 					/>
 
 					<calendar-weekly-info
@@ -106,8 +128,8 @@ function nextWeek() {
 					/>
 
 					<calendar-event-board
-						v-if="eventBoardData"
-						:event-board="eventBoardData"
+						v-if="eventBoard.length"
+						:event-board="eventBoard"
 					/>
 				</template>
 

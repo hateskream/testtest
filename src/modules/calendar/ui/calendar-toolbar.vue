@@ -9,12 +9,13 @@ import {
 	ModalSubmenuContent,
 } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { CalendarDaySelect } from '@/modules/calendar/ui';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import { UiDriver } from '@/shared/ui/driver';
-import type { IMarketData, IToolbarUserState } from '@/modules/calendar/types';
+import type { IEventBoardFilters, IEventBoardRange, IMarketData } from '@/modules/calendar/types';
 import { EventType, Impact } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
+
+import CalendarWeekRangeSelect from '@/modules/calendar/ui/calendar-week-range-select.vue';
 
 interface ICalendarProps {
 	markets: IMarketData[];
@@ -30,10 +31,11 @@ const props = defineProps<ICalendarProps>();
 const emits = defineEmits<{
 	'prev-week': [];
 	'next-week': [];
+	'reset-week': [];
 }>();
 
-const state = defineModel<IToolbarUserState>('state', { required: true });
-const selectedDate = defineModel<Date>('selectedDate', { required: true });
+const state = defineModel<IEventBoardFilters>('state', { required: true });
+const range = defineModel<IEventBoardRange>('range', { required: true });
 
 const selectedMarket = computed({
 	set: (market: IMarketData) => {
@@ -257,11 +259,7 @@ const label = computed(() => {
 				<template #content>
 					<modal-submenu-content>
 						<template #content>
-							<calendar-day-select
-								v-model="selectedDate"
-								view="weekly"
-								@update-week="selectedDate = $event"
-							/>
+							<calendar-week-range-select v-model="range" />
 						</template>
 
 					</modal-submenu-content>
@@ -278,6 +276,17 @@ const label = computed(() => {
 					:class="['dropdown-icon']"
 				/>
 			</button>
+
+			<button :class="classes.nav" @click="emits('reset-week')">
+				<ui-icon
+					:id="IconIds.Calendar"
+					width="12"
+					height="12"
+					:class="['dropdown-icon', classes.calendarIcon]"
+				/>
+				<span :class="classes.redDot" />
+			</button>
+
 			<button :class="classes.nav" @click="emits('next-week')">
 				<ui-icon
 					:id="IconIds.DropdownDown"
@@ -325,7 +334,7 @@ const label = computed(() => {
 	align-items: center;
 	width: 275px;
 	color: #eeeeee;
-	gap: 0.75rem;
+	gap: 0.2rem;
 }
 
 .label {
@@ -335,6 +344,7 @@ const label = computed(() => {
 }
 
 .nav {
+	position: relative;
 	display: grid;
 	width: 2rem;
 	height: 2rem;
@@ -349,9 +359,19 @@ const label = computed(() => {
 		transform: rotate(90deg);
 	}
 
-	&:nth-child(2) {
+	&:nth-child(3) {
 		transform: rotate(-90deg);
 	}
+}
+
+.redDot {
+	position: absolute;
+	right: 8px;
+	bottom: 8px;
+	width: 6px;
+	height: 6px;
+	background-color: rgb(230 0 0 / 100%);
+	border-radius: 50%;
 }
 
 .nav:hover {

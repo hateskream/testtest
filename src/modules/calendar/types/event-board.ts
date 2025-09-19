@@ -1,9 +1,23 @@
-import { type DateYYYYMMDD, EventType, type IToolbarUserState } from '@/modules/calendar';
+import { type DateYYYYMMDD, EventType, Impact, MarketIds } from '@/modules/calendar';
 
-export interface ICreateEventBoardOptions {
+export interface IEventBoardRange {
 	from: DateYYYYMMDD;
 	to: DateYYYYMMDD;
-	filters?: Partial<IToolbarUserState>;
+}
+
+export interface IEventBoardFilters {
+	marketId: MarketIds;
+	eventType: EventType;
+	impact: Impact;
+	watchlist: {
+		selectedId: string | null;
+		selectedSectionId: string | null;
+	};
+}
+
+export interface ICreateEventBoardOptions {
+	range: IEventBoardRange;
+	filters: IEventBoardFilters;
 }
 
 export interface ICalendarEventMetric {
@@ -13,6 +27,8 @@ export interface ICalendarEventMetric {
 
 export interface ICalendarEvent {
 	eventType: EventType;
+	marketId: MarketIds;
+	impact: Impact;
 	eventTitle: string;
 	eventTitleDescription?: string;
 	eventDatetime?: string;

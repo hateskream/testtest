@@ -27,6 +27,7 @@
 	align-items: center;
 	align-self: stretch;
 	gap: 8px;
+	overflow: hidden;
 }
 
 .calendarSidebar {

@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 
 import type { ICreateEventBoardOptions, IDailyCalendarInfo, IEventBoard } from '@/modules/calendar';
 import { getCalendarDays, getEventBoard } from '@/modules/calendar/api';
+import { queryClient } from '@/shared/service/query-client.ts';
 
 const SETTINGS_QUERY_KEY = 'calendar-settings';
 
@@ -22,5 +23,14 @@ export const useEventBoardGetState = (options: ICreateEventBoardOptions) => {
 		queryKey: [getStateCacheKey(), 'event-board'],
 		queryFn: () => getEventBoard(options),
 		refetchOnMount: false,
+	});
+};
+
+export const useEventBoardUpdateState = () => {
+	return useMutation<IEventBoard[], Error, ICreateEventBoardOptions>({
+		mutationFn: (newOptions) => getEventBoard(newOptions),
+		onSuccess: (data) => {
+			queryClient.setQueryData([getStateCacheKey(), 'event-board'], data);
+		},
 	});
 };

@@ -1,23 +1,42 @@
-import { EventType, type ICreateEventBoardOptions } from '@/modules/calendar';
-import type { ICalendarEvent, ICalendarEventMetric, IEventBoard } from '../../types';
+import { EventType, Impact, MarketIds } from '../../models';
+import type {
+	ICalendarEvent,
+	ICalendarEventMetric,
+	ICreateEventBoardOptions,
+	IEventBoard,
+	IEventBoardFilters,
+} from '../../types';
 
 export function createMockEventBoard(
 	options: ICreateEventBoardOptions,
-) {
-	const { from, to } = options;
+): IEventBoard[] {
+	const { range, filters } = options;
 
-	assertYmd(from);
-	assertYmd(to);
+	assertYmd(range.from);
+	assertYmd(range.to);
 
-	const start = new Date(from + 'T00:00:00Z');
-	const end = new Date(to + 'T00:00:00Z');
+	const start = new Date(range.from + 'T00:00:00Z');
+	const end = new Date(range.to + 'T00:00:00Z');
 	if (start > end) {
 		throw new Error('`from` must be <= `to`');
 	}
 
-	const rng = mulberry32(hashStr(from + ':' + to));
-	const types = (Object.values(EventType).filter(v => v !== EventType.All) as EventType[]);
-	const tickers = ['AAPL', 'TSLA', 'NVDA', 'MSFT', 'AMZN', 'GOOGL', 'META', 'AMD', 'NFLX', 'BABA'] as const;
+	const rng = mulberry32(hashStr(range.from + ':' + range.to));
+	const types = Object.values(EventType).filter(
+		(v) => v !== EventType.All,
+	) as EventType[];
+	const tickers = [
+		'AAPL',
+		'TSLA',
+		'NVDA',
+		'MSFT',
+		'AMZN',
+		'GOOGL',
+		'META',
+		'AMD',
+		'NFLX',
+		'BABA',
+	] as const;
 	const crypto = ['BTC', 'ETH', 'SOL', 'RAI', 'TON', 'DOGE'] as const;
 
 	const out: IEventBoard[] = [];
@@ -32,7 +51,9 @@ export function createMockEventBoard(
 			const eventTitle =
 				eventType === EventType.Crypto
 					? baseTitle
-					: `${baseTitle} ${eventType === EventType.Earnings ? 'Earnings Report' : eventType}`;
+					: `${baseTitle} ${
+						eventType === EventType.Earnings ? 'Earnings Report' : eventType
+					}`;
 			const eventTitleDescription =
 				eventType === EventType.Crypto && rng() < 0.5
 					? 'Unlock'
@@ -44,7 +65,10 @@ export function createMockEventBoard(
 			const eventDatetime = `${date}T${time}`;
 
 			const metrics = makeMetrics(rng, eventType, date);
-			const ticker = isStock ? baseTitle : undefined;
+			const ticker = isStock ? (baseTitle as string) : undefined;
+
+			const marketId = chooseMarketId(rng, eventType, ticker);
+			const impact = chooseImpact(rng, eventType, metrics);
 
 			return {
 				eventType,
@@ -55,17 +79,24 @@ export function createMockEventBoard(
 				ticker,
 				link: '',
 				linkText: 'Details',
+				marketId,
+				impact,
 			};
 		});
 
 		out.push({ date, events });
 	}
 
-	return out;
+	return applyFilters(out, filters);
 
-	function makeMetrics(r: () => number, t: EventType, ymd: string): ICalendarEventMetric[] {
+	function makeMetrics(
+		r: () => number,
+		t: EventType,
+		ymd: string,
+	): ICalendarEventMetric[] {
 		if (t === EventType.Splits) {
-			const a = randInt(r, 1, 3), b = randInt(r, 2, 10);
+			const a = randInt(r, 1, 3),
+				b = randInt(r, 2, 10);
 			return [{ label: 'Ratio', value: `${a}:${b}` }];
 		}
 		if (t === EventType.Ipos) {
@@ -107,12 +138,20 @@ export function createMockEventBoard(
 		}
 		if (t === EventType.Revenue) {
 			return [
-				{ label: 'Quarter', value: `Q${randInt(r, 1, 4)} ${randInt(r, 2019, 2025)}` },
+				{
+					label: 'Quarter',
+					value: `Q${randInt(r, 1, 4)} ${randInt(r, 2019, 2025)}`,
+				},
 				{ label: 'Revenue', value: `${randFloat(r, 0.1, 200).toFixed(2)} B` },
 			];
 		}
 		if (t === EventType.News) {
-			return [{ label: 'Sentiment', value: pick(r, ['Positive', 'Neutral', 'Negative'] as const) }];
+			return [
+				{
+					label: 'Sentiment',
+					value: pick(r, ['Positive', 'Neutral', 'Negative'] as const),
+				},
+			];
 		}
 		if (t === EventType.Conference) {
 			return [
@@ -124,8 +163,175 @@ export function createMockEventBoard(
 	}
 }
 
-function assertYmd(s: string) {
-	return !/^\d{4}-\d{2}-\d{2}$/.test(s);
+function applyFilters(
+	days: IEventBoard[],
+	filters?: Partial<IEventBoardFilters>,
+): IEventBoard[] {
+	if (!filters) {
+		return days;
+	}
+	const byType = (e: ICalendarEvent) =>
+		!filters.eventType ||
+		filters.eventType === EventType.All ||
+		e.eventType === filters.eventType;
+	const byImpact = (e: ICalendarEvent) =>
+		!filters.impact ||
+		filters.impact === Impact.All ||
+		e.impact === filters.impact;
+	const byMarket = (e: ICalendarEvent) =>
+		filters.marketId === undefined || e.marketId === filters.marketId;
+
+	return days
+		.map((d) => ({
+			date: d.date,
+			events: d.events.filter((e) => byType(e) && byImpact(e) && byMarket(e)),
+		}))
+		.filter((d) => d.events.length > 0);
+}
+
+function chooseMarketId(
+	r: () => number,
+	t: EventType,
+	ticker?: string,
+): MarketIds {
+	const stockMarket: Record<string, MarketIds> = {
+		AAPL: MarketIds.USA,
+		TSLA: MarketIds.USA,
+		NVDA: MarketIds.USA,
+		MSFT: MarketIds.USA,
+		AMZN: MarketIds.USA,
+		GOOGL: MarketIds.USA,
+		META: MarketIds.USA,
+		AMD: MarketIds.USA,
+		NFLX: MarketIds.USA,
+		BABA: MarketIds.HongKong,
+	};
+	if (ticker && stockMarket[ticker]) {
+		return stockMarket[ticker];
+	}
+	if (t === EventType.Crypto) {
+		return MarketIds.EntireWorld;
+	}
+	const pool = [
+		MarketIds.USA,
+		MarketIds.India,
+		MarketIds.Germany,
+		MarketIds.Japan,
+		MarketIds.Canada,
+		MarketIds.HongKong,
+		MarketIds.UnitedKingdom,
+		MarketIds.EntireWorld,
+	] as const;
+	return pick(r, pool);
+}
+
+function chooseImpact(
+	r: () => number,
+	t: EventType,
+	metrics: ICalendarEventMetric[],
+): Impact {
+	const num = (s: string | undefined) => {
+		if (!s) {
+			return null;
+		}
+		const m = /-?\d+(\.\d+)?/.exec(s);
+		return m ? parseFloat(m[0]) : null;
+	};
+
+	if (t === EventType.Ipos) {
+		const v = num(metrics.find((m) => m.label === 'IPO Value')?.value) ?? 0;
+		if (v >= 50) {
+			return Impact.High;
+		}
+		if (v >= 10) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Dividends) {
+		const y = num(metrics.find((m) => m.label === 'Div. yield')?.value) ?? 0;
+		if (y >= 4) {
+			return Impact.High;
+		}
+		if (y >= 2) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Earnings) {
+		const eps = Math.abs(num(metrics.find((m) => m.label === 'EPS')?.value) ?? 0);
+		if (eps >= 2) {
+			return Impact.High;
+		}
+		if (eps >= 0.5) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Economic) {
+		const a = num(metrics.find((m) => m.label === 'Actual')?.value) ?? 0;
+		const f = num(metrics.find((m) => m.label === 'Forecast')?.value) ?? 0;
+		const diff = Math.abs(a - f);
+		if (diff >= 2.5) {
+			return Impact.High;
+		}
+		if (diff >= 1) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Crypto) {
+		const amt = num(metrics.find((m) => m.label === 'Amount')?.value) ?? 0;
+		if (amt >= 1.5) {
+			return Impact.High;
+		}
+		if (amt >= 0.3) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Revenue) {
+		const rev = num(metrics.find((m) => m.label === 'Revenue')?.value) ?? 0;
+		if (rev >= 80) {
+			return Impact.High;
+		}
+		if (rev >= 20) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Splits) {
+		const ratio = metrics.find((m) => m.label === 'Ratio')?.value ?? '';
+		const [, bStr] = ratio.split(':');
+		const b = Number(bStr ?? '1');
+		if (b >= 8) {
+			return Impact.High;
+		}
+		if (b >= 4) {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.News) {
+		const s = metrics.find((m) => m.label === 'Sentiment')?.value ?? 'Neutral';
+		if (s === 'Negative') {
+			return r() < 0.6 ? Impact.High : Impact.Medium;
+		}
+		if (s === 'Positive') {
+			return Impact.Medium;
+		}
+		return Impact.Low;
+	}
+	if (t === EventType.Conference) {
+		return r() < 0.2 ? Impact.High : r() < 0.6 ? Impact.Medium : Impact.Low;
+	}
+	return Impact.Low;
+}
+
+function assertYmd(s: string): void {
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+		throw new Error('Expected YYYY-MM-DD');
+	}
 }
 
 function toYmd(d: Date): string {
@@ -146,7 +352,11 @@ function shiftYmd(ymd: string, deltaDays: number): string {
 
 function toPretty(ymd: string): string {
 	const d = new Date(ymd + 'T00:00:00Z');
-	return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(d);
+	return new Intl.DateTimeFormat('en-US', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	}).format(d);
 }
 
 function pad2(n: number): string {
@@ -176,6 +386,7 @@ function hashStr(s: string): number {
 
 function mulberry32(seed: number): () => number {
 	return function () {
+
 		// eslint-disable-next-line no-param-reassign
 		let t = (seed += 0x6d2b79f5);
 		t = Math.imul(t ^ (t >>> 15), t | 1);

@@ -1,10 +1,5 @@
 import type { IDailyCalendarInfo } from '../../types';
-
-function toUtcIsoDate(d: Date): string {
-	return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-		.toISOString()
-		.split('T')[0];
-}
+import { toUtcIsoDate } from '../../utils';
 
 export function createMockApiDays(past = 21, future = 42): IDailyCalendarInfo[] {
 	const today = new Date();
