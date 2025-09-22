@@ -23,6 +23,5 @@ export function useEventBoard(optionsGetter: MaybeRefOrGetter<ICreateEventBoardO
 
 	return {
 		eventBoard,
-		options,
 	};
 }

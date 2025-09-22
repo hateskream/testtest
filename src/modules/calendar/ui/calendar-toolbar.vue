@@ -11,13 +11,15 @@ import {
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import { UiDriver } from '@/shared/ui/driver';
-import type { IEventBoardFilters, IEventBoardRange, IMarketData } from '@/modules/calendar/types';
-import { EventType, Impact } from '@/modules/calendar';
+import type { IEventBoardRange, IMarketData } from '@/modules/calendar/types';
+import { EventType, Impact, isSameWeek, MarketIds } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
 
 import CalendarWeekRangeSelect from '@/modules/calendar/ui/calendar-week-range-select.vue';
 
 interface ICalendarProps {
+	initialDate: Date;
+	baseDate: Date;
 	markets: IMarketData[];
 	eventTypes: EventType[];
 	impacts: Impact[];
@@ -34,38 +36,51 @@ const emits = defineEmits<{
 	'reset-week': [];
 }>();
 
-const state = defineModel<IEventBoardFilters>('state', { required: true });
-const range = defineModel<IEventBoardRange>('range', { required: true });
+const countryState = defineModel<MarketIds>('country-state', { required: true });
+const impactState = defineModel<Impact>('impact-state', { required: true });
+const eventState = defineModel<EventType>('event-state', { required: true });
+const watchlistIdState = defineModel<string | null>('watchlist-id-state', { required: true });
+const watchlistSectionState = defineModel<string | null>('watchlist-section-state', { required: true });
 
-const selectedMarket = computed({
+const range = defineModel<IEventBoardRange>('range-state', { required: true });
+
+const selectedCountry = computed({
 	set: (market: IMarketData) => {
-		state.value.marketId = market.id;
+		countryState.value = market.id;
 	},
 	get: () => {
-		return props.markets[state.value.marketId];
+		return props.markets.find(market => market.id === countryState.value);
 	},
 });
 
-const selectedWatchlist = computed(() => {
-	return props.watchlists.find(v => v.id === state.value.watchlist.selectedId);
+const selectedWatchlistSection = computed(() => {
+	if (watchlistIdState.value === null) {
+		return null;
+	}
+
+	return props.watchlists.find(v => v.id === watchlistIdState.value)!.sections;
 });
 
-function updateSelectedWatchlist(id: string) {
-	if (state.value.watchlist.selectedId === id) {
-		state.value.watchlist.selectedSectionId = null;
-		state.value.watchlist.selectedId = null; return;
+function updateSelectedWatchlistCatalogId(id: string) {
+	watchlistSectionState.value = null;
+
+	if (watchlistIdState.value === id) {
+		watchlistIdState.value = null;
+
+		return;
 	}
 
-	state.value.watchlist.selectedId = id;
-	state.value.watchlist.selectedSectionId = null;
+	watchlistIdState.value = id;
 }
 
-function updateSelectedSection(id: string) {
-	if (state.value.watchlist.selectedSectionId === id) {
-		state.value.watchlist.selectedSectionId = null; return;
+function selectWatchlistSection(name: string) {
+	if (watchlistSectionState.value === name) {
+		watchlistSectionState.value = null;
+
+		return;
 	}
 
-	state.value.watchlist.selectedSectionId = id;
+	watchlistSectionState.value = name;
 }
 
 const startDate = computed(() => props.weekDays[0].date);
@@ -92,12 +107,12 @@ const label = computed(() => {
 			>
 				<template #title="{ isVisible }">
 					<ui-icon
-						:id="selectedMarket.icon"
+						:id="selectedCountry.icon"
 						width="10px"
 						height="10px"
 					/>
 					<span>
-						{{selectedMarket.label}}
+						{{ selectedCountry.label }}
 					</span>
 					<ui-icon
 						:id="IconIds.DropdownDown"
@@ -113,8 +128,8 @@ const label = computed(() => {
 							<modal-item-selector
 								v-for="market in props.markets"
 								:key="market.label"
-								:model-value="selectedMarket.id === market.id"
-								@update:model-value="selectedMarket = market"
+								:model-value="selectedCountry.id === market.id"
+								@update:model-value="selectedCountry = market"
 							>
 								<div :class="classes.modalItem">
 									<div :class="classes.iconWrapper">
@@ -154,25 +169,25 @@ const label = computed(() => {
 							Watchlist
 						</modal-title>
 						<modal-item-selector
-							v-for="watchlist in watchlists"
-							:key="watchlist.id"
-							:model-value="watchlist.id === state.watchlist.selectedId"
-							@click="updateSelectedWatchlist(watchlist.id)"
+							v-for="watchlistItem in props.watchlists"
+							:key="watchlistItem.id"
+							:model-value="watchlistIdState === watchlistItem.id"
+							@click="updateSelectedWatchlistCatalogId(watchlistItem.id)"
 						>
-							{{watchlist.name}}
+							{{watchlistItem.name}}
 						</modal-item-selector>
 
 						<ui-driver />
 
-						<template v-if="selectedWatchlist">
+						<template v-if="selectedWatchlistSection">
 							<modal-title>
 								Created Lists
 							</modal-title>
 							<modal-item-selector
-								v-for="section in selectedWatchlist.sections"
+								v-for="section in selectedWatchlistSection"
 								:key="section.id"
-								:model-value="state.watchlist.selectedSectionId === section.id"
-								@click="updateSelectedSection(section.id)"
+								:model-value="watchlistSectionState === section.name"
+								@click="selectWatchlistSection(section.name)"
 							>
 								{{section.name}}
 							</modal-item-selector>
@@ -201,8 +216,8 @@ const label = computed(() => {
 							<modal-item-checkbox
 								v-for="(event, index) in props.eventTypes"
 								:key="index"
-								:model-value="event === state.eventType"
-								@update:model-value="state.eventType = event"
+								:model-value="event === eventState"
+								@update:model-value="eventState = event"
 							>
 								{{event}}
 							</modal-item-checkbox>
@@ -232,12 +247,12 @@ const label = computed(() => {
 						</template>
 						<template #default>
 							<modal-item-checkbox
-								v-for="(impact, index) in props.impacts"
+								v-for="(propImpact, index) in props.impacts"
 								:key="index"
-								:model-value="impact === state.impact"
-								@update:model-value="state.impact = impact"
+								:model-value="impactState === propImpact"
+								@update:model-value="impactState = propImpact"
 							>
-								{{impact}}
+								{{propImpact}}
 							</modal-item-checkbox>
 						</template>
 					</modal-badge-list>
@@ -268,7 +283,10 @@ const label = computed(() => {
 		</div>
 
 		<div :class="classes.toolbarEnd">
-			<button :class="classes.nav" @click="emits('prev-week')">
+			<button
+				:class="[classes.nav]"
+				@click="emits('prev-week')"
+			>
 				<ui-icon
 					:id="IconIds.DropdownDown"
 					width="12"
@@ -277,7 +295,11 @@ const label = computed(() => {
 				/>
 			</button>
 
-			<button :class="classes.nav" @click="emits('reset-week')">
+			<button
+				v-if="!isSameWeek(props.baseDate, props.initialDate)"
+				:class="classes.nav"
+				@click="emits('reset-week')"
+			>
 				<ui-icon
 					:id="IconIds.Calendar"
 					width="12"
@@ -287,7 +309,7 @@ const label = computed(() => {
 				<span :class="classes.redDot" />
 			</button>
 
-			<button :class="classes.nav" @click="emits('next-week')">
+			<button :class="[classes.nav, classes.rotated]" @click="emits('next-week')">
 				<ui-icon
 					:id="IconIds.DropdownDown"
 					width="12"
@@ -358,10 +380,10 @@ const label = computed(() => {
 	&:first-child {
 		transform: rotate(90deg);
 	}
+}
 
-	&:nth-child(3) {
-		transform: rotate(-90deg);
-	}
+.rotated {
+	transform: rotate(-90deg);
 }
 
 .redDot {

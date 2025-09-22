@@ -2,14 +2,14 @@ import type { IMarketData } from '../types';
 import { IconIds } from '@/shared/ui/icon';
 
 export enum MarketIds {
-	EntireWorld,
-	USA,
-	India,
-	Germany,
-	Japan,
-	Canada,
-	HongKong,
-	UnitedKingdom,
+	EntireWorld= 'entire-world',
+	USA = 'usa',
+	India = 'india',
+	Germany = 'germany',
+	Japan = 'japan',
+	Canada = 'canada',
+	HongKong = 'hongkong',
+	UnitedKingdom = 'united-kingdom',
 }
 
 export const markets: IMarketData[] = [

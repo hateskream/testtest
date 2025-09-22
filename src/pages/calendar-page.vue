@@ -7,15 +7,14 @@ import {
 	EventType,
 	getEndOfWeek,
 	getStartOfWeek,
-	type IEventBoardFilters,
 	type IEventBoardRange,
 	Impact,
-	MarketIds,
 	markets,
 	toUtcIsoDate,
 	toWeekDays,
 	useDailyCalendarGetState,
 	useEventBoard,
+	useToolbarState,
 } from '@/modules/calendar';
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
@@ -37,15 +36,9 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 const baseDate = ref(new Date(props.initialDate));
 const selectedDate = ref(new Date(baseDate.value));
 
-const toolbarState = reactive<IEventBoardFilters>({
-	marketId: MarketIds.EntireWorld,
-	impact: Impact.All,
-	eventType: EventType.All,
-	watchlist: {
-		selectedId: null,
-		selectedSectionId: null,
-	},
-});
+const { watchlists } = useWatchlist();
+
+const { state: toolbar } = useToolbarState();
 
 const weekRange = reactive<IEventBoardRange>({
 	from: toUtcIsoDate(getStartOfWeek(baseDate.value)),
@@ -63,11 +56,30 @@ function resetWeek() {
 	weekRange.to = toUtcIsoDate(getEndOfWeek(props.initialDate));
 }
 
-const { watchlists } = useWatchlist();
-const { eventBoard } = useEventBoard({
-	range: weekRange,
-	filters: toolbarState,
+const watchlistSelectedSections = computed(() => {
+	if (!toolbar.watchlistSection) {
+		return watchlists.value
+			.find(v => v.id === toolbar.watchlistId)
+			?.sections.flatMap(v => v.tickerIds) || [];
+	}
+
+	return watchlists.value
+		.find(v => v.id === toolbar.watchlistId)
+		?.sections.find(v => v.name === toolbar.watchlistSection)
+		?.tickerIds || [];
 });
+
+const filters = computed(() => ({
+	range: weekRange,
+	filters: {
+		marketId: toolbar.marketId,
+		impact: toolbar.impact,
+		eventType: toolbar.eventType,
+		watchlist: watchlistSelectedSections.value,
+	},
+}));
+
+const { eventBoard } = useEventBoard(filters);
 
 const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 
@@ -108,8 +120,14 @@ function nextWeek() {
 			<calendar-layout>
 				<template #content>
 					<calendar-toolbar
-						v-model:state="toolbarState"
-						v-model:range="weekRange"
+						v-model:country-state="toolbar.marketId"
+						v-model:impact-state="toolbar.impact"
+						v-model:event-state="toolbar.eventType"
+						v-model:watchlist-id-state="toolbar.watchlistId"
+						v-model:watchlist-section-state="toolbar.watchlistSection"
+						v-model:range-state="weekRange"
+						:initial-date="props.initialDate"
+						:base-date="baseDate"
 						:markets="markets"
 						:event-types="Object.values(EventType)"
 						:impacts="Object.values(Impact)"

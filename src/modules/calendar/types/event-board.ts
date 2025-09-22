@@ -9,10 +9,7 @@ export interface IEventBoardFilters {
 	marketId: MarketIds;
 	eventType: EventType;
 	impact: Impact;
-	watchlist: {
-		selectedId: string | null;
-		selectedSectionId: string | null;
-	};
+	watchlist: string[];
 }
 
 export interface ICreateEventBoardOptions {
@@ -34,7 +31,8 @@ export interface ICalendarEvent {
 	eventDatetime?: string;
 	eventSummary?: string;
 	metrics: ICalendarEventMetric[];
-	ticker?: string;
+	section: string;
+	ticker: string;
 	text?: string;
 	link?: string;
 	linkText?: string;
