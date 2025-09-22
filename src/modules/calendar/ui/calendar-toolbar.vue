@@ -107,12 +107,13 @@ const label = computed(() => {
 			>
 				<template #title="{ isVisible }">
 					<ui-icon
+						v-if="selectedCountry"
 						:id="selectedCountry.icon"
 						width="10px"
 						height="10px"
 					/>
 					<span>
-						{{ selectedCountry.label }}
+						{{ selectedCountry && selectedCountry.label }}
 					</span>
 					<ui-icon
 						:id="IconIds.DropdownDown"

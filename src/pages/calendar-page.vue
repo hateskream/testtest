@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, useTemplateRef, watch } from 'vue';
 
 import { LayoutComponent } from '@/modules/layout';
 import {
@@ -81,6 +81,22 @@ const filters = computed(() => ({
 
 const { eventBoard } = useEventBoard(filters);
 
+const eventBoardRef = useTemplateRef('event-board-component');
+
+watch([() => eventBoard.value.length, baseDate], async ([len, date]) => {
+	if (len === 0) {
+		return;
+	}
+
+	await nextTick();
+
+	const iso = toUtcIsoDate(date);
+
+	eventBoardRef.value?.scrollToDate(iso, {
+		behavior: 'auto',
+	});
+}, { immediate: true });
+
 const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 
 const weekDays = computed<IWeeklyDayInfo[]>(() => {
@@ -147,6 +163,7 @@ function nextWeek() {
 
 					<calendar-event-board
 						v-if="eventBoard.length"
+						ref="event-board-component"
 						:event-board="eventBoard"
 					/>
 				</template>
