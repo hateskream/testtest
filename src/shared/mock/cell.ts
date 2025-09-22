@@ -22,7 +22,6 @@ import {
 	type IPercentCell,
 	type IRangeCell,
 } from '@/modules/cell';
-import { generateRandomColor } from '../lib';
 
 const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 	[ColumnType.PriceCurrent]: {
@@ -351,29 +350,6 @@ const allCellByColumn: Record<ColumnWithoutSymbol, Cell> = 	{
 		columnType: ColumnType.Volatility,
 		value: 'High',
 		status: Status.CAUTION,
-	},
-	[ColumnType.Dominance24hPercent]: {
-		cellType: CellType.Percent,
-		columnType: ColumnType.Dominance24hPercent,
-		value: '12.2',
-		trend: Trend.UP,
-	},
-	[ColumnType.Dominance7dPercent]: {
-		cellType: CellType.Percent,
-		columnType: ColumnType.Dominance7dPercent,
-		value: '12.2',
-		trend: Trend.UP,
-	},
-	[ColumnType.Dominance30dPercent]: {
-		cellType: CellType.Percent,
-		columnType: ColumnType.Dominance30dPercent,
-		value: '12.2',
-		trend: Trend.UP,
-	},
-	[ColumnType.Color]: {
-		cellType: CellType.Text,
-		columnType: ColumnType.Color,
-		value: '',
 	},
 };
 
@@ -710,18 +686,7 @@ export function generateRows<T extends RowCells = RowCells>(
 				...Object
 					.fromEntries(
 						cols
-							.map(col => {
-								if (col === ColumnType.Color) {
-									const data = {
-										...allCellByColumn[col],
-										value: generateRandomColor(),
-									};
-
-									return [col, data];
-								}
-
-								return [col, allCellByColumn[col]];
-							}),
+							.map(col => [col, allCellByColumn[col]]),
 					),
 			} as TableRow<T>;
 		});

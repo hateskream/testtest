@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { getMappedRow } from '@/modules/ticker-selector/utils';
-import type { ITickerMapped, ITickerSelectAction, TickerDto } from '@/modules/ticker-selector/model';
+import {
+	getMappedRow,
+	type ITickerMapped,
+	type ITickerSelectAction,
+	type TickerDto,
+} from '@/modules/ticker-selector/model';
 
 import ModalFilterTickerItem from './modal-filter-ticker-item.vue';
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
-
 
 interface IProps {
 	list: TickerDto[];
@@ -26,7 +29,6 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 		return getMappedRow(item);
 	});
 });
-
 </script>
 
 <template>
@@ -39,7 +41,7 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 		@update="
 			emits('update', {
 				tickerId: item.tickerId,
-				isSelected: !selectedIdsMap.includes(item.tickerId)
+				isSelected: !selectedIdsMap.includes(item.tickerId),
 			})
 		"
 	>
@@ -55,7 +57,6 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 		</template>
 	</modal-filter-ticker-item>
 </template>
-
 
 <style module="classes">
 .listItemDataImageWrapper {

@@ -2,8 +2,12 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { ITickerMapped, ITickerSelectAction, TickerDto } from '@/modules/ticker-selector/model';
-import { getMappedRow } from '@/modules/ticker-selector/utils';
+import {
+	getMappedRow,
+	type ITickerMapped,
+	type ITickerSelectAction,
+	type TickerDto,
+} from '@/modules/ticker-selector/model';
 
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
 
@@ -19,13 +23,11 @@ interface IEmits {
 
 const emits = defineEmits<IEmits>();
 
-
 const mappedTickers = computed<ITickerMapped[]>(() => {
 	return props.list.map((item) => {
 		return getMappedRow(item);
 	});
 });
-
 </script>
 
 <template>
@@ -51,10 +53,12 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 			width="10"
 			height="10"
 			:class="classes.badgeRemoveIcon"
-			@click="emits('update', {
-				isSelected: false,
-				tickerId: item.tickerId
-			})"
+			@click="
+				emits('update', {
+					isSelected: false,
+					tickerId: item.tickerId,
+				})
+			"
 		/>
 	</div>
 </template>

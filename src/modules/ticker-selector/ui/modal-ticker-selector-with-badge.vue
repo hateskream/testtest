@@ -4,9 +4,7 @@ import { computed } from 'vue';
 import { ModalFilter } from './components/modal';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useQueryTickerSelector } from '../queries';
-import type { ITickerEmits } from '../model';
-import { ACTIVE_TICKER_LIST_COUNT_SHOW } from '../const';
-import { getMappedRow } from '../utils';
+import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
 import { ModalBadge } from '@/modules/widgets/base';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';

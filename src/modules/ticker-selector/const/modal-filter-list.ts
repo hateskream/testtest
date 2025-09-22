@@ -1,1 +1,0 @@
-export const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;

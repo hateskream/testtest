@@ -68,12 +68,6 @@ export enum ColumnType {
 	UpdateDate = 'updateDate',
 
 	Volatility = 'volatility',
-
-	Dominance24hPercent = 'dominance24hPercent',
-	Dominance7dPercent = 'dominance7dPercent',
-	Dominance30dPercent = 'dominance30dPercent',
-
-	Color = 'color',
 }
 
 export enum CellType {
@@ -301,13 +295,6 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.PriceClose]: CellType.Number,
 
 	[ColumnType.Volatility]: CellType.Label,
-
-	[ColumnType.Color]: CellType.Text,
-
-	[ColumnType.Dominance24hPercent]: CellType.Percent,
-	[ColumnType.Dominance7dPercent]: CellType.Percent,
-	[ColumnType.Dominance30dPercent]: CellType.Percent,
-
 };
 
 export type ColumnToCell = {
@@ -375,13 +362,6 @@ export type ColumnToCell = {
 	[ColumnType.PriceClose]: INumberCell;
 
 	[ColumnType.Volatility]: ILableCell;
-
-	[ColumnType.Dominance24hPercent]: IPercentCell;
-	[ColumnType.Dominance7dPercent]: IPercentCell;
-	[ColumnType.Dominance30dPercent]: IPercentCell;
-
-	[ColumnType.Color]: ITextCell;
-
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];
