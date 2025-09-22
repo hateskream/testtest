@@ -129,7 +129,7 @@ const label = computed(() => {
 							<modal-item-selector
 								v-for="market in props.markets"
 								:key="market.label"
-								:model-value="selectedCountry.id === market.id"
+								:model-value="selectedCountry?.id === market.id"
 								@update:model-value="selectedCountry = market"
 							>
 								<div :class="classes.modalItem">

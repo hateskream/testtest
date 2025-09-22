@@ -1,20 +1,14 @@
 import type { DateYYYYMMDD } from '@/modules/calendar';
 
-export function newUtcDate(): Date {
-	const now = new Date();
-	return new Date(
-		Date.UTC(
-			now.getUTCFullYear(), now.getUTCMonth(),
-			now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(),
-			now.getUTCSeconds(), now.getUTCMilliseconds(),
-		),
-	);
-}
-
 export function toUtcIsoDate(d: Date): DateYYYYMMDD {
 	return (new Date(d.getTime() - d.getTimezoneOffset() * 60000)
 		.toISOString()
 		.split('T')[0]) as DateYYYYMMDD;
+}
+
+export function toIsoUtcDate(iso: DateYYYYMMDD) {
+	const [y, m, d] = iso.split('-').map(Number);
+	return new Date(y, (m || 1) - 1, d || 1);
 }
 
 export function getStartOfWeek(date: Date): Date {

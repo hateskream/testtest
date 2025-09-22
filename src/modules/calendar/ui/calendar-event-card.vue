@@ -3,10 +3,11 @@ import { computed, ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ExternalLink } from '@/shared/ui/link';
-import { tickerIcon } from '@/shared/ui/ticker';
-
+import { MarketIds, markets } from '@/modules/calendar';
 
 interface ICalendarEventCardProps {
+	isMissed: boolean;
+
 	eventType: string;
 	eventTitle: string;
 	eventTitleDescription?: string;
@@ -20,6 +21,7 @@ interface ICalendarEventCardProps {
 	text?: string;
 	link?: string;
 	linkText?: string;
+	marketId?: MarketIds;
 }
 
 const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
@@ -27,6 +29,7 @@ const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
 	eventTitleDescription: '',
 	eventSummary: '',
 	ticker: 'TSLA',
+	marketId: undefined,
 	// eslint-disable-next-line @stylistic/max-len
 	text: 'MBA 30-Year Mortgage Rate is average 30-year fixed mortgage lending rate measured during the reported week and backed by the Mortgage Bankers Association.',
 	link: 'https://google.com/',
@@ -39,30 +42,41 @@ const openEventCard = () => {
 	isCardOpen.value = !isCardOpen.value;
 };
 
+const now = new Date();
 
 const eventStartsIn = computed(() => {
-	const now = new Date();
-	const eventDate = new Date(props.eventDatetime);
-	const diffTime = Math.abs(eventDate.getTime() - now.getTime());
-	// const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	// const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-	const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+	const start = new Date(props.eventDatetime);
 
-	return `in ${diffMinutes} mins`;
+	const diff = start.getTime() - now.getTime();
+	const mins = Math.round(diff / 60000);
+
+	if (mins > 0 && mins < 60) {
+		return `in ${mins} min${mins === 1 ? '' : 's'}`;
+	}
+
+	return null;
 });
 </script>
 
 <template>
-	<div :class="classes.calendarEventCard">
+	<div :class="[classes.calendarEventCard, props.isMissed && classes.missed]">
 		<div :class="classes.cardHeader">
 			<div :class="classes.flexStart">
 				<div :class="classes.eventType">
 					{{ props.eventType }}
 				</div>
 
-				<div :class="classes.eventStartsIn">
+				<div v-if="eventStartsIn" :class="classes.eventStartsIn">
 					{{ eventStartsIn }}
 				</div>
+
+				<button :class="classes.buttonIcon">
+					<ui-icon
+						:id="IconIds.Favorite"
+						width="16px"
+						height="16px"
+					/>
+				</button>
 			</div>
 			<div :class="classes.flexEnd">
 				<div :class="classes.eventSummary">
@@ -72,8 +86,13 @@ const eventStartsIn = computed(() => {
 		</div>
 		<div :class="classes.cardHeadline">
 			<div :class="classes.eventTitle" @click="openEventCard">
-				<!-- FIXME: Get ticker icon from the server -->
-				<ticker-icon src="@/assets/images/stock/TSLA.png" :ticker="props.ticker" />
+				<div v-if="props.marketId" :class="classes.iconWrapper">
+					<ui-icon
+						:id="markets.find(v => v.id === props.marketId)!.icon"
+						width="20px"
+						height="20px"
+					/>
+				</div>
 
 				<div :class="classes.eventTitle">{{ props.eventTitle }}</div>
 
@@ -90,7 +109,6 @@ const eventStartsIn = computed(() => {
 					height="18px"
 				/>
 			</div>
-
 			<div :class="classes.eventMetrics">
 				<div
 					v-for="metric in props.metrics"
@@ -130,10 +148,35 @@ const eventStartsIn = computed(() => {
 .calendarEventCard {
 	display: flex;
 	flex-direction: column;
-	padding: 12px 16px;
+	padding: 12px 10px;
 	background: var(--color-bg-surface-02, #161618);
-	border-radius: 20px;
-	gap: 8px;
+	border-radius: 16px;
+	gap: 12px;
+}
+
+.buttonIcon {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	line-height: 0;
+	color: rgb(100 101 104 / 100%);
+	cursor: pointer;
+}
+
+.missed {
+	cursor: default;
+	opacity: 0.4;
+	pointer-events: none;
+}
+
+.iconWrapper {
+	display: grid;
+	width: 32px;
+	height: 32px;
+	line-height: 0;
+	border: 1px solid var(--color-border-base-300, rgb(97 97 97 / 30%));
+	border-radius: 50%;
+	place-items: center;
 }
 
 .cardHeader {
@@ -169,6 +212,7 @@ const eventStartsIn = computed(() => {
 
 .cardHeadline {
 	display: inline-flex;
+	flex-direction: row;
 	justify-content: space-between;
 
 	.eventTitle {
@@ -186,11 +230,20 @@ const eventStartsIn = computed(() => {
 	}
 }
 
+@media screen and (max-width: 1024px) {
+	.cardHeadline {
+		gap: 12px;
+		flex-direction: column;
+	}
+}
 
 .eventMetrics {
-	display: inline-flex;
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
 	align-items: center;
-	gap: 16px;
+	align-self: stretch;
+	gap: 2px 16px;
 
 	.metricData {
 		display: inline-flex;
@@ -217,7 +270,7 @@ const eventStartsIn = computed(() => {
 	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.143px;
-	gap: 24px;
+	gap: 12px;
 
 
 	.launcChartAction {

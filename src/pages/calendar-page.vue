@@ -83,11 +83,7 @@ const { eventBoard } = useEventBoard(filters);
 
 const eventBoardRef = useTemplateRef('event-board-component');
 
-watch([() => eventBoard.value.length, baseDate], async ([len, date]) => {
-	if (len === 0) {
-		return;
-	}
-
+watch([() => eventBoard.value.length, baseDate], async ([_, date]) => {
 	await nextTick();
 
 	const iso = toUtcIsoDate(date);
@@ -95,7 +91,7 @@ watch([() => eventBoard.value.length, baseDate], async ([len, date]) => {
 	eventBoardRef.value?.scrollToDate(iso, {
 		behavior: 'auto',
 	});
-}, { immediate: true });
+});
 
 const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 
