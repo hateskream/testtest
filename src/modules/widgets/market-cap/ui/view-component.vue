@@ -4,17 +4,15 @@ import { nextTick, ref, useTemplateRef, watch } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { RangeChart } from '@/shared/ui/chart-range';
-import type { TickerDto } from '../api';
-import { getNumberText, getTickerName, Trend } from '@/modules/cell';
 import { useMarketCapStore } from '../store/market-cap.ts';
-import type { TickerRow } from '../model/market-cap.ts';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector/index.ts';
+import type { IMarketCapDomain } from '../api/get-market-cap.ts';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
 interface IViewComponentProps {
 	meta: IMeta;
-	data: TickerRow[];
+	data: IMarketCapDomain[];
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -25,7 +23,7 @@ const prevIds = ref<string[]>([]);
 
 watch(
 	() => props.data,
-	async (newData: TickerDto[]) => {
+	async (newData: IMarketCapDomain[]) => {
 		await nextTick();
 		const chart = chartMarketCapRef.value;
 		if (!chart) {
@@ -37,10 +35,10 @@ watch(
 		}
 
 		for (const d of newData) {
-			chart.addTicker(d.color.value!, d.tickerId);
+			chart.addTicker(d.color!, d.symbol);
 		}
 
-		prevIds.value = newData.map(d => d.tickerId);
+		prevIds.value = newData.map(d => d.id);
 	},
 	{ immediate: true, flush: 'post' },
 );
@@ -125,28 +123,28 @@ watch(
 		<div v-if="data.length > 0" :class="classes.marketCapCurrencyList">
 			<div
 				v-for="item in data"
-				:key="item.tickerId"
+				:key="item.id"
 				:class="classes.marketCapCurrency"
 			>
 
 				<div :class="classes.marketCapCurrencyName">
-					<div :style="{backgroundColor: item.color.value}"></div>
+					<div :style="{backgroundColor: item.color}"></div>
 					<span>
-						{{ getTickerName(item.symbol) }}
+						{{ item.symbol  }}
 					</span>
 				</div>
 
 				<div :class="classes.marketCapCurrencyFdv">
-					{{ getNumberText(item.marketCap24h) }}
+					{{ item.fdv }}
 				</div>
 
 				<div
 					:class="[classes.marketCapCurrencyChange,
-						item.marketCapChange24hPercent.trend === Trend.UP ?
+						item.change24h > 0 ?
 							classes.marketCapCurrencyChangePositive : classes.marketCapCurrencyChangeNegative
 					]"
 				>
-					{{ item.marketCapChange24hPercent.value }}%
+					{{ item.change24h  }}%
 				</div>
 
 			</div>

@@ -37,8 +37,8 @@ const emit = defineEmits<{
 			<error-component v-if="isError" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
-				v-else-if="data?.tickers"
-				:data="data.tickers"
+				v-else-if="data"
+				:data="data"
 				:meta="meta"
 			/>
 		</template>

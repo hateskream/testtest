@@ -1,32 +1,30 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
-import type { TickerDto } from '../api';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
-import { getTickerName } from '@/modules/cell';
-import type { TickerRow } from '../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import type { IBitcoinDominanceDomain } from '../api';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 
 interface IViewComponentProps {
 	meta: IMeta;
-	data: TickerRow[];
+	data: IBitcoinDominanceDomain[];
 }
 
 const props = defineProps<IViewComponentProps>();
 const chartMarketCapRef = useTemplateRef('chart');
 
 const activeListSorted = computed(() => {
-	return [...props.data].sort((a, b) => +b.dominance24hPercent.value - +a.dominance24hPercent.value );
+	return [...props.data].sort((a, b) => +b.dominance - +a.dominance );
 });
 
 const totalOtherDominance = computed(() => {
-	return (100 - activeListSorted.value.reduce((acc, item) => acc + +item.dominance24hPercent.value, 0)).toFixed(2);
+	return (100 - activeListSorted.value.reduce((acc, item) => acc + +item.dominance, 0)).toFixed(2);
 });
 
 const bitcoinDominanceStore = useBitcoinDominanceStore();
@@ -35,7 +33,7 @@ const prevIds = ref<string[]>([]);
 
 watch(
 	() => props.data,
-	async (newData: TickerDto[]) => {
+	async (newData: IBitcoinDominanceDomain[]) => {
 		await nextTick();
 		const chart = chartMarketCapRef.value;
 		if (!chart) {
@@ -47,10 +45,10 @@ watch(
 		}
 
 		for (const d of newData) {
-			chart.addTicker(d.color.value!, d.tickerId);
+			chart.addTicker(d.color, d.symbol);
 		}
 
-		prevIds.value = newData.map(d => d.tickerId);
+		prevIds.value = newData.map(d => d.id);
 	},
 	{ immediate: true, flush: 'post' },
 );
@@ -68,18 +66,18 @@ watch(
 				<div  :class="classes.marketCapCurrencyDominanceList">
 					<div
 						v-for="item in activeListSorted"
-						:key="item.tickerId"
+						:key="item.symbol"
 						:class="classes.marketCapCurrencyDominanceItem"
 					>
 						<div :class="classes.marketCapCurrencyDominanceName">
-							<div :style="{backgroundColor: item.color.value}"></div>
+							<div :style="{backgroundColor: item.color}"></div>
 							<span>
-								{{ getTickerName(item.symbol)}}
+								{{ item.symbol }}
 							</span>
 						</div>
 
 						<div :class="classes.marketCapCurrencyDominanceValue">
-							{{ item.dominance24hPercent.value }}%
+							{{ item.dominance }}%
 						</div>
 					</div>
 
@@ -100,9 +98,9 @@ watch(
 				<div v-if="bitcoinDominanceStore.isShowIndicator" :class="classes.marketCapDominanceLine">
 					<div
 						v-for="item in activeListSorted"
-						:key="item.tickerId"
+						:key="item.symbol"
 						:class="classes.marketCapDominanceLineItem"
-						:style="{background: item.color.value, width: `${item.dominance24hPercent.value}%`}"
+						:style="{background: item.color, width: `${item.dominance}%`}"
 					/>
 					<div
 						:class="classes.marketCapDominanceLineItem"
@@ -114,28 +112,28 @@ watch(
 			<div v-if="bitcoinDominanceStore.isShowHistorical" :class="classes.marketCapCurrencyList">
 				<div
 					v-for="item in activeListSorted"
-					:key="item.tickerId"
+					:key="item.symbol"
 					:class="classes.marketCapCurrency"
 				>
 
 					<div :class="classes.marketCapCurrencyName">
-						<div :style="{backgroundColor: item.color.value}"></div>
+						<div :style="{backgroundColor: item.color}"></div>
 						<span>
-							{{ getTickerName(item.symbol) }}
+							{{ item.symbol }}
 						</span>
 					</div>
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.dominance24hPercent.value }}%
+						{{ item.changeYerstaday }}%
 					</div>
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.dominance7dPercent.value }}%
+						{{ item.changeWeek }}%
 					</div>
 
 
 					<div :class="classes.marketCapCurrencyChange">
-						{{ item.dominance30dPercent.value }}%
+						{{ item.changeYear }}%
 					</div>
 				</div>
 			</div>

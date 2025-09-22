@@ -1,90 +1,97 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import {
-	type SymbolDto,
-	ColumnType,
-	type TableRowDto,
-	type NumberDto,
-	type ColorDto,
-	mapTickersToTableRows,
-	type PercentDto,
-	SymbolType,
-	type ColumnWithoutSymbol,
-} from '@/modules/cell';
-import type { TickerRow } from '../model/market-cap';
-import { generateRows } from '@/shared/mock';
+import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { ImageTypePath } from '@/shared/lib/get-image-path';
+import type { IMarketCapCurrency } from '../model/market-cap';
 
 const IS_USE_MOCK = true;
 
-export type TickerDto = TableRowDto<{
-	[ColumnType.Symbol]: SymbolDto;
-	[ColumnType.Color]: ColorDto;
-	[ColumnType.MarketCap24h]: NumberDto;
-	[ColumnType.MarketCapChange24hPercent]: PercentDto;
-}>;
-
-export interface IMarketCapRequest {
+export interface IGetMarketCapRequest {
 	tickersIds: string;
 }
 
-interface IGetResponse {
-	data: {
-		tickers: TickerDto[];
-	};
+export interface IGetMarketResponse {
+	data: IMarketCapCurrency[];
 }
 
-export interface IPreparedResponse {
-	tickers: TickerRow[];
+export interface IMarketCapDomain extends IMarketCapCurrency {
+	srcValue: string;
 }
 
-export async function getMarketCap(query: IMarketCapRequest): Promise<IPreparedResponse> {
+export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketCapDomain[]> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
+	const query = removeUndefinedPropertiesFromObject(args);
+
 	try {
-		if (IS_USE_MOCK) {
-			return await getMockData(query);
-		}
+		const response = IS_USE_MOCK
+			? await getMockData(args)
+			: await httpService.get<IGetMarketResponse>('/api/market', {
+				query,
+			});
 
-		const response = await httpService.get<IGetResponse>('/api/market-cap', {
-			query: {
-				tickerIds: query.tickersIds,
-			},
-		});
-
-		return {
-			tickers: mapTickersToTableRows<TickerRow>(response.data.tickers),
-		};
+		return prepareResponse(response.data);
 	} catch (error) {
-		logger.error('Failed to get market-cap', error as Error);
+		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
 }
 
+function prepareResponse(data: IMarketCapCurrency[]): IMarketCapDomain[] {
+	return data.map(item => ({
+		...item,
+		srcValue: getImagePath(item.symbol, item.type === 'crypto' ? ImageTypePath.Currency : ImageTypePath.Stock),
+	}));
+}
 
-const columnTypes: ColumnWithoutSymbol[] = [
-	ColumnType.Color,
-	ColumnType.MarketCapChange24hPercent,
-	ColumnType.MarketCap24h,
-];
-
-const mockTickers = [
-	...generateRows<TickerRow>(SymbolType.Crypto, columnTypes, 20),
-	...generateRows<TickerRow>(SymbolType.Commodity, columnTypes, 20),
-	...generateRows<TickerRow>(SymbolType.Forex, columnTypes, 20),
-	...generateRows<TickerRow>(SymbolType.Index, columnTypes, 20),
-	...generateRows<TickerRow>(SymbolType.Stock, columnTypes, 20),
-];
-
-
-async function getMockData(query: IMarketCapRequest): Promise<IPreparedResponse> {
+async function getMockData(args: IGetMarketCapRequest): Promise<IGetMarketResponse> {
 	await new Promise(resolve => {
 		setTimeout(resolve, 0);
 	});
 
-	const tickers = query.tickersIds.split(',');
+	const mockData: IMarketCapCurrency[] = [
+		{
+			id: 'Crypto-ADACardano',
+			symbol: 'ADA',
+			name: 'Cardano',
+			type: 'crypto',
+			change24h: 0.93,
+			color: ' rgb(247, 169, 104)',
+			fdv: '84232834934324.45',
+		},
+		{
+			id: 'Crypto-TRXTron',
+			symbol: 'TRON',
+			name: 'TRX',
+			type: 'crypto',
+			change24h: 12,
+			color: ' rgb(42, 135, 211)',
+			fdv: '8743253453.45',
+		},
+		{
+			id: 'Crypto-SOLSolana',
+			symbol: 'SOL',
+			name: 'Solana',
+			type: 'crypto',
+			change24h: -0.5,
+			color: ' rgb(42, 211, 98)',
+			fdv: '943299.45',
+		},
+		{
+			id: 'Stock-TSLATesla',
+			symbol: 'TSLA',
+			name: 'Tesla Inc',
+			type: 'stock',
+			change24h: -4,
+			color: ' rgb(211, 67, 42)',
+			fdv: '44883234838.45',
+		},
+	];
 
-	return {
-		tickers: mockTickers.filter((item) => tickers.includes(item.tickerId)),
+	const response: IGetMarketResponse = {
+		data: mockData.filter(item => args.tickersIds.includes(item.id)),
 	};
+
+	return response;
 }
