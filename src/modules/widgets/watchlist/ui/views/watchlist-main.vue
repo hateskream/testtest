@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableRow, ITableColumn } from '@/modules/cell';
-import type { ISectionUi, ITab, ITickerAddPayload, ITickerRemovePayload } from '../../model';
+import type { ISectionUi, ITab, ITickerAddPayload, ITickerRemovePayload, ITickersAddPayload } from '../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import WatchlistTable from '../table/watchlist-table.vue';
@@ -24,6 +24,7 @@ const emit = defineEmits<{
 	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 	(event: 'delete-tab', id: string): void;
 	(event: 'create-new-watchlist'): void;
+	(event: 'add-tickers', payload: ITickersAddPayload): void;
 }>();
 
 function onRenameTab(id: string, name: string) {
@@ -48,6 +49,7 @@ function onRenameTab(id: string, name: string) {
 				:tickers="props.tickers"
 				@add-ticker="emit('add-ticker', $event)"
 				@remove-ticker="emit('remove-ticker', $event)"
+				@add-tickers="emit('add-tickers', $event)"
 			/>
 		</template>
 		<template v-else>

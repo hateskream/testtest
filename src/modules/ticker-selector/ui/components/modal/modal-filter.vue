@@ -177,7 +177,7 @@ function handleSelectAll(groupName: SymbolType) {
 				:class="classes.header"
 				:style="isBackgroundTransparent
 					? {
-						background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-00) 22%)',
+						background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-01) 22%)',
 					}
 					: {
 						background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',

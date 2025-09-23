@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapSections, type ISectionUi, type ITickerAddPayload, type ITickerRemovePayload } from '../../model';
+import {
+	mapSections,
+	type ISectionUi,
+	type ITickerAddPayload,
+	type ITickerRemovePayload,
+	type ITickersAddPayload,
+} from '../../model';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useGoToTickerPage } from '@/modules/chart';
@@ -20,6 +26,7 @@ const props = defineProps<IWatchlistTableProps>();
 const emit = defineEmits<{
 	(event: 'add-ticker', payload: ITickerAddPayload): void;
 	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
+	(event: 'add-tickers', payload: ITickersAddPayload): void;
 }>();
 
 const { goToTickerPage } = useGoToTickerPage();
@@ -78,6 +85,7 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 			v-else
 			@add-ticker="emit('add-ticker', $event)"
 			@remove-ticker="emit('remove-ticker', $event)"
+			@add-tickers="emit('add-tickers', $event)"
 		/>
 	</div>
 </template>

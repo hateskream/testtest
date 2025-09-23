@@ -7,6 +7,7 @@ import {
 	type ITable,
 	type ITickerAddPayload,
 	type ITickerRemovePayload,
+	type ITickersAddPayload,
 	changeActiveTable,
 	changeColumnsState,
 	createTablesFromWatchlists,
@@ -21,6 +22,7 @@ import {
 import type { ISort, ITableColumn } from '@/modules/cell';
 import { useGetState, useUpdateState } from '../queries';
 import { useWatchlist } from '@/modules/watchlist';
+import type { MarketType } from '@/modules/market';
 
 export function useWatchlistWidget(widgetId: string) {
 	const {
@@ -118,6 +120,15 @@ export function useWatchlistWidget(widgetId: string) {
 		addToWatchlist(table.value.id, tickerId, tickerType);
 	}
 
+	function handlerAddTickersToWatchlist({ tickers }: ITickersAddPayload) {
+		Object.entries(tickers)
+			.forEach(([tickerType, _tickerIds]) => {
+				_tickerIds.forEach(tickerId => {
+					handlerAddToWatchlist({ tickerId, tickerType: tickerType as MarketType });
+				});
+			});
+	}
+
 	function handlerRemoveFromWatchlist({ tickerId }: ITickerRemovePayload) {
 		if (!table.value) {
 			return;
@@ -152,6 +163,7 @@ export function useWatchlistWidget(widgetId: string) {
 
 		handlerAddToWatchlist,
 		handlerRemoveFromWatchlist,
+		handlerAddTickersToWatchlist,
 
 		createNewWatchlist,
 	};

@@ -1,3 +1,5 @@
+import { MarketType } from '../market';
+
 export enum ColumnType {
 	Symbol = 'symbol',
 
@@ -379,6 +381,10 @@ export function decodeTickerId(tickerId: string): IDecodeTickerId | null {
 	return null;
 }
 
+export function encodeTickerId(symbolType: SymbolType, tickerId: string): string {
+	return `${symbolType}-${tickerId}`;
+}
+
 function isValidSymbolType(value: string): value is SymbolType {
 	return Object.values(SymbolType).includes(value as SymbolType);
 }
@@ -389,19 +395,19 @@ export function createTickerId(symbolCell: ISymbolCell): string {
 
 	switch (symbolCell.symbolType) {
 		case SymbolType.Crypto:
-			idPayload = createTickerIdCrypto(symbolCell);
+			idPayload = createTickerIdCrypto(symbolCell.ticker, symbolCell.blockchain);
 			break;
 		case SymbolType.Stock:
-			idPayload = createTickerIdStock(symbolCell);
+			idPayload = createTickerIdStock(symbolCell.ticker);
 			break;
 		case SymbolType.Index:
-			idPayload = createTickerIdIndex(symbolCell);
+			idPayload = createTickerIdIndex(symbolCell.ticker);
 			break;
 		case SymbolType.Commodity:
-			idPayload = createTickerIdCommodity(symbolCell);
+			idPayload = createTickerIdCommodity(symbolCell.ticker);
 			break;
 		case SymbolType.Forex:
-			idPayload = createTickerIdForex(symbolCell);
+			idPayload = createTickerIdForex(symbolCell.leftTicker, symbolCell.rightTicker);
 			break;
 		default:
 			idPayload = symbolCell.text;
@@ -410,22 +416,40 @@ export function createTickerId(symbolCell: ISymbolCell): string {
 	return `${symbolType}-${idPayload}`;
 }
 
-function createTickerIdCrypto(symbolCell: ICryptoSymbolCell): string {
-	return symbolCell.ticker + symbolCell.blockchain;
+function createTickerIdCrypto(ticker: string, blockchain: string): string {
+	return ticker + blockchain;
 }
 
-function createTickerIdStock(symbolCell: IStockSymbolCell): string {
-	return symbolCell.ticker;
+function createTickerIdStock(ticker: string): string {
+	return ticker;
 }
 
-function createTickerIdIndex(symbolCell: IIndexSymbolCell): string {
-	return symbolCell.ticker;
+function createTickerIdIndex(ticker: string): string {
+	return ticker;
 }
 
-function createTickerIdCommodity(symbolCell: ICommoditySymbolCell): string {
-	return symbolCell.ticker;
+function createTickerIdCommodity(ticker: string): string {
+	return ticker;
 }
 
-function createTickerIdForex(symbolCell: IForexSymbolCell): string {
-	return symbolCell.leftTicker + symbolCell.rightTicker;
+function createTickerIdForex(leftTicker: string, rightTicker: string): string {
+	return leftTicker + rightTicker;
+}
+
+
+export function mapSymbolTypeToMarketType(st: SymbolType): MarketType | null {
+	switch (st) {
+		case SymbolType.Crypto:
+			return MarketType.Crypto;
+		case SymbolType.Stock:
+			return MarketType.Stock;
+		case SymbolType.Index:
+			return MarketType.Indices;
+		case SymbolType.Commodity:
+			return MarketType.Commodities;
+		case SymbolType.Forex:
+			return MarketType.Forex;
+		default:
+			return null;
+	}
 }

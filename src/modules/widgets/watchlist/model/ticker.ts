@@ -92,3 +92,7 @@ export interface ITickerAddPayload {
 export interface ITickerRemovePayload {
 	tickerId: string;
 }
+
+export interface ITickersAddPayload {
+	tickers: Record<MarketType, string[]>;
+}
