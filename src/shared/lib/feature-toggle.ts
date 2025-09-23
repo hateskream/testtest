@@ -18,6 +18,7 @@ const ALL_WIDGETS = [
 	'WIDGET_WATCH_LIST',
 	'WIDGET_BITCOIN_DOMINANCE',
 	'WIDGET_TOP_INDICES',
+	'WIDGET_CALENDAR',
 ] as const;
 
 export type WidgetFeature = typeof ALL_WIDGETS[number];

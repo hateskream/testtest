@@ -103,6 +103,14 @@ const TopIndices: Preset = {
 	defaultSize: { w: 2, h: 6 },
 };
 
+const Calendar: Preset = {
+	name: 'Calendar',
+	description: 'Calendar',
+	minSize: { w: 2, h: 4 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 6 },
+};
+
 const ProdPresets: AllPresets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -115,6 +123,7 @@ const ProdPresets: AllPresets = {
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
 	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
+	[WidgetType.Calendar]: Calendar,
 };
 
 const DevPresets: AllPresets = {
@@ -129,6 +138,7 @@ const DevPresets: AllPresets = {
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
 	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
+	[WidgetType.Calendar]: Calendar,
 };
 
 const DemoPresets: AllPresets = {
@@ -143,6 +153,7 @@ const DemoPresets: AllPresets = {
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
 	[WidgetType.BitcoinDominance]: BitcoinDominance,
 	[WidgetType.TopIndices]: TopIndices,
+	[WidgetType.Calendar]: Calendar,
 };
 
 function getCurrentPresets(): AllPresets {
@@ -172,6 +183,7 @@ export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_WATCH_LIST': WidgetType.Watchlist,
 	'WIDGET_BITCOIN_DOMINANCE': WidgetType.BitcoinDominance,
 	'WIDGET_TOP_INDICES': WidgetType.TopIndices,
+	'WIDGET_CALENDAR': WidgetType.Calendar,
 };
 
 function getPresets(): Presets {
