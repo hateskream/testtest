@@ -19,11 +19,19 @@ import ModalFilterRowTitle from './modal-filter-row-title.vue';
 interface IModalFilterTickerProps {
 	tickers: TickerDto[];
 	modelValue: string[];
+	isBackgroundTransparent?: boolean;
+	enableSelectedInfo?: boolean;
+	enableSelectAll?: boolean;
+	textAboveSearch?: string;
 }
 
 type IGroupedTicker = Record<SymbolType, TickerDto[]>;
 
-const props = defineProps<IModalFilterTickerProps>();
+const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
+	isBackgroundTransparent: false,
+	enableSelectedInfo: true,
+	textAboveSearch: '',
+});
 
 type IEmits = ITickerEmits & {
 	(e: 'update:modelValue', data: string[]): void;
@@ -160,127 +168,177 @@ function handleSelectAll(groupName: SymbolType) {
 </script>
 
 <template>
-	<div :class="classes.wrapper">
-		<div :class="classes.search">
-			<modal-search v-model="query" />
-		</div>
-		<!--
-		<div
-			v-if="selectedTickers.allSelected.length > 0 && viewMode === FilterListType.All"
-			:class="classes.listBadge"
-		>
-			<modal-filter-selected-info
-				:list="selectedTickers.allSelected"
-				@update="handleToggleSelect"
+	<div
+		:class="classes.wrapper"
+		:style="isBackgroundTransparent && { background: 'transparent' }"
+	>
+		<div :class="classes.content">
+			<div
+				:class="classes.header"
+				:style="isBackgroundTransparent
+					? {
+						background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-00) 22%)',
+					}
+					: {
+						background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',
+					}"
+			>
+				<div
+					v-if="props.textAboveSearch"
+					:class="classes.textAboveSearch"
+				>
+					{{ props.textAboveSearch }}
+				</div>
+
+				<div :class="classes.search">
+					<modal-search v-model="query" />
+				</div>
+			</div>
+
+			<modal-filter-info
+				v-if="props.enableSelectedInfo"
+				v-model="viewMode"
+				:is-searching="query.length > 0"
+				:total-items="queredTickers.length"
+				:total-selected="selectedTickers.allSelected.length"
 			/>
-		</div> -->
 
-		<modal-filter-info
-			v-model="viewMode"
-			:is-searching="query.length > 0"
-			:total-items="queredTickers.length"
-			:total-selected="selectedTickers.allSelected.length"
-		/>
+			<template v-if="viewMode === FilterListType.All">
+				<template v-if="activeGroup === null">
+					<div v-for="(_, group) in groupedTickers" :key="group">
+						<modal-filter-row-title
+							:is-selected-all="isGroupTickersSelectedAll(group)"
+							:is-searching="query.length > 0"
+							:is-inside-open="false"
+							:enable-select-all="props.enableSelectAll"
+							@select-all="handleSelectAll(group)"
+							@click="activeGroup = group"
+						>
+							<template #title>
+								{{ getGroupKey(group) }}
+							</template>
+							<template #count>
+								{{ groupedTickers[group].length }}
+							</template>
+						</modal-filter-row-title>
 
-		<template v-if="viewMode === FilterListType.All">
-			<template v-if="activeGroup === null">
-				<div v-for="(_, group) in groupedTickers" :key="group">
+
+						<template v-if="query.length > 0">
+							<div
+								v-if=" groupedTickers[group].length === 0"
+								:class="classes.notFound"
+							>
+								Nothing found in {{ getGroupKey(group) }}
+							</div>
+							<modal-filter-row
+								v-else
+								:list="groupedTickers[group!].slice(0, 3)"
+								:selected-ids-map="modelValue"
+								@update="handleToggleSelect"
+							/>
+						</template>
+
+					</div>
+				</template>
+				<template v-else>
 					<modal-filter-row-title
-						:is-selected-all="isGroupTickersSelectedAll(group)"
+						:is-back="true"
+						:is-selected-all="isGroupTickersSelectedAll(activeGroup)"
 						:is-searching="query.length > 0"
-						:is-inside-open="false"
-						@select-all="handleSelectAll(group)"
-						@click="activeGroup = group"
+						:is-inside-open="true"
+						:enable-select-all="props.enableSelectAll"
+						@click="activeGroup = null"
+						@select-all="handleSelectAll(activeGroup)"
 					>
 						<template #title>
-							{{ getGroupKey(group) }}
+							{{ getGroupKey(activeGroup) }}
 						</template>
 						<template #count>
-							{{ groupedTickers[group].length }}
+							{{ groupedTickers[activeGroup!].length }}
 						</template>
 					</modal-filter-row-title>
 
-
-					<template v-if="query.length > 0">
-						<div
-							v-if=" groupedTickers[group].length === 0"
-							:class="classes.notFound"
-						>
-							Nothing found in {{ getGroupKey(group) }}
-						</div>
-						<modal-filter-row
-							v-else
-							:list="groupedTickers[group!].slice(0, 3)"
-							:selected-ids-map="modelValue"
-							@update="handleToggleSelect"
-						/>
-					</template>
-
-				</div>
+					<modal-filter-row
+						:list="groupedTickers[activeGroup!]"
+						:selected-ids-map="modelValue"
+						@update="handleToggleSelect"
+					/>
+				</template>
 			</template>
-			<template v-else>
-				<modal-filter-row-title
-					:is-back="true"
-					:is-selected-all="isGroupTickersSelectedAll(activeGroup)"
-					:is-searching="query.length > 0"
-					:is-inside-open="true"
-					@click="activeGroup = null"
-					@select-all="handleSelectAll(activeGroup)"
-				>
-					<template #title>
-						{{ getGroupKey(activeGroup) }}
-					</template>
-					<template #count>
-						{{ groupedTickers[activeGroup!].length }}
-					</template>
-				</modal-filter-row-title>
 
+			<template v-else>
+				<div
+					v-if="selectedTickers.allSelected.length === 0 && query.length > 0"
+					:class="classes.notFound"
+				>
+					Nothing found in selected items
+				</div>
 				<modal-filter-row
-					:list="groupedTickers[activeGroup!]"
+					v-else
+					:list="selectedTickers.allSelected"
 					:selected-ids-map="modelValue"
 					@update="handleToggleSelect"
 				/>
 			</template>
-		</template>
-
-		<template v-else>
-			<div
-				v-if="selectedTickers.allSelected.length === 0 && query.length > 0"
-				:class="classes.notFound"
-			>
-				Nothing found in selected items
-			</div>
-			<modal-filter-row
-				v-else
-				:list="selectedTickers.allSelected"
-				:selected-ids-map="modelValue"
-				@update="handleToggleSelect"
-			/>
-		</template>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
-.listBadge {
-	display: flex;
-	align-items: center;
-	margin-bottom: 12px;
-	overflow: hidden;
-	gap: 4px;
-	padding-inline: 12px;
-}
-
 .wrapper {
+	position: relative;
+	display: flex;
+	flex-direction: column;
 	width: 286px;
+	height: 100%;
 	padding: 6px;
+	overflow: hidden;
 	background: var(--bg-modal-color-base);
 	border: 1px solid rgb(199 199 199 / 10%);
 	border-radius: 18px;
 }
 
+.textAboveSearch {
+	padding: 12px;
+	font-style: normal;
+	text-align: center;
+}
+
 .search {
 	padding-inline: 12px;
-	margin-bottom: 12px;
+}
+
+.content {
+	flex: 1;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: var(--border-color-base-300) transparent;
+}
+
+.content::-webkit-scrollbar {
+	width: 6px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.content::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+	background-color: var(--border-color-base-300);
+	border-radius: 6px;
+}
+
+.content:hover::-webkit-scrollbar {
+	opacity: 1;
+}
+
+.header {
+	position: sticky;
+	top: 0;
+	padding-bottom: 22px;
 }
 
 .listItemDataImage {

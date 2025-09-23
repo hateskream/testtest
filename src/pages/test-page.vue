@@ -1,72 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
+import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { LayoutComponent } from '@/modules/layout';
 
-
-// Reactive state
-const data = ref(null);
-const loading = ref<boolean>(false);
-const error = ref<string | null>(null);
-
-// Fetch function
-const fetchData = async () => {
-	try {
-		loading.value = true;
-		error.value = null;
-
-		// Запрос через прокси
-		const response = await fetch('/api/v1/fear-and-greed/data');
-
-		if (!response.ok) {
-			throw new Error(`HTTP error! Status: ${response.status}`);
-		}
-
-		const result = await response.json();
-		data.value = result;
-		console.log('Data received:', result);
-
-	} catch (err) {
-		error.value = err instanceof Error ? err.message : 'Unknown error occurred';
-		console.error('Fetch error:', err);
-	} finally {
-		loading.value = false;
-	}
-};
-
-// Fetch data when component mounts
-onMounted(() => {
-	fetchData();
-});
-
-const test = ref(true);
 </script>
 
 <template>
-	<layout-component v-model:is-curtain-fixed="test" :is-edit-mode="false">
+	<layout-component :is-curtain-fixed="false">
 		<template #content>
 			<div class="fear-and-greed">
-				<h2>Fear & Greed Index</h2>
-
-				<!-- Loading state -->
-				<div v-if="loading" class="loading">
-					Loading data...
-				</div>
-
-				<!-- Error state -->
-				<div v-else-if="error" class="error">
-					Error: {{ error }}
-				</div>
-
-				<!-- Success state -->
-				<div v-else-if="data" class="data-content">
-					<pre>{{ data }}</pre>
-				</div>
-
-				<!-- Button to refresh data -->
-				<button :disabled="loading" @click="fetchData">
-					{{ loading ? 'Loading...' : 'Refresh Data' }}
-				</button>
+				<modal-ticker-selector
+					:is-background-transparent="true"
+					:enable-selected-info="false"
+					:enable-select-all="false"
+					text-above-search="Add symbols"
+				/>
 			</div>
 		</template>
 		<template #curtain>
@@ -85,6 +32,7 @@ const test = ref(true);
 <style scoped>
 .fear-and-greed {
 	max-width: 800px;
+	height: 400px;
 	margin: 0 auto;
 	padding: 20px;
 }

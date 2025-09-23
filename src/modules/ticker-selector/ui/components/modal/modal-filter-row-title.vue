@@ -6,10 +6,12 @@ interface IProps {
 	isSelectedAll: boolean;
 	isSearching: boolean;
 	isInsideOpen: boolean;
+	enableSelectAll?: boolean;
 }
 
 withDefaults(defineProps<IProps>(), {
 	isBack: false,
+	enableSelectAll: true,
 });
 
 interface IEmits {
@@ -32,7 +34,7 @@ const emits = defineEmits<IEmits>();
 
 		<div :class="classes.titleEnd">
 			<div
-				v-if="!isSearching"
+				v-if="!isSearching && enableSelectAll"
 				:class="classes.selectAll"
 				@click.prevent.stop="emits('selectAll')"
 			>
