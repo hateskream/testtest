@@ -11,18 +11,11 @@ import { SymbolType } from '@/modules/cell';
 
 type RNG = () => number;
 
-function flatLeft<T extends { left: string; right: string }>(xs: T[]) {
-	return xs.map(x => x.left);
-}
-function forexPairs<T extends { left: string; right: string }>(xs: T[]) {
-	return xs.map(x => ({ pair: x.left + x.right, left: x.left, right: x.right }));
-}
-
-const STOCK_LEFT = flatLeft(allTickers[SymbolType.Stock]);
-const CRYPTO_LEFT = flatLeft(allTickers[SymbolType.Crypto]);
-const INDEX_LEFT = flatLeft(allTickers[SymbolType.Index]);
-const COMMO_LEFT = flatLeft(allTickers[SymbolType.Commodity]);
-const FOREX_PAIRS = forexPairs(allTickers[SymbolType.Forex]);
+const STOCK_LEFT = allTickers[SymbolType.Stock];
+const CRYPTO_LEFT = allTickers[SymbolType.Crypto];
+const INDEX_LEFT = allTickers[SymbolType.Index];
+const COMMO_LEFT = allTickers[SymbolType.Commodity];
+const FOREX_PAIRS = allTickers[SymbolType.Forex];
 
 export function createMockEventBoard(
 	options: ICreateEventBoardOptions,
@@ -41,10 +34,10 @@ export function createMockEventBoard(
 		const ymd = toYmd(date);
 		const count = randInt(rng, 0, 100);
 
-		const events: ICalendarEvent[] = Array.from({ length: count }, () => {
+		const events: ICalendarEvent[] = Array.from({ length: count }, (_, index) => {
 			const eventType = pick(rng, eventTypes);
 
-			const { symbolType, ticker, baseTitle } = createTicker(rng, eventType);
+			const { symbolType, ticker, additional, baseTitle } = createTicker(rng, eventType);
 
 			const eventTitle = createEventTitle(baseTitle, eventType);
 			const eventTitleDescription = createEventTitleDescription(rng, eventType);
@@ -55,13 +48,16 @@ export function createMockEventBoard(
 			const impact = createImpact(rng, eventType, metrics);
 
 			return {
+				id: index.toString(),
+				ticker,
+				additional,
+				symbolType,
 				eventType,
 				eventTitle,
 				eventTitleDescription,
 				eventDatetime,
 				metrics,
 				section: symbolType,
-				ticker,
 				link: '',
 				linkText: 'Details',
 				marketId,
@@ -153,29 +149,29 @@ function applyFilters(
 		.filter(d => d.events.length > 0);
 }
 
-// creators
 function createTicker(r: RNG, et: EventType) {
 	if (et === EventType.Crypto) {
 		const t = pick(r, CRYPTO_LEFT);
-		return { symbolType: SymbolType.Crypto, ticker: t, baseTitle: t };
+		return { symbolType: SymbolType.Crypto, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 	const roll = r();
 
 	if (roll < 0.70) {
 		const t = pick(r, STOCK_LEFT);
-		return { symbolType: SymbolType.Stock, ticker: t, baseTitle: t };
+		return { symbolType: SymbolType.Stock, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 	if (roll < 0.85) {
 		const t = pick(r, INDEX_LEFT);
-		return { symbolType: SymbolType.Index, ticker: t, baseTitle: t };
+		return { symbolType: SymbolType.Index, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 	if (roll < 0.95) {
 		const t = pick(r, COMMO_LEFT);
-		return { symbolType: SymbolType.Commodity, ticker: t, baseTitle: t };
+		return { symbolType: SymbolType.Commodity, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
+
 	const p = pick(r, FOREX_PAIRS);
 
-	return { symbolType: SymbolType.Forex, ticker: p.pair, baseTitle: p.pair };
+	return { symbolType: SymbolType.Forex, ticker: p.left, baseTitle: p.left + p.right, additional: p.right };
 }
 
 function createMarketIdFromTicker(

@@ -13,9 +13,13 @@ import CalendarEventCard from './calendar-event-card.vue';
 
 interface ICalendarEventBoardProps {
 	eventBoard: IEventBoard[];
+	eventBoardFavorites: string[];
 }
 
 const props = defineProps<ICalendarEventBoardProps>();
+const emits = defineEmits<{
+	toggleEventBoard: [id: string];
+}>();
 
 const now = new Date();
 
@@ -104,6 +108,10 @@ const groupedBoard = computed(() =>
 		const grouped = groupEventsByHour(day.events).map(group => ({
 			...group,
 			...getHourStatus(day.date as DateYYYYMMDD, group.hour),
+			events: group.events.map(event => ({
+				...event,
+				favorite: props.eventBoardFavorites.includes(event.id),
+			})),
 		}));
 
 		return { ...day, grouped };
@@ -116,7 +124,11 @@ function scrollToDate(
 	date: DateYYYYMMDD,
 	param: ScrollIntoViewOptions = {},
 ) {
-	const scroller = containerRef.value!;
+	const scroller = containerRef.value;
+	if (!scroller) {
+		return;
+	}
+
 	const behavior = (param.behavior as ScrollBehavior) ?? 'smooth';
 	const dayEl = scroller.querySelector<HTMLElement>(`[data-date="${date}"]`);
 	if (!dayEl) {
@@ -190,17 +202,25 @@ defineExpose({ scrollToDate });
 					:class="classes.hourSection"
 					:data-hour="group.hour"
 				>
-					<div v-if="group.soon" :class="classes.lightning">
-						<div :class="classes.line" />
-					</div>
+					<div
+						v-if="group.soon"
+						:class="classes.lightning"
+						:style="{
+							'--light-start': 'rgba(230,0,0,0)',
+							'--light-mid': 'rgba(230,0,0,0.2)',
+							'--light-border': 'rgba(230,0,0,0.7)',
+						}"
+					/>
 					<div :class="classes.hourLabel">{{ group.hour }}</div>
 
 					<div :class="classes.dayBoard">
 						<calendar-event-card
-							v-for="(ev, i) in group.events"
+							v-for="(event, i) in group.events"
 							:key="`${day.date}-${group.hour}-${i}`"
-							v-bind="ev"
+							v-bind="event"
 							:is-missed="group.missed"
+							:is-favorite="event.favorite"
+							@toggle-favorite="emits('toggleEventBoard', $event)"
 						/>
 					</div>
 				</div>
@@ -245,18 +265,19 @@ defineExpose({ scrollToDate });
 	z-index: 1;
 	width: 40px;
 	height: 100%;
-	background: linear-gradient(270deg, rgb(230 0 0 / 0%) 0%, rgb(230 0 0 / 20%) 100%);
-	border-left: 2px solid rgb(230 0 0 / 70%);
+	background:
+		linear-gradient(
+			270deg,
+			var(--light-start) 0%,
+			var(--light-mid) 100%
+		);
+	border-left: 2px solid var(--light-border);
 }
 
 @media screen and (max-width: 1024px) {
 	.calendarEventBoard {
 		border-radius: 0;
 	}
-}
-
-.line {
-	width: 4px;
 }
 
 .hourSection {

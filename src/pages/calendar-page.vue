@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref, useTemplateRef, watch } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
 
 import { LayoutComponent } from '@/modules/layout';
 import {
@@ -80,7 +81,9 @@ const filters = computed(() => ({
 }));
 
 const { eventBoard } = useEventBoard(filters);
-
+const eventBoardFavorites = useLocalStorage<string[]>('calendar-event-board-favorites', [], {
+	deep: true,
+});
 const eventBoardRef = useTemplateRef('event-board-component');
 
 watch([() => eventBoard.value.length, baseDate], async ([_, date]) => {
@@ -92,6 +95,14 @@ watch([() => eventBoard.value.length, baseDate], async ([_, date]) => {
 		behavior: 'auto',
 	});
 });
+
+function toggleFavorite(id: string) {
+	if (eventBoardFavorites.value.includes(id)) {
+		eventBoardFavorites.value.splice(eventBoardFavorites.value.indexOf(id), 1);
+	} else {
+		eventBoardFavorites.value.push(id);
+	}
+}
 
 const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 
@@ -161,6 +172,8 @@ function nextWeek() {
 						v-if="eventBoard.length"
 						ref="event-board-component"
 						:event-board="eventBoard"
+						:event-board-favorites="eventBoardFavorites"
+						@toggle-event-board="toggleFavorite"
 					/>
 				</template>
 

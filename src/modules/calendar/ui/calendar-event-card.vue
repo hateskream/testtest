@@ -6,7 +6,10 @@ import { ExternalLink } from '@/shared/ui/link';
 import { MarketIds, markets } from '@/modules/calendar';
 
 interface ICalendarEventCardProps {
+	id: string;
+
 	isMissed: boolean;
+	isFavorite: boolean;
 
 	eventType: string;
 	eventTitle: string;
@@ -36,6 +39,10 @@ const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
 	linkText: 'Mortgage Bankers Association of America',
 });
 
+const emits = defineEmits<{
+	toggleFavorite: [id: string];
+}>();
+
 const isCardOpen = ref(false);
 
 const openEventCard = () => {
@@ -59,7 +66,12 @@ const eventStartsIn = computed(() => {
 </script>
 
 <template>
-	<div :class="[classes.calendarEventCard, props.isMissed && classes.missed]">
+	<div
+		:class="[
+			classes.calendarEventCard,
+			props.isMissed && classes.missed
+		]"
+	>
 		<div :class="classes.cardHeader">
 			<div :class="classes.flexStart">
 				<div :class="classes.eventType">
@@ -70,7 +82,10 @@ const eventStartsIn = computed(() => {
 					{{ eventStartsIn }}
 				</div>
 
-				<button :class="classes.buttonIcon">
+				<button
+					:class="[classes.buttonIcon, props.isFavorite && classes.favorite]"
+					@click="emits('toggleFavorite', props.id)"
+				>
 					<ui-icon
 						:id="IconIds.Favorite"
 						width="16px"
@@ -162,6 +177,11 @@ const eventStartsIn = computed(() => {
 	color: rgb(100 101 104 / 100%);
 	cursor: pointer;
 }
+
+.favorite {
+	color: rgb(230 171 10);
+}
+
 
 .missed {
 	cursor: default;
