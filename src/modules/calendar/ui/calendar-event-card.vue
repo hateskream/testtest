@@ -167,6 +167,8 @@ const eventStartsIn = computed(() => {
 	background: var(--color-bg-surface-02, #161618);
 	border-radius: 16px;
 	gap: 12px;
+	container-type: inline-size;
+	container-name: event-card;
 }
 
 .buttonIcon {
@@ -250,7 +252,7 @@ const eventStartsIn = computed(() => {
 	}
 }
 
-@media screen and (max-width: 1024px) {
+@container event-card (max-width: 700px) {
 	.cardHeadline {
 		gap: 12px;
 		flex-direction: column;

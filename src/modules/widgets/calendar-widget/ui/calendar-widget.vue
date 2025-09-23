@@ -1,8 +1,22 @@
 <script setup lang="ts">
-// import { computed } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import { useNow } from '@vueuse/core';
 
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import {
+	EventType,
+	getEndOfWeek,
+	getStartOfWeek,
+	type IEventBoardRange,
+	Impact,
+	type IToolbarState,
+	MarketIds,
+	toUtcIsoDate,
+	useDailyCalendarGetState,
+	useEventBoard,
+} from '@/modules/calendar';
+import { useWatchlist } from '@/modules/watchlist';
 
 import CalendarError from './views/calendar-error.vue';
 import CalendarLoader from './views/calendar-loader.vue';
@@ -17,29 +31,58 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
-// const {
-// 	tabs,
-// 	columns,
-// 	sections,
-// 	tickerIds,
+const now = useNow({ interval: 60_000 	});
 
-// 	addNewWatchlist,
-// 	renameWatchlist,
-// 	handlerSwitchTab,
-// 	duplicateWatchlist,
-// 	removeWatchlist,
+const { watchlists } = useWatchlist();
+const toolbar = ref<IToolbarState>({
+	marketId: MarketIds.EntireWorld,
+	impact: Impact.All,
+	eventType: EventType.All,
+	watchlistId: null,
+	watchlistSection: null,
+});
 
-// 	resetAllChanges,
+const watchlistSelectedSections = computed(() => {
+	if (!toolbar.value.watchlistSection) {
+		return watchlists.value
+			.find(v => v.id === toolbar.value.watchlistId)
+			?.sections.flatMap(v => v.tickerIds) || [];
+	}
 
-// 	handlerAddToWatchlist,
-// 	handlerRemoveFromWatchlist,
+	return watchlists.value
+		.find(v => v.id === toolbar.value.watchlistId)
+		?.sections.find(v => v.name === toolbar.value.watchlistSection)
+		?.tickerIds || [];
+});
 
-// 	createNewWatchlist,
-// } = useWatchlistWidget(props.meta.widgetId);
+const weekRange = reactive<IEventBoardRange>({
+	from: toUtcIsoDate(getStartOfWeek(now.value)),
+	to: toUtcIsoDate(getEndOfWeek(now.value)),
+});
 
-// const { data, isLoading, isError } = useQueryTickers(tickerIds);
+const filters = computed(() => ({
+	range: weekRange,
+	filters: {
+		marketId: toolbar.value.marketId,
+		impact: toolbar.value.impact,
+		eventType: toolbar.value.eventType,
+		watchlist: watchlistSelectedSections.value,
+	},
+}));
 
-// const noData = computed(() => !!data?.value && isLoading.value);
+const {
+	eventBoard,
+	isLoading: isEventBoardLoading,
+} = useEventBoard(filters);
+
+const {
+	data: dailyCalendar,
+	isLoading: isDailyCalendarLoading,
+} = useDailyCalendarGetState();
+
+const isLoading = computed(() => {
+	return isEventBoardLoading.value && isDailyCalendarLoading.value;
+});
 </script>
 
 <template>
@@ -49,13 +92,19 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<!-- <calendar-error v-if="isError" /> -->
 			<calendar-error v-if="false" />
 
-			<!-- <calendar-loader v-if="noData" :count="5" /> -->
-			<calendar-loader v-if="false" :count="5" />
-			<!-- <calendar-main v-if="data" /> -->
-			<calendar-main v-if="true" />
+			<calendar-loader v-else-if="isLoading" :count="5" />
+
+			<calendar-main
+				v-else-if="eventBoard && dailyCalendar"
+				v-model:week-range="weekRange"
+				v-model:toolbar="toolbar"
+				:watchlists="watchlists"
+				:event-board="eventBoard"
+				:daily-calendar-data="dailyCalendar"
+				:current-date="now"
+			/>
 		</template>
 
 		<template #rcm>

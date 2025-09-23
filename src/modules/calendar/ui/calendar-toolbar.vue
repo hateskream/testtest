@@ -59,7 +59,7 @@ const selectedWatchlistSection = computed(() => {
 		return null;
 	}
 
-	return props.watchlists.find(v => v.id === watchlistIdState.value)!.sections;
+	return props.watchlists.find(v => v.id === watchlistIdState.value)?.sections;
 });
 
 function updateSelectedWatchlistCatalogId(id: string) {
@@ -419,10 +419,13 @@ const label = computed(() => {
 
 <style module="classes">
 .calendarToolbar {
-	display: inline-flex;
+	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	align-self: stretch;
+	width: 100%;
+	container-type: inline-size;
+	container-name: toolbar;
 }
 
 .toolbarStart {
@@ -499,7 +502,7 @@ const label = computed(() => {
 	background: #1a1a1a;
 }
 
-@media screen and (max-width: 1200px) {
+@container toolbar (max-width: 624px) {
 	.watchlistModal,
 	.eventTypeModal,
 	.impactModal {
@@ -508,6 +511,12 @@ const label = computed(() => {
 
 	.filterModal {
 		display: unset;
+	}
+}
+
+@container toolbar (max-width: 452px) {
+	.label {
+		display: none;
 	}
 }
 </style>
