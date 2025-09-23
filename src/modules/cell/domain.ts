@@ -215,11 +215,6 @@ export interface ILableCell extends IBaseCell {
 	status: Status;
 }
 
-export interface IColorCell extends IBaseCell {
-	cellType: CellType.Text;
-	value: string;
-}
-
 export type Cell =
 	| IEmptyCell
 	| ISymbolCell
