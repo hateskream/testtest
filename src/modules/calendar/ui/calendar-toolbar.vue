@@ -6,6 +6,7 @@ import {
 	ModalBadgeList,
 	ModalItemCheckbox,
 	ModalItemSelector,
+	ModalSubmenu,
 	ModalSubmenuContent,
 } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -150,9 +151,102 @@ const label = computed(() => {
 				</template>
 			</modal-badge>
 
+			<modal-badge :class="classes.filterModal">
+				<template #title>
+					<ui-icon
+						:id="IconIds.Burger"
+						width="12px"
+						height="12px"
+					/>
+				</template>
+				<template #content>
+					<modal-badge-list>
+						<modal-title>
+							Filters
+						</modal-title>
+
+						<modal-submenu>
+							<template #title>
+								Watchlist
+							</template>
+							<template #content>
+								<modal-submenu-content>
+									<template #content>
+										<modal-item-selector
+											v-for="watchlistItem in props.watchlists"
+											:key="watchlistItem.id"
+											:model-value="watchlistIdState === watchlistItem.id"
+											@click="updateSelectedWatchlistCatalogId(watchlistItem.id)"
+										>
+											{{watchlistItem.name}}
+										</modal-item-selector>
+
+										<ui-driver />
+
+										<template v-if="selectedWatchlistSection">
+											<modal-title>
+												Created Lists
+											</modal-title>
+											<modal-item-selector
+												v-for="section in selectedWatchlistSection"
+												:key="section.id"
+												:model-value="watchlistSectionState === section.name"
+												@click="selectWatchlistSection(section.name)"
+											>
+												{{section.name}}
+											</modal-item-selector>
+										</template>
+									</template>
+								</modal-submenu-content>
+							</template>
+						</modal-submenu>
+
+						<modal-submenu>
+							<template #title>
+								Event type
+							</template>
+							<template #content>
+								<modal-badge-list>
+									<template #default>
+										<modal-item-checkbox
+											v-for="(event, index) in props.eventTypes"
+											:key="index"
+											:model-value="event === eventState"
+											@update:model-value="eventState = event"
+										>
+											{{event}}
+										</modal-item-checkbox>
+									</template>
+								</modal-badge-list>
+							</template>
+						</modal-submenu>
+
+						<modal-submenu>
+							<template #title>
+								Impact
+							</template>
+							<template #content>
+								<modal-submenu-content>
+									<template #content>
+										<modal-item-checkbox
+											v-for="(propImpact, index) in props.impacts"
+											:key="index"
+											:model-value="impactState === propImpact"
+											@update:model-value="impactState = propImpact"
+										>
+											{{propImpact}}
+										</modal-item-checkbox>
+									</template>
+								</modal-submenu-content>
+							</template>
+						</modal-submenu>
+					</modal-badge-list>
+				</template>
+			</modal-badge>
+
 			<modal-badge
 				v-if="watchlists.length"
-				class="watchlist-modal"
+				:class="classes.watchlistModal"
 				strategy="absolute"
 			>
 				<template #title="{ isVisible }">
@@ -198,7 +292,7 @@ const label = computed(() => {
 			</modal-badge>
 
 			<modal-badge
-				class="event-type-model"
+				:class="classes.eventTypeModal"
 				strategy="absolute"
 			>
 				<template #title="{ isVisible }">
@@ -228,7 +322,7 @@ const label = computed(() => {
 			</modal-badge>
 
 			<modal-badge
-				class="impact-model"
+				:class="classes.impactModal"
 				strategy="absolute"
 			>
 				<template #title="{ isVisible }">
@@ -343,6 +437,10 @@ const label = computed(() => {
 	gap: 6px;
 }
 
+.filterModal {
+	display: none;
+}
+
 .iconWrapper {
 	display: grid;
 	width: 16px;
@@ -354,14 +452,14 @@ const label = computed(() => {
 
 .toolbarEnd {
 	display: flex;
+	flex-shrink: 0;
+	justify-content: end;
 	align-items: center;
-	width: 275px;
 	color: #eeeeee;
-	gap: 0.2rem;
 }
 
 .label {
-	margin-left: auto;
+	margin-left: 12px;
 	font-weight: 600;
 	font-size: 0.875rem;
 }
@@ -399,5 +497,17 @@ const label = computed(() => {
 
 .nav:hover {
 	background: #1a1a1a;
+}
+
+@media screen and (max-width: 1200px) {
+	.watchlistModal,
+	.eventTypeModal,
+	.impactModal {
+		display: none;
+	}
+
+	.filterModal {
+		display: unset;
+	}
 }
 </style>

@@ -111,7 +111,13 @@ const weekDays = computed<IWeeklyDayInfo[]>(() => {
 		return [];
 	}
 
-	return toWeekDays(dailyCalendarData.value, baseDate.value, props.locale);
+	return toWeekDays(
+		dailyCalendarData.value,
+		baseDate.value,
+		props.locale,
+		eventBoard.value,
+		eventBoardFavorites.value,
+	);
 });
 
 function setSelected(date: Date) {

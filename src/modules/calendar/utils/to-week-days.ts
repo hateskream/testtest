@@ -1,4 +1,6 @@
-import type { IDailyCalendarInfo, IWeeklyDayInfo } from '../types';
+import type { CSSProperties } from 'vue';
+
+import type { ICalendarEvent, IDailyCalendarInfo, IEventBoard, IWeeklyDayInfo } from '../types';
 import { getStartOfWeek, isSameCalendarDay, isSameWeek } from '@/modules/calendar';
 
 function localDateKey(d: Date): string {
@@ -12,6 +14,8 @@ export function toWeekDays(
 	apiDays: IDailyCalendarInfo[],
 	baseDateSource: Date,
 	locale: string,
+	evBoard: IEventBoard[] = [],
+	favorites: string[],
 ): IWeeklyDayInfo[] {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
@@ -25,6 +29,11 @@ export function toWeekDays(
 		apiMap.set(localDateKey(dt), item);
 	}
 
+	const eventsByDate = new Map<string, ICalendarEvent[]>();
+	for (const d of evBoard) {
+		eventsByDate.set(d.date, d.events);
+	}
+
 	const start = getStartOfWeek(baseDateSource);
 	const currentWeek = isSameWeek(baseDateSource, today);
 
@@ -32,7 +41,32 @@ export function toWeekDays(
 		const d = new Date(start);
 		d.setDate(start.getDate() + i);
 
-		const hit = apiMap.get(localDateKey(d));
+		const key = localDateKey(d);
+		const hit = apiMap.get(key);
+		const dayEvents = eventsByDate.get(key) ?? [];
+
+		const now = new Date();
+		const isToday = isSameCalendarDay(d, today);
+
+		const hasSoon = isToday && dayEvents.some(ev => {
+			if (!ev.eventDatetime) {
+				return false;
+			}
+			const startAt = new Date(ev.eventDatetime);
+			const diff = startAt.getTime() - now.getTime();
+			return diff > 0 && diff <= 60 * 60 * 1000;
+		});
+
+		const hasFavorite = dayEvents.some(ev => favorites.includes(ev.id));
+
+		const colorDots: { color: CSSProperties['color'] }[] = [];
+		if (hasSoon) {
+			colorDots.push({ color: 'red' });
+		}
+		if (hasFavorite) {
+			colorDots.push({ color: 'yellow' });
+		}
+
 		const metrics = hit ? [
 			{ label: 'Economic', value: hit.metrics.economic },
 			{ label: 'Earnings', value: hit.metrics.earnings },
@@ -48,10 +82,10 @@ export function toWeekDays(
 			dayNumber: d.getDate(),
 			weekdayShort: fmtShort.format(d),
 			weekdayLong: fmtLong.format(d),
-			isToday: isSameCalendarDay(d, today),
+			isToday,
 			isCurrentWeek: currentWeek,
 			metrics,
-			colorDots: [],
+			colorDots,
 		} as IWeeklyDayInfo;
 	});
 }

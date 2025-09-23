@@ -84,4 +84,5 @@ export enum IconIds {
 	Canada = 'canada',
 	HongKong = 'hong-kong',
 	UnitedKingdom = 'united-kingdom',
+	Burger = 'burger',
 }

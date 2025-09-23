@@ -48,7 +48,7 @@ export function createMockEventBoard(
 			const impact = createImpact(rng, eventType, metrics);
 
 			return {
-				id: index.toString(),
+				id: date.toString() + index.toString(),
 				ticker,
 				additional,
 				symbolType,
