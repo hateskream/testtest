@@ -28,12 +28,6 @@ export interface IColorDepth {
 	end: number;
 }
 
-export const NO_GROUP: ISettings = {
-	key: 'none',
-	displayName: 'No group',
-	isPercent: false,
-};
-
 export const TitleViewVariant = {
 	TICKER : 'Ticker',
 	NAME : 'Name',
@@ -46,7 +40,6 @@ export enum TitleKey {
 	TICKER = 'ticker',
 	NAME = 'name',
 }
-
 
 export interface IMarketSettings {
 	active: string;
@@ -88,6 +81,10 @@ const crypto: IDisplaySettings = {
 			colorBy:
 				{ key: 'change24h', displayName: 'Change 24h', isPercent: false },
 			colorDepth: [
+				{ start: -0.6, end: 0.6, id: '0.6-change24h' },
+				{ start: -3, end: 3, id: '3-change24h' },
+				{ start: -6, end: 6, id: '6-change24h' },
+				{ start: -15, end: 15, id: '15-change24h' },
 				{ start: -30, end: 30, id: '30-change24h' },
 			],
 		},
@@ -146,7 +143,11 @@ const stock: IDisplaySettings = {
 		{ key: 'industries', displayName: 'Industry', isPercent: false },
 		{ key: 'sector', displayName: 'Sector', isPercent: false },
 		{ key: 'country', displayName: 'Country', isPercent: false },
-		NO_GROUP,
+		{
+			key: 'none',
+			displayName: 'No group',
+			isPercent: false,
+		},
 	],
 };
 
@@ -192,4 +193,8 @@ const forex: IDisplaySettings = {
 	],
 };
 
-export const displaySettings = [crypto, stock, forex];
+export const displaySettings: Record<string, IDisplaySettings> = {
+	crypto,
+	stock,
+	forex,
+};
