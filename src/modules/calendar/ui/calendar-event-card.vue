@@ -161,6 +161,7 @@ const eventStartsIn = computed(() => {
 
 <style module="classes">
 .calendarEventCard {
+	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	padding: 12px 10px;

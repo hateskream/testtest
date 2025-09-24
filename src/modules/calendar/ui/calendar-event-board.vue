@@ -178,6 +178,24 @@ function scrollToDate(
 }
 
 defineExpose({ scrollToDate });
+
+const LIGHT_COLORS = {
+	favorite: {
+		'--light-start': 'rgba(230,171,10,0)',
+		'--light-mid': 'rgba(230,171,10,0.2)',
+		'--light-border': 'rgba(230,171,10,0.7)',
+	},
+	soon: {
+		'--light-start': 'rgba(230,0,0,0)',
+		'--light-mid': 'rgba(230,0,0,0.2)',
+		'--light-border': 'rgba(230,0,0,0.7)',
+	},
+	none: {
+		'--light-start': 'transparent',
+		'--light-mid': 'transparent',
+		'--light-border': 'transparent',
+	},
+} as const;
 </script>
 
 <template>
@@ -202,21 +220,27 @@ defineExpose({ scrollToDate });
 					:class="classes.hourSection"
 					:data-hour="group.hour"
 				>
+					<div v-if="group.soon" />
 					<div
-						v-if="group.soon"
-						:class="classes.lightning"
-						:style="{
-							'--light-start': 'rgba(230,0,0,0)',
-							'--light-mid': 'rgba(230,0,0,0.2)',
-							'--light-border': 'rgba(230,0,0,0.7)',
-						}"
-					/>
-					<div :class="classes.hourLabel">{{ group.hour }}</div>
+						:class="[classes.hourLabel, classes.lightning]"
+						:style="
+							group.events[0].favorite ? LIGHT_COLORS.favorite :
+							group.soon ? LIGHT_COLORS.soon : LIGHT_COLORS.none
+						"
+					>
+						{{ group.hour }}
+					</div>
 
-					<div :class="classes.dayBoard">
+					<div
+						v-for="(event, i) in group.events"
+						:key="`${day.date}-${group.hour}-${i}`"
+						:class="[classes.dayBoard, (event.favorite || group.soon) && classes.lightning]"
+						:style="
+							event.favorite ? LIGHT_COLORS.favorite :
+							group.soon ? LIGHT_COLORS.soon : LIGHT_COLORS.none
+						"
+					>
 						<calendar-event-card
-							v-for="(event, i) in group.events"
-							:key="`${day.date}-${group.hour}-${i}`"
 							v-bind="event"
 							:is-missed="group.missed"
 							:is-favorite="event.favorite"
@@ -258,11 +282,12 @@ defineExpose({ scrollToDate });
 	background: var(--color-bg-surface-01, #0c0c0d);
 }
 
-.lightning {
+.lightning::before {
+	content: '';
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 1;
+	z-index: 0;
 	width: 40px;
 	height: 100%;
 	background:
@@ -287,22 +312,21 @@ defineExpose({ scrollToDate });
 	flex-direction: column;
 	align-items: flex-start;
 	align-self: stretch;
-	gap: 4px;
 }
 
 .hourLabel {
+	position: relative;
 	display: flex;
 	align-items: end;
 	height: 30px;
+	padding-bottom: 4px;
 	padding-left: 10px;
 	font-style: normal;
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-02, 10px);
 	line-height: 170%;
-	color: #ffffff;
 	letter-spacing: 0.08px;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
-	opacity: 0.4;
 }
 
 .dayBoard {
@@ -311,7 +335,6 @@ defineExpose({ scrollToDate });
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	gap: 4px;
 	padding: 0 6px 6px 8px;
 }
 </style>

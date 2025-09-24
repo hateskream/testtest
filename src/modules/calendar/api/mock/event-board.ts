@@ -436,7 +436,7 @@ function toPretty(ymd: string): string {
 }
 
 function timeHHMM(r: RNG): string {
-	return `${pad2(randInt(r, 8, 23))}:${pad2(randInt(r, 0, 59))}`;
+	return `${pad2(randInt(r, 0, 23))}:${pad2(randInt(r, 0, 59))}`;
 }
 
 function pad2(n: number): string {
