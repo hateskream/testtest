@@ -193,6 +193,14 @@ export function useTreemapLayout(
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: false,
+					},
+					tooltip: {
+						enabled: false,
+					},
+				},
 			},
 		};
 
@@ -200,18 +208,6 @@ export function useTreemapLayout(
 
 		return extractData(renderedChart);
 	};
-
-	// function updateChart(): TreemapDataPoint[] {
-	// 	if (!renderedChart) {
-	// 		// eslint-disable-next-line no-console
-	// 		console.warn('renderedChart is null');
-	// 		return [];
-	// 	}
-
-	// 	renderedChart.data.datasets[0].tree = preparedData.value,
-	// 	renderedChart.update();
-	// 	return extractData(renderedChart);
-	// }
 
 	function extractData(chart: Chart<'treemap'>): TreemapDataPoint[] {
 		const [{ data: treemapRawData }] = chart.data.datasets;
