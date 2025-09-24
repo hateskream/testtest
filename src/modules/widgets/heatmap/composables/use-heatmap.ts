@@ -9,10 +9,16 @@ import {
 	type ISingleSetting,
 	type IState,
 } from '../model';
+import { useGetState, useUpdateState } from '../queries';
 
 const allMarkets = Object.values(displaySettings).map(({ market }) => ({ ...market }));
 
-export function useHeatmap() {
+export function useHeatmap(widgetId: string) {
+	const {
+		data: dataState,
+	} = useGetState(widgetId);
+	const { mutate } = useUpdateState(widgetId);
+
 	const state = ref<IState>(getDefaultState());
 
 	const marketSettings = reactive<IMarketSettings>({
@@ -179,6 +185,31 @@ export function useHeatmap() {
 		{ immediate: true },
 	);
 
+	watch(
+		() => marketSettings.active,
+		(active) => {
+			state.value.activeMarketId = active;
+		},
+	);
+
+
+	watch(dataState, newState => {
+		if (newState) {
+			state.value.activeMarketId = newState.activeMarketId;
+			marketSettings.active = newState.activeMarketId;
+			state.value.settings = JSON.parse(JSON.stringify(newState.settings));
+		}
+
+	}, { immediate: true });
+
+	watch(state, newState => {
+		mutate(newState);
+	}, { deep: true });
+
+	function resetAllChanges() {
+		state.value = getDefaultState();
+	}
+
 	return {
 		marketSettings,
 		sizeBySettings,
@@ -195,5 +226,7 @@ export function useHeatmap() {
 		activeColorDepth,
 		activeDisplayValue,
 		activeGroupBy,
+
+		resetAllChanges,
 	};
 }

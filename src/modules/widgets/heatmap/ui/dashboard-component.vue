@@ -25,7 +25,7 @@ const {
 	activeMarket,
 	activeGroupBy,
 	groupBySettings,
-} = useHeatmap();
+} = useHeatmap(props.meta.widgetId);
 
 </script>
 
