@@ -8,9 +8,9 @@ import {
 	EventType,
 	getEndOfWeek,
 	getStartOfWeek,
-	type IDailyCalendarInfo,
-	type IEventBoard,
+	type IDailyCalendarInfoResponse,
 	type IEventBoardRange,
+	type IEventBoardResponse,
 	Impact,
 	type IToolbarState,
 	type IWeeklyDayInfo,
@@ -25,8 +25,8 @@ interface ICalendarWeeklyContainerProps {
 	weekStartsOn?: 'monday' | 'sunday';
 	currentDate?: Date;
 	watchlists: IWatchlist[];
-	eventBoard: IEventBoard[];
-	dailyCalendarData: IDailyCalendarInfo[];
+	eventBoard: IEventBoardResponse[];
+	dailyCalendarData: IDailyCalendarInfoResponse[];
 }
 
 const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {

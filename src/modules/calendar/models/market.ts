@@ -1,4 +1,3 @@
-import type { IMarketData } from '../types';
 import { IconIds } from '@/shared/ui/icon';
 
 export enum MarketIds {
@@ -10,6 +9,12 @@ export enum MarketIds {
 	Canada = 'canada',
 	HongKong = 'hongkong',
 	UnitedKingdom = 'united-kingdom',
+}
+
+export interface IMarketData {
+	id: MarketIds;
+	label: string;
+	icon: IconIds;
 }
 
 export const markets: IMarketData[] = [

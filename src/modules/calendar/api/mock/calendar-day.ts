@@ -1,11 +1,11 @@
-import type { IDailyCalendarInfo } from '../../types';
+import type { IDailyCalendarInfoResponse } from '../../models';
 import { toUtcIsoDate } from '../../utils';
 
-export function createMockApiDays(past = 21, future = 42): IDailyCalendarInfo[] {
+export function createMockApiDays(past = 21, future = 42): IDailyCalendarInfoResponse[] {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 
-	const out: IDailyCalendarInfo[] = [];
+	const out: IDailyCalendarInfoResponse[] = [];
 	for (let offset = -past; offset <= future; offset += 1) {
 		const d = new Date(today);
 		d.setDate(today.getDate() + offset);

@@ -1,10 +1,10 @@
 import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
 
-import type { ICreateEventBoardOptions, IEventBoard } from '../types';
+import type { IEventBoardRequestOptions, IEventBoardResponse } from '../models';
 import { useEventBoardGetState, useEventBoardUpdateState } from '../query';
 
-export function useEventBoard(optionsGetter: MaybeRefOrGetter<ICreateEventBoardOptions>) {
-	const eventBoard = ref<IEventBoard[]>([]);
+export function useEventBoard(optionsGetter: MaybeRefOrGetter<IEventBoardRequestOptions>) {
+	const eventBoard = ref<IEventBoardResponse[]>([]);
 
 	const options = computed(() => toValue(optionsGetter));
 

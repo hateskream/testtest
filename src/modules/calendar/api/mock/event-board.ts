@@ -1,11 +1,11 @@
-import { EventType, Impact, MarketIds } from '../../models';
 import type {
 	ICalendarEvent,
 	ICalendarEventMetric,
-	ICreateEventBoardOptions,
-	IEventBoard,
 	IEventBoardFilters,
-} from '../../types';
+	IEventBoardRequestOptions,
+	IEventBoardResponse,
+} from '../../models';
+import { EventType, Impact, MarketIds } from '../../models';
 import { allTickers } from '@/shared/mock';
 import { SymbolType } from '@/modules/cell';
 
@@ -18,8 +18,8 @@ const COMMO_LEFT = allTickers[SymbolType.Commodity];
 const FOREX_PAIRS = allTickers[SymbolType.Forex];
 
 export function createMockEventBoard(
-	options: ICreateEventBoardOptions,
-): IEventBoard[] {
+	options: IEventBoardRequestOptions,
+): IEventBoardResponse[] {
 	const { range, filters } = options;
 
 	const start = ymdToUtcDate(range.from);
@@ -28,7 +28,7 @@ export function createMockEventBoard(
 	const rng = mulberry32(hashStr(`${range.from}:${range.to}`));
 	const eventTypes = Object.values(EventType).filter((t) => t !== EventType.All) as EventType[];
 
-	const days: IEventBoard[] = [];
+	const days: IEventBoardResponse[] = [];
 
 	for (let date = new Date(start); date <= end; date = addDays(date, 1)) {
 		const ymd = toYmd(date);
@@ -104,7 +104,7 @@ function splitLegacyCode(raw: string) {
 }
 
 function applyFilters(
-	days: IEventBoard[],
+	days: IEventBoardResponse[],
 	filters?: Partial<IEventBoardFilters>,
 ) {
 	if (!filters) {

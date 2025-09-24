@@ -1,4 +1,4 @@
-import type { ICreateEventBoardOptions, IEventBoard } from '@/modules/calendar';
+import type { IEventBoardRequestOptions, IEventBoardResponse } from '@/modules/calendar';
 import { useLogger } from '@/shared/service/logger';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockEventBoard } from '@/modules/calendar/api/mock';
@@ -11,7 +11,7 @@ enum DataProvider {
 
 const dataProvider = DataProvider.MockLocal;
 
-export async function getEventBoard(options: ICreateEventBoardOptions): Promise<IEventBoard[]> {
+export async function getEventBoard(options: IEventBoardRequestOptions): Promise<IEventBoardResponse[]> {
 	const logger = useLogger();
 
 	try {
@@ -22,7 +22,7 @@ export async function getEventBoard(options: ICreateEventBoardOptions): Promise<
 	}
 }
 
-function sendRequest<T>(type: DataProvider, options: ICreateEventBoardOptions) {
+function sendRequest<T>(type: DataProvider, options: IEventBoardRequestOptions) {
 	const httpService = useHttpService();
 
 	switch (type) {

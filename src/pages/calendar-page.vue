@@ -10,6 +10,7 @@ import {
 	getStartOfWeek,
 	type IEventBoardRange,
 	Impact,
+	type IWeeklyDayInfo,
 	markets,
 	toUtcIsoDate,
 	toWeekDays,
@@ -20,7 +21,6 @@ import {
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
 import { useWatchlist } from '@/modules/watchlist';
-import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;

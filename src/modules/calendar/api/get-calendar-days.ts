@@ -1,7 +1,7 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockApiDays } from './mock';
 import { useLogger } from '@/shared/service/logger';
-import type { IDailyCalendarInfo } from '@/modules/calendar';
+import type { IDailyCalendarInfoResponse } from '@/modules/calendar';
 
 enum DataProvider {
 	Production,
@@ -11,7 +11,7 @@ enum DataProvider {
 
 const dataProvider = DataProvider.MockLocal;
 
-export async function getCalendarDays(): Promise<IDailyCalendarInfo[]> {
+export async function getCalendarDays(): Promise<IDailyCalendarInfoResponse[]> {
 	const logger = useLogger();
 
 	try {

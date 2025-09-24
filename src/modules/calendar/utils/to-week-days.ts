@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue';
 
-import type { ICalendarEvent, IDailyCalendarInfo, IEventBoard, IWeeklyDayInfo } from '../types';
+import type { ICalendarEvent, IDailyCalendarInfoResponse, IEventBoardResponse, IWeeklyDayInfo } from '../models';
 import { getStartOfWeek, isSameCalendarDay, isSameWeek } from '@/modules/calendar';
 
 function localDateKey(d: Date): string {
@@ -11,10 +11,10 @@ function localDateKey(d: Date): string {
 }
 
 export function toWeekDays(
-	apiDays: IDailyCalendarInfo[],
+	apiDays: IDailyCalendarInfoResponse[],
 	baseDateSource: Date,
 	locale: string,
-	evBoard: IEventBoard[] = [],
+	evBoard: IEventBoardResponse[] = [],
 	favorites: string[],
 ): IWeeklyDayInfo[] {
 	const today = new Date();
@@ -23,7 +23,7 @@ export function toWeekDays(
 	const fmtShort = new Intl.DateTimeFormat(locale, { weekday: 'short' });
 	const fmtLong = new Intl.DateTimeFormat(locale, { weekday: 'long' });
 
-	const apiMap = new Map<string, IDailyCalendarInfo>();
+	const apiMap = new Map<string, IDailyCalendarInfoResponse>();
 	for (const item of apiDays) {
 		const dt = new Date(item.date);
 		apiMap.set(localDateKey(dt), item);

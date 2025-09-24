@@ -13,7 +13,7 @@ export interface IEventBoardFilters {
 	watchlist: string[];
 }
 
-export interface ICreateEventBoardOptions {
+export interface IEventBoardRequestOptions {
 	range: IEventBoardRange;
 	filters: IEventBoardFilters;
 }
@@ -42,7 +42,7 @@ export interface ICalendarEvent {
 	linkText?: string;
 }
 
-export interface IEventBoard {
+export interface IEventBoardResponse {
 	date: string;
 	events: ICalendarEvent[];
 }

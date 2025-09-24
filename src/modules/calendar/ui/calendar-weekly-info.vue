@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { IWeeklyDayInfo } from '@/modules/calendar/types/weekly-calendar-info.ts';
-import { isSameCalendarDay } from '@/modules/calendar';
+import { isSameCalendarDay, type IWeeklyDayInfo } from '@/modules/calendar';
 
 const props = defineProps<{
 	weekDays: IWeeklyDayInfo[];

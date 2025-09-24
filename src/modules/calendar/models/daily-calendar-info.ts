@@ -1,4 +1,4 @@
-export interface IDailyCalendarInfo {
+export interface IDailyCalendarInfoResponse {
 	date: string;
 	metrics: {
 		economic: number;

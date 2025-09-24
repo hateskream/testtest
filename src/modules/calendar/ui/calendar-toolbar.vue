@@ -12,8 +12,14 @@ import {
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import { UiDriver } from '@/shared/ui/driver';
-import type { IEventBoardRange, IMarketData } from '@/modules/calendar/types';
-import { EventType, Impact, isSameWeek, MarketIds } from '@/modules/calendar';
+import {
+	EventType,
+	type IEventBoardRange,
+	type IMarketData,
+	Impact,
+	isSameCalendarDay,
+	MarketIds,
+} from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
 
 import CalendarWeekRangeSelect from '@/modules/calendar/ui/calendar-week-range-select.vue';
@@ -391,8 +397,7 @@ const label = computed(() => {
 			</button>
 
 			<button
-				v-if="!isSameWeek(props.baseDate, props.initialDate)"
-				:class="classes.nav"
+				:class="[classes.nav, isSameCalendarDay(props.baseDate, props.initialDate) && classes.hidden]"
 				@click="emits('reset-week')"
 			>
 				<ui-icon
@@ -482,6 +487,10 @@ const label = computed(() => {
 	&:first-child {
 		transform: rotate(90deg);
 	}
+}
+
+.hidden {
+	visibility: hidden;
 }
 
 .rotated {
