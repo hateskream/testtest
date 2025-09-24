@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { useEventBoardState } from '@/modules/calendar';
+import { useCalendarState } from '@/modules/calendar';
 
 import CalendarError from './views/calendar-error.vue';
 import CalendarLoader from './views/calendar-loader.vue';
@@ -35,7 +35,7 @@ const {
 	nextWeek,
 	prevWeek,
 	resetWeek,
-} = useEventBoardState({
+} = useCalendarState({
 	toolbar: {
 		useQuery: false,
 		widgetId: props.meta.widgetId,

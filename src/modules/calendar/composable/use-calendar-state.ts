@@ -3,6 +3,7 @@ import { computed, reactive, ref, watch } from 'vue';
 
 import { useWatchlist } from '@/modules/watchlist';
 import {
+	addDays,
 	getEndOfWeek,
 	getStartOfWeek,
 	type IEventBoardRange,
@@ -10,7 +11,7 @@ import {
 	type IWeeklyDayInfo,
 	toUtcIsoDate,
 	toWeekDays,
-	useDailyCalendarGetState,
+	useDailyCalendar,
 	useEventBoard,
 	useFavoritesState,
 	useToolbar,
@@ -20,7 +21,7 @@ export interface IUseCalendarStateOptions {
 	toolbar: IUseToolbarStateOptions;
 }
 
-export function useEventBoardState(options: IUseCalendarStateOptions) {
+export function useCalendarState(options: IUseCalendarStateOptions) {
 	const now = useNow({ interval: 60_000 });
 	const locale = 'en-US';
 
@@ -29,12 +30,16 @@ export function useEventBoardState(options: IUseCalendarStateOptions) {
 
 	const { watchlists } = useWatchlist();
 	const { state: toolbar } = useToolbar(options.toolbar);
-	const { data: dailyCalendar, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
 	const { eventBoardFavorites, toggleFavorite } = useFavoritesState();
 
 	const weekRange = reactive<IEventBoardRange>({
 		from: toUtcIsoDate(getStartOfWeek(baseDate.value)),
 		to: toUtcIsoDate(getEndOfWeek(baseDate.value)),
+	});
+
+	const { dailyCalendar, isDailyCalendarLoading } = useDailyCalendar({
+		from: () => toUtcIsoDate(getStartOfWeek(baseDate.value)),
+		to: () => toUtcIsoDate(addDays(getEndOfWeek(baseDate.value), 7)),
 	});
 
 	function resetWeek() {

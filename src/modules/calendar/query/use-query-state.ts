@@ -1,6 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/vue-query';
+import { type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { IDailyCalendarInfoResponse, IEventBoardRequestOptions, IEventBoardResponse } from '@/modules/calendar';
+import type {
+	IDailyCalendarInfoRequest,
+	IDailyCalendarInfoResponse,
+	IEventBoardRequestOptions,
+	IEventBoardResponse,
+} from '@/modules/calendar';
 import { getCalendarDays, getEventBoard } from '@/modules/calendar/api';
 import { queryClient } from '@/shared/service/query-client.ts';
 
@@ -10,10 +16,10 @@ export function getStateCacheKey() {
 	return [SETTINGS_QUERY_KEY];
 }
 
-export const useDailyCalendarGetState = () => {
+export const useDailyCalendarGetState = (options: MaybeRefOrGetter<IDailyCalendarInfoRequest>) => {
 	return useQuery<IDailyCalendarInfoResponse[]>({
-		queryKey: [getStateCacheKey(), 'daily-calendar'],
-		queryFn: () => getCalendarDays(),
+		queryKey: [getStateCacheKey(), 'daily-calendar', options],
+		queryFn: () => getCalendarDays(toValue(options)),
 		refetchOnMount: false,
 	});
 };

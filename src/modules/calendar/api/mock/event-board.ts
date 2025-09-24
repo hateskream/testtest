@@ -8,6 +8,7 @@ import type {
 import { EventType, Impact, MarketIds } from '../../models';
 import { allTickers } from '@/shared/mock';
 import { SymbolType } from '@/modules/cell';
+import { addDays } from '@/modules/calendar';
 
 type RNG = () => number;
 
@@ -418,12 +419,6 @@ function ymdToUtcDate(ymd: string): Date {
 
 function toYmd(d: Date): string {
 	return d.toISOString().slice(0, 10);
-}
-
-function addDays(d: Date, n: number): Date {
-	const x = new Date(d);
-	x.setUTCDate(x.getUTCDate() + n);
-	return x;
 }
 
 function shiftYmd(ymd: string, deltaDays: number): string {

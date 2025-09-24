@@ -44,3 +44,9 @@ export function isSameWeek(a: Date, b: Date): boolean {
 
 	return isSameCalendarDay(sa, sb);
 }
+
+export function addDays(d: Date, n: number): Date {
+	const x = new Date(d);
+	x.setUTCDate(x.getUTCDate() + n);
+	return x;
+}

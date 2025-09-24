@@ -1,7 +1,7 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockApiDays } from './mock';
 import { useLogger } from '@/shared/service/logger';
-import type { IDailyCalendarInfoResponse } from '@/modules/calendar';
+import type { IDailyCalendarInfoRequest, IDailyCalendarInfoResponse } from '@/modules/calendar';
 
 enum DataProvider {
 	Production,
@@ -11,28 +11,28 @@ enum DataProvider {
 
 const dataProvider = DataProvider.MockLocal;
 
-export async function getCalendarDays(): Promise<IDailyCalendarInfoResponse[]> {
+export async function getCalendarDays(options: IDailyCalendarInfoRequest): Promise<IDailyCalendarInfoResponse[]> {
 	const logger = useLogger();
 
 	try {
-		return sendRequest(dataProvider);
+		return sendRequest(dataProvider, options);
 	} catch (error) {
 		logger.error('Failed to get display settings heatmap', error as Error);
 		throw error;
 	}
 }
 
-function sendRequest<T>(type: DataProvider) {
+function sendRequest<T>(type: DataProvider, options: IDailyCalendarInfoRequest) {
 	const httpService = useHttpService();
 
 	switch (type) {
 		case DataProvider.MockLocal:
-			return createMockApiDays();
+			return createMockApiDays(options);
 		case DataProvider.Production:
 			return httpService.get<T>('https://gateway.planet9.uk/с');
 		case DataProvider.MockServer:
 			return httpService.get<T>('https://gateway.planet9.uk/с');
 		default:
-			return createMockApiDays();
+			return createMockApiDays(options);
 	}
 }

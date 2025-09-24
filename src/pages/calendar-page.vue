@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 
-import { CalendarLayout, markets, useEventBoardScroll, useEventBoardState } from '@/modules/calendar';
+import { CalendarLayout, markets, useCalendarState, useEventBoardScroll } from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
 import { LayoutComponent } from '@/modules/layout';
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
@@ -36,7 +36,7 @@ const {
 	eventBoard,
 	eventBoardFavorites,
 	toggleFavorite,
-} = useEventBoardState({
+} = useCalendarState({
 	toolbar: {
 		useQuery: true,
 		widgetId: 'calendar-page',
