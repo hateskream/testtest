@@ -25,6 +25,8 @@ interface ITreemapCryptoProps {
 	activeColorDepth: IColorDepth;
 	activeSizeBy: ISettings;
 	activeDisplayValue: ISettings;
+
+	isShowDots: boolean;
 }
 
 const props = defineProps<ITreemapCryptoProps>();
@@ -67,6 +69,7 @@ const {
 			:active-color-by="props.activeColorBy"
 			:active-color-depth="props.activeColorDepth"
 			:active-display-value="props.activeDisplayValue"
+			:is-show-dots="props.isShowDots"
 		>
 			<setting-component
 				title="Size by"

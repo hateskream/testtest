@@ -4,7 +4,6 @@ import {
 	ModalItemSelector,
 	ModalBadgeList,
 	ModalItemInteraction,
-	ModalItemCheckbox,
 } from '@/modules/widgets/base';
 import type {
 	IMarketSettings,
@@ -21,11 +20,15 @@ import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
+import ChangeDisplay from './change-display.vue';
+
 interface ISettingsBase {
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
 	activeDisplayValue: ISettings;
+
+	isShowDots: boolean;
 }
 
 const props = defineProps<ISettingsBase>();
@@ -47,14 +50,6 @@ function updateColorBy(newColorBy: string) {
 
 function updateColorDepth(newColorDepth: string) {
 	colorDepth.value.active = newColorDepth;
-}
-
-function updateDisplayValue(newDisplayValue: string) {
-	displayValue.value.active = newDisplayValue;
-}
-
-function updateTitle(newTitle: TitleViewVariant) {
-	title.value = newTitle;
 }
 </script>
 
@@ -158,65 +153,18 @@ function updateTitle(newTitle: TitleViewVariant) {
 			</div>
 
 		</div>
-		<div class="end-group">
+		<div v-if="props.isShowDots" class="end-group">
 			<ui-position position="right-start" strategy="absolute">
 				<template #default>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>
 				<template #content>
-					<modal-badge-list>
-						<modal-item-checkbox
-							v-model="isShowLogo"
-						>
-							Logo
-						</modal-item-checkbox>
-						<ui-position>
-							<template #default>
-								<modal-item-interaction>
-									<div>
-										Title : {{ title }}
-									</div>
-								</modal-item-interaction>
-							</template>
-							<template #content>
-								<modal-badge-list>
-									<template #default>
-										<modal-item-selector
-											v-for="t in TitleViewVariant"
-											:key="t"
-											:model-value="t === title"
-											@update:model-value="updateTitle(t)"
-										>
-											{{ t }}
-										</modal-item-selector>
-									</template>
-								</modal-badge-list>
-							</template>
-						</ui-position>
-						<ui-position>
-							<template #default>
-								<modal-item-interaction>
-									<div>
-										Display value <span class="dot" /> {{ props.activeDisplayValue.displayName }}
-									</div>
-								</modal-item-interaction>
-							</template>
-							<template #content>
-								<modal-badge-list>
-									<template #default>
-										<modal-item-selector
-											v-for="dv in displayValue.values"
-											:key="dv.key"
-											:model-value="dv.key === displayValue.active"
-											@update:model-value="updateDisplayValue(dv.key)"
-										>
-											{{ dv.displayName }}
-										</modal-item-selector>
-									</template>
-								</modal-badge-list>
-							</template>
-						</ui-position>
-					</modal-badge-list>
+					<change-display
+						v-model:display-value="displayValue"
+						v-model:is-show-logo="isShowLogo"
+						v-model:title="title"
+						:active-display-value="props.activeDisplayValue"
+					/>
 				</template>
 			</ui-position>
 		</div>

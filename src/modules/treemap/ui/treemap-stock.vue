@@ -26,6 +26,8 @@ interface ITreemapCryptoProps {
 	activeSizeBy: ISettings;
 	activeGroupBy: ISettings;
 	activeDisplayValue: ISettings;
+
+	isShowDots: boolean;
 }
 
 const props = defineProps<ITreemapCryptoProps>();
@@ -80,6 +82,7 @@ function setSelectGroup(id: string | null) {
 			:active-color-by="props.activeColorBy"
 			:active-color-depth="props.activeColorDepth"
 			:active-display-value="props.activeDisplayValue"
+			:is-show-dots="props.isShowDots"
 		>
 			<setting-component
 				title="Size by"

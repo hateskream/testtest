@@ -4,11 +4,17 @@ import { BaseDashboardComponent } from '../../base/index.ts';
 import { TreemapComponent } from '@/modules/treemap';
 import { useHeatmap } from '../composables';
 
+import ContextMenu from './context-menu.vue';
+
 interface IWidgetComponentProps {
 	meta: IMeta;
 }
 
 const props = defineProps<IWidgetComponentProps>();
+
+const emit = defineEmits<{
+	(e: 'delete'): void;
+}>();
 
 const {
 	marketSettings,
@@ -25,6 +31,7 @@ const {
 	activeMarket,
 	activeGroupBy,
 	groupBySettings,
+	resetAllChanges,
 } = useHeatmap(props.meta.widgetId);
 
 </script>
@@ -51,8 +58,20 @@ const {
 					:active-size-by="activeSizeBy"
 					:active-display-value="activeDisplayValue"
 					:active-group-by="activeGroupBy"
+					:is-show-dots="false"
 				/>
 			</div>
+		</template>
+		<template #rcm>
+			<context-menu
+				v-model:display-value="displayValueSettings"
+				v-model:is-show-logo="isShowLogo"
+				v-model:title-variant="titleSetting"
+				:title="props.meta.name"
+				:active-display-value="activeDisplayValue!"
+				@delete="emit('delete')"
+				@reset="resetAllChanges"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

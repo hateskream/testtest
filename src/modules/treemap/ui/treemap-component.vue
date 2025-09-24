@@ -21,9 +21,13 @@ interface ITreemapCryptoProps {
 	activeSizeBy: ISettings | null;
 	activeDisplayValue: ISettings | null;
 	activeGroupBy: ISettings | null;
+
+	isShowDots?: boolean;
 }
 
-const props = defineProps<ITreemapCryptoProps>();
+const props = withDefaults(defineProps<ITreemapCryptoProps>(), {
+	isShowDots: true,
+});
 
 const marketSettings = defineModel<IMarketSettings>('market', { required: true });
 const sizeBySettings = defineModel<ISingleSetting>('sizeBy', { required: true });
@@ -51,6 +55,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-color-depth="props.activeColorDepth!"
 			:active-size-by="props.activeSizeBy!"
 			:active-display-value="props.activeDisplayValue!"
+			:is-show-dots="props.isShowDots"
 		/>
 		<treemap-stock
 			v-if="activeMarket.id === 'stock'"
@@ -68,6 +73,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-size-by="props.activeSizeBy!"
 			:active-group-by="props.activeGroupBy!"
 			:active-display-value="props.activeDisplayValue!"
+			:is-show-dots="props.isShowDots"
 		/>
 		<treemap-forex
 			v-if="activeMarket.id === 'forex'"
@@ -81,6 +87,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-color-by="props.activeColorBy!"
 			:active-color-depth="props.activeColorDepth!"
 			:active-display-value="props.activeDisplayValue!"
+			:is-show-dots="props.isShowDots"
 		/>
 	</div>
 </template>
