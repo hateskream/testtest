@@ -18,6 +18,7 @@ export enum WidgetType {
 	AltcoinSeason = 'altcoin-season',
 	TopIndices = 'top-indices',
 	Calendar = 'calendar',
+	Heatmap = 'heatmap',
 }
 
 export class InvalidWidgetType extends DomainError {

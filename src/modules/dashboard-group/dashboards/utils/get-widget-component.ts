@@ -18,6 +18,7 @@ import { BitcoinDominance } from '@/modules/widgets/bitcoin-dominance';
 import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { WidgetType } from '../../core';
+import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 
 export function getWidgetComponent(type: WidgetType) {
 	const components: Record<WidgetType, Component> = {
@@ -38,6 +39,7 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.BitcoinDominance]: BitcoinDominance,
 		[WidgetType.TopIndices]: TopIndicesWidget,
 		[WidgetType.Calendar]: CalendarWidget,
+		[WidgetType.Heatmap]: HeatmapDashboard,
 	};
 
 	return components[type];
