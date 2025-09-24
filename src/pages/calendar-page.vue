@@ -38,7 +38,8 @@ const {
 	toggleFavorite,
 } = useEventBoardState({
 	toolbar: {
-		query: true,
+		useQuery: true,
+		widgetId: 'calendar-page',
 	},
 });
 

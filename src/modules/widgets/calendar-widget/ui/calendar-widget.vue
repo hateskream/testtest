@@ -37,7 +37,8 @@ const {
 	resetWeek,
 } = useEventBoardState({
 	toolbar: {
-		query: false,
+		useQuery: false,
+		widgetId: props.meta.widgetId,
 	},
 });
 
