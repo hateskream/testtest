@@ -1,29 +1,38 @@
 <script setup lang="ts">
-import { useQueryDisplaySettings } from '../query';
-import { useDisplaySettings } from '../composables/';
+import type {
+	IMarket,
+	IColorBy,
+	IColorDepth,
+	ISettings,
+	IMarketSettings,
+	ISingleSetting,
+	IColorDepthSetting,
+	TitleViewVariant,
+} from '../model';
 
 import TreemapCrypto from './treemap-crypto.vue';
 import TreemapStock from './treemap-stock.vue';
 import TreemapForex from './treemap-forex.vue';
 
-const { data: settings } = useQueryDisplaySettings();
+interface ITreemapCryptoProps {
+	activeMarket: IMarket | undefined;
+	activeColorBy: IColorBy | null;
+	activeColorDepth: IColorDepth | null;
+	activeSizeBy: ISettings | null;
+	activeDisplayValue: ISettings | null;
+	activeGroupBy: ISettings | null;
+}
 
-const {
-	marketSettings,
-	sizeBySettings,
-	colorBySettings,
-	colorDepthSettings,
-	displayValueSettings,
-	activeColorBy,
-	activeSizeBy,
-	activeColorDepth,
-	activeDisplayValue,
-	isShowLogo,
-	titleSetting,
-	activeMarket,
-	activeGroupBy,
-	groupBySettings,
-} = useDisplaySettings(settings);
+const props = defineProps<ITreemapCryptoProps>();
+
+const marketSettings = defineModel<IMarketSettings>('market', { required: true });
+const sizeBySettings = defineModel<ISingleSetting>('sizeBy', { required: true });
+const colorBySettings = defineModel<ISingleSetting>('colorBy', { required: true });
+const colorDepthSettings = defineModel<IColorDepthSetting>('colorDepth', { required: true });
+const displayValueSettings = defineModel<ISingleSetting>('displayValue', { required: true });
+const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
+const groupBySettings = defineModel<ISingleSetting>('groupBy', { required: true });
+const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 </script>
 
 <template>
@@ -37,11 +46,11 @@ const {
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
-			:active-market="activeMarket!"
-			:active-color-by="activeColorBy!"
-			:active-color-depth="activeColorDepth!"
-			:active-size-by="activeSizeBy!"
-			:active-display-value="activeDisplayValue!"
+			:active-market="props.activeMarket!"
+			:active-color-by="props.activeColorBy!"
+			:active-color-depth="props.activeColorDepth!"
+			:active-size-by="props.activeSizeBy!"
+			:active-display-value="props.activeDisplayValue!"
 		/>
 		<treemap-stock
 			v-if="activeMarket.id === 'stock'"
@@ -49,16 +58,16 @@ const {
 			v-model:size-by="sizeBySettings"
 			v-model:color-by="colorBySettings"
 			v-model:color-depth="colorDepthSettings"
-			v-model:active-group-by="activeGroupBy"
 			v-model:group-by="groupBySettings"
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
-			:active-market="activeMarket!"
-			:active-color-by="activeColorBy!"
-			:active-color-depth="activeColorDepth!"
-			:active-size-by="activeSizeBy!"
-			:active-display-value="activeDisplayValue!"
+			:active-market="props.activeMarket!"
+			:active-color-by="props.activeColorBy!"
+			:active-color-depth="props.activeColorDepth!"
+			:active-size-by="props.activeSizeBy!"
+			:active-group-by="props.activeGroupBy!"
+			:active-display-value="props.activeDisplayValue!"
 		/>
 		<treemap-forex
 			v-if="activeMarket.id === 'forex'"
@@ -68,10 +77,10 @@ const {
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
-			:active-market="activeMarket!"
-			:active-color-by="activeColorBy!"
-			:active-color-depth="activeColorDepth!"
-			:active-display-value="activeDisplayValue!"
+			:active-market="props.activeMarket!"
+			:active-color-by="props.activeColorBy!"
+			:active-color-depth="props.activeColorDepth!"
+			:active-display-value="props.activeDisplayValue!"
 		/>
 	</div>
 </template>

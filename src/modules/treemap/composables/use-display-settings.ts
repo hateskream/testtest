@@ -1,13 +1,13 @@
-import { computed, reactive, ref, watch, type Ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useUrlSearchParams } from '@vueuse/core';
 
 import {
 	TitleViewVariant,
 	type IColorBy,
 	type IColorDepthSetting,
-	type IDisplaySettings,
 	type IMarketSettings,
 	type ISingleSetting,
+	displaySettings,
 } from '../model';
 
 interface IParams {
@@ -21,7 +21,7 @@ interface IParams {
 	groupBy?: string | undefined;
 }
 
-export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | undefined>) {
+export function useDisplaySettings() {
 	const params = useUrlSearchParams<IParams>('history');
 
 	const marketSettings = reactive<IMarketSettings>({
@@ -62,18 +62,13 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 
 	const activeMarket = computed(() => marketSettings.markets.find(m => m.id === marketSettings.active));
 
-	const activeDisplaySettings = computed(() => {
-		if (!settings.value?.length) {
-			return null;
-		}
-		return settings.value.find(s => s.market.id === marketSettings.active) || settings.value[0];
-	});
+	const activeDisplaySettings = computed(() =>
+		displaySettings.find(s => s.market.id === marketSettings.active) || displaySettings[0],
+	);
 
 	const activeColorBy = computed((): IColorBy | null => {
 		const setting = activeDisplaySettings.value;
-		if (!setting) {
-			return null;
-		}
+
 		return setting.colorBy.find(c => c.colorBy.key === colorBySettings.active) || setting.colorBy[0];
 	});
 
@@ -82,6 +77,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		if (!setting || !setting.sizeBy) {
 			return null;
 		}
+
 		return setting.sizeBy.find(s => s.key === sizeBySettings.active) || setting.sizeBy[0];
 	});
 
@@ -103,27 +99,11 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 
 	const activeDisplayValue = computed(() => {
 		const setting = activeDisplaySettings.value;
-		if (!setting) {
-			return null;
-		}
+
 		return setting.displayValue.find(d => d.key === displayValueSettings.active) || setting.displayValue[0];
 	});
 
 	onCreated();
-
-	watch(settings, newSettings => {
-		if (!newSettings?.length) {
-			return;
-		}
-
-		marketSettings.markets = newSettings.map(s => s.market);
-
-		const initialMarket = params.market && newSettings.some(s => s.market.id === params.market)
-			? params.market
-			: newSettings[0].market.id;
-
-		marketSettings.active = initialMarket;
-	}, { immediate: true });
 
 	let isInit = false;
 
@@ -133,7 +113,7 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 			return;
 		}
 
-		const defaultMarket = settings.value![0].market.id;
+		const defaultMarket = displaySettings[0].market.id;
 		setParamIfNotDefault('market', marketSettings.active, defaultMarket);
 
 		colorBySettings.values = setting.colorBy.map(c => c.colorBy);
@@ -246,6 +226,14 @@ export function useDisplaySettings(settings: Ref<IDisplaySettings[] | null | und
 		if (title) {
 			titleSetting.value = title as TitleViewVariant;
 		}
+
+		marketSettings.markets = displaySettings.map(s => s.market);
+
+		const initialMarket = params.market && displaySettings.some(s => s.market.id === params.market)
+			? params.market
+			: displaySettings[0].market.id;
+
+		marketSettings.active = initialMarket;
 	}
 
 	return {
