@@ -1,26 +1,11 @@
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref, useTemplateRef, watch } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
+import { useTemplateRef } from 'vue';
 
+import { CalendarLayout, markets, useEventBoardScroll, useEventBoardState } from '@/modules/calendar';
+import { EventType, Impact } from '@/modules/calendar/models';
 import { LayoutComponent } from '@/modules/layout';
-import {
-	CalendarLayout,
-	EventType,
-	getEndOfWeek,
-	getStartOfWeek,
-	type IEventBoardRange,
-	Impact,
-	type IWeeklyDayInfo,
-	markets,
-	toUtcIsoDate,
-	toWeekDays,
-	useDailyCalendarGetState,
-	useEventBoard,
-	useToolbarState,
-} from '@/modules/calendar';
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { NewsDashboard } from '@/modules/widgets/news';
-import { useWatchlist } from '@/modules/watchlist';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;
@@ -34,114 +19,38 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	initialDate: () => new Date(),
 });
 
-const baseDate = ref(new Date(props.initialDate));
-const selectedDate = ref(new Date(baseDate.value));
-
-const { watchlists } = useWatchlist();
-
-const { state: toolbar } = useToolbarState();
-
-const weekRange = reactive<IEventBoardRange>({
-	from: toUtcIsoDate(getStartOfWeek(baseDate.value)),
-	to: toUtcIsoDate(getEndOfWeek(baseDate.value)),
-});
-
-watch(baseDate, newValue => {
-	weekRange.from = toUtcIsoDate(getStartOfWeek(newValue));
-	weekRange.to = toUtcIsoDate(getEndOfWeek(newValue));
-});
-
-function resetWeek() {
-	baseDate.value = props.initialDate;
-	weekRange.from = toUtcIsoDate(getStartOfWeek(props.initialDate));
-	weekRange.to = toUtcIsoDate(getEndOfWeek(props.initialDate));
-}
-
-const watchlistSelectedSections = computed(() => {
-	if (!toolbar.watchlistSection) {
-		return watchlists.value
-			.find(v => v.id === toolbar.watchlistId)
-			?.sections.flatMap(v => v.tickerIds) || [];
-	}
-
-	return watchlists.value
-		.find(v => v.id === toolbar.watchlistId)
-		?.sections.find(v => v.name === toolbar.watchlistSection)
-		?.tickerIds || [];
-});
-
-const filters = computed(() => ({
-	range: weekRange,
-	filters: {
-		marketId: toolbar.marketId,
-		impact: toolbar.impact,
-		eventType: toolbar.eventType,
-		watchlist: watchlistSelectedSections.value,
-	},
-}));
-
-const { eventBoard } = useEventBoard(filters);
-const eventBoardFavorites = useLocalStorage<string[]>('calendar-event-board-favorites', [], {
-	deep: true,
-});
 const eventBoardRef = useTemplateRef('event-board-component');
 
-watch([() => eventBoard.value.length, baseDate], async ([_, date]) => {
-	await nextTick();
-
-	const iso = toUtcIsoDate(date);
-
-	eventBoardRef.value?.scrollToDate(iso, {
-		behavior: 'auto',
-	});
+const {
+	isDailyCalendarLoading,
+	weekRange,
+	baseDate,
+	selectedDate,
+	nextWeek,
+	prevWeek,
+	resetWeek,
+	setSelected,
+	toolbar,
+	weekDays,
+	watchlists,
+	eventBoard,
+	eventBoardFavorites,
+	toggleFavorite,
+} = useEventBoardState({
+	toolbar: {
+		query: true,
+	},
 });
 
-function toggleFavorite(id: string) {
-	if (eventBoardFavorites.value.includes(id)) {
-		eventBoardFavorites.value.splice(eventBoardFavorites.value.indexOf(id), 1);
-	} else {
-		eventBoardFavorites.value.push(id);
-	}
-}
-
-const { data: dailyCalendarData, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
-
-const weekDays = computed<IWeeklyDayInfo[]>(() => {
-	if (isDailyCalendarLoading.value || !dailyCalendarData.value) {
-		return [];
-	}
-
-	return toWeekDays(
-		dailyCalendarData.value,
-		baseDate.value,
-		props.locale,
-		eventBoard.value,
-		eventBoardFavorites.value,
-	);
+useEventBoardScroll({
+	ref: eventBoardRef,
+	board: eventBoard,
+	baseDate: baseDate,
 });
-
-function setSelected(date: Date) {
-	selectedDate.value = new Date(date);
-	baseDate.value = new Date(date);
-}
-
-function prevWeek() {
-	const d = new Date(baseDate.value);
-	d.setDate(d.getDate() - 7);
-
-	baseDate.value = d;
-}
-
-function nextWeek() {
-	const d = new Date(baseDate.value);
-	d.setDate(d.getDate() + 7);
-
-	baseDate.value = d;
-}
 </script>
 
 <template>
-	<layout-component v-if="!isDailyCalendarLoading" :is-curtain-fixed="false">
+	<layout-component :is-curtain-fixed="false">
 		<template #header>
 			<div :class="classes.header">Calendar</div>
 		</template>
@@ -149,6 +58,7 @@ function nextWeek() {
 			<calendar-layout>
 				<template #content>
 					<calendar-toolbar
+						v-if="!isDailyCalendarLoading"
 						v-model:country-state="toolbar.marketId"
 						v-model:impact-state="toolbar.impact"
 						v-model:event-state="toolbar.eventType"
@@ -169,6 +79,7 @@ function nextWeek() {
 					/>
 
 					<calendar-weekly-info
+						v-if="!isDailyCalendarLoading"
 						:week-days="weekDays"
 						:selected-date="selectedDate"
 						@select-day="setSelected"

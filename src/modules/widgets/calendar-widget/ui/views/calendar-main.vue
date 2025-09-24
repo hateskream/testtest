@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
+import { useTemplateRef } from 'vue';
 
 import {
 	CalendarEventBoard,
 	CalendarToolbar,
 	EventType,
-	getEndOfWeek,
-	getStartOfWeek,
 	type IDailyCalendarInfoResponse,
 	type IEventBoardRange,
 	type IEventBoardResponse,
@@ -15,8 +12,7 @@ import {
 	type IToolbarState,
 	type IWeeklyDayInfo,
 	markets,
-	toUtcIsoDate,
-	toWeekDays,
+	useEventBoardScroll,
 } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
 
@@ -27,6 +23,9 @@ interface ICalendarWeeklyContainerProps {
 	watchlists: IWatchlist[];
 	eventBoard: IEventBoardResponse[];
 	dailyCalendarData: IDailyCalendarInfoResponse[];
+	baseDate: Date;
+	weekDays: IWeeklyDayInfo[];
+	eventBoardFavorites: string[];
 }
 
 const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
@@ -35,66 +34,23 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	currentDate: () => new Date(),
 });
 
+const emits = defineEmits<{
+	nextWeek: [];
+	prevWeek: [];
+	resetWeek: [];
+	toggleFavorite: [id: string];
+}>();
+
 const weekRange = defineModel<IEventBoardRange>('week-range', { required: true });
 const toolbar = defineModel<IToolbarState>('toolbar', { required: true });
 
-const baseDate = ref(new Date(props.currentDate));
-
-watch(baseDate, newValue => {
-	weekRange.value.from = toUtcIsoDate(getStartOfWeek(newValue));
-	weekRange.value.to = toUtcIsoDate(getEndOfWeek(newValue));
-});
-
-function resetWeek() {
-	baseDate.value = props.currentDate;
-}
-
-const eventBoardFavorites = useLocalStorage<string[]>('calendar-event-board-favorites', [], {
-	deep: true,
-});
 const eventBoardRef = useTemplateRef('event-board-component');
 
-watch([() => props.eventBoard.length, baseDate], async ([_, date]) => {
-	await nextTick();
-
-	const iso = toUtcIsoDate(date);
-
-	eventBoardRef.value?.scrollToDate(iso, {
-		behavior: 'auto',
-	});
-}, { immediate: true });
-
-function toggleFavorite(id: string) {
-	if (eventBoardFavorites.value.includes(id)) {
-		eventBoardFavorites.value.splice(eventBoardFavorites.value.indexOf(id), 1);
-	} else {
-		eventBoardFavorites.value.push(id);
-	}
-}
-
-const weekDays = computed<IWeeklyDayInfo[]>(() => {
-	return toWeekDays(
-		props.dailyCalendarData,
-		baseDate.value,
-		props.locale,
-		props.eventBoard,
-		eventBoardFavorites.value,
-	);
+useEventBoardScroll({
+	ref: eventBoardRef,
+	board: props.eventBoard,
+	baseDate: props.baseDate,
 });
-
-function prevWeek() {
-	const d = new Date(baseDate.value);
-	d.setDate(d.getDate() - 7);
-
-	baseDate.value = d;
-}
-
-function nextWeek() {
-	const d = new Date(baseDate.value);
-	d.setDate(d.getDate() + 7);
-
-	baseDate.value = d;
-}
 </script>
 
 <template>
@@ -114,15 +70,15 @@ function nextWeek() {
 			:week-days="weekDays"
 			:locale="props.locale"
 			:watchlists="watchlists"
-			@next-week="nextWeek"
-			@prev-week="prevWeek"
-			@reset-week="resetWeek"
+			@next-week="emits('nextWeek')"
+			@prev-week="emits('prevWeek')"
+			@reset-week="emits('resetWeek')"
 		/>
 		<calendar-event-board
 			ref="event-board-component"
 			:event-board="eventBoard"
 			:event-board-favorites="eventBoardFavorites"
-			@toggle-event-board="toggleFavorite"
+			@toggle-event-board="emits('toggleFavorite', $event)"
 		/>
 	</div>
 </template>

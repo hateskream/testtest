@@ -1,5 +1,5 @@
 import { useUrlSearchParams } from '@vueuse/core';
-import { onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import { EventType, Impact, type IToolbarState, MarketIds } from '@/modules/calendar';
 
@@ -18,14 +18,18 @@ function parseEnum<T extends Record<string, string>>(e: T, v?: string | null) {
 	return (Object.values(e) as string[]).includes(v) ? (v as T[keyof T]) : undefined;
 }
 
-export function useToolbarState() {
-	const params = useUrlSearchParams<IParams>('history');
+export interface IUseToolbarStateOptions {
+	query: boolean;
+}
+
+export function useToolbar(options: IUseToolbarStateOptions) {
+	const params = options.query ? useUrlSearchParams<IParams>('history') : {};
 
 	const setParamIfNotDefault = (key: keyof IParams, value: string, defaultValue: string) => {
 		params[key] = value !== defaultValue ? value : undefined;
 	};
 
-	const state = reactive<IToolbarState>({
+	const state = ref<IToolbarState>({
 		marketId: MarketIds.EntireWorld,
 		impact: Impact.All,
 		eventType: EventType.All,
@@ -42,11 +46,11 @@ export function useToolbarState() {
 	}, { deep: true });
 
 	onMounted(() => {
-		state.marketId = parseEnum(MarketIds, params.country) ?? state.marketId;
-		state.impact = parseEnum(Impact, params.impact) ?? state.impact;
-		state.eventType = parseEnum(EventType, params.event) ?? state.eventType;
-		state.watchlistId = params.catalog ?? state.watchlistId;
-		state.watchlistSection = params.section ?? state.watchlistSection;
+		state.value.marketId = parseEnum(MarketIds, params.country) ?? state.value.marketId;
+		state.value.impact = parseEnum(Impact, params.impact) ?? state.value.impact;
+		state.value.eventType = parseEnum(EventType, params.event) ?? state.value.eventType;
+		state.value.watchlistId = params.catalog ?? state.value.watchlistId;
+		state.value.watchlistSection = params.section ?? state.value.watchlistSection;
 	});
 
 	onBeforeUnmount(() => {

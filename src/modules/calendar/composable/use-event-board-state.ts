@@ -1,0 +1,131 @@
+import { useNow } from '@vueuse/core';
+import { computed, reactive, ref, watch } from 'vue';
+
+import { useWatchlist } from '@/modules/watchlist';
+import {
+	getEndOfWeek,
+	getStartOfWeek,
+	type IEventBoardRange,
+	type IUseToolbarStateOptions,
+	type IWeeklyDayInfo,
+	toUtcIsoDate,
+	toWeekDays,
+	useDailyCalendarGetState,
+	useEventBoard,
+	useFavoritesState,
+	useToolbar,
+} from '@/modules/calendar';
+
+export interface IUseCalendarStateOptions {
+	toolbar: IUseToolbarStateOptions;
+}
+
+export function useEventBoardState(options: IUseCalendarStateOptions) {
+	const now = useNow({ interval: 60_000 });
+	const locale = 'en-US';
+
+	const baseDate = ref(now.value);
+	const selectedDate = ref(now.value);
+
+	const { watchlists } = useWatchlist();
+	const { state: toolbar } = useToolbar(options.toolbar);
+	const { data: dailyCalendar, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState();
+	const { eventBoardFavorites, toggleFavorite } = useFavoritesState();
+
+	const weekRange = reactive<IEventBoardRange>({
+		from: toUtcIsoDate(getStartOfWeek(baseDate.value)),
+		to: toUtcIsoDate(getEndOfWeek(baseDate.value)),
+	});
+
+	function resetWeek() {
+		baseDate.value = now.value;
+	}
+
+	watch(baseDate, newValue => {
+		weekRange.from = toUtcIsoDate(getStartOfWeek(newValue));
+		weekRange.to = toUtcIsoDate(getEndOfWeek(newValue));
+	});
+
+	const watchlistSelectedSections = computed(() => {
+		if (!toolbar.value.watchlistSection) {
+			return watchlists.value
+				.find(v => v.id === toolbar.value.watchlistId)
+				?.sections.flatMap(v => v.tickerIds) || [];
+		}
+
+		return watchlists.value
+			.find(v => v.id === toolbar.value.watchlistId)
+			?.sections.find(v => v.name === toolbar.value.watchlistSection)
+			?.tickerIds || [];
+	});
+
+	const filters = computed(() => ({
+		range: weekRange,
+		filters: {
+			marketId: toolbar.value.marketId,
+			impact: toolbar.value.impact,
+			eventType: toolbar.value.eventType,
+			watchlist: watchlistSelectedSections.value,
+		},
+	}));
+
+	const { eventBoard, isLoading: isEventBoardLoading } = useEventBoard(filters);
+
+	const weekDays = computed<IWeeklyDayInfo[]>(() => {
+		if (isDailyCalendarLoading.value || !dailyCalendar.value) {
+			return [];
+		}
+
+		return toWeekDays(
+			dailyCalendar.value,
+			baseDate.value,
+			locale,
+			eventBoard.value,
+			eventBoardFavorites.value,
+		);
+	});
+
+	function setSelected(date: Date) {
+		selectedDate.value = new Date(date);
+		baseDate.value = new Date(date);
+	}
+
+	function prevWeek() {
+		const d = new Date(baseDate.value);
+		d.setDate(d.getDate() - 7);
+
+		baseDate.value = d;
+	}
+
+	function nextWeek() {
+		const d = new Date(baseDate.value);
+		d.setDate(d.getDate() + 7);
+
+		baseDate.value = d;
+	}
+
+	return {
+		locale,
+
+		isDailyCalendarLoading,
+		isEventBoardLoading,
+
+		now,
+		baseDate,
+		selectedDate,
+		weekRange,
+		resetWeek,
+
+		toolbar,
+		dailyCalendar,
+		watchlists,
+		eventBoard,
+		eventBoardFavorites,
+		toggleFavorite,
+		weekDays,
+
+		setSelected,
+		prevWeek,
+		nextWeek,
+	};
+}

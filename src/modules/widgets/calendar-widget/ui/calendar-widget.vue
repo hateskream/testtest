@@ -1,22 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import { useNow } from '@vueuse/core';
+import { computed } from 'vue';
 
 import { BaseDashboardComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import {
-	EventType,
-	getEndOfWeek,
-	getStartOfWeek,
-	type IEventBoardRange,
-	Impact,
-	type IToolbarState,
-	MarketIds,
-	toUtcIsoDate,
-	useDailyCalendarGetState,
-	useEventBoard,
-} from '@/modules/calendar';
-import { useWatchlist } from '@/modules/watchlist';
+import { useEventBoardState } from '@/modules/calendar';
 
 import CalendarError from './views/calendar-error.vue';
 import CalendarLoader from './views/calendar-loader.vue';
@@ -31,58 +18,32 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
-const now = useNow({ interval: 60_000 	});
-
-const { watchlists } = useWatchlist();
-const toolbar = ref<IToolbarState>({
-	marketId: MarketIds.EntireWorld,
-	impact: Impact.All,
-	eventType: EventType.All,
-	watchlistId: null,
-	watchlistSection: null,
-});
-
-const watchlistSelectedSections = computed(() => {
-	if (!toolbar.value.watchlistSection) {
-		return watchlists.value
-			.find(v => v.id === toolbar.value.watchlistId)
-			?.sections.flatMap(v => v.tickerIds) || [];
-	}
-
-	return watchlists.value
-		.find(v => v.id === toolbar.value.watchlistId)
-		?.sections.find(v => v.name === toolbar.value.watchlistSection)
-		?.tickerIds || [];
-});
-
-const weekRange = reactive<IEventBoardRange>({
-	from: toUtcIsoDate(getStartOfWeek(now.value)),
-	to: toUtcIsoDate(getEndOfWeek(now.value)),
-});
-
-const filters = computed(() => ({
-	range: weekRange,
-	filters: {
-		marketId: toolbar.value.marketId,
-		impact: toolbar.value.impact,
-		eventType: toolbar.value.eventType,
-		watchlist: watchlistSelectedSections.value,
-	},
-}));
-
 const {
+	locale,
+	now,
+	baseDate,
+	isDailyCalendarLoading,
+	isEventBoardLoading,
+	watchlists,
 	eventBoard,
-	isLoading: isEventBoardLoading,
-} = useEventBoard(filters);
-
-const {
-	data: dailyCalendar,
-	isLoading: isDailyCalendarLoading,
-} = useDailyCalendarGetState();
-
-const isLoading = computed(() => {
-	return isEventBoardLoading.value && isDailyCalendarLoading.value;
+	eventBoardFavorites,
+	dailyCalendar,
+	toolbar,
+	weekRange,
+	weekDays,
+	toggleFavorite,
+	nextWeek,
+	prevWeek,
+	resetWeek,
+} = useEventBoardState({
+	toolbar: {
+		query: false,
+	},
 });
+
+const isLoading = computed(
+	() => isDailyCalendarLoading.value && isEventBoardLoading.value,
+);
 </script>
 
 <template>
@@ -100,10 +61,18 @@ const isLoading = computed(() => {
 				v-else-if="eventBoard && dailyCalendar"
 				v-model:week-range="weekRange"
 				v-model:toolbar="toolbar"
+				:event-board-favorites="eventBoardFavorites"
+				:base-date="baseDate"
+				:locale="locale"
+				:week-days="weekDays"
 				:watchlists="watchlists"
 				:event-board="eventBoard"
 				:daily-calendar-data="dailyCalendar"
 				:current-date="now"
+				@toggle-favorite="toggleFavorite"
+				@reset-week="resetWeek"
+				@prev-week="prevWeek"
+				@next-week="nextWeek"
 			/>
 		</template>
 
