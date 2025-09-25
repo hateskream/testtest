@@ -19,7 +19,7 @@ import { IconIds } from '@/shared/ui/icon';
 import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
 
-interface ITreemapCryptoProps {
+interface ITreemapStockProps {
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
@@ -28,9 +28,11 @@ interface ITreemapCryptoProps {
 	activeDisplayValue: ISettings;
 
 	isShowDots: boolean;
+	isNegativeColorMarket: boolean;
+	isNoGroup: boolean;
 }
 
-const props = defineProps<ITreemapCryptoProps>();
+const props = defineProps<ITreemapStockProps>();
 
 const market = defineModel<IMarketSettings>('market', { required: true });
 const sizeBy = defineModel<ISingleSetting>('sizeBy', { required: true });
@@ -55,7 +57,7 @@ const {
 	computed(() => props.activeSizeBy),
 	computed(() => props.activeColorBy),
 	computed(() => props.activeDisplayValue),
-	computed(() => props.activeGroupBy),
+	computed(() => props.isNoGroup ? NO_GROUP : props.activeGroupBy),
 	selectGroup,
 	title,
 );
@@ -83,6 +85,7 @@ function setSelectGroup(id: string | null) {
 			:active-color-depth="props.activeColorDepth"
 			:active-display-value="props.activeDisplayValue"
 			:is-show-dots="props.isShowDots"
+			:is-negative-color-market="props.isNegativeColorMarket"
 		>
 			<setting-component
 				title="Size by"
@@ -91,6 +94,7 @@ function setSelectGroup(id: string | null) {
 				:icon="IconIds.Size"
 			/>
 			<setting-component
+				v-if="!props.isNoGroup"
 				title="Group by"
 				:setting="groupBy"
 				:active="activeGroupBy"

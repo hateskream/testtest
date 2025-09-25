@@ -59,6 +59,8 @@ const {
 					:active-display-value="activeDisplayValue"
 					:active-group-by="activeGroupBy"
 					:is-show-dots="false"
+					:is-negative-color-market="false"
+					is-no-group-stock
 				/>
 			</div>
 		</template>

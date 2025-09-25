@@ -29,6 +29,7 @@ interface ISettingsBase {
 	activeDisplayValue: ISettings;
 
 	isShowDots: boolean;
+	isNegativeColorMarket: boolean;
 }
 
 const props = defineProps<ISettingsBase>();
@@ -58,8 +59,8 @@ function updateColorDepth(newColorDepth: string) {
 		<div class="start-group">
 			<modal-badge
 				class="market-modal"
-				background-color="var(--color-bg-contrast-300, #DCDCDF)"
-				color="var(--color-text-contrast-500, #0C0C0E)"
+				:background-color="props.isNegativeColorMarket ? 'var(--color-bg-contrast-300, #DCDCDF)' : undefined"
+				:color="props.isNegativeColorMarket ? 'var(--color-text-contrast-500, #0C0C0E)' : undefined"
 				strategy="absolute"
 			>
 				<template #title="{ isVisible }">

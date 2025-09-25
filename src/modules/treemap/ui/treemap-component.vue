@@ -23,10 +23,14 @@ interface ITreemapCryptoProps {
 	activeGroupBy: ISettings | null;
 
 	isShowDots?: boolean;
+	isNegativeColorMarket?: boolean;
+	isNoGroupStock?: boolean;
 }
 
 const props = withDefaults(defineProps<ITreemapCryptoProps>(), {
 	isShowDots: true,
+	isNegativeColorMarket: true,
+	isNoGroupStock: false,
 });
 
 const marketSettings = defineModel<IMarketSettings>('market', { required: true });
@@ -56,6 +60,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-size-by="props.activeSizeBy!"
 			:active-display-value="props.activeDisplayValue!"
 			:is-show-dots="props.isShowDots"
+			:is-negative-color-market="props.isNegativeColorMarket"
 		/>
 		<treemap-stock
 			v-if="activeMarket.id === 'stock'"
@@ -74,6 +79,8 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-group-by="props.activeGroupBy!"
 			:active-display-value="props.activeDisplayValue!"
 			:is-show-dots="props.isShowDots"
+			:is-negative-color-market="props.isNegativeColorMarket"
+			:is-no-group="props.isNoGroupStock"
 		/>
 		<treemap-forex
 			v-if="activeMarket.id === 'forex'"
@@ -88,6 +95,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			:active-color-depth="props.activeColorDepth!"
 			:active-display-value="props.activeDisplayValue!"
 			:is-show-dots="props.isShowDots"
+			:is-negative-color-market="props.isNegativeColorMarket"
 		/>
 	</div>
 </template>
