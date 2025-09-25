@@ -55,8 +55,8 @@ const { floatingStyles, placement } = useFloating(reference, floating, {
 });
 
 const isVisible = ref<boolean>(false);
-const showTimeout = ref<NodeJS.Timeout | null>(null);
-const hideTimeout = ref<NodeJS.Timeout | null>(null);
+const showTimeout = ref<number | null>(null);
+const hideTimeout = ref<number | null>(null);
 
 const parentContext = inject<IFloatingContext | null>('floating-context', null);
 const currentLevel: number = (parentContext?.getCurrentLevel() ?? -1) + 1;
