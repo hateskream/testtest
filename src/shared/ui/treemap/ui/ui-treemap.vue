@@ -228,7 +228,6 @@ function onClickOriginalBreadcrumb() {
 		</ui-treemap-layout>
 
 		<ui-treemap-tooltip
-			v-if="false"
 			:logo-url="dataForTooltip.logoUrl"
 			:ticker="dataForTooltip.ticker"
 

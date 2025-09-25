@@ -147,7 +147,7 @@ export function useDisplaySettings() {
 			params.displayValue = undefined;
 			params.groupBy = undefined;
 		}
-	});
+	}, { immediate: true });
 
 	watch(() => colorBySettings.active, () => {
 		const setting = activeDisplaySettings.value;
