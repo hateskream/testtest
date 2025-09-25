@@ -24,7 +24,7 @@ function isSelected(date: Date) {
 				:class="[
 					classes.dayCard,
 					dayItem.isToday ? classes.today : '',
-					isSelected(dayItem.date) ? classes.selected : ''
+					isSelected(dayItem.date) ? classes.selected : '',
 				]"
 				@click="emits('select-day', dayItem.date)"
 			>
@@ -44,12 +44,8 @@ function isSelected(date: Date) {
 						:key="metric.label"
 						:class="classes.metric"
 					>
-						<div :class="classes.metricLabel">
-							{{ metric.label }}:
-						</div>
-						<div :class="classes.metricValue">
-							{{ metric.value }}
-						</div>
+						<div :class="classes.metricLabel">{{ metric.label }}:</div>
+						<div :class="classes.metricValue">{{ metric.value }}</div>
 					</div>
 				</div>
 			</div>
@@ -69,8 +65,6 @@ function isSelected(date: Date) {
 	justify-content: space-between;
 	align-self: stretch;
 	gap: 8px;
-
-	/* TODO: Add horizontal scrollbar for smaller screens */
 }
 
 .dayCard {
@@ -83,6 +77,7 @@ function isSelected(date: Date) {
 	border: 1px solid var(--color-border-base-300, rgb(97 97 97 / 30%));
 	border-radius: 18px;
 	gap: 24px;
+	cursor: pointer;
 }
 
 .today {
