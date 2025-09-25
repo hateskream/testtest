@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { offset, shift, useFloating, flip, autoUpdate, type Placement } from '@floating-ui/vue';
-import { ref, useTemplateRef, provide, inject, onMounted, onUnmounted, computed } from 'vue';
+import { ref, useTemplateRef, provide, inject, onMounted, onUnmounted, computed, nextTick } from 'vue';
 
 interface IPositionComponentProps {
 	position?: Placement;
@@ -14,14 +14,17 @@ interface IPositionComponentProps {
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
-
 	(e: 'mouseleave'): void;
 }
 
 interface IFloatingContext {
-	registerFloating: (element: HTMLElement) => void;
+	registerFloating: (element: HTMLElement, level: number) => void;
 	unregisterFloating: (element: HTMLElement) => void;
 	isInsideFloating: (target: Element) => boolean;
+	getCurrentLevel: () => number;
+	cancelAllChildTimeouts: (fromLevel: number) => void;
+	notifyMouseEnter: (level: number) => void;
+	notifyMouseLeave: (level: number) => void;
 }
 
 const props = withDefaults(defineProps<IPositionComponentProps>(), {
@@ -36,9 +39,9 @@ const props = withDefaults(defineProps<IPositionComponentProps>(), {
 
 const emits = defineEmits<IPositionComponentEmits>();
 
-const reference = useTemplateRef('reference');
-const floating = useTemplateRef('floating');
-const wrapper = useTemplateRef('wrapper');
+const reference = useTemplateRef<HTMLElement>('reference');
+const floating = useTemplateRef<HTMLElement>('floating');
+const wrapper = useTemplateRef<HTMLElement>('wrapper');
 
 const { floatingStyles, placement } = useFloating(reference, floating, {
 	strategy: props.strategy,
@@ -51,33 +54,60 @@ const { floatingStyles, placement } = useFloating(reference, floating, {
 	whileElementsMounted: autoUpdate,
 });
 
-const isVisible = ref(false);
-const showTimeout = ref<number | null>(null);
-const hideTimeout = ref<number | null>(null);
+const isVisible = ref<boolean>(false);
+const showTimeout = ref<NodeJS.Timeout | null>(null);
+const hideTimeout = ref<NodeJS.Timeout | null>(null);
 
 const parentContext = inject<IFloatingContext | null>('floating-context', null);
-const floatingElements = ref(new Set<HTMLElement>());
+const currentLevel: number = (parentContext?.getCurrentLevel() ?? -1) + 1;
+const floatingElements = ref<Map<HTMLElement, number>>(new Map());
 
 const context: IFloatingContext = {
-	registerFloating: (element: HTMLElement) => {
-		floatingElements.value.add(element);
-		parentContext?.registerFloating(element);
+	registerFloating: (element: HTMLElement, level: number): void => {
+		floatingElements.value.set(element, level);
+		parentContext?.registerFloating(element, level);
 	},
-	unregisterFloating: (element: HTMLElement) => {
+	unregisterFloating: (element: HTMLElement): void => {
 		floatingElements.value.delete(element);
 		parentContext?.unregisterFloating(element);
 	},
 	isInsideFloating: (target: Element): boolean => {
-		for (const element of floatingElements.value) {
+		for (const element of floatingElements.value.keys()) {
 			if (element.contains(target)) {
 				return true;
 			}
 		}
 		return parentContext?.isInsideFloating(target) ?? false;
 	},
+	getCurrentLevel: (): number => currentLevel,
+	cancelAllChildTimeouts: (fromLevel: number): void => {
+		if (currentLevel >= fromLevel) {
+			if (showTimeout.value) {
+				clearTimeout(showTimeout.value);
+				showTimeout.value = null;
+			}
+			if (hideTimeout.value) {
+				clearTimeout(hideTimeout.value);
+				hideTimeout.value = null;
+			}
+		}
+		parentContext?.cancelAllChildTimeouts(fromLevel);
+	},
+	notifyMouseEnter: (level: number): void => {
+		if (level > currentLevel) {
+			if (hideTimeout.value) {
+				clearTimeout(hideTimeout.value);
+				hideTimeout.value = null;
+			}
+		}
+		parentContext?.notifyMouseEnter(level);
+	},
+	notifyMouseLeave: (level: number): void => {
+		parentContext?.notifyMouseLeave(level);
+	},
 };
 
-provide('floating-context', context);
+provide<IFloatingContext>('floating-context', context);
 
 const enhancedFloatingStyles = computed(() => {
 	if (!floatingStyles.value) {
@@ -88,7 +118,7 @@ const enhancedFloatingStyles = computed(() => {
 
 	if (props.trigger === 'hover') {
 		const padding = props.hoverPadding;
-		let paddingStyle = {};
+		let paddingStyle: Record<string, string> = {};
 
 		if (placement.value?.startsWith('right')) {
 			paddingStyle = { paddingLeft: `${padding}px`, marginLeft: `-${padding}px` };
@@ -110,20 +140,10 @@ const enhancedFloatingStyles = computed(() => {
 });
 
 onMounted(() => {
-	const observer = new MutationObserver(() => {
-		if (floating.value && !floatingElements.value.has(floating.value)) {
-			context.registerFloating(floating.value);
+	nextTick(() => {
+		if (floating.value) {
+			context.registerFloating(floating.value, currentLevel);
 		}
-	});
-
-	if (floating.value) {
-		context.registerFloating(floating.value);
-	}
-
-	observer.observe(document.body, { childList: true, subtree: true });
-
-	onUnmounted(() => {
-		observer.disconnect();
 	});
 });
 
@@ -140,7 +160,7 @@ onUnmounted(() => {
 	}
 });
 
-const handleDocumentClick = (event: Event) => {
+const handleDocumentClick = (event: Event): void => {
 	if (props.trigger !== 'click') {
 		return;
 	}
@@ -158,35 +178,35 @@ const handleDocumentClick = (event: Event) => {
 	isVisible.value = false;
 };
 
-const setupClickOutside = () => {
+const setupClickOutside = (): void => {
 	document.addEventListener('click', handleDocumentClick, true);
 };
 
-const cleanupClickOutside = () => {
+const cleanupClickOutside = (): void => {
 	document.removeEventListener('click', handleDocumentClick, true);
 };
 
 onMounted(setupClickOutside);
 onUnmounted(cleanupClickOutside);
 
-function handleClick() {
+function handleClick(): void {
 	if (props.trigger === 'click') {
 		isVisible.value = !isVisible.value;
 	}
 }
 
-function handleMouseover() {
+function handleMouseover(event: MouseEvent): void {
+	event.stopPropagation();
+
 	if (props.trigger === 'hover') {
+		context.notifyMouseEnter(currentLevel);
+
 		if (hideTimeout.value) {
 			clearTimeout(hideTimeout.value);
 			hideTimeout.value = null;
 		}
 
-		if (isVisible.value) {
-			return;
-		}
-
-		if (showTimeout.value) {
+		if (isVisible.value || showTimeout.value) {
 			return;
 		}
 
@@ -198,8 +218,66 @@ function handleMouseover() {
 	}
 }
 
-function handleMouseleave() {
+function handleMouseleave(event: MouseEvent): void {
+	event.stopPropagation();
+
 	if (props.trigger === 'hover') {
+		const relatedTarget = event.relatedTarget as Element | null;
+
+		if (relatedTarget && context.isInsideFloating(relatedTarget)) {
+			return;
+		}
+
+		if (relatedTarget && (
+			wrapper.value?.contains(relatedTarget) ||
+			floating.value?.contains(relatedTarget)
+		)) {
+			return;
+		}
+
+		context.notifyMouseLeave(currentLevel);
+
+		if (showTimeout.value) {
+			clearTimeout(showTimeout.value);
+			showTimeout.value = null;
+		}
+
+		hideTimeout.value = setTimeout(() => {
+			isVisible.value = false;
+			emits('mouseleave');
+			hideTimeout.value = null;
+		}, props.hideDelayMs);
+	}
+}
+
+function handleFloatingMouseenter(event: MouseEvent): void {
+	event.stopPropagation();
+
+	if (props.trigger === 'hover') {
+		context.notifyMouseEnter(currentLevel);
+
+		if (hideTimeout.value) {
+			clearTimeout(hideTimeout.value);
+			hideTimeout.value = null;
+		}
+	}
+}
+
+function handleFloatingMouseleave(event: MouseEvent): void {
+	event.stopPropagation();
+
+	if (props.trigger === 'hover') {
+		const relatedTarget = event.relatedTarget as Element | null;
+
+		if (relatedTarget && (
+			wrapper.value?.contains(relatedTarget) ||
+			context.isInsideFloating(relatedTarget)
+		)) {
+			return;
+		}
+
+		context.notifyMouseLeave(currentLevel);
+
 		if (showTimeout.value) {
 			clearTimeout(showTimeout.value);
 			showTimeout.value = null;
@@ -219,7 +297,7 @@ defineExpose({ isVisible, handleClick });
 <template>
 	<div
 		ref="wrapper"
-		@mouseover="handleMouseover"
+		@mouseenter="handleMouseover"
 		@mouseleave="handleMouseleave"
 	>
 		<div
@@ -238,16 +316,15 @@ defineExpose({ isVisible, handleClick });
 					ref="floating"
 					:style="enhancedFloatingStyles"
 					class="floating-content"
-					@mouseover="handleMouseover"
-					@mouseleave="handleMouseleave"
+					:data-level="currentLevel"
+					@mouseenter="handleFloatingMouseenter"
+					@mouseleave="handleFloatingMouseleave"
 				>
 					<div class="floating-inner" :style="{padding:`${props.positionOffset}px`}">
 						<div class="floating-scroll-wrapper">
-
 							<slot name="content" />
 						</div>
 					</div>
-
 				</div>
 			</transition>
 		</teleport>
@@ -256,7 +333,7 @@ defineExpose({ isVisible, handleClick });
 
 <style scoped>
 .floating-content {
-	z-index: 101;
+	z-index: v-bind('101 + currentLevel');
 }
 
 .floating-scroll-wrapper {
