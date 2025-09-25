@@ -64,11 +64,21 @@ const {
 		</template>
 		<template #rcm>
 			<context-menu
+				v-model:market="marketSettings"
+				v-model:size-by="sizeBySettings"
+				v-model:color-by="colorBySettings"
+				v-model:color-depth="colorDepthSettings"
 				v-model:display-value="displayValueSettings"
+				v-model:group-by="groupBySettings"
 				v-model:is-show-logo="isShowLogo"
 				v-model:title-variant="titleSetting"
 				:title="props.meta.name"
+				:active-market="activeMarket!"
+				:active-color-by="activeColorBy!"
+				:active-color-depth="activeColorDepth!"
+				:active-size-by="activeSizeBy!"
 				:active-display-value="activeDisplayValue!"
+				:active-group-by="activeGroupBy!"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
 			/>

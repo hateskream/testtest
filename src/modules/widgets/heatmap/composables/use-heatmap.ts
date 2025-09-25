@@ -21,7 +21,7 @@ export function useHeatmap(widgetId: string) {
 
 	const state = ref<IState>(getDefaultState());
 
-	const marketSettings = reactive<IMarketSettings>({
+	const marketSettings = ref<IMarketSettings>({
 		active: state.value.activeMarketId,
 		markets: allMarkets,
 	});
@@ -36,7 +36,7 @@ export function useHeatmap(widgetId: string) {
 		values: [],
 	});
 
-	const colorDepthSettings = reactive<IColorDepthSetting>({
+	const colorDepthSettings = ref<IColorDepthSetting>({
 		active: '',
 		values: [],
 	});
@@ -55,10 +55,10 @@ export function useHeatmap(widgetId: string) {
 	const titleSetting = ref<TitleViewVariant>(TitleViewVariant.NAME);
 
 	const activeMarket = computed(() =>
-		allMarkets.find(m => m.id === marketSettings.active),
+		allMarkets.find(m => m.id === marketSettings.value.active),
 	);
 
-	const activeDisplaySettings = computed(() => displaySettings[marketSettings.active]);
+	const activeDisplaySettings = computed(() => displaySettings[marketSettings.value.active]);
 
 	const activeSizeBy = computed(() =>
 		activeDisplaySettings.value.sizeBy?.find(s => s.key === sizeBySettings.active) || null,
@@ -84,7 +84,7 @@ export function useHeatmap(widgetId: string) {
 		}
 
 		return (
-			colorBy.colorDepth.find(d => d.id === colorDepthSettings.active) ||
+			colorBy.colorDepth.find(d => d.id === colorDepthSettings.value.active) ||
 		colorBy.colorDepth[0] ||
 		null
 		);
@@ -99,7 +99,7 @@ export function useHeatmap(widgetId: string) {
 	);
 
 	watch(
-		() => state.value.settings[marketSettings.active],
+		() => state.value.settings[marketSettings.value.active],
 		(activeSettings) => {
 			if (!activeSettings) {
 				return;
@@ -112,8 +112,8 @@ export function useHeatmap(widgetId: string) {
 			colorBySettings.values =
 			activeDisplaySettings.value.colorBy.map(c => c.colorBy) || [];
 
-			colorDepthSettings.active = activeSettings.colorDepth || '';
-			colorDepthSettings.values =
+			colorDepthSettings.value.active = activeSettings.colorDepth || '';
+			colorDepthSettings.value.values =
 			activeDisplaySettings.value.colorBy.find(c => c.colorBy.key === colorBySettings.active)?.colorDepth || [];
 
 			displayValueSettings.active = activeSettings.displayValue || '';
@@ -132,7 +132,7 @@ export function useHeatmap(widgetId: string) {
 		[
 			() => sizeBySettings.active,
 			() => colorBySettings.active,
-			() => colorDepthSettings.active,
+			() => colorDepthSettings.value.active,
 			() => displayValueSettings.active,
 			() => groupBySettings.active,
 			() => isShowLogo.value,
@@ -147,7 +147,7 @@ export function useHeatmap(widgetId: string) {
 			isLogo,
 			title,
 		]) => {
-			const activeSettings = state.value.settings[marketSettings.active];
+			const activeSettings = state.value.settings[marketSettings.value.active];
 			if (!activeSettings) {
 				return;
 			}
@@ -176,17 +176,17 @@ export function useHeatmap(widgetId: string) {
 				return;
 			}
 
-			colorDepthSettings.values = colorByOption.colorDepth;
+			colorDepthSettings.value.values = colorByOption.colorDepth;
 
-			colorDepthSettings.active =
-			colorByOption.colorDepth.find(d => d.id === colorDepthSettings.active)?.id ||
+			colorDepthSettings.value.active =
+			colorByOption.colorDepth.find(d => d.id === colorDepthSettings.value.active)?.id ||
 			(colorByOption.colorDepth[0]?.id ?? '');
 		},
 		{ immediate: true },
 	);
 
 	watch(
-		() => marketSettings.active,
+		() => marketSettings.value.active,
 		(active) => {
 			state.value.activeMarketId = active;
 		},
@@ -196,7 +196,7 @@ export function useHeatmap(widgetId: string) {
 	watch(dataState, newState => {
 		if (newState) {
 			state.value.activeMarketId = newState.activeMarketId;
-			marketSettings.active = newState.activeMarketId;
+			marketSettings.value.active = newState.activeMarketId;
 			state.value.settings = JSON.parse(JSON.stringify(newState.settings));
 		}
 

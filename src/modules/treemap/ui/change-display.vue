@@ -12,6 +12,8 @@ import type {
 import { TitleViewVariant } from '../model';
 import { UiPosition } from '@/shared/ui/position';
 
+import InteractionSettings from './interaction-settings.vue';
+
 interface IProps {
 	activeDisplayValue: ISettings;
 }
@@ -21,10 +23,6 @@ const props = defineProps<IProps>();
 const displayValue = defineModel<ISingleSetting>('displayValue', { required: true });
 const isShowLogo = defineModel<boolean>('isShowLogo', { required: true });
 const title = defineModel<TitleViewVariant>('title', { required: true });
-
-function updateDisplayValue(newDisplayValue: string) {
-	displayValue.value.active = newDisplayValue;
-}
 
 function updateTitle(newTitle: TitleViewVariant) {
 	title.value = newTitle;
@@ -61,39 +59,10 @@ function updateTitle(newTitle: TitleViewVariant) {
 				</modal-badge-list>
 			</template>
 		</ui-position>
-		<ui-position>
-			<template #default>
-				<modal-item-interaction>
-					<div>
-						Display value
-						<span :class="classes.dot" />
-						{{ props.activeDisplayValue.displayName }}
-					</div>
-				</modal-item-interaction>
-			</template>
-			<template #content>
-				<modal-badge-list>
-					<template #default>
-						<modal-item-selector
-							v-for="dv in displayValue.values"
-							:key="dv.key"
-							:model-value="dv.key === displayValue.active"
-							@update:model-value="updateDisplayValue(dv.key)"
-						>
-							{{ dv.displayName }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</ui-position>
+		<interaction-settings
+			v-model="displayValue"
+			:active="props.activeDisplayValue"
+			title="Display value"
+		/>
 	</modal-badge-list>
 </template>
-
-<style module="classes">
-.dot {
-	width: 1px;
-	height: 1px;
-	border: 1px solid var(--color-text-base-300, #9a9a9d);
-	border-radius: 100%;
-}
-</style>
