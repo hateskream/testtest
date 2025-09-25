@@ -103,9 +103,7 @@ function selectTicker(tickerId: string, sectionId: string) {
 								@unselect="emit('remove-ticker', { tickerId: $event })"
 							/>
 						</template>
-
 					</ui-position>
-
 				</button>
 
 				<button

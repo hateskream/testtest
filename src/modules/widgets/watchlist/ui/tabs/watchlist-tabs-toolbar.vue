@@ -8,9 +8,14 @@ import {
 	TabAction,
 	tabActionToTitle,
 	type ITab,
+	type ITickerAddPayload,
+	type ITickerRemovePayload,
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
+import { ModalTickerSelector } from '@/modules/ticker-selector';
+import type { MarketType } from '@/modules/market';
+import { decodeTickerId, mapSymbolTypeToMarketType } from '@/modules/cell';
 
 import WatchlistTab from './watchlist-tab.vue';
 
@@ -20,6 +25,7 @@ interface ITabWithEditing extends ITab {
 
 interface ITabsComponentProps {
 	tabs: ITab[];
+	selectedTickers: string[];
 }
 
 const props = defineProps<ITabsComponentProps>();
@@ -30,6 +36,8 @@ const emit = defineEmits<{
 	(event: 'rename-tab', id: string, name: string): void;
 	(event: 'duplicate-tab', id: string): void;
 	(event: 'delete-tab', id: string): void;
+	(event: 'add-ticker', payload: ITickerAddPayload): void;
+	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 }>();
 
 const actionToCb: Record<TabAction, (id: string) => void> = {
@@ -97,6 +105,25 @@ function openModal(index: number) {
 	positionRefs.value?.[index].handleClick();
 };
 
+function selectTicker(tickerId: string) {
+	const decodeId = decodeTickerId(tickerId);
+	if (!decodeId) {
+		return;
+	}
+
+	const marketType = mapSymbolTypeToMarketType(decodeId.symbolType);
+	if (!marketType) {
+		return;
+	}
+
+	emit('add-ticker',
+		{
+			tickerId,
+			tickerType: marketType as MarketType,
+		},
+	);
+}
+
 </script>
 
 <template>
@@ -137,9 +164,23 @@ function openModal(index: number) {
 							<modal-item
 								@click="onClickAction(TabAction.AddSymbolsToList, tab.id)"
 							>
-								<span :class="classes.menuActionTitle">
-									{{ tabActionToTitle[TabAction.AddSymbolsToList] }}
-								</span>
+								<ui-position
+									strategy="absolute"
+								>
+									<template #default>
+										<span :class="classes.menuActionTitle">
+											{{ tabActionToTitle[TabAction.AddSymbolsToList] }}
+										</span>
+									</template>
+									<template #content>
+										<modal-ticker-selector
+											:model-value="selectedTickers"
+											:enable-select-all="false"
+											@select="selectTicker"
+											@unselect="emit('remove-ticker', { tickerId: $event })"
+										/>
+									</template>
+								</ui-position>
 							</modal-item>
 
 							<ui-driver />

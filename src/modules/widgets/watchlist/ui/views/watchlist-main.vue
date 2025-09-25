@@ -38,12 +38,15 @@ function onRenameTab(id: string, name: string) {
 	<div :class="classes.root">
 		<template v-if="props.tabs.length">
 			<watchlist-tabs-toolbar
+				:selected-tickers="props.selectedTickers"
 				:tabs="props.tabs"
 				@add-tab="emit('add-tab')"
 				@rename-tab="onRenameTab"
 				@switch-tab="emit('switch-tab', $event)"
 				@duplicate-tab="emit('duplicate-tab', $event)"
 				@delete-tab="emit('delete-tab', $event)"
+				@add-ticker="emit('add-ticker', $event)"
+				@remove-ticker="emit('remove-ticker', $event)"
 			/>
 			<watchlist-table
 				:columns="props.columns"
