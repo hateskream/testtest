@@ -14,4 +14,5 @@ export const WidgetTypeToFeature: Record<WidgetType, FeatureName> = {
 	[WidgetType.TopIndices]: 'WIDGET_TOP_INDICES',
 	[WidgetType.BitcoinDominance]: 'WIDGET_BITCOIN_DOMINANCE',
 	[WidgetType.Calendar]: 'WIDGET_CALENDAR',
+	[WidgetType.Heatmap]: 'WIDGET_HEATMAP',
 };
