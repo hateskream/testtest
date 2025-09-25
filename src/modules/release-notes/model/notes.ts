@@ -102,4 +102,39 @@ export const notes: IWeekGroup[] = [
 			},
 		],
 	},
+	{
+		week: '18-25 09 2025',
+		items: [
+			{
+				id: '13',
+				title: 'Страница календаря',
+				description: 'Разработана адаптивная страница календаря, включая ' +
+				'недельную краткую сводку, фильтрацию по: рынку, вачлисту, типу ивента, импакту и временному отрезку.',
+				productLink: '/calendar',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=34377-239473&p=f&t=pfK9TY3TTSaUHMhO-0',
+			},
+			{
+				id: '14',
+				title: 'Виджет календаря',
+				description: 'Разработан виджет календаря, с учетом сохранения стейта виджета в локальном хранилище',
+				productLink: '/',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=34041-272333&t=pfK9TY3TTSaUHMhO-4',
+			},
+			{
+				id: '15',
+				title: 'Обновления в вочлисте',
+				description: 'Сделано: добавление секции, удаление секции добавление тикера из секции, ' +
+				'добавление тикера из пустого вочлиста',
+				productLink: '/',
+			},
+			{
+				id: '16',
+				title: 'Сделан виджет хитмеп',
+				description: '',
+				productLink: '/',
+			},
+		],
+	},
 ];
