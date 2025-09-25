@@ -43,13 +43,13 @@ const emits = defineEmits<{
 	'reset-week': [];
 }>();
 
-const countryState = defineModel<MarketIds>('country-state', { required: true });
-const impactState = defineModel<Impact>('impact-state', { required: true });
-const eventState = defineModel<EventType>('event-state', { required: true });
-const watchlistIdState = defineModel<string | null>('watchlist-id-state', { required: true });
-const watchlistSectionState = defineModel<string | null>('watchlist-section-state', { required: true });
+const countryState = defineModel<MarketIds>('countryState', { required: true });
+const impactState = defineModel<Impact>('impactState', { required: true });
+const eventState = defineModel<EventType>('eventState', { required: true });
+const watchlistIdState = defineModel<string | null>('watchlistIdState', { required: true });
+const watchlistSectionState = defineModel<string | null>('watchlistSectionState', { required: true });
 
-const range = defineModel<IEventBoardRange>('range-state', { required: true });
+const range = defineModel<IEventBoardRange>('rangeState', { required: true });
 
 const selectedCountry = computed({
 	set: (market: IMarketData) => {

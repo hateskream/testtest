@@ -41,7 +41,7 @@ const emits = defineEmits<{
 	toggleFavorite: [id: string];
 }>();
 
-const weekRange = defineModel<IEventBoardRange>('week-range', { required: true });
+const weekRange = defineModel<IEventBoardRange>('weekRange', { required: true });
 const toolbar = defineModel<IToolbarState>('toolbar', { required: true });
 
 const eventBoardRef = useTemplateRef('event-board-component');
