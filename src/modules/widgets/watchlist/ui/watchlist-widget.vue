@@ -23,7 +23,7 @@ const {
 	tabs,
 	columns,
 	sections,
-	tickerIds,
+	selectedTickers,
 
 	addNewWatchlist,
 	renameWatchlist,
@@ -42,7 +42,7 @@ const {
 	handlerRemoveSectionFromWatchlist,
 } = useWatchlistWidget(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryTickers(tickerIds);
+const { data, isLoading, isError } = useQueryTickers(selectedTickers);
 
 const isNotData = computed(() => !!data?.value && isLoading.value);
 </script>
@@ -63,6 +63,7 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				:sections="sections"
 				:tickers="data"
 				:tabs="tabs"
+				:selected-tickers="selectedTickers"
 				@add-tab="addNewWatchlist"
 				@rename-tab="renameWatchlist"
 				@switch-tab="handlerSwitchTab"

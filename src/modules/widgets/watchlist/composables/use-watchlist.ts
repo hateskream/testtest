@@ -27,6 +27,7 @@ import type { MarketType } from '@/modules/market';
 export function useWatchlistWidget(widgetId: string) {
 	const {
 		watchlists,
+		selectedTickers,
 
 		addNewWatchlist,
 		renameWatchlist,
@@ -50,8 +51,6 @@ export function useWatchlistWidget(widgetId: string) {
 	);
 
 	const sections = computed((): ISectionUi[] => getSections(state.value, watchlists.value));
-
-	const tickerIds = computed(() => []);
 
 	const columns = computed({
 		get: () => table.value?.columns || [],
@@ -160,7 +159,7 @@ export function useWatchlistWidget(widgetId: string) {
 		columns,
 		activeSort,
 		sections,
-		tickerIds,
+		selectedTickers,
 
 		addNewWatchlist,
 		renameWatchlist,

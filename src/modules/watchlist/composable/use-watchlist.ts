@@ -27,6 +27,11 @@ export function useWatchlist() {
 		getActionableWatchlists(watchlists.value),
 	);
 
+	const selectedTickers = computed(() =>
+		actionableWatchlists.value
+			.flatMap(item => item.tickers),
+	);
+
 	watch(watchlistsData, newState => {
 		if (newState) {
 			watchlists.value = [...newState];
@@ -72,6 +77,7 @@ export function useWatchlist() {
 	return {
 		watchlists,
 		actionableWatchlists,
+		selectedTickers,
 
 		addNewWatchlist,
 		renameWatchlist,

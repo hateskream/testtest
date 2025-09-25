@@ -186,3 +186,7 @@ export function moveRowBetweenSections(
 		return s;
 	});
 };
+
+export function findSectionTypeById(sections: ISection[], sectionId: string): SectionType | undefined {
+	return sections.find(section => section.id === sectionId)?.type;
+}

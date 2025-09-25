@@ -7,6 +7,7 @@ import WatchlistTable from '../table/watchlist-table.vue';
 import WatchlistTabsToolbar from '../tabs/watchlist-tabs-toolbar.vue';
 
 interface IWatchlistMainProps {
+	selectedTickers: string[];
 	tickers: TableRow[];
 	columns: ITableColumn[];
 	sections: ISectionUi[];
@@ -48,6 +49,7 @@ function onRenameTab(id: string, name: string) {
 				:columns="props.columns"
 				:sections="props.sections"
 				:tickers="props.tickers"
+				:selected-tickers="props.selectedTickers"
 				@add-ticker="emit('add-ticker', $event)"
 				@remove-ticker="emit('remove-ticker', $event)"
 				@add-tickers="emit('add-tickers', $event)"
