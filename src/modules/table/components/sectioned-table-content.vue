@@ -321,7 +321,7 @@ const canMoveItem = (evt: unknown) => {
 							</div>
 						</div>
 						<div :class="classes.sectionHeaderRight" @click.stop>
-							<slot name="section-actions" :section="item.section.id!" />
+							<slot name="section-actions" :section-id="item.section.id" />
 						</div>
 					</div>
 				</td>

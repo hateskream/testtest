@@ -25,6 +25,7 @@ const emit = defineEmits<{
 	(event: 'delete-tab', id: string): void;
 	(event: 'create-new-watchlist'): void;
 	(event: 'add-tickers', payload: ITickersAddPayload): void;
+	(event: 'remove-section', id: string): void;
 }>();
 
 function onRenameTab(id: string, name: string) {
@@ -50,6 +51,7 @@ function onRenameTab(id: string, name: string) {
 				@add-ticker="emit('add-ticker', $event)"
 				@remove-ticker="emit('remove-ticker', $event)"
 				@add-tickers="emit('add-tickers', $event)"
+				@remove-section="emit('remove-section', $event)"
 			/>
 		</template>
 		<template v-else>

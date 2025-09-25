@@ -366,8 +366,8 @@ const {
 						</slot>
 					</template>
 
-					<template #section-actions="sectionId : string">
-						<slot name="section-actions" v-bind="sectionId">
+					<template #section-actions="{ sectionId }">
+						<slot name="section-actions" :section-id="sectionId">
 						</slot>
 					</template>
 

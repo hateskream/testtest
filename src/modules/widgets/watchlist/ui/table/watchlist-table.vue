@@ -27,6 +27,7 @@ const emit = defineEmits<{
 	(event: 'add-ticker', payload: ITickerAddPayload): void;
 	(event: 'remove-ticker', payload: ITickerRemovePayload): void;
 	(event: 'add-tickers', payload: ITickersAddPayload): void;
+	(event: 'remove-section', id: string): void;
 }>();
 
 const { goToTickerPage } = useGoToTickerPage();
@@ -63,19 +64,13 @@ const genericSections = computed(() => mapSections(props.sections, props.tickers
 					class="action-button"
 					:title="sectionId"
 				>
-					✏️
-				</button>
-
-				<button
-					class="action-button"
-					:title="sectionId"
-				>
 					📋
 				</button>
 
 				<button
 					class="action-button delete-button"
 					:title="sectionId"
+					@click="emit('remove-section', sectionId)"
 				>
 					🗑️
 				</button>

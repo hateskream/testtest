@@ -38,6 +38,8 @@ const {
 	handlerAddTickersToWatchlist,
 
 	createNewWatchlist,
+
+	handlerRemoveSectionFromWatchlist,
 } = useWatchlistWidget(props.meta.widgetId);
 
 const { data, isLoading, isError } = useQueryTickers(tickerIds);
@@ -70,6 +72,7 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 				@delete-tab="removeWatchlist"
 				@create-new-watchlist="createNewWatchlist"
 				@add-tickers="handlerAddTickersToWatchlist"
+				@remove-section="handlerRemoveSectionFromWatchlist"
 			/>
 		</template>
 

@@ -33,6 +33,8 @@ export function useWatchlistWidget(widgetId: string) {
 		removeWatchlist,
 		duplicateWatchlist,
 
+		deleteSectionFromWatchlist,
+
 		addToWatchlist,
 		removeFromWatchlist,
 	} = useWatchlist();
@@ -137,6 +139,14 @@ export function useWatchlistWidget(widgetId: string) {
 		removeFromWatchlist(table.value.id, tickerId);
 	}
 
+	function handlerRemoveSectionFromWatchlist(sectionId: string) {
+		if (!table.value) {
+			return;
+		}
+
+		deleteSectionFromWatchlist(table.value.id, sectionId);
+	}
+
 	function resetAllChanges() {
 		state.value = getDefaultState(watchlists.value);
 	}
@@ -166,5 +176,7 @@ export function useWatchlistWidget(widgetId: string) {
 		handlerAddTickersToWatchlist,
 
 		createNewWatchlist,
+
+		handlerRemoveSectionFromWatchlist,
 	};
 }

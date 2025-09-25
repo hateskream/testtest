@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { addTicker, deleteTicker, type ISection } from './section';
+import { addTicker, deleteSection, deleteTicker, type ISection } from './section';
 import { updateById } from '@/shared/lib';
 import type { MarketType } from '@/modules/market';
 
@@ -122,6 +122,23 @@ export function deleteTickerFromWatchlist(
 			sections: deleteTicker(
 				watchlist.sections,
 				tickerId,
+			),
+		}));
+}
+
+export function deleteSectionFromWatchlist(
+	watchlists: IWatchlist[],
+	watchlistId: string,
+	sectionId: string,
+): IWatchlist[] {
+	return updateById(
+		watchlists,
+		watchlistId,
+		watchlist => ({
+			...watchlist,
+			sections: deleteSection(
+				watchlist.sections,
+				sectionId,
 			),
 		}));
 }

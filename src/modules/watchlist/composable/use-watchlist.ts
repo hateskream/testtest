@@ -9,6 +9,7 @@ import {
 	removeWatchlist as removeWatchlistModel,
 	duplicateWatchlist as duplicateWatchlistModel,
 	addTickerInNewWatchlist as addTickerInNewWatchlistModel,
+	deleteSectionFromWatchlist as deleteSectionFromWatchlistModel,
 	addTickerInWatchlist,
 	deleteTickerFromWatchlist,
 	getActionableWatchlists,
@@ -64,6 +65,10 @@ export function useWatchlist() {
 		watchlists.value = deleteTickerFromWatchlist(watchlists.value, watchlistId, tickerId);
 	}
 
+	function deleteSectionFromWatchlist(watchlistId: string, sectionId: string) {
+		watchlists.value = deleteSectionFromWatchlistModel(watchlists.value, watchlistId, sectionId);
+	}
+
 	return {
 		watchlists,
 		actionableWatchlists,
@@ -72,6 +77,8 @@ export function useWatchlist() {
 		renameWatchlist,
 		removeWatchlist,
 		duplicateWatchlist,
+
+		deleteSectionFromWatchlist,
 
 		addToWatchlist,
 		removeFromWatchlist,
