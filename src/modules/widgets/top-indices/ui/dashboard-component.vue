@@ -45,6 +45,7 @@ const emit = defineEmits<{
 			/>
 
 			<top-indices-main
+				v-else
 				:rows="rows"
 				:columns="ALL_COLUMNS"
 			/>

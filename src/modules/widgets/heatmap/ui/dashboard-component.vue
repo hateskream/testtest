@@ -6,6 +6,7 @@ import { useHeatmap } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import ContextMenu from './context-menu.vue';
+import SkeletonGroup from '@/shared/ui/skeleton/skeleton-group.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -19,6 +20,7 @@ const emit = defineEmits<{
 
 const {
 	isError,
+	isLoading,
 
 	marketSettings,
 	sizeBySettings,
@@ -46,7 +48,8 @@ const {
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<base-error-component v-if="isError" @retry="refetch" />
+			<skeleton-group v-if="isLoading" />
+			<base-error-component v-else-if="isError" @retry="refetch" />
 
 			<div v-else :class="classes.heatmap">
 				<treemap-component

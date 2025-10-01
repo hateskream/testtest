@@ -19,7 +19,7 @@ export function useFearGreed(widgetId: string) {
 		isError: isError.value,
 	}));
 
-	const isNotData = computed(() => !!data.value && isLoading.value && !isLoadingSettings.value);
+	const isNotData = computed(() => isLoading.value && !isLoadingSettings.value);
 
 	watch(dataSettings, newSettings => {
 		if (newSettings) {
