@@ -28,6 +28,7 @@ import type { IPosition } from '../model';
 import type { IWidgetState, WidgetType } from '@/modules/dashboard-group/core';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { mapToWidgetState } from '../utils';
+import { useDelayedLoading } from '@/shared/composables';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -68,6 +69,8 @@ let mountedPlaceholder: App<Element> | null = null;
 const { dnDProvider } = useInjectSetterDndHandler();
 
 const { canDelete } = useInjectCanDelete();
+
+const { loading } = useDelayedLoading();
 
 const wrapperRef = ref<HTMLDivElement | null>(null);
 const gridLayoutRef = ref<InstanceType<typeof GridLayout> | null>(null);
@@ -479,6 +482,7 @@ onCreated();
 			:margin="[0, 0]"
 			use-css-transforms
 			class="dashboard-grid"
+			:data-loading="loading"
 			@layout-updated="updated"
 		>
 			<dashboard-grid-element
@@ -538,7 +542,7 @@ onCreated();
 	--vgl-item-resizing-opacity: 100% !important;
 }
 
-:deep(.vgl-item--transform) {
+.dashboard-grid[data-loading='true'] :deep(.vgl-item--transform) {
 	transition: none !important;
 }
 

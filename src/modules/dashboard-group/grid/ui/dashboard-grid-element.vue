@@ -151,7 +151,7 @@ function resize(i: string, newH: number, newW: number) {
 <style module="classes">
 .root {
 	padding: 3px;
-	will-change: top, left !important;
+	will-change: transform !important;
 }
 
 .root:has([data-loading='true']) {

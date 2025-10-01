@@ -5,6 +5,7 @@ import { useElementSize } from '@vueuse/core';
 import type { IDashboard } from '../model';
 import type { IPosition, WidgetType } from '@/modules/dashboard-group/core';
 import type { IWidgetState } from '@/modules/dashboard-group/core';
+import { useDelayedLoading } from '@/shared/composables';
 
 import GridComponent from './grid-component.vue';
 
@@ -30,6 +31,8 @@ const emit = defineEmits<{
 	(e: 'is-edit', value: boolean): void;
 }>();
 
+const { loading } = useDelayedLoading();
+
 const { width } = useElementSize(useTemplateRef('rootRef'));
 
 const activeIndex = computed(() => {
@@ -41,7 +44,7 @@ const sliderStyle = computed(() => {
 
 	return {
 		transform: `translateX(${-translateX}px)`,
-		transition: `transform ${300}ms`,
+		transition: loading.value ? 'none' : `transform ${300}ms`,
 	};
 });
 

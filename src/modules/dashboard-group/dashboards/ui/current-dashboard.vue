@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed } from 'vue';
 
 import {
 	type IWidget,
 	type IMeta,
 } from '../../core';
 import { getWidgetComponent } from '../utils';
+import { useDelayedLoading } from '@/shared/composables';
 
 interface IGroupComponentProps {
 	dashboardItem: IWidget;
@@ -21,7 +22,7 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
-const isLoading = ref(true);
+const { loading } = useDelayedLoading();
 
 const meta = computed((): IMeta => ({
 	market: '',
@@ -33,27 +34,15 @@ const meta = computed((): IMeta => ({
 	},
 	name: props.dashboardItem.name,
 	defaultStateType: props.dashboardItem.defaultStateType,
-	isLoading: isLoading.value,
+	isLoading: loading.value,
 }));
-
-function showWithLoadingDelay() {
-	isLoading.value = true;
-
-	nextTick(() => {
-		setTimeout(() => {
-			isLoading.value	= false;
-		}, 50);
-	});
-}
-
-showWithLoadingDelay();
 </script>
 
 <template>
 	<component
 		:is="getWidgetComponent(props.dashboardItem.widgetType)"
 		:meta="meta"
-		:data-loading="isLoading"
+		:data-loading="loading"
 		@delete="emit('delete')"
 	/>
 </template>
