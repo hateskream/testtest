@@ -5,12 +5,6 @@ import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboard } from '@/modules/widgets/market-cap';
 import { NewsDashboard } from '@/modules/widgets/news';
 import { PriceDashboard } from '@/modules/widgets/price';
-import { HotMarketsDashboard } from '@/modules/widgets/hot-markets';
-import { SearchDashboard } from '@/modules/widgets/search';
-import { InsidersDashboard } from '@/modules/widgets/insiders';
-import { EventsDashboard } from '@/modules/widgets/events';
-import { TelegramDashboard } from '@/modules/widgets/telegram';
-import { ChartDashboard } from '@/modules/widgets/chart';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
@@ -27,12 +21,6 @@ export function getWidgetComponent(type: WidgetType) {
 		[WidgetType.MarketCap]: MarketCapDashboard,
 		[WidgetType.News]: NewsDashboard,
 		[WidgetType.Price]: PriceDashboard,
-		[WidgetType.HotMarkets]: HotMarketsDashboard,
-		[WidgetType.Search]: SearchDashboard,
-		[WidgetType.Insiders]: InsidersDashboard,
-		[WidgetType.Events]: EventsDashboard,
-		[WidgetType.Telegram]: TelegramDashboard,
-		[WidgetType.Chart]: ChartDashboard,
 		[WidgetType.Watchlist]: WatchlistDashboard,
 		[WidgetType.Performance]: PerformanceWidget,
 		[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
