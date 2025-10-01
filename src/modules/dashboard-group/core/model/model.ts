@@ -56,6 +56,7 @@ export interface IDashboardTab {
 export interface IMeta {
 	widgetId: string;
 	isResizing: boolean;
+	isLoading: boolean;
 	market: string;
 	name: string;
 	size: ISize;

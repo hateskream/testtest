@@ -476,8 +476,8 @@ onCreated();
 			:is-draggable="isEditable"
 			:is-resizable="isEditable"
 			:prevent-collision="false"
-			:use-css-transforms="false"
 			:margin="[0, 0]"
+			use-css-transforms
 			class="dashboard-grid"
 			@layout-updated="updated"
 		>
@@ -536,6 +536,10 @@ onCreated();
 	touch-action: none;
 
 	--vgl-item-resizing-opacity: 100% !important;
+}
+
+:deep(.vgl-item--transform) {
+	transition: none !important;
 }
 
 :deep(.vgl-item:not(.vgl-item--placeholder)) {

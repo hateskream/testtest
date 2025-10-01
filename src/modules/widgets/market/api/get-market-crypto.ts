@@ -100,7 +100,7 @@ export async function getMarketCrypto(_: IGetMarketRequest): Promise<IPreparedRe
 
 async function getMockData(): Promise<IPreparedResponse> {
 	await new Promise(resolve => {
-		setTimeout(resolve, 5000);
+		setTimeout(resolve, 0);
 	});
 
 	const columnTypes: ColumnWithoutSymbol[] = [

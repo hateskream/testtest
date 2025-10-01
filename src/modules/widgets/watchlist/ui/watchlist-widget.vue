@@ -44,7 +44,7 @@ const {
 
 const { data, isLoading, isError, refetch } = useQueryTickers(selectedTickers);
 
-const isNotData = computed(() => !!data?.value && isLoading.value);
+const isNotData = computed(() => (!!data?.value && isLoading.value) || props.meta.isLoading);
 </script>
 
 <template>

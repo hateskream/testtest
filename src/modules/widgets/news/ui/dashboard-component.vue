@@ -43,7 +43,7 @@ const { data, isLoading, isError, refetch } = useQueryNews(computed(() => ({
 	limit: 10,
 })));
 
-const isNotData = computed(() => !!data.value && isLoading.value);
+const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
 const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
 

@@ -35,7 +35,7 @@ const emit = defineEmits<{
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
 			<view-component
 				v-else
 				v-model="activeMarket"

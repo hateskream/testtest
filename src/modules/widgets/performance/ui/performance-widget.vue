@@ -44,7 +44,7 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<performance-loader v-else-if="isLoading" />
+			<performance-loader v-else-if="isLoading || props.meta.isLoading" />
 			<performance-view
 				v-else-if="data"
 				v-model:is-compact-mode="isCompactMode"

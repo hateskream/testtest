@@ -51,7 +51,7 @@ const { data, isLoading, isError, refetch } = useQueryMarket(
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 
-const isNotData = computed(() => !rows.value.length && isLoading.value);
+const isNotData = computed(() => (!rows.value.length && isLoading.value) || props.meta.isLoading);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;

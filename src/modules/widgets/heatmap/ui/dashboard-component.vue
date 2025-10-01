@@ -48,11 +48,12 @@ const {
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<skeleton-group v-if="isLoading" />
+			<skeleton-group v-if="isLoading || props.meta.isLoading" />
 			<base-error-component v-else-if="isError" @retry="refetch" />
 
 			<div v-else :class="classes.heatmap">
 				<treemap-component
+					v-else
 					v-model:market="marketSettings"
 					v-model:size-by="sizeBySettings"
 					v-model:color-by="colorBySettings"

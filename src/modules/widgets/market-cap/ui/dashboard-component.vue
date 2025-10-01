@@ -21,7 +21,7 @@ const marketCap = useMarketCapStore();
 
 const { data, isLoading, isError, refetch } = useQueryMarketCap(computed(() => marketCap.selectedTickers));
 
-const isNotData = computed(() => !!data.value && isLoading.value);
+const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;

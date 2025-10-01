@@ -44,7 +44,7 @@ const {
 });
 
 const isLoading = computed(
-	() => isDailyCalendarLoading.value && isEventBoardLoading.value,
+	() => (isDailyCalendarLoading.value && isEventBoardLoading.value) || props.meta.isLoading,
 );
 </script>
 

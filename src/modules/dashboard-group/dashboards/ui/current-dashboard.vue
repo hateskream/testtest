@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import {
 	type IWidget,
@@ -21,6 +21,8 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
+const isLoading = ref(true);
+
 const meta = computed((): IMeta => ({
 	market: '',
 	widgetId: props.dashboardItem.id,
@@ -31,14 +33,27 @@ const meta = computed((): IMeta => ({
 	},
 	name: props.dashboardItem.name,
 	defaultStateType: props.dashboardItem.defaultStateType,
+	isLoading: isLoading.value,
 }));
 
+function showWithLoadingDelay() {
+	isLoading.value = true;
+
+	nextTick(() => {
+		setTimeout(() => {
+			isLoading.value	= false;
+		}, 50);
+	});
+}
+
+showWithLoadingDelay();
 </script>
 
 <template>
 	<component
 		:is="getWidgetComponent(props.dashboardItem.widgetType)"
 		:meta="meta"
+		:data-loading="isLoading"
 		@delete="emit('delete')"
 	/>
 </template>

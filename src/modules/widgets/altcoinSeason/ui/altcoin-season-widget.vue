@@ -9,7 +9,6 @@ import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import AltcoinSeasonMain from './layouts/altcoin-season-main.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
 interface IAltcoinSeasonWidgetProps {
 	meta: IMeta;
 }
@@ -20,8 +19,10 @@ const emit = defineEmits<{
 	(e: 'delete'): void;
 }>();
 
+const altcoinSeasonStore = useAltcoinSeasonStore();
+
 const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
-const isLoading = computed(() => altcoinSeasonStore.isLoading.value);
+const isLoading = computed(() => altcoinSeasonStore.isLoading.value || props.meta.isLoading);
 const isError = computed(() => altcoinSeasonStore.isError.value);
 </script>
 

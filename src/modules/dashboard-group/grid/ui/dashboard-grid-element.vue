@@ -108,6 +108,7 @@ function resize(i: string, newH: number, newW: number) {
 		:min-w="props.minW"
 		drag-allow-from=".widget-drag"
 		drag-ignore-from=".widget-no-drag"
+		:class="classes.root"
 		@resize="resize"
 		@resized="emit('resized')"
 		@moved="emit('moved')"
@@ -135,28 +136,40 @@ function resize(i: string, newH: number, newW: number) {
 				<slot name="state-add-widget" />
 			</div>
 
-			<div
-				v-show="!componentState.isResize && !componentState.isDnd && props.dropId !== props.i"
-				:class="classes.item"
-			>
-				<slot name="state-calm" />
-			</div>
+			<keep-alive>
+				<div
+					v-if="!componentState.isResize && !componentState.isDnd && props.dropId !== props.i"
+					:class="classes.item"
+				>
+					<slot name="state-calm" />
+				</div>
+			</keep-alive>
 		</div>
 	</grid-item>
 </template>
 
 <style module="classes">
+.root {
+	padding: 3px;
+	will-change: top, left !important;
+}
+
+.root:has([data-loading='true']) {
+	transition: none !important;
+}
+
 .isEditing {
-	padding: 7px;
+	margin: 3px;
 }
 
 .notEditing {
-	padding: 3px;
+	margin: 0;
 }
 
 .itemWrapper {
 	height: 100%;
-	transition: padding 0.3s ease;
+	transition: margin 0.1s ease-out;
+	will-change: margin;
 }
 
 .item {

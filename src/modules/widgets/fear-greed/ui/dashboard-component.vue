@@ -30,7 +30,7 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<preloader-component v-if="isNotData" />
+			<preloader-component v-if="isNotData || props.meta.isLoading" />
 			<base-error-component
 				v-else-if="dataState.isError"
 				@retry="refetch"

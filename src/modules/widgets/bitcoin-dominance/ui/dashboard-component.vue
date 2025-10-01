@@ -23,7 +23,7 @@ const { data, isLoading, isError, refetch } = useQueryBintcoinDominance(
 	computed(() => bitcoinDominanceStore.selectedTickers),
 );
 
-const isNotData = computed(() => !!data.value && isLoading.value);
+const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
