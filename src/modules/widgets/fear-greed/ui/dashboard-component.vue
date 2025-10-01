@@ -13,7 +13,7 @@ import PreloaderComponent from './preloader-component.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
 	loadingComponent: PreloaderComponent,
-	errorComponent: ErrorComponent,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IWidgetComponentProps {

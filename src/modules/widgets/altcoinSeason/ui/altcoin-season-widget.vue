@@ -7,13 +7,12 @@ import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
-import AltcoinSeasonError from './layouts/altcoin-season-error.vue';
 
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/altcoin-season-main.vue'),
 	loadingComponent: AltcoinSeasonLoader,
-	errorComponent: AltcoinSeasonError,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IAltcoinSeasonWidgetProps {

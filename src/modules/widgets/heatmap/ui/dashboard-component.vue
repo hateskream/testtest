@@ -60,7 +60,6 @@ const {
 
 			<div v-else :class="classes.heatmap">
 				<main-component
-					v-else
 					v-model:market="marketSettings"
 					v-model:size-by="sizeBySettings"
 					v-model:color-by="colorBySettings"

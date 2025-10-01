@@ -13,7 +13,7 @@ import PerformanceContextMenu from './modals/performance-context-menu.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/performance-view.vue'),
 	loadingComponent: PerformanceLoader,
-	errorComponent: PerformanceError,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IWidgetComponentProps {

@@ -13,7 +13,7 @@ import BitcoinDominanceContextMenu from './bitcoin-dominance-context-menu.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
 	loadingComponent: PreloaderComponent,
-	errorComponent: ErrorComponent,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IWidgetComponentProps {

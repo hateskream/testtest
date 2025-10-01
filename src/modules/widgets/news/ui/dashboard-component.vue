@@ -14,7 +14,7 @@ import NewsContextMenu from './news-context-menu.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-news-component.vue'),
 	loadingComponent: PreloaderComponent,
-	errorComponent: ErrorComponent,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IWidgetComponentProps {

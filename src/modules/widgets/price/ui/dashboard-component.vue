@@ -12,7 +12,7 @@ import PriceListContextMenu from './price-list-context-menu.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
 	loadingComponent: PreloaderComponent,
-	errorComponent: ErrorComponent,
+	errorComponent: BaseErrorComponent,
 });
 
 interface IWidgetComponentProps {

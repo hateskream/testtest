@@ -11,7 +11,7 @@ import CalendarContextMenu from './calendar-context-menu.vue';
 const CalendarMain = defineAsyncComponent({
 	loader: () => import('./views/calendar-main.vue'),
 	loadingComponent: CalendarLoader,
-	errorComponent: CalendarError,
+	errorComponent: BaseErrorComponent,
 });
 
 const props = defineProps<{
