@@ -7,6 +7,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import vueDevTools from 'vite-plugin-vue-devtools';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
@@ -32,6 +33,48 @@ export default defineConfig({
 				target: 'https://gateway.planet9.uk',
 				changeOrigin: true,
 				secure: true,
+			},
+		},
+	},
+	build: {
+		target: 'es2017',
+		cssCodeSplit: true,
+		sourcemap: false,
+		minify: 'terser',
+		terserOptions: {
+			parse: {
+				ecma: 2017,
+			},
+			compress: {
+				inline: 2,
+				passes: 3,
+				collapse_vars: true,
+				reduce_vars: true,
+				unused: true,
+				dead_code: true,
+				pure_getters: true,
+				drop_console: true,
+				drop_debugger: true,
+				ecma: 2017,
+				comparisons: false,
+			},
+			mangle: true,
+			output: {
+				ecma: 2017,
+				comments: false,
+				ascii_only: true,
+			},
+		},
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					vue: ['vue', 'vue-router', 'pinia'],
+					chart: ['chart.js', 'chartjs-plugin-annotation', 'chartjs-chart-treemap'],
+					utils: ['uuid', 'mitt', 'zod'],
+				},
+				chunkFileNames: 'assets/js/[name]-[hash].js',
+				entryFileNames: 'assets/js/[name]-[hash].js',
+				assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
 			},
 		},
 	},

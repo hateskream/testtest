@@ -11,7 +11,12 @@ const props = defineProps<IProps>();
 
 <template>
 	<div :class="classes.chartContainer">
-		<img v-if="props.data.src" :src="MockChart" />
+		<img
+			v-if="props.data.src"
+			:src="MockChart"
+			alt="chart"
+			fetchpriority="high"
+		/>
 		<!-- <img
 			v-if="props.cell.src"
 			:src="props.cell.src"

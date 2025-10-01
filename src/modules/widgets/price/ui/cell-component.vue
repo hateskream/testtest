@@ -90,6 +90,8 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						<img
 							:src="MockChart"
 							style="  width: 90px; height: 40px; object-fit: contain;"
+							alt="chart"
+							fetchpriority="high"
 						/>
 					</div>
 				</ui-transition-fade>

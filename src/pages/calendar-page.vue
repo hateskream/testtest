@@ -105,6 +105,7 @@ useEventBoardScroll({
 						we can replace this with module instead of full widget -->
 					<news-dashboard
 						:meta="{
+							isLoading: false,
 							name: '',
 							isResizing: false,
 							widgetId: 'news',
