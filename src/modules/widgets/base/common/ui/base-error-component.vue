@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ErrorNetworkComponent } from '@/modules/widgets/base';
+import ErrorNetworkComponent from './error-network-component.vue';
+
+const emits = defineEmits<{
+	retry: [];
+}>();
 </script>
 
 <template>
 	<div :class="classes.root">
-		<error-network-component />
+		<error-network-component @retry="emits('retry')" />
 	</div>
 </template>
 

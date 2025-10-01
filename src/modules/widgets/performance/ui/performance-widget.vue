@@ -2,12 +2,11 @@
 import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { BaseDashboardComponent } from '@/modules/widgets/base';
+import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
-import PerformanceError from './layouts/performance-error.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
 import PerformanceView from './layouts/performance-view.vue';
 import PerformanceContextMenu from './modals/performance-context-menu.vue';
@@ -30,7 +29,7 @@ const {
 	resetAllChanges,
 } = usePerformance(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryPerformance(
+const { data, isLoading, isError, refetch } = useQueryPerformance(
 	currentStock,
 	currentDate,
 	10,
@@ -44,7 +43,7 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 		<template #title> {{ props.meta.name }} </template>
 
 		<template #content>
-			<performance-error v-if="isError" />
+			<base-error-component v-if="isError" @retry="refetch" />
 			<performance-loader v-else-if="isLoading" />
 			<performance-view
 				v-else-if="data"

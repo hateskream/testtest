@@ -3,9 +3,9 @@
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { useFearGreed } from '../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import FearGreedContextMenu from './fear-greed-context-menu.vue';
-import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
 
@@ -15,10 +15,10 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { viewState, dataState, isNotData, resetAllChanges } = useFearGreed(props.meta.widgetId);
+const { viewState, dataState, isNotData, resetAllChanges, refetch } = useFearGreed(props.meta.widgetId);
 
 const emit = defineEmits<{
-	(e: 'delete'): void;
+	delete: [];
 }>();
 
 </script>
@@ -30,7 +30,10 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<error-component v-if="dataState.isError" />
+			<base-error-component
+				v-if="dataState.isError"
+				@retry="refetch"
+			/>
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="dataState.data"

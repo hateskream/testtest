@@ -37,7 +37,12 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		to: toUtcIsoDate(getEndOfWeek(baseDate.value)),
 	});
 
-	const { dailyCalendar, isDailyCalendarLoading } = useDailyCalendar({
+	const {
+		dailyCalendar,
+		isDailyCalendarLoading,
+		isError: isDailyCalendarError,
+		refetch: refetchDailyCalendar,
+	} = useDailyCalendar({
 		from: () => toUtcIsoDate(getStartOfWeek(baseDate.value)),
 		to: () => toUtcIsoDate(addDays(getEndOfWeek(baseDate.value), 7)),
 	});
@@ -74,7 +79,12 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		},
 	}));
 
-	const { eventBoard, isLoading: isEventBoardLoading } = useEventBoard(filters);
+	const {
+		eventBoard,
+		isLoading: isEventBoardLoading,
+		isError: isEventBoardError,
+		refetch: refetchEventBoard,
+	} = useEventBoard(filters);
 
 	const weekDays = computed<IWeeklyDayInfo[]>(() => {
 		if (isDailyCalendarLoading.value || !dailyCalendar.value) {
@@ -109,6 +119,19 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		baseDate.value = d;
 	}
 
+	const isError = computed(() =>
+		isEventBoardError.value || isDailyCalendarError.value,
+	);
+
+	async function refetch() {
+		if (isDailyCalendarError.value) {
+			await refetchDailyCalendar();
+		}
+		if (isEventBoardError.value) {
+			await refetchEventBoard();
+		}
+	}
+
 	return {
 		locale,
 
@@ -129,8 +152,11 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		toggleFavorite,
 		weekDays,
 
+		isError,
 		setSelected,
 		prevWeek,
 		nextWeek,
+
+		refetch,
 	};
 }

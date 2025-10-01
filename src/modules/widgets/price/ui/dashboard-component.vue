@@ -2,8 +2,8 @@
 import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { usePrice } from '../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
 import PriceListContextMenu from './price-list-context-menu.vue';
@@ -22,6 +22,7 @@ const {
 	isNotData,
 	resetAllChanges,
 	togglePin,
+	refetch,
 } = usePrice(props.meta.widgetId, props.meta.defaultStateType);
 
 const emit = defineEmits<{
@@ -33,7 +34,7 @@ const emit = defineEmits<{
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
-			<error-component v-if="fetchTickersError" />
+			<base-error-component v-if="fetchTickersError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else

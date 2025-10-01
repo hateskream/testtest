@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { BaseDashboardComponent } from '@/modules/widgets/base';
+import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { useCalendarState } from '@/modules/calendar';
 
-import CalendarError from './views/calendar-error.vue';
 import CalendarLoader from './views/calendar-loader.vue';
 import CalendarContextMenu from './calendar-context-menu.vue';
 import CalendarMain from './views/calendar-main.vue';
@@ -31,10 +30,12 @@ const {
 	toolbar,
 	weekRange,
 	weekDays,
+	isError,
 	toggleFavorite,
 	nextWeek,
 	prevWeek,
 	resetWeek,
+	refetch,
 } = useCalendarState({
 	toolbar: {
 		useQuery: false,
@@ -54,7 +55,7 @@ const isLoading = computed(
 		</template>
 
 		<template #content>
-			<calendar-error v-if="false" />
+			<base-error-component v-if="isError" @retry="refetch" />
 
 			<calendar-loader v-else-if="isLoading" :count="5" />
 

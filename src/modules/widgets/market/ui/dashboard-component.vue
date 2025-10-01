@@ -6,8 +6,8 @@ import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent } from '../../base';
 import { useMarket } from '../composables';
 import { NONE_SET_FILTER } from '../model';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
 import MarketContextMenu from './market-context-menu.vue';
@@ -34,7 +34,7 @@ const {
 	handleAddTickerInNewWatchlist,
 } = useMarket(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryMarket(
+const { data, isLoading, isError, refetch } = useQueryMarket(
 	activeMarket,
 	activeSort,
 	computed(
@@ -62,7 +62,10 @@ const emit = defineEmits<{
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
-			<error-component v-if="isError" />
+			<base-error-component
+				v-if="isError"
+				@retry="refetch"
+			/>
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else

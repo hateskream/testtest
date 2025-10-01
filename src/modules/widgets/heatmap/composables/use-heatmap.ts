@@ -3,11 +3,11 @@ import { computed, reactive, ref, watch } from 'vue';
 import {
 	displaySettings,
 	getDefaultState,
-	TitleViewVariant,
 	type IColorDepthSetting,
 	type IMarketSettings,
 	type ISingleSetting,
 	type IState,
+	TitleViewVariant,
 } from '../model';
 import { useGetState, useUpdateState } from '../queries';
 
@@ -16,6 +16,7 @@ const allMarkets = Object.values(displaySettings).map(({ market }) => ({ ...mark
 export function useHeatmap(widgetId: string) {
 	const {
 		data: dataState,
+		...rest
 	} = useGetState(widgetId);
 	const { mutate } = useUpdateState(widgetId);
 
@@ -228,5 +229,6 @@ export function useHeatmap(widgetId: string) {
 		activeGroupBy,
 
 		resetAllChanges,
+		...rest,
 	};
 }

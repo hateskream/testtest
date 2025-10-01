@@ -8,7 +8,7 @@ export function useEventBoard(optionsGetter: MaybeRefOrGetter<IEventBoardRequest
 
 	const options = computed(() => toValue(optionsGetter));
 
-	const { data: eventBoardData, isError, isLoading } = useEventBoardGetState(options.value);
+	const { data: eventBoardData, isError, isLoading, ...rest } = useEventBoardGetState(options.value);
 	const { mutate } = useEventBoardUpdateState();
 
 	watch(eventBoardData, newState => {
@@ -25,5 +25,6 @@ export function useEventBoard(optionsGetter: MaybeRefOrGetter<IEventBoardRequest
 		eventBoard,
 		isError,
 		isLoading,
+		...rest,
 	};
 }

@@ -5,10 +5,10 @@ import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import { useMarketCapStore } from '../store/market-cap.ts';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
-import ErrorComponent from './error-component.vue';
 import MarketCapContextMenu from './market-cap-context-menu.vue';
 
 interface IWidgetComponentProps {
@@ -19,7 +19,7 @@ const props = defineProps<IWidgetComponentProps>();
 
 const marketCap = useMarketCapStore();
 
-const { data, isLoading, isError } = useQueryMarketCap(computed(() => marketCap.selectedTickers));
+const { data, isLoading, isError, refetch } = useQueryMarketCap(computed(() => marketCap.selectedTickers));
 
 const isNotData = computed(() => !!data.value && isLoading.value);
 
@@ -34,7 +34,7 @@ const emit = defineEmits<{
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<error-component v-if="isError" />
+			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"

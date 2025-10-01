@@ -6,7 +6,7 @@ import { getDefaultViewState, type ISettings } from '../model';
 export function useFearGreed(widgetId: string) {
 	const viewState = ref<ISettings>(getDefaultViewState());
 
-	const { data, isLoading, isError } = useQueryTension();
+	const { data, isLoading, isError, refetch } = useQueryTension();
 	const {
 		data: dataSettings,
 		isLoading: isLoadingSettings,
@@ -42,5 +42,6 @@ export function useFearGreed(widgetId: string) {
 		isNotData,
 
 		resetAllChanges,
+		refetch,
 	};
 }

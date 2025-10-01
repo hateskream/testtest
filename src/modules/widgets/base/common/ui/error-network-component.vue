@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+
+const emits = defineEmits<{
+	retry: [];
+}>();
 
 const isWideScreen = ref(window.innerWidth > 400);
 
@@ -21,7 +25,10 @@ watch(
 				:class="classes.wideContent"
 			>
 				<span :class="classes.text">Couldn't load</span>
-				<span :class="classes.retryContainer">
+				<span
+					:class="classes.retryContainer"
+					@click="emits('retry')"
+				>
 					<ui-icon
 						:id="IconIds.Retry"
 						:class="classes.icon"
@@ -31,12 +38,18 @@ watch(
 					<span :class="classes.textRetry"> Retry </span>
 				</span>
 
-				<button :class="classes.retryButton">R</button>
+				<button
+					:class="classes.retryButton"
+					@click="emits('retry')"
+				>
+					R
+				</button>
 			</div>
 
 			<div
 				v-else
 				:class="classes.narrowContent"
+				@click="emits('retry')"
 			>
 				<span :class="classes.retryContainer">
 					<ui-icon

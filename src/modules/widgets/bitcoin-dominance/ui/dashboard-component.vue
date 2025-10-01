@@ -5,10 +5,10 @@ import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
-import ErrorComponent from './error-component.vue';
 import BitcoinDominanceContextMenu from './bitcoin-dominance-context-menu.vue';
 
 interface IWidgetComponentProps {
@@ -19,7 +19,7 @@ const props = defineProps<IWidgetComponentProps>();
 
 const bitcoinDominanceStore = useBitcoinDominanceStore();
 
-const { data, isLoading, isError } = useQueryBintcoinDominance(
+const { data, isLoading, isError, refetch } = useQueryBintcoinDominance(
 	computed(() => bitcoinDominanceStore.selectedTickers),
 );
 
@@ -36,7 +36,10 @@ const emit = defineEmits<{
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<error-component v-if="isError" />
+			<base-error-component
+				v-if="isError"
+				@retry="refetch"
+			/>
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"

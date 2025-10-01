@@ -5,8 +5,8 @@ import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { useQueryTickers } from '../queries';
 import { useWatchlistWidget } from '../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import WatchlistError from './views/watchlist-error.vue';
 import WatchlistLoader from './views/watchlist-loader.vue';
 import WatchlistContextMenu from './watchlist-context-menu.vue';
 import WatchlistMain from './views/watchlist-main.vue';
@@ -42,7 +42,7 @@ const {
 	handlerRemoveSectionFromWatchlist,
 } = useWatchlistWidget(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryTickers(selectedTickers);
+const { data, isLoading, isError, refetch } = useQueryTickers(selectedTickers);
 
 const isNotData = computed(() => !!data?.value && isLoading.value);
 </script>
@@ -54,11 +54,14 @@ const isNotData = computed(() => !!data?.value && isLoading.value);
 		</template>
 
 		<template #content>
-			<watchlist-error v-if="isError" />
+			<base-error-component
+				v-if="isError"
+				@retry="refetch"
+			/>
 
-			<watchlist-loader v-if="isNotData" :count="5" />
+			<watchlist-loader v-else-if="isNotData" :count="5" />
 			<watchlist-main
-				v-if="data"
+				v-else-if="data"
 				:columns="columns"
 				:sections="sections"
 				:tickers="data"

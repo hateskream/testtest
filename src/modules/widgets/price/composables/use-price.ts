@@ -26,6 +26,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		isFetchingNextPage,
 		isLoading,
 		isError: fetchTickersError,
+		refetch,
 	} = useQueryPrice(
 		activeMarket,
 		pinnedTickers,
@@ -90,8 +91,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		mutate(newState);
 	}, { deep: true });
 
-	watch(
-		() => state.value.activeMarket,
+	watch(() => state.value.activeMarket,
 		newMarket => {
 			currentSettings.value = state.value.settings[newMarket].display;
 			pinnedTickers.value = state.value.settings[newMarket].pinned;
@@ -145,5 +145,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		isNotData,
 		togglePin,
 		state,
+		refetch,
 	};
 }

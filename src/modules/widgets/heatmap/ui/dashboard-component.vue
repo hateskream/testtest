@@ -3,6 +3,7 @@ import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { TreemapComponent } from '@/modules/treemap';
 import { useHeatmap } from '../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import ContextMenu from './context-menu.vue';
 
@@ -17,6 +18,8 @@ const emit = defineEmits<{
 }>();
 
 const {
+	isError,
+
 	marketSettings,
 	sizeBySettings,
 	colorBySettings,
@@ -32,6 +35,7 @@ const {
 	activeGroupBy,
 	groupBySettings,
 	resetAllChanges,
+	refetch,
 } = useHeatmap(props.meta.widgetId);
 
 </script>
@@ -42,7 +46,9 @@ const {
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<div :class="classes.heatmap">
+			<base-error-component v-if="isError" @retry="refetch" />
+
+			<div v-else :class="classes.heatmap">
 				<treemap-component
 					v-model:market="marketSettings"
 					v-model:size-by="sizeBySettings"

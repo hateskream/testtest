@@ -5,12 +5,11 @@ import { BaseDashboardComponent } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { useQueryTopIndices } from '../queries/get-top-indices';
 import { ALL_COLUMNS } from '../model';
+import { ErrorNetworkComponent } from '@/modules/widgets/base';
 
 import TopIndicesMain from './layouts/main-layout.vue';
-import TopIndicesError from './layouts/error-layout.vue';
 import TopIndicesLoader from './layouts/loader-layout.vue';
 import TopIndicesContextMenu from './modals/context-menu.vue';
-
 
 interface ITopIndicesWidgetProps {
 	meta: IMeta;
@@ -18,7 +17,7 @@ interface ITopIndicesWidgetProps {
 
 const props = defineProps<ITopIndicesWidgetProps>();
 
-const { data, isLoading, isError } = useQueryTopIndices(10);
+const { data, isLoading, isError, refetch } = useQueryTopIndices(10);
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 
@@ -38,7 +37,7 @@ const emit = defineEmits<{
 		</template>
 
 		<template #content>
-			<top-indices-error v-if="isError" />
+			<error-network-component v-if="isError" @retry="refetch" />
 			<top-indices-loader
 				v-else-if="isNotData"
 				:count="5"

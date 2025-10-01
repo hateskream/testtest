@@ -2,13 +2,12 @@
 import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { BaseDashboardComponent } from '@/modules/widgets/base';
+import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import AltcoinSeasonMain from './layouts/altcoin-season-main.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
-import AltcoinSeasonError from './layouts/altcoin-season-error.vue';
 
 const altcoinSeasonStore = useAltcoinSeasonStore();
 interface IAltcoinSeasonWidgetProps {
@@ -35,7 +34,7 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 		<template #title>{{ props.meta.name }}</template>
 		<template #content>
 			<altcoin-season-loader v-if="isLoading" :count="6" />
-			<altcoin-season-error v-else-if="isError" />
+			<base-error-component v-else-if="isError" @retry="altcoinSeasonStore.refetch" />
 			<altcoin-season-main v-else :meta="props.meta" />
 
 		</template>

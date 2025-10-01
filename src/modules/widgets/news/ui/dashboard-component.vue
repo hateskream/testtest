@@ -5,9 +5,9 @@ import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { useNews } from '../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import NewsFiltersPanel from './news-filters-panel-component.vue';
-import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewNewsComponent from './view-news-component.vue';
 import NewsContextMenu from './news-context-menu.vue';
@@ -32,7 +32,7 @@ const {
 	resetAllChanges,
 } = useNews(props.meta.widgetId);
 
-const { data, isLoading, isError } = useQueryNews(computed(() => ({
+const { data, isLoading, isError, refetch } = useQueryNews(computed(() => ({
 	score: selectedScores.value,
 	segment: selectedSegments.value,
 	sentiment: selectedSentiment.value,
@@ -69,7 +69,7 @@ const emit = defineEmits<{
 				v-model:locations="locations"
 				v-model:sort-by="sortBy"
 			/>
-			<error-component v-if="isError" />
+			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
 			<view-news-component
 				v-else-if="news"

@@ -8,7 +8,11 @@ export interface IUseDailyCalendar {
 }
 
 export function useDailyCalendar(options: IUseDailyCalendar) {
-	const { data: dailyCalendar, isLoading: isDailyCalendarLoading } = useDailyCalendarGetState(computed(() => ({
+	const {
+		data: dailyCalendar,
+		isLoading: isDailyCalendarLoading,
+		...rest
+	} = useDailyCalendarGetState(computed(() => ({
 		from: toValue(options.from),
 		to: toValue(options.to),
 	})));
@@ -16,5 +20,6 @@ export function useDailyCalendar(options: IUseDailyCalendar) {
 	return {
 		dailyCalendar,
 		isDailyCalendarLoading,
+		...rest,
 	};
 }
