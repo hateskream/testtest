@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group/core';
@@ -9,7 +9,12 @@ import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import WatchlistLoader from './views/watchlist-loader.vue';
 import WatchlistContextMenu from './watchlist-context-menu.vue';
-import WatchlistMain from './views/watchlist-main.vue';
+
+const WatchlistMain = defineAsyncComponent({
+	loader: () => import('./views/watchlist-main.vue'),
+	loadingComponent: WatchlistLoader,
+	errorComponent: BaseErrorComponent,
+});
 
 const props = defineProps<{
 	meta: IMeta;

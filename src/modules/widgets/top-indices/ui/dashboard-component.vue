@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group/core';
@@ -7,9 +7,13 @@ import { useQueryTopIndices } from '../queries/get-top-indices';
 import { ALL_COLUMNS } from '../model';
 import { ErrorNetworkComponent } from '@/modules/widgets/base';
 
-import TopIndicesMain from './layouts/main-layout.vue';
 import TopIndicesLoader from './layouts/loader-layout.vue';
 import TopIndicesContextMenu from './modals/context-menu.vue';
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./layouts/main-layout.vue'),
+	loadingComponent: TopIndicesLoader,
+	errorComponent: BaseDashboardComponent,
+});
 
 interface ITopIndicesWidgetProps {
 	meta: IMeta;
@@ -44,7 +48,7 @@ const emit = defineEmits<{
 				:height="'48px'"
 			/>
 
-			<top-indices-main
+			<view-component
 				v-else
 				:rows="rows"
 				:columns="ALL_COLUMNS"

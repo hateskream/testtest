@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
@@ -8,8 +8,13 @@ import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
 import PerformanceLoader from './layouts/performance-loader.vue';
-import PerformanceView from './layouts/performance-view.vue';
 import PerformanceContextMenu from './modals/performance-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./layouts/performance-view.vue'),
+	loadingComponent: PerformanceLoader,
+	errorComponent: PerformanceError,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -45,7 +50,7 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<performance-loader v-else-if="isLoading || props.meta.isLoading" />
-			<performance-view
+			<view-component
 				v-else-if="data"
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"

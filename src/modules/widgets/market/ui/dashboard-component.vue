@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { useQueryMarket } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group/core';
@@ -9,8 +9,13 @@ import { NONE_SET_FILTER } from '../model';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import ViewComponent from './view-component.vue';
 import MarketContextMenu from './market-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;

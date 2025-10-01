@@ -14,21 +14,22 @@ import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { WidgetType } from '../../core';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 
+const components: Record<WidgetType, Component> = {
+	[WidgetType.FearGreed]: FearGreedDashboard,
+	[WidgetType.Market]: MarketDashboard,
+	[WidgetType.MarketCap]: MarketCapDashboard,
+	[WidgetType.News]: NewsDashboard,
+	[WidgetType.Price]: PriceDashboard,
+	[WidgetType.Watchlist]: WatchlistDashboard,
+	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.TopIndices]: TopIndicesWidget,
+	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Heatmap]: HeatmapDashboard,
+};
+
 export function getWidgetComponent(type: WidgetType) {
-	const components: Record<WidgetType, Component> = {
-		[WidgetType.FearGreed]: FearGreedDashboard,
-		[WidgetType.Market]: MarketDashboard,
-		[WidgetType.MarketCap]: MarketCapDashboard,
-		[WidgetType.News]: NewsDashboard,
-		[WidgetType.Price]: PriceDashboard,
-		[WidgetType.Watchlist]: WatchlistDashboard,
-		[WidgetType.Performance]: PerformanceWidget,
-		[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-		[WidgetType.BitcoinDominance]: BitcoinDominance,
-		[WidgetType.TopIndices]: TopIndicesWidget,
-		[WidgetType.Calendar]: CalendarWidget,
-		[WidgetType.Heatmap]: HeatmapDashboard,
-	};
 
 	return components[type];
 }

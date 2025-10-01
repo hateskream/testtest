@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
+
 import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { usePrice } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import ViewComponent from './view-component.vue';
 import PriceListContextMenu from './price-list-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;

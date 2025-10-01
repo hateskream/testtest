@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
+
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
-import { TreemapComponent } from '@/modules/treemap';
 import { useHeatmap } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import ContextMenu from './context-menu.vue';
 import SkeletonGroup from '@/shared/ui/skeleton/skeleton-group.vue';
+
+const MainComponent = defineAsyncComponent({
+	loader: () => import('@/modules/treemap').then(c => c.TreemapComponent),
+	loadingComponent: SkeletonGroup,
+	errorComponent: BaseErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -52,7 +59,7 @@ const {
 			<base-error-component v-else-if="isError" @retry="refetch" />
 
 			<div v-else :class="classes.heatmap">
-				<treemap-component
+				<main-component
 					v-else
 					v-model:market="marketSettings"
 					v-model:size-by="sizeBySettings"

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { defineAsyncComponent } from 'vue';
+
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { useFearGreed } from '../composables';
@@ -7,7 +9,12 @@ import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import FearGreedContextMenu from './fear-greed-context-menu.vue';
 import PreloaderComponent from './preloader-component.vue';
-import ViewComponent from './view-component.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;

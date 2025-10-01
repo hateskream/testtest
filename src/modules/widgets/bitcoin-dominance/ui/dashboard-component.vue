@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
@@ -7,9 +7,14 @@ import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominanc
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import BitcoinDominanceContextMenu from './bitcoin-dominance-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;

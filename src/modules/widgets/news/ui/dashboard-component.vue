@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import { useQueryNews } from '../queries';
@@ -9,8 +9,13 @@ import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import NewsFiltersPanel from './news-filters-panel-component.vue';
 import PreloaderComponent from './preloader-component.vue';
-import ViewNewsComponent from './view-news-component.vue';
 import NewsContextMenu from './news-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-news-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -71,7 +76,7 @@ const emit = defineEmits<{
 			/>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
-			<view-news-component
+			<view-component
 				v-else-if="news"
 				:news="news"
 				:display-settings="displaySettings"

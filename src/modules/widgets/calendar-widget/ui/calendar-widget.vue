@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
@@ -7,7 +7,12 @@ import { useCalendarState } from '@/modules/calendar';
 
 import CalendarLoader from './views/calendar-loader.vue';
 import CalendarContextMenu from './calendar-context-menu.vue';
-import CalendarMain from './views/calendar-main.vue';
+
+const CalendarMain = defineAsyncComponent({
+	loader: () => import('./views/calendar-main.vue'),
+	loadingComponent: CalendarLoader,
+	errorComponent: CalendarError,
+});
 
 const props = defineProps<{
 	meta: IMeta;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import { BaseDashboardComponent } from '../../base/index.ts';
@@ -7,9 +7,14 @@ import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import { useMarketCapStore } from '../store/market-cap.ts';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import ViewComponent from './view-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import MarketCapContextMenu from './market-cap-context-menu.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./view-component.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: ErrorComponent,
+});
 
 interface IWidgetComponentProps {
 	meta: IMeta;
