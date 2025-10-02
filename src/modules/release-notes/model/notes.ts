@@ -164,8 +164,6 @@ export const notes: IWeekGroup[] = [
 				'для улучшения отзывчивости интерфейса. '+
 				'При ошибке загрузки данных, их можно перезапросить из состояния ошибки',
 				productLink: '/',
-				// eslint-disable-next-line @stylistic/max-len
-				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=34041-272333&t=pfK9TY3TTSaUHMhO-4',
 			},
 		],
 	},
