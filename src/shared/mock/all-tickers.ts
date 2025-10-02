@@ -1,5 +1,6 @@
 import { SymbolType } from '@/modules/cell';
 import type { ITickerData } from './cell';
+import { MarketType } from '@/modules/market';
 
 export const allTickers: Record<SymbolType, ITickerData[]> = {
 	[SymbolType.Crypto]: [
@@ -310,3 +311,20 @@ export const allTickers: Record<SymbolType, ITickerData[]> = {
 		{ left: 'Waste Management', right: '' },
 	],
 };
+
+export function getTickersByMarketType(type: MarketType): ITickerData[] {
+	switch (type) {
+		case MarketType.Crypto:
+			return allTickers[SymbolType.Crypto];
+		case MarketType.Stock:
+			return allTickers[SymbolType.Stock];
+		case MarketType.Forex:
+			return allTickers[SymbolType.Forex];
+		case MarketType.Commodities:
+			return allTickers[SymbolType.Commodity];
+		case MarketType.Indices:
+			return allTickers[SymbolType.Index];
+		default:
+			return [];
+	}
+}

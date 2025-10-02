@@ -1,5 +1,5 @@
 import { type DateYYYYMMDD, EventType, Impact, MarketIds } from '@/modules/calendar';
-import { SymbolType } from '@/modules/cell';
+import type { MarketType } from '@/modules/market';
 
 export interface IEventBoardRange {
 	from: DateYYYYMMDD;
@@ -27,7 +27,7 @@ export interface ICalendarEvent {
 	id: string;
 	ticker: string;
 	additional: string;
-	symbolType: SymbolType;
+	marketType: MarketType;
 	eventType: EventType;
 	marketId: MarketIds;
 	impact: Impact;

@@ -60,5 +60,6 @@ const classesList = computed(() => ({
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
+	user-select: none;
 }
 </style>

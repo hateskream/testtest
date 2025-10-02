@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent } from '../../base';
-import { useQueryNews } from '../queries';
+import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import { useNews } from '../composables';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import {
+	type IGetNewsRequest,
+	NewsFiltersPanel,
+	useNews,
+	useQueryNews,
+} from '@/modules/news';
 
-import NewsFiltersPanel from './news-filters-panel-component.vue';
 import PreloaderComponent from './preloader-component.vue';
-import NewsContextMenu from './news-context-menu.vue';
+import NewsDisplaySettings from './news-display-settings.vue';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-news-component.vue'),
+	// FIXME: WE SHOULD NOT USE ITEMS FROM MODULES DIRECTLY
+	loader: () => import('@/modules/news/ui/view-news-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -24,8 +27,16 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const {
+	segments,
+	selectedMarketSegments,
+	selectedSegmentTickers,
+	selectedSegmentRequest,
+
+	selectAll,
+	unselectAll,
+	toggleTicker,
+
 	selectedScores,
-	selectedSegments,
 	selectedSentiment,
 	selectedSources,
 	displaySettings,
@@ -37,9 +48,10 @@ const {
 	resetAllChanges,
 } = useNews(props.meta.widgetId);
 
-const { data, isLoading, isError, refetch } = useQueryNews(computed(() => ({
+const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
+	offset: 0,
 	score: selectedScores.value,
-	segment: selectedSegments.value,
+	segment: selectedSegmentRequest.value,
 	sentiment: selectedSentiment.value,
 	source: selectedSources.value,
 	locations: activeLocations.value,
@@ -47,6 +59,7 @@ const { data, isLoading, isError, refetch } = useQueryNews(computed(() => ({
 	selectedTickers: selectedTickers.value,
 	limit: 10,
 })));
+
 
 const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
@@ -66,32 +79,45 @@ const emit = defineEmits<{
 
 		</template>
 		<template #content>
-			<news-filters-panel
-				v-model:selected-scores="selectedScores"
-				v-model:selected-segments="selectedSegments"
-				v-model:selected-sentiment="selectedSentiment"
-				v-model:selected-sources="selectedSources"
-				v-model:locations="locations"
-				v-model:sort-by="sortBy"
-			/>
-			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
-			<view-component
-				v-else-if="news"
-				:news="news"
-				:display-settings="displaySettings"
-			/>
+			<div :class="classes.content">
+				<news-filters-panel
+					v-model:selected-scores="selectedScores"
+					v-model:selected-segments="selectedMarketSegments"
+					v-model:selected-sentiment="selectedSentiment"
+					v-model:selected-sources="selectedSources"
+					v-model:locations="locations"
+					v-model:sort-by="sortBy"
+					:segments="segments"
+					:selected-segments-tickers="selectedSegmentTickers"
+					@select-all="selectAll"
+					@unselect-all="unselectAll"
+					@toggle-ticker="toggleTicker"
+				/>
+				<base-error-component v-if="isError" @retry="refetch" />
+				<preloader-component v-else-if="isNotData" />
+				<view-component
+					v-else-if="news"
+					:news="news"
+					:display-settings="displaySettings"
+					@next="fetchNextPage"
+				/>
+			</div>
 		</template>
 		<template #rcm>
-			<news-context-menu
+			<news-display-settings
 				v-model:display-settings="displaySettings"
 				v-model:selected-scores="selectedScores"
-				v-model:selected-segments="selectedSegments"
+				v-model:selected-segments="selectedMarketSegments"
 				v-model:selected-sentiment="selectedSentiment"
 				v-model:selected-sources="selectedSources"
 				v-model:sort-by="sortBy"
 				v-model:locations="locations"
 				:title="props.meta.name"
+				:segments="segments"
+				:selected-segment-tickers="selectedSegmentTickers"
+				@select-all="selectAll"
+				@unselect-all="unselectAll"
+				@toggle-ticker="toggleTicker"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
 			/>
@@ -104,5 +130,11 @@ const emit = defineEmits<{
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 </style>

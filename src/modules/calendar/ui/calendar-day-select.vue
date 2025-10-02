@@ -32,6 +32,7 @@ const selectedDate = defineModel<Date>({ required: true });
 .calendarComponent {
 	display: flex;
 	align-self: stretch;
+	padding: 16px;
 }
 
 .calendar {

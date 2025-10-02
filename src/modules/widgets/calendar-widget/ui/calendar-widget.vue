@@ -41,6 +41,7 @@ const {
 	prevWeek,
 	resetWeek,
 	refetch,
+	resetAll,
 } = useCalendarState({
 	toolbar: {
 		useQuery: false,
@@ -80,6 +81,7 @@ const isLoading = computed(
 				@reset-week="resetWeek"
 				@prev-week="prevWeek"
 				@next-week="nextWeek"
+				@reset-all="resetAll"
 			/>
 		</template>
 

@@ -29,7 +29,7 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 	const selectedDate = ref(now.value);
 
 	const { watchlists } = useWatchlist();
-	const { state: toolbar } = useToolbar(options.toolbar);
+	const { state: toolbar, getToolbarDefaultState } = useToolbar(options.toolbar);
 	const { eventBoardFavorites, toggleFavorite } = useFavoritesState();
 
 	const weekRange = reactive<IEventBoardRange>({
@@ -49,6 +49,12 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 
 	function resetWeek() {
 		baseDate.value = now.value;
+		selectedDate.value = now.value;
+	}
+
+	function resetAll() {
+		resetWeek();
+		toolbar.value = getToolbarDefaultState();
 	}
 
 	watch(baseDate, newValue => {
@@ -143,6 +149,7 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		selectedDate,
 		weekRange,
 		resetWeek,
+		resetAll,
 
 		toolbar,
 		dailyCalendar,

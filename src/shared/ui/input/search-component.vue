@@ -1,0 +1,58 @@
+<script setup lang="ts">
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+
+const props = withDefaults(defineProps<{
+	placeholder?: string;
+}>(), {
+	placeholder: 'Type to search...',
+});
+
+const model = defineModel<string>();
+</script>
+
+<template>
+	<div :class="classes.root">
+		<ui-icon
+			:id="IconIds.Search"
+			:class="classes.icon"
+			width="20px"
+			height="20px"
+		/>
+		<input
+			v-model="model"
+			type="text"
+			:placeholder="props.placeholder"
+			:class="classes.input"
+		/>
+	</div>
+</template>
+
+<style module="classes">
+.root {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	align-self: stretch;
+	width: 100%;
+	height: 42px;
+	gap: 12px;
+}
+
+.icon {
+	color: rgb(100 101 104 / 100%);
+}
+
+.input {
+	font-style: normal;
+	font-weight: 300;
+	font-size: 13px;
+	line-height: normal;
+	font-family: 'Roboto Flex', sans-serif;
+	text-align: left;
+	background: none;
+
+	&::placeholder {
+		color: rgb(100 101 104 / 100%);
+	}
+}
+</style>

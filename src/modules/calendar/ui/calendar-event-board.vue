@@ -259,10 +259,16 @@ const LIGHT_COLORS = {
 	flex: 1 0 0;
 	flex-direction: column;
 	align-self: stretch;
-	overflow: scroll;
+	overflow-y: scroll;
 	background: var(--color-bg-surface-01, #0c0c0d);
 	gap: 12px;
 	border-radius: 16px;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.calendarEventBoard::-webkit-scrollbar {
+	display: none;
 }
 
 .boardDate {

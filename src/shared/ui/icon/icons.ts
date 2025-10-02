@@ -85,4 +85,7 @@ export enum IconIds {
 	HongKong = 'hong-kong',
 	UnitedKingdom = 'united-kingdom',
 	Burger = 'burger',
+	Sentiment = 'sentiment',
+	EventBoardEmpty = 'event-board-empty',
+	Ellipse = 'ellipse',
 }

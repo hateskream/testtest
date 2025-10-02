@@ -9,13 +9,17 @@ export interface IUseToolbarStateOptions {
 }
 
 export function useToolbar(options: IUseToolbarStateOptions) {
-	const toolbar = ref<IToolbarState>({
-		marketId: MarketIds.EntireWorld,
-		impact: Impact.All,
-		eventType: EventType.All,
-		watchlistId: null,
-		watchlistSection: null,
-	});
+	const toolbar = ref<IToolbarState>(getToolbarDefaultState());
+
+	function getToolbarDefaultState() {
+		return {
+			marketId: MarketIds.EntireWorld,
+			impact: Impact.All,
+			eventType: EventType.All,
+			watchlistId: null,
+			watchlistSection: null,
+		};
+	}
 
 	const { data } = useToolbarGetState(options.widgetId, options);
 	const { mutate } = useToolbarUpdateState(options.widgetId, options);
@@ -32,5 +36,6 @@ export function useToolbar(options: IUseToolbarStateOptions) {
 
 	return {
 		state: toolbar,
+		getToolbarDefaultState,
 	};
 }

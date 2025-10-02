@@ -6,17 +6,11 @@ import type {
 	IEventBoardResponse,
 } from '../../models';
 import { EventType, Impact, MarketIds } from '../../models';
-import { allTickers } from '@/shared/mock';
-import { SymbolType } from '@/modules/cell';
+import { getTickersByMarketType } from '@/shared/mock';
 import { addDays } from '@/modules/calendar';
+import { MarketType } from '@/modules/market';
 
 type RNG = () => number;
-
-const STOCK_LEFT = allTickers[SymbolType.Stock];
-const CRYPTO_LEFT = allTickers[SymbolType.Crypto];
-const INDEX_LEFT = allTickers[SymbolType.Index];
-const COMMO_LEFT = allTickers[SymbolType.Commodity];
-const FOREX_PAIRS = allTickers[SymbolType.Forex];
 
 export function createMockEventBoard(
 	options: IEventBoardRequestOptions,
@@ -27,7 +21,7 @@ export function createMockEventBoard(
 	const end = ymdToUtcDate(range.to);
 
 	const rng = mulberry32(hashStr(`${range.from}:${range.to}`));
-	const eventTypes = Object.values(EventType).filter((t) => t !== EventType.All) as EventType[];
+	const eventTypes = Object.values(EventType).filter((t) => t !== EventType.All) satisfies EventType[];
 
 	const days: IEventBoardResponse[] = [];
 
@@ -38,32 +32,32 @@ export function createMockEventBoard(
 		const events: ICalendarEvent[] = Array.from({ length: count }, (_, index) => {
 			const eventType = pick(rng, eventTypes);
 
-			const { symbolType, ticker, additional, baseTitle } = createTicker(rng, eventType);
+			const { marketType, ticker, additional, baseTitle } = createTicker(rng, eventType);
 
 			const eventTitle = createEventTitle(baseTitle, eventType);
 			const eventTitleDescription = createEventTitleDescription(rng, eventType);
 			const eventDatetime = `${ymd}T${timeHHMM(rng)}`;
 			const metrics = createMetrics(rng, eventType, ymd);
 
-			const marketId = createMarketIdFromTicker(rng, eventType, symbolType, ticker);
+			const marketId = createMarketIdFromTicker(rng, eventType, marketType, ticker);
 			const impact = createImpact(rng, eventType, metrics);
 
 			return {
 				id: date.toString() + index.toString(),
+				marketType: marketType,
 				ticker,
 				additional,
-				symbolType,
 				eventType,
 				eventTitle,
 				eventTitleDescription,
 				eventDatetime,
 				metrics,
-				section: symbolType,
+				section: marketType,
 				link: '',
 				linkText: 'Details',
 				marketId,
 				impact,
-			};
+			} satisfies ICalendarEvent;
 		});
 
 		days.push({ date: ymd, events });
@@ -74,34 +68,69 @@ export function createMockEventBoard(
 
 function splitLegacyCode(raw: string) {
 	const i = raw.indexOf('-');
+	if (i === -1) {
+		return null;
+	}
 
-	const sectionStr = raw.slice(0, i).trim() as SymbolType;
+	const sectionLabel = raw.slice(0, i).trim();
 	const rest = raw.slice(i + 1).trim();
-	const list = allTickers[sectionStr];
 
-	if (sectionStr === SymbolType.Forex) {
-		const pairs = list.map(x => x.left + x.right);
+	const section = parseMarketType(sectionLabel);
+	if (!section) {
+		return null;
+	}
+
+	const list = getTickersByMarketType(section);
+
+	if (section === MarketType.Forex) {
+		const pairs = list.map(x => (x.right ? x.left + x.right : x.left)).map(p => p.toUpperCase());
 		pairs.sort((a, b) => b.length - a.length);
 
-		const hit = pairs.find(p => rest.startsWith(p));
+		const restUp = rest.toUpperCase();
+		const hit = pairs.find(p => restUp.startsWith(p));
 		if (!hit) {
 			return null;
 		}
 
-		const right = rest.slice(hit.length).trim() || undefined;
+		let left = hit;
+		let right: string | undefined;
 
-		return { section: sectionStr, left: hit, right };
+		if (hit.length === 6) {
+			left = hit.slice(0, 3);
+			right = hit.slice(3);
+		}
+
+		return { section, left, right };
 	}
 
-	const candidates = list.map(x => x.left).sort((a, b) => b.length - a.length);
-	const hit = candidates.find(t => rest.startsWith(t));
-
+	const candidates = list.map((x) => String(x.left)).sort((a: string, b: string) => b.length - a.length);
+	const hit = candidates.find((t: string) => rest.startsWith(t));
 	if (!hit) {
 		return null;
 	}
 
 	const right = rest.slice(hit.length).trim() || undefined;
-	return { section: sectionStr, left: hit, right };
+	return { section, left: hit, right };
+}
+
+function parseMarketType(label: string): MarketType | null {
+	const s = label.trim().toLowerCase();
+	if (s === 'crypto') {
+		return MarketType.Crypto;
+	}
+	if (s === 'stock' || s === 'stocks') {
+		return MarketType.Stock;
+	}
+	if (s === 'forex' || s === 'fx' || s === 'currency' || s === 'currencies') {
+		return MarketType.Forex;
+	}
+	if (s === 'commodity' || s === 'commodities') {
+		return MarketType.Commodities;
+	}
+	if (s === 'index' || s === 'indices' || s === 'indexes') {
+		return MarketType.Indices;
+	}
+	return null;
 }
 
 function applyFilters(
@@ -129,6 +158,7 @@ function applyFilters(
 
 		for (const raw of wl) {
 			const p = splitLegacyCode(raw);
+
 			if (!p) {
 				continue;
 			}
@@ -152,36 +182,46 @@ function applyFilters(
 
 function createTicker(r: RNG, et: EventType) {
 	if (et === EventType.Crypto) {
-		const t = pick(r, CRYPTO_LEFT);
-		return { symbolType: SymbolType.Crypto, ticker: t.left, baseTitle: t.right, additional: t.right };
+		const list = getTickersByMarketType(MarketType.Crypto);
+		const t = pick(r, list);
+		return { marketType: MarketType.Crypto, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
+
 	const roll = r();
 
 	if (roll < 0.70) {
-		const t = pick(r, STOCK_LEFT);
-		return { symbolType: SymbolType.Stock, ticker: t.left, baseTitle: t.right, additional: t.right };
+		const list = getTickersByMarketType(MarketType.Stock);
+		const t = pick(r, list);
+		return { marketType: MarketType.Stock, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 	if (roll < 0.85) {
-		const t = pick(r, INDEX_LEFT);
-		return { symbolType: SymbolType.Index, ticker: t.left, baseTitle: t.right, additional: t.right };
+		const list = getTickersByMarketType(MarketType.Indices);
+		const t = pick(r, list);
+		return { marketType: MarketType.Indices, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 	if (roll < 0.95) {
-		const t = pick(r, COMMO_LEFT);
-		return { symbolType: SymbolType.Commodity, ticker: t.left, baseTitle: t.right, additional: t.right };
+		const list = getTickersByMarketType(MarketType.Commodities);
+		const t = pick(r, list);
+		return { marketType: MarketType.Commodities, ticker: t.left, baseTitle: t.right, additional: t.right };
 	}
 
-	const p = pick(r, FOREX_PAIRS);
-
-	return { symbolType: SymbolType.Forex, ticker: p.left, baseTitle: p.left + p.right, additional: p.right };
+	const list = getTickersByMarketType(MarketType.Forex);
+	const p = pick(r, list);
+	return {
+		marketType: MarketType.Forex,
+		ticker: p.left,
+		baseTitle: String(p.left) + String(p.right),
+		additional: p.right,
+	};
 }
 
 function createMarketIdFromTicker(
 	r: RNG,
 	t: EventType,
-	s: SymbolType,
+	marketType: MarketType,
 	ticker: string,
 ): MarketIds {
-	if (s === SymbolType.Crypto || t === EventType.Crypto) {
+	if (marketType === MarketType.Crypto || t === EventType.Crypto) {
 		return MarketIds.EntireWorld;
 	}
 
@@ -198,11 +238,11 @@ function createMarketIdFromTicker(
 		BABA: MarketIds.HongKong,
 	};
 
-	if (s === SymbolType.Stock && STOCK_MARKET[ticker]) {
+	if (marketType === MarketType.Stock && STOCK_MARKET[ticker]) {
 		return STOCK_MARKET[ticker];
 	}
 
-	if (s === SymbolType.Forex) {
+	if (marketType === MarketType.Forex) {
 		return MarketIds.EntireWorld;
 	}
 
@@ -225,7 +265,6 @@ function createEventTitle(base: string, type: EventType) {
 		return base;
 	}
 	const suffix = type === EventType.Earnings ? 'Earnings Report' : type;
-
 	return `${base} ${suffix}`;
 }
 
@@ -236,7 +275,6 @@ function createEventTitleDescription(rng: RNG, type: EventType) {
 	if (type === EventType.Dividends) {
 		return rng() < 0.5 ? 'Quarterly' : undefined;
 	}
-
 	return undefined;
 }
 
@@ -290,9 +328,7 @@ function createMetrics(r: RNG, t: EventType, ymd: string): ICalendarEventMetric[
 		];
 	}
 	if (t === EventType.News) {
-		return [
-			{ label: 'Sentiment', value: pick(r, ['Positive', 'Neutral', 'Negative'] as const) },
-		];
+		return [{ label: 'Sentiment', value: pick(r, ['Positive', 'Neutral', 'Negative'] as const) }];
 	}
 	if (t === EventType.Conference) {
 		return [
@@ -300,7 +336,6 @@ function createMetrics(r: RNG, t: EventType, ymd: string): ICalendarEventMetric[
 			{ label: 'Venue', value: pick(r, ['Virtual', 'NYC', 'London', 'Tokyo'] as const) },
 		];
 	}
-
 	return [];
 }
 
@@ -412,7 +447,6 @@ function createImpact(r: RNG, t: EventType, m: ICalendarEventMetric[]): Impact {
 	return Impact.Low;
 }
 
-// date
 function ymdToUtcDate(ymd: string): Date {
 	return new Date(`${ymd}T00:00:00Z`);
 }
@@ -443,7 +477,6 @@ function pad2(n: number): string {
 	return String(n).padStart(2, '0');
 }
 
-// random
 function randInt(r: RNG, min: number, max: number): number {
 	return Math.floor(r() * (max - min + 1)) + min;
 }
@@ -458,7 +491,7 @@ function pick<T>(r: RNG, arr: readonly T[]): T {
 
 function hashStr(s: string): number {
 	let h = 2166136261 >>> 0;
-	for (let i = 0; i < s.length; i+=1) {
+	for (let i = 0; i < s.length; i += 1) {
 		h ^= s.charCodeAt(i);
 		h = Math.imul(h, 16777619);
 	}

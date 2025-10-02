@@ -35,7 +35,7 @@
 	flex-direction: column;
 	align-items: center;
 	align-self: stretch;
-	padding: 16px;
+	overflow: hidden;
 	background: var(--color-bg-surface-01, #0c0c0d);
 	border-radius: 18px;
 	gap: 8px;

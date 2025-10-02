@@ -2,6 +2,7 @@
 import { useTemplateRef } from 'vue';
 
 import {
+	CalendarEmptyEventBoard,
 	CalendarEventBoard,
 	CalendarToolbar,
 	EventType,
@@ -39,6 +40,7 @@ const emits = defineEmits<{
 	prevWeek: [];
 	resetWeek: [];
 	toggleFavorite: [id: string];
+	resetAll: [];
 }>();
 
 const weekRange = defineModel<IEventBoardRange>('weekRange', { required: true });
@@ -75,10 +77,15 @@ useEventBoardScroll({
 			@reset-week="emits('resetWeek')"
 		/>
 		<calendar-event-board
+			v-if="eventBoard.length"
 			ref="event-board-component"
 			:event-board="eventBoard"
 			:event-board-favorites="eventBoardFavorites"
 			@toggle-event-board="emits('toggleFavorite', $event)"
+		/>
+		<calendar-empty-event-board
+			v-else
+			@reset="emits('resetAll')"
 		/>
 	</div>
 </template>

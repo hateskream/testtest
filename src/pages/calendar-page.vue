@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 
-import { CalendarLayout, markets, useCalendarState, useEventBoardScroll } from '@/modules/calendar';
+import {
+	CalendarEmptyEventBoard,
+	CalendarLayout,
+	CalendarNews,
+	markets,
+	useCalendarState,
+	useEventBoardScroll,
+} from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
 import { LayoutComponent } from '@/modules/layout';
 import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
-import { NewsDashboard } from '@/modules/widgets/news';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;
@@ -26,6 +32,7 @@ const {
 	weekRange,
 	baseDate,
 	selectedDate,
+	resetAll,
 	nextWeek,
 	prevWeek,
 	resetWeek,
@@ -93,6 +100,11 @@ useEventBoardScroll({
 						:event-board-favorites="eventBoardFavorites"
 						@toggle-event-board="toggleFavorite"
 					/>
+
+					<calendar-empty-event-board
+						v-else
+						@reset="resetAll"
+					/>
 				</template>
 
 				<template #calendar-sidebar>
@@ -101,19 +113,7 @@ useEventBoardScroll({
 						@update-week="setSelected"
 					/>
 
-					<!-- TODO: after refactoring widget system to reusable modules,
-						we can replace this with module instead of full widget -->
-					<news-dashboard
-						:meta="{
-							isLoading: false,
-							name: '',
-							isResizing: false,
-							widgetId: 'news',
-							market: 'crypto',
-							size: { h: 1, w: 1 },
-							defaultStateType: 'normal'
-						}"
-					/>
+					<calendar-news />
 				</template>
 			</calendar-layout>
 		</template>
@@ -128,5 +128,4 @@ useEventBoardScroll({
 	line-height: 100%;
 	color: var(--text-color-base-500);
 }
-
 </style>
