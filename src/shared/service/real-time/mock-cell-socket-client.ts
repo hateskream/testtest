@@ -40,26 +40,28 @@ export class MockSocketClient implements ISocketClient {
 
 	private setup() {
 		generateAllRows()
-			.forEach(row => {
-				const { tickerId } = row;
+			.then(res => res
+				.forEach(row => {
+					const { tickerId } = row;
 
-				Object.values(ColumnType).forEach(columnType => {
-					if (columnType === ColumnType.Symbol) {
-						return;
-					}
+					Object.values(ColumnType).forEach(columnType => {
+						if (columnType === ColumnType.Symbol) {
+							return;
+						}
 
-					const interval = Math.floor(Math.random() * (5_000 - 1_000 + 1)) + 1_000;
+						const interval = Math.floor(Math.random() * (5_000 - 1_000 + 1)) + 1_000;
 
-					const id = setInterval(() => {
-						this.queueEmit(columnType, {
-							tickerId,
-							[columnType]: randomizeCellData(row[columnType]),
-						});
-					}, interval);
+						const id = setInterval(() => {
+							this.queueEmit(columnType, {
+								tickerId,
+								[columnType]: randomizeCellData(row[columnType]),
+							});
+						}, interval);
 
-					this.intervalIds.push(id);
-				});
-			});
+						this.intervalIds.push(id);
+					});
+				}),
+			);
 
 		this.batchIntervalId = setInterval(() => {
 			this.flushBatch();

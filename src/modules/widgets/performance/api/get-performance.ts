@@ -74,7 +74,7 @@ async function getMockData(_: IGetPerformanceRequest): Promise<IPreparedResponse
 	});
 
 	return {
-		tickers: generateRows(SymbolType.PlaneText, [ColumnType.ChangePrice24hPercent]),
+		tickers: await generateRows(SymbolType.PlaneText, [ColumnType.ChangePrice24hPercent]),
 		pagination: {
 			offset: 0,
 			limit: 10,

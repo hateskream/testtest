@@ -82,6 +82,6 @@ async function getMockData(): Promise<IPreparedResponse> {
 			limit: 10,
 			total: 10,
 		},
-		tickers: generateRows(SymbolType.Index, columnTypes),
+		tickers: await generateRows(SymbolType.Index, columnTypes),
 	};
 }

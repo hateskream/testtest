@@ -141,7 +141,7 @@ async function getMockData(): Promise<IPreparedResponse> {
 			limit: 10,
 			total: 10,
 		},
-		tickers: generateRows(SymbolType.Crypto, columnTypes, 12),
+		tickers: await generateRows(SymbolType.Crypto, columnTypes, 12),
 	};
 
 	return response;

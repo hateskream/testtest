@@ -1,0 +1,1174 @@
+{
+    "Crypto": [
+        {
+            "left": "BTC",
+            "right": "Bitcoin"
+        },
+        {
+            "left": "ETH",
+            "right": "Ethereum"
+        },
+        {
+            "left": "BNB",
+            "right": "Binance Coin"
+        },
+        {
+            "left": "XRP",
+            "right": "XRP (Ripple)"
+        },
+        {
+            "left": "ADA",
+            "right": "Cardano"
+        },
+        {
+            "left": "SOL",
+            "right": "Solana"
+        },
+        {
+            "left": "DOGE",
+            "right": "Dogecoin"
+        },
+        {
+            "left": "DOT",
+            "right": "Polkadot"
+        },
+        {
+            "left": "MATIC",
+            "right": "Polygon"
+        },
+        {
+            "left": "LTC",
+            "right": "Litecoin"
+        },
+        {
+            "left": "TRX",
+            "right": "TRON"
+        },
+        {
+            "left": "SHIB",
+            "right": "Shiba Inu"
+        },
+        {
+            "left": "AVAX",
+            "right": "Avalanche"
+        },
+        {
+            "left": "UNI",
+            "right": "Uniswap"
+        },
+        {
+            "left": "LINK",
+            "right": "Chainlink"
+        },
+        {
+            "left": "XLM",
+            "right": "Stellar"
+        },
+        {
+            "left": "ATOM",
+            "right": "Cosmos"
+        },
+        {
+            "left": "ETC",
+            "right": "Ethereum Classic"
+        },
+        {
+            "left": "TON",
+            "right": "Toncoin"
+        },
+        {
+            "left": "XMR",
+            "right": "Monero"
+        },
+        {
+            "left": "BCH",
+            "right": "Bitcoin Cash"
+        },
+        {
+            "left": "APT",
+            "right": "Aptos"
+        },
+        {
+            "left": "NEAR",
+            "right": "NEAR Protocol"
+        },
+        {
+            "left": "QNT",
+            "right": "Quant"
+        },
+        {
+            "left": "VET",
+            "right": "VeChain"
+        },
+        {
+            "left": "FIL",
+            "right": "Filecoin"
+        },
+        {
+            "left": "ALGO",
+            "right": "Algorand"
+        },
+        {
+            "left": "HBAR",
+            "right": "Hedera"
+        },
+        {
+            "left": "ICP",
+            "right": "Internet Computer"
+        },
+        {
+            "left": "GRT",
+            "right": "The Graph"
+        },
+        {
+            "left": "AAVE",
+            "right": "Aave"
+        },
+        {
+            "left": "EOS",
+            "right": "EOS"
+        },
+        {
+            "left": "SAND",
+            "right": "The Sandbox"
+        },
+        {
+            "left": "MANA",
+            "right": "Decentraland"
+        },
+        {
+            "left": "XTZ",
+            "right": "Tezos"
+        },
+        {
+            "left": "AXS",
+            "right": "Axie Infinity"
+        },
+        {
+            "left": "THETA",
+            "right": "Theta"
+        },
+        {
+            "left": "FTM",
+            "right": "Fantom"
+        },
+        {
+            "left": "EGLD",
+            "right": "Elrond (MultiversX)"
+        },
+        {
+            "left": "KAVA",
+            "right": "Kava"
+        },
+        {
+            "left": "RUNE",
+            "right": "THORChain"
+        },
+        {
+            "left": "NEO",
+            "right": "NEO"
+        },
+        {
+            "left": "FLOW",
+            "right": "Flow"
+        },
+        {
+            "left": "ZEC",
+            "right": "Zcash"
+        },
+        {
+            "left": "CHZ",
+            "right": "Chiliz"
+        },
+        {
+            "left": "CRV",
+            "right": "Curve DAO"
+        },
+        {
+            "left": "SNX",
+            "right": "Synthetix"
+        },
+        {
+            "left": "1INCH",
+            "right": "1inch"
+        }
+    ],
+    "Stock": [
+        {
+            "left": "AAPL",
+            "right": "Apple Inc."
+        },
+        {
+            "left": "MSFT",
+            "right": "Microsoft Corporation"
+        },
+        {
+            "left": "GOOGL",
+            "right": "Alphabet Inc. (Class A)"
+        },
+        {
+            "left": "AMZN",
+            "right": "Amazon.com, Inc."
+        },
+        {
+            "left": "TSLA",
+            "right": "Tesla, Inc."
+        },
+        {
+            "left": "META",
+            "right": "Meta Platforms, Inc."
+        },
+        {
+            "left": "NVDA",
+            "right": "NVIDIA Corporation"
+        },
+        {
+            "left": "BRK.B",
+            "right": "Berkshire Hathaway (Class B)"
+        },
+        {
+            "left": "JPM",
+            "right": "JPMorgan Chase & Co."
+        },
+        {
+            "left": "V",
+            "right": "Visa Inc."
+        },
+        {
+            "left": "JNJ",
+            "right": "Johnson & Johnson"
+        },
+        {
+            "left": "PG",
+            "right": "Procter & Gamble Co."
+        },
+        {
+            "left": "UNH",
+            "right": "UnitedHealth Group"
+        },
+        {
+            "left": "HD",
+            "right": "Home Depot, Inc."
+        },
+        {
+            "left": "MA",
+            "right": "Mastercard Incorporated"
+        },
+        {
+            "left": "DIS",
+            "right": "The Walt Disney Company"
+        },
+        {
+            "left": "BAC",
+            "right": "Bank of America Corporation"
+        },
+        {
+            "left": "PFE",
+            "right": "Pfizer Inc."
+        },
+        {
+            "left": "KO",
+            "right": "The Coca-Cola Company"
+        },
+        {
+            "left": "PEP",
+            "right": "PepsiCo, Inc."
+        },
+        {
+            "left": "CSCO",
+            "right": "Cisco Systems, Inc."
+        },
+        {
+            "left": "NFLX",
+            "right": "Netflix, Inc."
+        },
+        {
+            "left": "INTC",
+            "right": "Intel Corporation"
+        },
+        {
+            "left": "T",
+            "right": "AT&T Inc."
+        },
+        {
+            "left": "XOM",
+            "right": "Exxon Mobil Corporation"
+        },
+        {
+            "left": "WMT",
+            "right": "Walmart Inc."
+        },
+        {
+            "left": "NKE",
+            "right": "Nike, Inc."
+        },
+        {
+            "left": "CVX",
+            "right": "Chevron Corporation"
+        },
+        {
+            "left": "MRK",
+            "right": "Merck & Co., Inc."
+        },
+        {
+            "left": "MCD",
+            "right": "McDonald's Corporation"
+        },
+        {
+            "left": "VZ",
+            "right": "Verizon Communications"
+        },
+        {
+            "left": "ADBE",
+            "right": "Adobe Inc."
+        },
+        {
+            "left": "PYPL",
+            "right": "PayPal Holdings, Inc."
+        },
+        {
+            "left": "CRM",
+            "right": "Salesforce, Inc."
+        },
+        {
+            "left": "ABBV",
+            "right": "AbbVie Inc."
+        },
+        {
+            "left": "QCOM",
+            "right": "Qualcomm Incorporated"
+        },
+        {
+            "left": "COST",
+            "right": "Costco Wholesale Corporation"
+        },
+        {
+            "left": "AMD",
+            "right": "Advanced Micro Devices, Inc."
+        },
+        {
+            "left": "ORCL",
+            "right": "Oracle Corporation"
+        },
+        {
+            "left": "GS",
+            "right": "Goldman Sachs Group"
+        },
+        {
+            "left": "IBM",
+            "right": "International Business Machines"
+        },
+        {
+            "left": "CAT",
+            "right": "Caterpillar Inc."
+        },
+        {
+            "left": "LMT",
+            "right": "Lockheed Martin Corporation"
+        },
+        {
+            "left": "GE",
+            "right": "General Electric Company"
+        },
+        {
+            "left": "BA",
+            "right": "The Boeing Company"
+        },
+        {
+            "left": "HON",
+            "right": "Honeywell International"
+        },
+        {
+            "left": "TXN",
+            "right": "Texas Instruments"
+        }
+    ],
+    "Forex": [
+        {
+            "left": "EUR",
+            "right": "USD"
+        },
+        {
+            "left": "USD",
+            "right": "JPY"
+        },
+        {
+            "left": "GBP",
+            "right": "USD"
+        },
+        {
+            "left": "AUD",
+            "right": "USD"
+        },
+        {
+            "left": "USD",
+            "right": "CAD"
+        },
+        {
+            "left": "USD",
+            "right": "CHF"
+        },
+        {
+            "left": "NZD",
+            "right": "USD"
+        },
+        {
+            "left": "EUR",
+            "right": "GBP"
+        },
+        {
+            "left": "EUR",
+            "right": "JPY"
+        },
+        {
+            "left": "GBP",
+            "right": "JPY"
+        },
+        {
+            "left": "AUD",
+            "right": "JPY"
+        },
+        {
+            "left": "CAD",
+            "right": "JPY"
+        },
+        {
+            "left": "CHF",
+            "right": "JPY"
+        },
+        {
+            "left": "EUR",
+            "right": "AUD"
+        },
+        {
+            "left": "EUR",
+            "right": "NZD"
+        },
+        {
+            "left": "GBP",
+            "right": "AUD"
+        },
+        {
+            "left": "GBP",
+            "right": "CAD"
+        },
+        {
+            "left": "GBP",
+            "right": "NZD"
+        },
+        {
+            "left": "AUD",
+            "right": "CAD"
+        },
+        {
+            "left": "AUD",
+            "right": "CHF"
+        },
+        {
+            "left": "AUD",
+            "right": "NZD"
+        },
+        {
+            "left": "CAD",
+            "right": "CHF"
+        },
+        {
+            "left": "EUR",
+            "right": "NOK"
+        },
+        {
+            "left": "EUR",
+            "right": "SEK"
+        },
+        {
+            "left": "EUR",
+            "right": "CHF"
+        },
+        {
+            "left": "USD",
+            "right": "NOK"
+        },
+        {
+            "left": "USD",
+            "right": "SEK"
+        },
+        {
+            "left": "USD",
+            "right": "MXN"
+        },
+        {
+            "left": "USD",
+            "right": "BRL"
+        },
+        {
+            "left": "USD",
+            "right": "CNH"
+        },
+        {
+            "left": "USD",
+            "right": "HKD"
+        },
+        {
+            "left": "USD",
+            "right": "ZAR"
+        },
+        {
+            "left": "USD",
+            "right": "TRY"
+        },
+        {
+            "left": "USD",
+            "right": "PLN"
+        },
+        {
+            "left": "USD",
+            "right": "HUF"
+        },
+        {
+            "left": "EUR",
+            "right": "PLN"
+        },
+        {
+            "left": "EUR",
+            "right": "HUF"
+        },
+        {
+            "left": "EUR",
+            "right": "TRY"
+        },
+        {
+            "left": "EUR",
+            "right": "ZAR"
+        },
+        {
+            "left": "GBP",
+            "right": "CHF"
+        },
+        {
+            "left": "NZD",
+            "right": "JPY"
+        },
+        {
+            "left": "NOK",
+            "right": "JPY"
+        },
+        {
+            "left": "SEK",
+            "right": "JPY"
+        },
+        {
+            "left": "SGD",
+            "right": "JPY"
+        },
+        {
+            "left": "USD",
+            "right": "ILS"
+        },
+        {
+            "left": "USD",
+            "right": "SGD"
+        },
+        {
+            "left": "USD",
+            "right": "KRW"
+        },
+        {
+            "left": "USD",
+            "right": "RUB"
+        },
+        {
+            "left": "EUR",
+            "right": "CZK"
+        },
+        {
+            "left": "USD",
+            "right": "THB"
+        }
+    ],
+    "Commodity": [
+        {
+            "left": "XAUUSD",
+            "right": "Gold (spot)"
+        },
+        {
+            "left": "XAGUSD",
+            "right": "Silver (spot)"
+        },
+        {
+            "left": "XPTUSD",
+            "right": "Platinum (spot)"
+        },
+        {
+            "left": "XPDUSD",
+            "right": "Palladium (spot)"
+        },
+        {
+            "left": "WTI",
+            "right": "WTI Crude Oil"
+        },
+        {
+            "left": "BRENT",
+            "right": "Brent Crude Oil"
+        },
+        {
+            "left": "NG",
+            "right": "Natural Gas"
+        },
+        {
+            "left": "HG",
+            "right": "Copper (COMEX)"
+        },
+        {
+            "left": "ZC",
+            "right": "Corn"
+        },
+        {
+            "left": "ZW",
+            "right": "Wheat"
+        },
+        {
+            "left": "ZS",
+            "right": "Soybeans"
+        },
+        {
+            "left": "KC",
+            "right": "Coffee"
+        },
+        {
+            "left": "CT",
+            "right": "Cotton"
+        },
+        {
+            "left": "SB",
+            "right": "Sugar"
+        },
+        {
+            "left": "OJ",
+            "right": "Orange Juice"
+        },
+        {
+            "left": "CC",
+            "right": "Cocoa"
+        },
+        {
+            "left": "LBS",
+            "right": "Live Cattle"
+        },
+        {
+            "left": "LE",
+            "right": "Feeder Cattle"
+        },
+        {
+            "left": "GF",
+            "right": "Frozen Pork Bellies (historic)"
+        },
+        {
+            "left": "HE",
+            "right": "Lean Hogs"
+        },
+        {
+            "left": "SI",
+            "right": "Silver (alt ticker)"
+        },
+        {
+            "left": "GC",
+            "right": "Gold (COMEX)"
+        },
+        {
+            "left": "PL",
+            "right": "Platinum (COMEX)"
+        },
+        {
+            "left": "PA",
+            "right": "Palladium (COMEX)"
+        },
+        {
+            "left": "URANIUM",
+            "right": "Uranium"
+        },
+        {
+            "left": "RBOB",
+            "right": "RBOB Gasoline"
+        },
+        {
+            "left": "HO",
+            "right": "Heating Oil"
+        },
+        {
+            "left": "LMEAL",
+            "right": "LME Aluminium"
+        },
+        {
+            "left": "LMCAD",
+            "right": "LME Cadmium"
+        },
+        {
+            "left": "LMZINC",
+            "right": "LME Zinc"
+        },
+        {
+            "left": "LMNICKEL",
+            "right": "LME Nickel"
+        },
+        {
+            "left": "LMTIN",
+            "right": "LME Tin"
+        },
+        {
+            "left": "LMALUM",
+            "right": "LME Aluminium (alt)"
+        },
+        {
+            "left": "COCOA",
+            "right": "Cocoa (ICE)"
+        },
+        {
+            "left": "COFFEE",
+            "right": "Coffee (ICE)"
+        },
+        {
+            "left": "CORN",
+            "right": "Corn (CBOT)"
+        },
+        {
+            "left": "SOYBEAN",
+            "right": "Soybean (CBOT)"
+        },
+        {
+            "left": "WHEAT",
+            "right": "Wheat (CBOT)"
+        },
+        {
+            "left": "RICE",
+            "right": "Rice"
+        },
+        {
+            "left": "COTTON",
+            "right": "Cotton (ICE)"
+        },
+        {
+            "left": "SUGAR",
+            "right": "Sugar (ICE)"
+        },
+        {
+            "left": "MILK",
+            "right": "Milk"
+        },
+        {
+            "left": "CATTLE",
+            "right": "Live Cattle"
+        },
+        {
+            "left": "HOGS",
+            "right": "Hogs"
+        },
+        {
+            "left": "WOOL",
+            "right": "Wool"
+        },
+        {
+            "left": "LUMBER",
+            "right": "Lumber"
+        },
+        {
+            "left": "OATS",
+            "right": "Oats"
+        },
+        {
+            "left": "COBALT",
+            "right": "Cobalt"
+        }
+    ],
+    "Index": [
+        {
+            "left": "SPX",
+            "right": "S&P 500"
+        },
+        {
+            "left": "NDX",
+            "right": "Nasdaq 100"
+        },
+        {
+            "left": "DJI",
+            "right": "Dow Jones Industrial Average"
+        },
+        {
+            "left": "RUT",
+            "right": "Russell 2000"
+        },
+        {
+            "left": "VIX",
+            "right": "CBOE Volatility Index"
+        },
+        {
+            "left": "FTSE",
+            "right": "FTSE 100"
+        },
+        {
+            "left": "DAX",
+            "right": "DAX (Germany)"
+        },
+        {
+            "left": "CAC40",
+            "right": "CAC 40 (France)"
+        },
+        {
+            "left": "IBEX",
+            "right": "IBEX 35 (Spain)"
+        },
+        {
+            "left": "AEX",
+            "right": "AEX (Netherlands)"
+        },
+        {
+            "left": "OMXS30",
+            "right": "OMX Stockholm 30"
+        },
+        {
+            "left": "SMI",
+            "right": "SMI (Switzerland)"
+        },
+        {
+            "left": "NIKKEI225",
+            "right": "Nikkei 225"
+        },
+        {
+            "left": "TOPIX",
+            "right": "TOPIX (Japan)"
+        },
+        {
+            "left": "HSI",
+            "right": "Hang Seng Index"
+        },
+        {
+            "left": "CSI300",
+            "right": "CSI 300 (China)"
+        },
+        {
+            "left": "SSE50",
+            "right": "SSE 50 (China)"
+        },
+        {
+            "left": "KOSPI",
+            "right": "KOSPI (Korea)"
+        },
+        {
+            "left": "NIFTY50",
+            "right": "NIFTY 50 (India)"
+        },
+        {
+            "left": "BSE30",
+            "right": "BSE Sensex (India)"
+        },
+        {
+            "left": "ASX200",
+            "right": "ASX 200 (Australia)"
+        },
+        {
+            "left": "NZ50",
+            "right": "NZX 50 (New Zealand)"
+        },
+        {
+            "left": "TSX",
+            "right": "S&P/TSX Composite (Canada)"
+        },
+        {
+            "left": "BOVESPA",
+            "right": "Bovespa (Brazil)"
+        },
+        {
+            "left": "MEXBOL",
+            "right": "IPC (Mexico)"
+        },
+        {
+            "left": "MOEX",
+            "right": "MOEX Russia"
+        },
+        {
+            "left": "RTSI",
+            "right": "RTS Index (Russia)"
+        },
+        {
+            "left": "TASE",
+            "right": "TA-35 (Israel)"
+        },
+        {
+            "left": "JSE",
+            "right": "JSE All Share (South Africa)"
+        },
+        {
+            "left": "EGX30",
+            "right": "EGX 30 (Egypt)"
+        },
+        {
+            "left": "ADX",
+            "right": "ADX General (UAE)"
+        },
+        {
+            "left": "TAIEX",
+            "right": "TAIEX (Taiwan)"
+        },
+        {
+            "left": "PSEi",
+            "right": "PSEi (Philippines)"
+        },
+        {
+            "left": "SET50",
+            "right": "SET50 (Thailand)"
+        },
+        {
+            "left": "VNINDEX",
+            "right": "VN-Index (Vietnam)"
+        },
+        {
+            "left": "KLCI",
+            "right": "FTSE KLCI (Malaysia)"
+        },
+        {
+            "left": "IDX",
+            "right": "IDX Composite (Indonesia)"
+        },
+        {
+            "left": "STI",
+            "right": "STI (Singapore)"
+        },
+        {
+            "left": "MSCIWORLD",
+            "right": "MSCI World"
+        },
+        {
+            "left": "MSCIEM",
+            "right": "MSCI Emerging Markets"
+        },
+        {
+            "left": "EUROSTOXX50",
+            "right": "Euro Stoxx 50"
+        },
+        {
+            "left": "MSCIACWI",
+            "right": "MSCI ACWI"
+        },
+        {
+            "left": "SPLATAM",
+            "right": "S&P Latin America"
+        },
+        {
+            "left": "MSCIAFRICA",
+            "right": "MSCI Africa"
+        },
+        {
+            "left": "MSCI_GCC",
+            "right": "MSCI GCC"
+        },
+        {
+            "left": "MSCIJAPAN",
+            "right": "MSCI Japan"
+        },
+        {
+            "left": "MSCIKOREA",
+            "right": "MSCI Korea"
+        }
+    ],
+    "PlainText": [
+        {
+            "left": "Technology",
+            "right": ""
+        },
+        {
+            "left": "Healthcare",
+            "right": ""
+        },
+        {
+            "left": "Financials",
+            "right": ""
+        },
+        {
+            "left": "Consumer Goods",
+            "right": ""
+        },
+        {
+            "left": "Energy",
+            "right": ""
+        },
+        {
+            "left": "Industrials",
+            "right": ""
+        },
+        {
+            "left": "Materials",
+            "right": ""
+        },
+        {
+            "left": "Utilities",
+            "right": ""
+        },
+        {
+            "left": "Real Estate",
+            "right": ""
+        },
+        {
+            "left": "Telecommunications",
+            "right": ""
+        },
+        {
+            "left": "Services",
+            "right": ""
+        },
+        {
+            "left": "Semiconductors",
+            "right": ""
+        },
+        {
+            "left": "Automotive Industry",
+            "right": ""
+        },
+        {
+            "left": "Retail",
+            "right": ""
+        },
+        {
+            "left": "Biotechnology",
+            "right": ""
+        },
+        {
+            "left": "Pharmaceuticals",
+            "right": ""
+        },
+        {
+            "left": "Medical Devices",
+            "right": ""
+        },
+        {
+            "left": "Insurance",
+            "right": ""
+        },
+        {
+            "left": "Banking",
+            "right": ""
+        },
+        {
+            "left": "Investment Services",
+            "right": ""
+        },
+        {
+            "left": "Food & Beverages",
+            "right": ""
+        },
+        {
+            "left": "Restaurants",
+            "right": ""
+        },
+        {
+            "left": "Travel & Leisure",
+            "right": ""
+        },
+        {
+            "left": "Aerospace & Defense",
+            "right": ""
+        },
+        {
+            "left": "Construction",
+            "right": ""
+        },
+        {
+            "left": "Chemicals",
+            "right": ""
+        },
+        {
+            "left": "Metals & Mining",
+            "right": ""
+        },
+        {
+            "left": "Paper & Forest Products",
+            "right": ""
+        },
+        {
+            "left": "Shipping & Logistics",
+            "right": ""
+        },
+        {
+            "left": "Agriculture",
+            "right": ""
+        },
+        {
+            "left": "Oil & Gas",
+            "right": ""
+        },
+        {
+            "left": "Renewable Energy",
+            "right": ""
+        },
+        {
+            "left": "Media & Entertainment",
+            "right": ""
+        },
+        {
+            "left": "Gaming & Esports",
+            "right": ""
+        },
+        {
+            "left": "Internet Services",
+            "right": ""
+        },
+        {
+            "left": "Cloud Computing",
+            "right": ""
+        },
+        {
+            "left": "Cybersecurity",
+            "right": ""
+        },
+        {
+            "left": "Artificial Intelligence",
+            "right": ""
+        },
+        {
+            "left": "Blockchain",
+            "right": ""
+        },
+        {
+            "left": "E-commerce",
+            "right": ""
+        },
+        {
+            "left": "Fashion & Apparel",
+            "right": ""
+        },
+        {
+            "left": "Luxury Goods",
+            "right": ""
+        },
+        {
+            "left": "Education",
+            "right": ""
+        },
+        {
+            "left": "Professional Services",
+            "right": ""
+        },
+        {
+            "left": "Consulting",
+            "right": ""
+        },
+        {
+            "left": "Sports & Recreation",
+            "right": ""
+        },
+        {
+            "left": "Transportation",
+            "right": ""
+        },
+        {
+            "left": "Infrastructure",
+            "right": ""
+        },
+        {
+            "left": "Environmental Services",
+            "right": ""
+        },
+        {
+            "left": "Waste Management",
+            "right": ""
+        }
+    ]
+}

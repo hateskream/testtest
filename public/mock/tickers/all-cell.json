@@ -1,0 +1,329 @@
+{
+    "priceCurrent": {
+        "cellType": "Number",
+        "columnType": "priceCurrent",
+        "value": "45632",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "increase"
+    },
+    "priceMin24h": {
+        "cellType": "Number",
+        "columnType": "priceMin24h",
+        "value": "44892",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "priceMax24h": {
+        "cellType": "Number",
+        "columnType": "priceMax24h",
+        "value": "46120",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "priceMin1y": {
+        "cellType": "Number",
+        "columnType": "priceMin1y",
+        "value": "15476",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "priceMax1y": {
+        "cellType": "Number",
+        "columnType": "priceMax1y",
+        "value": "73750",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "priceAvg50d": {
+        "cellType": "Number",
+        "columnType": "priceAvg50d",
+        "value": "42150",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "priceAvg200d": {
+        "cellType": "Number",
+        "columnType": "priceAvg200d",
+        "value": "38925",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "priceOpen": {
+        "cellType": "Number",
+        "columnType": "priceOpen",
+        "value": "45120",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "priceClose": {
+        "cellType": "Number",
+        "columnType": "priceClose",
+        "value": "45632",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "price1yRange": {
+        "cellType": "Range",
+        "columnType": "price1yRange",
+        "currencySymbol": "$",
+        "startValue": "15476",
+        "endValue": "73750",
+        "startMagnitude": "thousand",
+        "endMagnitude": "thousand"
+    },
+    "price24hChart": {
+        "cellType": "SvgChart",
+        "columnType": "price24hChart",
+        "src": "/images/mock/chart-btc-24h.svg"
+    },
+    "price7dChart": {
+        "cellType": "SvgChart",
+        "columnType": "price7dChart",
+        "src": "/images/mock/chart-btc-7d.svg"
+    },
+    "price30dChart": {
+        "cellType": "SvgChart",
+        "columnType": "price30dChart",
+        "src": "/images/mock/chart-btc-30d.svg"
+    },
+    "changePrice24h": {
+        "cellType": "Number",
+        "columnType": "changePrice24h",
+        "value": "511",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "increase"
+    },
+    "changePrice1hPercent": {
+        "cellType": "Percent",
+        "columnType": "changePrice1hPercent",
+        "value": "12",
+        "trend": "increase"
+    },
+    "changePrice24hPercent": {
+        "cellType": "Percent",
+        "columnType": "changePrice24hPercent",
+        "value": "13",
+        "trend": "increase"
+    },
+    "changePrice7dPercent": {
+        "cellType": "Percent",
+        "columnType": "changePrice7dPercent",
+        "value": "25",
+        "trend": "increase"
+    },
+    "changePrice30dPercent": {
+        "cellType": "Percent",
+        "columnType": "changePrice30dPercent",
+        "value": "47",
+        "trend": "increase"
+    },
+    "volume24h": {
+        "cellType": "Number",
+        "columnType": "volume24h",
+        "value": "42",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "increase"
+    },
+    "volumeRel10d": {
+        "cellType": "Number",
+        "columnType": "volumeRel10d",
+        "value": "15",
+        "currencySymbol": "",
+        "magnitude": "none",
+        "trend": "increase"
+    },
+    "volumeAvg10d": {
+        "cellType": "Number",
+        "columnType": "volumeAvg10d",
+        "value": "73",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "stable"
+    },
+    "volumeAvg50d": {
+        "cellType": "Number",
+        "columnType": "volumeAvg50d",
+        "value": "18",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "stable"
+    },
+    "marketCap24h": {
+        "cellType": "Number",
+        "columnType": "marketCap24h",
+        "value": "50",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "increase"
+    },
+    "marketCapRank": {
+        "cellType": "Text",
+        "columnType": "marketCapRank",
+        "value": "1"
+    },
+    "marketCapFullyDiluted": {
+        "cellType": "Number",
+        "columnType": "marketCapFullyDiluted",
+        "value": "957",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "increase"
+    },
+    "marketCapChange24h": {
+        "cellType": "Number",
+        "columnType": "marketCapChange24h",
+        "value": "10",
+        "currencySymbol": "$",
+        "magnitude": "billion",
+        "trend": "increase"
+    },
+    "marketCapChange24hPercent": {
+        "cellType": "Percent",
+        "columnType": "marketCapChange24hPercent",
+        "value": "13",
+        "trend": "increase"
+    },
+    "circulatingSupply": {
+        "cellType": "Number",
+        "columnType": "circulatingSupply",
+        "value": "65",
+        "currencySymbol": "",
+        "magnitude": "million",
+        "trend": "stable"
+    },
+    "totalSupply": {
+        "cellType": "Number",
+        "columnType": "totalSupply",
+        "value": "19",
+        "currencySymbol": "",
+        "magnitude": "million",
+        "trend": "stable"
+    },
+    "maxSupply": {
+        "cellType": "Number",
+        "columnType": "maxSupply",
+        "value": "21",
+        "currencySymbol": "",
+        "magnitude": "million",
+        "trend": "stable"
+    },
+    "allTimeHigh": {
+        "cellType": "Number",
+        "columnType": "allTimeHigh",
+        "value": "73750",
+        "currencySymbol": "$",
+        "magnitude": "thousand",
+        "trend": "stable"
+    },
+    "allTimeHighChangePercent": {
+        "cellType": "Percent",
+        "columnType": "allTimeHighChangePercent",
+        "value": "38",
+        "trend": "decrease"
+    },
+    "allTimeHighDate": {
+        "cellType": "Text",
+        "columnType": "allTimeHighDate",
+        "value": "2021-11-10"
+    },
+    "allTimeLow": {
+        "cellType": "Number",
+        "columnType": "allTimeLow",
+        "value": "81",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "allTimeLowChangePercent": {
+        "cellType": "Percent",
+        "columnType": "allTimeLowChangePercent",
+        "value": "81",
+        "trend": "increase"
+    },
+    "allTimeLowDate": {
+        "cellType": "Text",
+        "columnType": "allTimeLowDate",
+        "value": "2013-07-05"
+    },
+    "rsiValue": {
+        "cellType": "Number",
+        "columnType": "rsiValue",
+        "value": "58",
+        "currencySymbol": "",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "rsiChart": {
+        "cellType": "SvgChart",
+        "columnType": "rsiChart",
+        "src": "/images/mock/rsi-btc.svg"
+    },
+    "beta5y": {
+        "cellType": "Number",
+        "columnType": "beta5y",
+        "value": "23",
+        "currencySymbol": "",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "lastDividend": {
+        "cellType": "Number",
+        "columnType": "lastDividend",
+        "value": "54",
+        "currencySymbol": "$",
+        "magnitude": "none",
+        "trend": "stable"
+    },
+    "employees": {
+        "cellType": "Text",
+        "columnType": "employees",
+        "value": "N/A"
+    },
+    "ipoDate": {
+        "cellType": "Text",
+        "columnType": "ipoDate",
+        "value": "2009-01-03"
+    },
+    "sector": {
+        "cellType": "Text",
+        "columnType": "sector",
+        "value": "Cryptocurrency"
+    },
+    "industry": {
+        "cellType": "Text",
+        "columnType": "industry",
+        "value": "Digital Currency"
+    },
+    "source": {
+        "cellType": "Text",
+        "columnType": "source",
+        "value": "CoinGecko"
+    },
+    "listingDate": {
+        "cellType": "Text",
+        "columnType": "listingDate",
+        "value": "2013-04-28"
+    },
+    "updateDate": {
+        "cellType": "Text",
+        "columnType": "updateDate",
+        "value": "2024-01-15 10:30:15"
+    },
+    "volatility": {
+        "cellType": "Label",
+        "columnType": "volatility",
+        "value": "High",
+        "status": "caution"
+    }
+}

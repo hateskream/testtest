@@ -2,7 +2,7 @@ import { useHttpService } from '@/shared/service/http-service';
 import { Tension, type ITension } from '../model';
 import { useLogger } from '@/shared/service/logger';
 
-const IS_USE_MOCK = false;
+const IS_USE_MOCK = true;
 let mockCurrentTension = 85;
 
 interface IGetTensionResponse {

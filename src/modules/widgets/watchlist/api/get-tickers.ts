@@ -129,7 +129,7 @@ async function getMockData(_: string[]): Promise<IGetWatchlistResponse> {
 
 	const response: IGetWatchlistResponse = {
 		data: {
-			tickers: generateAllRows(),
+			tickers: await generateAllRows(),
 		},
 	};
 	return response;
