@@ -157,6 +157,16 @@ export const notes: IWeekGroup[] = [
         '(это ускоряет навигацию и при первом заходе) ',
 				productLink: '/',
 			},
+			{
+				id: '19',
+				title: 'Индикаторы загрузки и состояние ошибки',
+				description: 'Во все виджеты добавлены индикаторы загрузки и состояние ошибки, '+
+				'для улучшения отзывчивости интерфейса. '+
+				'При ошибке загрузки данных, их можно перезапросить из состояния ошибки',
+				productLink: '/',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=34041-272333&t=pfK9TY3TTSaUHMhO-4',
+			},
 		],
 	},
 ];
