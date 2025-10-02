@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue';
 
 import { useQueryAltcoinSeason } from '../queries';
-import type { AltcoinSeasonModuleKey, IAltcoinSeasonConfig, Period } from '../model';
+import { type AltcoinSeasonModuleKey, type IAltcoinSeasonConfig, type Period } from '../model';
 import type { IAltcoinSeasonRequest } from '../api';
 
 export const useAltcoinSeasonStore = () => {
@@ -15,9 +15,7 @@ export const useAltcoinSeasonStore = () => {
 		modules: modules.value,
 	}));
 
-	// TODO: refetch on request data change
-	const { data, refetch, isLoading, isError } = useQueryAltcoinSeason(request.value);
-
+	const { data, refetch, isLoading, isError } = useQueryAltcoinSeason(request);
 
 	const widgetData = computed(() => ({
 		widgetConfig: data.value?.widgetConfig,
@@ -47,6 +45,8 @@ export const useAltcoinSeasonStore = () => {
 	}, { once: true });
 
 	return {
+		period,
+
 		widgetData,
 		refetch,
 		isLoading,

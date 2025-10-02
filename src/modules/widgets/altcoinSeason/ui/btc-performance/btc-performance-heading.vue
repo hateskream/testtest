@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
-import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 
 import AltcoinSeasonTimeFilter from '@/modules/widgets/altcoinSeason/ui/modals/altcoin-season-time-filter.vue';
@@ -22,7 +22,7 @@ const period = computed(() => altcoinSeasonStore.selectedPeriod);
 <template>
 	<div :class="classes.heading">
 		<div :class="classes.headingTitle">
-			BTC performance rank
+			BTC rank
 		</div>
 
 		<ui-position
@@ -62,6 +62,11 @@ const period = computed(() => altcoinSeasonStore.selectedPeriod);
 	align-items: center;
 	gap: 8px;
 	align-self: stretch;
+}
+
+.headingTitle {
+	padding: 12px 0;
+	font-size: 12px;
 }
 
 .icon {

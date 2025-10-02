@@ -20,6 +20,7 @@ export interface IPeriodTimestamps {
 }
 
 export type Period = '7D' | '30D' | '90D' | '1Y';
+export const periods = ['7D', '30D', '90D', '1Y'] satisfies Period[];
 
 // Дополнительные типы для работы с модулями
 export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];

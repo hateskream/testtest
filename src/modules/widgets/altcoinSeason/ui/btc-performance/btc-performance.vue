@@ -13,8 +13,10 @@ const props = defineProps<IBtcPerformanceProps>();
 <template>
 	<div :class="classes.btcPerformance">
 		<btc-performance-heading :show-period="props.showPeriod" />
-		<btc-performance-season />
-		<btc-performance-chart />
+		<div :class="classes.bottom">
+			<btc-performance-season />
+			<btc-performance-chart />
+		</div>
 	</div>
 </template>
 
@@ -22,10 +24,14 @@ const props = defineProps<IBtcPerformanceProps>();
 .btcPerformance {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	height: 100%;
-	padding: 12px 8px;
+	gap: 9px;
+	padding: 6px 16px 26px;
 	color: var(--color-text-base-300, #9a9a9d);
 }
 
+.bottom {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
 </style>

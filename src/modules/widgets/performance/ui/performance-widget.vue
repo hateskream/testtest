@@ -47,7 +47,9 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 
 <template>
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
-		<template #title> {{ props.meta.name }} </template>
+		<template #title>
+			<span :class="classes.title">{{ props.meta.name }}</span>
+		</template>
 
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
@@ -79,3 +81,10 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 		</template>
 	</base-dashboard-component>
 </template>
+
+<style module="classes">
+.title {
+	font-size: 12px;
+	line-height: 1;
+}
+</style>

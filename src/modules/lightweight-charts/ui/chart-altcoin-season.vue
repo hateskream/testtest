@@ -2,6 +2,7 @@
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js';
 
+import { UiDriver } from '@/shared/ui/driver';
 import { getExternalTooltipVaults } from '../utils';
 
 const container = useTemplateRef('container');
@@ -19,6 +20,7 @@ const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 
 onMounted(() => {
 	const labels = ['Mar 17', 'Mar 24', 'Mar 25', 'Apr 14', 'Apr 28', 'May 12'];
+	const lines = [9.5, 12];
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
@@ -40,7 +42,30 @@ onMounted(() => {
 					pointStyle: false,
 				},
 				{
-					data: [12, 12, 12, 12, 12, 12],
+					data: [19.5, 19.5, 19.5, 19.5, 19.5, 19.5],
+					borderColor: '#D9D9D9',
+					borderWidth: 1,
+					borderDash: [3, 3],
+					pointStyle: false,
+				},
+				{
+					data: [16.5, 16.5, 16.5, 16.5, 16.5, 16.5],
+					borderColor: '#D9D9D9',
+					borderWidth: 1,
+					borderDash: [3, 3],
+					backgroundColor: 'rgba(65, 59, 150, 0.2)',
+					fill: 'end',
+					pointStyle: false,
+				},
+				{
+					data: [13.5, 13.5, 13.5, 13.5, 13.5, 13.5],
+					borderColor: '#D9D9D9',
+					borderWidth: 1,
+					borderDash: [3, 3],
+					pointStyle: false,
+				},
+				{
+					data: [10.5, 10.5, 10.5, 10.5, 10.5, 10.5],
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
 					borderDash: [3, 3],
@@ -48,9 +73,8 @@ onMounted(() => {
 					backgroundColor: 'rgba(0,0,0,0.5)',
 					fill: 'end',
 				},
-
 				{
-					data: [9.5, 9.5, 9.5, 9.5, 9.5, 9.5],
+					data: [8, 8, 8, 8, 8, 8],
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
 					borderDash: [3, 3],
@@ -73,7 +97,7 @@ onMounted(() => {
 					pointStyle: false,
 				},
 				{
-					data: [8, 10, 15, 10, 14, 12],
+					data: [8, 10, 20, 10, 14, 12],
 					borderColor: '#FEB358',
 					borderWidth: 2,
 					pointStyle: false,
@@ -85,6 +109,9 @@ onMounted(() => {
 			],
 		},
 		options: {
+			layout: {
+				autoPadding: false,
+			},
 			maintainAspectRatio: false,
 			normalized: true,
 			responsive: true,
@@ -148,12 +175,13 @@ onMounted(() => {
 
 			scales: {
 				y: {
+					display: false,
 					type: 'linear',
-					display: true,
 					position: 'right',
 
 					grid: {
 						color: '#373737',
+						display: false,
 					},
 
 					ticks: {
@@ -174,6 +202,7 @@ onMounted(() => {
 					},
 				},
 				x: {
+					display: false,
 					ticks: {
 						padding: 10,
 					},
@@ -197,7 +226,16 @@ onMounted(() => {
 
 <template>
 	<div :class="classes.wrapper">
-		<canvas ref="container" :class="classes.mainChart"></canvas>
+		<ui-driver />
+
+		<span :class="classes.title">
+			Chart
+		</span>
+		<div :class="classes.chartContainer">
+			<canvas ref="container" :class="classes.mainChart"></canvas>
+		</div>
+
+		<ui-driver />
 	</div>
 </template>
 
@@ -208,11 +246,28 @@ onMounted(() => {
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
+	overflow: hidden;
+}
+
+.title {
+	padding: 12px 16px;
+	overflow: hidden;
+	font-style: normal;
+	font-weight: 440;
+	font-size: 12px;
+	color: var(--color-text-base-300, #9a9a9d);
+	letter-spacing: 0.08px;
+	text-overflow: ellipsis;
+}
+
+.chartContainer {
+	height: 175px;
+	margin-bottom: 30px;
 }
 
 .mainChart {
 	flex-grow: 1;
 	width: 100%;
-	height: 90% !important;
+	height: 100%;
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { getColorByRank, getSeasonNameByRank } from '@/modules/widgets/altcoinSeason/const';
+import { getActiveColorByRank, getSeasonNameByRank } from '@/modules/widgets/altcoinSeason/const';
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 import InfoTooltip from '@/shared/ui/info-tooltip/info-tooltip.vue';
@@ -20,7 +20,7 @@ const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRa
 			<info-tooltip text="Bitcoin current score" />
 		</div>
 
-		<div :class="classes.seasonLabel" :style="{ color: getColorByRank(btcRank || 0) }">
+		<div :class="classes.seasonLabel" :style="{ color: getActiveColorByRank(btcRank || 0) }">
 			{{ getSeasonNameByRank(btcRank || 0) }}
 		</div>
 	</div>

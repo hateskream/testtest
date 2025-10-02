@@ -1,34 +1,48 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
+import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type Period } from '@/modules/widgets/altcoinSeason/model';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const props = defineProps<{
+	periodList: Period[];
+}>();
 
-// TODO: get from API
-const periods = ['7D', '30D', '90D', '1Y'] as Period[];
-
-// FIXME: get from widget config but its too deep for reactivity
-const selectedPeriod = computed(() => altcoinSeasonStore.selectedPeriod.value);
+const selectedPeriod = defineModel<Period>('selectedPeriod', { required: true });
 
 const handlePeriodClick = (periodItem: Period) => {
-	altcoinSeasonStore.handlePeriodChange(periodItem);
+	selectedPeriod.value = periodItem;
 };
 </script>
 
 <template>
 	<div :class="classes.altcoinSeasonPeriodGroup">
-		<div
-			v-for="periodItem in periods"
-			:key="periodItem"
-			:class="[classes.periodItem, { [classes.active]: periodItem === selectedPeriod }]"
-			@click="handlePeriodClick(periodItem)"
-		>
-			<span :class="classes.periodItemText">
-				{{ periodItem }}
-			</span>
-		</div>
+		<modal-badge>
+			<template #title>
+				{{selectedPeriod}}
+				<ui-icon
+					:id="IconIds.Arrow"
+					width="10px"
+					height="10px"
+					:class="classes.arrow"
+				/>
+			</template>
+			<template #content>
+				<modal-badge-list>
+					<template #title>
+						Period
+					</template>
+
+					<modal-item-selector
+						v-for="period in props.periodList"
+						:key="period"
+						:model-value="selectedPeriod === period"
+						@click="handlePeriodClick(period)"
+					>
+						{{period}}
+					</modal-item-selector>
+				</modal-badge-list>
+			</template>
+		</modal-badge>
 	</div>
 </template>
 
@@ -36,10 +50,7 @@ const handlePeriodClick = (periodItem: Period) => {
 .altcoinSeasonPeriodGroup {
 	display: flex;
 	align-items: center;
-	width: 283px;
-	padding: 2px;
-	background: var(--color-metrics-bg-control-300, rgb(45 45 47 / 40%));
-	border-radius: var(--radius-full, 9999px);
+	padding: 0 16px;
 }
 
 .periodItem {
@@ -56,6 +67,10 @@ const handlePeriodClick = (periodItem: Period) => {
 	&.active {
 		background: var(--color-bg-actived-base-300-actived, rgb(51 51 51 / 80%));
 	}
+}
+
+.arrow {
+	rotate: -90deg;
 }
 
 .periodItemText {

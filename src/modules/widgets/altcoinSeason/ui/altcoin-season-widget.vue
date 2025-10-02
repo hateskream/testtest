@@ -42,10 +42,11 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 	>
 		<template #title>{{ props.meta.name }}</template>
 		<template #content>
-			<altcoin-season-loader v-if="isLoading" :count="6" />
-			<base-error-component v-else-if="isError" @retry="altcoinSeasonStore.refetch" />
-			<view-component v-else :meta="props.meta" />
-
+			<div :class="classes.content">
+				<altcoin-season-loader v-if="isLoading" :count="6" />
+				<base-error-component v-else-if="isError" @retry="altcoinSeasonStore.refetch" />
+				<view-component v-else :meta="props.meta" />
+			</div>
 		</template>
 
 		<template #rcm>
@@ -64,5 +65,11 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 <style module="classes">
 .altcoinSeasonWidget {
 	/* todo: add styles */
+}
+
+.content {
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 </style>

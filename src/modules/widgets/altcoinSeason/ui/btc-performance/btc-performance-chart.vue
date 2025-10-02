@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { widgetColor, widgetActiveColor } from '@/modules/widgets/altcoinSeason/const';
+import { widgetActiveColor, widgetColor } from '@/modules/widgets/altcoinSeason/const';
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
 const altcoinSeasonStore = useAltcoinSeasonStore();
@@ -64,6 +64,7 @@ const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRa
 .btcPerformanceChart {
 	display: flex;
 	align-self: stretch;
+	padding: 0 8px;
 }
 
 .chart {

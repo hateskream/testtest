@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 
@@ -61,6 +61,19 @@ const period = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.
 	align-items: center;
 	gap: 8px;
 	align-self: stretch;
+}
+
+.headingTitle {
+	display: -webkit-box;
+	overflow: hidden;
+	font-style: normal;
+	font-weight: 440;
+	font-size: 12px;
+	color: var(--color-text-base-300, #9a9a9d);
+	letter-spacing: 0.08px;
+	text-overflow: ellipsis;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 }
 
 .icon {

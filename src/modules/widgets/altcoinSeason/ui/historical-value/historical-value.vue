@@ -23,7 +23,8 @@ const props = defineProps<IHistoricalValueProps>();
 	flex-direction: column;
 	align-items: flex-start;
 	height: 100%;
-	padding: 12px 8px;
+	min-height: 144px;
+	padding: 6px 16px 15px;
 	color: var(--color-text-base-300, #9a9a9d);
 	gap: 12px;
 }
