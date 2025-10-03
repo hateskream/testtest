@@ -1,26 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
+import { ModalBadgeList, ModalItemSwitch } from '@/modules/widgets/base/modal';
 import {
-	ModalItemSwitch,
-	ModalBadgeList,
-} from '@/modules/widgets/base/modal';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
-import { ALTCOIN_SEASON_MODULE_LABELS, type AltcoinSeasonModuleKey } from '@/modules/widgets/altcoinSeason/model';
+	ALTCOIN_SEASON_MODULE_LABELS,
+	type AltcoinSeasonModuleKey,
+	type IAltcoinSeasonConfig,
+} from '@/modules/widgets/altcoinSeason/model';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const props = defineProps<{
+	modules: IAltcoinSeasonConfig['modules'];
+}>();
 
-const modules = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig?.modules);
+const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selected-modules', { required: true });
 
-async function handleModuleToggle(moduleKey: string, value: boolean) {
-	try {
-		await altcoinSeasonStore.setModuleState(moduleKey as AltcoinSeasonModuleKey, value);
-	} catch (_error) {
-		// error already handled in store
-		// console.error('Failed to update module state:', error);
-	}
+function handleModuleToggle(key: AltcoinSeasonModuleKey, value: boolean) {
+	selectedModules.value[key] = value;
 }
-
 </script>
 
 <template>
@@ -33,12 +27,12 @@ async function handleModuleToggle(moduleKey: string, value: boolean) {
 		</template>
 
 		<modal-item-switch
-			v-for="(value, key) in modules"
+			v-for="(value, key) in props.modules"
 			:key="key"
 			:model-value="value"
 			@update:model-value="(newValue) => handleModuleToggle(key, newValue)"
 		>
-			{{ ALTCOIN_SEASON_MODULE_LABELS[key as AltcoinSeasonModuleKey] || key }}
+			{{ ALTCOIN_SEASON_MODULE_LABELS[key] || key }}
 		</modal-item-switch>
 	</modal-badge-list>
 </template>

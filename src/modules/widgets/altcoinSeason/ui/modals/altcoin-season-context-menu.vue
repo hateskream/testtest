@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useAltcoinSeasonStore } from '../../stores';
 import { ModalSubmenu, WidgetContextMenu } from '@/modules/widgets/base';
 import { usePerformanceStore } from '@/modules/widgets/performance/stores';
+import type { IAltcoinSeasonConfig, Period } from '@/modules/widgets/altcoinSeason/model';
 
 import AltcoinSeasonTimeFilter from './altcoin-season-time-filter.vue';
 import AltcoinSeasonWidgetConfig from './altcoin-season-widget-config.vue';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
 const performanceStore = usePerformanceStore();
 
 interface IAltcoinSeasonContextMenuProps {
 	title: string;
+	modules: IAltcoinSeasonConfig['modules'] | null;
 	dashboards: {
 		id: string;
 		name: string;
@@ -24,11 +24,12 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const selectedPeriod = defineModel<Period>('period', { required: true });
+const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selectedModules', { required: true });
+
 const resetAll = () => {
-	altcoinSeasonStore.refetch();
 	performanceStore.resetAll();
 };
-
 </script>
 
 <template>
@@ -43,14 +44,18 @@ const resetAll = () => {
 		<modal-submenu>
 			<template #title>Change display</template>
 			<template #content>
-				<altcoin-season-widget-config />
+				<altcoin-season-widget-config
+					v-if="props.modules"
+					v-model:selected-modules="selectedModules"
+					:modules="props.modules"
+				/>
 			</template>
 		</modal-submenu>
 
 		<modal-submenu>
 			<template #title>Filter</template>
 			<template #content>
-				<altcoin-season-time-filter />
+				<altcoin-season-time-filter :period="selectedPeriod" />
 			</template>
 		</modal-submenu>
 	</widget-context-menu>

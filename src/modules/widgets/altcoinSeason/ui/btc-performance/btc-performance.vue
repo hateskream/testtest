@@ -1,21 +1,21 @@
 <script setup lang="ts">
+import type { IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
+
 import BtcPerformanceHeading from './btc-performance-heading.vue';
 import BtcPerformanceSeason from './btc-performance-season.vue';
 import BtcPerformanceChart from './btc-performance-chart.vue';
 
-interface IBtcPerformanceProps {
-	showPeriod: boolean;
-}
-
-const props = defineProps<IBtcPerformanceProps>();
+const props = defineProps<{
+	performance: IPerformanceRank;
+}>();
 </script>
 
 <template>
 	<div :class="classes.btcPerformance">
-		<btc-performance-heading :show-period="props.showPeriod" />
+		<btc-performance-heading />
 		<div :class="classes.bottom">
-			<btc-performance-season />
-			<btc-performance-chart />
+			<btc-performance-season :performance="props.performance" />
+			<btc-performance-chart :performance="props.performance" />
 		</div>
 	</div>
 </template>

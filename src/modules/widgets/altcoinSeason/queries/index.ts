@@ -1,1 +1,1 @@
-export * from './use-query-altcoin-season';
+export * from './use-altcoin-season-query.ts';

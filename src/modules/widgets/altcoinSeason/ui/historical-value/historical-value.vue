@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import type { IHistoricalValue } from '@/modules/widgets/altcoinSeason/model';
+
 import HistoricalValueHeading from './historical-value-heading.vue';
 import HistoricalValueData from './historical-value-data.vue';
 
-interface IHistoricalValueProps {
-	showPeriod: boolean;
-}
+const props = defineProps<{
+	historicalValues: IHistoricalValue;
+}>();
 
-const props = defineProps<IHistoricalValueProps>();
 </script>
 
 <template>
 	<div :class="classes.historicalValue">
-		<historical-value-heading :show-period="props.showPeriod" />
-		<historical-value-data />
+		<historical-value-heading  />
+		<historical-value-data :historical-values="props.historicalValues" />
 	</div>
 </template>
 

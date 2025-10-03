@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { IPerformanceRank, IHistoricalValue, Period, IAltcoinSeasonConfig } from '../model';
+import type { IAltcoinSeasonConfig, IHistoricalValue, IPerformanceRank, Period } from '../model';
 import { useFetchMock } from '@/shared/mock';
 
 enum DataProvider {
@@ -13,8 +13,8 @@ const dataProvider = DataProvider.MockLocal;
 
 export interface IAltcoinSeasonRequest {
 	market: string;
-	period?: Period;
-	modules?: IAltcoinSeasonConfig['modules'];
+	period: Period;
+	modules: Partial<IAltcoinSeasonConfig['modules']>;
 }
 
 
@@ -30,9 +30,8 @@ export async function getAltcoinSeason(request: IAltcoinSeasonRequest): Promise<
 	const logger = useLogger();
 
 	try {
-		const response = await sendRequestByProvider(dataProvider, request);
-
-		return response;
+		logger.debug('send request');
+		return sendRequestByProvider(dataProvider, request);
 	} catch (error) {
 		logger.error('Failed to get altcoin season', error as Error);
 		throw error;

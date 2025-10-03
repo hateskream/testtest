@@ -2,20 +2,26 @@
 import { computed } from 'vue';
 
 import { PerformanceWidget } from '@/modules/widgets/performance';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
 import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
-import { periods } from '@/modules/widgets/altcoinSeason/model';
+import {
+	type IAltcoinSeasonConfig,
+	type IHistoricalValue,
+	type IPerformanceRank,
+	type Period,
+	periods,
+} from '@/modules/widgets/altcoinSeason/model';
 
 import BtcPerformance from '../btc-performance/btc-performance.vue';
 import AltcoinSeasonLayout from './altcoin-season-layout.vue';
 import AltcoinSeasonPeriodGroup from '../period-switch/altcoin-season-period-group.vue';
 import HistoricalValue from '../historical-value/historical-value.vue';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
-
 interface IAltcoinSeasonMainProps {
 	meta: IMeta;
+	performance: IPerformanceRank;
+	historicalValues: IHistoricalValue;
+	widgetDisplaySettings: IAltcoinSeasonConfig['modules'];
 }
 
 const props = defineProps<IAltcoinSeasonMainProps>();
@@ -26,24 +32,25 @@ const metaPerformance = computed(() => {
 		name: 'Top 100 coins performance',
 	};
 });
+
+const period = defineModel<Period>('period', { required: true });
 </script>
 
 <template>
-	<altcoin-season-layout :size-by-cells="props.meta.size">
+	<altcoin-season-layout :size-by-cells="props.meta.size" :widget-display-settings="props.widgetDisplaySettings">
 		<template #period>
 			<altcoin-season-period-group
-				v-model:selected-period="altcoinSeasonStore.period.value"
+				v-model:period="period"
 				:period-list="periods"
-				@update:selected-period="altcoinSeasonStore.handlePeriodChange($event)"
 			/>
 		</template>
 
-		<template #performanceRank="{ showPeriod }">
-			<btc-performance :show-period="showPeriod" />
+		<template #performanceRank>
+			<btc-performance :performance="props.performance" />
 		</template>
 
-		<template #historicalValues="{ showPeriod }">
-			<historical-value :show-period="showPeriod" />
+		<template #historicalValues>
+			<historical-value :historical-values="props.historicalValues" />
 		</template>
 
 		<template #chart="{showX, showY}">

@@ -3,11 +3,11 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
+import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
+import { useQueryAltcoinSeason } from '@/modules/widgets/altcoinSeason/queries/use-query-altcoin-season.ts';
 
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
-
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/altcoin-season-main.vue'),
@@ -27,11 +27,12 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const { period, modules, request } = useAltcoinSeasonState();
+const { data, isLoading, isError, refetch } = useQueryAltcoinSeason(request);
 
-const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
-const isLoading = computed(() => altcoinSeasonStore.isLoading.value || props.meta.isLoading);
-const isError = computed(() => altcoinSeasonStore.isError.value);
+const widgetConfig = computed(
+	() => data.value?.widgetConfig,
+);
 </script>
 
 <template>
@@ -44,13 +45,23 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 		<template #content>
 			<div :class="classes.content">
 				<altcoin-season-loader v-if="isLoading" :count="6" />
-				<base-error-component v-else-if="isError" @retry="altcoinSeasonStore.refetch" />
-				<view-component v-else :meta="props.meta" />
+				<base-error-component v-else-if="isError" @retry="refetch" />
+				<view-component
+					v-else-if="data"
+					v-model:period="period"
+					:meta="props.meta"
+					:performance="data.performanceRank"
+					:historical-values="data.historicalValues"
+					:widget-display-settings="data.widgetConfig.modules"
+				/>
 			</div>
 		</template>
 
 		<template #rcm>
 			<altcoin-season-context-menu
+				v-model:period="period"
+				v-model:selected-modules="modules"
+				:modules="data?.widgetConfig.modules || null"
 				:title="props.meta.name"
 				:dashboards="props.meta.dashboards"
 				:widget-config="widgetConfig || null"

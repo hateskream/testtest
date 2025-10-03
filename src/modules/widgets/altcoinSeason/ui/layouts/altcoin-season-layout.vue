@@ -2,41 +2,13 @@
 import { computed, type CSSProperties } from 'vue';
 
 import type { ISize } from '@/modules/dashboard-group/grid/model';
-import { MIN_COL_WIDTH, MIN_ROW_HEIGHT } from '@/modules/dashboard-group/core';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
-
-const altcoinSeasonStore = useAltcoinSeasonStore();
+import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model';
 
 interface IWidgetLayoutProps {
 	sizeByCells: ISize;
+	widgetDisplaySettings: IAltcoinSeasonConfig['modules'];
 }
 const props = defineProps<IWidgetLayoutProps>();
-
-const widgetConfig = computed(() => altcoinSeasonStore.widgetData.value.widgetConfig);
-
-const gridConfig = computed(() => {
-	const { w: width, h: height } = props.sizeByCells;
-	let columns = 0;
-	let rows = height;
-
-	if (width >= 7 && height >= 10) {
-		columns = 7;
-	} else if (width >=4) {
-		columns = 4;
-	} else {
-		columns = 2;
-	}
-
-	return {
-		columns,
-		rows,
-	};
-});
-
-const showPeriod = computed(() => {
-	const { columns, rows } = gridConfig.value;
-	return columns > 3 || rows > 3;
-});
 
 const widgetVars = computed(() => {
 	const { w: width } = props.sizeByCells;
@@ -55,31 +27,16 @@ const widgetVars = computed(() => {
 
 	return styles;
 });
-
-const containerStyles = computed(() => {
-	const { columns, rows } = gridConfig.value;
-	const minimumRows = 12;
-
-	const styles = {
-		'--min-col-width': `${MIN_COL_WIDTH}px`,
-		'--min-row-height': `${MIN_ROW_HEIGHT}px`,
-		'--grid-columns': columns.toString(),
-		'--grid-rows': rows > minimumRows ? rows.toString() : minimumRows.toString(),
-	};
-
-	return styles;
-});
 </script>
 
 <template>
 	<div
 		ref="widgetLayoutRef"
 		:class="classes.widgetLayout"
-		:style="{...containerStyles, ...widgetVars}"
+		:style="widgetVars"
 	>
 		<div :class="classes.left">
 			<div
-				v-if="showPeriod"
 				:class="[classes.period, classes.slot]"
 			>
 				<slot name="period" />
@@ -87,22 +44,22 @@ const containerStyles = computed(() => {
 
 			<div :class="classes.btcAndHistoricalContainer">
 				<div
-					v-if="widgetConfig?.modules.performanceRank"
+					v-if="widgetDisplaySettings?.performanceRank"
 					:class="[classes.performanceRank, classes.slot]"
 				>
-					<slot name="performanceRank" :show-period="!showPeriod" />
+					<slot name="performanceRank" />
 				</div>
 
 				<div
-					v-if="widgetConfig?.modules.historicalValues"
+					v-if="widgetDisplaySettings?.historicalValues"
 					:class="[classes.historicalValues, classes.slot]"
 				>
-					<slot name="historicalValues" :show-period="!showPeriod" />
+					<slot name="historicalValues" />
 				</div>
 			</div>
 
 			<div
-				v-if="widgetConfig?.modules.chart"
+				v-if="widgetDisplaySettings?.chart"
 				:class="[classes.chart, classes.slot]"
 			>
 				<slot
@@ -115,7 +72,7 @@ const containerStyles = computed(() => {
 
 		<div :class="classes.right">
 			<div
-				v-if="widgetConfig?.modules.top100"
+				v-if="widgetDisplaySettings?.top100"
 				:class="[classes.top100, classes.slot]"
 			>
 				<slot name="top100" />

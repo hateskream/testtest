@@ -2,12 +2,18 @@
 import { computed } from 'vue';
 
 import { widgetActiveColor, widgetColor } from '@/modules/widgets/altcoinSeason/const';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
+import type { IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const props = defineProps<{
+	performance: IPerformanceRank;
+}>();
 
-const activeBar = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.btcRank);
-const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRank?.maxRank);
+const maxRank = computed(
+	() => props.performance.maxRank,
+);
+const activeBar = computed(
+	() => props.performance.btcRank,
+);
 </script>
 
 <template>

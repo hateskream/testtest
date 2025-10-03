@@ -2,12 +2,15 @@
 import { computed } from 'vue';
 
 import { getActiveColorByRank } from '@/modules/widgets/altcoinSeason/const';
-import { useAltcoinSeasonStore } from '@/modules/widgets/altcoinSeason/stores';
+import type { IHistoricalValue } from '@/modules/widgets/altcoinSeason/model';
 
-const altcoinSeasonStore = useAltcoinSeasonStore();
+const props = defineProps<{
+	historicalValues: IHistoricalValue;
+}>();
 
-const historicalValues = computed(() => altcoinSeasonStore.widgetData.value.historicalValues);
-
+const historicalValues = computed(
+	() => props.historicalValues,
+);
 </script>
 
 <template>

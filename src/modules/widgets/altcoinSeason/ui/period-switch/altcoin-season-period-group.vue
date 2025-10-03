@@ -7,7 +7,7 @@ const props = defineProps<{
 	periodList: Period[];
 }>();
 
-const selectedPeriod = defineModel<Period>('selectedPeriod', { required: true });
+const selectedPeriod = defineModel<Period>('period', { required: true });
 
 const handlePeriodClick = (periodItem: Period) => {
 	selectedPeriod.value = periodItem;
