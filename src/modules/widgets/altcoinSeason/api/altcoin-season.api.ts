@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { IAltcoinSeasonConfig, IHistoricalValue, IPerformanceRank, Period } from '../model';
+import type { IAltcoinSeasonConfig, IHistoricalValue, IPerformanceRank, ITop100, Period } from '../model';
 import { useFetchMock } from '@/shared/mock';
 
 enum DataProvider {
@@ -19,10 +19,9 @@ export interface IAltcoinSeasonRequest {
 
 
 export interface IAltcoinSeasonDataResponse {
-	widgetConfig: IAltcoinSeasonConfig;
 	performanceRank: IPerformanceRank;
 	historicalValues: IHistoricalValue;
-	top100: unknown;
+	top100: ITop100;
 	chart: unknown;
 }
 

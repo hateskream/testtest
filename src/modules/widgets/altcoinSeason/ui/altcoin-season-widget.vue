@@ -52,7 +52,8 @@ const widgetConfig = computed(
 					:meta="props.meta"
 					:performance="data.performanceRank"
 					:historical-values="data.historicalValues"
-					:widget-display-settings="data.widgetConfig.modules"
+					:module-settings="modules"
+					:top100="data.top100"
 				/>
 			</div>
 		</template>

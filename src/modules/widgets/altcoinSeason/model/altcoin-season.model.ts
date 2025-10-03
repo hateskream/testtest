@@ -1,10 +1,14 @@
+import type { PerformanceTableRow } from '@/modules/widgets/altcoinSeason/model/performance.ts';
+
+export interface IAltcoinSeasonModules {
+	performanceRank: boolean;
+	historicalValues: boolean;
+	top100: boolean;
+	chart: boolean;
+}
+
 export interface IAltcoinSeasonConfig {
-	modules: {
-		performanceRank: boolean;
-		historicalValues: boolean;
-		top100: boolean;
-		chart: boolean;
-	};
+	modules: IAltcoinSeasonModules;
 	period: Period;
 }
 
@@ -19,6 +23,10 @@ export function getDefaultConfigState() {
 			chart: true,
 		},
 	} as const;
+}
+
+export interface ITop100 {
+	tickers: PerformanceTableRow[];
 }
 
 export interface IPerformanceRank {

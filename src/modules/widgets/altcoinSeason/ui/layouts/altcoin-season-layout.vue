@@ -6,12 +6,12 @@ import type { IAltcoinSeasonConfig } from '@/modules/widgets/altcoinSeason/model
 
 interface IWidgetLayoutProps {
 	sizeByCells: ISize;
-	widgetDisplaySettings: IAltcoinSeasonConfig['modules'];
+	moduleSettings: IAltcoinSeasonConfig['modules'];
 }
 const props = defineProps<IWidgetLayoutProps>();
 
 const hasAnyLeftSideTrueOption = computed(() => {
-	const { historicalValues, chart, performanceRank } = props.widgetDisplaySettings;
+	const { historicalValues, chart, performanceRank } = props.moduleSettings;
 	return historicalValues || chart || performanceRank;
 });
 
@@ -39,7 +39,7 @@ const widgetVars = computed(() => {
 
 const chartSlotProps = computed(() => {
 	const { w, h } = props.sizeByCells;
-	const settings = props.widgetDisplaySettings;
+	const settings = props.moduleSettings;
 
 	if (!settings.performanceRank && !settings.historicalValues) {
 		return {
@@ -63,7 +63,7 @@ const chartSlotProps = computed(() => {
 
 const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 	const { w, h } = props.sizeByCells;
-	const settings = props.widgetDisplaySettings;
+	const settings = props.moduleSettings;
 
 	if (!hasAnyLeftSideTrueOption.value) {
 		return {
@@ -142,14 +142,14 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 
 			<div :class="classes.btcAndHistoricalContainer">
 				<div
-					v-if="widgetDisplays.performanceRank && widgetDisplaySettings?.performanceRank"
+					v-if="widgetDisplays.performanceRank && moduleSettings?.performanceRank"
 					:class="[classes.performanceRank, classes.slot]"
 				>
 					<slot name="performanceRank" />
 				</div>
 
 				<div
-					v-if="widgetDisplays.historicalValues && widgetDisplaySettings?.historicalValues"
+					v-if="widgetDisplays.historicalValues && moduleSettings?.historicalValues"
 					:class="[classes.historicalValues, classes.slot]"
 				>
 					<slot name="historicalValues" />
@@ -157,7 +157,7 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 			</div>
 
 			<div
-				v-if="widgetDisplays.chart && widgetDisplaySettings?.chart"
+				v-if="widgetDisplays.chart && moduleSettings?.chart"
 				:class="[classes.chart, classes.slot]"
 			>
 				<slot
@@ -167,7 +167,7 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 			</div>
 		</div>
 
-		<div v-if="widgetDisplays.top100 && widgetDisplaySettings?.top100" :class="classes.right">
+		<div v-if="widgetDisplays.top100 && moduleSettings?.top100" :class="classes.right">
 			<div
 				:class="[classes.top100, classes.slot]"
 			>

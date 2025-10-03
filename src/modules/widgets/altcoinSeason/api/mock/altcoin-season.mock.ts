@@ -1,12 +1,7 @@
-import type { IAltcoinSeasonConfig, IHistoricalValue, IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
+import type { IHistoricalValue, IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
 import type { IAltcoinSeasonDataResponse, IAltcoinSeasonRequest } from '@/modules/widgets/altcoinSeason/api';
-
-function returnModuleWithDefault<T extends IAltcoinSeasonRequest['modules']>(
-	request: T,
-	key: keyof T,
-) {
-	return key in request ? (request[key] as boolean) : true;
-}
+import { generateRows } from '@/shared/mock';
+import { ColumnType, SymbolType } from '@/modules/cell';
 
 export async function getAltcoinMockData(request: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
 	await new Promise(resolve => {
@@ -15,16 +10,6 @@ export async function getAltcoinMockData(request: IAltcoinSeasonRequest): Promis
 
 	const btcRank = Math.floor(Math.random() * 30) + 1;
 	const fetchPeriod = request.period;
-
-	const widgetConfigMockData: IAltcoinSeasonConfig = {
-		period: fetchPeriod,
-		modules: {
-			performanceRank: returnModuleWithDefault(request.modules, 'performanceRank'),
-			historicalValues: returnModuleWithDefault(request.modules, 'historicalValues'),
-			top100: returnModuleWithDefault(request.modules, 'top100'),
-			chart: returnModuleWithDefault(request.modules, 'chart'),
-		},
-	};
 
 	const performanceRankMockData: IPerformanceRank =
 		{
@@ -40,10 +25,11 @@ export async function getAltcoinMockData(request: IAltcoinSeasonRequest): Promis
 	};
 
 	return {
-		widgetConfig: widgetConfigMockData,
 		performanceRank: performanceRankMockData,
 		historicalValues: historicalValuesMockData,
-		top100: {}, // TODO: i dont freaking know what to do with this coz we need to think about about data sharing between widgets
-		chart: {}, // TODO: add chart data
+		top100: {
+			tickers: generateRows(SymbolType.PlaneText, [ColumnType.ChangePrice24hPercent]),
+		},
+		chart: {},
 	};
 }

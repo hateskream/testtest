@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { PerformanceWidget } from '@/modules/widgets/performance';
 import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
 import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import {
-	type IAltcoinSeasonConfig,
+	ALTCOIN_PERFORMANCE_COLUMNS,
+	type IAltcoinSeasonModules,
 	type IHistoricalValue,
 	type IPerformanceRank,
+	type ITop100,
 	type Period,
 	periods,
 } from '@/modules/widgets/altcoinSeason/model';
@@ -16,28 +17,25 @@ import BtcPerformance from '../btc-performance/btc-performance.vue';
 import AltcoinSeasonLayout from './altcoin-season-layout.vue';
 import AltcoinSeasonPeriodGroup from '../period-switch/altcoin-season-period-group.vue';
 import HistoricalValue from '../historical-value/historical-value.vue';
+import PerformanceTable from '@/modules/widgets/altcoinSeason/ui/performance/performance-table.vue';
 
 interface IAltcoinSeasonMainProps {
 	meta: IMeta;
 	performance: IPerformanceRank;
 	historicalValues: IHistoricalValue;
-	widgetDisplaySettings: IAltcoinSeasonConfig['modules'];
+	moduleSettings: IAltcoinSeasonModules;
+	top100: ITop100;
 }
 
 const props = defineProps<IAltcoinSeasonMainProps>();
 
-const metaPerformance = computed(() => {
-	return {
-		...props.meta,
-		name: 'Top 100 coins performance',
-	};
-});
-
 const period = defineModel<Period>('period', { required: true });
+
+const rows = computed(() => props.top100.tickers.filter(t => !!t) ?? []);
 </script>
 
 <template>
-	<altcoin-season-layout :size-by-cells="props.meta.size" :widget-display-settings="props.widgetDisplaySettings">
+	<altcoin-season-layout :size-by-cells="props.meta.size" :module-settings="props.moduleSettings">
 		<template #period>
 			<altcoin-season-period-group
 				v-model:period="period"
@@ -58,7 +56,10 @@ const period = defineModel<Period>('period', { required: true });
 		</template>
 
 		<template #top100>
-			<performance-widget :meta="metaPerformance" />
+			<performance-table
+				:rows="rows"
+				:columns="ALTCOIN_PERFORMANCE_COLUMNS"
+			/>
 		</template>
 
 	</altcoin-season-layout>
