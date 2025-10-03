@@ -55,7 +55,7 @@ const resetAll = () => {
 		<modal-submenu>
 			<template #title>Filter</template>
 			<template #content>
-				<altcoin-season-time-filter :period="selectedPeriod" />
+				<altcoin-season-time-filter v-model:period="selectedPeriod" />
 			</template>
 		</modal-submenu>
 	</widget-context-menu>

@@ -8,10 +8,6 @@ const props = defineProps<{
 }>();
 
 const selectedPeriod = defineModel<Period>('period', { required: true });
-
-const handlePeriodClick = (periodItem: Period) => {
-	selectedPeriod.value = periodItem;
-};
 </script>
 
 <template>
@@ -36,7 +32,7 @@ const handlePeriodClick = (periodItem: Period) => {
 						v-for="period in props.periodList"
 						:key="period"
 						:model-value="selectedPeriod === period"
-						@click="handlePeriodClick(period)"
+						@update:model-value="selectedPeriod = period"
 					>
 						{{period}}
 					</modal-item-selector>

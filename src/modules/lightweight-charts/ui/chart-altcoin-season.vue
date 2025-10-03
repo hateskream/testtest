@@ -3,10 +3,13 @@ import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js';
 
 import { getExternalTooltipVaults } from '../utils';
+import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
 
 const props = defineProps<{
 	showX: boolean;
 	showY: boolean;
+
+	chartData: IChartData;
 }>();
 
 const container = useTemplateRef('container');
@@ -22,10 +25,7 @@ const legendsList = [
 const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 
 onMounted(() => {
-	const labels = [
-		'Mar 17', 'Mar 24', 'Mar 25', 'Apr 14', 'Apr 28', 'May 12',
-		'May 19', 'May 26', 'Jun 02', 'Jun 09', 'Jun 16', 'Jun 23', 'Jun 30',
-	];
+	const { labels } = props.chartData;
 
 	const level0 = Array(labels.length).fill(1);
 	const level25 = Array(labels.length).fill(25);
@@ -71,7 +71,7 @@ onMounted(() => {
 					pointStyle: false,
 				},
 				{
-					data: [8, 47, 57, 80, 88, 64, 50, 12, 14, 7, 26, 40, 68],
+					data: props.chartData.metrics,
 					borderColor: '#FEB358',
 					borderWidth: 2,
 					pointStyle: false,

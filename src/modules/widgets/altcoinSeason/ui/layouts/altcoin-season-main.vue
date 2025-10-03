@@ -6,6 +6,7 @@ import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
 import {
 	ALTCOIN_PERFORMANCE_COLUMNS,
 	type IAltcoinSeasonModules,
+	type IChartData,
 	type IHistoricalValue,
 	type IPerformanceRank,
 	type ITop100,
@@ -25,6 +26,7 @@ interface IAltcoinSeasonMainProps {
 	historicalValues: IHistoricalValue;
 	moduleSettings: IAltcoinSeasonModules;
 	top100: ITop100;
+	chart: IChartData;
 }
 
 const props = defineProps<IAltcoinSeasonMainProps>();
@@ -52,7 +54,12 @@ const rows = computed(() => props.top100.tickers.filter(t => !!t) ?? []);
 		</template>
 
 		<template #chart="{showX, showY}">
-			<chart-altcoin-season :show-x="showX" :show-y="showY" />
+			<chart-altcoin-season
+				:key="period"
+				:chart-data="props.chart"
+				:show-x="showX"
+				:show-y="showY"
+			/>
 		</template>
 
 		<template #top100>

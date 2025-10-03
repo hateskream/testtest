@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group/core';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
-import { useQueryAltcoinSeason } from '@/modules/widgets/altcoinSeason/queries/use-query-altcoin-season.ts';
+import { useAltcoinSeasonQuery } from '@/modules/widgets/altcoinSeason/queries';
 
 import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
@@ -28,11 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const { period, modules, request } = useAltcoinSeasonState();
-const { data, isLoading, isError, refetch } = useQueryAltcoinSeason(request);
-
-const widgetConfig = computed(
-	() => data.value?.widgetConfig,
-);
+const { data, isLoading, isError, refetch } = useAltcoinSeasonQuery(request);
 </script>
 
 <template>
@@ -54,6 +50,7 @@ const widgetConfig = computed(
 					:historical-values="data.historicalValues"
 					:module-settings="modules"
 					:top100="data.top100"
+					:chart="data.chart"
 				/>
 			</div>
 		</template>
@@ -64,7 +61,7 @@ const widgetConfig = computed(
 				v-model:selected-modules="modules"
 				:title="props.meta.name"
 				:dashboards="props.meta.dashboards"
-				:widget-config="widgetConfig || null"
+				:modules="modules"
 				@delete="emit('delete')"
 				@move-to="emit('moveTo', $event)"
 				@duplicate="emit('duplicate')"

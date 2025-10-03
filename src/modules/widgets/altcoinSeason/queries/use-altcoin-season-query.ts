@@ -9,12 +9,12 @@ export function useAltcoinSeasonQuery(_request: MaybeRefOrGetter<IAltcoinSeasonR
 	);
 
 	return useQuery({
-		queryKey: [
+		queryKey: computed(() => [
 			'altcoin-season',
 			request.value.market,
 			request.value.period,
 			request.value.modules,
-		],
+		]),
 		queryFn: () => getAltcoinSeason(request.value),
 		refetchOnMount: false,
 	});

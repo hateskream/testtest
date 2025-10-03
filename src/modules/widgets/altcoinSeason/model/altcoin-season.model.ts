@@ -29,6 +29,11 @@ export interface ITop100 {
 	tickers: PerformanceTableRow[];
 }
 
+export interface IChartData {
+	labels: string[];
+	metrics: number[];
+}
+
 export interface IPerformanceRank {
 	period: Period;
 	btcRank: number;
