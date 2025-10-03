@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { IHistoricalValue } from '@/modules/widgets/altcoinSeason/model';
 
-import HistoricalValueHeading from './historical-value-heading.vue';
 import HistoricalValueData from './historical-value-data.vue';
+import AltcoinHeading from '../shared/altcoin-heading.vue';
 
 const props = defineProps<{
 	historicalValues: IHistoricalValue;
@@ -12,7 +12,9 @@ const props = defineProps<{
 
 <template>
 	<div :class="classes.historicalValue">
-		<historical-value-heading  />
+		<altcoin-heading>
+			Historical values
+		</altcoin-heading>
 		<historical-value-data :historical-values="props.historicalValues" />
 	</div>
 </template>

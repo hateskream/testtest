@@ -61,7 +61,6 @@ const widgetConfig = computed(
 			<altcoin-season-context-menu
 				v-model:period="period"
 				v-model:selected-modules="modules"
-				:modules="data?.widgetConfig.modules || null"
 				:title="props.meta.name"
 				:dashboards="props.meta.dashboards"
 				:widget-config="widgetConfig || null"

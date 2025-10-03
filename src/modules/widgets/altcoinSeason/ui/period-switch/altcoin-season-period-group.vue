@@ -4,7 +4,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type Period } from '@/modules/widgets/altcoinSeason/model';
 
 const props = defineProps<{
-	periodList: Period[];
+	periodList: readonly Period[];
 }>();
 
 const selectedPeriod = defineModel<Period>('period', { required: true });

@@ -6,10 +6,6 @@ import {
 	type IAltcoinSeasonConfig,
 } from '@/modules/widgets/altcoinSeason/model';
 
-const props = defineProps<{
-	modules: IAltcoinSeasonConfig['modules'];
-}>();
-
 const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selected-modules', { required: true });
 
 function handleModuleToggle(key: AltcoinSeasonModuleKey, value: boolean) {
@@ -27,7 +23,7 @@ function handleModuleToggle(key: AltcoinSeasonModuleKey, value: boolean) {
 		</template>
 
 		<modal-item-switch
-			v-for="(value, key) in props.modules"
+			v-for="(value, key) in selectedModules"
 			:key="key"
 			:model-value="value"
 			@update:model-value="(newValue) => handleModuleToggle(key, newValue)"

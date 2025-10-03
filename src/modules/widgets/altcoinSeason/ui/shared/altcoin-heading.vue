@@ -5,7 +5,7 @@
 <template>
 	<div :class="classes.heading">
 		<div :class="classes.headingTitle">
-			BTC rank
+			<slot />
 		</div>
 	</div>
 </template>
@@ -19,7 +19,7 @@
 }
 
 .headingTitle {
-	padding: 12px 0;
+	padding: 10px 0;
 	font-size: 12px;
 }
 

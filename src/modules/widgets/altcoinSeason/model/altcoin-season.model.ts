@@ -35,7 +35,6 @@ export interface IPeriodTimestamps {
 export type Period = '7D' | '30D' | '90D' | '1Y';
 export const periods = ['7D', '30D', '90D', '1Y'] as const;
 
-// Дополнительные типы для работы с модулями
 export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];
 
 export interface IAltcoinSeasonModuleLabels {
@@ -51,8 +50,6 @@ export interface IHistoricalValue {
 	lastMonth: number;
 }
 
-
-// Константы для модулей
 export const ALTCOIN_SEASON_MODULE_LABELS: IAltcoinSeasonModuleLabels = {
 	performanceRank: 'Performance Rank',
 	historicalValues: 'Historical Values',

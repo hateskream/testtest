@@ -2,7 +2,6 @@
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js';
 
-import { UiDriver } from '@/shared/ui/driver';
 import { getExternalTooltipVaults } from '../utils';
 
 const props = defineProps<{
@@ -201,16 +200,12 @@ onMounted(() => {
 
 <template>
 	<div :class="classes.wrapper">
-		<ui-driver />
-
 		<span :class="classes.title">
 			Chart
 		</span>
 		<div :class="classes.chartContainer">
 			<canvas ref="container" :class="classes.mainChart"></canvas>
 		</div>
-
-		<ui-driver />
 	</div>
 </template>
 

@@ -10,10 +10,19 @@ interface IWidgetLayoutProps {
 }
 const props = defineProps<IWidgetLayoutProps>();
 
+const hasAnyLeftSideTrueOption = computed(() => {
+	const { historicalValues, chart, performanceRank } = props.widgetDisplaySettings;
+	return historicalValues || chart || performanceRank;
+});
+
 const widgetVars = computed(() => {
 	const { w: width } = props.sizeByCells;
 
 	const styles: CSSProperties = {};
+
+	if (!hasAnyLeftSideTrueOption.value) {
+		styles['--right-width'] = '100%';
+	}
 
 	if (width >= 3) {
 		styles['--btc-n-historical-direction'] = 'row';
@@ -27,6 +36,95 @@ const widgetVars = computed(() => {
 
 	return styles;
 });
+
+const chartSlotProps = computed(() => {
+	const { w, h } = props.sizeByCells;
+	const settings = props.widgetDisplaySettings;
+
+	if (!settings.performanceRank && !settings.historicalValues) {
+		return {
+			showX: true,
+			showY: true,
+		};
+	}
+
+	if (w >= 4 && h <= 6) {
+		return {
+			showX: false,
+			showY: false,
+		};
+	}
+
+	return {
+		showX: props.sizeByCells.w >= 4,
+		showY: props.sizeByCells.w >= 4,
+	};
+});
+
+const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
+	const { w, h } = props.sizeByCells;
+	const settings = props.widgetDisplaySettings;
+
+	if (!hasAnyLeftSideTrueOption.value) {
+		return {
+			top100: true,
+			performanceRank: false,
+			chart: false,
+			historicalValues: false,
+		};
+	}
+
+	if (w <= 4 && !(settings.historicalValues || settings.performanceRank)) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			chart: true,
+			top100: true,
+		};
+	}
+
+	if (w >= 4 && h <= 5) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			top100: true,
+			chart: false,
+		};
+	}
+
+	if (w >= 3 && w <= 4 && h >= 4) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			chart: true,
+			top100: false,
+		};
+	}
+
+	if (w <= 4 && h <= 7) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			chart: false,
+			top100: false,
+		};
+	}
+	if (w <= 4 && h >= 8) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			chart: true,
+			top100: false,
+		};
+	}
+
+	return {
+		performanceRank: true,
+		historicalValues: true,
+		chart: true,
+		top100: true,
+	};
+});
 </script>
 
 <template>
@@ -35,7 +133,7 @@ const widgetVars = computed(() => {
 		:class="classes.widgetLayout"
 		:style="widgetVars"
 	>
-		<div :class="classes.left">
+		<div v-if="hasAnyLeftSideTrueOption" :class="classes.left">
 			<div
 				:class="[classes.period, classes.slot]"
 			>
@@ -44,14 +142,14 @@ const widgetVars = computed(() => {
 
 			<div :class="classes.btcAndHistoricalContainer">
 				<div
-					v-if="widgetDisplaySettings?.performanceRank"
+					v-if="widgetDisplays.performanceRank && widgetDisplaySettings?.performanceRank"
 					:class="[classes.performanceRank, classes.slot]"
 				>
 					<slot name="performanceRank" />
 				</div>
 
 				<div
-					v-if="widgetDisplaySettings?.historicalValues"
+					v-if="widgetDisplays.historicalValues && widgetDisplaySettings?.historicalValues"
 					:class="[classes.historicalValues, classes.slot]"
 				>
 					<slot name="historicalValues" />
@@ -59,20 +157,18 @@ const widgetVars = computed(() => {
 			</div>
 
 			<div
-				v-if="widgetDisplaySettings?.chart"
+				v-if="widgetDisplays.chart && widgetDisplaySettings?.chart"
 				:class="[classes.chart, classes.slot]"
 			>
 				<slot
 					name="chart"
-					:show-x="props.sizeByCells.w >= 4"
-					:show-y="props.sizeByCells.w >= 4"
+					v-bind="chartSlotProps"
 				/>
 			</div>
 		</div>
 
-		<div :class="classes.right">
+		<div v-if="widgetDisplays.top100 && widgetDisplaySettings?.top100" :class="classes.right">
 			<div
-				v-if="widgetDisplaySettings?.top100"
 				:class="[classes.top100, classes.slot]"
 			>
 				<slot name="top100" />
@@ -87,8 +183,6 @@ const widgetVars = computed(() => {
 	flex-direction: var(--layout-direction, column);
 	width: 100%;
 	height: 100%;
-	overflow-x: hidden;
-	overflow-y: var(--left-and-layout-overflow-y, scroll);
 }
 
 .left {
@@ -96,12 +190,14 @@ const widgetVars = computed(() => {
 	flex: 1;
 	flex-direction: column;
 	width: 100%;
-	overflow-y: var(--left-and-layout-overflow-y, unset);
+	height: 100%;
+	min-height: 100%;
+	overflow: hidden;
 }
 
 .right {
 	width: 100%;
-	max-width: 360px;
+	max-width: var(--right-width, 360px);
 	height: 100%;
 	overflow-y: var(--right-overflow-y, unset);
 }
