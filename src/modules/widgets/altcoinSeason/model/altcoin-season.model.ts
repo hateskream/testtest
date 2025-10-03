@@ -8,6 +8,19 @@ export interface IAltcoinSeasonConfig {
 	period: Period;
 }
 
+export function getDefaultConfigState() {
+	return {
+		period: '90D',
+		market: 'BTC',
+		modules: {
+			performanceRank: true,
+			historicalValues: true,
+			top100: true,
+			chart: true,
+		},
+	} as const;
+}
+
 export interface IPerformanceRank {
 	period: Period;
 	btcRank: number;
@@ -20,7 +33,7 @@ export interface IPeriodTimestamps {
 }
 
 export type Period = '7D' | '30D' | '90D' | '1Y';
-export const periods = ['7D', '30D', '90D', '1Y'] satisfies Period[];
+export const periods = ['7D', '30D', '90D', '1Y'] as const;
 
 // Дополнительные типы для работы с модулями
 export type AltcoinSeasonModuleKey = keyof IAltcoinSeasonConfig['modules'];

@@ -14,7 +14,7 @@ const dataProvider = DataProvider.MockLocal;
 export interface IAltcoinSeasonRequest {
 	market: string;
 	period: Period;
-	modules: Partial<IAltcoinSeasonConfig['modules']>;
+	modules: IAltcoinSeasonConfig['modules'];
 }
 
 
