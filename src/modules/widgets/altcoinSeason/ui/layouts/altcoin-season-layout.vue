@@ -39,17 +39,18 @@ const showPeriod = computed(() => {
 });
 
 const widgetVars = computed(() => {
-	const { w: width, h: height } = props.sizeByCells;
+	const { w: width } = props.sizeByCells;
 
 	const styles: CSSProperties = {};
 
-	if (width > 3) {
+	if (width >= 3) {
 		styles['--btc-n-historical-direction'] = 'row';
 	}
 
-	if (width > 5) {
+	if (width >= 5) {
 		styles['--layout-direction'] = 'row';
 		styles['--right-overflow-y'] = 'scroll';
+		styles['--left-and-layout-overflow-y'] = 'hidden';
 	}
 
 	return styles;
@@ -104,7 +105,11 @@ const containerStyles = computed(() => {
 				v-if="widgetConfig?.modules.chart"
 				:class="[classes.chart, classes.slot]"
 			>
-				<slot name="chart" />
+				<slot
+					name="chart"
+					:show-x="props.sizeByCells.w >= 4"
+					:show-y="props.sizeByCells.w >= 4"
+				/>
 			</div>
 		</div>
 
@@ -126,7 +131,7 @@ const containerStyles = computed(() => {
 	width: 100%;
 	height: 100%;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: var(--left-and-layout-overflow-y, scroll);
 }
 
 .left {
@@ -134,11 +139,12 @@ const containerStyles = computed(() => {
 	flex: 1;
 	flex-direction: column;
 	width: 100%;
+	overflow-y: var(--left-and-layout-overflow-y, unset);
 }
 
 .right {
-	min-width: 420px;
-	max-width: 100%;
+	width: 100%;
+	max-width: 360px;
 	height: 100%;
 	overflow-y: var(--right-overflow-y, unset);
 }
@@ -149,6 +155,10 @@ const containerStyles = computed(() => {
 
 .period {
 	flex: unset;
+}
+
+.chart {
+	overflow: hidden;
 }
 
 .btcAndHistoricalContainer {

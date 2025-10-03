@@ -70,6 +70,7 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 .content {
 	height: 100%;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: hidden;
+	border-radius: 18px;
 }
 </style>

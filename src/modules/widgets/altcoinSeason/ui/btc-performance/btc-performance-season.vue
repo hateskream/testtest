@@ -53,6 +53,7 @@ const maxRank = computed(() => altcoinSeasonStore.widgetData.value.performanceRa
 .seasonLabel {
 	padding: 8px 12px;
 	font-weight: 440;
+	font-size: 12px;
 	letter-spacing: 0.096px;
 	background: var(--color-metrics-bg-control-300, rgb(45 45 47 / 40%));
 	border-radius: 9999px;

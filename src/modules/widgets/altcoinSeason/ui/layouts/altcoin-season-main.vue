@@ -46,8 +46,8 @@ const metaPerformance = computed(() => {
 			<historical-value :show-period="showPeriod" />
 		</template>
 
-		<template #chart>
-			<chart-altcoin-season />
+		<template #chart="{showX, showY}">
+			<chart-altcoin-season :show-x="showX" :show-y="showY" />
 		</template>
 
 		<template #top100>

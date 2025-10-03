@@ -5,9 +5,13 @@ import { Chart } from 'chart.js';
 import { UiDriver } from '@/shared/ui/driver';
 import { getExternalTooltipVaults } from '../utils';
 
+const props = defineProps<{
+	showX: boolean;
+	showY: boolean;
+}>();
+
 const container = useTemplateRef('container');
 const chart = ref<Chart>();
-
 
 const legendsList = [
 	{
@@ -19,8 +23,15 @@ const legendsList = [
 const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 
 onMounted(() => {
-	const labels = ['Mar 17', 'Mar 24', 'Mar 25', 'Apr 14', 'Apr 28', 'May 12'];
-	const lines = [9.5, 12];
+	const labels = [
+		'Mar 17', 'Mar 24', 'Mar 25', 'Apr 14', 'Apr 28', 'May 12',
+		'May 19', 'May 26', 'Jun 02', 'Jun 09', 'Jun 16', 'Jun 23', 'Jun 30',
+	];
+
+	const level0 = Array(labels.length).fill(1);
+	const level25 = Array(labels.length).fill(25);
+	const level50 = Array(labels.length).fill(50);
+	const level75 = Array(labels.length).fill(75);
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
@@ -28,76 +39,40 @@ onMounted(() => {
 			labels,
 			datasets: [
 				{
-					data: [null, null, null, 10, null, null],
-					pointStyle: 'circle',
-					borderColor: '#000',
-					pointBorderWidth: 2,
-					backgroundColor: '#fff',
-					borderWidth: 1,
-				},
-				{
-					data: [null, null, null, 10, 10, 10],
-					borderColor: '#FEB358',
-					borderWidth: 1,
-					pointStyle: false,
-				},
-				{
-					data: [19.5, 19.5, 19.5, 19.5, 19.5, 19.5],
-					borderColor: '#D9D9D9',
+					data: level75,
+					borderColor: '#333333',
 					borderWidth: 1,
 					borderDash: [3, 3],
-					pointStyle: false,
-				},
-				{
-					data: [16.5, 16.5, 16.5, 16.5, 16.5, 16.5],
-					borderColor: '#D9D9D9',
-					borderWidth: 1,
-					borderDash: [3, 3],
-					backgroundColor: 'rgba(65, 59, 150, 0.2)',
+					backgroundColor: 'rgba(65, 59, 150, 0.1)',
 					fill: 'end',
 					pointStyle: false,
 				},
 				{
-					data: [13.5, 13.5, 13.5, 13.5, 13.5, 13.5],
-					borderColor: '#D9D9D9',
+					data: level50,
+					borderColor: '#333333',
 					borderWidth: 1,
 					borderDash: [3, 3],
 					pointStyle: false,
 				},
 				{
-					data: [10.5, 10.5, 10.5, 10.5, 10.5, 10.5],
+					data: level25,
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
 					borderDash: [3, 3],
-					pointStyle: false,
 					backgroundColor: 'rgba(0,0,0,0.5)',
 					fill: 'end',
+					pointStyle: false,
 				},
 				{
-					data: [8, 8, 8, 8, 8, 8],
+					data: level0,
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
 					borderDash: [3, 3],
-					pointStyle: false,
-					backgroundColor: 'rgba(0,0,0,0.5)',
-					fill: 'start',
-				},
-				{
-					data: [null, null, null, null, 14, null],
-					pointStyle: 'circle',
-					borderColor: '#000',
-					pointBorderWidth: 2,
-					backgroundColor: '#fff',
-					borderWidth: 1,
-				},
-				{
-					data: [null, null, null, null, 14, 14],
-					borderColor: 'rgba(255, 255, 255, 0.8)',
-					borderWidth: 1,
+					fill: 'end',
 					pointStyle: false,
 				},
 				{
-					data: [8, 10, 20, 10, 14, 12],
+					data: [8, 47, 57, 80, 88, 64, 50, 12, 14, 7, 26, 40, 68],
 					borderColor: '#FEB358',
 					borderWidth: 2,
 					pointStyle: false,
@@ -105,7 +80,6 @@ onMounted(() => {
 					fill: 'start',
 					tension: 0.3,
 				},
-
 			],
 		},
 		options: {
@@ -175,8 +149,9 @@ onMounted(() => {
 
 			scales: {
 				y: {
-					display: false,
+					display: props.showY,
 					type: 'linear',
+					suggestedMax: 100,
 					position: 'right',
 
 					grid: {
@@ -202,7 +177,7 @@ onMounted(() => {
 					},
 				},
 				x: {
-					display: false,
+					display: props.showX,
 					ticks: {
 						padding: 10,
 					},
@@ -251,7 +226,6 @@ onMounted(() => {
 
 .title {
 	padding: 12px 16px;
-	overflow: hidden;
 	font-style: normal;
 	font-weight: 440;
 	font-size: 12px;
@@ -261,8 +235,9 @@ onMounted(() => {
 }
 
 .chartContainer {
-	height: 175px;
-	margin-bottom: 30px;
+	height: 100%;
+	min-height: 175px;
+	margin-bottom: 9px;
 }
 
 .mainChart {
