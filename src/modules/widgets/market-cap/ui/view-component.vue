@@ -10,6 +10,7 @@ import type { IMarketCapDomain } from '../api/get-market-cap.ts';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
+
 interface IViewComponentProps {
 	meta: IMeta;
 	data: IMarketCapDomain[];
@@ -150,25 +151,41 @@ watch(
 			</div>
 		</div>
 
-		<div v-show="marketCapStore.isShowChart && meta.size.h > 3" :class="classes.chartWrapper">
-			<chart-component
-				v-show="data.length === 0"
-				:width="100"
-				:disable-scroll="true"
-				:is-visible-history-graph="false"
-				:is-visible-indicators="false"
-				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-				:height="'85%'"
-				:is-visible-range="meta.size.w > 2"
-			/>
-			<chart-market-cap
-				v-show="data.length > 0"
-				ref="chartMarketCap"
-				:is-visible-range="meta.size.w > 2"
-				:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-				:height="'75%'"
-			/>
-		</div>
+		<template v-if="marketCapStore.isShowChart && meta.size.h > 3">
+			<div :class="classes.chartWrapper">
+				<chart-component
+					v-show="data.length === 0"
+					:width="100"
+					:disable-scroll="true"
+					:is-visible-history-graph="false"
+					:is-visible-indicators="false"
+					:range-list="[
+						RangeChart['1D'],
+						RangeChart['1W'],
+						RangeChart['1M'],
+						RangeChart['1Y'],
+						RangeChart.ALL
+					]"
+					height="100%"
+					:is-visible-range="meta.size.w > 2"
+				/>
+
+
+				<chart-market-cap
+					v-show="data.length > 0"
+					ref="chartMarketCap"
+					:is-visible-range="meta.size.w > 2"
+					:range-list="[
+						RangeChart['1D'],
+						RangeChart['1W'],
+						RangeChart['1M'],
+						RangeChart['1Y'],
+						RangeChart.ALL
+					]"
+					height="100%"
+				/>
+			</div>
+		</template>
 	</div>
 </template>
 

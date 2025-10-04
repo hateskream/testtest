@@ -140,20 +140,17 @@ watch(
 
 		</div>
 
-		<div
-			v-show="
-				bitcoinDominanceStore.isShowChart &&
-					meta.size.h >= 7 &&
-					activeListSorted.length > 0
-			"
-			:class="classes.chartWrapper"
-		>
-			<chart-bitcoin-dominance
-				ref="chart"
-				:hide-axis="meta.size.w  <= 2 || meta.size.h <= 7"
-				:height="'85%'"
-			/>
 
+		<template
+			v-if="bitcoinDominanceStore.isShowChart && meta.size.h >= 7 && activeListSorted.length > 0"
+		>
+			<div :class="classes.chartWrapper">
+				<chart-bitcoin-dominance
+					ref="chart"
+					:hide-axis="meta.size.w  <= 2 || meta.size.h <= 7"
+					height="100%"
+				/>
+			</div>
 			<chart-range
 				v-show="meta.size.h >= 8 && meta.size.w >=3"
 				:class="classes.range"
@@ -167,8 +164,7 @@ watch(
 					RangeChart['ALL']
 				]"
 			/>
-		</div>
-
+		</template>
 	</div>
 </template>
 
@@ -182,6 +178,9 @@ watch(
 	gap: 16px;
 }
 
+.range {
+	margin-bottom: 10px;
+}
 
 .chartWrapper {
 	flex: 1;
