@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 import { getExternalTooltipVaults } from '../utils';
 import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
@@ -9,7 +10,7 @@ import { ALTCOIN_THRESHOLD, BITCOIN_THRESHOLD, DATA_CAP } from '@/modules/widget
 const props = defineProps<{
 	showX: boolean;
 	showY: boolean;
-
+	btcRank: number;
 	chartData: IChartData;
 }>();
 
@@ -28,9 +29,14 @@ const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 onMounted(() => {
 	const { labels } = props.chartData;
 
-	const level0 = Array(labels.length).fill(0);
-	const level25 = Array(labels.length).fill(BITCOIN_THRESHOLD);
-	const level75 = Array(labels.length).fill(ALTCOIN_THRESHOLD);
+	Chart.register(annotationPlugin);
+
+	const zone =
+		props.btcRank <= BITCOIN_THRESHOLD
+			? { yMin: 0, yMax: BITCOIN_THRESHOLD }
+			: props.btcRank < ALTCOIN_THRESHOLD
+				? { yMin: BITCOIN_THRESHOLD, yMax: ALTCOIN_THRESHOLD }
+				: { yMin: ALTCOIN_THRESHOLD, yMax: 100 };
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
@@ -38,29 +44,9 @@ onMounted(() => {
 			labels,
 			datasets: [
 				{
-					data: level75,
-					borderColor: '#333333',
-					borderWidth: 1,
-					borderDash: [3, 3],
+					data: Array(labels.length).fill(ALTCOIN_THRESHOLD),
 					backgroundColor: 'rgba(65, 59, 150, 0.1)',
 					fill: 'end',
-					pointStyle: false,
-				},
-				{
-					data: level25,
-					borderColor: '#D9D9D9',
-					borderWidth: 1,
-					borderDash: [3, 3],
-					backgroundColor: 'rgba(0,0,0,0.5)',
-					fill: 'end',
-					pointStyle: false,
-				},
-				{
-					data: level0,
-					borderColor: '#D9D9D9',
-					borderWidth: 1,
-					borderDash: [3, 3],
-					pointStyle: false,
 				},
 				{
 					data: props.chartData.metrics,
@@ -68,8 +54,8 @@ onMounted(() => {
 					borderWidth: 2,
 					pointStyle: false,
 					backgroundColor: 'rgba(254, 179, 88, 0.15)',
-					fill: 'start',
-					tension: props.chartData.metrics.length > 30 ? 0 : 0.3,
+					fill: true,
+					tension: 0.3,
 				},
 			],
 		},
@@ -85,46 +71,44 @@ onMounted(() => {
 				intersect: false,
 			},
 			plugins: {
-				annotation:  {
-					clip: false,
+				annotation: {
 					annotations: {
-						label1: {
-							type: 'label',
-							xValue: 5.2,
-							yValue: 10,
-							borderRadius: 24,
-							color: '#FEB358',
-							position: 'center',
-							backgroundColor: 'rgba(136, 93, 36, 1)',
-							content: ['Low'],
-							padding: {
-								top: 2,
-								bottom: 2,
-								left: 6,
-								right: 6,
-							},
-							font: {
-								size: 10,
-							},
+						below: {
+							type: 'box',
+							yMin: 0,
+							yMax: zone.yMin,
+							backgroundColor: 'rgba(0,0,0,0.5)',
+							borderWidth: 0,
 						},
-						label2: {
-							type: 'label',
-							xValue: 5.2,
-							yValue: 14,
-							borderRadius: 24,
-							color: '#fff',
-							position: 'center',
-							backgroundColor: '#4F4F4F',
-							content: ['Neutral'],
-							padding: {
-								top: 2,
-								bottom: 2,
-								left: 6,
-								right: 6,
-							},
-							font: {
-								size: 10,
-							},
+						above: {
+							type: 'box',
+							yMin: zone.yMax,
+							yMax: 100,
+							backgroundColor: 'rgba(0,0,0,0.5)',
+							borderWidth: 0,
+						},
+						active: {
+							type: 'box',
+							yMin: zone.yMin,
+							yMax: zone.yMax,
+							backgroundColor: 'transparent',
+							borderWidth: 0,
+						},
+						topLine: {
+							type: 'line',
+							yMin: zone.yMax,
+							yMax: zone.yMax,
+							borderColor: '#fff',
+							borderWidth: 2,
+							borderDash: [6, 4],
+						},
+						bottomLine: {
+							type: 'line',
+							yMin: zone.yMin,
+							yMax: zone.yMin,
+							borderColor: '#fff',
+							borderWidth: 2,
+							borderDash: [6, 4],
 						},
 					},
 				},

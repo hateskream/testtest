@@ -37,7 +37,6 @@ export interface IChartData {
 export interface IPerformanceRank {
 	period: Period;
 	btcRank: number;
-	maxRank: number;
 }
 
 export interface IPeriodTimestamps {

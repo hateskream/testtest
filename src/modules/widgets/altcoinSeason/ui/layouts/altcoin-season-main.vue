@@ -56,6 +56,7 @@ const rows = computed(() => props.top100.tickers.filter(t => !!t) ?? []);
 		<template #chart="{showX, showY}">
 			<chart-altcoin-season
 				:key="period"
+				:btc-rank="props.performance.btcRank"
 				:chart-data="props.chart"
 				:show-x="showX"
 				:show-y="showY"
