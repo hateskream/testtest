@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getActiveColorByRank, getSeasonNameByRank } from '@/modules/widgets/altcoinSeason/const';
+import { DATA_CAP, getActiveColorByRank, getSeasonNameByRank } from '@/modules/widgets/altcoinSeason/const';
 import type { IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
 
 import InfoTooltip from '@/shared/ui/info-tooltip/info-tooltip.vue';
@@ -13,7 +13,7 @@ const props = defineProps<{
 	<div :class="classes.btcPerformanceRankSeason">
 		<div :class="classes.rank">
 			<span :class="classes.rankValue">{{ props.performance.btcRank }}</span>
-			<span>/{{ props.performance.maxRank }}</span>
+			<span>/{{DATA_CAP}}</span>
 			<info-tooltip text="Bitcoin current score" />
 		</div>
 

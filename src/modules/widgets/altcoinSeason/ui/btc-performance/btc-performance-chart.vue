@@ -1,64 +1,50 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { widgetActiveColor, widgetColor } from '@/modules/widgets/altcoinSeason/const';
 import type { IPerformanceRank } from '@/modules/widgets/altcoinSeason/model';
+import { DATA_CAP, getActiveColorByRank, getColorByRank } from '@/modules/widgets/altcoinSeason/const';
 
 const props = defineProps<{
 	performance: IPerformanceRank;
 }>();
 
-const maxRank = computed(
-	() => props.performance.maxRank,
-);
 const activeBar = computed(
 	() => props.performance.btcRank,
 );
+
+function getTargetColorByRank(rank: number, isActive: boolean = true) {
+	return isActive ? getActiveColorByRank(rank) : getColorByRank(rank);
+}
 </script>
 
 <template>
 	<div :class="classes.btcPerformanceChart">
 		<div :class="classes.chart">
 			<div
-				v-for="i in maxRank"
+				v-for="i in DATA_CAP"
 				:key="i"
 				:class="classes.chartBar"
 			>
-				<div v-if="i === activeBar || i === 1 || i === maxRank" :class="classes.barIndex">{{ i }}</div>
+				<div v-if="i === activeBar || i === 1 || i === DATA_CAP" :class="classes.barIndex">{{ i }}</div>
 				<div
 					v-if="i === activeBar"
 					:class="classes.barIndex"
 					:style="{
-						color:
-							i <= 7
-								? widgetActiveColor.bitcoinSeason
-								: i <= 23
-									? widgetActiveColor.neutralSeason
-									: widgetActiveColor.altcoinSeason,
+						color: getTargetColorByRank(i),
 					}"
 				>{{ i }}</div>
 				<div
 					v-if="i !== activeBar"
 					:class="[classes.bar, {[classes.active]: i === activeBar}]"
 					:style="{
-						backgroundColor:
-							i <= 7
-								? widgetColor.bitcoinSeason
-								: i <= 23
-									? widgetColor.neutralSeason
-									: widgetColor.altcoinSeason,
+						backgroundColor: getTargetColorByRank(i, false),
 					}"
 				/>
 				<div
 					v-else-if="i === activeBar"
 					:class="[classes.bar, {[classes.active]: i === activeBar}]"
 					:style="{
-						backgroundColor:
-							i <= 7
-								? widgetActiveColor.bitcoinSeason
-								: i <= 23
-									? widgetActiveColor.neutralSeason
-									: widgetActiveColor.altcoinSeason,
+						backgroundColor: getTargetColorByRank(i),
 					}"
 				/>
 			</div>

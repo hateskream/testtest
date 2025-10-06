@@ -4,6 +4,7 @@ import { Chart } from 'chart.js';
 
 import { getExternalTooltipVaults } from '../utils';
 import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
+import { ALTCOIN_THRESHOLD, BITCOIN_THRESHOLD, DATA_CAP } from '@/modules/widgets/altcoinSeason/const';
 
 const props = defineProps<{
 	showX: boolean;
@@ -27,10 +28,9 @@ const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 onMounted(() => {
 	const { labels } = props.chartData;
 
-	const level0 = Array(labels.length).fill(1);
-	const level25 = Array(labels.length).fill(25);
-	const level50 = Array(labels.length).fill(50);
-	const level75 = Array(labels.length).fill(75);
+	const level0 = Array(labels.length).fill(0);
+	const level25 = Array(labels.length).fill(BITCOIN_THRESHOLD);
+	const level75 = Array(labels.length).fill(ALTCOIN_THRESHOLD);
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
@@ -47,13 +47,6 @@ onMounted(() => {
 					pointStyle: false,
 				},
 				{
-					data: level50,
-					borderColor: '#333333',
-					borderWidth: 1,
-					borderDash: [3, 3],
-					pointStyle: false,
-				},
-				{
 					data: level25,
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
@@ -67,7 +60,6 @@ onMounted(() => {
 					borderColor: '#D9D9D9',
 					borderWidth: 1,
 					borderDash: [3, 3],
-					fill: 'end',
 					pointStyle: false,
 				},
 				{
@@ -77,7 +69,7 @@ onMounted(() => {
 					pointStyle: false,
 					backgroundColor: 'rgba(254, 179, 88, 0.15)',
 					fill: 'start',
-					tension: 0.3,
+					tension: props.chartData.metrics.length > 30 ? 0 : 0.3,
 				},
 			],
 		},
@@ -150,7 +142,7 @@ onMounted(() => {
 				y: {
 					display: props.showY,
 					type: 'linear',
-					suggestedMax: 100,
+					suggestedMax: DATA_CAP,
 					position: 'right',
 
 					grid: {

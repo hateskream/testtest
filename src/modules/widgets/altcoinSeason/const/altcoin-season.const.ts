@@ -1,3 +1,7 @@
+export const DATA_CAP = 30;
+export const BITCOIN_THRESHOLD = 8;
+export const ALTCOIN_THRESHOLD = 23;
+
 export const widgetColor = {
 	bitcoinSeason: '#FEB358',
 	neutralSeason: 'rgba(77, 77, 77, 0.40)',
@@ -11,9 +15,9 @@ export const widgetActiveColor = {
 };
 
 export const getColorByRank = (rank: number) => {
-	if (rank <= 7) {
+	if (rank <= BITCOIN_THRESHOLD) {
 		return widgetColor.bitcoinSeason;
-	} else if (rank <= 23) {
+	} else if (rank <= ALTCOIN_THRESHOLD) {
 		return widgetColor.neutralSeason;
 	} else {
 		return widgetColor.altcoinSeason;
@@ -22,9 +26,9 @@ export const getColorByRank = (rank: number) => {
 
 
 export const getActiveColorByRank = (rank: number) => {
-	if (rank <= 7) {
+	if (rank <= BITCOIN_THRESHOLD) {
 		return widgetActiveColor.bitcoinSeason;
-	} else if (rank <= 23) {
+	} else if (rank <= ALTCOIN_THRESHOLD) {
 		return widgetActiveColor.neutralSeason;
 	} else {
 		return widgetActiveColor.altcoinSeason;
@@ -32,9 +36,9 @@ export const getActiveColorByRank = (rank: number) => {
 };
 
 export const getSeasonNameByRank = (rank: number) => {
-	if (rank <= 7) {
+	if (rank <= BITCOIN_THRESHOLD) {
 		return 'Bitcoin season';
-	} else if (rank <= 23) {
+	} else if (rank <= ALTCOIN_THRESHOLD) {
 		return 'Neutral season';
 	} else {
 		return 'Altcoin season';
