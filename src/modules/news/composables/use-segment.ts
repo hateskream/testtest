@@ -4,10 +4,10 @@ import { MarketType } from '@/modules/market';
 import type { ITickerData } from '@/shared/mock';
 import {
 	type ISegmentRequest,
-	segmentsData,
 	type SelectAllFrom,
 	type SelectedSegmentTickersState,
-} from '@/modules/news';
+} from '@/modules/news/model';
+import { segmentsData } from '@/modules/news/model/segment-modal';
 import * as utils from '@/modules/news/utils';
 
 export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) {
@@ -20,11 +20,11 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 			return segmentsData;
 		}
 
-		return segmentsData.filter(s => selected.has(s.id));
+		return segmentsData.filter((s) => selected.has(s.id));
 	});
 
-	watch(segments, segment => {
-		const validIds = new Set(segment.map(s => s.id));
+	watch(segments, (segment) => {
+		const validIds = new Set(segment.map((s) => s.id));
 
 		const filtered: Record<string, Set<string>> = {};
 		for (const [id, set] of Object.entries(selectedSegmentTickers.value)) {
@@ -47,7 +47,7 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 			return true;
 		}
 
-		return segments.value.every(s => isAllSelectedInSegment(s.id));
+		return segments.value.every((s) => isAllSelectedInSegment(s.id));
 	});
 
 	const selectedSegmentRequest = computed<ISegmentRequest>(() => {
@@ -65,7 +65,7 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 		for (const segment of segments.value) {
 			const selected = selectedSegmentTickers.value[segment.id] ?? new Set();
 
-			const allIds = segment.tickers.map(t =>
+			const allIds = segment.tickers.map((t) =>
 				utils.parseTicker(segment.id, t),
 			);
 
@@ -116,7 +116,7 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 	}
 
 	function selectAll(segmentId: MarketType) {
-		const seg = segments.value.find(s => s.id === segmentId);
+		const seg = segments.value.find((s) => s.id === segmentId);
 
 		if (!seg) {
 			return;
@@ -124,7 +124,7 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 
 		selectedSegmentTickers.value = {
 			...selectedSegmentTickers.value,
-			[segmentId]: new Set(seg.tickers.map(t => utils.parseTicker(segmentId, t))),
+			[segmentId]: new Set(seg.tickers.map((t) => utils.parseTicker(segmentId, t))),
 		};
 	}
 

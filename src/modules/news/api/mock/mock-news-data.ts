@@ -9,7 +9,8 @@ import {
 	Sort,
 	type SortState,
 } from '@/modules/news';
-import { getTickersByMarketType } from '@/shared/mock';
+import { segmentsData } from '@/modules/news/model/segment-modal';
+import type { ITickerData } from '@/shared/mock';
 
 type Maybe<T> = T | null | undefined;
 
@@ -112,12 +113,19 @@ function selectToMarketTypes(select: SelectAllFrom[]): MarketType[] {
 	return uniq(acc);
 }
 
+function getTickersByMarketTypeSync(marketType: MarketType): ITickerData[] {
+	const segment = segmentsData.find((s) => s.id === marketType);
+	const tickers = segment?.tickers ?? [];
+	// Фильтруем невалидные тикеры
+	return tickers.filter((t) => t && t.left && t.right);
+}
+
 function poolFromSegments(seg: ISegmentRequest): ITicker[] {
 	const types = seg.isAllTickersShow
 		? [MarketType.Stock, MarketType.Crypto, MarketType.Forex, MarketType.Commodities, MarketType.Indices]
 		: selectToMarketTypes(seg.selectAllFrom);
 
-	const pools = types.flatMap(t => getTickersByMarketType(t).map<ITicker>(d => ({
+	const pools = types.flatMap((t) => getTickersByMarketTypeSync(t).map<ITicker>((d) => ({
 		name: d.right,
 		ticker: d.left,
 		srcImage: d.left.toLowerCase(),
@@ -202,6 +210,9 @@ export async function getMockNewsData(req?: Maybe<Partial<IGetNewsRequest>>): Pr
 	const universeTickers = universe.map(u => u.ticker);
 
 	const marketOfTicker = (t: string): MarketType => {
+		if (!t) {
+			return MarketType.Stock;
+		}
 		const up = t.toUpperCase();
 		for (const m of [
 			MarketType.Stock,
@@ -210,8 +221,8 @@ export async function getMockNewsData(req?: Maybe<Partial<IGetNewsRequest>>): Pr
 			MarketType.Commodities,
 			MarketType.Indices,
 		]) {
-			const pool = getTickersByMarketType(m);
-			if (pool.some(p => p.left.toUpperCase() === up)) {
+			const pool = getTickersByMarketTypeSync(m);
+			if (pool.some((p) => p?.left?.toUpperCase() === up)) {
 				return m;
 			}
 		}

@@ -1,4 +1,4 @@
-import { type ITickerData } from '@/shared/mock';
+import { type ITickerData, getTickersByMarketType } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 
 export enum SegmentFilterIds {
@@ -47,30 +47,45 @@ export interface ISegmentRequest {
 	isAllTickersShow: boolean;
 }
 
-// export const segmentsData: ISegmentData[] = [
-// 	{
-// 		id: MarketType.Crypto,
-// 		label: 'Crypto',
-// 		tickers: getTickersByMarketType(MarketType.Crypto),
-// 	},
-// 	{
-// 		id: MarketType.Stock,
-// 		label: 'Stock',
-// 		tickers: getTickersByMarketType(MarketType.Stock),
-// 	},
-// 	{
-// 		id: MarketType.Forex,
-// 		label: 'Forex',
-// 		tickers: getTickersByMarketType(MarketType.Forex),
-// 	},
-// 	{
-// 		id: MarketType.Commodities,
-// 		label: 'Commodities',
-// 		tickers: getTickersByMarketType(MarketType.Commodities),
-// 	},
-// 	{
-// 		id: MarketType.Indices,
-// 		label: 'Indices',
-// 		tickers: getTickersByMarketType(MarketType.Indices),
-// 	},
-// ];
+export const segmentsData: ISegmentData[] = [
+	{
+		id: MarketType.Crypto,
+		label: 'Crypto',
+		tickers: [],
+	},
+	{
+		id: MarketType.Stock,
+		label: 'Stock',
+		tickers: [],
+	},
+	{
+		id: MarketType.Forex,
+		label: 'Forex',
+		tickers: [],
+	},
+	{
+		id: MarketType.Commodities,
+		label: 'Commodities',
+		tickers: [],
+	},
+	{
+		id: MarketType.Indices,
+		label: 'Indices',
+		tickers: [],
+	},
+];
+
+// Initialize tickers asynchronously
+Promise.all([
+	getTickersByMarketType(MarketType.Crypto),
+	getTickersByMarketType(MarketType.Stock),
+	getTickersByMarketType(MarketType.Forex),
+	getTickersByMarketType(MarketType.Commodities),
+	getTickersByMarketType(MarketType.Indices),
+]).then(([crypto, stock, forex, commodities, indices]) => {
+	segmentsData[0].tickers = crypto;
+	segmentsData[1].tickers = stock;
+	segmentsData[2].tickers = forex;
+	segmentsData[3].tickers = commodities;
+	segmentsData[4].tickers = indices;
+});
