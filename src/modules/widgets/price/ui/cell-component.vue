@@ -104,6 +104,14 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 			@click="emit('togglePin', props.ticker.tickerId)"
 		>
 			<ui-icon
+				v-if="props.ticker.isPined"
+				:id="IconIds.Pined"
+				:width="20"
+				:height="20"
+				:class="classes.hoverActionIcon"
+			/>
+			<ui-icon
+				v-else
 				:id="IconIds.Pin"
 				:width="20"
 				:height="20"
@@ -146,6 +154,10 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 .hoverActionIcon {
 	color: var(--icon-color-base-300);
+}
+
+.pined {
+	display: flex;
 }
 
 .root:hover .icon {
@@ -213,5 +225,15 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 .change {
 	font-weight: 440;
+}
+
+.enterActive,
+.leaveActive {
+	transition: opacity 0.3s ease;
+}
+
+.enterFrom,
+.leaveTo {
+	opacity: 0;
 }
 </style>

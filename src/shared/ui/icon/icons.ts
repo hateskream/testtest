@@ -55,6 +55,7 @@ export enum IconIds {
 	MetricDown = 'metric-down',
 	MetricHold = 'metric-hold',
 	Pin = 'pin',
+	Pined = 'pined',
 	Bars = 'bars',
 	List = 'list',
 	Cryptos = 'cryptos',
