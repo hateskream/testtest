@@ -1,20 +1,74 @@
 import { computed, ref, watch } from 'vue';
+import { z } from 'zod';
 
 import {
 	getDefaultSettings,
 	getDefaultState,
+	hydrateFilters,
+	PRESETS,
+	rehydrateFilters,
 	type FiltersState,
 	type FiltersValues,
+	type IFilterHydrateState,
 	type ISettings,
 	type IState,
 	type IWatchlistAction,
 } from '../model';
-import type { MarketType } from '@/modules/market';
-import { useGetState, useUpdateState } from '../queries';
-import type { ITableColumn, ISort } from '@/modules/cell';
+import { MarketType } from '@/modules/market';
+import type { ITableColumn, ISort, IHydratedColumn } from '@/modules/cell';
 import { useWatchlist } from '@/modules/watchlist';
+import { createStateQueries } from '@/shared/service/data-repo';
+import { ColumnType, hydrateColumns, rehydrateColumns } from '@/modules/cell';
+
+const columnSchema = z.object({
+	columnType: z.nativeEnum(ColumnType),
+	isShow: z.boolean(),
+	order: z.number(),
+});
+
+const filterSchema = z.object({
+	filterType: z.string(),
+	selected: z.string(),
+});
+
+const settingsSchema = z.object({
+	column: z.array(columnSchema),
+	sort: z.object({
+		columnType: z.string(),
+		sortDirection: z.string(),
+	}).nullish(),
+	filters: z.array(filterSchema),
+});
+
+export const stateSchema = z.object({
+	activeMarket: z.nativeEnum(MarketType),
+	settings: z.object({
+		[MarketType.Crypto]: settingsSchema,
+		[MarketType.Stock]: settingsSchema,
+		[MarketType.Forex]: settingsSchema,
+		[MarketType.Commodities]: settingsSchema,
+		[MarketType.Indices]: settingsSchema,
+	}),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function useMarket(widgetId: string) {
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__MARKET__',
+		isSaveChange: true,
+		getDefaultState: getDefaultState,
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: hydrate,
+		rehydrateFn: rehydrate,
+		urlGet: '',
+		urlSet: '',
+	});
+
 	const {
 		actionableWatchlists: wachlists,
 		addToWatchlist,
@@ -22,8 +76,8 @@ export function useMarket(widgetId: string) {
 		addTickerInNewWatchlist,
 	} = useWatchlist();
 
-	const { data: dataState } = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	const { data: dataState } = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const state = ref<IState>(getDefaultState());
 
@@ -142,4 +196,63 @@ export function useMarket(widgetId: string) {
 		handleRemoveFromWatchlist,
 		handleAddTickerInNewWatchlist,
 	};
+}
+
+function rehydrate(
+	data: StateSchemaType,
+): IState {
+	return {
+		activeMarket: data.activeMarket,
+		settings: Object.fromEntries(
+			Object
+				.entries(data.settings)
+				.map(
+					([key, { column, filters, sort }]) => [
+						key,
+						{
+							column: rehydrateColumns(
+								column,
+								PRESETS[key as MarketType].columns,
+							),
+							filters: rehydrateFilters(
+								filters,
+								PRESETS[key as MarketType].filters,
+							),
+							sort: sort,
+						},
+					],
+				),
+		) as IState['settings'],
+	};
+}
+
+function hydrate(data: IState): StateSchemaType {
+	type SettingsType = {
+		[key in MarketType]: {
+			column: IHydratedColumn[];
+			filters: IFilterHydrateState[];
+			sort: ISort | null;
+		};
+	};
+
+	const hydrated = {
+		activeMarket: data.activeMarket,
+		settings: Object.fromEntries(
+			Object
+				.entries(data.settings)
+				.map(
+					([key, value]) => [
+						key,
+						{
+							column: hydrateColumns(value.column),
+							filters: hydrateFilters(value.filters),
+							sort: value.sort,
+						},
+					],
+				),
+		) as SettingsType,
+	};
+
+
+	return hydrated;
 }
