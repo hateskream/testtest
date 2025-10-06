@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 import { watch } from 'vue';
+import z from 'zod';
 
 import {
 	type IActionableWatchlist,
@@ -13,13 +14,48 @@ import {
 	addTickerInWatchlist,
 	deleteTickerFromWatchlist,
 	getActionableWatchlists,
+	type IState,
+	getDefaultState,
 } from '../model';
 import { MarketType } from '@/modules/market';
-import { useGetState, useUpdateState } from '../queries';
+import { createStateQueries } from '@/shared/service/data-repo';
+import { SpecificSectionType } from '../model';
+
+const sectionSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	type: z.union([z.nativeEnum(MarketType), z.nativeEnum(SpecificSectionType)]),
+	tickerIds: z.array(z.string()),
+});
+
+const watchlistSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	sections: z.array(sectionSchema),
+});
+
+const stateSchema = z.array(watchlistSchema);
+
+type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function useWatchlist() {
-	const { data: watchlistsData } = useGetState();
-	const { mutate } = useUpdateState();
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__WATCHLIST__',
+		isSaveChange: true,
+		getDefaultState: getDefaultState,
+		entityId: 'watchlist',
+		schema: stateSchema,
+		hydrateFn: (s: StateSchemaType): IState => s,
+		rehydrateFn: (s: IState): StateSchemaType => s,
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const { data: watchlistsData } = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const watchlists = ref<IWatchlist[]>([]);
 
