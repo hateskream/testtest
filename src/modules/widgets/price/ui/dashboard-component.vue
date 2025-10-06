@@ -30,6 +30,8 @@ const {
 	resetAllChanges,
 	togglePin,
 	refetch,
+	filtersValues,
+	filtersState,
 } = usePrice(props.meta.widgetId, props.meta.defaultStateType);
 
 const emit = defineEmits<{
@@ -47,7 +49,9 @@ const emit = defineEmits<{
 			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
 			<view-component
 				v-else
-				v-model="activeMarket"
+				v-model:market="activeMarket"
+				v-model:filters="filtersState"
+				:filters-values="filtersValues"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"

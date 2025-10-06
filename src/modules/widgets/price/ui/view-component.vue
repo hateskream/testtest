@@ -3,8 +3,19 @@ import { computed, ref } from 'vue';
 
 import {
 	MarketBadge,
+	ModalBadge,
+	ModalBadgeList,
+	ModalItemSelector,
 } from '@/modules/widgets/base';
-import type { ISettings, ITicker } from '../model';
+import {
+	filterTypeToName,
+	filterValueToDisplay,
+	type FiltersState,
+	type FiltersValues,
+	type FilterType,
+	type IDisplaySettings,
+	type ITicker,
+} from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
 import type { MarketType } from '@/modules/market';
 
@@ -13,11 +24,13 @@ import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
 	tickers: ITicker[];
-	settings: ISettings;
+	settings: IDisplaySettings;
 	meta: IMeta;
+	filtersValues: FiltersValues;
 }
 
-const activeMarket = defineModel<MarketType>({ required: true });
+const activeMarket = defineModel<MarketType>('market', { required: true });
+const filters = defineModel<FiltersState>('filters', { required: true });
 
 const props = defineProps<IViewComponentProps>();
 
@@ -41,11 +54,49 @@ const gridTemplateContent = computed(() => {
 });
 
 const isShowPriceChart = ref(false); // разнесут на 2 виджета
+
+function updateFilter(filterKey: FilterType, filterValue: string) {
+	filters.value = {
+		...filters.value,
+		[filterKey]: filterValue,
+	};
+}
 </script>
 
 <template>
 	<div :class="classes.root">
-		<market-badge v-model="activeMarket" :class="classes.priceHeader" />
+		<div :class="classes.priceHeader">
+			<market-badge v-model="activeMarket" />
+
+			<modal-badge
+				v-for="(filterState, filterKey) in filters"
+				:key="filterKey"
+			>
+				<template #title v-if="filterState">
+					{{ filterValueToDisplay[filterState].label }}
+				</template>
+				<template #content>
+					<modal-badge-list>
+						<template #title>
+							{{ filterTypeToName[filterKey] }}
+						</template>
+						<template
+							v-for="filterValue in props.filtersValues[filterKey]"
+							:key="filterValue.value"
+						>
+
+							<modal-item-selector
+								:model-value="filterValue.value === filterState"
+								@update:model-value="updateFilter(filterKey, filterValue.value)"
+							>
+								{{ filterValue.label }}
+							</modal-item-selector>
+						</template>
+					</modal-badge-list>
+				</template>
+			</modal-badge>
+
+		</div>
 
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
@@ -88,6 +139,7 @@ const isShowPriceChart = ref(false); // разнесут на 2 виджета
 
 .priceHeader {
 	margin-inline: 12px;
+	display: flex;
 }
 
 .scrollable {

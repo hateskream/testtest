@@ -1,6 +1,7 @@
 import { MarketType } from '@/modules/market';
+import { FilterType, RankingAndNewFilterValue, TimeRangeFilterValue, type FilterValue } from './filters';
 
-export interface ISettings {
+export interface IDisplaySettings {
 	isShowChart: boolean;
 	isShowPercentageChange: boolean;
 	isShowLogo: boolean;
@@ -8,14 +9,22 @@ export interface ISettings {
 	isShowDescription: boolean;
 }
 
-type SettingsByMarketType = Record<MarketType, { display: ISettings; pinned: string[] }>;
+interface ISettings {
+	display: IDisplaySettings;
+	pinned: string[];
+	filtersState: {
+		[key in FilterType]?: FilterValue;
+	};
+}
+
+type SettingsByMarketType = Record<MarketType, ISettings>;
 
 export interface IState {
 	activeMarket: MarketType;
 	settings: SettingsByMarketType;
 }
 
-const defaultSettings: ISettings = {
+const defaultSettings: IDisplaySettings = {
 	isShowChart: true,
 	isShowPercentageChange: true,
 	isShowLogo: true,
@@ -23,7 +32,7 @@ const defaultSettings: ISettings = {
 	isShowDescription: false,
 };
 
-export function getDefaultsSettings(): ISettings {
+export function getDefaultsSettings(): IDisplaySettings {
 	return { ...defaultSettings };
 }
 
@@ -31,22 +40,30 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 	[MarketType.Crypto]: {
 		display: getDefaultsSettings(),
 		pinned: [],
+		filtersState: {
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+			[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
+		},
 	},
 	[MarketType.Stock]: {
 		display: getDefaultsSettings(),
 		pinned: [],
+		filtersState: {},
 	},
 	[MarketType.Forex]: {
 		display: getDefaultsSettings(),
 		pinned: [],
+		filtersState: {},
 	},
 	[MarketType.Commodities]: {
 		display: getDefaultsSettings(),
 		pinned: [],
+		filtersState: {},
 	},
 	[MarketType.Indices]: {
 		display: getDefaultsSettings(),
 		pinned: [],
+		filtersState: {},
 	},
 };
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalItemSwitch, ModalItemCheckbox, ModalSubmenuContent } from '../../base';
-import type { ISettings } from '../model';
+import type { IDisplaySettings } from '../model';
 
-const settings = defineModel<ISettings>({ required: true });
+const settings = defineModel<IDisplaySettings>({ required: true });
 
 function toggleShowChart() {
 	settings.value = { ...settings.value, isShowChart: !settings.value.isShowChart };

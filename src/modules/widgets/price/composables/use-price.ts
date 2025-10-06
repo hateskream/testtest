@@ -1,12 +1,41 @@
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
 
-import { getDefaultsSettings, getDefaultsState, type ISettings, type IState } from '../model';
+import {
+	filtersByMarketType,
+	FilterType,
+	filterTypeToValue,
+	filterValueToDisplay,
+	getDefaultsSettings,
+	getDefaultsState,
+	MarketTrendFilterValue,
+	RankingAndNewFilterValue,
+	SectorFilterValue,
+	TimeRangeFilterValue,
+	type FiltersState,
+	type FiltersValues,
+	type IDisplaySettings,
+	type IState,
+} from '../model';
 import { useQueryPrice } from '../queries';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
 
-const ISettingsSchema = z.object({
+const MarketTrendFilterValueSchema = z.nativeEnum(MarketTrendFilterValue);
+const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
+const SectorFilterValueSchema = z.nativeEnum(SectorFilterValue);
+const TimeRangeFilterValueSchema = z.nativeEnum(TimeRangeFilterValue);
+
+const FilterValueSchema = z.union([
+	MarketTrendFilterValueSchema,
+	RankingAndNewFilterValueSchema,
+	SectorFilterValueSchema,
+	TimeRangeFilterValueSchema,
+]);
+
+const FiltersStateSchema = z.record(z.nativeEnum(FilterType), FilterValueSchema.optional());
+
+const IDisplaySettingsSchema = z.object({
 	isShowChart: z.boolean(),
 	isShowPercentageChange: z.boolean(),
 	isShowLogo: z.boolean(),
@@ -14,29 +43,20 @@ const ISettingsSchema = z.object({
 	isShowDescription: z.boolean(),
 });
 
+const ISettingsSchema = z.object({
+	display: IDisplaySettingsSchema,
+	pinned: z.array(z.string()),
+	filtersState: FiltersStateSchema,
+});
+
 export const stateSchema = z.object({
 	activeMarket: z.nativeEnum(MarketType),
 	settings: z.object({
-		[MarketType.Crypto]: z.object({
-			display: ISettingsSchema,
-			pinned: z.array(z.string()),
-		}),
-		[MarketType.Stock]: z.object({
-			display: ISettingsSchema,
-			pinned: z.array(z.string()),
-		}),
-		[MarketType.Forex]: z.object({
-			display: ISettingsSchema,
-			pinned: z.array(z.string()),
-		}),
-		[MarketType.Commodities]: z.object({
-			display: ISettingsSchema,
-			pinned: z.array(z.string()),
-		}),
-		[MarketType.Indices]: z.object({
-			display: ISettingsSchema,
-			pinned: z.array(z.string()),
-		}),
+		[MarketType.Crypto]: ISettingsSchema,
+		[MarketType.Stock]: ISettingsSchema,
+		[MarketType.Forex]: ISettingsSchema,
+		[MarketType.Commodities]: ISettingsSchema,
+		[MarketType.Indices]: ISettingsSchema,
 	}),
 });
 
@@ -61,7 +81,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 
 
 	const state = ref<IState>(getDefaultsState(defaultStateType));
-	const currentSettings = ref<ISettings>(getDefaultsSettings());
+	const currentSettings = ref<IDisplaySettings>(getDefaultsSettings());
 	const pinnedTickers = ref<string[]>([]);
 
 	const activeMarket = computed({
@@ -70,6 +90,34 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 			state.value.activeMarket = val;
 		},
 	});
+
+	const filtersValues = computed((): FiltersValues =>
+		filtersByMarketType[activeMarket.value]
+			.reduce((acc, filter) => ({
+				...acc,
+				[filter]: filterTypeToValue[filter]
+					.map(filterValue => filterValueToDisplay[filterValue]),
+			}), {}),
+	);
+
+	// const filtersState = computed({
+	// 	get: (): FiltersState => state.value.settings[activeMarket.value].filtersState,
+	// 	set: (val: FiltersState) => {
+	// 		state.value.settings[activeMarket.value].filtersState = val;
+	// 	},
+	// });
+
+	const filtersState = ref<FiltersState>(
+		state.value.settings[state.value.activeMarket].filtersState,
+	);
+
+	watch(() => state.value.activeMarket, newMarket => {
+		filtersState.value = state.value.settings[newMarket].filtersState;
+	}, { immediate: true });
+
+	watch(filtersState, newFilters => {
+		state.value.settings[state.value.activeMarket].filtersState = newFilters;
+	}, { deep: true });
 
 	const limit = 50;
 
@@ -138,6 +186,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 			state.value = JSON.parse(JSON.stringify(newState));
 			currentSettings.value = state.value.settings[state.value.activeMarket].display;
 			pinnedTickers.value = state.value.settings[state.value.activeMarket].pinned;
+			// filtersState.value = state.value.settings[state.value.activeMarket].filtersState;
 		}
 	}, { immediate: true });
 
@@ -149,6 +198,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		newMarket => {
 			currentSettings.value = state.value.settings[newMarket].display;
 			pinnedTickers.value = state.value.settings[newMarket].pinned;
+			// filtersState.value = state.value.settings[newMarket].filtersState;
 		},
 	), { immediate: true };
 
@@ -200,5 +250,7 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		togglePin,
 		state,
 		refetch,
+		filtersValues,
+		filtersState,
 	};
 }

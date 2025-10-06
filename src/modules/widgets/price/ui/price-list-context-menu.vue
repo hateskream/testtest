@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ModalSubmenu, WidgetContextMenu } from '@/modules/widgets/base';
-import type { ISettings } from '../model';
+import type { IDisplaySettings } from '../model';
 
 import RcmPriceComponent from './rcm-price-component.vue';
 
-const settings = defineModel<ISettings>({ required: true });
+const settings = defineModel<IDisplaySettings>({ required: true });
 
 const props = defineProps<{
 	title: string;
