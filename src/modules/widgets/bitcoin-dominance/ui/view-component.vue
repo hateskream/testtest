@@ -185,6 +185,7 @@ watch(
 .chartWrapper {
 	flex: 1;
 	height: 100%;
+	overflow: hidden;
 
 	/* background-color: red; */
 }
