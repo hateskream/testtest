@@ -1,4 +1,5 @@
 import { computed, reactive, ref, watch } from 'vue';
+import z from 'zod';
 
 import {
 	displaySettings,
@@ -9,16 +10,55 @@ import {
 	type IState,
 	TitleViewVariant,
 } from '../model';
-import { useGetState, useUpdateState } from '../queries';
+import { createStateQueries } from '@/shared/service/data-repo';
+
+const TitleViewVariantSchema = z.enum([
+	TitleViewVariant.TICKER,
+	TitleViewVariant.NAME,
+	TitleViewVariant.NONE,
+]);
+
+export const DisplayStateSchemaC = z.object({
+	sizeBy: z.string().optional(),
+	groupBy: z.string().optional(),
+	colorBy: z.string(),
+	colorDepth: z.string(),
+	displayValue: z.string(),
+	isShowLogo: z.boolean(),
+	titleSetting: TitleViewVariantSchema,
+});
+
+export const stateSchema = z.object({
+	activeMarketId: z.string(),
+	settings: z.record(z.string(), DisplayStateSchemaC),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
+
 
 const allMarkets = Object.values(displaySettings).map(({ market }) => ({ ...market }));
 
 export function useHeatmap(widgetId: string) {
 	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__HEATMAP__',
+		isSaveChange: true,
+		getDefaultState: getDefaultState,
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: (s: StateSchemaType): IState => s,
+		rehydrateFn: (s: IState): StateSchemaType => s,
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const {
 		data: dataState,
 		...rest
-	} = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	} = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const state = ref<IState>(getDefaultState());
 
