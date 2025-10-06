@@ -3,6 +3,7 @@ import { useLogger } from '@/shared/service/logger';
 import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import type { IMarketCapCurrency } from '../model/market-cap';
+import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -45,49 +46,10 @@ function prepareResponse(data: IMarketCapCurrency[]): IMarketCapDomain[] {
 	}));
 }
 
-async function getMockData(args: IGetMarketCapRequest): Promise<IGetMarketResponse> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
+const { getMock } = useFetchMock<IMarketCapCurrency[]>('/mock/widgets/market-cap.json');
 
-	const mockData: IMarketCapCurrency[] = [
-		{
-			id: 'Crypto-ADACardano',
-			symbol: 'ADA',
-			name: 'Cardano',
-			type: 'crypto',
-			change24h: 0.93,
-			color: ' rgb(247, 169, 104)',
-			fdv: '84232834934324.45',
-		},
-		{
-			id: 'Crypto-TRXTron',
-			symbol: 'TRON',
-			name: 'TRX',
-			type: 'crypto',
-			change24h: 12,
-			color: ' rgb(42, 135, 211)',
-			fdv: '8743253453.45',
-		},
-		{
-			id: 'Crypto-SOLSolana',
-			symbol: 'SOL',
-			name: 'Solana',
-			type: 'crypto',
-			change24h: -0.5,
-			color: ' rgb(42, 211, 98)',
-			fdv: '943299.45',
-		},
-		{
-			id: 'Stock-TSLATesla',
-			symbol: 'TSLA',
-			name: 'Tesla Inc',
-			type: 'stock',
-			change24h: -4,
-			color: ' rgb(211, 67, 42)',
-			fdv: '44883234838.45',
-		},
-	];
+async function getMockData(args: IGetMarketCapRequest): Promise<IGetMarketResponse> {
+	const mockData = await getMock();
 
 	const response: IGetMarketResponse = {
 		data: mockData.filter(item => args.tickersIds.includes(item.id)),

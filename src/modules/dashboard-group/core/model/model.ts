@@ -53,6 +53,8 @@ export interface IDashboardTab {
 	isActive: boolean;
 }
 
+// 1727 или 1728
+
 export interface IMeta {
 	widgetId: string;
 	isResizing: boolean;

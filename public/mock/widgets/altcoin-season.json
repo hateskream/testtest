@@ -1,0 +1,23 @@
+{
+    "widgetConfig": {
+        "period": "90D",
+        "modules": {
+            "performanceRank": true,
+            "historicalValues": true,
+            "top100": true,
+            "chart": true
+        }
+    },
+    "performanceRank": {
+        "btcRank": 16,
+        "maxRank": 30,
+        "period": "90D"
+    },
+    "historicalValues": {
+        "today": 16,
+        "lastWeek": 22,
+        "lastMonth": 24
+    },
+    "top100": {},
+    "chart": {}
+}

@@ -1,6 +1,7 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import type { IPerformanceRank, IHistoricalValue, Period, IAltcoinSeasonConfig } from '../model';
+import { useFetchMock } from '@/shared/mock';
 
 enum DataProvider {
 	Production,
@@ -58,45 +59,8 @@ function sendRequestByProvider(
 	}
 }
 
-async function getMockData(request: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 200);
-	});
+const { getMock } = useFetchMock<IAltcoinSeasonDataResponse>('/mock/widgets/altcoin-season.json');
 
-	const btcRank = Math.floor(Math.random() * 30) + 1;
-	const fetchPeriod = request.period || '90D';
-
-	const widgetConfigMockData: IAltcoinSeasonConfig = {
-		period: fetchPeriod,
-		modules: request.modules || {
-			performanceRank: true,
-			historicalValues: true,
-			top100: true,
-			chart: true,
-		},
-	};
-
-	const performanceRankMockData: IPerformanceRank =
-		{
-			btcRank: btcRank,
-			maxRank: 30,
-			period: fetchPeriod,
-		};
-
-	const historicalValuesMockData: IHistoricalValue = {
-		today: btcRank,
-		lastWeek: Math.floor(Math.random() * 30) + 1,
-		lastMonth: Math.floor(Math.random() * 30) + 1,
-	};
-
-
-	const response: IAltcoinSeasonDataResponse = {
-		widgetConfig: widgetConfigMockData,
-		performanceRank: performanceRankMockData,
-		historicalValues: historicalValuesMockData,
-		top100: {}, // TODO: i dont freaking know what to do with this coz we neeg to think about about data sharing between widgets
-		chart: {}, // TODO: add chart data
-	};
-
-	return response;
+async function getMockData(_: IAltcoinSeasonRequest): Promise<IAltcoinSeasonDataResponse> {
+	return getMock();
 }

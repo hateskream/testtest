@@ -1,0 +1,20 @@
+{
+    "tension": 45,
+    "history": [
+        {
+            "displayName": "Yesterday",
+            "name": "yesterday",
+            "value": 3
+        },
+        {
+            "displayName": "Last week",
+            "name": "lastWeek",
+            "value": 45
+        },
+        {
+            "displayName": "Last month",
+            "name": "lastMonth",
+            "value": 69
+        }
+    ]
+}

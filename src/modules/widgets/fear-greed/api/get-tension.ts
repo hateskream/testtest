@@ -1,9 +1,9 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { Tension, type ITension } from '../model';
+import { type ITension } from '../model';
 import { useLogger } from '@/shared/service/logger';
+import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
-let mockCurrentTension = 85;
 
 interface IGetTensionResponse {
 	data: {
@@ -62,52 +62,9 @@ async function fetchFromApi(): Promise<ITension> {
 	return tension;
 }
 
-function getRandomFromRange(max: number, min: number) {
-	return Math.round(Math.random() * (max - min) + min);
-}
+const { getMock } = useFetchMock<ITension>('/mock/widgets/fear-greed.json');
 
 async function getMockData(): Promise<ITension> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
 
-	const response: ITension = {
-		tension: mockCurrentTension,
-		history: [
-			{
-				displayName: 'Yesterday',
-				name: 'yesterday',
-				value: 3,
-			},
-			{
-				displayName: 'Last week',
-				name: 'lastWeek',
-				value: 45,
-			},
-			{
-				displayName: 'Last month',
-				name: 'lastMonth',
-				value: 69,
-			},
-		],
-	};
-
-
-	if (mockCurrentTension !== -1) {
-		if (mockCurrentTension <= Tension.extremeFear.max) {
-			mockCurrentTension = getRandomFromRange(Tension.fear.max, Tension.fear.min);
-		} else if (mockCurrentTension <= Tension.fear.max) {
-			mockCurrentTension = getRandomFromRange(Tension.neutral.max, Tension.neutral.min);
-		} else if (mockCurrentTension <= Tension.neutral.max) {
-			mockCurrentTension = getRandomFromRange(Tension.greed.max, Tension.greed.min);
-		} else if (mockCurrentTension <= Tension.greed.max) {
-			mockCurrentTension = getRandomFromRange(Tension.extremeGreed.max, Tension.extremeGreed.min);
-		} else {
-			mockCurrentTension = getRandomFromRange(Tension.extremeFear.max, Tension.extremeFear.min);
-		}
-
-		response.tension = mockCurrentTension;
-	}
-
-	return response;
+	return getMock();
 }

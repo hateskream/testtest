@@ -39,27 +39,22 @@ export async function getAssetsTickerSelector(): Promise<IPreparedResponse> {
 	}
 }
 
-const [crypto, commodities, forex, indices, stocks] = await Promise.all([
-	generateRows<TickerRow>(SymbolType.Crypto, [], 20),
-	generateRows<TickerRow>(SymbolType.Commodity, [], 20),
-	generateRows<TickerRow>(SymbolType.Forex, [], 20),
-	generateRows<TickerRow>(SymbolType.Index, [], 20),
-	generateRows<TickerRow>(SymbolType.Stock, [], 20),
-]);
-
-const mockTickers = [
-	...crypto,
-	...commodities,
-	...forex,
-	...indices,
-	...stocks,
-];
-
-
 async function getMockData(): Promise<IPreparedResponse> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
+	const [crypto, commodities, forex, indices, stocks] = await Promise.all([
+		generateRows<TickerRow>(SymbolType.Crypto, [], 20),
+		generateRows<TickerRow>(SymbolType.Commodity, [], 20),
+		generateRows<TickerRow>(SymbolType.Forex, [], 20),
+		generateRows<TickerRow>(SymbolType.Index, [], 20),
+		generateRows<TickerRow>(SymbolType.Stock, [], 20),
+	]);
+
+	const mockTickers = [
+		...crypto,
+		...commodities,
+		...forex,
+		...indices,
+		...stocks,
+	];
 
 	return {
 		tickers: mockTickers,

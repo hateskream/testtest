@@ -1,12 +1,13 @@
+import { useFetchMock } from '@/shared/mock';
 import type {
 	IEventBoardRequestOptions,
 	IEventBoardResponse,
 } from '../../models';
-import data from './data.json';
+
+const { getMock } = useFetchMock<IEventBoardResponse[]>('/mock/calendar/event-board.json');
 
 export function createMockEventBoard(
 	_: IEventBoardRequestOptions,
-): IEventBoardResponse[] {
-
-	return data as IEventBoardResponse[];
+): Promise<IEventBoardResponse[]> {
+	return getMock();
 }

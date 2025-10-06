@@ -1,0 +1,6002 @@
+[
+    {
+        "ticker": "BTC",
+        "name": "Bitcoin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 63120312,
+            "volume": 22021812,
+            "change24hPercent": 19.97,
+            "change24h": 0.00401858,
+            "price": 0.02012307
+        }
+    },
+    {
+        "ticker": "ETH",
+        "name": "Ethereum",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5053629075,
+            "volume": 332106261,
+            "change24hPercent": -0.58,
+            "change24h": -0.04565691,
+            "price": 7.8718807
+        }
+    },
+    {
+        "ticker": "BNB",
+        "name": "Binance Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5914935561,
+            "volume": 4011719172,
+            "change24hPercent": -4.55,
+            "change24h": -0.3254191,
+            "price": 7.15206809
+        }
+    },
+    {
+        "ticker": "SOL",
+        "name": "Solana",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 75180697,
+            "volume": 48134018,
+            "change24hPercent": -47.8,
+            "change24h": -0.04209163,
+            "price": 0.0880578
+        }
+    },
+    {
+        "ticker": "XRP",
+        "name": "XRP",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3618316,
+            "volume": 688901,
+            "change24hPercent": 24.73,
+            "change24h": 8.3e-7,
+            "price": 0.00000335
+        }
+    },
+    {
+        "ticker": "DOGE",
+        "name": "Dogecoin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 81705170,
+            "volume": 24390232,
+            "change24hPercent": -33.93,
+            "change24h": -0.02659931,
+            "price": 0.07839468
+        }
+    },
+    {
+        "ticker": "ADA",
+        "name": "Cardano",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5760335490,
+            "volume": 1112275380,
+            "change24hPercent": 2.28,
+            "change24h": 0.0330514,
+            "price": 1.44962278
+        }
+    },
+    {
+        "ticker": "SHIB",
+        "name": "Shiba Inu",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 679579711652,
+            "volume": 380501466440,
+            "change24hPercent": -1.29,
+            "change24h": -134.05462021,
+            "price": 10391.83102394
+        }
+    },
+    {
+        "ticker": "DOT",
+        "name": "Polkadot",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5815684,
+            "volume": 1113888,
+            "change24hPercent": -35.04,
+            "change24h": -0.00002329,
+            "price": 0.00006647
+        }
+    },
+    {
+        "ticker": "MATIC",
+        "name": "Polygon",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3576152558,
+            "volume": 2207400472,
+            "change24hPercent": 10.17,
+            "change24h": 0.03925296,
+            "price": 0.38596811
+        }
+    },
+    {
+        "ticker": "LTC",
+        "name": "LTC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 93130940,
+            "volume": 23056243,
+            "change24hPercent": -16.84,
+            "change24h": -0.01138809,
+            "price": 0.06762524
+        }
+    },
+    {
+        "ticker": "UNI",
+        "name": "UNI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6498924,
+            "volume": 1597230,
+            "change24hPercent": 86.52,
+            "change24h": 0.00008331,
+            "price": 0.00009629
+        }
+    },
+    {
+        "ticker": "LINK",
+        "name": "LINK Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6328817,
+            "volume": 2113435,
+            "change24hPercent": -12.72,
+            "change24h": -0.00755392,
+            "price": 0.05938616
+        }
+    },
+    {
+        "ticker": "TRX",
+        "name": "TRX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8414787,
+            "volume": 3885307,
+            "change24hPercent": -55.84,
+            "change24h": -0.5555399,
+            "price": 0.99487804
+        }
+    },
+    {
+        "ticker": "AVAX",
+        "name": "AVAX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 91556803,
+            "volume": 35803712,
+            "change24hPercent": 99.22,
+            "change24h": 0.05470636,
+            "price": 0.05513642
+        }
+    },
+    {
+        "ticker": "ATOM",
+        "name": "ATOM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 864294,
+            "volume": 185313,
+            "change24hPercent": -43.28,
+            "change24h": -0.98030729,
+            "price": 2.26503534
+        }
+    },
+    {
+        "ticker": "NEAR",
+        "name": "NEAR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4760874826,
+            "volume": 2442625515,
+            "change24hPercent": 8.33,
+            "change24h": 0.41914465,
+            "price": 5.03174856
+        }
+    },
+    {
+        "ticker": "FIL",
+        "name": "FIL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 47349720,
+            "volume": 31660726,
+            "change24hPercent": 35.18,
+            "change24h": 0.00287781,
+            "price": 0.00818026
+        }
+    },
+    {
+        "ticker": "ICP",
+        "name": "ICP Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4603758,
+            "volume": 2719146,
+            "change24hPercent": -44.62,
+            "change24h": -0.00003564,
+            "price": 0.00007987
+        }
+    },
+    {
+        "ticker": "VET",
+        "name": "VET Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 20362518,
+            "volume": 13504821,
+            "change24hPercent": -66.51,
+            "change24h": -0.0476671,
+            "price": 0.07166908
+        }
+    },
+    {
+        "ticker": "EOS",
+        "name": "EOS Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4941325,
+            "volume": 1703786,
+            "change24hPercent": -49.27,
+            "change24h": -0.00001007,
+            "price": 0.00002044
+        }
+    },
+    {
+        "ticker": "ALGO",
+        "name": "ALGO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5265129612,
+            "volume": 3848502891,
+            "change24hPercent": 2.95,
+            "change24h": 0.05240913,
+            "price": 1.77658052
+        }
+    },
+    {
+        "ticker": "XTZ",
+        "name": "XTZ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 21656810,
+            "volume": 6752689,
+            "change24hPercent": 5.27,
+            "change24h": 0.00156746,
+            "price": 0.02974307
+        }
+    },
+    {
+        "ticker": "AAVE",
+        "name": "AAVE Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 47651433,
+            "volume": 38812908,
+            "change24hPercent": 97.77,
+            "change24h": 0.05637374,
+            "price": 0.05765955
+        }
+    },
+    {
+        "ticker": "MKR",
+        "name": "MKR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2985181,
+            "volume": 562104,
+            "change24hPercent": -38.21,
+            "change24h": -0.0000061,
+            "price": 0.00001596
+        }
+    },
+    {
+        "ticker": "COMP",
+        "name": "COMP Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4915487924,
+            "volume": 3697674104,
+            "change24hPercent": -10.49,
+            "change24h": -0.79023162,
+            "price": 7.53318993
+        }
+    },
+    {
+        "ticker": "SAND",
+        "name": "SAND Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7010732497,
+            "volume": 1667079575,
+            "change24hPercent": -14.46,
+            "change24h": -0.82142941,
+            "price": 5.68070128
+        }
+    },
+    {
+        "ticker": "MANA",
+        "name": "MANA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3802588,
+            "volume": 2235278,
+            "change24hPercent": 41.28,
+            "change24h": 1.15391304,
+            "price": 2.79533197
+        }
+    },
+    {
+        "ticker": "THETA",
+        "name": "THETA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9182453,
+            "volume": 2484338,
+            "change24hPercent": -48.1,
+            "change24h": -1.63399563,
+            "price": 3.39708031
+        }
+    },
+    {
+        "ticker": "GRT",
+        "name": "GRT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6630778,
+            "volume": 5620009,
+            "change24hPercent": -46.81,
+            "change24h": -0.0000097,
+            "price": 0.00002072
+        }
+    },
+    {
+        "ticker": "CRV",
+        "name": "CRV Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 18161471,
+            "volume": 8139392,
+            "change24hPercent": 46.03,
+            "change24h": 0.02137824,
+            "price": 0.04644414
+        }
+    },
+    {
+        "ticker": "SNX",
+        "name": "SNX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3632284262,
+            "volume": 850967482,
+            "change24hPercent": -0.68,
+            "change24h": -0.03159656,
+            "price": 4.64655275
+        }
+    },
+    {
+        "ticker": "KSM",
+        "name": "KSM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2643559685,
+            "volume": 1594860064,
+            "change24hPercent": 10.68,
+            "change24h": 1.02245825,
+            "price": 9.5735791
+        }
+    },
+    {
+        "ticker": "FLOW",
+        "name": "FLOW Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 98992251,
+            "volume": 50429778,
+            "change24hPercent": 42.8,
+            "change24h": 0.0154352,
+            "price": 0.03606355
+        }
+    },
+    {
+        "ticker": "AR",
+        "name": "AR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 660575544916,
+            "volume": 50464613285,
+            "change24hPercent": -0.28,
+            "change24h": -49.88732232,
+            "price": 17816.90082788
+        }
+    },
+    {
+        "ticker": "CHZ",
+        "name": "CHZ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2011188352,
+            "volume": 716368490,
+            "change24hPercent": 2.85,
+            "change24h": 0.08786584,
+            "price": 3.08301188
+        }
+    },
+    {
+        "ticker": "ENJ",
+        "name": "ENJ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7997970,
+            "volume": 4044733,
+            "change24hPercent": 29.85,
+            "change24h": 0.00002978,
+            "price": 0.00009975
+        }
+    },
+    {
+        "ticker": "RUNE",
+        "name": "RUNE Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6631693,
+            "volume": 5050899,
+            "change24hPercent": -29.91,
+            "change24h": -0.000018,
+            "price": 0.00006019
+        }
+    },
+    {
+        "ticker": "CAKE",
+        "name": "CAKE Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7191693,
+            "volume": 1829531,
+            "change24hPercent": 6.21,
+            "change24h": 0.02415205,
+            "price": 0.38892187
+        }
+    },
+    {
+        "ticker": "HBAR",
+        "name": "HBAR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 77319383,
+            "volume": 10477444,
+            "change24hPercent": 37.35,
+            "change24h": 0.02422695,
+            "price": 0.06486466
+        }
+    },
+    {
+        "ticker": "KLAY",
+        "name": "KLAY Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 89322515,
+            "volume": 28809089,
+            "change24hPercent": -76.71,
+            "change24h": -0.07650399,
+            "price": 0.09973145
+        }
+    },
+    {
+        "ticker": "ONE",
+        "name": "ONE Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7596205550,
+            "volume": 2094028616,
+            "change24hPercent": -12.03,
+            "change24h": -0.39111613,
+            "price": 3.25117319
+        }
+    },
+    {
+        "ticker": "DASH",
+        "name": "DASH Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7440968,
+            "volume": 3809215,
+            "change24hPercent": 36.93,
+            "change24h": 0.00002274,
+            "price": 0.00006159
+        }
+    },
+    {
+        "ticker": "ZEC",
+        "name": "ZEC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5811426036,
+            "volume": 1153800403,
+            "change24hPercent": 0.01,
+            "change24h": 0.00018141,
+            "price": 1.81411919
+        }
+    },
+    {
+        "ticker": "XMR",
+        "name": "XMR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7106115,
+            "volume": 4174136,
+            "change24hPercent": -44.25,
+            "change24h": -0.00000474,
+            "price": 0.00001071
+        }
+    },
+    {
+        "ticker": "BAT",
+        "name": "BAT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 538075547800,
+            "volume": 133602199187,
+            "change24hPercent": 0.23,
+            "change24h": 60.57439833,
+            "price": 26336.694928
+        }
+    },
+    {
+        "ticker": "OMG",
+        "name": "OMG Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7087727,
+            "volume": 3688923,
+            "change24hPercent": 56.55,
+            "change24h": 1.9541247,
+            "price": 3.45556977
+        }
+    },
+    {
+        "ticker": "ZIL",
+        "name": "ZIL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 69581142,
+            "volume": 52052418,
+            "change24hPercent": -55.76,
+            "change24h": -0.02220225,
+            "price": 0.03981752
+        }
+    },
+    {
+        "ticker": "STX",
+        "name": "STX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 76529912,
+            "volume": 46490386,
+            "change24hPercent": 28.64,
+            "change24h": 0.02172271,
+            "price": 0.07584745
+        }
+    },
+    {
+        "ticker": "MINA",
+        "name": "MINA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 98376140,
+            "volume": 64144820,
+            "change24hPercent": -0.13,
+            "change24h": -0.00012856,
+            "price": 0.09889195
+        }
+    },
+    {
+        "ticker": "CELO",
+        "name": "CELO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1259305810,
+            "volume": 96735791,
+            "change24hPercent": -10.69,
+            "change24h": -0.05805416,
+            "price": 0.54306979
+        }
+    },
+    {
+        "ticker": "GLMR",
+        "name": "GLMR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 56222090,
+            "volume": 12168900,
+            "change24hPercent": 14.69,
+            "change24h": 0.01168398,
+            "price": 0.07953698
+        }
+    },
+    {
+        "ticker": "ASTR",
+        "name": "ASTR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6176171332,
+            "volume": 2968763228,
+            "change24hPercent": 1.19,
+            "change24h": 0.02573476,
+            "price": 2.16258475
+        }
+    },
+    {
+        "ticker": "ROSE",
+        "name": "ROSE Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 756012,
+            "volume": 458206,
+            "change24hPercent": -1.76,
+            "change24h": -0.00000154,
+            "price": 0.0000876
+        }
+    },
+    {
+        "ticker": "OAS",
+        "name": "OAS Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6330703572,
+            "volume": 4274863428,
+            "change24hPercent": -14.42,
+            "change24h": -0.76409527,
+            "price": 5.29885763
+        }
+    },
+    {
+        "ticker": "ACH",
+        "name": "ACH Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3349767,
+            "volume": 2103386,
+            "change24hPercent": 13.85,
+            "change24h": 0.00000293,
+            "price": 0.00002113
+        }
+    },
+    {
+        "ticker": "API3",
+        "name": "API3 Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4930269264,
+            "volume": 371617417,
+            "change24hPercent": -4.97,
+            "change24h": -0.38308854,
+            "price": 7.70801898
+        }
+    },
+    {
+        "ticker": "BAL",
+        "name": "BAL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 48520775,
+            "volume": 10507606,
+            "change24hPercent": -0.15,
+            "change24h": -0.00005539,
+            "price": 0.03692614
+        }
+    },
+    {
+        "ticker": "BAND",
+        "name": "BAND Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9377680,
+            "volume": 4841679,
+            "change24hPercent": 3.22,
+            "change24h": 8e-7,
+            "price": 0.0000249
+        }
+    },
+    {
+        "ticker": "BLZ",
+        "name": "BLZ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 29963124,
+            "volume": 5498103,
+            "change24hPercent": 10.96,
+            "change24h": 0.00424465,
+            "price": 0.03872856
+        }
+    },
+    {
+        "ticker": "CTSI",
+        "name": "CTSI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 54699345,
+            "volume": 8136695,
+            "change24hPercent": 4.7,
+            "change24h": 0.00255442,
+            "price": 0.05434938
+        }
+    },
+    {
+        "ticker": "DIA",
+        "name": "DIA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5058118,
+            "volume": 921766,
+            "change24hPercent": 89.73,
+            "change24h": 0.83611614,
+            "price": 0.93181338
+        }
+    },
+    {
+        "ticker": "DNT",
+        "name": "DNT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2951749,
+            "volume": 2028926,
+            "change24hPercent": -27.09,
+            "change24h": -0.00001575,
+            "price": 0.00005812
+        }
+    },
+    {
+        "ticker": "EGLD",
+        "name": "EGLD Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5072704987,
+            "volume": 2033110439,
+            "change24hPercent": -9.19,
+            "change24h": -0.79136016,
+            "price": 8.61110072
+        }
+    },
+    {
+        "ticker": "ELON",
+        "name": "ELON Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5556781,
+            "volume": 868307,
+            "change24hPercent": 19.74,
+            "change24h": 0.7964902,
+            "price": 4.03490475
+        }
+    },
+    {
+        "ticker": "FLUX",
+        "name": "FLUX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 93888854,
+            "volume": 62060843,
+            "change24hPercent": 38.5,
+            "change24h": 0.00905932,
+            "price": 0.02353071
+        }
+    },
+    {
+        "ticker": "FRAX",
+        "name": "FRAX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5840236,
+            "volume": 4117376,
+            "change24hPercent": 48.06,
+            "change24h": 0.00004147,
+            "price": 0.00008628
+        }
+    },
+    {
+        "ticker": "FXS",
+        "name": "FXS Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 36469014,
+            "volume": 6084301,
+            "change24hPercent": -97.11,
+            "change24h": -0.05469715,
+            "price": 0.05632494
+        }
+    },
+    {
+        "ticker": "GALA",
+        "name": "GALA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5011184,
+            "volume": 1960727,
+            "change24hPercent": 9.54,
+            "change24h": 0.00000612,
+            "price": 0.00006412
+        }
+    },
+    {
+        "ticker": "HNT",
+        "name": "HNT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2919587,
+            "volume": 2053533,
+            "change24hPercent": -22.73,
+            "change24h": -0.00001948,
+            "price": 0.00008572
+        }
+    },
+    {
+        "ticker": "ICX",
+        "name": "ICX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 81362525,
+            "volume": 41865855,
+            "change24hPercent": 57.15,
+            "change24h": 0.03309956,
+            "price": 0.05791698
+        }
+    },
+    {
+        "ticker": "INJ",
+        "name": "INJ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2682882,
+            "volume": 1204183,
+            "change24hPercent": -43.78,
+            "change24h": -2.04974969,
+            "price": 4.68193168
+        }
+    },
+    {
+        "ticker": "IOST",
+        "name": "IOST Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6747192924,
+            "volume": 1559824597,
+            "change24hPercent": 7.78,
+            "change24h": 0.63767741,
+            "price": 8.1963678
+        }
+    },
+    {
+        "ticker": "JST",
+        "name": "JST Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6938011,
+            "volume": 4419988,
+            "change24hPercent": -16.7,
+            "change24h": -0.00001046,
+            "price": 0.00006266
+        }
+    },
+    {
+        "ticker": "KAVA",
+        "name": "KAVA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1111129385,
+            "volume": 351040900,
+            "change24hPercent": 7.52,
+            "change24h": 0.27050819,
+            "price": 3.59718332
+        }
+    },
+    {
+        "ticker": "KEEP",
+        "name": "KEEP Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9601635457,
+            "volume": 1806717760,
+            "change24hPercent": 7.85,
+            "change24h": 0.52496593,
+            "price": 6.68746411
+        }
+    },
+    {
+        "ticker": "KNC",
+        "name": "KNC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 53989139,
+            "volume": 38093860,
+            "change24hPercent": -45.18,
+            "change24h": -0.02847279,
+            "price": 0.06302078
+        }
+    },
+    {
+        "ticker": "LDO",
+        "name": "LDO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 78422657,
+            "volume": 50765138,
+            "change24hPercent": 1.21,
+            "change24h": 0.00037164,
+            "price": 0.03071431
+        }
+    },
+    {
+        "ticker": "LRC",
+        "name": "LRC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1906757,
+            "volume": 1019372,
+            "change24hPercent": -39.62,
+            "change24h": -0.00001536,
+            "price": 0.00003876
+        }
+    },
+    {
+        "ticker": "NEXO",
+        "name": "NEXO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 95134690,
+            "volume": 60890026,
+            "change24hPercent": 10.94,
+            "change24h": 0.00728948,
+            "price": 0.06663142
+        }
+    },
+    {
+        "ticker": "OCEAN",
+        "name": "OCEAN Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 48760522,
+            "volume": 23144923,
+            "change24hPercent": 21.92,
+            "change24h": 0.01591646,
+            "price": 0.07261157
+        }
+    },
+    {
+        "ticker": "ONG",
+        "name": "ONG Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 844503,
+            "volume": 74551,
+            "change24hPercent": -21.22,
+            "change24h": -1.02707891,
+            "price": 4.84014565
+        }
+    },
+    {
+        "ticker": "ONT",
+        "name": "ONT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2952704672,
+            "volume": 2111664738,
+            "change24hPercent": 14.84,
+            "change24h": 1.04417447,
+            "price": 7.03621612
+        }
+    },
+    {
+        "ticker": "PLA",
+        "name": "PLA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8811487,
+            "volume": 6500545,
+            "change24hPercent": -31.6,
+            "change24h": -0.00001829,
+            "price": 0.00005789
+        }
+    },
+    {
+        "ticker": "QNT",
+        "name": "QNT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6347673,
+            "volume": 4355465,
+            "change24hPercent": 8.68,
+            "change24h": 0.00000536,
+            "price": 0.0000617
+        }
+    },
+    {
+        "ticker": "QTUM",
+        "name": "QTUM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1520240,
+            "volume": 801524,
+            "change24hPercent": -28.01,
+            "change24h": -0.00002405,
+            "price": 0.00008586
+        }
+    },
+    {
+        "ticker": "RARI",
+        "name": "RARI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 21951485,
+            "volume": 9885185,
+            "change24hPercent": 36.93,
+            "change24h": 0.00927867,
+            "price": 0.02512503
+        }
+    },
+    {
+        "ticker": "REEF",
+        "name": "REEF Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6420512,
+            "volume": 3999778,
+            "change24hPercent": -48.73,
+            "change24h": -0.00002246,
+            "price": 0.00004609
+        }
+    },
+    {
+        "ticker": "RSR",
+        "name": "RSR Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9521028412,
+            "volume": 5034519195,
+            "change24hPercent": -10.78,
+            "change24h": -0.55962047,
+            "price": 5.19128447
+        }
+    },
+    {
+        "ticker": "SKL",
+        "name": "SKL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6045336829,
+            "volume": 5094781770,
+            "change24hPercent": 3.7,
+            "change24h": 0.26911699,
+            "price": 7.27343205
+        }
+    },
+    {
+        "ticker": "SRM",
+        "name": "SRM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 10024945,
+            "volume": 7582137,
+            "change24hPercent": 79.11,
+            "change24h": 0.00003225,
+            "price": 0.00004077
+        }
+    },
+    {
+        "ticker": "STORJ",
+        "name": "STORJ Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8895749792,
+            "volume": 7090616323,
+            "change24hPercent": 7.73,
+            "change24h": 0.15451116,
+            "price": 1.99885074
+        }
+    },
+    {
+        "ticker": "SUSHI",
+        "name": "SUSHI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5259715,
+            "volume": 2916559,
+            "change24hPercent": -50.5,
+            "change24h": -0.00002422,
+            "price": 0.00004797
+        }
+    },
+    {
+        "ticker": "TEL",
+        "name": "TEL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 27181369,
+            "volume": 14719168,
+            "change24hPercent": 35.26,
+            "change24h": 0.02692208,
+            "price": 0.07635304
+        }
+    },
+    {
+        "ticker": "TFUEL",
+        "name": "TFUEL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 152433719626,
+            "volume": 34704621512,
+            "change24hPercent": -1.86,
+            "change24h": -173.3390367,
+            "price": 9319.30304815
+        }
+    },
+    {
+        "ticker": "TOMO",
+        "name": "TOMO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1654737,
+            "volume": 152265,
+            "change24hPercent": 42.36,
+            "change24h": 0.00003431,
+            "price": 0.00008099
+        }
+    },
+    {
+        "ticker": "TVK",
+        "name": "TVK Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 28345493,
+            "volume": 6775740,
+            "change24hPercent": 4.58,
+            "change24h": 0.00236392,
+            "price": 0.05161399
+        }
+    },
+    {
+        "ticker": "UMA",
+        "name": "UMA Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 468644651942,
+            "volume": 80889666753,
+            "change24hPercent": -1.78,
+            "change24h": -417.50709949,
+            "price": 23455.45502748
+        }
+    },
+    {
+        "ticker": "VIDT",
+        "name": "VIDT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9823905,
+            "volume": 4167595,
+            "change24hPercent": -81.51,
+            "change24h": -0.00002004,
+            "price": 0.00002459
+        }
+    },
+    {
+        "ticker": "WAVES",
+        "name": "WAVES Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 22181113,
+            "volume": 12056170,
+            "change24hPercent": -17.89,
+            "change24h": -0.00769414,
+            "price": 0.04300806
+        }
+    },
+    {
+        "ticker": "WRX",
+        "name": "WRX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 20542678,
+            "volume": 15319948,
+            "change24hPercent": 1.54,
+            "change24h": 0.00097566,
+            "price": 0.06335475
+        }
+    },
+    {
+        "ticker": "XEC",
+        "name": "XEC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3049217,
+            "volume": 1014694,
+            "change24hPercent": -29.4,
+            "change24h": -0.00002877,
+            "price": 0.00009786
+        }
+    },
+    {
+        "ticker": "XNO",
+        "name": "XNO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4367517296,
+            "volume": 726509536,
+            "change24hPercent": 14.5,
+            "change24h": 0.21444566,
+            "price": 1.47893558
+        }
+    },
+    {
+        "ticker": "YFI",
+        "name": "YFI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 487132500,
+            "volume": 402535778,
+            "change24hPercent": 0.82,
+            "change24h": 0.07352516,
+            "price": 8.96648308
+        }
+    },
+    {
+        "ticker": "YGG",
+        "name": "YGG Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 76795302,
+            "volume": 31390840,
+            "change24hPercent": 39.77,
+            "change24h": 0.03826097,
+            "price": 0.0962056
+        }
+    },
+    {
+        "ticker": "ZEN",
+        "name": "ZEN Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5003628,
+            "volume": 329909,
+            "change24hPercent": 14.73,
+            "change24h": 0.00001464,
+            "price": 0.0000994
+        }
+    },
+    {
+        "ticker": "ZRX",
+        "name": "ZRX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 16220911,
+            "volume": 9437857,
+            "change24hPercent": 15.7,
+            "change24h": 0.01500468,
+            "price": 0.09557123
+        }
+    },
+    {
+        "ticker": "CVX",
+        "name": "CVX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 55181991,
+            "volume": 13847816,
+            "change24hPercent": -6.52,
+            "change24h": -0.00199842,
+            "price": 0.03065059
+        }
+    },
+    {
+        "ticker": "SPELL",
+        "name": "SPELL Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3722671,
+            "volume": 1853916,
+            "change24hPercent": 23.54,
+            "change24h": 0.00001438,
+            "price": 0.00006108
+        }
+    },
+    {
+        "ticker": "AXS",
+        "name": "AXS Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 99454410,
+            "volume": 16956087,
+            "change24hPercent": 22.01,
+            "change24h": 0.01992318,
+            "price": 0.09051876
+        }
+    },
+    {
+        "ticker": "IMX",
+        "name": "IMX Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1622524,
+            "volume": 139519,
+            "change24hPercent": -15.18,
+            "change24h": -0.40536646,
+            "price": 2.67039829
+        }
+    },
+    {
+        "ticker": "PEPE",
+        "name": "Pepe",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 93127637,
+            "volume": 21484141,
+            "change24hPercent": 58.25,
+            "change24h": 0.03626015,
+            "price": 0.06224919
+        }
+    },
+    {
+        "ticker": "APT",
+        "name": "Aptos",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3834292587,
+            "volume": 2790184130,
+            "change24hPercent": -0.13,
+            "change24h": -0.0041086,
+            "price": 3.16046306
+        }
+    },
+    {
+        "ticker": "SEI",
+        "name": "SEI Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 61227751,
+            "volume": 51489978,
+            "change24hPercent": -1.33,
+            "change24h": -0.0010136,
+            "price": 0.07621089
+        }
+    },
+    {
+        "ticker": "WLD",
+        "name": "Worldcoin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 17884696,
+            "volume": 13351203,
+            "change24hPercent": -37.59,
+            "change24h": -0.03761901,
+            "price": 0.10007717
+        }
+    },
+    {
+        "ticker": "FET",
+        "name": "Fetch.ai",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 82847432,
+            "volume": 25730649,
+            "change24hPercent": -46.79,
+            "change24h": -0.01342044,
+            "price": 0.02868229
+        }
+    },
+    {
+        "ticker": "ARKM",
+        "name": "Arkham",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8860344,
+            "volume": 7133986,
+            "change24hPercent": -26.3,
+            "change24h": -0.00001951,
+            "price": 0.0000742
+        }
+    },
+    {
+        "ticker": "JUP",
+        "name": "Jupiter",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4730064,
+            "volume": 2396581,
+            "change24hPercent": 16.27,
+            "change24h": 0.6685528,
+            "price": 4.10911368
+        }
+    },
+    {
+        "ticker": "BONK",
+        "name": "Bonk",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 43624775,
+            "volume": 33288640,
+            "change24hPercent": 70.55,
+            "change24h": 0.03376807,
+            "price": 0.04786403
+        }
+    },
+    {
+        "ticker": "NOT",
+        "name": "NOT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 96756172096,
+            "volume": 11989485419,
+            "change24hPercent": 3.59,
+            "change24h": 2768.04515037,
+            "price": 77104.32173735
+        }
+    },
+    {
+        "ticker": "MEW",
+        "name": "MEW Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 78948010,
+            "volume": 39808572,
+            "change24hPercent": -23.08,
+            "change24h": -0.01305243,
+            "price": 0.05655297
+        }
+    },
+    {
+        "ticker": "POPCAT",
+        "name": "POPCAT Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 835374791,
+            "volume": 453434382,
+            "change24hPercent": 5.73,
+            "change24h": 0.26574602,
+            "price": 4.6378014
+        }
+    },
+    {
+        "ticker": "BEAM",
+        "name": "BEAM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 36258979,
+            "volume": 29984798,
+            "change24hPercent": -7.15,
+            "change24h": -0.00210294,
+            "price": 0.02941175
+        }
+    },
+    {
+        "ticker": "HONEY",
+        "name": "HONEY Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8831594,
+            "volume": 4678703,
+            "change24hPercent": 34.51,
+            "change24h": 0.00001304,
+            "price": 0.0000378
+        }
+    },
+    {
+        "ticker": "MYRO",
+        "name": "MYRO Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 22997716,
+            "volume": 6562558,
+            "change24hPercent": 5.34,
+            "change24h": 0.00499329,
+            "price": 0.09350725
+        }
+    },
+    {
+        "ticker": "SUN",
+        "name": "SUN Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 220449,
+            "volume": 164749,
+            "change24hPercent": 46.14,
+            "change24h": 0.00002501,
+            "price": 0.00005421
+        }
+    },
+    {
+        "ticker": "SLP",
+        "name": "SLP Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9291128670,
+            "volume": 3805585738,
+            "change24hPercent": 1.68,
+            "change24h": 0.0731121,
+            "price": 4.35191099
+        }
+    },
+    {
+        "ticker": "TLM",
+        "name": "TLM Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 806850006893,
+            "volume": 169862633683,
+            "change24hPercent": 4.59,
+            "change24h": 2635.47910792,
+            "price": 57417.8454885
+        }
+    },
+    {
+        "ticker": "TUSC",
+        "name": "TUSC Coin",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 20118812,
+            "volume": 5341022,
+            "change24hPercent": 37.02,
+            "change24h": 0.02460317,
+            "price": 0.06645912
+        }
+    },
+    {
+        "ticker": "CRYP1",
+        "name": "CRYP1 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 31765154,
+            "volume": 3046923,
+            "change24hPercent": -22.03,
+            "change24h": -0.00391535,
+            "price": 0.0177728
+        }
+    },
+    {
+        "ticker": "CRYP2",
+        "name": "CRYP2 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9799538788,
+            "volume": 1907888528,
+            "change24hPercent": 6.42,
+            "change24h": 0.48374969,
+            "price": 7.53504198
+        }
+    },
+    {
+        "ticker": "CRYP3",
+        "name": "CRYP3 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 93686447,
+            "volume": 20429477,
+            "change24hPercent": -31.87,
+            "change24h": -0.01759846,
+            "price": 0.05521952
+        }
+    },
+    {
+        "ticker": "CRYP4",
+        "name": "CRYP4 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 49550757,
+            "volume": 9044878,
+            "change24hPercent": 4.37,
+            "change24h": 0.00394833,
+            "price": 0.09035091
+        }
+    },
+    {
+        "ticker": "CRYP5",
+        "name": "CRYP5 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 96999948,
+            "volume": 38447372,
+            "change24hPercent": 23.69,
+            "change24h": 0.01086521,
+            "price": 0.04586411
+        }
+    },
+    {
+        "ticker": "CRYP6",
+        "name": "CRYP6 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1126680,
+            "volume": 94678,
+            "change24hPercent": 49.15,
+            "change24h": 1.38287109,
+            "price": 2.81357293
+        }
+    },
+    {
+        "ticker": "CRYP7",
+        "name": "CRYP7 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2259884,
+            "volume": 849876,
+            "change24hPercent": 5.22,
+            "change24h": 0.19417471,
+            "price": 3.71982201
+        }
+    },
+    {
+        "ticker": "CRYP8",
+        "name": "CRYP8 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 651193783604,
+            "volume": 69021796812,
+            "change24hPercent": -2.1,
+            "change24h": -1445.34379825,
+            "price": 68825.89515477
+        }
+    },
+    {
+        "ticker": "CRYP9",
+        "name": "CRYP9 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5314228,
+            "volume": 2185860,
+            "change24hPercent": -89.15,
+            "change24h": -0.00005004,
+            "price": 0.00005613
+        }
+    },
+    {
+        "ticker": "CRYP10",
+        "name": "CRYP10 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4622788837,
+            "volume": 2399591509,
+            "change24hPercent": -7.3,
+            "change24h": -0.50819605,
+            "price": 6.96158973
+        }
+    },
+    {
+        "ticker": "CRYP11",
+        "name": "CRYP11 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 81319074,
+            "volume": 50359652,
+            "change24hPercent": 23.86,
+            "change24h": 0.01521205,
+            "price": 0.06375545
+        }
+    },
+    {
+        "ticker": "CRYP12",
+        "name": "CRYP12 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 81426270,
+            "volume": 10043435,
+            "change24hPercent": 19.86,
+            "change24h": 0.00874887,
+            "price": 0.0440527
+        }
+    },
+    {
+        "ticker": "CRYP13",
+        "name": "CRYP13 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 29419994,
+            "volume": 5941903,
+            "change24hPercent": 6.57,
+            "change24h": 0.0055572,
+            "price": 0.08458447
+        }
+    },
+    {
+        "ticker": "CRYP14",
+        "name": "CRYP14 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8917702,
+            "volume": 2790098,
+            "change24hPercent": -29.45,
+            "change24h": -0.5325046,
+            "price": 1.80816504
+        }
+    },
+    {
+        "ticker": "CRYP15",
+        "name": "CRYP15 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 285855158420,
+            "volume": 69843540665,
+            "change24hPercent": 0.55,
+            "change24h": 0.04299145,
+            "price": 7.81662716
+        }
+    },
+    {
+        "ticker": "CRYP16",
+        "name": "CRYP16 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2593555,
+            "volume": 696127,
+            "change24hPercent": -70.93,
+            "change24h": -0.00005613,
+            "price": 0.00007913
+        }
+    },
+    {
+        "ticker": "CRYP17",
+        "name": "CRYP17 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 491585,
+            "volume": 286391,
+            "change24hPercent": -30.09,
+            "change24h": -0.00000785,
+            "price": 0.00002609
+        }
+    },
+    {
+        "ticker": "CRYP18",
+        "name": "CRYP18 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3086701314,
+            "volume": 2163908199,
+            "change24hPercent": -12.96,
+            "change24h": -1.02737083,
+            "price": 7.92724408
+        }
+    },
+    {
+        "ticker": "CRYP19",
+        "name": "CRYP19 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 10588448,
+            "volume": 5802270,
+            "change24hPercent": 22.61,
+            "change24h": 0.00228338,
+            "price": 0.01009898
+        }
+    },
+    {
+        "ticker": "CRYP20",
+        "name": "CRYP20 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9071009,
+            "volume": 3855267,
+            "change24hPercent": 84.44,
+            "change24h": 3.51356481,
+            "price": 4.16101943
+        }
+    },
+    {
+        "ticker": "CRYP21",
+        "name": "CRYP21 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2912575,
+            "volume": 677430,
+            "change24hPercent": -39.93,
+            "change24h": -0.00000963,
+            "price": 0.00002411
+        }
+    },
+    {
+        "ticker": "CRYP22",
+        "name": "CRYP22 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 623548915,
+            "volume": 282870641,
+            "change24hPercent": 3.38,
+            "change24h": 0.17964203,
+            "price": 5.31485299
+        }
+    },
+    {
+        "ticker": "CRYP23",
+        "name": "CRYP23 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 290852344265,
+            "volume": 149889064934,
+            "change24hPercent": -4.87,
+            "change24h": -129.31357192,
+            "price": 2655.3094851
+        }
+    },
+    {
+        "ticker": "CRYP24",
+        "name": "CRYP24 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6231382,
+            "volume": 2635378,
+            "change24hPercent": 31.18,
+            "change24h": 0.00001784,
+            "price": 0.00005723
+        }
+    },
+    {
+        "ticker": "CRYP25",
+        "name": "CRYP25 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 58897379,
+            "volume": 20764026,
+            "change24hPercent": 24.84,
+            "change24h": 0.02393152,
+            "price": 0.09634269
+        }
+    },
+    {
+        "ticker": "CRYP26",
+        "name": "CRYP26 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2142821207,
+            "volume": 465835076,
+            "change24hPercent": -13.13,
+            "change24h": -0.62395814,
+            "price": 4.75215643
+        }
+    },
+    {
+        "ticker": "CRYP27",
+        "name": "CRYP27 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 57107118,
+            "volume": 14059253,
+            "change24hPercent": -75.34,
+            "change24h": -0.00353504,
+            "price": 0.00469212
+        }
+    },
+    {
+        "ticker": "CRYP28",
+        "name": "CRYP28 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2258949,
+            "volume": 972906,
+            "change24hPercent": 44.28,
+            "change24h": 0.00001319,
+            "price": 0.00002979
+        }
+    },
+    {
+        "ticker": "CRYP29",
+        "name": "CRYP29 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 46531481,
+            "volume": 23242365,
+            "change24hPercent": -94.16,
+            "change24h": -0.06469609,
+            "price": 0.06870867
+        }
+    },
+    {
+        "ticker": "CRYP30",
+        "name": "CRYP30 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1983055,
+            "volume": 1288265,
+            "change24hPercent": -0.28,
+            "change24h": -1.5e-7,
+            "price": 0.00005221
+        }
+    },
+    {
+        "ticker": "CRYP31",
+        "name": "CRYP31 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3583877,
+            "volume": 352069,
+            "change24hPercent": 2.8,
+            "change24h": 5.5e-7,
+            "price": 0.00001955
+        }
+    },
+    {
+        "ticker": "CRYP32",
+        "name": "CRYP32 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8641570694,
+            "volume": 7003095201,
+            "change24hPercent": -5.31,
+            "change24h": -0.08752923,
+            "price": 1.64838474
+        }
+    },
+    {
+        "ticker": "CRYP33",
+        "name": "CRYP33 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9595143041,
+            "volume": 6233633121,
+            "change24hPercent": -5.46,
+            "change24h": -0.27243814,
+            "price": 4.98970951
+        }
+    },
+    {
+        "ticker": "CRYP34",
+        "name": "CRYP34 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3095102882,
+            "volume": 2541734142,
+            "change24hPercent": -8.47,
+            "change24h": -0.30673245,
+            "price": 3.62139843
+        }
+    },
+    {
+        "ticker": "CRYP35",
+        "name": "CRYP35 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 45632708,
+            "volume": 22270380,
+            "change24hPercent": -69.84,
+            "change24h": -0.00212219,
+            "price": 0.00303864
+        }
+    },
+    {
+        "ticker": "CRYP36",
+        "name": "CRYP36 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9558980,
+            "volume": 4366057,
+            "change24hPercent": 16.74,
+            "change24h": 0.00001369,
+            "price": 0.0000818
+        }
+    },
+    {
+        "ticker": "CRYP37",
+        "name": "CRYP37 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 31589860,
+            "volume": 2860685,
+            "change24hPercent": -9.58,
+            "change24h": -0.00706501,
+            "price": 0.07374753
+        }
+    },
+    {
+        "ticker": "CRYP38",
+        "name": "CRYP38 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 60550928,
+            "volume": 10772521,
+            "change24hPercent": 15.99,
+            "change24h": 0.01445637,
+            "price": 0.09040883
+        }
+    },
+    {
+        "ticker": "CRYP39",
+        "name": "CRYP39 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2866059332,
+            "volume": 661912510,
+            "change24hPercent": 3.99,
+            "change24h": 0.19015878,
+            "price": 4.76588417
+        }
+    },
+    {
+        "ticker": "CRYP40",
+        "name": "CRYP40 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6003433,
+            "volume": 3412613,
+            "change24hPercent": -14.39,
+            "change24h": -0.68095346,
+            "price": 4.73212968
+        }
+    },
+    {
+        "ticker": "CRYP41",
+        "name": "CRYP41 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5038020,
+            "volume": 739821,
+            "change24hPercent": 25.56,
+            "change24h": 0.94109286,
+            "price": 3.68189696
+        }
+    },
+    {
+        "ticker": "CRYP42",
+        "name": "CRYP42 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8152712187,
+            "volume": 6271686484,
+            "change24hPercent": 3.32,
+            "change24h": 0.13913013,
+            "price": 4.19066643
+        }
+    },
+    {
+        "ticker": "CRYP43",
+        "name": "CRYP43 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 64719271,
+            "volume": 20123849,
+            "change24hPercent": -6.59,
+            "change24h": -0.0016795,
+            "price": 0.02548558
+        }
+    },
+    {
+        "ticker": "CRYP44",
+        "name": "CRYP44 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6578308255,
+            "volume": 834968419,
+            "change24hPercent": 1.77,
+            "change24h": 0.02317129,
+            "price": 1.30911232
+        }
+    },
+    {
+        "ticker": "CRYP45",
+        "name": "CRYP45 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4121595670,
+            "volume": 3126492674,
+            "change24hPercent": -9.72,
+            "change24h": -0.88775798,
+            "price": 9.13331253
+        }
+    },
+    {
+        "ticker": "CRYP46",
+        "name": "CRYP46 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1117363751,
+            "volume": 101874249,
+            "change24hPercent": 12.12,
+            "change24h": 0.05662419,
+            "price": 0.46719627
+        }
+    },
+    {
+        "ticker": "CRYP47",
+        "name": "CRYP47 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7382916,
+            "volume": 5512421,
+            "change24hPercent": -40.37,
+            "change24h": -0.0000231,
+            "price": 0.00005722
+        }
+    },
+    {
+        "ticker": "CRYP48",
+        "name": "CRYP48 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5430773,
+            "volume": 291881,
+            "change24hPercent": -38.49,
+            "change24h": -1.86472343,
+            "price": 4.84469584
+        }
+    },
+    {
+        "ticker": "CRYP49",
+        "name": "CRYP49 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 13114622,
+            "volume": 10517602,
+            "change24hPercent": 47.32,
+            "change24h": 0.02706572,
+            "price": 0.05719721
+        }
+    },
+    {
+        "ticker": "CRYP50",
+        "name": "CRYP50 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2472992,
+            "volume": 1287284,
+            "change24hPercent": -5.69,
+            "change24h": -0.01268196,
+            "price": 0.22288162
+        }
+    },
+    {
+        "ticker": "CRYP51",
+        "name": "CRYP51 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8398856564,
+            "volume": 4221286537,
+            "change24hPercent": -12.53,
+            "change24h": -0.2959998,
+            "price": 2.36232885
+        }
+    },
+    {
+        "ticker": "CRYP52",
+        "name": "CRYP52 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3544402914,
+            "volume": 2649741805,
+            "change24hPercent": -13.24,
+            "change24h": -0.65970494,
+            "price": 4.98266572
+        }
+    },
+    {
+        "ticker": "CRYP53",
+        "name": "CRYP53 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 92463653,
+            "volume": 7141150,
+            "change24hPercent": 70.12,
+            "change24h": 0.00101361,
+            "price": 0.00144554
+        }
+    },
+    {
+        "ticker": "CRYP54",
+        "name": "CRYP54 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 460809,
+            "volume": 96962,
+            "change24hPercent": -31.26,
+            "change24h": -0.64178495,
+            "price": 2.05305485
+        }
+    },
+    {
+        "ticker": "CRYP55",
+        "name": "CRYP55 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 383898678940,
+            "volume": 183748422236,
+            "change24hPercent": -0.41,
+            "change24h": -198.55804977,
+            "price": 48428.79262636
+        }
+    },
+    {
+        "ticker": "CRYP56",
+        "name": "CRYP56 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9331234,
+            "volume": 4914908,
+            "change24hPercent": 36.03,
+            "change24h": 0.000006,
+            "price": 0.00001665
+        }
+    },
+    {
+        "ticker": "CRYP57",
+        "name": "CRYP57 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 47041170,
+            "volume": 25286926,
+            "change24hPercent": 0.76,
+            "change24h": 0.00001174,
+            "price": 0.0015445
+        }
+    },
+    {
+        "ticker": "CRYP58",
+        "name": "CRYP58 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 36276857,
+            "volume": 3356560,
+            "change24hPercent": -3.43,
+            "change24h": -0.00321932,
+            "price": 0.09385774
+        }
+    },
+    {
+        "ticker": "CRYP59",
+        "name": "CRYP59 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 14757057,
+            "volume": 8952158,
+            "change24hPercent": 40.09,
+            "change24h": 0.02544531,
+            "price": 0.06347046
+        }
+    },
+    {
+        "ticker": "CRYP60",
+        "name": "CRYP60 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1321443,
+            "volume": 1088957,
+            "change24hPercent": -12.72,
+            "change24h": -8e-7,
+            "price": 0.00000632
+        }
+    },
+    {
+        "ticker": "CRYP61",
+        "name": "CRYP61 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6719980,
+            "volume": 4403152,
+            "change24hPercent": -54.87,
+            "change24h": -0.00003814,
+            "price": 0.00006951
+        }
+    },
+    {
+        "ticker": "CRYP62",
+        "name": "CRYP62 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5881315,
+            "volume": 2465753,
+            "change24hPercent": 23.72,
+            "change24h": 0.00001921,
+            "price": 0.00008099
+        }
+    },
+    {
+        "ticker": "CRYP63",
+        "name": "CRYP63 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2087806,
+            "volume": 923900,
+            "change24hPercent": -29.96,
+            "change24h": -0.0000145,
+            "price": 0.0000484
+        }
+    },
+    {
+        "ticker": "CRYP64",
+        "name": "CRYP64 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1614312472,
+            "volume": 158805403,
+            "change24hPercent": -14.82,
+            "change24h": -1.48044128,
+            "price": 9.98948231
+        }
+    },
+    {
+        "ticker": "CRYP65",
+        "name": "CRYP65 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 24456741,
+            "volume": 10920953,
+            "change24hPercent": 33.99,
+            "change24h": 0.02650238,
+            "price": 0.07797112
+        }
+    },
+    {
+        "ticker": "CRYP66",
+        "name": "CRYP66 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 89265803,
+            "volume": 74549069,
+            "change24hPercent": 15.51,
+            "change24h": 0.01325251,
+            "price": 0.08544493
+        }
+    },
+    {
+        "ticker": "CRYP67",
+        "name": "CRYP67 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2530305,
+            "volume": 752078,
+            "change24hPercent": 5.32,
+            "change24h": 5e-8,
+            "price": 9.7e-7
+        }
+    },
+    {
+        "ticker": "CRYP68",
+        "name": "CRYP68 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4644053,
+            "volume": 465937,
+            "change24hPercent": -91.67,
+            "change24h": -0.25103208,
+            "price": 0.27384323
+        }
+    },
+    {
+        "ticker": "CRYP69",
+        "name": "CRYP69 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 79648422,
+            "volume": 10708552,
+            "change24hPercent": -21.24,
+            "change24h": -0.01157902,
+            "price": 0.05451517
+        }
+    },
+    {
+        "ticker": "CRYP70",
+        "name": "CRYP70 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1497682,
+            "volume": 175253,
+            "change24hPercent": -10.29,
+            "change24h": -0.27493259,
+            "price": 2.67184246
+        }
+    },
+    {
+        "ticker": "CRYP71",
+        "name": "CRYP71 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6992829573,
+            "volume": 4637019902,
+            "change24hPercent": -9.92,
+            "change24h": -0.12582017,
+            "price": 1.26834853
+        }
+    },
+    {
+        "ticker": "CRYP72",
+        "name": "CRYP72 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8874435,
+            "volume": 5606021,
+            "change24hPercent": -9.97,
+            "change24h": -0.00000997,
+            "price": 0.00009998
+        }
+    },
+    {
+        "ticker": "CRYP73",
+        "name": "CRYP73 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 91997741,
+            "volume": 71292957,
+            "change24hPercent": 6.67,
+            "change24h": 0.00551381,
+            "price": 0.08266587
+        }
+    },
+    {
+        "ticker": "CRYP74",
+        "name": "CRYP74 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 88246156,
+            "volume": 56330974,
+            "change24hPercent": -37.3,
+            "change24h": -0.01992483,
+            "price": 0.05341776
+        }
+    },
+    {
+        "ticker": "CRYP75",
+        "name": "CRYP75 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 85837886,
+            "volume": 8860434,
+            "change24hPercent": 8.13,
+            "change24h": 0.00507676,
+            "price": 0.06244472
+        }
+    },
+    {
+        "ticker": "CRYP76",
+        "name": "CRYP76 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 45896402,
+            "volume": 26716995,
+            "change24hPercent": 30.23,
+            "change24h": 0.01046717,
+            "price": 0.0346251
+        }
+    },
+    {
+        "ticker": "CRYP77",
+        "name": "CRYP77 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 75259337,
+            "volume": 22889501,
+            "change24hPercent": 29.72,
+            "change24h": 0.01837933,
+            "price": 0.06184162
+        }
+    },
+    {
+        "ticker": "CRYP78",
+        "name": "CRYP78 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 10052429,
+            "volume": 3651954,
+            "change24hPercent": -14.34,
+            "change24h": -0.20977467,
+            "price": 1.46286381
+        }
+    },
+    {
+        "ticker": "CRYP79",
+        "name": "CRYP79 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 87327319,
+            "volume": 57769898,
+            "change24hPercent": 24.72,
+            "change24h": 0.01735426,
+            "price": 0.07020332
+        }
+    },
+    {
+        "ticker": "CRYP80",
+        "name": "CRYP80 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8733721907,
+            "volume": 2002188837,
+            "change24hPercent": 8.57,
+            "change24h": 0.68191722,
+            "price": 7.95702711
+        }
+    },
+    {
+        "ticker": "CRYP81",
+        "name": "CRYP81 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 58949406,
+            "volume": 33581431,
+            "change24hPercent": 97.16,
+            "change24h": 0.05387023,
+            "price": 0.05544486
+        }
+    },
+    {
+        "ticker": "CRYP82",
+        "name": "CRYP82 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 94659470,
+            "volume": 31502823,
+            "change24hPercent": 24.28,
+            "change24h": 0.00224854,
+            "price": 0.00926085
+        }
+    },
+    {
+        "ticker": "CRYP83",
+        "name": "CRYP83 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 12340359,
+            "volume": 3202268,
+            "change24hPercent": -5.45,
+            "change24h": -0.00018336,
+            "price": 0.00336435
+        }
+    },
+    {
+        "ticker": "CRYP84",
+        "name": "CRYP84 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 20912904,
+            "volume": 14969677,
+            "change24hPercent": 22.74,
+            "change24h": 0.00282181,
+            "price": 0.01240902
+        }
+    },
+    {
+        "ticker": "CRYP85",
+        "name": "CRYP85 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2817717,
+            "volume": 912167,
+            "change24hPercent": 0.75,
+            "change24h": 9e-8,
+            "price": 0.00001144
+        }
+    },
+    {
+        "ticker": "CRYP86",
+        "name": "CRYP86 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5828111312,
+            "volume": 2712658380,
+            "change24hPercent": -14.13,
+            "change24h": -0.32253539,
+            "price": 2.28262838
+        }
+    },
+    {
+        "ticker": "CRYP87",
+        "name": "CRYP87 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 51575596,
+            "volume": 31819319,
+            "change24hPercent": 13.18,
+            "change24h": 0.00227176,
+            "price": 0.01723644
+        }
+    },
+    {
+        "ticker": "CRYP88",
+        "name": "CRYP88 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 62628350,
+            "volume": 41872096,
+            "change24hPercent": -41.09,
+            "change24h": -0.01504845,
+            "price": 0.03662315
+        }
+    },
+    {
+        "ticker": "CRYP89",
+        "name": "CRYP89 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6067036,
+            "volume": 2289489,
+            "change24hPercent": -9.21,
+            "change24h": -0.32049471,
+            "price": 3.47985565
+        }
+    },
+    {
+        "ticker": "CRYP90",
+        "name": "CRYP90 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8047795,
+            "volume": 6559258,
+            "change24hPercent": -9.16,
+            "change24h": -0.00000478,
+            "price": 0.00005216
+        }
+    },
+    {
+        "ticker": "CRYP91",
+        "name": "CRYP91 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 56415531,
+            "volume": 16904313,
+            "change24hPercent": -32.64,
+            "change24h": -0.03100521,
+            "price": 0.09499145
+        }
+    },
+    {
+        "ticker": "CRYP92",
+        "name": "CRYP92 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 66420679,
+            "volume": 37938678,
+            "change24hPercent": 47.51,
+            "change24h": 0.02792137,
+            "price": 0.05876945
+        }
+    },
+    {
+        "ticker": "CRYP93",
+        "name": "CRYP93 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 21266223,
+            "volume": 3107485,
+            "change24hPercent": -14.11,
+            "change24h": -0.00331231,
+            "price": 0.0234749
+        }
+    },
+    {
+        "ticker": "CRYP94",
+        "name": "CRYP94 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 27312159,
+            "volume": 15587202,
+            "change24hPercent": 17.9,
+            "change24h": 0.00631196,
+            "price": 0.03526232
+        }
+    },
+    {
+        "ticker": "CRYP95",
+        "name": "CRYP95 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 84714637,
+            "volume": 12290694,
+            "change24hPercent": 30.66,
+            "change24h": 0.00824584,
+            "price": 0.02689446
+        }
+    },
+    {
+        "ticker": "CRYP96",
+        "name": "CRYP96 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 91178549,
+            "volume": 22456362,
+            "change24hPercent": -71.66,
+            "change24h": -0.048346,
+            "price": 0.06746581
+        }
+    },
+    {
+        "ticker": "CRYP97",
+        "name": "CRYP97 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 36959419,
+            "volume": 2650670,
+            "change24hPercent": 38.29,
+            "change24h": 0.02351202,
+            "price": 0.06140511
+        }
+    },
+    {
+        "ticker": "CRYP98",
+        "name": "CRYP98 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 46696131,
+            "volume": 32675386,
+            "change24hPercent": 43.3,
+            "change24h": 0.00005017,
+            "price": 0.00011586
+        }
+    },
+    {
+        "ticker": "CRYP99",
+        "name": "CRYP99 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 27459950,
+            "volume": 23010665,
+            "change24hPercent": 0.21,
+            "change24h": 0.00001308,
+            "price": 0.00623062
+        }
+    },
+    {
+        "ticker": "CRYP100",
+        "name": "CRYP100 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 78255386,
+            "volume": 62711769,
+            "change24hPercent": -21.19,
+            "change24h": -0.01640881,
+            "price": 0.07743655
+        }
+    },
+    {
+        "ticker": "CRYP101",
+        "name": "CRYP101 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 86846419,
+            "volume": 39420977,
+            "change24hPercent": 43.29,
+            "change24h": 0.02755162,
+            "price": 0.06364431
+        }
+    },
+    {
+        "ticker": "CRYP102",
+        "name": "CRYP102 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8327274,
+            "volume": 2014577,
+            "change24hPercent": -20.61,
+            "change24h": -0.00000413,
+            "price": 0.00002004
+        }
+    },
+    {
+        "ticker": "CRYP103",
+        "name": "CRYP103 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 28903570,
+            "volume": 13785449,
+            "change24hPercent": 51.83,
+            "change24h": 0.0225812,
+            "price": 0.04356781
+        }
+    },
+    {
+        "ticker": "CRYP104",
+        "name": "CRYP104 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 10000799,
+            "volume": 2265540,
+            "change24hPercent": -14.74,
+            "change24h": -0.01238809,
+            "price": 0.08404405
+        }
+    },
+    {
+        "ticker": "CRYP105",
+        "name": "CRYP105 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9050860,
+            "volume": 2089180,
+            "change24hPercent": -24.86,
+            "change24h": -0.00001106,
+            "price": 0.0000445
+        }
+    },
+    {
+        "ticker": "CRYP106",
+        "name": "CRYP106 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8422227,
+            "volume": 5387555,
+            "change24hPercent": -83.68,
+            "change24h": -3.01733676,
+            "price": 3.60580397
+        }
+    },
+    {
+        "ticker": "CRYP107",
+        "name": "CRYP107 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 17155611,
+            "volume": 14534240,
+            "change24hPercent": -63.49,
+            "change24h": -0.02726619,
+            "price": 0.04294564
+        }
+    },
+    {
+        "ticker": "CRYP108",
+        "name": "CRYP108 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2131874,
+            "volume": 1468945,
+            "change24hPercent": 15.26,
+            "change24h": 0.00001277,
+            "price": 0.00008365
+        }
+    },
+    {
+        "ticker": "CRYP109",
+        "name": "CRYP109 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 663929993067,
+            "volume": 353655706891,
+            "change24hPercent": -4.43,
+            "change24h": -872.53415501,
+            "price": 19696.03058704
+        }
+    },
+    {
+        "ticker": "CRYP110",
+        "name": "CRYP110 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 67970860,
+            "volume": 4367173,
+            "change24hPercent": 7.19,
+            "change24h": 0.00267325,
+            "price": 0.03718011
+        }
+    },
+    {
+        "ticker": "CRYP111",
+        "name": "CRYP111 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 38442939,
+            "volume": 24736177,
+            "change24hPercent": 8.92,
+            "change24h": 0.0010078,
+            "price": 0.01129816
+        }
+    },
+    {
+        "ticker": "CRYP112",
+        "name": "CRYP112 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2675222,
+            "volume": 2114888,
+            "change24hPercent": 7.22,
+            "change24h": 0.00000553,
+            "price": 0.00007654
+        }
+    },
+    {
+        "ticker": "CRYP113",
+        "name": "CRYP113 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 15205429,
+            "volume": 5986906,
+            "change24hPercent": -1.24,
+            "change24h": -0.00025112,
+            "price": 0.02025189
+        }
+    },
+    {
+        "ticker": "CRYP114",
+        "name": "CRYP114 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4601732,
+            "volume": 2196527,
+            "change24hPercent": 49.01,
+            "change24h": 0.00003706,
+            "price": 0.00007561
+        }
+    },
+    {
+        "ticker": "CRYP115",
+        "name": "CRYP115 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 956297,
+            "volume": 291287,
+            "change24hPercent": 21.26,
+            "change24h": 0.06479935,
+            "price": 0.30479471
+        }
+    },
+    {
+        "ticker": "CRYP116",
+        "name": "CRYP116 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2690850,
+            "volume": 296262,
+            "change24hPercent": -2.1,
+            "change24h": -6.4e-7,
+            "price": 0.00003041
+        }
+    },
+    {
+        "ticker": "CRYP117",
+        "name": "CRYP117 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5036347,
+            "volume": 3738004,
+            "change24hPercent": -48.31,
+            "change24h": -2.12534651,
+            "price": 4.39939249
+        }
+    },
+    {
+        "ticker": "CRYP118",
+        "name": "CRYP118 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 77149195,
+            "volume": 37931007,
+            "change24hPercent": -27.85,
+            "change24h": -0.00009277,
+            "price": 0.00033311
+        }
+    },
+    {
+        "ticker": "CRYP119",
+        "name": "CRYP119 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2379677790,
+            "volume": 160149987,
+            "change24hPercent": -9.73,
+            "change24h": -0.35083009,
+            "price": 3.60565351
+        }
+    },
+    {
+        "ticker": "CRYP120",
+        "name": "CRYP120 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 57254756,
+            "volume": 32117360,
+            "change24hPercent": 5.07,
+            "change24h": 0.00394207,
+            "price": 0.07775288
+        }
+    },
+    {
+        "ticker": "CRYP121",
+        "name": "CRYP121 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 373110646907,
+            "volume": 264256139312,
+            "change24hPercent": 2.12,
+            "change24h": 0.10105023,
+            "price": 4.76652018
+        }
+    },
+    {
+        "ticker": "CRYP122",
+        "name": "CRYP122 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 69906601,
+            "volume": 53631411,
+            "change24hPercent": -27.08,
+            "change24h": -0.00914594,
+            "price": 0.03377378
+        }
+    },
+    {
+        "ticker": "CRYP123",
+        "name": "CRYP123 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3191987,
+            "volume": 1449216,
+            "change24hPercent": -54.24,
+            "change24h": -0.00004121,
+            "price": 0.00007598
+        }
+    },
+    {
+        "ticker": "CRYP124",
+        "name": "CRYP124 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1781617,
+            "volume": 1347525,
+            "change24hPercent": -44.42,
+            "change24h": -0.00003247,
+            "price": 0.0000731
+        }
+    },
+    {
+        "ticker": "CRYP125",
+        "name": "CRYP125 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 82382850,
+            "volume": 39962068,
+            "change24hPercent": -3.4,
+            "change24h": -0.00063504,
+            "price": 0.01867779
+        }
+    },
+    {
+        "ticker": "CRYP126",
+        "name": "CRYP126 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 711982,
+            "volume": 199706,
+            "change24hPercent": 37.72,
+            "change24h": 0.62628521,
+            "price": 1.66035317
+        }
+    },
+    {
+        "ticker": "CRYP127",
+        "name": "CRYP127 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3879155,
+            "volume": 939826,
+            "change24hPercent": -11.09,
+            "change24h": -0.0000078,
+            "price": 0.00007029
+        }
+    },
+    {
+        "ticker": "CRYP128",
+        "name": "CRYP128 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 45346399,
+            "volume": 21467232,
+            "change24hPercent": -91.85,
+            "change24h": -0.01609874,
+            "price": 0.01752721
+        }
+    },
+    {
+        "ticker": "CRYP129",
+        "name": "CRYP129 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6660615564,
+            "volume": 1094385314,
+            "change24hPercent": 12.67,
+            "change24h": 0.77957515,
+            "price": 6.15292148
+        }
+    },
+    {
+        "ticker": "CRYP130",
+        "name": "CRYP130 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4039539,
+            "volume": 2633650,
+            "change24hPercent": -0.58,
+            "change24h": -3e-7,
+            "price": 0.00005215
+        }
+    },
+    {
+        "ticker": "CRYP131",
+        "name": "CRYP131 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 284040030407,
+            "volume": 51408640613,
+            "change24hPercent": -4.48,
+            "change24h": -1527.95418658,
+            "price": 34106.12023616
+        }
+    },
+    {
+        "ticker": "CRYP132",
+        "name": "CRYP132 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 63039940,
+            "volume": 35644047,
+            "change24hPercent": -87.34,
+            "change24h": -0.00645438,
+            "price": 0.00738995
+        }
+    },
+    {
+        "ticker": "CRYP133",
+        "name": "CRYP133 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4231310893,
+            "volume": 1052373483,
+            "change24hPercent": -7.45,
+            "change24h": -0.73811832,
+            "price": 9.90762843
+        }
+    },
+    {
+        "ticker": "CRYP134",
+        "name": "CRYP134 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 61428221,
+            "volume": 12311635,
+            "change24hPercent": -44.71,
+            "change24h": -0.01049742,
+            "price": 0.02347891
+        }
+    },
+    {
+        "ticker": "CRYP135",
+        "name": "CRYP135 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2289697,
+            "volume": 432250,
+            "change24hPercent": 85.74,
+            "change24h": 3.96740955,
+            "price": 4.62725629
+        }
+    },
+    {
+        "ticker": "CRYP136",
+        "name": "CRYP136 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1100347,
+            "volume": 478229,
+            "change24hPercent": -48.53,
+            "change24h": -0.00000727,
+            "price": 0.00001498
+        }
+    },
+    {
+        "ticker": "CRYP137",
+        "name": "CRYP137 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 49985440,
+            "volume": 29268840,
+            "change24hPercent": 18.99,
+            "change24h": 0.00573502,
+            "price": 0.0302002
+        }
+    },
+    {
+        "ticker": "CRYP138",
+        "name": "CRYP138 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5638233,
+            "volume": 345732,
+            "change24hPercent": 28.52,
+            "change24h": 0.00002491,
+            "price": 0.00008736
+        }
+    },
+    {
+        "ticker": "CRYP139",
+        "name": "CRYP139 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 37112231,
+            "volume": 19743563,
+            "change24hPercent": 36.88,
+            "change24h": 0.01704419,
+            "price": 0.04621525
+        }
+    },
+    {
+        "ticker": "CRYP140",
+        "name": "CRYP140 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 15000659,
+            "volume": 3394830,
+            "change24hPercent": -27.11,
+            "change24h": -0.00040406,
+            "price": 0.00149044
+        }
+    },
+    {
+        "ticker": "CRYP141",
+        "name": "CRYP141 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8493983,
+            "volume": 4141915,
+            "change24hPercent": 33.8,
+            "change24h": 0.00001869,
+            "price": 0.0000553
+        }
+    },
+    {
+        "ticker": "CRYP142",
+        "name": "CRYP142 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 34764190,
+            "volume": 13373180,
+            "change24hPercent": 43.04,
+            "change24h": 0.03083126,
+            "price": 0.07163397
+        }
+    },
+    {
+        "ticker": "CRYP143",
+        "name": "CRYP143 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8665893,
+            "volume": 1491149,
+            "change24hPercent": 49.71,
+            "change24h": 0.42472698,
+            "price": 0.85440953
+        }
+    },
+    {
+        "ticker": "CRYP144",
+        "name": "CRYP144 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 19902010,
+            "volume": 11166738,
+            "change24hPercent": 29.83,
+            "change24h": 0.01288593,
+            "price": 0.0431979
+        }
+    },
+    {
+        "ticker": "CRYP145",
+        "name": "CRYP145 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 59982830,
+            "volume": 16006815,
+            "change24hPercent": 57.29,
+            "change24h": 0.04129281,
+            "price": 0.07207682
+        }
+    },
+    {
+        "ticker": "CRYP146",
+        "name": "CRYP146 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2063887891,
+            "volume": 1298884615,
+            "change24hPercent": 12.33,
+            "change24h": 0.63109576,
+            "price": 5.11837598
+        }
+    },
+    {
+        "ticker": "CRYP147",
+        "name": "CRYP147 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 29959860,
+            "volume": 15260432,
+            "change24hPercent": -22.92,
+            "change24h": -0.01525188,
+            "price": 0.06654399
+        }
+    },
+    {
+        "ticker": "CRYP148",
+        "name": "CRYP148 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9520259,
+            "volume": 7820982,
+            "change24hPercent": 47.46,
+            "change24h": 0.00000229,
+            "price": 0.00000482
+        }
+    },
+    {
+        "ticker": "CRYP149",
+        "name": "CRYP149 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 26338576,
+            "volume": 10839800,
+            "change24hPercent": -49.04,
+            "change24h": -0.03179957,
+            "price": 0.06484416
+        }
+    },
+    {
+        "ticker": "CRYP150",
+        "name": "CRYP150 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9873755,
+            "volume": 1059898,
+            "change24hPercent": 44.39,
+            "change24h": 0.0000184,
+            "price": 0.00004146
+        }
+    },
+    {
+        "ticker": "CRYP151",
+        "name": "CRYP151 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2476101418,
+            "volume": 375371639,
+            "change24hPercent": 5.95,
+            "change24h": 0.30575489,
+            "price": 5.13873758
+        }
+    },
+    {
+        "ticker": "CRYP152",
+        "name": "CRYP152 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 274477,
+            "volume": 82106,
+            "change24hPercent": -56.71,
+            "change24h": -0.00005597,
+            "price": 0.00009869
+        }
+    },
+    {
+        "ticker": "CRYP153",
+        "name": "CRYP153 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7799212466,
+            "volume": 4520565622,
+            "change24hPercent": -5.66,
+            "change24h": -0.52463939,
+            "price": 9.26924717
+        }
+    },
+    {
+        "ticker": "CRYP154",
+        "name": "CRYP154 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2530447,
+            "volume": 1652374,
+            "change24hPercent": 42.41,
+            "change24h": 0.28242171,
+            "price": 0.66593188
+        }
+    },
+    {
+        "ticker": "CRYP155",
+        "name": "CRYP155 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5158467411,
+            "volume": 2324747047,
+            "change24hPercent": -5.72,
+            "change24h": -0.51089612,
+            "price": 8.93175036
+        }
+    },
+    {
+        "ticker": "CRYP156",
+        "name": "CRYP156 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 22558892,
+            "volume": 17713959,
+            "change24hPercent": -34.02,
+            "change24h": -0.03148966,
+            "price": 0.09256219
+        }
+    },
+    {
+        "ticker": "CRYP157",
+        "name": "CRYP157 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 76036719,
+            "volume": 44424624,
+            "change24hPercent": -97.96,
+            "change24h": -0.09372827,
+            "price": 0.09568015
+        }
+    },
+    {
+        "ticker": "CRYP158",
+        "name": "CRYP158 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 70321148,
+            "volume": 23652233,
+            "change24hPercent": -11.46,
+            "change24h": -0.00271443,
+            "price": 0.02368615
+        }
+    },
+    {
+        "ticker": "CRYP159",
+        "name": "CRYP159 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 19766679,
+            "volume": 5653212,
+            "change24hPercent": -19.54,
+            "change24h": -0.00301322,
+            "price": 0.01542076
+        }
+    },
+    {
+        "ticker": "CRYP160",
+        "name": "CRYP160 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3866758,
+            "volume": 1652155,
+            "change24hPercent": 21.21,
+            "change24h": 0.00001275,
+            "price": 0.00006012
+        }
+    },
+    {
+        "ticker": "CRYP161",
+        "name": "CRYP161 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 99010735,
+            "volume": 81490035,
+            "change24hPercent": -64.57,
+            "change24h": -0.0224241,
+            "price": 0.03472835
+        }
+    },
+    {
+        "ticker": "CRYP162",
+        "name": "CRYP162 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9350592,
+            "volume": 4706322,
+            "change24hPercent": 23.69,
+            "change24h": 0.00001773,
+            "price": 0.00007484
+        }
+    },
+    {
+        "ticker": "CRYP163",
+        "name": "CRYP163 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7343607,
+            "volume": 4619174,
+            "change24hPercent": -45.92,
+            "change24h": -0.00000536,
+            "price": 0.00001166
+        }
+    },
+    {
+        "ticker": "CRYP164",
+        "name": "CRYP164 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6845967468,
+            "volume": 1990518776,
+            "change24hPercent": 3.25,
+            "change24h": 0.29299616,
+            "price": 9.01526659
+        }
+    },
+    {
+        "ticker": "CRYP165",
+        "name": "CRYP165 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 990283251,
+            "volume": 518469190,
+            "change24hPercent": 1.33,
+            "change24h": 0.11432602,
+            "price": 8.59594101
+        }
+    },
+    {
+        "ticker": "CRYP166",
+        "name": "CRYP166 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7223101,
+            "volume": 5816810,
+            "change24hPercent": -83.22,
+            "change24h": -0.00001731,
+            "price": 0.0000208
+        }
+    },
+    {
+        "ticker": "CRYP167",
+        "name": "CRYP167 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 44030653,
+            "volume": 30500632,
+            "change24hPercent": -4.67,
+            "change24h": -0.0039251,
+            "price": 0.08404924
+        }
+    },
+    {
+        "ticker": "CRYP168",
+        "name": "CRYP168 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 59791095,
+            "volume": 14108525,
+            "change24hPercent": 8.91,
+            "change24h": 0.00531014,
+            "price": 0.05959751
+        }
+    },
+    {
+        "ticker": "CRYP169",
+        "name": "CRYP169 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9116978744,
+            "volume": 7216021949,
+            "change24hPercent": -9.39,
+            "change24h": -0.2914713,
+            "price": 3.10406067
+        }
+    },
+    {
+        "ticker": "CRYP170",
+        "name": "CRYP170 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2534076,
+            "volume": 1346159,
+            "change24hPercent": -83.58,
+            "change24h": -0.00001375,
+            "price": 0.00001645
+        }
+    },
+    {
+        "ticker": "CRYP171",
+        "name": "CRYP171 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2008658690,
+            "volume": 397946502,
+            "change24hPercent": -3.31,
+            "change24h": -0.03739276,
+            "price": 1.12969075
+        }
+    },
+    {
+        "ticker": "CRYP172",
+        "name": "CRYP172 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 13032232,
+            "volume": 10111331,
+            "change24hPercent": -36.33,
+            "change24h": -0.01980804,
+            "price": 0.05452254
+        }
+    },
+    {
+        "ticker": "CRYP173",
+        "name": "CRYP173 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 47905639,
+            "volume": 6603438,
+            "change24hPercent": 28.31,
+            "change24h": 0.02830393,
+            "price": 0.09997854
+        }
+    },
+    {
+        "ticker": "CRYP174",
+        "name": "CRYP174 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6842695291,
+            "volume": 5098144503,
+            "change24hPercent": -0.43,
+            "change24h": -0.02940459,
+            "price": 6.83827742
+        }
+    },
+    {
+        "ticker": "CRYP175",
+        "name": "CRYP175 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 60432103,
+            "volume": 21030443,
+            "change24hPercent": -15.03,
+            "change24h": -0.00118978,
+            "price": 0.00791606
+        }
+    },
+    {
+        "ticker": "CRYP176",
+        "name": "CRYP176 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 65836976,
+            "volume": 28299736,
+            "change24hPercent": 9.59,
+            "change24h": 0.0088428,
+            "price": 0.09220851
+        }
+    },
+    {
+        "ticker": "CRYP177",
+        "name": "CRYP177 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5198583425,
+            "volume": 3520170753,
+            "change24hPercent": 2.8,
+            "change24h": 0.22206466,
+            "price": 7.93088065
+        }
+    },
+    {
+        "ticker": "CRYP178",
+        "name": "CRYP178 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4689887,
+            "volume": 1207144,
+            "change24hPercent": -47.25,
+            "change24h": -0.00000777,
+            "price": 0.00001644
+        }
+    },
+    {
+        "ticker": "CRYP179",
+        "name": "CRYP179 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7607723,
+            "volume": 5716240,
+            "change24hPercent": 39.86,
+            "change24h": 0.00003172,
+            "price": 0.00007958
+        }
+    },
+    {
+        "ticker": "CRYP180",
+        "name": "CRYP180 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6119171,
+            "volume": 2499481,
+            "change24hPercent": 22.7,
+            "change24h": 0.88858903,
+            "price": 3.91448911
+        }
+    },
+    {
+        "ticker": "CRYP181",
+        "name": "CRYP181 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1430690,
+            "volume": 180311,
+            "change24hPercent": -42.2,
+            "change24h": -0.25976313,
+            "price": 0.61555244
+        }
+    },
+    {
+        "ticker": "CRYP182",
+        "name": "CRYP182 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 70009279,
+            "volume": 58339668,
+            "change24hPercent": -35.74,
+            "change24h": -0.02421631,
+            "price": 0.06775688
+        }
+    },
+    {
+        "ticker": "CRYP183",
+        "name": "CRYP183 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 36215193102,
+            "volume": 16853467108,
+            "change24hPercent": 1.72,
+            "change24h": 1012.17467717,
+            "price": 58847.36495166
+        }
+    },
+    {
+        "ticker": "CRYP184",
+        "name": "CRYP184 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5120493776,
+            "volume": 672011698,
+            "change24hPercent": -6.83,
+            "change24h": -0.44291537,
+            "price": 6.4848517
+        }
+    },
+    {
+        "ticker": "CRYP185",
+        "name": "CRYP185 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 12433525,
+            "volume": 2057325,
+            "change24hPercent": -41.02,
+            "change24h": -0.02191862,
+            "price": 0.05343399
+        }
+    },
+    {
+        "ticker": "CRYP186",
+        "name": "CRYP186 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4190355,
+            "volume": 418376,
+            "change24hPercent": -10.68,
+            "change24h": -0.00000652,
+            "price": 0.00006104
+        }
+    },
+    {
+        "ticker": "CRYP187",
+        "name": "CRYP187 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3716915,
+            "volume": 2575672,
+            "change24hPercent": 22.42,
+            "change24h": 0.00002191,
+            "price": 0.00009772
+        }
+    },
+    {
+        "ticker": "CRYP188",
+        "name": "CRYP188 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 49800300,
+            "volume": 35453748,
+            "change24hPercent": -2.59,
+            "change24h": -0.00175705,
+            "price": 0.06783975
+        }
+    },
+    {
+        "ticker": "CRYP189",
+        "name": "CRYP189 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7593170,
+            "volume": 6452743,
+            "change24hPercent": -42.73,
+            "change24h": -0.00001179,
+            "price": 0.00002758
+        }
+    },
+    {
+        "ticker": "CRYP190",
+        "name": "CRYP190 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5256401,
+            "volume": 659052,
+            "change24hPercent": -65.17,
+            "change24h": -0.00001919,
+            "price": 0.00002944
+        }
+    },
+    {
+        "ticker": "CRYP191",
+        "name": "CRYP191 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8376752,
+            "volume": 3027645,
+            "change24hPercent": -3.61,
+            "change24h": -0.00000347,
+            "price": 0.00009618
+        }
+    },
+    {
+        "ticker": "CRYP192",
+        "name": "CRYP192 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4765907869,
+            "volume": 2380336659,
+            "change24hPercent": -4.74,
+            "change24h": -0.18603412,
+            "price": 3.92477037
+        }
+    },
+    {
+        "ticker": "CRYP193",
+        "name": "CRYP193 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 45424642,
+            "volume": 9106344,
+            "change24hPercent": 5.35,
+            "change24h": 0.0041443,
+            "price": 0.0774636
+        }
+    },
+    {
+        "ticker": "CRYP194",
+        "name": "CRYP194 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9047039,
+            "volume": 7406175,
+            "change24hPercent": -31.44,
+            "change24h": -1.06465598,
+            "price": 3.38631036
+        }
+    },
+    {
+        "ticker": "CRYP195",
+        "name": "CRYP195 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3745340858,
+            "volume": 2112083849,
+            "change24hPercent": 6.8,
+            "change24h": 0.51189825,
+            "price": 7.5279154
+        }
+    },
+    {
+        "ticker": "CRYP196",
+        "name": "CRYP196 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 65958129,
+            "volume": 48412407,
+            "change24hPercent": 0.41,
+            "change24h": 0.00000992,
+            "price": 0.00241994
+        }
+    },
+    {
+        "ticker": "CRYP197",
+        "name": "CRYP197 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8637359,
+            "volume": 4054194,
+            "change24hPercent": 14,
+            "change24h": 0.00000233,
+            "price": 0.00001662
+        }
+    },
+    {
+        "ticker": "CRYP198",
+        "name": "CRYP198 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6247306,
+            "volume": 3539824,
+            "change24hPercent": 69.04,
+            "change24h": 1.20863102,
+            "price": 1.75062431
+        }
+    },
+    {
+        "ticker": "CRYP199",
+        "name": "CRYP199 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8991735,
+            "volume": 5465366,
+            "change24hPercent": -9.3,
+            "change24h": -0.00000804,
+            "price": 0.00008645
+        }
+    },
+    {
+        "ticker": "CRYP200",
+        "name": "CRYP200 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3585079,
+            "volume": 1469353,
+            "change24hPercent": -37.93,
+            "change24h": -0.00000298,
+            "price": 0.00000786
+        }
+    },
+    {
+        "ticker": "CRYP201",
+        "name": "CRYP201 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 52712730,
+            "volume": 8013125,
+            "change24hPercent": 93.59,
+            "change24h": 0.07906984,
+            "price": 0.08448535
+        }
+    },
+    {
+        "ticker": "CRYP202",
+        "name": "CRYP202 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1108296,
+            "volume": 634343,
+            "change24hPercent": -11.98,
+            "change24h": -0.00001169,
+            "price": 0.0000976
+        }
+    },
+    {
+        "ticker": "CRYP203",
+        "name": "CRYP203 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 411126356,
+            "volume": 57573566,
+            "change24hPercent": 7.7,
+            "change24h": 0.21454992,
+            "price": 2.78636261
+        }
+    },
+    {
+        "ticker": "CRYP204",
+        "name": "CRYP204 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 609581,
+            "volume": 127672,
+            "change24hPercent": 9.25,
+            "change24h": 0.19199594,
+            "price": 2.07563175
+        }
+    },
+    {
+        "ticker": "CRYP205",
+        "name": "CRYP205 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 17239412,
+            "volume": 1391473,
+            "change24hPercent": -94.49,
+            "change24h": -0.03872709,
+            "price": 0.04098538
+        }
+    },
+    {
+        "ticker": "CRYP206",
+        "name": "CRYP206 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 35464999,
+            "volume": 12861029,
+            "change24hPercent": 26.74,
+            "change24h": 0.01949228,
+            "price": 0.07289558
+        }
+    },
+    {
+        "ticker": "CRYP207",
+        "name": "CRYP207 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 25193531,
+            "volume": 16130543,
+            "change24hPercent": 15.7,
+            "change24h": 0.00832145,
+            "price": 0.05300286
+        }
+    },
+    {
+        "ticker": "CRYP208",
+        "name": "CRYP208 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3814261703,
+            "volume": 1793604557,
+            "change24hPercent": -12.06,
+            "change24h": -0.37438285,
+            "price": 3.10433539
+        }
+    },
+    {
+        "ticker": "CRYP209",
+        "name": "CRYP209 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1660483,
+            "volume": 698785,
+            "change24hPercent": 40.2,
+            "change24h": 0.21067286,
+            "price": 0.52406185
+        }
+    },
+    {
+        "ticker": "CRYP210",
+        "name": "CRYP210 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5739486161,
+            "volume": 771687415,
+            "change24hPercent": -14.01,
+            "change24h": -0.80133519,
+            "price": 5.71973723
+        }
+    },
+    {
+        "ticker": "CRYP211",
+        "name": "CRYP211 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6559902,
+            "volume": 570396,
+            "change24hPercent": -49.68,
+            "change24h": -0.00004755,
+            "price": 0.0000957
+        }
+    },
+    {
+        "ticker": "CRYP212",
+        "name": "CRYP212 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 40971004,
+            "volume": 32489415,
+            "change24hPercent": 33.3,
+            "change24h": 0.03110786,
+            "price": 0.09341701
+        }
+    },
+    {
+        "ticker": "CRYP213",
+        "name": "CRYP213 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 77991541,
+            "volume": 37015803,
+            "change24hPercent": 15.51,
+            "change24h": 0.00301646,
+            "price": 0.01944846
+        }
+    },
+    {
+        "ticker": "CRYP214",
+        "name": "CRYP214 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 93313710,
+            "volume": 41038982,
+            "change24hPercent": -33.29,
+            "change24h": -0.0082151,
+            "price": 0.02467739
+        }
+    },
+    {
+        "ticker": "CRYP215",
+        "name": "CRYP215 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5521983,
+            "volume": 408167,
+            "change24hPercent": -29.38,
+            "change24h": -0.00001733,
+            "price": 0.000059
+        }
+    },
+    {
+        "ticker": "CRYP216",
+        "name": "CRYP216 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8141303,
+            "volume": 5589865,
+            "change24hPercent": -11.51,
+            "change24h": -0.00000652,
+            "price": 0.00005667
+        }
+    },
+    {
+        "ticker": "CRYP217",
+        "name": "CRYP217 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 39750873,
+            "volume": 5923103,
+            "change24hPercent": 12.06,
+            "change24h": 0.00399277,
+            "price": 0.03310756
+        }
+    },
+    {
+        "ticker": "CRYP218",
+        "name": "CRYP218 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 84417021363,
+            "volume": 8586119669,
+            "change24hPercent": 1.95,
+            "change24h": 920.52952476,
+            "price": 47206.64229516
+        }
+    },
+    {
+        "ticker": "CRYP219",
+        "name": "CRYP219 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4555317,
+            "volume": 378745,
+            "change24hPercent": 48.35,
+            "change24h": 0.00004206,
+            "price": 0.00008699
+        }
+    },
+    {
+        "ticker": "CRYP220",
+        "name": "CRYP220 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 92878183,
+            "volume": 40657093,
+            "change24hPercent": -29.95,
+            "change24h": -0.01128906,
+            "price": 0.03769303
+        }
+    },
+    {
+        "ticker": "CRYP221",
+        "name": "CRYP221 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2391493492,
+            "volume": 141639716,
+            "change24hPercent": -5.5,
+            "change24h": -0.3833697,
+            "price": 6.97035815
+        }
+    },
+    {
+        "ticker": "CRYP222",
+        "name": "CRYP222 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 24072863,
+            "volume": 6676882,
+            "change24hPercent": 61.46,
+            "change24h": 0.05764707,
+            "price": 0.09379608
+        }
+    },
+    {
+        "ticker": "CRYP223",
+        "name": "CRYP223 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5224551133,
+            "volume": 3972263335,
+            "change24hPercent": -10.98,
+            "change24h": -0.72822638,
+            "price": 6.63229858
+        }
+    },
+    {
+        "ticker": "CRYP224",
+        "name": "CRYP224 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 60620249,
+            "volume": 12175169,
+            "change24hPercent": -18.6,
+            "change24h": -0.00940216,
+            "price": 0.05054923
+        }
+    },
+    {
+        "ticker": "CRYP225",
+        "name": "CRYP225 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 81218409,
+            "volume": 37705718,
+            "change24hPercent": 17.86,
+            "change24h": 0.00036055,
+            "price": 0.00201878
+        }
+    },
+    {
+        "ticker": "CRYP226",
+        "name": "CRYP226 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1466606,
+            "volume": 402000,
+            "change24hPercent": -11.83,
+            "change24h": -0.00000983,
+            "price": 0.00008308
+        }
+    },
+    {
+        "ticker": "CRYP227",
+        "name": "CRYP227 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 75564694,
+            "volume": 61904574,
+            "change24hPercent": 36.4,
+            "change24h": 0.02505567,
+            "price": 0.06883427
+        }
+    },
+    {
+        "ticker": "CRYP228",
+        "name": "CRYP228 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4122100,
+            "volume": 2724763,
+            "change24hPercent": -5.56,
+            "change24h": -0.00000239,
+            "price": 0.00004307
+        }
+    },
+    {
+        "ticker": "CRYP229",
+        "name": "CRYP229 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4791621,
+            "volume": 1589458,
+            "change24hPercent": -95.44,
+            "change24h": -0.00007992,
+            "price": 0.00008374
+        }
+    },
+    {
+        "ticker": "CRYP230",
+        "name": "CRYP230 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8042136,
+            "volume": 3227821,
+            "change24hPercent": -22.47,
+            "change24h": -0.70939072,
+            "price": 3.15705705
+        }
+    },
+    {
+        "ticker": "CRYP231",
+        "name": "CRYP231 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 92500300,
+            "volume": 38830814,
+            "change24hPercent": 7.92,
+            "change24h": 0.00482264,
+            "price": 0.06089187
+        }
+    },
+    {
+        "ticker": "CRYP232",
+        "name": "CRYP232 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7758393,
+            "volume": 596642,
+            "change24hPercent": -13.05,
+            "change24h": -0.00000272,
+            "price": 0.00002082
+        }
+    },
+    {
+        "ticker": "CRYP233",
+        "name": "CRYP233 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 129775803558,
+            "volume": 63568035311,
+            "change24hPercent": 1.15,
+            "change24h": 473.61846302,
+            "price": 41184.21417607
+        }
+    },
+    {
+        "ticker": "CRYP234",
+        "name": "CRYP234 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 85026453,
+            "volume": 55550279,
+            "change24hPercent": -49.69,
+            "change24h": -0.04406028,
+            "price": 0.08867031
+        }
+    },
+    {
+        "ticker": "CRYP235",
+        "name": "CRYP235 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5144113,
+            "volume": 2770602,
+            "change24hPercent": -5.81,
+            "change24h": -0.00000159,
+            "price": 0.00002742
+        }
+    },
+    {
+        "ticker": "CRYP236",
+        "name": "CRYP236 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 89130261,
+            "volume": 64624490,
+            "change24hPercent": -26.17,
+            "change24h": -0.00139251,
+            "price": 0.00532101
+        }
+    },
+    {
+        "ticker": "CRYP237",
+        "name": "CRYP237 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 68776482,
+            "volume": 21303679,
+            "change24hPercent": -38.24,
+            "change24h": -0.03306168,
+            "price": 0.08645837
+        }
+    },
+    {
+        "ticker": "CRYP238",
+        "name": "CRYP238 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4704412,
+            "volume": 1707097,
+            "change24hPercent": -7.03,
+            "change24h": -0.00000697,
+            "price": 0.00009909
+        }
+    },
+    {
+        "ticker": "CRYP239",
+        "name": "CRYP239 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 99997474,
+            "volume": 32605842,
+            "change24hPercent": 21.07,
+            "change24h": 0.00132556,
+            "price": 0.00629124
+        }
+    },
+    {
+        "ticker": "CRYP240",
+        "name": "CRYP240 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 189529,
+            "volume": 94298,
+            "change24hPercent": 13.36,
+            "change24h": 0.00000732,
+            "price": 0.00005476
+        }
+    },
+    {
+        "ticker": "CRYP241",
+        "name": "CRYP241 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 371951230,
+            "volume": 145842542,
+            "change24hPercent": 13.66,
+            "change24h": 1.34998376,
+            "price": 9.88275083
+        }
+    },
+    {
+        "ticker": "CRYP242",
+        "name": "CRYP242 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7139718744,
+            "volume": 2077324322,
+            "change24hPercent": -3.65,
+            "change24h": -0.03944509,
+            "price": 1.08068745
+        }
+    },
+    {
+        "ticker": "CRYP243",
+        "name": "CRYP243 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 24264369,
+            "volume": 11661752,
+            "change24hPercent": 21.05,
+            "change24h": 0.017321,
+            "price": 0.08228502
+        }
+    },
+    {
+        "ticker": "CRYP244",
+        "name": "CRYP244 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2950390451,
+            "volume": 204769201,
+            "change24hPercent": -4.49,
+            "change24h": -0.24716611,
+            "price": 5.50481306
+        }
+    },
+    {
+        "ticker": "CRYP245",
+        "name": "CRYP245 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 73671902,
+            "volume": 14488307,
+            "change24hPercent": 6.11,
+            "change24h": 0.00532134,
+            "price": 0.08709234
+        }
+    },
+    {
+        "ticker": "CRYP246",
+        "name": "CRYP246 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 61727720,
+            "volume": 18717160,
+            "change24hPercent": -73.45,
+            "change24h": -0.00475557,
+            "price": 0.00647456
+        }
+    },
+    {
+        "ticker": "CRYP247",
+        "name": "CRYP247 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3037435,
+            "volume": 240784,
+            "change24hPercent": -44.23,
+            "change24h": -0.00000807,
+            "price": 0.00001824
+        }
+    },
+    {
+        "ticker": "CRYP248",
+        "name": "CRYP248 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3990517744,
+            "volume": 2771263693,
+            "change24hPercent": -8.53,
+            "change24h": -0.37927143,
+            "price": 4.44632395
+        }
+    },
+    {
+        "ticker": "CRYP249",
+        "name": "CRYP249 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1719641770,
+            "volume": 1087855827,
+            "change24hPercent": 9.1,
+            "change24h": 0.82248812,
+            "price": 9.03833103
+        }
+    },
+    {
+        "ticker": "CRYP250",
+        "name": "CRYP250 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 906674780086,
+            "volume": 440432772034,
+            "change24hPercent": -1.8,
+            "change24h": -449.61928917,
+            "price": 24978.84939808
+        }
+    },
+    {
+        "ticker": "CRYP251",
+        "name": "CRYP251 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2813467787,
+            "volume": 1162623261,
+            "change24hPercent": 3.98,
+            "change24h": 0.24114686,
+            "price": 6.05896625
+        }
+    },
+    {
+        "ticker": "CRYP252",
+        "name": "CRYP252 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 65559364,
+            "volume": 31751720,
+            "change24hPercent": 1.73,
+            "change24h": 0.00115894,
+            "price": 0.0669905
+        }
+    },
+    {
+        "ticker": "CRYP253",
+        "name": "CRYP253 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1671769,
+            "volume": 450370,
+            "change24hPercent": -30.45,
+            "change24h": -0.0000147,
+            "price": 0.00004828
+        }
+    },
+    {
+        "ticker": "CRYP254",
+        "name": "CRYP254 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1581616,
+            "volume": 1015029,
+            "change24hPercent": 19.14,
+            "change24h": 0.00001197,
+            "price": 0.00006256
+        }
+    },
+    {
+        "ticker": "CRYP255",
+        "name": "CRYP255 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4460832,
+            "volume": 1244851,
+            "change24hPercent": -60.58,
+            "change24h": -2.09005528,
+            "price": 3.45007474
+        }
+    },
+    {
+        "ticker": "CRYP256",
+        "name": "CRYP256 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6731824662,
+            "volume": 5476948384,
+            "change24hPercent": -0.3,
+            "change24h": -0.00691378,
+            "price": 2.30459379
+        }
+    },
+    {
+        "ticker": "CRYP257",
+        "name": "CRYP257 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1428822091,
+            "volume": 1076187381,
+            "change24hPercent": 2.86,
+            "change24h": 0.21928197,
+            "price": 7.66720173
+        }
+    },
+    {
+        "ticker": "CRYP258",
+        "name": "CRYP258 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3852693,
+            "volume": 1145689,
+            "change24hPercent": -33.7,
+            "change24h": -1.32765649,
+            "price": 3.9396335
+        }
+    },
+    {
+        "ticker": "CRYP259",
+        "name": "CRYP259 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7041368,
+            "volume": 2732834,
+            "change24hPercent": -39.23,
+            "change24h": -0.00003129,
+            "price": 0.00007976
+        }
+    },
+    {
+        "ticker": "CRYP260",
+        "name": "CRYP260 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 18466626,
+            "volume": 5064958,
+            "change24hPercent": -33.49,
+            "change24h": -0.02941414,
+            "price": 0.08782963
+        }
+    },
+    {
+        "ticker": "CRYP261",
+        "name": "CRYP261 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 91662895,
+            "volume": 21509293,
+            "change24hPercent": -6.92,
+            "change24h": -0.00195282,
+            "price": 0.02821989
+        }
+    },
+    {
+        "ticker": "CRYP262",
+        "name": "CRYP262 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2938988713,
+            "volume": 388409612,
+            "change24hPercent": -0.59,
+            "change24h": -0.04606744,
+            "price": 7.80804046
+        }
+    },
+    {
+        "ticker": "CRYP263",
+        "name": "CRYP263 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 95857195,
+            "volume": 60508447,
+            "change24hPercent": 9.95,
+            "change24h": 0.00344916,
+            "price": 0.03466497
+        }
+    },
+    {
+        "ticker": "CRYP264",
+        "name": "CRYP264 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 21472157,
+            "volume": 11938068,
+            "change24hPercent": -37.59,
+            "change24h": -0.02591181,
+            "price": 0.06893271
+        }
+    },
+    {
+        "ticker": "CRYP265",
+        "name": "CRYP265 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8691300,
+            "volume": 6133379,
+            "change24hPercent": -27.93,
+            "change24h": -0.0000248,
+            "price": 0.00008879
+        }
+    },
+    {
+        "ticker": "CRYP266",
+        "name": "CRYP266 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 82722317,
+            "volume": 27633666,
+            "change24hPercent": 34.51,
+            "change24h": 0.01912678,
+            "price": 0.05542387
+        }
+    },
+    {
+        "ticker": "CRYP267",
+        "name": "CRYP267 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5129354407,
+            "volume": 4035934132,
+            "change24hPercent": 12.33,
+            "change24h": 0.36467989,
+            "price": 2.95766332
+        }
+    },
+    {
+        "ticker": "CRYP268",
+        "name": "CRYP268 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4722656,
+            "volume": 1424807,
+            "change24hPercent": -9.12,
+            "change24h": -0.43237365,
+            "price": 4.74093913
+        }
+    },
+    {
+        "ticker": "CRYP269",
+        "name": "CRYP269 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3983238475,
+            "volume": 894522278,
+            "change24hPercent": 1.95,
+            "change24h": 0.06278653,
+            "price": 3.21982211
+        }
+    },
+    {
+        "ticker": "CRYP270",
+        "name": "CRYP270 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3032842,
+            "volume": 1420684,
+            "change24hPercent": 23.31,
+            "change24h": 0.00001523,
+            "price": 0.00006532
+        }
+    },
+    {
+        "ticker": "CRYP271",
+        "name": "CRYP271 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 54023829,
+            "volume": 38588795,
+            "change24hPercent": 2.39,
+            "change24h": 0.00018945,
+            "price": 0.00792697
+        }
+    },
+    {
+        "ticker": "CRYP272",
+        "name": "CRYP272 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 16198929937,
+            "volume": 1159405587,
+            "change24hPercent": 1.67,
+            "change24h": 1414.02582626,
+            "price": 84672.20516536
+        }
+    },
+    {
+        "ticker": "CRYP273",
+        "name": "CRYP273 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 42026309,
+            "volume": 11279021,
+            "change24hPercent": -4.42,
+            "change24h": -0.00148021,
+            "price": 0.03348887
+        }
+    },
+    {
+        "ticker": "CRYP274",
+        "name": "CRYP274 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 42219519,
+            "volume": 25892880,
+            "change24hPercent": 11.77,
+            "change24h": 0.00733185,
+            "price": 0.06229268
+        }
+    },
+    {
+        "ticker": "CRYP275",
+        "name": "CRYP275 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 90273111,
+            "volume": 42291155,
+            "change24hPercent": -24.16,
+            "change24h": -0.01588215,
+            "price": 0.06573737
+        }
+    },
+    {
+        "ticker": "CRYP276",
+        "name": "CRYP276 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2859349,
+            "volume": 369069,
+            "change24hPercent": -43.54,
+            "change24h": -0.00003173,
+            "price": 0.00007288
+        }
+    },
+    {
+        "ticker": "CRYP277",
+        "name": "CRYP277 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6543427,
+            "volume": 4479767,
+            "change24hPercent": -2.46,
+            "change24h": -0.00000102,
+            "price": 0.00004161
+        }
+    },
+    {
+        "ticker": "CRYP278",
+        "name": "CRYP278 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1328774643,
+            "volume": 752986481,
+            "change24hPercent": -0.98,
+            "change24h": -0.01341507,
+            "price": 1.36888425
+        }
+    },
+    {
+        "ticker": "CRYP279",
+        "name": "CRYP279 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1563672068,
+            "volume": 759272048,
+            "change24hPercent": -8.97,
+            "change24h": -0.48382832,
+            "price": 5.39384968
+        }
+    },
+    {
+        "ticker": "CRYP280",
+        "name": "CRYP280 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5295379,
+            "volume": 2973652,
+            "change24hPercent": 30.21,
+            "change24h": 1.39134232,
+            "price": 4.60556876
+        }
+    },
+    {
+        "ticker": "CRYP281",
+        "name": "CRYP281 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8605382768,
+            "volume": 4609524083,
+            "change24hPercent": 9.17,
+            "change24h": 0.45647116,
+            "price": 4.97787519
+        }
+    },
+    {
+        "ticker": "CRYP282",
+        "name": "CRYP282 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6578714,
+            "volume": 1014787,
+            "change24hPercent": -71.88,
+            "change24h": -0.0000505,
+            "price": 0.00007026
+        }
+    },
+    {
+        "ticker": "CRYP283",
+        "name": "CRYP283 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2914313,
+            "volume": 576297,
+            "change24hPercent": 35.94,
+            "change24h": 0.00003393,
+            "price": 0.00009442
+        }
+    },
+    {
+        "ticker": "CRYP284",
+        "name": "CRYP284 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9309427,
+            "volume": 7662856,
+            "change24hPercent": -26.47,
+            "change24h": -0.00001969,
+            "price": 0.0000744
+        }
+    },
+    {
+        "ticker": "CRYP285",
+        "name": "CRYP285 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 92385183,
+            "volume": 62755393,
+            "change24hPercent": -14.37,
+            "change24h": -0.0044939,
+            "price": 0.0312728
+        }
+    },
+    {
+        "ticker": "CRYP286",
+        "name": "CRYP286 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9743122766,
+            "volume": 8178728643,
+            "change24hPercent": -1.11,
+            "change24h": -0.01190325,
+            "price": 1.07236451
+        }
+    },
+    {
+        "ticker": "CRYP287",
+        "name": "CRYP287 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9117848,
+            "volume": 5557059,
+            "change24hPercent": -44.93,
+            "change24h": -2.18431727,
+            "price": 4.86160087
+        }
+    },
+    {
+        "ticker": "CRYP288",
+        "name": "CRYP288 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5427610696,
+            "volume": 298435266,
+            "change24hPercent": 13.29,
+            "change24h": 0.47668628,
+            "price": 3.5868042
+        }
+    },
+    {
+        "ticker": "CRYP289",
+        "name": "CRYP289 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6303281,
+            "volume": 873190,
+            "change24hPercent": 33.62,
+            "change24h": 0.00001463,
+            "price": 0.0000435
+        }
+    },
+    {
+        "ticker": "CRYP290",
+        "name": "CRYP290 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 70196276,
+            "volume": 35101434,
+            "change24hPercent": 49.26,
+            "change24h": 0.01946089,
+            "price": 0.03950648
+        }
+    },
+    {
+        "ticker": "CRYP291",
+        "name": "CRYP291 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 53780362,
+            "volume": 45231777,
+            "change24hPercent": -7.4,
+            "change24h": -0.00503524,
+            "price": 0.06804376
+        }
+    },
+    {
+        "ticker": "CRYP292",
+        "name": "CRYP292 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7511409,
+            "volume": 2131505,
+            "change24hPercent": -2.85,
+            "change24h": -0.00496537,
+            "price": 0.1742234
+        }
+    },
+    {
+        "ticker": "CRYP293",
+        "name": "CRYP293 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1505015935,
+            "volume": 776940789,
+            "change24hPercent": -3.98,
+            "change24h": -0.05299082,
+            "price": 1.33142776
+        }
+    },
+    {
+        "ticker": "CRYP294",
+        "name": "CRYP294 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9117641,
+            "volume": 4391029,
+            "change24hPercent": 15.01,
+            "change24h": 0.00000422,
+            "price": 0.00002811
+        }
+    },
+    {
+        "ticker": "CRYP295",
+        "name": "CRYP295 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4428991,
+            "volume": 978995,
+            "change24hPercent": -24.77,
+            "change24h": -0.39631865,
+            "price": 1.59999456
+        }
+    },
+    {
+        "ticker": "CRYP296",
+        "name": "CRYP296 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 26208383,
+            "volume": 20803437,
+            "change24hPercent": 23.03,
+            "change24h": 0.01446732,
+            "price": 0.06281943
+        }
+    },
+    {
+        "ticker": "CRYP297",
+        "name": "CRYP297 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5869101,
+            "volume": 1287627,
+            "change24hPercent": -2.23,
+            "change24h": -6.2e-7,
+            "price": 0.00002799
+        }
+    },
+    {
+        "ticker": "CRYP298",
+        "name": "CRYP298 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9865768,
+            "volume": 4849869,
+            "change24hPercent": -38.9,
+            "change24h": -0.00001358,
+            "price": 0.0000349
+        }
+    },
+    {
+        "ticker": "CRYP299",
+        "name": "CRYP299 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 97306394,
+            "volume": 77943724,
+            "change24hPercent": -33.72,
+            "change24h": -0.00332912,
+            "price": 0.00987284
+        }
+    },
+    {
+        "ticker": "CRYP300",
+        "name": "CRYP300 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3092696773,
+            "volume": 1157024533,
+            "change24hPercent": -5.6,
+            "change24h": -0.08758539,
+            "price": 1.56402481
+        }
+    },
+    {
+        "ticker": "CRYP301",
+        "name": "CRYP301 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5824628,
+            "volume": 2536669,
+            "change24hPercent": 34.69,
+            "change24h": 0.3539872,
+            "price": 1.0204301
+        }
+    },
+    {
+        "ticker": "CRYP302",
+        "name": "CRYP302 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3721822,
+            "volume": 655415,
+            "change24hPercent": -73.71,
+            "change24h": -1.20980881,
+            "price": 1.64130893
+        }
+    },
+    {
+        "ticker": "CRYP303",
+        "name": "CRYP303 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5988912895,
+            "volume": 4414664870,
+            "change24hPercent": -12.94,
+            "change24h": -0.92832419,
+            "price": 7.17406635
+        }
+    },
+    {
+        "ticker": "CRYP304",
+        "name": "CRYP304 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4350833,
+            "volume": 1422982,
+            "change24hPercent": -28.7,
+            "change24h": -0.00001919,
+            "price": 0.00006687
+        }
+    },
+    {
+        "ticker": "CRYP305",
+        "name": "CRYP305 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1008660194874,
+            "volume": 61326565379,
+            "change24hPercent": -2.45,
+            "change24h": -2076.57038643,
+            "price": 84757.97495626
+        }
+    },
+    {
+        "ticker": "CRYP306",
+        "name": "CRYP306 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 75879113,
+            "volume": 14430424,
+            "change24hPercent": -42.02,
+            "change24h": -0.02951057,
+            "price": 0.07022982
+        }
+    },
+    {
+        "ticker": "CRYP307",
+        "name": "CRYP307 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2455395,
+            "volume": 1513395,
+            "change24hPercent": 17.96,
+            "change24h": 0.00000528,
+            "price": 0.00002942
+        }
+    },
+    {
+        "ticker": "CRYP308",
+        "name": "CRYP308 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5367638799,
+            "volume": 3484621401,
+            "change24hPercent": -2.01,
+            "change24h": -0.09935649,
+            "price": 4.94310893
+        }
+    },
+    {
+        "ticker": "CRYP309",
+        "name": "CRYP309 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 380288439821,
+            "volume": 273281968796,
+            "change24hPercent": 2.52,
+            "change24h": 0.0665239,
+            "price": 2.63983731
+        }
+    },
+    {
+        "ticker": "CRYP310",
+        "name": "CRYP310 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3178618173,
+            "volume": 556498701,
+            "change24hPercent": 14.56,
+            "change24h": 0.1379265,
+            "price": 0.94729739
+        }
+    },
+    {
+        "ticker": "CRYP311",
+        "name": "CRYP311 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 71516773,
+            "volume": 20697117,
+            "change24hPercent": 62.18,
+            "change24h": 0.01034265,
+            "price": 0.01663341
+        }
+    },
+    {
+        "ticker": "CRYP312",
+        "name": "CRYP312 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 87594002,
+            "volume": 68878728,
+            "change24hPercent": 5.47,
+            "change24h": 0.0052691,
+            "price": 0.09632719
+        }
+    },
+    {
+        "ticker": "CRYP313",
+        "name": "CRYP313 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1171056,
+            "volume": 545571,
+            "change24hPercent": -37.68,
+            "change24h": -0.8734632,
+            "price": 2.31810827
+        }
+    },
+    {
+        "ticker": "CRYP314",
+        "name": "CRYP314 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9849107569,
+            "volume": 8334838488,
+            "change24hPercent": 10.78,
+            "change24h": 0.68690351,
+            "price": 6.37201774
+        }
+    },
+    {
+        "ticker": "CRYP315",
+        "name": "CRYP315 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7337743,
+            "volume": 4069734,
+            "change24hPercent": -21.38,
+            "change24h": -0.00000141,
+            "price": 0.00000659
+        }
+    },
+    {
+        "ticker": "CRYP316",
+        "name": "CRYP316 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1036018422517,
+            "volume": 516894869990,
+            "change24hPercent": 0.3,
+            "change24h": 17.50804961,
+            "price": 5836.01653759
+        }
+    },
+    {
+        "ticker": "CRYP317",
+        "name": "CRYP317 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 78922402,
+            "volume": 64706128,
+            "change24hPercent": -35.63,
+            "change24h": -0.02460523,
+            "price": 0.06905761
+        }
+    },
+    {
+        "ticker": "CRYP318",
+        "name": "CRYP318 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 74901489,
+            "volume": 26849642,
+            "change24hPercent": 48.59,
+            "change24h": 0.02699067,
+            "price": 0.05554778
+        }
+    },
+    {
+        "ticker": "CRYP319",
+        "name": "CRYP319 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8627742692,
+            "volume": 5926122799,
+            "change24hPercent": -1.91,
+            "change24h": -0.17017409,
+            "price": 8.90963804
+        }
+    },
+    {
+        "ticker": "CRYP320",
+        "name": "CRYP320 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 34329628,
+            "volume": 11941755,
+            "change24hPercent": 3.32,
+            "change24h": 0.00317752,
+            "price": 0.09570855
+        }
+    },
+    {
+        "ticker": "CRYP321",
+        "name": "CRYP321 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4660585034,
+            "volume": 1706774031,
+            "change24hPercent": 5.39,
+            "change24h": 0.41623923,
+            "price": 7.72243462
+        }
+    },
+    {
+        "ticker": "CRYP322",
+        "name": "CRYP322 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 159589911,
+            "volume": 82654079,
+            "change24hPercent": 8.58,
+            "change24h": 0.35681297,
+            "price": 4.15865935
+        }
+    },
+    {
+        "ticker": "CRYP323",
+        "name": "CRYP323 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 75639724,
+            "volume": 7547236,
+            "change24hPercent": 31.92,
+            "change24h": 0.0112118,
+            "price": 0.03512468
+        }
+    },
+    {
+        "ticker": "CRYP324",
+        "name": "CRYP324 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 80442018,
+            "volume": 60495994,
+            "change24hPercent": 19.71,
+            "change24h": 0.00508445,
+            "price": 0.02579628
+        }
+    },
+    {
+        "ticker": "CRYP325",
+        "name": "CRYP325 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5330739,
+            "volume": 943844,
+            "change24hPercent": 0.51,
+            "change24h": 4.1e-7,
+            "price": 0.00008134
+        }
+    },
+    {
+        "ticker": "CRYP326",
+        "name": "CRYP326 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 10867673,
+            "volume": 7478995,
+            "change24hPercent": -42.05,
+            "change24h": -0.01849664,
+            "price": 0.04398726
+        }
+    },
+    {
+        "ticker": "CRYP327",
+        "name": "CRYP327 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6571587,
+            "volume": 1467018,
+            "change24hPercent": 30.02,
+            "change24h": 0.00001034,
+            "price": 0.00003446
+        }
+    },
+    {
+        "ticker": "CRYP328",
+        "name": "CRYP328 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6193657,
+            "volume": 4880995,
+            "change24hPercent": 13.69,
+            "change24h": 0.00001035,
+            "price": 0.00007559
+        }
+    },
+    {
+        "ticker": "CRYP329",
+        "name": "CRYP329 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 427499705,
+            "volume": 119972875,
+            "change24hPercent": -11.39,
+            "change24h": -0.80172949,
+            "price": 7.03888925
+        }
+    },
+    {
+        "ticker": "CRYP330",
+        "name": "CRYP330 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 679132,
+            "volume": 116445,
+            "change24hPercent": 31.5,
+            "change24h": 0.00000149,
+            "price": 0.00000472
+        }
+    },
+    {
+        "ticker": "CRYP331",
+        "name": "CRYP331 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 574424851,
+            "volume": 396075774,
+            "change24hPercent": 8.67,
+            "change24h": 0.75423554,
+            "price": 8.69937188
+        }
+    },
+    {
+        "ticker": "CRYP332",
+        "name": "CRYP332 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 306687,
+            "volume": 156340,
+            "change24hPercent": 16.1,
+            "change24h": 0.00001063,
+            "price": 0.00006603
+        }
+    },
+    {
+        "ticker": "CRYP333",
+        "name": "CRYP333 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 45923295,
+            "volume": 17488827,
+            "change24hPercent": -55.37,
+            "change24h": -0.03173806,
+            "price": 0.05731995
+        }
+    },
+    {
+        "ticker": "CRYP334",
+        "name": "CRYP334 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3800661,
+            "volume": 807267,
+            "change24hPercent": 9.22,
+            "change24h": 0.32184078,
+            "price": 3.49068089
+        }
+    },
+    {
+        "ticker": "CRYP335",
+        "name": "CRYP335 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5955796,
+            "volume": 1071669,
+            "change24hPercent": -32.99,
+            "change24h": -0.00001544,
+            "price": 0.0000468
+        }
+    },
+    {
+        "ticker": "CRYP336",
+        "name": "CRYP336 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5556282,
+            "volume": 4167103,
+            "change24hPercent": 13,
+            "change24h": 0.00000794,
+            "price": 0.00006106
+        }
+    },
+    {
+        "ticker": "CRYP337",
+        "name": "CRYP337 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 50724823,
+            "volume": 28683803,
+            "change24hPercent": -21.22,
+            "change24h": -0.01743657,
+            "price": 0.08217044
+        }
+    },
+    {
+        "ticker": "CRYP338",
+        "name": "CRYP338 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4939018831,
+            "volume": 3451627579,
+            "change24hPercent": 3.65,
+            "change24h": 0.19360616,
+            "price": 5.30427849
+        }
+    },
+    {
+        "ticker": "CRYP339",
+        "name": "CRYP339 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 46719068,
+            "volume": 27679572,
+            "change24hPercent": 36,
+            "change24h": 0.0135608,
+            "price": 0.0376689
+        }
+    },
+    {
+        "ticker": "CRYP340",
+        "name": "CRYP340 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 15621527,
+            "volume": 10267910,
+            "change24hPercent": -42.32,
+            "change24h": -0.00053463,
+            "price": 0.0012633
+        }
+    },
+    {
+        "ticker": "CRYP341",
+        "name": "CRYP341 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 309434156,
+            "volume": 245935198,
+            "change24hPercent": 4.57,
+            "change24h": 0.40442654,
+            "price": 8.84959601
+        }
+    },
+    {
+        "ticker": "CRYP342",
+        "name": "CRYP342 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 9130403679,
+            "volume": 4400483645,
+            "change24hPercent": 9.55,
+            "change24h": 0.60426031,
+            "price": 6.3273331
+        }
+    },
+    {
+        "ticker": "CRYP343",
+        "name": "CRYP343 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5749096,
+            "volume": 851557,
+            "change24hPercent": 49.85,
+            "change24h": 1.2507641,
+            "price": 2.50905536
+        }
+    },
+    {
+        "ticker": "CRYP344",
+        "name": "CRYP344 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6476674,
+            "volume": 1183206,
+            "change24hPercent": -1.31,
+            "change24h": -1.1e-7,
+            "price": 0.00000819
+        }
+    },
+    {
+        "ticker": "CRYP345",
+        "name": "CRYP345 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 18903905,
+            "volume": 2085411,
+            "change24hPercent": -20.16,
+            "change24h": -0.00613042,
+            "price": 0.03040883
+        }
+    },
+    {
+        "ticker": "CRYP346",
+        "name": "CRYP346 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 64490734,
+            "volume": 45544487,
+            "change24hPercent": -38.99,
+            "change24h": -0.0082861,
+            "price": 0.02125185
+        }
+    },
+    {
+        "ticker": "CRYP347",
+        "name": "CRYP347 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 39241954,
+            "volume": 7227094,
+            "change24hPercent": -69.69,
+            "change24h": -0.06367167,
+            "price": 0.09136414
+        }
+    },
+    {
+        "ticker": "CRYP348",
+        "name": "CRYP348 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 76435881,
+            "volume": 14612559,
+            "change24hPercent": 45.61,
+            "change24h": 0.00404717,
+            "price": 0.00887342
+        }
+    },
+    {
+        "ticker": "CRYP349",
+        "name": "CRYP349 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 53756906,
+            "volume": 8917973,
+            "change24hPercent": -30.33,
+            "change24h": -0.00441053,
+            "price": 0.01454182
+        }
+    },
+    {
+        "ticker": "CRYP350",
+        "name": "CRYP350 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 54660359,
+            "volume": 26389341,
+            "change24hPercent": 12.86,
+            "change24h": 0.00852714,
+            "price": 0.06630745
+        }
+    },
+    {
+        "ticker": "CRYP351",
+        "name": "CRYP351 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 3003484508,
+            "volume": 1506652015,
+            "change24hPercent": 2.66,
+            "change24h": 0.04281654,
+            "price": 1.60964433
+        }
+    },
+    {
+        "ticker": "CRYP352",
+        "name": "CRYP352 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 367141,
+            "volume": 203412,
+            "change24hPercent": 36.07,
+            "change24h": 0.00000363,
+            "price": 0.00001005
+        }
+    },
+    {
+        "ticker": "CRYP353",
+        "name": "CRYP353 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2670676,
+            "volume": 2262064,
+            "change24hPercent": 33.37,
+            "change24h": 0.00002286,
+            "price": 0.00006851
+        }
+    },
+    {
+        "ticker": "CRYP354",
+        "name": "CRYP354 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 8920114181,
+            "volume": 4261344253,
+            "change24hPercent": 14,
+            "change24h": 0.27159295,
+            "price": 1.93994962
+        }
+    },
+    {
+        "ticker": "CRYP355",
+        "name": "CRYP355 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6267736,
+            "volume": 1446652,
+            "change24hPercent": -98.09,
+            "change24h": -0.0000342,
+            "price": 0.00003487
+        }
+    },
+    {
+        "ticker": "CRYP356",
+        "name": "CRYP356 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4523031,
+            "volume": 675086,
+            "change24hPercent": 36.75,
+            "change24h": 0.0000251,
+            "price": 0.0000683
+        }
+    },
+    {
+        "ticker": "CRYP357",
+        "name": "CRYP357 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 39077973809,
+            "volume": 18480111829,
+            "change24hPercent": -2.82,
+            "change24h": -0.12081438,
+            "price": 4.2841977
+        }
+    },
+    {
+        "ticker": "CRYP358",
+        "name": "CRYP358 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 712855816607,
+            "volume": 294398292068,
+            "change24hPercent": -3.18,
+            "change24h": -0.13997951,
+            "price": 4.4018713
+        }
+    },
+    {
+        "ticker": "CRYP359",
+        "name": "CRYP359 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2258549,
+            "volume": 1099319,
+            "change24hPercent": 28.56,
+            "change24h": 0.00001204,
+            "price": 0.00004215
+        }
+    },
+    {
+        "ticker": "CRYP360",
+        "name": "CRYP360 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 77808316,
+            "volume": 60220879,
+            "change24hPercent": 7.15,
+            "change24h": 0.00460469,
+            "price": 0.06440127
+        }
+    },
+    {
+        "ticker": "CRYP361",
+        "name": "CRYP361 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 15862690,
+            "volume": 8423257,
+            "change24hPercent": 43.94,
+            "change24h": 0.01608335,
+            "price": 0.03660298
+        }
+    },
+    {
+        "ticker": "CRYP362",
+        "name": "CRYP362 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6799857260,
+            "volume": 4625682872,
+            "change24hPercent": 1.42,
+            "change24h": 0.13090254,
+            "price": 9.2184888
+        }
+    },
+    {
+        "ticker": "CRYP363",
+        "name": "CRYP363 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 2313085,
+            "volume": 1783570,
+            "change24hPercent": 17.78,
+            "change24h": 0.00000161,
+            "price": 0.00000904
+        }
+    },
+    {
+        "ticker": "CRYP364",
+        "name": "CRYP364 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 653306,
+            "volume": 347057,
+            "change24hPercent": 45.36,
+            "change24h": 2.00936401,
+            "price": 4.42981483
+        }
+    },
+    {
+        "ticker": "CRYP365",
+        "name": "CRYP365 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 972919,
+            "volume": 753566,
+            "change24hPercent": -47.96,
+            "change24h": -0.00004542,
+            "price": 0.0000947
+        }
+    },
+    {
+        "ticker": "CRYP366",
+        "name": "CRYP366 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 422655,
+            "volume": 121229,
+            "change24hPercent": -5.65,
+            "change24h": -0.0000048,
+            "price": 0.00008496
+        }
+    },
+    {
+        "ticker": "CRYP367",
+        "name": "CRYP367 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 5409537360,
+            "volume": 4058408030,
+            "change24hPercent": -5.53,
+            "change24h": -0.47092899,
+            "price": 8.51589492
+        }
+    },
+    {
+        "ticker": "CRYP368",
+        "name": "CRYP368 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 4349043799,
+            "volume": 2490631643,
+            "change24hPercent": -7.05,
+            "change24h": -0.67763047,
+            "price": 9.61177965
+        }
+    },
+    {
+        "ticker": "CRYP369",
+        "name": "CRYP369 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 7652137,
+            "volume": 3732204,
+            "change24hPercent": -20.44,
+            "change24h": -0.88569168,
+            "price": 4.33312955
+        }
+    },
+    {
+        "ticker": "CRYP370",
+        "name": "CRYP370 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 1086759,
+            "volume": 530578,
+            "change24hPercent": -41.17,
+            "change24h": -0.00003188,
+            "price": 0.00007743
+        }
+    },
+    {
+        "ticker": "CRYP371",
+        "name": "CRYP371 Token",
+        "logoSrc": "",
+        "values": {
+            "marketCap": 6460281416,
+            "volume": 1787802718,
+            "change24hPercent": -12.14,
+            "change24h": -0.12481973,
+            "price": 1.02816908
+        }
+    }
+]

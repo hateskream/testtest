@@ -19,47 +19,13 @@ import {
 	SymbolType,
 	type TableRow,
 } from '@/modules/cell';
+import { useFetchMock } from './fetch-mock';
 
 type AllTickersType = Record<SymbolType, ITickerData[]>;
 type AllCellsType = Record<ColumnWithoutSymbol, Cell>;
 
-const allCellByColumnCache: AllCellsType | null = null;
-const allTickersCache: AllTickersType | null = null;
-
-async function getAllCellByColumn(): Promise<AllCellsType> {
-	if (allCellByColumnCache) {
-		return allCellByColumnCache;
-	}
-
-	// return allCellByColumnCache || loadAllCells();
-
-	return loadAllCells();
-}
-
-
-async function getAllTickers(): Promise<AllTickersType> {
-	if (allTickersCache) {
-		return allTickersCache;
-	}
-
-	return loadAllTickers();
-}
-
-async function loadAllTickers(): Promise<AllTickersType> {
-	const res = await fetch('/mock/tickers/all-tickers.json');
-	if (!res.ok) {
-		throw new Error('Failed to load tickers');
-	}
-	return res.json();
-}
-
-async function loadAllCells(): Promise<AllCellsType> {
-	const res = await fetch('/mock/tickers/all-cell.json');
-	if (!res.ok) {
-		throw new Error('Failed to load cells');
-	}
-	return res.json();
-}
+const { getMock:getAllTickers } = useFetchMock<AllTickersType>('/mock/tickers/all-tickers.json');
+const { getMock:getAllCellByColumn } = useFetchMock<AllCellsType>('/mock/tickers/all-cell.json');
 
 export interface ITickerData {
 	left: string;

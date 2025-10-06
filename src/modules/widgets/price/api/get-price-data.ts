@@ -86,26 +86,22 @@ const columnTypes: ColumnWithoutSymbol[] = [
 	ColumnType.Price24hChart,
 ];
 
-const [crypto, commodities, forex, indices, stocks] = await Promise.all([
-	generateRows(SymbolType.Crypto, columnTypes),
-	generateRows(SymbolType.Commodity, columnTypes),
-	generateRows(SymbolType.Forex, columnTypes),
-	generateRows(SymbolType.Index, columnTypes),
-	generateRows(SymbolType.Stock, columnTypes),
-]);
-
-const marketToTickers = {
-	[MarketType.Crypto]: crypto,
-	[MarketType.Stock]: stocks,
-	[MarketType.Forex]: forex,
-	[MarketType.Indices]: indices,
-	[MarketType.Commodities]: commodities,
-} as Record<MarketType, TickerWithoutState[]>;
-
 async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 100);
-	});
+	const [crypto, commodities, forex, indices, stocks] = await Promise.all([
+		generateRows(SymbolType.Crypto, columnTypes),
+		generateRows(SymbolType.Commodity, columnTypes),
+		generateRows(SymbolType.Forex, columnTypes),
+		generateRows(SymbolType.Index, columnTypes),
+		generateRows(SymbolType.Stock, columnTypes),
+	]);
+
+	const marketToTickers = {
+		[MarketType.Crypto]: crypto,
+		[MarketType.Stock]: stocks,
+		[MarketType.Forex]: forex,
+		[MarketType.Indices]: indices,
+		[MarketType.Commodities]: commodities,
+	} as Record<MarketType, TickerWithoutState[]>;
 
 	const response: IPriceData = {
 		pagination: {
