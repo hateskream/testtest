@@ -38,12 +38,6 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 <template>
 	<div :class="classes.root">
-		<ui-icon
-			:id="IconIds.Drag"
-			width="4px"
-			height="12px"
-			:class="[classes.icon]"
-		/>
 		<div :class="classes.content">
 			<ui-transition-fade>
 				<div v-if="props.settings.isShowLogo && meta.size.w > 1" :class="classes.logo">
