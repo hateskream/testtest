@@ -1,11 +1,65 @@
 import { computed, ref, watch } from 'vue';
+import { z } from 'zod';
 
 import { getDefaultsSettings, getDefaultsState, type ISettings, type IState } from '../model';
 import { useQueryPrice } from '../queries';
-import { useGetState, useUpdateState } from '../queries/use-query-widget-state';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
+import { createStateQueries } from '@/shared/service/data-repo';
+
+const ISettingsSchema = z.object({
+	isShowChart: z.boolean(),
+	isShowPercentageChange: z.boolean(),
+	isShowLogo: z.boolean(),
+	isShowTicker: z.boolean(),
+	isShowDescription: z.boolean(),
+});
+
+export const stateSchema = z.object({
+	activeMarket: z.nativeEnum(MarketType),
+	settings: z.object({
+		[MarketType.Crypto]: z.object({
+			display: ISettingsSchema,
+			pinned: z.array(z.string()),
+		}),
+		[MarketType.Stock]: z.object({
+			display: ISettingsSchema,
+			pinned: z.array(z.string()),
+		}),
+		[MarketType.Forex]: z.object({
+			display: ISettingsSchema,
+			pinned: z.array(z.string()),
+		}),
+		[MarketType.Commodities]: z.object({
+			display: ISettingsSchema,
+			pinned: z.array(z.string()),
+		}),
+		[MarketType.Indices]: z.object({
+			display: ISettingsSchema,
+			pinned: z.array(z.string()),
+		}),
+	}),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
+
 
 export function usePrice(widgetId: string, defaultStateType: string) {
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__PRICE__',
+		isSaveChange: true,
+		getDefaultState: () => getDefaultsState(defaultStateType),
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: (s: StateSchemaType): IState => s,
+		rehydrateFn: (s: IState): StateSchemaType => s,
+		urlGet: '',
+		urlSet: '',
+	});
+
+
 	const state = ref<IState>(getDefaultsState(defaultStateType));
 	const currentSettings = ref<ISettings>(getDefaultsSettings());
 	const pinnedTickers = ref<string[]>([]);
@@ -36,8 +90,8 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 	const {
 		data: dataState,
 		isLoading: isLoadingState,
-	} = useGetState(widgetId, defaultStateType);
-	const { mutate } = useUpdateState(widgetId, defaultStateType);
+	} = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const isNotData = computed(() => !!dataResponse.value && isLoading.value && !isLoadingState.value);
 
