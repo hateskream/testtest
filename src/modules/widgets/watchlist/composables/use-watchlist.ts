@@ -1,4 +1,5 @@
 import { computed, ref, watch } from 'vue';
+import { z } from 'zod';
 
 import {
 	type ISectionUi,
@@ -15,14 +16,54 @@ import {
 	getDefaultState,
 	getSections,
 	getTabsFromWatchlists,
+	hydrateState,
+	rehydrateState,
 	selectNewActiveTableId,
 	updateSort,
 	updateTableState,
 } from '../model';
 import type { ISort, ITableColumn } from '@/modules/cell';
-import { useGetState, useUpdateState } from '../queries';
 import { useWatchlist } from '@/modules/watchlist';
 import type { MarketType } from '@/modules/market';
+import { createStateQueries } from '@/shared/service/data-repo';
+import { ColumnType, SortDirection } from '@/modules/cell';
+
+const sortSchema = z.object({
+	columnType: z.nativeEnum(ColumnType),
+	sortDirection: z.nativeEnum(SortDirection),
+});
+
+const tickerStateSchema = z.object({
+	isShowLogo: z.boolean(),
+	isShowTicker: z.boolean(),
+	isShowDescription: z.boolean(),
+});
+
+const columnSchema = z.object({
+	columnType: z.nativeEnum(ColumnType),
+	isShow: z.boolean(),
+	order: z.number(),
+});
+
+const sectionSchema = z.object({
+	id: z.string(),
+	isOpen: z.boolean(),
+});
+
+const tableSchema = z.object({
+	id: z.string(),
+	columns: z.array(columnSchema),
+	sections: z.array(sectionSchema),
+	tickerState: tickerStateSchema,
+	sort: sortSchema.nullable(),
+});
+
+export const stateSchema = z.object({
+	activeTableId: z.string().nullable(),
+	tables: z.array(tableSchema),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function useWatchlistWidget(widgetId: string) {
 	const {
@@ -40,8 +81,23 @@ export function useWatchlistWidget(widgetId: string) {
 		removeFromWatchlist,
 	} = useWatchlist();
 
-	const { data: dataState } = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__WATCHLIST_WIDGET__',
+		isSaveChange: true,
+		getDefaultState: () => getDefaultState(watchlists.value),
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: hydrateState,
+		rehydrateFn: rehydrateState,
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const { data: dataState } = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const state = ref<IState>(getDefaultState(watchlists.value));
 
