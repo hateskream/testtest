@@ -1,13 +1,39 @@
 import { computed, ref, watch } from 'vue';
+import { z } from 'zod';
 
-import { type IState, getDefaultState, type Stock, type DateRange, type DisplayVariant } from '../model';
-import { useGetState, useUpdateState } from '../queries';
+import { type IState, getDefaultState, Stock, DateRange, DisplayVariant } from '../model';
+import { createStateQueries } from '@/shared/service/data-repo';
+
+export const stateSchema = z.object({
+	stock: z.nativeEnum(Stock),
+	date: z.nativeEnum(DateRange),
+	displayVariant: z.nativeEnum(DisplayVariant),
+	isCompactMode: z.boolean(),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
+
 
 export function usePerformance(widgetId: string) {
 	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__PERFORMANCE__',
+		isSaveChange: true,
+		getDefaultState: getDefaultState,
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: (s: StateSchemaType): IState => s,
+		rehydrateFn: (s: IState): StateSchemaType => s,
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const {
 		data: dataState,
-	} = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	} = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const state = ref<IState>(getDefaultState());
 
