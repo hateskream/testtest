@@ -9,7 +9,6 @@ import {
 	rehydrateLocations,
 } from './location';
 import { compareSort, type SortState } from './sort';
-import type { StateSchemaType } from '@/modules/news/service/validator.ts';
 import type { ISegmentRequest } from '@/modules/news';
 
 export interface IState {
@@ -69,7 +68,7 @@ export function hydrateState({
 	activeSort,
 	displaySettings,
 	locations,
-}: IState): StateSchemaType {
+}: IState) {
 	return {
 		score: Array.from(score),
 		segment: segment,

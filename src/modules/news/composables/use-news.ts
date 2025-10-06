@@ -1,24 +1,75 @@
 import { computed, ref, watch } from 'vue';
+import { z } from 'zod';
 
 import {
 	compareState,
 	getActiveLocations,
 	getDefaultState,
+	Source,
+	Sort,
 	type IDisplaySettings,
 	type ILocation,
 	type IState,
 	Score,
 	Sentiment,
 	type SortState,
-	Source,
+	rehydrateState,
+	hydrateState,
 } from '../model';
-import { useGetState, useUpdateState } from '../queries';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
+import { createStateQueries } from '@/shared/service/data-repo';
 import { useSegment } from '@/modules/news';
 
+const displaySettingsSchema = z.object({
+	isShowDate: z.boolean(),
+	isShowSource: z.boolean(),
+	isShowDesc: z.boolean(),
+	isShowAuthor: z.boolean(),
+	isShowSymbols: z.boolean(),
+	isShowScore: z.boolean(),
+});
+
+const activeLocationSchema = z.object({
+	region: z.string(),
+	countries: z.array(z.string()),
+});
+
+export const stateSchema = z.object({
+	score: z.array(z.nativeEnum(Score)),
+	segment: z.object({
+		selectAllFrom: z.array(z.enum(['crypto', 'stock', 'index', 'forex', 'commodity', 'all'])),
+		selectTickers: z.array(z.string()),
+		isAllTickersShow: z.boolean(),
+	}),
+	sentiment: z.array(z.nativeEnum(Sentiment)),
+	source: z.array(z.nativeEnum(Source)),
+	selectedTickers: z.array(z.string()),
+	activeSort: z.nativeEnum(Sort).nullable(),
+	displaySettings: displaySettingsSchema,
+	locations: z.array(activeLocationSchema),
+});
+
+export type StateSchemaType = z.infer<typeof stateSchema>;
+
+
 export function useNews(widgetId: string) {
-	const { data: dataState } = useGetState(widgetId);
-	const { mutate } = useUpdateState(widgetId);
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IState, StateSchemaType>({
+		storageKey: '__NEWS__',
+		isSaveChange: true,
+		getDefaultState: getDefaultState,
+		entityId: widgetId,
+		schema: stateSchema,
+		hydrateFn: hydrateState,
+		rehydrateFn: rehydrateState,
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const { data: dataState } = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const state = ref<IState>(getDefaultState());
 
