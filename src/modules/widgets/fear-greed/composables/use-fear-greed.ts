@@ -1,17 +1,44 @@
 import { computed, ref, watch } from 'vue';
+import z from 'zod';
 
-import { useGetSettings, useQueryTension, useUpdateSettings } from '../queries';
+import { useQueryTension } from '../queries';
 import { getDefaultViewState, type ISettings } from '../model';
+import { createStateQueries } from '@/shared/service/data-repo';
+
+const settingsSchema = z.object({
+	isShowChart: z.boolean(),
+	isShowName: z.boolean(),
+	isShowDescription: z.boolean(),
+	isShowPastValues: z.boolean(),
+});
+
+type ISettingsSchema = z.infer<typeof settingsSchema>;
 
 export function useFearGreed(widgetId: string) {
 	const viewState = ref<ISettings>(getDefaultViewState());
 
 	const { data, isLoading, isError, refetch } = useQueryTension();
+
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<ISettings, ISettingsSchema>({
+		storageKey: '__FEAR_GREED__',
+		isSaveChange: true,
+		getDefaultState: getDefaultViewState,
+		entityId: widgetId,
+		schema: settingsSchema,
+		hydrateFn: (s: ISettingsSchema): ISettings => s,
+		rehydrateFn: (s: ISettings): ISettingsSchema => s,
+		urlGet: '',
+		urlSet: '',
+	});
+
 	const {
 		data: dataSettings,
 		isLoading: isLoadingSettings,
-	} = useGetSettings(widgetId);
-	const { mutate } = useUpdateSettings(widgetId);
+	} = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const dataState = computed(() => ({
 		data: data.value,
