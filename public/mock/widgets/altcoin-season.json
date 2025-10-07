@@ -18,6 +18,772 @@
         "lastWeek": 22,
         "lastMonth": 24
     },
-    "top100": {},
-    "chart": {}
+    "top100": {
+			"tickers": [
+				{
+					"tickerId": "PlainText-Technology",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Technology"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Healthcare",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Healthcare"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Financials",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Financials"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Consumer Goods",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Consumer Goods"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Energy",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Energy"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Industrials",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Industrials"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Materials",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Materials"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Utilities",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Utilities"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Real Estate",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Real Estate"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Telecommunications",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Telecommunications"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Services",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Services"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Semiconductors",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Semiconductors"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Automotive Industry",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Automotive Industry"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Retail",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Retail"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Biotechnology",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Biotechnology"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Pharmaceuticals",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Pharmaceuticals"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Medical Devices",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Medical Devices"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Insurance",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Insurance"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Banking",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Banking"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Investment Services",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Investment Services"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Food & Beverages",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Food & Beverages"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Restaurants",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Restaurants"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Travel & Leisure",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Travel & Leisure"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Aerospace & Defense",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Aerospace & Defense"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Construction",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Construction"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Chemicals",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Chemicals"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Metals & Mining",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Metals & Mining"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Paper & Forest Products",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Paper & Forest Products"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Shipping & Logistics",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Shipping & Logistics"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Agriculture",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Agriculture"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Oil & Gas",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Oil & Gas"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Renewable Energy",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Renewable Energy"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Media & Entertainment",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Media & Entertainment"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Gaming & Esports",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Gaming & Esports"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Internet Services",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Internet Services"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Cloud Computing",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Cloud Computing"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Cybersecurity",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Cybersecurity"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Artificial Intelligence",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Artificial Intelligence"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Blockchain",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Blockchain"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-E-commerce",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "E-commerce"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Fashion & Apparel",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Fashion & Apparel"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Luxury Goods",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Luxury Goods"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Education",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Education"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Professional Services",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Professional Services"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Consulting",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Consulting"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Sports & Recreation",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Sports & Recreation"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Transportation",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Transportation"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Infrastructure",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Infrastructure"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Environmental Services",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Environmental Services"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				},
+				{
+					"tickerId": "PlainText-Waste Management",
+					"symbol": {
+						"cellType": "Symbol",
+						"columnType": "symbol",
+						"symbolType": "PlainText",
+						"text": "Waste Management"
+					},
+					"changePrice24hPercent": {
+						"cellType": "Percent",
+						"columnType": "changePrice24hPercent",
+						"value": "13",
+						"trend": "increase"
+					}
+				}
+			]
+		},
+    "chart": {
+			"labels": [
+				"09 Jul",
+				"19 Jul",
+				"29 Jul",
+				"08 Aug",
+				"18 Aug",
+				"28 Aug",
+				"07 Sep",
+				"17 Sep",
+				"27 Sep"
+			],
+			"metrics": [12, 18, 9, 21, 15, 27, 14, 19, 23]
+		}
 }
