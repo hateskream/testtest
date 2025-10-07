@@ -22,6 +22,8 @@ export function useFearGreed(widgetId: string) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		undo,
+		redo,
 	} = createStateQueries<ISettings, ISettingsSchema>({
 		storageKey: '__FEAR_GREED__',
 		isSaveChange: true,
@@ -56,8 +58,12 @@ export function useFearGreed(widgetId: string) {
 	}, { immediate: true });
 
 	watch(viewState, newSettings => {
+		if (JSON.stringify(newSettings) === JSON.stringify(dataSettings.value)) {
+			return;
+		}
 		mutate(newSettings);
 	}, { deep: true });
+
 
 	function resetAllChanges() {
 		viewState.value = getDefaultViewState();
@@ -70,5 +76,8 @@ export function useFearGreed(widgetId: string) {
 
 		resetAllChanges,
 		refetch,
+
+		undo,
+		redo,
 	};
 }
