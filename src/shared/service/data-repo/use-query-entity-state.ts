@@ -1,10 +1,16 @@
 import { useMutation, useQuery } from '@tanstack/vue-query';
 
-import { useRepository, type IOptions } from './use-repository';
+import { useRepository, type IOptionsRepository } from './use-repository';
 import { queryClient } from '@/shared/service/query-client';
 import { useHistoryManager } from './use-history';
 
+interface IOptions<TData, TSchema> extends IOptionsRepository<TData, TSchema> {
+	saveHistory?: boolean;
+}
+
 export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSchema>) {
+	const saveHistory = options.saveHistory ?? false;
+
 	const repository = useRepository(options);
 
 	const STATE_QUERY_KEY = [`state-${options.storageKey}`, options.entityId];
@@ -34,7 +40,7 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 
 			const previousSettings = queryClient.getQueryData<TData>(STATE_QUERY_KEY);
 
-			if (previousSettings) {
+			if (previousSettings && saveHistory) {
 				pushToHistory(previousSettings);
 			}
 
@@ -47,7 +53,10 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 			const ctx = context as { previousSettings?: TData };
 			if (ctx?.previousSettings) {
 				queryClient.setQueryData(STATE_QUERY_KEY, ctx.previousSettings);
-				undoStack.value.pop();
+
+				if (saveHistory) {
+					undoStack.value.pop();
+				}
 			}
 		},
 

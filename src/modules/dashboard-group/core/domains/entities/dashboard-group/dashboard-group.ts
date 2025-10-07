@@ -89,6 +89,7 @@ export class DashboardGroup {
 		this.findDashboardById(id).name = name;
 	}
 
+
 	getAllWidgetIds(type: WidgetType): string[] {
 		return this.findActiveDashboard().getAllWidgetIds(type);
 	}

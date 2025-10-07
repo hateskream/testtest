@@ -7,6 +7,7 @@ import { PresetWidget } from './widget-preset';
 import type { WidgetType } from './widget-type';
 
 export class Widget {
+
 	private constructor(
 		private readonly _id: string,
 		private readonly _preset: PresetWidget,
