@@ -83,6 +83,15 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 		};
 	}
 
+	if (w < 5 && h >= 11) {
+		return {
+			performanceRank: true,
+			historicalValues: true,
+			top100: true,
+			chart: true,
+		};
+	}
+
 	if (w >= 3 && h <= 5) {
 		return {
 			performanceRank: true,
@@ -125,6 +134,17 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 		top100: true,
 	};
 });
+
+const showCompactTop100 = computed(() =>
+	widgetDisplays.value.top100 &&
+	props.moduleSettings.top100 &&
+	props.sizeByCells.w < 5 &&
+	props.sizeByCells.h >= 8,
+);
+
+const showRightTop100 = computed(() =>
+	widgetDisplays.value.top100 && props.moduleSettings.top100 && !showCompactTop100.value,
+);
 </script>
 
 <template>
@@ -159,15 +179,23 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 			<div
 				v-if="widgetDisplays.chart && moduleSettings?.chart"
 				:class="[classes.chart, classes.slot]"
+				:style="{overflow: showCompactTop100 ? 'unset' : 'hidden'}"
 			>
 				<slot
 					name="chart"
 					v-bind="chartSlotProps"
 				/>
 			</div>
+
+			<div
+				v-if="showCompactTop100"
+				:class="classes.compact100"
+			>
+				<slot name="top100" />
+			</div>
 		</div>
 
-		<div v-if="widgetDisplays.top100 && moduleSettings?.top100" :class="classes.right">
+		<div v-if="showRightTop100" :class="classes.right">
 			<div
 				:class="[classes.top100, classes.slot]"
 			>
@@ -210,8 +238,14 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 	flex: unset;
 }
 
-.chart {
+.compact100 {
 	overflow: hidden;
+}
+
+@container top (max-height: 199px) {
+	.compact100 {
+		display: none;
+	}
 }
 
 .btcAndHistoricalContainer {

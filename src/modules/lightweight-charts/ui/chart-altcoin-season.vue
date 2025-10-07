@@ -5,7 +5,16 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 
 import { getExternalTooltipVaults } from '../utils';
 import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
-import { ALTCOIN_THRESHOLD, BITCOIN_THRESHOLD, DATA_CAP } from '@/modules/widgets/altcoinSeason/const';
+import {
+	ALTCOIN_THRESHOLD,
+	BITCOIN_THRESHOLD,
+	DATA_CAP,
+	graphActiveColor,
+	graphColor,
+	MIDDLE_THRESHOLD,
+	widgetActiveColor,
+	widgetColor,
+} from '@/modules/widgets/altcoinSeason/const';
 
 const props = defineProps<{
 	showX: boolean;
@@ -26,34 +35,141 @@ const legendsList = [
 
 const externalTooltipHandler = getExternalTooltipVaults(legendsList);
 
+function pickQuarter(rank: number) {
+	if (rank <= BITCOIN_THRESHOLD) {
+		return {
+			type: 'btc',
+			yMin: 0,
+			yMax: BITCOIN_THRESHOLD,
+			bg: graphActiveColor.bitcoinSeason,
+			stroke: widgetColor.bitcoinSeason,
+		};
+	} else if (rank <= MIDDLE_THRESHOLD) {
+		return {
+			type: 'neutralLow',
+			yMin: BITCOIN_THRESHOLD,
+			yMax: MIDDLE_THRESHOLD,
+			bg: 'transparent',
+			stroke: '#fff',
+		};
+	} else if (rank <= ALTCOIN_THRESHOLD) {
+		return {
+			type: 'neutralHigh',
+			yMin: MIDDLE_THRESHOLD,
+			yMax: ALTCOIN_THRESHOLD,
+			bg: 'transparent',
+			stroke: '#fff',
+		};
+	}
+
+	return {
+		type: 'alt',
+		yMin: ALTCOIN_THRESHOLD,
+		yMax: DATA_CAP,
+		bg: graphActiveColor.altcoinSeason,
+		stroke: widgetColor.altcoinSeason,
+	};
+}
+
 onMounted(() => {
 	const { labels } = props.chartData;
 
+	const active = pickQuarter(props.btcRank);
+	const borderDash = [3, 3];
+
+	const annotations = {
+		below: {
+			type: 'box',
+			yMin: 0,
+			yMax: active.yMin,
+			backgroundColor: 'rgba(0,0,0,0.5)',
+			borderWidth: 0,
+		},
+		above: {
+			type: 'box',
+			yMin: active.yMax,
+			yMax: DATA_CAP,
+			backgroundColor: 'rgba(0,0,0,0.5)',
+			borderWidth: 0,
+		},
+		active: {
+			type: 'box',
+			yMin: active.yMin,
+			yMax: active.yMax,
+			backgroundColor: active.bg,
+			borderWidth: 0,
+		},
+
+		topLine: {
+			type: 'line',
+			yMin: active.yMax,
+			yMax: active.yMax,
+			borderColor: active.stroke,
+			borderWidth: 2,
+			borderDash,
+		},
+		bottomLine: {
+			type: 'line',
+			yMin: active.yMin,
+			yMax: active.yMin,
+			borderColor: active.stroke,
+			borderWidth: 2,
+			borderDash,
+		},
+
+		neutralLine: {
+			type: 'line',
+			yMin: MIDDLE_THRESHOLD,
+			yMax: MIDDLE_THRESHOLD,
+			borderColor: 'rgba(255,255,255,0.6)',
+			borderWidth: 1,
+			borderDash,
+		},
+		btcThreshold: {
+			type: 'line',
+			yMin: BITCOIN_THRESHOLD,
+			yMax: BITCOIN_THRESHOLD,
+			borderColor: 'rgba(255,255,255,0.6)',
+			borderWidth: 1,
+			borderDash,
+		},
+		altcoinThreshold: {
+			type: 'line',
+			yMin: ALTCOIN_THRESHOLD,
+			yMax: ALTCOIN_THRESHOLD,
+			borderColor: 'rgba(255,255,255,0.6)',
+			borderWidth: 1,
+			borderDash,
+		},
+
+		btcThresholdBox: {
+			type: 'box',
+			yMin: 0,
+			yMax: BITCOIN_THRESHOLD,
+			backgroundColor: active.type !== 'btc' ? graphColor.bitcoinSeason : 'transparent',
+			borderWidth: 0,
+		},
+		altcoinThresholdBox: {
+			type: 'box',
+			yMin: ALTCOIN_THRESHOLD,
+			yMax: 30,
+			backgroundColor: active.type !== 'alt' ? graphColor.altcoinSeason : 'transparent',
+			borderWidth: 0,
+		},
+	} as const;
+
 	Chart.register(annotationPlugin);
-
-	const zone =
-		props.btcRank <= BITCOIN_THRESHOLD
-			? { yMin: 0, yMax: BITCOIN_THRESHOLD }
-			: props.btcRank < ALTCOIN_THRESHOLD
-				? { yMin: BITCOIN_THRESHOLD, yMax: ALTCOIN_THRESHOLD }
-				: { yMin: ALTCOIN_THRESHOLD, yMax: 100 };
-
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
 		data: {
 			labels,
 			datasets: [
 				{
-					data: Array(labels.length).fill(ALTCOIN_THRESHOLD),
-					backgroundColor: 'rgba(65, 59, 150, 0.1)',
-					fill: 'end',
-				},
-				{
 					data: props.chartData.metrics,
-					borderColor: '#FEB358',
+					borderColor: widgetActiveColor.neutralSeason,
 					borderWidth: 2,
 					pointStyle: false,
-					backgroundColor: 'rgba(254, 179, 88, 0.15)',
+					backgroundColor: widgetColor.neutralSeason,
 					fill: true,
 					tension: 0.3,
 				},
@@ -72,45 +188,7 @@ onMounted(() => {
 			},
 			plugins: {
 				annotation: {
-					annotations: {
-						below: {
-							type: 'box',
-							yMin: 0,
-							yMax: zone.yMin,
-							backgroundColor: 'rgba(0,0,0,0.5)',
-							borderWidth: 0,
-						},
-						above: {
-							type: 'box',
-							yMin: zone.yMax,
-							yMax: 100,
-							backgroundColor: 'rgba(0,0,0,0.5)',
-							borderWidth: 0,
-						},
-						active: {
-							type: 'box',
-							yMin: zone.yMin,
-							yMax: zone.yMax,
-							backgroundColor: 'transparent',
-							borderWidth: 0,
-						},
-						topLine: {
-							type: 'line',
-							yMin: zone.yMax,
-							yMax: zone.yMax,
-							borderColor: '#fff',
-							borderWidth: 2,
-							borderDash: [6, 4],
-						},
-						bottomLine: {
-							type: 'line',
-							yMin: zone.yMin,
-							yMax: zone.yMin,
-							borderColor: '#fff',
-							borderWidth: 2,
-							borderDash: [6, 4],
-						},
-					},
+					annotations: annotations,
 				},
 				legend: {
 					display: false,
@@ -128,12 +206,10 @@ onMounted(() => {
 					type: 'linear',
 					suggestedMax: DATA_CAP,
 					position: 'right',
-
 					grid: {
 						color: '#373737',
 						display: false,
 					},
-
 					ticks: {
 						padding: 20,
 						autoSkip: true,
@@ -145,8 +221,6 @@ onMounted(() => {
 							return value;
 						},
 					},
-
-
 					border: {
 						dash: [2, 2],
 					},
@@ -156,16 +230,13 @@ onMounted(() => {
 					ticks: {
 						padding: 10,
 					},
-
 					grid: {
 						display: false,
 					},
-
 					border: {
 						display: false,
 					},
 				},
-
 			},
 		},
 	});
