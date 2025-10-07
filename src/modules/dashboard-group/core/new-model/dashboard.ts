@@ -13,12 +13,26 @@ import { NAME_TO_PRESET, type PresetName } from './dashbord-presets';
 
 type Layout = Map<number, IWidget[]>;
 
-export interface IDashboard {
+export interface IDashboardPrivate {
 	id: string;
 	name: string;
 	order: number;
 	activeColNum: number;
 	layout: Layout;
+}
+
+export interface IDashboard {
+	id: string;
+	name: string;
+	order: number;
+	widgets: IWidget[];
+}
+
+export function fromInnerToPublicDashboard(dashboard: IDashboardPrivate): IDashboard {
+	return {
+		...dashboard,
+		widgets: getWidgets(dashboard),
+	};
 }
 
 // Lazy initialization of enabled widgets to avoid circular dependency issues
@@ -34,18 +48,18 @@ function getEnabledWidgets(): Set<WidgetType> {
 	return enableWidgets;
 }
 
-function getWidgets(dashboard: IDashboard): IWidget[] {
+function getWidgets(dashboard: IDashboardPrivate): IWidget[] {
 	return dashboard.layout.get(dashboard.activeColNum) || [];
 }
 
-function setWidgets(dashboard: IDashboard, widgets: IWidget[]): IDashboard {
+function setWidgets(dashboard: IDashboardPrivate, widgets: IWidget[]): IDashboardPrivate {
 	return {
 		...dashboard,
 		layout: new Map(dashboard.layout.set(dashboard.activeColNum, widgets)),
 	};
 }
 
-function setActiveColumn(dashboard: IDashboard, activeColNum: number): IDashboard {
+export function setActiveColumn(dashboard: IDashboardPrivate, activeColNum: number): IDashboardPrivate {
 	if (dashboard.activeColNum === activeColNum) {
 		return dashboard;
 	}
@@ -68,13 +82,13 @@ function setActiveColumn(dashboard: IDashboard, activeColNum: number): IDashboar
 	};
 }
 
-export function getAllWidgetIds(dashboard: IDashboard, type: WidgetType): string[] {
+export function getAllWidgetIds(dashboard: IDashboardPrivate, type: WidgetType): string[] {
 	return getWidgets(dashboard)
 		.filter(widget => widget.widgetType === type)
 		.map(widget => widget.id);
 }
 
-export function changeWidgetsState(dashboard: IDashboard, widgetsState: IWidgetState[]): IDashboard {
+export function changeWidgetsState(dashboard: IDashboardPrivate, widgetsState: IWidgetState[]): IDashboardPrivate {
 	const widgets = getWidgets(dashboard);
 
 	widgets.forEach(widget => {
@@ -87,7 +101,11 @@ export function changeWidgetsState(dashboard: IDashboard, widgetsState: IWidgetS
 	return setWidgets(dashboard, widgets);
 }
 
-export function deleteWidget(dashboard: IDashboard, widgetId: string, widgetsState: IWidgetState[]): IDashboard {
+export function deleteWidget(
+	dashboard: IDashboardPrivate,
+	widgetId: string,
+	widgetsState: IWidgetState[],
+): IDashboardPrivate {
 	const { layout } = dashboard;
 
 	layout.forEach((widgets, key) => {
@@ -105,11 +123,11 @@ export function deleteWidget(dashboard: IDashboard, widgetId: string, widgetsSta
 }
 
 export function addWidget(
-	dashboard: IDashboard,
+	dashboard: IDashboardPrivate,
 	widgetType: string,
 	position: IPosition,
 	widgetsState: IWidgetState[],
-): IDashboard {
+): IDashboardPrivate {
 	const widget = createWidget(widgetType, position);
 
 	const { layout } = dashboard;
@@ -132,7 +150,7 @@ function createDashboard(
 	order: number,
 	activeColNum: number,
 	layout: Layout,
-): IDashboard {
+): IDashboardPrivate {
 	return {
 		id: uuidv4(),
 		name,
@@ -142,18 +160,18 @@ function createDashboard(
 	};
 }
 
-export function createEmptyDashboard(order: number, activeColNum: number): IDashboard {
+export function createEmptyDashboard(order: number, activeColNum: number): IDashboardPrivate {
 	const layout = new Map();
 	layout.set(activeColNum, []);
 
 	return createDashboard('Dashboard', order, activeColNum, layout);
 }
 
-export function createDashboardFromPreset(presetName: PresetName, order: number): IDashboard {
+export function createDashboardFromPreset(presetName: PresetName, order: number, colNum: number): IDashboardPrivate {
 	const preset = NAME_TO_PRESET()[presetName];
 	const layout = new Map<number, IWidget[]>();
 
-	Object.entries(preset).forEach(([colNum, instances]) => {
+	Object.entries(preset).forEach(([cn, instances]) => {
 		const widgets = instances
 			.filter(instance => getEnabledWidgets().has(instance.type))
 			.map(instance => {
@@ -170,16 +188,11 @@ export function createDashboardFromPreset(presetName: PresetName, order: number)
 			});
 
 		if (widgets.length > 0) {
-			layout.set(Number(colNum), widgets);
+			layout.set(Number(cn), widgets);
 		}
 	});
 
-	/*
-		я полагаю экземпляр после создания
-		не будет использоваться сразу
-		поэтому ставлю несуществующую активную колонку
-	*/
-	return createDashboard(presetName, order, 0, layout);
+	return createDashboard(presetName, order, colNum, layout);
 }
 
 function rehydrateDashboard(
@@ -188,7 +201,7 @@ function rehydrateDashboard(
 	order: number,
 	activeColNum: number,
 	layout: Layout,
-): IDashboard {
+): IDashboardPrivate {
 	return {
 		id,
 		name,

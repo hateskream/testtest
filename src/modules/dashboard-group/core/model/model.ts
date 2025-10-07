@@ -1,3 +1,5 @@
+import type { WidgetType } from '../new-model';
+
 export interface IDashboardGroup {
 	activeDashboardId: string;
 	dashboards: IDashboard[];
@@ -65,17 +67,17 @@ export interface IMeta {
 	defaultStateType: string;
 }
 
-export enum WidgetType {
-	FearGreed = 'fear-greed',
-	BitcoinDominance = 'bitcoin-dominance',
-	Market = 'market',
-	MarketCap = 'market-cap',
-	News = 'news',
-	Price = 'price',
-	Watchlist = 'watchlist',
-	Performance = 'performance',
-	AltcoinSeason = 'altcoin-season',
-	TopIndices = 'top-indices',
-	Calendar = 'calendar',
-	Heatmap = 'heatmap',
-}
+// export enum WidgetType {
+// 	FearGreed = 'fear-greed',
+// 	BitcoinDominance = 'bitcoin-dominance',
+// 	Market = 'market',
+// 	MarketCap = 'market-cap',
+// 	News = 'news',
+// 	Price = 'price',
+// 	Watchlist = 'watchlist',
+// 	Performance = 'performance',
+// 	AltcoinSeason = 'altcoin-season',
+// 	TopIndices = 'top-indices',
+// 	Calendar = 'calendar',
+// 	Heatmap = 'heatmap',
+// }

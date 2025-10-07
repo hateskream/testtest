@@ -1,5 +1,6 @@
 import { updateById } from '@/shared/lib';
 import {
+	type IDashboardPrivate,
 	type IDashboard,
 	addWidget as addWidgetInDashboard,
 	createEmptyDashboard,
@@ -7,19 +8,22 @@ import {
 	deleteWidget as deleteWidgetInDashboard,
 	getAllWidgetIds as getAllWidgetIdsInDashboard,
 	createDashboardFromPreset,
+	fromInnerToPublicDashboard,
+	setActiveColumn,
 } from './dashboard';
 import type { IPosition, IWidgetState, WidgetType } from './widget';
 
-interface IDashboardGroup {
+export interface IDashboardGroup {
 	activeDashboardId: string;
-	dashboards: IDashboard[];
+	activeColNum: number;
+	dashboards: IDashboardPrivate[];
 }
 
-function getDashboardsByColNum(dg: IDashboardGroup, colNum: number): IDashboard[] {
-	return dg.dashboards.map(d => ({ ...d, activeColNum: colNum }));
+export function getDashboardsByColNum(dg: IDashboardGroup): IDashboard[] {
+	return dg.dashboards.map(fromInnerToPublicDashboard);
 }
 
-function addWidget(
+export function addWidget(
 	dg: IDashboardGroup,
 	type: string,
 	position: IPosition,
@@ -35,7 +39,7 @@ function addWidget(
 	};
 }
 
-function changeActiveDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
+export function changeActiveDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
 	return {
 		...dg,
 		activeDashboardId: id,
@@ -61,13 +65,14 @@ function changeTabOrder(dg: IDashboardGroup, newOrder: string[]): IDashboardGrou
 	};
 }
 
-function addNewDashboard(dg: IDashboardGroup): IDashboardGroup {
+export function addNewDashboard(dg: IDashboardGroup): IDashboardGroup {
 	const { activeColNum = 0 } = dg.dashboards[0] || {};
 
 	const newDashboard = createEmptyDashboard(dg.dashboards.length + 1, activeColNum);
 
 
 	return {
+		...dg,
 		activeDashboardId: newDashboard.id,
 		dashboards: [...dg.dashboards, newDashboard],
 	};
@@ -79,6 +84,7 @@ function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
 	}
 
 	return {
+		...dg,
 		activeDashboardId: selectNewActive(dg.dashboards, id),
 		dashboards: dg.dashboards
 			.filter(d => d.id !== id)
@@ -86,7 +92,7 @@ function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
 	};
 }
 
-function selectNewActive(dashboards: IDashboard[], id: string) {
+function selectNewActive(dashboards: IDashboardPrivate[], id: string) {
 	const newIndex = dashboards
 		.reverse()
 		.findIndex(dashboard => dashboard.id === id) - 1;
@@ -98,7 +104,7 @@ function selectNewActive(dashboards: IDashboard[], id: string) {
 	}
 }
 
-function changeWidgetsState(dg: IDashboardGroup, widgetsState: IWidgetState[]): IDashboardGroup {
+export function changeWidgetsState(dg: IDashboardGroup, widgetsState: IWidgetState[]): IDashboardGroup {
 	return {
 		...dg,
 		dashboards: updateById(
@@ -109,7 +115,7 @@ function changeWidgetsState(dg: IDashboardGroup, widgetsState: IWidgetState[]): 
 	};
 }
 
-function deleteWidget(dg: IDashboardGroup, widgetId: string, widgetsState: IWidgetState[]): IDashboardGroup {
+export function deleteWidget(dg: IDashboardGroup, widgetId: string, widgetsState: IWidgetState[]): IDashboardGroup {
 	return {
 		...dg,
 		dashboards: updateById(
@@ -120,7 +126,7 @@ function deleteWidget(dg: IDashboardGroup, widgetId: string, widgetsState: IWidg
 	};
 }
 
-function renameDashboard(dg: IDashboardGroup, id: string, name: string): IDashboardGroup {
+export function renameDashboard(dg: IDashboardGroup, id: string, name: string): IDashboardGroup {
 	return {
 		...dg,
 		dashboards: updateById(
@@ -137,14 +143,29 @@ function getAllWidgetIds(dg: IDashboardGroup, type: WidgetType): string[] {
 	return dashboard ? getAllWidgetIdsInDashboard(dashboard, type) : [];
 }
 
-function createDashboardGroup(): IDashboardGroup {
-	const mainDashboard = createDashboardFromPreset('Main', 0);
-	const cryptoDashboard = createDashboardFromPreset('Crypto', 1);
-	const stockDashboard = createDashboardFromPreset('Stock', 2);
-	const forexDashboard = createDashboardFromPreset('Forex', 3);
+function changeActiveColumnNum(dg: IDashboardGroup, colNum: number): IDashboardGroup {
+	return {
+		...dg,
+		activeColNum: colNum,
+		dashboards: dg.dashboards.map(d => setActiveColumn(d, colNum)),
+	};
+}
+
+export function createDashboardGroup(colNum: number): IDashboardGroup {
+	const mainDashboard = createDashboardFromPreset('Main', 0, colNum);
+	const cryptoDashboard = createDashboardFromPreset('Crypto', 1, colNum);
+	const stockDashboard = createDashboardFromPreset('Stock', 2, colNum);
+	const forexDashboard = createDashboardFromPreset('Forex', 3, colNum);
 
 	return {
+		activeColNum: colNum,
 		activeDashboardId: mainDashboard.id,
 		dashboards: [mainDashboard, cryptoDashboard, stockDashboard, forexDashboard],
 	};
+}
+
+export interface IDashboardTab {
+	id: string;
+	name: string;
+	isActive: boolean;
 }

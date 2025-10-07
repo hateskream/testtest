@@ -25,7 +25,7 @@ export interface IPosition {
 	h: number;
 }
 
-interface ISize {
+export interface ISize {
 	w: number;
 	h: number;
 }
@@ -35,7 +35,7 @@ export interface IWidgetState {
 	position: IPosition;
 }
 
-interface IWidgetPreset {
+export interface IWidgetPreset {
 	widgetType: WidgetType;
 	name: string;
 	description: string;
@@ -290,7 +290,7 @@ function createPreset(typeStr: string): IWidgetPreset {
 	return getPresetByType(type);
 }
 
-function allWidgets(): IWidgetPreset[] {
+export function allWidgets(): IWidgetPreset[] {
 	const presets = getPresets();
 
 	return Object.keys(presets).map(createPreset);

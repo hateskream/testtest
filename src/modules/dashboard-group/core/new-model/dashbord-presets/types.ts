@@ -1,4 +1,4 @@
-import { type ISize, WidgetType } from '../../widget';
+import { type ISize, WidgetType } from '../widget';
 
 export interface IPresetPosition {
 	x: number;

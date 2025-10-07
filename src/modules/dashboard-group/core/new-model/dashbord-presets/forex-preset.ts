@@ -1,4 +1,4 @@
-import { WidgetType } from '../../widget';
+import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
 export const FOREX_DASHBOARD_PRESET: PresetLayout = {
