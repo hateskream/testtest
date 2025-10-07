@@ -195,18 +195,18 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 	return createDashboard(presetName, order, colNum, layout);
 }
 
-function rehydrateDashboard(
-	id: string,
-	name: string,
-	order: number,
-	activeColNum: number,
-	layout: Layout,
-): IDashboardPrivate {
-	return {
-		id,
-		name,
-		order,
-		activeColNum,
-		layout,
-	};
-}
+// function rehydrateDashboard(
+// 	id: string,
+// 	name: string,
+// 	order: number,
+// 	activeColNum: number,
+// 	layout: Layout,
+// ): IDashboardPrivate {
+// 	return {
+// 		id,
+// 		name,
+// 		order,
+// 		activeColNum,
+// 		layout,
+// 	};
+// }

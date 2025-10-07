@@ -12,6 +12,6 @@ export { WidgetType } from './model';
 
 export { useDashboardGroupsStore } from './stores/dashboard-group-store';
 
-export { useGridLayout, useUsecase } from './composables';
+export { useGridLayout } from './composables';
 
 export { MAX_COL_WIDTH, MAX_ROW_HEIGHT, MIN_COL_WIDTH, MIN_ROW_HEIGHT } from './utils';

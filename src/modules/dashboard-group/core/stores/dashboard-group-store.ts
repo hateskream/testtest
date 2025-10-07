@@ -30,8 +30,6 @@ export interface IDashboard {
 export const useDashboardGroupsStore = defineStore('dashboardGroups', () => {
 	const preset = allWidgets();
 
-	const colNum = ref(1);
-
 	const state = ref<IDashboardGroup>({
 		activeDashboardId: '',
 		dashboards: [],

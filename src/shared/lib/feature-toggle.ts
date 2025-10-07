@@ -9,7 +9,6 @@ function checkIsConfigValidated() {
 const ALL_WIDGETS = [
 	'WIDGET_ALTCOIN_SEASON',
 	'WIDGET_FEAR_GREED',
-	'WIDGET_HOT_MARKETS',
 	'WIDGET_MARKET',
 	'WIDGET_MARKET_CAP',
 	'WIDGET_NEWS',

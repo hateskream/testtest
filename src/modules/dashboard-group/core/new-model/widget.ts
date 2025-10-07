@@ -9,7 +9,6 @@ export enum WidgetType {
 	MarketCap = 'market-cap',
 	News = 'news',
 	Price = 'price',
-	HotMarkets = 'hot-markets',
 	Watchlist = 'watchlist',
 	Performance = 'performance',
 	AltcoinSeason = 'altcoin-season',
@@ -115,14 +114,6 @@ const Watchlist: Preset = {
 	defaultSize: { w: 2, h: 6 },
 };
 
-const HotMarkets: Preset = {
-	name: 'Hot Markets',
-	description: 'Favorite symbols',
-	minSize: { w: 2, h: 4 }, // TODO сделать по дизайну
-	maxSize: { w: Infinity, h: Infinity }, // TODO сделать по дизайну
-	defaultSize: { w: 2, h: 6 }, // TODO сделать по дизайну
-};
-
 const Performance: Preset = {
 	name: 'Performance',
 	description: 'Performance',
@@ -185,7 +176,6 @@ const ProdPresets: AllPresets = {
 	[WidgetType.Price]: Price,
 	[WidgetType.News]: News,
 	[WidgetType.Watchlist]: Watchlist,
-	[WidgetType.HotMarkets]: HotMarkets,
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
@@ -201,7 +191,6 @@ const DevPresets: AllPresets = {
 	[WidgetType.Price]: Price,
 	[WidgetType.News]: News,
 	[WidgetType.Watchlist]: Watchlist,
-	[WidgetType.HotMarkets]: HotMarkets,
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
@@ -217,7 +206,6 @@ const DemoPresets: AllPresets = {
 	[WidgetType.Price]: Price,
 	[WidgetType.News]: News,
 	[WidgetType.Watchlist]: Watchlist,
-	[WidgetType.HotMarkets]: HotMarkets,
 	[WidgetType.Performance]: Performance,
 	[WidgetType.MarketCap]: MarketCap,
 	[WidgetType.AltcoinSeason]: AltcoinSeason,
@@ -245,7 +233,6 @@ function getCurrentPresets(): AllPresets {
 export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_ALTCOIN_SEASON': WidgetType.AltcoinSeason,
 	'WIDGET_FEAR_GREED': WidgetType.FearGreed,
-	'WIDGET_HOT_MARKETS': WidgetType.HotMarkets,
 	'WIDGET_MARKET': WidgetType.Market,
 	'WIDGET_MARKET_CAP': WidgetType.MarketCap,
 	'WIDGET_NEWS': WidgetType.News,
@@ -313,13 +300,13 @@ export function createWidget(type: string, position: IPosition, defaultStateType
 	};
 }
 
-function rehydrateWidget(id: string, type: string, position: IPosition): IWidget {
-	const preset = createPreset(type);
+// function rehydrateWidget(id: string, type: string, position: IPosition): IWidget {
+// 	const preset = createPreset(type);
 
-	return {
-		...preset,
-		id,
-		position,
-		defaultStateType: '',
-	};
-}
+// 	return {
+// 		...preset,
+// 		id,
+// 		position,
+// 		defaultStateType: '',
+// 	};
+// }
