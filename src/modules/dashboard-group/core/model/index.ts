@@ -1,2 +1,24 @@
-export * from './model';
-export { WidgetType } from '../new-model';
+export {
+	type IDashboardTab,
+	type IDashboardGroup,
+	createDashboardGroup,
+	getDashboardsByColNum,
+	addNewDashboard,
+	renameDashboard,
+	changeActiveDashboard,
+	changeWidgetsState,
+	deleteWidget,
+	addWidget,
+} from './dashboard-group';
+
+export { type IDashboard } from './dashboard';
+
+export {
+	type IWidgetPreset,
+	WidgetType,
+	type IPosition,
+	type IWidget,
+	type IWidgetState,
+	allWidgets,
+	type ISize,
+} from './widget';

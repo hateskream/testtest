@@ -1,5 +1,16 @@
+import type { ISize } from './model';
+
+export interface IMeta {
+	widgetId: string;
+	isResizing: boolean;
+	isLoading: boolean;
+	market: string;
+	name: string;
+	size: ISize;
+	defaultStateType: string;
+}
+
 export type {
-	IMeta,
 	IWidget,
 	IDashboardGroup,
 	IPosition,
@@ -8,6 +19,7 @@ export type {
 	IWidgetState,
 	ISize,
 } from './model';
+
 export { WidgetType } from './model';
 
 export { useDashboardGroupsStore } from './stores/dashboard-group-store';

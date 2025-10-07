@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 
 import {
 	type IDashboardTab,
-	// type IDashboard,
 	WidgetType,
 	type IPosition,
 	type IWidgetState,
@@ -18,7 +17,7 @@ import {
 	changeWidgetsState,
 	deleteWidget as deleteWidgetModel,
 	addWidget as addWidgetModel,
-} from '../new-model';
+} from '../model';
 
 export interface IDashboard {
 	id: string;
