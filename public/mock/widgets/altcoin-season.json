@@ -9,769 +9,739 @@
         }
     },
     "performanceRank": {
-        "btcRank": 16,
+        "btcRank": 6,
         "maxRank": 30,
         "period": "90D"
     },
     "historicalValues": {
-        "today": 16,
-        "lastWeek": 22,
+        "today": 6,
+        "lastWeek": 12,
         "lastMonth": 24
     },
     "top100": {
-			"tickers": [
-				{
-					"tickerId": "PlainText-Technology",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Technology"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
+		"tickers": [
+			{
+				"tickerId": "Crypto-BTCBitcoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "BTC"
 				},
-				{
-					"tickerId": "PlainText-Healthcare",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Healthcare"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Financials",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Financials"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Consumer Goods",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Consumer Goods"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Energy",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Energy"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Industrials",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Industrials"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Materials",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Materials"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Utilities",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Utilities"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Real Estate",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Real Estate"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Telecommunications",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Telecommunications"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Services",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Services"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Semiconductors",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Semiconductors"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Automotive Industry",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Automotive Industry"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Retail",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Retail"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Biotechnology",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Biotechnology"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Pharmaceuticals",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Pharmaceuticals"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Medical Devices",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Medical Devices"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Insurance",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Insurance"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Banking",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Banking"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Investment Services",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Investment Services"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Food & Beverages",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Food & Beverages"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Restaurants",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Restaurants"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Travel & Leisure",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Travel & Leisure"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Aerospace & Defense",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Aerospace & Defense"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Construction",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Construction"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Chemicals",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Chemicals"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Metals & Mining",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Metals & Mining"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Paper & Forest Products",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Paper & Forest Products"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Shipping & Logistics",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Shipping & Logistics"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Agriculture",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Agriculture"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Oil & Gas",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Oil & Gas"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Renewable Energy",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Renewable Energy"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Media & Entertainment",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Media & Entertainment"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Gaming & Esports",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Gaming & Esports"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Internet Services",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Internet Services"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Cloud Computing",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Cloud Computing"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Cybersecurity",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Cybersecurity"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Artificial Intelligence",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Artificial Intelligence"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Blockchain",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Blockchain"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-E-commerce",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "E-commerce"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Fashion & Apparel",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Fashion & Apparel"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Luxury Goods",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Luxury Goods"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Education",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Education"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Professional Services",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Professional Services"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Consulting",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Consulting"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Sports & Recreation",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Sports & Recreation"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Transportation",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Transportation"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Infrastructure",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Infrastructure"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Environmental Services",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Environmental Services"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
-				},
-				{
-					"tickerId": "PlainText-Waste Management",
-					"symbol": {
-						"cellType": "Symbol",
-						"columnType": "symbol",
-						"symbolType": "PlainText",
-						"text": "Waste Management"
-					},
-					"changePrice24hPercent": {
-						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
-						"value": "13",
-						"trend": "increase"
-					}
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "5.2",
+					"trend": "increase"
 				}
-			]
-		},
+			},
+			{
+				"tickerId": "Crypto-ETHEthereum",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ETH"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "8.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-BNBBinanceCoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "BNB"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "2.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ADACardano",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ADA"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "12.4",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-SOLSolana",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "SOL"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "18.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-XRPXRP(Ripple)",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "XRP"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "5.6",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-DOTPolkadot",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "DOT"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "7.1",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-DOGEDogecoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "DOGE"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "3.8",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-AVAXAvalanche",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "AVAX"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "14.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-MATICPolygon",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "MATIC"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "4.1",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-LINKChainlink",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "LINK"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "9.6",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-LTCLitecoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "LTC"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "2.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-UNIUniswap",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "UNI"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "11.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ATOMCosmos",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ATOM"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "7.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-XLMStellar",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "XLM"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "6.5",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ALGOAlgorand",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ALGO"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "15.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-VETVeChain",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "VET"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "3.4",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-FILFilecoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "FIL"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "4.8",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-TRXTRON",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "TRX"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "1.6",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-XMRMonero",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "XMR"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "8.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-EOSEOS",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "EOS"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "1.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-XTZTezos",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "XTZ"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "10.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-AAVEAave",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "AAVE"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "13.5",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-SANDTheSandbox",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "SAND"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "22.1",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-MANADecentraland",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "MANA"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "19.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-SHIBShibaInu",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "SHIB"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "6.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-APTAptos",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "APT"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "25.8",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-GRTTheGraph",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "GRT"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "16.4",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-NEARNEARProtocol",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "NEAR"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "9.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-FTMFantom",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "FTM"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "8.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-HBARHedera",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "HBAR"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "11.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ICPInternetComputer",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ICP"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "3.1",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-QNTQuant",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "QNT"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "12.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ETCEthereumClassic",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ETC"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "7.6",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-TONToncoin",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "TON"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "4.8",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-AXSAxieInfinity",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "AXS"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "9.4",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-CRVCurveDAO",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "CRV"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "12.5",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-THETATheta",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "THETA"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "5.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-1INCH1inch",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "1INCH"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "14.8",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-SNXSynthetix",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "SNX"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "2.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-EGLDElrond(MultiversX)",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "EGLD"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "17.2",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-CHZChiliz",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "CHZ"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "20.5",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-KAVAKava",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "KAVA"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "5.1",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-ZECZcash",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "ZEC"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "1.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-RUNETHORChain",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "RUNE"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "6.9",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-NEONEO",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "NEO"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "10.3",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-FLOWFlow",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "FLOW"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "11.7",
+					"trend": "increase"
+				}
+			},
+			{
+				"tickerId": "Crypto-BCHBitcoinCash",
+				"symbol": {
+					"cellType": "Symbol",
+					"columnType": "symbol",
+					"symbolType": "PlainText",
+					"text": "BCH"
+				},
+				"changePrice24hPercent": {
+					"cellType": "Percent",
+					"columnType": "changePrice24hPercent",
+					"value": "2.1",
+					"trend": "increase"
+				}
+			}
+		]
+	},
     "chart": {
 			"labels": [
 				"09 Jul",
@@ -784,6 +754,6 @@
 				"17 Sep",
 				"27 Sep"
 			],
-			"metrics": [12, 18, 9, 21, 15, 27, 14, 19, 23]
+			"metrics": [4, 8, 12, 10, 15, 20, 14, 4, 6]
 		}
 }
