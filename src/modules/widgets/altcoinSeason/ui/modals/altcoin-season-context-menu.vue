@@ -24,7 +24,7 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
-const selectedPeriod = defineModel<Period>('period', { required: true });
+const period = defineModel<Period>('period', { required: true });
 const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selectedModules', { required: true });
 
 const resetAll = () => {
@@ -55,7 +55,7 @@ const resetAll = () => {
 		<modal-submenu>
 			<template #title>Filter</template>
 			<template #content>
-				<altcoin-season-time-filter v-model:period="selectedPeriod" />
+				<altcoin-season-time-filter v-model:period="period" />
 			</template>
 		</modal-submenu>
 	</widget-context-menu>

@@ -6,7 +6,7 @@ import {
 	type IAltcoinSeasonConfig,
 } from '@/modules/widgets/altcoinSeason/model';
 
-const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selected-modules', { required: true });
+const selectedModules = defineModel<IAltcoinSeasonConfig['modules']>('selectedModules', { required: true });
 
 function handleModuleToggle(key: AltcoinSeasonModuleKey, value: boolean) {
 	selectedModules.value[key] = value;
