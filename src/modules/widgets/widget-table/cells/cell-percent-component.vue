@@ -45,7 +45,7 @@ const barColor = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.rootBarCell">
+	<div :class="classes.rootBarCell" class="percentCell">
 		<div
 			v-if="props.data.maxAbsValue"
 			:class="classes.barContainer"
@@ -59,7 +59,7 @@ const barColor = computed(() => {
 			/>
 		</div>
 		<span
-			:class="classes.valueText"
+			class="paragraph-p-00"
 			:style="{ color: barColor }"
 		>
 			{{ displayValue }}
@@ -71,6 +71,7 @@ const barColor = computed(() => {
 .rootBarCell {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 	gap: 12px;
 	width: 100%;
 	min-height: 24px;

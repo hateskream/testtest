@@ -172,7 +172,7 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 			:class="classes.headerRow"
 			item-key="key"
 			tag="tr"
-			class="draggable-container"
+			class="draggable-container headerRowAnchor"
 		>
 			<template #item="{ element: column, index }">
 				<th
@@ -279,12 +279,11 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 }
 
 .headerRow {
-	height: 44px;
+	height: 28px;
 }
 
 .headerCell {
 	position: relative;
-	min-height: 44px;
 	padding: 0 12px;
 	font-weight: 440;
 	font-size: 12px;
@@ -341,7 +340,7 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 	width: 100%;
 	gap: 8px;
 	min-width: 0;
-	min-height: 44px;
+	min-height: 28px;
 
 	.headerMain {
 		display: block;

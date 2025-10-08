@@ -41,6 +41,7 @@ const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 .performanceView {
 	display: flex;
 	flex-direction: column;
+	gap: 8px;
 	height: 100%;
 	overflow: hidden;
 }
