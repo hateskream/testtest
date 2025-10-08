@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
-import { useDashboardGroupsStore } from '@/modules/dashboard-group/core/stores/dashboard-group-store';
+import { ref } from 'vue';
+
+import { useDashboardGroup } from '@/modules/dashboard-group';
 
 export interface IDashboardStateWidget {
 	id: string;
@@ -33,7 +35,7 @@ export interface IDashboardState {
  */
 export function getDashboardState(): IDashboardState | null {
 	try {
-		const store = useDashboardGroupsStore();
+		const store = useDashboardGroup(ref(0));
 		if (!store) {
 			if (import.meta.env.MODE === 'development') {
 				console.warn('Dashboard store is not available');
@@ -43,7 +45,7 @@ export function getDashboardState(): IDashboardState | null {
 
 		const { activeDashboard, activeDashboardId } = store;
 
-		if (!activeDashboard?.widgets) {
+		if (!activeDashboard.value?.widgets) {
 			return null;
 		}
 
@@ -61,7 +63,7 @@ export function getDashboardState(): IDashboardState | null {
 		}
 
 		// Map widget data from store
-		const widgets: IDashboardStateWidget[] = activeDashboard.widgets.map(({
+		const widgets: IDashboardStateWidget[] = activeDashboard.value.widgets.map(({
 			id,
 			name,
 			widgetType,
@@ -81,8 +83,8 @@ export function getDashboardState(): IDashboardState | null {
 		}));
 
 		return {
-			activeDashboardId,
-			dashboardName: activeDashboard.name,
+			activeDashboardId: activeDashboardId.value,
+			dashboardName: activeDashboard.value.name,
 			gridSize,
 			widgets,
 		};
@@ -100,7 +102,7 @@ export function getDashboardState(): IDashboardState | null {
  */
 export function getAllDashboards() {
 	try {
-		const store = useDashboardGroupsStore();
+		const store = useDashboardGroup(ref(0));
 		if (!store) {
 			if (import.meta.env.MODE === 'development') {
 				console.warn('Dashboard store is not available');
@@ -110,7 +112,7 @@ export function getAllDashboards() {
 
 		const { dashboards } = store;
 
-		return dashboards.map(({ id, name, order, widgets }) => ({
+		return dashboards.value.map(({ id, name, order, widgets }) => ({
 			id,
 			name,
 			order,

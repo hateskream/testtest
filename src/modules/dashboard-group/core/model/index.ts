@@ -9,6 +9,8 @@ export {
 	changeWidgetsState,
 	deleteWidget,
 	addWidget,
+	areDashboardGroupsEqual,
+	changeActiveColumnNum,
 } from './dashboard-group';
 
 export { type IDashboard } from './dashboard';
@@ -21,4 +23,5 @@ export {
 	type IWidgetState,
 	allWidgets,
 	type ISize,
+	rehydrateWidget,
 } from './widget';

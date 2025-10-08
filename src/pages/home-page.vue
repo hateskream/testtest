@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { reactive, watch, type ComponentPublicInstance } from 'vue';
+import { reactive, type ComponentPublicInstance } from 'vue';
 import { templateRef } from '@vueuse/core';
 
 import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
@@ -10,28 +9,10 @@ import {
 	useDndHandler,
 	useDelete,
 	GhostComponentBase,
-	useDashboardGroupsStore,
 	useGridLayout,
+	useDashboardGroup,
 } from '@/modules/dashboard-group';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
-
-const dashboardStore = useDashboardGroupsStore();
-const {
-	addTab,
-	switchTab,
-	renameTab,
-	addWidget,
-	deleteWidget,
-	changeDashboardState,
-	loadDashboards,
-} = dashboardStore;
-const {
-	tabs,
-	activeDashboard,
-	preset,
-	activeDashboardId,
-	dashboards,
-} = storeToRefs(dashboardStore);
 
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
 const { provideCanDelete, setCanDelete } = useDelete();
@@ -46,6 +27,21 @@ const {
 	templateRef<ComponentPublicInstance>('dashboardGridRef'),
 );
 
+const {
+	addTab,
+	switchTab,
+	renameTab,
+	addWidget,
+	deleteWidget,
+	changeDashboardState,
+
+	tabs,
+	activeDashboard,
+	preset,
+	activeDashboardId,
+	dashboards,
+} = useDashboardGroup(columnsNum);
+
 provideSetterDndHandler();
 provideCanDelete();
 
@@ -53,31 +49,6 @@ const pageState = reactive({
 	isCurtainFixed: isCurtainMustFixed(),
 	isEdit: false,
 });
-
-watch(
-	columnsNum,
-	cn => {
-		if (pageState.isCurtainFixed && activeDashboard.value != null) {
-			return;
-		}
-
-		loadDashboards(cn);
-	},
-);
-
-watch(
-	activeDashboard,
-	() => {
-		if (isCurtainMustFixed()) {
-			pageState.isCurtainFixed = true;
-		} else {
-			pageState.isCurtainFixed = false;
-		}
-	},
-	{
-		deep: true,
-	},
-);
 
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;

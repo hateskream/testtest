@@ -9,9 +9,9 @@ import {
 	// getAllWidgetIds as getAllWidgetIdsInDashboard,
 	createDashboardFromPreset,
 	fromInnerToPublicDashboard,
-	// setActiveColumn,
+	setActiveColumn,
 } from './dashboard';
-import type { IPosition, IWidgetState } from './widget';
+import type { IPosition, ISize, IWidget, IWidgetState } from './widget';
 
 export interface IDashboardGroup {
 	activeDashboardId: string;
@@ -143,13 +143,13 @@ export function renameDashboard(dg: IDashboardGroup, id: string, name: string): 
 // 	return dashboard ? getAllWidgetIdsInDashboard(dashboard, type) : [];
 // }
 
-// function changeActiveColumnNum(dg: IDashboardGroup, colNum: number): IDashboardGroup {
-// 	return {
-// 		...dg,
-// 		activeColNum: colNum,
-// 		dashboards: dg.dashboards.map(d => setActiveColumn(d, colNum)),
-// 	};
-// }
+export function changeActiveColumnNum(dg: IDashboardGroup, colNum: number): IDashboardGroup {
+	return {
+		...dg,
+		activeColNum: colNum,
+		dashboards: dg.dashboards.map(d => setActiveColumn(d, colNum)),
+	};
+}
 
 export function createDashboardGroup(colNum: number): IDashboardGroup {
 	const mainDashboard = createDashboardFromPreset('Main', 0, colNum);
@@ -168,4 +168,127 @@ export interface IDashboardTab {
 	id: string;
 	name: string;
 	isActive: boolean;
+}
+
+export function areDashboardGroupsEqual(a: IDashboardGroup, b: IDashboardGroup): boolean {
+	if (a === b) {
+		return true;
+	}
+	if (!a || !b) {
+		return false;
+	}
+
+	if (a.activeDashboardId !== b.activeDashboardId) {
+		return false;
+	}
+	if (a.activeColNum !== b.activeColNum) {
+		return false;
+	}
+
+	if (a.dashboards.length !== b.dashboards.length) {
+		return false;
+	}
+
+	const sortDashboards = (d: IDashboardPrivate[]) =>
+		[...d].sort((x, y) => x.order - y.order || x.id.localeCompare(y.id));
+
+	const dashboardsA = sortDashboards(a.dashboards);
+	const dashboardsB = sortDashboards(b.dashboards);
+
+	// eslint-disable-next-line no-plusplus
+	for (let i = 0; i < dashboardsA.length; i++) {
+		const da = dashboardsA[i];
+		const db = dashboardsB[i];
+		if (!areDashboardsEqual(da, db)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function areDashboardsEqual(a: IDashboardPrivate, b: IDashboardPrivate): boolean {
+	if (a.id !== b.id) {
+		return false;
+	}
+	if (a.name !== b.name) {
+		return false;
+	}
+	if (a.order !== b.order) {
+		return false;
+	}
+	if (a.activeColNum !== b.activeColNum) {
+		return false;
+	}
+
+	// Compare layouts (Record<number, IWidget[]>)
+	const keysA = Object.keys(a.layout) as unknown as number[];
+	const keysB = Object.keys(b.layout);
+
+	if (keysA.length !== keysB.length) {
+		return false;
+	}
+
+	for (const key of keysA) {
+		if (!b.layout[key]) {
+			return false;
+		}
+
+		const widgetsA = a.layout[key];
+		const widgetsB = b.layout[key];
+
+		if (widgetsA.length !== widgetsB.length) {
+			return false;
+		}
+
+		for (let i = 0; i < widgetsA.length; i++) {
+			if (!areWidgetsEqual(widgetsA[i], widgetsB[i])) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+
+function areWidgetsEqual(a: IWidget, b: IWidget): boolean {
+	if (a.id !== b.id) {
+		return false;
+	}
+	if (a.name !== b.name) {
+		return false;
+	}
+	if (a.widgetType !== b.widgetType) {
+		return false;
+	}
+	if (a.description !== b.description) {
+		return false;
+	}
+	if (a.defaultStateType !== b.defaultStateType) {
+		return false;
+	}
+
+	if (!areSizeEqual(a.maxSize, b.maxSize)) {
+		return false;
+	}
+	if (!areSizeEqual(a.minSize, b.minSize)) {
+		return false;
+	}
+	if (!areSizeEqual(a.defaultSize, b.defaultSize)) {
+		return false;
+	}
+	if (!arePositionEqual(a.position, b.position)) {
+		return false;
+	}
+
+	return true;
+}
+
+function areSizeEqual(a: ISize, b: ISize): boolean {
+	return a.w === b.w && a.h === b.h;
+}
+
+function arePositionEqual(a: IPosition, b: IPosition): boolean {
+	return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
 }

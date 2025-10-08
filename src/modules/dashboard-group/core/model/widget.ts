@@ -300,13 +300,13 @@ export function createWidget(type: string, position: IPosition, defaultStateType
 	};
 }
 
-// function rehydrateWidget(id: string, type: string, position: IPosition): IWidget {
-// 	const preset = createPreset(type);
+export function rehydrateWidget(id: string, type: string, position: IPosition): IWidget {
+	const preset = createPreset(type);
 
-// 	return {
-// 		...preset,
-// 		id,
-// 		position,
-// 		defaultStateType: '',
-// 	};
-// }
+	return {
+		...preset,
+		id,
+		position,
+		defaultStateType: '',
+	};
+}

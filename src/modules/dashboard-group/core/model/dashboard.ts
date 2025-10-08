@@ -11,7 +11,7 @@ import {
 import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 import { NAME_TO_PRESET, type PresetName } from './dashbord-presets';
 
-type Layout = Map<number, IWidget[]>;
+type Layout = Record<number, IWidget[]>;
 
 export interface IDashboardPrivate {
 	id: string;
@@ -41,21 +41,23 @@ let enableWidgets: Set<WidgetType> | null = null;
 function getEnabledWidgets(): Set<WidgetType> {
 	if (enableWidgets === null) {
 		enableWidgets = new Set(
-			getAllEnableWidgets()
-				.map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
+			getAllEnableWidgets().map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
 		);
 	}
 	return enableWidgets;
 }
 
 function getWidgets(dashboard: IDashboardPrivate): IWidget[] {
-	return dashboard.layout.get(dashboard.activeColNum) || [];
+	return dashboard.layout[dashboard.activeColNum] || [];
 }
 
 function setWidgets(dashboard: IDashboardPrivate, widgets: IWidget[]): IDashboardPrivate {
 	return {
 		...dashboard,
-		layout: new Map(dashboard.layout.set(dashboard.activeColNum, widgets)),
+		layout: {
+			...dashboard.layout,
+			[dashboard.activeColNum]: [...widgets],
+		},
 	};
 }
 
@@ -64,7 +66,7 @@ export function setActiveColumn(dashboard: IDashboardPrivate, activeColNum: numb
 		return dashboard;
 	}
 
-	const activeColWidgets = dashboard.layout.get(activeColNum) || [];
+	const activeColWidgets = dashboard.layout[activeColNum] || [];
 
 	const seen = new Set<string>();
 	const uniqueWidgets = activeColWidgets.filter(widget => {
@@ -77,7 +79,10 @@ export function setActiveColumn(dashboard: IDashboardPrivate, activeColNum: numb
 	});
 
 	return {
-		...setWidgets(dashboard, uniqueWidgets),
+		...setWidgets({
+			...dashboard,
+			activeColNum,
+		}, uniqueWidgets),
 		activeColNum,
 	};
 }
@@ -91,14 +96,18 @@ export function getAllWidgetIds(dashboard: IDashboardPrivate, type: WidgetType):
 export function changeWidgetsState(dashboard: IDashboardPrivate, widgetsState: IWidgetState[]): IDashboardPrivate {
 	const widgets = getWidgets(dashboard);
 
-	widgets.forEach(widget => {
+	const updatedWidgets = widgets.map(widget => {
 		const widgetState = widgetsState.find(w => w.id === widget.id);
 		if (widgetState) {
-			widget.position = widgetState.position;
+			return {
+				...widget,
+				position: widgetState.position,
+			};
 		}
+		return widget;
 	});
 
-	return setWidgets(dashboard, widgets);
+	return setWidgets(dashboard, updatedWidgets);
 }
 
 export function deleteWidget(
@@ -106,17 +115,18 @@ export function deleteWidget(
 	widgetId: string,
 	widgetsState: IWidgetState[],
 ): IDashboardPrivate {
-	const { layout } = dashboard;
+	const newLayout: Layout = {};
 
-	layout.forEach((widgets, key) => {
-		const updatedWidgets = widgets.filter(w => w.id !== widgetId);
-		layout.set(key, updatedWidgets);
-	});
+	// eslint-disable-next-line no-restricted-syntax
+	for (const key in dashboard.layout) {
+		const widgets = dashboard.layout[key];
+		newLayout[key] = widgets.filter(w => w.id !== widgetId);
+	}
 
 	return changeWidgetsState(
 		{
 			...dashboard,
-			layout: new Map(layout),
+			layout: newLayout,
 		},
 		widgetsState,
 	);
@@ -130,16 +140,16 @@ export function addWidget(
 ): IDashboardPrivate {
 	const widget = createWidget(widgetType, position);
 
-	const { layout } = dashboard;
-
-	layout.forEach(widgets => {
-		widgets.push(widget);
-	});
+	const newLayout: Layout = {};
+	// eslint-disable-next-line no-restricted-syntax
+	for (const key in dashboard.layout) {
+		newLayout[key] = [...dashboard.layout[key], widget];
+	}
 
 	return changeWidgetsState(
 		{
 			...dashboard,
-			layout: new Map(layout),
+			layout: newLayout,
 		},
 		widgetsState,
 	);
@@ -161,15 +171,16 @@ function createDashboard(
 }
 
 export function createEmptyDashboard(order: number, activeColNum: number): IDashboardPrivate {
-	const layout = new Map();
-	layout.set(activeColNum, []);
+	const layout: Layout = {
+		[activeColNum]: [],
+	};
 
 	return createDashboard('Dashboard', order, activeColNum, layout);
 }
 
 export function createDashboardFromPreset(presetName: PresetName, order: number, colNum: number): IDashboardPrivate {
 	const preset = NAME_TO_PRESET()[presetName];
-	const layout = new Map<number, IWidget[]>();
+	const layout: Layout = {};
 
 	Object.entries(preset).forEach(([cn, instances]) => {
 		const widgets = instances
@@ -188,25 +199,9 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 			});
 
 		if (widgets.length > 0) {
-			layout.set(Number(cn), widgets);
+			layout[Number(cn)] = widgets;
 		}
 	});
 
 	return createDashboard(presetName, order, colNum, layout);
 }
-
-// function rehydrateDashboard(
-// 	id: string,
-// 	name: string,
-// 	order: number,
-// 	activeColNum: number,
-// 	layout: Layout,
-// ): IDashboardPrivate {
-// 	return {
-// 		id,
-// 		name,
-// 		order,
-// 		activeColNum,
-// 		layout,
-// 	};
-// }

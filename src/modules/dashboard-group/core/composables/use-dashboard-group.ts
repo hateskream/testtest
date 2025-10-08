@@ -1,0 +1,209 @@
+import { computed, ref, watch, type Ref } from 'vue';
+import { z } from 'zod';
+
+import {
+	type IDashboardTab,
+	WidgetType,
+	type IPosition,
+	type IWidgetState,
+	allWidgets,
+	type IDashboardGroup,
+	createDashboardGroup,
+	getDashboardsByColNum,
+	addNewDashboard,
+	renameDashboard,
+	changeActiveDashboard,
+	changeWidgetsState,
+	deleteWidget as deleteWidgetModel,
+	addWidget as addWidgetModel,
+	type IDashboard,
+	rehydrateWidget,
+	areDashboardGroupsEqual,
+	changeActiveColumnNum,
+} from '../model';
+import { createStateQueries } from '@/shared/service/data-repo';
+
+const PositionSchema = z.object({
+	x: z.number(),
+	y: z.number(),
+	w: z.number(),
+	h: z.number(),
+});
+
+export type Position = z.infer<typeof PositionSchema>;
+
+const WidgetSchema = z.object({
+	id: z.string(),
+	type: z.string(),
+	position: PositionSchema,
+});
+
+export type Widget = z.infer<typeof WidgetSchema>;
+
+const DashboardSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	order: z.number(),
+	activeColNum: z.number(),
+	layout:  z.record(z.array(WidgetSchema)),
+});
+
+export type Dashboard = z.infer<typeof DashboardSchema>;
+
+export const DashboardGroupSchema = z.object({
+	activeDashboardId: z.string(),
+	dashboards: z.array(DashboardSchema),
+});
+
+export type DashboardGroup = z.infer<typeof DashboardGroupSchema>;
+
+export function useDashboardGroup(colNum: Ref<number>) {
+	let isUserInteraction = true;
+
+	const {
+		useStateQuery,
+		useStateMutation,
+	} = createStateQueries<IDashboardGroup, DashboardGroup>({
+		storageKey: '__DASHBOARD_GROUP__',
+		isSaveChange: true,
+		getDefaultState: () => createDashboardGroup(colNum.value),
+		entityId: 'dashboard-group',
+		schema: DashboardGroupSchema,
+		hydrateFn: s => hydrate(s),
+		rehydrateFn: s => rehydrate(s, colNum.value),
+		urlGet: '',
+		urlSet: '',
+	});
+
+	const { data: dashboardGroupData } = useStateQuery();
+	const { mutate } = useStateMutation();
+
+	const preset = allWidgets();
+
+	const state = ref<IDashboardGroup>({
+		activeDashboardId: '',
+		dashboards: [],
+		activeColNum: 0,
+	});
+
+	const activeDashboardId = computed(() => state.value.activeDashboardId);
+
+	const dashboards = computed(() => getDashboardsByColNum(state.value));
+
+	const tabs = computed<IDashboardTab[]>(() =>
+		dashboards.value.map(group => ({
+			id: group.id,
+			name: group.name,
+			isActive: group.id === activeDashboardId.value,
+		})),
+	);
+
+	const activeDashboard = computed<IDashboard | null>(() =>
+		dashboards.value.find(el => el.id === activeDashboardId.value) || null,
+	);
+
+	watch(dashboardGroupData, newState => {
+		if (newState) {
+			state.value = { ...newState };
+		}
+	}, { immediate: true });
+
+	watch(state, (newState, oldState) => {
+		if (areDashboardGroupsEqual(newState, oldState)) {
+			return;
+		}
+
+		if (!isUserInteraction) {
+			isUserInteraction = true;
+			return;
+		}
+
+		mutate(newState);
+	}, { deep: true });
+
+	watch(colNum, newColNum => {
+		state.value = changeActiveColumnNum(state.value, newColNum);
+		isUserInteraction = false;
+	}, { immediate: true });
+
+	async function addTab() {
+		state.value = addNewDashboard(state.value);
+	}
+
+	async function renameTab(tabId: string, newName: string) {
+		state.value = renameDashboard(state.value, tabId, newName);
+	}
+
+	async function switchTab(tabId: string) {
+		state.value = changeActiveDashboard(state.value, tabId);
+	}
+
+	async function changeDashboardState(widgetsState: IWidgetState[]) {
+		state.value = changeWidgetsState(state.value, widgetsState);
+	}
+
+	async function deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
+		state.value = deleteWidgetModel(state.value, widgetId, widgetsState);
+	}
+
+	async function addWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
+		state.value = addWidgetModel(state.value, type, position, widgetsState);
+	}
+
+	return {
+		activeDashboardId,
+		preset,
+		dashboards,
+		tabs,
+		addTab,
+		renameTab,
+		switchTab,
+		activeDashboard,
+		addWidget,
+		deleteWidget,
+		changeDashboardState,
+	};
+}
+
+function rehydrate(data: DashboardGroup, colNum: number): IDashboardGroup {
+	return {
+		activeDashboardId: data.activeDashboardId,
+		activeColNum: colNum,
+		dashboards: data.dashboards.map(dashboard => ({
+			id: dashboard.id,
+			name: dashboard.name,
+			order: dashboard.order,
+			activeColNum: dashboard.activeColNum,
+			layout: Object.fromEntries(
+				Object.entries(dashboard.layout).map(([key, widgets]) => [
+					Number(key),
+					widgets.map(widget =>
+						rehydrateWidget(widget.id, widget.type, widget.position),
+					),
+				]),
+			),
+		})),
+	};
+}
+
+function hydrate(data: IDashboardGroup): DashboardGroup {
+	return {
+		activeDashboardId: data.activeDashboardId,
+		dashboards: data.dashboards.map(d => ({
+			id: d.id,
+			name: d.name,
+			order: d.order,
+			activeColNum: d.activeColNum,
+			layout: Object.fromEntries(
+				Object.entries(d.layout).map(([key, widgets]) => [
+					Number(key),
+					widgets.map(widget => ({
+						id: widget.id,
+						type: widget.widgetType,
+						position: widget.position,
+					})),
+				]),
+			),
+		})),
+	};
+}
