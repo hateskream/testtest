@@ -40,13 +40,16 @@ const barWidth = computed(() => {
 });
 
 const barColor = computed(() => {
+
 	if (props.data.trend === 'increase') {
 		return COLORS.POSITIVE;
 	}
 	if (props.data.trend === 'decrease') {
 		return COLORS.NEGATIVE;
 	}
-	return COLORS.POSITIVE;
+
+	const numValue = +(props.data.value ?? 0);
+	return numValue >= 0 ? COLORS.POSITIVE : COLORS.NEGATIVE;
 });
 </script>
 
