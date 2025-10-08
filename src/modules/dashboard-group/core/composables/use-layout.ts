@@ -1,8 +1,6 @@
 import { computed, ref, watch, type Ref } from 'vue';
 
-import { createGrid } from '../utils';
-import type { IPosition } from '../model';
-import type { IWidget } from '../../core';
+import { createGrid, mapToLayoutItem, type ILayoutItem, type IWidget } from '../model';
 
 export function useLayout(
 	columnsNum: Ref<number>,
@@ -12,7 +10,7 @@ export function useLayout(
 	const FAKE_ID_PREFIX = 'fake-id';
 	const DROP_ID = 'drop-id';
 
-	const layout = ref<IPosition[]>([]);
+	const layout = ref<ILayoutItem[]>([]);
 
 	const isEmpty = computed(() => rawWidgets.value.length === 0);
 	const hasDropId = computed(() => !!layout.value.find(item => item.i === DROP_ID));
@@ -30,7 +28,7 @@ export function useLayout(
 		},
 	);
 
-	function generateEmptyGrid(columns: number, rows: number): IPosition[] {
+	function generateEmptyGrid(columns: number, rows: number): ILayoutItem[] {
 		const totalCells = columns * rows;
 
 		return Array.from({ length: totalCells }, (_, index) => ({
@@ -54,10 +52,7 @@ export function useLayout(
 		if (isEmpty.value) {
 			layout.value = generateEmptyGrid(columnsNum.value, rowsNum.value);
 		} else {
-			const positions = rawWidgets.value.map(widget => ({
-				...widget.position,
-				i: widget.id,
-			}));
+			const positions = mapToLayoutItem(rawWidgets.value);
 
 			layout.value = createGrid(columnsNum.value, positions);
 		}

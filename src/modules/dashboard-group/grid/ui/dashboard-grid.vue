@@ -16,18 +16,19 @@ import {
 	useInjectCanDelete,
 	useInjectSetterDndHandler,
 	useMousePositionSync,
-	useLayout,
 } from '../composables';
 import {
 	type IWidget,
-	type IPosition as WidgetPosition,
+	type IPosition,
+	useLayout,
+	type ILayoutItem,
+	duplicate,
+	mapToWidgetState,
 } from '@/modules/dashboard-group/core';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
-import type { IPosition } from '../model';
 import type { IWidgetState, WidgetType } from '@/modules/dashboard-group/core';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
-import { mapToWidgetState } from '../utils';
 import { useDelayedLoading } from '@/shared/composables';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
@@ -58,11 +59,10 @@ const props = defineProps<IGridLayoutComponent>();
 
 const emit = defineEmits<{
 	(e: 'update-is-show-grid-state', value: boolean): void;
-	(e: 'add-widget', type: WidgetType, position: WidgetPosition, widgetsState: IWidgetState[]): void;
+	(e: 'add-widget', type: WidgetType, position: IPosition, widgetsState: IWidgetState[]): void;
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
 }>();
-
 
 let mountedPlaceholder: App<Element> | null = null;
 
@@ -104,7 +104,7 @@ const {
 const isEditable = computed(() => !isEmpty.value || gridState.isAddWidget);
 
 const { mouseAt } = useMousePositionSync();
-const dragItem = ref<IPosition>({ x: -1, y: -1, w: 2, h: 2, i: '' });
+const dragItem = ref<ILayoutItem>({ x: -1, y: -1, w: 2, h: 2, i: '' });
 
 watch(
 	() => gridState.isUserInteracted,
@@ -413,7 +413,7 @@ function handlerDragEnd() {
 
 		const newItemId = String(Date.now());
 
-		const position: IPosition = {
+		const position: ILayoutItem = {
 			x: finalX,
 			y: finalY,
 			w: dragItem.value.w,
@@ -461,6 +461,24 @@ function deleteDashboards(widgetId: string) {
 
 function updateLayout() {
 	emit('change-dashboard-state', mapToWidgetState(layout.value));
+}
+
+function duplicateDashboard(id: string) {
+	const result = duplicate(layout.value, id);
+	if (!result) {
+		return;
+	}
+
+	const { allWidgets, newWidget } = result;
+
+	const widget = getDashboardItemById(id);
+
+	emit(
+		'add-widget',
+		widget.widgetType,
+		newWidget,
+		mapToWidgetState(allWidgets),
+	);
 }
 
 onCreated();
@@ -511,6 +529,7 @@ onCreated();
 						v-if="!checkIsFake(item.i)"
 						:dashboard-item="getDashboardItemById(item.i)"
 						@delete="deleteDashboards(item.i)"
+						@duplicate="duplicateDashboard(item.i)"
 					/>
 				</template>
 				<template #state-dnd>

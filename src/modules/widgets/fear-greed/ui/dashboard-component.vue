@@ -26,6 +26,7 @@ const { viewState, dataState, isNotData, resetAllChanges, refetch } = useFearGre
 
 const emit = defineEmits<{
 	delete: [];
+	duplicate: [];
 }>();
 
 </script>
@@ -55,6 +56,7 @@ const emit = defineEmits<{
 				v-model="viewState"
 				:title="props.meta.name"
 				@delete="emit('delete')"
+				@duplicate="emit('duplicate')"
 				@reset="resetAllChanges"
 			/>
 		</template>

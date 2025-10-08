@@ -14,6 +14,7 @@ const settings = defineModel<ISettings>({ required: true });
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'duplicate'): void;
 	(e: 'reset'): void;
 }>();
 </script>
@@ -22,6 +23,7 @@ const emit = defineEmits<{
 	<widget-context-menu
 		:title="props.title"
 		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
 		@reset="emit('reset')"
 	>
 		<modal-submenu>

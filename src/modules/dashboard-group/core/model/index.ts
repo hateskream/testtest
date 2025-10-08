@@ -25,3 +25,5 @@ export {
 	type ISize,
 	rehydrateWidget,
 } from './widget';
+
+export * from './layout';
