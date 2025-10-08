@@ -81,6 +81,7 @@ function handleOpenRcm(e: MouseEvent) {
 					width="20px"
 					height="20px"
 				/>
+
 				<ui-icon
 					:id="IconIds.ControlShare"
 					:class="classes.iconWrapper"

@@ -22,6 +22,7 @@ import {
 	changeActiveColumnNum,
 	mapToLayoutItem,
 	moveTo as moveToModel,
+	deleteDashboard as deleteDashboardModel,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 
@@ -65,6 +66,7 @@ export function useDashboardGroup(colNum: Ref<number>) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		undo,
 	} = createStateQueries<IDashboardGroup, DashboardGroup>({
 		storageKey: '__DASHBOARD_GROUP__',
 		isSaveChange: true,
@@ -75,6 +77,7 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		rehydrateFn: s => rehydrate(s, colNum.value),
 		urlGet: '',
 		urlSet: '',
+		saveHistory: true,
 	});
 
 	const { data: dashboardGroupData } = useStateQuery();
@@ -111,6 +114,10 @@ export function useDashboardGroup(colNum: Ref<number>) {
 	}, { immediate: true });
 
 	watch(state, (newState, oldState) => {
+		if (newState.activeColNum === 0) {
+			return;
+		}
+
 		if (areDashboardGroupsEqual(newState, oldState)) {
 			return;
 		}
@@ -121,6 +128,7 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		}
 
 		mutate(newState);
+
 	}, { deep: true });
 
 	watch(colNum, newColNum => {
@@ -165,6 +173,10 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		state.value = addWidgetModel(state.value, type, newPosition, widgets, dashboardId);
 	}
 
+	function deleteDashboard(id: string) {
+		state.value = deleteDashboardModel(state.value, id);
+	}
+
 	return {
 		activeDashboardId,
 		preset,
@@ -178,6 +190,8 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		deleteWidget,
 		changeDashboardState,
 		moveTo,
+		deleteDashboard,
+		undo,
 	};
 }
 

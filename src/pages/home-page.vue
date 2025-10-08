@@ -2,7 +2,6 @@
 import { reactive, type ComponentPublicInstance } from 'vue';
 import { templateRef } from '@vueuse/core';
 
-import { DashboardGroupTabs } from '@/modules/dashboard-group-tabs';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
@@ -11,6 +10,7 @@ import {
 	GhostComponentBase,
 	useGridLayout,
 	useDashboardGroup,
+	DashboardGroupTabs,
 } from '@/modules/dashboard-group';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
 
@@ -35,6 +35,8 @@ const {
 	deleteWidget,
 	changeDashboardState,
 	moveTo,
+	deleteDashboard,
+	undo,
 
 	tabs,
 	activeDashboard,
@@ -87,6 +89,8 @@ function isCurtainMustFixed(): boolean {
 				@add-tab="addTab"
 				@switch-tab="switchTab"
 				@rename-tab="renameTab"
+				@delete="deleteDashboard"
+				@undo="undo"
 			/>
 		</template>
 		<template #content>

@@ -79,31 +79,31 @@ export function addNewDashboard(dg: IDashboardGroup): IDashboardGroup {
 	};
 }
 
-// function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
-// 	if (dg.dashboards.length === 1 || !dg.dashboards.find(d => d.id === id)) {
-// 		return dg;
-// 	}
+export function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
+	if (dg.dashboards.length === 1 || !dg.dashboards.find(d => d.id === id)) {
+		return dg;
+	}
 
-// 	return {
-// 		...dg,
-// 		activeDashboardId: selectNewActive(dg.dashboards, id),
-// 		dashboards: dg.dashboards
-// 			.filter(d => d.id !== id)
-// 			.map((d, index) => ({ ...d, order: index })),
-// 	};
-// }
+	return {
+		...dg,
+		activeDashboardId: selectNewActive(dg.dashboards, id),
+		dashboards: dg.dashboards
+			.filter(d => d.id !== id)
+			.map((d, index) => ({ ...d, order: index })),
+	};
+}
 
-// function selectNewActive(dashboards: IDashboardPrivate[], id: string) {
-// 	const newIndex = dashboards
-// 		.reverse()
-// 		.findIndex(dashboard => dashboard.id === id) - 1;
+function selectNewActive(dashboards: IDashboardPrivate[], id: string) {
+	const reversed = [...dashboards].reverse();
+	const newIndex = reversed.findIndex(dashboard => dashboard.id === id) - 1;
 
-// 	if (newIndex === -1) {
-// 		return dashboards[dashboards.length - 1].id;
-// 	} else {
-// 		return dashboards[newIndex].id;
-// 	}
-// }
+	if (newIndex === -1) {
+		return reversed[reversed.length - 1].id;
+	} else {
+		return reversed[newIndex].id;
+	}
+}
+
 
 export function changeWidgetsState(dg: IDashboardGroup, widgetsState: IWidgetState[]): IDashboardGroup {
 	return {

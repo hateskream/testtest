@@ -11,6 +11,7 @@ export {
 	addWidget,
 	areDashboardGroupsEqual,
 	changeActiveColumnNum,
+	deleteDashboard,
 } from './dashboard-group';
 
 export { type IDashboard } from './dashboard';

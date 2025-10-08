@@ -8,9 +8,8 @@
 .root {
 	position: sticky;
 	top: 0;
-	display: flex;
-	align-items: center;
-	min-height: 64px;
+	min-height: 72px;
+	padding-top: 16px;
 
 	/* eslint-disable-next-line prettier/prettier */
 	/* stylelint-disable-next-line declaration-colon-newline-after */
