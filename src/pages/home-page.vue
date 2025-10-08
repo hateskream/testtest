@@ -68,7 +68,7 @@ watch(isCurtainMustFixed, (mustBeFixed) => {
 	} else {
 		pageState.isCurtainFixed = false;
 	}
-});
+}, { immediate: true });
 
 function updateIsEdit(value: boolean) {
 	pageState.isEdit = value;

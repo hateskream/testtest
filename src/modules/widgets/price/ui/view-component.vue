@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
+import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	MarketBadge,
 	ModalBadge,
@@ -68,9 +69,13 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 		<div :class="classes.priceHeader">
 			<market-badge v-model="activeMarket" />
 
+			<div :class="classes.lineDelimiterGroup">
+				<ui-delimiter />
+			</div>
 			<modal-badge
 				v-for="(filterState, filterKey) in filters"
 				:key="filterKey"
+				:class="classes.filter"
 			>
 				<template #title v-if="filterState">
 					{{ filterValueToDisplay[filterState].label }}
@@ -137,6 +142,10 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	overflow: hidden;
 }
 
+.filter {
+	margin-left: 6px;
+}
+
 .priceHeader {
 	margin-inline: 12px;
 	display: flex;
@@ -162,6 +171,13 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	display: grid;
 	grid-template-columns: v-bind(gridTemplateContent);
 	width: 100%;
+}
+
+.lineDelimiterGroup {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: 6px;
 }
 
 .sectionEnterActive,

@@ -1,5 +1,5 @@
 import { MarketType } from '@/modules/market';
-import type { IconIds } from '@/shared/ui/icon';
+import { IconIds } from '@/shared/ui/icon';
 
 export enum FilterType {
 	MarketTrend = 'market-trend',
@@ -41,10 +41,10 @@ export enum TimeRangeFilterValue {
 export type FilterValue = MarketTrendFilterValue | RankingAndNewFilterValue | SectorFilterValue | TimeRangeFilterValue;
 
 export const filtersByMarketType: Record<MarketType, FilterType[]> = {
-	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.RankingAndNew],
-	[MarketType.Stock]: [FilterType.TimeRange, FilterType.MarketTrend],
+	[MarketType.Crypto]: [FilterType.RankingAndNew, FilterType.TimeRange],
+	[MarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
 	[MarketType.Forex]: [FilterType.TimeRange],
-	[MarketType.Commodities]: [FilterType.TimeRange, FilterType.Sector],
+	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
 	[MarketType.Indices]: [FilterType.TimeRange],
 };
 
@@ -55,29 +55,37 @@ export const filterTypeToValue: Record<FilterType, FilterValue[]> = {
 	[FilterType.TimeRange]: Object.values(TimeRangeFilterValue),
 };
 
+interface IIcon {
+	color: string;
+	id: IconIds;
+}
+
 export interface IFilterDisplay {
 	label: string;
 	value: string;
-	icon?: {
-		color: string;
-		id: IconIds;
-	};
+	icon?: IIcon;
 }
 
 export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
 	all: { label: 'All', value: 'all' },
-	gainers: { label: 'Gainers', value: 'gainers' },
-	losers: { label: 'Losers', value: 'losers' },
+	gainers: { label: 'Gainers', value: 'gainers', icon: {
+		id: IconIds.Gainers,
+		color: 'rgb(206 255 139 / 100%)',
+	} },
+	losers: { label: 'Losers', value: 'losers', icon: {
+		id: IconIds.Loosers,
+		color: 'rgb(248 89 97 / 50%)',
+	} },
 	top: { label: 'Top', value: 'top' },
 	[RankingAndNewFilterValue.New]: { label: 'New', value: 'new' },
 	[SectorFilterValue.Energy]: { label: 'Energy', value: 'energy' },
 	[SectorFilterValue.Metal]: { label: 'Metal', value: 'metal' },
-	[TimeRangeFilterValue.Day]: { label: 'Day', value: '1D' },
-	[TimeRangeFilterValue.Week]: { label: 'Week', value: '1W' },
-	[TimeRangeFilterValue.Month]: { label: 'Month', value: '1M' },
-	[TimeRangeFilterValue.ThreeMonths]: { label: '3 Months', value: '3M' },
-	[TimeRangeFilterValue.SixMonths]: { label: '6 Months', value: '6M' },
-	[TimeRangeFilterValue.Year]: { label: 'Year', value: '1Y' },
+	[TimeRangeFilterValue.Day]: { label: '1D', value: '1D' },
+	[TimeRangeFilterValue.Week]: { label: '1W', value: '1W' },
+	[TimeRangeFilterValue.Month]: { label: '1M', value: '1M' },
+	[TimeRangeFilterValue.ThreeMonths]: { label: '3M', value: '3M' },
+	[TimeRangeFilterValue.SixMonths]: { label: '6M', value: '6M' },
+	[TimeRangeFilterValue.Year]: { label: '1Y', value: '1Y' },
 };
 
 export const filterTypeToName: Record<FilterType, string> = {

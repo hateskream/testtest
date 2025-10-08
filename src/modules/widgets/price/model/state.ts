@@ -1,5 +1,12 @@
 import { MarketType } from '@/modules/market';
-import { FilterType, RankingAndNewFilterValue, TimeRangeFilterValue, type FilterValue } from './filters';
+import {
+	FilterType,
+	MarketTrendFilterValue,
+	RankingAndNewFilterValue,
+	SectorFilterValue,
+	TimeRangeFilterValue,
+	type FilterValue,
+} from './filters';
 
 export interface IDisplaySettings {
 	isShowChart: boolean;
@@ -41,29 +48,39 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 			[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 		},
 	},
 	[MarketType.Stock]: {
 		display: getDefaultsSettings(),
 		pinned: [],
-		filtersState: {},
+		filtersState: {
+			[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+		},
 	},
 	[MarketType.Forex]: {
 		display: getDefaultsSettings(),
 		pinned: [],
-		filtersState: {},
+		filtersState: {
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+		},
 	},
 	[MarketType.Commodities]: {
 		display: getDefaultsSettings(),
 		pinned: [],
-		filtersState: {},
+		filtersState: {
+			[FilterType.Sector]: SectorFilterValue.All,
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+		},
 	},
 	[MarketType.Indices]: {
 		display: getDefaultsSettings(),
 		pinned: [],
-		filtersState: {},
+		filtersState: {
+			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+		},
 	},
 };
 
