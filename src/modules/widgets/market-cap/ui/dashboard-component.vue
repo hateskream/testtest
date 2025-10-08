@@ -30,6 +30,8 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -48,7 +50,13 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<market-cap-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<market-cap-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emit('delete')"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

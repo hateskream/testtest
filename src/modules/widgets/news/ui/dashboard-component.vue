@@ -67,6 +67,8 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -115,11 +117,14 @@ const emit = defineEmits<{
 				:title="props.meta.name"
 				:segments="segments"
 				:selected-segment-tickers="selectedSegmentTickers"
+				:dashboards="props.meta.dashboards"
 				@select-all="selectAll"
 				@unselect-all="unselectAll"
 				@toggle-ticker="toggleTicker"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

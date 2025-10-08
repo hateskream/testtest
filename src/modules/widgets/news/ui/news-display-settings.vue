@@ -15,11 +15,17 @@ import {
 	toggleSetting,
 } from '@/modules/news';
 
-const props = defineProps<{
+interface INewsSettingsProps {
 	title: string;
 	segments: ISegmentData[];
 	selectedSegmentTickers: SelectedSegmentTickersState;
-}>();
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
+}
+
+const props = defineProps<INewsSettingsProps>();
 
 const emit = defineEmits<{
 	selectAll: [id: MarketType];
@@ -27,6 +33,8 @@ const emit = defineEmits<{
 	toggleTicker: [id: MarketType, tickerId: string];
 	delete: [];
 	reset: [];
+	duplicate: [];
+	moveTo: [dashboardId: string];
 }>();
 
 const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
@@ -47,9 +55,12 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 
 <template>
 	<widget-context-menu
+		:dashboards="props.dashboards"
 		:title="props.title"
 		@delete="emit('delete')"
 		@reset="emit('reset')"
+		@move-to="emit('moveTo', $event)"
+		@duplicate="emit('duplicate')"
 	>
 		<modal-submenu>
 			<template #title> Change display </template>

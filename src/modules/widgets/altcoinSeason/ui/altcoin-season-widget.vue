@@ -23,6 +23,8 @@ const props = defineProps<IAltcoinSeasonWidgetProps>();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const altcoinSeasonStore = useAltcoinSeasonStore();
@@ -49,8 +51,11 @@ const isError = computed(() => altcoinSeasonStore.isError.value);
 		<template #rcm>
 			<altcoin-season-context-menu
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
 				:widget-config="widgetConfig || null"
 				@delete="emit('delete')"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

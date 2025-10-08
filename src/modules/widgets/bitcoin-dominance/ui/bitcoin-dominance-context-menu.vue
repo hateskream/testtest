@@ -11,17 +11,26 @@ const bitcoinDominanceStore = useBitcoinDominanceStore();
 
 const props = defineProps<{
 	title: string;
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
 }>();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
 <template>
 	<widget-context-menu
+		:dashboards="props.dashboards"
 		:title="props.title"
 		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
 		@reset="bitcoinDominanceStore.resetAll"
 	>
 		<modal-submenu>

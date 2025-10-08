@@ -23,6 +23,11 @@ interface IProps {
 	activeGroupBy: ISettings | null;
 
 	title: string;
+
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
 }
 
 const props = defineProps<IProps>();
@@ -30,6 +35,8 @@ const props = defineProps<IProps>();
 const emit = defineEmits<{
 	(e: 'delete'): void;
 	(e: 'reset'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const marketSettings = defineModel<IMarketSettings>('market', { required: true });
@@ -127,8 +134,11 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 <template>
 	<widget-context-menu
 		:title="props.title"
+		:dashboards="props.dashboards"
 		@delete="emit('delete')"
 		@reset="emit('reset')"
+		@move-to="emit('moveTo', $event)"
+		@duplicate="emit('duplicate')"
 	>
 		<modal-submenu>
 			<template #title>Change display</template>

@@ -32,6 +32,8 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -53,7 +55,11 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<bitcoin-dominance-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<bitcoin-dominance-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emit('delete')"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

@@ -60,6 +60,8 @@ const isNotData = computed(() => (!rows.value.length && isLoading.value) || prop
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -89,8 +91,11 @@ const emit = defineEmits<{
 			<market-context-menu
 				v-model="columns"
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 

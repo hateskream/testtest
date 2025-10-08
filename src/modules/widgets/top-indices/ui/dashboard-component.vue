@@ -29,6 +29,8 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -56,7 +58,13 @@ const emit = defineEmits<{
 		</template>
 
 		<template #rcm>
-			<top-indices-context-menu :title="props.meta.name" @delete="emit('delete')" />
+			<top-indices-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emit('delete')"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

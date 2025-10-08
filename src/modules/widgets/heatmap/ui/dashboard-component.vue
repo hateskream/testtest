@@ -23,6 +23,8 @@ const props = defineProps<IWidgetComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const {
@@ -97,8 +99,11 @@ const {
 				:active-size-by="activeSizeBy!"
 				:active-display-value="activeDisplayValue!"
 				:active-group-by="activeGroupBy!"
+				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

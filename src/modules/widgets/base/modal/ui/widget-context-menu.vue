@@ -10,7 +10,7 @@ import { UiPosition } from '@/shared/ui/position';
 
 interface IWidgetContextMenuProps {
 	title: string;
-	dashboards?: {
+	dashboards: {
 		id: string;
 		name: string;
 	}[];
@@ -19,7 +19,6 @@ interface IWidgetContextMenuProps {
 
 const props = withDefaults(defineProps<IWidgetContextMenuProps>(), {
 	hasReset: true,
-	dashboards: () => [],
 });
 
 const emits = defineEmits<{

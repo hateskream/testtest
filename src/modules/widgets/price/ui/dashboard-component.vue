@@ -34,6 +34,8 @@ const {
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 </script>
 
@@ -56,8 +58,11 @@ const emit = defineEmits<{
 			<price-list-context-menu
 				v-model="currentSettings"
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

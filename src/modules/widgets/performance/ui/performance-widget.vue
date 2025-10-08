@@ -24,6 +24,8 @@ const props = defineProps<IWidgetComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const {
@@ -68,8 +70,11 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 				v-model:stock="currentStock"
 				v-model:date="currentDate"
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

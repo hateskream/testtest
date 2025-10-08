@@ -22,6 +22,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const {
@@ -88,6 +90,9 @@ const isNotData = computed(() => (!!data?.value && isLoading.value) || props.met
 		<template #rcm>
 			<watchlist-context-menu
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@move-to="emit('moveTo', $event)"
+				@duplicate="emit('duplicate')"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
 			/>

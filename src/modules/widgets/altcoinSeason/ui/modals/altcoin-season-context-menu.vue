@@ -11,11 +11,17 @@ const performanceStore = usePerformanceStore();
 
 interface IAltcoinSeasonContextMenuProps {
 	title: string;
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
 }
 const props = defineProps<IAltcoinSeasonContextMenuProps>();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
 }>();
 
 const resetAll = () => {
@@ -27,9 +33,12 @@ const resetAll = () => {
 
 <template>
 	<widget-context-menu
+		:dashboards="props.dashboards"
 		:title="props.title"
 		@delete="emit('delete')"
 		@reset="resetAll"
+		@move-to="emit('moveTo', $event)"
+		@duplicate="emit('duplicate')"
 	>
 		<modal-submenu>
 			<template #title>Change display</template>
