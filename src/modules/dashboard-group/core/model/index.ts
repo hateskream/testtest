@@ -9,7 +9,6 @@ export {
 	changeWidgetsState,
 	deleteWidget,
 	addWidget,
-	areDashboardGroupsEqual,
 	changeActiveColumnNum,
 	deleteDashboard,
 } from './dashboard-group';

@@ -1,4 +1,4 @@
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, nextTick, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
 import {
@@ -18,7 +18,6 @@ import {
 	addWidget as addWidgetModel,
 	type IDashboard,
 	rehydrateWidget,
-	areDashboardGroupsEqual,
 	changeActiveColumnNum,
 	mapToLayoutItem,
 	moveTo as moveToModel,
@@ -61,7 +60,7 @@ export const DashboardGroupSchema = z.object({
 export type DashboardGroup = z.infer<typeof DashboardGroupSchema>;
 
 export function useDashboardGroup(colNum: Ref<number>) {
-	let isUserInteraction = true;
+	let isUserInteraction: boolean = true;
 
 	const {
 		useStateQuery,
@@ -80,8 +79,20 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		saveHistory: true,
 	});
 
-	const { data: dashboardGroupData } = useStateQuery();
-	const { mutate } = useStateMutation();
+	const { data: dashboardGroupData, error } = useStateQuery();
+	const { mutate, error: mutationError } = useStateMutation();
+
+	watch(error, () => {
+		if (error.value) {
+			console.log(error.value);
+		}
+	});
+
+	watch(mutationError, () => {
+		if (mutationError.value) {
+			console.log(mutationError.value);
+		}
+	});
 
 	const preset = allWidgets();
 
@@ -90,6 +101,8 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		dashboards: [],
 		activeColNum: 0,
 	});
+
+	const isUndo = ref(false);
 
 	const activeDashboardId = computed(() => state.value.activeDashboardId);
 
@@ -118,12 +131,14 @@ export function useDashboardGroup(colNum: Ref<number>) {
 			return;
 		}
 
-		if (areDashboardGroupsEqual(newState, oldState)) {
+		if (JSON.stringify(newState) === JSON.stringify(oldState)) {
 			return;
 		}
 
 		if (!isUserInteraction) {
-			isUserInteraction = true;
+			nextTick(() => {
+				isUserInteraction = true;
+			});
 			return;
 		}
 
@@ -177,11 +192,26 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		state.value = deleteDashboardModel(state.value, id);
 	}
 
+	function undoDeleteTab() {
+		console.log('dashboards.value.lengt', dashboards.value.length);
+		undo();
+
+		if (dashboards.value.length < 2) {
+			return;
+		}
+
+		isUndo.value = true;
+		nextTick(() => {
+			isUndo.value = false;
+		});
+	}
+
 	return {
 		activeDashboardId,
 		preset,
 		dashboards,
 		tabs,
+		isUndo,
 		addTab,
 		renameTab,
 		switchTab,
@@ -191,7 +221,7 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		changeDashboardState,
 		moveTo,
 		deleteDashboard,
-		undo,
+		undoDeleteTab,
 	};
 }
 

@@ -23,7 +23,6 @@ interface ILayoutComponentProps {
 }
 
 const env = getEnvironmentName();
-
 const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 	isEditMode: false,
 });
@@ -34,8 +33,8 @@ const { width } = useWindowSize();
 
 const layoutState = reactive<ILayoutState>({
 	isOpenCurtain: false,
-	isCurtainFixed: isLargestScreen(),
-	isSidebarExpanded: isLargestScreen(),
+	isCurtainFixed: false,
+	isSidebarExpanded: false,
 });
 
 const curtainRef = useTemplateRef<HTMLElement>('curtainRef');
@@ -46,63 +45,70 @@ const rightPanelRef = useTemplateRef('rightPanelRef');
 const leftPanelRef = useTemplateRef('leftPanelRef');
 
 const { pannelWidth } = usePanelWidth(leftPanelRef, rightPanelRef);
-
 const { isMouseInElement } = useMousePosition(curtainGuardRef);
 
 const isCurtainIconHovered = useElementHover(curtainIconRef);
 const isAddWidgetIconHovered = useElementHover(addWidgetIconRef);
+const isControlOpenCurtainHovered = computed(
+	() => isCurtainIconHovered.value || isAddWidgetIconHovered.value,
+);
 
-const isControlOpenCurtainHovered = computed(() => isCurtainIconHovered.value || isAddWidgetIconHovered.value);
+const isLargeScreen = computed(() => width.value >= 2560);
 
-const centerContentStyle = computed((): Partial<CSSProperties> => {
-	return {
-		marginLeft: `${pannelWidth.left}px`,
-		marginRight: `${pannelWidth.right}px`,
-	};
-});
+const canChangeCurtainFix = computed(() => !isLargeScreen.value);
 
-watch(isControlOpenCurtainHovered, newValue => {
-	if (newValue) {
+const centerContentStyle = computed((): Partial<CSSProperties> => ({
+	marginLeft: `${pannelWidth.left}px`,
+	marginRight: `${pannelWidth.right}px`,
+}));
+
+
+watch(isControlOpenCurtainHovered, (hovered) => {
+	if (hovered) {
 		openCurtain();
 	}
 });
 
-watch(() => isCurtainFixed.value, newValue => {
-	if (isLargestScreen()) {
-		isCurtainFixed.value = true;
-		layoutState.isCurtainFixed = true;
-		return;
+watch(isMouseInElement, (inside) => {
+	if (!inside) {
+		closeCurtain();
 	}
-
-	layoutState.isCurtainFixed = newValue;
 });
 
 watch(
-	() => layoutState.isCurtainFixed,
-	() => {
-		closeCurtain();
+	isLargeScreen,
+	(isLarge) => {
+		if (isLarge) {
+
+			isCurtainFixed.value = true;
+			layoutState.isCurtainFixed = true;
+			layoutState.isSidebarExpanded = true;
+		} else {
+
+			layoutState.isCurtainFixed = isCurtainFixed.value;
+			layoutState.isSidebarExpanded = false;
+		}
 	},
+	{ immediate: true },
 );
 
-watch(isMouseInElement, newValue => {
-	if (!newValue) {
-		closeCurtain();
-	}
-});
+watch(
+	() => isCurtainFixed.value,
+	(newValue) => {
+		if (isLargeScreen.value) {
 
-watch(() => width.value, () => {
-	if (!isLargestScreen()) {
-		return;
-	}
-	isCurtainFixed.value = true;
-	layoutState.isSidebarExpanded = true;
-}, { immediate: true });
+			isCurtainFixed.value = true;
+			layoutState.isCurtainFixed = true;
+			return;
+		}
+		layoutState.isCurtainFixed = newValue;
+	},
+);
 
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
 		return;
 	}
-
 	layoutState.isOpenCurtain = true;
 }
 
@@ -111,10 +117,11 @@ function closeCurtain() {
 }
 
 function unFixCurtain() {
-	if (isLargestScreen()) {
+	if (!canChangeCurtainFix.value) {
 		return;
 	}
 	isCurtainFixed.value = false;
+	layoutState.isCurtainFixed = false;
 }
 
 function expandSidebar() {
@@ -122,14 +129,10 @@ function expandSidebar() {
 }
 
 function minifySidebar() {
-	if (isLargestScreen()) {
+	if (isLargeScreen.value) {
 		return;
 	}
 	layoutState.isSidebarExpanded = false;
-}
-
-function isLargestScreen() {
-	return width.value >= 2560;
 }
 </script>
 

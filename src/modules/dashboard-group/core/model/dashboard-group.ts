@@ -11,7 +11,7 @@ import {
 	fromInnerToPublicDashboard,
 	setActiveColumn,
 } from './dashboard';
-import type { IPosition, ISize, IWidget, IWidgetState } from './widget';
+import type { IPosition, IWidgetState } from './widget';
 
 export interface IDashboardGroup {
 	activeDashboardId: string;
@@ -80,8 +80,20 @@ export function addNewDashboard(dg: IDashboardGroup): IDashboardGroup {
 }
 
 export function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
-	if (dg.dashboards.length === 1 || !dg.dashboards.find(d => d.id === id)) {
+	if (!dg.dashboards.find(d => d.id === id)) {
 		return dg;
+	}
+
+	if (dg.dashboards.length === 1) {
+		const { activeColNum = 0 } = dg.dashboards[0] || {};
+
+		const newDashboard = createEmptyDashboard(dg.dashboards.length + 1, activeColNum);
+
+		return {
+			...dg,
+			activeDashboardId: newDashboard.id,
+			dashboards: [newDashboard],
+		};
 	}
 
 	return {
@@ -94,14 +106,21 @@ export function deleteDashboard(dg: IDashboardGroup, id: string): IDashboardGrou
 }
 
 function selectNewActive(dashboards: IDashboardPrivate[], id: string) {
-	const reversed = [...dashboards].reverse();
-	const newIndex = reversed.findIndex(dashboard => dashboard.id === id) - 1;
+	const index = dashboards.findIndex(d => d.id === id);
 
-	if (newIndex === -1) {
-		return reversed[reversed.length - 1].id;
-	} else {
-		return reversed[newIndex].id;
+	if (index === -1) {
+		return dashboards[0]?.id;
 	}
+
+	if (index > 0) {
+		return dashboards[index - 1].id;
+	}
+
+	if (dashboards.length > 1) {
+		return dashboards[index + 1].id;
+	}
+
+	return id;
 }
 
 
@@ -169,127 +188,4 @@ export interface IDashboardTab {
 	id: string;
 	name: string;
 	isActive: boolean;
-}
-
-export function areDashboardGroupsEqual(a: IDashboardGroup, b: IDashboardGroup): boolean {
-	if (a === b) {
-		return true;
-	}
-	if (!a || !b) {
-		return false;
-	}
-
-	if (a.activeDashboardId !== b.activeDashboardId) {
-		return false;
-	}
-	if (a.activeColNum !== b.activeColNum) {
-		return false;
-	}
-
-	if (a.dashboards.length !== b.dashboards.length) {
-		return false;
-	}
-
-	const sortDashboards = (d: IDashboardPrivate[]) =>
-		[...d].sort((x, y) => x.order - y.order || x.id.localeCompare(y.id));
-
-	const dashboardsA = sortDashboards(a.dashboards);
-	const dashboardsB = sortDashboards(b.dashboards);
-
-	// eslint-disable-next-line no-plusplus
-	for (let i = 0; i < dashboardsA.length; i++) {
-		const da = dashboardsA[i];
-		const db = dashboardsB[i];
-		if (!areDashboardsEqual(da, db)) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-function areDashboardsEqual(a: IDashboardPrivate, b: IDashboardPrivate): boolean {
-	if (a.id !== b.id) {
-		return false;
-	}
-	if (a.name !== b.name) {
-		return false;
-	}
-	if (a.order !== b.order) {
-		return false;
-	}
-	if (a.activeColNum !== b.activeColNum) {
-		return false;
-	}
-
-	// Compare layouts (Record<number, IWidget[]>)
-	const keysA = Object.keys(a.layout) as unknown as number[];
-	const keysB = Object.keys(b.layout);
-
-	if (keysA.length !== keysB.length) {
-		return false;
-	}
-
-	for (const key of keysA) {
-		if (!b.layout[key]) {
-			return false;
-		}
-
-		const widgetsA = a.layout[key];
-		const widgetsB = b.layout[key];
-
-		if (widgetsA.length !== widgetsB.length) {
-			return false;
-		}
-
-		for (let i = 0; i < widgetsA.length; i++) {
-			if (!areWidgetsEqual(widgetsA[i], widgetsB[i])) {
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-
-function areWidgetsEqual(a: IWidget, b: IWidget): boolean {
-	if (a.id !== b.id) {
-		return false;
-	}
-	if (a.name !== b.name) {
-		return false;
-	}
-	if (a.widgetType !== b.widgetType) {
-		return false;
-	}
-	if (a.description !== b.description) {
-		return false;
-	}
-	if (a.defaultStateType !== b.defaultStateType) {
-		return false;
-	}
-
-	if (!areSizeEqual(a.maxSize, b.maxSize)) {
-		return false;
-	}
-	if (!areSizeEqual(a.minSize, b.minSize)) {
-		return false;
-	}
-	if (!areSizeEqual(a.defaultSize, b.defaultSize)) {
-		return false;
-	}
-	if (!arePositionEqual(a.position, b.position)) {
-		return false;
-	}
-
-	return true;
-}
-
-function areSizeEqual(a: ISize, b: ISize): boolean {
-	return a.w === b.w && a.h === b.h;
-}
-
-function arePositionEqual(a: IPosition, b: IPosition): boolean {
-	return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
 }

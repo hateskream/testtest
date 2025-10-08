@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, type ComponentPublicInstance } from 'vue';
+import { reactive, type ComponentPublicInstance, watch, computed } from 'vue';
 import { templateRef } from '@vueuse/core';
 
 import { LayoutComponent } from '@/modules/layout';
@@ -36,21 +36,38 @@ const {
 	changeDashboardState,
 	moveTo,
 	deleteDashboard,
-	undo,
+	undoDeleteTab,
 
 	tabs,
 	activeDashboard,
 	preset,
 	activeDashboardId,
 	dashboards,
+	isUndo,
 } = useDashboardGroup(columnsNum);
 
 provideSetterDndHandler();
 provideCanDelete();
 
 const pageState = reactive({
-	isCurtainFixed: isCurtainMustFixed(),
+	isCurtainFixed: false,
 	isEdit: false,
+});
+
+const isCurtainMustFixed = computed(() => {
+	const dashboard = activeDashboard.value;
+	if (!dashboard) {
+		return false;
+	}
+	return dashboard.widgets.length === 0;
+});
+
+watch(isCurtainMustFixed, (mustBeFixed) => {
+	if (mustBeFixed) {
+		pageState.isCurtainFixed = true;
+	} else {
+		pageState.isCurtainFixed = false;
+	}
 });
 
 function updateIsEdit(value: boolean) {
@@ -58,21 +75,16 @@ function updateIsEdit(value: boolean) {
 }
 
 function updateStateCurtainFixed(value: boolean) {
-	if (isCurtainMustFixed()) {
+	if (isCurtainMustFixed.value) {
 		pageState.isCurtainFixed = true;
 		return;
 	}
 	pageState.isCurtainFixed = value;
 }
 
-function isCurtainMustFixed(): boolean {
-	const dashboard = activeDashboard.value;
-
-	if (dashboard == null) {
-		return false;
-	}
-
-	return dashboard.widgets.length === 0;
+function onAddTab() {
+	pageState.isCurtainFixed = true;
+	addTab();
 }
 
 </script>
@@ -86,11 +98,12 @@ function isCurtainMustFixed(): boolean {
 		<template #header>
 			<dashboard-group-tabs
 				:tabs="tabs"
-				@add-tab="addTab"
+				:is-undo="isUndo"
+				@add-tab="onAddTab"
 				@switch-tab="switchTab"
 				@rename-tab="renameTab"
 				@delete="deleteDashboard"
-				@undo="undo"
+				@undo="undoDeleteTab"
 			/>
 		</template>
 		<template #content>

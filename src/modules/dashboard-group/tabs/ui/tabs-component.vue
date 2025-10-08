@@ -13,6 +13,7 @@ import UndoDelete from './undo-delete.vue';
 
 interface ITabsComponentProps {
 	tabs: IDashboardTab[];
+	isUndo: boolean;
 }
 
 const props = defineProps<ITabsComponentProps>();
@@ -35,8 +36,12 @@ const { start } = useTimeoutFn(() => {
 
 watch(
 	() => props.tabs,
-	(newTabs) => {
-		if (localTabs.value.length === 0) {
+	(newTabs, oldTabs) => {
+		if (JSON.stringify(newTabs) === JSON.stringify(oldTabs)) {
+			return;
+		}
+
+		if (localTabs.value.length === 0 || props.isUndo) {
 			localTabs.value = initTabs(newTabs);
 			return;
 		}
