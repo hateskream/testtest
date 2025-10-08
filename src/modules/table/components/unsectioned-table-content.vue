@@ -208,6 +208,7 @@ const onRowDragChange = (evt: IDragEvent<T>) => {
 .tableBody {
 	user-select: none;
 }
+
 .tableRow {
 	height: 48px;
 }

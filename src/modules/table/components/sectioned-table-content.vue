@@ -470,9 +470,11 @@ const canMoveItem = (evt: unknown) => {
 		opacity: 1;
 	}
 }
-.tableRow{
-	height:48px;
+
+.tableRow {
+	height: 48px;
 }
+
 .tableCell {
 	position: relative;
 	padding: 8px 12px;

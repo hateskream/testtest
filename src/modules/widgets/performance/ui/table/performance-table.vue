@@ -83,7 +83,8 @@ const genericRows = computed(() =>
 :deep(.symbolCellText) {
 	font-size: var(--typography-paragraph-size-p-01);
 }
+
 :deep(th:last-child) {
-	padding-right:34px;
+	padding-right: 34px;
 }
 </style>

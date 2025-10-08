@@ -70,11 +70,11 @@ const barColor = computed(() => {
 <style module="classes">
 .rootBarCell {
 	display: flex;
-	align-items: center;
 	justify-content: flex-end;
-	gap: 12px;
+	align-items: center;
 	width: 100%;
 	min-height: 24px;
+	gap: 12px;
 }
 
 .barContainer {
