@@ -48,6 +48,10 @@ interface IGridState {
 
 interface IGridLayoutComponent {
 	widgets: IWidget[];
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
 	isDnd: boolean;
 	columnsNum: number;
 	rowsNum: number;
@@ -62,6 +66,7 @@ const emit = defineEmits<{
 	(e: 'add-widget', type: WidgetType, position: IPosition, widgetsState: IWidgetState[]): void;
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
+	(e: 'moveTo', type: WidgetType, widgetId: string, position: IPosition, dashboardId: string): void;
 }>();
 
 let mountedPlaceholder: App<Element> | null = null;
@@ -481,6 +486,18 @@ function duplicateDashboard(id: string) {
 	);
 }
 
+function moveTo(widgetId: string, dashboardId: string) {
+	const { position, widgetType } = getDashboardItemById(widgetId);
+
+	emit(
+		'moveTo',
+		widgetType,
+		widgetId,
+		position,
+		dashboardId,
+	);
+}
+
 onCreated();
 </script>
 
@@ -528,8 +545,10 @@ onCreated();
 					<current-dashboard
 						v-if="!checkIsFake(item.i)"
 						:dashboard-item="getDashboardItemById(item.i)"
+						:dashboards="props.dashboards"
 						@delete="deleteDashboards(item.i)"
 						@duplicate="duplicateDashboard(item.i)"
+						@move-to="moveTo(item.i, $event)"
 					/>
 				</template>
 				<template #state-dnd>

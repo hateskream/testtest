@@ -1,15 +1,3 @@
-import type { ISize } from './model';
-
-export interface IMeta {
-	widgetId: string;
-	isResizing: boolean;
-	isLoading: boolean;
-	market: string;
-	name: string;
-	size: ISize;
-	defaultStateType: string;
-}
-
 export type {
 	IWidget,
 	IDashboardGroup,
@@ -19,6 +7,7 @@ export type {
 	IWidgetState,
 	ISize,
 	ILayoutItem,
+	IMeta,
 } from './model';
 
 export {

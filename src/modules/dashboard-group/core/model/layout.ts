@@ -111,14 +111,12 @@ export function duplicate(allWidgets: ILayoutItem[], widgetId: string): {
 		return null;
 	}
 
-	// создаём копию виджета
 	const newWidget: ILayoutItem = {
 		...target,
 		x: target.x + target.w,
-		i: `${target.i}_copy_${Date.now()}`, // уникальный id
+		i: `${target.i}_copy_${Date.now()}`,
 	};
 
-	// проверяем пересечения
 	function isOverlap(a: ILayoutItem, b: ILayoutItem) {
 		return !(
 			a.x + a.w <= b.x ||
@@ -128,13 +126,11 @@ export function duplicate(allWidgets: ILayoutItem[], widgetId: string): {
 		);
 	}
 
-	// если пересекается — сдвигаем все виджеты справа
 	let overlap = true;
 	while (overlap) {
 		overlap = false;
 		for (const w of widgets) {
 			if (isOverlap(newWidget, w)) {
-				// сдвигаем всё, что правее
 				for (const ww of widgets) {
 					if (ww.y < w.y + w.h && ww.y + ww.h > w.y && ww.x >= w.x) {
 						ww.x += newWidget.w;
@@ -152,7 +148,21 @@ export function duplicate(allWidgets: ILayoutItem[], widgetId: string): {
 	};
 }
 
-// export function moveTo(otherWidgets: ILayoutItem[], widget: ILayoutItem);
+export function moveTo(otherWidgets: ILayoutItem[], widget: ILayoutItem): ILayoutItem {
+	let maxY = 0;
+	for (const w of otherWidgets) {
+		const bottom = w.y + w.h;
+		if (bottom > maxY) {
+			maxY = bottom;
+		}
+	}
+
+	return {
+		...widget,
+		x: 0,
+		y: maxY,
+	};
+}
 
 export function mapToWidgetState(positions: ILayoutItem[]): IWidgetState[] {
 	return positions.map(item => ({

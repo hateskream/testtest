@@ -9,6 +9,10 @@ import DashboardGrid from './dashboard-grid.vue';
 
 interface IProps {
 	widgets: IWidget[];
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
 	id: string;
 	activeId: string | null;
 	rowsNum: number;
@@ -25,6 +29,7 @@ const emit = defineEmits<{
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
 	(e: 'is-edit', value: boolean): void;
+	(e: 'moveTo', type: WidgetType, widgetId: string, position: IPosition, dashboardId: string): void;
 }>();
 
 const gridRef = ref<HTMLDivElement | null>(null);
@@ -45,6 +50,10 @@ function emitAddWidget(type: WidgetType, position: IPosition, widgetsState: IWid
 
 function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 	emit('delete-widget', widgetId, widgetsState);
+}
+
+function emitMoveTo(type: WidgetType, widgetId: string, position: IPosition, dashboardId: string) {
+	emit('moveTo', type, widgetId, position, dashboardId);
 }
 </script>
 
@@ -67,6 +76,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 		<div :class="classes.content">
 			<dashboard-grid
 				v-if="props.id === props.activeId"
+				:dashboards="props.dashboards"
 				:column-width="columnWidth"
 				:widgets="props.widgets"
 				:is-dnd="isEditState"
@@ -77,6 +87,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 				@add-widget="emitAddWidget"
 				@delete-widget="emitDeleteWidget"
 				@change-dashboard-state="emit('change-dashboard-state', $event)"
+				@move-to="emitMoveTo"
 			/>
 		</div>
 	</div>

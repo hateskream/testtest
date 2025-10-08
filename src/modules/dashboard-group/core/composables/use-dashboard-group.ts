@@ -20,6 +20,8 @@ import {
 	rehydrateWidget,
 	areDashboardGroupsEqual,
 	changeActiveColumnNum,
+	mapToLayoutItem,
+	moveTo as moveToModel,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 
@@ -126,28 +128,41 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		isUserInteraction = false;
 	}, { immediate: true });
 
-	async function addTab() {
+	function addTab() {
 		state.value = addNewDashboard(state.value);
 	}
 
-	async function renameTab(tabId: string, newName: string) {
+	function renameTab(tabId: string, newName: string) {
 		state.value = renameDashboard(state.value, tabId, newName);
 	}
 
-	async function switchTab(tabId: string) {
+	function switchTab(tabId: string) {
 		state.value = changeActiveDashboard(state.value, tabId);
 	}
 
-	async function changeDashboardState(widgetsState: IWidgetState[]) {
+	function changeDashboardState(widgetsState: IWidgetState[]) {
 		state.value = changeWidgetsState(state.value, widgetsState);
 	}
 
-	async function deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
+	function deleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 		state.value = deleteWidgetModel(state.value, widgetId, widgetsState);
 	}
 
-	async function addWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
+	function addWidget(type: WidgetType, position: IPosition, widgetsState: IWidgetState[]) {
 		state.value = addWidgetModel(state.value, type, position, widgetsState);
+	}
+
+	function moveTo(type: WidgetType, widgetId: string, position: IPosition, dashboardId: string) {
+		const { widgets } = dashboards.value.find(d => d.id === dashboardId) || {};
+		if (!widgets) {
+			return;
+		}
+
+		const layout = mapToLayoutItem(widgets);
+
+		const newPosition = moveToModel(layout, { i: widgetId, ...position });
+
+		state.value = addWidgetModel(state.value, type, newPosition, widgets, dashboardId);
 	}
 
 	return {
@@ -162,6 +177,7 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		addWidget,
 		deleteWidget,
 		changeDashboardState,
+		moveTo,
 	};
 }
 

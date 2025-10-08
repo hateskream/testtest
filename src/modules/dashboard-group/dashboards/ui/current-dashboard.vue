@@ -11,15 +11,21 @@ import { useDelayedLoading } from '@/shared/composables';
 interface IGroupComponentProps {
 	dashboardItem: IWidget;
 	isResizing?: boolean;
+	dashboards?: {
+		id: string;
+		name: string;
+	}[];
 }
 
 const props = withDefaults(defineProps<IGroupComponentProps>(), {
 	market: '',
 	isResizing: false,
+	dashboards: () => [],
 });
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
 }>();
 
 const { loading } = useDelayedLoading();
@@ -35,6 +41,7 @@ const meta = computed((): IMeta => ({
 	name: props.dashboardItem.name,
 	defaultStateType: props.dashboardItem.defaultStateType,
 	isLoading: loading.value,
+	dashboards: props.dashboards,
 }));
 </script>
 
@@ -44,5 +51,6 @@ const meta = computed((): IMeta => ({
 		:meta="meta"
 		:data-loading="loading"
 		@delete="emit('delete')"
+		@move-to="emit('moveTo', $event)"
 	/>
 </template>

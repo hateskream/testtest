@@ -27,6 +27,7 @@ const { viewState, dataState, isNotData, resetAllChanges, refetch } = useFearGre
 const emit = defineEmits<{
 	delete: [];
 	duplicate: [];
+	moveTo: [dashboardId: string];
 }>();
 
 </script>
@@ -55,8 +56,10 @@ const emit = defineEmits<{
 			<fear-greed-context-menu
 				v-model="viewState"
 				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@duplicate="emit('duplicate')"
+				@move-to="emit('moveTo', $event)"
 				@reset="resetAllChanges"
 			/>
 		</template>

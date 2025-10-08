@@ -28,12 +28,13 @@ export function addWidget(
 	type: string,
 	position: IPosition,
 	widgetsState: IWidgetState[],
+	dashboardId?: string,
 ): IDashboardGroup {
 	return {
 		...dg,
 		dashboards: updateById(
 			dg.dashboards,
-			dg.activeDashboardId,
+			dashboardId || dg.activeDashboardId,
 			(d) => addWidgetInDashboard(d, type, position, widgetsState),
 		),
 	};

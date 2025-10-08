@@ -29,6 +29,7 @@ const emit = defineEmits<{
 	(e: 'delete-widget', widgetId: string, widgetsState: IWidgetState[]): void;
 	(e: 'change-dashboard-state', widgetsState: IWidgetState[]): void;
 	(e: 'is-edit', value: boolean): void;
+	(e: 'moveTo', type: WidgetType, widgetId: string, position: IPosition, dashboardId: string): void;
 }>();
 
 const { loading } = useDelayedLoading();
@@ -55,6 +56,10 @@ function emitAddWidget(type: WidgetType, position: IPosition, widgetsState: IWid
 function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 	emit('delete-widget', widgetId, widgetsState);
 }
+
+function emitMoveTo(type: WidgetType, widgetId: string, position: IPosition, dashboardId: string) {
+	emit('moveTo', type, widgetId, position, dashboardId);
+}
 </script>
 
 <template>
@@ -71,6 +76,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					v-for="dashboard in props.dashboards"
 					:key="dashboard.id"
 					:id="dashboard.id"
+					:dashboards="props.dashboards"
 					data-test="123"
 					:active-id="props.activeDashboardId"
 					:widgets="dashboard.widgets"
@@ -86,6 +92,7 @@ function emitDeleteWidget(widgetId: string, widgetsState: IWidgetState[]) {
 					@delete-widget="emitDeleteWidget"
 					@change-dashboard-state="emit('change-dashboard-state', $event)"
 					@is-edit="emit('is-edit', $event)"
+					@move-to="emitMoveTo"
 				/>
 			</div>
 		</div>

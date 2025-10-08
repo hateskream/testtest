@@ -34,6 +34,7 @@ const {
 	addWidget,
 	deleteWidget,
 	changeDashboardState,
+	moveTo,
 
 	tabs,
 	activeDashboard,
@@ -102,6 +103,7 @@ function isCurtainMustFixed(): boolean {
 				@delete-widget="deleteWidget"
 				@change-dashboard-state="changeDashboardState"
 				@is-edit="updateIsEdit"
+				@move-to="moveTo"
 			/>
 		</template>
 		<template #curtain>
