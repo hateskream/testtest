@@ -10,13 +10,11 @@ enum DataProvider {
 }
 const dataProvider = DataProvider.MockLocal;
 
-
 export interface IAltcoinSeasonRequest {
 	market: string;
 	period: Period;
 	modules: IAltcoinSeasonConfig['modules'];
 }
-
 
 export interface IAltcoinSeasonDataResponse {
 	performanceRank: IPerformanceRank;
