@@ -16,8 +16,7 @@ const { isActive } = useActiveLink();
 		<div :class="classes.iconWrapper" @click="emits('expand')">
 			<ui-icon
 				:id="IconIds.Logo"
-				width="40px"
-				height="12px"
+				width="56px"
 			/>
 		</div>
 		<nav>
