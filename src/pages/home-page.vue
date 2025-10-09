@@ -93,6 +93,7 @@ function onAddTab() {
 	<layout-component
 		:is-curtain-fixed="pageState.isCurtainFixed"
 		:is-edit-mode="pageState.isEdit"
+		:is-curtain-force-fixed="isCurtainMustFixed"
 		@update:is-curtain-fixed="updateStateCurtainFixed"
 	>
 		<template #header>

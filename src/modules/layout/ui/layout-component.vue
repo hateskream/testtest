@@ -20,11 +20,13 @@ interface ILayoutState {
 
 interface ILayoutComponentProps {
 	isEditMode?: boolean;
+	isCurtainForceFixed?: boolean;
 }
 
 const env = getEnvironmentName();
 const props = withDefaults(defineProps<ILayoutComponentProps>(), {
 	isEditMode: false,
+	isCurtainForceFixed: false,
 });
 
 const isCurtainFixed = defineModel<boolean>('isCurtainFixed', { required: true });
@@ -54,14 +56,12 @@ const isControlOpenCurtainHovered = computed(
 );
 
 const isLargeScreen = computed(() => width.value >= 2560);
-
 const canChangeCurtainFix = computed(() => !isLargeScreen.value);
 
 const centerContentStyle = computed((): Partial<CSSProperties> => ({
 	marginLeft: `${pannelWidth.left}px`,
 	marginRight: `${pannelWidth.right}px`,
 }));
-
 
 watch(isControlOpenCurtainHovered, (hovered) => {
 	if (hovered) {
@@ -79,12 +79,11 @@ watch(
 	isLargeScreen,
 	(isLarge) => {
 		if (isLarge) {
-
 			isCurtainFixed.value = true;
 			layoutState.isCurtainFixed = true;
 			layoutState.isSidebarExpanded = true;
+			layoutState.isOpenCurtain = false;
 		} else {
-
 			layoutState.isCurtainFixed = isCurtainFixed.value;
 			layoutState.isSidebarExpanded = false;
 		}
@@ -96,32 +95,45 @@ watch(
 	() => isCurtainFixed.value,
 	(newValue) => {
 		if (isLargeScreen.value) {
-
 			isCurtainFixed.value = true;
 			layoutState.isCurtainFixed = true;
+			layoutState.isOpenCurtain = false;
 			return;
 		}
+
 		layoutState.isCurtainFixed = newValue;
+		if (newValue) {
+			layoutState.isOpenCurtain = false;
+		}
 	},
 );
 
 function openCurtain() {
 	if (layoutState.isCurtainFixed) {
+		layoutState.isOpenCurtain = false;
 		return;
 	}
 	layoutState.isOpenCurtain = true;
 }
 
 function closeCurtain() {
-	layoutState.isOpenCurtain = false;
+	if (!layoutState.isCurtainFixed) {
+		layoutState.isOpenCurtain = false;
+	}
 }
 
 function unFixCurtain() {
+	if (props.isCurtainForceFixed) {
+		return;
+	}
+
 	if (!canChangeCurtainFix.value) {
 		return;
 	}
+
 	isCurtainFixed.value = false;
 	layoutState.isCurtainFixed = false;
+	layoutState.isOpenCurtain = false;
 }
 
 function expandSidebar() {
