@@ -135,8 +135,11 @@ export function useDashboardGroup(colNum: Ref<number>) {
 
 	}, { deep: true });
 
-	watch(colNum, newColNum => {
+	watch(colNum, (newColNum, oldColNum) => {
 		state.value = changeActiveColumnNum(state.value, newColNum);
+		if (!oldColNum) {
+			return;
+		}
 		isUserInteraction = false;
 	}, { immediate: true });
 
