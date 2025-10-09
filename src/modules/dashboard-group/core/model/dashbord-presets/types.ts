@@ -1,4 +1,4 @@
-import { type ISize, WidgetType } from '../widget';
+import { type ISize } from '../widget';
 
 export interface IPresetPosition {
 	x: number;
@@ -8,13 +8,13 @@ export interface IPresetPosition {
 
 export interface IWidgetInstancePreset {
 	id: string;
-	type: WidgetType;
+	type: string;
 	position: IPresetPosition;
 	defaultStateType?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const colNumbers = [2, 4, 6, 8, 10, 12, 14, 16, 20] as const;
+const colNumbers = [2, 4, 6, 8, 10] as const;
 type ColNumType = typeof colNumbers[number];
 
 export type PresetLayout = Record<ColNumType, IWidgetInstancePreset[]>;

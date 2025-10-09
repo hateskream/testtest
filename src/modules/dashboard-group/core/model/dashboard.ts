@@ -184,7 +184,7 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 
 	Object.entries(preset).forEach(([cn, instances]) => {
 		const widgets = instances
-			.filter(instance => getEnabledWidgets().has(instance.type))
+			.filter(instance => getEnabledWidgets().has(instance.type as WidgetType))
 			.map(instance => {
 				return createWidget(
 					instance.type,
@@ -194,7 +194,7 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 						w: instance.position.size.w,
 						h: instance.position.size.h,
 					},
-					instance.defaultStateType,
+					instance.defaultStateType || 'none',
 				);
 			});
 

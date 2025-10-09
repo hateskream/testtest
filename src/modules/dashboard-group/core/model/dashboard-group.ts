@@ -172,15 +172,14 @@ export function changeActiveColumnNum(dg: IDashboardGroup, colNum: number): IDas
 }
 
 export function createDashboardGroup(colNum: number): IDashboardGroup {
-	const mainDashboard = createDashboardFromPreset('Main', 0, colNum);
-	const cryptoDashboard = createDashboardFromPreset('Crypto', 1, colNum);
-	const stockDashboard = createDashboardFromPreset('Stock', 2, colNum);
-	const forexDashboard = createDashboardFromPreset('Forex', 3, colNum);
+	const cryptoDashboard = createDashboardFromPreset('Crypto', 0, colNum);
+	const stockDashboard = createDashboardFromPreset('Stock', 1, colNum);
+	const forexDashboard = createDashboardFromPreset('Forex', 2, colNum);
 
 	return {
 		activeColNum: colNum,
-		activeDashboardId: mainDashboard.id,
-		dashboards: [mainDashboard, cryptoDashboard, stockDashboard, forexDashboard],
+		activeDashboardId: cryptoDashboard.id,
+		dashboards: [cryptoDashboard, stockDashboard, forexDashboard],
 	};
 }
 

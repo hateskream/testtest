@@ -84,6 +84,7 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 	},
 };
 
+
 export function getDefaultsState(defaultStateType: string): IState {
 	let activeMarket: MarketType = MarketType.Crypto;
 

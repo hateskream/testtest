@@ -139,8 +139,8 @@ const AltcoinSeason: Preset = {
 };
 
 const BitcoinDominance: Preset = {
-	name: 'Bitcoin Dominance',
-	description: 'Bitcoin Dominance',
+	name: 'Dominance',
+	description: 'Dominance',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 3, h: 9 },
@@ -300,13 +300,13 @@ export function createWidget(type: string, position: IPosition, defaultStateType
 	};
 }
 
-export function rehydrateWidget(id: string, type: string, position: IPosition): IWidget {
+export function rehydrateWidget(id: string, type: string, position: IPosition, defaultStateType: string): IWidget {
 	const preset = createPreset(type);
 
 	return {
 		...preset,
 		id,
 		position,
-		defaultStateType: '',
+		defaultStateType,
 	};
 }

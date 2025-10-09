@@ -2,6 +2,7 @@
 import { reactive, type ComponentPublicInstance, watch, computed } from 'vue';
 import { templateRef } from '@vueuse/core';
 
+import { dashboardStateUtility } from '@/shared/lib/dashboard-state-utility';
 import { LayoutComponent } from '@/modules/layout';
 import {
 	DashboardGrid,
@@ -87,6 +88,18 @@ function onAddTab() {
 	addTab();
 }
 
+const state = useDashboardGroup(columnsNum);
+
+if (typeof window !== 'undefined') {
+	Object.assign(window, {
+		getDashboardState: () => dashboardStateUtility.getDashboardState(state),
+		getAllDashboards: () => dashboardStateUtility.getAllDashboards(state),
+		getGridInfo: () => dashboardStateUtility.getGridInfo(),
+		debugDashboardState: () => dashboardStateUtility.debugDashboardState(state),
+		generateDashboardLayout: () => dashboardStateUtility
+			.generateDashboardLayout(columnsNum.value, state.activeDashboard.value?.widgets || []),
+	});
+}
 </script>
 
 <template>

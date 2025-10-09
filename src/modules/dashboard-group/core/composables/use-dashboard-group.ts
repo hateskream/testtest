@@ -38,6 +38,7 @@ const WidgetSchema = z.object({
 	id: z.string(),
 	type: z.string(),
 	position: PositionSchema,
+	defaultStateType: z.string(),
 });
 
 export type Widget = z.infer<typeof WidgetSchema>;
@@ -79,20 +80,8 @@ export function useDashboardGroup(colNum: Ref<number>) {
 		saveHistory: true,
 	});
 
-	const { data: dashboardGroupData, error } = useStateQuery();
-	const { mutate, error: mutationError } = useStateMutation();
-
-	watch(error, () => {
-		if (error.value) {
-			console.log(error.value);
-		}
-	});
-
-	watch(mutationError, () => {
-		if (mutationError.value) {
-			console.log(mutationError.value);
-		}
-	});
+	const { data: dashboardGroupData } = useStateQuery();
+	const { mutate } = useStateMutation();
 
 	const preset = allWidgets();
 
@@ -193,7 +182,6 @@ export function useDashboardGroup(colNum: Ref<number>) {
 	}
 
 	function undoDeleteTab() {
-		console.log('dashboards.value.lengt', dashboards.value.length);
 		undo();
 
 		if (dashboards.value.length < 2) {
@@ -235,12 +223,14 @@ function rehydrate(data: DashboardGroup, colNum: number): IDashboardGroup {
 			order: dashboard.order,
 			activeColNum: dashboard.activeColNum,
 			layout: Object.fromEntries(
-				Object.entries(dashboard.layout).map(([key, widgets]) => [
-					Number(key),
-					widgets.map(widget =>
-						rehydrateWidget(widget.id, widget.type, widget.position),
-					),
-				]),
+				Object
+					.entries(dashboard.layout)
+					.map(([key, widgets]) => [
+						Number(key),
+						widgets.map(widget =>
+							rehydrateWidget(widget.id, widget.type, widget.position, widget.defaultStateType),
+						),
+					]),
 			),
 		})),
 	};
@@ -261,6 +251,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 						id: widget.id,
 						type: widget.widgetType,
 						position: widget.position,
+						defaultStateType: widget.defaultStateType,
 					})),
 				]),
 			),

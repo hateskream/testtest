@@ -10,6 +10,7 @@ import {
 } from './location';
 import { compareSort, type SortState } from './sort';
 import type { ISegmentRequest } from '@/modules/news';
+import type { MarketType } from '@/modules/market';
 
 export interface IState {
 	score: Set<Score>;
@@ -44,7 +45,11 @@ const DEFAULT_STATE: IState = {
 	locations: LOCATIONS_DEFAULT,
 };
 
-export function getDefaultState(): IState {
+export function getDefaultState(defaultStateType: MarketType | 'none' = 'none'): IState {
+	if (defaultStateType === 'none') {
+		return { ...DEFAULT_STATE };
+	}
+
 	return { ...DEFAULT_STATE };
 }
 
