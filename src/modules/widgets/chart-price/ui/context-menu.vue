@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ModalSubmenu, WidgetContextMenu } from '@/modules/widgets/base';
-import type { IDisplaySettings } from '../model';
+import { ModalTickerSelector } from '@/modules/ticker-selector';
 
-import RcmPriceComponent from './rcm-price-component.vue';
-
-const settings = defineModel<IDisplaySettings>({ required: true });
+const selectedTicker = defineModel<string>('selectedTicker', { required: true });
 
 const props = defineProps<{
 	title: string;
@@ -20,6 +18,10 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+function updateTicker(newValue: string[]) {
+	[selectedTicker.value] = newValue;
+}
 </script>
 
 <template>
@@ -32,9 +34,15 @@ const emit = defineEmits<{
 		@duplicate="emit('duplicate')"
 	>
 		<modal-submenu>
-			<template #title>Change display</template>
+			<template #title>Choose ticker</template>
 			<template #content>
-				<rcm-price-component v-model="settings" />
+				<modal-ticker-selector
+					:model-value="[selectedTicker]"
+					:enable-selected-info="false"
+					:enable-select-all="false"
+					selection-mode="single"
+					@update:model-value="updateTicker"
+				/>
 			</template>
 		</modal-submenu>
 	</widget-context-menu>

@@ -9,11 +9,21 @@ import { ModalBadge } from '@/modules/widgets/base';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';
 
-const { data } = useQueryTickerSelector();
+interface IProps {
+	selectionMode?: 'single' | 'multiple';
+	enableSelectedInfo?: boolean;
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+	selectionMode: 'multiple',
+	enableSelectedInfo: true,
+});
 
 const selectedTickers = defineModel<string[]>({
 	default: [],
 });
+
+const { data } = useQueryTickerSelector();
 
 const emits = defineEmits<ITickerEmits>();
 
@@ -71,7 +81,9 @@ const selectedTickersMapped = computed(() => {
 			<modal-filter
 				v-if="data"
 				v-model="selectedTickers"
+				:selection-mode="props.selectionMode"
 				:tickers="data.tickers"
+				:enable-selected-info="props.enableSelectedInfo"
 				@select="emits('select', $event)"
 				@unselect="emits('unselect', $event)"
 				@select-all="emits('selectAll', $event)"
