@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalItemSwitch, ModalItemCheckbox, ModalSubmenuContent } from '../../base';
+import { ModalItemSelector, ModalItemSwitch, ModalSubmenuContent } from '../../base';
 import type { IDisplaySettings } from '../model';
 
 const settings = defineModel<IDisplaySettings>({ required: true });
@@ -59,19 +59,19 @@ function changeTextDisplay() {
 
 			<ui-driver />
 
-			<modal-item-checkbox
+			<modal-item-selector
 				:model-value="settings.isShowTicker"
 				@update:model-value="changeTextDisplay"
 			>
 				Ticker
-			</modal-item-checkbox>
+			</modal-item-selector>
 
-			<modal-item-checkbox
+			<modal-item-selector
 				:model-value="settings.isShowDescription"
 				@update:model-value="changeTextDisplay"
 			>
 				Description
-			</modal-item-checkbox>
+			</modal-item-selector>
 		</template>
 	</modal-submenu-content>
 </template>

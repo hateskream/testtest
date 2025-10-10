@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useDebounce } from '@vueuse/core';
 
-import { ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
 import { UiSearch } from '@/shared/ui/input';
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPillButton } from '@/shared/ui/pill';
@@ -127,14 +127,14 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 					</button>
 				</template>
 				<template #content>
-					<modal-item-selector
+					<modal-item-checkbox
 						v-for="ticker in segment.tickers"
 						:key="`${ticker.left}+${ticker.right}`"
 						:model-value="hasInSegment(segment.id, ticker, props.selectedSegmentTickers)"
 						@click="emits('toggleTicker', segment.id, parseTicker(segment.id, ticker))"
 					>
 						{{ ticker.left }} · {{ ticker.right }}
-					</modal-item-selector>
+					</modal-item-checkbox>
 				</template>
 			</ui-accordion>
 		</div>

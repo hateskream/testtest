@@ -46,13 +46,13 @@ const classesList = computed(() => ({
 
 .content:hover .icon {
 	border-width: 1px;
-	border-color: rgb(115 115 116);
+	border-color: rgb(245 245 245 / 90%);
 }
 
 .iconActive {
 	box-sizing: border-box;
 	border-width: 6px !important;
-	border-color: rgb(115 115 116);
+	border-color: rgb(245 245 245 / 90%);
 }
 
 .content {

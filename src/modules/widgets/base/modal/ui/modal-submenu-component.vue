@@ -1,13 +1,18 @@
 <script lang="ts" setup>
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiPosition } from '@/shared/ui/position';
+import { type IPositionProps, UiPosition } from '@/shared/ui/position';
+
+const props = withDefaults(defineProps<IPositionProps>(), {
+	teleport: false,
+	trigger: 'hover',
+	position: 'right-start',
+	positionOffset: 12,
+});
 </script>
 
 <template>
 	<ui-position
-		trigger="hover"
-		position="right-start"
-		:position-offset="12"
+		v-bind="props"
 	>
 		<template #default="{ isVisible }">
 			<div :class="[classes.title, { [classes.titleActive]: isVisible }]">
@@ -48,6 +53,7 @@ import { UiPosition } from '@/shared/ui/position';
 	font-size: 12px;
 	color: var(--text-color-base-500);
 	border-radius: 18px;
+	cursor: pointer;
 	transition: background-color 0.3s ease;
 }
 
