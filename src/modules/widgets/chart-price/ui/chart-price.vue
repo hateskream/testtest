@@ -104,6 +104,7 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 
 <style module="classes">
 .root {
+	height: 100%;
 	padding: 10px 8px 10px 16px;
 }
 

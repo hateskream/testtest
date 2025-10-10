@@ -15,6 +15,7 @@ export enum WidgetType {
 	TopIndices = 'top-indices',
 	Calendar = 'calendar',
 	Heatmap = 'heatmap',
+	ChartPrice = 'chart-price',
 }
 
 export interface IPosition {
@@ -170,6 +171,14 @@ const Heatmap: Preset = {
 	defaultSize: { w: 2, h: 7 },
 };
 
+const ChartPrice: Preset = {
+	name: 'Chart',
+	description: 'Real-time price and chart',
+	minSize: { w: 1, h: 3 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 2, h: 4 },
+};
+
 const ProdPresets: AllPresets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -183,6 +192,7 @@ const ProdPresets: AllPresets = {
 	[WidgetType.TopIndices]: TopIndices,
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
+	[WidgetType.ChartPrice]: ChartPrice,
 };
 
 const DevPresets: AllPresets = {
@@ -198,6 +208,7 @@ const DevPresets: AllPresets = {
 	[WidgetType.TopIndices]: TopIndices,
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
+	[WidgetType.ChartPrice]: ChartPrice,
 };
 
 const DemoPresets: AllPresets = {
@@ -213,6 +224,7 @@ const DemoPresets: AllPresets = {
 	[WidgetType.TopIndices]: TopIndices,
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
+	[WidgetType.ChartPrice]: ChartPrice,
 };
 
 function getCurrentPresets(): AllPresets {
@@ -243,6 +255,7 @@ export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_TOP_INDICES': WidgetType.TopIndices,
 	'WIDGET_CALENDAR': WidgetType.Calendar,
 	'WIDGET_HEATMAP': WidgetType.Heatmap,
+	'WIDGET_CHART_PRICE': WidgetType.ChartPrice,
 };
 
 function getPresets(): Presets {
