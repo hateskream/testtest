@@ -1,12 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { UiDriver } from '@/shared/ui/driver';
-import {
-	ModalItem,
-	ModalItemNumber,
-	ModalBadgeList,
-	ModalItemInteraction,
-} from '@/modules/widgets/base';
-import { UiPosition } from '@/shared/ui/position';
+import { ModalBadgeList, ModalItem, ModalItemInteraction, ModalItemNumber } from '@/modules/widgets/base';
+import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 
 interface IWidgetContextMenuProps {
 	title: string;
@@ -15,11 +12,19 @@ interface IWidgetContextMenuProps {
 		name: string;
 	}[];
 	hasReset?: boolean;
+	uiPositionProps?: IPositionProps;
 }
 
 const props = withDefaults(defineProps<IWidgetContextMenuProps>(), {
 	hasReset: true,
+	uiPositionProps: () => ({}),
 });
+
+const uiPropsWithDefaults = computed<IPositionProps>(() => ({
+	trigger: 'hover',
+	teleport: false,
+	...props.uiPositionProps,
+}));
 
 const emits = defineEmits<{
 	(e: 'duplicate'): void;
@@ -37,7 +42,7 @@ const emits = defineEmits<{
 		<modal-item-number :value="1" @click="emits('duplicate')">Duplicate</modal-item-number>
 		<modal-item-number :value="2" @click="emits('openFull')">Open full data</modal-item-number>
 
-		<ui-position trigger="hover">
+		<ui-position v-bind="uiPropsWithDefaults">
 			<template #title>
 				<modal-item-interaction>
 					Move to
@@ -88,7 +93,8 @@ const emits = defineEmits<{
 	display: flex;
 	align-items: center;
 	width: max-content;
-	padding: 12px;
+	height: 40px;
+	padding-inline: 12px;
 	font-weight: 300;
 	font-size: 13px;
 	color: var(--text-color-base-300);

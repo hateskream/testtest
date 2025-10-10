@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, useCssModule, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import {
-	autoUpdate,
-	flip,
-	offset,
-	shift,
-	useFloating,
-	type VirtualElement,
-} from '@floating-ui/vue';
+import { autoUpdate, flip, offset, shift, useFloating, type VirtualElement } from '@floating-ui/vue';
 
 import { createResizeContext } from '../composables/use-resize-context';
 import { useGlobalRcm } from '../composables/use-rcm';
@@ -87,14 +80,16 @@ function handleOpenRcm(e: MouseEvent) {
 		<div :class="[classes.content, 'widget-no-drag']">
 			<slot name="content" />
 		</div>
-		<div
-			v-show="isVisibleRcm"
-			ref="rcm"
-			:class="classes.rcm"
-			:style="floatingStyles"
-		>
-			<slot name="rcm" />
-		</div>
+		<teleport to="body">
+			<div
+				v-show="isVisibleRcm"
+				ref="rcm"
+				:class="classes.rcm"
+				:style="floatingStyles"
+			>
+				<slot name="rcm" />
+			</div>
+		</teleport>
 	</div>
 </template>
 

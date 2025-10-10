@@ -57,12 +57,16 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 	<widget-context-menu
 		:dashboards="props.dashboards"
 		:title="props.title"
+		:ui-position-props="{
+			teleport: false,
+			positionOffset: 12
+		}"
 		@delete="emit('delete')"
 		@reset="emit('reset')"
 		@move-to="emit('moveTo', $event)"
 		@duplicate="emit('duplicate')"
 	>
-		<modal-submenu>
+		<modal-submenu :teleport="false">
 			<template #title> Change display </template>
 
 			<template #content>
@@ -107,7 +111,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 			</template>
 		</modal-submenu>
 
-		<modal-submenu>
+		<modal-submenu :teleport="false">
 			<template #title> Filter & Sort </template>
 
 			<template #content>

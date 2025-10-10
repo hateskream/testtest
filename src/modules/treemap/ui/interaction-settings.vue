@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import {
-	ModalItemSelector,
-	ModalBadgeList,
-	ModalItemInteraction,
-} from '@/modules/widgets/base';
+import { ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
 import type { ISettings, ISingleSetting } from '../model';
-import { UiPosition } from '@/shared/ui/position';
 
 interface IProps {
 	title: string;
@@ -25,17 +20,15 @@ function update(newValue: string) {
 </script>
 
 <template>
-	<ui-position>
+	<modal-submenu>
 		<template #title>
-			<modal-item-interaction>
-				<div>
-					{{ props.title }}
-					<span :class="classes.dot">
-						·
-					</span>
-					{{ props.active.displayName }}
-				</div>
-			</modal-item-interaction>
+			<div>
+				{{ props.title }}
+				<span :class="classes.dot">
+					·
+				</span>
+				{{ props.active.displayName }}
+			</div>
 		</template>
 		<template #content>
 			<modal-badge-list>
@@ -51,7 +44,7 @@ function update(newValue: string) {
 				</template>
 			</modal-badge-list>
 		</template>
-	</ui-position>
+	</modal-submenu>
 </template>
 
 <style module="classes">

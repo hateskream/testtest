@@ -2,17 +2,9 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { BaseSearch } from '../..';
 
-interface ISearchComponentProps {
-	modelValue: string;
-}
-
-defineProps<ISearchComponentProps>();
-
-interface ISearchComponentEmits {
-	(e: 'update:modelValue', data: string): void;
-}
-
-const emits = defineEmits<ISearchComponentEmits>();
+const model = defineModel<string>({
+	required: true,
+});
 </script>
 
 <template>
@@ -25,8 +17,7 @@ const emits = defineEmits<ISearchComponentEmits>();
 		/>
 
 		<base-search
-			:model-value="modelValue"
-			@update:model-value="emits('update:modelValue', $event)"
+			v-model="model"
 		/>
 	</div>
 </template>

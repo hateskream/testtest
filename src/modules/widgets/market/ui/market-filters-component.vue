@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { UiPosition } from '@/shared/ui/position';
-import { MarketBadgeList, ModalBadgeList, ModalItem, ModalItemInteraction } from '../../base';
+import { MarketBadgeList, ModalBadgeList, ModalItem, ModalSubmenu } from '../../base';
 import type { MarketType } from '@/modules/market';
 import type { ITableColumn } from '@/modules/cell';
 
@@ -14,31 +13,31 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 	<modal-badge-list>
 		<template #title> Filter </template>
 
-		<ui-position
+		<modal-submenu
 			:position-offset="12"
 			trigger="hover"
 		>
 			<template #title>
-				<modal-item-interaction> Categories </modal-item-interaction>
+				Categories
 			</template>
 
 			<template #content>
 				<market-badge-list v-model="market" title="Categories" />
 			</template>
-		</ui-position>
+		</modal-submenu>
 
-		<ui-position
+		<modal-submenu
 			:position-offset="12"
 			trigger="hover"
 		>
 			<template #title>
-				<modal-item-interaction> Editing columns </modal-item-interaction>
+				Editing columns
 			</template>
 
 			<template #content>
 				<table-columns-settings-component v-model="columns" />
 			</template>
-		</ui-position>
+		</modal-submenu>
 
 		<modal-item> Reset all changes </modal-item>
 	</modal-badge-list>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
 
 interface IProps {
 	isActive: boolean;
@@ -7,42 +6,66 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const classes = useCssModule('classes');
-
-const classesList = computed(() => ({
-	[classes.switchWrapper]: true,
-	[classes.switchActive]: props.isActive,
-}));
 </script>
 
 <template>
-	<div :class="classesList" />
+	<div :class="[classes.switch, props.isActive ? classes.active : classes.unactive]">
+		<div :class="classes.indicator" />
+	</div>
 </template>
 
 <style module="classes">
-.switchWrapper {
+.switch {
 	position: relative;
 	width: 34px;
 	height: 19px;
-	background: #262626;
-	border: none;
-	border-radius: 16px;
+	overflow: hidden;
+	border-radius: var(--radius-full, 9999px);
+	cursor: pointer;
+	transition: background-color 0.25s ease;
 }
 
-.switchWrapper::after {
-	content: '';
+.indicator {
 	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 15px;
-	height: 15px;
-	background-color: rgb(255 255 255 / 40%);
-	border-radius: 100%;
-	transition: transform 0.3s ease;
+	width: 18px;
+	height: 18px;
+	border-radius: var(--radius-full, 9999px);
+	transition:
+		left 0.25s ease,
+		background 0.25s ease,
+		box-shadow 0.25s ease,
+		transform 0.25s ease;
 }
 
-.switchActive::after {
-	background-color: rgb(255 255 255);
-	transform: translateX(100%);
+.switch.active {
+	background-color: rgb(221 221 223 / 50%);
+}
+
+.switch.active .indicator {
+	/* FIXME: not use fixed value */
+	left: 46%;
+	background: #a6a6a6;
+	box-shadow:
+		0 0 4px 0 #ffffff inset,
+		0 7px 9px 0 #ffffff inset,
+		3px 0 9px 0 #ffffff;
+	transform: translateX(0);
+}
+
+.switch.unactive {
+	background: rgb(92 92 97 / 50%);
+}
+
+.switch.unactive .indicator {
+	left: 0;
+	background: #3b3b3b;
+	box-shadow:
+		0 0 4px 0 #737373 inset,
+		0 5px 9px 0 #676767 inset;
+	transform: translateX(0);
+}
+
+.switch:active .indicator {
+	transform: scale(0.92);
 }
 </style>

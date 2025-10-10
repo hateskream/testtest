@@ -2,27 +2,19 @@
 import { BaseSwitch } from '../..';
 import { ModalItem } from '../index';
 
-interface IProps {
-	modelValue: boolean;
-}
-
-interface IEmits {
-	(e: 'update:modelValue', data: boolean): void;
-}
-
-const props = defineProps<IProps>();
-
-const emits = defineEmits<IEmits>();
+const model = defineModel<boolean>({
+	required: true,
+});
 </script>
 
 <template>
 	<modal-item
 		:class="classes.content"
-		@click="emits('update:modelValue', !modelValue)"
+		@click="model = !model"
 	>
 		<slot name="default" />
 
-		<base-switch :is-active="props.modelValue" />
+		<base-switch :is-active="model" />
 	</modal-item>
 </template>
 

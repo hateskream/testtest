@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { useTemplateRef, computed, type CSSProperties } from 'vue';
+import { computed, type CSSProperties, useTemplateRef } from 'vue';
 
-import { UiPosition } from '@/shared/ui/position';
+import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 import { ModalBadgeTitle } from '../index';
 
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
 	color?: CSSProperties['color'];
 	strategy?: 'fixed' | 'absolute';
+	uiPositionProps?: Omit<IPositionProps, 'strategy'>;
 }
 const props = defineProps<IProps>();
 
@@ -21,6 +22,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 	<ui-position
 		ref="position"
 		position="bottom-start"
+		v-bind="props.uiPositionProps || {}"
 		:strategy="props.strategy"
 	>
 		<template #title>

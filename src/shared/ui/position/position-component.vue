@@ -1,40 +1,23 @@
 <script setup lang="ts">
-import { offset, shift, useFloating, flip, autoUpdate, type Placement } from '@floating-ui/vue';
-import { ref, useTemplateRef, provide, inject, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
+import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, useTemplateRef } from 'vue';
 
-interface IPositionComponentProps {
-	position?: Placement;
-	trigger?: 'hover' | 'click';
-	showInMs?: number;
-	hideDelayMs?: number;
-	positionOffset?: number;
-	strategy?: 'fixed' | 'absolute';
-	hoverPadding?: number;
-}
+import type { IFloatingContext, IPositionProps } from './types';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
 	(e: 'mouseleave'): void;
 }
 
-interface IFloatingContext {
-	registerFloating: (element: HTMLElement, level: number) => void;
-	unregisterFloating: (element: HTMLElement) => void;
-	isInsideFloating: (target: Element) => boolean;
-	getCurrentLevel: () => number;
-	cancelAllChildTimeouts: (fromLevel: number) => void;
-	notifyMouseEnter: (level: number) => void;
-	notifyMouseLeave: (level: number) => void;
-}
-
-const props = withDefaults(defineProps<IPositionComponentProps>(), {
+const props = withDefaults(defineProps<IPositionProps>(), {
 	position: 'right-end',
 	trigger: 'click',
 	showInMs: 100,
 	hideDelayMs: 200,
-	positionOffset: 2,
+	positionOffset: 6,
 	strategy: 'fixed',
 	hoverPadding: 8,
+	teleport: 'body',
 });
 
 const emits = defineEmits<IPositionComponentEmits>();
@@ -80,31 +63,6 @@ const context: IFloatingContext = {
 		return parentContext?.isInsideFloating(target) ?? false;
 	},
 	getCurrentLevel: (): number => currentLevel,
-	cancelAllChildTimeouts: (fromLevel: number): void => {
-		if (currentLevel >= fromLevel) {
-			if (showTimeout.value) {
-				clearTimeout(showTimeout.value);
-				showTimeout.value = null;
-			}
-			if (hideTimeout.value) {
-				clearTimeout(hideTimeout.value);
-				hideTimeout.value = null;
-			}
-		}
-		parentContext?.cancelAllChildTimeouts(fromLevel);
-	},
-	notifyMouseEnter: (level: number): void => {
-		if (level > currentLevel) {
-			if (hideTimeout.value) {
-				clearTimeout(hideTimeout.value);
-				hideTimeout.value = null;
-			}
-		}
-		parentContext?.notifyMouseEnter(level);
-	},
-	notifyMouseLeave: (level: number): void => {
-		parentContext?.notifyMouseLeave(level);
-	},
 };
 
 provide<IFloatingContext>('floating-context', context);
@@ -166,12 +124,10 @@ const handleDocumentClick = (event: Event): void => {
 	}
 
 	const target = event.target as Element;
-
 	if (wrapper.value?.contains(target)) {
 		return;
 	}
-
-	if (context.isInsideFloating(target)) {
+	if (floating.value?.contains(target)) {
 		return;
 	}
 
@@ -195,12 +151,17 @@ function handleClick(): void {
 	}
 }
 
+function isInsideAny(target: Element | null) {
+	if (!target) {
+		return false;
+	}
+	return wrapper.value?.contains(target) || floating.value?.contains(target);
+}
+
 function handleMouseover(event: MouseEvent): void {
 	event.stopPropagation();
 
 	if (props.trigger === 'hover') {
-		context.notifyMouseEnter(currentLevel);
-
 		if (hideTimeout.value) {
 			clearTimeout(hideTimeout.value);
 			hideTimeout.value = null;
@@ -219,42 +180,30 @@ function handleMouseover(event: MouseEvent): void {
 }
 
 function handleMouseleave(event: MouseEvent): void {
-	event.stopPropagation();
-
-	if (props.trigger === 'hover') {
-		const relatedTarget = event.relatedTarget as Element | null;
-
-		if (relatedTarget && context.isInsideFloating(relatedTarget)) {
-			return;
-		}
-
-		if (relatedTarget && (
-			wrapper.value?.contains(relatedTarget) ||
-			floating.value?.contains(relatedTarget)
-		)) {
-			return;
-		}
-
-		context.notifyMouseLeave(currentLevel);
-
-		if (showTimeout.value) {
-			clearTimeout(showTimeout.value);
-			showTimeout.value = null;
-		}
-
-		hideTimeout.value = setTimeout(() => {
-			isVisible.value = false;
-			emits('mouseleave');
-			hideTimeout.value = null;
-		}, props.hideDelayMs);
+	if (props.trigger !== 'hover') {
+		return;
 	}
+	const related = event.relatedTarget as Element | null;
+	if (isInsideAny(related)) {
+		return;
+	}
+
+	if (showTimeout.value) {
+		clearTimeout(showTimeout.value);
+		showTimeout.value = null;
+	}
+
+	hideTimeout.value = setTimeout(() => {
+		isVisible.value = false;
+		emits('mouseleave');
+		hideTimeout.value = null;
+	}, props.hideDelayMs);
 }
 
 function handleFloatingMouseenter(event: MouseEvent): void {
 	event.stopPropagation();
 
 	if (props.trigger === 'hover') {
-		context.notifyMouseEnter(currentLevel);
 
 		if (hideTimeout.value) {
 			clearTimeout(hideTimeout.value);
@@ -264,31 +213,24 @@ function handleFloatingMouseenter(event: MouseEvent): void {
 }
 
 function handleFloatingMouseleave(event: MouseEvent): void {
-	event.stopPropagation();
-
-	if (props.trigger === 'hover') {
-		const relatedTarget = event.relatedTarget as Element | null;
-
-		if (relatedTarget && (
-			wrapper.value?.contains(relatedTarget) ||
-			context.isInsideFloating(relatedTarget)
-		)) {
-			return;
-		}
-
-		context.notifyMouseLeave(currentLevel);
-
-		if (showTimeout.value) {
-			clearTimeout(showTimeout.value);
-			showTimeout.value = null;
-		}
-
-		hideTimeout.value = setTimeout(() => {
-			isVisible.value = false;
-			emits('mouseleave');
-			hideTimeout.value = null;
-		}, props.hideDelayMs);
+	if (props.trigger !== 'hover') {
+		return;
 	}
+	const related = event.relatedTarget as Element | null;
+	if (isInsideAny(related)) {
+		return;
+	}
+
+	if (showTimeout.value) {
+		clearTimeout(showTimeout.value);
+		showTimeout.value = null;
+	}
+
+	hideTimeout.value = setTimeout(() => {
+		isVisible.value = false;
+		emits('mouseleave');
+		hideTimeout.value = null;
+	}, props.hideDelayMs);
 }
 
 defineExpose({ isVisible, handleClick });
@@ -309,7 +251,7 @@ defineExpose({ isVisible, handleClick });
 				:is-visible="isVisible"
 			/>
 		</div>
-		<teleport to="body">
+		<teleport :to="props.teleport" :disabled="!props.teleport">
 			<transition name="fade">
 				<div
 					v-show="isVisible"

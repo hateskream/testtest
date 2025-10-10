@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-	ModalItemCheckbox,
-	WidgetContextMenu,
-	ModalSubmenu,
-	ModalSubmenuContent,
-} from '../../base';
+import { ModalItemCheckbox, ModalSubmenu, ModalSubmenuContent, WidgetContextMenu } from '../../base';
 import { useMarketCapStore } from '../store/market-cap';
 
 const marketCapStore = useMarketCapStore();
@@ -34,7 +29,7 @@ const emit = defineEmits<{
 		@move-to="emit('moveTo', $event)"
 		@duplicate="emit('duplicate')"
 	>
-		<modal-submenu>
+		<modal-submenu :position-offset="6">
 			<template #title>Change display</template>
 
 			<template #content>

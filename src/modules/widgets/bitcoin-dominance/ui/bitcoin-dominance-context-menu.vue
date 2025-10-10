@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-	ModalItemCheckbox,
-	WidgetContextMenu,
-	ModalSubmenu,
-	ModalSubmenuContent,
-} from '../../base';
+import { ModalItemSwitch, ModalSubmenu, ModalSubmenuContent, WidgetContextMenu } from '../../base';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
 
 const bitcoinDominanceStore = useBitcoinDominanceStore();
@@ -40,26 +35,26 @@ const emit = defineEmits<{
 				<modal-submenu-content>
 					<template #content>
 
-						<modal-item-checkbox
+						<modal-item-switch
 							:model-value="bitcoinDominanceStore.isShowIndicator"
 							@update:model-value="bitcoinDominanceStore.toggleShowIndicator"
 						>
 							Segmented indicator
-						</modal-item-checkbox>
+						</modal-item-switch>
 
-						<modal-item-checkbox
+						<modal-item-switch
 							:model-value="bitcoinDominanceStore.isShowHistorical"
 							@update:model-value="bitcoinDominanceStore.toggleShowHistorical"
 						>
 							Historical values
-						</modal-item-checkbox>
+						</modal-item-switch>
 
-						<modal-item-checkbox
+						<modal-item-switch
 							:model-value="bitcoinDominanceStore.isShowChart"
 							@update:model-value="bitcoinDominanceStore.toggleShowChart"
 						>
 							Chart
-						</modal-item-checkbox>
+						</modal-item-switch>
 					</template>
 				</modal-submenu-content>
 			</template>

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
 
-import { UiPosition } from '@/shared/ui/position';
+import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 
-interface IProps {
-	strategy?: 'fixed' | 'absolute';
-}
-const props = defineProps<IProps>();
+const props = withDefaults(defineProps<IPositionProps>(), {
+	position: 'bottom-start',
+});
 
 // FIXME: Idk why but it doesnt work without type
 const positionRef = useTemplateRef<{ isVisible: boolean }>('position');
@@ -17,8 +16,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 <template>
 	<ui-position
 		ref="position"
-		position="bottom-start"
-		:strategy="props.strategy"
+		v-bind="props"
 	>
 		<template #title>
 			<div :class="classes.icon">

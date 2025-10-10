@@ -35,6 +35,7 @@ const classesList = computed(() => ({
 			<ui-icon
 				v-if="modelValue"
 				:id="IconIds.RcmCheckbox"
+				width="12px"
 			/>
 		</div>
 	</modal-item>
@@ -49,19 +50,7 @@ const classesList = computed(() => ({
 	height: 18px;
 	padding: 4px;
 	color: var(--icon-color-base-500);
-	border-width: 1px;
-	border-style: solid;
-	border-color: var(--bg-modal-color-base);
 	border-radius: 6px;
-}
-
-.iconActive {
-	background-color: rgb(115 115 116);
-	border-color: rgb(115 115 116);
-}
-
-.content:hover .icon {
-	border-color: rgb(115 115 116);
 }
 
 .content {
