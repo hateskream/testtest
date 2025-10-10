@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -14,6 +15,13 @@ interface ICellComponentProps {
 
 defineProps<ICellComponentProps>();
 
+const { height: containerHeight } = useElementSize(useTemplateRef('container'));
+const { height: headerHeight } = useElementSize(useTemplateRef('header'));
+
+const chartHeight = computed(() => {
+	return containerHeight.value - headerHeight.value - 20;
+});
+
 const currentPrice = ref<IChartUpdateEmitData>({
 	value: 0,
 	time: new Date(),
@@ -25,9 +33,8 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 </script>
 
 <template>
-	<div :class="classes.root">
-		<div :class="classes.chartPrices">
-
+	<div ref="container" :class="classes.root">
+		<div ref="header" :class="classes.chartPrices">
 
 			<div>
 				<div :class="classes.chartPrice">
@@ -59,7 +66,6 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 
 			</div>
 
-
 			<div>
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
@@ -89,10 +95,9 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 				</div>
 			</div>
 		</div>
-
 		<chart-component
-			:width="210"
-			:height="230"
+			width="100%"
+			:height="chartHeight"
 			:is-visible-history-graph="false"
 			:disable-scroll="false"
 			:is-visible-indicators="false"
