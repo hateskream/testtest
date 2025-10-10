@@ -30,7 +30,7 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 
 <template>
 	<div :class="classes.root">
-		<div :class="classes.priceHeader">
+		<div :class="classes.header">
 			<modal-ticker-selector-with-badge
 				:model-value="[selectedTicker]"
 			/>
@@ -39,7 +39,7 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 				<ui-delimiter />
 			</div>
 
-			<modal-badge>
+			<modal-badge :class="classes.filter">
 				<template #title>
 					{{ filterValueToDisplay[timeRange].label }}
 				</template>
@@ -65,13 +65,12 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 
 		</div>
 
-		<div :class="classes.scrollable">
-			<div :class="classes.content">
-				<chart-price
-					:meta="meta"
-				/>
-			</div>
-		</div>
+		<!-- <div :class="classes.chart"> -->
+		<chart-price
+			:class="classes.chart"
+			:meta="meta"
+		/>
+		<!-- </div> -->
 	</div>
 </template>
 
@@ -80,32 +79,20 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	overflow: hidden;
+	max-height: 100%;
 }
 
 .filter {
 	margin-left: 6px;
 }
 
-.priceHeader {
+.header {
 	margin-inline: 12px;
 	display: flex;
 }
 
-.scrollable {
-	position: relative;
-	flex: 1;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.flip-list-move {
-	transition: transform 0.5s;
-}
-
-.content {
-	width: 100%;
-	height: 100%;
+.chart {
+	height: calc(100% - 38px);
 }
 
 .lineDelimiterGroup {
@@ -113,25 +100,5 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 	align-items: center;
 	gap: 6px;
 	margin-left: 6px;
-}
-
-.sectionEnterActive,
-.sectionLeaveActive {
-	max-height: 700px;
-	opacity: 1;
-	transition: all 0.4s ease;
-}
-
-.sectionEnterFrom,
-.sectionLeaveTo {
-	max-height: 0;
-	transform: translateY(-10px);
-	opacity: 0;
-}
-</style>
-
-<style scoped>
-:deep(.vgl-item--placeholder) {
-	background: transparent !important;
 }
 </style>

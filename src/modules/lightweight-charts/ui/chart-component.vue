@@ -15,6 +15,7 @@ import {
 	type LogicalRangeChangeEventHandler,
 } from 'lightweight-charts';
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { nextTick } from 'vue';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
 import { IndicatorsChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
@@ -27,7 +28,7 @@ import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
 interface IChartProps {
-	width: number;
+	width: CSSProperties['width'];
 	height: CSSProperties['height'];
 	disableScroll: boolean;
 	isVisibleHistoryGraph?:boolean;
@@ -116,6 +117,33 @@ const listActiveIndicators = computed(() => {
 	return Array.from(indicators.entries()).filter(([, item]) => item.isActive).map(([name]) => name);
 });
 
+const styleRoot = computed(() => {
+	if (typeof props.height === 'number') {
+		return {
+			height: `${props.height}px`,
+		};
+	}
+
+	return {
+		height: props.height,
+	};
+});
+
+const styleMainChart = computed(() => {
+	let otherElHeight = 0;
+
+	if (props.isVisibleRange) {
+		otherElHeight += 50;
+	}
+
+	if (chartHistory.value) {
+		otherElHeight += 180;
+	}
+
+	return {
+		height: `calc(100% - ${otherElHeight}px)`,
+	};
+});
 
 function regenerateData() {
 	mainData.value = generateCandleDataFromLineData(generateLineData(4000));
@@ -264,7 +292,8 @@ function updateHistoryChartPropChange() {
 watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
 
 
-onMounted(() => {
+onMounted(async () => {
+	await nextTick();
 	chart.value = createChart(container.value as HTMLElement, {
 		autoSize: true,
 		layout: {
@@ -322,12 +351,13 @@ onMounted(() => {
 
 	updateHistoryChartPropChange();
 });
-
-
 </script>
 
 <template>
-	<div :class="classes.wrapper" :style="{ height }">
+	<div
+		:class="classes.wrapper"
+		:style="styleRoot"
+	>
 		<div v-if="isVisibleIndicators" :class="classes.instruments">
 			<modal-badge>
 				<template #title>
@@ -388,16 +418,10 @@ onMounted(() => {
 			</modal-badge>
 		</div>
 
-		<!--
-			:style="{
-				width: '100%',
-				height: chartHistory ? 'calc(100% - 180px)' : '100%'
-			}"
-		-->
-
 		<div
 			ref="container"
 			:class="classes.mainChart"
+			:style="styleMainChart"
 		>
 		</div>
 
@@ -426,9 +450,7 @@ onMounted(() => {
 }
 
 .mainChart {
-	flex-grow: 1;
 	width: 100%;
-	height: v-bind(`${chartHistory ? 'calc(100% - 180px)' : '100%'}`);
 }
 
 .chartHistory {

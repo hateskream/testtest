@@ -38,7 +38,7 @@ const emit = defineEmits<{
 	<base-dashboard-component :is-resizing="props.meta.isResizing">
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
-			<base-error-component v-if="props.meta.isLoading" />
+			<preloader-component v-if="props.meta.isLoading" />
 			<view-component
 				v-else
 				v-model:selected-ticker="selectedTicker"
