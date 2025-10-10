@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { ALL_COLUMNS } from '../model';

@@ -10,3 +10,5 @@ export {
 } from './tabs';
 
 export { useDashboardGroup, useGridLayout } from './core';
+
+export * from './dashboards';

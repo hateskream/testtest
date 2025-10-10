@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import { useQueryMarket } from '../queries';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base';
 import { useMarket } from '../composables';
 import { NONE_SET_FILTER } from '../model';

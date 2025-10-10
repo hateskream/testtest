@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
 import { useAltcoinSeasonQuery } from '@/modules/widgets/altcoinSeason/queries';

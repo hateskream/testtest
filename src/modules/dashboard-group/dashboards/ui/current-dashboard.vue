@@ -3,9 +3,8 @@ import { computed } from 'vue';
 
 import {
 	type IWidget,
-	type IMeta,
 } from '../../core';
-import { getWidgetComponent } from '../utils';
+import { getWidgetComponent, type IMeta } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 
 interface IGroupComponentProps {
@@ -42,6 +41,8 @@ const meta = computed((): IMeta => ({
 	defaultStateType: props.dashboardItem.defaultStateType,
 	isLoading: loading.value,
 	dashboards: props.dashboards,
+	widgetType: props.dashboardItem.widgetType,
+	isOpenFull: false,
 }));
 </script>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import { useMarketCapStore } from '../store/market-cap.ts';

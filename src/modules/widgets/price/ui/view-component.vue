@@ -17,7 +17,7 @@ import {
 	type IDisplaySettings,
 	type ITicker,
 } from '../model';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import type { MarketType } from '@/modules/market';
 
 import CellComponent from './cell-component.vue';

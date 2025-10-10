@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';

@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { ChartAltcoinSeason } from '@/modules/lightweight-charts';
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import type { IMeta } from '@/modules/dashboard-group';
 import {
 	ALTCOIN_PERFORMANCE_COLUMNS,
 	type IAltcoinSeasonModules,

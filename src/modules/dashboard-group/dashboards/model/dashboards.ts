@@ -15,7 +15,34 @@ import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { PriceChartDashboard } from '@/modules/widgets/chart-price';
 
-const components: Record<WidgetType, Component> = {
+export interface ISize {
+	w: number;
+	h: number;
+}
+
+export interface IMeta {
+	widgetId: string;
+	isResizing: boolean;
+	isLoading: boolean;
+	market: string;
+	name: string;
+	size: ISize;
+	defaultStateType: string;
+	widgetType: WidgetType;
+	isOpenFull: boolean;
+	dashboards: {
+		id: string;
+		name: string;
+	}[];
+}
+
+interface IWidgetComponentProps {
+	meta: IMeta;
+}
+
+type WidgetComponent = Component<IWidgetComponentProps>;
+
+const components: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapDashboard,
@@ -32,6 +59,5 @@ const components: Record<WidgetType, Component> = {
 };
 
 export function getWidgetComponent(type: WidgetType) {
-
 	return components[type];
 }

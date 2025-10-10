@@ -2,7 +2,7 @@
 import { nextTick, ref, useTemplateRef, watch } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { useMarketCapStore } from '../store/market-cap.ts';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector/index.ts';

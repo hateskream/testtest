@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import {
 	type IGetNewsRequest,
 	NewsFiltersPanel,

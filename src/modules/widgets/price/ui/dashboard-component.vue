@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 

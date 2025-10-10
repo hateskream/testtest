@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';

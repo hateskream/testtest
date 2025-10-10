@@ -7,7 +7,6 @@ export type {
 	IWidgetState,
 	ISize,
 	ILayoutItem,
-	IMeta,
 } from './model';
 
 export {

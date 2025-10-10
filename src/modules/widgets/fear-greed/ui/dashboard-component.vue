@@ -3,7 +3,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '../../base/index.ts';
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import type { IMeta } from '@/modules/dashboard-group';
 import { useFearGreed } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 

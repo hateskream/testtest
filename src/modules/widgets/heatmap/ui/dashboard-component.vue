@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import type { IMeta } from '@/modules/dashboard-group/core/index.ts';
+import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useHeatmap } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';

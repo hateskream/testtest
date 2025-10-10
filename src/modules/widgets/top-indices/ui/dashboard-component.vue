@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '@/modules/widgets/base/';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../queries/get-top-indices';
 import { ALL_COLUMNS } from '../model';
 import { ErrorNetworkComponent } from '@/modules/widgets/base';
