@@ -20,7 +20,7 @@ import {
 import type { IMeta } from '@/modules/dashboard-group/core';
 import type { MarketType } from '@/modules/market';
 
-import CellComponent from './cell-component.vue';
+import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
 	tickers: ITicker[];
@@ -102,18 +102,9 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
-				<div
-					:class="classes.contentWrapped"
-				>
-					<cell-component
-						v-for="ticker in props.tickers"
-						:key="ticker.tickerId"
-						:settings="props.settings"
-						:ticker="ticker"
-						:meta="meta"
-						@toggle-pin="emit('togglePin', $event)"
-					/>
-				</div>
+				<chart-price
+					:meta="meta"
+				/>
 			</div>
 		</div>
 	</div>
@@ -149,7 +140,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 
 .content {
 	width: 100%;
-	height: auto;
+	height: 100%;
 }
 
 .contentWrapped {
@@ -163,5 +154,25 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	align-items: center;
 	gap: 6px;
 	margin-left: 6px;
+}
+
+.sectionEnterActive,
+.sectionLeaveActive {
+	max-height: 700px;
+	opacity: 1;
+	transition: all 0.4s ease;
+}
+
+.sectionEnterFrom,
+.sectionLeaveTo {
+	max-height: 0;
+	transform: translateY(-10px);
+	opacity: 0;
+}
+</style>
+
+<style scoped>
+:deep(.vgl-item--placeholder) {
+	background: transparent !important;
 }
 </style>

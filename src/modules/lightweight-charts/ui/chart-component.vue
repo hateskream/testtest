@@ -388,7 +388,18 @@ onMounted(() => {
 			</modal-badge>
 		</div>
 
-		<div ref="container" :class="classes.mainChart"></div>
+		<!--
+			:style="{
+				width: '100%',
+				height: chartHistory ? 'calc(100% - 180px)' : '100%'
+			}"
+		-->
+
+		<div
+			ref="container"
+			:class="classes.mainChart"
+		>
+		</div>
 
 		<chart-range
 			v-if="isVisibleRange"
@@ -411,6 +422,7 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	height: 100%;
 }
 
 .mainChart {

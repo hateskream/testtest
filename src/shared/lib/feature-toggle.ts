@@ -19,6 +19,7 @@ const ALL_WIDGETS = [
 	'WIDGET_TOP_INDICES',
 	'WIDGET_CALENDAR',
 	'WIDGET_HEATMAP',
+	'WIDGET_CHART_PRICE',
 ] as const;
 
 export type WidgetFeature = typeof ALL_WIDGETS[number];

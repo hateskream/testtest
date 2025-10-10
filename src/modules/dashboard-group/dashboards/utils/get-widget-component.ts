@@ -1,5 +1,6 @@
 import type { Component } from 'vue';
 
+import { WidgetType } from '../../core';
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboard } from '@/modules/widgets/market-cap';
@@ -11,8 +12,8 @@ import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { BitcoinDominance } from '@/modules/widgets/bitcoin-dominance';
 import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
-import { WidgetType } from '../../core';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
+import { PriceChartDashboard } from '@/modules/widgets/chart-price';
 
 const components: Record<WidgetType, Component> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
@@ -27,6 +28,7 @@ const components: Record<WidgetType, Component> = {
 	[WidgetType.TopIndices]: TopIndicesWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
+	[WidgetType.ChartPrice]: PriceChartDashboard,
 };
 
 export function getWidgetComponent(type: WidgetType) {
