@@ -30,6 +30,10 @@ const isBig = computed(() => props.meta.size.h >= 6 );
 function updateFilter(newValue: TimeRangeFilterValue) {
 	timeRange.value = newValue;
 }
+
+function updateTicker(newValue: string[]) {
+	[selectedTicker.value] = newValue;
+}
 </script>
 
 <template>
@@ -37,6 +41,9 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 		<div :class="classes.header">
 			<modal-ticker-selector-with-badge
 				:model-value="[selectedTicker]"
+				:enable-selected-info="false"
+				selection-mode="single"
+				@update:model-value="updateTicker"
 			/>
 
 			<template v-if="!isBig">

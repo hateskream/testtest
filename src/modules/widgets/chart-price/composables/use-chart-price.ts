@@ -55,16 +55,12 @@ export function useChartPrice(widgetId: string, defaultStateType: string) {
 	watch(dataState, newState => {
 		if (newState) {
 			state.value = {
-				...state.value,
 				...newState,
 			};
 		}
 	}, { immediate: true });
 
-	watch(state, (newState, oldState) => {
-		if (JSON.stringify(newState) === JSON.stringify(oldState)) {
-			return;
-		}
+	watch(() => state.value, newState => {
 		mutate(newState);
 	}, { deep: true });
 

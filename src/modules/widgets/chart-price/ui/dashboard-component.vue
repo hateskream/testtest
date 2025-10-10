@@ -7,7 +7,7 @@ import { useChartPrice } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import PriceListContextMenu from './price-list-context-menu.vue';
+import ContextMenu from './context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -47,15 +47,15 @@ const emit = defineEmits<{
 			/>
 		</template>
 		<template #rcm>
-			<!-- <price-list-context-menu
-				v-model="currentSettings"
+			<context-menu
+				v-model:selected-ticker="selectedTicker"
 				:title="props.meta.name"
 				:dashboards="props.meta.dashboards"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"
 				@move-to="emit('moveTo', $event)"
 				@duplicate="emit('duplicate')"
-			/> -->
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

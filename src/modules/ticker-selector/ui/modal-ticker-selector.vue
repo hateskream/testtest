@@ -8,6 +8,7 @@ interface IProps {
 	enableSelectedInfo?: boolean;
 	enableSelectAll?: boolean;
 	textAboveSearch?: string;
+	selectionMode?: 'single' | 'multiple';
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	enableSelectedInfo: true,
 	enableSelectAll: true,
 	textAboveSearch: '',
+	selectionMode: 'multiple',
 });
 
 const { data } = useQueryTickerSelector();
@@ -32,6 +34,7 @@ const emits = defineEmits<ITickerEmits>();
 		v-if="data?.tickers"
 		v-model="selectedTickers"
 		:tickers="data.tickers"
+		:selection-mode="props.selectionMode"
 		:is-background-transparent="props.isBackgroundTransparent"
 		:enable-selected-info="props.enableSelectedInfo"
 		:enable-select-all="props.enableSelectAll"

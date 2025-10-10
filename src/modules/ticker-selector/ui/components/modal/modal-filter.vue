@@ -23,6 +23,7 @@ interface IModalFilterTickerProps {
 	enableSelectedInfo?: boolean;
 	enableSelectAll?: boolean;
 	textAboveSearch?: string;
+	selectionMode?: 'single' | 'multiple';
 }
 
 type IGroupedTicker = Record<SymbolType, TickerDto[]>;
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
 	isBackgroundTransparent: false,
 	enableSelectedInfo: true,
 	textAboveSearch: '',
+	selectionMode: 'multiple',
 });
 
 type IEmits = ITickerEmits & {
@@ -39,9 +41,7 @@ type IEmits = ITickerEmits & {
 
 const emits = defineEmits<IEmits>();
 
-const getGroupKey = (type: SymbolType) => {
-	return SymbolToName[type];
-};
+const getGroupKey = (type: SymbolType) => SymbolToName[type];
 
 const tickersData = computed<TickerDto[]>(() =>
 	props.tickers.map((t) => ({
@@ -51,28 +51,22 @@ const tickersData = computed<TickerDto[]>(() =>
 );
 
 const query = ref('');
-
 const activeGroup = ref<SymbolType | null>(null);
 const viewMode = ref<FilterListType>(FilterListType.All);
-
 
 const selectedTickers = computed(() => {
 	const groupedSelectedCount: Record<string, number> = {};
 
 	let allSelected = tickersData.value.filter((t) => {
 		const isSelected = props.modelValue.includes(t.tickerId);
-
 		if (isSelected) {
 			const groupName = t.symbol.symbolType!;
-
 			groupedSelectedCount[groupName] = (groupedSelectedCount[groupName] ?? 0) + 1;
 		}
-
 		return isSelected;
 	});
 
-
-	if (viewMode.value === FilterListType.Selected ) {
+	if (viewMode.value === FilterListType.Selected) {
 		allSelected = allSelected.filter((t) =>
 			[t.tickerId.toLowerCase()].some((s) => s.includes(query.value)),
 		);
@@ -82,30 +76,23 @@ const selectedTickers = computed(() => {
 		groupedSelectedCount,
 		allSelected,
 	};
-},
-);
-
-const queredTickers = computed(() => {
-	return tickersData.value.filter((item) =>
-		[item.tickerId.toLowerCase()].some((s) => s.includes(query.value)),
-	);
 });
+
+const queredTickers = computed(() =>
+	tickersData.value.filter((item) =>
+		[item.tickerId.toLowerCase()].some((s) => s.includes(query.value)),
+	),
+);
 
 const groupedTickers = computed<IGroupedTicker>(() => {
 	const group: IGroupedTicker = {} as IGroupedTicker;
-
-	tickersData.value.forEach((item) => {
-		group[item.symbol.symbolType!] = [];
-	});
-
+	tickersData.value.forEach((item) => (group[item.symbol.symbolType!] = []));
 	queredTickers.value.forEach((item) => {
 		const type = item.symbol.symbolType;
-
 		if (type) {
 			(group[item.symbol.symbolType!] ??= []).push(item);
 		}
 	});
-
 	return group;
 });
 
@@ -113,59 +100,77 @@ function isGroupTickersSelectedAll(group: SymbolType) {
 	return groupedTickers.value[group].length === selectedTickers.value.groupedSelectedCount[group];
 }
 
+/** 🧩 Обновлённая логика выбора элемента */
 function handleToggleSelect(action: ITickerSelectAction) {
-	if (!action.isSelected) {
-		const idx = props.modelValue.findIndex((i) =>
-			compareStrings(i, action.tickerId),
-		);
+	if (props.selectionMode === 'single') {
 
-		if (idx !== -1) {
-			const item = props.modelValue[idx];
-			emits(
-				'update:modelValue',
-				props.modelValue.filter((_, i) => i !== idx),
-			);
-			emits('unselect', item);
+		if (action.isSelected) {
+
+			emits('update:modelValue', [action.tickerId]);
+			emits('select', action.tickerId);
+		} else {
+
+			if (props.modelValue.length > 1) {
+				const next = props.modelValue.filter((id) => id !== action.tickerId);
+				emits('update:modelValue', next);
+				emits('unselect', action.tickerId);
+			}
 		}
 	} else {
-		const ticker = tickersData.value.find((i) =>
-			compareStrings(i.tickerId, action.tickerId),
-		);
-		if (ticker) {
-			emits('update:modelValue', [...new Set([...props.modelValue, ticker.tickerId])]);
-			emits('select', ticker.tickerId);
+
+		if (!action.isSelected) {
+			const next = props.modelValue.filter((id) => id !== action.tickerId);
+			emits('update:modelValue', next);
+			emits('unselect', action.tickerId);
+		} else {
+			const ticker = tickersData.value.find((i) => compareStrings(i.tickerId, action.tickerId));
+			if (ticker) {
+				emits('update:modelValue', [...new Set([...props.modelValue, ticker.tickerId])]);
+				emits('select', ticker.tickerId);
+			}
 		}
 	}
 
 	nextTick(() => {
-		if (props.modelValue.length === 0) {
+		if (props.modelValue.length === 0 && props.selectionMode === 'multiple') {
 			viewMode.value = FilterListType.All;
 			activeGroup.value = null;
 		}
 	});
 }
 
+/** 🧩 Обновлён handleSelectAll (в single режиме — просто выбирает первый) */
 function handleSelectAll(groupName: SymbolType) {
-	const group = groupedTickers.value[groupName];
+	if (props.selectionMode === 'single') {
+		const group = groupedTickers.value[groupName];
+		if (group.length > 0) {
+			const first = group[0].tickerId;
+			emits('update:modelValue', [first]);
+			emits('selectAll', [first]);
+		}
+		return;
+	}
 
+
+	const group = groupedTickers.value[groupName];
 	if (isGroupTickersSelectedAll(groupName)) {
 		const toUnselect = new Set(group.map((t) => t.tickerId));
 		const next = props.modelValue.filter((m) => !toUnselect.has(m));
-
 		emits('unselectAll', next);
 		emits('update:modelValue', next);
 	} else {
-		const additions: string[] = group.filter((t) => !props.modelValue.includes(t.tickerId)).map((i) => i.tickerId);
-
+		const additions: string[] = group
+			.filter((t) => !props.modelValue.includes(t.tickerId))
+			.map((i) => i.tickerId);
 		if (additions.length) {
 			const tickers = [...props.modelValue, ...additions];
-
 			emits('update:modelValue', tickers);
 			emits('selectAll', tickers);
 		}
 	}
 }
 </script>
+
 
 <template>
 	<div
