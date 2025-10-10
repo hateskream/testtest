@@ -25,8 +25,8 @@ const badgeColors = computed(() => ({
 	flex-wrap: wrap;
 	align-items: center;
 	width: max-content;
-	height: auto;
-	padding: 8px 12px;
+	height: 32px;
+	padding: 0 12px;
 	font-weight: 300;
 	font-size: 10px;
 	text-align: left;

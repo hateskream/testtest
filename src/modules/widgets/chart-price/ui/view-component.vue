@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	ModalBadge,
@@ -23,6 +25,8 @@ const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: tru
 
 const props = defineProps<IViewComponentProps>();
 
+const isBig = computed(() => props.meta.size.h >= 6 );
+
 function updateFilter(newValue: TimeRangeFilterValue) {
 	timeRange.value = newValue;
 }
@@ -35,42 +39,41 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 				:model-value="[selectedTicker]"
 			/>
 
-			<div :class="classes.lineDelimiterGroup">
-				<ui-delimiter />
-			</div>
+			<template v-if="!isBig">
+				<div :class="classes.lineDelimiterGroup">
+					<ui-delimiter />
+				</div>
 
-			<modal-badge :class="classes.filter">
-				<template #title>
-					{{ filterValueToDisplay[timeRange].label }}
-				</template>
-				<template #content>
-					<modal-badge-list>
-						<template #title>
-							Time Range
-						</template>
-						<template
-							v-for="filterValue in TimeRangeFilterValue"
-							:key="filterValue"
-						>
-							<modal-item-selector
-								:model-value="filterValue === timeRange"
-								@update:model-value="updateFilter(filterValue)"
+				<modal-badge :class="classes.filter">
+					<template #title>
+						{{ filterValueToDisplay[timeRange].label }}
+					</template>
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								Time Range
+							</template>
+							<template
+								v-for="filterValue in TimeRangeFilterValue"
+								:key="filterValue"
 							>
-								{{ filterValueToDisplay[filterValue].label }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
-
+								<modal-item-selector
+									:model-value="filterValue === timeRange"
+									@update:model-value="updateFilter(filterValue)"
+								>
+									{{ filterValueToDisplay[filterValue].label }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+			</template>
 		</div>
 
-		<!-- <div :class="classes.chart"> -->
 		<chart-price
 			:class="classes.chart"
-			:meta="meta"
+			:is-big="isBig"
 		/>
-		<!-- </div> -->
 	</div>
 </template>
 

@@ -4,16 +4,15 @@ import { useElementSize } from '@vueuse/core';
 
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IMeta } from '@/modules/dashboard-group/core';
 import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 
 interface ICellComponentProps {
-	meta: IMeta;
+	isBig: boolean;
 }
 
-defineProps<ICellComponentProps>();
+const props = defineProps<ICellComponentProps>();
 
 const { height: containerHeight } = useElementSize(useTemplateRef('container'));
 const { height: headerHeight } = useElementSize(useTemplateRef('header'));
@@ -35,14 +34,12 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 <template>
 	<div ref="container" :class="classes.root">
 		<div ref="header" :class="classes.chartPrices">
-
+			<!-- At Close -->
 			<div>
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
 						At Close: {{ currentPrice.time.toUTCString() }}
 					</div>
-
-
 					<div :class="classes.chartPriceTitle">
 						<div :class="classes.chartPriceTitleValue">
 							$ {{ currentPrice.value.toFixed(2) }}
@@ -63,21 +60,17 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 						</div>
 					</div>
 				</div>
-
 			</div>
 
-			<div>
+			<div :class="classes.afterHours">
 				<div :class="classes.chartPrice">
 					<div :class="classes.chartPriceTime">
 						After Hours
 					</div>
-
-
 					<div :class="classes.chartPriceTitle">
 						<div :class="classes.chartPriceTitleValue">
 							$ {{ (+currentPrice.value + 5).toFixed(2) }}
 						</div>
-
 						<div :class="classes.chartPriceTitleChange">
 							<div :class="classes.chartPriceTitleChangeIcon">
 								<ui-icon
@@ -95,13 +88,15 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 				</div>
 			</div>
 		</div>
+
 		<chart-component
 			width="100%"
 			:height="chartHeight"
 			:is-visible-history-graph="false"
 			:disable-scroll="false"
 			:is-visible-indicators="false"
-			:range-list="[ RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
+			:is-visible-range="props.isBig"
+			:range-list="[RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
 			@update="handleUpdateData"
 		/>
 	</div>
@@ -111,6 +106,8 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 .root {
 	height: 100%;
 	padding: 10px 8px 10px 16px;
+	container-type: inline-size;
+	container-name: root;
 }
 
 .chartPriceTitleChangeIcon {
@@ -164,5 +161,15 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 	font-weight: 440;
 	font-size: 12px;
 	color: var(--metrics-color-positive-chart);
+}
+
+.afterHours {
+	display: block;
+}
+
+@container root (max-width: 448px) {
+	.afterHours {
+		display: none;
+	}
 }
 </style>
