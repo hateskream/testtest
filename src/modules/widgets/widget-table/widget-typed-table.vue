@@ -32,6 +32,7 @@ export interface IProps<T> {
 	enableRowActions?: boolean;
 	showHeader?: boolean;
 	tickerState?: ITickerState;
+	isUpdating?: boolean;
 }
 
 export interface IEmits<T> {
@@ -85,6 +86,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	enableRowActions: true,
 	sortConfig: () => ({ columnKey: '', direction: 'none' }),
 	showHeader: true,
+	isUpdating: false,
 });
 
 const emit = defineEmits<IEmits<T>>();

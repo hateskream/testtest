@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type {
@@ -31,6 +31,7 @@ export interface IProps<T> {
 	enableRowActions?: boolean;
 	showHeader?: boolean;
 	canAddSections?: boolean;
+	isUpdating?: boolean;
 }
 
 export interface IEmits<T> {
@@ -72,6 +73,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	sortConfig: () => ({ columnKey: '', direction: 'none' }),
 	showHeader: true,
 	canAddSections: false,
+	isUpdating: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -259,21 +261,44 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 
 const containerRef: Ref<HTMLDivElement | null> = ref(null);
 
-
 const {
 	width: containerWidth,
-
 }: {
 	width: Ref<number>;
-
 } = useElementSize(containerRef);
 
+// Animation control for updating data (need for filters/sorts)
+const isAnimating = ref(false);
+const shouldFinishAnimation = ref(false);
+
+watch(() => props.isUpdating, (newValue) => {
+	if (newValue) {
+		isAnimating.value = true;
+		shouldFinishAnimation.value = false;
+	} else {
+		// Дать завершить текущий цикл анимации
+		shouldFinishAnimation.value = true;
+	}
+},
+{ immediate: true },
+);
+
+const handleAnimationIteration = () => {
+	if (shouldFinishAnimation.value) {
+		isAnimating.value = false;
+		shouldFinishAnimation.value = false;
+	}
+};
 
 </script>
 
 <template generic="T">
 	<div :class="classes.tableContainer">
-		<div ref="containerRef" :class="classes.scrollContainer">
+		<div
+			ref="containerRef"
+			:class="classes.scrollContainer"
+		>
+
 			<table
 				:class="classes.dataTable"
 				:style="columnStyles"
@@ -416,6 +441,15 @@ const {
 					</template>
 				</unsectioned-table-content>
 			</table>
+			<!-- loader for updating data -->
+			<div
+				v-if="isAnimating"
+				:class="classes.loadingIndicatorContainer"
+				@animationiteration="handleAnimationIteration"
+			>
+				<div :class="classes.loadingIndicator"></div>
+			</div>
+
 		</div>
 
 		<!-- Pagination outside scroll area -->
@@ -437,8 +471,10 @@ const {
 }
 
 .scrollContainer {
+	position: relative;
 	flex: 1;
 	min-height: 0;
+	padding-bottom: 2px;
 	overflow: auto;
 	scrollbar-width: thin;
 	scrollbar-color: rgb(255 255 255 / 30%) rgb(255 255 255 / 10%);
@@ -466,6 +502,37 @@ const {
 
 .scrollContainer::-webkit-scrollbar-corner {
 	background: rgb(255 255 255 / 5%);
+}
+
+.loadingIndicatorContainer {
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	width: 100%;
+	height: 3px;
+	overflow: hidden;
+	background-color: var(--bg-color-base-100);
+	pointer-events: none;
+}
+
+.loadingIndicator {
+	position: absolute;
+	top: 0;
+	width: 80px;
+	height: 3px;
+	background: var(--bg-color-base-500);
+	animation: slide-progress 1.5s linear infinite;
+}
+
+@keyframes slide-progress {
+	0% {
+		left: -80px;
+	}
+
+	100% {
+		left: 100%;
+	}
 }
 
 .dataTable {
