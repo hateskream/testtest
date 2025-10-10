@@ -100,7 +100,7 @@ function handleUpdatePositions(columnKey: string, _x: number, y: number) {
 <template>
 	<div :class="classes.columnSettings">
 		<ui-position position="right-start">
-			<template #default>
+			<template #title>
 				<ui-icon
 					:id="IconIds.Tertiary"
 					:class="classes.iconTertiary"

@@ -87,7 +87,7 @@ function selectTicker(tickerId: string, sectionId: string) {
 					<ui-position
 						strategy="absolute"
 					>
-						<template #default>
+						<template #title>
 							<ui-icon
 								:id="IconIds.Plus"
 								height="20px"

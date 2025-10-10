@@ -33,7 +33,7 @@ function updateFilter(filterKey: string, filterValue: string) {
 	<div :class="classes.container">
 		<div :class="classes.iconAllFilter">
 			<ui-position position="right-start">
-				<template #default>
+				<template #title>
 					<ui-icon
 						:id="IconIds.NewsFilter"
 						width="20"

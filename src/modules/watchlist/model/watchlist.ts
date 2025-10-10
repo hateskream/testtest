@@ -157,3 +157,18 @@ function duplicate(watchlist: IWatchlist): IWatchlist {
 		id: uuidv4(),
 	};
 }
+
+export interface IWatchlistData {
+	watchlistId: string;
+	name: string;
+	tickers: string[];
+}
+
+export function isOnWatchlist(data: IWatchlistData, tickerId: string): boolean {
+	return data.tickers.includes(tickerId);
+}
+
+export interface IWatchlistAction {
+	watchlistId: string;
+	tickerId: string;
+}

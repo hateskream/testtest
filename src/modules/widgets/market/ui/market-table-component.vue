@@ -1,21 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	mapRow,
 	mapColumn,
 	type ITableColumn,
 	type TableRow,
 } from '@/modules/cell';
-import {
-	ModalBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-	ModalItem,
-} from '@/modules/widgets/base';
-import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
+import { type IWatchlistAction } from '../model';
 import { useGoToTickerPage } from '@/modules/chart';
+import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -43,19 +37,6 @@ const genericColumns = computed(() =>
 const genericRows = computed(() =>
 	props.rows.map(ticker => mapRow(ticker)),
 );
-
-function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
-	const payload: IWatchlistAction = {
-		watchlistId: watchlist.watchlistId,
-		tickerId,
-	};
-
-	if (isOnWatchlist(watchlist, tickerId)) {
-		emits('remove-from-watchlist', payload);
-	} else {
-		emits('add-to-watchlist', payload);
-	}
-}
 </script>
 
 <template>
@@ -75,42 +56,13 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 			@click-on-ticker="goToTickerPage"
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">
-				<modal-badge>
-					<template #title>
-						<div
-							:class="classes.favorite"
-						>
-							<ui-icon
-								:id="IconIds.Favorite"
-								width="16px"
-								height="16px"
-							/>
-						</div>
-					</template>
-					<template #content>
-						<modal-badge-list>
-							<template #title>Add to watchlist</template>
-
-							<template v-for="watchlist in props.wachlists" :key="watchlist.tabId">
-								<modal-item-selector
-									:model-value="isOnWatchlist(watchlist, tickerId)"
-									@update:model-value="clickRowAction(watchlist, tickerId)"
-								>
-									{{ watchlist.name }}
-								</modal-item-selector>
-							</template>
-
-							<modal-item @click="emits('add-to-new-watchlist', tickerId)">
-								<div :class="classes.new">
-									<ui-icon
-										:id="IconIds.Plus"
-									/>
-									New
-								</div>
-							</modal-item>
-						</modal-badge-list>
-					</template>
-				</modal-badge>
+				<add-to-watchlist
+					:ticker-id="tickerId"
+					:wachlists="props.wachlists"
+					@add-to-watchlist="emits('add-to-watchlist', $event)"
+					@remove-from-watchlist="emits('remove-from-watchlist', $event)"
+					@add-to-new-watchlist="emits('add-to-new-watchlist', $event)"
+				/>
 			</template>
 		</widget-typed-table>
 	</div>
@@ -121,27 +73,5 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 .scrollable {
 	position: relative;
 	height: 100%;
-}
-
-.favorite {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 20px;
-	height: 20px;
-	color: var(--text-color-base-300);
-	cursor: pointer;
-	transition: color 0.2s ease-in;
-
-	&:hover {
-		color: var(--text-color-base-300-effect);
-	}
-}
-
-.new {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	cursor: pointer;
 }
 </style>

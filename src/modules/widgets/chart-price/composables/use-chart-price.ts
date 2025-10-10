@@ -7,6 +7,8 @@ import {
 	type IState,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
+import { useWatchlist } from '@/modules/watchlist';
+import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),
@@ -16,6 +18,13 @@ export const stateSchema = z.object({
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function useChartPrice(widgetId: string, defaultStateType: string) {
+	const {
+		actionableWatchlists: wachlists,
+		addToWatchlist,
+		removeFromWatchlist,
+		addTickerInNewWatchlist,
+	} = useWatchlist();
+
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -68,10 +77,37 @@ export function useChartPrice(widgetId: string, defaultStateType: string) {
 		state.value = getDefaultsState(defaultStateType);
 	}
 
+	function handleAddToWatchlist(watchlistId: string ) {
+		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		if (!marketType) {
+			return;
+		}
+
+		addToWatchlist(watchlistId, selectedTicker.value, marketType);
+	}
+
+	function handleRemoveFromWatchlist(watchlistId: string) {
+		removeFromWatchlist(watchlistId, selectedTicker.value);
+	}
+
+	function handleAddTickerInNewWatchlist() {
+		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		if (!marketType) {
+			return;
+		}
+
+		addTickerInNewWatchlist(selectedTicker.value, marketType);
+	}
+
 	return {
 		selectedTicker,
 		timeRange,
-		resetAllChanges,
 		state,
+		wachlists,
+
+		handleAddToWatchlist,
+		handleRemoveFromWatchlist,
+		handleAddTickerInNewWatchlist,
+		resetAllChanges,
 	};
 }

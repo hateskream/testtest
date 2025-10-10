@@ -30,7 +30,7 @@ function updateDate(v: DateRange) {
 	<div :class="classes.performanceHeader">
 		<div :class="classes.listFilters">
 			<ui-position  :class="classes.iconAllFilter">
-				<template #default>
+				<template #title>
 					<ui-icon
 						:id="IconIds.NewsFilter"
 						width="20"

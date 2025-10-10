@@ -13,17 +13,25 @@ import {
 	TimeRangeFilterValue,
 } from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
+import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 
 import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
 	meta: IMeta;
+	wachlists: IWatchlistData[];
 }
 
 const selectedTicker = defineModel<string>('selectedTicker', { required: true });
 const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
 
 const props = defineProps<IViewComponentProps>();
+
+const emits = defineEmits<{
+	(e: 'add-to-watchlist', wachlistsId: string): void;
+	(e: 'remove-from-watchlist', wachlistsId: string): void;
+	(e: 'add-to-new-watchlist'): void;
+}>();
 
 const isBig = computed(() => props.meta.size.h >= 6 );
 
@@ -75,6 +83,14 @@ function updateTicker(newValue: string[]) {
 					</template>
 				</modal-badge>
 			</template>
+
+			<add-to-watchlist
+				:wachlists="props.wachlists"
+				:ticker-id="selectedTicker"
+				@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
+				@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
+				@add-to-new-watchlist="emits('add-to-new-watchlist')"
+			/>
 		</div>
 
 		<chart-price
@@ -99,6 +115,11 @@ function updateTicker(newValue: string[]) {
 .header {
 	margin-inline: 12px;
 	display: flex;
+	align-items: center;
+}
+
+.header > :last-child {
+	margin-left: auto;
 }
 
 .chart {

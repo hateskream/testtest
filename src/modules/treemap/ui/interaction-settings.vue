@@ -26,7 +26,7 @@ function update(newValue: string) {
 
 <template>
 	<ui-position>
-		<template #default>
+		<template #title>
 			<modal-item-interaction>
 				<div>
 					{{ props.title }}

@@ -96,7 +96,7 @@ function getScoreLevelActiveNumber(value: string) {
 	<div :class="classes.container">
 		<div :class="classes.iconAllFilter">
 			<ui-position>
-				<template #default>
+				<template #title>
 					<ui-icon
 						:id="IconIds.NewsFilter"
 						width="20"

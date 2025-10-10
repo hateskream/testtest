@@ -37,7 +37,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 			Logo
 		</modal-item-checkbox>
 		<ui-position>
-			<template #default>
+			<template #title>
 				<modal-item-interaction>
 					<div>
 						Title : {{ title }}

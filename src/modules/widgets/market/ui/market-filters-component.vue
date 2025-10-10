@@ -18,7 +18,7 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 			:position-offset="12"
 			trigger="hover"
 		>
-			<template #default>
+			<template #title>
 				<modal-item-interaction> Categories </modal-item-interaction>
 			</template>
 
@@ -31,7 +31,7 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 			:position-offset="12"
 			trigger="hover"
 		>
-			<template #default>
+			<template #title>
 				<modal-item-interaction> Editing columns </modal-item-interaction>
 			</template>
 

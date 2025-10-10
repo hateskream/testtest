@@ -38,7 +38,7 @@ const emits = defineEmits<{
 		<modal-item-number :value="2" @click="emits('openFull')">Open full data</modal-item-number>
 
 		<ui-position trigger="hover">
-			<template #default>
+			<template #title>
 				<modal-item-interaction>
 					Move to
 				</modal-item-interaction>
