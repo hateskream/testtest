@@ -53,7 +53,7 @@ const getSortIcon = (direction: string) => {
 		case 'desc':
 			return '↓';
 		default:
-			return '↕';
+			return '';
 	}
 };
 
@@ -172,7 +172,7 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 			:class="classes.headerRow"
 			item-key="key"
 			tag="tr"
-			class="draggable-container"
+			class="draggable-container headerRowAnchor"
 		>
 			<template #item="{ element: column, index }">
 				<th
@@ -197,24 +197,6 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 					:colspan="shouldUseColspan && index + 1 === columns.length ? 2 : 1"
 				>
 					<div :class="classes.headerContent">
-						<div :class="classes.headerMain">
-							<slot
-								:name="`header-${index}`"
-								:column="column"
-								:index="index"
-								:sort-direction="getSortDirection(column.key)"
-								:sort-icon="getSortIcon(getSortDirection(column.key))"
-							>
-								<span
-									:class="[
-										classes.headerLabel,
-										{[classes.colspanFix]: shouldUseColspan && index + 1 === columns.length}]"
-								>
-									{{ column.label }} 123
-								</span>
-							</slot>
-						</div>
-
 						<div
 							v-if="column.sortable && enableSorting"
 							:class="[
@@ -232,6 +214,25 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 								{{ getSortIcon(getSortDirection(column.key)) }}
 							</span>
 						</div>
+						<div :class="classes.headerMain">
+							<slot
+								:name="`header-${index}`"
+								:column="column"
+								:index="index"
+								:sort-direction="getSortDirection(column.key)"
+								:sort-icon="getSortIcon(getSortDirection(column.key))"
+							>
+								<span
+									:class="[
+										classes.headerLabel,
+										{[classes.colspanFix]: shouldUseColspan && index + 1 === columns.length}]"
+								>
+									{{ column.label }}
+								</span>
+							</slot>
+						</div>
+
+
 					</div>
 				</th>
 			</template>
@@ -279,12 +280,11 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 }
 
 .headerRow {
-	height: 44px;
+	height: 28px;
 }
 
 .headerCell {
 	position: relative;
-	min-height: 44px;
 	padding: 0 12px;
 	font-weight: 440;
 	font-size: 12px;
@@ -339,9 +339,9 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	gap: 8px;
+	gap: 3px;
 	min-width: 0;
-	min-height: 44px;
+	min-height: 28px;
 
 	.headerMain {
 		display: block;
@@ -365,22 +365,6 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 	text-overflow: ellipsis;
 }
 
-.sortArrowContainer {
-	display: flex;
-	flex-shrink: 0;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	background: transparent;
-	border-radius: 4px;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.sortArrowContainer:hover {
-	background: rgb(255 255 255 / 10%);
-}
 
 .sortArrow {
 	font-size: 12px;
@@ -392,21 +376,11 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 	color: var(--text-color-base-100, #ffffff);
 }
 
-.sortArrowActive {
-	background: rgb(255 255 255 / 5%);
-}
 
 .sortArrowActive .sortArrow {
 	color: var(--text-color-base-100, #ffffff);
 }
 
-.sortArrowAsc .sortArrow {
-	color: #00d4aa;
-}
-
-.sortArrowDesc .sortArrow {
-	color: #ff6b6b;
-}
 
 .settingsCell {
 	width: 50px;

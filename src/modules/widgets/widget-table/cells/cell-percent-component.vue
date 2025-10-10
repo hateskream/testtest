@@ -40,12 +40,21 @@ const barWidth = computed(() => {
 });
 
 const barColor = computed(() => {
-	return props.data.value ?? 0 >= 0 ? COLORS.POSITIVE : COLORS.NEGATIVE;
+
+	if (props.data.trend === 'increase') {
+		return COLORS.POSITIVE;
+	}
+	if (props.data.trend === 'decrease') {
+		return COLORS.NEGATIVE;
+	}
+
+	const numValue = +(props.data.value ?? 0);
+	return numValue >= 0 ? COLORS.POSITIVE : COLORS.NEGATIVE;
 });
 </script>
 
 <template>
-	<div :class="classes.rootBarCell">
+	<div :class="classes.rootBarCell" class="percentCell">
 		<div
 			v-if="props.data.maxAbsValue"
 			:class="classes.barContainer"
@@ -59,7 +68,7 @@ const barColor = computed(() => {
 			/>
 		</div>
 		<span
-			:class="classes.valueText"
+			class="paragraph-p-00"
 			:style="{ color: barColor }"
 		>
 			{{ displayValue }}
@@ -70,10 +79,11 @@ const barColor = computed(() => {
 <style module="classes">
 .rootBarCell {
 	display: flex;
+	justify-content: flex-end;
 	align-items: center;
-	gap: 12px;
 	width: 100%;
 	min-height: 24px;
+	gap: 12px;
 }
 
 .barContainer {

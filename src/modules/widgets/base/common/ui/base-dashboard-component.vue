@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, useTemplateRef } from 'vue';
+import { computed, getCurrentInstance, ref, useCssModule, useTemplateRef } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import {
 	autoUpdate,
@@ -11,6 +11,7 @@ import {
 } from '@floating-ui/vue';
 
 import { createResizeContext } from '../composables/use-resize-context';
+import { useGlobalRcm } from '../composables/use-rcm';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IBaseDashboardComponentProps {
@@ -23,7 +24,9 @@ createResizeContext(props.isResizing);
 
 const classes = useCssModule('classes');
 
-const isVisibleRcm = ref(false);
+const instanceId = getCurrentInstance()!.uid;
+const { isOpen: isVisibleRcm, open: openRcm, close: closeRcm } = useGlobalRcm(instanceId);
+
 const rcmRef = useTemplateRef('rcm');
 
 const reference = ref<VirtualElement | null>(null);
@@ -40,7 +43,7 @@ const classList = computed(() => ({
 }));
 
 onClickOutside(rcmRef, () => {
-	isVisibleRcm.value = false;
+	closeRcm();
 });
 
 function handleOpenRcm(e: MouseEvent) {
@@ -59,16 +62,13 @@ function handleOpenRcm(e: MouseEvent) {
 		},
 	};
 
-	isVisibleRcm.value = true;
+	openRcm();
 }
 </script>
 
 <template>
-	<div :class="[classes.container, classList]">
-		<div
-			:class="[classes.title, 'widget-drag']"
-			@click.prevent.right="handleOpenRcm"
-		>
+	<div :class="[classes.container, classList]" @click.prevent.right="handleOpenRcm">
+		<div :class="[classes.title, 'widget-drag']">
 			<div :class="classes.titleTextContainer">
 				<div :class="classes.titleText">
 					<slot name="title" />
@@ -80,13 +80,7 @@ function handleOpenRcm(e: MouseEvent) {
 					:class="classes.iconWrapper"
 					width="20px"
 					height="20px"
-				/>
-
-				<ui-icon
-					:id="IconIds.ControlShare"
-					:class="classes.iconWrapper"
-					width="20px"
-					height="20px"
+					@click.prevent.left="handleOpenRcm"
 				/>
 			</div>
 		</div>
@@ -161,7 +155,7 @@ function handleOpenRcm(e: MouseEvent) {
 	transition: opacity 0.3s ease;
 }
 
-.title:hover > .control {
+.container:hover > .title > .control {
 	opacity: 1;
 }
 

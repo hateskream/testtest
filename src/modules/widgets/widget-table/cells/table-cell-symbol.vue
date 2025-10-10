@@ -50,7 +50,7 @@ const emits = defineEmits<{
 		<div
 			v-if="props.data.symbolType === 'PlainText'
 				&& props.data.text"
-			:class="[classes.text, 'paragraph-p-00']"
+			:class="[classes.text, 'paragraph-p-00', 'symbolCellText']"
 			@click="emits('click-symbol')"
 		>
 			{{ props.data.text }}

@@ -471,9 +471,12 @@ const canMoveItem = (evt: unknown) => {
 	}
 }
 
+.tableRow {
+	height: 48px;
+}
+
 .tableCell {
 	position: relative;
-	min-height: 50px;
 	padding: 8px 12px;
 	overflow: hidden;
 	vertical-align: middle;

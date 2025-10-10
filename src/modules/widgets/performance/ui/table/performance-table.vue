@@ -72,4 +72,19 @@ const genericRows = computed(() =>
 	height: 100%;
 	overflow: auto;
 }
+
+</style>
+
+<style scoped>
+:deep(.percentCell) {
+	padding-right: 34px;
+}
+
+:deep(.symbolCellText) {
+	font-size: var(--typography-paragraph-size-p-01);
+}
+
+:deep(th:last-child) {
+	padding-right: 34px;
+}
 </style>

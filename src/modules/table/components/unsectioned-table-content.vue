@@ -209,6 +209,10 @@ const onRowDragChange = (evt: IDragEvent<T>) => {
 	user-select: none;
 }
 
+.tableRow {
+	height: 48px;
+}
+
 .dragging {
 	.tableRow:hover {
 		background-color: transparent !important;
@@ -242,7 +246,6 @@ const onRowDragChange = (evt: IDragEvent<T>) => {
 
 .tableCell {
 	position: relative;
-	min-height: 50px;
 	padding: 8px 12px;
 	overflow: hidden;
 	vertical-align: middle;
