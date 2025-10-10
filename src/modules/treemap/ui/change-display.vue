@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import {
-	ModalItemSelector,
-	ModalBadgeList,
-	ModalItemInteraction,
-	ModalItemCheckbox,
-} from '@/modules/widgets/base';
-import type {
-	ISingleSetting,
-	ISettings,
-} from '../model';
+import { ModalBadgeList, ModalItemCheckbox, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
+import type { ISettings, ISingleSetting } from '../model';
 import { TitleViewVariant } from '../model';
-import { UiPosition } from '@/shared/ui/position';
 
 import InteractionSettings from './interaction-settings.vue';
 
@@ -36,13 +27,9 @@ function updateTitle(newTitle: TitleViewVariant) {
 		>
 			Logo
 		</modal-item-checkbox>
-		<ui-position>
-			<template #default>
-				<modal-item-interaction>
-					<div>
-						Title : {{ title }}
-					</div>
-				</modal-item-interaction>
+		<modal-submenu>
+			<template #title>
+				Title : {{ title }}
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -58,7 +45,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 					</template>
 				</modal-badge-list>
 			</template>
-		</ui-position>
+		</modal-submenu>
 		<interaction-settings
 			v-model="displayValue"
 			:active="props.activeDisplayValue"

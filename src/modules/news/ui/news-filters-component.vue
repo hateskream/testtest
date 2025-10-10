@@ -167,8 +167,8 @@ function toggleSortBy(sort: SortState) {
 			</div>
 
 			<ui-position
-				:position-offset="12"
 				trigger="hover"
+				:teleport="false"
 			>
 				<template #default>
 					<modal-item-interaction> Location </modal-item-interaction>
@@ -180,8 +180,8 @@ function toggleSortBy(sort: SortState) {
 			</ui-position>
 
 			<ui-position
-				:position-offset="12"
 				trigger="hover"
+				:teleport="false"
 			>
 				<template #default>
 					<modal-item-interaction> Ticker </modal-item-interaction>

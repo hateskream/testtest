@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import {
-	ModalBadge,
-	ModalItemSelector,
-	ModalBadgeList,
-	ModalItemInteraction,
-} from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItemInteraction, ModalItemSelector } from '@/modules/widgets/base';
 import type {
-	IMarketSettings,
-	ISingleSetting,
-	IColorDepthSetting,
-	IMarket,
 	IColorBy,
 	IColorDepth,
+	IColorDepthSetting,
+	IMarket,
+	IMarketSettings,
 	ISettings,
+	ISingleSetting,
 } from '../model';
 import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
@@ -92,7 +87,10 @@ function updateColorDepth(newColorDepth: string) {
 
 			<ui-delimiter class="delimiter" />
 
-			<modal-badge class="color-modal" strategy="absolute">
+			<modal-badge
+				class="color-modal"
+				strategy="absolute"
+			>
 				<template #title="{ isVisible }">
 					<ui-icon
 						:id="IconIds.Color"
@@ -121,7 +119,7 @@ function updateColorDepth(newColorDepth: string) {
 								{{ cb.displayName }}
 							</modal-item-selector>
 							<ui-driver />
-							<ui-position>
+							<ui-position trigger="hover" :teleport="false">
 								<template #default>
 									<modal-item-interaction>
 										<!-- eslint-disable-next-line @stylistic/max-len -->

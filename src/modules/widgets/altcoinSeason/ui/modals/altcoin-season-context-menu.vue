@@ -41,7 +41,7 @@ const resetAll = () => {
 		@move-to="emit('moveTo', $event)"
 		@duplicate="emit('duplicate')"
 	>
-		<modal-submenu>
+		<modal-submenu :teleport="false">
 			<template #title>Change display</template>
 			<template #content>
 				<altcoin-season-widget-config
@@ -52,7 +52,7 @@ const resetAll = () => {
 			</template>
 		</modal-submenu>
 
-		<modal-submenu>
+		<modal-submenu :teleport="false">
 			<template #title>Filter</template>
 			<template #content>
 				<altcoin-season-time-filter v-model:period="period" />

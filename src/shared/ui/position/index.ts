@@ -1,3 +1,2 @@
-import PositionComponent from './position-component.vue';
-
-export { PositionComponent as UiPosition };
+export { default as UiPosition } from './position-component.vue';
+export * from './types';
