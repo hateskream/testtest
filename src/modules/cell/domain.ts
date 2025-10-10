@@ -389,7 +389,11 @@ function isValidSymbolType(value: string): value is SymbolType {
 	return Object.values(SymbolType).includes(value as SymbolType);
 }
 
-export function createTickerId(symbolCell: ISymbolCell): string {
+export function createTickerId(symbolType: SymbolType, payload: string): string {
+	return `${symbolType}-${payload}`;
+}
+
+export function createTickerIdFromCell(symbolCell: ISymbolCell): string {
 	const { symbolType } = symbolCell;
 	let idPayload = '';
 
@@ -413,26 +417,26 @@ export function createTickerId(symbolCell: ISymbolCell): string {
 			idPayload = symbolCell.text;
 	}
 
-	return `${symbolType}-${idPayload}`;
+	return createTickerId(symbolType, idPayload);
 }
 
-function createTickerIdCrypto(ticker: string, blockchain: string): string {
+export function createTickerIdCrypto(ticker: string, blockchain: string): string {
 	return ticker + blockchain;
 }
 
-function createTickerIdStock(ticker: string): string {
+export function createTickerIdStock(ticker: string): string {
 	return ticker;
 }
 
-function createTickerIdIndex(ticker: string): string {
+export function createTickerIdIndex(ticker: string): string {
 	return ticker;
 }
 
-function createTickerIdCommodity(ticker: string): string {
+export function createTickerIdCommodity(ticker: string): string {
 	return ticker;
 }
 
-function createTickerIdForex(leftTicker: string, rightTicker: string): string {
+export function createTickerIdForex(leftTicker: string, rightTicker: string): string {
 	return leftTicker + rightTicker;
 }
 

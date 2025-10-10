@@ -1,97 +1,62 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
-	MarketBadge,
 	ModalBadge,
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
+import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import {
-	filterTypeToName,
 	filterValueToDisplay,
-	type FiltersState,
-	type FiltersValues,
-	type FilterType,
-	type IDisplaySettings,
-	type ITicker,
+	TimeRangeFilterValue,
 } from '../model';
 import type { IMeta } from '@/modules/dashboard-group/core';
-import type { MarketType } from '@/modules/market';
 
 import ChartPrice from './chart-price.vue';
 
 interface IViewComponentProps {
-	tickers: ITicker[];
-	settings: IDisplaySettings;
 	meta: IMeta;
-	filtersValues: FiltersValues;
 }
 
-const activeMarket = defineModel<MarketType>('market', { required: true });
-const filters = defineModel<FiltersState>('filters', { required: true });
+const selectedTicker = defineModel<string>('selectedTicker', { required: true });
+const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
 
 const props = defineProps<IViewComponentProps>();
 
-const emit = defineEmits<{
-	(e: 'togglePin', tickerId: string): void;
-}>();
-
-const gridTemplateContent = computed(() => {
-	const defaultMinWidth = props.meta.size.w > 1 ? 190 : 100;
-
-	let minWidth = defaultMinWidth + ((
-		(+(props.settings.isShowChart && props.meta.size.w > 1)) +
-		+props.settings.isShowPercentageChange +
-		(+(props.settings.isShowLogo && props.meta.size.w > 1)) +
-		+props.settings.isShowTicker +
-		+props.settings.isShowDescription
-	) * 30);
-
-
-	return `repeat(auto-fit, minmax(${minWidth}px, 1fr)) `;
-});
-
-function updateFilter(filterKey: FilterType, filterValue: string) {
-	filters.value = {
-		...filters.value,
-		[filterKey]: filterValue,
-	};
+function updateFilter(newValue: TimeRangeFilterValue) {
+	timeRange.value = newValue;
 }
 </script>
 
 <template>
 	<div :class="classes.root">
 		<div :class="classes.priceHeader">
-			<market-badge v-model="activeMarket" />
+			<modal-ticker-selector-with-badge
+				:model-value="[selectedTicker]"
+			/>
 
 			<div :class="classes.lineDelimiterGroup">
 				<ui-delimiter />
 			</div>
-			<modal-badge
-				v-for="(filterState, filterKey) in filters"
-				:key="filterKey"
-				:class="classes.filter"
-			>
-				<template #title v-if="filterState">
-					{{ filterValueToDisplay[filterState].label }}
+
+			<modal-badge>
+				<template #title>
+					{{ filterValueToDisplay[timeRange].label }}
 				</template>
 				<template #content>
 					<modal-badge-list>
 						<template #title>
-							{{ filterTypeToName[filterKey] }}
+							Time Range
 						</template>
 						<template
-							v-for="filterValue in props.filtersValues[filterKey]"
-							:key="filterValue.value"
+							v-for="filterValue in TimeRangeFilterValue"
+							:key="filterValue"
 						>
-
 							<modal-item-selector
-								:model-value="filterValue.value === filterState"
-								@update:model-value="updateFilter(filterKey, filterValue.value)"
+								:model-value="filterValue === timeRange"
+								@update:model-value="updateFilter(filterValue)"
 							>
-								{{ filterValue.label }}
+								{{ filterValueToDisplay[filterValue].label }}
 							</modal-item-selector>
 						</template>
 					</modal-badge-list>
@@ -141,12 +106,6 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 .content {
 	width: 100%;
 	height: 100%;
-}
-
-.contentWrapped {
-	display: grid;
-	grid-template-columns: v-bind(gridTemplateContent);
-	width: 100%;
 }
 
 .lineDelimiterGroup {
