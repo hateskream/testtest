@@ -1,111 +1,28 @@
-import { MarketType } from '@/modules/market';
+import { createTickerId, createTickerIdForex, createTickerIdIndex, SymbolType } from '@/modules/cell';
 import {
-	FilterType,
-	MarketTrendFilterValue,
-	RankingAndNewFilterValue,
-	SectorFilterValue,
 	TimeRangeFilterValue,
-	type FilterValue,
-} from './filters';
-
-export interface IDisplaySettings {
-	isShowChart: boolean;
-	isShowPercentageChange: boolean;
-	isShowLogo: boolean;
-	isShowTicker: boolean;
-	isShowDescription: boolean;
-}
-
-interface ISettings {
-	display: IDisplaySettings;
-	pinned: string[];
-	filtersState: {
-		[key in FilterType]?: FilterValue;
-	};
-}
-
-type SettingsByMarketType = Record<MarketType, ISettings>;
+} from './time-range';
 
 export interface IState {
-	activeMarket: MarketType;
-	settings: SettingsByMarketType;
+	selectedTicker: string;
+	timeRange: TimeRangeFilterValue;
 }
-
-const defaultSettings: IDisplaySettings = {
-	isShowChart: true,
-	isShowPercentageChange: true,
-	isShowLogo: true,
-	isShowTicker: true,
-	isShowDescription: false,
-};
-
-export function getDefaultsSettings(): IDisplaySettings {
-	return { ...defaultSettings };
-}
-
-const defaultSettingsByMarket: SettingsByMarketType = {
-	[MarketType.Crypto]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Stock]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Forex]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Commodities]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.Sector]: SectorFilterValue.All,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Indices]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-};
-
 
 export function getDefaultsState(defaultStateType: string): IState {
-	let activeMarket: MarketType = MarketType.Crypto;
-
-	if (defaultStateType === 'stock') {
-		activeMarket = MarketType.Stock;
-	}
+	let defaultSelectedTicker = createTickerId(
+		SymbolType.Index,
+		createTickerIdIndex('SPX'),
+	);
 
 	if (defaultStateType === 'forex') {
-		activeMarket = MarketType.Forex;
-	}
-
-	if (defaultStateType === 'commodities') {
-		activeMarket = MarketType.Commodities;
-	}
-
-	if (defaultStateType === 'indices') {
-		activeMarket = MarketType.Indices;
+		defaultSelectedTicker = createTickerId(
+			SymbolType.Forex,
+			createTickerIdForex('USDT', 'EUR'),
+		);
 	}
 
 	return {
-		activeMarket,
-		settings: { ...defaultSettingsByMarket },
+		selectedTicker: defaultSelectedTicker,
+		timeRange: TimeRangeFilterValue.Day,
 	};
 }

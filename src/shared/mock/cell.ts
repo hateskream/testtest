@@ -4,7 +4,7 @@ import {
 	type ColumnToCell,
 	ColumnType,
 	type ColumnWithoutSymbol,
-	createTickerId,
+	createTickerIdFromCell,
 	type ICommoditySymbolCell,
 	type ICryptoSymbolCell,
 	type IForexSymbolCell,
@@ -50,7 +50,7 @@ export async function generateRows<T extends RowCells = RowCells>(
 			const tickerCell = createSymbolCell(type, tickerData);
 
 			return {
-				tickerId: createTickerId(tickerCell),
+				tickerId: createTickerIdFromCell(tickerCell),
 				[ColumnType.Symbol]: tickerCell,
 				...Object
 					.fromEntries(
