@@ -9,7 +9,7 @@ import { UiPosition } from '@/shared/ui/position';
 		position="right-start"
 		:position-offset="12"
 	>
-		<template #default="{ isVisible }">
+		<template #title="{ isVisible }">
 			<div :class="[classes.title, { [classes.titleActive]: isVisible }]">
 				<slot name="title" />
 

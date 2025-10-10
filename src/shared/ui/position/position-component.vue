@@ -305,7 +305,7 @@ defineExpose({ isVisible, handleClick });
 			@click="handleClick"
 		>
 			<slot
-				name="default"
+				name="title"
 				:is-visible="isVisible"
 			/>
 		</div>

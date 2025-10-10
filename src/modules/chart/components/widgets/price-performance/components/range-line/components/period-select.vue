@@ -38,7 +38,7 @@ const handlePeriodSelect = (period: string) => {
 		position="bottom-start"
 		trigger="click"
 	>
-		<template #default="{isVisible}">
+		<template #title="{isVisible}">
 			<div :class="classes.selectWrapper" class="paragraph-p-01">
 				<div :class="classes.selectedValue">{{ selectedPeriod }}</div>
 				<ui-icon

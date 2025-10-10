@@ -170,7 +170,7 @@ function toggleSortBy(sort: SortState) {
 				:position-offset="12"
 				trigger="hover"
 			>
-				<template #default>
+				<template #title>
 					<modal-item-interaction> Location </modal-item-interaction>
 				</template>
 
@@ -183,7 +183,7 @@ function toggleSortBy(sort: SortState) {
 				:position-offset="12"
 				trigger="hover"
 			>
-				<template #default>
+				<template #title>
 					<modal-item-interaction> Ticker </modal-item-interaction>
 				</template>
 

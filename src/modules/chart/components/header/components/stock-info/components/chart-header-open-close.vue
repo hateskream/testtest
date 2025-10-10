@@ -91,7 +91,7 @@ useIntervalFn(() => {
 		position="bottom-start"
 		trigger="hover"
 	>
-		<template #default>
+		<template #title>
 			<div :class="[classes.openCloseLabel, {[classes.closed]: !isActiveMarketOpen}]">
 				<div :class="classes.iconWrapper">
 					<ui-icon

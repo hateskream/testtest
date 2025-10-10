@@ -23,8 +23,13 @@ const props = defineProps<IWidgetComponentProps>();
 
 const {
 	selectedTicker,
-	resetAllChanges,
 	timeRange,
+	wachlists,
+
+	handleAddToWatchlist,
+	handleRemoveFromWatchlist,
+	handleAddTickerInNewWatchlist,
+	resetAllChanges,
 } = useChartPrice(props.meta.widgetId, props.meta.defaultStateType);
 
 const emit = defineEmits<{
@@ -43,7 +48,11 @@ const emit = defineEmits<{
 				v-else
 				v-model:selected-ticker="selectedTicker"
 				v-model:time-range="timeRange"
+				:wachlists="wachlists"
 				:meta="meta"
+				@add-to-watchlist="handleAddToWatchlist"
+				@remove-from-watchlist="handleRemoveFromWatchlist"
+				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
 			/>
 		</template>
 		<template #rcm>

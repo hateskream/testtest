@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import type { ITickersAddPayload } from '../../model';
-import { decodeTickerId, encodeTickerId, mapSymbolTypeToMarketType } from '@/modules/cell';
+import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 const emit = defineEmits<{
 	(event: 'add-tickers', payload: ITickersAddPayload): void;
@@ -17,26 +17,15 @@ function onClickSave() {
 	const tickers = selectedTickers.value
 		.reduce<ITickersAddPayload['tickers']>(
 			(acc, item) => {
-				const decode = decodeTickerId(item);
-
-				if (!decode) {
-					return acc;
-				}
-
-				const { symbolType, tickerId } = decode;
-
-				const marketType = mapSymbolTypeToMarketType(symbolType);
-
+				const marketType = resolveMarketTypeFromTicker(item);
 				if (!marketType) {
 					return acc;
 				}
 
-				const ticker = encodeTickerId(symbolType, tickerId);
-
 				if (!acc[marketType]) {
-					acc[marketType] = [ticker];
+					acc[marketType] = [item];
 				} else {
-					acc[marketType].push(ticker);
+					acc[marketType].push(item);
 				}
 
 				return acc;

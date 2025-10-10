@@ -23,7 +23,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 		position="bottom-start"
 		:strategy="props.strategy"
 	>
-		<template #default>
+		<template #title>
 			<modal-badge-title
 				:background-color="props.backgroundColor"
 				:color="props.color"

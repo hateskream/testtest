@@ -381,10 +381,6 @@ export function decodeTickerId(tickerId: string): IDecodeTickerId | null {
 	return null;
 }
 
-export function encodeTickerId(symbolType: SymbolType, tickerId: string): string {
-	return `${symbolType}-${tickerId}`;
-}
-
 function isValidSymbolType(value: string): value is SymbolType {
 	return Object.values(SymbolType).includes(value as SymbolType);
 }
@@ -456,4 +452,18 @@ export function mapSymbolTypeToMarketType(st: SymbolType): MarketType | null {
 		default:
 			return null;
 	}
+}
+
+export function resolveMarketTypeFromTicker(selectedTicker: string) {
+	const { symbolType } = decodeTickerId(selectedTicker) || {};
+	if (!symbolType) {
+		return;
+	}
+
+	const marketType = mapSymbolTypeToMarketType(symbolType);
+	if (!marketType) {
+		return;
+	}
+
+	return marketType;
 }

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { FiltersState, FiltersValues, IWatchlistAction, IWatchlistData } from '../model';
+import type { FiltersState, FiltersValues, IWatchlistAction } from '../model';
 import type { ITableColumn, TableRow } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
+import type { IWatchlistData } from '@/modules/watchlist';
 
 import MarketTabsComponent from './market-tabs-component.vue';
 import MarketTableComponent from './market-table-component.vue';

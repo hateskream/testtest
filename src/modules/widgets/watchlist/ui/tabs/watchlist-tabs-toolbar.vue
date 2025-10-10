@@ -14,8 +14,7 @@ import {
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
-import type { MarketType } from '@/modules/market';
-import { decodeTickerId, mapSymbolTypeToMarketType } from '@/modules/cell';
+import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 import WatchlistTab from './watchlist-tab.vue';
 
@@ -106,12 +105,7 @@ function openModal(index: number) {
 };
 
 function selectTicker(tickerId: string) {
-	const decodeId = decodeTickerId(tickerId);
-	if (!decodeId) {
-		return;
-	}
-
-	const marketType = mapSymbolTypeToMarketType(decodeId.symbolType);
+	const marketType = resolveMarketTypeFromTicker(tickerId);
 	if (!marketType) {
 		return;
 	}
@@ -119,7 +113,7 @@ function selectTicker(tickerId: string) {
 	emit('add-ticker',
 		{
 			tickerId,
-			tickerType: marketType as MarketType,
+			tickerType: marketType,
 		},
 	);
 }
@@ -134,7 +128,7 @@ function selectTicker(tickerId: string) {
 					ref="positionRefs"
 					position="bottom-start"
 				>
-					<template #default="{ isVisible }">
+					<template #title="{ isVisible }">
 						<watchlist-tab
 							:tab="tab"
 							:is-open="isVisible"
@@ -167,7 +161,7 @@ function selectTicker(tickerId: string) {
 								<ui-position
 									strategy="absolute"
 								>
-									<template #default>
+									<template #title>
 										<span :class="classes.menuActionTitle">
 											{{ tabActionToTitle[TabAction.AddSymbolsToList] }}
 										</span>

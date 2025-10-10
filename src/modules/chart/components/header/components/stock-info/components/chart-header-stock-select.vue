@@ -33,7 +33,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 		position="bottom-start"
 		trigger="click"
 	>
-		<template #default="{ isVisible }">
+		<template #title="{ isVisible }">
 			<div :class="classes.selectWrapper">
 				<ui-icon
 					:id="activeExchange.iconId"

@@ -122,7 +122,7 @@ function updateColorDepth(newColorDepth: string) {
 							</modal-item-selector>
 							<ui-driver />
 							<ui-position>
-								<template #default>
+								<template #title>
 									<modal-item-interaction>
 										<!-- eslint-disable-next-line @stylistic/max-len -->
 										Color depth <span class="dot" /> {{ props.activeColorDepth.start }} to {{ props.activeColorDepth.end }}
@@ -156,7 +156,7 @@ function updateColorDepth(newColorDepth: string) {
 		</div>
 		<div v-if="props.isShowDots" class="end-group">
 			<ui-position position="right-start" strategy="absolute">
-				<template #default>
+				<template #title>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>
 				<template #content>
