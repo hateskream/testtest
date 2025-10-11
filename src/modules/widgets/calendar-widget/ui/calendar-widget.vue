@@ -6,7 +6,6 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { useCalendarState } from '@/modules/calendar';
 
 import CalendarLoader from './views/calendar-loader.vue';
-import CalendarContextMenu from './calendar-context-menu.vue';
 
 const CalendarMain = defineAsyncComponent({
 	loader: () => import('./views/calendar-main.vue'),
@@ -57,7 +56,14 @@ const isLoading = computed(
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAll"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>
 		</template>
@@ -85,17 +91,6 @@ const isLoading = computed(
 				@next-week="nextWeek"
 				@reset-all="resetAll"
 			/>
-		</template>
-
-		<template #rcm>
-			<calendar-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-			/>
-			<!-- @reset="resetAllChanges" -->
 		</template>
 	</base-dashboard-component>
 </template>
