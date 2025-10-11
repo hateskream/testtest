@@ -11,6 +11,23 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 </script>
 
 <template>
+	<!--
+		вынести сюда modal-badge-list
+		<template #content>
+				<modal-badge-list>
+					<template #default>
+						<modal-item
+							v-for="d in props.dashboards"
+							:key="d.id"
+							:class="classes.item"
+							@click="emits('moveTo', d.id)"
+						>
+							{{ d.name }}
+						</modal-item>
+					</template>
+				</modal-badge-list>
+			</template>
+	-->
 	<ui-position
 		v-bind="props"
 	>

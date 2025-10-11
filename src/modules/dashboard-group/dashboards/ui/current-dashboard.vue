@@ -9,6 +9,8 @@ import { useDelayedLoading } from '@/shared/composables';
 
 interface IGroupComponentProps {
 	dashboardItem: IWidget;
+	columnWidth: number;
+	rowHeight: number;
 	isResizing?: boolean;
 	dashboards?: {
 		id: string;
@@ -47,6 +49,8 @@ const meta = computed((): IMeta => ({
 	dashboards: props.dashboards,
 	widgetType: props.dashboardItem.widgetType,
 	isOpenFull: false,
+	columnWidth: props.columnWidth,
+	rowHeight: props.rowHeight,
 }));
 </script>
 

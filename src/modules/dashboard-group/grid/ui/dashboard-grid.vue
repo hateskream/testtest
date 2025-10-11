@@ -546,6 +546,8 @@ onCreated();
 						v-if="!checkIsFake(item.i)"
 						:dashboard-item="getDashboardItemById(item.i)"
 						:dashboards="props.dashboards"
+						:column-width="props.columnWidth"
+						:row-height="props.rowHeight"
 						@delete="deleteDashboards(item.i)"
 						@duplicate="duplicateDashboard(item.i)"
 						@move-to="moveTo(item.i, $event)"

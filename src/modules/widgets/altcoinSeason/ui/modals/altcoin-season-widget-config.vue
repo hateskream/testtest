@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModalBadgeList, ModalItemSwitch } from '@/modules/widgets/base/modal';
+import { ModalItemSwitch } from '@/modules/widgets/base/modal';
 import {
 	ALTCOIN_SEASON_MODULE_LABELS,
 	type AltcoinSeasonModuleKey,
@@ -14,23 +14,14 @@ function handleModuleToggle(key: AltcoinSeasonModuleKey, value: boolean) {
 </script>
 
 <template>
-	<modal-badge-list>
-		<template #title>
-			Filter
-			<!-- TODO: Обсудить с дизайнерами -->
-			<!-- Maybe good to show saving and error indicator for optomistic update -->
-			<!-- <span v-if="isSaving" :class="classes.savingIndicator">Saving...</span> -->
-		</template>
-
-		<modal-item-switch
-			v-for="(value, key) in selectedModules"
-			:key="key"
-			:model-value="value"
-			@update:model-value="(newValue) => handleModuleToggle(key, newValue)"
-		>
-			{{ ALTCOIN_SEASON_MODULE_LABELS[key] || key }}
-		</modal-item-switch>
-	</modal-badge-list>
+	<modal-item-switch
+		v-for="(value, key) in selectedModules"
+		:key="key"
+		:model-value="value"
+		@update:model-value="(newValue) => handleModuleToggle(key, newValue)"
+	>
+		{{ ALTCOIN_SEASON_MODULE_LABELS[key] || key }}
+	</modal-item-switch>
 </template>
 
 <style module="classes">

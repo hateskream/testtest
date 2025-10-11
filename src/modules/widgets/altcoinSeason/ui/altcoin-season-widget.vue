@@ -5,8 +5,10 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
 import { useAltcoinSeasonQuery } from '@/modules/widgets/altcoinSeason/queries';
+import { usePerformanceStore } from '../../performance/stores';
 
-import AltcoinSeasonContextMenu from './modals/altcoin-season-context-menu.vue';
+import AltcoinSeasonTimeFilter from './modals/altcoin-season-time-filter.vue';
+import AltcoinSeasonWidgetConfig from './modals/altcoin-season-widget-config.vue';
 import AltcoinSeasonLoader from './layouts/altcoin-season-loader.vue';
 
 const ViewComponent = defineAsyncComponent({
@@ -29,13 +31,23 @@ const emit = defineEmits<{
 
 const { period, modules, request } = useAltcoinSeasonState();
 const { data, isLoading, isError, refetch } = useAltcoinSeasonQuery(request);
+
+const performanceStore = usePerformanceStore();
+
+function resetAll() {
+	performanceStore.resetAll();
+};
 </script>
 
 <template>
 	<base-dashboard-component
-		:is-resizing="props.meta.isResizing"
+		has-reset
 		:meta="props.meta"
 		:class="classes.altcoinSeasonWidget"
+		@delete="emit('delete')"
+		@move-to="emit('moveTo', $event)"
+		@duplicate="emit('duplicate')"
+		@reset="resetAll"
 	>
 		<template #title>{{ props.meta.name }}</template>
 		<template #content>
@@ -55,17 +67,14 @@ const { data, isLoading, isError, refetch } = useAltcoinSeasonQuery(request);
 			</div>
 		</template>
 
-		<template #rcm>
-			<altcoin-season-context-menu
-				v-model:period="period"
+		<template #change-display>
+			<altcoin-season-widget-config
 				v-model:selected-modules="modules"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				:modules="modules"
-				@delete="emit('delete')"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
 			/>
+		</template>
+
+		<template #filter>
+			<altcoin-season-time-filter v-model:period="period" />
 		</template>
 	</base-dashboard-component>
 </template>

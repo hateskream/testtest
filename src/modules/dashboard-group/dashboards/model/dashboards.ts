@@ -31,6 +31,8 @@ export interface IMeta {
 	defaultStateType: string;
 	widgetType: WidgetType;
 	isOpenFull: boolean;
+	columnWidth: number;
+	rowHeight: number;
 	dashboards: {
 		id: string;
 		name: string;

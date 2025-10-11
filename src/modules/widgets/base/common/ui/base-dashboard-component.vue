@@ -5,8 +5,9 @@ import { createResizeContext } from '../composables/use-resize-context';
 import { useGlobalRcm } from '../composables/use-rcm';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
-import { getWidgetComponent, type IMeta } from '@/modules/dashboard-group';
-import { UiModal } from '@/shared/ui/modal';
+import { type IMeta } from '@/modules/dashboard-group';
+
+import WidgetComponent from './widget-component.vue';
 
 interface IBaseDashboardComponentProps {
 	meta: IMeta;
@@ -123,17 +124,10 @@ function handleOpenFullView() {
 					</template>
 				</widget-context-menu-full-view>
 			</div>
-			<ui-modal v-model="isOpenFullView">
-				<component
-					:is="getWidgetComponent(props.meta.widgetType)"
-					:meta="{
-						...props.meta,
-						widgetId: 'ephemeral',
-						isOpenFull: true,
-						size: props.meta.maxSize,
-					}"
-				/>
-			</ui-modal>
+			<widget-component
+				v-model="isOpenFullView"
+				:meta="props.meta"
+			/>
 		</teleport>
 	</div>
 </template>
@@ -156,6 +150,7 @@ function handleOpenFullView() {
 	position: relative;
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 	height: 100%;
 	border-radius: 18px;
 }

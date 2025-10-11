@@ -1,0 +1,60 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+import { getWidgetComponent, type IMeta } from '@/modules/dashboard-group';
+import { useDelayedLoading } from '@/shared/composables';
+import { UiModal } from '@/shared/ui/modal';
+
+interface IProps {
+	meta: IMeta;
+}
+
+const props = defineProps<IProps>();
+
+const isOpenFullView = defineModel<boolean>({ required: true });
+
+const { loading } = useDelayedLoading();
+
+const preparedMeta = computed((): IMeta => ({
+	...props.meta,
+	widgetId: 'ephemeral',
+	isOpenFull: true,
+	size: props.meta.maxSize,
+	isLoading: loading.value,
+}));
+
+const VERTICAL_PADDING = 160;
+const HORIZONTAL_PADDING = 130;
+
+const style = computed(() => {
+	const { maxSize, columnWidth, rowHeight } = props.meta;
+
+	let width = window.innerWidth - HORIZONTAL_PADDING;
+	if (Number.isFinite(maxSize.w)) {
+		width = maxSize.w * columnWidth;
+	}
+
+	let height = window.innerHeight - VERTICAL_PADDING;
+	if (Number.isFinite(maxSize.h)) {
+		height = maxSize.h * rowHeight;
+	}
+
+	return {
+		width: `${width}px`,
+		height: `${height}px`,
+	};
+});
+</script>
+
+<template>
+	<ui-modal
+		ref="rootRef"
+		v-model="isOpenFullView"
+	>
+		<component
+			:is="getWidgetComponent(props.meta.widgetType)"
+			:meta="preparedMeta"
+			:style="style"
+		/>
+	</ui-modal>
+</template>
