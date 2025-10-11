@@ -5,10 +5,9 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import BitcoinDominanceContextMenu from './bitcoin-dominance-context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -38,7 +37,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="bitcoinDominanceStore.resetAll"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			{{ props.meta.name }}
 		</template>
@@ -54,12 +60,27 @@ const emit = defineEmits<{
 				:meta="meta"
 			/>
 		</template>
-		<template #rcm>
-			<bitcoin-dominance-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-			/>
+		<template #change-display>
+			<modal-item-switch
+				:model-value="bitcoinDominanceStore.isShowIndicator"
+				@update:model-value="bitcoinDominanceStore.toggleShowIndicator"
+			>
+				Segmented indicator
+			</modal-item-switch>
+
+			<modal-item-switch
+				:model-value="bitcoinDominanceStore.isShowHistorical"
+				@update:model-value="bitcoinDominanceStore.toggleShowHistorical"
+			>
+				Historical values
+			</modal-item-switch>
+
+			<modal-item-switch
+				:model-value="bitcoinDominanceStore.isShowChart"
+				@update:model-value="bitcoinDominanceStore.toggleShowChart"
+			>
+				Chart
+			</modal-item-switch>
 		</template>
 	</base-dashboard-component>
 </template>

@@ -14,6 +14,8 @@ const props = defineProps<IPlaceholderResizeComponent>();
 		<current-dashboard
 			:dashboard-item="props.dashboardItem"
 			is-resizing
+			:column-width="0"
+			:row-height="0"
 		/>
 	</div>
 </template>
