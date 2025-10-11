@@ -8,7 +8,6 @@ import { useWatchlistWidget } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
 import WatchlistLoader from './views/watchlist-loader.vue';
-import WatchlistContextMenu from './watchlist-context-menu.vue';
 
 const WatchlistMain = defineAsyncComponent({
 	loader: () => import('./views/watchlist-main.vue'),
@@ -55,7 +54,14 @@ const isNotData = computed(() => (!!data?.value && isLoading.value) || props.met
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>
 		</template>
@@ -84,17 +90,6 @@ const isNotData = computed(() => (!!data?.value && isLoading.value) || props.met
 				@create-new-watchlist="createNewWatchlist"
 				@add-tickers="handlerAddTickersToWatchlist"
 				@remove-section="handlerRemoveSectionFromWatchlist"
-			/>
-		</template>
-
-		<template #rcm>
-			<watchlist-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
 			/>
 		</template>
 	</base-dashboard-component>
