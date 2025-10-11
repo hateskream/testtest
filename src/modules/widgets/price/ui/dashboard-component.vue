@@ -6,8 +6,8 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
+import RcmPriceComponent from './rcm-price-component.vue';
 import PreloaderComponent from './preloader-component.vue';
-import PriceListContextMenu from './price-list-context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -42,7 +42,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
@@ -58,16 +65,8 @@ const emit = defineEmits<{
 				@toggle-pin="togglePin"
 			/>
 		</template>
-		<template #rcm>
-			<price-list-context-menu
-				v-model="currentSettings"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-			/>
+		<template #change-display>
+			<rcm-price-component v-model="currentSettings" />
 		</template>
 	</base-dashboard-component>
 </template>
