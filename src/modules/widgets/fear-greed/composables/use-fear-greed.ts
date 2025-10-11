@@ -14,7 +14,12 @@ const settingsSchema = z.object({
 
 type ISettingsSchema = z.infer<typeof settingsSchema>;
 
-export function useFearGreed(widgetId: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+}
+
+export function useFearGreed({ widgetId, isEphemeral }: IOptions) {
 	const viewState = ref<ISettings>(getDefaultViewState());
 
 	const { data, isLoading, isError, refetch } = useQueryTension();
@@ -26,7 +31,7 @@ export function useFearGreed(widgetId: string) {
 		redo,
 	} = createStateQueries<ISettings, ISettingsSchema>({
 		storageKey: '__FEAR_GREED__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: getDefaultViewState,
 		entityId: widgetId,
 		schema: settingsSchema,

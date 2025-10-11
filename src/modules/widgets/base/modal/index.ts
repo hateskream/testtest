@@ -14,3 +14,4 @@ export { default as ModalItemInteraction } from './ui/modal-item-interaction-com
 export { default as ModalSearch } from './ui/modal-search-component.vue';
 export { default as ModalItemSelector } from './ui/modal-item-selector-component.vue';
 export { default as WidgetContextMenu } from './ui/widget-context-menu.vue';
+export { default as WidgetContextMenuFullView } from './ui/widget-context-menu-full-view.vue';

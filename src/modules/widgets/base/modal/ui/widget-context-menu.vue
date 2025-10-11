@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { useSlots } from 'vue';
 
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalBadgeList, ModalItem, ModalItemInteraction, ModalItemNumber } from '@/modules/widgets/base';
-import { type IPositionProps, UiPosition } from '@/shared/ui/position';
+import { ModalBadgeList, ModalItem, ModalItemNumber } from '@/modules/widgets/base';
+
+import ModalSubmenuComponent from './modal-submenu-component.vue';
 
 interface IWidgetContextMenuProps {
 	title: string;
@@ -12,19 +13,12 @@ interface IWidgetContextMenuProps {
 		name: string;
 	}[];
 	hasReset?: boolean;
-	uiPositionProps?: IPositionProps;
 }
 
 const props = withDefaults(defineProps<IWidgetContextMenuProps>(), {
 	hasReset: true,
-	uiPositionProps: () => ({}),
 });
 
-const uiPropsWithDefaults = computed<IPositionProps>(() => ({
-	trigger: 'hover',
-	teleport: false,
-	...props.uiPositionProps,
-}));
 
 const emits = defineEmits<{
 	(e: 'duplicate'): void;
@@ -33,6 +27,8 @@ const emits = defineEmits<{
 	(e: 'reset'): void;
 	(e: 'delete'): void;
 }>();
+
+const slots = useSlots();
 </script>
 
 <template>
@@ -42,11 +38,9 @@ const emits = defineEmits<{
 		<modal-item-number :value="1" @click="emits('duplicate')">Duplicate</modal-item-number>
 		<modal-item-number :value="2" @click="emits('openFull')">Open full data</modal-item-number>
 
-		<ui-position v-bind="uiPropsWithDefaults">
+		<modal-submenu-component>
 			<template #title>
-				<modal-item-interaction>
-					Move to
-				</modal-item-interaction>
+				Move to
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -62,11 +56,27 @@ const emits = defineEmits<{
 					</template>
 				</modal-badge-list>
 			</template>
-		</ui-position>
+		</modal-submenu-component>
 
 		<ui-driver />
 
-		<slot />
+		<modal-submenu-component v-if="slots.filter">
+			<template #title>Filter</template>
+			<template #content>
+				<modal-badge-list>
+					<slot name="filter" />
+				</modal-badge-list>
+			</template>
+		</modal-submenu-component>
+
+		<modal-submenu-component v-if="slots['change-display']">
+			<template #title>Change display</template>
+			<template #content>
+				<modal-badge-list>
+					<slot name="change-display" />
+				</modal-badge-list>
+			</template>
+		</modal-submenu-component>
 
 		<modal-item
 			v-if="props.hasReset"

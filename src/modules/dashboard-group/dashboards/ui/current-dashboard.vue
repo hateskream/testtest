@@ -37,6 +37,10 @@ const meta = computed((): IMeta => ({
 		h: props.dashboardItem.position.h,
 		w: props.dashboardItem.position.w,
 	},
+	maxSize: {
+		h: props.dashboardItem.maxSize.h,
+		w: props.dashboardItem.maxSize.w,
+	},
 	name: props.dashboardItem.name,
 	defaultStateType: props.dashboardItem.defaultStateType,
 	isLoading: loading.value,

@@ -7,7 +7,7 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { useFearGreed } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import FearGreedContextMenu from './fear-greed-context-menu.vue';
+import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 
 const ViewComponent = defineAsyncComponent({
@@ -22,7 +22,16 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { viewState, dataState, isNotData, resetAllChanges, refetch } = useFearGreed(props.meta.widgetId);
+const {
+	viewState,
+	dataState,
+	isNotData,
+	resetAllChanges,
+	refetch,
+} = useFearGreed({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 
 const emit = defineEmits<{
 	delete: [];
@@ -33,7 +42,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			{{ props.meta.name }}
 		</template>
@@ -52,23 +68,8 @@ const emit = defineEmits<{
 			/>
 		</template>
 
-		<template #rcm>
-			<fear-greed-context-menu
-				v-model="viewState"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@duplicate="emit('duplicate')"
-				@move-to="emit('moveTo', $event)"
-				@reset="resetAllChanges"
-			/>
+		<template #change-display>
+			<rcm-fear-greed-component v-model="viewState" />
 		</template>
 	</base-dashboard-component>
 </template>
-
-<style module="classes">
-.root {
-	flex-grow: 0.99;
-	flex-basis: 0;
-}
-</style>

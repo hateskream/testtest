@@ -27,6 +27,7 @@ export interface IMeta {
 	market: string;
 	name: string;
 	size: ISize;
+	maxSize: ISize;
 	defaultStateType: string;
 	widgetType: WidgetType;
 	isOpenFull: boolean;

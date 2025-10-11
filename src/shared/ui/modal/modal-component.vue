@@ -265,6 +265,9 @@ function handleDrop(event: DragEvent) {
 	left: 0;
 	width: 100%;
 	height: 100%;
+	background: rgb(0 0 0 / 45%);
+	backdrop-filter: blur(2px);
+	transition: background 0.2s ease;
 }
 
 .notFullShield {
@@ -273,6 +276,7 @@ function handleDrop(event: DragEvent) {
 	left: 0;
 	width: 0;
 	height: 0;
+	background: transparent;
 }
 
 .body {

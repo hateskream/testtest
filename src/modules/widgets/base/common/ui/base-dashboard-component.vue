@@ -1,66 +1,70 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref, useCssModule, useTemplateRef } from 'vue';
-import { onClickOutside } from '@vueuse/core';
-import { autoUpdate, flip, offset, shift, useFloating, type VirtualElement } from '@floating-ui/vue';
+import { computed, ref, useCssModule, useSlots, useTemplateRef } from 'vue';
 
 import { createResizeContext } from '../composables/use-resize-context';
 import { useGlobalRcm } from '../composables/use-rcm';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
+import { getWidgetComponent, type IMeta } from '@/modules/dashboard-group';
+import { UiModal } from '@/shared/ui/modal';
 
 interface IBaseDashboardComponentProps {
-	isResizing: boolean;
+	meta: IMeta;
+	hasReset: boolean;
 }
 
 const props = defineProps<IBaseDashboardComponentProps>();
 
-createResizeContext(props.isResizing);
+const emits = defineEmits<{
+	(e: 'duplicate'): void;
+	(e: 'openFull'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'reset'): void;
+	(e: 'delete'): void;
+}>();
+
+createResizeContext(props.meta.isResizing);
 
 const classes = useCssModule('classes');
 
-const instanceId = getCurrentInstance()!.uid;
-const { isOpen: isVisibleRcm, open: openRcm, close: closeRcm } = useGlobalRcm(instanceId);
+const {
+	isOpen: isVisibleRcm,
+	handleOpen: openRcm,
+	close: closeRcm,
+	floatingStyles,
+} = useGlobalRcm(props.meta.widgetId, useTemplateRef('rcm'));
 
-const rcmRef = useTemplateRef('rcm');
+const {
+	isOpen: isVisibleRcmFull,
+	handleOpen: openRcmFull,
+	floatingStyles: floatingStylesFull,
+} = useGlobalRcm(props.meta.widgetId, useTemplateRef('rcmFull'));
 
-const reference = ref<VirtualElement | null>(null);
-const { floatingStyles } = useFloating(reference, rcmRef, {
-	placement: 'right-start',
-	strategy: 'fixed',
-	middleware: [offset(6), flip(), shift({ padding: 5 })],
-	whileElementsMounted: autoUpdate,
-});
+const slots = useSlots();
+
+const isOpenFullView = ref(false);
 
 const classList = computed(() => ({
-	[classes.resizing]: props.isResizing,
-	[classes.notResizing]: !props.isResizing,
+	[classes.resizing]: props.meta.isResizing,
+	[classes.notResizing]: !props.meta.isResizing,
 }));
 
-onClickOutside(rcmRef, () => {
+function onOpen(e: MouseEvent) {
+	if (props.meta.isOpenFull) {
+		openRcmFull(e);
+	} else {
+		openRcm(e);
+	}
+}
+
+function handleOpenFullView() {
 	closeRcm();
-});
-
-function handleOpenRcm(e: MouseEvent) {
-	reference.value = {
-		getBoundingClientRect() {
-			return {
-				width: 0,
-				height: 0,
-				x: e.clientX,
-				y: e.clientY,
-				top: e.clientY,
-				left: e.clientX,
-				right: e.clientX,
-				bottom: e.clientY,
-			};
-		},
-	};
-
-	openRcm();
+	isOpenFullView.value = true;
 }
 </script>
 
 <template>
-	<div :class="[classes.container, classList]" @click.prevent.right="handleOpenRcm">
+	<div :class="[classes.container, classList]" @click.prevent.right="onOpen">
 		<div :class="[classes.title, 'widget-drag']">
 			<div :class="classes.titleTextContainer">
 				<div :class="classes.titleText">
@@ -73,7 +77,7 @@ function handleOpenRcm(e: MouseEvent) {
 					:class="classes.iconWrapper"
 					width="20px"
 					height="20px"
-					@click.prevent.left="handleOpenRcm"
+					@click.prevent.left="onOpen"
 				/>
 			</div>
 		</div>
@@ -82,13 +86,54 @@ function handleOpenRcm(e: MouseEvent) {
 		</div>
 		<teleport to="body">
 			<div
-				v-show="isVisibleRcm"
+				v-if="isVisibleRcm"
 				ref="rcm"
 				:class="classes.rcm"
 				:style="floatingStyles"
 			>
-				<slot name="rcm" />
+				<widget-context-menu
+					:dashboards="meta.dashboards"
+					:title="meta.name"
+					@delete="emits('delete')"
+					@duplicate="emits('duplicate')"
+					@reset="emits('reset')"
+					@move-to="emits('moveTo', $event)"
+					@open-full="handleOpenFullView"
+				>
+					<template #filter v-if="slots.filter">
+						<slot name="filter" />
+					</template>
+					<template #change-display v-if="slots['change-display']">
+						<slot name="change-display" />
+					</template>
+				</widget-context-menu>
 			</div>
+			<div
+				v-if="isVisibleRcmFull"
+				ref="rcmFull"
+				:style="{
+					...floatingStylesFull,
+					zIndex: 99999
+				}"
+				:class="classes.rcm"
+			>
+				<widget-context-menu-full-view>
+					<template #filter v-if="slots.filter">
+						<slot name="filter" />
+					</template>
+				</widget-context-menu-full-view>
+			</div>
+			<ui-modal v-model="isOpenFullView">
+				<component
+					:is="getWidgetComponent(props.meta.widgetType)"
+					:meta="{
+						...props.meta,
+						widgetId: 'ephemeral',
+						isOpenFull: true,
+						size: props.meta.maxSize,
+					}"
+				/>
+			</ui-modal>
 		</teleport>
 	</div>
 </template>
