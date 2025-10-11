@@ -107,6 +107,9 @@ function handleOpenFullView() {
 					<template #change-display v-if="slots['change-display']">
 						<slot name="change-display" />
 					</template>
+					<template #other>
+						<slot name="other" />
+					</template>
 				</widget-context-menu>
 			</div>
 			<div

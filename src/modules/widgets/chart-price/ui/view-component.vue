@@ -12,7 +12,7 @@ import {
 	filterValueToDisplay,
 	TimeRangeFilterValue,
 } from '../model';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 
 import ChartPrice from './chart-price.vue';

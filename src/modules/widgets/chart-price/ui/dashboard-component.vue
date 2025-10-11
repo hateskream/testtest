@@ -2,12 +2,12 @@
 import { defineAsyncComponent } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
-import type { IMeta } from '@/modules/dashboard-group/core';
+import type { IMeta } from '@/modules/dashboard-group';
 import { useChartPrice } from '../composables';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, ModalSubmenu } from '@/modules/widgets/base';
+import { ModalTickerSelector } from '@/modules/ticker-selector';
 
 import PreloaderComponent from './preloader-component.vue';
-import ContextMenu from './context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -37,10 +37,22 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+
+function updateTicker(newValue: string[]) {
+	[selectedTicker.value] = newValue;
+}
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<preloader-component v-if="props.meta.isLoading" />
@@ -55,16 +67,19 @@ const emit = defineEmits<{
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
 			/>
 		</template>
-		<template #rcm>
-			<context-menu
-				v-model:selected-ticker="selectedTicker"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-			/>
+		<template #other>
+			<modal-submenu>
+				<template #title>Choose ticker</template>
+				<template #content>
+					<modal-ticker-selector
+						:model-value="[selectedTicker]"
+						:enable-selected-info="false"
+						:enable-select-all="false"
+						selection-mode="single"
+						@update:model-value="updateTicker"
+					/>
+				</template>
+			</modal-submenu>
 		</template>
 	</base-dashboard-component>
 </template>

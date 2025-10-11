@@ -78,6 +78,8 @@ const slots = useSlots();
 			</template>
 		</modal-submenu-component>
 
+		<slot name="other" />
+
 		<modal-item
 			v-if="props.hasReset"
 			@click="emits('reset')"

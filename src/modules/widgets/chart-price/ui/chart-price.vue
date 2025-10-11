@@ -18,7 +18,7 @@ const { height: containerHeight } = useElementSize(useTemplateRef('container'));
 const { height: headerHeight } = useElementSize(useTemplateRef('header'));
 
 const chartHeight = computed(() => {
-	return containerHeight.value - headerHeight.value - 20;
+	return containerHeight.value - headerHeight.value - 30;
 });
 
 const currentPrice = ref<IChartUpdateEmitData>({
