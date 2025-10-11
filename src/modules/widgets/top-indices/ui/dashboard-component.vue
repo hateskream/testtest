@@ -8,7 +8,7 @@ import { ALL_COLUMNS } from '../model';
 import { ErrorNetworkComponent } from '@/modules/widgets/base';
 
 import TopIndicesLoader from './layouts/loader-layout.vue';
-import TopIndicesContextMenu from './modals/context-menu.vue';
+
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/main-layout.vue'),
 	loadingComponent: TopIndicesLoader,
@@ -35,7 +35,13 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		:has-reset="false"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			<div :class="classes.titleContainer">
 				<span>{{ props.meta.name }}</span>
@@ -54,16 +60,6 @@ const emit = defineEmits<{
 				v-else
 				:rows="rows"
 				:columns="ALL_COLUMNS"
-			/>
-		</template>
-
-		<template #rcm>
-			<top-indices-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>
