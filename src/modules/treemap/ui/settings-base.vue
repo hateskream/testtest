@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ModalBadge, ModalBadgeList, ModalItemInteraction, ModalItemSelector } from '@/modules/widgets/base';
+import {
+	ModalBadge,
+	ModalBadgeList,
+	ModalItemInteraction,
+	ModalItemSelector,
+} from '@/modules/widgets/base';
 import type {
 	IColorBy,
 	IColorDepth,
@@ -158,12 +163,14 @@ function updateColorDepth(newColorDepth: string) {
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>
 				<template #content>
-					<change-display
-						v-model:display-value="displayValue"
-						v-model:is-show-logo="isShowLogo"
-						v-model:title="title"
-						:active-display-value="props.activeDisplayValue"
-					/>
+					<modal-badge-list>
+						<change-display
+							v-model:display-value="displayValue"
+							v-model:is-show-logo="isShowLogo"
+							v-model:title="title"
+							:active-display-value="props.activeDisplayValue"
+						/>
+					</modal-badge-list>
 				</template>
 			</ui-position>
 		</div>

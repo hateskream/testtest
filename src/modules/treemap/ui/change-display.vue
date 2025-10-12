@@ -21,35 +21,33 @@ function updateTitle(newTitle: TitleViewVariant) {
 </script>
 
 <template>
-	<modal-badge-list>
-		<modal-item-checkbox
-			v-model="isShowLogo"
-		>
-			Logo
-		</modal-item-checkbox>
-		<modal-submenu>
-			<template #title>
-				Title : {{ title }}
-			</template>
-			<template #content>
-				<modal-badge-list>
-					<template #default>
-						<modal-item-selector
-							v-for="t in TitleViewVariant"
-							:key="t"
-							:model-value="t === title"
-							@update:model-value="updateTitle(t)"
-						>
-							{{ t }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-submenu>
-		<interaction-settings
-			v-model="displayValue"
-			:active="props.activeDisplayValue"
-			title="Display value"
-		/>
-	</modal-badge-list>
+	<modal-item-checkbox
+		v-model="isShowLogo"
+	>
+		Logo
+	</modal-item-checkbox>
+	<modal-submenu>
+		<template #title>
+			Title : {{ title }}
+		</template>
+		<template #content>
+			<modal-badge-list>
+				<template #default>
+					<modal-item-selector
+						v-for="t in TitleViewVariant"
+						:key="t"
+						:model-value="t === title"
+						@update:model-value="updateTitle(t)"
+					>
+						{{ t }}
+					</modal-item-selector>
+				</template>
+			</modal-badge-list>
+		</template>
+	</modal-submenu>
+	<interaction-settings
+		v-model="displayValue"
+		:active="props.activeDisplayValue"
+		title="Display value"
+	/>
 </template>
