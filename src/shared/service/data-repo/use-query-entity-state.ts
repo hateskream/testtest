@@ -9,6 +9,7 @@ import { getParentId, isChild } from '@/modules/dashboard-group';
 interface IOptions<TData, TSchema> extends IOptionsRepository<TData, TSchema> {
 	saveHistory?: boolean;
 	isEphemeral?: boolean;
+	transformFirstState?: (parentState: TData) => TData;
 }
 
 interface IStateQueries<TData> {
@@ -52,7 +53,7 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 
 	const useStateQuery = () => useQuery<TData>({
 		queryKey: STATE_QUERY_KEY,
-		queryFn: () => {
+		queryFn: async () => {
 			if (isInit) {
 				return baseRepository.get();
 			}
@@ -65,14 +66,14 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 
 			const parentStateKey = generateQueryStateKey(options.storageKey, getParentId(options.entityId));
 
-			const state = queryClient.getQueryData<TData>(parentStateKey);
+			let state = queryClient.getQueryData<TData>(parentStateKey);
 			if (!state) {
 				// этого никогда не должно быть
 				// нужно залогировать если эта строчка когда-то будет вызвана
-				return parentRepository.get();
+				state = await parentRepository.get();
 			}
 
-			return state;
+			return options.transformFirstState?.(state) ?? state;
 
 		},
 		refetchOnMount: false,
