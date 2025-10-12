@@ -2,13 +2,11 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent } from '../../base/index.ts';
 import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import { useMarketCapStore } from '../store/market-cap.ts';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseDashboardComponent, ModalItemCheckbox } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import MarketCapContextMenu from './market-cap-context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -36,7 +34,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="marketCap.resetAll"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			{{ props.meta.name }}
 		</template>
@@ -49,14 +54,19 @@ const emit = defineEmits<{
 				:meta="meta"
 			/>
 		</template>
-		<template #rcm>
-			<market-cap-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-			/>
+		<template #change-display>
+			<modal-item-checkbox
+				:model-value="marketCap.isShowChart"
+				@update:model-value="marketCap.toggleShowChart"
+			>
+				Chart
+			</modal-item-checkbox>
+			<modal-item-checkbox
+				:model-value="marketCap.isShowChange"
+				@update:model-value="marketCap.toggleShowChange"
+			>
+				Change, %
+			</modal-item-checkbox>
 		</template>
 	</base-dashboard-component>
 </template>
