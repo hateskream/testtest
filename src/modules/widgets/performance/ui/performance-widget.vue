@@ -7,8 +7,8 @@ import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
+import PerformanceFilter from './modals/performance-filters.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
-import PerformanceContextMenu from './modals/performance-context-menu.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/performance-view.vue'),
@@ -46,7 +46,14 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			<span :class="classes.title">{{ props.meta.name }}</span>
 		</template>
@@ -65,18 +72,12 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 			/>
 		</template>
 
-		<template #rcm>
-			<performance-context-menu
+		<template #filter>
+			<performance-filter
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
 				v-model:stock="currentStock"
 				v-model:date="currentDate"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>
