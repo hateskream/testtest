@@ -5,13 +5,17 @@ import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/ba
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	type IGetNewsRequest,
+	NewsFilters,
 	NewsFiltersPanel,
+	type SettingKey,
+	toggleSetting,
 	useNews,
 	useQueryNews,
 } from '@/modules/news';
+import { ModalItemSwitch } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import NewsDisplaySettings from './news-display-settings.vue';
+
 
 const ViewComponent = defineAsyncComponent({
 	// FIXME: WE SHOULD NOT USE ITEMS FROM MODULES DIRECTLY
@@ -70,10 +74,21 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+function toggleDisplaySettings(settingsKey: SettingKey) {
+	displaySettings.value = toggleSetting(displaySettings.value, settingsKey);
+}
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title>
 			<div :class="classes.titleContainer">
 				<span>{{ props.meta.name }}</span>
@@ -105,26 +120,59 @@ const emit = defineEmits<{
 				/>
 			</div>
 		</template>
-		<template #rcm>
-			<news-display-settings
-				v-model:display-settings="displaySettings"
+
+		<template #change-display>
+			<modal-item-switch
+				:model-value="displaySettings.isShowDate"
+				@update:model-value="toggleDisplaySettings('isShowDate')"
+			>
+				Date
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowSource"
+				@update:model-value="toggleDisplaySettings('isShowSource')"
+			>
+				Source
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowDesc"
+				@update:model-value="toggleDisplaySettings('isShowDesc')"
+			>
+				Description
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowAuthor"
+				@update:model-value="toggleDisplaySettings('isShowAuthor')"
+			>
+				Author
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowSymbols"
+				@update:model-value="toggleDisplaySettings('isShowSymbols')"
+			>
+				Symbols
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowScore"
+				@update:model-value="toggleDisplaySettings('isShowScore')"
+			>
+				Score
+			</modal-item-switch>
+		</template>
+
+		<template #filter>
+			<news-filters
 				v-model:selected-scores="selectedScores"
 				v-model:selected-segments="selectedMarketSegments"
 				v-model:selected-sentiment="selectedSentiment"
 				v-model:selected-sources="selectedSources"
 				v-model:sort-by="sortBy"
 				v-model:locations="locations"
-				:title="props.meta.name"
 				:segments="segments"
 				:selected-segment-tickers="selectedSegmentTickers"
-				:dashboards="props.meta.dashboards"
 				@select-all="selectAll"
 				@unselect-all="unselectAll"
 				@toggle-ticker="toggleTicker"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
 			/>
 		</template>
 	</base-dashboard-component>

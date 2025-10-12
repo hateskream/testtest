@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { UiModalBadgeIcon } from '@/shared/ui/modal';
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItemSelector, ModalFilter } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { marketToLabel, type MarketType } from '@/modules/market';
 import {
@@ -106,19 +106,21 @@ function getScoreLevelActiveNumber(value: string) {
 				</template>
 
 				<template #content>
-					<news-filters
-						v-model:selected-scores="selectedScores"
-						v-model:selected-segments="selectedSegments"
-						v-model:selected-sentiment="selectedSentiment"
-						v-model:selected-sources="selectedSources"
-						v-model:sort-by="sortBy"
-						v-model:locations="locations"
-						:segments="props.segments"
-						:selected-segment-tickers="props.selectedSegmentsTickers"
-						@select-all="emits('selectAll', $event)"
-						@unselect-all="emits('unselectAll', $event)"
-						@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-					/>
+					<modal-filter>
+						<news-filters
+							v-model:selected-scores="selectedScores"
+							v-model:selected-segments="selectedSegments"
+							v-model:selected-sentiment="selectedSentiment"
+							v-model:selected-sources="selectedSources"
+							v-model:sort-by="sortBy"
+							v-model:locations="locations"
+							:segments="props.segments"
+							:selected-segment-tickers="props.selectedSegmentsTickers"
+							@select-all="emits('selectAll', $event)"
+							@unselect-all="emits('unselectAll', $event)"
+							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+						/>
+					</modal-filter>
 				</template>
 			</ui-position>
 		</div>

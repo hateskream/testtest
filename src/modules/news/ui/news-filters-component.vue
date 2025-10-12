@@ -2,7 +2,6 @@
 import { UiDriver } from '@/shared/ui/driver';
 import { UiPosition } from '@/shared/ui/position';
 import {
-	ModalFilter,
 	ModalFilterTabWrapper,
 	ModalFilterTitle,
 	ModalItemInteraction,
@@ -70,157 +69,151 @@ function toggleSortBy(sort: SortState) {
 </script>
 
 <template>
-	<modal-filter>
-		<template #title> Filter </template>
+	<div :class="classes.rowWrapper">
+		<div
+			:class="classes.row"
+		>
+			<div :class="classes.rowTitle">
+				Score
+			</div>
+
+			<div
+				:class="classes.tabs"
+			>
+				<modal-filter-tab-wrapper
+					v-for="(name, key) in scoreToName"
+					:key="key"
+					:is-active="selectedScores.has(key)"
+					@click="toggleScore(key)"
+				>
+					{{ name }}
+				</modal-filter-tab-wrapper>
+			</div>
+		</div>
+	</div>
+
+	<div :class="classes.rowWrapper">
+		<div
+			:class="classes.row"
+		>
+			<div :class="classes.rowTitle">
+				Segment
+			</div>
+
+			<div
+				:class="classes.tabs"
+			>
+				<modal-filter-tab-wrapper
+					v-for="{type, label} in getAllMarkets()"
+					:key="type"
+					:is-active="selectedSegments.has(type)"
+					@click="toggleSegment(type)"
+				>
+					{{ label }}
+				</modal-filter-tab-wrapper>
+			</div>
+		</div>
+	</div>
+
+	<div :class="classes.rowWrapper">
+		<div
+			:class="classes.row"
+		>
+			<div :class="classes.rowTitle">
+				Sentiment
+			</div>
+
+			<div
+				:class="classes.tabs"
+			>
+				<modal-filter-tab-wrapper
+					v-for="(name, key) in sentimentToName"
+					:key="key"
+					:is-active="selectedSentiment.has(key)"
+					@click="toggleSentiment(key)"
+				>
+					{{ name }}
+				</modal-filter-tab-wrapper>
+			</div>
+		</div>
+	</div>
+
+	<div :class="classes.rowWrapper">
+		<div
+			:class="classes.row"
+		>
+			<div :class="classes.rowTitle">
+				Source
+			</div>
+
+			<div
+				:class="classes.tabs"
+			>
+				<modal-filter-tab-wrapper
+					v-for="(name, key) in sourceToName"
+					:key="key"
+					:is-active="selectedSources.has(key)"
+					@click="toggleSource(key)"
+				>
+					{{ name }}
+				</modal-filter-tab-wrapper>
+			</div>
+		</div>
+	</div>
+
+	<ui-position
+		trigger="hover"
+		:teleport="false"
+	>
+		<template #title>
+			<modal-item-interaction> Location </modal-item-interaction>
+		</template>
 
 		<template #content>
-			<div :class="classes.rowWrapper">
-				<div
-					:class="classes.row"
-				>
-					<div :class="classes.rowTitle">
-						Score
-					</div>
-
-					<div
-						:class="classes.tabs"
-					>
-						<modal-filter-tab-wrapper
-							v-for="(name, key) in scoreToName"
-							:key="key"
-							:is-active="selectedScores.has(key)"
-							@click="toggleScore(key)"
-						>
-							{{ name }}
-						</modal-filter-tab-wrapper>
-					</div>
-				</div>
-			</div>
-
-			<div :class="classes.rowWrapper">
-				<div
-					:class="classes.row"
-				>
-					<div :class="classes.rowTitle">
-						Segment
-					</div>
-
-					<div
-						:class="classes.tabs"
-					>
-						<modal-filter-tab-wrapper
-							v-for="{type, label} in getAllMarkets()"
-							:key="type"
-							:is-active="selectedSegments.has(type)"
-							@click="toggleSegment(type)"
-						>
-							{{ label }}
-						</modal-filter-tab-wrapper>
-					</div>
-				</div>
-			</div>
-
-			<div :class="classes.rowWrapper">
-				<div
-					:class="classes.row"
-				>
-					<div :class="classes.rowTitle">
-						Sentiment
-					</div>
-
-					<div
-						:class="classes.tabs"
-					>
-						<modal-filter-tab-wrapper
-							v-for="(name, key) in sentimentToName"
-							:key="key"
-							:is-active="selectedSentiment.has(key)"
-							@click="toggleSentiment(key)"
-						>
-							{{ name }}
-						</modal-filter-tab-wrapper>
-					</div>
-				</div>
-			</div>
-
-			<div :class="classes.rowWrapper">
-				<div
-					:class="classes.row"
-				>
-					<div :class="classes.rowTitle">
-						Source
-					</div>
-
-					<div
-						:class="classes.tabs"
-					>
-						<modal-filter-tab-wrapper
-							v-for="(name, key) in sourceToName"
-							:key="key"
-							:is-active="selectedSources.has(key)"
-							@click="toggleSource(key)"
-						>
-							{{ name }}
-						</modal-filter-tab-wrapper>
-					</div>
-				</div>
-			</div>
-
-			<ui-position
-				trigger="hover"
-				:teleport="false"
-			>
-				<template #title>
-					<modal-item-interaction> Location </modal-item-interaction>
-				</template>
-
-				<template #content>
-					<news-location-filter-component v-model:locations="locations" />
-				</template>
-			</ui-position>
-
-			<ui-position
-				trigger="hover"
-				:teleport="false"
-			>
-				<template #title>
-					<modal-item-interaction> Ticker </modal-item-interaction>
-				</template>
-
-				<template #content>
-					<news-segment-modal
-						:segments="props.segments"
-						:selected-segment-tickers="props.selectedSegmentTickers"
-						@select-all="emits('selectAll', $event)"
-						@unselect-all="emits('unselectAll', $event)"
-						@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-					/>
-				</template>
-			</ui-position>
-
-			<ui-driver />
-
-			<div>
-				<modal-filter-title> Sort By</modal-filter-title>
-
-				<modal-item-selector
-					v-for="(name, key) in sortToName"
-					:key="key"
-					:model-value="sortBy === key"
-					@update:model-value="toggleSortBy(key)"
-				>
-					<template v-if="typeof name === 'string'">
-						{{ name }}
-					</template>
-					<div v-else>
-						{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
-							{{name.additional}}
-						</span>
-					</div>
-				</modal-item-selector>
-			</div>
+			<news-location-filter-component v-model:locations="locations" />
 		</template>
-	</modal-filter>
+	</ui-position>
+
+	<ui-position
+		trigger="hover"
+		:teleport="false"
+	>
+		<template #title>
+			<modal-item-interaction> Ticker </modal-item-interaction>
+		</template>
+
+		<template #content>
+			<news-segment-modal
+				:segments="props.segments"
+				:selected-segment-tickers="props.selectedSegmentTickers"
+				@select-all="emits('selectAll', $event)"
+				@unselect-all="emits('unselectAll', $event)"
+				@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+			/>
+		</template>
+	</ui-position>
+
+	<ui-driver />
+
+	<div>
+		<modal-filter-title> Sort By</modal-filter-title>
+
+		<modal-item-selector
+			v-for="(name, key) in sortToName"
+			:key="key"
+			:model-value="sortBy === key"
+			@update:model-value="toggleSortBy(key)"
+		>
+			<template v-if="typeof name === 'string'">
+				{{ name }}
+			</template>
+			<div v-else>
+				{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
+					{{name.additional}}
+				</span>
+			</div>
+		</modal-item-selector>
+	</div>
 </template>
 
 <style module="classes">
