@@ -3,13 +3,12 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import { useQueryMarket } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent } from '../../base';
 import { useMarket } from '../composables';
 import { NONE_SET_FILTER } from '../model';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseDashboardComponent, ModalSubmenu } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
-import MarketContextMenu from './market-context-menu.vue';
+import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./view-component.vue'),
@@ -66,7 +65,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :is-resizing="props.meta.isResizing">
+	<base-dashboard-component
+		:meta="props.meta"
+		has-reset
+		@reset="resetAllChanges"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
+	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<base-error-component
@@ -87,17 +93,13 @@ const emit = defineEmits<{
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
 			/>
 		</template>
-		<template #rcm>
-			<market-context-menu
-				v-model="columns"
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emit('delete')"
-				@reset="resetAllChanges"
-				@move-to="emit('moveTo', $event)"
-				@duplicate="emit('duplicate')"
-			/>
+		<template #change-display>
+			<modal-submenu>
+				<template #title> Column metrics </template>
+				<template #content>
+					<table-columns-settings-component v-model="columns" />
+				</template>
+			</modal-submenu>
 		</template>
-
 	</base-dashboard-component>
 </template>
