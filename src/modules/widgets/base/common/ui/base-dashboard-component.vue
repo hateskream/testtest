@@ -5,9 +5,7 @@ import { createResizeContext } from '../composables/use-resize-context';
 import { useGlobalRcm } from '../composables/use-rcm';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
-import { type IMeta } from '@/modules/dashboard-group';
-
-import WidgetComponent from './widget-component.vue';
+import { FullViewDashboard, type IMeta } from '@/modules/dashboard-group';
 
 interface IBaseDashboardComponentProps {
 	meta: IMeta;
@@ -22,6 +20,7 @@ const emits = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'reset'): void;
 	(e: 'delete'): void;
+	(e: 'apply-changes'): void;
 }>();
 
 createResizeContext(props.meta.isResizing);
@@ -121,13 +120,16 @@ function handleOpenFullView() {
 				}"
 				:class="classes.rcm"
 			>
-				<widget-context-menu-full-view>
+				<widget-context-menu-full-view
+					@reset="emits('reset')"
+					@apply-changes="emits('apply-changes')"
+				>
 					<template #filter v-if="slots.filter">
 						<slot name="filter" />
 					</template>
 				</widget-context-menu-full-view>
 			</div>
-			<widget-component
+			<full-view-dashboard
 				v-model="isOpenFullView"
 				:meta="props.meta"
 			/>

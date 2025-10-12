@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { getWidgetComponent, type IMeta } from '@/modules/dashboard-group';
 import { useDelayedLoading } from '@/shared/composables';
 import { UiModal } from '@/shared/ui/modal';
+import { generateId, getWidgetComponent, type IMeta } from '../model';
 
 interface IProps {
 	meta: IMeta;
@@ -17,7 +17,7 @@ const { loading } = useDelayedLoading();
 
 const preparedMeta = computed((): IMeta => ({
 	...props.meta,
-	widgetId: 'ephemeral',
+	widgetId: generateId(props.meta.widgetId),
 	isOpenFull: true,
 	size: props.meta.maxSize,
 	isLoading: loading.value,

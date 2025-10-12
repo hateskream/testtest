@@ -1,3 +1,3 @@
-export { CurrentDashboard } from './ui';
+export { CurrentDashboard, FullViewDashboard } from './ui';
 
-export { type IMeta, getWidgetComponent } from './model';
+export { type IMeta, getWidgetComponent, getParentId, isChild } from './model';

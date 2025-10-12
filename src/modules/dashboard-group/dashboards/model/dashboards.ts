@@ -64,3 +64,17 @@ const components: Record<WidgetType, WidgetComponent> = {
 export function getWidgetComponent(type: WidgetType) {
 	return components[type];
 }
+
+const PREFIX_FULL_VIEW = 'ephemeral';
+
+export function generateId(id: string) {
+	return `${PREFIX_FULL_VIEW}${id}`;
+}
+
+export function getParentId(str: string) {
+	return str.replace(PREFIX_FULL_VIEW, '');
+}
+
+export function isChild(str: string) {
+	return str.startsWith(PREFIX_FULL_VIEW);
+}
