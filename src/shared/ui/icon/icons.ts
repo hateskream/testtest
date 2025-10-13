@@ -89,4 +89,5 @@ export enum IconIds {
 	Sentiment = 'sentiment',
 	EventBoardEmpty = 'event-board-empty',
 	Ellipse = 'ellipse',
+	ControlFullView = 'control-full-view',
 }

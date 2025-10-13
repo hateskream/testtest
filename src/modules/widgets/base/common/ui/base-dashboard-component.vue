@@ -49,6 +49,14 @@ const classList = computed(() => ({
 	[classes.notResizing]: !props.meta.isResizing,
 }));
 
+const isShowControlMore = computed(() => {
+	if (!props.meta.isOpenFull) {
+		return true;
+	}
+
+	return slots.filter ;
+});
+
 function onOpen(e: MouseEvent) {
 	if (props.meta.isOpenFull) {
 		openRcmFull(e);
@@ -73,6 +81,15 @@ function handleOpenFullView() {
 			</div>
 			<div :class="classes.control">
 				<ui-icon
+					v-if="!props.meta.isOpenFull"
+					:id="IconIds.ControlFullView"
+					:class="classes.iconWrapper"
+					width="20px"
+					height="20px"
+					@open-full="handleOpenFullView"
+				/>
+				<ui-icon
+					v-if="isShowControlMore"
 					:id="IconIds.ControlMore"
 					:class="classes.iconWrapper"
 					width="20px"
@@ -190,7 +207,7 @@ function handleOpenFullView() {
 .control {
 	display: flex;
 	align-items: center;
-	gap: 26px;
+	gap: 12px;
 	opacity: 0;
 	transition: opacity 0.3s ease;
 }
