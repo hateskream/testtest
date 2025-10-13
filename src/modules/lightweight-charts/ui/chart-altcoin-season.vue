@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { Chart } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
@@ -17,6 +17,7 @@ import {
 } from '@/modules/widgets/altcoinSeason/const';
 
 const props = defineProps<{
+	show: boolean;
 	showX: boolean;
 	showY: boolean;
 	btcRank: number;
@@ -71,8 +72,32 @@ function pickQuarter(rank: number) {
 	};
 }
 
+watch(() => props.chartData.labels, (labels) => {
+	if (!chart.value) {
+		return;
+	}
+
+	chart.value.data.labels = [...labels];
+	chart.value.update();
+});
+
+watch(() => props.chartData.metrics, (metrics) => {
+	if (!chart.value) {
+		return;
+	}
+
+	chart.value.data.datasets[0].data = [...metrics];
+	chart.value.update();
+});
+
 onMounted(() => {
-	const { labels } = props.chartData;
+	if (chart.value) {
+		return;
+	}
+
+	Chart.register(annotationPlugin);
+
+	const { labels, metrics } = props.chartData;
 
 	const active = pickQuarter(props.btcRank);
 	const borderDash = [3, 3];
@@ -158,14 +183,13 @@ onMounted(() => {
 		},
 	} as const;
 
-	Chart.register(annotationPlugin);
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
 		data: {
-			labels,
+			labels: labels.slice(),
 			datasets: [
 				{
-					data: props.chartData.metrics,
+					data: metrics.slice(),
 					borderColor: widgetActiveColor.neutralSeason,
 					borderWidth: 2,
 					pointStyle: false,
@@ -242,7 +266,11 @@ onMounted(() => {
 	});
 });
 
-
+watch(() => props.show, (value) => {
+	if (!value && chart.value) {
+		chart.value.destroy();
+	}
+});
 </script>
 
 <template>

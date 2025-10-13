@@ -52,7 +52,7 @@ function resetAll() {
 		<template #title>{{ props.meta.name }}</template>
 		<template #content>
 			<div :class="classes.content">
-				<altcoin-season-loader v-if="isLoading" :count="6" />
+				<altcoin-season-loader v-if="isLoading || props.meta.isResizing" :count="6" />
 				<base-error-component v-else-if="isError" @retry="refetch" />
 				<view-component
 					v-else-if="data"

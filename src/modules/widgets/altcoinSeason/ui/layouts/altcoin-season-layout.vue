@@ -192,6 +192,7 @@ const showRightTop100 = computed(() =>
 			>
 				<slot
 					name="chart"
+					:show="widgetDisplays.chart && widgetDisplays?.chart"
 					v-bind="chartSlotProps"
 				/>
 			</div>
@@ -208,7 +209,9 @@ const showRightTop100 = computed(() =>
 			<div
 				:class="[classes.top100, classes.slot]"
 			>
-				<slot name="top100" />
+				<slot
+					name="top100"
+				/>
 			</div>
 		</div>
 	</div>
