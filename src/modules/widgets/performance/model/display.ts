@@ -20,3 +20,13 @@ export const displayVariantToView: Readonly<Record<DisplayVariant, IDisplayVaria
 		label: 'List',
 	},
 };
+
+export enum SymbolDisplayVariant {
+	Ticker = 'ticker',
+	Logo = 'logo',
+}
+
+export const symbolDisplayVariantToView: Readonly<Record<SymbolDisplayVariant, string>> = {
+	[SymbolDisplayVariant.Ticker]: 'Ticker',
+	[SymbolDisplayVariant.Logo]: 'Logo',
+};

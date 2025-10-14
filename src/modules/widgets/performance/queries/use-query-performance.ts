@@ -3,23 +3,23 @@ import type { MaybeRefOrGetter } from 'vue';
 import { computed, onUnmounted, toValue } from 'vue';
 
 import { getPerformance } from '../api';
-import type { DateRange, Stock } from '../model';
+import type { ForexMarketType } from '../model';
 import { ColumnType } from '@/modules/cell';
 import { updateQueryData, type QueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { CellUpdater } from '@/shared/service/real-time';
 
 export function useQueryPerformance(
-	stock: MaybeRefOrGetter<Stock>,
-	date: MaybeRefOrGetter<DateRange>,
+	market: MaybeRefOrGetter<ForexMarketType>,
+	pined: MaybeRefOrGetter<string[]>,
 	limit: number,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
 	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
 		queryClient.setQueryData(
-			['performance', toValue(stock), toValue(date)],
-			oldData => updateQueryData(oldData as QueryData, updatedData),
+			['performance', toValue(market), toValue(pined)],
+			(oldData: QueryData) => updateQueryData(oldData as QueryData, updatedData),
 		);
 	});
 
@@ -29,11 +29,11 @@ export function useQueryPerformance(
 
 	return useInfiniteQuery({
 		queryKey: computed(() => {
-			return ['performance', toValue(stock), toValue(date)];
+			return ['performance', toValue(market), toValue(pined)];
 		}),
 		queryFn: ({ pageParam = 0 }) => getPerformance({
-			stock: toValue(stock),
-			date: toValue(date),
+			market: toValue(market),
+			pined: toValue(pined),
 			offset: pageParam,
 			limit,
 		}),
