@@ -7,7 +7,17 @@ import {
 	PERFORMANCE_TIME_RANGES,
 	PERFORMANCE_DISPLAY_MODES,
 } from '../const';
-import type { IPerformanceSettings, IPerformanceFilter } from '../model';
+
+interface IPerformanceFilter {
+	type: 'industry' | 'sector';
+	timeRange: 'today' | 'yesterday' | 'week' | 'custom';
+}
+
+interface IPerformanceSettings {
+	displayMode: 'bar' | 'list';
+	compactMode: boolean;
+	filter: IPerformanceFilter;
+}
 
 export const usePerformanceStore = defineStore('performance', () => {
 	// State
