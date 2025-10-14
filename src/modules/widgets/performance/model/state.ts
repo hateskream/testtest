@@ -1,6 +1,7 @@
+import { MarketType } from '@/modules/market';
 import { DisplayVariant, SymbolDisplayVariant } from './display';
 import { DateRangeStock, DateRangeForex, Stock } from './filters';
-import { ForexMarketType } from './market';
+import { Currency } from './quote-currency';
 
 export interface ISettingsBase {
 	displayVariant: DisplayVariant;
@@ -10,6 +11,7 @@ export interface ISettingsBase {
 
 export interface ISettingsForex extends ISettingsBase {
 	periodForex: DateRangeForex;
+	quoteCurrency: Currency;
 	symbolDisplayVariant: SymbolDisplayVariant;
 }
 
@@ -19,12 +21,12 @@ export interface ISettingsStock extends ISettingsBase {
 }
 
 export type SettingsByMarket = {
-	[ForexMarketType.Stock]: ISettingsStock;
-	[ForexMarketType.Forex]: ISettingsForex;
+	[MarketType.Stock]: ISettingsStock;
+	[MarketType.Forex]: ISettingsForex;
 };
 
 export interface IState {
-	activeMarket: ForexMarketType;
+	activeMarket: MarketType.Stock | MarketType.Forex;
 	settings: SettingsByMarket;
 }
 
@@ -41,16 +43,17 @@ const defaultForexSettings: ISettingsForex = {
 	symbolDisplayVariant: SymbolDisplayVariant.Ticker,
 	displayVariant: DisplayVariant.Bar,
 	isCompactMode: false,
+	quoteCurrency: Currency.USD,
 	pinned: [],
 };
 
 export function getDefaultState(type: string): IState {
 	const isForex = type === 'forex';
 	return {
-		activeMarket: isForex ? ForexMarketType.Forex : ForexMarketType.Stock,
+		activeMarket: isForex ? MarketType.Forex : MarketType.Stock,
 		settings: {
-			[ForexMarketType.Stock]: defaultStockSettings,
-			[ForexMarketType.Forex]: defaultForexSettings,
+			[MarketType.Stock]: defaultStockSettings,
+			[MarketType.Forex]: defaultForexSettings,
 		},
 	};
 }

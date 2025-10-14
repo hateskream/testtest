@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
-import { useQueryPerformance } from '@/modules/widgets/performance/queries';
 import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
-import PerformanceFilter from './modals/performance-filters.vue';
+// import PerformanceFilter from './modals/performance-filters.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
 
 const ViewComponent = defineAsyncComponent({
@@ -34,15 +33,14 @@ const {
 	currentDisplayVariant,
 	isCompactMode,
 	resetAllChanges,
-} = usePerformance(props.meta.widgetId);
-
-const { data, isLoading, isError, refetch } = useQueryPerformance(
-	currentStock,
-	currentDate,
-	10,
-);
-
-const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
+	tickers,
+	isError,
+	isLoading,
+	currentSymbolDisplayVariant,
+	activeMarket,
+	quoteCurrency,
+	refetch,
+} = usePerformance(props.meta.widgetId, props.meta.defaultStateType);
 </script>
 
 <template>
@@ -62,23 +60,26 @@ const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).fi
 			<base-error-component v-if="isError" @retry="refetch" />
 			<performance-loader v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else-if="data"
+				v-else-if="tickers.length"
+				v-model:active-market="activeMarket"
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
-				v-model:stock="currentStock"
+				v-model:stock="currentStock!"
 				v-model:date="currentDate"
-				:rows="rows"
+				v-model:symbol-display="currentSymbolDisplayVariant"
+				v-model:quote-currency="quoteCurrency"
+				:rows="tickers"
 				:columns="ALL_COLUMNS"
 			/>
 		</template>
 
 		<template #filter>
-			<performance-filter
+			<!-- <performance-filter
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
 				v-model:stock="currentStock"
 				v-model:date="currentDate"
-			/>
+			/> -->
 		</template>
 	</base-dashboard-component>
 </template>

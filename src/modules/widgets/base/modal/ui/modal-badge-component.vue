@@ -9,6 +9,7 @@ interface IProps {
 	color?: CSSProperties['color'];
 	strategy?: 'fixed' | 'absolute';
 	uiPositionProps?: Omit<IPositionProps, 'strategy'>;
+	paddingLeft?: CSSProperties['paddingLeft'];
 }
 const props = defineProps<IProps>();
 
@@ -29,6 +30,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 			<modal-badge-title
 				:background-color="props.backgroundColor"
 				:color="props.color"
+				:padding-left="props.paddingLeft"
 			>
 				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->
 				<slot name="title" :is-visible="isVisible" />

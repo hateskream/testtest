@@ -5,7 +5,7 @@ import {
 	ModalItemSwitch,
 } from '@/modules/widgets/base/modal';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { DateRange, dateToLabel, DisplayVariant, Stock, stockToLabel } from '../../model';
+import { type DateRange, dateToLabel, DisplayVariant, Stock, stockToLabel } from '../../model';
 
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
 const stock = defineModel<Stock>('stock', { required: true });

@@ -4,12 +4,14 @@ import { computed, type CSSProperties } from 'vue';
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
 	color?: CSSProperties['color'];
+	paddingLeft?: CSSProperties['paddingLeft'];
 }
 const props = defineProps<IProps>();
 
 const badgeColors = computed(() => ({
 	backgroundColor: props.backgroundColor ?? 'var(--bg-color-base-300)',
 	color: props.color ?? 'var(--text-color-base-300)',
+	paddingLeft: props.paddingLeft ?? '12px',
 }));
 </script>
 

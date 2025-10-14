@@ -23,7 +23,13 @@ export enum DateRangeForex {
 	Year = '1Y',
 }
 
-export const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
+export type DateRange = DateRangeStock | DateRangeForex;
+
+export function isDataRangeStock(value: string): value is DateRangeStock {
+	return Object.values(DateRangeStock).includes(value as DateRangeStock);
+}
+
+const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
 	[DateRangeStock.Today]: 'Today',
 	[DateRangeStock.Yesterday]: 'Yesterday',
 	[DateRangeStock.Week]: 'Week',
@@ -34,3 +40,17 @@ export const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, strin
 	[DateRangeForex.SixMonths]: '6M',
 	[DateRangeForex.Year]: '1Y',
 };
+
+export function getDateLabelByType(isStock: boolean):
+Record<DateRangeStock, string> | Record<DateRangeForex, string> {
+	return Object
+		.fromEntries(
+			Object
+				.entries(dateToLabel)
+				.filter(([k]) => {
+					const res = isDataRangeStock(k);
+					return isStock ? res : !res;
+				})
+				.filter(Boolean),
+		) as Record<DateRangeStock, string> | Record<DateRangeForex, string>;
+}

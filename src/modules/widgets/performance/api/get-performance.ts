@@ -13,7 +13,6 @@ import type { PerformanceTableRow } from '../model/row';
 import { generateRows } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 import type { TickerWithoutState } from '../../price/model';
-import type { ForexMarketType } from '../model';
 
 const IS_USE_MOCK = true;
 
@@ -45,7 +44,7 @@ export interface IPerformanceData {
 }
 
 export interface IGetPerformanceRequest {
-	market: ForexMarketType;
+	market: MarketType;
 	pined: string[];
 	offset: number;
 	limit: number;
@@ -88,7 +87,7 @@ async function getMockData(req: IGetPerformanceRequest): Promise<IPerformanceDat
 	const marketToTickers = {
 		[MarketType.Stock]: stocks,
 		[MarketType.Forex]: forex,
-	} as Record<ForexMarketType, TickerWithoutState[]>;
+	} as Record<MarketType, TickerWithoutState[]>;
 
 	const response: IPerformanceData = {
 		pagination: {

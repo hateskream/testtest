@@ -9,10 +9,13 @@ import {
 	DateRangeForex,
 	DateRangeStock,
 	SymbolDisplayVariant,
-	ForexMarketType,
+	type ITicker,
+	type DateRange,
+	Currency,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useQueryPerformance } from '../queries';
+import { MarketType } from '@/modules/market';
 
 const baseSettingsSchema = z.object({
 	displayVariant: z.nativeEnum(DisplayVariant),
@@ -28,15 +31,16 @@ export const stockSettingsSchema = baseSettingsSchema.extend({
 export const forexSettingsSchema = baseSettingsSchema.extend({
 	periodForex: z.nativeEnum(DateRangeForex),
 	symbolDisplayVariant: z.nativeEnum(SymbolDisplayVariant),
+	quoteCurrency: z.nativeEnum(Currency),
 });
 
 export const settingsByMarketSchema = z.object({
-	[ForexMarketType.Stock]: stockSettingsSchema,
-	[ForexMarketType.Forex]: forexSettingsSchema,
+	[MarketType.Stock]: stockSettingsSchema,
+	[MarketType.Forex]: forexSettingsSchema,
 });
 
 export const stateSchema = z.object({
-	activeMarket: z.nativeEnum(ForexMarketType),
+	activeMarket: z.nativeEnum(MarketType),
 	settings: settingsByMarketSchema,
 });
 
@@ -65,7 +69,7 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 
 	const activeMarket = computed({
 		get: () => state.value.activeMarket,
-		set: (val: ForexMarketType) => {
+		set: (val: MarketType.Stock | MarketType.Forex) => {
 			state.value.activeMarket = val;
 		},
 	});
@@ -84,29 +88,29 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 
 	const currentStock = computed({
 		get: () =>
-			state.value.activeMarket === ForexMarketType.Stock
-				? state.value.settings[ForexMarketType.Stock].stock
+			state.value.activeMarket === MarketType.Stock
+				? state.value.settings[MarketType.Stock].stock
 				: undefined,
 		set: (val: Stock | undefined) => {
-			if (val && state.value.activeMarket === ForexMarketType.Stock) {
-				state.value.settings[ForexMarketType.Stock].stock = val;
+			if (val && state.value.activeMarket === MarketType.Stock) {
+				state.value.settings[MarketType.Stock].stock = val;
 			}
 		},
 	});
 
 	const currentDate = computed({
 		get: () => {
-			if (state.value.activeMarket === ForexMarketType.Stock) {
-				return state.value.settings[ForexMarketType.Stock].periodStock;
+			if (state.value.activeMarket === MarketType.Stock) {
+				return state.value.settings[MarketType.Stock].periodStock;
 			}
-			return state.value.settings[ForexMarketType.Forex].periodForex;
+			return state.value.settings[MarketType.Forex].periodForex;
 		},
-		set: (val: DateRangeStock | DateRangeForex) => {
-			if (state.value.activeMarket === ForexMarketType.Stock) {
-				state.value.settings[ForexMarketType.Stock].periodStock =
+		set: (val: DateRange) => {
+			if (state.value.activeMarket === MarketType.Stock) {
+				state.value.settings[MarketType.Stock].periodStock =
 					val as DateRangeStock;
 			} else {
-				state.value.settings[ForexMarketType.Forex].periodForex =
+				state.value.settings[MarketType.Forex].periodForex =
 					val as DateRangeForex;
 			}
 		},
@@ -114,12 +118,23 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 
 	const currentSymbolDisplayVariant = computed({
 		get: () =>
-			state.value.activeMarket === ForexMarketType.Forex
-				? state.value.settings[ForexMarketType.Forex].symbolDisplayVariant
+			state.value.activeMarket === MarketType.Forex
+				? state.value.settings[MarketType.Forex].symbolDisplayVariant
 				: undefined,
 		set: (val: SymbolDisplayVariant | undefined) => {
-			if (val && state.value.activeMarket === ForexMarketType.Forex) {
-				state.value.settings[ForexMarketType.Forex].symbolDisplayVariant = val;
+			if (val && state.value.activeMarket === MarketType.Forex) {
+				state.value.settings[MarketType.Forex].symbolDisplayVariant = val;
+			}
+		},
+	});
+
+	const quoteCurrency = computed({
+		get: () => state.value.activeMarket === MarketType.Forex
+			? state.value.settings[MarketType.Forex].quoteCurrency
+			: undefined,
+		set: (val: Currency) => {
+			if (val && state.value.activeMarket === MarketType.Forex) {
+				state.value.settings[MarketType.Forex].quoteCurrency = val;
 			}
 		},
 	});
@@ -147,38 +162,46 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 		hasNextPage,
 		isFetchingNextPage,
 		isLoading,
-		isError: fetchTickersError,
+		isError,
 		refetch,
 	} = useQueryPerformance(activeMarket, pinnedTickers, limit);
 
-	const isNotData = computed(
-		() => !!dataResponse.value && isLoading.value && !dataState.value,
-	);
-
-	const tickers = computed(() => {
+	const tickers = computed((): ITicker[] => {
 		if (!dataResponse.value) {
 			return [];
 		}
 
 		const allTickers = [
-			...(dataResponse.value.pages?.flatMap((p) => p?.tickers) ?? []),
-			...(dataResponse.value.pages?.flatMap((p) => p?.pinedTickers) ?? []),
-		].filter(Boolean);
+			...dataResponse.value.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? [],
+			...dataResponse.value.pages.flatMap(page => page?.pinedTickers).filter(t => !!t) ?? [],
+		];
 
-		const pinnedSet = new Set(pinnedTickers.value);
-		const pinned = allTickers
-			.filter((t) => pinnedSet.has(t.tickerId))
-			.map((t) => ({ ...t, isPinned: true }));
+		const pinedIds = new Set(pinnedTickers.value);
 
-		const others = allTickers
-			.filter((t) => !pinnedSet.has(t.tickerId))
-			.map((t) => ({ ...t, isPinned: false }));
+		const pinedTickers = allTickers
+			.filter(t => pinedIds.has(t.tickerId))
+			.map(t => ({
+				...t,
+				isShow: true,
+				isPined: true,
+			}));
 
-		const sortedPinned = pinnedTickers.value
-			.map((id) => pinned.find((t) => t.tickerId === id))
-			.filter(Boolean);
+		const otherTickers = allTickers
+			.filter(t => !pinedIds.has(t.tickerId))
+			.map(t => ({
+				...t,
+				isShow: true,
+				isPined: false,
+			}));
 
-		return [...sortedPinned, ...others];
+		const sortedPinedTickers = pinnedTickers.value
+			.map(id => pinedTickers.find(t => t.tickerId === id))
+			.filter(t => !!t);
+
+		return [
+			...sortedPinedTickers,
+			...otherTickers,
+		];
 	});
 
 	function togglePin(tickerId: string) {
@@ -227,21 +250,20 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 
 	return {
 		activeMarket,
-		currentSettings,
 		currentDisplayVariant,
 		isCompactMode,
 		currentStock,
 		currentDate,
 		currentSymbolDisplayVariant,
-		pinnedTickers,
 		tickers,
+		quoteCurrency,
+
 		togglePin,
 
 		loadMore,
 		resetAllChanges,
-		isNotData,
-		fetchTickersError,
+		isLoading,
+		isError,
 		refetch,
-		state,
 	};
 }

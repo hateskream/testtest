@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import {
 	ModalBadgeList,
 	ModalItemSelector,
@@ -7,11 +9,14 @@ import { getAllMarkets, type MarketType } from '@/modules/market';
 
 interface IMarketBadgeProps {
 	title: string;
+	excludeMarkets: MarketType[];
 }
 
 const props =defineProps<IMarketBadgeProps>();
 
 const activeMarket = defineModel<MarketType>({ required: true });
+
+const markets = computed(() => getAllMarkets().filter((market) => !props.excludeMarkets.includes(market.type)));
 
 function updateMarket(market: MarketType) {
 	activeMarket.value = market;
@@ -22,7 +27,7 @@ function updateMarket(market: MarketType) {
 	<modal-badge-list>
 		<template #title>{{ props.title }}</template>
 
-		<template v-for="market in getAllMarkets()" :key="market.type">
+		<template v-for="market in markets" :key="market.type">
 			<modal-item-selector
 				:model-value="activeMarket === market.type"
 				@update:model-value="updateMarket(market.type)"

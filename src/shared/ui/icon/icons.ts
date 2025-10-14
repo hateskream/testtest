@@ -90,4 +90,6 @@ export enum IconIds {
 	EventBoardEmpty = 'event-board-empty',
 	Ellipse = 'ellipse',
 	ControlFullView = 'control-full-view',
+	ToCompact = 'to-compact',
+	ToFull = 'to-full',
 }

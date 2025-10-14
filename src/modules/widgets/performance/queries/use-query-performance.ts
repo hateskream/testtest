@@ -3,14 +3,14 @@ import type { MaybeRefOrGetter } from 'vue';
 import { computed, onUnmounted, toValue } from 'vue';
 
 import { getPerformance } from '../api';
-import type { ForexMarketType } from '../model';
 import { ColumnType } from '@/modules/cell';
 import { updateQueryData, type QueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { CellUpdater } from '@/shared/service/real-time';
+import type { MarketType } from '@/modules/market';
 
 export function useQueryPerformance(
-	market: MaybeRefOrGetter<ForexMarketType>,
+	market: MaybeRefOrGetter<MarketType>,
 	pined: MaybeRefOrGetter<string[]>,
 	limit: number,
 ) {

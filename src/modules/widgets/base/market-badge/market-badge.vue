@@ -9,10 +9,12 @@ import MarketBadgeList from './market-badge-list.vue';
 
 interface IMarketBadgeProps {
 	title?: string;
+	excludeMarkets?: MarketType[];
 }
 
 const props = withDefaults(defineProps<IMarketBadgeProps>(), {
 	title: 'Market',
+	excludeMarkets: () => [],
 });
 
 const activeMarket = defineModel<MarketType>({ required: true });
@@ -26,7 +28,11 @@ const activeMarket = defineModel<MarketType>({ required: true });
 		</template>
 
 		<template #content>
-			<market-badge-list v-model="activeMarket" :title="props.title" />
+			<market-badge-list
+				v-model="activeMarket"
+				:title="props.title"
+				:exclude-markets="props.excludeMarkets"
+			/>
 		</template>
 	</modal-badge>
 </template>
