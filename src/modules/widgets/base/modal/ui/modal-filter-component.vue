@@ -4,7 +4,7 @@ import ModalFilterTitle from './modal-filter-title-component.vue';
 
 <template>
 	<div :class="classes.container">
-		<modal-filter-title>
+		<modal-filter-title v-if="$slots.title">
 			<slot name="title" />
 		</modal-filter-title>
 

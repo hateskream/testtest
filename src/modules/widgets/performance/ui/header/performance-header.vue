@@ -5,7 +5,6 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { MarketBadge, ModalBadge, ModalBadgeList, ModalItemSelector, ModalItemSwitch } from '@/modules/widgets/base';
-// eslint-disable-next-line import/order
 import {
 	stockToLabel,
 	type DateRange,
@@ -16,15 +15,14 @@ import {
 	isDataRangeStock,
 	Currency,
 } from '../../model';
-
-// import PerformanceFilters from '../modals/performance-filters.vue';
 import { MarketType } from '@/modules/market';
 
+import PerformanceFilters from '../modals/performance-filters.vue';
 import ViewToggle from './view-toggle.vue';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
-// const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
+const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
 const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
@@ -66,12 +64,15 @@ function updateCurrency(v: Currency) {
 				</template>
 
 				<template #content>
-					<!-- <performance-filters
+					<performance-filters
+						v-model:active-market="activeMarket"
 						v-model:is-compact-mode="isCompactMode"
 						v-model:display-variant="displayVariant"
 						v-model:stock="stock"
 						v-model:date="date"
-					/> -->
+						v-model:symbol-display="symbolDisplayVariant"
+						v-model:quote-currency="quoteCurrency"
+					/>
 				</template>
 			</ui-position>
 
@@ -89,7 +90,6 @@ function updateCurrency(v: Currency) {
 			<modal-badge v-if="stock">
 				<template #title>
 					{{stock}}
-					<!-- {{ stockToLabel[stock] }} -->
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 

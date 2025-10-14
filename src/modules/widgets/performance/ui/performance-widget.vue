@@ -6,7 +6,7 @@ import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/ba
 import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
-// import PerformanceFilter from './modals/performance-filters.vue';
+import PerformanceFilter from './modals/performance-filters.vue';
 import PerformanceLoader from './layouts/performance-loader.vue';
 
 const ViewComponent = defineAsyncComponent({
@@ -74,12 +74,15 @@ const {
 		</template>
 
 		<template #filter>
-			<!-- <performance-filter
+			<performance-filter
+				v-model:active-market="activeMarket"
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
 				v-model:stock="currentStock"
 				v-model:date="currentDate"
-			/> -->
+				v-model:symbol-display="currentSymbolDisplayVariant"
+				v-model:quote-currency="quoteCurrency"
+			/>
 		</template>
 	</base-dashboard-component>
 </template>

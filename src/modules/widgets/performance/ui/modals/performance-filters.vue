@@ -1,120 +1,146 @@
 <script setup lang="ts">
 import {
 	ModalFilter,
-	ModalFilterTabWrapper,
-	ModalItemSwitch,
-} from '@/modules/widgets/base/modal';
+	BaseSwitch,
+} from '@/modules/widgets/base/';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { type DateRange, dateToLabel, DisplayVariant, Stock, stockToLabel } from '../../model';
+import { Currency, type DateRange, DateRangeStock, DisplayVariant, Stock } from '../../model';
+import { MarketType } from '@/modules/market';
 
-const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
-const stock = defineModel<Stock>('stock', { required: true });
+const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
+// const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
+const quoteCurrency = defineModel<Currency>('quoteCurrency');
+
+const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
+const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
 const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 
-function updateDisplayVariant(value: DisplayVariant) {
-	displayVariant.value = value;
-}
-
-function updateStock(value: Stock) {
-	stock.value = value;
-}
-
-function updateDate(value: DateRange) {
-	date.value = value;
-}
 </script>
 
 <template>
 	<modal-filter>
-		<template #title>
-			Filter
-		</template>
-
 		<template #content>
 			<div :class="classes.content">
-				<!-- Stock Section -->
-				<div :class="classes.row">
-					<div :class="classes.rowTitle">Stock</div>
-					<div :class="classes.tabs">
-						<modal-filter-tab-wrapper
-							:is-active="stock === Stock.Industry"
-							@click="updateStock(Stock.Industry)"
+				<div :class="classes.label">Market</div>
+				<div :class="classes.switchGroup">
+					<button
+						:class="[
+							classes.switch,
+							activeMarket === MarketType.Stock && classes.active
+						]"
+						@click="activeMarket = MarketType.Stock"
+					>
+						Stock
+					</button>
+					<button
+						:class="[
+							classes.switch,
+							activeMarket === MarketType.Forex && classes.active
+						]"
+						@click="activeMarket = MarketType.Forex"
+					>
+						Forex
+					</button>
+				</div>
+
+				<div :class="classes.label">Filter</div>
+
+				<div :class="classes.subBlock">
+					<div :class="classes.subLabel">Category</div>
+					<div :class="classes.switchGroup">
+						<button
+							:class="[
+								classes.switch,
+								stock === Stock.Industry && classes.active
+							]"
+							@click="stock = Stock.Industry"
 						>
-							{{ stockToLabel[Stock.Industry] }}
-						</modal-filter-tab-wrapper>
-						<modal-filter-tab-wrapper
-							:is-active="stock === Stock.Sector"
-							@click="updateStock(Stock.Sector)"
+							Industry
+						</button>
+						<button
+							:class="[
+								classes.switch,
+								stock === Stock.Sector && classes.active
+							]"
+							@click="stock = Stock.Sector"
 						>
-							{{ stockToLabel[Stock.Sector] }}
-						</modal-filter-tab-wrapper>
+							Sector
+						</button>
 					</div>
 				</div>
 
-				<!-- Date Section -->
-				<div :class="classes.row">
-					<div :class="classes.rowTitle">Date</div>
-					<div :class="classes.tabs">
-						<modal-filter-tab-wrapper
-							:is-active="date === DateRange.Today"
-							@click="updateDate(DateRange.Today)"
+				<div :class="classes.subBlock">
+					<div :class="classes.subLabel">Period</div>
+					<div :class="classes.switchGroup">
+						<button
+							:class="[
+								classes.switch,
+								date === DateRangeStock.Today && classes.active
+							]"
+							@click="date = DateRangeStock.Today"
 						>
-							{{ dateToLabel[ DateRange.Today] }}
-						</modal-filter-tab-wrapper>
-						<modal-filter-tab-wrapper
-							:is-active="date === DateRange.Yesterday"
-							@click="updateDate(DateRange.Yesterday)"
+							Today
+						</button>
+						<button
+							:class="[
+								classes.switch,
+								date === DateRangeStock.Yesterday && classes.active
+							]"
+							@click="date = DateRangeStock.Yesterday"
 						>
-							{{ dateToLabel[ DateRange.Yesterday] }}
-						</modal-filter-tab-wrapper>
-						<modal-filter-tab-wrapper
-							:is-active="date === DateRange.Week"
-							@click="updateDate(DateRange.Week)"
+							Yesterday
+						</button>
+						<button
+							:class="[
+								classes.switch,
+								date === DateRangeStock.Week && classes.active
+							]"
+							@click="date = DateRangeStock.Week"
 						>
-							<div :class="classes.dateOption">
-								{{ dateToLabel[ DateRange.Week] }}
-								<ui-icon :id="IconIds.Calendar" :class="classes.calendarIcon" />
-							</div>
-						</modal-filter-tab-wrapper>
+							A week ago
+						</button>
 					</div>
 				</div>
 
-				<!-- Display Section -->
-				<div :class="classes.row">
-					<div :class="classes.rowTitle">Display</div>
-					<div :class="classes.tabs">
-						<modal-filter-tab-wrapper
-							:is-active="displayVariant === DisplayVariant.Bar"
-							@click="updateDisplayVariant(DisplayVariant.Bar)"
+				<div :class="classes.subBlock">
+					<div :class="classes.subLabel">Display</div>
+					<div :class="classes.switchGroup">
+						<button
+							:class="[
+								classes.switch,
+								displayVariant === DisplayVariant.Bar && classes.active
+							]"
+							@click="displayVariant = DisplayVariant.Bar"
 						>
-							<div :class="classes.displayOption">
-								<ui-icon :id="IconIds.Bars" :class="classes.displayIcon" />
-								Bar
-							</div>
-						</modal-filter-tab-wrapper>
-						<modal-filter-tab-wrapper
-							:is-active="displayVariant === DisplayVariant.List"
-							@click="updateDisplayVariant(DisplayVariant.List)"
+							<ui-icon
+								:id="IconIds.Bars"
+								width="16"
+								height="16"
+							/>
+							Bar
+						</button>
+						<button
+							:class="[
+								classes.switch,
+								displayVariant === DisplayVariant.List && classes.active
+							]"
+							@click="displayVariant = DisplayVariant.List"
 						>
-							<div :class="classes.displayOption">
-								<ui-icon :id="IconIds.List" :class="classes.displayIcon" />
-								List
-							</div>
-						</modal-filter-tab-wrapper>
+							<ui-icon
+								:id="IconIds.List"
+								width="16"
+								height="16"
+							/>
+							List
+						</button>
 					</div>
 				</div>
 
-				<!-- Settings Section -->
-				<div :class="classes.row">
-					<div :class="classes.rowTitle">Settings</div>
-					<div :class="classes.settingsContent">
-						<modal-item-switch
-							v-model="isCompactMode"
-						>
-							Compact mode
-						</modal-item-switch>
-					</div>
+				<div :class="[classes.label, classes.settings]">Settings</div>
+				<div :class="classes.toggleRow" @click="isCompactMode = !isCompactMode">
+					<span :class="classes.subLabel">Compact mode</span>
+					<base-switch :is-active="isCompactMode" />
 				</div>
 			</div>
 		</template>
@@ -125,56 +151,128 @@ function updateDate(value: DateRange) {
 .content {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
-	padding: 12px 0;
+	padding: 6px 16px;
 }
 
-.row {
+.label {
+	padding: 10px 0;
+	font-style: normal;
+	font-weight: 300;
+	font-size: var(--typography-menu-menu-title, 13px);
+	line-height: 22px;
+	color: var(--color-text-base-300, #9a9a9d);
+	letter-spacing: 0.052px;
+}
+
+.subBlock {
 	display: flex;
-	align-items: center;
-	padding: 4px 12px;
-}
-
-.rowTitle {
-	flex: 0 0 80px;
-	font-weight: 500;
-	font-size: 12px;
-	text-align: left;
-	color: var(--text-color-base-300);
-}
-
-.tabs {
-	display: flex;
-	flex: 1;
-	align-items: center;
-	gap: 8px;
-}
-
-.settingsContent {
-	flex: 1;
-}
-
-.dateOption {
-	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	gap: 6px;
 }
 
-.displayOption {
+.subLabel {
+	padding: 10px 0;
+	overflow: hidden;
+	font-style: normal;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01, 12px);
+	line-height: 20px;
+	color: var(--color-text-base-500, #ffffff);
+	letter-spacing: 0.096px;
+	text-overflow: ellipsis;
+}
+
+.switchGroup {
 	display: flex;
+	min-width: 284px;
+	padding: 3px;
+	background: #1c1c1c;
+	border-radius: 9999px;
+	gap: 3px;
+}
+
+.switch {
+	display: flex;
+	flex: 1;
+	justify-content: center;
 	align-items: center;
-	gap: 6px;
+	padding: 6px 0;
+	font-size: 14px;
+	color: #777777;
+	background: transparent;
+	border: none;
+	border-radius: 9999px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	gap: 2px;
 }
 
-.calendarIcon {
-	width: 12px;
-	height: 12px;
-	color: var(--icon-color-base-500);
+.active {
+	color: #ffffff;
+	background: #2a2a2a;
 }
 
-.displayIcon {
-	width: 12px;
-	height: 12px;
-	color: var(--icon-color-base-500);
+.switch:hover:not(.active) {
+	color: #cccccc;
+	background: #1f1f1f;
+}
+
+.toggleRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 13px;
+	color: #aaaaaa;
+}
+
+.toggle {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	height: 18px;
+}
+
+.toggle input {
+	width: 0;
+	height: 0;
+	opacity: 0;
+}
+
+.slider {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #2a2a2a;
+	border-radius: 34px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.slider::before {
+	content: '';
+	position: absolute;
+	bottom: 2px;
+	left: 2px;
+	width: 14px;
+	height: 14px;
+	background-color: #777777;
+	border-radius: 50%;
+	transition: 0.3s;
+}
+
+.toggle input:checked + .slider {
+	background-color: #007aff;
+}
+
+.toggle input:checked + .slider::before {
+	background-color: #ffffff;
+	transform: translateX(18px);
+}
+
+.settings {
+	margin-top: 24px;
 }
 </style>
