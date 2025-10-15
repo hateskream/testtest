@@ -134,7 +134,7 @@ const MarketCap: Preset = {
 const AltcoinSeason: Preset = {
 	name: 'Altcoin Season',
 	description: 'Altcoin season',
-	minSize: { w: 2, h: 3 },
+	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 14 },
 };

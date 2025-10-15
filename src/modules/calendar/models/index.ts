@@ -6,3 +6,4 @@ export * from './daily-calendar-info';
 export * from './date-format';
 export * from './event-board';
 export * from './weekly-calendar-info';
+export * from './presets';

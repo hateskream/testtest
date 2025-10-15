@@ -29,6 +29,7 @@ const eventBoardRef = useTemplateRef('event-board-component');
 
 const {
 	isDailyCalendarLoading,
+	isEventBoardLoading,
 	weekRange,
 	baseDate,
 	selectedDate,
@@ -93,8 +94,11 @@ useEventBoardScroll({
 						@select-day="setSelected"
 					/>
 
+					<!--		TODO: Add loader component			-->
+					<div v-if="isEventBoardLoading" class="loading" />
+
 					<calendar-event-board
-						v-if="eventBoard.length"
+						v-else-if="eventBoard.length"
 						ref="event-board-component"
 						:event-board="eventBoard"
 						:event-board-favorites="eventBoardFavorites"

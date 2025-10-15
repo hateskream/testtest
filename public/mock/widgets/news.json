@@ -1,93 +1,219 @@
 {
-    "data": [
-        {
-            "author": "Jesse Choafohen-Phosteghedos",
-            "description": "As we navigate through 2025, the landscape of technology stocks presents",
-            "id": "1",
-            "score": 50,
-            "stocks": [
-                {
-                    "name": "Tesla Inc",
-                    "ticker": "TSLA",
-                    "srcImage": "1"
-                },
-                {
-                    "name": "Meta Platforms",
-                    "ticker": "META",
-                    "srcImage": "1"
-                }
-            ],
-            "title": "2 AI Stocks Down More Than 20% YTD to Buy Before They Soar",
-            "timestamp": 1759748534821,
-            "srcSourceImage": "1"
-        },
-        {
-            "author": "Jesse Cohen",
-            "description": "As we navigate through 2025, the landscape of technology stocks presents",
-            "id": "2",
-            "score": 76,
-            "stocks": [
-                {
-                    "name": "Tesla Inc",
-                    "ticker": "TSLA",
-                    "srcImage": "1"
-                },
-                {
-                    "name": "Meta Platforms",
-                    "ticker": "META",
-                    "srcImage": "1"
-                }
-            ],
-            "title": "2 AI Stocks Down More Than 20% YTD to Buy Before They Soar",
-            "timestamp": 1759748534821,
-            "srcSourceImage": "1"
-        },
-        {
-            "author": "Jesse Cohen",
-            "description": "As we navigate through 2025, the landscape of technology stocks presents",
-            "id": "2",
-            "score": 32,
-            "stocks": [
-                {
-                    "name": "Tesla Inc",
-                    "ticker": "TSLA",
-                    "srcImage": "1"
-                },
-                {
-                    "name": "Meta Platforms",
-                    "ticker": "META",
-                    "srcImage": "1"
-                }
-            ],
-            "title": "2 AI Stocks Down More Than 20% YTD to Buy Before They Soar",
-            "timestamp": 1759748534821,
-            "srcSourceImage": "1"
-        },
-        {
-            "author": "Jesse Cohen",
-            "description": "As we navigate through 2025, the landscape of technology stocks presents",
-            "id": "2",
-            "score": 10,
-            "stocks": [
-                {
-                    "name": "Tesla Inc",
-                    "ticker": "TSLA",
-                    "srcImage": "1"
-                },
-                {
-                    "name": "Meta Platforms",
-                    "ticker": "META",
-                    "srcImage": "1"
-                }
-            ],
-            "title": "2 AI Stocks Down More Than 20% YTD to Buy Before They Soar",
-            "timestamp": 1759748534821,
-            "srcSourceImage": "1"
-        }
-    ],
-    "pagination": {
-        "offset": 0,
-        "limit": 10,
-        "total": 10
-    }
+	"data": [
+		{
+			"id": "vwnakx2gt9a9cnmtcotwot",
+			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
+			"timestamp": 1759890997403,
+			"author": "Noah Kim",
+			"title": "Why Cocoa (ICE) could outperform commodities through Q4",
+			"stocks": [
+				{
+					"name": "Cocoa (ICE)",
+					"ticker": "COCOA",
+					"srcImage": "cocoa"
+				},
+				{
+					"name": "Intel Corporation",
+					"ticker": "INTC",
+					"srcImage": "intc"
+				}
+			],
+			"score": 13,
+			"srcSourceImage": "benzinga.svg"
+		},
+		{
+			"id": "9gm0zwo60hwpe6ge02eknm",
+			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
+			"timestamp": 1759871549317,
+			"author": "Zhang Wei",
+			"title": "THORChain vs Dow Jones Industrial Average: which is the better crypto play now",
+			"stocks": [
+				{
+					"name": "THORChain",
+					"ticker": "RUNE",
+					"srcImage": "rune"
+				},
+				{
+					"name": "Dow Jones Industrial Average",
+					"ticker": "DJI",
+					"srcImage": "dji"
+				}
+			],
+			"score": 7,
+			"srcSourceImage": "investing-com.svg"
+		},
+		{
+			"id": "52gwx77in0e7mijcxfwdjj",
+			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
+			"timestamp": 1759780234223,
+			"author": "Elena García",
+			"title": "3 signals USD is primed for a breakout",
+			"stocks": [
+				{
+					"name": "USD",
+					"ticker": "EUR",
+					"srcImage": "eur"
+				},
+				{
+					"name": "Pfizer Inc.",
+					"ticker": "PFE",
+					"srcImage": "pfe"
+				}
+			],
+			"score": 31,
+			"srcSourceImage": "bloomberg.svg"
+		},
+		{
+			"id": "mjmrskf81rbravuenaru3",
+			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
+			"timestamp": 1759732288401,
+			"author": "Zhang Wei",
+			"title": "Analyst note: THORChain fair value revised amid earnings beat",
+			"stocks": [
+				{
+					"name": "THORChain",
+					"ticker": "RUNE",
+					"srcImage": "rune"
+				},
+				{
+					"name": "Wool",
+					"ticker": "WOOL",
+					"srcImage": "wool"
+				}
+			],
+			"score": 12,
+			"srcSourceImage": "benzinga.svg"
+		},
+		{
+			"id": "xuw9aoja17n26x3vl40xb1",
+			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
+			"timestamp": 1759721765223,
+			"author": "Mia Novak",
+			"title": "CSI 300 (China) vs Dow Jones Industrial Average: which is the better indices play now",
+			"stocks": [
+				{
+					"name": "CSI 300 (China)",
+					"ticker": "CSI300",
+					"srcImage": "csi300"
+				},
+				{
+					"name": "Dow Jones Industrial Average",
+					"ticker": "DJI",
+					"srcImage": "dji"
+				}
+			],
+			"score": 28,
+			"srcSourceImage": "benzinga.svg"
+		},
+		{
+			"id": "3v2r70bwvd8pfao8uavat",
+			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
+			"timestamp": 1759699590521,
+			"author": "Liam O’Connor",
+			"title": "Oracle Corporation vs S&P Latin America: which is the better equities play now",
+			"stocks": [
+				{
+					"name": "Oracle Corporation",
+					"ticker": "ORCL",
+					"srcImage": "orcl"
+				},
+				{
+					"name": "S&P Latin America",
+					"ticker": "SPLATAM",
+					"srcImage": "splatam"
+				}
+			],
+			"score": 24,
+			"srcSourceImage": "bloomberg.svg"
+		},
+		{
+			"id": "b6ehgvakfpk9ir5jm2lpc6",
+			"description": "Positioning remains uneven as dispersion across sectors widens.",
+			"timestamp": 1759685145512,
+			"author": "Lucas Moretti",
+			"title": "FTSE 100 vs Alphabet Inc. (Class A): which is the better indices play now",
+			"stocks": [
+				{
+					"name": "FTSE 100",
+					"ticker": "FTSE",
+					"srcImage": "ftse"
+				},
+				{
+					"name": "Alphabet Inc. (Class A)",
+					"ticker": "GOOGL",
+					"srcImage": "googl"
+				}
+			],
+			"score": 35,
+			"srcSourceImage": "benzinga.svg"
+		},
+		{
+			"id": "kmmqri29vmhk7f1mu2xdg",
+			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
+			"timestamp": 1759594525813,
+			"author": "Elena García",
+			"title": "Why Chainlink could outperform crypto through Q4",
+			"stocks": [
+				{
+					"name": "Chainlink",
+					"ticker": "LINK",
+					"srcImage": "link"
+				},
+				{
+					"name": "Tesla, Inc.",
+					"ticker": "TSLA",
+					"srcImage": "tsla"
+				}
+			],
+			"score": 26,
+			"srcSourceImage": "investing-com.svg"
+		},
+		{
+			"id": "a9hkvg795tfme178sbv7mb",
+			"description": "Markets reassess valuation premiums while liquidity rotates across factors.",
+			"timestamp": 1759581987547,
+			"author": "Zhang Wei",
+			"title": "Analyst note: AEX (Netherlands) fair value revised amid valuation reset",
+			"stocks": [
+				{
+					"name": "AEX (Netherlands)",
+					"ticker": "AEX",
+					"srcImage": "aex"
+				},
+				{
+					"name": "Lumber",
+					"ticker": "LUMBER",
+					"srcImage": "lumber"
+				}
+			],
+			"score": 63,
+			"srcSourceImage": "seekingalpha.svg"
+		},
+		{
+			"id": "cni27jkukdpuuziiasgjq",
+			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
+			"timestamp": 1759553796023,
+			"author": "Jesse Cohen",
+			"title": "Analyst note: LME Cadmium fair value revised amid guidance raise",
+			"stocks": [
+				{
+					"name": "LME Cadmium",
+					"ticker": "LMCAD",
+					"srcImage": "lmcad"
+				},
+				{
+					"name": "Lockheed Martin Corporation",
+					"ticker": "LMT",
+					"srcImage": "lmt"
+				}
+			],
+			"score": 16,
+			"srcSourceImage": "seekingalpha.svg"
+		}
+	],
+	"pagination": {
+		"offset": 0,
+		"limit": 10,
+		"total": 48
+	}
 }

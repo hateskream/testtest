@@ -68,8 +68,7 @@ const eventStartsIn = computed(() => {
 <template>
 	<div
 		:class="[
-			classes.calendarEventCard,
-			props.isMissed && classes.missed
+			classes.calendarEventCard
 		]"
 	>
 		<div :class="classes.cardHeader">
@@ -183,13 +182,6 @@ const eventStartsIn = computed(() => {
 
 .favorite {
 	color: rgb(230 171 10);
-}
-
-
-.missed {
-	cursor: default;
-	opacity: 0.4;
-	pointer-events: none;
 }
 
 .iconWrapper {

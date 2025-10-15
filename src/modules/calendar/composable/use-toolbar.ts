@@ -1,28 +1,30 @@
 import { ref, watch } from 'vue';
 
 import { useToolbarGetState, useToolbarUpdateState } from '@/modules/calendar/query/use-query-toolbar.ts';
-import { EventType, Impact, type IToolbarState, MarketIds } from '@/modules/calendar';
+import { getDefaultState, type IToolbarState } from '@/modules/calendar';
 
 export interface IUseToolbarStateOptions {
 	widgetId: string;
 	useQuery: boolean;
+	defaultState?: string;
 }
 
 export function useToolbar(options: IUseToolbarStateOptions) {
-	const toolbar = ref<IToolbarState>(getToolbarDefaultState());
+	const toolbar = ref<IToolbarState>(getDefaultState(options.defaultState));
+
+	const { data } = useToolbarGetState(options.widgetId, {
+		useQuery: options.useQuery,
+		defaultState: getToolbarDefaultState,
+	});
+
+	const { mutate } = useToolbarUpdateState(options.widgetId, {
+		useQuery: options.useQuery,
+		defaultState: getToolbarDefaultState,
+	});
 
 	function getToolbarDefaultState() {
-		return {
-			marketId: MarketIds.EntireWorld,
-			impact: Impact.All,
-			eventType: EventType.All,
-			watchlistId: null,
-			watchlistSection: null,
-		};
+		return getDefaultState(options.defaultState);
 	}
-
-	const { data } = useToolbarGetState(options.widgetId, options);
-	const { mutate } = useToolbarUpdateState(options.widgetId, options);
 
 	watch(data, (newState) => {
 		if (newState) {

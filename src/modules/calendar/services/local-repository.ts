@@ -2,10 +2,11 @@ import { useUrlSearchParams } from '@vueuse/core';
 
 import { BaseRepository } from './base-repository.ts';
 import { type ToolbarSchemaType } from './schema.ts';
-import { EventType, Impact, MarketIds } from '../models';
+import { EventType, getDefaultState, Impact, MarketIds } from '../models';
 
 export interface ILocalRepositoryOptions {
 	useQuery: boolean;
+	defaultState: () => ToolbarSchemaType;
 }
 
 interface IParams {
@@ -14,16 +15,6 @@ interface IParams {
 	event?: EventType;
 	catalog?: string;
 	section?: string;
-}
-
-function getDefaultState(): ToolbarSchemaType {
-	return {
-		marketId: MarketIds.EntireWorld,
-		impact: Impact.All,
-		eventType: EventType.All,
-		watchlistId: null,
-		watchlistSection: null,
-	};
 }
 
 export class LocalRepository extends BaseRepository {
@@ -73,7 +64,7 @@ export class LocalRepository extends BaseRepository {
 		let state: ToolbarSchemaType;
 
 		if (raw === null) {
-			state = getDefaultState();
+			state = this.options?.defaultState() || getDefaultState();
 		} else {
 			state = JSON.parse(raw) as ToolbarSchemaType;
 		}

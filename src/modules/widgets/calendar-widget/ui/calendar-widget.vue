@@ -47,6 +47,7 @@ const {
 	toolbar: {
 		useQuery: false,
 		widgetId: props.meta.widgetId,
+		defaultState: 'high-impact',
 	},
 });
 

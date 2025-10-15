@@ -1,65 +1,32 @@
 import { computed, ref, watch } from 'vue';
-import { z } from 'zod';
 
 import {
 	compareState,
 	getActiveLocations,
 	getDefaultState,
-	Source,
-	Sort,
+	hydrateState,
 	type IDisplaySettings,
 	type ILocation,
 	type IState,
+	rehydrateState,
 	Score,
 	Sentiment,
 	type SortState,
-	rehydrateState,
-	hydrateState,
+	Source,
 } from '../model';
+import { useSegment } from './use-segment';
+import { stateSchema, type StateSchemaType } from '../services';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { useSegment } from '@/modules/news';
 
-const displaySettingsSchema = z.object({
-	isShowDate: z.boolean(),
-	isShowSource: z.boolean(),
-	isShowDesc: z.boolean(),
-	isShowAuthor: z.boolean(),
-	isShowSymbols: z.boolean(),
-	isShowScore: z.boolean(),
-});
-
-const activeLocationSchema = z.object({
-	region: z.string(),
-	countries: z.array(z.string()),
-});
-
-export const stateSchema = z.object({
-	score: z.array(z.nativeEnum(Score)),
-	segment: z.object({
-		selectAllFrom: z.array(z.enum(['crypto', 'stock', 'index', 'forex', 'commodity', 'all'])),
-		selectTickers: z.array(z.string()),
-		isAllTickersShow: z.boolean(),
-	}),
-	sentiment: z.array(z.nativeEnum(Sentiment)),
-	source: z.array(z.nativeEnum(Source)),
-	selectedTickers: z.array(z.string()),
-	activeSort: z.nativeEnum(Sort).nullable(),
-	displaySettings: displaySettingsSchema,
-	locations: z.array(activeLocationSchema),
-});
-
-export type StateSchemaType = z.infer<typeof stateSchema>;
-
-
-export function useNews(widgetId: string) {
+export function useNews(widgetId: string, defaultState?: string) {
 	const {
 		useStateQuery,
 		useStateMutation,
 	} = createStateQueries<IState, StateSchemaType>({
 		storageKey: '__NEWS__',
 		isSaveChange: true,
-		getDefaultState: getDefaultState,
+		getDefaultState: () => getDefaultState(defaultState),
 		entityId: widgetId,
 		schema: stateSchema,
 		hydrateFn: hydrateState,
@@ -71,9 +38,14 @@ export function useNews(widgetId: string) {
 	const { data: dataState } = useStateQuery();
 	const { mutate } = useStateMutation();
 
-	const state = ref<IState>(getDefaultState());
+	const state = ref<IState>(getDefaultState(defaultState));
 
-	const selectedMarketSegments = ref<Set<MarketType>>(new Set());
+	const selectedSegments = computed({
+		get: () => state.value.segments,
+		set: (val: Set<MarketType>) => {
+			state.value.segments = val;
+		},
+	});
 
 	const {
 		segments,
@@ -82,11 +54,7 @@ export function useNews(widgetId: string) {
 		selectAll,
 		unselectAll,
 		toggleTicker,
-	} = useSegment(selectedMarketSegments);
-
-	watch(selectedSegmentRequest, (newValue) => {
-		state.value.segment = newValue;
-	});
+	} = useSegment(selectedSegments);
 
 	const selectedScores = computed({
 		get: (): Set<Score> => state.value.score,
@@ -150,11 +118,11 @@ export function useNews(widgetId: string) {
 	}, { deep: true });
 
 	function resetAllChanges() {
-		state.value = getDefaultState();
+		state.value = getDefaultState(defaultState);
 	}
 
 	return {
-		selectedMarketSegments,
+		selectedMarketSegments: selectedSegments,
 
 		segments,
 		selectedSegmentRequest,

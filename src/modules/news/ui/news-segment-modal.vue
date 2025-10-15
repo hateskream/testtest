@@ -50,7 +50,7 @@ const filteredSegments = computed(() => {
 			const allIds = segment.tickers.map(t =>
 				segment.id === MarketType.Forex ? `${t.left}+${t.right}` : t.left,
 			);
-			const isAllSelected = selected.size === allIds.length;
+			const isAllSelected = model.value === SegmentFilterIds.Selected || selected.size === allIds.length;
 			const toggleLabel = isAllSelected ? 'Unselect all' : 'Select all';
 
 			return {
@@ -114,6 +114,7 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 			<ui-accordion
 				v-for="segment in filteredSegments"
 				:key="segment.label"
+				:class="classes.accordion"
 			>
 				<template #left>
 					{{ segment.label }}
@@ -164,7 +165,12 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 	flex-direction: column;
 }
 
+.accordion:hover .selectUnSelectAll {
+	display: block;
+}
+
 .selectUnSelectAll {
+	display: none;
 	font-style: normal;
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-02, 15px);

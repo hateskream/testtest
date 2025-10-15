@@ -1,3 +1,4 @@
+import { MarketType } from '@/modules/market';
 import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
@@ -139,6 +140,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 15,
 				},
 			},
+			defaultStateType: MarketType.Forex,
 		},
 		{
 			'id': '5a06e948-f5c9-4db0-8a96-42ce16d09d79',
@@ -214,6 +216,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 22,
 				},
 			},
+			defaultStateType: MarketType.Forex,
 		},
 		{
 			'id': '29789f1a-ac08-4181-9acf-ea4d1617ac1a',

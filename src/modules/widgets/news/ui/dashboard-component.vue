@@ -50,7 +50,7 @@ const {
 	sortBy,
 
 	resetAllChanges,
-} = useNews(props.meta.widgetId);
+} = useNews(props.meta.widgetId, props.meta.defaultStateType);
 
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,

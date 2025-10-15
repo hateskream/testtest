@@ -1,5 +1,3 @@
-import type { ISegmentRequest } from '@/modules/news';
-
 export enum Sentiment {
 	Optimistic = 'optimistic',
 	Neutral = 'neutral',
@@ -71,7 +69,7 @@ export function compareFilter<T>(filter1: Set<T>, filter2: Set<T>): boolean {
 	return true;
 }
 
-function compareArray(a: string[], b: string[]): boolean {
+export function compareArray(a: string[], b: string[]): boolean {
 	if (a.length !== b.length) {
 		return false;
 	}
@@ -80,19 +78,6 @@ function compareArray(a: string[], b: string[]): boolean {
 		if (!set.has(item)) {
 			return false;
 		}
-	}
-	return true;
-}
-
-export function compareSegment(s1: ISegmentRequest, s2: ISegmentRequest): boolean {
-	if (s1.isAllTickersShow !== s2.isAllTickersShow) {
-		return false;
-	}
-	if (!compareArray(s1.selectAllFrom, s2.selectAllFrom)) {
-		return false;
-	}
-	if (!compareArray(s1.selectTickers, s2.selectTickers)) {
-		return false;
 	}
 	return true;
 }

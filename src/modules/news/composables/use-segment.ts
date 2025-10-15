@@ -2,17 +2,26 @@ import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
 
 import { MarketType } from '@/modules/market';
 import type { ITickerData } from '@/shared/mock';
-import {
-	type ISegmentRequest,
-	type SelectAllFrom,
-	type SelectedSegmentTickersState,
-} from '@/modules/news/model';
+import { type ISegmentRequest, type SelectAllFrom, type SelectedSegmentTickersState } from '@/modules/news/model';
 import { segmentsData } from '@/modules/news/model/segment-modal';
 import * as utils from '@/modules/news/utils';
 
-export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) {
-	const selectedSegmentTickers = ref<SelectedSegmentTickersState>({});
+export function useSegment(
+	selectedSegments: MaybeRefOrGetter<Set<MarketType>>,
+) {
+	const getDefaultTickers = (): SelectedSegmentTickersState => {
+		const map: SelectedSegmentTickersState = {};
+		for (const seg of segmentsData) {
+			map[seg.id] = new Set(seg.tickers.map(t => utils.parseTicker(seg.id, t)));
+		}
+		return map;
+	};
 
+	const selectedSegmentTickers = ref<SelectedSegmentTickersState>(
+		getDefaultTickers(),
+	);
+
+	// FIXME: asynchronous fetch from repository not triggers DOM updates
 	const segments = computed(() => {
 		const selected = toValue(selectedSegments);
 
@@ -25,29 +34,38 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 
 	watch(segments, (segment) => {
 		const validIds = new Set(segment.map((s) => s.id));
-
 		const filtered: Record<string, Set<string>> = {};
+
 		for (const [id, set] of Object.entries(selectedSegmentTickers.value)) {
 			if (validIds.has(id as MarketType)) {
 				filtered[id] = set;
 			}
 		}
 
+		for (const seg of segment) {
+			if (!filtered[seg.id]) {
+				filtered[seg.id] = new Set(seg.tickers.map(t => utils.parseTicker(seg.id, t)));
+			}
+		}
+
 		if (Object.keys(filtered).length !== Object.keys(selectedSegmentTickers.value).length) {
 			selectedSegmentTickers.value = filtered;
 		}
-	});
+	}, { deep: true, immediate: true });
 
 	const isAllSelected = computed((): boolean => {
-		const hasAny = Object.values(selectedSegmentTickers.value ?? {}).some(
-			s => s && s.size > 0,
-		);
+		for (const type of Object.values(MarketType)) {
+			const seg = segmentsData.find(s => s.id === type);
+			if (!seg) {
+				continue;
+			}
 
-		if (!hasAny) {
-			return true;
+			if (!isAllSelectedInSegment(type)) {
+				return false;
+			}
 		}
 
-		return segments.value.every((s) => isAllSelectedInSegment(s.id));
+		return true;
 	});
 
 	const selectedSegmentRequest = computed<ISegmentRequest>(() => {
@@ -64,30 +82,15 @@ export function useSegment(selectedSegments: MaybeRefOrGetter<Set<MarketType>>) 
 
 		for (const segment of segments.value) {
 			const selected = selectedSegmentTickers.value[segment.id] ?? new Set();
-
-			const allIds = segment.tickers.map((t) =>
-				utils.parseTicker(segment.id, t),
-			);
-
-			if (selected.size === 0) {
-				continue;
-			}
+			const allIds = segment.tickers.map(t => utils.parseTicker(segment.id, t));
 
 			if (selected.size === allIds.length) {
-				selectAllFrom.push(segment.id as SelectAllFrom);
+				selectAllFrom.push(segment.id);
 			} else {
 				for (const t of selected) {
 					selectTickers.push(t);
 				}
 			}
-		}
-
-		if (selectAllFrom.length === segments.value.length) {
-			return {
-				selectAllFrom: ['all'],
-				selectTickers: [],
-				isAllTickersShow: true,
-			};
 		}
 
 		return {

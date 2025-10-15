@@ -1,4 +1,4 @@
-import { type ITickerData, getTickersByMarketType } from '@/shared/mock';
+import { getTickersByMarketType, type ITickerData } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 
 export enum SegmentFilterIds {
@@ -25,13 +25,7 @@ export const segmentFilters: ISegmentFilters[] = [
 	},
 ];
 
-export type SelectAllFrom =
-	| 'crypto'
-	| 'stock'
-	| 'index'
-	| 'forex'
-	| 'commodity'
-	| 'all';
+export type SelectAllFrom = MarketType | 'all';
 
 export type SelectedSegmentTickersState = Record<string, Set<string>>;
 
@@ -75,7 +69,6 @@ export const segmentsData: ISegmentData[] = [
 	},
 ];
 
-// Initialize tickers asynchronously
 Promise.all([
 	getTickersByMarketType(MarketType.Crypto),
 	getTickersByMarketType(MarketType.Stock),

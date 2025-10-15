@@ -1,4 +1,5 @@
 
+import { MarketType } from '@/modules/market';
 import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
@@ -67,6 +68,7 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 8,
 				},
 			},
+			defaultStateType: MarketType.Stock,
 		},
 		{
 			'id': '542a2309-109e-4de1-a15c-2d316a15ee28',
@@ -180,6 +182,7 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 21,
 				},
 			},
+			defaultStateType: MarketType.Stock,
 		},
 		{
 			'id': 'e3b3d088-7549-4e81-b2be-bb76caed9bd0',

@@ -245,6 +245,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 					'h': 17,
 				},
 			},
+			defaultStateType: MarketType.Crypto,
 		},
 		{
 			'id': '77f1b985-fad9-430d-ab61-1d1e392b3c24',

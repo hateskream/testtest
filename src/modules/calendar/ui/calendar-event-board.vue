@@ -217,7 +217,10 @@ const LIGHT_COLORS = {
 				<div
 					v-for="group in day.grouped"
 					:key="group.hour"
-					:class="classes.hourSection"
+					:class="[
+						classes.hourSection,
+						group.missed && classes.missed
+					]"
 					:data-hour="group.hour"
 				>
 					<div v-if="group.soon" />
@@ -234,7 +237,10 @@ const LIGHT_COLORS = {
 					<div
 						v-for="(event, i) in group.events"
 						:key="`${day.date}-${group.hour}-${i}`"
-						:class="[classes.dayBoard, (event.favorite || group.soon) && classes.lightning]"
+						:class="[
+							classes.dayBoard,
+							(event.favorite || group.soon) && classes.lightning
+						]"
 						:style="
 							event.favorite ? LIGHT_COLORS.favorite :
 							group.soon ? LIGHT_COLORS.soon : LIGHT_COLORS.none
@@ -342,5 +348,10 @@ const LIGHT_COLORS = {
 	flex-direction: column;
 	width: 100%;
 	padding: 0 6px 6px 8px;
+}
+
+.missed {
+	cursor: default;
+	opacity: 0.4;
 }
 </style>

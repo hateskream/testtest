@@ -1,4 +1,4 @@
-import { compareFilter, compareSegment, type Score, type Sentiment, type Source } from './filters';
+import { compareArray, compareFilter, type Score, type Sentiment, type Source } from './filters';
 import { compareDisplaySettings, type IDisplaySettings } from './display';
 import {
 	compareLocations,
@@ -9,12 +9,11 @@ import {
 	rehydrateLocations,
 } from './location';
 import { compareSort, type SortState } from './sort';
-import type { ISegmentRequest } from '@/modules/news';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 
 export interface IState {
 	score: Set<Score>;
-	segment: ISegmentRequest;
+	segments: Set<MarketType>;
 	sentiment: Set<Sentiment>;
 	source: Set<Source>;
 	selectedTickers: string[];
@@ -23,39 +22,9 @@ export interface IState {
 	locations: ILocation[];
 }
 
-const DEFAULT_STATE: IState = {
-	score: new Set(),
-	segment: {
-		isAllTickersShow: true,
-		selectTickers: [],
-		selectAllFrom: ['all'],
-	},
-	sentiment: new Set(),
-	source: new Set(),
-	selectedTickers: [],
-	activeSort: null,
-	displaySettings: {
-		isShowDate: true,
-		isShowSource: true,
-		isShowDesc: true,
-		isShowAuthor: true,
-		isShowSymbols: true,
-		isShowScore: true,
-	},
-	locations: LOCATIONS_DEFAULT,
-};
-
-export function getDefaultState(defaultStateType: MarketType | 'none' = 'none'): IState {
-	if (defaultStateType === 'none') {
-		return { ...DEFAULT_STATE };
-	}
-
-	return { ...DEFAULT_STATE };
-}
-
 export interface IHydratedState {
 	score: Score[];
-	segment: ISegmentRequest;
+	segments: MarketType[];
 	sentiment: Sentiment[];
 	source: Source[];
 	selectedTickers: string[];
@@ -66,7 +35,7 @@ export interface IHydratedState {
 
 export function hydrateState({
 	score,
-	segment,
+	segments,
 	sentiment,
 	source,
 	selectedTickers,
@@ -76,19 +45,19 @@ export function hydrateState({
 }: IState) {
 	return {
 		score: Array.from(score),
-		segment: segment,
+		segments: Array.from(segments),
 		sentiment: Array.from(sentiment),
 		source: Array.from(source),
-		selectedTickers,
-		activeSort,
-		displaySettings,
+		selectedTickers: selectedTickers,
+		activeSort: activeSort,
+		displaySettings: displaySettings,
 		locations: getActiveLocations(locations),
 	};
 }
 
 export function rehydrateState({
 	score,
-	segment,
+	segments,
 	sentiment,
 	source,
 	selectedTickers,
@@ -99,7 +68,7 @@ export function rehydrateState({
 ): IState {
 	return {
 		score: new Set(score),
-		segment: segment,
+		segments: new Set(segments),
 		sentiment: new Set(sentiment),
 		source: new Set(source),
 		selectedTickers,
@@ -113,7 +82,7 @@ export function compareState(state1: IState, state2: IState): boolean {
 	if (!compareFilter(state1.score, state2.score)) {
 		return false;
 	}
-	if (!compareSegment(state1.segment, state2.segment)) {
+	if (!compareArray(Array.from(state1.segments), Array.from(state2.segments))) {
 		return false;
 	}
 	if (!compareFilter(state1.sentiment, state2.sentiment)) {
