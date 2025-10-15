@@ -21,7 +21,11 @@ const {
 	activeLocations,
 	selectedTickers,
 	sortBy,
-} = useNews('calendar-page-news');
+} = useNews({
+	widgetId: 'calendar-page-news',
+	isEphemeral: false,
+	defaultStateType: '',
+});
 
 const { data, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,

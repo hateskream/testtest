@@ -62,14 +62,25 @@ export const stateSchema = z.object({
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
 
-export function usePrice(widgetId: string, defaultStateType: string) {
+export function usePrice({
+	widgetId,
+	isEphemeral,
+	defaultStateType,
+}: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__PRICE__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: () => getDefaultsState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
@@ -78,7 +89,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		urlGet: '',
 		urlSet: '',
 	});
-
 
 	const state = ref<IState>(getDefaultsState(defaultStateType));
 	const currentSettings = ref<IDisplaySettings>(getDefaultsSettings());
@@ -99,13 +109,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 					.map(filterValue => filterValueToDisplay[filterValue]),
 			}), {}),
 	);
-
-	// const filtersState = computed({
-	// 	get: (): FiltersState => state.value.settings[activeMarket.value].filtersState,
-	// 	set: (val: FiltersState) => {
-	// 		state.value.settings[activeMarket.value].filtersState = val;
-	// 	},
-	// });
 
 	const filtersState = ref<FiltersState>(
 		state.value.settings[state.value.activeMarket].filtersState,
@@ -186,7 +189,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 			state.value = JSON.parse(JSON.stringify(newState));
 			currentSettings.value = state.value.settings[state.value.activeMarket].display;
 			pinnedTickers.value = state.value.settings[state.value.activeMarket].pinned;
-			// filtersState.value = state.value.settings[state.value.activeMarket].filtersState;
 		}
 	}, { immediate: true });
 
@@ -198,7 +200,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		newMarket => {
 			currentSettings.value = state.value.settings[newMarket].display;
 			pinnedTickers.value = state.value.settings[newMarket].pinned;
-			// filtersState.value = state.value.settings[newMarket].filtersState;
 		},
 	), { immediate: true };
 
@@ -252,5 +253,6 @@ export function usePrice(widgetId: string, defaultStateType: string) {
 		refetch,
 		filtersValues,
 		filtersState,
+		applyStateToParent,
 	};
 }

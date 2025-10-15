@@ -46,7 +46,13 @@ const {
 	createNewWatchlist,
 
 	handlerRemoveSectionFromWatchlist,
-} = useWatchlistWidget(props.meta.widgetId);
+
+	applyStateToParent,
+} = useWatchlistWidget({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 
 const { data, isLoading, isError, refetch } = useQueryTickers(selectedTickers);
 
@@ -61,6 +67,7 @@ const isNotData = computed(() => (!!data?.value && isLoading.value) || props.met
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>

@@ -36,7 +36,12 @@ const {
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
 	handleAddTickerInNewWatchlist,
-} = useMarket(props.meta.widgetId);
+	applyStateToParent,
+} = useMarket({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 
 const { data, isLoading, isError, refetch } = useQueryMarket(
 	activeMarket,
@@ -72,6 +77,7 @@ const emit = defineEmits<{
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>

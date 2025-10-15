@@ -38,13 +38,21 @@ export type StateSchemaType = z.infer<typeof stateSchema>;
 
 const allMarkets = Object.values(displaySettings).map(({ market }) => ({ ...market }));
 
-export function useHeatmap(widgetId: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
+
+export function useHeatmap({ widgetId, isEphemeral }: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__HEATMAP__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: getDefaultState,
 		entityId: widgetId,
 		schema: stateSchema,
@@ -269,6 +277,7 @@ export function useHeatmap(widgetId: string) {
 		activeGroupBy,
 
 		resetAllChanges,
+		applyStateToParent,
 		...rest,
 	};
 }

@@ -88,6 +88,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title>
 			<div :class="classes.titleContainer">

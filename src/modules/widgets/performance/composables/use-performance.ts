@@ -46,13 +46,25 @@ export const stateSchema = z.object({
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
-export function usePerformance(widgetId: string, defaultStateType: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
+
+export function usePerformance({
+	widgetId,
+	isEphemeral,
+	defaultStateType,
+}: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__PERFORMANCE__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: () => getDefaultState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
@@ -265,6 +277,7 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 		isLoading,
 		isError,
 		refetch,
+		applyStateToParent,
 	};
 }
 

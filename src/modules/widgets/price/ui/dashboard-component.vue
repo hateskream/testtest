@@ -32,7 +32,12 @@ const {
 	refetch,
 	filtersValues,
 	filtersState,
-} = usePrice(props.meta.widgetId, props.meta.defaultStateType);
+	applyStateToParent,
+} = usePrice({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -49,6 +54,7 @@ const emit = defineEmits<{
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>

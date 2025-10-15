@@ -53,13 +53,24 @@ export const stateSchema = z.object({
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
-export function useMarket(widgetId: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
+
+export function useMarket({
+	widgetId,
+	isEphemeral,
+}: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__MARKET__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: getDefaultState,
 		entityId: widgetId,
 		schema: stateSchema,
@@ -195,6 +206,7 @@ export function useMarket(widgetId: string) {
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,
 		handleAddTickerInNewWatchlist,
+		applyStateToParent,
 	};
 }
 

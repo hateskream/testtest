@@ -17,7 +17,17 @@ export const stateSchema = z.object({
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
-export function useChartPrice(widgetId: string, defaultStateType: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
+
+export function useChartPrice({
+	widgetId,
+	isEphemeral,
+	defaultStateType,
+}: IOptions) {
 	const {
 		actionableWatchlists: wachlists,
 		addToWatchlist,
@@ -28,9 +38,11 @@ export function useChartPrice(widgetId: string, defaultStateType: string) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__CHART_PRICE__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: () => getDefaultsState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
@@ -109,5 +121,6 @@ export function useChartPrice(widgetId: string, defaultStateType: string) {
 		handleRemoveFromWatchlist,
 		handleAddTickerInNewWatchlist,
 		resetAllChanges,
+		applyStateToParent,
 	};
 }

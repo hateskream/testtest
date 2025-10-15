@@ -23,7 +23,9 @@ export function useNews(widgetId: string, defaultState?: string) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__NEWS__',
 		isSaveChange: true,
 		getDefaultState: () => getDefaultState(defaultState),
@@ -141,5 +143,6 @@ export function useNews(widgetId: string, defaultState?: string) {
 		activeLocations,
 
 		resetAllChanges,
+		applyStateToParent,
 	};
 }

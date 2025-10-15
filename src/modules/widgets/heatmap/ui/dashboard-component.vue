@@ -55,7 +55,12 @@ const {
 	groupBySettings,
 	resetAllChanges,
 	refetch,
-} = useHeatmap(props.meta.widgetId);
+	applyStateToParent,
+} = useHeatmap({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 
 const hasSizeBy = computed(() => activeMarket.value?.id === 'crypto' || activeMarket.value?.id === 'stock');
 const hasColorDepth = computed(() => activeMarket.value?.id === 'forex' );
@@ -145,6 +150,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title>
 			{{ props.meta.name }}

@@ -65,7 +65,13 @@ export const stateSchema = z.object({
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
-export function useWatchlistWidget(widgetId: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType: string;
+}
+
+export function useWatchlistWidget({ widgetId, isEphemeral }: IOptions) {
 	const {
 		watchlists,
 		selectedTickers,
@@ -84,9 +90,11 @@ export function useWatchlistWidget(widgetId: string) {
 	const {
 		useStateQuery,
 		useStateMutation,
+		applyStateToParent,
 	} = createStateQueries<IState, StateSchemaType>({
+		isEphemeral,
 		storageKey: '__WATCHLIST_WIDGET__',
-		isSaveChange: true,
+		isSaveChange: !isEphemeral,
 		getDefaultState: () => getDefaultState(watchlists.value),
 		entityId: widgetId,
 		schema: stateSchema,
@@ -233,5 +241,7 @@ export function useWatchlistWidget(widgetId: string) {
 		createNewWatchlist,
 
 		handlerRemoveSectionFromWatchlist,
+
+		applyStateToParent,
 	};
 }

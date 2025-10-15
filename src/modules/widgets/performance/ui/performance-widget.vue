@@ -40,7 +40,12 @@ const {
 	activeMarket,
 	quoteCurrency,
 	refetch,
-} = usePerformance(props.meta.widgetId, props.meta.defaultStateType);
+	applyStateToParent,
+} = usePerformance({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 </script>
 
 <template>
@@ -51,6 +56,7 @@ const {
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title>
 			<span :class="classes.title">{{ props.meta.name }}</span>
@@ -64,7 +70,7 @@ const {
 				v-model:active-market="activeMarket"
 				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
-				v-model:stock="currentStock!"
+				v-model:stock="currentStock"
 				v-model:date="currentDate"
 				v-model:symbol-display="currentSymbolDisplayVariant"
 				v-model:quote-currency="quoteCurrency"

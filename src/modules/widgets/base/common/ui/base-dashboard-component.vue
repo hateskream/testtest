@@ -86,7 +86,7 @@ function handleOpenFullView() {
 					:class="classes.iconWrapper"
 					width="20px"
 					height="20px"
-					@open-full="handleOpenFullView"
+					@click="handleOpenFullView"
 				/>
 				<ui-icon
 					v-if="isShowControlMore"
