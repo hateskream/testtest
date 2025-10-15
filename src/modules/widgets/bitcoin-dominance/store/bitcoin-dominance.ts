@@ -6,7 +6,7 @@ export const useBitcoinDominanceStore = defineStore('dashboards-bitcoin-dominanc
 	const isShowIndicator = ref(true);
 	const isShowChart = ref(true);
 
-	const selectedTickers = ref<string[]>(['Crypto-BTCBitcoin']);
+	const selectedTickers = ref<string[]>(['Crypto-BTCBitcoin', 'Crypto-ETHEthereum']);
 
 	watch(selectedTickers, (newVal) => {
 		if (newVal.length === 0) {

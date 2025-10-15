@@ -62,6 +62,7 @@ interface IOptions {
 export function useMarket({
 	widgetId,
 	isEphemeral,
+	defaultStateType,
 }: IOptions) {
 	const {
 		useStateQuery,
@@ -71,7 +72,7 @@ export function useMarket({
 		isEphemeral,
 		storageKey: '__MARKET__',
 		isSaveChange: !isEphemeral,
-		getDefaultState: getDefaultState,
+		getDefaultState: () => getDefaultState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
 		hydrateFn: hydrate,
@@ -90,7 +91,7 @@ export function useMarket({
 	const { data: dataState } = useStateQuery();
 	const { mutate } = useStateMutation();
 
-	const state = ref<IState>(getDefaultState());
+	const state = ref<IState>(getDefaultState(defaultStateType));
 
 	const currentSettings = ref<ISettings>(getDefaultSettings());
 
@@ -177,7 +178,7 @@ export function useMarket({
 	);
 
 	function resetAllChanges() {
-		state.value = getDefaultState();
+		state.value = getDefaultState(defaultStateType);
 	}
 
 	function handleAddToWatchlist({ watchlistId, tickerId }: IWatchlistAction) {

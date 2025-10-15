@@ -1,5 +1,4 @@
 /* eslint-disable @stylistic/max-len */
-import { MarketType } from '@/modules/market';
 import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
@@ -26,19 +25,19 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 
 	'6': [
 		{
-			'id': 'ab468903-a1fa-4089-933f-1e69ec664a84',
+			'id': 'b98aadfb-dbec-4213-ae26-b1c571471182',
 			'type': 'fear-greed',
 			'position': {
-				'x': 2,
+				'x': 3,
 				'y': 0,
 				'size': {
-					'w': 2,
+					'w': 1,
 					'h': 3,
 				},
 			},
 		},
 		{
-			'id': '393e0da7-61e3-4f08-973b-33c3a2f03feb',
+			'id': 'fd051f7f-7ecc-4f31-845c-37646fcc51c8',
 			'type': 'price',
 			'position': {
 				'x': 0,
@@ -50,7 +49,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 			},
 		},
 		{
-			'id': '5c90e9c0-eb73-4afc-a1f8-b45035e5c34a',
+			'id': 'c26213e5-de4c-4aee-8f8b-a753681c4ce1',
 			'type': 'market-cap',
 			'position': {
 				'x': 2,
@@ -62,7 +61,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 			},
 		},
 		{
-			'id': '44b3f689-1d4d-441c-9446-428b4b191cc4',
+			'id': '290a20f1-72dc-4c88-b4ea-5482718ae960',
 			'type': 'bitcoin-dominance',
 			'position': {
 				'x': 4,
@@ -74,7 +73,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 			},
 		},
 		{
-			'id': '3b685667-ce7b-44ea-ae49-05411b7d7473',
+			'id': '216f10b6-e158-4ca2-bf88-cd8a2ac264cf',
 			'type': 'altcoin-season',
 			'position': {
 				'x': 4,
@@ -86,34 +85,117 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 			},
 		},
 		{
-			'id': '7c7d2846-6f9d-4fcb-84dd-40a5da377541',
+			'id': '5a1537a7-0a98-4c35-8571-a53efa9892dd',
 			'type': 'market',
 			'position': {
 				'x': 0,
 				'y': 6,
 				'size': {
 					'w': 4,
-					'h': 6,
+					'h': 8,
 				},
 			},
 		},
 		{
-			'id': 'd2d3c650-54e6-4f5e-bea4-15fffc33bcef',
+			'id': '854a99d3-03f2-47e1-878c-26b0e06cb3a2',
 			'type': 'news',
 			'position': {
 				'x': 4,
-				'y': 3,
+				'y': 6,
 				'size': {
 					'w': 2,
 					'h': 8,
 				},
 			},
-			defaultStateType: MarketType.Crypto,
+		},
+		{
+			'id': 'e896b316-e8e6-4440-b78b-68236e22b344',
+			'type': 'eth-gas',
+			'position': {
+				'x': 2,
+				'y': 0,
+				'size': {
+					'w': 1,
+					'h': 3,
+				},
+			},
 		},
 	],
 	'8': [
 		{
-			'id': '0f0bb66c-94ca-4814-a459-2ba6a7e0a0d6',
+			'id': 'f5224d13-ab9f-4535-85a1-5a2dcfe07a36',
+			'type': 'fear-greed',
+			'position': {
+				'x': 3,
+				'y': 0,
+				'size': {
+					'w': 1,
+					'h': 3,
+				},
+			},
+		},
+		{
+			'id': 'b6943127-c75d-4b69-81c7-0f1d89e390eb',
+			'type': 'price',
+			'position': {
+				'x': 0,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 6,
+				},
+			},
+		},
+		{
+			'id': '39efe5aa-e651-468f-8e8d-58260f414894',
+			'type': 'market-cap',
+			'position': {
+				'x': 2,
+				'y': 3,
+				'size': {
+					'w': 2,
+					'h': 3,
+				},
+			},
+		},
+		{
+			'id': '539664de-e37c-493c-b596-8c77afb03fd6',
+			'type': 'bitcoin-dominance',
+			'position': {
+				'x': 4,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 3,
+				},
+			},
+		},
+		{
+			'id': '16cd2635-8ad4-4fd7-90bd-2e48226ffcad',
+			'type': 'altcoin-season',
+			'position': {
+				'x': 4,
+				'y': 3,
+				'size': {
+					'w': 2,
+					'h': 3,
+				},
+			},
+		},
+		{
+			'id': 'cfe44046-8704-426a-b43b-64f748c2e574',
+			'type': 'market',
+			'position': {
+				'x': 0,
+				'y': 6,
+				'size': {
+					'w': 6,
+					'h': 8,
+				},
+			},
+		},
+		{
+			'id': '52632ecf-fb03-4de9-922a-5cfb90e141b7',
 			'type': 'news',
 			'position': {
 				'x': 6,
@@ -125,161 +207,112 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 			},
 		},
 		{
-			'id': '4c933e67-7ed3-4c06-9d8c-c8193583e34b',
-			'type': 'bitcoin-dominance',
-			'position': {
-				'x': 4,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 3,
-				},
-			},
-		},
-		{
-			'id': 'b0edb319-71f0-4c6a-abfd-349559c0a6d1',
-			'type': 'altcoin-season',
-			'position': {
-				'x': 4,
-				'y': 3,
-				'size': {
-					'w': 2,
-					'h': 3,
-				},
-			},
-		},
-		{
-			'id': '4be6084c-c611-475e-b603-cb351291398c',
-			'type': 'market-cap',
-			'position': {
-				'x': 2,
-				'y': 3,
-				'size': {
-					'w': 2,
-					'h': 3,
-				},
-			},
-		},
-		{
-			'id': '8e651adf-7340-4d92-88e6-6e43a5071e8c',
-			'type': 'fear-greed',
+			'id': '03217f19-bcb7-4411-abaf-e8cc26cb596e',
+			'type': 'eth-gas',
 			'position': {
 				'x': 2,
 				'y': 0,
 				'size': {
-					'w': 2,
+					'w': 1,
 					'h': 3,
-				},
-			},
-		},
-		{
-			'id': '3a1f31db-f750-4704-998d-0aaa3d115594',
-			'type': 'price',
-			'position': {
-				'x': 0,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 6,
-				},
-			},
-		},
-		{
-			'id': 'cb0243fb-e378-42de-b9e6-8056da7e969c',
-			'type': 'market',
-			'position': {
-				'x': 0,
-				'y': 6,
-				'size': {
-					'w': 6,
-					'h': 8,
 				},
 			},
 		},
 	],
 	10: [
 		{
-			'id': 'db750a7a-89fe-479f-8740-2fd48969b33f',
+			'id': 'df0e7a36-a182-455d-8b40-c767bba9855f',
 			'type': 'fear-greed',
 			'position': {
 				'x': 0,
-				'y': 0,
+				'y': 5,
 				'size': {
 					'w': 2,
-					'h': 6,
+					'h': 3,
 				},
 			},
 		},
 		{
-			'id': '5fff94a1-243d-4624-8b18-bbb3ad81c47b',
+			'id': '20a96ab7-a14e-4220-b0cd-e20af78b4224',
 			'type': 'market-cap',
 			'position': {
 				'x': 2,
 				'y': 0,
 				'size': {
-					'w': 4,
-					'h': 6,
+					'w': 3,
+					'h': 8,
 				},
 			},
 		},
 		{
-			'id': 'f9519733-0926-42e5-8cbb-8139cd58ce4f',
+			'id': 'a148d447-f460-4ad9-8f4c-66aebd720109',
 			'type': 'bitcoin-dominance',
 			'position': {
-				'x': 6,
+				'x': 5,
 				'y': 0,
 				'size': {
-					'w': 4,
-					'h': 6,
+					'w': 3,
+					'h': 8,
 				},
 			},
 		},
 		{
-			'id': '82f9d166-0ccb-4f90-981b-2629eb5caebb',
+			'id': 'f8929a90-4b0c-4ae1-8bd0-191d640ddea8',
 			'type': 'news',
 			'position': {
-				'x': 10,
+				'x': 8,
 				'y': 0,
 				'size': {
 					'w': 2,
-					'h': 17,
+					'h': 21,
 				},
 			},
-			defaultStateType: MarketType.Crypto,
 		},
 		{
-			'id': '77f1b985-fad9-430d-ab61-1d1e392b3c24',
+			'id': 'b2cf3594-0386-4b48-b082-1d280fe6835f',
 			'type': 'price',
 			'position': {
 				'x': 0,
-				'y': 6,
+				'y': 8,
 				'size': {
-					'w': 6,
+					'w': 5,
 					'h': 5,
 				},
 			},
 		},
 		{
-			'id': 'ae20ecd8-8f4a-483e-bb0f-df35b1560398',
+			'id': '0b6ba8b3-8c68-4e96-872a-0c3ec4cb3f90',
 			'type': 'altcoin-season',
 			'position': {
-				'x': 6,
-				'y': 6,
+				'x': 5,
+				'y': 8,
 				'size': {
-					'w': 4,
-					'h': 11,
+					'w': 3,
+					'h': 14,
 				},
 			},
 		},
 		{
-			'id': '3d9b95f8-daa9-400b-a906-f1523d8bc670',
+			'id': '39d1060d-de8b-412a-8abc-15106c057c5d',
 			'type': 'market',
 			'position': {
 				'x': 0,
-				'y': 11,
+				'y': 13,
 				'size': {
-					'w': 6,
-					'h': 6,
+					'w': 5,
+					'h': 9,
+				},
+			},
+		},
+		{
+			'id': '3bc35755-3b55-4448-ae1f-7582eaed72bf',
+			'type': 'eth-gas',
+			'position': {
+				'x': 0,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 5,
 				},
 			},
 		},

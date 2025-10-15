@@ -1,5 +1,4 @@
 
-import { MarketType } from '@/modules/market';
 import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
@@ -21,10 +20,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 
 	6: [
 		{
-			'id': '8bc12e3b-242c-4d72-9dd7-6ac56ff16679',
+			'id': '022e011f-14d8-48aa-b58d-ff7320fb5a25',
 			'type': 'price',
 			'position': {
-				'x': 0,
+				'x': 2,
 				'y': 0,
 				'size': {
 					'w': 2,
@@ -34,19 +33,7 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'stock',
 		},
 		{
-			'id': '842981f5-63de-4fa0-937b-181e98451803',
-			'type': 'market-cap',
-			'position': {
-				'x': 4,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 7,
-				},
-			},
-		},
-		{
-			'id': 'abac040a-e535-46d3-9295-40a00bf1f2ee',
+			'id': 'fa603756-ccce-46a0-b323-b6c5703213e6',
 			'type': 'market',
 			'position': {
 				'x': 0,
@@ -56,9 +43,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 8,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': '3023231b-f618-43e9-8f0d-013af1d1b927',
+			'id': '19660725-12c5-4f15-8ac4-c692d50ae05c',
 			'type': 'news',
 			'position': {
 				'x': 4,
@@ -68,36 +56,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 8,
 				},
 			},
-			defaultStateType: MarketType.Stock,
+			defaultStateType: 'stock',
 		},
 		{
-			'id': '542a2309-109e-4de1-a15c-2d316a15ee28',
-			'type': 'performance',
-			'position': {
-				'x': 2,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 7,
-				},
-			},
-		},
-		{
-			'id': 'f4a99130-cd48-422d-8ca0-5c99d8468d32',
-			'type': 'market-cap',
-			'position': {
-				'x': 2,
-				'y': 0,
-				'size': {
-					'w': 3,
-					'h': 7,
-				},
-			},
-		},
-	],
-	8: [
-		{
-			'id': '903a53a1-29d0-44a2-8df7-db737425f254',
+			'id': 'a147e076-4d17-470d-8de4-58258540703e',
 			'type': 'performance',
 			'position': {
 				'x': 0,
@@ -107,9 +69,38 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 7,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': 'aae18fdc-b0a6-4536-97d6-06423947ff82',
+			'id': '8e127c4e-d8a1-4e18-8c34-4d49c0c7d08a',
+			'type': 'chart-price',
+			'position': {
+				'x': 4,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 7,
+				},
+			},
+			defaultStateType: 'stock',
+		},
+		{
+			'id': '833be485-33f4-48ef-b1f6-01332b5ad564',
+			'type': 'calendar',
+			'position': {
+				'x': 0,
+				'y': 15,
+				'size': {
+					'w': 6,
+					'h': 6,
+				},
+			},
+			defaultStateType: 'stock',
+		},
+	],
+	8: [
+		{
+			'id': 'be6734b4-7407-4eaf-9889-f74163a42e55',
 			'type': 'price',
 			'position': {
 				'x': 2,
@@ -122,57 +113,74 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'stock',
 		},
 		{
-			'id': '69c46b76-69b5-42ef-9ce2-cd3a5aeabccb',
+			'id': 'a634beac-2463-48ff-aed5-0d2de01c2f0c',
 			'type': 'market',
 			'position': {
-				'x': 4,
-				'y': 0,
+				'x': 0,
+				'y': 7,
 				'size': {
-					'w': 2,
-					'h': 7,
+					'w': 4,
+					'h': 8,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': '241aa4d6-97b1-4628-9ddd-a907e861f1b6',
+			'id': 'abfa17ba-3ff7-4ea7-9901-c76c7f135789',
 			'type': 'news',
 			'position': {
 				'x': 6,
 				'y': 0,
 				'size': {
 					'w': 2,
-					'h': 14,
+					'h': 15,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': '99b9b592-cfc1-44a8-870d-b7a87f2f423c',
+			'id': '56ae39c4-8ee3-4fde-95c9-9f60fd569c40',
+			'type': 'performance',
+			'position': {
+				'x': 0,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 7,
+				},
+			},
+			defaultStateType: 'stock',
+		},
+		{
+			'id': 'd97a60a3-a41f-4318-8db8-6ec1ff6aa3d5',
+			'type': 'chart-price',
+			'position': {
+				'x': 4,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 7,
+				},
+			},
+			defaultStateType: 'stock',
+		},
+		{
+			'id': '1eee6607-4694-4268-8bc9-27d5080661ac',
 			'type': 'calendar',
 			'position': {
 				'x': 4,
 				'y': 7,
 				'size': {
 					'w': 2,
-					'h': 7,
+					'h': 8,
 				},
 			},
-		},
-		{
-			'id': '466477a8-3a81-4bb3-88ef-9682e7e950e9',
-			'type': 'market',
-			'position': {
-				'x': 0,
-				'y': 7,
-				'size': {
-					'w': 4,
-					'h': 7,
-				},
-			},
+			defaultStateType: 'stock',
 		},
 	],
 	10: [
 		{
-			'id': '3f8699ef-8571-41d5-9d9d-661a72c19ce2',
+			'id': 'ab064f36-a5ea-4a34-88d0-6479bae655ce',
 			'type': 'news',
 			'position': {
 				'x': 7,
@@ -182,10 +190,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 21,
 				},
 			},
-			defaultStateType: MarketType.Stock,
+			defaultStateType: 'stock',
 		},
 		{
-			'id': 'e3b3d088-7549-4e81-b2be-bb76caed9bd0',
+			'id': 'b90846d9-3888-4b95-a503-3c5ab9dc4cb5',
 			'type': 'calendar',
 			'position': {
 				'x': 4,
@@ -195,9 +203,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 15,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': '87453f1d-d9d8-45a0-8e20-3eff6bcbc2da',
+			'id': '12ca5db8-4698-4d24-a0e6-327582cc8e5a',
 			'type': 'price',
 			'position': {
 				'x': 2,
@@ -210,7 +219,7 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'stock',
 		},
 		{
-			'id': 'f77fe8c2-7bc1-427b-b831-259882b22d7f',
+			'id': '3658a5fe-fec9-4975-8fc4-8320029b9985',
 			'type': 'performance',
 			'position': {
 				'x': 0,
@@ -220,21 +229,10 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 7,
 				},
 			},
+			defaultStateType: 'stock',
 		},
 		{
-			'id': 'cf67f10a-a619-45bd-b07d-7cb9ecbeddba',
-			'type': 'market-cap',
-			'position': {
-				'x': 0,
-				'y': 7,
-				'size': {
-					'w': 4,
-					'h': 8,
-				},
-			},
-		},
-		{
-			'id': 'f362c3b5-e204-4820-a804-f0bcae62d1bf',
+			'id': 'f95652b9-fec8-478f-98c2-c0cc4b1a2538',
 			'type': 'market',
 			'position': {
 				'x': 0,
@@ -244,6 +242,20 @@ export const STOCK_DASHBOARD_PRESET: PresetLayout = {
 					'h': 6,
 				},
 			},
+			defaultStateType: 'stock',
+		},
+		{
+			'id': 'b1150c51-a2f9-49ad-a060-882b875d4df4',
+			'type': 'chart-price',
+			'position': {
+				'x': 0,
+				'y': 7,
+				'size': {
+					'w': 4,
+					'h': 8,
+				},
+			},
+			defaultStateType: 'stock',
 		},
 	],
 };

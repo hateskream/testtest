@@ -1,7 +1,7 @@
 <!-- eslint-disable @stylistic/max-len -->
 <script lang="ts" setup>
 import { useElementSize } from '@vueuse/core';
-import { computed, toRefs, useTemplateRef } from 'vue';
+import { computed, inject, toRefs, useTemplateRef } from 'vue';
 
 import { useDepth } from '../composable';
 import { prepareNumber, preparePercent } from '../utils';
@@ -39,8 +39,9 @@ interface IUiHeatmap {
 
 const props = defineProps<IUiHeatmap>();
 
-const { getColorByValue } = useDepth(toRefs(props).depthRange);
+const color = inject('color-heatmap', '#000000');
 
+const { getColorByValue } = useDepth(toRefs(props).depthRange);
 
 const { height, width } = useElementSize(useTemplateRef('size'));
 
@@ -97,12 +98,12 @@ function prepareValue(value: number) {
 		<div ref="size" class="size" />
 		<div class="grid-wrapper" :style="wrapperStyle">
 			<div class="grid-container" :style="gridStyle">
-				<div class="cell sticky-header sticky-first"></div>
+				<div class="cell sticky-header sticky-first" :style="{backgroundColor: color}"></div>
 				<div
 					v-for="item in props.data"
 					:key="item.ticker"
 					class="cell sticky-header"
-					:style="cellStyle"
+					:style="{...cellStyle, backgroundColor: color}"
 				>
 					<div
 						v-if="props.visibleConfig.isShowLogo"
@@ -119,7 +120,7 @@ function prepareValue(value: number) {
 				<template v-for="(row, dataIndex) in props.data" :key="row.ticker">
 					<div
 						class="cell sticky-first"
-						:style="cellStyle"
+						:style="{...cellStyle, backgroundColor: color}"
 					>
 						<div
 							v-if="props.visibleConfig.isShowLogo"

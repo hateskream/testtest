@@ -31,6 +31,7 @@ watch(
 			return;
 		}
 
+		// eslint-disable-next-line no-plusplus
 		for (let i = prevIds.value.length - 1; i >= 0; i--) {
 			chart.removeTicker(i);
 		}
@@ -47,7 +48,15 @@ watch(
 </script>
 
 <template>
-	<div :class="classes.root">
+	<div
+		:class="classes.root"
+		:style="
+			data.length >= 0 &&
+				(	!marketCapStore.isShowChart ||
+					meta.size.h <= 3) &&
+				{ justifyContent: 'space-between'}
+		"
+	>
 		<modal-ticker-selector-with-badge
 			v-model="marketCapStore.selectedTickers"
 		/>

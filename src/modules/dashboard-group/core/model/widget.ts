@@ -193,7 +193,7 @@ const Exchange: Preset = {
 const EthGas: Preset = {
 	name: 'ETH Gas',
 	description: 'ETH Gas',
-	minSize: { w: 2, h: 2 },
+	minSize: { w: 1, h: 2 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 4 },
 };

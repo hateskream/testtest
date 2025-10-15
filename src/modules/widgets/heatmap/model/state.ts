@@ -1,3 +1,4 @@
+import { MarketType } from '@/modules/market';
 import { displaySettings, TitleViewVariant } from './display-settings';
 
 export interface IDisplayState {
@@ -15,9 +16,19 @@ export interface IState {
 	settings: Record<string, IDisplayState>;
 }
 
-export function getDefaultState(): IState {
+export function getDefaultState(defaultStateType: string): IState {
+	let activeMarket: MarketType = MarketType.Crypto;
+
+	if (defaultStateType === 'stock') {
+		activeMarket = MarketType.Stock;
+	}
+
+	if (defaultStateType === 'forex') {
+		activeMarket = MarketType.Forex;
+	}
+
 	return {
-		activeMarketId: 'crypto',
+		activeMarketId: activeMarket,
 		settings: {
 			crypto: {
 				sizeBy: displaySettings['crypto']?.sizeBy?.[0].key || '',

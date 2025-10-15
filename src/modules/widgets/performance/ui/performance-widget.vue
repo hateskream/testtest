@@ -58,10 +58,7 @@ const {
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
 	>
-		<template #title>
-			<span :class="classes.title">{{ props.meta.name }}</span>
-		</template>
-
+		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<performance-loader v-else-if="isLoading || props.meta.isLoading" />

@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, provide, reactive, ref, watch } from 'vue';
 import z from 'zod';
 
 import {
@@ -44,7 +44,9 @@ interface IOptions {
 	defaultStateType: string;
 }
 
-export function useHeatmap({ widgetId, isEphemeral }: IOptions) {
+export function useHeatmap({ widgetId, isEphemeral, defaultStateType }: IOptions) {
+	provide('color-heatmap', 'rgb(12 12 13 / 100%)');
+
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -53,7 +55,7 @@ export function useHeatmap({ widgetId, isEphemeral }: IOptions) {
 		isEphemeral,
 		storageKey: '__HEATMAP__',
 		isSaveChange: !isEphemeral,
-		getDefaultState: getDefaultState,
+		getDefaultState: () => getDefaultState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
 		hydrateFn: (s: StateSchemaType): IState => s,
@@ -68,7 +70,7 @@ export function useHeatmap({ widgetId, isEphemeral }: IOptions) {
 	} = useStateQuery();
 	const { mutate } = useStateMutation();
 
-	const state = ref<IState>(getDefaultState());
+	const state = ref<IState>(getDefaultState(defaultStateType));
 
 	const marketSettings = ref<IMarketSettings>({
 		active: state.value.activeMarketId,
@@ -256,7 +258,7 @@ export function useHeatmap({ widgetId, isEphemeral }: IOptions) {
 	}, { deep: true });
 
 	function resetAllChanges() {
-		state.value = getDefaultState();
+		state.value = getDefaultState(defaultStateType);
 	}
 
 	return {

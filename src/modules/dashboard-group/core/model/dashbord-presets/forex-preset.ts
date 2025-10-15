@@ -1,4 +1,3 @@
-import { MarketType } from '@/modules/market';
 import { WidgetType } from '../widget';
 import type { PresetLayout } from './types';
 
@@ -18,7 +17,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 
 	6: [
 		{
-			'id': '6ce3ad14-23cb-430d-9ddc-be255f39441a',
+			'id': '6a394195-da1e-4f5a-b33a-6ff7a4cfadf4',
 			'type': 'price',
 			'position': {
 				'x': 2,
@@ -31,7 +30,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'forex',
 		},
 		{
-			'id': 'e11b0c0b-be8f-4ef0-ab5c-ca17cc83edf0',
+			'id': '22df780b-c690-4f70-ace5-6ebf4f69fbbb',
 			'type': 'performance',
 			'position': {
 				'x': 0,
@@ -41,33 +40,23 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 6,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '6e6835fc-412d-4f9d-bcd3-36fd026c6bdb',
-			'type': 'market-cap',
-			'position': {
-				'x': 4,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 6,
-				},
-			},
-		},
-		{
-			'id': 'fe0d4f20-a5d2-47df-aeed-78108cacb4d4',
+			'id': '63801bbd-0092-4f35-a51f-dca27435ab71',
 			'type': 'news',
 			'position': {
 				'x': 4,
 				'y': 6,
 				'size': {
 					'w': 2,
-					'h': 7,
+					'h': 14,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '672c01f0-d232-4cc3-8b08-8d12227a8bb5',
+			'id': 'c8be431c-5dc7-4411-b9e9-4fe4ae970771',
 			'type': 'heatmap',
 			'position': {
 				'x': 0,
@@ -77,23 +66,38 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 7,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '1d7d3e8c-445f-47b4-8500-6c457fd64b9a',
+			'id': '0a79c6a5-09f2-44fe-9fed-9930f33c4223',
 			'type': 'calendar',
 			'position': {
 				'x': 0,
 				'y': 13,
 				'size': {
-					'w': 6,
+					'w': 4,
 					'h': 7,
 				},
 			},
+			defaultStateType: 'forex',
+		},
+		{
+			'id': '5e28e75c-2d47-4a77-8319-e527f4d73b5d',
+			'type': 'chart-price',
+			'position': {
+				'x': 4,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 6,
+				},
+			},
+			defaultStateType: 'forex',
 		},
 	],
 	8: [
 		{
-			'id': '244795de-ab62-4be7-97bb-7a3c82cc9912',
+			'id': '7cd0474a-8919-4cc9-9fb8-ec799495e70a',
 			'type': 'price',
 			'position': {
 				'x': 2,
@@ -106,7 +110,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'forex',
 		},
 		{
-			'id': '7e3a2f10-7bdc-4025-8747-0cf506042ea9',
+			'id': '6b12849e-a759-4215-8be6-ac500ca6003f',
 			'type': 'performance',
 			'position': {
 				'x': 0,
@@ -116,34 +120,23 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 6,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': 'ee2732cd-c480-4f33-826d-5dc95dca348d',
-			'type': 'market-cap',
-			'position': {
-				'x': 4,
-				'y': 0,
-				'size': {
-					'w': 2,
-					'h': 6,
-				},
-			},
-		},
-		{
-			'id': 'd6414137-6a4a-42d1-9c08-9073fca5a8b9',
+			'id': '56aabe8b-d2b3-4962-94ec-bde6c30a1411',
 			'type': 'news',
 			'position': {
 				'x': 6,
 				'y': 0,
 				'size': {
 					'w': 2,
-					'h': 15,
+					'h': 13,
 				},
 			},
-			defaultStateType: MarketType.Forex,
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '5a06e948-f5c9-4db0-8a96-42ce16d09d79',
+			'id': 'db182a70-bb63-49c3-a0a2-9f4e35437412',
 			'type': 'heatmap',
 			'position': {
 				'x': 0,
@@ -153,9 +146,10 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 7,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '97e27c4b-de6e-48f4-a0cf-970085bfb1c2',
+			'id': '56d0abde-f707-4a14-8558-d03986375d80',
 			'type': 'calendar',
 			'position': {
 				'x': 4,
@@ -165,11 +159,25 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 7,
 				},
 			},
+			defaultStateType: 'forex',
+		},
+		{
+			'id': '39ff011f-c1ce-4cb2-a840-89fc4a206300',
+			'type': 'chart-price',
+			'position': {
+				'x': 4,
+				'y': 0,
+				'size': {
+					'w': 2,
+					'h': 6,
+				},
+			},
+			defaultStateType: 'forex',
 		},
 	],
 	10: [
 		{
-			'id': '52f05a49-f865-4d3a-9f47-a0fd584ce1b9',
+			'id': '2444c925-6cc9-4cda-a9df-f56ccc994089',
 			'type': 'performance',
 			'position': {
 				'x': 0,
@@ -179,9 +187,10 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 6,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '01b12fdd-2ae4-49f2-83b9-336a146aa984',
+			'id': '4801a8c2-32ee-415c-8ac0-43dd02b623ee',
 			'type': 'price',
 			'position': {
 				'x': 2,
@@ -194,7 +203,7 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 			defaultStateType: 'forex',
 		},
 		{
-			'id': 'a19e5d5d-6d70-4191-a955-d72054f77d32',
+			'id': '4d466c4f-f104-4117-90b2-04936e674fde',
 			'type': 'calendar',
 			'position': {
 				'x': 4,
@@ -204,9 +213,10 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 12,
 				},
 			},
+			defaultStateType: 'forex',
 		},
 		{
-			'id': 'd15aacb4-0535-449e-8746-54151852164c',
+			'id': '906f4ace-9fe7-4bee-a4e4-92df0578761c',
 			'type': 'news',
 			'position': {
 				'x': 7,
@@ -216,22 +226,10 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 22,
 				},
 			},
-			defaultStateType: MarketType.Forex,
+			defaultStateType: 'forex',
 		},
 		{
-			'id': '29789f1a-ac08-4181-9acf-ea4d1617ac1a',
-			'type': 'market-cap',
-			'position': {
-				'x': 0,
-				'y': 6,
-				'size': {
-					'w': 4,
-					'h': 6,
-				},
-			},
-		},
-		{
-			'id': '0483f613-7f73-420c-b21c-d4de9cda0a29',
+			'id': '04a31271-7e6d-42fd-9a3c-ab0f79818cdf',
 			'type': 'heatmap',
 			'position': {
 				'x': 0,
@@ -241,6 +239,20 @@ export const FOREX_DASHBOARD_PRESET: PresetLayout = {
 					'h': 10,
 				},
 			},
+			defaultStateType: 'forex',
+		},
+		{
+			'id': 'd08fdb7f-a35d-47da-ad93-b0584f6c8048',
+			'type': 'chart-price',
+			'position': {
+				'x': 0,
+				'y': 6,
+				'size': {
+					'w': 4,
+					'h': 6,
+				},
+			},
+			defaultStateType: 'forex',
 		},
 	],
 };

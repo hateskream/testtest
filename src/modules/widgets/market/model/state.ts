@@ -20,39 +20,47 @@ export interface IState {
 	settings: SettingsByMarket;
 }
 
-const DEFAULT_STATE: IState = {
-	activeMarket: MarketType.Crypto,
-	settings: {
-		[MarketType.Crypto]: {
-			column: CRYPTO_ALL_COLUMNS,
-			sort: null,
-			filters: CRYPTO_FILTERS,
-		},
-		[MarketType.Stock]: {
-			column: STOCK_ALL_COLUMNS,
-			sort: null,
-			filters: STOCK_FILTERS,
-		},
-		[MarketType.Forex]: {
-			column: FOREX_ALL_COLUMNS,
-			sort: null,
-			filters: {},
-		},
-		[MarketType.Commodities]: {
-			column: COMMODITIES_ALL_COLUMNS,
-			sort: null,
-			filters: COMMODITIES_FILTERS,
-		},
-		[MarketType.Indices]: {
-			column: INDICES_ALL_COLUMNS,
-			sort: null,
-			filters: {},
-		},
-	},
-};
+export function getDefaultState(defaultStateType: string): IState {
+	let activeMarket: MarketType = MarketType.Crypto;
 
-export function getDefaultState(): IState {
-	return structuredClone(DEFAULT_STATE);
+	if (defaultStateType === 'stock') {
+		activeMarket = MarketType.Stock;
+	}
+
+	if (defaultStateType === 'forex') {
+		activeMarket = MarketType.Forex;
+	}
+
+	return {
+		activeMarket,
+		settings: {
+			[MarketType.Crypto]: {
+				column: CRYPTO_ALL_COLUMNS,
+				sort: null,
+				filters: CRYPTO_FILTERS,
+			},
+			[MarketType.Stock]: {
+				column: STOCK_ALL_COLUMNS,
+				sort: null,
+				filters: STOCK_FILTERS,
+			},
+			[MarketType.Forex]: {
+				column: FOREX_ALL_COLUMNS,
+				sort: null,
+				filters: {},
+			},
+			[MarketType.Commodities]: {
+				column: COMMODITIES_ALL_COLUMNS,
+				sort: null,
+				filters: COMMODITIES_FILTERS,
+			},
+			[MarketType.Indices]: {
+				column: INDICES_ALL_COLUMNS,
+				sort: null,
+				filters: {},
+			},
+		},
+	};
 }
 
 export function getDefaultSettings(): ISettings {
@@ -136,4 +144,3 @@ function findFilter(states: IFilterHydrateState[], filterType: string): IFilterH
 
 	throw new Error(`Filter ${filterType} not found`);
 }
-

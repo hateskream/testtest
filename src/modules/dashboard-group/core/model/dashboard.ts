@@ -48,6 +48,20 @@ function getEnabledWidgets(): Set<WidgetType> {
 }
 
 function getWidgets(dashboard: IDashboardPrivate): IWidget[] {
+	if (!Object.prototype.hasOwnProperty.call(dashboard.layout, dashboard.activeColNum)) {
+		// eslint-disable-next-line no-console
+		console.warn(
+			'[Dashboard] Missing layout for activeColNum',
+			dashboard.activeColNum,
+			'Available layout keys:',
+			Object.keys(dashboard.layout),
+			'Dashboard name:',
+			dashboard.name,
+			'Dashboard ID:',
+			dashboard.id,
+		);
+	}
+
 	return dashboard.layout[dashboard.activeColNum] || [];
 }
 

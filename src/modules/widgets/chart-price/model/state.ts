@@ -17,7 +17,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'forex') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Forex,
-			createTickerIdForex('USDT', 'EUR'),
+			createTickerIdForex('EUR', 'USD'),
 		);
 	}
 
