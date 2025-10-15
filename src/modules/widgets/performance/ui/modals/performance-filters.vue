@@ -4,13 +4,13 @@ import {
 	BaseSwitch,
 } from '@/modules/widgets/base/';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { Currency, type DateRange, DateRangeStock, DisplayVariant, Stock } from '../../model';
+import { type DateRange, DateRangeStock, DisplayVariant, Stock } from '../../model';
 import { MarketType } from '@/modules/market';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
 // const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
-const quoteCurrency = defineModel<Currency>('quoteCurrency');
+// const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });

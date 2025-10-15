@@ -9,10 +9,12 @@ import { getAllMarkets, type MarketType } from '@/modules/market';
 
 interface IMarketBadgeProps {
 	title: string;
-	excludeMarkets: MarketType[];
+	excludeMarkets?: MarketType[];
 }
 
-const props =defineProps<IMarketBadgeProps>();
+const props = withDefaults(defineProps<IMarketBadgeProps>(), {
+	excludeMarkets: () => [],
+});
 
 const activeMarket = defineModel<MarketType>({ required: true });
 

@@ -56,8 +56,8 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 		getDefaultState: () => getDefaultState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
-		hydrateFn: (s: StateSchemaType): IState => s,
-		rehydrateFn: (s: IState): StateSchemaType => s,
+		hydrateFn: hydrate,
+		rehydrateFn: rehydrate,
 		urlGet: '',
 		urlSet: '',
 	});
@@ -265,5 +265,25 @@ export function usePerformance(widgetId: string, defaultStateType: string) {
 		isLoading,
 		isError,
 		refetch,
+	};
+}
+
+function hydrate(data: IState): StateSchemaType {
+	return {
+		activeMarket: data.activeMarket,
+		settings: {
+			[MarketType.Stock]: data.settings[MarketType.Stock],
+			[MarketType.Forex]: data.settings[MarketType.Forex],
+		},
+	};
+}
+
+function rehydrate(data: StateSchemaType): IState {
+	return {
+		activeMarket: data.activeMarket as MarketType.Forex | MarketType.Stock,
+		settings: {
+			[MarketType.Stock]: data.settings[MarketType.Stock],
+			[MarketType.Forex]: data.settings[MarketType.Forex],
+		},
 	};
 }
