@@ -1,1 +1,1 @@
-export * from './get-tension';
+export * from './get-eth.ts';

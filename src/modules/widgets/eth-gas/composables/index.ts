@@ -1,3 +1,2 @@
-export * from './use-map-tension';
-export * from './use-fear-greed';
+export * from './use-eth-gas.ts';
 export * from './use-repository';

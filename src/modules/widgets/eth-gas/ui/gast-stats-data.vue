@@ -19,22 +19,22 @@ const props = defineProps<IGasStatsCardProps>();
 		<div :class="classes.stats">
 			<div :class="classes.statItem">
 				<div :class="classes.statLabel">Last block</div>
-				<div :class="classes.statValue">{{ data.lastBlock.toLocaleString() }}</div>
+				<div :class="classes.statValue">{{ props.data.lastBlock.toLocaleString() }}</div>
 			</div>
 
 			<div :class="classes.statItem">
 				<div :class="classes.statLabel">Avg Block Size</div>
-				<div :class="classes.statValue">{{ data.avgBlockSize }}</div>
+				<div :class="classes.statValue">{{ props.data.avgBlockSize }}</div>
 			</div>
 
 			<div :class="classes.statItem">
 				<div :class="classes.statLabel">Pending queue</div>
-				<div :class="classes.statValue">{{ data.pendingQueue.toLocaleString() }}</div>
+				<div :class="classes.statValue">{{ props.data.pendingQueue.toLocaleString() }}</div>
 			</div>
 
 			<div :class="classes.statItem">
 				<div :class="classes.statLabel">Avg Utilization</div>
-				<div :class="classes.statValue">{{ data.avgUtilization.toFixed(1) }}%</div>
+				<div :class="classes.statValue">{{ props.data.avgUtilization.toFixed(1) }}%</div>
 			</div>
 		</div>
 	</div>

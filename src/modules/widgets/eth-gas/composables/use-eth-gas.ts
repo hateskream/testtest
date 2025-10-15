@@ -1,12 +1,12 @@
 import { computed, ref, watch } from 'vue';
 
-import { useGetSettings, useQueryTension, useUpdateSettings } from '../queries';
+import { useGetSettings, useQueryEthGas, useUpdateSettings } from '../queries';
 import { getDefaultViewState, type ISettings } from '../model';
 
-export function useFearGreed(widgetId: string) {
+export function useEthGas(widgetId: string) {
 	const viewState = ref<ISettings>(getDefaultViewState());
 
-	const { data, isLoading, isError } = useQueryTension();
+	const { data, isLoading, isError } = useQueryEthGas();
 	const {
 		data: dataSettings,
 		isLoading: isLoadingSettings,
@@ -40,7 +40,6 @@ export function useFearGreed(widgetId: string) {
 		viewState,
 		dataState,
 		isNotData,
-
 		resetAllChanges,
 	};
 }

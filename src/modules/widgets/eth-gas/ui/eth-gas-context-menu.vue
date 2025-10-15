@@ -6,8 +6,9 @@ import type { IMeta } from '@/modules/dashboard-group';
 
 
 const props = defineProps<{
-	meta: IMeta;
 	title: string;
+	meta: IMeta;
+
 }>();
 
 

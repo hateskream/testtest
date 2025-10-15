@@ -3,8 +3,8 @@ import { computed } from 'vue';
 
 import { type ISize } from '../model';
 
-import GasCard from './gas-card.vue';
-import type { IGasCardData } from './gas-card.vue';
+import GasCard from './gas-card-component.vue';
+import type { IGasCardData } from './gas-card-component.vue';
 import GasStatsCard from './gast-stats-data.vue';
 import type { IGasStatsData } from './gast-stats-data.vue';
 
@@ -12,12 +12,10 @@ export interface IViewComponentProps {
 	size: ISize;
 }
 
-export interface IViewComponentEmits {
-	(e: 'updateInteractive'): void;
-}
+
 
 const props = defineProps<IViewComponentProps>();
-const emits = defineEmits<IViewComponentEmits>();
+
 
 // Моковые данные для gas карточек
 const gasData: IGasCardData[] = [
@@ -220,7 +218,6 @@ const layoutConfig = computed(() => {
 			'--gap': layoutConfig.gap
 		}"
 	>
-		<!-- Контейнер для газовых карточек -->
 		<div :class="classes.cardsContainer">
 			<gas-card
 				v-for="(data, index) in gasData.slice(0, layoutConfig.showCards)"

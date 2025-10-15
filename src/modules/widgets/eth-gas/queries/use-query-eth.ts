@@ -1,11 +1,11 @@
 import { keepPreviousData, useQuery } from '@tanstack/vue-query';
 
-import { getTension } from '../api';
+import { getEth } from '../api';
 
-export function useQueryTension() {
+export function useQueryEthGas() {
 	return useQuery({
-		queryKey: ['fear-greed'],
-		queryFn: () => getTension(),
+		queryKey: ['eth-gas'],
+		queryFn: () => getEth(),
 		placeholderData: keepPreviousData,
 		refetchOnMount: false,
 	});

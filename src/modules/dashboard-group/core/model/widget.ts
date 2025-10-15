@@ -194,7 +194,7 @@ const EthGas: Preset = {
 	name: 'ETH Gas',
 	description: 'ETH Gas',
 	minSize: { w: 2, h: 2 },
-	maxSize: { w: 5, h: 5 },
+	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 4 },
 };
 

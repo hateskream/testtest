@@ -53,7 +53,7 @@ const updateMarket = (cexDexVal:CexDex, viewMarketVal:MarketType) => {
 	cexDex.value = cexDexVal;
 	viewMarket.value = viewMarketVal;
 	if (viewMarketVal === MarketType.Stock) {
-		activeMarket.value = MarketType.Stock;
+		activeMarket.value = ExchangeMarketType.Stock;
 	}
 	if (viewMarketVal === MarketType.Crypto) {
 		if (cexDexVal === 'CEX') {
@@ -91,7 +91,7 @@ const isNotData = computed(() => (!rows.value.length && isLoading.value) || prop
 </script>
 
 <template>
-	<base-dashboard-component :meta="props.meta">
+	<base-dashboard-component :meta="props.meta" has-reset>
 		<template #title> {{ props.meta.name }}</template>
 		<template #content>
 			<base-error-component
@@ -112,6 +112,7 @@ const isNotData = computed(() => (!rows.value.length && isLoading.value) || prop
 		<template #rcm>
 			<exchanges-context-menu
 				v-model="columns"
+				:meta="props.meta"
 				:title="props.meta.name"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"

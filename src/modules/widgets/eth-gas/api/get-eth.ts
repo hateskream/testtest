@@ -20,7 +20,7 @@ interface IGetTensionResponse {
 	};
 }
 
-export async function getTension(): Promise<ITension> {
+export async function getEth(): Promise<ITension> {
 	const logger = useLogger();
 	try {
 		const response = IS_USE_MOCK

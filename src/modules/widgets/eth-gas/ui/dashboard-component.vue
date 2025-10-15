@@ -2,9 +2,9 @@
 
 import { BaseDashboardComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useFearGreed } from '../composables';
+import { useEthGas } from '../composables';
 
-import FearGreedContextMenu from './fear-greed-context-menu.vue';
+import EthGasContextMenu from './eth-gas-context-menu.vue';
 import ErrorComponent from './error-component.vue';
 import PreloaderComponent from './preloader-component.vue';
 import ViewComponent from './view-component.vue';
@@ -15,7 +15,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { viewState, dataState, isNotData, resetAllChanges } = useFearGreed(props.meta.widgetId);
+const { viewState, dataState, isNotData, resetAllChanges } = useEthGas(props.meta.widgetId);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -41,8 +41,8 @@ const emit = defineEmits<{
 		</template>
 
 		<template #rcm>
-			<fear-greed-context-menu
-				v-model="viewState"
+			<eth-gas-context-menu
+				:meta="meta"
 				:title="props.meta.name"
 				@delete="emit('delete')"
 				@reset="resetAllChanges"

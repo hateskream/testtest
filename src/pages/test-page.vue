@@ -1,29 +1,12 @@
 <script setup lang="ts">
 
 import { LayoutComponent } from '@/modules/layout';
-import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 
-const meta = {
-	widgetId: '123',
-	isResizing: false,
-	isLoading: false,
-	market: 'stock',
-	name: 'Ajaja',
-	size: { w: 2, h: 2 },
-	defaultStateType: '',
-	dashboards: [{
-		id: 'aaa',
-		name: 'aaaa',
-	}],
-};
 </script>
 
 <template>
 	<layout-component :is-curtain-fixed="false">
-		<template #content>
-			<exchanges-dashboard style="max-width: 900px;" :meta="meta" />
-		</template>
-
+		Hello, dholly!
 	</layout-component>
 </template>
 
