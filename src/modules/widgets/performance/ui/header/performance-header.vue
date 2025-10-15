@@ -4,7 +4,14 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { MarketBadge, ModalBadge, ModalBadgeList, ModalItemSelector, ModalItemSwitch } from '@/modules/widgets/base';
+import {
+	MarketBadge,
+	ModalBadge,
+	ModalBadgeList,
+	ModalItemSelector,
+	ModalItemSwitch,
+	ModalFilter,
+} from '@/modules/widgets/base';
 import {
 	stockToLabel,
 	type DateRange,
@@ -64,15 +71,19 @@ function updateCurrency(v: Currency) {
 				</template>
 
 				<template #content>
-					<performance-filters
-						v-model:active-market="activeMarket"
-						v-model:is-compact-mode="isCompactMode"
-						v-model:display-variant="displayVariant"
-						v-model:stock="stock"
-						v-model:date="date"
-						v-model:symbol-display="symbolDisplayVariant"
-						v-model:quote-currency="quoteCurrency"
-					/>
+					<modal-filter>
+						<template #content>
+							<performance-filters
+								v-model:active-market="activeMarket"
+								v-model:is-compact-mode="isCompactMode"
+								v-model:display-variant="displayVariant"
+								v-model:stock="stock"
+								v-model:date="date"
+								v-model:symbol-display="symbolDisplayVariant"
+								v-model:quote-currency="quoteCurrency"
+							/>
+						</template>
+					</modal-filter>
 				</template>
 			</ui-position>
 

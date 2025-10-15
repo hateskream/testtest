@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import {
-	ModalFilter,
 	BaseSwitch,
 	ModalBadgeList,
 	ModalItemSelector,
@@ -23,7 +22,6 @@ import { MarketType } from '@/modules/market';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
-// const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
 const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
@@ -31,203 +29,197 @@ const displayVariant = defineModel<DisplayVariant>('displayVariant', { required:
 const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 
 const isStock = computed((): boolean => isDataRangeStock(date.value));
-
-// const switchGroupWidth = computed(() => {});
-
 </script>
 
 <template>
-	<modal-filter>
-		<template #content>
-			<div :class="classes.content">
-				<div :class="classes.label">Market</div>
+
+	<div :class="classes.content">
+		<div :class="classes.label">Market</div>
+		<div :class="classes.switchGroup">
+			<button
+				:class="[
+					classes.switch,
+					activeMarket === MarketType.Stock && classes.active
+				]"
+				@click="activeMarket = MarketType.Stock"
+			>
+				Stock
+			</button>
+			<button
+				:class="[
+					classes.switch,
+					activeMarket === MarketType.Forex && classes.active
+				]"
+				@click="activeMarket = MarketType.Forex"
+			>
+				Forex
+			</button>
+		</div>
+
+		<div :class="classes.label">Filter</div>
+
+		<template v-if="isStock">
+			<div :class="classes.subBlock">
+				<div :class="classes.subLabel">Category</div>
 				<div :class="classes.switchGroup">
 					<button
 						:class="[
 							classes.switch,
-							activeMarket === MarketType.Stock && classes.active
+							stock === Stock.Industry && classes.active
 						]"
-						@click="activeMarket = MarketType.Stock"
+						@click="stock = Stock.Industry"
 					>
-						Stock
+						Industry
 					</button>
 					<button
 						:class="[
 							classes.switch,
-							activeMarket === MarketType.Forex && classes.active
+							stock === Stock.Sector && classes.active
 						]"
-						@click="activeMarket = MarketType.Forex"
+						@click="stock = Stock.Sector"
 					>
-						Forex
+						Sector
 					</button>
 				</div>
+			</div>
 
-				<div :class="classes.label">Filter</div>
-
-				<template v-if="isStock">
-					<div :class="classes.subBlock">
-						<div :class="classes.subLabel">Category</div>
-						<div :class="classes.switchGroup">
-							<button
-								:class="[
-									classes.switch,
-									stock === Stock.Industry && classes.active
-								]"
-								@click="stock = Stock.Industry"
-							>
-								Industry
-							</button>
-							<button
-								:class="[
-									classes.switch,
-									stock === Stock.Sector && classes.active
-								]"
-								@click="stock = Stock.Sector"
-							>
-								Sector
-							</button>
-						</div>
-					</div>
-
-					<div :class="classes.subBlock">
-						<div :class="classes.subLabel">Period</div>
-						<div :class="classes.switchGroup">
-							<button
-								:class="[
-									classes.switch,
-									date === DateRangeStock.Today && classes.active
-								]"
-								@click="date = DateRangeStock.Today"
-							>
-								Today
-							</button>
-							<button
-								:class="[
-									classes.switch,
-									date === DateRangeStock.Yesterday && classes.active
-								]"
-								@click="date = DateRangeStock.Yesterday"
-							>
-								Yesterday
-							</button>
-							<button
-								:class="[
-									classes.switch,
-									date === DateRangeStock.Week && classes.active
-								]"
-								@click="date = DateRangeStock.Week"
-							>
-								A week ago
-							</button>
-						</div>
-					</div>
-				</template>
-				<template v-else>
-					<ui-position :teleport="false">
-						<template #title>
-							<div :class="classes.forexGroup">
-								<div :class="classes.right">
-									<div :class="classes.subLabel">Quote currency</div>
-									<div :class="classes.secondaryColor">·</div>
-									<div :class="classes.secondaryColor">{{ quoteCurrency }}</div>
-								</div>
-								<ui-icon
-									:id="IconIds.RcmArrowRight"
-									:class="classes.secondaryColor"
-									width="6"
-									height="20"
-								/>
-							</div>
-						</template>
-						<template #content>
-							<modal-badge-list>
-								<template #title>Quote currency</template>
-								<template v-for="c in Currency" :key="c">
-									<modal-item-selector
-										:model-value="c === quoteCurrency"
-										@update:model-value="quoteCurrency = c"
-									>
-										{{ c }}
-									</modal-item-selector>
-								</template>
-							</modal-badge-list>
-						</template>
-					</ui-position>
-
-					<ui-position>
-						<template #title>
-							<div :class="classes.forexGroup">
-								<div :class="classes.right">
-									<div :class="classes.subLabel">Period</div>
-									<div :class="classes.secondaryColor">·</div>
-									<div :class="classes.secondaryColor">{{ dateToLabel[date] }}</div>
-								</div>
-								<ui-icon
-									:id="IconIds.RcmArrowRight"
-									:class="classes.secondaryColor"
-									width="6"
-									height="20"
-								/>
-							</div>
-						</template>
-						<template #content>
-							<modal-badge-list>
-								<template #title>Date</template>
-
-								<template v-for="r in DateRangeForex" :key="r">
-									<modal-item-selector
-										:model-value="r === date"
-										@update:model-value="date = r"
-									>
-										{{ dateToLabel[r] }}
-									</modal-item-selector>
-								</template>
-							</modal-badge-list>
-						</template>
-					</ui-position>
-				</template>
-				<div :class="classes.subBlock">
-					<div :class="classes.subLabel">Display</div>
-					<div :class="classes.switchGroup">
-						<button
-							:class="[
-								classes.switch,
-								displayVariant === DisplayVariant.Bar && classes.active
-							]"
-							@click="displayVariant = DisplayVariant.Bar"
-						>
-							<ui-icon
-								:id="IconIds.Bars"
-								width="16"
-								height="16"
-							/>
-							Bar
-						</button>
-						<button
-							:class="[
-								classes.switch,
-								displayVariant === DisplayVariant.List && classes.active
-							]"
-							@click="displayVariant = DisplayVariant.List"
-						>
-							<ui-icon
-								:id="IconIds.List"
-								width="16"
-								height="16"
-							/>
-							List
-						</button>
-					</div>
-				</div>
-
-				<div :class="[classes.label, classes.settings]">Settings</div>
-				<div :class="classes.toggleRow" @click="isCompactMode = !isCompactMode">
-					<span :class="classes.subLabel">Compact mode</span>
-					<base-switch :is-active="isCompactMode" />
+			<div :class="classes.subBlock">
+				<div :class="classes.subLabel">Period</div>
+				<div :class="classes.switchGroup">
+					<button
+						:class="[
+							classes.switch,
+							date === DateRangeStock.Today && classes.active
+						]"
+						@click="date = DateRangeStock.Today"
+					>
+						Today
+					</button>
+					<button
+						:class="[
+							classes.switch,
+							date === DateRangeStock.Yesterday && classes.active
+						]"
+						@click="date = DateRangeStock.Yesterday"
+					>
+						Yesterday
+					</button>
+					<button
+						:class="[
+							classes.switch,
+							date === DateRangeStock.Week && classes.active
+						]"
+						@click="date = DateRangeStock.Week"
+					>
+						A week ago
+					</button>
 				</div>
 			</div>
 		</template>
-	</modal-filter>
+		<template v-else>
+			<ui-position :teleport="false">
+				<template #title>
+					<div :class="classes.forexGroup">
+						<div :class="classes.right">
+							<div :class="classes.subLabel">Quote currency</div>
+							<div :class="classes.secondaryColor">·</div>
+							<div :class="classes.secondaryColor">{{ quoteCurrency }}</div>
+						</div>
+						<ui-icon
+							:id="IconIds.RcmArrowRight"
+							:class="classes.secondaryColor"
+							width="6"
+							height="20"
+						/>
+					</div>
+				</template>
+				<template #content>
+					<modal-badge-list>
+						<template #title>Quote currency</template>
+						<template v-for="c in Currency" :key="c">
+							<modal-item-selector
+								:model-value="c === quoteCurrency"
+								@update:model-value="quoteCurrency = c"
+							>
+								{{ c }}
+							</modal-item-selector>
+						</template>
+					</modal-badge-list>
+				</template>
+			</ui-position>
+
+			<ui-position>
+				<template #title>
+					<div :class="classes.forexGroup">
+						<div :class="classes.right">
+							<div :class="classes.subLabel">Period</div>
+							<div :class="classes.secondaryColor">·</div>
+							<div :class="classes.secondaryColor">{{ dateToLabel[date] }}</div>
+						</div>
+						<ui-icon
+							:id="IconIds.RcmArrowRight"
+							:class="classes.secondaryColor"
+							width="6"
+							height="20"
+						/>
+					</div>
+				</template>
+				<template #content>
+					<modal-badge-list>
+						<template #title>Date</template>
+
+						<template v-for="r in DateRangeForex" :key="r">
+							<modal-item-selector
+								:model-value="r === date"
+								@update:model-value="date = r"
+							>
+								{{ dateToLabel[r] }}
+							</modal-item-selector>
+						</template>
+					</modal-badge-list>
+				</template>
+			</ui-position>
+		</template>
+		<div :class="classes.subBlock">
+			<div :class="classes.subLabel">Display</div>
+			<div :class="classes.switchGroup">
+				<button
+					:class="[
+						classes.switch,
+						displayVariant === DisplayVariant.Bar && classes.active
+					]"
+					@click="displayVariant = DisplayVariant.Bar"
+				>
+					<ui-icon
+						:id="IconIds.Bars"
+						width="16"
+						height="16"
+					/>
+					Bar
+				</button>
+				<button
+					:class="[
+						classes.switch,
+						displayVariant === DisplayVariant.List && classes.active
+					]"
+					@click="displayVariant = DisplayVariant.List"
+				>
+					<ui-icon
+						:id="IconIds.List"
+						width="16"
+						height="16"
+					/>
+					List
+				</button>
+			</div>
+		</div>
+
+		<div :class="[classes.label, classes.settings]">Settings</div>
+		<div :class="classes.toggleRow" @click="isCompactMode = !isCompactMode">
+			<span :class="classes.subLabel">Compact mode</span>
+			<base-switch :is-active="isCompactMode" />
+		</div>
+	</div>
 </template>
 
 <style module="classes">
