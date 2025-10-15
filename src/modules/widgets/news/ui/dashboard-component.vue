@@ -50,7 +50,12 @@ const {
 	sortBy,
 
 	resetAllChanges,
-} = useNews(props.meta.widgetId, props.meta.defaultStateType);
+	applyStateToParent,
+} = useNews({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+	defaultStateType: props.meta.defaultStateType,
+});
 
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,

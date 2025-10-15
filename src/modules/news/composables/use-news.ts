@@ -19,7 +19,13 @@ import { stateSchema, type StateSchemaType } from '../services';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
 
-export function useNews(widgetId: string, defaultState?: string) {
+interface IOptions {
+	widgetId: string;
+	isEphemeral: boolean;
+	defaultStateType?: string;
+}
+
+export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -28,7 +34,7 @@ export function useNews(widgetId: string, defaultState?: string) {
 		isEphemeral,
 		storageKey: '__NEWS__',
 		isSaveChange: true,
-		getDefaultState: () => getDefaultState(defaultState),
+		getDefaultState: () => getDefaultState(defaultStateType),
 		entityId: widgetId,
 		schema: stateSchema,
 		hydrateFn: hydrateState,
@@ -40,7 +46,7 @@ export function useNews(widgetId: string, defaultState?: string) {
 	const { data: dataState } = useStateQuery();
 	const { mutate } = useStateMutation();
 
-	const state = ref<IState>(getDefaultState(defaultState));
+	const state = ref<IState>(getDefaultState(defaultStateType));
 
 	const selectedSegments = computed({
 		get: () => state.value.segments,
@@ -120,7 +126,7 @@ export function useNews(widgetId: string, defaultState?: string) {
 	}, { deep: true });
 
 	function resetAllChanges() {
-		state.value = getDefaultState(defaultState);
+		state.value = getDefaultState(defaultStateType);
 	}
 
 	return {
