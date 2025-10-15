@@ -1,20 +1,38 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import {
 	ModalFilter,
 	BaseSwitch,
+	ModalBadgeList,
+	ModalItemSelector,
 } from '@/modules/widgets/base/';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { type DateRange, DateRangeStock, DisplayVariant, Stock } from '../../model';
+import { UiPosition } from '@/shared/ui/position';
+import {
+	Currency,
+	type DateRange,
+	DateRangeStock,
+	DateRangeForex,
+	DisplayVariant,
+	isDataRangeStock,
+	Stock,
+	dateToLabel,
+} from '../../model';
 import { MarketType } from '@/modules/market';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
 // const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
-// const quoteCurrency = defineModel<Currency>('quoteCurrency');
+const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
 const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
+
+const isStock = computed((): boolean => isDataRangeStock(date.value));
+
+// const switchGroupWidth = computed(() => {});
 
 </script>
 
@@ -46,63 +64,128 @@ const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 
 				<div :class="classes.label">Filter</div>
 
-				<div :class="classes.subBlock">
-					<div :class="classes.subLabel">Category</div>
-					<div :class="classes.switchGroup">
-						<button
-							:class="[
-								classes.switch,
-								stock === Stock.Industry && classes.active
-							]"
-							@click="stock = Stock.Industry"
-						>
-							Industry
-						</button>
-						<button
-							:class="[
-								classes.switch,
-								stock === Stock.Sector && classes.active
-							]"
-							@click="stock = Stock.Sector"
-						>
-							Sector
-						</button>
+				<template v-if="isStock">
+					<div :class="classes.subBlock">
+						<div :class="classes.subLabel">Category</div>
+						<div :class="classes.switchGroup">
+							<button
+								:class="[
+									classes.switch,
+									stock === Stock.Industry && classes.active
+								]"
+								@click="stock = Stock.Industry"
+							>
+								Industry
+							</button>
+							<button
+								:class="[
+									classes.switch,
+									stock === Stock.Sector && classes.active
+								]"
+								@click="stock = Stock.Sector"
+							>
+								Sector
+							</button>
+						</div>
 					</div>
-				</div>
 
-				<div :class="classes.subBlock">
-					<div :class="classes.subLabel">Period</div>
-					<div :class="classes.switchGroup">
-						<button
-							:class="[
-								classes.switch,
-								date === DateRangeStock.Today && classes.active
-							]"
-							@click="date = DateRangeStock.Today"
-						>
-							Today
-						</button>
-						<button
-							:class="[
-								classes.switch,
-								date === DateRangeStock.Yesterday && classes.active
-							]"
-							@click="date = DateRangeStock.Yesterday"
-						>
-							Yesterday
-						</button>
-						<button
-							:class="[
-								classes.switch,
-								date === DateRangeStock.Week && classes.active
-							]"
-							@click="date = DateRangeStock.Week"
-						>
-							A week ago
-						</button>
+					<div :class="classes.subBlock">
+						<div :class="classes.subLabel">Period</div>
+						<div :class="classes.switchGroup">
+							<button
+								:class="[
+									classes.switch,
+									date === DateRangeStock.Today && classes.active
+								]"
+								@click="date = DateRangeStock.Today"
+							>
+								Today
+							</button>
+							<button
+								:class="[
+									classes.switch,
+									date === DateRangeStock.Yesterday && classes.active
+								]"
+								@click="date = DateRangeStock.Yesterday"
+							>
+								Yesterday
+							</button>
+							<button
+								:class="[
+									classes.switch,
+									date === DateRangeStock.Week && classes.active
+								]"
+								@click="date = DateRangeStock.Week"
+							>
+								A week ago
+							</button>
+						</div>
 					</div>
-				</div>
+				</template>
+				<template v-else>
+					<ui-position :teleport="false">
+						<template #title>
+							<div :class="classes.forexGroup">
+								<div :class="classes.right">
+									<div :class="classes.subLabel">Quote currency</div>
+									<div :class="classes.secondaryColor">·</div>
+									<div :class="classes.secondaryColor">{{ quoteCurrency }}</div>
+								</div>
+								<ui-icon
+									:id="IconIds.RcmArrowRight"
+									:class="classes.secondaryColor"
+									width="6"
+									height="20"
+								/>
+							</div>
+						</template>
+						<template #content>
+							<modal-badge-list>
+								<template #title>Quote currency</template>
+								<template v-for="c in Currency" :key="c">
+									<modal-item-selector
+										:model-value="c === quoteCurrency"
+										@update:model-value="quoteCurrency = c"
+									>
+										{{ c }}
+									</modal-item-selector>
+								</template>
+							</modal-badge-list>
+						</template>
+					</ui-position>
 
+					<ui-position>
+						<template #title>
+							<div :class="classes.forexGroup">
+								<div :class="classes.right">
+									<div :class="classes.subLabel">Period</div>
+									<div :class="classes.secondaryColor">·</div>
+									<div :class="classes.secondaryColor">{{ dateToLabel[date] }}</div>
+								</div>
+								<ui-icon
+									:id="IconIds.RcmArrowRight"
+									:class="classes.secondaryColor"
+									width="6"
+									height="20"
+								/>
+							</div>
+						</template>
+						<template #content>
+							<modal-badge-list>
+								<template #title>Date</template>
+
+								<template v-for="r in DateRangeForex" :key="r">
+									<modal-item-selector
+										:model-value="r === date"
+										@update:model-value="date = r"
+									>
+										{{ dateToLabel[r] }}
+									</modal-item-selector>
+								</template>
+							</modal-badge-list>
+						</template>
+					</ui-position>
+				</template>
 				<div :class="classes.subBlock">
 					<div :class="classes.subLabel">Display</div>
 					<div :class="classes.switchGroup">
@@ -148,6 +231,28 @@ const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 </template>
 
 <style module="classes">
+.forexGroup {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+}
+
+.right {
+	display: flex;
+	align-items: center;
+	font-style: normal;
+	font-weight: 300;
+	font-size: var(--typography-menu-menu-item, 12px);
+	line-height: 18px;
+	color: var(--color-text-base-300, #9a9a9d);
+	gap: 6px;
+}
+
+.secondaryColor {
+	color: #646568;
+}
+
 .content {
 	display: flex;
 	flex-direction: column;
@@ -186,7 +291,7 @@ const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
 .switchGroup {
 	display: flex;
 	min-width: 284px;
-	padding: 3px;
+	padding: 2px;
 	background: #1c1c1c;
 	border-radius: 9999px;
 	gap: 3px;

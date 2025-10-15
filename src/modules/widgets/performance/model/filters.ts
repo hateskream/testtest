@@ -29,7 +29,7 @@ export function isDataRangeStock(value: string): value is DateRangeStock {
 	return Object.values(DateRangeStock).includes(value as DateRangeStock);
 }
 
-const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
+export const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
 	[DateRangeStock.Today]: 'Today',
 	[DateRangeStock.Yesterday]: 'Yesterday',
 	[DateRangeStock.Week]: 'Week',
