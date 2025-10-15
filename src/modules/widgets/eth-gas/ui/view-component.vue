@@ -13,7 +13,6 @@ export interface IViewComponentProps {
 }
 
 
-
 const props = defineProps<IViewComponentProps>();
 
 
