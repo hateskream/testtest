@@ -20,6 +20,8 @@ const ALL_WIDGETS = [
 	'WIDGET_CALENDAR',
 	'WIDGET_HEATMAP',
 	'WIDGET_CHART_PRICE',
+	'WIDGET_EXCHANGE',
+	'WIDGET_ETH_GAS',
 ] as const;
 
 export type WidgetFeature = typeof ALL_WIDGETS[number];

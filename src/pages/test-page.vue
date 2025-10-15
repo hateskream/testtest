@@ -1,31 +1,29 @@
 <script setup lang="ts">
-import { ModalTickerSelector } from '@/modules/ticker-selector';
-import { LayoutComponent } from '@/modules/layout';
 
+import { LayoutComponent } from '@/modules/layout';
+import { ExchangesDashboard } from '@/modules/widgets/exchanges';
+
+const meta = {
+	widgetId: '123',
+	isResizing: false,
+	isLoading: false,
+	market: 'stock',
+	name: 'Ajaja',
+	size: { w: 2, h: 2 },
+	defaultStateType: '',
+	dashboards: [{
+		id: 'aaa',
+		name: 'aaaa',
+	}],
+};
 </script>
 
 <template>
 	<layout-component :is-curtain-fixed="false">
 		<template #content>
-			<div class="fear-and-greed">
-				<modal-ticker-selector
-					:is-background-transparent="true"
-					:enable-selected-info="false"
-					:enable-select-all="false"
-					text-above-search="Add symbols"
-				/>
-			</div>
+			<exchanges-dashboard style="max-width: 900px;" :meta="meta" />
 		</template>
-		<template #curtain>
-			<div
-				:style="{
-					width: '429px',
-					background: 'red',
-					height: '100%',
-				}"
-			>
-			</div>
-		</template>
+
 	</layout-component>
 </template>
 

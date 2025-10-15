@@ -14,6 +14,8 @@ import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { PriceChartDashboard } from '@/modules/widgets/chart-price';
+import { ExchangesDashboard } from '@/modules/widgets/exchanges';
+import { EthGasDashboard } from '@/modules/widgets/eth-gas';
 
 export interface ISize {
 	w: number;
@@ -59,6 +61,8 @@ const components: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
 	[WidgetType.ChartPrice]: PriceChartDashboard,
+	[WidgetType.Exchange]: ExchangesDashboard,
+	[WidgetType.EthGas]: EthGasDashboard,
 };
 
 export function getWidgetComponent(type: WidgetType) {

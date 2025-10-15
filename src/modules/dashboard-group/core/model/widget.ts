@@ -16,6 +16,8 @@ export enum WidgetType {
 	Calendar = 'calendar',
 	Heatmap = 'heatmap',
 	ChartPrice = 'chart-price',
+	Exchange = 'exchange',
+	EthGas = 'eth-gas',
 }
 
 export interface IPosition {
@@ -179,6 +181,23 @@ const ChartPrice: Preset = {
 	defaultSize: { w: 2, h: 4 },
 };
 
+const Exchange: Preset = {
+	name: 'Exchange',
+	description: 'Exchange',
+	minSize: { w: 2, h: 2 },
+	maxSize: { w: Infinity, h: Infinity },
+	defaultSize: { w: 4, h: 4 },
+};
+
+
+const EthGas: Preset = {
+	name: 'ETH Gas',
+	description: 'ETH Gas',
+	minSize: { w: 2, h: 2 },
+	maxSize: { w: 5, h: 5 },
+	defaultSize: { w: 2, h: 4 },
+};
+
 const ProdPresets: AllPresets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -193,6 +212,8 @@ const ProdPresets: AllPresets = {
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
 	[WidgetType.ChartPrice]: ChartPrice,
+	[WidgetType.Exchange]: Exchange,
+	[WidgetType.EthGas]: EthGas,
 };
 
 const DevPresets: AllPresets = {
@@ -209,6 +230,8 @@ const DevPresets: AllPresets = {
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
 	[WidgetType.ChartPrice]: ChartPrice,
+	[WidgetType.Exchange]: Exchange,
+	[WidgetType.EthGas]: EthGas,
 };
 
 const DemoPresets: AllPresets = {
@@ -225,6 +248,8 @@ const DemoPresets: AllPresets = {
 	[WidgetType.Calendar]: Calendar,
 	[WidgetType.Heatmap]: Heatmap,
 	[WidgetType.ChartPrice]: ChartPrice,
+	[WidgetType.Exchange]: Exchange,
+	[WidgetType.EthGas]: EthGas,
 };
 
 function getCurrentPresets(): AllPresets {
@@ -256,6 +281,8 @@ export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
 	'WIDGET_CALENDAR': WidgetType.Calendar,
 	'WIDGET_HEATMAP': WidgetType.Heatmap,
 	'WIDGET_CHART_PRICE': WidgetType.ChartPrice,
+	'WIDGET_EXCHANGE': WidgetType.Exchange,
+	'WIDGET_ETH_GAS': WidgetType.EthGas,
 };
 
 function getPresets(): Presets {
