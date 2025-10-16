@@ -4,8 +4,9 @@ import { createApp } from 'vue';
 import VCalendar from 'v-calendar';
 
 import { router } from './router';
-import { queryClient } from '@/shared/service/query-client';
 import { validateConfig } from '@/shared/lib';
+// eslint-disable-next-line import/order
+import { queryClient } from '@/shared/service/query-client';
 
 import '@/assets/styles/base.css';
 import 'v-calendar/style.css';
@@ -13,10 +14,18 @@ import 'v-calendar/style.css';
 import 'virtual:svg-icons-register';
 
 
+import { useStorageVersion } from '@/shared/composables';
+
 import App from './app.vue';
 
 validateConfig();
 
+const { compareVersions, updateVersion } = useStorageVersion();
+
+if (!compareVersions()) {
+	localStorage.clear();
+	updateVersion();
+}
 
 const app = createApp(App);
 
