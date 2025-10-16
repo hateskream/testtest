@@ -202,4 +202,50 @@ export const notes: IWeekGroup[] = [
 			},
 		],
 	},
+	{
+		week: '09-16 10 2025',
+		items: [
+			{
+				id: '26',
+				title: 'Исправлен баг в выпадающих списках',
+				description: 'Исправлен баг провацирующий "улетание" выпадающих списков',
+			},
+			{
+				id: '27',
+				title: 'Сделан виджет Chart',
+				description: 'Сделан виджет показывающий цену одного тикера',
+				productLink: '/',
+			},
+			{
+				id: '28',
+				title: 'Сделан виджет Chart',
+				description: 'Сделан виджет в сетке показывающий цену одного тикера',
+				productLink: '/',
+			},
+			{
+				id: '29',
+				title: 'Механика open full view в ПКМ виджета',
+				description: 'Теперь можно виджет открыть в отдельном модально окне, и поменять настройки через него',
+				productLink: '/',
+			},
+			{
+				id: '30',
+				title: 'Добавлен forex в виджет perfomance',
+				description: '',
+				productLink: '/',
+			},
+			{
+				id: '31',
+				title: 'Обновлены пресеты дашбордов',
+				description: '',
+				productLink: '/',
+			},
+			{
+				id: '32',
+				title: 'В драфтовом варианте добавлены виджеты exchange и eth gas',
+				description: '',
+				productLink: '/',
+			},
+		],
+	},
 ];
