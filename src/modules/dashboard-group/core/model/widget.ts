@@ -95,7 +95,7 @@ const Market: Preset = {
 
 const Price: Preset = {
 	name: 'Price',
-	description: 'Real-time crypto price and chart',
+	description: 'Tickers and their prices',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 4 },
@@ -111,7 +111,7 @@ const News: Preset = {
 
 const Watchlist: Preset = {
 	name: 'Watchlist',
-	description: 'Watchlist',
+	description: 'Favorite symbols',
 	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 6 },
@@ -119,7 +119,7 @@ const Watchlist: Preset = {
 
 const Performance: Preset = {
 	name: 'Performance',
-	description: 'Performance',
+	description: 'Sector, industry, or currency pair price change',
 	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 4, h: 9 },
@@ -127,23 +127,23 @@ const Performance: Preset = {
 
 const MarketCap: Preset = {
 	name: 'MarketCap',
-	description: 'MarketCap',
+	description: 'Total value of all coins in circulation',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 3, h: 7 }, // так вставить в пресет дашборда
 };
 
 const AltcoinSeason: Preset = {
-	name: 'Altcoin Season',
-	description: 'Altcoin season',
+	name: 'Altcoin season index',
+	description: 'Bitcoin vs. Altcoins',
 	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 14 },
 };
 
 const BitcoinDominance: Preset = {
-	name: 'Dominance',
-	description: 'Dominance',
+	name: 'Bitcoin dominance',
+	description: 'Share of market cap',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 3, h: 9 },
@@ -159,7 +159,7 @@ const TopIndices: Preset = {
 
 const Calendar: Preset = {
 	name: 'Calendar',
-	description: 'Calendar',
+	description: 'Market events hub',
 	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 6 },
@@ -175,7 +175,7 @@ const Heatmap: Preset = {
 
 const ChartPrice: Preset = {
 	name: 'Chart',
-	description: 'Real-time price and chart',
+	description: 'Price movement over time',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 4 },
@@ -183,7 +183,7 @@ const ChartPrice: Preset = {
 
 const Exchange: Preset = {
 	name: 'Exchange',
-	description: 'Exchange',
+	description: 'Trust level insights',
 	minSize: { w: 2, h: 2 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 4, h: 4 },
@@ -192,7 +192,7 @@ const Exchange: Preset = {
 
 const EthGas: Preset = {
 	name: 'ETH Gas',
-	description: 'ETH Gas',
+	description: 'Gas fees tracker',
 	minSize: { w: 1, h: 2 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 4 },
