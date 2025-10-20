@@ -16,6 +16,13 @@ const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
 	[WidgetType.MarketCap]: IconIds.LogoWidgetMarketCap,
 	[WidgetType.BitcoinDominance]: IconIds.LogoWidgetBitcoinDominance,
 	[WidgetType.Calendar]: IconIds.Calendar,
+	[WidgetType.Heatmap]: IconIds.Heatmap,
+	[WidgetType.AltcoinSeason]: IconIds.LogoWidgetAltcoinSeason,
+	[WidgetType.TopIndices]: IconIds.LogoWidgetTopIndices,
+	[WidgetType.ChartPrice]: IconIds.LogoWidgetChartPrice,
+	[WidgetType.Exchange]: IconIds.LogoWidgetExchange,
+	[WidgetType.EthGas]: IconIds.LogoWidgetEthGas,
+	[WidgetType.Performance]: IconIds.LogoWidgetPerfomance,
 };
 
 interface IDashboardsCurtainComponentProps {
