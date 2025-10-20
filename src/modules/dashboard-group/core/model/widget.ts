@@ -151,7 +151,7 @@ const BitcoinDominance: Preset = {
 
 const TopIndices: Preset = {
 	name: 'Top Indices YTD',
-	description: 'Top Indices',
+	description: 'Major Stock Indices',
 	minSize: { w: 2, h: 4 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 2, h: 6 },
