@@ -176,6 +176,7 @@ deploy:
     - if: '$CI_COMMIT_BRANCH == "main" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
       when: on_success
     - if: '$CI_COMMIT_BRANCH == "dev" && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
+    - if: '$CI_COMMIT_BRANCH =~ /^sandbox\/.+$/ && ($DISABLE_DEPLOY != "true" && $SKIP_ALL_JOBS != "true")'
       when: on_success
     - when: never
 
