@@ -76,7 +76,7 @@ const isLoading = computed(
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
 
-			<calendar-loader v-else-if="isLoading" :count="5" />
+			<calendar-loader v-else-if="isLoading" />
 
 			<calendar-main
 				v-else-if="eventBoard && dailyCalendar"

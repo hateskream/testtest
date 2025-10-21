@@ -52,8 +52,6 @@ const emit = defineEmits<{
 			<error-network-component v-if="isError" @retry="refetch" />
 			<top-indices-loader
 				v-else-if="isNotData"
-				:count="5"
-				:height="'48px'"
 			/>
 
 			<view-component

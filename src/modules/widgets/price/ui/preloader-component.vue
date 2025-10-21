@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import { UiSkeletonGroup } from '@/shared/ui/skeleton';
+import { UiSkeleton } from '@/shared/ui/skeleton';
+import { BaseLoaderComponent } from '@/modules/widgets/base';
 </script>
 
 <template>
-	<div :class="classes.root">
-		<ui-skeleton-group />
-	</div>
+	<base-loader-component :row-height="60" :class="classes.preloaderContainer">
+		<template #before>
+			<div>
+				<ui-skeleton width="100px" height="32px" />
+			</div>
+		</template>
+	</base-loader-component>
 </template>
 
 <style module="classes">
-.root {
-	padding: 10px;
+.preloaderContainer {
+	padding: 0 16px 16px;
+	gap: 8px;
 }
 </style>

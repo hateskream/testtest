@@ -88,7 +88,7 @@ const safeData = computed(() => data.value ?? lastData.value);
 				@retry="refetch"
 			/>
 
-			<watchlist-loader v-else-if="!safeData?.length" :count="5" />
+			<watchlist-loader v-else-if="!safeData?.length" />
 
 			<watchlist-main
 				v-else

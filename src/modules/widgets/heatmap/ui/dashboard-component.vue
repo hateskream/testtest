@@ -7,19 +7,19 @@ import { useHeatmap } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { ChangeDisplay, InteractionSettings } from '@/modules/treemap';
 import type {
-	ISingleSetting,
-	IMarket,
-	ISettings,
-	IMarketSettings,
 	IColorDepth,
 	IColorDepthSetting,
+	IMarket,
+	IMarketSettings,
+	ISettings,
+	ISingleSetting,
 } from '../model/display-settings.ts';
 
-import SkeletonGroup from '@/shared/ui/skeleton/skeleton-group.vue';
+import HeatmapLoader from './preloader-component.vue';
 
 const MainComponent = defineAsyncComponent({
 	loader: () => import('@/modules/treemap').then(c => c.TreemapComponent),
-	loadingComponent: SkeletonGroup,
+	loadingComponent: HeatmapLoader,
 	errorComponent: BaseErrorComponent,
 });
 
@@ -156,7 +156,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<skeleton-group v-if="isLoading || props.meta.isLoading" />
+			<heatmap-loader v-if="isLoading || props.meta.isLoading" />
 			<base-error-component v-else-if="isError" @retry="refetch" />
 
 			<div v-else :class="classes.heatmap">
