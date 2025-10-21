@@ -3,7 +3,7 @@ import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { Chart } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
-import { getExternalTooltipVaults } from '../utils';
+import { useExternalTooltip } from '../composables';
 import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
 import {
 	ALTCOIN_THRESHOLD,
@@ -15,6 +15,7 @@ import {
 	widgetActiveColor,
 	widgetColor,
 } from '@/modules/widgets/altcoinSeason/const';
+import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 
 const props = defineProps<{
 	show: boolean;
@@ -34,7 +35,11 @@ const legendsList = [
 	},
 ];
 
-const externalTooltipHandler = getExternalTooltipVaults(legendsList);
+const { state, handler } = useExternalTooltip({
+	mode: 'vaults',
+	legends: legendsList,
+	wrapperEl: document.body,
+});
 
 function pickQuarter(rank: number) {
 	if (rank <= BITCOIN_THRESHOLD) {
@@ -220,7 +225,7 @@ onMounted(() => {
 				tooltip: {
 					enabled: false,
 					position: 'nearest',
-					external: externalTooltipHandler,
+					external: handler,
 				},
 			},
 
@@ -282,6 +287,10 @@ watch(() => props.show, (value) => {
 			<canvas ref="container" :class="classes.mainChart"></canvas>
 		</div>
 	</div>
+
+	<teleport to="body">
+		<chart-external-tooltip v-bind="state" />
+	</teleport>
 </template>
 
 <style module="classes">

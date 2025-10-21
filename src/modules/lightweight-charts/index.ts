@@ -1,45 +1,22 @@
-import Chart from './ui/chart-component.vue';
-import ChartForecast from './ui/chart-forecast-component.vue';
-import ChartQuarterlyRevenue from './ui/chart-quarterly-revenue-component.vue';
-import ChartYearlyRevenue from './ui/chart-yearly-revenue-component.vue';
-import ChartStockBulk from './ui/chart-stock-bulk-component.vue';
-import ChartDividends from './ui/chart-dividends.vue';
-import ChartBalanceSheet from './ui/chart-balance-sheet.vue';
-import ChartIncomeStatement from './ui/chart-income-statement.vue';
-import ChartMarketCap from './ui/chart-market-cap.vue';
-import ChartBitcoinDominance from './ui/chart-bitcoin-dominance.vue';
-import ChartAltcoinSeason from './ui/chart-altcoin-season.vue';
-import ChartTooltip from './ui/chart-tooltip.vue';
-import ChartEps from './ui/chart-eps.vue';
-import ChartTransactionAvg from './ui/chart-transaction-avg.vue';
-import ChartTransactionAvgTotal from './ui/chart-transaction-avg-total.vue';
-import ChartAnnualMarginTrends from './ui/chart-annual-margin-trends.vue';
-import ChartDailyNetFlows from './ui/chart-daily-net-flows.vue';
-import ChartTrailingReturns from './ui/chart-trailing-returns.vue';
-import ChartHoldingsDiagram from './ui/chart-holdings-diagram.vue';
-import ChartStylebox from './ui/chart-stylebox.vue';
-import ChartSeasonals from './ui/chart-seasonals.vue';
-
-export {
-	Chart,
-	ChartForecast,
-	ChartYearlyRevenue,
-	ChartQuarterlyRevenue,
-	ChartStockBulk,
-	ChartDividends,
-	ChartBalanceSheet,
-	ChartIncomeStatement,
-	ChartMarketCap,
-	ChartBitcoinDominance,
-	ChartAltcoinSeason,
-	ChartTooltip,
-	ChartEps,
-	ChartTransactionAvg,
-	ChartTransactionAvgTotal,
-	ChartAnnualMarginTrends,
-	ChartDailyNetFlows,
-	ChartTrailingReturns,
-	ChartHoldingsDiagram,
-	ChartStylebox,
-	ChartSeasonals,
-};
+export { default as Chart } from './ui/chart-component.vue';
+export { default as ChartForecast } from './ui/chart-forecast-component.vue';
+export { default as ChartQuarterlyRevenue } from './ui/chart-quarterly-revenue-component.vue';
+export { default as ChartYearlyRevenue } from './ui/chart-yearly-revenue-component.vue';
+export { default as ChartStockBulk } from './ui/chart-stock-bulk-component.vue';
+export { default as ChartDividends } from './ui/chart-dividends.vue';
+export { default as ChartBalanceSheet } from './ui/chart-balance-sheet.vue';
+export { default as ChartIncomeStatement } from './ui/chart-income-statement.vue';
+export { default as ChartMarketCap } from './ui/chart-market-cap.vue';
+export { default as ChartBitcoinDominance } from './ui/chart-bitcoin-dominance.vue';
+export { default as ChartAltcoinSeason } from './ui/chart-altcoin-season.vue';
+export { default as ChartTooltip } from './ui/chart-tooltip.vue';
+export { default as ChartEps } from './ui/chart-eps.vue';
+export { default as ChartTransactionAvg } from './ui/chart-transaction-avg.vue';
+export { default as ChartTransactionAvgTotal } from './ui/chart-transaction-avg-total.vue';
+export { default as ChartAnnualMarginTrends } from './ui/chart-annual-margin-trends.vue';
+export { default as ChartDailyNetFlows } from './ui/chart-daily-net-flows.vue';
+export { default as ChartTrailingReturns } from './ui/chart-trailing-returns.vue';
+export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue';
+export { default as ChartStylebox } from './ui/chart-stylebox.vue';
+export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
+export { default as ChartExternalTooltip } from './ui/chart-external-tooltip.vue';
