@@ -70,5 +70,11 @@ export const CRYPTO_DEX_COLUMNS: ITableColumn[] =
 				isShow: true,
 				groupOrder: 0,
 			},
+			{
+				columnType: ColumnType.TrustScore,
+				isDraggable: false,
+				isShow: true,
+				groupOrder: 1,
+			},
 		],
 	);

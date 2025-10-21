@@ -12,7 +12,7 @@ export interface IGasStatsCardProps {
 }
 
 const props = withDefaults(defineProps<IGasStatsCardProps>(), {
-	isTable: true
+	isTable: true,
 });
 </script>
 
@@ -71,9 +71,9 @@ const props = withDefaults(defineProps<IGasStatsCardProps>(), {
 }
 
 .statValue {
+	font-size: 16px;
 	line-height: 1.2;
 	color: #ffffff;
-	font-size: 16px;
 }
 
 /* Режим линии (isTable = false) */
@@ -98,6 +98,7 @@ const props = withDefaults(defineProps<IGasStatsCardProps>(), {
 .line .statValue {
 	font-size: 18px;
 }
+
 .table {
 	.stats {
 		display: grid;

@@ -12,6 +12,7 @@ import {
 	isSvgChartCell,
 	isRangeCell,
 	isForexSymbolCell,
+	isScoreCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -33,6 +34,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.SvgChart]: TableColumnType.CHART,
 	[CellType.Range]: TableColumnType.RANGE,
 	[CellType.Empty]: TableColumnType.TEXT,
+	[CellType.Score]: TableColumnType.SCORE,
 };
 
 const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => unknown> = {
@@ -43,6 +45,7 @@ const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => 
 	[CellType.SvgChart]: mapSvgChartToTable,
 	[CellType.Range]: mapRangeToTable,
 	[CellType.Label]: mapLabelToTable,
+	[CellType.Score]: mapScoreToTable,
 };
 
 function mapCellToTable(cell: Cell): unknown {
@@ -120,6 +123,13 @@ function mapNumberToTable(cell: Cell) {
 		currencySymbol: cell.currencySymbol,
 		magnitude: getMagnitudeText(cell.magnitude),
 	};
+}
+
+function mapScoreToTable(cell: Cell) {
+	if (isScoreCell(cell)) {
+		return cell;
+	}
+	return cell;
 }
 
 function mapPercentToTable(cell: Cell) {

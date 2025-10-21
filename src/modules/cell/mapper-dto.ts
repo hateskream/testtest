@@ -14,7 +14,7 @@ import {
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
-	type ITextCell,
+	type ITextCell, type IScoreCell,
 } from './domain';
 import type {
 	CellDto,
@@ -27,11 +27,12 @@ import type {
 	LabelDto,
 	NumberDto,
 	PercentDto,
-	RangeDto,
+	RangeDto, ScoreDto,
 	SvgChartDto,
 	SymbolDto,
 	TextDto,
 } from './dto';
+
 
 export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 	if (isEmpty(dto)) {
@@ -222,6 +223,20 @@ export function mapLabel(dto: CellDto): ILableCell | IEmptyCell {
 	console.error('Cell not match Label', dto);
 	return createEmpty(dto);
 }
+export function mapScore(dto: CellDto): IScoreCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isScoreDto(dto)) {
+		return {
+			cellType: CellType.Score,
+			columnType: dto.columnType,
+			value: dto.value,
+			score: dto.score,
+		} as IScoreCell;
+	}
+	return createEmpty(dto);
+}
 
 function isIndexSymbolDto(dto: CellDto): dto is IIndexSymbolDto {
 	return (
@@ -269,6 +284,10 @@ function isPlaneTextSymbolDto(dto: CellDto): dto is IPlaneTextSymbolDto {
 		'symbolType' in dto &&
 		dto.symbolType === SymbolType.PlaneText
 	);
+}
+
+function isScoreDto(dto: CellDto): dto is ScoreDto {
+	return dto.cellType === CellType.Score;
 }
 
 function isSymbolDto(dto: CellDto): dto is SymbolDto {

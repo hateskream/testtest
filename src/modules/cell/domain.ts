@@ -70,6 +70,8 @@ export enum ColumnType {
 	UpdateDate = 'updateDate',
 
 	Volatility = 'volatility',
+	TrustScore = 'trustScore',
+	isOpenNow = 'isOpenNow'
 }
 
 export enum CellType {
@@ -81,6 +83,8 @@ export enum CellType {
 	Range = 'Range',
 	Empty = 'Empty',
 	Label = 'Label',
+	Score = 'Score',
+	isOpen = 'isOpen',
 }
 
 export enum Trend {
@@ -185,6 +189,12 @@ export interface INumberCell extends IBaseCell {
 	magnitude: Magnitude;
 }
 
+export interface IScoreCell extends IBaseCell {
+	cellType: CellType.Score;
+	value: string;
+	score: number;
+}
+
 export interface IPercentCell extends IBaseCell {
 	cellType: CellType.Percent;
 	value: string;
@@ -200,6 +210,11 @@ export interface ISvgChartCell extends IBaseCell {
 export interface ITextCell extends IBaseCell {
 	cellType: CellType.Text;
 	value: string;
+}
+
+export interface IIsOpen extends IBaseCell {
+	cellType: CellType.isOpen;
+	value: boolean | string;
 }
 
 export interface IRangeCell extends IBaseCell {
@@ -225,7 +240,8 @@ export type Cell =
 	| ISvgChartCell
 	| ITextCell
 	| ILableCell
-	| IRangeCell;
+	| IRangeCell
+	| IScoreCell;
 
 export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Symbol]: CellType.Symbol,
@@ -292,6 +308,8 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.PriceClose]: CellType.Number,
 
 	[ColumnType.Volatility]: CellType.Label,
+	[ColumnType.TrustScore]: CellType.Score,
+	[ColumnType.isOpenNow]: CellType.isOpen
 };
 
 export type ColumnToCell = {
@@ -359,6 +377,8 @@ export type ColumnToCell = {
 	[ColumnType.PriceClose]: INumberCell;
 
 	[ColumnType.Volatility]: ILableCell;
+	[ColumnType.TrustScore]: IScoreCell;
+	[ColumnType.isOpenNow]: IIsOpen
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

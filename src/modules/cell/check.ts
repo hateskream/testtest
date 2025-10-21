@@ -15,7 +15,7 @@ import {
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
-	type ITextCell,
+	type ITextCell, type IScoreCell,
 } from './domain';
 
 export function isEmptyCell(cell: Cell): cell is IEmptyCell {
@@ -72,4 +72,7 @@ export function isRangeCell(cell: Cell): cell is IRangeCell {
 
 export function isLabelCell(cell: Cell): cell is ILableCell {
 	return cell.cellType === CellType.Label;
+}
+export function isScoreCell(cell: Cell): cell is IScoreCell {
+	return cell.cellType === CellType.Score;
 }

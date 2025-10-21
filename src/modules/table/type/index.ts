@@ -10,6 +10,7 @@ export enum TableColumnType {
 	RANGE = 'range',
 	EMPTY = 'empty',
 	PLATE = 'plate',
+	SCORE = 'score',
 }
 
 export type SortDirection = 'asc' | 'desc' | 'none';

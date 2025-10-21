@@ -102,5 +102,10 @@ export type LabelDto = BaseDto &
 		status: Status;
 	}>;
 
+export type ScoreDto = BaseDto &
+	Nullable<{
+		value:string;
+		score:number;
+	}>;
 
-export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto | LabelDto;
+export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto | LabelDto | ScoreDto ;

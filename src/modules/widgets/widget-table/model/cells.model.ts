@@ -30,6 +30,10 @@ export interface ITablePercentCell {
 export interface ITableSvgChartCell {
 	src?: string;
 }
+export interface ITableScoreCell {
+	value: string;
+	score: number;
+}
 
 export interface ITableTextCell {
 	value?: string;

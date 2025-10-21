@@ -9,6 +9,7 @@ import CellPercentComponent from './cell-percent-component.vue';
 import CellPlate from './cell-plate.vue';
 import TableCellChart from './table-cell-chart.vue';
 import TableCellRange from './table-cell-range.vue';
+import TableCellScore from './table-cell-score.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -20,6 +21,7 @@ export enum CellType {
 	IMAGE_STRING = 'image-string',
 	PLATE = 'plate',
 	EMPTY = 'empty',
+	SCORE = 'score',
 }
 
 
@@ -36,6 +38,7 @@ const components: Record<CellType, Component> = {
 	// TODO: add chart component and add it here in
 	[CellType.CHART]: TableCellChart,
 	[CellType.EMPTY]: CellEmptyStateComponent,
+	[CellType.SCORE]: TableCellScore,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

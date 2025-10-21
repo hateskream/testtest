@@ -385,4 +385,10 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Volatility',
 		groupName: 'Other',
 	},
+	[ColumnType.TrustScore]: {
+		columnName: 'Trust score',
+		tooltip: 'Trust score',
+		settingsName: 'Trust score',
+		groupName: 'Trust score',
+	},
 };
