@@ -5,6 +5,7 @@ export enum SortDirection {
 	DESC = 'desc',
 	NONE= 'none',
 };
+//test
 
 type TransitionRules = {
 	[currentState in SortDirection]: SortDirection;
