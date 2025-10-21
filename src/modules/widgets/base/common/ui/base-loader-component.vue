@@ -58,9 +58,9 @@ const lineHeight = computed(() => props.rowHeight + 'px');
 
 <style module="classes">
 .container {
-	height: 100%;
 	display: flex;
 	flex-direction: column;
+	height: 100%;
 }
 
 .content {
