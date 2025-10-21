@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-import { computed } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 
 import SkeletonComponent from './skeleton-component.vue';
 
@@ -8,12 +7,14 @@ interface ISkeletonGroupProps {
 	count?: number;
 	height?: CSSProperties['height'];
 	borderRadius?: CSSProperties['borderRadius'];
+	gap?: CSSProperties['gap'];
 }
 
 const props = withDefaults(defineProps<ISkeletonGroupProps>(), {
 	count: 3,
 	height: '64px',
 	borderRadius: '16px',
+	gap: '10px',
 });
 
 const opacityValues = computed(() => {
@@ -46,6 +47,6 @@ const opacityValues = computed(() => {
 .root {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: v-bind(gap);
 }
 </style>
