@@ -5,11 +5,11 @@ import { ref, useTemplateRef, watch } from 'vue';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import {
-	TabAction,
-	tabActionToTitle,
 	type ITab,
 	type ITickerAddPayload,
 	type ITickerRemovePayload,
+	TabAction,
+	tabActionToTitle,
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
@@ -102,7 +102,7 @@ function onRenameTab(id: string, name: string) {
 
 function openModal(index: number) {
 	positionRefs.value?.[index].handleClick();
-};
+}
 
 function selectTicker(tickerId: string) {
 	const marketType = resolveMarketTypeFromTicker(tickerId);
@@ -160,6 +160,7 @@ function selectTicker(tickerId: string) {
 							>
 								<ui-position
 									strategy="absolute"
+									:teleport="false"
 								>
 									<template #title>
 										<span :class="classes.menuActionTitle">
