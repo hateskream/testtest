@@ -27,14 +27,12 @@ const { data } = useQueryTickerSelector();
 
 const emits = defineEmits<ITickerEmits>();
 
-
 const selectedTickersMapped = computed(() => {
 	return (data.value?.tickers ?? [])
 		.filter((item) => selectedTickers.value.includes(item.tickerId))
 		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)
 		.map(getMappedRow);
 });
-
 </script>
 
 <template>
@@ -95,8 +93,6 @@ const selectedTickersMapped = computed(() => {
 <style module="classes">
 .iconsItem {
 	margin-left: -12px;
-	overflow: hidden;
-	background-color: #222223;
 	border-radius: 100%;
 }
 
@@ -107,7 +103,6 @@ const selectedTickersMapped = computed(() => {
 .iconsWrapper {
 	display: flex;
 	align-items: center;
-	overflow: hidden;
 	gap: 4px;
 }
 </style>

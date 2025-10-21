@@ -1,5 +1,4 @@
 export enum EventType {
-	All = 'All',
 	Economic = 'Economic',
 	Earnings = 'Earnings',
 	Revenue = 'Revenue',

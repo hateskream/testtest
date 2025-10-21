@@ -10,8 +10,8 @@ import {
 	type IEventBoardRange,
 	type IEventBoardResponse,
 	Impact,
-	type IToolbarState,
 	type IWeeklyDayInfo,
+	MarketIds,
 	markets,
 	useEventBoardScroll,
 } from '@/modules/calendar';
@@ -44,7 +44,12 @@ const emits = defineEmits<{
 }>();
 
 const weekRange = defineModel<IEventBoardRange>('weekRange', { required: true });
-const toolbar = defineModel<IToolbarState>('toolbar', { required: true });
+
+const countryState = defineModel<Set<MarketIds>>('countryState', { required: true });
+const impactState = defineModel<Set<Impact>>('impactState', { required: true });
+const eventState = defineModel<Set<EventType>>('eventState', { required: true });
+const watchlistIdState = defineModel<string | null>('watchlistIdState', { required: true });
+const watchlistSectionState = defineModel<string | null>('watchlistSectionState', { required: true });
 
 const eventBoardRef = useTemplateRef('event-board-component');
 
@@ -58,11 +63,11 @@ useEventBoardScroll({
 <template>
 	<div :class="classes.calendarMain">
 		<calendar-toolbar
-			v-model:country-state="toolbar.marketId"
-			v-model:impact-state="toolbar.impact"
-			v-model:event-state="toolbar.eventType"
-			v-model:watchlist-id-state="toolbar.watchlistId"
-			v-model:watchlist-section-state="toolbar.watchlistSection"
+			v-model:country-state="countryState"
+			v-model:impact-state="impactState"
+			v-model:event-state="eventState"
+			v-model:watchlist-id-state="watchlistIdState"
+			v-model:watchlist-section-state="watchlistSectionState"
 			v-model:range-state="weekRange"
 			:initial-date="props.currentDate"
 			:base-date="baseDate"

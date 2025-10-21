@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	MarketBadge,
+	MarketBadgeList,
 	ModalBadge,
 	ModalBadgeList,
 	ModalItemSelector,
+	ModalSubmenu,
 } from '@/modules/widgets/base';
 import {
-	filterTypeToName,
-	filterValueToDisplay,
 	type FiltersState,
 	type FiltersValues,
 	type FilterType,
+	filterTypeToName,
+	filterValueToDisplay,
 	type IDisplaySettings,
 	type ITicker,
 } from '../model';
 import type { IMeta } from '@/modules/dashboard-group';
-import type { MarketType } from '@/modules/market';
+import { type MarketType } from '@/modules/market';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import CellComponent from './cell-component.vue';
 
@@ -64,42 +68,105 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 <template>
 	<div :class="classes.root">
 		<div :class="classes.priceHeader">
-			<market-badge v-model="activeMarket" />
+			<div :class="classes.maximized">
+				<market-badge v-model="activeMarket" />
 
-			<div :class="classes.lineDelimiterGroup">
-				<ui-delimiter />
-			</div>
-			<modal-badge
-				v-for="(filterState, filterKey) in filters"
-				:key="filterKey"
-				:class="classes.filter"
-			>
-				<template #title v-if="filterState">
-					{{ filterValueToDisplay[filterState].label }}
-				</template>
-				<template #content>
-					<modal-badge-list>
-						<template #title>
-							{{ filterTypeToName[filterKey] }}
-						</template>
-						<template
-							v-for="filterValue in props.filtersValues[filterKey]"
-							:key="filterValue.value"
-						>
+				<div :class="classes.lineDelimiterGroup">
+					<ui-delimiter />
+				</div>
 
-							<modal-item-selector
-								:model-value="filterValue.value === filterState"
-								@update:model-value="updateFilter(filterKey, filterValue.value)"
+				<modal-badge
+					v-for="(filterState, filterKey) in filters"
+					:key="filterKey"
+					:class="classes.filter"
+				>
+					<template #title v-if="filterState">
+						{{ filterValueToDisplay[filterState].label }}
+
+						<ui-icon
+							:id="IconIds.DropdownDown"
+							width="20"
+							height="20"
+							:class="classes.iconAllFilterColor"
+						/>
+					</template>
+					<template #content>
+						<modal-badge-list>
+							<template #title>
+								{{ filterTypeToName[filterKey] }}
+							</template>
+							<template
+								v-for="filterValue in props.filtersValues[filterKey]"
+								:key="filterValue.value"
 							>
-								{{ filterValue.label }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
+								<modal-item-selector
+									:model-value="filterValue.value === filterState"
+									@update:model-value="updateFilter(filterKey, filterValue.value)"
+								>
+									{{ filterValue.label }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge>
+			</div>
+			<div :class="classes.minimized">
+				<market-badge v-model="activeMarket" />
 
+				<div :class="classes.lineDelimiterGroup">
+					<ui-delimiter />
+				</div>
+
+				<ui-position :class="[classes.burger, classes.filter]">
+					<template #title>
+						<ui-icon
+							:id="IconIds.Burger"
+							width="20px"
+							height="20px"
+						/>
+					</template>
+					<template #content>
+						<modal-badge-list>
+							<modal-submenu>
+								<template #title>
+									Market
+								</template>
+								<template #content>
+									<market-badge-list v-model="activeMarket" title="Market" />
+								</template>
+							</modal-submenu>
+
+							<modal-submenu
+								v-for="(filterState, filterKey) in filters"
+								:key="filterKey"
+							>
+								<template #title v-if="filterState">
+									{{ filterTypeToName[filterKey] }}
+								</template>
+								<template #content>
+									<modal-badge-list>
+										<template #title>
+											{{ filterTypeToName[filterKey] }}
+										</template>
+										<template
+											v-for="filterValue in props.filtersValues[filterKey]"
+											:key="filterValue.value"
+										>
+											<modal-item-selector
+												:model-value="filterValue.value === filterState"
+												@update:model-value="updateFilter(filterKey, filterValue.value)"
+											>
+												{{ filterValue.label }}
+											</modal-item-selector>
+										</template>
+									</modal-badge-list>
+								</template>
+							</modal-submenu>
+						</modal-badge-list>
+					</template>
+				</ui-position>
+			</div>
 		</div>
-
 		<div :class="classes.scrollable">
 			<div :class="classes.content">
 				<div
@@ -134,6 +201,34 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 .priceHeader {
 	margin-inline: 12px;
 	display: flex;
+	container: toolbar / inline-size;
+}
+
+.maximized {
+	display: contents;
+}
+
+.minimized {
+	display: none;
+}
+
+.burger {
+	line-height: 0;
+	cursor: pointer;
+}
+
+@container toolbar (max-width: 200px) {
+	.maximized {
+		display: none;
+	}
+
+	.minimized {
+		display: contents;
+	}
+
+	.burger {
+		padding: 4px 0;
+	}
 }
 
 .scrollable {

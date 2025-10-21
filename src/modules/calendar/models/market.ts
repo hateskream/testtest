@@ -1,7 +1,6 @@
 import { IconIds } from '@/shared/ui/icon';
 
 export enum MarketIds {
-	EntireWorld= 'entire-world',
 	USA = 'usa',
 	India = 'india',
 	Germany = 'germany',
@@ -18,7 +17,6 @@ export interface IMarketData {
 }
 
 export const markets: IMarketData[] = [
-	{ id: MarketIds.EntireWorld, label: 'Entire World', icon: IconIds.Globus },
 	{ id: MarketIds.USA, label: 'USA', icon: IconIds.USA },
 	{ id: MarketIds.India, label: 'India', icon: IconIds.India },
 	{ id: MarketIds.Germany, label: 'Germany', icon: IconIds.Germany },

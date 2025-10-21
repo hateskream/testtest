@@ -1,58 +1,58 @@
 [
-    {
-        "date": "2025-10-06",
-        "metrics": {
-            "economic": 43,
-            "earnings": 0,
-            "dividends": 600
-        }
-    },
-    {
-        "date": "2025-10-07",
-        "metrics": {
-            "economic": 24,
-            "earnings": 67,
-            "dividends": 651
-        }
-    },
-    {
-        "date": "2025-10-08",
-        "metrics": {
-            "economic": 95,
-            "earnings": 60,
-            "dividends": 639
-        }
-    },
-    {
-        "date": "2025-10-09",
-        "metrics": {
-            "economic": 17,
-            "earnings": 20,
-            "dividends": 892
-        }
-    },
-    {
-        "date": "2025-10-10",
-        "metrics": {
-            "economic": 98,
-            "earnings": 40,
-            "dividends": 372
-        }
-    },
-    {
-        "date": "2025-10-11",
-        "metrics": {
-            "economic": 97,
-            "earnings": 85,
-            "dividends": 96
-        }
-    },
-    {
-        "date": "2025-10-12",
-        "metrics": {
-            "economic": 45,
-            "earnings": 77,
-            "dividends": 885
-        }
-    }
+	{
+		"date": "2025-10-13",
+		"metrics": {
+			"economic": 56,
+			"earnings": 32,
+			"dividends": 743
+		}
+	},
+	{
+		"date": "2025-10-14",
+		"metrics": {
+			"economic": 88,
+			"earnings": 15,
+			"dividends": 512
+		}
+	},
+	{
+		"date": "2025-10-15",
+		"metrics": {
+			"economic": 31,
+			"earnings": 94,
+			"dividends": 420
+		}
+	},
+	{
+		"date": "2025-10-16",
+		"metrics": {
+			"economic": 72,
+			"earnings": 48,
+			"dividends": 801
+		}
+	},
+	{
+		"date": "2025-10-17",
+		"metrics": {
+			"economic": 19,
+			"earnings": 66,
+			"dividends": 275
+		}
+	},
+	{
+		"date": "2025-10-18",
+		"metrics": {
+			"economic": 90,
+			"earnings": 11,
+			"dividends": 654
+		}
+	},
+	{
+		"date": "2025-10-19",
+		"metrics": {
+			"economic": 62,
+			"earnings": 83,
+			"dividends": 507
+		}
+	}
 ]

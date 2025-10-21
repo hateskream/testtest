@@ -1,5 +1,6 @@
 import { toolbarSchema, type ToolbarSchemaType } from './schema.ts';
 import type { IToolbarState } from '@/modules/calendar';
+import { getHydrated, getRehydrated } from '@/modules/calendar/services/hydration.ts';
 
 export abstract class BaseRepository {
 	protected abstract getter(): Promise<ToolbarSchemaType>;
@@ -14,12 +15,16 @@ export abstract class BaseRepository {
 
 	protected rehydrate(data: ToolbarSchemaType): IToolbarState {
 		this.check(data);
-		return data;
+
+		return getRehydrated(data);
 	}
 
-	protected hydrate(data: ToolbarSchemaType): IToolbarState {
-		this.check(data);
-		return data;
+	protected hydrate(data: IToolbarState): ToolbarSchemaType {
+		const output = getHydrated(data);
+
+		this.check(output);
+
+		return output;
 	}
 
 	public async get(): Promise<IToolbarState> {
@@ -27,10 +32,8 @@ export abstract class BaseRepository {
 		return this.rehydrate(data);
 	}
 
-	public async set(state: IToolbarState): Promise<ToolbarSchemaType> {
+	public async set(state: IToolbarState) {
 		const hydrated = this.hydrate(state);
 		await this.setter(hydrated);
-
-		return hydrated;
 	}
 }

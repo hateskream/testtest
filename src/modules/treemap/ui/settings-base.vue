@@ -179,6 +179,7 @@ function updateColorDepth(newColorDepth: string) {
 
 <style scoped>
 .heatmap-toolbar {
+	margin-inline: 12px;
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;

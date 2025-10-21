@@ -31,6 +31,15 @@ function updateFilter(filterKey: string, filterValue: string) {
 </script>
 <template>
 	<div :class="classes.container">
+		<market-badge
+			v-model="market"
+			title="Categories"
+		/>
+
+		<div :class="[classes.lineDelimiterGroup, classes.preAllFilter]">
+			<ui-delimiter />
+		</div>
+
 		<div :class="classes.iconAllFilter">
 			<ui-position position="right-start">
 				<template #title>
@@ -44,52 +53,41 @@ function updateFilter(filterKey: string, filterValue: string) {
 
 				<template #content>
 					<market-filters-component
+						v-model:filters="filters"
 						v-model:market="market"
 						v-model:columns="columns"
+						:filters-values="props.filtersValues"
 					/>
 				</template>
 			</ui-position>
 		</div>
 
-		<div :class="classes.lineDelimiterGroup">
-			<ui-delimiter />
-			<ui-delimiter />
-		</div>
-
-		<market-badge
-			v-model="market"
-			title="Categories"
-		/>
-
-		<div :class="classes.lineDelimiterGroup">
+		<div :class="[classes.lineDelimiterGroup, classes.postAllFilter]">
 			<ui-delimiter />
 		</div>
 
-		<div :class="classes.tabs">
+		<div
+			v-for="(filterState, filterKey) in filters"
+			:key="filterKey"
+			:class="classes.tabs"
+		>
 			<div
-				v-for="(filterState, filterKey) in filters"
-				:key="filterKey"
-				:class="classes.tabs"
+				v-for="filterValue in props.filtersValues[filterKey]"
+				:key="filterValue.value"
+				:class="[
+					classes.tab,
+					{ [classes.tabActive]: filterValue.value === filterState.selected },
+				]"
+				@click="updateFilter(filterKey, filterValue.value)"
 			>
-				<div
-					v-for="filterValue in props.filtersValues[filterKey]"
-					:key="filterValue.value"
-					:is-active="filterValue.value === filterState.selected"
-					:class="[
-						classes.tab,
-						{ [classes.tabActive]: filterValue.value === filterState.selected },
-					]"
-					@click="updateFilter(filterKey, filterValue.value)"
-				>
-					<ui-icon
-						v-if="filterValue.icon"
-						:id="filterValue.icon.id"
-						:class="[classes.iconWrapper]"
-						:style="{ color: filterValue.icon.color }"
-					/>
+				<ui-icon
+					v-if="filterValue.icon"
+					:id="filterValue.icon.id"
+					:class="[classes.iconWrapper]"
+					:style="{ color: filterValue.icon.color }"
+				/>
 
-					{{ filterValue.name }}
-				</div>
+				{{ filterValue.name }}
 			</div>
 		</div>
 	</div>
@@ -107,10 +105,7 @@ function updateFilter(filterKey: string, filterValue: string) {
 	align-items: center;
 	gap: 8px;
 	margin-bottom: 8px;
-}
-
-.iconAllFilter {
-	cursor: pointer;
+	container: toolbar / inline-size;
 }
 
 .iconGainersColor {
@@ -155,7 +150,34 @@ function updateFilter(filterKey: string, filterValue: string) {
 	cursor: pointer;
 }
 
+.preAllFilter {
+	display: none;
+}
+
+.iconAllFilter {
+	display: none;
+	cursor: pointer;
+}
+
 .iconAllFilterColor {
 	color: var(--icon-color-base-300);
+}
+
+@container toolbar (max-width: 500px) {
+	.tabs {
+		display: none;
+	}
+
+	.preAllFilter {
+		display: unset;
+	}
+
+	.iconAllFilter {
+		display: unset;
+	}
+
+	.postAllFilter {
+		display: none;
+	}
 }
 </style>

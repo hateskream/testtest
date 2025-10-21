@@ -21,7 +21,6 @@ const excludeMarkets:MarketType[] = [
 		<template v-if="market !== 'stock'">
 			<div :class="classes.lineDelimiterGroup">
 				<ui-delimiter />
-				<ui-delimiter />
 			</div>
 			<div :class="classes.cexDexTabs">
 				<div

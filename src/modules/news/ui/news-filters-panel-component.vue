@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { UiModalBadgeIcon } from '@/shared/ui/modal';
-import { ModalBadge, ModalBadgeList, ModalItemSelector, ModalFilter } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { marketToLabel, type MarketType } from '@/modules/market';
 import {
@@ -94,41 +94,7 @@ function getScoreLevelActiveNumber(value: string) {
 
 <template>
 	<div :class="classes.container">
-		<div :class="classes.iconAllFilter">
-			<ui-position>
-				<template #title>
-					<ui-icon
-						:id="IconIds.NewsFilter"
-						width="20"
-						height="20"
-						:class="classes.iconAllFilterColor"
-					/>
-				</template>
-
-				<template #content>
-					<modal-filter>
-						<news-filters
-							v-model:selected-scores="selectedScores"
-							v-model:selected-segments="selectedSegments"
-							v-model:selected-sentiment="selectedSentiment"
-							v-model:selected-sources="selectedSources"
-							v-model:sort-by="sortBy"
-							v-model:locations="locations"
-							:segments="props.segments"
-							:selected-segment-tickers="props.selectedSegmentsTickers"
-							@select-all="emits('selectAll', $event)"
-							@unselect-all="emits('unselectAll', $event)"
-							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-						/>
-					</modal-filter>
-				</template>
-			</ui-position>
-		</div>
-
-		<ui-delimiter />
-
 		<div :class="classes.listFilters">
-			<ui-delimiter v-if="selectedSegments.size > 0" />
 			<div
 				v-if="selectedSegments.size > 0"
 				:class="classes.listFilterWithDelimiter"
@@ -157,12 +123,48 @@ function getScoreLevelActiveNumber(value: string) {
 				</modal-badge>
 			</div>
 
+			<ui-delimiter :class="classes.listFilterGroupDelimeter" />
+
+			<div :class="classes.listFilterGroup">
+				<ui-position>
+					<template #title>
+						<ui-icon
+							:id="IconIds.NewsFilter"
+							width="20"
+							height="20"
+							:class="classes.iconAllFilterColor"
+						/>
+					</template>
+
+					<template #content>
+						<modal-filter>
+							<template #content>
+								<news-filters
+									v-model:selected-scores="selectedScores"
+									v-model:selected-segments="selectedSegments"
+									v-model:selected-sentiment="selectedSentiment"
+									v-model:selected-sources="selectedSources"
+									v-model:sort-by="sortBy"
+									v-model:locations="locations"
+									:segments="props.segments"
+									:selected-segment-tickers="props.selectedSegmentsTickers"
+									@select-all="emits('selectAll', $event)"
+									@unselect-all="emits('unselectAll', $event)"
+									@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+								/>
+							</template>
+						</modal-filter>
+					</template>
+				</ui-position>
+			</div>
+
 			<div :class="classes.optionalFilters">
-				<ui-delimiter v-if="selectedScores.size > 0" />
 				<div
 					v-if="selectedScores.size > 0"
 					:class="classes.listFilterWithDelimiter"
 				>
+					<ui-delimiter />
+
 					<ui-modal-badge-icon>
 						<template #title>
 							<div :class="classes.badgeIcon">
@@ -203,6 +205,7 @@ function getScoreLevelActiveNumber(value: string) {
 				</div>
 
 				<ui-delimiter v-if="selectedSentiment.size > 0" />
+
 				<div
 					v-if="selectedSentiment.size > 0"
 					:class="classes.listFilterWithDelimiter"
@@ -312,8 +315,9 @@ function getScoreLevelActiveNumber(value: string) {
 .container {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	margin-bottom: 6px;
 	padding: 0 10px 0 16px;
+	gap: 6px;
 	container: filters / inline-size;
 }
 
@@ -321,8 +325,6 @@ function getScoreLevelActiveNumber(value: string) {
 	display: flex;
 	align-items: center;
 	max-width: 100%;
-	height: 42px;
-	padding-bottom: 4px;
 	overflow-x: auto;
 	gap: 6px;
 }
@@ -331,15 +333,45 @@ function getScoreLevelActiveNumber(value: string) {
 	display: contents;
 }
 
-@container filters (max-width: 320px) {
+.iconAllFilter {
+	line-height: 0;
+	cursor: pointer;
+}
+
+.listFilterGroup {
+	display: none;
+	line-height: 0;
+}
+
+.listFilterGroupDelimeter {
+	display: none;
+}
+
+@container filters (max-width: 400px) {
 	.optionalFilters {
 		display: none;
+	}
+
+	.iconAllFilter {
+		display: none;
+	}
+
+	.iconAllFilterDelimeter {
+		display: none;
+	}
+
+	.listFilterGroup {
+		display: block;
+	}
+
+	.listFilterGroupDelimeter {
+		display: block;
 	}
 }
 
 .badgeIcon {
 	display: flex;
-	padding: 2px 2.5px;
+	padding: 4px;
 }
 
 .iconBorder {
@@ -361,10 +393,6 @@ function getScoreLevelActiveNumber(value: string) {
 .icon {
 	width: 16px;
 	height: 16px;
-}
-
-.iconAllFilter {
-	cursor: pointer;
 }
 
 .iconAllFilterColor {

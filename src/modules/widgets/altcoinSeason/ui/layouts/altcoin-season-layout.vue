@@ -83,6 +83,15 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 		};
 	}
 
+	if (w === 2 && h <= 5) {
+		return {
+			performanceRank: true,
+			historicalValues: false,
+			top100: false,
+			chart: false,
+		};
+	}
+
 	if (w < 5 && h >= 11) {
 		return {
 			performanceRank: true,

@@ -38,7 +38,11 @@ const {
 	prevWeek,
 	resetWeek,
 	setSelected,
-	toolbar,
+	marketId,
+	impact,
+	eventType,
+	watchlistId,
+	watchlistSection,
 	weekDays,
 	watchlists,
 	eventBoard,
@@ -68,11 +72,11 @@ useEventBoardScroll({
 				<template #content>
 					<calendar-toolbar
 						v-if="!isDailyCalendarLoading"
-						v-model:country-state="toolbar.marketId"
-						v-model:impact-state="toolbar.impact"
-						v-model:event-state="toolbar.eventType"
-						v-model:watchlist-id-state="toolbar.watchlistId"
-						v-model:watchlist-section-state="toolbar.watchlistSection"
+						v-model:country-state="marketId"
+						v-model:impact-state="impact"
+						v-model:event-state="eventType"
+						v-model:watchlist-id-state="watchlistId"
+						v-model:watchlist-section-state="watchlistSection"
 						v-model:range-state="weekRange"
 						:initial-date="props.initialDate"
 						:base-date="baseDate"

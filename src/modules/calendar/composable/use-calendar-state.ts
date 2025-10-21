@@ -16,6 +16,7 @@ import {
 	useFavoritesState,
 	useToolbar,
 } from '@/modules/calendar';
+import { getRehydrated } from '@/modules/calendar/services';
 
 export interface IUseCalendarStateOptions {
 	toolbar: IUseToolbarStateOptions;
@@ -29,7 +30,15 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 	const selectedDate = ref(now.value);
 
 	const { watchlists } = useWatchlist();
-	const { state: toolbar, getToolbarDefaultState } = useToolbar(options.toolbar);
+	const {
+		state: toolbar,
+		marketId,
+		impact,
+		eventType,
+		watchlistId,
+		watchlistSection,
+		getToolbarDefaultState,
+	} = useToolbar(options.toolbar);
 	const { eventBoardFavorites, toggleFavorite } = useFavoritesState();
 
 	const weekRange = reactive<IEventBoardRange>({
@@ -54,7 +63,7 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 
 	function resetAll() {
 		resetWeek();
-		toolbar.value = getToolbarDefaultState();
+		toolbar.value = getRehydrated(getToolbarDefaultState());
 	}
 
 	watch(baseDate, newValue => {
@@ -78,10 +87,10 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 	const filters = computed(() => ({
 		range: weekRange,
 		filters: {
-			marketId: toolbar.value.marketId,
-			impact: toolbar.value.impact,
-			eventType: toolbar.value.eventType,
-			watchlist: watchlistSelectedSections.value,
+			marketId: Array.from(toolbar.value.marketId),
+			impact: Array.from(toolbar.value.impact),
+			eventType: Array.from(toolbar.value.eventType),
+			watchlist: Array.from(watchlistSelectedSections.value),
 		},
 	}));
 
@@ -158,6 +167,12 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 		eventBoardFavorites,
 		toggleFavorite,
 		weekDays,
+
+		marketId,
+		impact,
+		eventType,
+		watchlistId,
+		watchlistSection,
 
 		isError,
 		setSelected,

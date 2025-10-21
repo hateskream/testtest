@@ -8,19 +8,19 @@ import {
 	MarketBadge,
 	ModalBadge,
 	ModalBadgeList,
+	ModalFilter,
 	ModalItemSelector,
 	ModalItemSwitch,
-	ModalFilter,
 } from '@/modules/widgets/base';
 import {
-	stockToLabel,
+	Currency,
 	type DateRange,
-	Stock,
 	DisplayVariant,
-	SymbolDisplayVariant,
 	getDateLabelByType,
 	isDataRangeStock,
-	Currency,
+	Stock,
+	stockToLabel,
+	SymbolDisplayVariant,
 } from '../../model';
 import { MarketType } from '@/modules/market';
 
@@ -60,7 +60,18 @@ function updateCurrency(v: Currency) {
 <template>
 	<div :class="classes.performanceHeader">
 		<div :class="classes.listFilters">
-			<ui-position  :class="classes.iconAllFilter">
+			<market-badge
+				v-model="activeMarket"
+				:exclude-markets="[
+					MarketType.Commodities,
+					MarketType.Crypto,
+					MarketType.Indices
+				]"
+			/>
+
+			<ui-delimiter />
+
+			<ui-position :class="classes.iconAllFilter">
 				<template #title>
 					<ui-icon
 						:id="IconIds.NewsFilter"
@@ -87,18 +98,7 @@ function updateCurrency(v: Currency) {
 				</template>
 			</ui-position>
 
-			<ui-delimiter />
-
-			<market-badge
-				v-model="activeMarket"
-				:exclude-markets="[
-					MarketType.Commodities,
-					MarketType.Crypto,
-					MarketType.Indices
-				]"
-			/>
-
-			<modal-badge v-if="stock">
+			<modal-badge v-if="stock" :class="classes.stock">
 				<template #title>
 					{{stock}}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
@@ -120,7 +120,7 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge v-if="quoteCurrency">
+			<modal-badge v-if="quoteCurrency" :class="classes.currency">
 				<template #title>
 					{{quoteCurrency}}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
@@ -142,7 +142,7 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge>
+			<modal-badge :class="classes.date">
 				<template #title>
 					{{date}}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
@@ -164,7 +164,7 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge padding-left="2px">
+			<modal-badge :class="classes.settings" padding-left="2px">
 				<template #title>
 					<div :class="classes.mode">
 						<ui-icon
@@ -200,6 +200,7 @@ function updateCurrency(v: Currency) {
 	padding: 0 10px 0 16px;
 	border-bottom: 1px solid var(--border-color-base-100);
 	gap: 6px;
+	container: toolbar / inline-size;
 }
 
 .listFilters {
@@ -211,6 +212,8 @@ function updateCurrency(v: Currency) {
 }
 
 .iconAllFilter {
+	display: none;
+	line-height: 0;
 	cursor: pointer;
 }
 
@@ -228,5 +231,18 @@ function updateCurrency(v: Currency) {
 	border: 0.5px solid var(--color-border-surface-02, rgb(199 199 199 / 10%));
 	border-radius: var(--radius-full, 9999px);
 	backdrop-filter: blur(5px);
+}
+
+@container toolbar (max-width: 500px) {
+	.settings,
+	.date,
+	.currency,
+	.stock {
+		display: none;
+	}
+
+	.iconAllFilter {
+		display: block;
+	}
 }
 </style>
