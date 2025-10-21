@@ -1,5 +1,5 @@
 /* eslint-disable @stylistic/max-len */
-import { WidgetType } from '../widget';
+import { WidgetType } from '@/modules/dashboard-group';
 import type { PresetLayout } from './types';
 
 export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {

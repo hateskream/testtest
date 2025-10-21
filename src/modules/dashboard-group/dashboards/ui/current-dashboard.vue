@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import {
 	type IWidget,
-} from '../../core';
+} from '../../tv';
 import { getWidgetComponent, type IMeta } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 

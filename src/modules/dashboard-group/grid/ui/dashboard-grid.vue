@@ -24,10 +24,10 @@ import {
 	type ILayoutItem,
 	duplicate,
 	mapToWidgetState,
-} from '@/modules/dashboard-group/core';
+} from '@/modules/dashboard-group/tv';
 import { queryClient } from '@/shared/service/query-client';
 import { CurrentDashboardSymbol } from '../model';
-import type { IWidgetState, WidgetType } from '@/modules/dashboard-group/core';
+import type { IWidgetState, WidgetType } from '@/modules/dashboard-group';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { useDelayedLoading } from '@/shared/composables';
 

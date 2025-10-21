@@ -1,5 +1,5 @@
 
-import { WidgetType } from '../widget';
+import { WidgetType } from '@/modules/dashboard-group';
 import type { PresetLayout } from './types';
 
 export const STOCK_DASHBOARD_PRESET: PresetLayout = {

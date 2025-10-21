@@ -1,9 +1,9 @@
 import { computed, nextTick, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
+import { WidgetType } from '@/modules/dashboard-group';
 import {
 	type IDashboardTab,
-	WidgetType,
 	type IPosition,
 	type IWidgetState,
 	allWidgets,

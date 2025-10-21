@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type IDashboardTab } from '@/modules/dashboard-group/core';
+import { type IDashboardTab } from '@/modules/dashboard-group/tv';
 import type { ITab } from '../model';
 
 import TabItem from './tab-item.vue';

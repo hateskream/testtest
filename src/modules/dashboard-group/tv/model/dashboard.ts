@@ -6,8 +6,8 @@ import {
 	type IPosition,
 	type IWidget,
 	type IWidgetState,
-	type WidgetType,
 } from './widget';
+import { WidgetType } from '@/modules/dashboard-group';
 import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 import { NAME_TO_PRESET, type PresetName } from './dashbord-presets';
 

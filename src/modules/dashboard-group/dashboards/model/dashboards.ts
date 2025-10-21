@@ -1,6 +1,5 @@
 import type { Component } from 'vue';
 
-import { WidgetType } from '../../core';
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboard } from '@/modules/widgets/market-cap';
@@ -16,6 +15,7 @@ import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { PriceChartDashboard } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
+import { WidgetType } from '@/modules/dashboard-group';
 
 export interface ISize {
 	w: number;
