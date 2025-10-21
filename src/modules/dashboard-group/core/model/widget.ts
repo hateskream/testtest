@@ -195,7 +195,7 @@ const EthGas: Preset = {
 	description: 'Gas fees tracker',
 	minSize: { w: 1, h: 2 },
 	maxSize: { w: Infinity, h: Infinity },
-	defaultSize: { w: 2, h: 4 },
+	defaultSize: { w: 1, h: 2 },
 };
 
 const ProdPresets: AllPresets = {

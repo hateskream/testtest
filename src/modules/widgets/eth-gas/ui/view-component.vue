@@ -12,9 +12,7 @@ export interface IViewComponentProps {
 	size: ISize;
 }
 
-
 const props = defineProps<IViewComponentProps>();
-
 
 // Моковые данные для gas карточек
 const gasData: IGasCardData[] = [
@@ -44,30 +42,40 @@ const layoutConfig = computed(() => {
 				showCards: 1,
 				compact: true,
 				gap: '12px',
-				showStats: false,
-				showHorizontalStats: false,
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
-
-		if (h <= 4) {
+		if (h === 3) {
 			return {
 				columns: 1,
-				showCards: 2,
-				compact: true,
+				showCards: 1,
+				compact: false,
 				gap: '12px',
-				showStats: false,
-				showHorizontalStats: false,
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 
-		if (h <= 7) {
+		if (h <= 5) {
 			return {
 				columns: 1,
 				showCards: 3,
 				compact: true,
-				gap: '16px',
-				showStats: false,
-				showHorizontalStats: false,
+				gap: '12px',
+				statsPosition: 'none' as const,
+				isTable: true,
+			};
+		}
+
+		if (h <= 6) {
+			return {
+				columns: 1,
+				showCards: 3,
+				compact: false,
+				gap: '8px',
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 		if (h === 8) {
@@ -76,8 +84,8 @@ const layoutConfig = computed(() => {
 				showCards: 3,
 				compact: false,
 				gap: '16px',
-				showStats: false,
-				showHorizontalStats: false,
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 	}
@@ -88,12 +96,22 @@ const layoutConfig = computed(() => {
 	if (w === 2) {
 		if (h === 2) {
 			return {
-				columns: 2,
-				showCards: 2,
+				columns: 3,
+				showCards: 3,
 				compact: true,
-				gap: '16px',
-				showStats: false,
-				showHorizontalStats: false,
+				gap: '3px',
+				statsPosition: 'none' as const,
+				isTable: true,
+			};
+		}
+		if (h <= 4) {
+			return {
+				columns: 3,
+				showCards: 3,
+				compact: false,
+				gap: '3px',
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 
@@ -101,10 +119,10 @@ const layoutConfig = computed(() => {
 			return {
 				columns: 2,
 				showCards: 3,
-				compact: true,
-				gap: '8px',
-				showStats: false,
-				showHorizontalStats: false,
+				compact: false,
+				gap: '12px',
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 
@@ -114,29 +132,29 @@ const layoutConfig = computed(() => {
 				showCards: 3,
 				compact: false,
 				gap: '20px',
-				showStats: false,
-				showHorizontalStats: false,
+				statsPosition: 'none' as const,
+				isTable: true,
 			};
 		}
 
 		if (h === 7) {
 			return {
-				columns: 1,
+				columns: 2,
 				showCards: 3,
 				compact: true,
-				gap: '20px',
-				showStats: true,
-				showHorizontalStats: false,
+				gap: '12px',
+				statsPosition: 'bottom' as const,
+				isTable: true,
 			};
 		}
 		if (h > 7) {
 			return {
-				columns: 1,
+				columns: 2,
 				showCards: 3,
 				compact: false,
-				gap: '20px',
-				showStats: true,
-				showHorizontalStats: false,
+				gap: '12px',
+				statsPosition: 'right' as const,
+				isTable: true,
 			};
 		}
 	}
@@ -151,40 +169,89 @@ const layoutConfig = computed(() => {
 				showCards: 3,
 				compact: true,
 				gap: '20px',
-				showStats: false,
-				showHorizontalStats: false,
+				statsPosition: 'none' as const,
+				isTable: false,
 			};
 		}
-		if (h ===3 ) {
+		if (h === 3) {
 			return {
 				columns: 3,
 				showCards: 3,
 				compact: false,
 				gap: '20px',
-				showStats: false,
-				showHorizontalStats: true,
+				statsPosition: 'none' as const,
+				isTable: false,
 			};
 		}
 
-		if (h >= 4 && h < 5) {
+		if ( h <= 5) {
 			return {
 				columns: 3,
 				showCards: 3,
 				compact: true,
 				gap: '20px',
-				showStats: false,
-				showHorizontalStats: true,
+				statsPosition: 'bottom' as const,
+				isTable: false,
 			};
 		}
 
-		if (h >= 5) {
+		if (h <= 9) {
 			return {
 				columns: 3,
 				showCards: 3,
 				compact: false,
 				gap: '20px',
-				showStats: false,
-				showHorizontalStats: true,
+				statsPosition: 'bottom' as const,
+				isTable: true,
+			};
+		}
+	}
+
+
+	// ============================================
+	// WIDTH 4+
+	// ============================================
+	if (w >= 4) {
+		if (h === 2) {
+			return {
+				columns: 3,
+				showCards: 3,
+				compact: true,
+				gap: '20px',
+				statsPosition: 'right' as const,
+				isTable: false,
+			};
+		}
+		if (h === 3) {
+			return {
+				columns: 3,
+				showCards: 3,
+				compact: false,
+				gap: '20px',
+				statsPosition: 'right' as const,
+				isTable: true,
+			};
+		}
+
+		if ( h <= 5) {
+			return {
+				columns: 3,
+				showCards: 3,
+				compact: true,
+				gap: '20px',
+				statsPosition: 'bottom' as const,
+				isTable: false,
+			};
+		}
+
+		if (h <= 9) {
+			return {
+				columns: 3,
+				showCards: 3,
+				compact: false,
+				gap: '20px',
+				statsPosition: 'bottom' as const,
+				isTable: true,
 			};
 		}
 	}
@@ -197,8 +264,8 @@ const layoutConfig = computed(() => {
 		showCards: 3,
 		compact: false,
 		gap: '16px',
-		showStats: false,
-		showHorizontalStats: false,
+		statsPosition: 'none' as const,
+		isTable: true,
 	};
 });
 </script>
@@ -208,8 +275,8 @@ const layoutConfig = computed(() => {
 		:class="[
 			classes.container,
 			{
-				[classes.withStats]: layoutConfig.showStats,
-				[classes.withHorizontalStats]: layoutConfig.showHorizontalStats
+				[classes.withStatsRight]: layoutConfig.statsPosition === 'right',
+				[classes.withStatsBottom]: layoutConfig.statsPosition === 'bottom'
 			}
 		]"
 		:style="{
@@ -223,22 +290,26 @@ const layoutConfig = computed(() => {
 				:key="index"
 				:data="data"
 				:compact="layoutConfig.compact"
+				:class="{
+					[classes.fullWidth]: layoutConfig.columns === 2 && index === 2
+				}"
 			/>
 		</div>
 
-		<!-- Вертикальная статистика справа (для width 2) -->
+		<!-- Статистика справа (для width 2) -->
 		<gas-stats-card
-			v-if="layoutConfig.showStats"
+			v-if="layoutConfig.statsPosition === 'right'"
 			:class="classes.statsCard"
 			:data="statsData"
+			:is-table="layoutConfig.isTable"
 		/>
 
-		<!-- Горизонтальная статистика снизу (для width 3+) -->
+		<!-- Статистика снизу (для width 3+) -->
 		<gas-stats-card
-			v-if="layoutConfig.showHorizontalStats"
-			:class="classes.horizontalStatsCard"
+			v-if="layoutConfig.statsPosition === 'bottom'"
+			:class="classes.bottomStatsCard"
 			:data="statsData"
-			:is-horizontal="true"
+			:is-table="layoutConfig.isTable"
 		/>
 	</div>
 </template>
@@ -258,11 +329,11 @@ const layoutConfig = computed(() => {
 	grid-template-columns: repeat(var(--cards-columns, 1), 1fr);
 	gap: var(--gap, 16px);
 	flex: 1;
-	align-content: start;
+	align-content: end;
 }
 
-/* Когда показываем вертикальную статистику (width 2) */
-.withStats .cardsContainer {
+/* Когда показываем статистику справа (width 2) */
+.withStatsRight .cardsContainer {
 	flex: 2;
 }
 
@@ -271,18 +342,22 @@ const layoutConfig = computed(() => {
 	min-width: 0;
 }
 
-/* Когда показываем горизонтальную статистику (width 3+) */
-.withHorizontalStats {
+/* Когда показываем статистику снизу (width 3+) */
+.withStatsBottom {
 	flex-direction: column;
 	gap: 12px;
 }
 
-.withHorizontalStats .cardsContainer {
+.withStatsBottom .cardsContainer {
 	width: 100%;
 }
 
-.horizontalStatsCard {
+.bottomStatsCard {
 	width: 100%;
 	margin-top: -4px;
+}
+
+.fullWidth {
+	grid-column: 1 / -1;
 }
 </style>
