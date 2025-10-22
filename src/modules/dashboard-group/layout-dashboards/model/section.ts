@@ -5,21 +5,24 @@ import { createWidget, type IWidget } from './widget';
 export interface ISection {
 	id: string;
 	name: string;
+	width: number;
 	widgets: IWidget[];
 }
 
 export interface ISectionPreset {
 	name: string;
+	width: number;
 	widgets: {
 		widgetType: WidgetType;
 		defaultState: string;
 	}[];
 }
 
-export function createSectionFromPreset({ widgets, name }: ISectionPreset): ISection {
+export function createSectionFromPreset({ widgets, name, width }: ISectionPreset): ISection {
 	return {
 		id: uuidv4(),
 		name,
+		width,
 		widgets: widgets.map(({ widgetType, defaultState }) => createWidget(widgetType, defaultState)),
 	};
 }

@@ -118,11 +118,15 @@ export function rehydrateWidget(
 	defaultStateType: string,
 ): IWidget | null {
 	if (isWidgetTypeKey(widgetType) === false) {
+		// eslint-disable-next-line no-console
+		console.error(`Invalid widget type: ${widgetType}`);
 		return null;
 	}
 
 	const preset = createPreset(widgetType);
 	if (!preset) {
+		// eslint-disable-next-line no-console
+		console.error(`Preset not found for widget type: ${widgetType}`);
 		return null;
 	}
 
