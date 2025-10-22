@@ -326,16 +326,21 @@
 		"value": "High",
 		"status": "caution"
 	},
-	"isOpenNow": {
-		"cellType": "isOpen",
-		"columnType": "isOpen",
-		"value": false
-	}
+	"open": {
+		"cellType": "open",
+		"columnType": "open",
+		"value": true
+	},
 
 	"trustScore": {
 		"cellType": "Score",
 		"columnType": "trustScore",
 		"value": "2",
 		"score": 2
+	},
+	"incentive": {
+		"cellType": "Check",
+		"columnType": "incentive",
+		"value": false
 	}
 }

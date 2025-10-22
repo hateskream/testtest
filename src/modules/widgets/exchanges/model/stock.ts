@@ -25,5 +25,11 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			isShow: true,
 			groupOrder: 0,
 		},
+		{
+			columnType: ColumnType.Open,
+			isDraggable: false,
+			isShow: true,
+			groupOrder: 2,
+		},
 	]);
 

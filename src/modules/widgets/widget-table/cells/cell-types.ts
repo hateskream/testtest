@@ -10,6 +10,7 @@ import CellPlate from './cell-plate.vue';
 import TableCellChart from './table-cell-chart.vue';
 import TableCellRange from './table-cell-range.vue';
 import TableCellScore from './table-cell-score.vue';
+import TableCellIsOpen from './table-cell-is-open.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -22,6 +23,7 @@ export enum CellType {
 	PLATE = 'plate',
 	EMPTY = 'empty',
 	SCORE = 'score',
+	IS_OPEN = 'open',
 }
 
 
@@ -39,6 +41,7 @@ const components: Record<CellType, Component> = {
 	[CellType.CHART]: TableCellChart,
 	[CellType.EMPTY]: CellEmptyStateComponent,
 	[CellType.SCORE]: TableCellScore,
+	[CellType.IS_OPEN]: TableCellIsOpen,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

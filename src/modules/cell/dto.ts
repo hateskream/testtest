@@ -1,4 +1,4 @@
-import type { CellType, ColumnType, Magnitude, Status, SymbolType, Trend } from './domain';
+import type {CellType, ColumnType, Magnitude, Status, SymbolType, Trend} from './domain';
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null | undefined };
 
@@ -104,8 +104,29 @@ export type LabelDto = BaseDto &
 
 export type ScoreDto = BaseDto &
 	Nullable<{
-		value:string;
-		score:number;
+		value: string;
+		score: number;
 	}>;
 
-export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto | LabelDto | ScoreDto ;
+
+export type OpenDto = BaseDto &
+	Nullable<{
+		value: boolean;
+	}>;
+
+export type CheckDto = BaseDto &
+	Nullable<{
+		value: boolean;
+	}>;
+
+export type CellDto =
+	SymbolDto
+	| NumberDto
+	| PercentDto
+	| SvgChartDto
+	| TextDto
+	| RangeDto
+	| LabelDto
+	| ScoreDto
+	| OpenDto
+	| CheckDto

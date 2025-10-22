@@ -47,6 +47,14 @@ export interface ITableRangeCell {
 	endMagnitude?: string;
 }
 
+export interface ITableOpenCell {
+	value: boolean | string;
+}
+
+export interface ITableCheckCell {
+	value: boolean;
+}
+
 enum TrendType {
 	UP = 'up',
 	DOWN = 'down',

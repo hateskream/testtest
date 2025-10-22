@@ -12,7 +12,7 @@ import {
 	isSvgChartCell,
 	isRangeCell,
 	isForexSymbolCell,
-	isScoreCell,
+	isScoreCell, isOpenCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -35,6 +35,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Range]: TableColumnType.RANGE,
 	[CellType.Empty]: TableColumnType.TEXT,
 	[CellType.Score]: TableColumnType.SCORE,
+	[CellType.Open]: TableColumnType.IS_OPEN,
 };
 
 const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => unknown> = {
@@ -46,14 +47,15 @@ const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => 
 	[CellType.Range]: mapRangeToTable,
 	[CellType.Label]: mapLabelToTable,
 	[CellType.Score]: mapScoreToTable,
+	[CellType.Open]: mapOpenToTable,
 };
 
 function mapCellToTable(cell: Cell): unknown {
 	if (cell.cellType === CellType.Empty) {
 		return mapEmptyToTable(cell);
 	}
-
 	return cellTypeToTableMapper[cell.cellType](cell);
+
 }
 
 function mapSymbolToTable(cell: Cell) {
@@ -126,10 +128,25 @@ function mapNumberToTable(cell: Cell) {
 }
 
 function mapScoreToTable(cell: Cell) {
-	if (isScoreCell(cell)) {
-		return cell;
+	if (!isScoreCell(cell)) {
+		return mapEmptyToTable(cell);
 	}
-	return cell;
+	return {
+		cellType: CellType.Score,
+		value: cell.value,
+		score: cell.score,
+	};
+}
+
+
+function mapOpenToTable(cell: Cell) {
+	if (!isOpenCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+	return {
+		cellType: CellType.Open,
+		value: cell.value,
+	};
 }
 
 function mapPercentToTable(cell: Cell) {

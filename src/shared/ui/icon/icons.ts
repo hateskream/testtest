@@ -98,4 +98,6 @@ export enum IconIds {
 	ControlFullView = 'control-full-view',
 	ToCompact = 'to-compact',
 	ToFull = 'to-full',
+	ControlCheck = 'control-check',
+	ControlClose = 'control-close',
 }

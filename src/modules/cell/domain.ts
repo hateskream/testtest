@@ -71,7 +71,8 @@ export enum ColumnType {
 
 	Volatility = 'volatility',
 	TrustScore = 'trustScore',
-	isOpenNow = 'isOpenNow'
+	Open = 'open',
+	Incentive = 'incentive',
 }
 
 export enum CellType {
@@ -84,7 +85,8 @@ export enum CellType {
 	Empty = 'Empty',
 	Label = 'Label',
 	Score = 'Score',
-	isOpen = 'isOpen',
+	Open = 'open',
+	Check = 'check',
 }
 
 export enum Trend {
@@ -174,11 +176,11 @@ export interface IPlaneTextSymbolCell extends ISymbolCellBase {
 }
 
 export type ISymbolCell =
-  | IIndexSymbolCell
-  | ICommoditySymbolCell
-  | IStockSymbolCell
-  | ICryptoSymbolCell
-  | IForexSymbolCell
+	| IIndexSymbolCell
+	| ICommoditySymbolCell
+	| IStockSymbolCell
+	| ICryptoSymbolCell
+	| IForexSymbolCell
 	| IPlaneTextSymbolCell;
 
 export interface INumberCell extends IBaseCell {
@@ -212,8 +214,8 @@ export interface ITextCell extends IBaseCell {
 	value: string;
 }
 
-export interface IIsOpen extends IBaseCell {
-	cellType: CellType.isOpen;
+export interface IOpenCell extends IBaseCell {
+	cellType: CellType.Open;
 	value: boolean | string;
 }
 
@@ -232,6 +234,12 @@ export interface ILableCell extends IBaseCell {
 	status: Status;
 }
 
+
+export interface ICheckCell extends IBaseCell {
+	cellType: CellType.Check;
+	value: boolean;
+}
+
 export type Cell =
 	| IEmptyCell
 	| ISymbolCell
@@ -241,7 +249,9 @@ export type Cell =
 	| ITextCell
 	| ILableCell
 	| IRangeCell
-	| IScoreCell;
+	| IScoreCell
+	| IOpenCell
+	| ICheckCell;
 
 export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Symbol]: CellType.Symbol,
@@ -309,7 +319,8 @@ export const columnToCell: Record<ColumnType, CellType> = {
 
 	[ColumnType.Volatility]: CellType.Label,
 	[ColumnType.TrustScore]: CellType.Score,
-	[ColumnType.isOpenNow]: CellType.isOpen
+	[ColumnType.Open]: CellType.Open,
+	[ColumnType.Incentive]: CellType.Check,
 };
 
 export type ColumnToCell = {
@@ -378,7 +389,8 @@ export type ColumnToCell = {
 
 	[ColumnType.Volatility]: ILableCell;
 	[ColumnType.TrustScore]: IScoreCell;
-	[ColumnType.isOpenNow]: IIsOpen
+	[ColumnType.Open]: IOpenCell;
+	[ColumnType.Incentive]: ICheckCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

@@ -391,4 +391,16 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Trust score',
 		groupName: 'Trust score',
 	},
+	[ColumnType.Open]: {
+		columnName: 'Is Open',
+		tooltip: 'Is open now?',
+		settingsName: 'Is open',
+		groupName: 'Is open',
+	},
+	[ColumnType.Incentive]: {
+		columnName: 'Incentive',
+		tooltip: 'Incentive',
+		settingsName: 'Incentive',
+		groupName: 'Incentive',
+	},
 };

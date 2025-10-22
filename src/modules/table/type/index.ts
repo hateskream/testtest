@@ -11,6 +11,7 @@ export enum TableColumnType {
 	EMPTY = 'empty',
 	PLATE = 'plate',
 	SCORE = 'score',
+	IS_OPEN = 'open',
 }
 
 export type SortDirection = 'asc' | 'desc' | 'none';
