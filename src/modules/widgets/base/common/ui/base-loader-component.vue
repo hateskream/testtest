@@ -7,19 +7,19 @@ import { UiSkeletonGroup } from '@/shared/ui/skeleton';
 interface IBaseLoaderComponentProps {
 	rowHeight?: number;
 	rowCount?: number;
-	gap?: number;
+	rowGap?: number;
 }
 
 const props = withDefaults(defineProps<IBaseLoaderComponentProps>(), {
 	rowCount: 0,
 	rowHeight: 64,
-	gap: 10,
+	rowGap: 10,
 });
 
 const { height: contentHeight } = useElementSize(useTemplateRef('contentRef'));
 
 const calculatedLinesCount = computed(() => {
-	return Math.floor(contentHeight.value / (props.rowHeight + props.gap));
+	return Math.floor(contentHeight.value / (props.rowHeight + props.rowGap));
 });
 
 const optimizedLinesCount = computed(() => {
@@ -27,7 +27,7 @@ const optimizedLinesCount = computed(() => {
 });
 
 const lineHeight = computed(() => props.rowHeight + 'px');
-const gapInPx = computed(() => props.gap + 'px');
+const rowGapInPx = computed(() => props.rowGap + 'px');
 </script>
 
 <template>
@@ -38,7 +38,7 @@ const gapInPx = computed(() => props.gap + 'px');
 				<ui-skeleton-group
 					:count="optimizedLinesCount"
 					:height="lineHeight"
-					:gap="gapInPx"
+					:gap="rowGapInPx"
 				/>
 			</slot>
 		</div>
