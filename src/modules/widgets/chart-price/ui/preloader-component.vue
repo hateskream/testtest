@@ -5,7 +5,7 @@ import { BaseLoaderComponent } from '@/modules/widgets/base';
 
 <template>
 	<base-loader-component :row-height="40" :class="classes.preloaderContainer">
-		<template #before>
+		<template #header>
 			<div :class="classes.preloaderHeader">
 				<ui-skeleton width="100px" height="24px" />
 				<ui-skeleton width="30px" height="24px" />

@@ -32,7 +32,7 @@ const rowGapInPx = computed(() => props.rowGap + 'px');
 
 <template>
 	<div :class="classes.container">
-		<slot name="before"></slot>
+		<slot name="header"></slot>
 		<div ref="contentRef" :class="classes.content">
 			<slot :lines-count="optimizedLinesCount">
 				<ui-skeleton-group
@@ -42,7 +42,7 @@ const rowGapInPx = computed(() => props.rowGap + 'px');
 				/>
 			</slot>
 		</div>
-		<slot name="after"></slot>
+		<slot name="footer"></slot>
 	</div>
 </template>
 

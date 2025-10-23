@@ -5,7 +5,7 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 
 <template>
 	<base-loader-component :class="classes.preloaderContainer">
-		<template #before>
+		<template #header>
 			<div>
 				<ui-skeleton width="30%" height="32px" />
 			</div>
