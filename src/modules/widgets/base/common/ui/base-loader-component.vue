@@ -49,8 +49,8 @@ const rowGapInPx = computed(() => props.rowGap + 'px');
 <style module="classes">
 .container {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-	height: 100%;
 	padding: 0 16px 16px;
 }
 
