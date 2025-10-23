@@ -61,6 +61,7 @@ const lineHeight = computed(() => props.rowHeight + 'px');
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	padding: 0 16px 16px;
 }
 
 .content {

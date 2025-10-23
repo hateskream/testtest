@@ -3,11 +3,5 @@ import { BaseLoaderComponent } from '@/modules/widgets/base';
 </script>
 
 <template>
-	<base-loader-component :row-height="100" :class="classes.preloaderContainer" />
+	<base-loader-component :row-height="100" />
 </template>
-
-<style module="classes">
-.preloaderContainer {
-	padding: 0 16px 16px;
-}
-</style>

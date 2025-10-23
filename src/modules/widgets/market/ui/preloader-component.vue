@@ -15,7 +15,6 @@ import { BaseLoaderComponent } from '@/modules/widgets/base';
 
 <style module="classes">
 .preloaderContainer {
-	padding: 0 16px 16px;
 	gap: 8px;
 }
 </style>
