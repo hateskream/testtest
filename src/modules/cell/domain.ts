@@ -86,7 +86,7 @@ export enum CellType {
 	Label = 'Label',
 	Score = 'Score',
 	Open = 'open',
-	Check = 'check',
+	Check = 'Check',
 }
 
 export enum Trend {

@@ -2,6 +2,7 @@
 
 
 import type { ITableCheckCell } from '../model';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 
 interface IProps {
@@ -15,7 +16,20 @@ const props = defineProps<IProps>();
 
 <template>
 	<div :class="classes.chartContainer">
-		{{props.data}}
+		<ui-icon
+			v-if="props.data.value"
+			:id="IconIds.ControlCheck"
+			width="12"
+			height="12"
+		/>
+		<ui-icon
+			v-else
+			:id="IconIds.ControlClose"
+			:class="classes.closeCrest"
+			width="12"
+			height="12"
+		/>
+
 	</div>
 </template>
 
@@ -29,15 +43,8 @@ const props = defineProps<IProps>();
 	height: 32px;
 }
 
-
-.value {
-	text-align: left;
-	color: var(--text-color-base-500);
-}
-
-.iconWrapper {
-	margin-left: 4px;
-	transform: scaleX(-1) translateY(4px);
+.closeCrest {
+	color: var(--icon-color-base-300);
 }
 
 </style>

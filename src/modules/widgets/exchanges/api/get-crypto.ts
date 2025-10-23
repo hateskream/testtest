@@ -75,6 +75,7 @@ async function getMockData(): Promise<IPreparedResponse> {
 		ColumnType.MaxSupply,
 		ColumnType.TrustScore,
 		ColumnType.Open,
+		ColumnType.Incentive,
 	];
 
 	const response: IPreparedResponse = {

@@ -12,7 +12,7 @@ import {
 	isSvgChartCell,
 	isRangeCell,
 	isForexSymbolCell,
-	isScoreCell, isOpenCell,
+	isScoreCell, isOpenCell, isCheckCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -36,6 +36,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Empty]: TableColumnType.TEXT,
 	[CellType.Score]: TableColumnType.SCORE,
 	[CellType.Open]: TableColumnType.IS_OPEN,
+	[CellType.Check]: TableColumnType.CHECK,
 };
 
 const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => unknown> = {
@@ -48,12 +49,14 @@ const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => 
 	[CellType.Label]: mapLabelToTable,
 	[CellType.Score]: mapScoreToTable,
 	[CellType.Open]: mapOpenToTable,
+	[CellType.Check]: mapCheckToTable,
 };
 
 function mapCellToTable(cell: Cell): unknown {
 	if (cell.cellType === CellType.Empty) {
 		return mapEmptyToTable(cell);
 	}
+	console.log(cell.cellType, cell);
 	return cellTypeToTableMapper[cell.cellType](cell);
 
 }
@@ -172,6 +175,17 @@ function mapTextToTable(cell: Cell) {
 
 function mapLabelToTable(cell: Cell) {
 	if (!isLabelCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
+	return {
+		value: cell.value,
+	};
+}
+
+
+function mapCheckToTable(cell: Cell) {
+	if (!isCheckCell(cell)) {
 		return mapEmptyToTable(cell);
 	}
 

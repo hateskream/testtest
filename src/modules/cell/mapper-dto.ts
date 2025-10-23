@@ -35,7 +35,6 @@ import type {
 	SymbolDto,
 	TextDto,
 } from './dto';
-import {isCheckCell} from "@/modules/cell/check.ts";
 
 
 export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
@@ -263,7 +262,7 @@ export function mapCheck(dto: CellDto): ICheckCell | IEmptyCell {
 	if (isEmpty(dto)) {
 		return createEmpty(dto);
 	}
-	if (isCheckCell(dto)) {
+	if (isCheckDto(dto)) {
 		return {
 			cellType: CellType.Check,
 			columnType: dto.columnType,
@@ -356,6 +355,11 @@ function isLabelDto(dto: CellDto): dto is LabelDto {
 
 function isIsOpenDto(dto: CellDto): dto is OpenDto {
 	return dto.cellType === CellType.Open;
+}
+
+
+function isCheckDto(dto: CellDto): dto is OpenDto {
+	return dto.cellType === CellType.Check;
 }
 
 function createEmpty(dto: CellDto): IEmptyCell {

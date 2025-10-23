@@ -14,7 +14,7 @@ import {
 	isEmptyCell,
 	type TableRow,
 	mapLabel,
-	mapScore, mapOpen,
+	mapScore, mapOpen, mapCheck,
 } from '.';
 import type { CellDto } from './dto';
 
@@ -100,6 +100,7 @@ const cellTypeToMapper: Record<Exclude<CellType, 'Empty'>, (dto: CellDto) => Cel
 	[CellType.Label]: mapLabel,
 	[CellType.Score]: mapScore,
 	[CellType.Open]: mapOpen,
+	[CellType.Check]: mapCheck,
 };
 
 function mapDtoToCell(cellType: CellType, dto: CellDto) {
