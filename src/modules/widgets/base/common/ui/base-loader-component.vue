@@ -6,42 +6,28 @@ import { UiSkeletonGroup } from '@/shared/ui/skeleton';
 
 interface IBaseLoaderComponentProps {
 	rowHeight?: number;
-	minLines?: number;
-	maxLines?: number;
 	rowCount?: number;
 	gap?: number;
-	fitMode?: 'shrink' | 'expand';
 }
 
 const props = withDefaults(defineProps<IBaseLoaderComponentProps>(), {
-	minLines: 2,
-	maxLines: Infinity,
-	rowCount: undefined,
+	rowCount: 0,
 	rowHeight: 64,
 	gap: 10,
-	fitMode: 'shrink',
 });
 
 const { height: contentHeight } = useElementSize(useTemplateRef('contentRef'));
 
 const calculatedLinesCount = computed(() => {
-	const rawCount = contentHeight.value / (props.rowHeight + props.gap);
-
-	if (props.fitMode === 'shrink') {
-		return Math.floor(rawCount);
-	}
-
-	return Math.ceil(rawCount);
+	return Math.floor(contentHeight.value / (props.rowHeight + props.gap));
 });
 
 const optimizedLinesCount = computed(() => {
-	return Math.max(
-		props.minLines,
-		Math.min(props.maxLines, props.rowCount || calculatedLinesCount.value),
-	);
+	return Math.max(2, props.rowCount || calculatedLinesCount.value);
 });
 
 const lineHeight = computed(() => props.rowHeight + 'px');
+const gapInPx = computed(() => props.gap + 'px');
 </script>
 
 <template>
@@ -49,7 +35,11 @@ const lineHeight = computed(() => props.rowHeight + 'px');
 		<slot name="before"></slot>
 		<div ref="contentRef" :class="classes.content">
 			<slot :lines-count="optimizedLinesCount">
-				<ui-skeleton-group :count="optimizedLinesCount" :height="lineHeight" />
+				<ui-skeleton-group
+					:count="optimizedLinesCount"
+					:height="lineHeight"
+					:gap="gapInPx"
+				/>
 			</slot>
 		</div>
 		<slot name="after"></slot>
@@ -65,7 +55,7 @@ const lineHeight = computed(() => props.rowHeight + 'px');
 }
 
 .content {
-	height: 100%;
+	flex-grow: 1;
 	overflow-y: hidden;
 }
 </style>
