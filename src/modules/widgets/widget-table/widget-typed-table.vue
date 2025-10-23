@@ -1,21 +1,25 @@
 <script setup lang="ts" generic="T">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { computed, getCurrentInstance, ref } from 'vue';
 
 import { getComponentByType, CellType } from './cells/cell-types';
-import type {
-	IGenericTableColumn,
-	IGenericTableSection,
-	IGenericTableRow,
-	ISortConfig,
-	IDragDropEvent,
+import {
+	type IGenericTableColumn,
+	type IGenericTableSection,
+	type IGenericTableRow,
+	type ISortConfig,
+	type IDragDropEvent,
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
 import { ModalFilterTabWrapper } from '@/modules/widgets/base';
 
-export interface IExtendedTableColumn extends IGenericTableColumn {
-	type?: string | undefined;
+export interface IExtendedTableColumn extends Omit<IGenericTableColumn, 'type'> {
+	type: string;
+}
+
+export interface ITickerState {
+	isShowLogo: boolean;
+	isShowTicker: boolean;
+	isShowDescription: boolean;
 }
 
 export interface IProps<T> {
@@ -61,12 +65,6 @@ export interface IEmits<T> {
 	(e: 'click-on-row', tickerId: string): void;
 
 	(e: 'click-on-ticker', tickerId: string): void;
-}
-
-interface ITickerState {
-	isShowLogo: boolean;
-	isShowTicker: boolean;
-	isShowDescription: boolean;
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {
@@ -216,7 +214,7 @@ const tickerState = computed(() => {
 		<!-- Forward section header slot -->
 		<template #section-header="sectionProps">
 			<slot name="section-header" v-bind="sectionProps">
-				{{ sectionProps.section.title }}
+				{{ (sectionProps as any).section.title }}
 			</slot>
 		</template>
 

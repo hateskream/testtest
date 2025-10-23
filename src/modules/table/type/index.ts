@@ -24,7 +24,7 @@ export interface IGenericTableColumn {
 	visible: boolean;
 	width?: number;
 	minWidth?: number;
-	type: TableColumnType;
+	type: TableColumnType | string;
 	group?: {
 		name: string;
 		displayName: string;
@@ -49,7 +49,7 @@ export interface ICellWrapper {
 // Generic types using cell wrapper structure
 export interface IGenericTableRow<T = Record<string, ICellWrapper>> {
 	id: string;
-	data: UnwrapRef<T>;
+	data: T;
 }
 
 export interface IGenericTableSection<T = Record<string, ICellWrapper>> {
@@ -64,7 +64,7 @@ export interface IDragDropEvent<T = Record<string, ICellWrapper>> {
 	sectionId: string;
 	oldIndex?: number;
 	newIndex?: number;
-	element?: IGenericTableRow<T>;
+	element?: IGenericTableRow<UnwrapRef<T>>;
 }
 
 export interface IDragEvent<T = Record<string, ICellWrapper>> {

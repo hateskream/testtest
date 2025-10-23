@@ -11,7 +11,6 @@ import type {
 	ISortConfig,
 	IDragDropEvent,
 } from '../type';
-import { useTableLayout } from '../table-common';
 
 import GenericGridHeader from './generic-grid-header.vue';
 import SectionedTableContent from './sectioned-table-content.vue';
@@ -77,7 +76,6 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 });
 
 const emit = defineEmits<IEmits<T>>();
-const { getColumnStyles } = useTableLayout();
 
 const localColumns = ref<IGenericTableColumn[]>([...props.columns]);
 const localSections = ref<IGenericTableSection<T>[]>([...props.sections]);
@@ -89,10 +87,6 @@ const visibleColumns = computed(() =>
 		.filter(col => col.visible)
 		.sort((a, b) => a.position - b.position),
 );
-
-const columnStyles = computed(() => {
-	return getColumnStyles(visibleColumns.value);
-});
 
 // Determine if this is a sectioned table
 const isSectionedTable = computed(() => {
@@ -149,7 +143,7 @@ const handleSectionedRowMoved = (payload: IDragDropEvent<T>) => {
 			updatedRows.splice(payload.newIndex!, 0, movedRow);
 			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 		} else if (payload.type === 'added') {
-			updatedRows.splice(payload.newIndex!, 0, payload.element);
+			updatedRows.splice(payload.newIndex!, 0, payload.element!);
 			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 		} else if (payload.type === 'removed') {
 			updatedRows.splice(payload.oldIndex!, 1);
@@ -191,7 +185,7 @@ const handleUnsectionedRowMoved = (payload: IDragDropEvent<T>) => {
 		updatedRows.splice(payload.newIndex!, 0, movedRow);
 		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 	} else if (payload.type === 'added') {
-		updatedRows.splice(payload.newIndex!, 0, payload.element);
+		updatedRows.splice(payload.newIndex!, 0, payload.element!);
 		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 	} else if (payload.type === 'removed') {
 		updatedRows.splice(payload.oldIndex!, 1);
@@ -292,18 +286,14 @@ const handleAnimationIteration = () => {
 
 </script>
 
-<template generic="T">
+<template>
 	<div :class="classes.tableContainer">
 		<div
 			ref="containerRef"
 			:class="classes.scrollContainer"
 		>
 
-			<table
-				:class="classes.dataTable"
-				:style="columnStyles"
-				style=" width: 100%;min-width: max-content;"
-			>
+			<table :class="classes.dataTable">
 				<generic-grid-header
 					v-if="props.showHeader"
 					:columns="visibleColumns"
@@ -536,8 +526,8 @@ const handleAnimationIteration = () => {
 }
 
 .dataTable {
-	width: 100%;
-	min-width: fit-content;
+	width: auto;
+	min-width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: var(--bg-color-surface-01, #1a1a1a);
