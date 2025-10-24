@@ -1,2 +1,3 @@
 export { default as UiPosition } from './position-component.vue';
-export * from './types';
+export { default as UiSubposition } from './subposition-component.vue';
+export * from './model.ts';

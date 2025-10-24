@@ -1,5 +1,5 @@
 <template>
-	<div :class="classes.submenu">
+	<div :class="classes.submenu" data-floating-submenu>
 		<div :class="classes.content">
 			<slot name="content" />
 		</div>

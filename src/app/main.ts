@@ -6,6 +6,7 @@ import { registerComponent } from '@shared/component-library';
 
 import { router } from './router';
 import { queryClient } from '@/shared/service/query-client';
+import { floatingPlugin } from '@/app/plugins/floating';
 import { validateConfig } from '@/shared/lib';
 
 import '@/assets/styles/base.css';
@@ -27,5 +28,6 @@ app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
 app.use(VCalendar);
+app.use(floatingPlugin);
 
 app.mount('#app');
