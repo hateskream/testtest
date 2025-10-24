@@ -5,7 +5,7 @@ import {
 	type Strategy,
 } from '@floating-ui/vue';
 
-export type FloatingTrigger = 'click' | 'hover';
+export type FloatingTriggers = 'click' | 'hover' | 'contextmenu';
 
 export interface IFloatingOptions {
 	placement?: Placement;
@@ -15,7 +15,7 @@ export interface IFloatingOptions {
 	middleware?: Middleware[];
 	showInMs?: number;
 	hideDelayMs?: number;
-	trigger?: FloatingTrigger;
+	trigger?: FloatingTriggers | FloatingTriggers[];
 }
 
 export interface IFloatingSession {

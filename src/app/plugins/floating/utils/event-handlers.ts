@@ -1,16 +1,3 @@
-function isInsideSameRoot(e: Event, rootId: string) {
-	const path = (e.composedPath?.() ?? []) as EventTarget[];
-	for (const t of path) {
-		if (t instanceof Element) {
-			const el = t.closest(`[data-floating-root="${rootId}"]`);
-			if (el) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 function isInsideFloatingList(e: Event) {
 	const path = (e.composedPath?.() ?? []) as EventTarget[];
 
@@ -19,6 +6,7 @@ function isInsideFloatingList(e: Event) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -43,10 +31,6 @@ export function createClickOutsideHandler(
 		) {
 			stop();
 		}
-		return;
-	}
-
-	if (isInsideSameRoot(e, rootId)) {
 		return;
 	}
 

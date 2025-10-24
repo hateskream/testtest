@@ -11,6 +11,7 @@ import {
 
 import { type IPositionProps, POSITION_INJECTION_KEY } from './model.ts';
 import { useInjectFloatingContext } from '@/app/plugins/floating';
+import { matchesTrigger } from '@/app/plugins/floating/utils';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
@@ -97,16 +98,32 @@ function handleMouseLeave() {
 }
 
 onMounted(() => {
-	if (props.trigger === 'click') {
+	const { trigger } = props;
+
+	const element = wrapperRef.value;
+
+	if (!element) {
 		return;
 	}
 
-	wrapperRef.value?.addEventListener('mouseover', handleMouseOver);
-	wrapperRef.value?.addEventListener('mouseleave', handleMouseLeave);
+	if (matchesTrigger(trigger, 'contextmenu')) {
+		element.addEventListener('contextmenu', handleContextMenu);
+	}
+
+	if (matchesTrigger(trigger, 'click')) {
+		element.addEventListener('click', handleContextMenu);
+	}
+
+	if (matchesTrigger(trigger, 'hover')) {
+		element.addEventListener('mouseover', handleMouseOver);
+		element.addEventListener('mouseleave', handleMouseLeave);
+	}
 
 	onUnmounted(() => {
-		wrapperRef.value?.removeEventListener('mouseover', handleMouseOver);
-		wrapperRef.value?.removeEventListener('mouseleave', handleMouseLeave);
+		element.removeEventListener('contextmenu', handleContextMenu);
+		element.removeEventListener('click', handleContextMenu);
+		element.removeEventListener('mouseover', handleMouseOver);
+		element.removeEventListener('mouseleave', handleMouseLeave);
 	});
 });
 
@@ -117,11 +134,7 @@ onUnmounted(() => {
 
 <template>
 	<div ref="wrapper">
-		<div
-			ref="reference"
-			@click="handleContextMenu"
-			@contextmenu="handleContextMenu"
-		>
+		<div ref="reference">
 			<slot
 				name="title"
 				:is-visible="isVisible"

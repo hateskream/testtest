@@ -15,6 +15,7 @@ import {
 
 import type { IFloatingOpenPayload, IFloatingSession } from './types.ts';
 import { createClickOutsideHandler } from '@/app/plugins/floating/utils/event-handlers.ts';
+import { matchesTrigger } from '@/app/plugins/floating/utils';
 
 export function createFloatingStore() {
 	const reference = ref<HTMLElement | null>(null);
@@ -57,16 +58,23 @@ export function createFloatingStore() {
 	}
 
 	function addEventListeners() {
-		if (session.options.trigger === 'click') {
+		const { trigger } = session.options;
+
+		if (!trigger) {
+			return;
+		}
+
+		if (matchesTrigger(trigger, ['click', 'contextmenu'])) {
 			document.addEventListener('pointerdown', handleClickOutside, true);
-		} else if (session.options.trigger === 'hover') {
+		}
+		if (matchesTrigger(trigger, 'hover')) {
 			content.value?.addEventListener('mouseleave', handleMouseLeave, true);
 		}
 	}
 
 	function removeEventListeners() {
 		document.removeEventListener('pointerdown', handleClickOutside, true);
-		content.value?.removeEventListener('mouseleave', handleMouseLeave);
+		content.value?.removeEventListener('mouseleave', handleMouseLeave, true);
 	}
 
 	function open(payload: IFloatingOpenPayload) {

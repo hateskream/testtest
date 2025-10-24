@@ -3,6 +3,7 @@ import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
 import type { IPositionProps } from './model';
+import { matchesTrigger } from '@/app/plugins/floating/utils';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
@@ -28,15 +29,12 @@ const wrapper = useTemplateRef<HTMLElement>('wrapper');
 const { floatingStyles, placement } = useFloating(reference, floating, {
 	strategy: props.strategy,
 	placement: props.position,
-	middleware: [
-		offset(props.positionOffset - 2),
-		flip(),
-		shift({ padding: 5 }),
-	],
+	middleware: [offset(props.positionOffset - 2), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
 });
 
-const isVisible = ref<boolean>(false);
+const isVisible = ref(false);
+
 const showTimeout = ref<number | null>(null);
 const hideTimeout = ref<number | null>(null);
 
@@ -44,13 +42,11 @@ const enhancedFloatingStyles = computed(() => {
 	if (!floatingStyles.value) {
 		return {};
 	}
-
 	const baseStyles = floatingStyles.value;
 
-	if (props.trigger === 'hover') {
+	if (matchesTrigger(props.trigger, 'hover')) {
 		const padding = props.hoverPadding;
 		let paddingStyle: Record<string, string> = {};
-
 		if (placement.value?.startsWith('right')) {
 			paddingStyle = { paddingLeft: `${padding}px`, marginLeft: `-${padding}px` };
 		} else if (placement.value?.startsWith('left')) {
@@ -60,29 +56,85 @@ const enhancedFloatingStyles = computed(() => {
 		} else if (placement.value?.startsWith('bottom')) {
 			paddingStyle = { paddingTop: `${padding}px`, marginTop: `-${padding}px` };
 		}
-
-		return {
-			...baseStyles,
-			...paddingStyle,
-		};
+		return { ...baseStyles, ...paddingStyle };
 	}
 
 	return baseStyles;
 });
-onUnmounted(() => {
-	if (showTimeout.value) {
-		clearTimeout(showTimeout.value);
+
+function handleClick() {
+	isVisible.value = !isVisible.value;
+}
+
+function isInsideAny(target: Element | null) {
+	if (!target) {
+		return false;
 	}
+	return !!target.closest('[data-floating-submenu]');
+}
+
+function handleMouseover(e: MouseEvent) {
+	e.stopPropagation();
+
 	if (hideTimeout.value) {
 		clearTimeout(hideTimeout.value);
+		hideTimeout.value = null;
 	}
-});
-
-const handleDocumentClick = (event: Event): void => {
-	if (props.trigger !== 'click') {
+	if (isVisible.value || showTimeout.value) {
 		return;
 	}
 
+	showTimeout.value = setTimeout(() => {
+		isVisible.value = true;
+		emits('mouseover');
+		showTimeout.value = null;
+	}, props.showInMs);
+}
+
+function handleMouseleave(e: MouseEvent) {
+	const related = e.relatedTarget as Element | null;
+	if (isInsideAny(related)) {
+		return;
+	}
+
+	if (showTimeout.value) {
+		clearTimeout(showTimeout.value);
+		showTimeout.value = null;
+	}
+
+	hideTimeout.value = setTimeout(() => {
+		isVisible.value = false;
+		emits('mouseleave');
+		hideTimeout.value = null;
+	}, props.hideDelayMs);
+}
+
+function handleFloatingMouseenter() {
+	if (matchesTrigger(props.trigger, 'hover') && hideTimeout.value) {
+		clearTimeout(hideTimeout.value);
+		hideTimeout.value = null;
+	}
+}
+
+function handleFloatingMouseleave(e: MouseEvent) {
+	const related = e.relatedTarget as Element | null;
+	if (isInsideAny(related)) {
+		return;
+	}
+
+	if (showTimeout.value) {
+		clearTimeout(showTimeout.value);
+		showTimeout.value = null;
+	}
+
+	hideTimeout.value = setTimeout(() => {
+		isVisible.value = false;
+		emits('mouseleave');
+		hideTimeout.value = null;
+	}, props.hideDelayMs);
+}
+
+const handleDocumentClick = (event: Event) => {
 	const target = event.target as Element;
 	if (wrapper.value?.contains(target)) {
 		return;
@@ -90,118 +142,53 @@ const handleDocumentClick = (event: Event): void => {
 	if (floating.value?.contains(target)) {
 		return;
 	}
-
 	isVisible.value = false;
 };
 
-const setupClickOutside = (): void => {
+onMounted(() => {
+	const el = wrapper.value;
+	const content = floating.value;
+	if (!el || !content) {
+		return;
+	}
+	const { trigger } = props;
+
+	if (matchesTrigger(trigger, 'contextmenu')) {
+		el.addEventListener('contextmenu', handleClick);
+	}
+
+	if (matchesTrigger(trigger, 'click')) {
+		el.addEventListener('click', handleClick);
+	}
+
+	if (matchesTrigger(trigger, 'hover')) {
+		el.addEventListener('mouseenter', handleMouseover);
+		el.addEventListener('mouseleave', handleMouseleave);
+
+		content.addEventListener('mouseenter', handleFloatingMouseenter);
+		content.addEventListener('mouseleave', handleFloatingMouseleave);
+	}
+
 	document.addEventListener('click', handleDocumentClick, true);
-};
 
-const cleanupClickOutside = (): void => {
-	document.removeEventListener('click', handleDocumentClick, true);
-};
+	onUnmounted(() => {
+		el.removeEventListener('contextmenu', handleClick);
+		el.removeEventListener('click', handleClick);
+		el.removeEventListener('mouseenter', handleMouseover);
+		el.removeEventListener('mouseleave', handleMouseleave);
 
-onMounted(setupClickOutside);
-onUnmounted(cleanupClickOutside);
+		content.removeEventListener('mouseenter', handleFloatingMouseenter);
+		content.removeEventListener('mouseleave', handleFloatingMouseleave);
 
-function handleClick(): void {
-	if (props.trigger === 'click') {
-		isVisible.value = !isVisible.value;
-	}
-}
-
-function isInsideAny(target: Element | null) {
-	if (!target) {
-		return false;
-	}
-	return wrapper.value?.contains(target) || floating.value?.contains(target);
-}
-
-function handleMouseover(event: MouseEvent): void {
-	event.stopPropagation();
-
-	if (props.trigger === 'hover') {
-		if (hideTimeout.value) {
-			clearTimeout(hideTimeout.value);
-			hideTimeout.value = null;
-		}
-
-		if (isVisible.value || showTimeout.value) {
-			return;
-		}
-
-		showTimeout.value = setTimeout(() => {
-			isVisible.value = true;
-			emits('mouseover');
-			showTimeout.value = null;
-		}, props.showInMs);
-	}
-}
-
-function handleMouseleave(event: MouseEvent): void {
-	if (props.trigger !== 'hover') {
-		return;
-	}
-	const related = event.relatedTarget as Element | null;
-	if (isInsideAny(related)) {
-		return;
-	}
-
-	if (showTimeout.value) {
-		clearTimeout(showTimeout.value);
-		showTimeout.value = null;
-	}
-
-	hideTimeout.value = setTimeout(() => {
-		isVisible.value = false;
-		emits('mouseleave');
-		hideTimeout.value = null;
-	}, props.hideDelayMs);
-}
-
-function handleFloatingMouseenter(event: MouseEvent): void {
-	event.stopPropagation();
-
-	if (props.trigger === 'hover') {
-
-		if (hideTimeout.value) {
-			clearTimeout(hideTimeout.value);
-			hideTimeout.value = null;
-		}
-	}
-}
-
-function handleFloatingMouseleave(event: MouseEvent): void {
-	if (props.trigger !== 'hover') {
-		return;
-	}
-	const related = event.relatedTarget as Element | null;
-	if (isInsideAny(related)) {
-		return;
-	}
-
-	if (showTimeout.value) {
-		clearTimeout(showTimeout.value);
-		showTimeout.value = null;
-	}
-
-	hideTimeout.value = setTimeout(() => {
-		isVisible.value = false;
-		emits('mouseleave');
-		hideTimeout.value = null;
-	}, props.hideDelayMs);
-}
+		document.removeEventListener('click', handleDocumentClick, true);
+	});
+});
 
 defineExpose({ isVisible, handleClick });
 </script>
 
 <template>
-	<div
-		ref="wrapper"
-		@mouseenter="handleMouseover"
-		@mouseleave="handleMouseleave"
-	>
+	<div ref="wrapper">
 		<div
 			ref="reference"
 			@click="handleClick"
@@ -219,10 +206,8 @@ defineExpose({ isVisible, handleClick });
 					:style="enhancedFloatingStyles"
 					class="floating-content"
 					data-floating-submenu
-					@mouseenter="handleFloatingMouseenter"
-					@mouseleave="handleFloatingMouseleave"
 				>
-					<div class="floating-inner" :style="{padding:`${props.positionOffset}px`}">
+					<div class="floating-inner" :style="{ padding: `${props.positionOffset}px` }">
 						<div class="floating-scroll-wrapper">
 							<slot name="content" />
 						</div>

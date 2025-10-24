@@ -1,11 +1,11 @@
 import type { Placement } from '@floating-ui/vue';
 import type { InjectionKey } from 'vue';
 
-export type PositionTriggers = 'hover' | 'click';
+import type { FloatingTriggers } from '@/app/plugins/floating';
 
 export interface IPositionProps {
 	position?: Placement;
-	trigger?: PositionTriggers;
+	trigger?: FloatingTriggers | FloatingTriggers[];
 	showInMs?: number;
 	hideDelayMs?: number;
 	positionOffset?: number;

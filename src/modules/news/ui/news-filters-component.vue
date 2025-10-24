@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { UiPosition } from '@/shared/ui/position';
+import { UiSubposition } from '@/shared/ui/position';
 import {
 	ModalFilterTabWrapper,
 	ModalFilterTitle,
@@ -161,9 +161,8 @@ function toggleSortBy(sort: SortState) {
 		</div>
 	</div>
 
-	<ui-position
+	<ui-subposition
 		trigger="hover"
-		:teleport="false"
 	>
 		<template #title>
 			<modal-item-interaction> Location </modal-item-interaction>
@@ -172,11 +171,10 @@ function toggleSortBy(sort: SortState) {
 		<template #content>
 			<news-location-filter-component v-model:locations="locations" />
 		</template>
-	</ui-position>
+	</ui-subposition>
 
-	<ui-position
+	<ui-subposition
 		trigger="hover"
-		:teleport="false"
 	>
 		<template #title>
 			<modal-item-interaction> Ticker </modal-item-interaction>
@@ -191,7 +189,7 @@ function toggleSortBy(sort: SortState) {
 				@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
 			/>
 		</template>
-	</ui-position>
+	</ui-subposition>
 
 	<ui-driver />
 
