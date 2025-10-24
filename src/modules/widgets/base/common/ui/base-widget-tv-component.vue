@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, useSlots, h } from 'vue';
+import { computed, ref, useCssModule, useSlots, useTemplateRef } from 'vue';
 
 import { createResizeContext } from '../composables/use-resize-context';
-import { useGlobalRcm } from '../composables/use-rcm';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
 import { FullViewDashboard, type IMeta } from '@/modules/dashboard-group';
+import { FloatingPortal } from '@/app/plugins/floating';
 
 interface IBaseDashboardComponentProps {
 	meta: IMeta;
@@ -27,15 +27,15 @@ defineSlots<{
 	title(): unknown;
 	content(): unknown;
 	rcm(): unknown;
+	filter(): unknown;
+	'change-display'(): unknown;
+	other(): unknown;
 }>();
 
 createResizeContext(props.meta.isResizing);
 
 const classes = useCssModule('classes');
 const slots = useSlots();
-
-const { open: openRcm, close: closeRcm } = useGlobalRcm(props.meta.widgetId);
-const { open: openRcmFull } = useGlobalRcm(props.meta.widgetId);
 
 const isOpenFullView = ref(false);
 
@@ -52,50 +52,20 @@ const isShowControlMore = computed(() => {
 	return slots.filter ;
 });
 
-/*
-	TODO: Change render function to something better
-	I know that this is SO BAD but idk how to pass ref from template that will not actually render
-	Maybe we should create custom floating host in current template, but it's complex thing
-	BTW, performance is so much better
- */
-function onOpen(event: MouseEvent) {
-	event.preventDefault();
+const rcmLayer = useTemplateRef('rcmLayer');
+const rcmFullLayer = useTemplateRef('rcmFullLayer');
+
+function onOpen(e: MouseEvent) {
+	e.preventDefault();
 	if (props.meta.isOpenFull) {
-		openRcmFull(() =>
-			h(
-				WidgetContextMenuFullView,
-				{
-					onReset: () => emits('reset'),
-					onApplyChanges: () => emits('apply-changes'),
-				},
-				{
-					filter: slots.filter ? () => slots.filter?.({}) : undefined,
-				},
-			), event);
+		rcmFullLayer.value?.openEvent(e);
 	} else {
-		openRcm(() =>
-			h(
-				WidgetContextMenu,
-				{
-					dashboards: props.meta.dashboards,
-					title: props.meta.name,
-					onDelete: () => emits('delete'),
-					onDuplicate: () => emits('duplicate'),
-					onReset: () => emits('reset'),
-					onMoveTo: (id: string) => emits('moveTo', id),
-					onOpenFull: handleOpenFullView,
-				},
-				{
-					filter: slots.filter ? () => slots.filter!({}) : undefined,
-					'change-display': slots['change-display'] ? () => slots['change-display']!({}) : undefined,
-					other: slots.other ? () => slots.other!({}) : undefined,
-				},
-			), event);
+		rcmLayer.value?.openEvent(e);
 	}
 }
 
 function handleOpenFullView() {
-	closeRcm();
+	rcmLayer.value?.close(true);
 	isOpenFullView.value = true;
 }
 </script>
@@ -125,17 +95,57 @@ function handleOpenFullView() {
 					height="20px"
 					@click.prevent.left="onOpen"
 				/>
-				<teleport to="body">
-					<full-view-dashboard
-						v-model="isOpenFullView"
-						:meta="props.meta"
-					/>
-				</teleport>
 			</div>
 		</div>
 		<div :class="[classes.content, 'widget-no-drag']">
 			<slot name="content" />
 		</div>
+
+		<floating-portal
+			ref="rcmLayer"
+			trigger="contextmenu"
+		>
+			<widget-context-menu
+				:dashboards="props.meta.dashboards"
+				:title="props.meta.name"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@reset="emits('reset')"
+				@move-to="emits('moveTo', $event)"
+				@open-full="handleOpenFullView"
+			>
+				<template #filter>
+					<slot name="filter" />
+				</template>
+				<template #change-display>
+					<slot name="change-display" />
+				</template>
+				<template #other>
+					<slot name="other" />
+				</template>
+			</widget-context-menu>
+		</floating-portal>
+
+		<floating-portal
+			ref="rcmFullLayer"
+			trigger="contextmenu"
+		>
+			<widget-context-menu-full-view
+				@reset="emits('reset')"
+				@apply-changes="emits('apply-changes')"
+			>
+				<template #filter>
+					<slot name="filter" />
+				</template>
+			</widget-context-menu-full-view>
+		</floating-portal>
+
+		<teleport to="body">
+			<full-view-dashboard
+				v-model="isOpenFullView"
+				:meta="props.meta"
+			/>
+		</teleport>
 	</div>
 </template>
 
