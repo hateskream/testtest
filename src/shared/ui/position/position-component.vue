@@ -19,6 +19,7 @@ interface IPositionComponentEmits {
 }
 
 const props = withDefaults(defineProps<IPositionProps>(), {
+	scope: 'default',
 	position: 'right-end',
 	trigger: 'click',
 	showInMs: 100,
@@ -43,7 +44,7 @@ const isVisible = ref(false);
 const wrapperRef = useTemplateRef<HTMLElement>('wrapper');
 const referenceRef = useTemplateRef<HTMLElement>('reference');
 
-const floating = useFloatingContext();
+const floating = useFloatingContext(props.scope);
 
 provide(POSITION_INJECTION_KEY, {
 	close: floating.close,
@@ -56,12 +57,12 @@ function openFloating() {
 		reference: referenceRef,
 		content: () => slots.content?.() ?? null,
 		options: {
-			placement: props.position,
+			placement: props.placement,
 			hideDelayMs: props.hideDelayMs,
 			hoverPadding: props.hoverPadding,
 			strategy: props.strategy,
 			showInMs: props.showInMs,
-			offset: props.positionOffset,
+			offset: props.offset,
 			trigger: props.trigger,
 		},
 		onClose: () => {
@@ -130,6 +131,10 @@ onMounted(() => {
 
 onUnmounted(() => {
 	floating.stop();
+});
+
+defineExpose({
+	isVisible,
 });
 </script>
 

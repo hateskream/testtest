@@ -34,7 +34,7 @@ watch(isVisible, (value) => {
 <template>
 	<ui-position
 		ref="position"
-		position="bottom-start"
+		placement="bottom-start"
 		v-bind="props.uiPositionProps || {}"
 		:strategy="props.strategy"
 	>

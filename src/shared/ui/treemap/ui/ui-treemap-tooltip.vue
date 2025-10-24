@@ -2,8 +2,8 @@
 import { refDebounced, useMouse } from '@vueuse/core';
 import { computed, useTemplateRef, watchEffect } from 'vue';
 
+import { UiPositionPortal } from '@/shared/ui/position';
 import { prepareNumber, preparePercent } from '../utils';
-import { FloatingPortal } from '@/app/plugins/floating';
 
 const SIZE_ACTIVATOR = 10;
 const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR}`;
@@ -101,7 +101,11 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 </script>
 
 <template>
-	<floating-portal ref="portalRef" placement="top-start">
+	<ui-position-portal
+		ref="portalRef"
+		placement="top-start"
+		scope="tooltip"
+	>
 		<div class="container">
 			<div class="header">
 				<div class="logo" />
@@ -123,7 +127,7 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 				</div>
 			</div>
 		</div>
-	</floating-portal>
+	</ui-position-portal>
 </template>
 
 <style scoped>

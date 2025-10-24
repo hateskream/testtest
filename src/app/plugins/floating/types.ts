@@ -5,10 +5,16 @@ import {
 	type Strategy,
 } from '@floating-ui/vue';
 
+import type { createFloatingStore, createFloatingManager } from './core';
+
 export type FloatingTriggers = 'click' | 'hover' | 'contextmenu';
 export type FloatingContentRenderable = VNodeChild | Component | null | undefined;
 
+export type FloatingStore = ReturnType<typeof createFloatingStore>;
+export type FloatingManager = ReturnType<typeof createFloatingManager>;
+
 export interface IFloatingOptions {
+	scope?: string;
 	placement?: Placement;
 	strategy?: Strategy;
 	offset?: number;

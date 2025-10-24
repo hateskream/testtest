@@ -35,7 +35,7 @@ const handlePeriodSelect = (period: string) => {
 <template>
 	<ui-position
 		ref="positionRef"
-		position="bottom-start"
+		placement="bottom-start"
 		trigger="click"
 	>
 		<template #title="{isVisible}">

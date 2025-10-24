@@ -88,7 +88,7 @@ useIntervalFn(() => {
 
 <template>
 	<ui-position
-		position="bottom-start"
+		placement="bottom-start"
 		trigger="hover"
 	>
 		<template #title>

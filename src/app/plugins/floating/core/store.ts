@@ -15,10 +15,10 @@ import {
 	type UseFloatingReturn,
 } from '@floating-ui/vue';
 
-import type { IFloatingOpenPayload, IFloatingSession } from './types.ts';
-import { createClickOutsideHandler, matchesTrigger } from './utils';
+import type { IFloatingOpenPayload, IFloatingSession } from '../types.ts';
+import { createClickOutsideHandler, matchesTrigger } from '../utils';
 
-export function createFloatingStore() {
+export function createFloatingStore(scope: string) {
 	const reference = ref<ReferenceElement | null>(null);
 	const content = ref<HTMLElement | null>(null);
 	const isOpen = ref(false);
@@ -124,6 +124,7 @@ export function createFloatingStore() {
 	}
 
 	return {
+		scope,
 		reference,
 		content,
 		instance,

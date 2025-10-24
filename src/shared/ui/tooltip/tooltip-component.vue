@@ -2,15 +2,18 @@
 import { ref, computed, watch, useTemplateRef } from 'vue';
 import { offset, shift, flip, type Placement } from '@floating-ui/vue';
 
-import { FloatingPortal } from '@/app/plugins/floating';
+import { UiPositionPortal } from '@/shared/ui/position';
+import { type IFloatingOptions } from '@/app/plugins/floating';
 
 interface IProps {
+	scope?: string;
 	forceHide?: boolean;
 	showInMs?: number;
 	position?: Placement;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
+	scope: 'tooltip',
 	forceHide: false,
 	showInMs: 800,
 	position: 'bottom',
@@ -22,7 +25,8 @@ const layer = useTemplateRef('layerRef');
 const isVisible = ref(false);
 const timeout = ref<number | null>(null);
 
-const layerOptions = computed(() => ({
+const layerOptions = computed<IFloatingOptions>(() => ({
+	scope: props.scope,
 	strategy: 'fixed' as const,
 	placement: props.position,
 	offset: 6,
@@ -83,13 +87,13 @@ watch(
 			<slot name="default" />
 		</div>
 
-		<floating-portal ref="layerRef" v-bind="layerOptions">
+		<ui-position-portal ref="layerRef" v-bind="layerOptions">
 			<transition name="fade" appear>
 				<div :class="classes.content" class="content-anchor">
 					<slot name="content" />
 				</div>
 			</transition>
-		</floating-portal>
+		</ui-position-portal>
 	</div>
 </template>
 

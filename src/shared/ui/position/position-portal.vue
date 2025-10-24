@@ -7,6 +7,7 @@ import { makeVirtualFromMouseEvent } from '@/app/plugins/floating/utils/virtual'
 import type { IFloatingOptions } from '@/app/plugins/floating/types';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
+	scope: 'default',
 	trigger: 'click',
 	placement: 'right-start',
 	strategy: 'fixed',
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<IFloatingOptions>(), {
 });
 
 const slots = useSlots();
-const floating = useFloatingContext();
+const floating = useFloatingContext(props.scope);
 
 function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
 	floating.open({

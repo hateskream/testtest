@@ -1,17 +1,27 @@
 import { inject, type InjectionKey } from 'vue';
 
-import { createFloatingStore } from '@/app/plugins/floating/core.ts';
+import type { FloatingManager } from '../types';
 
-type Store = ReturnType<typeof createFloatingStore>;
-
-export const FLOATING_KEY: InjectionKey<Store> =
+export const FLOATING_KEY: InjectionKey<FloatingManager> =
 	Symbol.for('FLOATING_INJECTION_KEY')
 ;
 
-export function useFloatingContext() {
-	const id = inject(FLOATING_KEY);
-	if (!id) {
-		throw new Error(`injection key ${FLOATING_KEY.toString()} not found`);
+export function useFloatingContext(scope = 'default') {
+	const manager = inject<FloatingManager>(FLOATING_KEY);
+
+	if (!manager) {
+		throw new Error('Floating manager not provided');
 	}
-	return id;
+
+	return manager.ensureScope(scope);
+}
+
+export function listFloatingScopes() {
+	const manager = inject<FloatingManager>(FLOATING_KEY);
+
+	if (!manager) {
+		throw new Error('Floating manager not provided');
+	}
+
+	return Array.from(manager.scopes.keys());
 }

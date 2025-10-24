@@ -5,7 +5,7 @@ import { createResizeContext } from '../composables/use-resize-context';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
 import { FullViewDashboard, type IMeta } from '@/modules/dashboard-group';
-import { FloatingPortal } from '@/app/plugins/floating';
+import { UiPositionPortal } from '@/shared/ui/position';
 
 interface IBaseDashboardComponentProps {
 	meta: IMeta;
@@ -101,7 +101,7 @@ function handleOpenFullView() {
 			<slot name="content" />
 		</div>
 
-		<floating-portal
+		<ui-position-portal
 			ref="rcmLayer"
 			trigger="contextmenu"
 		>
@@ -124,9 +124,9 @@ function handleOpenFullView() {
 					<slot name="other" />
 				</template>
 			</widget-context-menu>
-		</floating-portal>
+		</ui-position-portal>
 
-		<floating-portal
+		<ui-position-portal
 			ref="rcmFullLayer"
 			trigger="contextmenu"
 		>
@@ -138,7 +138,7 @@ function handleOpenFullView() {
 					<slot name="filter" />
 				</template>
 			</widget-context-menu-full-view>
-		</floating-portal>
+		</ui-position-portal>
 
 		<teleport to="body">
 			<full-view-dashboard

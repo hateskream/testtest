@@ -11,11 +11,11 @@ interface IPositionComponentEmits {
 }
 
 const props = withDefaults(defineProps<IPositionProps>(), {
-	position: 'right-end',
+	placement: 'right-end',
 	trigger: 'hover',
 	showInMs: 100,
 	hideDelayMs: 200,
-	positionOffset: 6,
+	offset: 6,
 	strategy: 'fixed',
 	hoverPadding: 8,
 });
@@ -28,8 +28,8 @@ const wrapper = useTemplateRef<HTMLElement>('wrapper');
 
 const { floatingStyles, placement } = useFloating(reference, floating, {
 	strategy: props.strategy,
-	placement: props.position,
-	middleware: [offset(props.positionOffset - 2), flip(), shift({ padding: 5 })],
+	placement: props.placement,
+	middleware: [offset(props.offset - 2), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
 });
 
@@ -196,7 +196,7 @@ defineExpose({ isVisible, handleClick });
 				class="submenu"
 				data-floating-submenu
 			>
-				<div class="inner" :style="{ padding: `${props.positionOffset}px` }">
+				<div class="inner" :style="{ padding: `${props.offset}px` }">
 					<div class="scroll-wrapper">
 						<slot name="content" />
 					</div>
