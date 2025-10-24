@@ -6,7 +6,7 @@ import {
 	reactive,
 	ref,
 	watch,
-	type App,
+	type App, getCurrentInstance,
 } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
@@ -234,6 +234,8 @@ function getMinSize(id: string): { w: number; h: number } {
 	};
 }
 
+const instance = getCurrentInstance();
+
 function mountPlaceholderResize() {
 	if (resizableWidgetId.value === null) {
 		return;
@@ -243,9 +245,12 @@ function mountPlaceholderResize() {
 		dashboardItem: getDashboardItemById(resizableWidgetId.value),
 	});
 
-	mountedPlaceholder.provide(CurrentDashboardSymbol, CurrentDashboard);
-
-	mountedPlaceholder.use(VueQueryPlugin, { queryClient });
+	if (instance) {
+		mountedPlaceholder._context.provides = instance.appContext.provides;
+	} else {
+		mountedPlaceholder.provide(CurrentDashboardSymbol, CurrentDashboard);
+		mountedPlaceholder.use(VueQueryPlugin, { queryClient });
+	}
 
 	mountPlaceholderComponents(mountedPlaceholder);
 }

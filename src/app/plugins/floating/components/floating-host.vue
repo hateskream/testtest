@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, type VNode } from 'vue';
 
-import { useInjectFloatingContext } from '@/app/plugins/floating';
+import { useFloatingContext } from '@/app/plugins/floating';
 
-const floating = useInjectFloatingContext();
+const floating = useFloatingContext()!;
 
 const { content } = floating;
 

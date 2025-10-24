@@ -8,10 +8,10 @@ export const FLOATING_KEY: InjectionKey<Store> =
 	Symbol.for('FLOATING_INJECTION_KEY')
 ;
 
-export function useInjectFloatingContext() {
+export function useFloatingContext() {
 	const id = inject(FLOATING_KEY);
 	if (!id) {
-		throw new Error('No floating context provided');
+		throw new Error(`injection key ${FLOATING_KEY.toString()} not found`);
 	}
 	return id;
 }

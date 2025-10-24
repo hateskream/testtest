@@ -10,7 +10,7 @@ import {
 } from 'vue';
 
 import { type IPositionProps, POSITION_INJECTION_KEY } from './model.ts';
-import { useInjectFloatingContext } from '@/app/plugins/floating';
+import { useFloatingContext } from '@/app/plugins/floating';
 import { matchesTrigger } from '@/app/plugins/floating/utils';
 
 interface IPositionComponentEmits {
@@ -43,7 +43,8 @@ const isVisible = ref(false);
 const wrapperRef = useTemplateRef<HTMLElement>('wrapper');
 const referenceRef = useTemplateRef<HTMLElement>('reference');
 
-const floating = useInjectFloatingContext();
+const floating = useFloatingContext();
+
 provide(POSITION_INJECTION_KEY, {
 	close: floating.close,
 });
