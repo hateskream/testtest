@@ -66,13 +66,6 @@ function handleClick() {
 	isVisible.value = !isVisible.value;
 }
 
-function isInsideAny(target: Element | null) {
-	if (!target) {
-		return false;
-	}
-	return !!target.closest('[data-floating-submenu]');
-}
-
 function handleMouseover(e: MouseEvent) {
 	e.stopPropagation();
 
@@ -91,12 +84,7 @@ function handleMouseover(e: MouseEvent) {
 	}, props.showInMs);
 }
 
-function handleMouseleave(e: MouseEvent) {
-	const related = e.relatedTarget as Element | null;
-	if (isInsideAny(related)) {
-		return;
-	}
-
+function handleMouseleave() {
 	if (showTimeout.value) {
 		clearTimeout(showTimeout.value);
 		showTimeout.value = null;
@@ -117,8 +105,9 @@ function handleFloatingMouseenter() {
 }
 
 function handleFloatingMouseleave(e: MouseEvent) {
-	const related = e.relatedTarget as Element | null;
-	if (isInsideAny(related)) {
+	const related = e.relatedTarget as HTMLElement | null;
+
+	if (reference.value && related && reference.value.contains(related)) {
 		return;
 	}
 
@@ -146,39 +135,43 @@ const handleDocumentClick = (event: Event) => {
 };
 
 onMounted(() => {
-	const el = wrapper.value;
-	const content = floating.value;
-	if (!el || !content) {
+	const wrapperEl = wrapper.value;
+	const triggerEl = reference.value;
+	const floatingEl = floating.value;
+
+	if (!wrapperEl || !floatingEl || !triggerEl) {
 		return;
 	}
 	const { trigger } = props;
 
 	if (matchesTrigger(trigger, 'contextmenu')) {
-		el.addEventListener('contextmenu', handleClick);
+		wrapperEl.addEventListener('contextmenu', handleClick);
 	}
 
 	if (matchesTrigger(trigger, 'click')) {
-		el.addEventListener('click', handleClick);
+		wrapperEl.addEventListener('click', handleClick);
+		triggerEl.addEventListener('click', handleClick);
 	}
 
 	if (matchesTrigger(trigger, 'hover')) {
-		el.addEventListener('mouseenter', handleMouseover);
-		el.addEventListener('mouseleave', handleMouseleave);
+		wrapperEl.addEventListener('mouseenter', handleMouseover);
+		wrapperEl.addEventListener('mouseleave', handleMouseleave);
 
-		content.addEventListener('mouseenter', handleFloatingMouseenter);
-		content.addEventListener('mouseleave', handleFloatingMouseleave);
+		floatingEl.addEventListener('mouseenter', handleFloatingMouseenter);
+		floatingEl.addEventListener('mouseleave', handleFloatingMouseleave);
 	}
 
 	document.addEventListener('click', handleDocumentClick, true);
 
 	onUnmounted(() => {
-		el.removeEventListener('contextmenu', handleClick);
-		el.removeEventListener('click', handleClick);
-		el.removeEventListener('mouseenter', handleMouseover);
-		el.removeEventListener('mouseleave', handleMouseleave);
+		wrapperEl.removeEventListener('contextmenu', handleClick);
+		wrapperEl.removeEventListener('click', handleClick);
+		triggerEl.removeEventListener('click', handleClick);
+		wrapperEl.removeEventListener('mouseenter', handleMouseover);
+		wrapperEl.removeEventListener('mouseleave', handleMouseleave);
 
-		content.removeEventListener('mouseenter', handleFloatingMouseenter);
-		content.removeEventListener('mouseleave', handleFloatingMouseleave);
+		floatingEl.removeEventListener('mouseenter', handleFloatingMouseenter);
+		floatingEl.removeEventListener('mouseleave', handleFloatingMouseleave);
 
 		document.removeEventListener('click', handleDocumentClick, true);
 	});
@@ -189,32 +182,27 @@ defineExpose({ isVisible, handleClick });
 
 <template>
 	<div ref="wrapper">
-		<div
-			ref="reference"
-			@click="handleClick"
-		>
+		<div ref="reference">
 			<slot
 				name="title"
 				:is-visible="isVisible"
 			/>
 		</div>
-		<teleport to="body">
-			<transition name="fade">
-				<div
-					v-show="isVisible"
-					ref="floating"
-					:style="enhancedFloatingStyles"
-					class="floating-content"
-					data-floating-submenu
-				>
-					<div class="floating-inner" :style="{ padding: `${props.positionOffset}px` }">
-						<div class="floating-scroll-wrapper">
-							<slot name="content" />
-						</div>
+		<transition name="fade">
+			<div
+				v-show="isVisible"
+				ref="floating"
+				:style="enhancedFloatingStyles"
+				class="floating-content"
+				data-floating-submenu
+			>
+				<div class="floating-inner" :style="{ padding: `${props.positionOffset}px` }">
+					<div class="floating-scroll-wrapper">
+						<slot name="content" />
 					</div>
 				</div>
-			</transition>
-		</teleport>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -235,6 +223,7 @@ defineExpose({ isVisible, handleClick });
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.15s ease;
+	pointer-events: none;
 }
 
 .fade-enter-from,
