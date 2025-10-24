@@ -17,23 +17,38 @@ const normalizedContent = computed<FloatingContentRenderable[]>(() => {
 </script>
 
 <template>
-	<teleport v-if="floating.isOpen" to="body">
-		<div
-			ref="content"
-			:class="classes.host"
-			:style="floating.instance.floatingStyles"
-		>
-			<component
-				:is="node"
-				v-for="(node, i) in normalizedContent"
-				:key="i"
-			/>
-		</div>
+	<teleport to="body">
+		<transition name="fade">
+			<div
+				v-if="floating.isOpen && normalizedContent.length"
+				ref="content"
+				:class="classes.host"
+				:style="floating.instance.floatingStyles"
+			>
+				<component
+					:is="node"
+					v-for="(node, i) in normalizedContent"
+					:key="i"
+				/>
+			</div>
+		</transition>
 	</teleport>
 </template>
 
 <style module="classes">
 .host {
 	z-index: 101;
+}
+</style>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
 }
 </style>
