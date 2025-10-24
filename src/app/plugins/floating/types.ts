@@ -1,11 +1,12 @@
-import { type MaybeRefOrGetter, type VNode } from 'vue';
+import { type Component, type MaybeRefOrGetter, type VNodeChild } from 'vue';
 import {
 	type Middleware,
-	type Placement,
+	type Placement, type ReferenceElement,
 	type Strategy,
 } from '@floating-ui/vue';
 
 export type FloatingTriggers = 'click' | 'hover' | 'contextmenu';
+export type FloatingContentRenderable = VNodeChild | Component | null | undefined;
 
 export interface IFloatingOptions {
 	placement?: Placement;
@@ -20,15 +21,15 @@ export interface IFloatingOptions {
 
 export interface IFloatingSession {
 	id: number;
-	reference: HTMLElement | null;
-	content: (() => VNode[] | VNode | null | undefined) | null;
+	reference: ReferenceElement | null;
+	content: (() => FloatingContentRenderable) | null;
 	options: IFloatingOptions;
 	onClose?: () => void;
 }
 
 export interface IFloatingOpenPayload {
-	reference: MaybeRefOrGetter<HTMLElement | null>;
-	content: (() => VNode | VNode[] | null) | null;
+	reference: MaybeRefOrGetter<ReferenceElement | null>;
+	content: (() => FloatingContentRenderable) | null;
 	options?: IFloatingOptions;
 	onClose?: () => void;
 }

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, type VNode } from 'vue';
+import { computed } from 'vue';
 
-import { useFloatingContext } from '@/app/plugins/floating';
+import { useFloatingContext, type FloatingContentRenderable } from '@/app/plugins/floating';
 
 const floating = useFloatingContext()!;
 
 const { content } = floating;
 
-const normalizedContent = computed<VNode[]>(() => {
+const normalizedContent = computed<FloatingContentRenderable[]>(() => {
 	const node = floating.session.content?.();
 	if (!node) {
 		return [];
@@ -20,6 +20,7 @@ const normalizedContent = computed<VNode[]>(() => {
 	<teleport v-if="floating.isOpen" to="body">
 		<div
 			ref="content"
+			:class="classes.host"
 			:style="floating.instance.floatingStyles"
 		>
 			<component
@@ -31,6 +32,8 @@ const normalizedContent = computed<VNode[]>(() => {
 	</teleport>
 </template>
 
-<style scoped>
-
+<style module="classes">
+.host {
+	z-index: 101;
+}
 </style>

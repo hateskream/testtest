@@ -44,7 +44,7 @@ interface IUiModalProps {
 }
 
 const props = withDefaults(defineProps<IUiModalProps>(), {
-	zIndex: 10002,
+	zIndex: 50,
 	bodyScrollLock: true,
 	focusFirstElement: true,
 	closable: false,

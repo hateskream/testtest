@@ -193,11 +193,11 @@ defineExpose({ isVisible, handleClick });
 				v-show="isVisible"
 				ref="floating"
 				:style="enhancedFloatingStyles"
-				class="floating-content"
+				class="submenu"
 				data-floating-submenu
 			>
-				<div class="floating-inner" :style="{ padding: `${props.positionOffset}px` }">
-					<div class="floating-scroll-wrapper">
+				<div class="inner" :style="{ padding: `${props.positionOffset}px` }">
+					<div class="scroll-wrapper">
 						<slot name="content" />
 					</div>
 				</div>
@@ -211,13 +211,13 @@ defineExpose({ isVisible, handleClick });
 	z-index: 101;
 }
 
-.floating-scroll-wrapper {
-	max-height: 80svh;
-	overflow-y: auto;
+.inner {
+	border-radius: 6px;
 }
 
-.floating-inner {
-	border-radius: 6px;
+.scroll-wrapper {
+	max-height: 80svh;
+	overflow-y: auto;
 }
 
 .fade-enter-active,

@@ -6,19 +6,20 @@ import {
 } from 'vue';
 import {
 	autoUpdate,
-	flip, type Middleware,
+	flip,
 	offset,
 	shift,
 	useFloating,
+	type Middleware,
+	type ReferenceElement,
 	type UseFloatingReturn,
 } from '@floating-ui/vue';
 
 import type { IFloatingOpenPayload, IFloatingSession } from './types.ts';
-import { createClickOutsideHandler } from '@/app/plugins/floating/utils/event-handlers.ts';
-import { matchesTrigger } from '@/app/plugins/floating/utils';
+import { createClickOutsideHandler, matchesTrigger } from './utils';
 
 export function createFloatingStore() {
-	const reference = ref<HTMLElement | null>(null);
+	const reference = ref<ReferenceElement | null>(null);
 	const content = ref<HTMLElement | null>(null);
 	const isOpen = ref(false);
 

@@ -1,24 +1,38 @@
-import { autoUpdate, flip, offset, shift, useFloating, type VirtualElement } from '@floating-ui/vue';
-import { onClickOutside } from '@vueuse/core';
-import { ref, watch, type Ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
+
+import {
+	makeVirtualFromMouseEvent,
+	useFloatingContext,
+	type FloatingContentRenderable,
+} from '@/app/plugins/floating';
 
 const currentOpenRcmId = ref<string | null>(null);
 
-export function useGlobalRcm(instanceId: string, rcmRef: Ref<HTMLElement | null>) {
+export function useGlobalRcm(instanceId: string) {
+	const floating = useFloatingContext();
 	const isOpen = ref(false);
 
-	const reference = ref<VirtualElement | null>(null);
-
-	const { floatingStyles } = useFloating(reference, rcmRef, {
-		placement: 'right-start',
-		strategy: 'fixed',
-		middleware: [offset(6), flip(), shift({ padding: 5 })],
-		whileElementsMounted: autoUpdate,
-	});
-
-	function open() {
+	function open(content: () => FloatingContentRenderable, e: MouseEvent) {
 		currentOpenRcmId.value = instanceId;
 		isOpen.value = true;
+
+		floating.open({
+			reference: makeVirtualFromMouseEvent(e),
+			content: content,
+			options: {
+				trigger: 'contextmenu',
+				placement: 'right-start',
+				strategy: 'fixed',
+				offset: 6,
+				hideDelayMs: 120,
+			},
+			onClose: () => {
+				isOpen.value = false;
+				if (currentOpenRcmId.value === instanceId) {
+					currentOpenRcmId.value = null;
+				}
+			},
+		});
 	}
 
 	function close() {
@@ -26,41 +40,14 @@ export function useGlobalRcm(instanceId: string, rcmRef: Ref<HTMLElement | null>
 			currentOpenRcmId.value = null;
 		}
 		isOpen.value = false;
+		floating.close(true);
 	}
 
-	watch(currentOpenRcmId, (newId) => {
-		if (newId !== instanceId && isOpen.value) {
-			isOpen.value = false;
+	onUnmounted(() => {
+		if (isOpen.value) {
+			floating.close(true);
 		}
 	});
 
-	function handleOpen(e: MouseEvent) {
-		reference.value = {
-			getBoundingClientRect() {
-				return {
-					width: 0,
-					height: 0,
-					x: e.clientX,
-					y: e.clientY,
-					top: e.clientY,
-					left: e.clientX,
-					right: e.clientX,
-					bottom: e.clientY,
-				};
-			},
-		};
-
-		open();
-	}
-
-	onClickOutside(rcmRef, () => {
-		close();
-	});
-
-	return {
-		isOpen,
-		handleOpen,
-		close,
-		floatingStyles,
-	};
+	return { isOpen, open, close };
 }

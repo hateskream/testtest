@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, useSlots, useTemplateRef } from 'vue';
+import { computed, ref, useCssModule, useSlots, h } from 'vue';
 
 import { createResizeContext } from '../composables/use-resize-context';
 import { useGlobalRcm } from '../composables/use-rcm';
@@ -23,24 +23,19 @@ const emits = defineEmits<{
 	(e: 'apply-changes'): void;
 }>();
 
+defineSlots<{
+	title(): unknown;
+	content(): unknown;
+	rcm(): unknown;
+}>();
+
 createResizeContext(props.meta.isResizing);
 
 const classes = useCssModule('classes');
-
-const {
-	isOpen: isVisibleRcm,
-	handleOpen: openRcm,
-	close: closeRcm,
-	floatingStyles,
-} = useGlobalRcm(props.meta.widgetId, useTemplateRef('rcm'));
-
-const {
-	isOpen: isVisibleRcmFull,
-	handleOpen: openRcmFull,
-	floatingStyles: floatingStylesFull,
-} = useGlobalRcm(props.meta.widgetId, useTemplateRef('rcmFull'));
-
 const slots = useSlots();
+
+const { open: openRcm, close: closeRcm } = useGlobalRcm(props.meta.widgetId);
+const { open: openRcmFull } = useGlobalRcm(props.meta.widgetId);
 
 const isOpenFullView = ref(false);
 
@@ -57,11 +52,45 @@ const isShowControlMore = computed(() => {
 	return slots.filter ;
 });
 
-function onOpen(e: MouseEvent) {
+/*
+	TODO: Change render function to something better
+	I know that this is SO BAD but idk how to pass ref from template that will not actually render
+	Maybe we should create custom floating host in current template, but it's complex thing
+	BTW, performance is so much better
+ */
+function onOpen(event: MouseEvent) {
+	event.preventDefault();
 	if (props.meta.isOpenFull) {
-		openRcmFull(e);
+		openRcmFull(() =>
+			h(
+				WidgetContextMenuFullView,
+				{
+					onReset: () => emits('reset'),
+					onApplyChanges: () => emits('apply-changes'),
+				},
+				{
+					filter: slots.filter ? () => slots.filter?.({}) : undefined,
+				},
+			), event);
 	} else {
-		openRcm(e);
+		openRcm(() =>
+			h(
+				WidgetContextMenu,
+				{
+					dashboards: props.meta.dashboards,
+					title: props.meta.name,
+					onDelete: () => emits('delete'),
+					onDuplicate: () => emits('duplicate'),
+					onReset: () => emits('reset'),
+					onMoveTo: (id: string) => emits('moveTo', id),
+					onOpenFull: handleOpenFullView,
+				},
+				{
+					filter: slots.filter ? () => slots.filter!({}) : undefined,
+					'change-display': slots['change-display'] ? () => slots['change-display']!({}) : undefined,
+					other: slots.other ? () => slots.other!({}) : undefined,
+				},
+			), event);
 	}
 }
 
@@ -96,61 +125,17 @@ function handleOpenFullView() {
 					height="20px"
 					@click.prevent.left="onOpen"
 				/>
+				<teleport to="body">
+					<full-view-dashboard
+						v-model="isOpenFullView"
+						:meta="props.meta"
+					/>
+				</teleport>
 			</div>
 		</div>
 		<div :class="[classes.content, 'widget-no-drag']">
 			<slot name="content" />
 		</div>
-		<teleport to="body">
-			<div
-				v-if="isVisibleRcm"
-				ref="rcm"
-				:class="classes.rcm"
-				:style="floatingStyles"
-			>
-				<widget-context-menu
-					:dashboards="meta.dashboards"
-					:title="meta.name"
-					@delete="emits('delete')"
-					@duplicate="emits('duplicate')"
-					@reset="emits('reset')"
-					@move-to="emits('moveTo', $event)"
-					@open-full="handleOpenFullView"
-				>
-					<template #filter v-if="slots.filter">
-						<slot name="filter" />
-					</template>
-					<template #change-display v-if="slots['change-display']">
-						<slot name="change-display" />
-					</template>
-					<template #other>
-						<slot name="other" />
-					</template>
-				</widget-context-menu>
-			</div>
-			<div
-				v-if="isVisibleRcmFull"
-				ref="rcmFull"
-				:style="{
-					...floatingStylesFull,
-					zIndex: 99999
-				}"
-				:class="classes.rcm"
-			>
-				<widget-context-menu-full-view
-					@reset="emits('reset')"
-					@apply-changes="emits('apply-changes')"
-				>
-					<template #filter v-if="slots.filter">
-						<slot name="filter" />
-					</template>
-				</widget-context-menu-full-view>
-			</div>
-			<full-view-dashboard
-				v-model="isOpenFullView"
-				:meta="props.meta"
-			/>
-		</teleport>
 	</div>
 </template>
 
