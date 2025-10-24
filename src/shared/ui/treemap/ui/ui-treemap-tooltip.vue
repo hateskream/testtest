@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { flip, useFloating, type VirtualElement } from '@floating-ui/vue';
 import { refDebounced, useMouse } from '@vueuse/core';
-import { computed, useTemplateRef, watch } from 'vue';
+import { computed, useTemplateRef, watchEffect } from 'vue';
 
 import { prepareNumber, preparePercent } from '../utils';
+import { FloatingPortal } from '@/app/plugins/floating';
 
 const SIZE_ACTIVATOR = 10;
-const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR / 2}px`;
+const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR}`;
 const DEBOUNCE_UPDATE_POSITION = 10;
 
 const colorMapping = {
@@ -39,28 +39,35 @@ const { x, y } = useMouse({ touch: false });
 const debouncedX = refDebounced(x, DEBOUNCE_UPDATE_POSITION);
 const debouncedY = refDebounced(y, DEBOUNCE_UPDATE_POSITION);
 
-const { floatingStyles, update } = useFloating(
-	computed<VirtualElement>(() => ({
-		getBoundingClientRect() {
-			return {
-				width: SIZE_ACTIVATOR,
-				height: SIZE_ACTIVATOR,
-				x: x.value,
-				y: y.value,
-				left: x.value,
-				top: y.value,
-				right: x.value + SIZE_ACTIVATOR,
-				bottom: y.value + SIZE_ACTIVATOR,
-			};
-		},
-	})),
-	useTemplateRef('floating'),
-	{
-		strategy: 'fixed',
-		placement: 'top-start',
-		middleware: [flip()],
+const portal = useTemplateRef('portalRef');
+
+const virtualRef = computed(() => ({
+	getBoundingClientRect() {
+		const SIZE = 10;
+		return {
+			width: SIZE,
+			height: SIZE,
+			x: debouncedX.value,
+			y: debouncedY.value,
+			left: debouncedX.value,
+			top: debouncedY.value,
+			right: debouncedX.value + SIZE,
+			bottom: debouncedY.value + SIZE,
+		};
 	},
-);
+}));
+
+watchEffect(() => {
+	if (props.isOpen) {
+		portal.value?.openAt(virtualRef.value, {
+			placement: 'top-start',
+			strategy: 'fixed',
+			offset: 6,
+		});
+	} else {
+		portal.value?.close(true);
+	}
+});
 
 const prepareSizeBy = computed(() =>
 	prepareNumberValue(props.sizeValue, props.sizeValueIsPercent),
@@ -83,8 +90,6 @@ const styleValueDisplay = computed(() => {
 	};
 });
 
-watch([debouncedX, debouncedY], update);
-
 function prepareNumberValue(value: number, isPercent: boolean) {
 	if (isPercent) {
 		return preparePercent(value);
@@ -96,39 +101,29 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 </script>
 
 <template>
-	<div
-		v-show="props.isOpen"
-		ref="floating"
-		class="container"
-		:style="floatingStyles"
-	>
-		<div class="header">
-			<div class="logo" />
-			<div class="ticker">{{ props.ticker }}</div>
-		</div>
-		<div class="line" />
-		<div class="info">
-			<div class="info-item">
-				<div class="value">Price</div>
-				<div class="value">{{ preparePrice }}</div>
+	<floating-portal ref="portalRef" placement="top-start">
+		<div class="container">
+			<div class="header">
+				<div class="logo" />
+				<div class="ticker">{{ props.ticker }}</div>
 			</div>
-			<div class="info-item">
-				<div class="value">{{ props.sizeBy }}</div>
-				<div class="value">{{ prepareSizeBy }}</div>
-			</div>
-			<div class="info-item">
-				<div
-					class="value"
-				>
-					{{ props.displayValueName }}
+			<div class="line" />
+			<div class="info">
+				<div class="info-item">
+					<div class="value">Price</div>
+					<div class="value">{{ preparePrice }}</div>
 				</div>
-				<div
-					class="value"
-					:style="styleValueDisplay"
-				>{{ prepareValueDisplay }}</div>
+				<div class="info-item">
+					<div class="value">{{ props.sizeBy }}</div>
+					<div class="value">{{ prepareSizeBy }}</div>
+				</div>
+				<div class="info-item">
+					<div class="value">{{ props.displayValueName }}</div>
+					<div class="value" :style="styleValueDisplay">{{ prepareValueDisplay }}</div>
+				</div>
 			</div>
 		</div>
-	</div>
+	</floating-portal>
 </template>
 
 <style scoped>

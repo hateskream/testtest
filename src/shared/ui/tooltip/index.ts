@@ -1,3 +1,1 @@
-import TooltipComponent from './tooltip-component.vue';
-
-export { TooltipComponent as UiTooltip };
+export { default as UiTooltip } from './tooltip-component.vue';
