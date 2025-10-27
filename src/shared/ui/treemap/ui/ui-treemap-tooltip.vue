@@ -65,7 +65,7 @@ watchEffect(() => {
 			offset: 6,
 		});
 	} else {
-		portal.value?.close(true);
+		portal.value?.close();
 	}
 });
 

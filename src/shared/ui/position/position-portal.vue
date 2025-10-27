@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<IFloatingOptions>(), {
 	placement: 'right-start',
 	strategy: 'fixed',
 	offset: 6,
-	hideDelayMs: 120,
+	hideDelay: 120,
 });
 
 const slots = useSlots();
@@ -34,8 +34,8 @@ function openAt(reference: ReferenceElement | VirtualElement, opts?: IFloatingOp
 	});
 }
 
-function close(immediate = false) {
-	floating.close(immediate);
+function close() {
+	floating.close();
 }
 
 defineSlots<{

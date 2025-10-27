@@ -102,7 +102,7 @@ function onRenameTab(id: string, name: string) {
 }
 
 function openModal(index: number) {
-	positionRefs.value?.[index].handleClick();
+	positionRefs.value?.[index].handleOpen();
 }
 
 function selectTicker(tickerId: string) {

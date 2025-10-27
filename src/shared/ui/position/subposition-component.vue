@@ -13,8 +13,6 @@ interface IPositionComponentEmits {
 const props = withDefaults(defineProps<IPositionProps>(), {
 	placement: 'right-end',
 	trigger: 'hover',
-	showInMs: 100,
-	hideDelayMs: 200,
 	offset: 6,
 	strategy: 'fixed',
 	hoverPadding: 8,
@@ -77,11 +75,9 @@ function handleMouseover(e: MouseEvent) {
 		return;
 	}
 
-	showTimeout.value = setTimeout(() => {
-		isVisible.value = true;
-		emits('mouseover');
-		showTimeout.value = null;
-	}, props.showInMs);
+	isVisible.value = true;
+	emits('mouseover');
+	showTimeout.value = null;
 }
 
 function handleMouseleave() {
@@ -90,11 +86,9 @@ function handleMouseleave() {
 		showTimeout.value = null;
 	}
 
-	hideTimeout.value = setTimeout(() => {
-		isVisible.value = false;
-		emits('mouseleave');
-		hideTimeout.value = null;
-	}, props.hideDelayMs);
+	isVisible.value = false;
+	emits('mouseleave');
+	hideTimeout.value = null;
 }
 
 function handleFloatingMouseenter() {
@@ -116,11 +110,9 @@ function handleFloatingMouseleave(e: MouseEvent) {
 		showTimeout.value = null;
 	}
 
-	hideTimeout.value = setTimeout(() => {
-		isVisible.value = false;
-		emits('mouseleave');
-		hideTimeout.value = null;
-	}, props.hideDelayMs);
+	isVisible.value = false;
+	emits('mouseleave');
+	hideTimeout.value = null;
 }
 
 const handleDocumentClick = (event: Event) => {

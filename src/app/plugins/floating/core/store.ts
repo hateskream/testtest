@@ -2,7 +2,7 @@ import {
 	reactive,
 	ref,
 	toValue,
-	computed,
+	computed, nextTick,
 } from 'vue';
 import {
 	autoUpdate,
@@ -16,7 +16,6 @@ import {
 } from '@floating-ui/vue';
 
 import type { IFloatingOpenPayload, IFloatingSession } from '../types.ts';
-import { createClickOutsideHandler, matchesTrigger } from '../utils';
 
 export function createFloatingStore(scope: string) {
 	const reference = ref<ReferenceElement | null>(null);
@@ -32,7 +31,7 @@ export function createFloatingStore(scope: string) {
 
 	const instance = reactive<UseFloatingReturn>(useFloating(reference, content, {
 		placement: () => session.options.placement ?? 'bottom-start',
-		strategy: () => session.options.strategy ?? 'absolute',
+		strategy: () => session.options.strategy ?? 'fixed',
 		middleware: computed(() => {
 			const base: Middleware[] = [offset(session.options.offset ?? 6), flip(), shift()];
 			return session.options.middleware ? base.concat(session.options.middleware) : base;
@@ -40,6 +39,16 @@ export function createFloatingStore(scope: string) {
 	}));
 
 	let cleanup: (() => void) | null = null;
+
+	function updateSession(payload: IFloatingOpenPayload) {
+		session.id += 1;
+		session.reference = toValue(payload.reference);
+		session.content = payload.content;
+		session.options = payload.options ?? {};
+		session.onClose = payload.onClose;
+
+		reference.value = toValue(session.reference);
+	}
 
 	function startAutoUpdate() {
 		cleanup?.();
@@ -50,70 +59,31 @@ export function createFloatingStore(scope: string) {
 		}
 	}
 
-	function handleClickOutside(e: PointerEvent) {
-		createClickOutsideHandler(e, reference.value, content.value, stop);
-	}
-
-	function handleMouseLeave() {
-		stop();
-	}
-
-	function addEventListeners() {
-		const { trigger } = session.options;
-
-		if (!trigger) {
-			return;
-		}
-
-		if (matchesTrigger(trigger, ['click', 'contextmenu'])) {
-			document.addEventListener('pointerdown', handleClickOutside, true);
-		}
-		if (matchesTrigger(trigger, 'hover')) {
-			content.value?.addEventListener('mouseleave', handleMouseLeave, true);
-		}
-	}
-
-	function removeEventListeners() {
-		document.removeEventListener('pointerdown', handleClickOutside, true);
-		content.value?.removeEventListener('mouseleave', handleMouseLeave, true);
-	}
-
-	function open(payload: IFloatingOpenPayload) {
+	async function open(payload: IFloatingOpenPayload) {
 		if (isOpen.value) {
 			stop();
 		}
 
-		const opts = payload.options ?? {};
-
-		session.id += 1;
-		session.reference = toValue(payload.reference);
-		session.content = payload.content;
-		session.options = opts;
-		session.onClose = payload.onClose;
-
-		reference.value = toValue(payload.reference);
+		updateSession(payload);
 		isOpen.value = true;
 
-		addEventListeners();
+		await nextTick();
+
 		startAutoUpdate();
 	}
 
-	function close(immediate = false) {
+	async function close() {
 		if (!isOpen.value) {
 			return;
 		}
 
-		if (immediate) {
-			stop();
-			return;
-		}
-
-		const delay = session.options.hideDelayMs ?? 0;
-		setTimeout(() => stop(), delay);
+		stop(session.id);
 	}
 
-	function stop() {
-		removeEventListeners();
+	function stop(id?: number) {
+		if (id && id !== session.id) {
+			return;
+		}
 
 		isOpen.value = false;
 		session.reference = null;

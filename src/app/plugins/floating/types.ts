@@ -20,8 +20,6 @@ export interface IFloatingOptions {
 	offset?: number;
 	hoverPadding?: number;
 	middleware?: Middleware[];
-	showInMs?: number;
-	hideDelayMs?: number;
 	trigger?: FloatingTriggers | FloatingTriggers[];
 }
 

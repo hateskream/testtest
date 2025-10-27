@@ -20,10 +20,8 @@ interface IPositionComponentEmits {
 
 const props = withDefaults(defineProps<IPositionProps>(), {
 	scope: 'default',
-	position: 'right-end',
+	placement: 'right-end',
 	trigger: 'click',
-	showInMs: 100,
-	hideDelayMs: 200,
 	positionOffset: 6,
 	strategy: 'fixed',
 	hoverPadding: 8,
@@ -50,7 +48,11 @@ provide(POSITION_INJECTION_KEY, {
 	close: floating.close,
 });
 
-function openFloating() {
+function handleOpen() {
+	if (isVisible.value || !slots.content) {
+		return;
+	}
+
 	isVisible.value = true;
 
 	floating.open({
@@ -58,10 +60,8 @@ function openFloating() {
 		content: () => slots.content?.() ?? null,
 		options: {
 			placement: props.placement,
-			hideDelayMs: props.hideDelayMs,
 			hoverPadding: props.hoverPadding,
 			strategy: props.strategy,
-			showInMs: props.showInMs,
 			offset: props.offset,
 			trigger: props.trigger,
 		},
@@ -69,14 +69,6 @@ function openFloating() {
 			isVisible.value = false;
 		},
 	});
-}
-
-function handleOpen() {
-	if (isVisible.value || !slots.content) {
-		return;
-	}
-
-	openFloating();
 }
 
 async function handleContextMenu(event: MouseEvent) {
@@ -135,6 +127,7 @@ onUnmounted(() => {
 
 defineExpose({
 	isVisible,
+	handleOpen,
 });
 </script>
 

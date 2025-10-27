@@ -65,7 +65,7 @@ function onOpen(e: MouseEvent) {
 }
 
 function handleOpenFullView() {
-	rcmLayer.value?.close(true);
+	rcmLayer.value?.close();
 	isOpenFullView.value = true;
 }
 </script>

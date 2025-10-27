@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FloatingHost from '@/app/plugins/floating/components/floating-host.vue';
+import { FloatingHost } from './plugins/floating';
 </script>
 
 <template>

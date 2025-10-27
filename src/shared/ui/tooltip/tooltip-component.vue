@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, useTemplateRef } from 'vue';
+import { ref, computed, watch, useTemplateRef, onUnmounted } from 'vue';
 import { offset, shift, flip, type Placement } from '@floating-ui/vue';
 
 import { UiPositionPortal } from '@/shared/ui/position';
@@ -41,8 +41,8 @@ function openNow() {
 	isVisible.value = true;
 }
 
-function closeNow(immediate = true) {
-	layer.value?.close(immediate);
+function closeNow() {
+	layer.value?.close();
 	isVisible.value = false;
 }
 
@@ -50,7 +50,7 @@ function handleMouseover() {
 	if (props.forceHide || timeout.value || isVisible.value) {
 		return;
 	}
-	timeout.value = window.setTimeout(() => {
+	timeout.value = setTimeout(() => {
 		openNow();
 		timeout.value && clearTimeout(timeout.value);
 		timeout.value = null;
@@ -67,14 +67,17 @@ function handleMouseleave() {
 	}
 }
 
-watch(
-	() => props.forceHide,
-	(v) => {
-		if (v && isVisible.value) {
-			closeNow(true);
-		}
-	},
-);
+watch(() => props.forceHide, value => {
+	if (value) {
+		closeNow();
+	}
+});
+
+onUnmounted(() => {
+	if (timeout.value) {
+		clearTimeout(timeout.value);
+	}
+});
 </script>
 
 <template>
