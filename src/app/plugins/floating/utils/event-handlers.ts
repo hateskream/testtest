@@ -1,27 +1,11 @@
 import type { ReferenceElement } from '@floating-ui/vue';
 
-function isInsideFloatingList(e: Event) {
-	const path = (e.composedPath?.() ?? []) as EventTarget[];
-
-	for (const t of path) {
-		if (t instanceof Element && t.closest('[data-floating-submenu]')) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 export function createClickOutsideHandler(
 	e: PointerEvent,
 	trigger: ReferenceElement | null,
 	floating: HTMLElement | null,
 	stop: () => void,
 ) {
-	if (isInsideFloatingList(e)) {
-		return;
-	}
-
 	const rootId =
 		(floating as HTMLElement)?.getAttribute?.('data-floating-root') ??
 		(trigger as HTMLElement)?.getAttribute?.('data-floating-root');

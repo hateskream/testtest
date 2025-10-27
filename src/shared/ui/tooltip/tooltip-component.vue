@@ -27,7 +27,7 @@ const timeout = ref<number | null>(null);
 
 const layerOptions = computed<IFloatingOptions>(() => ({
 	scope: props.scope,
-	strategy: 'fixed' as const,
+	strategy: 'fixed',
 	placement: props.position,
 	offset: 6,
 	middleware: [offset(6), flip(), shift({ padding: 5 })],

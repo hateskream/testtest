@@ -2,8 +2,8 @@
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
-import type { IPositionProps } from './model';
-import { matchesTrigger } from '@/app/plugins/floating/utils';
+import { matchesTrigger } from '@/app/plugins/floating';
+import type { IPositionProps } from '../model';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
@@ -186,7 +186,6 @@ defineExpose({ isVisible, handleClick });
 				ref="floating"
 				:style="enhancedFloatingStyles"
 				class="submenu"
-				data-floating-submenu
 			>
 				<div class="inner" :style="{ padding: `${props.offset}px` }">
 					<div class="scroll-wrapper">

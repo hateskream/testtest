@@ -3,13 +3,12 @@ import {
 	nextTick,
 	onMounted,
 	onUnmounted,
-	provide,
 	ref,
 	useSlots,
 	useTemplateRef,
 } from 'vue';
 
-import { type IPositionProps, POSITION_INJECTION_KEY } from './model.ts';
+import { type IPositionProps } from '../model.ts';
 import { useFloatingContext } from '@/app/plugins/floating';
 import { matchesTrigger } from '@/app/plugins/floating/utils';
 
@@ -43,10 +42,6 @@ const wrapperRef = useTemplateRef<HTMLElement>('wrapper');
 const referenceRef = useTemplateRef<HTMLElement>('reference');
 
 const floating = useFloatingContext(props.scope);
-
-provide(POSITION_INJECTION_KEY, {
-	close: floating.close,
-});
 
 function handleOpen() {
 	if (isVisible.value || !slots.content) {

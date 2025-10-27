@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { useSlots } from 'vue';
+import { computed, useSlots } from 'vue';
 import type { ReferenceElement, VirtualElement } from '@floating-ui/vue';
 
-import { useFloatingContext } from '@/app/plugins/floating';
-import { makeVirtualFromMouseEvent } from '@/app/plugins/floating/utils/virtual';
-import type { IFloatingOptions } from '@/app/plugins/floating/types';
+import {
+	useFloatingContext,
+	makeVirtualFromMouseEvent,
+	type IFloatingOptions,
+} from '@/app/plugins/floating';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
 	scope: 'default',
@@ -12,16 +14,21 @@ const props = withDefaults(defineProps<IFloatingOptions>(), {
 	placement: 'right-start',
 	strategy: 'fixed',
 	offset: 6,
-	hideDelay: 120,
 });
 
 const slots = useSlots();
 const floating = useFloatingContext(props.scope);
 
+const renderNode = computed(() => {
+	return () => slots.default?.({
+		close: close,
+	}) ?? null;
+});
+
 function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
 	floating.open({
 		reference: makeVirtualFromMouseEvent(e),
-		content: () => slots.default?.() ?? null,
+		content: renderNode.value,
 		options: { ...props, ...(opts ?? {}) },
 	});
 }
@@ -29,7 +36,7 @@ function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
 function openAt(reference: ReferenceElement | VirtualElement, opts?: IFloatingOptions) {
 	floating.open({
 		reference: reference,
-		content: () => slots.default?.() ?? null,
+		content: renderNode.value,
 		options: { ...props, ...(opts ?? {}) },
 	});
 }
@@ -39,7 +46,10 @@ function close() {
 }
 
 defineSlots<{
-	default(): unknown;
+	default(
+		// eslint-disable-next-line no-shadow
+		close: () => void
+	): unknown;
 }>();
 
 defineExpose({ openEvent, openAt, close });
