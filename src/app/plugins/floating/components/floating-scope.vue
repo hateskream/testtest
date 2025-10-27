@@ -64,8 +64,7 @@ onUnmounted(removeEventListeners);
 
 <template>
 	<div
-		v-if="normalizedContent.length"
-		:key="floating.session.id"
+		v-if="floating.isOpen && normalizedContent.length"
 		ref="content"
 		:class="classes.scope"
 		:style="floating.instance.floatingStyles"
