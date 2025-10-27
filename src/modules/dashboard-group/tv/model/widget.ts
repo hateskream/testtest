@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { EnvironmentName, getAllEnableWidgets, getEnvironmentName, type WidgetFeature } from '@/shared/lib';
-import { WidgetType, isWidgetTypeKey } from '@/modules/dashboard-group';
+import { WidgetType, isWidgetTypeKey } from '../../core';
 
 export interface IPosition {
 	x: number;

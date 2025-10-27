@@ -49,7 +49,7 @@ export const DashboardGroupSchema = z.object({
 export type DashboardGroup = z.infer<typeof DashboardGroupSchema>;
 
 
-export function useDashboardGroup() {
+export function useDashboardLayout() {
 
 	const {
 		useStateQuery,

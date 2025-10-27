@@ -100,4 +100,5 @@ export enum IconIds {
 	ToFull = 'to-full',
 	ControlCheck = 'control-check',
 	ControlClose = 'control-close',
+	Prev = 'prev',
 }

@@ -102,7 +102,7 @@ export const testRoutes: RouteRecordRaw[] = [
 	{
 		path: RoutePaths.Test,
 		name: RouteNames.Test,
-		component: () => import('@/pages/test-page.vue'),
+		component: () => import('@/pages/new-layout.vue'),
 	},
 	{
 		path: RoutePaths.Heatmap,
