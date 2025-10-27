@@ -73,6 +73,7 @@ export enum ColumnType {
 	TrustScore = 'trustScore',
 	Open = 'open',
 	Incentive = 'incentive',
+	MarketHours = 'marketHours',
 }
 
 export enum CellType {
@@ -87,6 +88,7 @@ export enum CellType {
 	Score = 'Score',
 	Open = 'open',
 	Check = 'Check',
+	Schedule = 'Schedule',
 }
 
 export enum Trend {
@@ -240,6 +242,14 @@ export interface ICheckCell extends IBaseCell {
 	value: boolean;
 }
 
+
+export interface IScheduleCell extends IBaseCell {
+	cellType: CellType.Schedule;
+	start: string;
+	finish: string;
+	current: string;
+}
+
 export type Cell =
 	| IEmptyCell
 	| ISymbolCell
@@ -251,7 +261,8 @@ export type Cell =
 	| IRangeCell
 	| IScoreCell
 	| IOpenCell
-	| ICheckCell;
+	| ICheckCell
+	| IScheduleCell;
 
 export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Symbol]: CellType.Symbol,
@@ -321,6 +332,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.TrustScore]: CellType.Score,
 	[ColumnType.Open]: CellType.Open,
 	[ColumnType.Incentive]: CellType.Check,
+	[ColumnType.MarketHours]: CellType.Schedule,
 };
 
 export type ColumnToCell = {
@@ -391,6 +403,7 @@ export type ColumnToCell = {
 	[ColumnType.TrustScore]: IScoreCell;
 	[ColumnType.Open]: IOpenCell;
 	[ColumnType.Incentive]: ICheckCell;
+	[ColumnType.MarketHours]: IScheduleCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

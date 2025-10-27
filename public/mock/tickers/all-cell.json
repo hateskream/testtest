@@ -331,7 +331,6 @@
 		"columnType": "open",
 		"value": true
 	},
-
 	"trustScore": {
 		"cellType": "Score",
 		"columnType": "trustScore",
@@ -342,5 +341,13 @@
 		"cellType": "Check",
 		"columnType": "incentive",
 		"value": false
+	},
+	"marketHours": {
+		"cellType": "Schedule",
+		"columnType": "marketHours",
+		"start": "10:00",
+		"finish": "19:30",
+		"current": "9:00"
 	}
 }
+

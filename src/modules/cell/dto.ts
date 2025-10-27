@@ -118,6 +118,13 @@ export type CheckDto = BaseDto &
 	Nullable<{
 		value: boolean;
 	}>;
+export type ScheduleDto = BaseDto &
+	Nullable<{
+		start: string;
+		finish: string;
+		current: string;
+	}>;
+
 
 export type CellDto =
 	SymbolDto
@@ -129,4 +136,5 @@ export type CellDto =
 	| LabelDto
 	| ScoreDto
 	| OpenDto
-	| CheckDto;
+	| CheckDto
+	| ScheduleDto;

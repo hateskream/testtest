@@ -13,6 +13,7 @@ export enum TableColumnType {
 	SCORE = 'score',
 	IS_OPEN = 'open',
 	CHECK = 'check',
+	SCHEDULE = 'schedule',
 }
 
 export type SortDirection = 'asc' | 'desc' | 'none';

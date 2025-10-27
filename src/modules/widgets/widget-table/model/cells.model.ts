@@ -54,6 +54,11 @@ export interface ITableOpenCell {
 export interface ITableCheckCell {
 	value: boolean;
 }
+export interface ITableScheduleCell {
+	start: string;
+	finish: string;
+	current: string;
+}
 
 enum TrendType {
 	UP = 'up',

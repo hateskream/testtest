@@ -12,7 +12,7 @@ import {
 	isSvgChartCell,
 	isRangeCell,
 	isForexSymbolCell,
-	isScoreCell, isOpenCell, isCheckCell,
+	isScoreCell, isOpenCell, isCheckCell, isScheduleCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
@@ -37,6 +37,7 @@ export const mapToTableColumnType: Record<CellType, TableColumnType> = {
 	[CellType.Score]: TableColumnType.SCORE,
 	[CellType.Open]: TableColumnType.IS_OPEN,
 	[CellType.Check]: TableColumnType.CHECK,
+	[CellType.Schedule]: TableColumnType.SCHEDULE,
 };
 
 const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => unknown> = {
@@ -50,15 +51,15 @@ const cellTypeToTableMapper: Record<Exclude<CellType, 'Empty'>, (cell: Cell) => 
 	[CellType.Score]: mapScoreToTable,
 	[CellType.Open]: mapOpenToTable,
 	[CellType.Check]: mapCheckToTable,
+	[CellType.Schedule]: mapScheduleToTable,
 };
 
 function mapCellToTable(cell: Cell): unknown {
 	if (cell.cellType === CellType.Empty) {
 		return mapEmptyToTable(cell);
 	}
-	console.log(cell.cellType, cell);
+	console.log(cell.cellType, cell, 'cells');
 	return cellTypeToTableMapper[cell.cellType](cell);
-
 }
 
 function mapSymbolToTable(cell: Cell) {
@@ -191,6 +192,19 @@ function mapCheckToTable(cell: Cell) {
 
 	return {
 		value: cell.value,
+	};
+}
+
+
+function mapScheduleToTable(cell: Cell) {
+	if (!isScheduleCell(cell)) {
+		return mapEmptyToTable(cell);
+	}
+
+	return {
+		start: cell.start,
+		finish: cell.finish,
+		current: cell.current,
 	};
 }
 

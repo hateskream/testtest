@@ -12,6 +12,7 @@ import TableCellRange from './table-cell-range.vue';
 import TableCellScore from './table-cell-score.vue';
 import TableCellIsOpen from './table-cell-is-open.vue';
 import TableCellCheck from './table-cell-check.vue';
+import TableCellSchedule from './table-cell-schedule.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -26,6 +27,7 @@ export enum CellType {
 	SCORE = 'score',
 	IS_OPEN = 'open',
 	CHECK = 'check',
+	SCHEDULE = 'schedule',
 }
 
 
@@ -45,6 +47,7 @@ const components: Record<CellType, Component> = {
 	[CellType.SCORE]: TableCellScore,
 	[CellType.IS_OPEN]: TableCellIsOpen,
 	[CellType.CHECK]: TableCellCheck,
+	[CellType.SCHEDULE]: TableCellSchedule,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

@@ -37,6 +37,12 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			isShow: true,
 			groupOrder: 2,
 		},
+		{
+			columnType: ColumnType.MarketHours,
+			isDraggable: false,
+			isShow: true,
+			groupOrder: 2,
+		},
 
 	]);
 

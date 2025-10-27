@@ -15,7 +15,7 @@ import {
 	type ISvgChartCell,
 	type ISymbolCell,
 	type ITextCell,
-	SymbolType, type ICheckCell,
+	SymbolType, type ICheckCell, type IScheduleCell,
 } from './domain';
 import type {
 	CellDto,
@@ -33,7 +33,7 @@ import type {
 	ScoreDto,
 	SvgChartDto,
 	SymbolDto,
-	TextDto,
+	TextDto, CheckDto, ScheduleDto,
 } from './dto';
 
 
@@ -226,6 +226,7 @@ export function mapLabel(dto: CellDto): ILableCell | IEmptyCell {
 	console.error('Cell not match Label', dto);
 	return createEmpty(dto);
 }
+
 export function mapScore(dto: CellDto): IScoreCell | IEmptyCell {
 	if (isEmpty(dto)) {
 		return createEmpty(dto);
@@ -269,6 +270,24 @@ export function mapCheck(dto: CellDto): ICheckCell | IEmptyCell {
 			value: dto.value,
 
 		} as ICheckCell;
+	}
+	return createEmpty(dto);
+}
+
+
+export function mapSchedule(dto: CellDto): IScheduleCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isScheduleDto(dto)) {
+		return {
+			cellType: CellType.Schedule,
+			columnType: dto.columnType,
+			start: dto.start,
+			finish: dto.finish,
+			current: dto.current,
+
+		} as IScheduleCell;
 	}
 	return createEmpty(dto);
 }
@@ -358,8 +377,12 @@ function isIsOpenDto(dto: CellDto): dto is OpenDto {
 }
 
 
-function isCheckDto(dto: CellDto): dto is OpenDto {
+function isCheckDto(dto: CellDto): dto is CheckDto {
 	return dto.cellType === CellType.Check;
+}
+
+function isScheduleDto(dto: CellDto): dto is ScheduleDto {
+	return dto.cellType === CellType.Schedule;
 }
 
 function createEmpty(dto: CellDto): IEmptyCell {

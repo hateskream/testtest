@@ -403,4 +403,10 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Incentive',
 		groupName: 'Incentive',
 	},
+	[ColumnType.MarketHours]: {
+		columnName: 'Market hours — UTC −4',
+		tooltip: 'Market hours — UTC −4',
+		settingsName: 'Market Hours',
+		groupName: 'Market Hours',
+	},
 };
