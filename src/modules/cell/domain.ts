@@ -74,6 +74,14 @@ export enum ColumnType {
 	Open = 'open',
 	Incentive = 'incentive',
 	MarketHours = 'marketHours',
+	Volume24hNorm = 'volume24hNorm',
+	Coins = 'coins',
+	Pairs = 'pairs',
+
+	Launched = 'launched',
+	DEXRank = 'DEXRank',
+	Country = 'country',
+	NextClosedDay = 'nextClosedDay',
 }
 
 export enum CellType {
@@ -266,6 +274,8 @@ export type Cell =
 
 export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Symbol]: CellType.Symbol,
+	[ColumnType.Launched]: CellType.Text,
+
 
 	[ColumnType.PriceCurrent]: CellType.Number,
 	[ColumnType.PriceMin24h]: CellType.Number,
@@ -287,6 +297,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.ChangePrice30dPercent]: CellType.Percent,
 
 	[ColumnType.Volume24h]: CellType.Number,
+	[ColumnType.Volume24hNorm]: CellType.Number,
 	[ColumnType.VolumeRel10d]: CellType.Number,
 	[ColumnType.VolumeAvg10d]: CellType.Number,
 	[ColumnType.VolumeAvg50d]: CellType.Number,
@@ -333,10 +344,16 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Open]: CellType.Open,
 	[ColumnType.Incentive]: CellType.Check,
 	[ColumnType.MarketHours]: CellType.Schedule,
+	[ColumnType.Coins]: CellType.Number,
+	[ColumnType.Pairs]: CellType.Number,
+	[ColumnType.DEXRank]: CellType.Number,
+	[ColumnType.Country]: CellType.Text,
+	[ColumnType.NextClosedDay]: CellType.Text,
 };
 
 export type ColumnToCell = {
 	[ColumnType.Symbol]: ISymbolCell;
+	[ColumnType.Launched]: ITextCell;
 
 	[ColumnType.PriceCurrent]: INumberCell;
 	[ColumnType.PriceMin24h]: INumberCell;
@@ -358,6 +375,7 @@ export type ColumnToCell = {
 	[ColumnType.ChangePrice30dPercent]: IPercentCell;
 
 	[ColumnType.Volume24h]: INumberCell;
+	[ColumnType.Volume24hNorm]: INumberCell;
 	[ColumnType.VolumeRel10d]: INumberCell;
 	[ColumnType.VolumeAvg10d]: INumberCell;
 	[ColumnType.VolumeAvg50d]: INumberCell;
@@ -404,6 +422,11 @@ export type ColumnToCell = {
 	[ColumnType.Open]: IOpenCell;
 	[ColumnType.Incentive]: ICheckCell;
 	[ColumnType.MarketHours]: IScheduleCell;
+	[ColumnType.Coins]: INumberCell;
+	[ColumnType.Pairs]: INumberCell;
+	[ColumnType.DEXRank]: INumberCell;
+	[ColumnType.Country]: ITextCell;
+	[ColumnType.NextClosedDay]: ITextCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

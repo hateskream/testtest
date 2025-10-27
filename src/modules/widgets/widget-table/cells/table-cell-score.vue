@@ -65,7 +65,7 @@ const getColor = computed(() => {
 }
 
 .bar {
-	width: 3px;
+	width: 2px;
 	border-radius: 1px;
 	transition: background-color 0.2s ease;
 }

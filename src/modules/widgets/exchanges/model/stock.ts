@@ -20,19 +20,7 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			groupOrder: 0,
 		},
 		{
-			columnType: ColumnType.PriceCurrent,
-			isDraggable: false,
-			isShow: true,
-			groupOrder: 0,
-		},
-		{
-			columnType: ColumnType.Open,
-			isDraggable: false,
-			isShow: true,
-			groupOrder: 2,
-		},
-		{
-			columnType: ColumnType.Incentive,
+			columnType: ColumnType.MarketHours,
 			isDraggable: false,
 			isShow: true,
 			groupOrder: 2,
@@ -42,6 +30,18 @@ export const STOCK_ALL_COLUMNS: ITableColumn[] =
 			isDraggable: false,
 			isShow: true,
 			groupOrder: 2,
+		},
+		{
+			columnType: ColumnType.Open,
+			isDraggable: false,
+			isShow: true,
+			groupOrder: 2,
+		},
+		{
+			columnType: ColumnType.NextClosedDay,
+			isDraggable: false,
+			isShow: true,
+			groupOrder: 3,
 		},
 
 	]);

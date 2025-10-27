@@ -135,6 +135,14 @@
 		"magnitude": "billion",
 		"trend": "increase"
 	},
+	"volume24hNorm": {
+		"cellType": "Number",
+		"columnType": "volume24hNorm",
+		"value": "22",
+		"currencySymbol": "$",
+		"magnitude": "billion",
+		"trend": "increase"
+	},
 	"volumeRel10d": {
 		"cellType": "Number",
 		"columnType": "volumeRel10d",
@@ -171,6 +179,14 @@
 		"cellType": "Text",
 		"columnType": "marketCapRank",
 		"value": "1"
+	},
+	"DEXRank": {
+		"cellType": "Number",
+		"columnType": "marketCapRank",
+		"value": "1",
+		"currencySymbol": "",
+		"magnitude": "",
+		"trend": "stable"
 	},
 	"marketCapFullyDiluted": {
 		"cellType": "Number",
@@ -345,9 +361,41 @@
 	"marketHours": {
 		"cellType": "Schedule",
 		"columnType": "marketHours",
-		"start": "10:00",
-		"finish": "19:30",
+		"start": "9:30",
+		"finish": "15:30",
 		"current": "9:00"
+	},
+	"coins": {
+		"cellType": "Number",
+		"columnType": "coins",
+		"value": "58",
+		"currencySymbol": "",
+		"magnitude": "none",
+		"trend": "stable"
+	},
+	"pairs": {
+		"cellType": "Number",
+		"columnType": "pairs",
+		"value": "59",
+		"currencySymbol": "",
+		"magnitude": "none",
+		"trend": "stable"
+	},
+	"launched": {
+		"cellType": "Text",
+		"columnType": "launched",
+		"value": "2013"
+	},
+	"country": {
+		"cellType": "Text",
+		"columnType": "country",
+		"value": "Armenia"
+	},
+	"nextClosedDay": {
+			"cellType": "Text",
+			"columnType": "nextClosedDay",
+			"value": "Jun 19, 2025, Saturday"
 	}
+
 }
 

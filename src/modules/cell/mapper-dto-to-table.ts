@@ -108,6 +108,7 @@ function mapDtoToCell(cellType: CellType, dto: CellDto) {
 	if (cellType === CellType.Empty) {
 		return null;
 	}
+	console.log(cellTypeToMapper[cellType](dto), dto, cellType, 'new');
 
 	return cellTypeToMapper[cellType](dto);
 }

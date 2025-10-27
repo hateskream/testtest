@@ -404,9 +404,51 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		groupName: 'Incentive',
 	},
 	[ColumnType.MarketHours]: {
-		columnName: 'Market hours — UTC −4',
-		tooltip: 'Market hours — UTC −4',
+		columnName: 'Market hours — some timezone',
+		tooltip: 'Market hours — UTC',
 		settingsName: 'Market Hours',
 		groupName: 'Market Hours',
+	},
+	[ColumnType.Volume24hNorm]: {
+		columnName: 'Vol norm, 24h',
+		tooltip: 'Vol normalized, 24h',
+		settingsName:'Vol norm, 24h',
+		groupName: 'Volume',
+	},
+	[ColumnType.Coins]: {
+		columnName: 'Coins',
+		tooltip: 'Coins',
+		settingsName:'Coins',
+		groupName: 'Coins',
+	},
+	[ColumnType.Pairs]: {
+		columnName: 'Pairs',
+		tooltip: 'Pairs',
+		settingsName:'Pairs',
+		groupName: 'Pairs',
+	},
+	[ColumnType.Launched]: {
+		columnName: 'Launched',
+		tooltip: 'Launched',
+		settingsName: 'Launched',
+		groupName: 'Launched',
+	},
+	[ColumnType.DEXRank]: {
+		columnName: 'Rank',
+		tooltip: 'Rank',
+		settingsName: 'Rank',
+		groupName: 'Rank',
+	},
+	[ColumnType.Country]: {
+		columnName: 'Country',
+		tooltip: 'Country',
+		settingsName: 'Country',
+		groupName: 'Country',
+	},
+	[ColumnType.NextClosedDay]: {
+		columnName: 'Next closed day',
+		tooltip: 'Next closed day',
+		settingsName: 'Next closed day',
+		groupName: 'Next closed day',
 	},
 };

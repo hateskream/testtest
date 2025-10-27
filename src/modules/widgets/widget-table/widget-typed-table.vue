@@ -151,6 +151,20 @@ const tickerState = computed(() => {
 		isShowDescription: showDescription.value,
 	};
 });
+
+
+const getCellComponentForColumn = (
+	columnType: IExtendedTableColumn,
+	cellData: unknown,
+	columnKey: string,
+) => {
+	if (!cellData) {
+		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
+		return getCellComponent('nothing');
+	}
+	return getCellComponent(columnType);
+};
+
 </script>
 
 <template>
@@ -204,7 +218,7 @@ const tickerState = computed(() => {
 					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component
-					:is="getCellComponent(column.type)"
+					:is="getCellComponentForColumn(column.type, cellProps.row.data[column.key], column.key)"
 					v-else
 					:data="cellProps.row.data[column.key]"
 				/>
