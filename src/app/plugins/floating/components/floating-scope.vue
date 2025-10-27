@@ -21,36 +21,22 @@ const normalizedContent = computed<FloatingContentRenderable[]>(() => {
 </script>
 
 <template>
-	<transition name="fade">
-		<div
-			v-if="floating.isOpen && normalizedContent.length"
-			ref="content"
-			:class="classes.scope"
-			:style="floating.instance.floatingStyles"
-		>
-			<component
-				:is="node"
-				v-for="(node, i) in normalizedContent"
-				:key="i"
-			/>
-		</div>
-	</transition>
+	<div
+		v-if="floating.isOpen"
+		ref="content"
+		:class="classes.scope"
+		:style="floating.instance.floatingStyles"
+	>
+		<component
+			:is="node"
+			v-for="(node, i) in normalizedContent"
+			:key="i"
+		/>
+	</div>
 </template>
 
 <style module="classes">
 .scope {
 	z-index: 101;
-}
-</style>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	opacity: 0;
 }
 </style>
