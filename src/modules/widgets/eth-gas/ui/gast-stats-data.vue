@@ -1,10 +1,7 @@
 <script setup lang="ts">
-export interface IGasStatsData {
-	lastBlock: number;
-	avgBlockSize: number;
-	pendingQueue: number;
-	avgUtilization: number;
-}
+
+
+import type { IGasStatsData } from '@/modules/widgets/eth-gas/model';
 
 export interface IGasStatsCardProps {
 	data: IGasStatsData;

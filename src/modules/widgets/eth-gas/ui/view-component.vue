@@ -1,33 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type ISize } from '../model';
+import { type ISize, type IGasStatsData, type IGasCardData } from '../model';
 
 import GasCard from './gas-card-component.vue';
-import type { IGasCardData } from './gas-card-component.vue';
 import GasStatsCard from './gast-stats-data.vue';
-import type { IGasStatsData } from './gast-stats-data.vue';
+
 
 export interface IViewComponentProps {
+	gasStats: IGasStatsData;
+	gasCards: IGasCardData[];
 	size: ISize;
 }
 
+
 const props = defineProps<IViewComponentProps>();
 
-// Моковые данные для gas карточек
-const gasData: IGasCardData[] = [
-	{ type: 'slow', gwei: 0.28, time: 45, price: 0.02 },
-	{ type: 'standard', gwei: 0.35, time: 20, price: 0.01 },
-	{ type: 'fast', gwei: 0.39, time: 15, price: 0.03 },
-];
-
-// Моковые данные для статистики
-const statsData: IGasStatsData = {
-	lastBlock: 23181923,
-	avgBlockSize: 217,
-	pendingQueue: 129965,
-	avgUtilization: 47.7,
-};
 
 const layoutConfig = computed(() => {
 	const { w, h } = props.size;
@@ -286,7 +274,7 @@ const layoutConfig = computed(() => {
 	>
 		<div :class="classes.cardsContainer">
 			<gas-card
-				v-for="(data, index) in gasData.slice(0, layoutConfig.showCards)"
+				v-for="(data, index) in props.gasCards.slice(0, layoutConfig.showCards)"
 				:key="index"
 				:data="data"
 				:compact="layoutConfig.compact"
@@ -300,7 +288,7 @@ const layoutConfig = computed(() => {
 		<gas-stats-card
 			v-if="layoutConfig.statsPosition === 'right'"
 			:class="classes.statsCard"
-			:data="statsData"
+			:data="props.gasStats"
 			:is-table="layoutConfig.isTable"
 		/>
 
@@ -308,7 +296,7 @@ const layoutConfig = computed(() => {
 		<gas-stats-card
 			v-if="layoutConfig.statsPosition === 'bottom'"
 			:class="classes.bottomStatsCard"
-			:data="statsData"
+			:data="props.gasStats"
 			:is-table="layoutConfig.isTable"
 		/>
 	</div>

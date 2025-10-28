@@ -35,7 +35,8 @@ const emit = defineEmits<{
 			<view-component
 				v-else-if="dataState.data"
 				:view-state="viewState"
-				:tension="dataState.data"
+				:gas-stats="dataState.data.gasStats"
+				:gas-cards="dataState.data.gasCardData"
 				:size="meta.size"
 			/>
 		</template>
