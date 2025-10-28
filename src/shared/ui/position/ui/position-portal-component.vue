@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue';
-import type { ReferenceElement, VirtualElement } from '@floating-ui/vue';
+import { computed, type MaybeRefOrGetter, useSlots } from 'vue';
+import type { ReferenceElement } from '@floating-ui/vue';
 
 import {
 	useFloatingContext,
-	makeVirtualFromMouseEvent,
+	createVirtualFloatingNode,
 	type IFloatingOptions,
 } from '@/app/plugins/floating';
 
@@ -27,13 +27,13 @@ const renderNode = computed(() => {
 
 function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
 	floating.open({
-		reference: makeVirtualFromMouseEvent(e),
+		reference: createVirtualFloatingNode(e),
 		content: renderNode.value,
 		options: { ...props, ...(opts ?? {}) },
 	});
 }
 
-function openAt(reference: ReferenceElement | VirtualElement, opts?: IFloatingOptions) {
+function openAt(reference: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
 	floating.open({
 		reference: reference,
 		content: renderNode.value,
@@ -48,11 +48,16 @@ function close() {
 defineSlots<{
 	default(
 		// eslint-disable-next-line no-shadow
-		close: () => void
+		close: () => void,
 	): unknown;
 }>();
 
-defineExpose({ openEvent, openAt, close });
+defineExpose({
+	openEvent,
+	openAt,
+	close,
+	floating,
+});
 </script>
 
 <!-- eslint-disable vue/valid-template-root -->

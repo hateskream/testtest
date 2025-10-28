@@ -1,12 +1,28 @@
 import type { VirtualElement } from '@floating-ui/vue';
 
-export function makeVirtualFromMouseEvent(e: MouseEvent): VirtualElement {
-	const x = e.clientX;
-	const y = e.clientY;
+interface ICreateVirtualFloatingNodeOptions {
+	x: number;
+	y: number;
+	top?: number;
+	left?: number;
+	right?: number;
+	bottom?: number;
+	width?: number;
+	height?: number;
+}
+
+export function createVirtualFloatingNode({ x, y, ...opts }: ICreateVirtualFloatingNodeOptions): VirtualElement {
 	return {
 		getBoundingClientRect() {
 			return {
-				x, y, top: y, left: x, right: x, bottom: y, width: 0, height: 0,
+				x: x,
+				y: y,
+				top: opts.top ?? y,
+				left: opts.left ?? x,
+				right: opts.right ?? x,
+				bottom: opts.bottom ?? y,
+				width: opts.width ?? 0,
+				height: opts.height ?? 0,
 			} as DOMRect;
 		},
 	};

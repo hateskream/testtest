@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { refDebounced, useMouse } from '@vueuse/core';
-import { computed, useTemplateRef, watchEffect } from 'vue';
+import { useMouse } from '@vueuse/core';
+import { computed, useTemplateRef, watch, watchEffect } from 'vue';
 
 import { UiPositionPortal } from '@/shared/ui/position';
 import { prepareNumber, preparePercent } from '../utils';
+import { createVirtualFloatingNode } from '@/app/plugins/floating';
 
 const SIZE_ACTIVATOR = 10;
 const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR}`;
-const DEBOUNCE_UPDATE_POSITION = 10;
 
 const colorMapping = {
 	zero: 'rgba(255, 255, 255, 1)',
@@ -36,36 +36,27 @@ interface IUiTreemapTooltipProps {
 const props = defineProps<IUiTreemapTooltipProps>();
 
 const { x, y } = useMouse({ touch: false });
-const debouncedX = refDebounced(x, DEBOUNCE_UPDATE_POSITION);
-const debouncedY = refDebounced(y, DEBOUNCE_UPDATE_POSITION);
 
 const portal = useTemplateRef('portalRef');
 
-const virtualRef = computed(() => ({
-	getBoundingClientRect() {
-		const SIZE = 10;
-		return {
-			width: SIZE,
-			height: SIZE,
-			x: debouncedX.value,
-			y: debouncedY.value,
-			left: debouncedX.value,
-			top: debouncedY.value,
-			right: debouncedX.value + SIZE,
-			bottom: debouncedY.value + SIZE,
-		};
-	},
+const virtualRef = computed(() => createVirtualFloatingNode({
+	x: x.value,
+	y: y.value,
+	right: x.value + SIZE_ACTIVATOR,
+	bottom: y.value + SIZE_ACTIVATOR,
 }));
 
 watchEffect(() => {
 	if (props.isOpen) {
-		portal.value?.openAt(virtualRef.value, {
-			placement: 'top-start',
-			strategy: 'fixed',
-			offset: 6,
-		});
+		portal.value?.openAt(virtualRef);
 	} else {
 		portal.value?.close();
+	}
+});
+
+watch([x, y], () => {
+	if (props.isOpen) {
+		portal.value?.floating.instance.update();
 	}
 });
 
@@ -97,14 +88,14 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 
 	return `${props.currencySymbol} ${prepareNumber(value)}`;
 }
-
 </script>
 
 <template>
 	<ui-position-portal
 		ref="portalRef"
-		placement="top-start"
+		placement="bottom-start"
 		scope="tooltip"
+		:offset="6"
 	>
 		<div class="container">
 			<div class="header">
