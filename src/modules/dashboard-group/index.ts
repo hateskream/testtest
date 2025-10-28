@@ -19,6 +19,10 @@ export {
 	useGridLayout,
 } from './tv';
 
+export {
+	LayoutDashboard,
+} from './layout-dashboards';
+
 export * from './core';
 
 export * from './dashboards';

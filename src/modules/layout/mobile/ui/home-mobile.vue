@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+const emits = defineEmits<{
+	'click-i88': [];
+}>();
+
 const favOpen = ref(true);
 const toastVisible = ref(false);
 const activeTab = ref('menu');
@@ -99,11 +103,11 @@ function setTab(tab: string) {
 				<div :class="classes.chev">›</div>
 			</div>
 
-			<div :class="classes.card">
+			<div :class="classes.card" @click="emits('click-i88')">
 				<div :class="classes.cardLeft">
 					<div :class="classes.iconStub">🧭</div>
 					<div>
-						<div :class="classes.cardTitle">8DX</div>
+						<div :class="classes.cardTitle">I88</div>
 					</div>
 				</div>
 				<div :class="classes.chev">›</div>

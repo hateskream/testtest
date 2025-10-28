@@ -9,6 +9,10 @@ import HeaderMobile from './header-mobile.vue';
 import SectionSlider from './section-slider.vue';
 import PaginationMobile from './pagination-mobile.vue';
 
+const emits = defineEmits<{
+	(e: 'close'): void;
+}>();
+
 const slides = [
 	{ name: '#1', width: 360 },
 	{ name: '#2', width: 300 },
@@ -86,7 +90,7 @@ const {
 			@prev="prev"
 			@next="next"
 		/>
-		<header-mobile v-if="isMobile" />
+		<header-mobile v-if="isMobile" @close="emits('close')" />
 	</div>
 </template>
 

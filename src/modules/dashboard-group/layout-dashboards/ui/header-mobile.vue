@@ -3,6 +3,10 @@ import { ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
+const emits = defineEmits<{
+	(e: 'close'): void;
+}>();
+
 const tabs = ['Main', 'Crypto', 'Stock', 'Forex', 'dsdfsdfsdfsd', 'sddscsdcsdcd', 'sdcdscdscd'];
 const active = ref('Main');
 </script>
@@ -29,6 +33,7 @@ const active = ref('Main');
 					:width="20"
 					:height="20"
 					:class="classes.closeIcon"
+					@click="emits('close')"
 				/>
 			</div>
 		</div>
