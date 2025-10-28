@@ -1,3 +1,2 @@
-import LayoutComponent from './ui/layout-component.vue';
-
-export { LayoutComponent };
+export { LayoutComponent } from './desktop';
+export { HomeMobile } from './mobile';

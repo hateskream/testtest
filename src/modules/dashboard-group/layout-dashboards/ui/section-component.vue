@@ -5,6 +5,7 @@ import WidgetComponent from './widget-component.vue';
 
 const props = defineProps<{
 	width: number;
+	name: string;
 }>();
 
 const widgets = [
@@ -25,7 +26,7 @@ const cardStyle = computed(() => ({ width: `${props.width}px` }));
 
 <template>
 	<section :class="classes.section" :style="cardStyle">
-		<h2 :class="classes.sectionTitle">Dashboard Widgets</h2>
+		<h2 :class="classes.sectionTitle">Dashboard {{ props.name }} </h2>
 
 		<div :class="classes.scroll">
 			<div :class="classes.widgetsContainer">
@@ -80,5 +81,11 @@ const cardStyle = computed(() => ({ width: `${props.width}px` }));
 
 .widgetsContainer > *:not(:last-child) {
 	margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+	.section {
+		padding: 12px 12px 0;
+	}
 }
 </style>

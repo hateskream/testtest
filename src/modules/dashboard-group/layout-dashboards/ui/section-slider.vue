@@ -1,104 +1,73 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
-
-import { useSlider } from '../composables';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import SectionComponent from './section-component.vue';
 
-const slides = [
-	{ name: '#FF6B6B', width: 360 },
-	{ name: '#FFD93D', width: 300 },
-	{ name: '#6BCB77', width: 320 },
-	{ name: '#4D96FF', width: 340 },
-	{ name: '#9B5DE5', width: 380 },
-	{ name: '#F15BB5', width: 320 },
-	{ name: '#FF6B6B', width: 320 },
-	{ name: '#FFD93D', width: 300 },
-	{ name: '#6BCB77', width: 320 },
-	{ name: '#4D96FF', width: 340 },
-	{ name: '#9B5DE5', width: 380 },
-	{ name: '#F15BB5', width: 320 },
-];
+const props = defineProps<{
+	slides: {
+		name: string;
+		width: number;
+	}[];
+	trackStyle: {
+		transform: string;
+		gap: string;
+	};
+	canPrev: boolean;
+	canNext: boolean;
+}>();
 
-const gap = 0;
-
-const viewportEl = useTemplateRef('viewport');
-
-const { translateX, pointerState, canNext, canPrev, next, prev } = useSlider({
-	slidesWidth: slides.map((s) => s.width),
-	gap,
-	viewportEl,
-});
-
-const trackStyle = computed(() => ({
-	transform: `translateX(${translateX.value}px)`,
-	gap: `${gap}px`,
-}));
-
-function onWheel(e: WheelEvent) {
-	pointerState.onWheel(e);
-}
-
-function onPointerDown(e: PointerEvent) {
-	pointerState.onPointerDown(e);
-}
-function onPointerMove(e: PointerEvent) {
-	pointerState.onPointerMove(e);
-}
-function onPointerUp(_: PointerEvent) {
-	pointerState.onPointerUp();
-}
-function onTouchStart(e: TouchEvent) {
-	pointerState.onTouchStart(e);
-}
-function onTouchMove(e: TouchEvent) {
-	pointerState.onTouchMove(e);
-}
-function onTouchEnd(_: TouchEvent) {
-	pointerState.onTouchEnd();
-}
+const emits = defineEmits<{
+	(e: 'pointerDown', event: PointerEvent): void;
+	(e: 'pointerMove', event: PointerEvent): void;
+	(e: 'pointerUp'): void;
+	(e: 'touchStart', event: TouchEvent): void;
+	(e: 'touchMove', event: TouchEvent): void;
+	(e: 'touchEnd'): void;
+	(e: 'wheel', event: WheelEvent): void;
+	(e: 'next'): void;
+	(e: 'prev'): void;
+	(e: 'goTo', index: number): void;
+}>();
 </script>
 
 <template>
 	<div
 		ref="viewport"
 		:class="classes.viewport"
-		@wheel="onWheel"
-		@pointerdown="onPointerDown"
-		@pointermove="onPointerMove"
-		@pointerup="onPointerUp"
-		@pointercancel="onPointerUp"
-		@pointerleave="onPointerUp"
-		@touchstart="onTouchStart"
-		@touchmove="onTouchMove"
-		@touchend="onTouchEnd"
+		@wheel="emits('wheel', $event)"
+		@pointerdown="emits('pointerDown', $event)"
+		@pointermove="emits('pointerMove', $event)"
+		@pointerup="emits('pointerUp')"
+		@pointercancel="emits('pointerUp')"
+		@pointerleave="emits('pointerUp')"
+		@touchstart="emits('touchStart', $event)"
+		@touchmove="emits('touchMove', $event)"
+		@touchend="emits('touchEnd')"
 	>
 		<div
 			:class="classes.track"
-			:style="trackStyle"
+			:style="props.trackStyle"
 		>
 			<section-component
-				v-for="(s, i) in slides"
+				v-for="(s, i) in props.slides"
 				:key="i"
 				:width="s.width"
-				:index="i"
+				:name="s.name"
 			/>
 		</div>
-		<!-- <div :class="classes"></div> -->
 		<div :class="classes.panel">
 			<div :class="classes.content">
 				<button
-					:disabled="!canPrev"
+					:disabled="!props.canPrev"
 					:class="classes.control"
-					@click="prev"
+					@click="emits('prev')"
 				>
 					<ui-icon :id="IconIds.Prev" />
 				</button>
 				<button
-					:disabled="!canNext"
+					:disabled="!props.canNext"
 					:class="classes.control"
-					@click="next"
+					@click="emits('next')"
 				>
 					<ui-icon
 						:id="IconIds.Prev"
@@ -127,10 +96,6 @@ function onTouchEnd(_: TouchEvent) {
 	transition: transform 300ms cubic-bezier(0.22, 0.9, 0.2, 1);
 	will-change: transform;
 }
-
-/* .track > *:not(:last-child) {
-	border-right: 1px solid #1d1d1e;
-} */
 
 .track > * {
 	border-right: 1px solid #1d1d1e;
@@ -182,5 +147,11 @@ function onTouchEnd(_: TouchEvent) {
 	background: rgb(73 73 80 / 32%);
 	border-radius: 8px;
 	backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+	.panel {
+		display: none;
+	}
 }
 </style>

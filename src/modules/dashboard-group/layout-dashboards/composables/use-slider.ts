@@ -1,24 +1,32 @@
-import { useElementSize } from '@vueuse/core';
-import { ref, computed, watch, type Ref } from 'vue';
+import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef } from 'vue';
+
+const PADDING_VIEWPORT = 44;
 
 export function useSlider(opts: {
-	slidesWidth: number[];
-	gap: number;
-	viewportEl: Ref<HTMLElement | null, HTMLElement | null>;
+	slidesWidth: MaybeRefOrGetter<number[]>;
+	gap?: number;
+	viewportWidth: ShallowRef<number, number>;
+	isMobile: ShallowRef<boolean, boolean>;
 }) {
-	const { slidesWidth: slides, gap, viewportEl } = opts;
+	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
 	const translateX = ref(0);
 
-	const { width: viewportWidth } = useElementSize(viewportEl);
+	const slides = computed(() => toValue(slidesWidth));
 
-	// общая ширина трека
 	const totalTrackWidth = computed(() => {
-		const cardSum = slides.reduce((s, c) => s + (c || 0), 0);
-		const gaps = Math.max(0, slides.length - 1) * gap;
-		return cardSum + gaps;
+		const cardSum = slides.value.reduce((s, c) => s + (c || 0), 0);
+		const gaps = Math.max(0, slides.value.length - 1) * gap;
+		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
-	// ограничение движения
+	const trackStyle = computed(() => ({
+		transform: `translateX(${translateX.value}px)`,
+		gap: `${gap}px`,
+	}));
+
+	watch(viewportWidth, () => setTranslateX(translateX.value));
+
+
 	function clampTranslate(x: number) {
 		const maxTranslate = 0;
 		const minTranslate = Math.min(0, viewportWidth.value - totalTrackWidth.value);
@@ -29,12 +37,10 @@ export function useSlider(opts: {
 		translateX.value = clampTranslate(x);
 	}
 
-	watch(viewportWidth, () => setTranslateX(translateX.value));
-
-	// --- указательные события ---
 	const pointer = {
 		isDown: false,
 		lastX: 0,
+		startX: 0,
 		lastY: 0,
 		isHorizontal: false,
 		hasDirection: false,
@@ -44,6 +50,7 @@ export function useSlider(opts: {
 		onPointerDown(e: PointerEvent) {
 			pointer.isDown = true;
 			pointer.lastX = e.clientX;
+			pointer.startX = e.clientX;
 			pointer.lastY = e.clientY;
 			pointer.isHorizontal = false;
 			pointer.hasDirection = false;
@@ -55,7 +62,6 @@ export function useSlider(opts: {
 			const dx = e.clientX - pointer.lastX;
 			const dy = e.clientY - pointer.lastY;
 
-			// Определяем направление только один раз
 			if (!pointer.hasDirection) {
 				pointer.hasDirection = true;
 				pointer.isHorizontal = Math.abs(dx) > Math.abs(dy);
@@ -74,7 +80,7 @@ export function useSlider(opts: {
 			pointer.hasDirection = false;
 		},
 
-		// --- touch-версии ---
+
 		onTouchStart(e: TouchEvent) {
 			pointer.isDown = true;
 			pointer.lastX = e.touches[0].clientX;
@@ -107,12 +113,30 @@ export function useSlider(opts: {
 		onTouchEnd() {
 			pointer.isDown = false;
 			pointer.hasDirection = false;
+
+			if (!isMobile.value) {
+				return;
+			}
+
+			const dx = pointer.lastX - pointer.startX;
+
+			const isLeft = dx < 0;
+
+			if (Math.abs(dx) < viewportWidth.value / 5) {
+				setTranslateX(translateX.value - dx);
+				return;
+			}
+
+			if (isLeft) {
+				next();
+			} else {
+				prev();
+			}
 		},
 
-		// --- wheel (только горизонтальный скролл) ---
+
 		onWheel(e: WheelEvent) {
 			const { deltaX, deltaY } = e;
-			// если горизонтальный скролл выражен сильнее, чем вертикальный
 			if (Math.abs(deltaX) > Math.abs(deltaY)) {
 				e.preventDefault();
 				setTranslateX(translateX.value - deltaX);
@@ -120,9 +144,8 @@ export function useSlider(opts: {
 		},
 	};
 
-	// --- управление кнопками ---
 	function getSlideOffset(index: number) {
-		const widths = slides.slice(0, index);
+		const widths = slides.value.slice(0, index);
 		const sum = widths.reduce((s, w) => s + w, 0);
 		return -(sum + gap * index);
 	}
@@ -133,28 +156,39 @@ export function useSlider(opts: {
 		return translateX.value > minTranslate;
 	});
 
-	let currentIndex = 0;
+	const currentIndex = ref(0);
 	function next() {
 		if (!canNext.value) {
 			return;
 		}
-		currentIndex = Math.min(slides.length - 1, currentIndex + 1);
-		setTranslateX(getSlideOffset(currentIndex));
+		currentIndex.value = Math.min(slides.value.length - 1, currentIndex.value + 1);
+		setTranslateX(getSlideOffset(currentIndex.value));
 	}
 	function prev() {
 		if (!canPrev.value) {
 			return;
 		}
-		currentIndex = Math.max(0, currentIndex - 1);
-		setTranslateX(getSlideOffset(currentIndex));
+		currentIndex.value = Math.max(0, currentIndex.value - 1);
+		setTranslateX(getSlideOffset(currentIndex.value));
+	}
+
+	function goTo(index: number) {
+		if (index < 0 || index >= slides.value.length) {
+			return;
+		}
+
+		currentIndex.value = index;
+		setTranslateX(getSlideOffset(index));
 	}
 
 	return {
-		translateX,
+		trackStyle,
 		canPrev,
 		canNext,
 		next,
 		prev,
 		pointerState,
+		goTo,
+		currentIndex,
 	};
 }
