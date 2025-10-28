@@ -17,5 +17,5 @@ export enum WidgetType {
 }
 
 export function isWidgetTypeKey(value: string): value is WidgetType {
-	return Object.keys(WidgetType).includes(value);
+	return Object.values<string>(WidgetType).includes(value);
 }
