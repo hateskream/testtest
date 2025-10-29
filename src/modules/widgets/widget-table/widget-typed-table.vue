@@ -237,7 +237,7 @@ const getCellComponentForColumn = (
 
 
 		<!-- Forward pagination slot -->
-		<template #pagination>
+		<template #pagination v-if="$slots.pagination">
 			<slot name="pagination" />
 		</template>
 

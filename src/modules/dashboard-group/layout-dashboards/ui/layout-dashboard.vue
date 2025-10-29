@@ -19,7 +19,7 @@ const { width } = useElementSize(useTemplateRef('viewport'));
 
 const viewportWidth = computed(() => width.value);
 
-const isMobile = computed(() => viewportWidth.value < 768);
+const isMobile = computed(() => viewportWidth.value < 768 - 72*2);
 const isSectionWidthLessThanViewport = computed(() =>
 	sections.value.reduce((acc, s) => acc + s.width, 0) < viewportWidth.value,
 );
