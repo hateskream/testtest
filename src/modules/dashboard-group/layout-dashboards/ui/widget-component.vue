@@ -11,13 +11,20 @@ interface IWidgetComponentProps {
 	widget: IWidget;
 	columnWidth: number;
 	colCount: number;
+	parentHeight: number;
 }
 
 const props = defineProps<IWidgetComponentProps>();
 
 const { loading } = useDelayedLoading();
 
-const cellSize = computed(() => calcSizeSideGridCell(props.widget.height, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT));
+const height = computed(() =>
+	Number.isFinite(props.widget.height)
+		? props.widget.height
+		: props.parentHeight,
+);
+
+const cellSize = computed(() => calcSizeSideGridCell(height.value, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT));
 
 const meta = computed((): IMeta => ({
 	market: '',
@@ -47,6 +54,9 @@ const meta = computed((): IMeta => ({
 	<component
 		:is="getWidgetComponent(props.widget.widgetType)"
 		:meta="meta"
+		:style="{
+			height: `${height}px`
+		}"
 	/>
 </template>
 

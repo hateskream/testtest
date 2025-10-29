@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import type { ISection } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
@@ -13,6 +13,8 @@ interface ISectionComponentProps {
 
 const props = defineProps<ISectionComponentProps>();
 
+const containerRef = useTemplateRef<HTMLDivElement>('container');
+
 const cardStyle = computed(() => ({ width: `${props.section.width}px` }));
 
 const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_COL_WIDTH, MAX_COL_WIDTH));
@@ -22,7 +24,7 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	<section :class="classes.section" :style="cardStyle">
 		<h2 :class="classes.sectionTitle">{{ props.section.name }} </h2>
 
-		<div :class="classes.scroll">
+		<div ref="container" :class="classes.scroll">
 			<div :class="classes.widgetsContainer">
 				<widget-component
 					v-for="widget in props.section.widgets"
@@ -30,6 +32,7 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 					:widget="widget"
 					:col-count="cellSize.count"
 					:column-width="cellSize.size"
+					:parent-height="containerRef?.offsetHeight || 0"
 				/>
 			</div>
 		</div>

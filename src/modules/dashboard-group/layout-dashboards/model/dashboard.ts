@@ -31,8 +31,8 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
-					height: 662,
-					widgetType:  WidgetType.Performance, // сделать бесконечный скролл ы
+					height: Infinity,
+					widgetType:  WidgetType.Performance,
 				},
 			],
 		},
@@ -104,8 +104,8 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 2020,
-					widgetType:  WidgetType.News, // сделать бесконечный скролл ы
+					height: Infinity,
+					widgetType:  WidgetType.News,
 				},
 			],
 		},
@@ -115,8 +115,8 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock-gainers', // сделать стейт
-					height: 1700,
-					widgetType:  WidgetType.Price, // сделать бесконечный скролл ы
+					height: Infinity,
+					widgetType:  WidgetType.Price,
 				},
 			],
 		},
@@ -126,8 +126,8 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock-gainers', // сделать стейт
-					height: 1700,
-					widgetType:  WidgetType.Price, // сделать бесконечный скролл ы
+					height: Infinity,
+					widgetType:  WidgetType.Price,
 				},
 			],
 		},
@@ -137,7 +137,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'none', // сделать стейт
-					height: 1700,
+					height: Infinity,
 					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
 				},
 			],
