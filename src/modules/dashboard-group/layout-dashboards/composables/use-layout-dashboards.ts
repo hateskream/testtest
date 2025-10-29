@@ -21,6 +21,7 @@ const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
 	height: z.number(),
+	maxCountRow: z.number().optional(),
 });
 
 export type Widget = z.infer<typeof WidgetSchema>;
@@ -126,6 +127,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					widgetType: widget.widgetType,
 					name: widget.name,
 					height: widget.height,
+					maxCountRow: widget.maxCountRow,
 				})),
 			})),
 		})),
@@ -143,7 +145,7 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 				name: s.name,
 				width: s.width,
 				widgets: s.widgets
-					.map(w => rehydrateWidget(w.id, w.widgetType, w.height, w.defaultStateType))
+					.map(w => rehydrateWidget(w.id, w.widgetType, w.height, w.defaultStateType, w.maxCountRow))
 					.filter(w => w !== null),
 			})),
 		})),

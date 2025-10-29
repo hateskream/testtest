@@ -31,6 +31,7 @@ interface IViewComponentProps {
 	settings: IDisplaySettings;
 	meta: IMeta;
 	filtersValues: FiltersValues;
+	hasPin: boolean;
 }
 
 const activeMarket = defineModel<MarketType>('market', { required: true });
@@ -178,6 +179,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 						:settings="props.settings"
 						:ticker="ticker"
 						:meta="meta"
+						:has-pin="props.hasPin"
 						@toggle-pin="emit('togglePin', $event)"
 					/>
 				</div>

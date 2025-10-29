@@ -33,10 +33,12 @@ const {
 	filtersValues,
 	filtersState,
 	applyStateToParent,
+	hasPin,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
+	maxCountRows: props.meta.maxCountRowTable,
 });
 
 const emit = defineEmits<{
@@ -68,6 +70,7 @@ const emit = defineEmits<{
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"
+				:has-pin="hasPin"
 				@toggle-pin="togglePin"
 			/>
 		</template>

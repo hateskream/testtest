@@ -21,7 +21,7 @@ interface ITopIndicesWidgetProps {
 
 const props = defineProps<ITopIndicesWidgetProps>();
 
-const { data, isLoading, isError, refetch } = useQueryTopIndices(10);
+const { data, isLoading, isError, refetch } = useQueryTopIndices(props.meta.maxCountRowTable ?? 50);
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 

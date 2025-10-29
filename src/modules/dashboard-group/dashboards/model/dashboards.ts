@@ -39,6 +39,7 @@ export interface IMeta {
 		id: string;
 		name: string;
 	}[];
+	maxCountRowTable?: number;
 }
 
 interface IWidgetComponentProps {

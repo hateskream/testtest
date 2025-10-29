@@ -27,6 +27,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'none',
 					height: 406,
+					maxCountRow: 7,
 					widgetType:  WidgetType.TopIndices, // ограничить кол-во колонок
 				},
 				{
@@ -69,32 +70,38 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'commodity',
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 				{
 					defaultState: 'crypto',
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 				{
 					defaultState: 'stock',
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 				{
 					defaultState: 'forex',
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 				{
 					defaultState: 'eth', // добавить
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 				{
 					defaultState: 'index',
 					height: 337,
-					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+					maxCountRow: 4,
+					widgetType:  WidgetType.Price,
 				},
 			],
 		},

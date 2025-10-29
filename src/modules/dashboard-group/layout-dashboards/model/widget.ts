@@ -100,10 +100,16 @@ function createPreset(widgetType: WidgetType): IWidgetPreset {
 export interface IWidget extends IWidgetPreset {
 	height: number;
 	defaultStateType: string;
+	maxCountRow?: number;
 	id: string;
 }
 
-export function createWidget(widgetType: WidgetType, height: number, defaultStateType = ''): IWidget {
+export function createWidget(
+	widgetType: WidgetType,
+	height: number,
+	defaultStateType = '',
+	maxCountRow?: number,
+) : IWidget {
 	const preset = createPreset(widgetType);
 
 	return {
@@ -111,6 +117,7 @@ export function createWidget(widgetType: WidgetType, height: number, defaultStat
 		height,
 		id: uuidv4(),
 		defaultStateType,
+		maxCountRow,
 	};
 }
 
@@ -119,6 +126,7 @@ export function rehydrateWidget(
 	widgetType: string,
 	height: number,
 	defaultStateType: string,
+	maxCountRow?: number,
 ): IWidget | null {
 	if (isWidgetTypeKey(widgetType) === false) {
 		// eslint-disable-next-line no-console
@@ -138,6 +146,7 @@ export function rehydrateWidget(
 		id,
 		height,
 		defaultStateType,
+		maxCountRow,
 	};
 }
 

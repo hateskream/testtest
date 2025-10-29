@@ -16,6 +16,7 @@ export interface ISectionPreset {
 		widgetType: WidgetType;
 		defaultState: string;
 		height: number;
+		maxCountRow?: number;
 	}[];
 }
 
@@ -25,6 +26,8 @@ export function createSectionFromPreset({ widgets, name, width }: ISectionPreset
 		name,
 		width,
 		widgets: widgets
-			.map(({ widgetType, defaultState, height }) => createWidget(widgetType, height, defaultState)),
+			.map(({ widgetType, defaultState, height, maxCountRow }) =>
+				createWidget(widgetType, height, defaultState, maxCountRow),
+			),
 	};
 }

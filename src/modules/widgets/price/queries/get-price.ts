@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { computed, onUnmounted, toValue, type Ref } from 'vue';
+import { computed, onUnmounted, toValue, type MaybeRefOrGetter } from 'vue';
 
 import { getPrice, type IPriceData } from '../api';
 import type { MarketType } from '@/modules/market';
@@ -9,23 +9,23 @@ import { updateInfiniteQueryData, type QueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 
 export function useQueryPrice(
-	market: Ref<MarketType>,
-	pined: Ref<string[]>,
+	market: MaybeRefOrGetter<MarketType>,
+	pined: MaybeRefOrGetter<string[]>,
 	limit: number,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
 	cellUpdater.register(ColumnType.PriceCurrent, updatedData => {
 		queryClient.setQueryData(
-			['price', market.value],
-			oldData => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
+			['price', toValue(market)],
+			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
 
 	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
 		queryClient.setQueryData(
-			['price', market.value],
-			oldData => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
+			['price', toValue(market)],
+			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
 
@@ -34,7 +34,7 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', market.value]),
+		queryKey: computed(() => ['price', toValue(market)]),
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),

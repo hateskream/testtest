@@ -46,6 +46,7 @@ const meta = computed((): IMeta => ({
 	isOpenFull: false,
 	columnWidth: props.columnWidth,
 	rowHeight: cellSize.value.size,
+	maxCountRowTable: props.widget.maxCountRow,
 }));
 
 </script>

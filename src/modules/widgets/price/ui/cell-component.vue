@@ -21,6 +21,7 @@ interface ICellComponentProps {
 	ticker: ITicker;
 	settings: IDisplaySettings;
 	meta: IMeta;
+	hasPin: boolean;
 }
 
 const props = defineProps<ICellComponentProps>();
@@ -93,6 +94,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 		</div>
 
 		<div
+			v-if="props.hasPin"
 			:class="classes.hoverActions"
 			:style="
 				props.ticker.isPined
