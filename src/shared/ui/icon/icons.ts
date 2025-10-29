@@ -122,4 +122,5 @@ export enum IconIds {
 	TileView = 'tile-view',
 	BarView = 'bar-view',
 	ListView = 'list-view',
+	Screener = 'screener',
 }

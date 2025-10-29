@@ -12,6 +12,13 @@ export enum RouteNames {
 	Automobile = 'Automobile',
 	Heatmap = 'Heatmap',
 	Calendar = 'Calendar',
+	Screener = 'Screener',
+	ScreenerStock = 'screener-stock',
+	ScreenerCrypto = 'screener-crypto',
+	ScreenerEtf = 'screener-etf',
+	ScreenerBond = 'screener-bond',
+	ScreenerCex = 'screener-cex',
+	ScreenerDex = 'screener-dex',
 	News = 'News',
 }
 
@@ -29,6 +36,13 @@ export enum RouteLabels {
 	Automobile = 'Automobile',
 	Calendar = 'Calendar',
 	News = 'News',
+	Screener = 'Screener',
+	ScreenerStock = 'Stock Screener',
+	ScreenerCrypto = 'Crypto Screener',
+	ScreenerEtf = 'ETF Screener',
+	ScreenerBond = 'Bond Screener',
+	ScreenerCex = 'CEX Screener',
+	ScreenerDex = 'DEX Screener',
 }
 
 export enum RoutePaths {
@@ -51,6 +65,13 @@ export enum RoutePaths {
 	Automobile = '/automobile',
 	Heatmap = '/heatmap',
 	Calendar = '/calendar',
+	Screener = '/screener',
+	ScreenerStock = '/screener/stock',
+	ScreenerCrypto = '/screener/crypto',
+	ScreenerEtf = '/screener/etf',
+	ScreenerBond = '/screener/bond',
+	ScreenerCex = '/screener/cex',
+	ScreenerDex = '/screener/dex',
 	News = '/news',
 }
 
@@ -66,4 +87,18 @@ export enum RouteTickerType {
 export interface ITickerRouteParams {
 	id: number;
 	type: TickerType;
+}
+
+export enum RouteScreenerType {
+	STOCK = 'stock',
+	CRYPTO = 'crypto',
+	ETF = 'etf',
+	BOND = 'bond',
+	CEX = 'cex',
+	DEX = 'dex',
+}
+
+export interface IScreenerRouteParams {
+	id?: string;
+	type: RouteScreenerType;
 }
