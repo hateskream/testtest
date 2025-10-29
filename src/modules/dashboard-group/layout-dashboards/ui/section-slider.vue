@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type { ISection } from '../model';
 
 import SectionComponent from './section-component.vue';
 
-const props = defineProps<{
-	slides: {
-		name: string;
-		width: number;
-	}[];
+interface ISectionSliderProps {
+	slides: ISection[];
 	trackStyle: {
 		transform: string;
 		gap: string;
 	};
 	canPrev: boolean;
 	canNext: boolean;
-}>();
+}
+
+const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
 	(e: 'pointerDown', event: PointerEvent): void;
@@ -49,10 +49,9 @@ const emits = defineEmits<{
 			:style="props.trackStyle"
 		>
 			<section-component
-				v-for="(s, i) in props.slides"
-				:key="i"
-				:width="s.width"
-				:name="s.name"
+				v-for="s in props.slides"
+				:key="s.id"
+				:section="s"
 			/>
 		</div>
 		<div :class="classes.panel">

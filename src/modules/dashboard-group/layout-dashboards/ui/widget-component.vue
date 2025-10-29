@@ -1,14 +1,53 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import { getWidgetComponent, type IMeta } from '../../dashboards';
+import type { IWidget } from '../model';
+import { useDelayedLoading } from '@/shared/composables';
+import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
+import { calcSizeSideGridCell } from '../model/widget';
+
+interface IWidgetComponentProps {
+	widget: IWidget;
+	columnWidth: number;
+	colCount: number;
+}
+
+const props = defineProps<IWidgetComponentProps>();
+
+const { loading } = useDelayedLoading();
+
+const cellSize = computed(() => calcSizeSideGridCell(props.widget.height, MIN_ROW_HEIGHT, MAX_ROW_HEIGHT));
+
+const meta = computed((): IMeta => ({
+	market: '',
+	widgetId: props.widget.id,
+	isResizing: false,
+	size: {
+		h: cellSize.value.count,
+		w: props.colCount,
+	},
+	maxSize: {
+		h: 0,
+		w: 0,
+	},
+	name: props.widget.name,
+	defaultStateType: props.widget.defaultStateType,
+	isLoading: loading.value,
+	dashboards: [],
+	widgetType: props.widget.widgetType,
+	isOpenFull: false,
+	columnWidth: props.columnWidth,
+	rowHeight: cellSize.value.size,
+}));
 
 </script>
 
 <template>
-	<div :class="classes.root">
-		<div :class="classes.header">Title</div>
-		<div :class="classes.content">
-			<span :class="classes.placeholder">Coming Soon...</span>
-		</div>
-	</div>
+	<component
+		:is="getWidgetComponent(props.widget.widgetType)"
+		:meta="meta"
+	/>
 </template>
 
 <style module="classes">

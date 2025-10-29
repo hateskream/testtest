@@ -73,7 +73,7 @@ function handleOpenFullView() {
 
 <template>
 	<div :class="[classes.container, classList]" @click.prevent.right="onOpen">
-		<div :class="[classes.title, 'widget-drag']">
+		<div :class="[classes.title, 'widget-drag', classList]">
 			<div :class="classes.titleTextContainer">
 				<div :class="classes.titleText">
 					<slot name="title" />
@@ -178,6 +178,9 @@ function handleOpenFullView() {
 }
 
 .title {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

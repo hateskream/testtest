@@ -98,15 +98,17 @@ function createPreset(widgetType: WidgetType): IWidgetPreset {
 }
 
 export interface IWidget extends IWidgetPreset {
+	height: number;
 	defaultStateType: string;
 	id: string;
 }
 
-export function createWidget(widgetType: WidgetType, defaultStateType = ''): IWidget {
+export function createWidget(widgetType: WidgetType, height: number, defaultStateType = ''): IWidget {
 	const preset = createPreset(widgetType);
 
 	return {
 		...preset,
+		height,
 		id: uuidv4(),
 		defaultStateType,
 	};
@@ -115,6 +117,7 @@ export function createWidget(widgetType: WidgetType, defaultStateType = ''): IWi
 export function rehydrateWidget(
 	id: string,
 	widgetType: string,
+	height: number,
 	defaultStateType: string,
 ): IWidget | null {
 	if (isWidgetTypeKey(widgetType) === false) {
@@ -133,6 +136,37 @@ export function rehydrateWidget(
 	return {
 		...preset,
 		id,
+		height,
 		defaultStateType,
+	};
+}
+
+export function calcSizeSideGridCell(
+	side: number,
+	minSize: number,
+	maxSize: number,
+): { count: number; size: number } {
+	let bestSize = minSize;
+	let bestCount = Math.floor(side / minSize);
+	let minRemainder = side % minSize;
+
+	// eslint-disable-next-line no-plusplus
+	for (let i = minSize; i <= maxSize; i++) {
+		const count = Math.floor(side / i);
+		const remainder = side % i;
+
+		if (
+			remainder < minRemainder ||
+      (remainder === minRemainder && i > bestSize)
+		) {
+			bestSize = i;
+			bestCount = count;
+			minRemainder = remainder;
+		}
+	}
+
+	return {
+		count: bestCount,
+		size: bestSize,
 	};
 }

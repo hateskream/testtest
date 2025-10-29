@@ -20,6 +20,7 @@ export type WidgetPreset = z.infer<typeof WidgetPresetSchema>;
 const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
+	height: z.number(),
 });
 
 export type Widget = z.infer<typeof WidgetSchema>;
@@ -50,13 +51,12 @@ export type DashboardGroup = z.infer<typeof DashboardGroupSchema>;
 
 
 export function useDashboardLayout() {
-
 	const {
 		useStateQuery,
 		useStateMutation,
 	} = createStateQueries<IDashboardGroup, DashboardGroup>({
 		storageKey: '__DASHBOARD_LAYOUT__',
-		isSaveChange: true,
+		isSaveChange: false,
 		getDefaultState: createDashboardGroup,
 		entityId: 'layout-dashboard',
 		schema: DashboardGroupSchema,
@@ -125,6 +125,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					defaultStateType: widget.defaultStateType,
 					widgetType: widget.widgetType,
 					name: widget.name,
+					height: widget.height,
 				})),
 			})),
 		})),
@@ -142,7 +143,7 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 				name: s.name,
 				width: s.width,
 				widgets: s.widgets
-					.map(w => rehydrateWidget(w.id, w.widgetType, w.defaultStateType))
+					.map(w => rehydrateWidget(w.id, w.widgetType, w.height, w.defaultStateType))
 					.filter(w => w !== null),
 			})),
 		})),

@@ -1,42 +1,36 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import type { ISection } from '../model';
+import { calcSizeSideGridCell } from '../model/widget';
+import { MIN_COL_WIDTH, MAX_COL_WIDTH } from '../../tv';
+
 import WidgetComponent from './widget-component.vue';
 
-const props = defineProps<{
-	width: number;
-	name: string;
-}>();
+interface ISectionComponentProps {
+	section: ISection;
+}
 
-const widgets = [
-	{ title: 'Market Overview', height: 160 },
-	{ title: '7D Fear-Greed Index', height: 100 },
-	{ title: 'Market Hours', height: 180 },
-	{ title: 'Performance', height: 140 },
-	{ title: 'Commodities', height: 160 },
-	{ title: 'Crypto Overview', height: 150 },
-	{ title: 'Top Gainers', height: 130 },
-	{ title: 'Top Losers', height: 130 },
-	{ title: 'Sector Summary', height: 170 },
-	{ title: 'Currency Exchange', height: 150 },
-];
+const props = defineProps<ISectionComponentProps>();
 
-const cardStyle = computed(() => ({ width: `${props.width}px` }));
+const cardStyle = computed(() => ({ width: `${props.section.width}px` }));
+
+const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_COL_WIDTH, MAX_COL_WIDTH));
 </script>
 
 <template>
 	<section :class="classes.section" :style="cardStyle">
-		<h2 :class="classes.sectionTitle">Dashboard {{ props.name }} </h2>
+		<h2 :class="classes.sectionTitle">{{ props.section.name }} </h2>
 
 		<div :class="classes.scroll">
 			<div :class="classes.widgetsContainer">
-				<div
-					v-for="(widget, i) in widgets"
-					:key="i"
-					:style="{ height: `${widget.height}px` }"
-				>
-					<widget-component />
-				</div>
+				<widget-component
+					v-for="widget in props.section.widgets"
+					:key="widget.id"
+					:widget="widget"
+					:col-count="cellSize.count"
+					:column-width="cellSize.size"
+				/>
 			</div>
 		</div>
 	</section>

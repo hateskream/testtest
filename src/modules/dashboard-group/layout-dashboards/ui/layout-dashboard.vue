@@ -2,7 +2,7 @@
 import { useElementSize } from '@vueuse/core';
 import { useTemplateRef, computed } from 'vue';
 
-import { useSlider } from '../composables';
+import { useDashboardLayout, useSlider } from '../composables';
 
 import HeaderDesktop from './header-desktop.vue';
 import HeaderMobile from './header-mobile.vue';
@@ -13,32 +13,28 @@ const emits = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-const slides = [
-	{ name: '#1', width: 360 },
-	{ name: '#2', width: 300 },
-	{ name: '#3', width: 320 },
-	{ name: '#4', width: 340 },
-	{ name: '#5', width: 380 },
-	{ name: '#6', width: 320 },
-	{ name: '#7', width: 320 },
-	{ name: '#8', width: 300 },
-	{ name: '#9', width: 320 },
-	{ name: '#10', width: 340 },
-	{ name: '#11', width: 380 },
-	{ name: '#12', width: 320 },
-];
+const { sections, tabs } = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
 
 const viewportWidth = computed(() => width.value);
 
 const isMobile = computed(() => viewportWidth.value < 768);
+const isSectionWidthLessThanViewport = computed(() =>
+	sections.value.reduce((acc, s) => acc + s.width, 0) < viewportWidth.value,
+);
+
+const normalizeWidth = computed(() => viewportWidth.value / sections.value.length);
 
 const preparedSlides = computed(
-	() => slides
+	() => sections.value
 		.map(s => ({
 			...s,
-			width: isMobile.value ? viewportWidth.value : s.width,
+			width: isMobile.value
+				? viewportWidth.value
+				: isSectionWidthLessThanViewport.value
+					? normalizeWidth.value
+					: s.width,
 		})),
 );
 
@@ -62,7 +58,10 @@ const {
 <template>
 	<div ref="viewport" :class="classes.root">
 		<div :class="classes.container">
-			<header-desktop v-if="!isMobile" />
+			<header-desktop
+				v-if="!isMobile"
+				:tabs="tabs"
+			/>
 			<section-slider
 				:slides="preparedSlides"
 				:track-style="trackStyle"
@@ -90,7 +89,11 @@ const {
 			@prev="prev"
 			@next="next"
 		/>
-		<header-mobile v-if="isMobile" @close="emits('close')" />
+		<header-mobile
+			v-if="isMobile"
+			:tabs="tabs"
+			@close="emits('close')"
+		/>
 	</div>
 </template>
 

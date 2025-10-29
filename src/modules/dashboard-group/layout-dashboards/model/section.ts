@@ -15,6 +15,7 @@ export interface ISectionPreset {
 	widgets: {
 		widgetType: WidgetType;
 		defaultState: string;
+		height: number;
 	}[];
 }
 
@@ -23,6 +24,7 @@ export function createSectionFromPreset({ widgets, name, width }: ISectionPreset
 		id: uuidv4(),
 		name,
 		width,
-		widgets: widgets.map(({ widgetType, defaultState }) => createWidget(widgetType, defaultState)),
+		widgets: widgets
+			.map(({ widgetType, defaultState, height }) => createWidget(widgetType, height, defaultState)),
 	};
 }

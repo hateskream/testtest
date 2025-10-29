@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 
-const tabs = ['Main', 'Crypto', 'Stock'];
-const active = ref('Main');
+import type { IDashboardTab } from '../model';
+
+interface IHeaderDesktop {
+	tabs: IDashboardTab[];
+}
+
+const props = defineProps<IHeaderDesktop>();
+
+const active = computed(() => props.tabs.find(el => el.isActive));
 </script>
 
 <template>
@@ -11,11 +18,11 @@ const active = ref('Main');
 		<div :class="classes.tabs">
 			<button
 				v-for="tab in tabs"
-				:key="tab"
+				:key="tab.id"
 				:class="[classes.tab, active === tab && classes.active]"
 				@click="active = tab"
 			>
-				{{ tab }}
+				{{ tab.name }}
 			</button>
 		</div>
 	</div>
