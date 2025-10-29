@@ -8,10 +8,10 @@ export interface IDashboardGroup {
 export function createDashboardGroup(): IDashboardGroup {
 	const cryptoDashboard = createDashboardFromPreset('Crypto');
 	const stockDashboard = createDashboardFromPreset('Stock');
-	const forexDashboard = createDashboardFromPreset('Forex');
+	const mainDashboard = createDashboardFromPreset('Main');
 
 	return {
-		activeDashboardId: cryptoDashboard.id,
-		dashboards: [cryptoDashboard, stockDashboard, forexDashboard],
+		activeDashboardId: mainDashboard.id,
+		dashboards: [mainDashboard, cryptoDashboard, stockDashboard],
 	};
 }

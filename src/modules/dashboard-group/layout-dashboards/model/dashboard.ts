@@ -9,90 +9,140 @@ export interface IDashboard {
 	sections: ISection[];
 }
 
-export type PresetName = 'Crypto' | 'Stock' | 'Forex';
+export type PresetName = 'Crypto' | 'Stock' | 'Main';
 
 const presets: Record<PresetName, ISectionPreset[]> = {
-	Crypto: [
-		{
-			name: 'Cryp2to',
-			width: 300,
-			widgets: [
-				{
-					defaultState: 'none',
-					height: 150,
-					widgetType:  WidgetType.FearGreed,
-				},
-			],
-		},
-		{
-			name: 'Crypto1',
-			width: 300,
-			widgets: [
-				{
-					defaultState: 'none',
-					height: 150,
-					widgetType:  WidgetType.FearGreed,
-				},
-			],
-		},
-		// {
-		// 	name: 'Crypto3',
-		// 	width: 300,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none',
-		// 			height: 150,
-		// 			widgetType:  WidgetType.FearGreed,
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	name: 'Crypto4',
-		// 	width: 300,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none',
-		// 			height: 150,
-		// 			widgetType:  WidgetType.FearGreed,
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	name: 'Crypto5',
-		// 	width: 300,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none',
-		// 			height: 150,
-		// 			widgetType:  WidgetType.FearGreed,
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	name: 'Crypto6',
-		// 	width: 300,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none',
-		// 			height: 150,
-		// 			widgetType:  WidgetType.FearGreed,
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	name: 'Crypto7',
-		// 	width: 300,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none',
-		// 			height: 150,
-		// 			widgetType:  WidgetType.FearGreed,
-		// 		},
-		// 	],
-		// },
-	],
+	Crypto: [],
 	Stock: [],
-	Forex: [],
+	Main: [
+		{
+			name: 'Market Momentum',
+			width: 560,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 465,
+					widgetType:  WidgetType.ChartPrice,
+				},
+				{
+					defaultState: 'none',
+					height: 406,
+					widgetType:  WidgetType.TopIndices, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'stock',
+					height: 662,
+					widgetType:  WidgetType.Performance, // сделать бесконечный скролл ы
+				},
+			],
+		},
+		{
+			name: 'Overview',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'crypto',
+					height: 226,
+					widgetType:  WidgetType.MarketCap,
+				},
+				{
+					defaultState: 'none',
+					height: 175,
+					widgetType:  WidgetType.BitcoinDominance,
+				},
+				{
+					defaultState: 'USDollar', // сделать стейт
+					height: 156,
+					widgetType:  WidgetType.ChartPrice,
+				},
+				{
+					defaultState: 'Gold', // сделать стейт
+					height: 156,
+					widgetType:  WidgetType.ChartPrice,
+				},
+			],
+		},
+		{
+			name: 'Cross-Market Insight',
+			width: 328,
+			widgets: [
+				{
+					defaultState: 'commodity',
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'crypto',
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'stock',
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'forex',
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'eth', // добавить
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+				{
+					defaultState: 'index',
+					height: 337,
+					widgetType:  WidgetType.Performance, // ограничить кол-во колонок
+				},
+			],
+		},
+		{
+			name: 'News & Events',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 2020,
+					widgetType:  WidgetType.News, // сделать бесконечный скролл ы
+				},
+			],
+		},
+		{
+			name: 'Gainers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-gainers', // сделать стейт
+					height: 1700,
+					widgetType:  WidgetType.Price, // сделать бесконечный скролл ы
+				},
+			],
+		},
+		{
+			name: 'Losers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-gainers', // сделать стейт
+					height: 1700,
+					widgetType:  WidgetType.Price, // сделать бесконечный скролл ы
+				},
+			],
+		},
+		{
+			name: 'US Economy',
+			width: 630,
+			widgets: [
+				{
+					defaultState: 'none', // сделать стейт
+					height: 1700,
+					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
+				},
+			],
+		},
+	],
 };
 
 export function createDashboardFromPreset(presetName: PresetName): IDashboard {
