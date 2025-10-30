@@ -58,7 +58,6 @@ function mapCellToTable(cell: Cell): unknown {
 	if (cell.cellType === CellType.Empty) {
 		return mapEmptyToTable(cell);
 	}
-	console.log(cell.cellType, cell, 'cells');
 	return cellTypeToTableMapper[cell.cellType](cell);
 }
 

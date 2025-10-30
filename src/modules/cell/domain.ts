@@ -94,7 +94,7 @@ export enum CellType {
 	Empty = 'Empty',
 	Label = 'Label',
 	Score = 'Score',
-	Open = 'open',
+	Open = 'Open',
 	Check = 'Check',
 	Schedule = 'Schedule',
 }

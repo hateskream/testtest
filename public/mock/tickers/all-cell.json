@@ -343,7 +343,7 @@
 		"status": "caution"
 	},
 	"open": {
-		"cellType": "open",
+		"cellType": "Open",
 		"columnType": "open",
 		"value": true
 	},
