@@ -29,10 +29,6 @@ const { isActive } = useActiveLink();
 			>
 				<ui-icon
 					:id="item.icon"
-					:class="[
-						classes.iconWrapper,
-						{ [classes.active]: isActive(item.routeName) },
-					]"
 					width="20px"
 					height="20px"
 				/>
@@ -57,7 +53,7 @@ const { isActive } = useActiveLink();
 	}
 }
 
-.active {
-	color: #ffffff;
+.activeLink {
+	color: var(--text-color-base-500);
 }
 </style>
