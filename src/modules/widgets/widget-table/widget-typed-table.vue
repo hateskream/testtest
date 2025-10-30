@@ -154,7 +154,7 @@ const tickerState = computed(() => {
 
 
 const getCellComponentForColumn = (
-	columnType: IExtendedTableColumn,
+	columnType: string | undefined | null,
 	cellData: unknown,
 	columnKey: string,
 ) => {
@@ -162,6 +162,7 @@ const getCellComponentForColumn = (
 		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
 		return getCellComponent('nothing');
 	}
+	console.log('columnType', columnType);
 	return getCellComponent(columnType);
 };
 
