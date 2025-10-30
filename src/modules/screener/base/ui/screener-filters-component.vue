@@ -59,15 +59,15 @@ function updateFilter(key: string, state: IFilterState) {
 <style module="classes">
 .container {
 	display: flex;
-	align-items: center;
 	flex-wrap: wrap;
+	align-items: center;
 	gap: 6px;
 	margin-bottom: 8px;
 }
 
 .icon {
+	margin: 0 6px;
 	color: var(--icon-color-base-300);
 	cursor: pointer;
-	margin: 0 6px;
 }
 </style>

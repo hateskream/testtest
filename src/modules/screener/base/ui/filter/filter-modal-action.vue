@@ -30,8 +30,8 @@ const props = defineProps<{
 }
 
 .disabled {
+	opacity: 0.5;
 	pointer-events: none;
-	opacity: .5;
 }
 
 .label {

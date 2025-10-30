@@ -103,8 +103,8 @@ watch(() => props.keyNumbers, value => {
 
 .selectorLabel {
 	display: flex;
-	flex-wrap: wrap;
 	flex-grow: 0;
+	flex-wrap: wrap;
 	max-width: 100%;
 }
 
@@ -117,11 +117,13 @@ watch(() => props.keyNumbers, value => {
 }
 
 .description {
-	color: var(--text-color-base-300);
 	font-size: 12px;
+	color: var(--text-color-base-300);
 }
 
 .number {
+	position: absolute;
+	right: 12px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -132,7 +134,5 @@ watch(() => props.keyNumbers, value => {
 	color: var(--text-color-base-300);
 	border: 1px solid var(--border-color-surface-02);
 	border-radius: 9px;
-	position: absolute;
-	right: 12px;
 }
 </style>

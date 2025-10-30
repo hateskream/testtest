@@ -124,8 +124,8 @@ const isEmptySearchState = computed(() => search.value.length && !filteredOption
 
 <style module="classes">
 .search {
-	padding: 0 12px;
 	margin-bottom: 6px;
+	padding: 0 12px;
 }
 
 .searchInput {
@@ -138,8 +138,8 @@ const isEmptySearchState = computed(() => search.value.length && !filteredOption
 
 .selectorLabel {
 	display: flex;
-	flex-wrap: wrap;
 	flex-grow: 0;
+	flex-wrap: wrap;
 	max-width: 100%;
 }
 
@@ -148,16 +148,16 @@ const isEmptySearchState = computed(() => search.value.length && !filteredOption
 }
 
 .description {
-	color: var(--text-color-base-300);
 	font-size: 12px;
+	color: var(--text-color-base-300);
 }
 
 .emptyState {
-	padding: 10px;
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
 	gap: 10px;
 }
 </style>

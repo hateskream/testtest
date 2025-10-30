@@ -68,10 +68,10 @@ const screenerTypeLabel = computed(() => screenerTypeToLabel[screenerType.value]
 }
 
 .search {
+	width: 300px;
+	padding: 12px;
 	border: 1px solid var(--border-color-surface-02);
 	border-radius: 9999px;
-	padding: 12px;
-	width: 300px;
 }
 
 .root {

@@ -2,13 +2,10 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { navigation } from '../constants';
 import { createRouteObject } from '../helpers';
-import { useActiveLink } from '../composables';
 
 const emits = defineEmits<{
 	expand: [];
 }>();
-
-const { isActive } = useActiveLink();
 </script>
 
 <template>
