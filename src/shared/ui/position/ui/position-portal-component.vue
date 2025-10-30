@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type MaybeRefOrGetter, useSlots } from 'vue';
+import { computed, type MaybeRefOrGetter, onUnmounted, useSlots } from 'vue';
 import type { ReferenceElement } from '@floating-ui/vue';
 
 import {
@@ -57,6 +57,10 @@ defineExpose({
 	openAt,
 	close,
 	floating,
+});
+
+onUnmounted(() => {
+	floating.stop();
 });
 </script>
 
