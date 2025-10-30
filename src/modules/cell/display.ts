@@ -1,5 +1,5 @@
-import { isForexSymbolCell, isCryptoSymbolCell, isStockSymbolCell, isIndexSymbolCell } from './check';
-import { Magnitude, type INumberCell, type IPercentCell, Trend, type ISymbolCell, ColumnType } from './domain';
+import { isCryptoSymbolCell, isForexSymbolCell, isIndexSymbolCell, isStockSymbolCell } from './check';
+import { ColumnType, type INumberCell, type IPercentCell, type ISymbolCell, Magnitude, Trend } from './domain';
 
 export function getMagnitudeText(magnitude: Magnitude): string {
 	switch (magnitude) {
@@ -580,5 +580,59 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		groupName: 'Performance',
 		minWidth: 100,
 		maxWidth: 200,
+	},
+	[ColumnType.AnalystRating]: {
+		columnName: 'Analyst R.',
+		tooltip: 'Analyst rating',
+		settingsName: 'Analyst rating',
+		groupName: 'Other',
+	},
+	[ColumnType.VolumeRel24h]: {
+		columnName: 'R. Vol., 24h',
+		tooltip: 'Relative volume, 24 hours',
+		settingsName: '24h',
+		groupName: 'Rel. volume',
+	},
+	[ColumnType.VolumeRelAvg50d]: {
+		columnName: 'R. Vol. Avg., 50d',
+		tooltip: 'Average relative volume, 50 days',
+		settingsName: '50d',
+		groupName: 'Rel. volume',
+	},
+	[ColumnType.PriceEarnings]: {
+		columnName: 'P/E',
+		tooltip: 'Price to earnings ratio',
+		settingsName: 'P/E',
+		groupName: 'P/E',
+	},
+	[ColumnType.EpsDil12mo]: {
+		columnName: 'EPS dil',
+		tooltip: 'EPS diluted, 12 months',
+		settingsName: '12mo',
+		groupName: 'EPS dil.',
+	},
+	[ColumnType.EpsDilAvg50d]: {
+		columnName: 'EPS dil, avg',
+		tooltip: 'Average EPS diluted, 50 days',
+		settingsName: 'Average, 50d',
+		groupName: 'EPS dil.',
+	},
+	[ColumnType.EpsDilGrowth12mo]: {
+		columnName: 'EPS dil growth',
+		tooltip: 'EPD diluted growth %, 12 months',
+		settingsName: '12mo',
+		groupName: 'EPS dil. growth',
+	},
+	[ColumnType.EpsDilGrowthAvg50d]: {
+		columnName: 'EPS dil growth, avg',
+		tooltip: 'Average EPS diluted growth %, 50 days',
+		settingsName: 'Average, 50d',
+		groupName: 'EPS dil. growth',
+	},
+	[ColumnType.DividendYield]: {
+		columnName: 'Div yield %',
+		tooltip: 'Dividend yield %',
+		settingsName: '12mo',
+		groupName: 'Div Yield',
 	},
 };
