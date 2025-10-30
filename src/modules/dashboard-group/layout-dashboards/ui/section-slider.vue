@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { ISection } from '../model';
 
@@ -28,11 +31,20 @@ const emits = defineEmits<{
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
 }>();
+
+const containerRef = useTemplateRef<HTMLDivElement>('container');
+
+const sectionHeight = computed(() => {
+	if (containerRef.value) {
+		return containerRef.value.clientHeight - 32;
+	}
+	return 0;
+});
 </script>
 
 <template>
 	<div
-		ref="viewport"
+		ref="container"
 		:class="classes.viewport"
 		@wheel="emits('wheel', $event)"
 		@pointerdown="emits('pointerDown', $event)"
@@ -52,6 +64,7 @@ const emits = defineEmits<{
 				v-for="s in props.slides"
 				:key="s.id"
 				:section="s"
+				:parent-height="sectionHeight"
 			/>
 		</div>
 		<div :class="classes.panel">

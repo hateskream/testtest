@@ -17,14 +17,14 @@ export function useQueryPrice(
 
 	cellUpdater.register(ColumnType.PriceCurrent, updatedData => {
 		queryClient.setQueryData(
-			['price', toValue(market)],
+			['price', toValue(market), ...toValue(pined), limit],
 			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
 
 	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
 		queryClient.setQueryData(
-			['price', toValue(market)],
+			['price', toValue(market), ...toValue(pined), limit],
 			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
@@ -34,7 +34,7 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', toValue(market)]),
+		queryKey: computed(() => ['price', toValue(market), ...toValue(pined), limit]),
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),

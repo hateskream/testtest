@@ -28,7 +28,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultState: 'none',
 					height: 406,
 					maxCountRow: 7,
-					widgetType:  WidgetType.TopIndices, // ограничить кол-во колонок
+					widgetType:  WidgetType.TopIndices,
 				},
 				{
 					defaultState: 'stock',
