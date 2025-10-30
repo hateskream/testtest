@@ -39,6 +39,7 @@ const classesList = computed(() => ({
 	width: 20px;
 	height: 20px;
 	color: var(--icon-color-base-500);
+	border-width: 1px;
 	border-style: solid;
 	border-color: var(--bg-modal-color-base);
 	border-radius: 100px;
@@ -46,7 +47,7 @@ const classesList = computed(() => ({
 
 .content:hover .icon {
 	border-width: 1px;
-	border-color: rgb(245 245 245 / 90%);
+	border-color: var(--border-color-base-500);
 }
 
 .iconActive {

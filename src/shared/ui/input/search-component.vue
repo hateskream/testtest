@@ -5,8 +5,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const props = withDefaults(defineProps<{
 	placeholder?: string;
+	showIcon?: boolean;
 }>(), {
 	placeholder: 'Type to search...',
+	showIcon: true,
 });
 
 const model = defineModel<string>();
@@ -23,6 +25,7 @@ defineExpose({ focus });
 <template>
 	<div :class="classes.root">
 		<ui-icon
+			v-if="showIcon"
 			:id="IconIds.Search"
 			:class="classes.icon"
 			width="20px"

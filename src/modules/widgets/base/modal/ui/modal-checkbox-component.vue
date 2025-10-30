@@ -51,6 +51,7 @@ const classesList = computed(() => ({
 	padding: 4px;
 	color: var(--icon-color-base-500);
 	border-radius: 6px;
+	transition: color 0.2s ease;
 }
 
 .content {
@@ -58,5 +59,9 @@ const classesList = computed(() => ({
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
+}
+
+.content:hover .icon {
+	color: var(--icon-color-base-300);
 }
 </style>
