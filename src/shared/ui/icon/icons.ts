@@ -123,4 +123,6 @@ export enum IconIds {
 	BarView = 'bar-view',
 	ListView = 'list-view',
 	Screener = 'screener',
+	SelectAll = 'select-all',
+	Settings = 'settings',
 }
