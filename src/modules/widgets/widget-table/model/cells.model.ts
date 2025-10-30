@@ -30,6 +30,10 @@ export interface ITablePercentCell {
 export interface ITableSvgChartCell {
 	src?: string;
 }
+export interface ITableScoreCell {
+	value: string;
+	score: number;
+}
 
 export interface ITableTextCell {
 	value?: string;
@@ -41,6 +45,19 @@ export interface ITableRangeCell {
 	endValue?: string;
 	startMagnitude?: string;
 	endMagnitude?: string;
+}
+
+export interface ITableOpenCell {
+	value: boolean | string;
+}
+
+export interface ITableCheckCell {
+	value: boolean;
+}
+export interface ITableScheduleCell {
+	start: string;
+	finish: string;
+	current: string;
 }
 
 enum TrendType {

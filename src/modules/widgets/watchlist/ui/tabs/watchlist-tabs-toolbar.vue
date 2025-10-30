@@ -3,13 +3,13 @@ import { ref, useTemplateRef, watch } from 'vue';
 
 
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadgeList, ModalItem } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItem } from '@/modules/widgets/base';
 import {
-	TabAction,
-	tabActionToTitle,
 	type ITab,
 	type ITickerAddPayload,
 	type ITickerRemovePayload,
+	TabAction,
+	tabActionToTitle,
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
@@ -17,6 +17,7 @@ import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 import WatchlistTab from './watchlist-tab.vue';
+import WatchlistModal from './watchlist-modal.vue';
 
 interface ITabWithEditing extends ITab {
 	isEditing: boolean;
@@ -102,7 +103,7 @@ function onRenameTab(id: string, name: string) {
 
 function openModal(index: number) {
 	positionRefs.value?.[index].handleClick();
-};
+}
 
 function selectTicker(tickerId: string) {
 	const marketType = resolveMarketTypeFromTicker(tickerId);
@@ -160,6 +161,8 @@ function selectTicker(tickerId: string) {
 							>
 								<ui-position
 									strategy="absolute"
+									trigger="hover"
+									:teleport="false"
 								>
 									<template #title>
 										<span :class="classes.menuActionTitle">
@@ -201,6 +204,27 @@ function selectTicker(tickerId: string) {
 				/>
 			</div>
 		</div>
+
+		<div :class="classes.tabMerged">
+			<modal-badge>
+				<template #title>
+					Watchlists
+
+					<ui-icon :id="IconIds.DropdownDown"  />
+				</template>
+				<template #content>
+					<watchlist-modal
+						:tabs="localTabs"
+						:selected-tickers="props.selectedTickers"
+						@on-click-action="onClickAction"
+						@select-ticker="selectTicker"
+						@remove-ticker="emit('remove-ticker', $event)"
+						@switch-tab="onSwitchTab"
+						@rename="onRenameTab"
+					/>
+				</template>
+			</modal-badge>
+		</div>
 	</div>
 </template>
 
@@ -211,6 +235,7 @@ function selectTicker(tickerId: string) {
 	height: 40px;
 	overflow: hidden;
 	border-radius: 9999px;
+	container: toolbar / inline-size;
 }
 
 .tabGroup {
@@ -222,6 +247,22 @@ function selectTicker(tickerId: string) {
 	background: var(--bg-color-base-300);
 	border-radius: 9999px;
 	gap: 4px;
+	scrollbar-width: thin;
+	scrollbar-color: rgb(255 255 255 / 25%) rgb(255 255 255 / 5%);
+}
+
+.tabMerged {
+	display: none;
+}
+
+@container toolbar (max-width: 500px) {
+	.tabGroup {
+		display: none;
+	}
+
+	.tabMerged {
+		display: flex;
+	}
 }
 
 .addTabAction {

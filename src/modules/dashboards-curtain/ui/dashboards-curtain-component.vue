@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { IWidgetPreset } from '@/modules/dashboard-group/core';
 import { WidgetType } from '@/modules/dashboard-group/core';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IWidgetPreset } from '@/modules/dashboard-group/core';
 
 import DraggableElement from './draggable-element.vue';
 import DashboardComponent from './dashboard-component.vue';
@@ -10,12 +10,19 @@ import SearchComponent from './search-component.vue';
 const WIDGET_TYPE_TO_ICON: Partial<Record<WidgetType, IconIds>> = {
 	[WidgetType.Market]: IconIds.LogoWidgetMarket,
 	[WidgetType.FearGreed]: IconIds.LogoWidgetFearAndGreat,
-	[WidgetType.Price]: IconIds.LogoWidgetPrice,
+	[WidgetType.Price]: IconIds.LogoWidgetPriceList,
 	[WidgetType.News]: IconIds.LogoWidgetNews,
 	[WidgetType.Watchlist]: IconIds.LogoWidgetWatchlist,
 	[WidgetType.MarketCap]: IconIds.LogoWidgetMarketCap,
 	[WidgetType.BitcoinDominance]: IconIds.LogoWidgetBitcoinDominance,
 	[WidgetType.Calendar]: IconIds.Calendar,
+	[WidgetType.Heatmap]: IconIds.Heatmap,
+	[WidgetType.AltcoinSeason]: IconIds.LogoWidgetAltcoinSeason,
+	[WidgetType.TopIndices]: IconIds.LogoWidgetTopIndices,
+	[WidgetType.ChartPrice]: IconIds.LogoWidgetPriceChart,
+	[WidgetType.Exchange]: IconIds.LogoWidgetExchange,
+	[WidgetType.EthGas]: IconIds.LogoWidgetEthGas,
+	[WidgetType.Performance]: IconIds.LogoWidgetPerfomance,
 };
 
 interface IDashboardsCurtainComponentProps {

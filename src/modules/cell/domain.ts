@@ -70,6 +70,18 @@ export enum ColumnType {
 	UpdateDate = 'updateDate',
 
 	Volatility = 'volatility',
+	TrustScore = 'trustScore',
+	Open = 'open',
+	Incentive = 'incentive',
+	MarketHours = 'marketHours',
+	Volume24hNorm = 'volume24hNorm',
+	Coins = 'coins',
+	Pairs = 'pairs',
+
+	Launched = 'launched',
+	DEXRank = 'DEXRank',
+	Country = 'country',
+	NextClosedDay = 'nextClosedDay',
 }
 
 export enum CellType {
@@ -81,6 +93,10 @@ export enum CellType {
 	Range = 'Range',
 	Empty = 'Empty',
 	Label = 'Label',
+	Score = 'Score',
+	Open = 'Open',
+	Check = 'Check',
+	Schedule = 'Schedule',
 }
 
 export enum Trend {
@@ -170,11 +186,11 @@ export interface IPlaneTextSymbolCell extends ISymbolCellBase {
 }
 
 export type ISymbolCell =
-  | IIndexSymbolCell
-  | ICommoditySymbolCell
-  | IStockSymbolCell
-  | ICryptoSymbolCell
-  | IForexSymbolCell
+	| IIndexSymbolCell
+	| ICommoditySymbolCell
+	| IStockSymbolCell
+	| ICryptoSymbolCell
+	| IForexSymbolCell
 	| IPlaneTextSymbolCell;
 
 export interface INumberCell extends IBaseCell {
@@ -183,6 +199,12 @@ export interface INumberCell extends IBaseCell {
 	trend: Trend;
 	currencySymbol: string;
 	magnitude: Magnitude;
+}
+
+export interface IScoreCell extends IBaseCell {
+	cellType: CellType.Score;
+	value: string;
+	score: number;
 }
 
 export interface IPercentCell extends IBaseCell {
@@ -202,6 +224,11 @@ export interface ITextCell extends IBaseCell {
 	value: string;
 }
 
+export interface IOpenCell extends IBaseCell {
+	cellType: CellType.Open;
+	value: boolean | string;
+}
+
 export interface IRangeCell extends IBaseCell {
 	cellType: CellType.Range;
 	currencySymbol: string;
@@ -217,6 +244,20 @@ export interface ILableCell extends IBaseCell {
 	status: Status;
 }
 
+
+export interface ICheckCell extends IBaseCell {
+	cellType: CellType.Check;
+	value: boolean;
+}
+
+
+export interface IScheduleCell extends IBaseCell {
+	cellType: CellType.Schedule;
+	start: string;
+	finish: string;
+	current: string;
+}
+
 export type Cell =
 	| IEmptyCell
 	| ISymbolCell
@@ -225,10 +266,16 @@ export type Cell =
 	| ISvgChartCell
 	| ITextCell
 	| ILableCell
-	| IRangeCell;
+	| IRangeCell
+	| IScoreCell
+	| IOpenCell
+	| ICheckCell
+	| IScheduleCell;
 
 export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.Symbol]: CellType.Symbol,
+	[ColumnType.Launched]: CellType.Text,
+
 
 	[ColumnType.PriceCurrent]: CellType.Number,
 	[ColumnType.PriceMin24h]: CellType.Number,
@@ -250,6 +297,7 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.ChangePrice30dPercent]: CellType.Percent,
 
 	[ColumnType.Volume24h]: CellType.Number,
+	[ColumnType.Volume24hNorm]: CellType.Number,
 	[ColumnType.VolumeRel10d]: CellType.Number,
 	[ColumnType.VolumeAvg10d]: CellType.Number,
 	[ColumnType.VolumeAvg50d]: CellType.Number,
@@ -292,10 +340,20 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.PriceClose]: CellType.Number,
 
 	[ColumnType.Volatility]: CellType.Label,
+	[ColumnType.TrustScore]: CellType.Score,
+	[ColumnType.Open]: CellType.Open,
+	[ColumnType.Incentive]: CellType.Check,
+	[ColumnType.MarketHours]: CellType.Schedule,
+	[ColumnType.Coins]: CellType.Number,
+	[ColumnType.Pairs]: CellType.Number,
+	[ColumnType.DEXRank]: CellType.Number,
+	[ColumnType.Country]: CellType.Text,
+	[ColumnType.NextClosedDay]: CellType.Text,
 };
 
 export type ColumnToCell = {
 	[ColumnType.Symbol]: ISymbolCell;
+	[ColumnType.Launched]: ITextCell;
 
 	[ColumnType.PriceCurrent]: INumberCell;
 	[ColumnType.PriceMin24h]: INumberCell;
@@ -317,6 +375,7 @@ export type ColumnToCell = {
 	[ColumnType.ChangePrice30dPercent]: IPercentCell;
 
 	[ColumnType.Volume24h]: INumberCell;
+	[ColumnType.Volume24hNorm]: INumberCell;
 	[ColumnType.VolumeRel10d]: INumberCell;
 	[ColumnType.VolumeAvg10d]: INumberCell;
 	[ColumnType.VolumeAvg50d]: INumberCell;
@@ -359,6 +418,15 @@ export type ColumnToCell = {
 	[ColumnType.PriceClose]: INumberCell;
 
 	[ColumnType.Volatility]: ILableCell;
+	[ColumnType.TrustScore]: IScoreCell;
+	[ColumnType.Open]: IOpenCell;
+	[ColumnType.Incentive]: ICheckCell;
+	[ColumnType.MarketHours]: IScheduleCell;
+	[ColumnType.Coins]: INumberCell;
+	[ColumnType.Pairs]: INumberCell;
+	[ColumnType.DEXRank]: INumberCell;
+	[ColumnType.Country]: ITextCell;
+	[ColumnType.NextClosedDay]: ITextCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

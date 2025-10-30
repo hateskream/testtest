@@ -274,9 +274,9 @@ const canMoveItem = (evt: unknown) => {
 };
 </script>
 
-<template generic="T">
+<template>
 	<draggable
-		:model-value="flattenedItems"
+		v-model="flattenedItems"
 		:group="enableDragDrop ? 'unified-table' : false"
 		:disabled="!enableDragDrop"
 		item-key="id"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseDashboardComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	type IGetNewsRequest,
@@ -12,7 +12,6 @@ import {
 	useNews,
 	useQueryNews,
 } from '@/modules/news';
-import { ModalItemSwitch } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
 

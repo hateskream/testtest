@@ -102,7 +102,7 @@ const eventStartsIn = computed(() => {
 			<div :class="classes.eventTitle" @click="openEventCard">
 				<div v-if="props.marketId" :class="classes.iconWrapper">
 					<ui-icon
-						:id="markets.find(v => v.id === props.marketId)!.icon"
+						:id="markets.find(v => v.id === props.marketId)?.icon ?? IconIds.Globus"
 						width="20px"
 						height="20px"
 					/>

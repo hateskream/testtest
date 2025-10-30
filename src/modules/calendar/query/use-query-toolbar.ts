@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query';
 
 import type { ILocalRepositoryOptions } from '../services';
-import { useRepository } from '@/modules/calendar';
+import { type IToolbarState, useRepository } from '@/modules/calendar';
 import { queryClient } from '@/shared/service/query-client.ts';
 import type { ToolbarSchemaType } from '@/modules/calendar/services/schema.ts';
 
@@ -20,14 +20,14 @@ export function useToolbarGetState(widgetId: string, options: ILocalRepositoryOp
 export const useToolbarUpdateState = (widgetId: string, options: ILocalRepositoryOptions) => {
 	const repository = useRepository(widgetId, options);
 
-	return useMutation<void, Error, ToolbarSchemaType>({
-		mutationFn: (newSettings) => repository.set(newSettings) as unknown as Promise<void>,
+	return useMutation<void, Error, IToolbarState>({
+		mutationFn: (newSettings) => repository.set(newSettings),
 		onMutate: async (newSettings) => {
 			await queryClient.cancelQueries({ queryKey: [CALENDAR_TOOLBAR_KEY, widgetId] });
 
 			const previousSettings = queryClient.getQueryData<ToolbarSchemaType>([CALENDAR_TOOLBAR_KEY, widgetId]);
 
-			queryClient.setQueryData<ToolbarSchemaType>([CALENDAR_TOOLBAR_KEY, widgetId], newSettings);
+			queryClient.setQueryData([CALENDAR_TOOLBAR_KEY, widgetId], newSettings);
 
 			return { previousSettings };
 		},

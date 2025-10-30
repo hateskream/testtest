@@ -73,6 +73,17 @@ async function getMockData(): Promise<IPreparedResponse> {
 		ColumnType.Volume24h,
 		ColumnType.PriceCurrent,
 		ColumnType.MaxSupply,
+		ColumnType.TrustScore,
+		ColumnType.Open,
+		ColumnType.Incentive,
+		ColumnType.MarketHours,
+		ColumnType.Volume24hNorm,
+		ColumnType.Pairs,
+		ColumnType.Coins,
+		ColumnType.Launched,
+		ColumnType.DEXRank,
+		ColumnType.Country,
+		ColumnType.NextClosedDay,
 	];
 
 	const response: IPreparedResponse = {

@@ -40,7 +40,7 @@ watch(
 			return;
 		}
 
-		for (let i = prevIds.value.length - 1; i >= 0; i--) {
+		for (let i = prevIds.value.length - 1; i >= 0; i -= 1) {
 			chart.removeTicker(i);
 		}
 
@@ -59,7 +59,6 @@ watch(
 		<modal-ticker-selector-with-badge
 			v-model="bitcoinDominanceStore.selectedTickers"
 		/>
-
 
 		<div v-if="activeListSorted.length  > 0" :class="classes.marketCapCurrencyAllData">
 			<div style="flex-grow: 1;">

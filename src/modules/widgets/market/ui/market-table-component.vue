@@ -40,7 +40,6 @@ const genericRows = computed(() =>
 </script>
 
 <template>
-
 	<div :class="classes.scrollable">
 		<widget-typed-table
 			:columns="genericColumns"

@@ -33,7 +33,11 @@ const {
 	eventBoard,
 	eventBoardFavorites,
 	dailyCalendar,
-	toolbar,
+	marketId,
+	impact,
+	eventType,
+	watchlistId,
+	watchlistSection,
 	weekRange,
 	weekDays,
 	isError,
@@ -47,7 +51,7 @@ const {
 	toolbar: {
 		useQuery: false,
 		widgetId: props.meta.widgetId,
-		defaultState: 'high-impact',
+		defaultState: props.meta.defaultStateType,
 	},
 });
 
@@ -72,12 +76,16 @@ const isLoading = computed(
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
 
-			<calendar-loader v-else-if="isLoading" :count="5" />
+			<calendar-loader v-else-if="isLoading" />
 
 			<calendar-main
 				v-else-if="eventBoard && dailyCalendar"
 				v-model:week-range="weekRange"
-				v-model:toolbar="toolbar"
+				v-model:country-state="marketId"
+				v-model:impact-state="impact"
+				v-model:event-state="eventType"
+				v-model:watchlist-id-state="watchlistId"
+				v-model:watchlist-section-state="watchlistSection"
 				:event-board-favorites="eventBoardFavorites"
 				:base-date="baseDate"
 				:locale="locale"

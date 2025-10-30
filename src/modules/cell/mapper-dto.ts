@@ -1,20 +1,21 @@
 import {
 	CellType,
-	SymbolType,
 	type ICommoditySymbolCell,
 	type ICryptoSymbolCell,
 	type IEmptyCell,
 	type IForexSymbolCell,
-	type IIndexSymbolCell,
+	type IIndexSymbolCell, type IOpenCell,
 	type ILableCell,
 	type INumberCell,
 	type IPercentCell,
 	type IPlaneTextSymbolCell,
 	type IRangeCell,
+	type IScoreCell,
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
 	type ITextCell,
+	SymbolType, type ICheckCell, type IScheduleCell,
 } from './domain';
 import type {
 	CellDto,
@@ -23,15 +24,18 @@ import type {
 	IForexSymbolDto,
 	IIndexSymbolDto,
 	IPlaneTextSymbolDto,
+	OpenDto,
 	IStockSymbolDto,
 	LabelDto,
 	NumberDto,
 	PercentDto,
 	RangeDto,
+	ScoreDto,
 	SvgChartDto,
 	SymbolDto,
-	TextDto,
+	TextDto, CheckDto, ScheduleDto,
 } from './dto';
+
 
 export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 	if (isEmpty(dto)) {
@@ -223,6 +227,71 @@ export function mapLabel(dto: CellDto): ILableCell | IEmptyCell {
 	return createEmpty(dto);
 }
 
+export function mapScore(dto: CellDto): IScoreCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isScoreDto(dto)) {
+		return {
+			cellType: CellType.Score,
+			columnType: dto.columnType,
+			value: dto.value,
+			score: dto.score,
+		} as IScoreCell;
+	}
+	return createEmpty(dto);
+}
+
+
+export function mapOpen(dto: CellDto): IOpenCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isIsOpenDto(dto)) {
+		return {
+			cellType: CellType.Open,
+			columnType: dto.columnType,
+			value: dto.value,
+
+		} as IOpenCell;
+	}
+	return createEmpty(dto);
+}
+
+
+export function mapCheck(dto: CellDto): ICheckCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isCheckDto(dto)) {
+		return {
+			cellType: CellType.Check,
+			columnType: dto.columnType,
+			value: dto.value,
+
+		} as ICheckCell;
+	}
+	return createEmpty(dto);
+}
+
+
+export function mapSchedule(dto: CellDto): IScheduleCell | IEmptyCell {
+	if (isEmpty(dto)) {
+		return createEmpty(dto);
+	}
+	if (isScheduleDto(dto)) {
+		return {
+			cellType: CellType.Schedule,
+			columnType: dto.columnType,
+			start: dto.start,
+			finish: dto.finish,
+			current: dto.current,
+
+		} as IScheduleCell;
+	}
+	return createEmpty(dto);
+}
+
 function isIndexSymbolDto(dto: CellDto): dto is IIndexSymbolDto {
 	return (
 		dto.cellType === CellType.Symbol &&
@@ -271,6 +340,10 @@ function isPlaneTextSymbolDto(dto: CellDto): dto is IPlaneTextSymbolDto {
 	);
 }
 
+function isScoreDto(dto: CellDto): dto is ScoreDto {
+	return dto.cellType === CellType.Score;
+}
+
 function isSymbolDto(dto: CellDto): dto is SymbolDto {
 	return dto.cellType === CellType.Symbol;
 }
@@ -297,6 +370,19 @@ function isRangeDto(dto: CellDto): dto is RangeDto {
 
 function isLabelDto(dto: CellDto): dto is LabelDto {
 	return dto.cellType === CellType.Label;
+}
+
+function isIsOpenDto(dto: CellDto): dto is OpenDto {
+	return dto.cellType === CellType.Open;
+}
+
+
+function isCheckDto(dto: CellDto): dto is CheckDto {
+	return dto.cellType === CellType.Check;
+}
+
+function isScheduleDto(dto: CellDto): dto is ScheduleDto {
+	return dto.cellType === CellType.Schedule;
 }
 
 function createEmpty(dto: CellDto): IEmptyCell {

@@ -83,6 +83,15 @@ const widgetDisplays = computed<IAltcoinSeasonConfig['modules']>(() => {
 		};
 	}
 
+	if (w === 2 && h <= 5) {
+		return {
+			performanceRank: true,
+			historicalValues: false,
+			top100: false,
+			chart: false,
+		};
+	}
+
 	if (w < 5 && h >= 11) {
 		return {
 			performanceRank: true,
@@ -183,6 +192,7 @@ const showRightTop100 = computed(() =>
 			>
 				<slot
 					name="chart"
+					:show="widgetDisplays.chart && widgetDisplays?.chart"
 					v-bind="chartSlotProps"
 				/>
 			</div>
@@ -199,7 +209,9 @@ const showRightTop100 = computed(() =>
 			<div
 				:class="[classes.top100, classes.slot]"
 			>
-				<slot name="top100" />
+				<slot
+					name="top100"
+				/>
 			</div>
 		</div>
 	</div>

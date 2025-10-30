@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref, watch } from 'vue';
 
 import { BaseDashboardComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTickers } from '../queries';
 import { useWatchlistWidget } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
+import type { Ticker } from '@/modules/widgets/watchlist/model';
 
 import WatchlistLoader from './views/watchlist-loader.vue';
 
@@ -54,9 +55,17 @@ const {
 	defaultStateType: props.meta.defaultStateType,
 });
 
-const { data, isLoading, isError, refetch } = useQueryTickers(selectedTickers);
+const lastData = ref<Ticker[]>([]);
 
-const isNotData = computed(() => (!!data?.value && isLoading.value) || props.meta.isLoading);
+const { data, isError, refetch } = useQueryTickers(selectedTickers);
+
+watch(data, (newVal) => {
+	if (newVal) {
+		lastData.value = newVal;
+	}
+});
+
+const safeData = computed(() => data.value ?? lastData.value);
 </script>
 
 <template>
@@ -79,12 +88,13 @@ const isNotData = computed(() => (!!data?.value && isLoading.value) || props.met
 				@retry="refetch"
 			/>
 
-			<watchlist-loader v-else-if="isNotData" :count="5" />
+			<watchlist-loader v-else-if="!safeData?.length" />
+
 			<watchlist-main
-				v-else-if="data"
+				v-else
 				:columns="columns"
 				:sections="sections"
-				:tickers="data"
+				:tickers="safeData"
 				:tabs="tabs"
 				:selected-tickers="selectedTickers"
 				@add-tab="addNewWatchlist"

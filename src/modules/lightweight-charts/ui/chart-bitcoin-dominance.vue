@@ -3,7 +3,8 @@ import type { CSSProperties } from 'vue';
 import { onMounted, shallowRef, useTemplateRef, watchEffect } from 'vue';
 import { Chart } from 'chart.js/auto';
 
-import { getExternalTooltipSplitted } from '../utils';
+import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 
 
 interface IChartProps {
@@ -89,7 +90,8 @@ const chartAxisOptions = {
 	},
 };
 
-const externalTooltipHandler = getExternalTooltipSplitted();
+const { state, handler } = useExternalTooltip({
+});
 
 watchEffect(() => {
 	if (props.hideAxis) {
@@ -143,7 +145,7 @@ onMounted(() => {
 				tooltip: {
 					enabled: false,
 					position: 'nearest',
-					external: externalTooltipHandler,
+					external: handler,
 				},
 			},
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -167,6 +169,10 @@ onMounted(() => {
 	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 	</div>
+
+	<teleport to="body">
+		<chart-external-tooltip v-bind="state" />
+	</teleport>
 </template>
 
 <style module="classes">

@@ -1,9 +1,9 @@
 import { EventType, Impact, MarketIds } from '@/modules/calendar';
 
 export interface IToolbarState {
-	marketId: MarketIds;
-	impact: Impact;
-	eventType: EventType;
+	marketId: Set<MarketIds>;
+	impact: Set<Impact>;
+	eventType: Set<EventType>;
 	watchlistId: string | null;
 	watchlistSection: string | null;
 }

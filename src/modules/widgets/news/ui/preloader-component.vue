@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import { UiSkeletonGroup } from '@/shared/ui/skeleton';
+import { BaseLoaderComponent } from '@/modules/widgets/base';
 </script>
 
 <template>
-	<div :class="classes.root">
-		<ui-skeleton-group />
-	</div>
+	<base-loader-component :row-height="100" />
 </template>
-
-<style module="classes">
-.root {
-	padding: 10px;
-}
-</style>

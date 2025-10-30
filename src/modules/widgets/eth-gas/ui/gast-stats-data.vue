@@ -1,21 +1,20 @@
 <script setup lang="ts">
-export interface IGasStatsData {
-	lastBlock: number;
-	avgBlockSize: number;
-	pendingQueue: number;
-	avgUtilization: number;
-}
+
+
+import type { IGasStatsData } from '@/modules/widgets/eth-gas/model';
 
 export interface IGasStatsCardProps {
 	data: IGasStatsData;
-	isHorizontal?: boolean;
+	isTable?: boolean; // true = вертикальная таблица, false = горизонтальная линия
 }
 
-const props = defineProps<IGasStatsCardProps>();
+const props = withDefaults(defineProps<IGasStatsCardProps>(), {
+	isTable: true,
+});
 </script>
 
 <template>
-	<div :class="[classes.card, { [classes.horizontal]: isHorizontal }]">
+	<div :class="[classes.card, { [classes.line]: !isTable, [classes.table]: isTable }]">
 		<div :class="classes.stats">
 			<div :class="classes.statItem">
 				<div :class="classes.statLabel">Last block</div>
@@ -44,17 +43,10 @@ const props = defineProps<IGasStatsCardProps>();
 .card {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	height: fit-content;
 	padding: 16px;
 	background: #171717;
 	border-radius: 8px;
-}
-
-.header {
-	margin-bottom: 20px;
-	font-weight: 500;
-	font-size: 14px;
-	color: rgb(255 255 255 / 50%);
 }
 
 .stats {
@@ -76,36 +68,38 @@ const props = defineProps<IGasStatsCardProps>();
 }
 
 .statValue {
+	font-size: 16px;
 	line-height: 1.2;
 	color: #ffffff;
 }
 
-/* Горизонтальный режим */
-.horizontal {
+/* Режим линии (isTable = false) */
+.line {
 	flex-direction: row;
 	align-items: center;
 	height: auto;
 	padding: 12px 16px;
 }
 
-.horizontal .header {
-	flex-shrink: 0;
-	margin-right: 32px;
-	margin-bottom: 0;
-}
-
-.horizontal .stats {
+.line .stats {
 	flex: 1;
 	flex-direction: row;
 	gap: 32px;
 }
 
-.horizontal .statItem {
+.line .statItem {
 	flex: 1;
 	min-width: 0;
 }
 
-.horizontal .statValue {
+.line .statValue {
 	font-size: 18px;
+}
+
+.table {
+	.stats {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
 }
 </style>

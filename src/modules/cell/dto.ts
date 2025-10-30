@@ -102,5 +102,39 @@ export type LabelDto = BaseDto &
 		status: Status;
 	}>;
 
+export type ScoreDto = BaseDto &
+	Nullable<{
+		value: string;
+		score: number;
+	}>;
 
-export type CellDto = SymbolDto | NumberDto | PercentDto | SvgChartDto | TextDto | RangeDto | LabelDto;
+
+export type OpenDto = BaseDto &
+	Nullable<{
+		value: boolean;
+	}>;
+
+export type CheckDto = BaseDto &
+	Nullable<{
+		value: boolean;
+	}>;
+export type ScheduleDto = BaseDto &
+	Nullable<{
+		start: string;
+		finish: string;
+		current: string;
+	}>;
+
+
+export type CellDto =
+	SymbolDto
+	| NumberDto
+	| PercentDto
+	| SvgChartDto
+	| TextDto
+	| RangeDto
+	| LabelDto
+	| ScoreDto
+	| OpenDto
+	| CheckDto
+	| ScheduleDto;

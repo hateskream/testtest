@@ -7,9 +7,9 @@ export interface IEventBoardRange {
 }
 
 export interface IEventBoardFilters {
-	marketId: MarketIds;
-	eventType: EventType;
-	impact: Impact;
+	marketId: MarketIds[];
+	eventType: EventType[];
+	impact: Impact[];
 	watchlist: string[];
 }
 

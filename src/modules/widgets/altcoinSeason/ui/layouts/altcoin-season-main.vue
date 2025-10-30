@@ -18,7 +18,7 @@ import BtcPerformance from '../btc-performance/btc-performance.vue';
 import AltcoinSeasonLayout from './altcoin-season-layout.vue';
 import AltcoinSeasonPeriodGroup from '../period-switch/altcoin-season-period-group.vue';
 import HistoricalValue from '../historical-value/historical-value.vue';
-import PerformanceTable from '@/modules/widgets/altcoinSeason/ui/performance/performance-table.vue';
+import PerformanceTable from '../performance/performance-table.vue';
 
 interface IAltcoinSeasonMainProps {
 	meta: IMeta;
@@ -53,21 +53,24 @@ const rows = computed(() => props.top100.tickers.filter(t => !!t) ?? []);
 			<historical-value :historical-values="props.historicalValues" />
 		</template>
 
-		<template #chart="{showX, showY}">
+		<template #chart="{show, showX, showY}">
 			<chart-altcoin-season
 				:key="period"
 				:btc-rank="props.performance.btcRank"
 				:chart-data="props.chart"
+				:show="show"
 				:show-x="showX"
 				:show-y="showY"
 			/>
 		</template>
 
 		<template #top100>
-			<performance-table
-				:rows="rows"
-				:columns="ALTCOIN_PERFORMANCE_COLUMNS"
-			/>
+			<keep-alive>
+				<performance-table
+					:rows="rows"
+					:columns="ALTCOIN_PERFORMANCE_COLUMNS"
+				/>
+			</keep-alive>
 		</template>
 
 	</altcoin-season-layout>

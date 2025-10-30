@@ -248,4 +248,71 @@ export const notes: IWeekGroup[] = [
 			},
 		],
 	},
+	{
+		week: '16-30 10 2025',
+		items: [
+			{
+				id: '33',
+				title: 'Исправлена перерисовка watchlist\'а при добавлении тикера',
+				description: 'Теперь модалка не закрывается после первого выбора.',
+				productLink: '/',
+			},
+			{
+				id: '34',
+				title: 'Собрал адаптивность тулбаров для всех виджетов',
+				description: 'Теперь тулбары адаптированы для всех виджетов, в которых оно требовалось.',
+				productLink: '/',
+			},
+			{
+				id: '35',
+				title: 'Исправил оверфлоу тултипов на графиках дашборда',
+				description: 'Теперь тулбары графиков могут покидать зону графика без проблем с отображением',
+				productLink: '/',
+			},
+			{
+				id: '36',
+				title: 'Исправил поведение таблиц в firefix',
+				description: 'Виджеты, в которых используются таблицы, теперь работают в firefox',
+				productLink: '/',
+			},
+			{
+				id: '37',
+				title: 'Переработка виджета altcoin season в соответствии с дизайн ревью',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Переаботан лейаут, работа с модулями, переработан график, исправлены цвета и дублирующиеся запросы',
+				productLink: '/',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=33188-135973&t=H3wUOcub7hZCihYj-4',
+			},
+			{
+				id: '38',
+				title: 'Переработка виджета News в соответствии с дизайн ревью',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Исправлен визуал строки фильтров, добавлены новые фильтры по дате, исправлено поведение модальных окон,',
+				productLink: '/',
+				// eslint-disable-next-line @stylistic/max-len
+				figmaLink: 'https://www.figma.com/design/Vlh431ShIfbTkfULdBuqii/P9.-i88---v2.3.0?node-id=33153-124699&t=H3wUOcub7hZCihYj-4',
+			},
+			{
+				id: '39',
+				title: 'Адаптивные скелетоны виджетов',
+				description: 'Анимация загрузки теперь динамически занимает весь размер виджета и ' +
+				'повторяет некоторые его элементы. Это позволяет сделать загрузку визуально более ' +
+				'аккуратной, уменьшить различия загружаемой и настоящей версии виджета.',
+				productLink: '/',
+			},
+			{
+				id: '40',
+				title: 'Обновлена информация о доступных виджетах в сайдбаре',
+				description: '',
+				productLink: '/',
+			},
+			{
+				id: '41',
+				title: 'В полностью рабочем варианте добавлены виджеты exchange и eth gas',
+				description: '',
+				productLink: '/',
+			},
+		],
+	},
 ];

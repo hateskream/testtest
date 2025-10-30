@@ -9,6 +9,10 @@ import CellPercentComponent from './cell-percent-component.vue';
 import CellPlate from './cell-plate.vue';
 import TableCellChart from './table-cell-chart.vue';
 import TableCellRange from './table-cell-range.vue';
+import TableCellScore from './table-cell-score.vue';
+import TableCellIsOpen from './table-cell-is-open.vue';
+import TableCellCheck from './table-cell-check.vue';
+import TableCellSchedule from './table-cell-schedule.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -20,6 +24,10 @@ export enum CellType {
 	IMAGE_STRING = 'image-string',
 	PLATE = 'plate',
 	EMPTY = 'empty',
+	SCORE = 'score',
+	IS_OPEN = 'open',
+	CHECK = 'check',
+	SCHEDULE = 'schedule',
 }
 
 
@@ -36,6 +44,10 @@ const components: Record<CellType, Component> = {
 	// TODO: add chart component and add it here in
 	[CellType.CHART]: TableCellChart,
 	[CellType.EMPTY]: CellEmptyStateComponent,
+	[CellType.SCORE]: TableCellScore,
+	[CellType.IS_OPEN]: TableCellIsOpen,
+	[CellType.CHECK]: TableCellCheck,
+	[CellType.SCHEDULE]: TableCellSchedule,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {

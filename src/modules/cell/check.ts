@@ -15,7 +15,8 @@ import {
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
-	type ITextCell,
+	type ITextCell, type IScoreCell, type IOpenCell, type ICheckCell,
+	type IScheduleCell,
 } from './domain';
 
 export function isEmptyCell(cell: Cell): cell is IEmptyCell {
@@ -72,4 +73,18 @@ export function isRangeCell(cell: Cell): cell is IRangeCell {
 
 export function isLabelCell(cell: Cell): cell is ILableCell {
 	return cell.cellType === CellType.Label;
+}
+export function isScoreCell(cell: Cell): cell is IScoreCell {
+	return cell.cellType === CellType.Score;
+}
+export function isOpenCell(cell: Cell): cell is IOpenCell {
+	return cell.cellType === CellType.Open;
+}
+
+export function isCheckCell(cell: Cell): cell is ICheckCell {
+	return cell.cellType === CellType.Check;
+}
+
+export function isScheduleCell(cell: Cell): cell is IScheduleCell {
+	return cell.cellType === CellType.Schedule;
 }

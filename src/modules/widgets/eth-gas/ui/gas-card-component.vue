@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-export interface IGasCardData {
-	type: 'slow' | 'standard' | 'fast';
-	gwei: number;
-	time: number;
-	price: number;
-}
+import type { IGasCardData } from '../model';
+
 
 export interface IGasCardProps {
 	data: IGasCardData;
@@ -165,8 +161,7 @@ const formattedTime = computed(() => {
 .compact {
 	justify-content: center;
 	min-height: 50px;
-	padding: 6px 10px;
-	gap: 2px;
+	padding: 6px;
 }
 
 .compact.bgSlow {

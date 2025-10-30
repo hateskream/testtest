@@ -107,6 +107,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 					'h': 8,
 				},
 			},
+			'defaultStateType': 'crypto',
 		},
 		{
 			'id': 'e896b316-e8e6-4440-b78b-68236e22b344',
@@ -205,6 +206,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 					'h': 14,
 				},
 			},
+			'defaultStateType': 'crypto',
 		},
 		{
 			'id': '03217f19-bcb7-4411-abaf-e8cc26cb596e',
@@ -267,6 +269,7 @@ export const CRYPTO_DASHBOARD_PRESET: PresetLayout = {
 					'h': 21,
 				},
 			},
+			'defaultStateType': 'crypto',
 		},
 		{
 			'id': 'b2cf3594-0386-4b48-b082-1d280fe6835f',

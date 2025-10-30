@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { UiSkeletonGroup } from '@/shared/ui/skeleton';
-
-const props = defineProps<{
-	count?: number;
-}>();
+import { BaseLoaderComponent } from '@/modules/widgets/base';
+import { UiSkeleton } from '@/shared/ui/skeleton';
 </script>
 
 <template>
-	<div :class="classes.root">
-		<ui-skeleton-group :count="props.count" />
-	</div>
+	<base-loader-component :row-height="50" :class="classes.preloaderContainer">
+		<template #header>
+			<div>
+				<ui-skeleton width="30%" height="32px" />
+			</div>
+		</template>
+	</base-loader-component>
 </template>
 
 <style module="classes">
-.root {
-	padding: 10px;
+.preloaderContainer {
+	gap: 8px;
 }
 </style>

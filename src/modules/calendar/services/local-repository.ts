@@ -9,18 +9,18 @@ export interface ILocalRepositoryOptions {
 	defaultState: () => ToolbarSchemaType;
 }
 
-interface IParams {
-	country?: MarketIds;
-	impact?: Impact;
-	event?: EventType;
-	catalog?: string;
-	section?: string;
+interface ICalendarRouteQueryParams {
+	country?: MarketIds[];
+	impact?: Impact[];
+	event?: EventType[];
+	watchlistId?: string;
+	watchlistSection?: string;
 }
 
 export class LocalRepository extends BaseRepository {
 	private static instances: Map<string, LocalRepository> = new Map();
 	private readonly storageKey: string;
-	private readonly params: IParams;
+	private readonly params: ICalendarRouteQueryParams;
 
 	private constructor(
 		private readonly _storageKey: string,
@@ -30,7 +30,7 @@ export class LocalRepository extends BaseRepository {
 		super();
 
 		this.storageKey = `${this._storageKey}${widgetId}`;
-		this.params = options?.useQuery ? useUrlSearchParams<IParams>('history') : {};
+		this.params = options?.useQuery ? useUrlSearchParams<ICalendarRouteQueryParams>('history') : {};
 	}
 
 	public static create(
@@ -54,8 +54,8 @@ export class LocalRepository extends BaseRepository {
 			marketId: this.params.country ?? state.marketId,
 			impact: this.params.impact ?? state.impact,
 			eventType: this.params.event ?? state.eventType,
-			watchlistId: this.params.catalog ?? state.watchlistId,
-			watchlistSection: this.params.section ?? state.watchlistSection,
+			watchlistId: this.params.watchlistId ?? state.watchlistId,
+			watchlistSection: this.params.watchlistSection ?? state.watchlistSection,
 		};
 	}
 
@@ -81,11 +81,11 @@ export class LocalRepository extends BaseRepository {
 		localStorage.setItem(this.storageKey, raw);
 
 		if (this.options?.useQuery) {
-			this.params.country = state.marketId !== MarketIds.EntireWorld ? state.marketId : undefined;
-			this.params.impact = state.impact !== Impact.All ? state.impact : undefined;
-			this.params.event = state.eventType !== EventType.All ? state.eventType : undefined;
-			this.params.catalog = state.watchlistId ?? undefined;
-			this.params.section = state.watchlistSection ?? undefined;
+			this.params.country = state.marketId ?? undefined;
+			this.params.impact = state.impact ?? undefined;
+			this.params.event = state.eventType ?? undefined;
+			this.params.watchlistId = state.watchlistId ?? undefined;
+			this.params.watchlistSection = state.watchlistSection ?? undefined;
 		}
 	}
 }
