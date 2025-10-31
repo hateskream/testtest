@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type MaybeRefOrGetter, onUnmounted, useSlots } from 'vue';
+import { computed, type MaybeRefOrGetter, onUnmounted, ref, useSlots, watch } from 'vue';
 import type { ReferenceElement } from '@floating-ui/vue';
 
 import {
@@ -16,51 +16,77 @@ const props = withDefaults(defineProps<IFloatingOptions>(), {
 	offset: 6,
 });
 
+const isVisible = ref(false);
+
 const slots = useSlots();
 const floating = useFloatingContext(props.scope);
 
 const renderNode = computed(() => {
 	return () => slots.default?.({
-		close: close,
+		close: handleClose,
+		isVisible: isVisible,
 	}) ?? null;
 });
 
-function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
+function handleOpen(reference?: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
+	if (isVisible.value) {
+		return;
+	}
+
+	isVisible.value = true;
+
 	floating.open({
-		reference: createVirtualFloatingNode(e),
+		reference: reference ?? floating.reference.value,
 		content: renderNode.value,
 		options: { ...props, ...(opts ?? {}) },
+		onClose: () => {
+			isVisible.value = false;
+		},
 	});
 }
 
-function openAt(reference: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
-	floating.open({
-		reference: reference,
-		content: renderNode.value,
-		options: { ...props, ...(opts ?? {}) },
-	});
-}
+function handleClose() {
+	if (!isVisible.value) {
+		return;
+	}
 
-function close() {
+	isVisible.value = false;
 	floating.close();
 }
 
+watch(isVisible, (value) => {
+	if (value) {
+		handleOpen();
+	} else {
+		handleClose();
+	}
+});
+
+function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
+	handleOpen(createVirtualFloatingNode(e), opts);
+}
+
+function openAt(reference: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
+	handleOpen(reference, opts);
+}
+
 defineSlots<{
-	default(
-		// eslint-disable-next-line no-shadow
-		close: () => void,
-	): unknown;
+	// eslint-disable-next-line no-shadow
+	default(props: {
+		close: () => void;
+		isVisible: boolean;
+	}): unknown;
 }>();
 
 defineExpose({
 	openEvent,
 	openAt,
-	close,
+	close: handleClose,
 	floating,
 });
 
 onUnmounted(() => {
-	floating.stop();
+	handleClose();
 });
 </script>
 

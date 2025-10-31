@@ -5,7 +5,7 @@ import {
 	onUnmounted,
 	ref,
 	useSlots,
-	useTemplateRef,
+	useTemplateRef, watch,
 } from 'vue';
 
 import { type IPositionProps } from '../model.ts';
@@ -23,20 +23,14 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	trigger: 'click',
 	positionOffset: 6,
 	strategy: 'fixed',
-	hoverPadding: 8,
 });
 
 const emits = defineEmits<IPositionComponentEmits>();
 
-defineSlots<{
-	// eslint-disable-next-line no-shadow
-	title(props: { isVisible: boolean }): unknown;
-	content(): unknown;
-}>();
-
 const slots = useSlots();
 
 const isVisible = ref(false);
+const isPinned = ref(false);
 
 const wrapperRef = useTemplateRef<HTMLElement>('wrapper');
 const referenceRef = useTemplateRef<HTMLElement>('reference');
@@ -53,36 +47,59 @@ function handleOpen() {
 	floating.open({
 		reference: referenceRef,
 		content: () => slots.content?.() ?? null,
-		options: {
-			placement: props.placement,
-			hoverPadding: props.hoverPadding,
-			strategy: props.strategy,
-			offset: props.offset,
-			trigger: props.trigger,
-		},
+		options: props,
 		onClose: () => {
 			isVisible.value = false;
+			isPinned.value = false;
 		},
 	});
 }
 
+function handleClose() {
+	if (!isVisible.value) {
+		return;
+	}
+
+	isVisible.value = false;
+	isPinned.value = false;
+	floating.close();
+}
+
+watch(isVisible, (value) => {
+	if (value) {
+		handleOpen();
+	} else {
+		handleClose();
+	}
+});
+
 async function handleContextMenu(event: MouseEvent) {
 	event.preventDefault();
+	isPinned.value = true;
 	await nextTick();
 	handleOpen();
 }
 
+function handleClick() {
+	if (isVisible.value && isPinned.value) {
+		handleClose();
+	} else {
+		isPinned.value = true;
+		handleOpen();
+	}
+}
+
 function handleMouseOver() {
-	if (!isVisible.value) {
+	if (!isVisible.value && !isPinned.value) {
 		emits('mouseover');
 		handleOpen();
 	}
 }
 
 function handleMouseLeave() {
-	if (isVisible.value) {
+	if (!isPinned.value) {
 		emits('mouseleave');
-		floating.close();
+		handleClose();
 	}
 }
 
@@ -100,7 +117,7 @@ onMounted(() => {
 	}
 
 	if (matchesTrigger(trigger, 'click')) {
-		element.addEventListener('click', handleContextMenu);
+		element.addEventListener('click', handleClick);
 	}
 
 	if (matchesTrigger(trigger, 'hover')) {
@@ -110,20 +127,28 @@ onMounted(() => {
 
 	onUnmounted(() => {
 		element.removeEventListener('contextmenu', handleContextMenu);
-		element.removeEventListener('click', handleContextMenu);
+		element.removeEventListener('click', handleClick);
 		element.removeEventListener('mouseover', handleMouseOver);
 		element.removeEventListener('mouseleave', handleMouseLeave);
 	});
 });
 
 onUnmounted(() => {
-	floating.stop();
+	handleClose();
 });
 
 defineExpose({
-	isVisible,
-	handleOpen,
+	isVisible: isVisible,
+	isPinned: isPinned,
+	handleOpen: handleOpen,
+	handleClose: handleClose,
 });
+
+defineSlots<{
+	// eslint-disable-next-line no-shadow
+	title(props: { isVisible: boolean; isPinned: boolean }): unknown;
+	content(): unknown;
+}>();
 </script>
 
 <template>
@@ -132,6 +157,7 @@ defineExpose({
 			<slot
 				name="title"
 				:is-visible="isVisible"
+				:is-pinned="isPinned"
 			/>
 		</div>
 	</div>

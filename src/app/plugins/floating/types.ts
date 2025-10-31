@@ -18,7 +18,6 @@ export interface IFloatingOptions {
 	placement?: Placement;
 	strategy?: Strategy;
 	offset?: number;
-	hoverPadding?: number;
 	middleware?: Middleware[];
 	trigger?: FloatingTriggers | FloatingTriggers[];
 }

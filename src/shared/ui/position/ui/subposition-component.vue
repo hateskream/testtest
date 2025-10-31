@@ -10,7 +10,11 @@ interface IPositionComponentEmits {
 	(e: 'mouseleave'): void;
 }
 
-const props = withDefaults(defineProps<IPositionProps>(), {
+interface ISubpositionProps extends IPositionProps {
+	hoverPadding?: number;
+}
+
+const props = withDefaults(defineProps<ISubpositionProps>(), {
 	placement: 'right-end',
 	trigger: 'hover',
 	offset: 6,
