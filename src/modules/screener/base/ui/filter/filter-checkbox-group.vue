@@ -70,10 +70,10 @@ const isEmptySearchState = computed(() => search.value.length && !filteredOption
 </script>
 <template>
 	<div>
-		<div 				v-if="searchable" :class="classes.search">
+		<div v-if="searchable" :class="classes.search">
 			<ui-search
 				v-model="search"
-				:placeholder="searchPlaceholder"
+				:placeholder="props.searchPlaceholder"
 				:class="classes.searchInput"
 				:show-icon="false"
 			/>

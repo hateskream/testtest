@@ -2,9 +2,10 @@
 import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalFilter } from '@/modules/widgets/base';
 import { type FiltersDefinition, type FiltersState, type IFilterState, ScreenerType } from '../model';
 import { FilterBadgeModal } from './filter';
+
+import ScreenerModalFiltersComponent from './screener-modal-filters-component.vue';
 
 const filters = defineModel<FiltersState>('filters', { required: true });
 const markets = defineModel<string[]>('markets', { required: true });
@@ -29,7 +30,7 @@ function updateFilter(key: string, state: IFilterState) {
 			[MarketSelector]: {{markets}}
 		</div>
 		<ui-delimiter />
-		<ui-position>
+		<ui-position position="right-start">
 			<template #title>
 				<ui-icon
 					:id="IconIds.NewsFilter"
@@ -39,19 +40,18 @@ function updateFilter(key: string, state: IFilterState) {
 				/>
 			</template>
 			<template #content>
-				<modal-filter>
-					<template #content>
-						Test
-					</template>
-				</modal-filter>
+				<screener-modal-filters-component
+					v-model:filters="filters"
+					:definitions="props.definitions"
+				/>
 			</template>
 		</ui-position>
 		<filter-badge-modal
-			v-for="(filter, key) in props.definitions"
+			v-for="(config, key) in props.definitions"
 			:key="key"
-			:filter="filter"
-			:state="filters[key]"
-			@update="updateFilter(key, $event)"
+			:config="config"
+			:model-value="filters[key]"
+			@update:model-value="updateFilter(key, $event)"
 		/>
 	</div>
 </template>

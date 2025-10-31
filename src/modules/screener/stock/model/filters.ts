@@ -1,16 +1,18 @@
-import { FilterFieldType, FilterOperator, type Filters, type IFilterConfig, type IFilterState } from '../../base/model';
+import type { Filters, IFilterConfig, IFilterState } from '../../base';
 import {
 	crosses,
 	equal,
 	equalOrGreater,
 	equalOrLess,
+	FilterOperator,
 	greater,
 	inDateRange,
 	inRange,
 	less,
 	plainOptions,
 	withDescription,
-} from '../../base/utils';
+} from '../../base';
+import { FilterFieldType } from '../../base/model/filter';
 
 export enum StockFilters {
 	Type = 'type',

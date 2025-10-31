@@ -9,9 +9,9 @@ function isNumberKey(key: string): key is KeydownNumberKey {
 	return numberKeys.some(value => value === key);
 }
 
-export type UseFilterKeydownHandler = (key: KeydownNumber, event: KeyboardEvent) => void;
+export type UseNumberKeydownHandler = (key: KeydownNumber, event: KeyboardEvent) => void;
 
-export function useFilterKeydown(handler: UseFilterKeydownHandler) {
+export function useNumberKeydown(handler: UseNumberKeydownHandler) {
 	const isActive = ref(false);
 
 	function onKeydown(event: KeyboardEvent) {

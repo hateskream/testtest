@@ -43,6 +43,7 @@ const classesList = computed(() => ({
 	border-style: solid;
 	border-color: var(--bg-modal-color-base);
 	border-radius: 100px;
+	flex-shrink: 0;
 }
 
 .content:hover .icon {

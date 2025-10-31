@@ -1,4 +1,4 @@
-import { ScreenerType, screenerTypeToLabel } from './type';
+import { ScreenerType, screenerTypeToLabel } from './screener-type';
 import { RouteNames, RouteScreenerType } from '@/types/route.d';
 
 export interface IScreenerTab {

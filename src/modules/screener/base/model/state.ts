@@ -1,6 +1,6 @@
 import type { ISort, ITableColumn } from '@/modules/cell';
 import { STOCK_ALL_COLUMNS, STOCK_FILTERS } from '../../stock';
-import { ScreenerType } from './type';
+import { ScreenerType } from './screener-type';
 import type { FilterCondition, Filters } from './filter';
 import { ScreenerMarket } from './market';
 

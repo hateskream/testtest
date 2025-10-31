@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalFilter, ModalItemInteraction } from '@/modules/widgets/base';
-import type { IFilterPreset, IFilterState } from '@/modules/screener/base';
+import type { IFilterPreset, IFilterState } from '../../model';
 import { UiPosition } from '@/shared/ui/position';
 
 import FilterRadioGroup from './filter-radio-group.vue';
 
 const modelValue = defineModel<IFilterState>();
 
-defineProps<{
+interface IFilterConditionProps {
 	presets: IFilterPreset[];
 	manualSetup?: boolean;
 	required?: boolean;
 	keyNumbers?: boolean;
-}>();
+}
+
+const props = defineProps<IFilterConditionProps>();
 
 // TODO: Manual Setup handling
 </script>
@@ -21,13 +23,14 @@ defineProps<{
 <template>
 	<filter-radio-group
 		v-model="modelValue"
-		:presets
-		:required
-		:key-numbers
+		:presets="props.presets"
+		:required="props.required"
+		:key-numbers="props.keyNumbers"
 	>
-		<template #footer-actions v-if="manualSetup">
+		<template #footer-actions v-if="props.manualSetup">
 			<ui-position
 				:teleport="false"
+				position="right-start"
 			>
 				<template #title>
 					<modal-item-interaction>
@@ -48,6 +51,7 @@ defineProps<{
 							Manual Setup
 						</template>
 						<template #content>
+							Manual Setup Handling
 						</template>
 					</modal-filter>
 				</template>

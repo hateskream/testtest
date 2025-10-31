@@ -28,8 +28,8 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 			</div>
 		</template>
 
-		<template #content>
-			<slot name="content" />
+		<template #content="{ isVisible }">
+			<slot name="content" :is-visible="isVisible" />
 		</template>
 	</ui-subposition>
 </template>

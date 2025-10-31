@@ -7,17 +7,19 @@ import { ModalItemSelector } from '@/modules/widgets/base';
 import type { IFilterPreset, IFilterState } from '../../model';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiDriver } from '@/shared/ui/driver';
-import { type KeydownNumber, useFilterKeydown } from '../../composables';
+import { type KeydownNumber, useNumberKeydown } from '@/shared/composables/use-number-keydown.ts';
 
 import FilterModalAction from './filter-modal-action.vue';
 
-const modelValue = defineModel<IFilterState>();
-
-const props = defineProps<{
+export interface IFilterRadioGroupProps {
 	presets: IFilterPreset[];
 	required?: boolean;
 	keyNumbers?: boolean;
-}>();
+}
+
+const props = defineProps<IFilterRadioGroupProps>();
+
+const modelValue = defineModel<IFilterState>();
 
 const selectedPresetId = computed(() => modelValue.value?.presetId);
 const hasSelectedValue = computed(() => notNullish(modelValue.value?.selected));
@@ -43,7 +45,7 @@ function handleKeyDown(key: KeydownNumber) {
 	select(props.presets[key - 1]);
 }
 
-const { stop, start } = useFilterKeydown(handleKeyDown);
+const { stop, start } = useNumberKeydown(handleKeyDown);
 
 watch(() => props.keyNumbers, value => {
 	if (value) {
@@ -57,7 +59,7 @@ watch(() => props.keyNumbers, value => {
 <template>
 	<div>
 		<modal-item-selector
-			v-for="(preset, index) in presets"
+			v-for="(preset, index) in props.presets"
 			:key="preset.id"
 			:model-value="selectedPresetId === preset.id"
 			:class="classes.selector"
@@ -66,21 +68,21 @@ watch(() => props.keyNumbers, value => {
 			<div :class="classes.selectorLabel">
 				<span>{{preset.label}}</span>
 				<template v-if="preset.description">
-					<span :class="classes.dot">·</span>
+					<span>·</span>
 					<span :class="classes.description">{{preset.description}}</span>
 				</template>
 			</div>
-			<div v-if="keyNumbers && index < 9 && modelValue?.presetId !== preset.id" :class="classes.number">
+			<div v-if="props.keyNumbers && index < 9 && modelValue?.presetId !== preset.id" :class="classes.number">
 				{{ index + 1 }}
 			</div>
 		</modal-item-selector>
 		<ui-transition-fade>
-			<div v-if="hasSelectedValue && !required || $slots['footer-actions']">
+			<div v-if="hasSelectedValue && !props.required || $slots['footer-actions']">
 				<ui-driver />
 				<slot name="footer-actions" />
 				<ui-transition-fade>
 					<filter-modal-action
-						v-if="hasSelectedValue && !required"
+						v-if="hasSelectedValue && !props.required"
 						:icon="IconIds.Close"
 						label="Clear"
 						@click="clear"
@@ -95,6 +97,8 @@ watch(() => props.keyNumbers, value => {
 .selector {
 	position: relative;
 	gap: 16px;
+	height: auto;
+	padding: 10px;
 }
 
 .selector:hover {
@@ -102,18 +106,13 @@ watch(() => props.keyNumbers, value => {
 }
 
 .selectorLabel {
-	display: flex;
-	flex-grow: 0;
+	display: inline-flex;
 	flex-wrap: wrap;
-	max-width: 100%;
+	gap: 6px;
 }
 
 .selector:hover .number {
 	opacity: 0;
-}
-
-.dot {
-	margin: 0 5px;
 }
 
 .description {
@@ -123,7 +122,7 @@ watch(() => props.keyNumbers, value => {
 
 .number {
 	position: absolute;
-	right: 12px;
+	right: 10px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
