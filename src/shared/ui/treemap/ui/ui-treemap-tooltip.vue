@@ -4,7 +4,7 @@ import { computed, useTemplateRef, watch, watchEffect } from 'vue';
 
 import { UiPositionPortal } from '@/shared/ui/position';
 import { prepareNumber, preparePercent } from '../utils';
-import { createVirtualFloatingNode } from '@/app/plugins/floating';
+import { createVirtualFloatingNode } from '@/shared/ui/position';
 
 const SIZE_ACTIVATOR = 10;
 const HALF_SIZE_ACTIVATOR_PX = `${SIZE_ACTIVATOR}`;

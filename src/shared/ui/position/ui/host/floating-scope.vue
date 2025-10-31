@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onUnmounted, watch } from 'vue';
 
-import { createClickOutsideHandler, matchesTrigger } from '../utils';
-import { useFloatingContext } from '../composables';
-import { type FloatingContentRenderable } from '../types';
+import { createClickOutsideHandler, matchesTrigger } from '../../utils';
+import { useFloatingContext } from '../../composables';
+import { type FloatingContentRenderable } from '../../model';
 
 const props = defineProps<{
 	scope: string;

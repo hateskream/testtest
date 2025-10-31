@@ -2,7 +2,8 @@ import {
 	reactive,
 	ref,
 	toValue,
-	computed, nextTick,
+	nextTick,
+	computed,
 } from 'vue';
 import {
 	autoUpdate,
@@ -15,7 +16,7 @@ import {
 	type UseFloatingReturn,
 } from '@floating-ui/vue';
 
-import type { IFloatingOpenPayload, IFloatingSession } from '../types.ts';
+import type { IFloatingOpenPayload, IFloatingSession } from '../model';
 
 export function createFloatingStore(scope: string) {
 	const reference = ref<ReferenceElement | null>(null);
@@ -61,7 +62,7 @@ export function createFloatingStore(scope: string) {
 
 	async function open(payload: IFloatingOpenPayload) {
 		if (isOpen.value) {
-			stop();
+			return;
 		}
 
 		updateSession(payload);

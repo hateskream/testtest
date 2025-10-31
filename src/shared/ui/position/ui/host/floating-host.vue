@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { listFloatingScopes } from '../composables';
+import { listFloatingScopes } from '../../composables';
 
 import FloatingScope from './floating-scope.vue';
 </script>

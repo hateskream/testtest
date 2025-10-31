@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { computed, type MaybeRefOrGetter, onUnmounted, ref, useSlots, watch } from 'vue';
+import {
+	computed,
+	onUnmounted,
+	ref,
+	useSlots,
+	watch,
+	type MaybeRefOrGetter,
+} from 'vue';
 import type { ReferenceElement } from '@floating-ui/vue';
 
-import {
-	useFloatingContext,
-	createVirtualFloatingNode,
-	type IFloatingOptions,
-} from '@/app/plugins/floating';
+import { createVirtualFloatingNode } from '../utils';
+import { useFloatingContext } from '../composables';
+import type { IFloatingOptions } from '../model';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
 	scope: 'default',

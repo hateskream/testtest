@@ -1,4 +1,4 @@
-import type { FloatingTriggers } from '@/app/plugins/floating';
+import type { FloatingTriggers } from '../model';
 
 export function matchesTrigger(
 	trigger: FloatingTriggers | FloatingTriggers[],

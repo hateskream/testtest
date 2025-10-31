@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FloatingHost } from './plugins/floating';
+import { FloatingHost } from '@/shared/ui/position';
 </script>
 
 <template>

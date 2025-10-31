@@ -7,7 +7,7 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	teleport: false,
 	trigger: 'hover',
 	position: 'right-start',
-	positionOffset: 6,
+	offset: 6,
 });
 </script>
 

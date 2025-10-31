@@ -2,8 +2,7 @@
 import { ref, computed, watch, useTemplateRef, onUnmounted } from 'vue';
 import { offset, shift, flip, type Placement } from '@floating-ui/vue';
 
-import { UiPositionPortal } from '@/shared/ui/position';
-import { type IFloatingOptions } from '@/app/plugins/floating';
+import { UiPositionPortal, type IPositionProps } from '@/shared/ui/position';
 
 interface IProps {
 	scope?: string;
@@ -25,7 +24,7 @@ const layer = useTemplateRef('layerRef');
 const isVisible = ref(false);
 const timeout = ref<number | null>(null);
 
-const layerOptions = computed<IFloatingOptions>(() => ({
+const layerOptions = computed<IPositionProps>(() => ({
 	scope: props.scope,
 	strategy: 'fixed',
 	placement: props.position,

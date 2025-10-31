@@ -2,15 +2,15 @@
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
-import { matchesTrigger } from '@/app/plugins/floating';
-import type { IPositionProps } from '../model';
+import type { IFloatingOptions } from '../model';
+import { matchesTrigger } from '../utils';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
 	(e: 'mouseleave'): void;
 }
 
-interface ISubpositionProps extends IPositionProps {
+interface ISubpositionProps extends IFloatingOptions {
 	hoverPadding?: number;
 }
 

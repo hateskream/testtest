@@ -5,19 +5,20 @@ import {
 	onUnmounted,
 	ref,
 	useSlots,
-	useTemplateRef, watch,
+	useTemplateRef,
+	watch,
 } from 'vue';
 
-import { type IPositionProps } from '../model.ts';
-import { useFloatingContext } from '@/app/plugins/floating';
-import { matchesTrigger } from '@/app/plugins/floating/utils';
+import type { IFloatingOptions } from '../model';
+import { useFloatingContext } from '../composables';
+import { matchesTrigger } from '../utils';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
 	(e: 'mouseleave'): void;
 }
 
-const props = withDefaults(defineProps<IPositionProps>(), {
+const props = withDefaults(defineProps<IFloatingOptions>(), {
 	scope: 'default',
 	placement: 'right-end',
 	trigger: 'click',

@@ -1,6 +1,6 @@
 import { inject, type InjectionKey } from 'vue';
 
-import type { FloatingManager } from '../types';
+import type { FloatingManager } from '../model';
 
 export const FLOATING_KEY: InjectionKey<FloatingManager> =
 	Symbol.for('FLOATING_INJECTION_KEY')

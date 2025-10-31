@@ -1,11 +1,7 @@
-import { type Component, type MaybeRefOrGetter, type VNodeChild } from 'vue';
-import {
-	type Middleware,
-	type Placement, type ReferenceElement,
-	type Strategy,
-} from '@floating-ui/vue';
+import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue';
+import type { Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/vue';
 
-import type { createFloatingStore, createFloatingManager } from './core';
+import type { createFloatingManager, createFloatingStore } from '@/shared/ui/position/core';
 
 export type FloatingTriggers = 'click' | 'hover' | 'contextmenu';
 export type FloatingContentRenderable = VNodeChild | Component | null | undefined;
