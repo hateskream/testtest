@@ -14,10 +14,16 @@ const floating = useFloatingContext(props.scope);
 const { content } = floating;
 
 const normalizedContent = computed<FloatingContentRenderable[]>(() => {
+	if (!floating.isOpen.value) {
+		return [];
+	}
+
 	const node = floating.session.content?.();
+
 	if (!node) {
 		return [];
 	}
+
 	return Array.isArray(node) ? node : [node];
 });
 
@@ -26,7 +32,7 @@ function handleClickOutside(e: PointerEvent) {
 }
 
 function handleMouseLeave() {
-	floating.stop();
+	floating.close();
 }
 
 function addEventListeners() {
@@ -63,22 +69,37 @@ onUnmounted(removeEventListeners);
 </script>
 
 <template>
-	<div
-		v-if="floating.isOpen && normalizedContent.length"
-		ref="content"
-		:class="classes.scope"
-		:style="floating.instance.floatingStyles"
-	>
-		<component
-			:is="node"
-			v-for="(node, i) in normalizedContent"
-			:key="i"
-		/>
-	</div>
+	<transition name="fade">
+		<div
+			v-if="normalizedContent.length"
+			v-show="floating.isOpen"
+			ref="content"
+			:class="classes.scope"
+			:style="floating.instance.floatingStyles"
+		>
+			<component
+				:is="node"
+				v-for="(node, i) in normalizedContent"
+				:key="i"
+			/>
+		</div>
+	</transition>
 </template>
 
 <style module="classes">
 .scope {
 	z-index: 101;
+}
+</style>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
 }
 </style>

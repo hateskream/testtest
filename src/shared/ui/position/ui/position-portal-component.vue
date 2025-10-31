@@ -50,7 +50,6 @@ function handleClose() {
 		return;
 	}
 
-	isVisible.value = false;
 	floating.close();
 }
 
@@ -86,7 +85,9 @@ defineExpose({
 });
 
 onUnmounted(() => {
-	handleClose();
+	if (isVisible.value) {
+		floating.stop();
+	}
 });
 </script>
 

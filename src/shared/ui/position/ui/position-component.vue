@@ -134,7 +134,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-	handleClose();
+	if (isVisible.value) {
+		floating.stop();
+	}
 });
 
 defineExpose({

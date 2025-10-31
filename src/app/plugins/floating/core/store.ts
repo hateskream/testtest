@@ -72,25 +72,22 @@ export function createFloatingStore(scope: string) {
 		startAutoUpdate();
 	}
 
-	async function close() {
+	function close() {
 		if (!isOpen.value) {
 			return;
 		}
 
-		stop(session.id);
-	}
-
-	function stop(id?: number) {
-		if (id && id !== session.id) {
-			return;
-		}
-
 		isOpen.value = false;
-		session.reference = null;
-		session.content = null;
 		session.onClose?.();
 		cleanup?.();
 		cleanup = null;
+	}
+
+	function stop() {
+		close();
+		session.content = null;
+		session.reference = null;
+		session.options = {};
 	}
 
 	return {
