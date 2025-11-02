@@ -1,4 +1,4 @@
-import { inject, type InjectionKey } from 'vue';
+import { inject, onUnmounted, type InjectionKey } from 'vue';
 
 import type { FloatingManager } from '../model';
 
@@ -13,7 +13,13 @@ export function useFloatingContext(scope = 'default') {
 		throw new Error('Floating manager not provided');
 	}
 
-	return manager.ensureScope(scope);
+	const store = manager.retain(scope);
+
+	onUnmounted(() => {
+		manager.dispose(scope);
+	});
+
+	return store;
 }
 
 export function listFloatingScopes() {

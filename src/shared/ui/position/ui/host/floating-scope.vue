@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, onUnmounted, watch } from 'vue';
+import { computed, inject, onUnmounted, watch } from 'vue';
 
 import { createClickOutsideHandler, matchesTrigger } from '../../utils';
-import { useFloatingContext } from '../../composables';
-import { type FloatingContentRenderable } from '../../model';
+import { FLOATING_KEY } from '../../composables';
+import { type FloatingContentRenderable, type FloatingManager } from '../../model';
 
 const props = defineProps<{
 	scope: string;
 }>();
 
-const floating = useFloatingContext(props.scope);
+const manager = inject<FloatingManager>(FLOATING_KEY)!;
+const floating = manager.scopes.get(props.scope)!;
 
 const { content } = floating;
 

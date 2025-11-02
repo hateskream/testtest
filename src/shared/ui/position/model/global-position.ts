@@ -1,4 +1,4 @@
-import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue';
+import type { Component, EffectScope, MaybeRefOrGetter, VNodeChild } from 'vue';
 import type { Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/vue';
 
 import type { createFloatingManager, createFloatingStore } from '@/shared/ui/position/core';
@@ -31,4 +31,9 @@ export interface IFloatingOpenPayload {
 	content: (() => FloatingContentRenderable) | null;
 	options?: IFloatingOptions;
 	onClose?: () => void;
+}
+
+export interface IFloatingEffectScope {
+	effect: EffectScope;
+	subscribers: number;
 }
