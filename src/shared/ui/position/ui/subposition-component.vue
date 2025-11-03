@@ -28,14 +28,15 @@ const reference = useTemplateRef<HTMLElement>('reference');
 const floating = useTemplateRef<HTMLElement>('floating');
 const wrapper = useTemplateRef<HTMLElement>('wrapper');
 
+const isVisible = ref(false);
+const isPinned = ref(false);
+
 const { floatingStyles, placement } = useFloating(reference, floating, {
 	strategy: props.strategy,
 	placement: props.placement,
 	middleware: [offset(props.offset - 2), flip(), shift({ padding: 5 })],
 	whileElementsMounted: autoUpdate,
 });
-
-const isVisible = ref(false);
 
 const showTimeout = ref<number | null>(null);
 const hideTimeout = ref<number | null>(null);
@@ -65,11 +66,25 @@ const enhancedFloatingStyles = computed(() => {
 });
 
 function handleClick() {
-	isVisible.value = !isVisible.value;
+	if (!matchesTrigger(props.trigger, 'hover')) {
+		isVisible.value = !isVisible.value;
+	}
+
+	if (!isPinned.value) {
+		isPinned.value = true;
+		isVisible.value = true;
+	} else {
+		isPinned.value = false;
+		isVisible.value = false;
+	}
 }
 
 function handleMouseover(e: MouseEvent) {
 	e.stopPropagation();
+
+	if (isPinned.value) {
+		return;
+	}
 
 	if (hideTimeout.value) {
 		clearTimeout(hideTimeout.value);
@@ -85,6 +100,10 @@ function handleMouseover(e: MouseEvent) {
 }
 
 function handleMouseleave() {
+	if (isPinned.value) {
+		return;
+	}
+
 	if (showTimeout.value) {
 		clearTimeout(showTimeout.value);
 		showTimeout.value = null;
@@ -96,6 +115,10 @@ function handleMouseleave() {
 }
 
 function handleFloatingMouseenter() {
+	if (isPinned.value) {
+		return;
+	}
+
 	if (matchesTrigger(props.trigger, 'hover') && hideTimeout.value) {
 		clearTimeout(hideTimeout.value);
 		hideTimeout.value = null;
@@ -103,6 +126,10 @@ function handleFloatingMouseenter() {
 }
 
 function handleFloatingMouseleave(e: MouseEvent) {
+	if (isPinned.value) {
+		return;
+	}
+
 	const related = e.relatedTarget as HTMLElement | null;
 
 	if (reference.value && related && reference.value.contains(related)) {
@@ -127,37 +154,31 @@ const handleDocumentClick = (event: Event) => {
 	if (floating.value?.contains(target)) {
 		return;
 	}
+	isPinned.value = false;
 	isVisible.value = false;
 };
 
 onMounted(() => {
 	const wrapperEl = wrapper.value;
 	const triggerEl = reference.value;
-	const floatingEl = floating.value;
 
-	if (!wrapperEl || !floatingEl || !triggerEl) {
+	if (!wrapperEl || !triggerEl) {
 		return;
 	}
+
 	const { trigger } = props;
+
+	document.addEventListener('click', handleDocumentClick, true);
+	triggerEl.addEventListener('click', handleClick);
 
 	if (matchesTrigger(trigger, 'contextmenu')) {
 		wrapperEl.addEventListener('contextmenu', handleClick);
 	}
 
-	if (matchesTrigger(trigger, 'click')) {
-		wrapperEl.addEventListener('click', handleClick);
-		triggerEl.addEventListener('click', handleClick);
-	}
-
 	if (matchesTrigger(trigger, 'hover')) {
 		wrapperEl.addEventListener('mouseenter', handleMouseover);
 		wrapperEl.addEventListener('mouseleave', handleMouseleave);
-
-		floatingEl.addEventListener('mouseenter', handleFloatingMouseenter);
-		floatingEl.addEventListener('mouseleave', handleFloatingMouseleave);
 	}
-
-	document.addEventListener('click', handleDocumentClick, true);
 
 	onUnmounted(() => {
 		wrapperEl.removeEventListener('contextmenu', handleClick);
@@ -166,14 +187,11 @@ onMounted(() => {
 		wrapperEl.removeEventListener('mouseenter', handleMouseover);
 		wrapperEl.removeEventListener('mouseleave', handleMouseleave);
 
-		floatingEl.removeEventListener('mouseenter', handleFloatingMouseenter);
-		floatingEl.removeEventListener('mouseleave', handleFloatingMouseleave);
-
 		document.removeEventListener('click', handleDocumentClick, true);
 	});
 });
 
-defineExpose({ isVisible, handleClick });
+defineExpose({ isVisible, isPinned, handleClick });
 </script>
 
 <template>
@@ -182,14 +200,17 @@ defineExpose({ isVisible, handleClick });
 			<slot
 				name="title"
 				:is-visible="isVisible"
+				:is-pinned="isPinned"
 			/>
 		</div>
 		<transition name="fade">
 			<div
-				v-show="isVisible"
+				v-if="isVisible"
 				ref="floating"
 				:style="enhancedFloatingStyles"
 				class="submenu"
+				@mouseenter="handleFloatingMouseenter"
+				@mouseleave="handleFloatingMouseleave"
 			>
 				<div class="inner" :style="{ padding: `${props.offset}px` }">
 					<div class="scroll-wrapper">
