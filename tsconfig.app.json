@@ -14,7 +14,7 @@
 		"composite": true,
 		"declaration": true,
 		"noEmit": true,
-
+		"ignoreDeprecations": "6.0",
 		"baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
