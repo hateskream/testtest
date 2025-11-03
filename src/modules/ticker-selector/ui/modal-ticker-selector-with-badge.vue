@@ -6,6 +6,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useQueryTickerSelector } from '../queries';
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
 import { ModalBadge } from '@/modules/widgets/base';
+import { MarketType } from '@/modules/market';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';
 
@@ -13,12 +14,16 @@ interface IProps {
 	selectionMode?: 'single' | 'multiple';
 	enableSelectedInfo?: boolean;
 	displayVariant?: 'default' | 'new';
+	searchPlaceholder?: string;
+	marketTypes?: MarketType[];
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	selectionMode: 'multiple',
 	enableSelectedInfo: true,
 	displayVariant: 'default',
+	searchPlaceholder: 'Start typing the ticker...',
+	marketTypes: () => Object.values(MarketType),
 });
 
 const selectedTickers = defineModel<string[]>({
@@ -84,6 +89,8 @@ const selectedTickersMapped = computed(() => {
 				:selection-mode="props.selectionMode"
 				:tickers="data.tickers"
 				:enable-selected-info="props.enableSelectedInfo"
+				:search-placeholder="props.searchPlaceholder"
+				:market-types="props.marketTypes"
 				@select="emits('select', $event)"
 				@unselect="emits('unselect', $event)"
 				@select-all="emits('selectAll', $event)"

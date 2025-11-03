@@ -39,8 +39,11 @@ function handleUpdate(e: Event) {
 	font-size: 13px;
 	line-height: normal;
 	text-align: left;
-	color: var(--text-color-base-100);
 	background-color: inherit;
 	border: none;
+
+	&::placeholder {
+		color: var(--text-color-base-100);
+	}
 }
 </style>

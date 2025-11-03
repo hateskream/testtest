@@ -1,11 +1,12 @@
 import {
-	SymbolType,
 	type ColumnType,
 	type ISymbolCell,
 	type SymbolDto,
+	SymbolType,
 	type TableRow,
 	type TableRowDto,
 } from '@/modules/cell';
+import { MarketType } from '@/modules/market';
 
 export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
@@ -60,6 +61,14 @@ export const SymbolToName: Record<SymbolType, string> = {
 	[SymbolType.Crypto]: 'Cryptocurrency',
 	[SymbolType.Forex]: 'Forex',
 	[SymbolType.PlaneText]: 'Text',
+};
+
+export const MarketToSymbol: Record<MarketType, SymbolType> = {
+	[MarketType.Crypto]: SymbolType.Crypto,
+	[MarketType.Stock]: SymbolType.Stock,
+	[MarketType.Forex]: SymbolType.Forex,
+	[MarketType.Commodities]: SymbolType.Commodity,
+	[MarketType.Indices]: SymbolType.Index,
 };
 
 export function getMappedRow(item: TickerDto): ITickerMapped {

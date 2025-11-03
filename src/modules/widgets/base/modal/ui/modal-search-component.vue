@@ -2,6 +2,12 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { BaseSearch } from '../..';
 
+interface IModalSearchProps {
+	placeholder?: string;
+}
+
+const props = defineProps<IModalSearchProps>();
+
 const model = defineModel<string>({
 	required: true,
 });
@@ -18,6 +24,7 @@ const model = defineModel<string>({
 
 		<base-search
 			v-model="model"
+			:placeholder="props.placeholder"
 		/>
 	</div>
 </template>
