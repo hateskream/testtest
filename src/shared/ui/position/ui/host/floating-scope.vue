@@ -2,7 +2,7 @@
 import { computed, inject, onUnmounted, watch } from 'vue';
 
 import { createClickOutsideHandler, matchesTrigger } from '../../utils';
-import { FLOATING_KEY } from '../../composables';
+import { FLOATING_KEY, providePinnedLevel, providePinnedStack } from '../../composables';
 import { type FloatingContentRenderable, type FloatingManager } from '../../model';
 
 const props = defineProps<{
@@ -11,6 +11,9 @@ const props = defineProps<{
 
 const manager = inject<FloatingManager>(FLOATING_KEY)!;
 const floating = manager.scopes.get(props.scope)!;
+
+providePinnedLevel(1);
+const stack = providePinnedStack();
 
 const { content } = floating;
 
@@ -29,6 +32,19 @@ const normalizedContent = computed<FloatingContentRenderable[]>(() => {
 });
 
 function handleClickOutside(e: PointerEvent) {
+	const target = e.target as HTMLElement;
+
+	if (target && target.closest('[data-subposition]')) {
+		return;
+	}
+
+	if (stack.hasPinned()) {
+		e.stopImmediatePropagation();
+		e.stopPropagation();
+		stack.closeLast();
+		return;
+	}
+
 	createClickOutsideHandler(e, floating.reference.value, floating.content.value, floating.close);
 }
 

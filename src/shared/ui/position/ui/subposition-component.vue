@@ -4,6 +4,7 @@ import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
 import type { IFloatingOptions } from '../model';
 import { matchesTrigger } from '../utils';
+import { providePinnedLevel, usePinnedLevel, usePinnedStack } from '../composables';
 
 interface IPositionComponentEmits {
 	(e: 'mouseover'): void;
@@ -22,6 +23,9 @@ const props = withDefaults(defineProps<ISubpositionProps>(), {
 	hoverPadding: 8,
 });
 
+const parentLevel = usePinnedLevel();
+const level = providePinnedLevel(parentLevel+1);
+
 const emits = defineEmits<IPositionComponentEmits>();
 
 const reference = useTemplateRef<HTMLElement>('reference');
@@ -30,6 +34,17 @@ const wrapper = useTemplateRef<HTMLElement>('wrapper');
 
 const isVisible = ref(false);
 const isPinned = ref(false);
+
+const stack = usePinnedStack();
+let clear: (() => void) | null = null;
+
+function pin() {
+	clear = stack.push(level, handleDocumentClick);
+}
+
+function unpin() {
+	clear?.();
+}
 
 const { floatingStyles, placement } = useFloating(reference, floating, {
 	strategy: props.strategy,
@@ -73,9 +88,9 @@ function handleClick() {
 	if (!isPinned.value) {
 		isPinned.value = true;
 		isVisible.value = true;
+		pin();
 	} else {
-		isPinned.value = false;
-		isVisible.value = false;
+		unpin();
 	}
 }
 
@@ -146,17 +161,10 @@ function handleFloatingMouseleave(e: MouseEvent) {
 	hideTimeout.value = null;
 }
 
-const handleDocumentClick = (event: Event) => {
-	const target = event.target as Element;
-	if (wrapper.value?.contains(target)) {
-		return;
-	}
-	if (floating.value?.contains(target)) {
-		return;
-	}
+function handleDocumentClick() {
 	isPinned.value = false;
 	isVisible.value = false;
-};
+}
 
 onMounted(() => {
 	const wrapperEl = wrapper.value;
@@ -168,7 +176,6 @@ onMounted(() => {
 
 	const { trigger } = props;
 
-	document.addEventListener('click', handleDocumentClick, true);
 	triggerEl.addEventListener('click', handleClick);
 
 	if (matchesTrigger(trigger, 'contextmenu')) {
@@ -186,8 +193,6 @@ onMounted(() => {
 		triggerEl.removeEventListener('click', handleClick);
 		wrapperEl.removeEventListener('mouseenter', handleMouseover);
 		wrapperEl.removeEventListener('mouseleave', handleMouseleave);
-
-		document.removeEventListener('click', handleDocumentClick, true);
 	});
 });
 
@@ -195,7 +200,11 @@ defineExpose({ isVisible, isPinned, handleClick });
 </script>
 
 <template>
-	<div ref="wrapper">
+	<div
+		ref="wrapper"
+		data-subposition
+		:data-subposition-level="level"
+	>
 		<div ref="reference">
 			<slot
 				name="title"

@@ -6,10 +6,6 @@ export function createClickOutsideHandler(
 	floating: HTMLElement | null,
 	stop: () => void,
 ) {
-	const rootId =
-		(floating as HTMLElement)?.getAttribute?.('data-floating-root') ??
-		(trigger as HTMLElement)?.getAttribute?.('data-floating-root');
-
 	const isVirtual = !!(trigger && !(trigger as HTMLElement).contains);
 
 	if (isVirtual) {
@@ -19,17 +15,12 @@ export function createClickOutsideHandler(
 		return;
 	}
 
-	if (!rootId) {
-		if (
-			trigger &&
-			!(trigger as HTMLElement).contains(e.target as Node) &&
-			floating &&
-			!floating.contains(e.target as Node)
-		) {
-			stop();
-		}
-		return;
+	if (
+		trigger &&
+		!(trigger as HTMLElement).contains(e.target as Node) &&
+		floating &&
+		!floating.contains(e.target as Node)
+	) {
+		stop();
 	}
-
-	stop();
 }
