@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { WidgetType } from '@/modules/dashboard-group';
-import { createWidget, type IWidget } from './widget';
+import { createWidget, type DisplayVariant, type IWidget } from './widget';
 export interface ISection {
 	id: string;
 	name: string;
@@ -16,6 +16,7 @@ export interface ISectionPreset {
 		widgetType: WidgetType;
 		defaultState: string;
 		height: number;
+		defaultDisplayVariant: DisplayVariant;
 		maxCountRow?: number;
 	}[];
 }
@@ -26,8 +27,8 @@ export function createSectionFromPreset({ widgets, name, width }: ISectionPreset
 		name,
 		width,
 		widgets: widgets
-			.map(({ widgetType, defaultState, height, maxCountRow }) =>
-				createWidget(widgetType, height, defaultState, maxCountRow),
+			.map(({ widgetType, defaultState, height, maxCountRow, defaultDisplayVariant }) =>
+				createWidget(widgetType, height, defaultDisplayVariant, defaultState, maxCountRow),
 			),
 	};
 }

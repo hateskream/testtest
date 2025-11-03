@@ -2,72 +2,89 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
 
+export type DisplayVariant = 'chart' | 'tile' | 'bar' | 'list' | 'default';
+
 export interface IWidgetPreset {
 	widgetType: WidgetType;
+	displayVariants: DisplayVariant[];
 	name: string;
 }
 
 type Preset = Omit<IWidgetPreset, 'widgetType'>;
 
-const FearGreed: Preset = {
-	name: 'Fear & Greed',
-};
-
-const Market: Preset = {
-	name: 'Market',
-};
-
-const Price: Preset = {
+const ChartPrice: Preset = {
 	name: 'Price',
-};
-
-const News: Preset = {
-	name: 'News',
-};
-
-const Watchlist: Preset = {
-	name: 'Watchlist',
-};
-
-const Performance: Preset = {
-	name: 'Performance',
-};
-
-const MarketCap: Preset = {
-	name: 'MarketCap',
-};
-
-const AltcoinSeason: Preset = {
-	name: 'Altcoin Season',
-};
-
-const BitcoinDominance: Preset = {
-	name: 'Dominance',
+	displayVariants: ['chart', 'tile'],
 };
 
 const TopIndices: Preset = {
 	name: 'Top Indices YTD',
+	displayVariants: ['list'],
+};
+
+const Performance: Preset = {
+	name: 'Performance',
+	displayVariants: ['bar', 'list'],
+};
+
+const MarketCap: Preset = {
+	name: 'Market cap',
+	displayVariants: ['chart', 'tile'],
+};
+
+const BitcoinDominance: Preset = {
+	name: 'Dominance',
+	displayVariants: ['chart', 'tile', 'bar'],
+};
+
+const Price: Preset = {
+	name: 'Price',
+	displayVariants: ['list'],
+};
+
+const News: Preset = {
+	name: 'News',
+	displayVariants: ['default'],
 };
 
 const Calendar: Preset = {
 	name: 'Calendar',
+	displayVariants: ['default'],
+};
+
+const FearGreed: Preset = {
+	name: 'Fear & Greed',
+	displayVariants: ['default'],
+};
+
+const Market: Preset = {
+	name: 'Market',
+	displayVariants: ['default'],
+};
+
+const Watchlist: Preset = {
+	name: 'Watchlist',
+	displayVariants: ['default'],
+};
+
+const AltcoinSeason: Preset = {
+	name: 'Altcoin Season',
+	displayVariants: ['default'],
 };
 
 const Heatmap: Preset = {
 	name: 'Heatmap',
-};
-
-const ChartPrice: Preset = {
-	name: 'Chart',
+	displayVariants: ['default'],
 };
 
 const Exchange: Preset = {
 	name: 'Exchange',
+	displayVariants: ['default'],
 };
-
 
 const EthGas: Preset = {
 	name: 'ETH Gas',
+	displayVariants: ['default'],
 };
 
 const presets: Record<WidgetType, Preset> = {
@@ -99,6 +116,7 @@ function createPreset(widgetType: WidgetType): IWidgetPreset {
 
 export interface IWidget extends IWidgetPreset {
 	height: number;
+	displayVariant: DisplayVariant;
 	defaultStateType: string;
 	maxCountRow?: number;
 	id: string;
@@ -107,6 +125,7 @@ export interface IWidget extends IWidgetPreset {
 export function createWidget(
 	widgetType: WidgetType,
 	height: number,
+	displayVariant: DisplayVariant,
 	defaultStateType = '',
 	maxCountRow?: number,
 ) : IWidget {
@@ -117,6 +136,7 @@ export function createWidget(
 		height,
 		id: uuidv4(),
 		defaultStateType,
+		displayVariant,
 		maxCountRow,
 	};
 }
@@ -125,6 +145,7 @@ export function rehydrateWidget(
 	id: string,
 	widgetType: string,
 	height: number,
+	displayVariant: DisplayVariant,
 	defaultStateType: string,
 	maxCountRow?: number,
 ): IWidget | null {
@@ -145,6 +166,7 @@ export function rehydrateWidget(
 		...preset,
 		id,
 		height,
+		displayVariant,
 		defaultStateType,
 		maxCountRow,
 	};

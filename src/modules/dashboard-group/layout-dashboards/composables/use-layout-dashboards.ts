@@ -17,10 +17,13 @@ const WidgetPresetSchema = z.object({
 
 export type WidgetPreset = z.infer<typeof WidgetPresetSchema>;
 
+const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default']);
+
 const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
 	height: z.number(),
+	displayVariant: DisplayVariantSchema,
 	maxCountRow: z.number().optional(),
 });
 
@@ -128,6 +131,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					name: widget.name,
 					height: widget.height,
 					maxCountRow: widget.maxCountRow,
+					displayVariant: widget.displayVariant,
 				})),
 			})),
 		})),
@@ -145,7 +149,15 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 				name: s.name,
 				width: s.width,
 				widgets: s.widgets
-					.map(w => rehydrateWidget(w.id, w.widgetType, w.height, w.defaultStateType, w.maxCountRow))
+					.map(w =>
+						rehydrateWidget(
+							w.id,
+							w.widgetType,
+							w.height,
+							w.displayVariant,
+							w.defaultStateType,
+							w.maxCountRow,
+						))
 					.filter(w => w !== null),
 			})),
 		})),
