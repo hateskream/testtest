@@ -47,10 +47,9 @@ const virtualRef = computed(() => createVirtualFloatingNode({
 }));
 
 watchEffect(() => {
+	portal.value?.close();
 	if (props.isOpen) {
 		portal.value?.openAt(virtualRef);
-	} else {
-		portal.value?.close();
 	}
 });
 
