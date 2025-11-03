@@ -82,6 +82,8 @@ export enum ColumnType {
 	DEXRank = 'DEXRank',
 	Country = 'country',
 	NextClosedDay = 'nextClosedDay',
+
+	Performance = 'Performance',
 }
 
 export enum CellType {
@@ -349,6 +351,8 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.DEXRank]: CellType.Number,
 	[ColumnType.Country]: CellType.Text,
 	[ColumnType.NextClosedDay]: CellType.Text,
+
+	[ColumnType.Performance]: CellType.Percent,
 };
 
 export type ColumnToCell = {
@@ -427,6 +431,8 @@ export type ColumnToCell = {
 	[ColumnType.DEXRank]: INumberCell;
 	[ColumnType.Country]: ITextCell;
 	[ColumnType.NextClosedDay]: ITextCell;
+
+	[ColumnType.Performance]: IPercentCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

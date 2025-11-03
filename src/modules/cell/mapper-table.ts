@@ -58,6 +58,7 @@ function mapCellToTable(cell: Cell): unknown {
 	if (cell.cellType === CellType.Empty) {
 		return mapEmptyToTable(cell);
 	}
+
 	return cellTypeToTableMapper[cell.cellType](cell);
 }
 

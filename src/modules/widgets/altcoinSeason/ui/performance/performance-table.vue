@@ -21,11 +21,11 @@ const genericColumns = computed(() =>
 
 const genericRows = computed(() =>
 	props.rows.map(ticker => {
-		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
+		const percent = { ...ticker[ColumnType.Performance] };
 
 		return mapRow({
 			...ticker,
-			[ColumnType.ChangePrice24hPercent]: percent,
+			[ColumnType.Performance]: percent,
 		});
 	}),
 );

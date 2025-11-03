@@ -451,4 +451,10 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Next closed day',
 		groupName: 'Next closed day',
 	},
+	[ColumnType.Performance]: {
+		columnName: 'Performance',
+		tooltip: 'Performance',
+		settingsName: 'Performance',
+		groupName: 'Performance',
+	},
 };
