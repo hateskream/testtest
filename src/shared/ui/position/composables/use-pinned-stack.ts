@@ -54,5 +54,5 @@ export function providePinnedStack() {
 }
 
 export function usePinnedStack() {
-	return inject<ReturnType<typeof providePinnedStack>>(PINNED_STACK_KEY)!;
+	return inject<ReturnType<typeof providePinnedStack> | undefined>(PINNED_STACK_KEY, undefined);
 }

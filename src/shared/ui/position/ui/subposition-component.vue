@@ -39,7 +39,7 @@ const stack = usePinnedStack();
 let clear: (() => void) | null = null;
 
 function pin() {
-	clear = stack.push(level, handleDocumentClick);
+	clear = stack?.push(level, handleDocumentClick) ?? null;
 }
 
 function unpin() {

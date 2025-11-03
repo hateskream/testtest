@@ -8,9 +8,5 @@ export function providePinnedLevel(level = 1) {
 }
 
 export function usePinnedLevel() {
-	const level = inject<number>(PINNED_LEVEL_KEY);
-	if (level == null) {
-		throw new Error('PinnedLevel is not provided');
-	}
-	return level;
+	return inject<number>(PINNED_LEVEL_KEY, 1);
 }
