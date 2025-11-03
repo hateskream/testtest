@@ -2,15 +2,14 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseWidgetTvComponent } from '../../base/index.ts';
-import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
-import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
-import { BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
-
-import PreloaderComponent from './preloader-component.vue';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemSwitch } from '@/modules/widgets/base';
+import { PreloaderComponent } from '../common';
+import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import { useBitcoinDominanceStore } from '../../store';
+import { useQueryBintcoinDominance } from '../../queries';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../common/base-view.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -49,16 +48,20 @@ const emit = defineEmits<{
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<base-error-component
-				v-if="isError"
-				@retry="refetch"
-			/>
+			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
 				:data="data"
 				:meta="meta"
-			/>
+				:class="classes.content"
+			>
+				<template #ticker-selector>
+					<modal-ticker-selector-with-badge
+						v-model="bitcoinDominanceStore.selectedTickers"
+					/>
+				</template>
+			</view-component>
 		</template>
 		<template #change-display>
 			<modal-item-switch
@@ -84,3 +87,10 @@ const emit = defineEmits<{
 		</template>
 	</base-widget-tv-component>
 </template>
+
+<style module="classes">
+.content {
+	padding: 0 16px 18px;
+	overflow: hidden;
+}
+</style>

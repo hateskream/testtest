@@ -8,7 +8,6 @@ import { PriceDashboard } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
-import { BitcoinDominance } from '@/modules/widgets/bitcoin-dominance';
 import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
@@ -16,6 +15,8 @@ import { PriceChartDashboard } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
 import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
+import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
+import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
 
 export interface ISize {
 	w: number;
@@ -59,7 +60,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
 	[WidgetType.TopIndices]: TopIndicesWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
@@ -77,7 +78,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
 	[WidgetType.TopIndices]: TopIndicesWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,

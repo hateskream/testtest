@@ -167,6 +167,12 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultDisplayVariant: 'chart',
 				},
 				{
+					defaultState: 'none',
+					height: 175,
+					widgetType:  WidgetType.BitcoinDominance,
+					defaultDisplayVariant: 'chart',
+				},
+				{
 					defaultState: 'crypto',
 					height: 400,
 					widgetType: WidgetType.MarketCap,

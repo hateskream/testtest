@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
-import { useBitcoinDominanceStore } from '../store/bitcoin-dominance';
+import { useBitcoinDominanceStore } from '../../store/bitcoin-dominance';
 import type { IMeta } from '@/modules/dashboard-group';
 import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import type { IBitcoinDominanceDomain } from '../api';
+import type { IBitcoinDominanceDomain } from '../../api';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -56,9 +55,7 @@ watch(
 
 <template>
 	<div :class="classes.root">
-		<modal-ticker-selector-with-badge
-			v-model="bitcoinDominanceStore.selectedTickers"
-		/>
+		<slot name=ticker-selector />
 
 		<div v-if="activeListSorted.length  > 0" :class="classes.marketCapCurrencyAllData">
 			<div style="flex-grow: 1;">
@@ -172,8 +169,6 @@ watch(
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	padding: 0 16px 18px;
-	overflow: hidden;
 	gap: 16px;
 }
 

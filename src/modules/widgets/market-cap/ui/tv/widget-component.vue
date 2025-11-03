@@ -54,9 +54,11 @@ const emit = defineEmits<{
 				:meta="meta"
 				:class="classes.content"
 			>
-				<modal-ticker-selector-with-badge
-					v-model="marketCap.selectedTickers"
-				/>
+				<template #ticker-selector>
+					<modal-ticker-selector-with-badge
+						v-model="marketCap.selectedTickers"
+					/>
+				</template>
 			</view-component>
 		</template>
 		<template #change-display>

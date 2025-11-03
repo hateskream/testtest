@@ -1,3 +1,2 @@
-import DashboardComponent from './ui/dashboard-component.vue';
-
-export { DashboardComponent as BitcoinDominance };
+export { BitcoinDominanceTvWidget } from './ui/tv';
+export { BitcoinDominanceDashboardWidget } from './ui/dashboard';
