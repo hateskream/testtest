@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
+import { BaseWidgetTvComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	NewsContentWrapper,
@@ -86,7 +86,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -192,7 +192,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				@toggle-ticker="toggleTicker"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 <style module="classes">
 .titleContainer {

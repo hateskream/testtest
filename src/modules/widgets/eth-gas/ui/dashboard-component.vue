@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { BaseDashboardComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useEthGas } from '../composables';
 
@@ -24,7 +24,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component :meta="props.meta" :has-reset="false">
+	<base-widget-tv-component :meta="props.meta" :has-reset="false">
 		<template #title>
 			{{ props.meta.name }}
 		</template>
@@ -49,7 +49,7 @@ const emit = defineEmits<{
 				@reset="resetAllChanges"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 
 <style module="classes">

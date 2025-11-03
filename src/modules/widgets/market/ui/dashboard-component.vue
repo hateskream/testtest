@@ -5,7 +5,7 @@ import { useQueryMarket } from '../queries';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useMarket } from '../composables';
 import { NONE_SET_FILTER } from '../model';
-import { BaseErrorComponent, BaseDashboardComponent, ModalSubmenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
 import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
@@ -70,7 +70,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -107,5 +107,5 @@ const emit = defineEmits<{
 				</template>
 			</modal-submenu>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

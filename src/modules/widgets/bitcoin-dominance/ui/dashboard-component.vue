@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../base/index.ts';
 import { useQueryBintcoinDominance } from '../queries/use-query-bitcoin-dominance.ts';
 import { useBitcoinDominanceStore } from '../store/bitcoin-dominance.ts';
 import { BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
@@ -37,7 +37,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="bitcoinDominanceStore.resetAll"
@@ -82,5 +82,5 @@ const emit = defineEmits<{
 				Chart
 			</modal-item-switch>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

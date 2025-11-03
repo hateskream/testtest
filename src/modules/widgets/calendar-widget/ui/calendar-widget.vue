@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useCalendarState } from '@/modules/calendar';
 
@@ -61,7 +61,7 @@ const isLoading = computed(
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAll"
@@ -101,5 +101,5 @@ const isLoading = computed(
 				@reset-all="resetAll"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent } from '@/modules/widgets/base/';
+import { BaseWidgetTvComponent } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../queries/get-top-indices';
 import { ALL_COLUMNS } from '../model';
@@ -12,7 +12,7 @@ import TopIndicesLoader from './layouts/loader-layout.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./layouts/main-layout.vue'),
 	loadingComponent: TopIndicesLoader,
-	errorComponent: BaseDashboardComponent,
+	errorComponent: BaseWidgetTvComponent,
 });
 
 interface ITopIndicesWidgetProps {
@@ -35,7 +35,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		:has-reset="false"
 		@delete="emit('delete')"
@@ -60,7 +60,7 @@ const emit = defineEmits<{
 				:columns="ALL_COLUMNS"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 
 <style module="classes">

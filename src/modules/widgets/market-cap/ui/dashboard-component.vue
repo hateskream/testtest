@@ -4,7 +4,7 @@ import { computed, defineAsyncComponent } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
 import { useMarketCapStore } from '../store/market-cap.ts';
-import { BaseErrorComponent, BaseDashboardComponent, ModalItemCheckbox } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemCheckbox } from '@/modules/widgets/base';
 
 import PreloaderComponent from './preloader-component.vue';
 
@@ -34,7 +34,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="marketCap.resetAll"
@@ -68,5 +68,5 @@ const emit = defineEmits<{
 				Change, %
 			</modal-item-checkbox>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

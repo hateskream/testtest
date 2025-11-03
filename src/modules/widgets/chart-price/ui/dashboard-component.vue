@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent } from '../../base';
+import { BaseWidgetTvComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useChartPrice } from '../composables';
 import { BaseErrorComponent, ModalSubmenu } from '@/modules/widgets/base';
@@ -50,7 +50,7 @@ function updateTicker(newValue: string[]) {
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -87,5 +87,5 @@ function updateTicker(newValue: string[]) {
 				</template>
 			</modal-submenu>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

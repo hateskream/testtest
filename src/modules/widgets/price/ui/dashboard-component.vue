@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent } from '../../base';
+import { BaseWidgetTvComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
@@ -49,7 +49,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -77,5 +77,5 @@ const emit = defineEmits<{
 		<template #change-display>
 			<rcm-price-component v-model="currentSettings" />
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

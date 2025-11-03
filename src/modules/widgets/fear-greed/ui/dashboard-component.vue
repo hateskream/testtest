@@ -2,7 +2,7 @@
 
 import { defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useFearGreed } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -71,5 +71,5 @@ const emit = defineEmits<{
 		<template #change-display>
 			<rcm-fear-greed-component v-model="viewState" />
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
