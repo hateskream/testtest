@@ -1,0 +1,38 @@
+[
+    {
+        "id": "Crypto-BTC-Bitcoin",
+        "symbol": "BTC",
+        "name": "Bitcoin",
+				"dominance": {
+					"current": 58.97,
+					"yesterday": 59.25,
+					"week": 59.21,
+					"year": 58.93
+				},
+        "color": "rgb(247, 169, 104)"
+    },
+    {
+        "id": "Crypto-SOL-Solana",
+        "symbol": "SOL",
+        "name": "Solana",
+				"dominance": {
+					"current": 2.75,
+					"yesterday": 2.79,
+					"week": 2.72,
+					"year": 3.36
+				},
+        "color": "rgb(42, 211, 98)"
+    },
+    {
+        "id": "Crypto-ETH-Ethereum",
+        "symbol": "ETH",
+        "name": "Ethereum",
+				"dominance": {
+					"current": 12.7,
+					"yesterday": 12.59,
+					"week": 12.68,
+					"year": 12.97
+				},
+        "color": "rgb(211, 67, 42)"
+    }
+]
