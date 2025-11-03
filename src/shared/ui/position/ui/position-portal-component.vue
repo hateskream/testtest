@@ -34,10 +34,6 @@ const renderNode = computed(() => {
 });
 
 function handleOpen(reference?: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
-	if (isVisible.value) {
-		return;
-	}
-
 	isVisible.value = true;
 
 	floating.open({
@@ -51,10 +47,6 @@ function handleOpen(reference?: MaybeRefOrGetter<ReferenceElement>, opts?: IFloa
 }
 
 function handleClose() {
-	if (!isVisible.value) {
-		return;
-	}
-
 	floating.close();
 }
 
