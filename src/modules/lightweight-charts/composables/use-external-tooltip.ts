@@ -101,7 +101,7 @@ function createHandler(
 }
 
 export function useExternalTooltip(
-	args: IUseExternalTooltipOptions,
+	args: IUseExternalTooltipOptions = {},
 ) {
 	const state = reactive<IUseExternalTooltipState>({
 		visible: false,

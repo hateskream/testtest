@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import { useBitcoinDominanceStore } from '../../store/bitcoin-dominance.ts';
-import { useQueryBintcoinDominance } from '../../queries/use-query-bitcoin-dominance.ts';
+import { useDominance } from '../../composables';
+
+import DominanceFiltersPanel from '../common/dominance-filters-panel.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/base-view.vue'),
@@ -20,13 +20,18 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const bitcoinDominanceStore = useBitcoinDominanceStore();
-
-const { data, isLoading, isError, refetch } = useQueryBintcoinDominance(
-	computed(() => bitcoinDominanceStore.selectedTickers),
-);
-
-const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
+const {
+	displaySettings,
+	selectedTickers,
+	activeDateRange,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useDominance({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 </script>
 
 <template>
@@ -36,9 +41,12 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 		:all-display-variants="props.meta.allDisplayVariants"
 	>
 		<template #filters>
-			<modal-ticker-selector-with-badge
-				v-model="bitcoinDominanceStore.selectedTickers"
-				display-variant="new"
+			<dominance-filters-panel
+				v-model:selected-tickers="selectedTickers"
+				v-model:date-range="activeDateRange"
+				:meta="props.meta"
+				:display-settings="displaySettings"
+				:class="classes.filters"
 			/>
 		</template>
 		<template #title>
@@ -46,12 +54,30 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 		</template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<preloader-component v-else-if="isLoading || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
-				v-else-if="data"
+				v-else-if="data?.length"
+				v-model:date-range="activeDateRange"
+				:selected-tickers="selectedTickers"
 				:data="data"
-				:meta="meta"
+				:meta="props.meta"
+				:display-settings="displaySettings"
+				:class="classes.component"
 			/>
 		</template>
 	</base-widget-dashboard>
 </template>
+
+<style module="classes">
+.filters {
+	margin-bottom: 16px;
+}
+
+.preloader {
+	padding: 0;
+}
+
+.component {
+	padding: 0;
+}
+</style>

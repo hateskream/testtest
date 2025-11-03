@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemSwitch } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import { useBitcoinDominanceStore } from '../../store';
-import { useQueryBintcoinDominance } from '../../queries';
+import { useDominance } from '../../composables';
+import { UiEmptyState } from '@/shared/ui/empty-state';
+import { UiPillButton } from '@/shared/ui/pill';
+
+import DominanceFiltersPanel from '@/modules/widgets/bitcoin-dominance/ui/common/dominance-filters-panel.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/base-view.vue'),
@@ -20,13 +22,21 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const bitcoinDominanceStore = useBitcoinDominanceStore();
-
-const { data, isLoading, isError, refetch } = useQueryBintcoinDominance(
-	computed(() => bitcoinDominanceStore.selectedTickers),
-);
-
-const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
+const {
+	displaySettings,
+	selectedTickers,
+	activeDateRange,
+	applyStateToParent,
+	resetAllChanges,
+	resetAllFilters,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useDominance({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -39,58 +49,62 @@ const emit = defineEmits<{
 	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
-		@reset="bitcoinDominanceStore.resetAll"
+		@reset="resetAllChanges"
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@apply-changes="applyStateToParent"
 	>
 		<template #title>
 			{{ props.meta.name }}
 		</template>
 		<template #content>
-			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<dominance-filters-panel
+				v-model:selected-tickers="selectedTickers"
+				v-model:date-range="activeDateRange"
+				:meta="props.meta"
+				:display-settings="displaySettings"
+				:class="classes.filters"
+			/>
+			<base-error-component
+				v-if="isError"
+				@retry="refetch"
+			/>
+			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else-if="data"
+				v-else-if="data?.length"
+				v-model:date-range="activeDateRange"
+				:selected-tickers="selectedTickers"
 				:data="data"
-				:meta="meta"
-				:class="classes.content"
-			>
-				<template #ticker-selector>
-					<modal-ticker-selector-with-badge
-						v-model="bitcoinDominanceStore.selectedTickers"
-					/>
+				:meta="props.meta"
+				:display-settings="displaySettings"
+			/>
+			<ui-empty-state v-else>
+				<template #footer>
+					<ui-pill-button :class="classes.reset" @click="resetAllFilters">
+						Reset filters
+					</ui-pill-button>
 				</template>
-			</view-component>
+			</ui-empty-state>
 		</template>
 		<template #change-display>
-			<modal-item-switch
-				:model-value="bitcoinDominanceStore.isShowIndicator"
-				@update:model-value="bitcoinDominanceStore.toggleShowIndicator"
-			>
-				Segmented indicator
-			</modal-item-switch>
-
-			<modal-item-switch
-				:model-value="bitcoinDominanceStore.isShowHistorical"
-				@update:model-value="bitcoinDominanceStore.toggleShowHistorical"
-			>
-				Historical values
-			</modal-item-switch>
-
-			<modal-item-switch
-				:model-value="bitcoinDominanceStore.isShowChart"
-				@update:model-value="bitcoinDominanceStore.toggleShowChart"
-			>
-				Chart
-			</modal-item-switch>
+			<modal-item-switch v-model="displaySettings.isShowIndicator">Segmented indicator</modal-item-switch>
+			<modal-item-switch v-model="displaySettings.isShowHistorical">Historical values</modal-item-switch>
+			<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
 		</template>
 	</base-widget-tv-component>
 </template>
 
 <style module="classes">
-.content {
-	padding: 0 16px 18px;
-	overflow: hidden;
+.filters {
+	padding: 0 16px;
+	margin-bottom: 5px;
+}
+
+.reset {
+	&:hover {
+		color: #ffffff;
+		background: rgb(51 51 51 / 80%);
+	}
 }
 </style>

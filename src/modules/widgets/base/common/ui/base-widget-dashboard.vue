@@ -107,5 +107,6 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 	display: flex;
 	flex: 1;
 	flex-direction: column;
+	overflow-y: hidden;
 }
 </style>

@@ -1,165 +1,124 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+import { computed } from 'vue';
 
-import { useBitcoinDominanceStore } from '../../store/bitcoin-dominance';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ChartBitcoinDominance } from '@/modules/lightweight-charts';
-import { RangeChart } from '@/shared/ui/chart-range';
-import type { IBitcoinDominanceDomain } from '../../api';
+import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
+import {
+	DominanceDateRange,
+	type IDisplaySettings,
+	type IDominanceSnapshot,
+	type IDominanceSnapshotValues,
+} from '../../model';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
-
+import DominanceHistoricalGrid from './historical/dominance-historical-grid.vue';
+import DominanceSegments from './segments/dominance-segments.vue';
+import DominanceHistoryChart from './dominance-history-chart.vue';
 
 interface IViewComponentProps {
 	meta: IMeta;
-	data: IBitcoinDominanceDomain[];
+	data: IDominanceSnapshot[];
+	displaySettings: IDisplaySettings;
+	selectedTickers: string[];
 }
 
 const props = defineProps<IViewComponentProps>();
-const chartMarketCapRef = useTemplateRef('chart');
 
-const activeListSorted = computed(() => {
-	return [...props.data].sort((a, b) => +b.dominance - +a.dominance );
-});
+const activeDateRange = defineModel<DominanceDateRange>('dateRange', { required: true });
 
-const totalOtherDominance = computed(() => {
-	return (100 - activeListSorted.value.reduce((acc, item) => acc + +item.dominance, 0)).toFixed(2);
-});
-
-const bitcoinDominanceStore = useBitcoinDominanceStore();
-
-const prevIds = ref<string[]>([]);
-
-watch(
-	() => props.data,
-	async (newData: IBitcoinDominanceDomain[]) => {
-		await nextTick();
-		const chart = chartMarketCapRef.value;
-		if (!chart) {
-			return;
-		}
-
-		for (let i = prevIds.value.length - 1; i >= 0; i -= 1) {
-			chart.removeTicker(i);
-		}
-
-		for (const d of newData) {
-			chart.addTicker(d.color, d.symbol);
-		}
-
-		prevIds.value = newData.map(d => d.id);
-	},
-	{ immediate: true, flush: 'post' },
+const sortedSnapshots = computed(() => [...props.data].sort(
+	(a, b) => +b.dominance.current - +a.dominance.current),
 );
+
+const otherDominanceValues = computed(() => {
+	return sortedSnapshots.value.reduce((acc, item) => {
+		acc.current -= item.dominance.current;
+		acc.yesterday -= item.dominance.yesterday;
+		acc.week -= item.dominance.week;
+		acc.year -= item.dominance.year;
+
+		return acc;
+	}, { current: 100, yesterday: 100, week: 100, year: 100 } as IDominanceSnapshotValues);
+});
+
+const dateRangeToRangeChart: Record<DominanceDateRange, RangeChartType> = {
+	[DominanceDateRange.Day]: RangeChart['24H'],
+	[DominanceDateRange.Week]: RangeChart['7D'],
+	[DominanceDateRange.Month]: RangeChart['1M'],
+	[DominanceDateRange.SixMonths]: RangeChart['6M'],
+	[DominanceDateRange.Year]: RangeChart['1Y'],
+	[DominanceDateRange.All]: RangeChart['ALL'],
+};
+
+const chartRanges = Object.values(DominanceDateRange).map(key => dateRangeToRangeChart[key]);
+
+const activeChartRange = computed(() => dateRangeToRangeChart[activeDateRange.value]);
+
+function selectDateRange(rangeChart: RangeChartType) {
+	const dateRangeFilter = Object.entries(dateRangeToRangeChart)
+		.find(([_, value]) => value === rangeChart);
+
+	if (dateRangeFilter) {
+		activeDateRange.value = dateRangeFilter[0] as DominanceDateRange;
+	}
+}
+
+const isShowSegments = computed(() => props.displaySettings.isShowIndicator || !props.displaySettings.isShowHistorical);
+const isShowHistorical = computed(() => props.displaySettings.isShowHistorical && props.meta.size.w > 1 &&
+	(props.meta.size.w >= 2 && props.meta.size.h < 3 || props.meta.size.w >= 3 || props.meta.size.h >= 5),
+);
+
+const isTopColumnView = computed(() => props.meta.size.w < 3 || props.meta.size.h < 3);
+const isTopWrapView = computed(() => props.meta.size.w <= 3 && props.meta.size.h > 5);
+
+const isSmall = computed(() => props.meta.size.w === 1);
 </script>
 
 <template>
 	<div :class="classes.root">
-		<slot name=ticker-selector />
-
-		<div v-if="activeListSorted.length  > 0" :class="classes.marketCapCurrencyAllData">
-			<div style="flex-grow: 1;">
-				<div  :class="classes.marketCapCurrencyDominanceList">
-					<div
-						v-for="item in activeListSorted"
-						:key="item.symbol"
-						:class="classes.marketCapCurrencyDominanceItem"
-					>
-						<div :class="classes.marketCapCurrencyDominanceName">
-							<div :style="{backgroundColor: item.color}"></div>
-							<span>
-								{{ item.symbol }}
-							</span>
-						</div>
-
-						<div :class="classes.marketCapCurrencyDominanceValue">
-							{{ item.dominance }}%
-						</div>
-					</div>
-
-					<div
-						:class="classes.marketCapCurrencyDominanceItem"
-					>
-						<div :class="classes.marketCapCurrencyDominanceName">
-							<div :style="{backgroundColor: '#Fff'}"></div>
-							<span>Other</span>
-						</div>
-
-						<div :class="classes.marketCapCurrencyDominanceValue">
-							{{ totalOtherDominance }}%
-						</div>
-					</div>
-				</div>
-
-				<div v-if="bitcoinDominanceStore.isShowIndicator" :class="classes.marketCapDominanceLine">
-					<div
-						v-for="item in activeListSorted"
-						:key="item.symbol"
-						:class="classes.marketCapDominanceLineItem"
-						:style="{background: item.color, width: `${item.dominance}%`}"
-					/>
-					<div
-						:class="classes.marketCapDominanceLineItem"
-						:style="{background: '#fff', width: `${totalOtherDominance}%`}"
-					/>
-				</div>
-			</div>
-
-			<div v-if="bitcoinDominanceStore.isShowHistorical" :class="classes.marketCapCurrencyList">
-				<div
-					v-for="item in activeListSorted"
-					:key="item.symbol"
-					:class="classes.marketCapCurrency"
-				>
-
-					<div :class="classes.marketCapCurrencyName">
-						<div :style="{backgroundColor: item.color}"></div>
-						<span>
-							{{ item.symbol }}
-						</span>
-					</div>
-
-					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeYerstaday }}%
-					</div>
-
-					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeWeek }}%
-					</div>
-
-
-					<div :class="classes.marketCapCurrencyChange">
-						{{ item.changeYear }}%
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-
-		<template
-			v-if="bitcoinDominanceStore.isShowChart && meta.size.h >= 7 && activeListSorted.length > 0"
+		<div
+			v-if="sortedSnapshots.length > 0"
+			:class="[
+				classes.top,
+				{ [classes.column]: isTopColumnView, [classes.wrap]: isTopWrapView , [classes.small]: isSmall }
+			]"
 		>
-			<div :class="classes.chartWrapper">
-				<chart-bitcoin-dominance
-					ref="chart"
-					:hide-axis="meta.size.w  <= 2 || meta.size.h <= 7"
-					height="100%"
+			<dominance-segments
+				v-if="props.displaySettings.isShowIndicator || isShowSegments"
+				:snapshots="sortedSnapshots"
+				:other="otherDominanceValues"
+				:class="classes.segments"
+				:is-show-segments="isShowSegments"
+				:is-show-indicator="props.displaySettings.isShowIndicator"
+			/>
+			<dominance-historical-grid
+				v-if="isShowHistorical"
+				:snapshots="sortedSnapshots"
+				:other="otherDominanceValues"
+				:is-show-today="!props.displaySettings.isShowIndicator"
+				:class="classes.historical"
+				:meta="props.meta"
+			/>
+		</div>
+		<template
+			v-if="props.displaySettings.isShowChart && meta.size.h > 5 && sortedSnapshots.length > 0"
+		>
+			<dominance-history-chart
+				:meta="props.meta"
+				:date-range="activeDateRange"
+				:data="sortedSnapshots"
+				:selected-tickers="props.selectedTickers"
+				:class="classes.chart"
+			/>
+			<div :class="classes.rangeWrapper">
+				<chart-range
+					v-show="meta.size.h >= 8 && meta.size.w >=3"
+					:active-range="activeChartRange"
+					:list="chartRanges"
+					disable-change
+					@select="selectDateRange"
 				/>
 			</div>
-			<chart-range
-				v-show="meta.size.h >= 8 && meta.size.w >=3"
-				:class="classes.range"
-				:active-range="RangeChart['ALL']"
-				:list="[
-					RangeChart['1D'],
-					RangeChart['1W'],
-					RangeChart['1M'],
-					RangeChart['6M'],
-					RangeChart['1Y'],
-					RangeChart['ALL']
-				]"
-			/>
 		</template>
 	</div>
 </template>
@@ -169,145 +128,54 @@ watch(
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	gap: 16px;
-}
-
-.range {
-	margin-bottom: 10px;
-}
-
-.chartWrapper {
-	flex: 1;
-	height: 100%;
 	overflow: hidden;
-
-	/* background-color: red; */
-}
-
-.marketCapCurrencyAllData {
-	display: flex;
-	flex-wrap: wrap;
 	gap: 16px;
 }
 
-.marketCapCurrencyDominanceList {
+.top {
 	display: flex;
-	flex-wrap: wrap;
-	max-height: 170px;
-	overflow-y: auto;
-	row-gap: 6px;
+	column-gap: 40px;
+	row-gap: 16px;
+	padding: 10px 16px 16px;
+	min-height: 0;
+	overflow: hidden;
 }
 
-.marketCapCurrencyDominanceItem {
-	display: flex;
+.top.column {
 	flex-direction: column;
-	width: 80px;
 }
 
-.marketCapCurrency {
-	display: flex;
-	align-items: center;
-	height: 17px;
-	margin-bottom: 4px;
-	background-color: var(--bg-color-surface-03);
-	border-radius: 16px;
-	gap: 6px;
-	padding-inline: 6px;
+.top.wrap {
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
-.marketCapCurrencyName {
-	display: flex;
-	align-items: center;
-	padding-right: 4px;
-	gap: 6px;
+.segments {
+	flex: 1 1 auto;
+	max-height: 165px;
 }
 
-.marketCapCurrencyName > div {
-	width: 4px;
-	height: 4px;
-	border-radius: 100%;
+.top.small .segments {
+	min-height: 0;
 }
 
-.marketCapCurrencyName > span {
-	width: 40px;
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	border-right: 1px solid var(--border-color-base-300);
+.top:not(.column) .segments {
+	align-self: flex-end;
 }
 
-
-.marketCapCurrencyDominanceName {
-	display: flex;
-	align-items: center;
-	padding-right: 4px;
-	gap: 6px;
-}
-
-.marketCapCurrencyDominanceName > div {
-	width: 4px;
-	height: 4px;
-	border-radius: 100%;
-}
-
-.marketCapCurrencyDominanceName > span {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-}
-
-.marketCapCurrencyDominanceValue {
-	font-weight: 400;
-	font-size: 15px;
-	color: #ffffff;
-}
-
-.marketCapCurrencyFdv {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-500);
-}
-
-.marketCapCurrencyList {
+.historical {
 	flex-grow: 1;
 	min-width: 300px;
-	max-height: 120px;
-	overflow-y: auto;
+	max-height: 165px;
+	min-height: 0;
 }
 
-.marketCapCurrencyChange {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	font-weight: 400;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-	border-right: 1px solid var(--border-color-base-300);
+.chart {
+	padding-right: 16px;
 }
 
-.marketCapCurrency .marketCapCurrencyChange:last-child {
-	border-right: none;
-}
-
-
-.marketCapDominanceLine {
-	display: flex;
-	align-items: center;
-	margin-top: 10px;
-}
-
-.marketCapDominanceLineItem {
-	height: 14px;
-}
-
-.marketCapDominanceLine .marketCapDominanceLineItem:first-child {
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
-}
-
-.marketCapDominanceLine .marketCapDominanceLineItem:last-child {
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
+.rangeWrapper {
+	margin-bottom: 10px;
+	padding: 0 16px;
 }
 </style>
