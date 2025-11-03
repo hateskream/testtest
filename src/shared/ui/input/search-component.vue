@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const props = withDefaults(defineProps<{
@@ -8,6 +10,14 @@ const props = withDefaults(defineProps<{
 });
 
 const model = defineModel<string>();
+
+const input = useTemplateRef('input');
+
+function focus() {
+	input.value?.focus();
+}
+
+defineExpose({ focus });
 </script>
 
 <template>
@@ -19,6 +29,7 @@ const model = defineModel<string>();
 			height="20px"
 		/>
 		<input
+			ref="input"
 			v-model="model"
 			type="text"
 			:placeholder="props.placeholder"

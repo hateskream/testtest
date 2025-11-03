@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { BaseSearch } from '../..';
 
@@ -11,6 +13,14 @@ const props = defineProps<IModalSearchProps>();
 const model = defineModel<string>({
 	required: true,
 });
+
+const searchRef = useTemplateRef('search');
+
+function focus() {
+	searchRef.value?.focus();
+}
+
+defineExpose({ focus });
 </script>
 
 <template>
@@ -23,6 +33,7 @@ const model = defineModel<string>({
 		/>
 
 		<base-search
+			ref="search"
 			v-model="model"
 			:placeholder="props.placeholder"
 		/>

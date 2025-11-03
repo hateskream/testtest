@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, useTemplateRef } from 'vue';
+import { computed, type CSSProperties, useTemplateRef, watch } from 'vue';
 
 import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 import { ModalBadgeTitle } from '../index';
@@ -15,10 +15,20 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
+interface IEmits {
+	(e: 'change-visible', state: boolean): void;
+}
+
+const emit = defineEmits<IEmits>();
+
 // FIXME: Idk why but it doesnt work without type
 const positionRef = useTemplateRef<{ isVisible: boolean }>('position');
 
 const isVisible = computed(() => positionRef.value?.isVisible ?? false);
+
+watch(isVisible, (value) => {
+	emit('change-visible', value);
+});
 </script>
 
 <template>
@@ -41,7 +51,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 		</template>
 
 		<template #content>
-			<slot name="content" />
+			<slot name="content" :is-visible="isVisible" />
 		</template>
 	</ui-position>
 </template>

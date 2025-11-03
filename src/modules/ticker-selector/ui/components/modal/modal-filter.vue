@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, useTemplateRef } from 'vue';
 
 import {
 	FilterListType,
@@ -195,6 +195,14 @@ function handleSelectAll(groupName: SymbolType) {
 		}
 	}
 }
+
+const searchRef = useTemplateRef('search');
+
+function focusSearch() {
+	searchRef.value?.focus();
+}
+
+defineExpose({ focusSearch });
 </script>
 
 
@@ -222,7 +230,11 @@ function handleSelectAll(groupName: SymbolType) {
 				</div>
 
 				<div :class="classes.search">
-					<modal-search v-model="query" :placeholder="searchPlaceholder" />
+					<modal-search
+						ref="search"
+						v-model="query"
+						:placeholder="searchPlaceholder"
+					/>
 				</div>
 			</div>
 
