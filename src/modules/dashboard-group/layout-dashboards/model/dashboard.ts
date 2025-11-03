@@ -162,7 +162,25 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'crypto',
-					height: 226,
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
 					widgetType: WidgetType.MarketCap,
 					defaultDisplayVariant: 'chart',
 				},

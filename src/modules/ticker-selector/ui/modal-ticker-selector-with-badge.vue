@@ -12,11 +12,13 @@ import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.v
 interface IProps {
 	selectionMode?: 'single' | 'multiple';
 	enableSelectedInfo?: boolean;
+	displayVariant?: 'default' | 'new';
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	selectionMode: 'multiple',
 	enableSelectedInfo: true,
+	displayVariant: 'default',
 });
 
 const selectedTickers = defineModel<string[]>({
@@ -36,7 +38,7 @@ const selectedTickersMapped = computed(() => {
 </script>
 
 <template>
-	<modal-badge>
+	<modal-badge :display-variant="props.displayVariant">
 		<template #title>
 			<div
 				v-if="selectedTickersMapped.length > 0"

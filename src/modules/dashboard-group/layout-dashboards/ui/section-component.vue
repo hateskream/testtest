@@ -35,6 +35,8 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 					:col-count="cellSize.count"
 					:column-width="cellSize.size"
 					:parent-height="props.parentHeight"
+					:active-display-variant="widget.displayVariant"
+					:all-display-variants="widget.displayVariants"
 				/>
 			</div>
 		</div>

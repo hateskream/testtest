@@ -29,12 +29,17 @@ const normalizeWidth = computed(() => viewportWidth.value / sections.value.lengt
 const preparedSlides = computed(
 	() => sections.value
 		.map(s => ({
+			// ...s,
+			// width: isMobile.value
+			// 	? viewportWidth.value
+			// 	: isSectionWidthLessThanViewport.value
+			// 		? normalizeWidth.value
+			// 		: s.width,
 			...s,
 			width: isMobile.value
 				? viewportWidth.value
-				: isSectionWidthLessThanViewport.value
-					? normalizeWidth.value
-					: s.width,
+
+				: s.width,
 		})),
 );
 

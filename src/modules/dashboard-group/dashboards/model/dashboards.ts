@@ -2,7 +2,7 @@ import type { Component } from 'vue';
 
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
-import { MarketCapDashboard } from '@/modules/widgets/market-cap';
+import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
 import { NewsDashboard } from '@/modules/widgets/news';
 import { PriceDashboard } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
@@ -15,7 +15,7 @@ import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { PriceChartDashboard } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
-import { WidgetType } from '@/modules/dashboard-group';
+import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
 
 export interface ISize {
 	w: number;
@@ -40,6 +40,8 @@ export interface IMeta {
 		name: string;
 	}[];
 	maxCountRowTable?: number;
+	activeDisplayVariant: DisplayVariant;
+	allDisplayVariants: DisplayVariant[];
 }
 
 interface IWidgetComponentProps {
@@ -48,10 +50,10 @@ interface IWidgetComponentProps {
 
 type WidgetComponent = Component<IWidgetComponentProps>;
 
-const components: Record<WidgetType, WidgetComponent> = {
+const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
-	[WidgetType.MarketCap]: MarketCapDashboard,
+	[WidgetType.MarketCap]: MarketCapTvWidget,
 	[WidgetType.News]: NewsDashboard,
 	[WidgetType.Price]: PriceDashboard,
 	[WidgetType.Watchlist]: WatchlistDashboard,
@@ -66,8 +68,26 @@ const components: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.EthGas]: EthGasDashboard,
 };
 
-export function getWidgetComponent(type: WidgetType) {
-	return components[type];
+const componentsDashboard: Record<WidgetType, WidgetComponent> = {
+	[WidgetType.FearGreed]: FearGreedDashboard,
+	[WidgetType.Market]: MarketDashboard,
+	[WidgetType.MarketCap]: MarketCapDashboardWidget,
+	[WidgetType.News]: NewsDashboard,
+	[WidgetType.Price]: PriceDashboard,
+	[WidgetType.Watchlist]: WatchlistDashboard,
+	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
+	[WidgetType.BitcoinDominance]: BitcoinDominance,
+	[WidgetType.TopIndices]: TopIndicesWidget,
+	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Heatmap]: HeatmapDashboard,
+	[WidgetType.ChartPrice]: PriceChartDashboard,
+	[WidgetType.Exchange]: ExchangesDashboard,
+	[WidgetType.EthGas]: EthGasDashboard,
+};
+
+export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {
+	return widgetVariant === 'dashboard' ? componentsDashboard[widgetType] : componentsTv[widgetType];
 }
 
 const PREFIX_FULL_VIEW = 'ephemeral';

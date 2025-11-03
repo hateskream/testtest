@@ -1,22 +1,30 @@
 <script setup lang="ts">
-import { computed, type CSSProperties } from 'vue';
+import { type CSSProperties } from 'vue';
 
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
 	color?: CSSProperties['color'];
 	paddingLeft?: CSSProperties['paddingLeft'];
+	displayVariant?: 'default' | 'new';
 }
-const props = defineProps<IProps>();
 
-const badgeColors = computed(() => ({
-	backgroundColor: props.backgroundColor ?? 'var(--bg-color-base-300)',
-	color: props.color ?? 'var(--text-color-base-300)',
-	paddingLeft: props.paddingLeft ?? '12px',
-}));
+const props = withDefaults(defineProps<IProps>(), {
+	backgroundColor: 'var(--bg-color-base-300)',
+	color: 'var(--text-color-base-300)',
+	paddingLeft: '12px',
+	displayVariant: 'default',
+});
 </script>
 
 <template>
-	<div :class="classes.title" :style="badgeColors">
+	<div
+		:class="classes.title"
+		:style="{
+			backgroundColor: props.backgroundColor,
+			color: props.color,
+			paddingLeft: props.paddingLeft,
+		}"
+	>
 		<slot />
 	</div>
 </template>

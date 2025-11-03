@@ -21,6 +21,7 @@ export {
 
 export {
 	LayoutDashboard,
+	type DisplayVariant,
 } from './layout-dashboards';
 
 export * from './core';

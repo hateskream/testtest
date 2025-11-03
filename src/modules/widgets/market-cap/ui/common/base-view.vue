@@ -4,9 +4,8 @@ import { nextTick, ref, useTemplateRef, watch } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group';
 import { RangeChart } from '@/shared/ui/chart-range';
-import { useMarketCapStore } from '../store/market-cap.ts';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector/index.ts';
-import type { IMarketCapDomain } from '../api/get-market-cap.ts';
+import { useMarketCapStore } from '../../store/market-cap.ts';
+import type { IMarketCapDomain } from '../../api/get-market-cap.ts';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartMarketCap from '@/modules/lightweight-charts/ui/chart-market-cap.vue';
@@ -57,9 +56,7 @@ watch(
 				{ justifyContent: 'space-between'}
 		"
 	>
-		<modal-ticker-selector-with-badge
-			v-model="marketCapStore.selectedTickers"
-		/>
+		<slot name=ticker-selector />
 
 		<div
 			v-if="data.length === 0"
@@ -203,8 +200,6 @@ watch(
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	padding: 0 16px 18px;
-	overflow: hidden;
 	gap: 16px;
 }
 

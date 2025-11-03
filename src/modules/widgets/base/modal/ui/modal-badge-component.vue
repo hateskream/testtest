@@ -10,7 +10,9 @@ interface IProps {
 	strategy?: 'fixed' | 'absolute';
 	uiPositionProps?: Omit<IPositionProps, 'strategy'>;
 	paddingLeft?: CSSProperties['paddingLeft'];
+	displayVariant?: 'default' | 'new';
 }
+
 const props = defineProps<IProps>();
 
 // FIXME: Idk why but it doesnt work without type
@@ -31,6 +33,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 				:background-color="props.backgroundColor"
 				:color="props.color"
 				:padding-left="props.paddingLeft"
+				:display-variant="props.displayVariant"
 			>
 				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->
 				<slot name="title" :is-visible="isVisible" />

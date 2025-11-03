@@ -2,14 +2,14 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { useQueryMarketCap } from '../queries/use-query-market-cap.ts';
-import { useMarketCapStore } from '../store/market-cap.ts';
+import { useQueryMarketCap } from '../../queries/use-query-market-cap.ts';
+import { useMarketCapStore } from '../../store/market-cap.ts';
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemCheckbox } from '@/modules/widgets/base';
-
-import PreloaderComponent from './preloader-component.vue';
+import { PreloaderComponent } from '../common';
+import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../common/base-view.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -52,7 +52,12 @@ const emit = defineEmits<{
 				v-else-if="data"
 				:data="data"
 				:meta="meta"
-			/>
+				:class="classes.content"
+			>
+				<modal-ticker-selector-with-badge
+					v-model="marketCap.selectedTickers"
+				/>
+			</view-component>
 		</template>
 		<template #change-display>
 			<modal-item-checkbox
@@ -70,3 +75,10 @@ const emit = defineEmits<{
 		</template>
 	</base-widget-tv-component>
 </template>
+
+<style module="classes">
+.content {
+	padding: 0 16px 18px;
+	overflow: hidden;
+}
+</style>

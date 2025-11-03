@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { getWidgetComponent, type IMeta } from '../../dashboards';
-import type { IWidget } from '../model';
+import type { DisplayVariant, IWidget } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
 import { calcSizeSideGridCell } from '../model/widget';
@@ -12,6 +12,8 @@ interface IWidgetComponentProps {
 	columnWidth: number;
 	colCount: number;
 	parentHeight: number;
+	activeDisplayVariant: DisplayVariant;
+	allDisplayVariants: DisplayVariant[];
 }
 
 const props = defineProps<IWidgetComponentProps>();
@@ -47,13 +49,15 @@ const meta = computed((): IMeta => ({
 	columnWidth: props.columnWidth,
 	rowHeight: cellSize.value.size,
 	maxCountRowTable: props.widget.maxCountRow,
+	activeDisplayVariant:  props.activeDisplayVariant,
+	allDisplayVariants: props.allDisplayVariants,
 }));
 
 </script>
 
 <template>
 	<component
-		:is="getWidgetComponent(props.widget.widgetType)"
+		:is="getWidgetComponent('dashboard',props.widget.widgetType)"
 		:meta="meta"
 		:style="{
 			height: `${height}px`
