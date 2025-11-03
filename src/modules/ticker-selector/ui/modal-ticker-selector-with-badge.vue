@@ -6,7 +6,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useQueryTickerSelector } from '../queries';
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
 import { ModalBadge } from '@/modules/widgets/base';
-import { MarketType } from '@/modules/market';
+import { marketToLabel, MarketType } from '@/modules/market';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';
 
@@ -40,6 +40,8 @@ const selectedTickersMapped = computed(() => {
 		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)
 		.map(getMappedRow);
 });
+
+const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
 </script>
 
 <template>
@@ -61,27 +63,21 @@ const selectedTickersMapped = computed(() => {
 						:type="item.symbolType"
 					/>
 				</div>
-
 				<template v-if="selectedTickers.length > 3">
 					+ {{ selectedTickers.length }}
 				</template>
 			</div>
-
-
 			<div
 				v-if="selectedTickers.length === 0"
-				:class="classes.title"
 			>
-				Crypto
+				{{previewLabel}}
 			</div>
-
 			<ui-icon
 				:id="IconIds.DropdownDown"
 				width="12"
 				height="12"
 			/>
 		</template>
-
 		<template #content>
 			<modal-filter
 				v-if="data"

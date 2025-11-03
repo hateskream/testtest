@@ -158,7 +158,7 @@ function handleToggleSelect(action: ITickerSelectAction) {
 	}
 
 	nextTick(() => {
-		if (props.modelValue.length === 0 && props.selectionMode === 'multiple') {
+		if (props.modelValue.length === 0 && props.selectionMode === 'multiple' && props.marketTypes.length > 1) {
 			viewMode.value = FilterListType.All;
 			activeGroup.value = null;
 		}
