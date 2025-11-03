@@ -101,6 +101,10 @@ function handleMouseover(e: MouseEvent) {
 		return;
 	}
 
+	if (stack?.hasPinnedLevel(level)) {
+		stack?.closeLevel(level);
+	}
+
 	if (hideTimeout.value) {
 		clearTimeout(hideTimeout.value);
 		hideTimeout.value = null;

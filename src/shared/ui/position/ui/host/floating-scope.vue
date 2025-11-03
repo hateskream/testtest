@@ -79,6 +79,7 @@ watch(floating.isOpen, (isOpen) => {
 		addEventListeners();
 	} else {
 		removeEventListeners();
+		stack.clear();
 	}
 }, { immediate: true });
 
