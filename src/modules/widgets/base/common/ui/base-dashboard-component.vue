@@ -204,6 +204,7 @@ function handleOpenFullView() {
 	flex: 1;
 	flex-direction: column;
 	overflow: hidden;
+	border-radius: inherit;
 }
 
 .control {
