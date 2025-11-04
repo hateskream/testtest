@@ -97,8 +97,8 @@ const emit = defineEmits<{
 
 <style module="classes">
 .filters {
-	padding: 0 16px;
 	margin-bottom: 5px;
+	padding: 0 16px;
 }
 
 .reset {

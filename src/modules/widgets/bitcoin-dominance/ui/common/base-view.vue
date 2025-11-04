@@ -134,11 +134,11 @@ const isSmall = computed(() => props.meta.size.w === 1);
 
 .top {
 	display: flex;
+	min-height: 0;
+	padding: 10px 16px 16px;
+	overflow: hidden;
 	column-gap: 40px;
 	row-gap: 16px;
-	padding: 10px 16px 16px;
-	min-height: 0;
-	overflow: hidden;
 }
 
 .top.column {
@@ -146,8 +146,7 @@ const isSmall = computed(() => props.meta.size.w === 1);
 }
 
 .top.wrap {
-	flex-direction: row;
-	flex-wrap: wrap;
+	flex-flow: row wrap;
 }
 
 .segments {
@@ -166,8 +165,8 @@ const isSmall = computed(() => props.meta.size.w === 1);
 .historical {
 	flex-grow: 1;
 	min-width: 300px;
-	max-height: 165px;
 	min-height: 0;
+	max-height: 165px;
 }
 
 .chart {
