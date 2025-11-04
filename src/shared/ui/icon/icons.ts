@@ -101,4 +101,20 @@ export enum IconIds {
 	ControlCheck = 'control-check',
 	ControlClose = 'control-close',
 	Prev = 'prev',
+
+	LogoWithoutText = 'logo-without-text',
+	Cashflow = 'cashflow',
+	Arbitrage = 'arbitrage',
+	Board = 'board',
+	Screen = 'screen',
+	Heat = 'heat',
+	Cal = 'cal',
+	News = 'news',
+	TV = 'tv',
+	SetUp = 'set-up',
+
+	AskAI = 'ask-ai',
+	Watch = 'watch',
+	Help = 'help',
+	Tray = 'tray',
 }

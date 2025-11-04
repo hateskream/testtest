@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import { LayoutDashboard } from '@/modules/dashboard-group';
-import { HomeMobile, LayoutComponent } from '@/modules/layout';
+import { HomeMobile, NewLayout } from '@/modules/layout';
 
 const isMobile = ref(window.innerWidth < 768);
 const isOpen = ref(false);
@@ -42,11 +42,9 @@ onBeforeUnmount(() => {
 		</transition>
 	</template>
 
-	<layout-component v-else :is-curtain-fixed="false">
-		<template #content>
-			<layout-dashboard />
-		</template>
-	</layout-component>
+	<new-layout v-else>
+		<layout-dashboard />
+	</new-layout>
 </template>
 
 <style module="classes">
