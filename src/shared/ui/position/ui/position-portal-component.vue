@@ -102,7 +102,10 @@ defineExpose({
 function handleClickOutside(e: PointerEvent) {
 	const target = e.target as HTMLElement;
 
-	if (target && target.closest('[data-subposition]')) {
+	if (
+		target && target.closest('[data-subposition]') ||
+		floatingRef.value && floatingRef.value.contains(target)
+	) {
 		return;
 	}
 
@@ -149,6 +152,7 @@ onUnmounted(() => {
 			v-if="isVisible"
 			ref="floating"
 			:style="floatingStyles"
+			data-position
 		>
 			<slot :close="handleClose" :is-visible="isVisible" />
 		</div>

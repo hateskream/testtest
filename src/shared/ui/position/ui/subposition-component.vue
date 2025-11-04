@@ -4,12 +4,7 @@ import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
 import type { IFloatingOptions } from '../model';
 import { matchesTrigger } from '../utils';
-import { providePinnedLevel, usePinnedLevel, usePinnedStack } from '../composables';
-
-interface IPositionComponentEmits {
-	(e: 'mouseover'): void;
-	(e: 'mouseleave'): void;
-}
+import { providePinnedLevel, useHoverEvents, usePinnedLevel, usePinnedStack } from '../composables';
 
 interface ISubpositionProps extends IFloatingOptions {
 	hoverPadding?: number;
@@ -21,29 +16,35 @@ const props = withDefaults(defineProps<ISubpositionProps>(), {
 	offset: 6,
 	strategy: 'fixed',
 	hoverPadding: 8,
+	openDelay: 20,
+	closeDelay: (_props) => {
+		if (_props.trigger && matchesTrigger(_props.trigger, ['hover'])) {
+			return 150;
+		}
+
+		return 0;
+	},
 });
 
 const parentLevel = usePinnedLevel();
-const level = providePinnedLevel(parentLevel+1);
+const level = providePinnedLevel(parentLevel + 1);
 
-const emits = defineEmits<IPositionComponentEmits>();
-
+const wrapper = useTemplateRef<HTMLElement>('wrapper');
 const reference = useTemplateRef<HTMLElement>('reference');
 const floating = useTemplateRef<HTMLElement>('floating');
-const wrapper = useTemplateRef<HTMLElement>('wrapper');
 
 const isVisible = ref(false);
 const isPinned = ref(false);
 
 const stack = usePinnedStack();
-let clear: (() => void) | null = null;
+let clearPinned: (() => void) | null = null;
 
 function pin() {
-	clear = stack?.push(level, handleDocumentClick) ?? null;
+	clearPinned = stack?.push(level, handleDocumentClick) ?? null;
 }
 
 function unpin() {
-	clear?.();
+	clearPinned?.();
 }
 
 const { floatingStyles, placement } = useFloating(reference, floating, {
@@ -53,32 +54,35 @@ const { floatingStyles, placement } = useFloating(reference, floating, {
 	whileElementsMounted: autoUpdate,
 });
 
-const showTimeout = ref<number | null>(null);
-const hideTimeout = ref<number | null>(null);
-
-const enhancedFloatingStyles = computed(() => {
-	if (!floatingStyles.value) {
-		return {};
-	}
-	const baseStyles = floatingStyles.value;
-
-	if (matchesTrigger(props.trigger, 'hover')) {
-		const padding = props.hoverPadding;
-		let paddingStyle: Record<string, string> = {};
-		if (placement.value?.startsWith('right')) {
-			paddingStyle = { paddingLeft: `${padding}px`, marginLeft: `-${padding}px` };
-		} else if (placement.value?.startsWith('left')) {
-			paddingStyle = { paddingRight: `${padding}px`, marginRight: `-${padding}px` };
-		} else if (placement.value?.startsWith('top')) {
-			paddingStyle = { paddingBottom: `${padding}px`, marginBottom: `-${padding}px` };
-		} else if (placement.value?.startsWith('bottom')) {
-			paddingStyle = { paddingTop: `${padding}px`, marginTop: `-${padding}px` };
+const {
+	onMouseEnter: onMouseEnterHandler,
+	onMouseLeave,
+	onFloatingEnter,
+	onFloatingLeave,
+} = useHoverEvents({
+	isPinned: isPinned,
+	show: () => {
+		if (!isVisible.value) {
+			isVisible.value = true;
 		}
-		return { ...baseStyles, ...paddingStyle };
+	},
+	hide: () => {
+		if (!isPinned.value && isVisible.value) {
+			isVisible.value = false;
+		}
+	},
+	triggerRef: reference,
+	openDelay: () => props.openDelay,
+	closeDelay: () => props.closeDelay,
+});
+
+function onMouseEnter() {
+	if (stack?.hasPinnedLevel(level)) {
+		return;
 	}
 
-	return baseStyles;
-});
+	onMouseEnterHandler();
+}
 
 function handleClick() {
 	if (!matchesTrigger(props.trigger, 'hover')) {
@@ -90,81 +94,43 @@ function handleClick() {
 		isVisible.value = true;
 		pin();
 	} else {
+		isPinned.value = false;
 		unpin();
 	}
-}
-
-function handleMouseover(e: MouseEvent) {
-	e.stopPropagation();
-
-	if (isPinned.value || stack?.hasPinnedLevel(level)) {
-		return;
-	}
-
-	if (hideTimeout.value) {
-		clearTimeout(hideTimeout.value);
-		hideTimeout.value = null;
-	}
-	if (isVisible.value || showTimeout.value) {
-		return;
-	}
-
-	isVisible.value = true;
-	emits('mouseover');
-	showTimeout.value = null;
-}
-
-function handleMouseleave() {
-	if (isPinned.value) {
-		return;
-	}
-
-	if (showTimeout.value) {
-		clearTimeout(showTimeout.value);
-		showTimeout.value = null;
-	}
-
-	isVisible.value = false;
-	emits('mouseleave');
-	hideTimeout.value = null;
-}
-
-function handleFloatingMouseenter() {
-	if (isPinned.value) {
-		return;
-	}
-
-	if (matchesTrigger(props.trigger, 'hover') && hideTimeout.value) {
-		clearTimeout(hideTimeout.value);
-		hideTimeout.value = null;
-	}
-}
-
-function handleFloatingMouseleave(e: MouseEvent) {
-	if (isPinned.value) {
-		return;
-	}
-
-	const related = e.relatedTarget as HTMLElement | null;
-
-	if (reference.value && related && reference.value.contains(related)) {
-		return;
-	}
-
-	if (showTimeout.value) {
-		clearTimeout(showTimeout.value);
-		showTimeout.value = null;
-	}
-
-	isVisible.value = false;
-	emits('mouseleave');
-	hideTimeout.value = null;
 }
 
 function handleDocumentClick() {
 	isPinned.value = false;
 	isVisible.value = false;
 }
+
+const enhancedFloatingStyles = computed(() => {
+	const base = floatingStyles.value ?? {};
+
+	if (!matchesTrigger(props.trigger, 'hover')) {
+		return base;
+	}
+
+	const padding = props.hoverPadding;
+	if (!placement.value) {
+		return base;
+	}
+
+	if (placement.value.startsWith('right')) {
+		return { ...base, paddingLeft: `${padding}px`, marginLeft: `-${padding}px` };
+	}
+	if (placement.value.startsWith('left')) {
+		return { ...base, paddingRight: `${padding}px`, marginRight: `-${padding}px` };
+	}
+	if (placement.value.startsWith('top')) {
+		return { ...base, paddingBottom: `${padding}px`, marginBottom: `-${padding}px` };
+	}
+	if (placement.value.startsWith('bottom')) {
+		return { ...base, paddingTop: `${padding}px`, marginTop: `-${padding}px` };
+	}
+
+	return base;
+});
 
 onMounted(() => {
 	const wrapperEl = wrapper.value;
@@ -174,25 +140,33 @@ onMounted(() => {
 		return;
 	}
 
-	const { trigger } = props;
-
 	triggerEl.addEventListener('click', handleClick);
 
-	if (matchesTrigger(trigger, 'contextmenu')) {
+	if (matchesTrigger(props.trigger, 'contextmenu')) {
 		wrapperEl.addEventListener('contextmenu', handleClick);
 	}
 
-	if (matchesTrigger(trigger, 'hover')) {
-		wrapperEl.addEventListener('mouseenter', handleMouseover);
-		wrapperEl.addEventListener('mouseleave', handleMouseleave);
+	if (matchesTrigger(props.trigger, 'hover')) {
+		wrapperEl.addEventListener('mouseenter', onMouseEnter);
+		wrapperEl.addEventListener('mouseleave', onMouseLeave);
+
+		floating.value?.addEventListener('mouseenter', onFloatingEnter, true);
+		floating.value?.addEventListener('mouseleave', onFloatingLeave, true);
 	}
 
 	onUnmounted(() => {
-		wrapperEl.removeEventListener('contextmenu', handleClick);
-		wrapperEl.removeEventListener('click', handleClick);
 		triggerEl.removeEventListener('click', handleClick);
-		wrapperEl.removeEventListener('mouseenter', handleMouseover);
-		wrapperEl.removeEventListener('mouseleave', handleMouseleave);
+
+		if (matchesTrigger(props.trigger, 'contextmenu')) {
+			wrapperEl.removeEventListener('contextmenu', handleClick);
+		}
+
+		if (matchesTrigger(props.trigger, 'hover')) {
+			wrapperEl.removeEventListener('mouseenter', onMouseEnter);
+			wrapperEl.removeEventListener('mouseleave', onMouseLeave);
+			floating.value?.removeEventListener('mouseenter', onFloatingEnter, true);
+			floating.value?.removeEventListener('mouseleave', onFloatingLeave, true);
+		}
 	});
 });
 
@@ -218,8 +192,6 @@ defineExpose({ isVisible, isPinned, handleClick });
 				ref="floating"
 				:style="enhancedFloatingStyles"
 				class="submenu"
-				@mouseenter="handleFloatingMouseenter"
-				@mouseleave="handleFloatingMouseleave"
 			>
 				<div class="inner" :style="{ padding: `${props.offset}px` }">
 					<div class="scroll-wrapper">
@@ -232,10 +204,6 @@ defineExpose({ isVisible, isPinned, handleClick });
 </template>
 
 <style scoped>
-.floating-content {
-	z-index: 101;
-}
-
 .inner {
 	border-radius: 6px;
 }

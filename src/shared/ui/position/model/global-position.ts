@@ -8,4 +8,6 @@ export interface IFloatingOptions {
 	offset?: number;
 	middleware?: Middleware[];
 	trigger?: FloatingTriggers | FloatingTriggers[];
+	openDelay?: number;
+	closeDelay?: number;
 }
