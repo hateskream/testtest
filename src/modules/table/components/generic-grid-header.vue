@@ -19,6 +19,7 @@ interface IProps {
 	enableRowActions?: boolean;
 	sticky?: boolean;
 	stickyFirstColumn?: boolean;
+	isFixedWidth?: boolean;
 }
 
 interface IEmits {
@@ -157,6 +158,27 @@ const draggableColumns = computed({
 });
 
 const shouldUseColspan = computed(() => !props.enableColumnSettings && props.enableRowActions);
+const calculateStyles = (index: number) => {
+	if (props.isFixedWidth) {
+		if (index === 0) {
+			return { width: '100%' };
+		} else {
+			return { width: '50%' };
+		}
+	}
+
+	return {
+		...(index !== 0 ?
+			{ width:
+					`calc(var(--col-${index}-width)
+					${shouldUseColspan.value && index + 1 === columns.length ? 70 : 0}px)` } : {}),
+
+		minWidth:
+			`calc(var(--col-${index}-min-width) +
+			${shouldUseColspan.value && index + 1 === columns.length ? 70 : 0}px)`,
+	};
+
+};
 
 </script>
 
@@ -187,13 +209,7 @@ const shouldUseColspan = computed(() => !props.enableColumnSettings && props.ena
 						}
 					]"
 					:title="column.label"
-					:style="{
-						...(index !== 0 ?
-							// eslint-disable-next-line @stylistic/max-len
-							{width:`calc(var(--col-${index}-width) ${shouldUseColspan && index + 1 === columns.length ? 70 : 0}px)`} : {}),
-						// eslint-disable-next-line @stylistic/max-len
-						minWidth:`calc(var(--col-${index}-min-width) + ${shouldUseColspan && index + 1 === columns.length ? 70 : 0}px)`
-					}"
+					:style="calculateStyles(index)"
 					:colspan="shouldUseColspan && index + 1 === columns.length ? 2 : 1"
 				>
 					<div :class="classes.headerContent">

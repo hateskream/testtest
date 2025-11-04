@@ -26,6 +26,7 @@ export interface IProps<T> {
 	// Data sources (one will be used based on mode)
 	sections?: IGenericTableSection<T>[];
 	rows?: IGenericTableRow<T>[];
+	isFixedWidth?: boolean;
 
 	// Common props
 	columns: IGenericTableColumn[];
@@ -62,6 +63,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	enableRowActions: true,
 	enableColumnSettings: false,
 	canAddSections: false,
+	isFixedWidth: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -397,6 +399,29 @@ const cancelAddSection = () => {
 	newSectionName.value = 'New section';
 	showAddSectionInput.value = false;
 };
+
+const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) => {
+	if (props.isFixedWidth) {
+		if (index === 0) {
+			return { width: '100%' };
+		} else {
+			return { width: '50%' };
+		}
+	}
+
+	return {
+		...(index !== 0 ?
+			{ width:
+					`calc(var(--col-${index}-width)
+					${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)` } : {}),
+
+		minWidth:
+			`calc(var(--col-${index}-min-width) +
+			${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)`,
+	};
+
+};
+
 </script>
 
 <template>
@@ -480,10 +505,7 @@ const cancelAddSection = () => {
 									&& stickyFirstColumn && hoveredRowId === getRowId(item),
 							}
 						]"
-						:style="{
-							...(cellIndex !== 0 ? {width: `var(--col-${cellIndex}-width)`} : {}),
-							minWidth: `var(--col-${cellIndex}-min-width)`
-						}"
+						:style="calculateStyles(cellIndex, columns)"
 					>
 						<slot
 							:name="`cell-${cellIndex}`"

@@ -77,7 +77,7 @@ const genericRows = computed(() =>
 
 <style scoped>
 :deep(.percentCell) {
-	padding-right: 34px;
+	padding-right: 24px;
 }
 
 :deep(.symbolCellText) {
@@ -85,6 +85,6 @@ const genericRows = computed(() =>
 }
 
 :deep(th:last-child) {
-	padding-right: 34px;
+	padding-right: 24px;
 }
 </style>

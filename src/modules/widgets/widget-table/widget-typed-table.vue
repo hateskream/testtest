@@ -38,6 +38,7 @@ export interface IProps<T> {
 	showHeader?: boolean;
 	tickerState?: ITickerState;
 	isUpdating?: boolean;
+	isFixedWidth?: boolean;
 }
 
 export interface IEmits<T> {
@@ -86,6 +87,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	sortConfig: () => ({ columnKey: '', direction: 'none' }),
 	showHeader: true,
 	isUpdating: false,
+	isFixedWidth: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -170,6 +172,7 @@ const getCellComponentForColumn = (
 </script>
 
 <template>
+	{{isFixedWidth}}
 	<generic-data-table
 		v-bind="props"
 		@update:columns="handleColumnsUpdate"

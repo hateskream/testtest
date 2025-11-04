@@ -32,6 +32,10 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+const isFixedWidth = computed(()=>{
+	return props.meta.size.w === 3;
+});
 </script>
 
 <template>
@@ -56,6 +60,7 @@ const emit = defineEmits<{
 
 			<view-component
 				v-else
+				:is-fixed-width="isFixedWidth"
 				:rows="rows"
 				:columns="ALL_COLUMNS"
 			/>

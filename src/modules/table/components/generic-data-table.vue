@@ -32,6 +32,7 @@ export interface IProps<T> {
 	canAddSections?: boolean;
 	isUpdating?: boolean;
 	showScrollbarsOnHover?: boolean; // New prop for hover behavior
+	isFixedWidth?: boolean;
 }
 
 export interface IEmits<T> {
@@ -286,6 +287,10 @@ const handleContainerMouseLeave = () => {
 	isContainerHovered.value = false;
 };
 
+const isFixedWidth = computed(()=>{
+	return props.isFixedWidth || visibleColumns.value.length === 2;
+});
+
 </script>
 
 <template>
@@ -307,9 +312,10 @@ const handleContainerMouseLeave = () => {
 				@mouseenter="handleContainerMouseEnter"
 				@mouseleave="handleContainerMouseLeave"
 			>
-				<table :class="classes.dataTable">
+				<table :class="classes.dataTable" :style="{width: isFixedWidth ? '100%' : 'auto'}">
 					<generic-grid-header
 						v-if="props.showHeader"
+						:is-fixed-width="isFixedWidth"
 						:columns="visibleColumns"
 						:all-columns="localColumns"
 						:sort-config="localSortConfig"
@@ -349,6 +355,7 @@ const handleContainerMouseLeave = () => {
 					</generic-grid-header>
 
 					<unified-table-content
+						:is-fixed-width="isFixedWidth"
 						:sections="isSectionedTable ? localSections : []"
 						:rows="isSectionedTable ? [] : localUnsortedRows"
 						:columns="visibleColumns"

@@ -9,6 +9,7 @@ import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.
 interface IViewComponentProps {
 	rows: TableRow[];
 	columns: ITableColumn[];
+	isFixedWidth: boolean;
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -30,6 +31,7 @@ const genericRows = computed(() =>
 		<div :class="classes.scrollable">
 			<widget-typed-table
 				:columns="genericColumns"
+				:is-fixed-width="isFixedWidth"
 				:rows="genericRows"
 				:enable-drag-drop="false"
 				:enable-column-reordering="true"
