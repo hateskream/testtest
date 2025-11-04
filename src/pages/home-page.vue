@@ -97,7 +97,7 @@ if (typeof window !== 'undefined') {
 		getGridInfo: () => dashboardStateUtility.getGridInfo(),
 		debugDashboardState: () => dashboardStateUtility.debugDashboardState(state),
 		generateDashboardLayout: () => dashboardStateUtility
-			.generateDashboardLayout(columnsNum.value, state.activeDashboard.value?.widgets || []),
+			.generateDashboardLayout(state.activeDashboard.value?.widgets || []),
 	});
 }
 </script>

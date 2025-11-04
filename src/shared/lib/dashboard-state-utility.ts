@@ -201,7 +201,7 @@ export function debugDashboardState(store: IDashboardGroupStore) {
 }
 
 export function generateDashboardLayout(
-	key: number,
+	// key: number,
 	widgets: IDashboardWidget[],
 ): unknown {
 	const formatted = widgets.map((w) => ({
