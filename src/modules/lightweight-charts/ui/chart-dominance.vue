@@ -26,8 +26,30 @@ const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
 const EMPTY_AXES_OPTIONS = {
-	y: { display: false },
-	x: { display: false },
+	y: { display: false,
+		grid: {
+			display: false,
+			drawBorder: false,
+		},
+		ticks: {
+			display: false,
+			padding: 0,
+		},
+		border: {
+			display: false,
+		} },
+	x: { display: false,
+		grid: {
+			display: false,
+			drawBorder: false,
+		},
+		ticks: {
+			display: false,
+			padding: 0,
+		},
+		border: {
+			display: false,
+		} },
 };
 
 const DEFAULT_VERTICAL_AXIS = {
@@ -163,6 +185,15 @@ const { state, handler } = useExternalTooltip({
 	valueSuffix: '%',
 	valuePrefix: '',
 	reversed: true,
+	transformTitle: (title) => {
+		return [(new Date(title[0])).toLocaleString(undefined, {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+		})];
+	},
 });
 
 function createGradient(context2D: CanvasRenderingContext2D, from: number, to: number, color: string) {
@@ -179,16 +210,17 @@ onMounted(() => {
 		return;
 	}
 
-	const labels = ['29 Jan 2013', '20 Mart 2017', '11 Apr 2021', '25 May 2021', '25 May 2025', '03 June 2025'];
-
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
 		data: {
-			labels,
 			datasets: buildDatasets(),
 		},
 		options: {
 			maintainAspectRatio: false,
+			layout: {
+				autoPadding: false,
+			},
+			normalized: true,
 			responsive: true,
 			interaction: {
 				mode: 'index',

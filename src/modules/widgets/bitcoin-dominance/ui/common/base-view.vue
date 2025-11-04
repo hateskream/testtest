@@ -20,6 +20,7 @@ interface IViewComponentProps {
 	data: IDominanceSnapshot[];
 	displaySettings: IDisplaySettings;
 	selectedTickers: string[];
+	segmentsClass?: string | string[];
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -70,7 +71,6 @@ const isShowHistorical = computed(() => props.displaySettings.isShowHistorical &
 
 const isTopColumnView = computed(() => props.meta.size.w < 3 || props.meta.size.h < 3);
 const isTopWrapView = computed(() => props.meta.size.w <= 3 && props.meta.size.h > 5);
-
 const isSmall = computed(() => props.meta.size.w === 1);
 </script>
 
@@ -80,6 +80,7 @@ const isSmall = computed(() => props.meta.size.w === 1);
 			v-if="sortedSnapshots.length > 0"
 			:class="[
 				classes.top,
+				props.segmentsClass,
 				{ [classes.column]: isTopColumnView, [classes.wrap]: isTopWrapView , [classes.small]: isSmall }
 			]"
 		>
@@ -90,6 +91,7 @@ const isSmall = computed(() => props.meta.size.w === 1);
 				:class="classes.segments"
 				:is-show-segments="isShowSegments"
 				:is-show-indicator="props.displaySettings.isShowIndicator"
+				:meta="props.meta"
 			/>
 			<dominance-historical-grid
 				v-if="isShowHistorical"
@@ -110,9 +112,8 @@ const isSmall = computed(() => props.meta.size.w === 1);
 				:selected-tickers="props.selectedTickers"
 				:class="classes.chart"
 			/>
-			<div :class="classes.rangeWrapper">
+			<div v-if="meta.size.h >= 8 && meta.size.w >= 3" :class="classes.rangeWrapper">
 				<chart-range
-					v-show="meta.size.h >= 8 && meta.size.w >=3"
 					:active-range="activeChartRange"
 					:list="chartRanges"
 					disable-change
@@ -135,7 +136,6 @@ const isSmall = computed(() => props.meta.size.w === 1);
 .top {
 	display: flex;
 	min-height: 0;
-	padding: 10px 16px 16px;
 	overflow: hidden;
 	column-gap: 40px;
 	row-gap: 16px;
@@ -158,19 +158,11 @@ const isSmall = computed(() => props.meta.size.w === 1);
 	min-height: 0;
 }
 
-.top:not(.column) .segments {
-	align-self: flex-end;
-}
-
 .historical {
 	flex-grow: 1;
 	min-width: 300px;
 	min-height: 0;
 	max-height: 165px;
-}
-
-.chart {
-	padding-right: 16px;
 }
 
 .rangeWrapper {

@@ -72,12 +72,4 @@ const {
 .filters {
 	margin-bottom: 16px;
 }
-
-.preloader {
-	padding: 0;
-}
-
-.component {
-	padding: 0;
-}
 </style>

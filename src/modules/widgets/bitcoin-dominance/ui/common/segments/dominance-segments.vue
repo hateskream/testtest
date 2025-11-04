@@ -76,8 +76,8 @@ const props = defineProps<IViewComponentProps>();
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	font-weight: 440;
-	font-size: 10px;
+	font-weight: 400;
+	font-size: 12px;
 	color: var(--text-color-base-300);
 }
 

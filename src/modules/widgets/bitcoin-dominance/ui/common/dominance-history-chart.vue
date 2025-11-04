@@ -89,9 +89,11 @@ watch(history, (value) => {
 }, { deep: true });
 
 const isNotData = computed(() => !history.value && isLoading.value);
+
+const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <= 7);
 </script>
 <template>
-	<div :class="classes.wrapper">
+	<div :class="[classes.wrapper, {[classes.visibleAxis]: !isHideAxis}]">
 		<base-error-component
 			v-if="isError"
 			@retry="refetch"
@@ -99,7 +101,7 @@ const isNotData = computed(() => !history.value && isLoading.value);
 		<ui-skeleton-group v-if="isNotData" />
 		<chart-dominance
 			v-else-if="history"
-			:hide-axis="meta.size.w <= 2 || meta.size.h <= 7"
+			:hide-axis="isHideAxis"
 			:range="props.dateRange"
 			:datasets="preparedDatasets"
 			height="100%"
@@ -112,5 +114,9 @@ const isNotData = computed(() => !history.value && isLoading.value);
 	flex: 1;
 	height: 100%;
 	overflow: hidden;
+}
+
+.wrapper.visibleAxis {
+	padding-right: 16px;
 }
 </style>

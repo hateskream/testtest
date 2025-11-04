@@ -78,6 +78,7 @@ const emit = defineEmits<{
 				:data="data"
 				:meta="props.meta"
 				:display-settings="displaySettings"
+				:segments-class="classes.segments"
 			/>
 			<ui-empty-state v-else>
 				<template #footer>
@@ -97,7 +98,7 @@ const emit = defineEmits<{
 
 <style module="classes">
 .filters {
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 	padding: 0 16px;
 }
 
@@ -106,5 +107,9 @@ const emit = defineEmits<{
 		color: #ffffff;
 		background: rgb(51 51 51 / 80%);
 	}
+}
+
+.segments {
+	padding: 10px 16px 16px;
 }
 </style>
