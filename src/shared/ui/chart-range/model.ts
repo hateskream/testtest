@@ -2,6 +2,8 @@ import type { RangeChart } from './types';
 
 export const RANGE_IN_SECONDS: { [x in RangeChart]: number } = {
 	'1D': 86400,
+	'24H': 86400,
+	'7D': 604800,
 	'1W': 604800,
 	'1M': 2592000,
 	'3M': 2592000 * 3,
