@@ -20,6 +20,7 @@ export interface IUseExternalTooltipOptions {
 	wrapperEl?: MaybeRefOrGetter<HTMLElement | null>;
 	valuePrefix?: string;
 	valueSuffix?: string;
+	reversed?: boolean;
 }
 
 export interface IUseExternalTooltipState {
@@ -47,17 +48,20 @@ function createRows(
 		bodyLines.forEach((body, i) => {
 			const legend = args.legends?.[i];
 			rows.push({
-				color: legend?.color ?? 'transparent',
+				color: legend?.color ?? 'red',
 				text: legend?.text ?? '',
 				value: `${args.valuePrefix}${body.toString()}${args.valueSuffix}`,
 			});
 		});
 	} else {
-		bodyLines.forEach((body) => {
+		bodyLines.forEach((body, i) => {
 			const [ticker, value] = body.toString().split(':');
 			const [symbol, color] = (ticker ?? '').split('-');
+
+			const labelColor = tooltip.labelColors?.[i]?.borderColor;
+
 			rows.push({
-				color: color ?? 'transparent',
+				color: color ?? labelColor ?? 'transparent',
 				text: symbol ?? '',
 				value: `${args.valuePrefix}${(value ?? '').trim()}${args.valueSuffix}`,
 			});
@@ -80,7 +84,12 @@ function createHandler(
 	}
 
 	state.title = [...tooltip.title];
-	state.rows = createRows(tooltip, args);
+
+	const rows = createRows(tooltip, args);
+
+	state.rows = args.reversed ? [...rows].reverse() : rows;
+
+
 	state.padding = Number(tooltip.options.padding ?? 8);
 
 	const { canvas } = chart;
