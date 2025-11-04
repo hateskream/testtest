@@ -578,5 +578,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		tooltip: 'Performance',
 		settingsName: 'Performance',
 		groupName: 'Performance',
+		minWidth: 100,
+		maxWidth: 200,
 	},
 };
