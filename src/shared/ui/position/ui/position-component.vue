@@ -1,59 +1,79 @@
 <script setup lang="ts">
 import {
+	autoUpdate,
+	flip,
+	offset,
+	shift,
+	useFloating,
+} from '@floating-ui/vue';
+import {
 	nextTick,
 	onMounted,
 	onUnmounted,
 	ref,
-	useSlots,
-	useTemplateRef,
+	useSlots, useTemplateRef,
 	watch,
 } from 'vue';
 
 import type { IFloatingOptions } from '../model';
-import { useFloatingContext } from '../composables';
-import { matchesTrigger } from '../utils';
+import { createClickOutsideHandler, matchesTrigger } from '../utils';
+import { providePinnedLevel, providePinnedStack } from '@/shared/ui/position';
 
-interface IPositionComponentEmits {
-	(e: 'mouseover'): void;
-	(e: 'mouseleave'): void;
-}
+import FloatingTeleport from '@/shared/ui/position/ui/host/floating-teleport.vue';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
-	scope: 'default',
 	placement: 'right-end',
 	trigger: 'click',
-	positionOffset: 6,
+	offset: 6,
 	strategy: 'fixed',
 });
 
-const emits = defineEmits<IPositionComponentEmits>();
-
 const slots = useSlots();
+
+const level = providePinnedLevel(1);
+const stack = providePinnedStack();
 
 const isVisible = ref(false);
 const isPinned = ref(false);
 
-const wrapperRef = useTemplateRef<HTMLElement>('wrapper');
-const referenceRef = useTemplateRef<HTMLElement>('reference');
+const wrapperRef = useTemplateRef('wrapper');
+const referenceRef = useTemplateRef('reference');
+const floatingRef = useTemplateRef('floating');
 
-const floating = useFloatingContext(props.scope);
+const { floatingStyles, update } = useFloating(
+	referenceRef,
+	floatingRef,
+	{
+		placement: props.placement,
+		strategy: props.strategy,
+		middleware: [
+			offset(props.offset),
+			flip(),
+			shift({ padding: 4 }),
+		],
+	},
+);
 
-function handleOpen() {
+let cleanup: (() => void) | null = null;
+
+async function handleOpen() {
 	if (isVisible.value || !slots.content) {
 		return;
 	}
 
 	isVisible.value = true;
 
-	floating.open({
-		reference: referenceRef,
-		content: () => slots.content?.() ?? null,
-		options: props,
-		onClose: () => {
-			isVisible.value = false;
-			isPinned.value = false;
-		},
-	});
+	await nextTick();
+
+	cleanup = autoUpdate(referenceRef.value!, floatingRef.value!, update);
+
+	if (matchesTrigger(props.trigger, ['click', 'contextmenu'])) {
+		document.body.addEventListener('pointerdown', handleClickOutside, true);
+	}
+
+	if (matchesTrigger(props.trigger, 'hover')) {
+		floatingRef.value?.addEventListener('mouseleave', handleMouseLeaveFloating, true);
+	}
 }
 
 function handleClose() {
@@ -63,25 +83,56 @@ function handleClose() {
 
 	isVisible.value = false;
 	isPinned.value = false;
-	floating.close();
+
+	cleanup?.();
+	cleanup = null;
+
+	document.body.removeEventListener('pointerdown', handleClickOutside, true);
+	floatingRef.value?.removeEventListener('mouseleave', handleMouseLeaveFloating, true);
 }
 
 watch(isVisible, (value) => {
-	if (value) {
-		handleOpen();
-	} else {
-		handleClose();
-	}
+	value ? handleOpen() : handleClose();
 });
+
+function handleClickOutside(e: PointerEvent) {
+	const target = e.target as HTMLElement;
+
+	if (target && target.closest('[data-subposition]')) {
+		return;
+	}
+
+	if (stack.hasPinned()) {
+		e.stopImmediatePropagation();
+		e.stopPropagation();
+		stack.closeLast();
+		return;
+	}
+
+	createClickOutsideHandler(
+		e,
+		referenceRef.value,
+		floatingRef.value,
+		handleClose,
+	);
+}
+
+function handleMouseLeaveFloating() {
+	if (isPinned.value) {
+		return;
+	}
+
+	handleClose();
+}
 
 async function handleContextMenu(event: MouseEvent) {
 	event.preventDefault();
 	isPinned.value = true;
 	await nextTick();
-	handleOpen();
+	await handleOpen();
 }
 
-function handleClick() {
+function handleClickWrapper() {
 	if (isVisible.value && isPinned.value) {
 		handleClose();
 	} else {
@@ -90,61 +141,62 @@ function handleClick() {
 	}
 }
 
-function handleMouseOver() {
+function handleMouseOverWrapper() {
 	if (!isVisible.value && !isPinned.value) {
-		emits('mouseover');
 		handleOpen();
 	}
 }
 
-function handleMouseLeave() {
+function handleMouseLeaveWrapper() {
 	if (!isPinned.value) {
-		emits('mouseleave');
 		handleClose();
 	}
 }
 
-onMounted(() => {
+function addEventListeners() {
 	const { trigger } = props;
 
-	const element = wrapperRef.value;
-
-	if (!element) {
-		return;
+	if (matchesTrigger(trigger, 'contextmenu')) {
+		wrapperRef.value?.addEventListener('contextmenu', handleContextMenu);
 	}
+	if (matchesTrigger(trigger, 'click')) {
+		wrapperRef.value?.addEventListener('click', handleClickWrapper);
+	}
+	if (matchesTrigger(trigger, 'hover')) {
+		wrapperRef.value?.addEventListener('mouseover', handleMouseOverWrapper);
+		wrapperRef.value?.addEventListener('mouseleave', handleMouseLeaveWrapper);
+	}
+}
+
+function removeEventListeners() {
+	const { trigger } = props;
 
 	if (matchesTrigger(trigger, 'contextmenu')) {
-		element.addEventListener('contextmenu', handleContextMenu);
+		wrapperRef.value?.removeEventListener('contextmenu', handleContextMenu);
 	}
-
 	if (matchesTrigger(trigger, 'click')) {
-		element.addEventListener('click', handleClick);
+		wrapperRef.value?.removeEventListener('click', handleClickWrapper);
 	}
-
 	if (matchesTrigger(trigger, 'hover')) {
-		element.addEventListener('mouseover', handleMouseOver);
-		element.addEventListener('mouseleave', handleMouseLeave);
+		wrapperRef.value?.removeEventListener('mouseover', handleMouseOverWrapper);
+		wrapperRef.value?.removeEventListener('mouseleave', handleMouseLeaveWrapper);
 	}
+}
 
-	onUnmounted(() => {
-		element.removeEventListener('contextmenu', handleContextMenu);
-		element.removeEventListener('click', handleClick);
-		element.removeEventListener('mouseover', handleMouseOver);
-		element.removeEventListener('mouseleave', handleMouseLeave);
-	});
+onMounted(() => {
+	addEventListeners();
 });
 
 onUnmounted(() => {
-	if (isVisible.value) {
-		floating.stop();
-	}
+	removeEventListeners();
+	handleClose();
 });
 
 defineExpose({
-	isVisible: isVisible,
-	isPinned: isPinned,
-	handleOpen: handleOpen,
-	handleClose: handleClose,
+	isVisible,
+	isPinned,
+	handleOpen,
+	handleClose,
 });
 
 defineSlots<{
@@ -155,7 +207,11 @@ defineSlots<{
 </script>
 
 <template>
-	<div ref="wrapper">
+	<div
+		ref="wrapper"
+		data-position
+		:data-position-level="level"
+	>
 		<div ref="reference">
 			<slot
 				name="title"
@@ -163,20 +219,26 @@ defineSlots<{
 				:is-pinned="isPinned"
 			/>
 		</div>
+
+		<floating-teleport>
+			<transition name="fade">
+				<div
+					v-if="isVisible"
+					ref="floating"
+					:style="floatingStyles"
+					class="floating-inner"
+				>
+					<slot name="content" />
+				</div>
+			</transition>
+		</floating-teleport>
 	</div>
 </template>
 
 <style scoped>
-.floating-content {
-	z-index: v-bind('101');
-}
-
-.floating-scroll-wrapper {
-	max-height: 80svh;
-	overflow-y: auto;
-}
-
 .floating-inner {
+	z-index: 101;
+	max-height: 80svh;
 	border-radius: 6px;
 }
 

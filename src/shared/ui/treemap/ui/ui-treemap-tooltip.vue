@@ -55,7 +55,7 @@ watchEffect(() => {
 
 watch([x, y], () => {
 	if (props.isOpen) {
-		portal.value?.floating.instance.update();
+		portal.value?.update();
 	}
 });
 
@@ -93,7 +93,6 @@ function prepareNumberValue(value: number, isPercent: boolean) {
 	<ui-position-portal
 		ref="portalRef"
 		placement="bottom-start"
-		scope="tooltip"
 		:offset="6"
 	>
 		<div class="container">

@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import {
-	computed,
-	onUnmounted,
+	autoUpdate,
+	useFloating,
+	offset,
+	flip,
+	shift,
+	type ReferenceElement,
+} from '@floating-ui/vue';
+import {
 	ref,
-	useSlots,
 	watch,
+	toValue,
+	nextTick,
+	onUnmounted,
+	useTemplateRef,
 	type MaybeRefOrGetter,
 } from 'vue';
-import type { ReferenceElement } from '@floating-ui/vue';
 
-import { createVirtualFloatingNode } from '../utils';
-import { useFloatingContext } from '../composables';
+import { FloatingTeleport } from '../ui';
+import { createVirtualFloatingNode, matchesTrigger } from '../utils';
+import { providePinnedLevel, providePinnedStack } from '../composables';
 import type { IFloatingOptions } from '../model';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
-	scope: 'default',
 	trigger: 'click',
 	placement: 'right-start',
 	strategy: 'fixed',
@@ -22,32 +30,46 @@ const props = withDefaults(defineProps<IFloatingOptions>(), {
 });
 
 const isVisible = ref(false);
+const isPinned = ref(false);
 
-const slots = useSlots();
-const floating = useFloatingContext(props.scope);
+providePinnedLevel(1);
+const stack = providePinnedStack();
 
-const renderNode = computed(() => {
-	return () => slots.default?.({
-		close: handleClose,
-		isVisible: isVisible,
-	}) ?? null;
+const referenceRef = ref<ReferenceElement | null>(null);
+const floatingRef = useTemplateRef('floating');
+
+const { floatingStyles, update } = useFloating(referenceRef, floatingRef, {
+	placement: props.placement,
+	strategy: props.strategy,
+	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
 });
 
-function handleOpen(reference?: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
+let cleanup: (() => void) | null = null;
+
+async function handleOpen(reference?: MaybeRefOrGetter<ReferenceElement>) {
 	isVisible.value = true;
 
-	floating.open({
-		reference: reference ?? floating.reference.value,
-		content: renderNode.value,
-		options: { ...props, ...(opts ?? {}) },
-		onClose: () => {
-			isVisible.value = false;
-		},
-	});
+	if (reference) {
+		referenceRef.value = toValue(reference);
+	}
+
+	await nextTick();
+
+	if (!referenceRef.value || !floatingRef.value) {
+		return;
+	}
+
+	cleanup = autoUpdate(referenceRef.value, floatingRef.value, update);
+	addEventListeners();
 }
 
 function handleClose() {
-	floating.close();
+	isVisible.value = false;
+	isPinned.value = false;
+
+	cleanup?.();
+	cleanup = null;
+	removeEventListeners();
 }
 
 watch(isVisible, (value) => {
@@ -58,36 +80,77 @@ watch(isVisible, (value) => {
 	}
 });
 
-function openEvent(e: MouseEvent, opts?: IFloatingOptions) {
-	handleOpen(createVirtualFloatingNode(e), opts);
+function openEvent(e: MouseEvent) {
+	isPinned.value = true;
+	const virtualElement = createVirtualFloatingNode(e);
+	handleOpen(virtualElement);
 }
 
-function openAt(reference: MaybeRefOrGetter<ReferenceElement>, opts?: IFloatingOptions) {
-	handleOpen(reference, opts);
+function openAt(reference: MaybeRefOrGetter<ReferenceElement>) {
+	isPinned.value = true;
+	handleOpen(reference);
 }
-
-defineSlots<{
-	// eslint-disable-next-line no-shadow
-	default(props: {
-		close: () => void;
-		isVisible: boolean;
-	}): unknown;
-}>();
 
 defineExpose({
 	openEvent,
 	openAt,
 	close: handleClose,
-	floating,
+	update,
+	isVisible,
 });
 
-onUnmounted(() => {
-	if (isVisible.value) {
-		floating.stop();
+function handleClickOutside(e: PointerEvent) {
+	const target = e.target as HTMLElement;
+
+	if (target && target.closest('[data-subposition]')) {
+		return;
 	}
+
+	if (stack.hasPinned()) {
+		e.stopImmediatePropagation();
+		e.stopPropagation();
+		stack.closeLast();
+		return;
+	}
+
+	handleClose();
+}
+
+function handleMouseLeaveFloating() {
+	handleClose();
+}
+
+function addEventListeners() {
+	const { trigger } = props;
+
+	if (matchesTrigger(trigger, ['click', 'contextmenu'])) {
+		document.body.addEventListener('pointerdown', handleClickOutside, true);
+	}
+
+	if (matchesTrigger(trigger, 'hover')) {
+		floatingRef.value?.addEventListener('mouseleave', handleMouseLeaveFloating, true);
+	}
+}
+
+function removeEventListeners() {
+	document.body.removeEventListener('pointerdown', handleClickOutside, true);
+	floatingRef.value?.removeEventListener('mouseleave', handleMouseLeaveFloating, true);
+}
+
+onUnmounted(() => {
+	removeEventListeners();
+	cleanup?.();
 });
 </script>
 
-<!-- eslint-disable vue/valid-template-root -->
 <template>
+	<floating-teleport>
+		<div
+			v-if="isVisible"
+			ref="floating"
+			:style="floatingStyles"
+		>
+			<slot :close="handleClose" :is-visible="isVisible" />
+		</div>
+	</floating-teleport>
 </template>

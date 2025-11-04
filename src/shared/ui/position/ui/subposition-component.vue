@@ -97,12 +97,8 @@ function handleClick() {
 function handleMouseover(e: MouseEvent) {
 	e.stopPropagation();
 
-	if (isPinned.value) {
+	if (isPinned.value || stack?.hasPinnedLevel(level)) {
 		return;
-	}
-
-	if (stack?.hasPinnedLevel(level)) {
-		stack?.closeLevel(level);
 	}
 
 	if (hideTimeout.value) {
@@ -207,7 +203,7 @@ defineExpose({ isVisible, isPinned, handleClick });
 	<div
 		ref="wrapper"
 		data-subposition
-		:data-subposition-level="level"
+		:data-position-level="level"
 	>
 		<div ref="reference">
 			<slot

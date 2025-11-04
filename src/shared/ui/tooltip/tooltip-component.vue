@@ -5,14 +5,12 @@ import { offset, shift, flip, type Placement } from '@floating-ui/vue';
 import { UiPositionPortal, type IPositionProps } from '@/shared/ui/position';
 
 interface IProps {
-	scope?: string;
 	forceHide?: boolean;
 	showInMs?: number;
 	position?: Placement;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-	scope: 'tooltip',
 	forceHide: false,
 	showInMs: 800,
 	position: 'bottom',
@@ -25,7 +23,6 @@ const isVisible = ref(false);
 const timeout = ref<number | null>(null);
 
 const layerOptions = computed<IPositionProps>(() => ({
-	scope: props.scope,
 	strategy: 'fixed',
 	placement: props.position,
 	offset: 6,
@@ -36,7 +33,7 @@ function openNow() {
 	if (!reference.value) {
 		return;
 	}
-	layer.value?.openAt(reference.value, layerOptions.value);
+	layer.value?.openAt(reference.value);
 	isVisible.value = true;
 }
 
