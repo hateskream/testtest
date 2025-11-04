@@ -254,7 +254,7 @@ export function mapColumn(marketColumns: ITableColumn[]) {
 		},
 		width: col.width ? col.width : 0,
 		maxWidth: col.maxWidth,
-		minWidth: col.minWidth
+		minWidth: col.minWidth,
 	}));
 }
 

@@ -1,4 +1,3 @@
-<!-- @ts-nocheck -->
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
@@ -140,7 +139,7 @@ const columns = [
 		type: CellType.TEXT,
 		group: { name: 'Info', displayName: 'Info' },
 		minWidth: 100,
-		maxWidth: 200
+		maxWidth: 200,
 	},
 	{
 		key: 'sp500',
@@ -156,6 +155,16 @@ const columns = [
 		group: { name: 'Info', displayName: 'Info' },
 	},
 ];
+
+
+type TRow = {
+	data: {
+		characteristic: {
+			cellType: string;
+			value: string;
+		};
+	};
+};
 
 </script>
 
@@ -174,7 +183,7 @@ const columns = [
 				:show-header="true"
 			>
 				<template #[`cell-characteristic`]="{ row }">
-					<cell-string-component :align="`left`" :data="row.data.characteristic" />
+					<cell-string-component :align="`left`" :data="(row as TRow).data.characteristic" />
 				</template>
 			</widget-typed-table>
 		</template>

@@ -39,7 +39,7 @@ export function getDefaultState(): IState {
 }
 
 export function getDefaultSettings(): ISettings {
-	console.log(CRYPTO_CEX_COLUMNS,'CRYPTO CEX COLUMNS')
+	console.log(CRYPTO_CEX_COLUMNS, 'CRYPTO CEX COLUMNS');
 	return {
 		column: CRYPTO_CEX_COLUMNS,
 		sort: null,

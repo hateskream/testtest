@@ -333,6 +333,8 @@ const columns = [
 		visible: true,
 		type: CellType.SYMBOL,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'marketValue',

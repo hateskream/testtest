@@ -142,6 +142,13 @@ const columns = [
 	},
 ];
 
+type TRow = {
+	data: {
+		name: { value: string | null };
+		value?: { value: string | number | null };
+		signal?: { value: string };
+	};
+};
 
 </script>
 
@@ -181,7 +188,7 @@ const columns = [
 			>
 				<template #[`cell-name`]="{ row }">
 					<div :class="classes.left" class="paragraph-p-00">
-						{{ row.data!.name?.value ?? '—' }}
+						{{ (row as TRow).data.name?.value ?? '—' }}
 					</div>
 				</template>
 			</widget-typed-table>
