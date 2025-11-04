@@ -16,6 +16,7 @@ import {
 } from 'lightweight-charts';
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import { nextTick } from 'vue';
+import type { ChartType } from '@shared/component-library';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
 import { IndicatorsChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
@@ -145,6 +146,29 @@ const styleMainChart = computed(() => {
 	};
 });
 
+const preparedChartData = computed(() => {
+	const data = groupedData.value[currentRange.value];
+
+	if (currentTypeGraph.value === TypeChart.Candlestick) {
+		return data;
+	} else {
+		return data.map(item => ({
+			time: item.time,
+			value: item.close,
+		}));
+	}
+});
+
+const chartTypeForWebComponent = computed<ChartType>(() => {
+	if (currentTypeGraph.value === TypeChart.Candlestick) {
+		return 'candlestick';
+	} else if (currentTypeGraph.value === TypeChart.Line) {
+		return 'area';
+	} else {
+		return 'area';
+	}
+});
+
 function regenerateData() {
 	mainData.value = generateCandleDataFromLineData(generateLineData(4000));
 }
@@ -233,16 +257,12 @@ function updateHistoryChartPropChange() {
 
 				rightPriceScale: {
 					scaleMargins: {
-						top: 0.3, // leave some space for the legend
+						top: 0.3,
 						bottom: 0.25,
 					},
-
-
 					minimumWidth: 55,
-
 					borderVisible: false,
 				},
-
 
 				grid: {
 					horzLines: {
@@ -300,17 +320,23 @@ onMounted(async () => {
 			textColor: '#9A9A9D',
 			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
 		},
+
 		rightPriceScale: {
 			scaleMargins: {
-				top: 0.3, // leave some space for the legend
+				top: 0.3,
 				bottom: 0.25,
 			},
-
 			minimumWidth: 55,
 			borderVisible: false,
 		},
 
 		handleScale: !props.disableScroll,
+
+		timeScale: {
+			borderVisible: false,
+			timeVisible: true,
+			secondsVisible: false,
+		},
 
 		grid: {
 			vertLines: {
@@ -319,6 +345,10 @@ onMounted(async () => {
 			horzLines: {
 				visible: false,
 			},
+		},
+
+		crosshair: {
+			mode: 1,
 		},
 	});
 
@@ -419,10 +449,16 @@ onMounted(async () => {
 		</div>
 
 		<div
-			ref="container"
 			:class="classes.mainChart"
 			:style="styleMainChart"
 		>
+			<i88-chart
+				ref="container"
+				:data="preparedChartData"
+				:type="chartTypeForWebComponent"
+				:auto-size="true"
+				:color-scheme="'positive'"
+			/>
 		</div>
 
 		<chart-range

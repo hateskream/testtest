@@ -2,6 +2,7 @@ import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import VCalendar from 'v-calendar';
+import { registerComponent } from '@shared/component-library';
 
 import { router } from './router';
 import { queryClient } from '@/shared/service/query-client';
@@ -16,6 +17,8 @@ import 'virtual:svg-icons-register';
 import App from './app.vue';
 
 validateConfig();
+
+registerComponent('i88-chart');
 
 
 const app = createApp(App);
