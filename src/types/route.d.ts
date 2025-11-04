@@ -11,6 +11,7 @@ export enum RouteNames {
 	Automobile = 'Automobile',
 	Heatmap = 'Heatmap',
 	Calendar = 'Calendar',
+	News = 'News',
 }
 
 export enum RouteLabels {
@@ -25,6 +26,7 @@ export enum RouteLabels {
 	Test = 'Test',
 	Automobile = 'Automobile',
 	Calendar = 'Calendar',
+	News = 'News',
 }
 
 export enum RoutePaths {
@@ -46,6 +48,7 @@ export enum RoutePaths {
 	Automobile = '/automobile',
 	Heatmap = '/heatmap',
 	Calendar = '/calendar',
+	News = '/news',
 }
 
 export enum RouteTickerType {

@@ -91,6 +91,11 @@ export const globalRoutes: RouteRecordRaw[] = [
 		name: RouteNames.Calendar,
 		component: () => import('@/pages/calendar-page.vue'),
 	},
+	{
+		path: RoutePaths.News,
+		name: RouteNames.News,
+		component: () => import('@/pages/news-page.vue'),
+	},
 ];
 
 export const testRoutes: RouteRecordRaw[] = [

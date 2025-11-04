@@ -23,8 +23,8 @@ export const scoreToName: Readonly<Record<Score, string>> = {
 };
 
 export enum Source {
-	InvestingCom = 'investing.com',
-	Benzinga = 'benzinga',
+	InvestingCom = 'https://investing.com',
+	Benzinga = 'https://benzinga.com',
 }
 
 export const sourceToName: Readonly<Record<Source, string>> = {

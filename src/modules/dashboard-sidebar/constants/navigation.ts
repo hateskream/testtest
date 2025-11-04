@@ -21,4 +21,10 @@ export const navigation: INavigationItem[] = [
 		routeName: RouteNames.Calendar,
 		routeLabels: RouteLabels.Calendar,
 	},
+	{
+		icon: IconIds.LogoWidgetNews,
+		id: IconIds.LogoWidgetNews,
+		routeName: RouteNames.News,
+		routeLabels: RouteLabels.News,
+	},
 ];

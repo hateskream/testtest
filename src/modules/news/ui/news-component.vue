@@ -130,6 +130,7 @@ const time = computed(() =>
 	width: 100%;
 	padding: 14px 12px;
 	border-radius: 18px;
+	cursor: pointer;
 	transition: background-color 0.3s ease;
 	gap: 6px;
 }

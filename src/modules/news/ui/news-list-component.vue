@@ -12,6 +12,7 @@ const props = defineProps<IViewNewsComponentProps>();
 
 const emits = defineEmits<{
 	next: [];
+	'select-news': [id: string];
 }>();
 
 let ticking = false;
@@ -49,6 +50,7 @@ function handleScroll(event: Event) {
 					:key="item.id"
 					:news="item"
 					:display-settings="props.displaySettings"
+					@click="emits('select-news', item.id)"
 				/>
 			</div>
 		</div>
