@@ -3,6 +3,8 @@
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
+import type { IExtendedTableColumn } from '@/modules/widgets/widget-table/widget-typed-table.vue';
+
 const columns = [
 	{
 		key: 'date',
@@ -74,7 +76,7 @@ const columns = [
 			displayName: 'Price',
 		},
 	},
-];
+] as IExtendedTableColumn[];
 
 const rows = [
 	{

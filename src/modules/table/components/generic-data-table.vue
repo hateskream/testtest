@@ -4,6 +4,7 @@
 import { computed, ref, watch, type Ref } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
+import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
 import type {
 	IGenericTableColumn,
 	IGenericTableSection,
@@ -30,6 +31,7 @@ export interface IProps<T> {
 	showHeader?: boolean;
 	canAddSections?: boolean;
 	isUpdating?: boolean;
+	showScrollbarsOnHover?: boolean; // New prop for hover behavior
 }
 
 export interface IEmits<T> {
@@ -72,6 +74,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	canAddSections: false,
 	isUpdating: false,
+	showScrollbarsOnHover: true, // Default to true
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -81,16 +84,16 @@ const localSections = ref<IGenericTableSection<T>[]>([...props.sections]);
 const localUnsortedRows = ref<IGenericTableRow<T>[]>([...props.rows]);
 const localSortConfig = ref<ISortConfig>({ ...props.sortConfig });
 
+// Hover state for container
+const isContainerHovered = ref(false);
+
 const visibleColumns = computed(() =>
 	localColumns.value
 		.filter(col => col.visible)
 		.sort((a, b) => a.position - b.position),
 );
 
-// Determine if this is a sectioned table
-const isSectionedTable = computed(() => {
-	return localSections.value.length > 0;
-});
+const isSectionedTable = computed(() => localSections.value.length > 0);
 
 watch(() => props.columns, (newColumns) => {
 	localColumns.value = [...newColumns];
@@ -132,10 +135,8 @@ const handleSortUpdate = (config: ISortConfig) => {
 	});
 };
 
-// Handle row moved event from unified component
 const handleRowMoved = (payload: IDragDropEvent<T>) => {
 	if (payload.sectionId === 'unsorted') {
-		// Handle unsorted rows
 		const updatedRows = [...localUnsortedRows.value];
 
 		if (payload.type === 'moved') {
@@ -150,7 +151,6 @@ const handleRowMoved = (payload: IDragDropEvent<T>) => {
 			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 		}
 	} else {
-		// Handle sectioned rows
 		const updatedSections = [...localSections.value];
 
 		if (payload.type === 'added' && payload.element) {
@@ -195,7 +195,6 @@ const handleRowDeleted = (payload: { rowId: string; sectionId?: string }) => {
 			handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
 		}
 	} else {
-		// Unsectioned table
 		const updatedRows = localUnsortedRows.value.filter(row => row.id !== payload.rowId);
 		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 	}
@@ -233,16 +232,32 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	emit('sectionRenamed', payload);
 };
 
-// Container width for unified component
 const containerRef: Ref<HTMLDivElement | null> = ref(null);
+const scrollContainerRef: Ref<HTMLDivElement | null> = ref(null);
 
+const { width: containerWidth }: { width: Ref<number> } = useElementSize(containerRef);
+
+// Custom scrollbar with hover visibility
 const {
-	width: containerWidth,
-}: {
-	width: Ref<number>;
-} = useElementSize(containerRef);
+	showVerticalScrollbar,
+	showHorizontalScrollbar,
+	verticalThumbTop,
+	horizontalThumbLeft,
+	isDraggingVertical,
+	isDraggingHorizontal,
+	verticalTrackRef,
+	horizontalTrackRef,
+	handleVerticalMouseDown,
+	handleHorizontalMouseDown,
+	handleVerticalTrackClick,
+	handleHorizontalTrackClick,
+	scrollbarStyles,
+	config: scrollbarConfig,
+} = useCustomScrollbar(scrollContainerRef, {
+	showOnHover: props.showScrollbarsOnHover,
+});
 
-// Animation control for updating data (need for filters/sorts)
+// Animation control
 const isAnimating = ref(false);
 const shouldFinishAnimation = ref(false);
 
@@ -251,12 +266,9 @@ watch(() => props.isUpdating, (newValue) => {
 		isAnimating.value = true;
 		shouldFinishAnimation.value = false;
 	} else {
-		// Allow current animation cycle to finish
 		shouldFinishAnimation.value = true;
 	}
-},
-{ immediate: true },
-);
+}, { immediate: true });
 
 const handleAnimationIteration = () => {
 	if (shouldFinishAnimation.value) {
@@ -265,128 +277,193 @@ const handleAnimationIteration = () => {
 	}
 };
 
+// Handle container hover
+const handleContainerMouseEnter = () => {
+	isContainerHovered.value = true;
+};
+
+const handleContainerMouseLeave = () => {
+	isContainerHovered.value = false;
+};
+
 </script>
 
 <template>
 	<div :class="classes.tableContainer">
+		<!-- Inject scrollbar styles -->
+		<component :is="'style'">{{ scrollbarStyles }}</component>
+
 		<div
 			ref="containerRef"
-			:class="classes.scrollContainer"
+			:class="[
+				classes.scrollContainer,
+				'custom-scrollbar-container',
+				{ 'is-hovered': isContainerHovered }
+			]"
 		>
-
-			<table :class="classes.dataTable">
-				<generic-grid-header
-					v-if="props.showHeader"
-					:columns="visibleColumns"
-					:all-columns="localColumns"
-					:sort-config="localSortConfig"
-					:enable-reordering="enableColumnReordering"
-					:enable-sorting="enableSorting"
-					:enable-column-settings="enableColumnSettings"
-					:enable-row-actions="enableRowActions"
-					:sticky="stickyHeader"
-					:sticky-first-column="stickyFirstColumn"
-					@update:columns="handleColumnsUpdate"
-					@update:sort="handleSortUpdate"
-				>
-					<template
-						v-for="(column, index) in visibleColumns"
-						:key="column.key"
-						#[`header-${index}`]="headerProps"
+			<div
+				ref="scrollContainerRef"
+				:class="['custom-scrollbar-content', classes.scrollContent]"
+				@mouseenter="handleContainerMouseEnter"
+				@mouseleave="handleContainerMouseLeave"
+			>
+				<table :class="classes.dataTable">
+					<generic-grid-header
+						v-if="props.showHeader"
+						:columns="visibleColumns"
+						:all-columns="localColumns"
+						:sort-config="localSortConfig"
+						:enable-reordering="enableColumnReordering"
+						:enable-sorting="enableSorting"
+						:enable-column-settings="enableColumnSettings"
+						:enable-row-actions="enableRowActions"
+						:sticky="stickyHeader"
+						:sticky-first-column="stickyFirstColumn"
+						@update:columns="handleColumnsUpdate"
+						@update:sort="handleSortUpdate"
 					>
-						<slot
-							:name="`header-${column.key}`"
-							v-bind="headerProps"
+						<template
+							v-for="(column, index) in visibleColumns"
+							:key="column.key"
+							#[`header-${index}`]="headerProps"
 						>
 							<slot
-								:name="`header-${index}`"
+								:name="`header-${column.key}`"
 								v-bind="headerProps"
 							>
-								{{ column.label }}
+								<slot
+									:name="`header-${index}`"
+									v-bind="headerProps"
+								>
+									{{ column.label }}
+								</slot>
 							</slot>
-						</slot>
-					</template>
+						</template>
 
-					<template
-						v-if="stickyFirstColumn && $slots['first-column-settings']"
-						#first-column-settings
-					>
-						<slot name="first-column-settings" />
-					</template>
-				</generic-grid-header>
+						<template
+							v-if="stickyFirstColumn && $slots['first-column-settings']"
+							#first-column-settings
+						>
+							<slot name="first-column-settings" />
+						</template>
+					</generic-grid-header>
 
-				<!-- Unified Table Content (handles both sectioned and unsectioned) -->
-				<unified-table-content
-					:sections="isSectionedTable ? localSections : []"
-					:rows="isSectionedTable ? [] : localUnsortedRows"
-					:columns="visibleColumns"
-					:sort-config="localSortConfig"
-					:container-width="containerWidth"
-					:can-add-sections="canAddSections"
-					:enable-drag-drop="enableDragDrop"
-					:sticky-first-column="stickyFirstColumn"
-					:enable-row-actions="enableRowActions"
-					:enable-column-settings="enableColumnSettings"
-					@update:sections="handleSectionsUpdate"
-					@update:rows="handleUnsortedRowsUpdate"
-					@row-moved="handleRowMoved"
-					@row-deleted="handleRowDeleted"
-					@section-toggled="handleSectionToggled"
-					@section-added="handleSectionAdded"
-					@section-deleted="handleSectionDeleted"
-					@section-renamed="handleSectionRenamed"
-					@click-on-row="emit('click-on-row', $event)"
-				>
-					<template
-						v-for="(column, index) in visibleColumns"
-						:key="column.key"
-						#[`cell-${index}`]="cellProps"
+					<unified-table-content
+						:sections="isSectionedTable ? localSections : []"
+						:rows="isSectionedTable ? [] : localUnsortedRows"
+						:columns="visibleColumns"
+						:sort-config="localSortConfig"
+						:container-width="containerWidth"
+						:can-add-sections="canAddSections"
+						:enable-drag-drop="enableDragDrop"
+						:sticky-first-column="stickyFirstColumn"
+						:enable-row-actions="enableRowActions"
+						:enable-column-settings="enableColumnSettings"
+						@update:sections="handleSectionsUpdate"
+						@update:rows="handleUnsortedRowsUpdate"
+						@row-moved="handleRowMoved"
+						@row-deleted="handleRowDeleted"
+						@section-toggled="handleSectionToggled"
+						@section-added="handleSectionAdded"
+						@section-deleted="handleSectionDeleted"
+						@section-renamed="handleSectionRenamed"
+						@click-on-row="emit('click-on-row', $event)"
 					>
-						<slot
-							:name="`cell-${column.key}`"
-							v-bind="cellProps"
+						<template
+							v-for="(column, index) in visibleColumns"
+							:key="column.key"
+							#[`cell-${index}`]="cellProps"
 						>
 							<slot
-								:name="`cell-${index}`"
+								:name="`cell-${column.key}`"
 								v-bind="cellProps"
 							>
-								{{ cellProps.row.data[column.key] }}
+								<slot
+									:name="`cell-${index}`"
+									v-bind="cellProps"
+								>
+									{{ cellProps.row.data[column.key] }}
+								</slot>
 							</slot>
-						</slot>
-					</template>
+						</template>
 
-					<template #section-header="sectionProps">
-						<slot name="section-header" v-bind="sectionProps">
-							{{ sectionProps.section.title }}
-						</slot>
-					</template>
+						<template #section-header="sectionProps">
+							<slot name="section-header" v-bind="sectionProps">
+								{{ sectionProps.section.title }}
+							</slot>
+						</template>
 
-					<template #section-actions="{ sectionId }">
-						<slot name="section-actions" :section-id="sectionId" />
-					</template>
+						<template #section-actions="{ sectionId }">
+							<slot name="section-actions" :section-id="sectionId" />
+						</template>
 
-					<template #row-actions="{ tickerId, sectionId }">
-						<slot
-							name="row-actions"
-							:ticker-id="tickerId"
-							:section-id="sectionId"
-						/>
-					</template>
-				</unified-table-content>
-			</table>
+						<template #row-actions="{ tickerId, sectionId }">
+							<slot
+								name="row-actions"
+								:ticker-id="tickerId"
+								:section-id="sectionId"
+							/>
+						</template>
+					</unified-table-content>
+				</table>
 
-			<!-- loader for updating data -->
-			<div
-				v-if="isAnimating"
-				:class="classes.loadingIndicatorContainer"
-				@animationiteration="handleAnimationIteration"
-			>
-				<div :class="classes.loadingIndicator"></div>
+				<!-- Loading indicator -->
+				<div
+					v-if="isAnimating"
+					:class="classes.loadingIndicatorContainer"
+					@animationiteration="handleAnimationIteration"
+				>
+					<div :class="classes.loadingIndicator"></div>
+				</div>
 			</div>
 
+			<!-- Custom scrollbars with hover visibility -->
+			<!-- Vertical scrollbar -->
+			<div
+				v-if="showVerticalScrollbar"
+				ref="verticalTrackRef"
+				class="custom-scrollbar-track vertical"
+				:class="{
+					'with-horizontal': showHorizontalScrollbar,
+					'show-on-hover': props.showScrollbarsOnHover,
+					'is-dragging': isDraggingVertical
+				}"
+				@click="handleVerticalTrackClick"
+			>
+				<div
+					class="custom-scrollbar-thumb vertical"
+					:class="{ dragging: isDraggingVertical }"
+					:style="{
+						top: `${scrollbarConfig.grabAreaPadding + verticalThumbTop}px`,
+					}"
+					@mousedown="handleVerticalMouseDown"
+				/>
+			</div>
+
+			<!-- Horizontal scrollbar -->
+			<div
+				v-if="showHorizontalScrollbar"
+				ref="horizontalTrackRef"
+				class="custom-scrollbar-track horizontal"
+				:class="{
+					'with-vertical': showVerticalScrollbar,
+					'show-on-hover': props.showScrollbarsOnHover,
+					'is-dragging': isDraggingHorizontal
+				}"
+				@click="handleHorizontalTrackClick"
+			>
+				<div
+					class="custom-scrollbar-thumb horizontal"
+					:class="{ dragging: isDraggingHorizontal }"
+					:style="{
+						left: `${scrollbarConfig.grabAreaPadding + horizontalThumbLeft}px`,
+					}"
+					@mousedown="handleHorizontalMouseDown"
+				/>
+			</div>
 		</div>
 
-		<!-- Pagination outside scroll area -->
+		<!-- Pagination slot -->
 		<div v-if="$slots.pagination" :class="classes.paginationWrapper">
 			<slot name="pagination" />
 		</div>
@@ -409,6 +486,12 @@ const handleAnimationIteration = () => {
 	flex: 1;
 	min-height: 0;
 	padding-bottom: 2px;
+	overflow: hidden;
+}
+
+.scrollContent {
+	width: 100%;
+	height: 100%;
 	overflow: auto;
 }
 

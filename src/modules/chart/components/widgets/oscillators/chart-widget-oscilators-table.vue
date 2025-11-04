@@ -2,6 +2,7 @@
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
+
 type TSignal = 'buy' | 'sell' | 'neutral';
 
 
@@ -110,6 +111,8 @@ const columns = [
 		visible: true,
 		type: CellType.TEXT,
 		group: { name: 'Osc', displayName: 'Osc' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'value',
@@ -121,6 +124,8 @@ const columns = [
 		visible: true,
 		type: CellType.NUMBER,
 		group: { name: 'Osc', displayName: 'Osc' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'signal',
@@ -132,6 +137,8 @@ const columns = [
 		visible: true,
 		type: CellType.PLATE,
 		group: { name: 'Osc', displayName: 'Osc' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 ];
 
@@ -174,7 +181,7 @@ const columns = [
 			>
 				<template #[`cell-name`]="{ row }">
 					<div :class="classes.left" class="paragraph-p-00">
-						{{ row.data.name?.value ?? '—' }}
+						{{ row.data!.name?.value ?? '—' }}
 					</div>
 				</template>
 			</widget-typed-table>

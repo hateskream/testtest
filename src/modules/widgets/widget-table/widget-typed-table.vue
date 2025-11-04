@@ -2,6 +2,7 @@
 import { computed, getCurrentInstance, ref } from 'vue';
 
 import { getComponentByType, CellType } from './cells/cell-types';
+import { getCellData } from './utils';
 import {
 	type IGenericTableColumn,
 	type IGenericTableSection,
@@ -165,6 +166,7 @@ const getCellComponentForColumn = (
 	return getCellComponent(columnType);
 };
 
+
 </script>
 
 <template>
@@ -213,16 +215,17 @@ const getCellComponentForColumn = (
 				<component
 					:is="getCellComponent(column.type)"
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
-					:data="cellProps.row.data[column.key]"
+					:data="getCellData(cellProps.row, column.key)"
 					:ticker-state="tickerState"
 					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component
-					:is="getCellComponentForColumn(column.type, cellProps.row.data[column.key], column.key)"
+					:is="getCellComponentForColumn(column.type, getCellData(cellProps.row, column.key), column.key)"
 					v-else
-					:data="cellProps.row.data[column.key]"
+					:data="getCellData(cellProps.row, column.key)"
 				/>
 			</template>
+
 		</template>
 
 		<!-- Forward section header slot -->
