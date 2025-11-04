@@ -10,7 +10,6 @@ import {
 	type StateSchemaType,
 } from '../model';
 import { useQueryDominanceSnapshot } from '../queries';
-import { deepCompare } from '@/shared/lib/compare.ts';
 
 interface IOptions {
 	widgetId: string;
@@ -71,11 +70,8 @@ export function useDominance({
 		}
 	}, { immediate: true });
 
-	watch(state, (newState, oldState) => {
-		if (!deepCompare(newState, oldState)) {
-			mutate(newState);
-		}
-
+	watch(state, (newState) => {
+		mutate(newState);
 	}, { deep: true });
 
 	function resetAllChanges() {
