@@ -216,8 +216,6 @@ export function generateDashboardLayout(
 			},
 		},
 	}));
-
-	console.log('colNum', key);
 	console.log(JSON.stringify(formatted, null, 2)); // красиво для копирования
 	return formatted;
 }

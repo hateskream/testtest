@@ -30,8 +30,6 @@ interface INotFullCol {
 
 function createTableColumn(col: INotFullCol): ITableColumn {
 	const display = columnDisplay[col.columnType];
-	console.log(display, 'display');
-
 	return {
 		...col,
 		group: {
