@@ -172,7 +172,6 @@ const getCellComponentForColumn = (
 </script>
 
 <template>
-	{{isFixedWidth}}
 	<generic-data-table
 		v-bind="props"
 		@update:columns="handleColumnsUpdate"
