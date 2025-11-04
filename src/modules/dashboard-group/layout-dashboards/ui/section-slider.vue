@@ -60,12 +60,19 @@ const sectionHeight = computed(() => {
 			:class="classes.track"
 			:style="props.trackStyle"
 		>
-			<section-component
-				v-for="s in props.slides"
+			<template
+				v-for="(s, i) in props.slides"
 				:key="s.id"
-				:section="s"
-				:parent-height="sectionHeight"
-			/>
+			>
+				<section-component
+					:section="s"
+					:parent-height="sectionHeight"
+				/>
+				<div
+					v-if="i < props.slides.length - 1"
+					:class="classes.sizer"
+				/>
+			</template>
 		</div>
 		<div :class="classes.panel">
 			<div :class="classes.content">
@@ -105,12 +112,10 @@ const sectionHeight = computed(() => {
 	display: flex;
 	flex-grow: 1;
 	align-items: stretch;
+	padding-right: 10px;
+	padding-left: 10px;
 	transition: transform 300ms cubic-bezier(0.22, 0.9, 0.2, 1);
 	will-change: transform;
-}
-
-.track > * {
-	border-right: 1px solid #1d1d1e;
 }
 
 .panel {
@@ -159,6 +164,16 @@ const sectionHeight = computed(() => {
 	background: rgb(73 73 80 / 32%);
 	border-radius: 8px;
 	backdrop-filter: blur(4px);
+}
+
+.sizer {
+	width: 3px;
+	height: 32px;
+	margin: auto;
+	background: #d9d9d9;
+	border-radius: 4px;
+	cursor: grab;
+	opacity: 0.3;
 }
 
 @media (max-width: 768px) {

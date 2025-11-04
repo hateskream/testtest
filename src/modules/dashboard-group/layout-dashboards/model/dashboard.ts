@@ -161,6 +161,56 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 560,
 			widgets: [
 				{
+					defaultState: 'none',
+					height: 406,
+					maxCountRow: 7,
+					defaultDisplayVariant: 'chart',
+					widgetType:  WidgetType.TopIndices,
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'none',
+					height: 175,
+					widgetType:  WidgetType.BitcoinDominance,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'crypto',
+					height: 400,
+					widgetType: WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+			],
+		},
+		{
+			name: 'Market Momentum',
+			width: 560,
+			widgets: [
+				{
+					defaultState: 'none',
+					height: 406,
+					maxCountRow: 7,
+					defaultDisplayVariant: 'chart',
+					widgetType:  WidgetType.TopIndices,
+				},
+				{
 					defaultState: 'crypto',
 					height: 400,
 					widgetType: WidgetType.MarketCap,

@@ -24,20 +24,23 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 		:class="classes.section"
 		:style="cardStyle"
 	>
-		<h2 :class="classes.sectionTitle">{{ props.section.name }} </h2>
-
 		<div :class="classes.scroll">
 			<div :class="classes.widgetsContainer">
-				<widget-component
-					v-for="widget in props.section.widgets"
-					:key="widget.id"
-					:widget="widget"
-					:col-count="cellSize.count"
-					:column-width="cellSize.size"
-					:parent-height="props.parentHeight"
-					:active-display-variant="widget.displayVariant"
-					:all-display-variants="widget.displayVariants"
-				/>
+
+				<h2 :class="classes.sectionTitle">{{ props.section.name }} </h2>
+
+				<div :class="classes.widgets">
+					<widget-component
+						v-for="widget in props.section.widgets"
+						:key="widget.id"
+						:widget="widget"
+						:col-count="cellSize.count"
+						:column-width="cellSize.size"
+						:parent-height="props.parentHeight"
+						:active-display-variant="widget.displayVariant"
+						:all-display-variants="widget.displayVariants"
+					/>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -48,26 +51,27 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	padding: 12px 16px;
+	padding: 0 10px;
 	overflow: auto;
 	color: #ffffff;
-	border-right: 1px solid #1d1d1e;
 }
 
 .sectionTitle {
-	margin-bottom: 12px;
+	padding: 12px 0;
 	font-style: normal;
-	font-weight: 410;
-	font-size: 15.5px;
-	line-height: 26px;
-	letter-spacing: 0.124px;
+	font-weight: 440;
+	font-size: 16.8px;
+	line-height: 160%; /* 26.88px */
+	color: #ffffff;
+	letter-spacing: 0.134px;
 }
 
 .scroll {
 	position: relative;
 	flex-grow: 1;
-	margin-top: 8px;
 	overflow: hidden;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
 }
 
 .widgetsContainer {
@@ -76,12 +80,24 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	right: 0;
 	bottom: 0;
 	left: 0;
+	padding-bottom: 25px;
 	overflow-y: auto;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
 	scrollbar-width: none;
 }
 
-.widgetsContainer > *:not(:last-child) {
-	margin-bottom: 16px;
+.widgets {
+	display: flex;
+	flex-direction: column;
+	border-radius: 24px;
+	gap: 6px;
+	/* stylelint-disable-next-line color-named */
+	mask-image:
+		radial-gradient(circle 24px at top left, transparent 0, black 0),
+		radial-gradient(circle 24px at top right, transparent 0, black 0),
+		linear-gradient(black, black);
+	mask-composite: intersect;
 }
 
 @media (max-width: 768px) {

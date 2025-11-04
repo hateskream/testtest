@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import type { IDashboardTab } from '../model';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IHeaderDesktop {
 	tabs: IDashboardTab[];
@@ -14,16 +15,47 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 
 <template>
 	<div :class="classes.navbar">
-		<div :class="classes.title">Dashboard</div>
-		<div :class="classes.tabs">
-			<button
-				v-for="tab in tabs"
-				:key="tab.id"
-				:class="[classes.tab, active === tab && classes.active]"
-				@click="active = tab"
-			>
-				{{ tab.name }}
-			</button>
+		<div :class="classes.left">
+			<div :class="classes.title">Dashboard</div>
+			<ui-icon
+				:id="IconIds.ControlMore"
+				:class="classes.iconWrapper"
+				width="20px"
+				height="20px"
+			/>
+			<div :class="classes.tabs">
+				<button
+					v-for="tab in tabs"
+					:key="tab.id"
+					:class="[classes.tab, active === tab && classes.active]"
+					@click="active = tab"
+				>
+					{{ tab.name }}
+				</button>
+			</div>
+		</div>
+
+		<div :class="classes.right">
+			<div :class="classes.add">
+				<ui-icon
+					:id="IconIds.Plus"
+					width="16px"
+					height="16px"
+				/>
+				Add
+				<ui-icon
+					:id="IconIds.DropdownDown"
+					width="12"
+					height="12"
+				/>
+			</div>
+			<div :class="classes.divider" />
+			<ui-icon
+				:id="IconIds.ControlRightMenu"
+				width="20px"
+				height="20px"
+				:class="classes.controlRightMenu"
+			/>
 		</div>
 	</div>
 </template>
@@ -31,12 +63,27 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 <style module="classes">
 .navbar {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	height: 44px;
 	padding: 0 10px 0 16px;
 	color: #ffffff;
-	border-bottom: 1px solid #1d1d1e;
-	gap: 16px;
+}
+
+.left {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.iconWrapper {
+	color: rgb(255 255 255 / 60%);
 }
 
 .title {
@@ -50,21 +97,20 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 .tabs {
 	display: flex;
 	align-items: center;
+	padding-left: 6px;
+	overflow: hidden;
 	font-style: normal;
-	font-weight: 450;
-	font-size: 12px;
-	line-height: 20px;
-	letter-spacing: 0.059px;
-	gap: 4px;
+	font-weight: 540;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	letter-spacing: 0.071px;
+	text-overflow: ellipsis;
+	gap: 16px;
 }
 
 .tab {
-	height: 24px;
-	padding: 0 10px;
-	color: #9b9b9b;
-	background: transparent;
-	border: none;
-	border-radius: 8px;
+	padding: 0;
+	color: rgb(255 255 255 / 60%);
 	cursor: pointer;
 	transition: background 0.2s, color 0.2s;
 }
@@ -74,7 +120,47 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 }
 
 .active {
+	color: rgb(255 255 255 / 96%);
+}
+
+.add {
+	display: flex;
+	align-items: center;
+	height: 30px;
+	padding: 0 10px;
+	overflow: hidden;
+	font-style: normal;
+	font-weight: 450;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	color: rgb(255 255 255 / 50%);
+	letter-spacing: 0.059px;
+	text-overflow: ellipsis;
+	background: rgb(73 73 80 / 32%);
+	border-radius: 12px;
+	cursor: pointer;
+	gap: 4px;
+}
+
+.add:hover {
 	color: #ffffff;
-	background: rgb(73 73 80 / 70%);
+	background: rgb(73 73 80 / 50%);
+}
+
+.divider {
+	width: 1px;
+	height: 15px;
+	margin: 0 6px;
+	background: rgb(73 73 80 / 52%);
+}
+
+.controlRightMenu {
+	color: rgb(255 255 255 / 50%);
+	transform: rotate(270deg);
+	cursor: pointer;
+}
+
+.controlRightMenu:hover {
+	color: #ffffff;
 }
 </style>
