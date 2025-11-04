@@ -7,6 +7,7 @@ import draggable from 'vuedraggable';
 import type {
 	IGenericTableSection,
 	IGenericTableColumn,
+	IGenericTableRow,
 	ISortConfig,
 	IDragDropEvent,
 	IDragEvent,
@@ -17,25 +18,35 @@ export interface ITableItem<T> {
 	id: string;
 	type: 'section-header' | 'row' | 'section-placeholder';
 	section?: IGenericTableSection<T>;
-	row?: T;
+	row?: IGenericTableRow<T>;
 	sectionId?: string;
 }
 
 export interface IProps<T> {
-	sections: IGenericTableSection<T>[];
+	// Data sources (one will be used based on mode)
+	sections?: IGenericTableSection<T>[];
+	rows?: IGenericTableRow<T>[];
+
+	// Common props
 	columns: IGenericTableColumn[];
 	sortConfig: ISortConfig;
-	canAddSections?: boolean;
+	containerWidth?: number;
+
+	// Feature flags
 	enableDragDrop?: boolean;
 	stickyFirstColumn?: boolean;
 	enableRowActions?: boolean;
 	enableColumnSettings?: boolean;
+
+	// Sectioned mode specific
+	canAddSections?: boolean;
 }
 
 export interface IEmits<T> {
 	(e: 'update:sections', sections: IGenericTableSection<T>[]): void;
+	(e: 'update:rows', rows: IGenericTableRow<T>[]): void;
 	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
-	(e: 'rowDeleted', payload: { rowId: string; sectionId: string }): void;
+	(e: 'rowDeleted', payload: { rowId: string; sectionId?: string }): void;
 	(e: 'sectionToggled', sectionId: string): void;
 	(e: 'sectionAdded', sectionName: string): void;
 	(e: 'sectionDeleted', sectionId: string): void;
@@ -44,6 +55,8 @@ export interface IEmits<T> {
 }
 
 const props = withDefaults(defineProps<IProps<T>>(), {
+	sections: () => [],
+	rows: () => [],
 	enableDragDrop: true,
 	stickyFirstColumn: true,
 	enableRowActions: true,
@@ -56,34 +69,19 @@ const emit = defineEmits<IEmits<T>>();
 const { sortData } = useTableData();
 const { getColumnStyles, getTotalColumnSpan } = useTableLayout();
 
+// State
 const hoveredRowId = ref<string | null>(null);
 const isDragging = ref<boolean>(false);
-
 const showAddSectionInput = ref(false);
 const addSectionInputRef = ref<HTMLInputElement>();
 const newSectionName = ref('New section');
 
-const handleRowMouseEnter = (rowId: string) => {
-	if (!isDragging.value) {
-		hoveredRowId.value = rowId;
-	}
-};
+// Determine table mode
+const isSectioned = computed(() => {
+	return props.sections && props.sections.length > 0;
+});
 
-const handleRowMouseLeave = () => {
-	if (!isDragging.value) {
-		hoveredRowId.value = null;
-	}
-};
-
-const handleDragStart = () => {
-	isDragging.value = true;
-	hoveredRowId.value = null;
-};
-
-const handleDragEnd = () => {
-	isDragging.value = false;
-};
-
+// Common computed properties
 const hasActionsOrSettings = computed(() => props.enableRowActions || props.enableColumnSettings);
 
 const shouldUseColspan = computed(() => props.enableColumnSettings && !props.enableRowActions);
@@ -96,7 +94,16 @@ const totalColumnSpan = computed(() => {
 	return getTotalColumnSpan(props.columns.length, hasActionsOrSettings.value);
 });
 
+const dragGroup = computed(() => {
+	return isSectioned.value ? 'unified-table' : 'table-rows';
+});
+
+// Sort sections (for sectioned mode)
 const sortedSections = computed(() => {
+	if (!isSectioned.value) {
+		return [];
+	}
+
 	if (!props.sortConfig || props.sortConfig.direction === 'none' || !props.sortConfig.columnKey) {
 		return props.sections;
 	}
@@ -120,7 +127,30 @@ const sortedSections = computed(() => {
 	});
 });
 
+// Sort rows (for unsectioned mode)
+const sortedRows = computed(() => {
+	if (isSectioned.value) {
+		return [];
+	}
+
+	if (!props.sortConfig || props.sortConfig.direction === 'none' || !props.sortConfig.columnKey) {
+		return props.rows;
+	}
+
+	const sortColumn = props.columns.find(col => col.key === props.sortConfig.columnKey);
+	if (!sortColumn) {
+		return props.rows;
+	}
+
+	return sortData(props.rows, sortColumn, props.sortConfig.direction);
+});
+
+// Flatten sections into items (for sectioned mode)
 const flattenedItems = computed((): ITableItem<T>[] => {
+	if (!isSectioned.value) {
+		return [];
+	}
+
 	const items: ITableItem<T>[] = [];
 
 	sortedSections.value.forEach(section => {
@@ -151,15 +181,63 @@ const flattenedItems = computed((): ITableItem<T>[] => {
 	return items;
 });
 
-const handleSectionToggle = (sectionId: string) => {
-	emit('sectionToggled', sectionId);
+// Unified table items (works for both modes)
+const tableItems = computed({
+	get: () => {
+		if (isSectioned.value) {
+			return flattenedItems.value;
+		}
+		return sortedRows.value;
+	},
+	set: (value) => {
+		// This setter is used by draggable v-model
+		// The actual updates happen through drag events
+	},
+});
+
+// Helper to get row ID from item
+const getRowId = (item: ITableItem<T> | IGenericTableRow<T>): string => {
+	if ('type' in item && item.type === 'row') {
+		return item.row?.id || '';
+	}
+	return item.id || '';
 };
 
-// const handleRowDeleted = (rowId: string, sectionId: string) => {
-// 	emit('rowDeleted', { rowId, sectionId });
-// };
+// Helper to get actual row from item
+const getRow = (item: ITableItem<T> | IGenericTableRow<T>): IGenericTableRow<T> | undefined => {
+	if ('type' in item) {
+		return item.row;
+	}
+	return item as IGenericTableRow<T>;
+};
 
-const onUnifiedDragChange = (evt: IDragEvent<ITableItem<T>>) => {
+// Mouse handlers
+const handleRowMouseEnter = (rowId: string) => {
+	if (!isDragging.value) {
+		hoveredRowId.value = rowId;
+	}
+};
+
+const handleRowMouseLeave = () => {
+	if (!isDragging.value) {
+		hoveredRowId.value = null;
+	}
+};
+
+const handleDragStart = () => {
+	isDragging.value = true;
+	hoveredRowId.value = null;
+};
+
+const handleDragEnd = () => {
+	isDragging.value = false;
+};
+
+// Unified drag change handler
+
+
+// Sectioned drag handler
+const handleSectionedDragChange = (evt: IDragEvent<ITableItem<T>>) => {
 	if (evt.moved) {
 		const movedItem = evt.moved.element;
 
@@ -237,6 +315,62 @@ const onUnifiedDragChange = (evt: IDragEvent<ITableItem<T>>) => {
 	}
 };
 
+// Unsectioned drag handler
+const handleUnsectionedDragChange = (evt: IDragEvent<IGenericTableRow<T>>) => {
+	if (evt.moved) {
+		emit('rowMoved', {
+			type: 'moved',
+			sectionId: 'unsorted',
+			oldIndex: evt.moved.oldIndex,
+			newIndex: evt.moved.newIndex,
+		});
+	}
+
+	if (evt.added) {
+		emit('rowMoved', {
+			type: 'added',
+			sectionId: 'unsorted',
+			newIndex: evt.added.newIndex,
+			element: evt.added.element,
+		});
+	}
+
+	if (evt.removed) {
+		emit('rowMoved', {
+			type: 'removed',
+			sectionId: 'unsorted',
+			oldIndex: evt.removed.oldIndex,
+			element: evt.removed.element,
+		});
+	}
+};
+
+
+// Common drag handler
+const handleUnifiedDragChange = (evt: IDragEvent<ITableItem<T> | IGenericTableRow<T>>) => {
+	if (isSectioned.value) {
+		handleSectionedDragChange(evt as IDragEvent<ITableItem<T>>);
+	} else {
+		handleUnsectionedDragChange(evt as IDragEvent<IGenericTableRow<T>>);
+	}
+};
+// Can move item validation
+const canMoveItem = (evt: unknown) => {
+	if (isSectioned.value) {
+		if (evt?.draggedContext?.element) {
+			const draggedItem = evt.draggedContext.element;
+			return draggedItem.type === 'row';
+		}
+		return false;
+	}
+	return true; // In unsectioned mode, all items can move
+};
+
+// Section handlers (only for sectioned mode)
+const handleSectionToggle = (sectionId: string) => {
+	emit('sectionToggled', sectionId);
+};
+
 const showAddSection = () => {
 	showAddSectionInput.value = true;
 	nextTick(() => {
@@ -263,47 +397,40 @@ const cancelAddSection = () => {
 	newSectionName.value = 'New section';
 	showAddSectionInput.value = false;
 };
-
-const canMoveItem = (evt: unknown) => {
-	if (evt?.draggedContext?.element) {
-		const draggedItem = evt.draggedContext.element;
-		return draggedItem.type === 'row';
-	} else {
-		return false;
-	}
-};
 </script>
 
 <template>
 	<draggable
-		v-model="flattenedItems"
-		:group="enableDragDrop ? 'unified-table' : false"
+		v-model="tableItems"
+		:group="enableDragDrop ? dragGroup : false"
 		:disabled="!enableDragDrop"
 		item-key="id"
 		tag="tbody"
 		:class="[classes.tableBody, { [classes.dragging]: isDragging }]"
-		:style="columnStyles"
+		:style="isSectioned ? columnStyles : undefined"
 		:move="canMoveItem"
-		@change="onUnifiedDragChange"
+		@change="handleUnifiedDragChange"
 		@start="handleDragStart"
 		@end="handleDragEnd"
 	>
-		<template #item="{ element: item }">
+		<template #item="{ element: item, index: itemIndex }">
 			<tr
-				:key="item.id"
 				:class="[
 					{
-						[classes.sectionHeaderRow]: item.type === 'section-header',
-						[classes.tableRow]: item.type === 'row',
-						[classes.tableRowHovered]: item.type === 'row' && hoveredRowId === item.row?.id
+						[classes.sectionHeaderRow]: isSectioned && item.type === 'section-header',
+						[classes.tableRow]: !isSectioned || item.type === 'row',
+						[classes.tableRowHovered]:
+							(!isSectioned || item.type === 'row') && hoveredRowId === getRowId(item)
 					}
 				]"
-				@click="item.type === 'section-header' ? handleSectionToggle(item.section!.id) : undefined"
-				@mouseenter="item.type === 'row' && item.row ? handleRowMouseEnter(item.row.id) : undefined"
-				@mouseleave="item.type === 'row' ? handleRowMouseLeave() : undefined"
+				@click="isSectioned && item.type === 'section-header'
+					? handleSectionToggle(item.section!.id) : emit('click-on-row', getRowId(item))"
+				@mouseenter="(!isSectioned || item.type === 'row') && handleRowMouseEnter(getRowId(item))"
+				@mouseleave="(!isSectioned || item.type === 'row') && handleRowMouseLeave()"
 			>
+				<!-- SECTION HEADER CONTENT -->
 				<td
-					v-if="item.type === 'section-header'"
+					v-if="isSectioned && item.type === 'section-header'"
 					:class="classes.sectionHeader"
 					:colspan="totalColumnSpan"
 				>
@@ -321,59 +448,14 @@ const canMoveItem = (evt: unknown) => {
 							</div>
 						</div>
 						<div :class="classes.sectionHeaderRight" @click.stop>
-							<slot name="section-actions" :section-id="item.section.id" />
+							<slot name="section-actions" :section-id="item.section!.id" />
 						</div>
 					</div>
 				</td>
 
-				<template v-else-if="item.type === 'row'">
-					<td
-						v-for="(column, cellIndex) in columns"
-						:key="`${item.row!.id}-${column.key}`"
-						:colspan="shouldUseColspan && cellIndex + 1 === columns.length ? 2 : 1"
-						:class="[
-							classes.tableCell,
-							{
-								[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
-								[classes.stickyFirstCellHovered]: cellIndex === 0
-									&& stickyFirstColumn && hoveredRowId === item.row!.id,
-							}
-						]"
-						:style="{
-							...(cellIndex !== 0 ? {width: `var(--col-${cellIndex}-width)`} : {}),
-							minWidth: `var(--col-${cellIndex}-min-width)`
-						}"
-						@click="emit('click-on-row', row.id)"
-					>
-						<slot
-							:name="`cell-${cellIndex}`"
-							:row="item.row!"
-							:column="column"
-							:cell-index="cellIndex"
-							:value="item.row!.data[column.key]"
-						>
-							{{item?.row.data[column.key] }}
-						</slot>
-					</td>
-
-					<td
-						v-if="enableRowActions"
-						:class="[
-							classes.rowActions,
-							classes.tableCell,
-							{ [classes.rowActionsHovered]: hoveredRowId === item.row!.id }
-						]"
-					>
-						<slot
-							name="row-actions"
-							:ticker-id="item.id"
-							:section-id="item.sectionId!"
-						/>
-					</td>
-				</template>
-
+				<!-- SECTION PLACEHOLDER CONTENT -->
 				<td
-					v-else-if="item.type === 'section-placeholder'"
+					v-else-if="isSectioned && item.type === 'section-placeholder'"
 					:colspan="totalColumnSpan"
 					:class="classes.emptyDropZoneCell"
 				>
@@ -383,14 +465,64 @@ const canMoveItem = (evt: unknown) => {
 						</span>
 					</div>
 				</td>
+
+				<!-- ROW CONTENT (works for both modes) -->
+				<template v-else>
+					<td
+						v-for="(column, cellIndex) in columns"
+						:key="`${getRowId(item)}-${column.key}`"
+						:colspan="shouldUseColspan && cellIndex + 1 === columns.length ? 2 : 1"
+						:class="[
+							classes.tableCell,
+							{
+								[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
+								[classes.stickyFirstCellHovered]: cellIndex === 0
+									&& stickyFirstColumn && hoveredRowId === getRowId(item),
+							}
+						]"
+						:style="{
+							...(cellIndex !== 0 ? {width: `var(--col-${cellIndex}-width)`} : {}),
+							minWidth: `var(--col-${cellIndex}-min-width)`
+						}"
+					>
+						<slot
+							:name="`cell-${cellIndex}`"
+							:row="getRow(item)!"
+							:column="column"
+							:cell-index="cellIndex"
+							:row-index="itemIndex"
+							:value="getRow(item)!.data[column.key]"
+						>
+							{{ getRow(item)?.data[column.key] }}
+						</slot>
+					</td>
+
+					<td
+						v-if="enableRowActions"
+						:class="[
+							classes.rowActions,
+							classes.tableCell,
+							{ [classes.rowActionsHovered]: hoveredRowId === getRowId(item) }
+						]"
+					>
+						<slot
+							name="row-actions"
+							:ticker-id="getRowId(item)"
+							:section-id="isSectioned && item.type === 'row' ? item.sectionId : undefined"
+						/>
+					</td>
+				</template>
 			</tr>
 		</template>
 
 		<template #ghost="{ element: item }">
-			<tr v-if="item.type === 'row'" :class="classes.ghostRow">
+			<tr
+				v-if="!isSectioned || (isSectioned && item.type === 'row')"
+				:class="classes.ghostRow"
+			>
 				<td
 					v-for="(column, cellIndex) in columns"
-					:key="`ghost-${item.row!.id}-${column.key}`"
+					:key="`ghost-${getRowId(item)}-${column.key}`"
 					:class="[
 						classes.ghostCell,
 						{
@@ -402,16 +534,14 @@ const canMoveItem = (evt: unknown) => {
 						minWidth: `var(--col-${cellIndex}-width)`
 					}"
 				>
-					{{
-						item.row!.data[column.key] || 'N/A'
-					}}
+					{{ getRow(item)?.data[column.key] || 'N/A' }}
 				</td>
-
 			</tr>
 		</template>
 
 		<template #footer>
-			<tr v-if="showAddSectionInput" :class="classes.addSectionRow">
+			<!-- Add section input (sectioned mode only) -->
+			<tr v-if="isSectioned && showAddSectionInput" :class="classes.addSectionRow">
 				<td :colspan="totalColumnSpan" :class="classes.addSectionCell">
 					<input
 						ref="addSectionInputRef"
@@ -425,7 +555,8 @@ const canMoveItem = (evt: unknown) => {
 				</td>
 			</tr>
 
-			<tr v-if="props.canAddSections" :class="classes.addSectionRow">
+			<!-- Add section button (sectioned mode only) -->
+			<tr v-if="isSectioned && props.canAddSections" :class="classes.addSectionRow">
 				<td
 					:colspan="totalColumnSpan"
 					:class="classes.addSectionButton"
@@ -463,16 +594,20 @@ const canMoveItem = (evt: unknown) => {
 	}
 }
 
+.tableRow {
+	height: 48px;
+}
+
 .tableRowHovered {
 	background-color: var(--border-color-surface-01-effect);
 
 	.rowActions {
 		opacity: 1;
 	}
-}
 
-.tableRow {
-	height: 48px;
+	.columnSettings {
+		opacity: 1;
+	}
 }
 
 .tableCell {
@@ -505,6 +640,11 @@ const canMoveItem = (evt: unknown) => {
 			rgb(32 32 32 / 100%) 65%,
 			rgb(32 32 32 / 0%) 100%
 		);
+}
+
+/* Section styles */
+.sectionHeaderRow {
+	cursor: pointer;
 }
 
 .sectionHeader {
@@ -589,17 +729,7 @@ const canMoveItem = (evt: unknown) => {
 	text-overflow: ellipsis;
 }
 
-.actionsCell {
-	position: relative;
-	width: 50px;
-	min-width: 50px;
-	padding: 8px;
-	vertical-align: middle;
-	text-align: center;
-	background: var(--bg-color-surface-01);
-	border: none;
-}
-
+/* Row actions */
 .rowActions {
 	position: sticky;
 	right: 0;
@@ -629,15 +759,7 @@ const canMoveItem = (evt: unknown) => {
 	opacity: 0;
 }
 
-.columnSettingsHovered {
-	background:
-		linear-gradient(
-			to left,
-			rgb(32 32 32 / 100%) 65%,
-			rgb(32 32 32 / 0%) 100%
-		);
-}
-
+/* Add section styles */
 .addSectionRow {
 	border-bottom: none;
 }
@@ -691,6 +813,7 @@ const canMoveItem = (evt: unknown) => {
 	color: rgb(131 132 135 / 90%);
 }
 
+/* Ghost and placeholder styles */
 .ghostRow {
 	background: var(--border-color-surface-01-effect) !important;
 	border: 2px dashed rgb(59 130 246 / 50%) !important;

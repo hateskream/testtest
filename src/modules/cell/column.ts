@@ -9,6 +9,9 @@ export interface ITableColumn {
 	displayColumnName: string;
 	displayShortColumnName: string;
 	isDraggable: boolean;
+	minWidth: number;
+	maxWidth: number;
+	curWidth?: number;
 	group: {
 		order: number;
 		name: string;
@@ -27,6 +30,7 @@ interface INotFullCol {
 
 function createTableColumn(col: INotFullCol): ITableColumn {
 	const display = columnDisplay[col.columnType];
+	console.log(display, 'display');
 
 	return {
 		...col,
@@ -38,6 +42,8 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 		order: 0,
 		displayColumnName: display.columnName,
 		displayShortColumnName: display.settingsName,
+		minWidth: display.minWidth,
+		maxWidth: display.maxWidth,
 		// TODO: tooltip
 		// tooltip: display.tooltip,
 	};

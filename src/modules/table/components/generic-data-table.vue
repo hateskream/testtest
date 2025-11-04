@@ -13,8 +13,7 @@ import type {
 } from '../type';
 
 import GenericGridHeader from './generic-grid-header.vue';
-import SectionedTableContent from './sectioned-table-content.vue';
-import UnsectionedTableContent from './unsectioned-table-content.vue';
+import UnifiedTableContent from './unified-table-content.vue';
 
 export interface IProps<T> {
 	sections?: IGenericTableSection<T>[];
@@ -133,9 +132,10 @@ const handleSortUpdate = (config: ISortConfig) => {
 	});
 };
 
-// Handle events from sectioned table
-const handleSectionedRowMoved = (payload: IDragDropEvent<T>) => {
+// Handle row moved event from unified component
+const handleRowMoved = (payload: IDragDropEvent<T>) => {
 	if (payload.sectionId === 'unsorted') {
+		// Handle unsorted rows
 		const updatedRows = [...localUnsortedRows.value];
 
 		if (payload.type === 'moved') {
@@ -150,6 +150,7 @@ const handleSectionedRowMoved = (payload: IDragDropEvent<T>) => {
 			handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 		}
 	} else {
+		// Handle sectioned rows
 		const updatedSections = [...localSections.value];
 
 		if (payload.type === 'added' && payload.element) {
@@ -171,25 +172,6 @@ const handleSectionedRowMoved = (payload: IDragDropEvent<T>) => {
 		}
 
 		handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
-	}
-
-	emit('rowMoved', payload);
-};
-
-// Handle events from unsectioned table
-const handleUnsectionedRowMoved = (payload: IDragDropEvent<T>) => {
-	const updatedRows = [...localUnsortedRows.value];
-
-	if (payload.type === 'moved') {
-		const [movedRow] = updatedRows.splice(payload.oldIndex!, 1);
-		updatedRows.splice(payload.newIndex!, 0, movedRow);
-		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
-	} else if (payload.type === 'added') {
-		updatedRows.splice(payload.newIndex!, 0, payload.element!);
-		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
-	} else if (payload.type === 'removed') {
-		updatedRows.splice(payload.oldIndex!, 1);
-		handleUnsortedRowsUpdate(updatedRows as IGenericTableRow<T>[]);
 	}
 
 	emit('rowMoved', payload);
@@ -251,8 +233,7 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	emit('sectionRenamed', payload);
 };
 
-/// need for child for hover rows
-
+// Container width for unified component
 const containerRef: Ref<HTMLDivElement | null> = ref(null);
 
 const {
@@ -270,7 +251,7 @@ watch(() => props.isUpdating, (newValue) => {
 		isAnimating.value = true;
 		shouldFinishAnimation.value = false;
 	} else {
-		// Дать завершить текущий цикл анимации
+		// Allow current animation cycle to finish
 		shouldFinishAnimation.value = true;
 	}
 },
@@ -330,26 +311,25 @@ const handleAnimationIteration = () => {
 						v-if="stickyFirstColumn && $slots['first-column-settings']"
 						#first-column-settings
 					>
-
-						<slot name="first-column-settings">
-
-						</slot>
+						<slot name="first-column-settings" />
 					</template>
 				</generic-grid-header>
 
-				<!-- Sectioned Table Content -->
-				<sectioned-table-content
-					v-if="isSectionedTable"
-					:sections="localSections"
+				<!-- Unified Table Content (handles both sectioned and unsectioned) -->
+				<unified-table-content
+					:sections="isSectionedTable ? localSections : []"
+					:rows="isSectionedTable ? [] : localUnsortedRows"
 					:columns="visibleColumns"
 					:sort-config="localSortConfig"
+					:container-width="containerWidth"
 					:can-add-sections="canAddSections"
 					:enable-drag-drop="enableDragDrop"
 					:sticky-first-column="stickyFirstColumn"
 					:enable-row-actions="enableRowActions"
 					:enable-column-settings="enableColumnSettings"
 					@update:sections="handleSectionsUpdate"
-					@row-moved="handleSectionedRowMoved"
+					@update:rows="handleUnsortedRowsUpdate"
+					@row-moved="handleRowMoved"
 					@row-deleted="handleRowDeleted"
 					@section-toggled="handleSectionToggled"
 					@section-added="handleSectionAdded"
@@ -382,55 +362,19 @@ const handleAnimationIteration = () => {
 					</template>
 
 					<template #section-actions="{ sectionId }">
-						<slot name="section-actions" :section-id="sectionId">
-						</slot>
+						<slot name="section-actions" :section-id="sectionId" />
 					</template>
 
-					<template #row-actions="{ tickerId }">
-						<slot name="row-actions" :ticker-id="tickerId">
-						</slot>
-					</template>
-				</sectioned-table-content>
-
-				<!-- Unsectioned Table Content -->
-				<unsectioned-table-content
-					v-else
-					:rows="localUnsortedRows"
-					:columns="visibleColumns"
-					:sort-config="localSortConfig"
-					:enable-drag-drop="enableDragDrop"
-					:sticky-first-column="stickyFirstColumn"
-					:enable-row-actions="enableRowActions"
-					:enable-column-settings="enableColumnSettings"
-					:container-width="containerWidth"
-					@update:rows="handleUnsortedRowsUpdate"
-					@row-moved="handleUnsectionedRowMoved"
-					@row-deleted="handleRowDeleted"
-					@click-on-row="emit('click-on-row', $event)"
-				>
-					<template
-						v-for="(column, index) in visibleColumns"
-						:key="column.key"
-						#[`cell-${index}`]="cellProps"
-					>
+					<template #row-actions="{ tickerId, sectionId }">
 						<slot
-							:name="`cell-${column.key}`"
-							v-bind="cellProps"
-						>
-							<slot
-								:name="`cell-${index}`"
-								v-bind="cellProps"
-							>
-								{{ cellProps.row.data[column.key] }}
-							</slot>
-						</slot>
+							name="row-actions"
+							:ticker-id="tickerId"
+							:section-id="sectionId"
+						/>
 					</template>
-					<template #row-actions="{ tickerId }">
-						<slot name="row-actions" :ticker-id="tickerId">
-						</slot>
-					</template>
-				</unsectioned-table-content>
+				</unified-table-content>
 			</table>
+
 			<!-- loader for updating data -->
 			<div
 				v-if="isAnimating"

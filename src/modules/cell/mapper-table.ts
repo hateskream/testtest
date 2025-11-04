@@ -252,6 +252,9 @@ export function mapColumn(marketColumns: ITableColumn[]) {
 			name: col.group.name,
 			displayName: col.group.name.charAt(0).toUpperCase() + col.group.name.slice(1),
 		},
+		width: col.width ? col.width : 0,
+		maxWidth: col.maxWidth,
+		minWidth: col.minWidth
 	}));
 }
 
