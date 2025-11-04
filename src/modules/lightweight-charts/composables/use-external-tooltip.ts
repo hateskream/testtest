@@ -21,6 +21,7 @@ export interface IUseExternalTooltipOptions {
 	valuePrefix?: string;
 	valueSuffix?: string;
 	reversed?: boolean;
+	transformTitle?: (title: string[]) => string[];
 }
 
 export interface IUseExternalTooltipState {
@@ -83,7 +84,12 @@ function createHandler(
 		return;
 	}
 
-	state.title = [...tooltip.title];
+	if (args.transformTitle) {
+		state.title = args.transformTitle([...tooltip.title]);
+	} else {
+		state.title = [...tooltip.title];
+	}
+
 
 	const rows = createRows(tooltip, args);
 
