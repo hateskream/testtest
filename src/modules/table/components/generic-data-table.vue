@@ -466,32 +466,6 @@ const handleAnimationIteration = () => {
 	min-height: 0;
 	padding-bottom: 2px;
 	overflow: auto;
-	scrollbar-width: thin;
-	scrollbar-color: rgb(255 255 255 / 30%) rgb(255 255 255 / 10%);
-}
-
-.scrollContainer::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
-}
-
-.scrollContainer::-webkit-scrollbar-track {
-	background: rgb(255 255 255 / 5%);
-	border-radius: 6px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb {
-	background: rgb(255 255 255 / 20%);
-	border: 2px solid rgb(255 255 255 / 5%);
-	border-radius: 6px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb:hover {
-	background: rgb(255 255 255 / 30%);
-}
-
-.scrollContainer::-webkit-scrollbar-corner {
-	background: rgb(255 255 255 / 5%);
 }
 
 .loadingIndicatorContainer {

@@ -1,0 +1,33 @@
+:root {
+	--scrollar-color: rgb(44 44 44 / 50%);
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: none;
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--scrollar-color);
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+
+::-webkit-scrollbar-corner {
+	background: rgb(255 255 255 / 5%);
+}
+
+@supports (-moz-appearance: none) {
+	body {
+		scrollbar-width: unset;
+		scrollbar-color: var(--scrollar-color) transparent;
+	}
+}

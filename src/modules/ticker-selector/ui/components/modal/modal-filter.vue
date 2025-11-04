@@ -321,25 +321,6 @@ function handleSelectAll(groupName: SymbolType) {
 	scrollbar-color: var(--border-color-base-300) transparent;
 }
 
-.content::-webkit-scrollbar {
-	width: 6px;
-	opacity: 0;
-	transition: opacity 0.3s;
-}
-
-.content::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-.content::-webkit-scrollbar-thumb {
-	background-color: var(--border-color-base-300);
-	border-radius: 6px;
-}
-
-.content:hover::-webkit-scrollbar {
-	opacity: 1;
-}
-
 .header {
 	position: sticky;
 	top: 0;
