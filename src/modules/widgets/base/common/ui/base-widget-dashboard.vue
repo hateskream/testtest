@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import type { DisplayVariant } from '@/modules/dashboard-group';
 import { UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
@@ -12,6 +14,16 @@ interface IBaseDashboardComponentProps {
 const props = defineProps<IBaseDashboardComponentProps>();
 
 const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant', { required: true });
+
+const MAX_DISPLAY_VARIANTS = 2;
+
+const preparedAllDisplayVariants = computed(() =>
+	props.allDisplayVariants.length > MAX_DISPLAY_VARIANTS
+		? [props.allDisplayVariants[0]]
+		: props.allDisplayVariants,
+);
+
+const countMore = computed(() => props.allDisplayVariants.length - preparedAllDisplayVariants.value.length);
 </script>
 
 <template>
@@ -27,7 +39,7 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 					:class="classes.displayVariantContainer"
 				>
 					<div
-						v-for="displayVariant in props.allDisplayVariants"
+						v-for="displayVariant in preparedAllDisplayVariants"
 						:key="displayVariant"
 						:class="[
 							classes.displayVariant,
@@ -39,6 +51,12 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 					>
 						<ui-icon :id="displayVariantToIcon[displayVariant]" />
 						<div :class="classes.displayVariantText">{{ displayVariantToName[displayVariant] }}</div>
+					</div>
+					<div
+						v-if="countMore > 1"
+						:class="[classes.displayVariant, classes.displayVariantText]"
+					>
+						{{countMore}} more...
 					</div>
 				</div>
 			</div>
@@ -63,6 +81,9 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
+	background: rgb(20 20 21 / 92%);
+	border: 1px solid rgb(73 73 80 / 12%);
+	border-radius: 12px;
 }
 
 .title {
@@ -71,16 +92,26 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 	z-index: 3;
 	display: flex;
 	flex-direction: column;
+	backdrop-filter: blur(8px);
+	background: rgb(20 20 21 / 92%);
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
 }
 
 .titleHeader {
 	display: flex;
+	align-items: center;
+	padding-bottom: 8px;
 }
 
 .titleText {
-	/* overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis; */
+	padding: 4px  10px;
+	font-style: normal;
+	font-weight: 450;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	color: #ffffff;
+	letter-spacing: 0.059px;
 }
 
 .displayVariantContainer {
@@ -88,7 +119,15 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 }
 
 .displayVariant {
+	display: flex;
+	padding: 0 10px 0 6px;
+	color: rgb(255 255 255 / 60%);
 	cursor: pointer;
+	gap: 3px;
+}
+
+.displayVariant:hover {
+	color: #ffffff;
 }
 
 .activeDisplayVariant {
@@ -96,11 +135,17 @@ const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant',
 }
 
 .displayVariantText {
-	/*
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	*/
+	overflow: hidden;
+	font-style: normal;
+	font-weight: 520;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	letter-spacing: 0.059px;
+	text-overflow: ellipsis;
+}
+
+.filters {
+	padding: 6px 16px 6px 20px;
 }
 
 .content {

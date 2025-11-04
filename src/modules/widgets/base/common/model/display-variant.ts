@@ -10,9 +10,9 @@ export const displayVariantToName: Record<DisplayVariant, string> = {
 };
 
 export const displayVariantToIcon: Record<DisplayVariant, IconIds> = {
-	chart: IconIds.Plus,
-	tile: IconIds.Plus,
-	bar: IconIds.Plus,
-	list: IconIds.Plus,
+	chart: IconIds.ChartView,
+	tile: IconIds.TileView,
+	bar: IconIds.BarView,
+	list: IconIds.ListView,
 	default: IconIds.Plus,
 };

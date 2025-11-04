@@ -117,4 +117,9 @@ export enum IconIds {
 	Watch = 'watch',
 	Help = 'help',
 	Tray = 'tray',
+
+	ChartView = 'chart-view',
+	TileView = 'tile-view',
+	BarView = 'bar-view',
+	ListView = 'list-view',
 }
