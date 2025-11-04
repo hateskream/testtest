@@ -18,11 +18,16 @@ const props = withDefaults(defineProps<IProps>(), {
 
 <template>
 	<div
-		:class="classes.title"
+		:class="[
+			classes.title,
+			{
+				[classes.new]: props.displayVariant === 'new',
+			},
+		]"
 		:style="{
-			backgroundColor: props.backgroundColor,
-			color: props.color,
-			paddingLeft: props.paddingLeft,
+			backgroundColor: props.displayVariant === 'new' ? 'rgb(73 73 80 / 70%);' : props.backgroundColor,
+			color: props.displayVariant === 'new' ? 'rgb(255 255 255 / 96%);' : props.color ,
+			paddingLeft: props.displayVariant === 'new' ? '10px' : props.paddingLeft,
 		}"
 	>
 		<slot />
@@ -37,11 +42,26 @@ const props = withDefaults(defineProps<IProps>(), {
 	width: max-content;
 	height: 32px;
 	padding: 0 12px;
-	font-weight: 300;
-	font-size: 10px;
-	text-align: left;
+	font-style: normal;
+	font-weight: 450;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	color: rgb(255 255 255 / 96%);
+	letter-spacing: 0.059px;
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;
+}
+
+.new {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 24px;
+	padding-right: 6px;
+	padding-left: 10px;
+	background: rgb(73 73 80 / 70%);
+	border-radius: 8px;
+	gap: 3px;
 }
 </style>
