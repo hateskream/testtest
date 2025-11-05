@@ -39,6 +39,11 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart && (
+	props.meta.size.h > 3
+	&& props.meta.size.h < 8
+));
 </script>
 
 <template>
@@ -57,8 +62,7 @@ const emit = defineEmits<{
 			<market-cap-filters-panel
 				v-model:selected-tickers="selectedTickers"
 				v-model:date-range="activeDateRange"
-				:meta="props.meta"
-				:display-settings="displaySettings"
+				:is-show-date-range="isShowFilterDateRange"
 				autofocus
 				:class="classes.filters"
 			/>
@@ -72,6 +76,7 @@ const emit = defineEmits<{
 				:display-settings="displaySettings"
 				:class="classes.content"
 				:summary-class="classes.summary"
+				is-show-chart-range
 			/>
 		</template>
 		<template #change-display>

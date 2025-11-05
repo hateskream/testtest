@@ -13,6 +13,7 @@ interface IViewComponentProps {
 	data: IMarketCapHistory;
 	displaySettings: IDisplaySettings;
 	summaryClass?: string | string[];
+	isShowChartRange?: boolean;
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -21,11 +22,15 @@ const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required:
 
 const isWide = computed(() => !props.displaySettings.isShowChart || props.meta.size.h <= 3);
 
+// TODO: Вынести в апи, когда опишем конечные контракты
 const mockedSummary = {
 	marketCap: (1_000_000_000 + Math.random() * 2_000_000_000).toString(),
 	volume: (1_000_000_000 + Math.random() * 2_000_000_000).toString(),
 	change24h: -10 + Math.random() * 20,
 };
+
+const isShowChartAxes = computed(() => props.meta.size.w > 2 && props.meta.size.h > 7);
+const chartRangeCanBeShowed = computed(() => props.meta.size.h > 7 && props.meta.size.w > 2);
 </script>
 
 <template>
@@ -49,6 +54,8 @@ const mockedSummary = {
 					:data="props.data"
 					:display-settings="props.displaySettings"
 					:summary="mockedSummary"
+					:is-show-range="props.isShowChartRange && chartRangeCanBeShowed"
+					:is-show-axes="isShowChartAxes"
 				/>
 			</div>
 		</template>

@@ -5,7 +5,6 @@ import { type IDisplaySettings, type IMarketCapHistory, type IMarketCapSummary, 
 import type { IMeta } from '@/modules/dashboard-group';
 import { ChartMarketCap } from '@/modules/lightweight-charts';
 import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
-import { DominanceDateRange } from '@/modules/widgets/bitcoin-dominance/model';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
@@ -15,6 +14,8 @@ interface IMarketCapChartProps {
 	data: IMarketCapHistory;
 	summary?: IMarketCapSummary;
 	displaySettings: IDisplaySettings;
+	isShowRange?: boolean;
+	isShowAxes?: boolean;
 }
 
 const props = defineProps<IMarketCapChartProps>();
@@ -24,7 +25,7 @@ const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required:
 const dateRangeToRangeChart: Record<MarketCapDateRange, RangeChartType> = {
 	[MarketCapDateRange.Day]: RangeChart['1D'],
 	[MarketCapDateRange.Week]: RangeChart['7D'],
-	[DominanceDateRange.Month]: RangeChart['1M'],
+	[MarketCapDateRange.Month]: RangeChart['1M'],
 	[MarketCapDateRange.SixMonths]: RangeChart['6M'],
 	[MarketCapDateRange.Year]: RangeChart['1Y'],
 	[MarketCapDateRange.All]: RangeChart['ALL'],
@@ -44,7 +45,6 @@ const activeChartRange = computed({
 	},
 });
 
-const isShowChartRange = computed(() => props.meta.size.h > 7 && props.meta.size.w > 2);
 const chartColorSchema = computed(() => props.summary && props.summary.change24h > 0 ? 'positive' : 'negative');
 
 function selectDateRange(rangeChart: RangeChartType) {
@@ -67,22 +67,20 @@ const preparedDatasets = computed(() => {
 		};
 	});
 });
-
-const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <= 7);
 </script>
 
 <template>
-	<div :class="[classes.root, {[classes.visibleAxis]: !isHideAxis}]">
+	<div :class="[classes.root, {[classes.visibleAxis]: props.isShowAxes}]">
 		<template v-if="props.data.tickers.length">
 			<chart-market-cap
 				:datasets="preparedDatasets"
 				:range="activeDateRange"
-				:hide-axis="isHideAxis"
+				:hide-axis="!props.isShowAxes"
 				height="100%"
 			/>
 			<div
-				v-if="meta.size.h >= 8 && meta.size.w >= 3"
-				:class="[classes.rangeWrapper, {[classes.visibleAxis]: !isHideAxis}]"
+				v-if="props.isShowRange"
+				:class="[classes.rangeWrapper, {[classes.visibleAxis]: props.isShowAxes}]"
 			>
 				<chart-range
 					:active-range="activeChartRange"
@@ -98,9 +96,9 @@ const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <=
 			:range-list="chartRanges"
 			:is-visible-history-graph="false"
 			:is-visible-indicators="false"
-			:is-visible-range="isShowChartRange"
+			:is-visible-range="props.isShowRange"
 			:is-visible-range-change="props.displaySettings.isShowChange"
-			:is-padded-range="isShowChartRange"
+			:is-padded-range="props.isShowRange"
 			:width="100"
 			height="100%"
 			disable-scroll

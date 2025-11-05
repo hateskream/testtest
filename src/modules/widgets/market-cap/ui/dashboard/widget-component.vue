@@ -44,10 +44,9 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 			<market-cap-filters-panel
 				v-model:selected-tickers="selectedTickers"
 				v-model:date-range="activeDateRange"
-				:meta="props.meta"
-				:display-settings="displaySettings"
-				:class="classes.filters"
 				autofocus
+				is-show-date-range
+				:class="classes.filters"
 			/>
 		</template>
 		<template #title>

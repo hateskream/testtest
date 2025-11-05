@@ -1,29 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import { dateRangeFilterValueToDisplay, type IDisplaySettings, MarketCapDateRange } from '../../model';
+import { dateRangeFilterValueToDisplay, MarketCapDateRange } from '../../model';
 import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IMeta } from '@/modules/dashboard-group';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
 const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
 const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
 
 interface IMarketCapFiltersPanelProps {
-	meta: IMeta;
-	displaySettings: IDisplaySettings;
+	isShowDateRange?: boolean;
 	displayVariant?: 'default' | 'new';
 }
 
 const props = defineProps<IMarketCapFiltersPanelProps>();
-
-const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart && (
-	props.meta.size.h > 3
-	&& props.meta.size.h < 8
-));
 </script>
 
 <template>
@@ -34,7 +25,7 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart 
 			:display-variant="props.displayVariant"
 			autofocus
 		/>
-		<template v-if="dateRangeMustBeVisible">
+		<template v-if="props.isShowDateRange">
 			<ui-delimiter />
 			<modal-badge>
 				<template #title>
