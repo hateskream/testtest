@@ -98,6 +98,8 @@ const preparedDatasets = computed(() => {
 			:is-visible-indicators="false"
 			:is-visible-range="props.isShowRange"
 			:is-visible-range-change="props.displaySettings.isShowChange"
+			:is-visible-price-scale="isShowAxes"
+			:is-visible-time-scale="isShowAxes"
 			:is-padded-range="props.isShowRange"
 			:width="100"
 			height="100%"

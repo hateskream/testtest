@@ -36,6 +36,8 @@ interface IChartProps {
 	isVisibleIndicators?: boolean;
 	isVisibleRange?: boolean;
 	isVisibleRangeChange?: boolean;
+	isVisiblePriceScale?: boolean;
+	isVisibleTimeScale?: boolean;
 	isPaddedRange?: boolean;
 	colorSchema?: 'positive' | 'negative';
 }
@@ -45,6 +47,8 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleIndicators: true,
 	isVisibleRange: true,
 	isVisibleRangeChange: true,
+	isVisiblePriceScale: true,
+	isVisibleTimeScale: true,
 	isPaddedRange: false,
 	colorSchema: 'positive',
 });
@@ -470,6 +474,8 @@ onMounted(async () => {
 				:type="chartTypeForWebComponent"
 				:auto-size="true"
 				:color-scheme="props.colorSchema"
+				:show-price-scale="props.isVisiblePriceScale"
+				:show-time-scale="props.isVisibleTimeScale"
 			/>
 		</div>
 		<chart-range
