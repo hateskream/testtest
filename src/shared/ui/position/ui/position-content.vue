@@ -110,7 +110,9 @@ onMounted(() => {
 
 onUnmounted(dispose);
 
-watch(isOpen, (v) => (v ? handleOpen() : dispose()));
+watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
+	immediate: true,
+});
 </script>
 
 <template>

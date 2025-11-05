@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, nextTick, onMounted, onUnmounted, toValue, useTemplateRef, watch } from 'vue';
+import {
+	watch,
+	toValue,
+	computed,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	useTemplateRef,
+	type CSSProperties,
+} from 'vue';
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 
 import type { ISubpositionContentProps } from '../../model';
@@ -90,7 +99,9 @@ onMounted(() => {
 
 onUnmounted(dispose);
 
-watch(isOpen, (v) => (v ? handleOpen() : dispose()));
+watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
+	immediate: true,
+});
 </script>
 
 <template>

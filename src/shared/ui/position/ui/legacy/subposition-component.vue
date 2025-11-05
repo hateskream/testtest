@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { UiPresence } from '@/shared/ui/presence';
 import type { IFloatingOptions } from '../../model';
 import { matchesTrigger } from '../../utils';
 
@@ -41,13 +42,19 @@ const props = withDefaults(defineProps<ISubpositionProps>(), {
 				:is-pinned="isPinned"
 			/>
 		</subposition-trigger>
-		<subposition-content
-			:offset="props.offset"
-			:strategy="props.strategy"
-			:placement="props.placement"
-		>
-			<slot name="content" />
-		</subposition-content>
+
+		<ui-presence :state="isOpen" v-slot="{present}">
+			<transition name="fade">
+				<subposition-content
+					v-if="present"
+					:offset="props.offset"
+					:strategy="props.strategy"
+					:placement="props.placement"
+				>
+					<slot name="content" />
+				</subposition-content>
+			</transition>
+		</ui-presence>
 	</subposition-root>
 </template>
 

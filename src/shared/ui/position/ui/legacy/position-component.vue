@@ -2,6 +2,7 @@
 import { useTemplateRef } from 'vue';
 
 import type { IPositionProps } from '../../model';
+import { UiPresence } from '@/shared/ui/presence';
 
 import PositionRoot from '../position-root.vue';
 import PositionTrigger from '../position-trigger.vue';
@@ -36,7 +37,7 @@ defineExpose({
 		:trigger="props.trigger"
 		:close-delay="props.closeDelay"
 		:open-delay="props.openDelay"
-		v-slot="{isOpen, isPinned}"
+		v-slot="{ isOpen, isPinned }"
 	>
 		<position-trigger>
 			<slot
@@ -45,14 +46,20 @@ defineExpose({
 				:is-pinned="isPinned"
 			/>
 		</position-trigger>
+
 		<position-teleport>
-			<position-content
-				:offset="props.offset"
-				:strategy="props.strategy"
-				:placement="props.placement"
-			>
-				<slot name="content" />
-			</position-content>
+			<ui-presence :state="isOpen" v-slot="{present}">
+				<transition name="fade">
+					<position-content
+						v-if="present"
+						:offset="props.offset"
+						:strategy="props.strategy"
+						:placement="props.placement"
+					>
+						<slot name="content" />
+					</position-content>
+				</transition>
+			</ui-presence>
 		</position-teleport>
 	</position-root>
 </template>
