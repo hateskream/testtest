@@ -4,6 +4,11 @@ import { computed, onMounted, onUnmounted, toValue, useTemplateRef } from 'vue';
 import { useSubFloatingContext } from '../../composables';
 import { matchesTrigger } from '../../utils';
 
+const emits = defineEmits<{
+	onTriggerMouseEnter: [];
+	onTriggerMouseLeave: [];
+}>();
+
 const triggerRef = useTemplateRef('trigger');
 
 const {
@@ -31,22 +36,18 @@ function handleClick() {
 		unpin();
 	}
 }
-function handleOver() {
-	if (!matchesTrigger(triggerProp.value, 'hover')) {
-		return;
-	}
 
+function handleEnter() {
 	if (!isOpen.value && !isPinned.value) {
 		events.hover.onMouseEnter();
+		emits('onTriggerMouseEnter');
 	}
 }
-function handleLeave() {
-	if (!matchesTrigger(triggerProp.value, 'hover')) {
-		return;
-	}
 
+function handleLeave() {
 	if (!isPinned.value) {
 		events.hover.onMouseLeave();
+		emits('onTriggerMouseLeave');
 	}
 }
 
@@ -64,17 +65,18 @@ function add() {
 	}
 
 	if (matchesTrigger(triggerProp.value, 'hover')) {
-		triggerRef.value.addEventListener('mouseover', handleOver);
+		triggerRef.value.addEventListener('mouseenter', handleEnter);
 		triggerRef.value.addEventListener('mouseleave', handleLeave);
 	}
 }
+
 function remove() {
 	if (!triggerRef.value) {
 		return;
 	}
 	triggerRef.value.removeEventListener('contextmenu', handleClick);
 	triggerRef.value.removeEventListener('click', handleClick);
-	triggerRef.value.removeEventListener('mouseover', handleOver);
+	triggerRef.value.removeEventListener('mouseenter', handleEnter);
 	triggerRef.value.removeEventListener('mouseleave', handleLeave);
 }
 

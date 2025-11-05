@@ -2,11 +2,11 @@ import { type MaybeRefOrGetter, toValue } from 'vue';
 
 export interface IUseHoverEventsOptions {
 	isPinned: MaybeRefOrGetter<boolean>;
-	openDelay?: MaybeRefOrGetter<number>;
-	closeDelay?: MaybeRefOrGetter<number>;
-	triggerRef?: MaybeRefOrGetter<HTMLElement | null>;
+	triggerRef: MaybeRefOrGetter<HTMLElement | null>;
 	show: () => void;
 	hide: () => void;
+	openDelay?: MaybeRefOrGetter<number>;
+	closeDelay?: MaybeRefOrGetter<number>;
 }
 
 export interface IUseHoverEventsReturn {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 
 import type { ISubpositionRootProps } from '../../model';
 import {
@@ -14,6 +14,13 @@ import {
 const props = withDefaults(defineProps<ISubpositionRootProps>(), {
 	trigger: 'hover',
 });
+
+const emits = defineEmits<{
+	onPinned: [];
+	onUnpinned: [];
+	onOpened: [];
+	onClosed: [];
+}>();
 
 const parentLevel = usePinnedLevel();
 const level = providePinnedLevel(parentLevel + 1);
@@ -34,12 +41,10 @@ function onDocumentClick() {
 let clearPinned: (() => void) | null = null;
 
 function pin() {
-	clearPinned = stack?.push(level, onDocumentClick) ?? null;
 	isPinned.value = true;
 }
 
 function unpin() {
-	clearPinned?.();
 	isPinned.value = false;
 }
 
@@ -50,6 +55,26 @@ function open() {
 function close() {
 	isOpen.value = false;
 }
+
+watch(isOpen, (value) => {
+	if (value) {
+		emits('onOpened');
+	} else {
+		emits('onClosed');
+		isPinned.value = false;
+	}
+}, { flush: 'post' });
+
+watch(isPinned, (value) => {
+	if (value) {
+		clearPinned = stack?.push(level, onDocumentClick) ?? null;
+		emits('onPinned');
+		isOpen.value = true;
+	} else {
+		emits('onUnpinned');
+		clearPinned?.();
+	}
+}, { flush: 'post' });
 
 function registerTrigger(element: HTMLElement) {
 	triggerRef.value = element;
@@ -70,7 +95,7 @@ const hoverEvents = useHoverEvents({
 
 function onMouseEnter() {
 	if (stack?.hasPinnedLevel(level)) {
-		stack?.closeLevel(level);
+		return;
 	}
 
 	hoverEvents.onMouseEnter();

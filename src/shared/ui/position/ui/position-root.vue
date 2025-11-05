@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 
 import {
 	providePinnedLevel,
@@ -15,6 +15,13 @@ const props = withDefaults(defineProps<IPositionRootProps>(), {
 	trigger: 'click',
 });
 
+const emits = defineEmits<{
+	onPinned: [];
+	onUnpinned: [];
+	onOpened: [];
+	onClosed: [];
+}>();
+
 const isOpen = ref(false);
 const isPinned = ref(false);
 
@@ -29,6 +36,14 @@ function close() {
 	isOpen.value = false;
 	isPinned.value = false;
 }
+
+watch(isOpen, (value) => {
+	value ? emits('onOpened') : emits('onClosed');
+}, { flush: 'post' });
+
+watch(isPinned, (value) => {
+	value ? emits('onPinned') : emits('onUnpinned');
+}, { flush: 'post' });
 
 function registerTrigger(element: HTMLElement) {
 	triggerRef.value = element;

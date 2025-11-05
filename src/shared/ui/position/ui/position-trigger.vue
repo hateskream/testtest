@@ -4,6 +4,11 @@ import { computed, onMounted, onUnmounted, toValue, useTemplateRef } from 'vue';
 import { matchesTrigger } from '../utils';
 import { useFloatingContext } from '../composables';
 
+const emits = defineEmits<{
+	onTriggerMouseEnter: [];
+	onTriggerMouseLeave: [];
+}>();
+
 const triggerRef = useTemplateRef('trigger');
 
 const {
@@ -43,21 +48,15 @@ function handleClick() {
 	}
 }
 function handleOver() {
-	if (!matchesTrigger(triggerProp.value, 'hover')) {
-		return;
-	}
-
 	if (!isOpen.value && !isPinned.value) {
 		events.hover.onMouseEnter();
+		emits('onTriggerMouseEnter');
 	}
 }
 function handleLeave() {
-	if (!matchesTrigger(triggerProp.value, 'hover')) {
-		return;
-	}
-
 	if (!isPinned.value) {
 		events.hover.onMouseLeave();
+		emits('onTriggerMouseEnter');
 	}
 }
 
