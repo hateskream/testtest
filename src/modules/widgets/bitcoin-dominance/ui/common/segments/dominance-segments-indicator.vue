@@ -33,7 +33,7 @@ const props = defineProps<IDominanceIndicatorProps>();
 	margin-top: 10px;
 	padding: 1px;
 	gap: 1px;
-	background-color: rgba(5, 5, 5, 0.4);
+	background-color: rgb(5 5 5 / 40%);
 	border-radius: 4px;
 }
 

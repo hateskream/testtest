@@ -90,7 +90,7 @@ const props = defineProps<IViewComponentProps>();
 .value {
 	font-weight: 400;
 	font-size: 16px;
-	color: #ffffff;
 	line-height: 160%;
+	color: #ffffff;
 }
 </style>
