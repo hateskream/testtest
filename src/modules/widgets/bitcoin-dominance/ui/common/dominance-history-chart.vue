@@ -32,10 +32,8 @@ const {
 function buildChartDatasets(historyValue: IDominanceHistory) {
 	const { tickers } = historyValue;
 
-	const dominances = props.data.map(item => ({ id: item.id, value: item.dominance.current }));
-	dominances.push({ id: 'other', value: 100 - dominances.reduce((acc, item) => acc + item.value, 0) });
-
-	const orders = Object.fromEntries(dominances.sort().map(item => [item.id, item.value]));
+	const dominanceValues = props.data.map(item => ({ id: item.id, value: item.dominance.current }));
+	const orders = Object.fromEntries(dominanceValues.sort().map(item => [item.id, item.value]));
 
 	const points = Object.fromEntries(
 		tickers.map(ticker => {
@@ -54,7 +52,7 @@ function buildChartDatasets(historyValue: IDominanceHistory) {
 		label: 'Other',
 		color: '#fff',
 		points: [],
-		order: orders['other'],
+		order: 0,
 	};
 
 	historyValue.data.forEach(value => {
@@ -66,7 +64,7 @@ function buildChartDatasets(historyValue: IDominanceHistory) {
 				y: value.dominance[ticker],
 			});
 
-			otherDominance -= value.dominance[ticker];
+			otherDominance -= Number(value.dominance[ticker]);
 		});
 
 		points.other.points.push({

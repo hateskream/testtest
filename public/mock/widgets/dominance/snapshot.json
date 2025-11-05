@@ -9,7 +9,7 @@
 					"week": 59.21,
 					"year": 58.93
 				},
-        "color": "rgb(247, 169, 104)"
+        "color": "#f7931a"
     },
     {
         "id": "Crypto-SOL-Solana",
@@ -33,6 +33,6 @@
 					"week": 12.68,
 					"year": 12.97
 				},
-        "color": "rgb(211, 67, 42)"
+        "color": "#74A0F3"
     }
 ]

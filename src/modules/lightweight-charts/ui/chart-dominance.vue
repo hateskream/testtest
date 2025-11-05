@@ -10,6 +10,7 @@ import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { DominanceDateRange } from '@/modules/widgets/bitcoin-dominance/model';
 import type { IChartDominanceDataset } from '../model';
+import { colorToRgba } from '@/shared/lib/color-to-rgba.ts';
 
 interface IChartDominanceProps {
 	height: CSSProperties['height'];
@@ -37,6 +38,7 @@ function buildDatasets() {
 			fill: true,
 			pointStyle: false,
 			animation: false,
+			stack: 'dominance',
 			backgroundColor: (context) => {
 				if (!context.chart.chartArea) {
 					return;
@@ -128,6 +130,7 @@ function buildScales() {
 			type: 'linear',
 			position: 'right',
 			display: !props.hideAxis,
+			stacked: true,
 			min: 0,
 			max: 100,
 			ticks: {
@@ -161,8 +164,8 @@ const { state, handler } = useExternalTooltip({
 function createGradient(context2D: CanvasRenderingContext2D, from: number, to: number, color: string) {
 	const gradient = context2D.createLinearGradient(0, from, 0, to);
 
-	gradient.addColorStop(0, color);
-	gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
+	gradient.addColorStop(0, colorToRgba(color, 0.4));
+	gradient.addColorStop(1, 'rgba(0, 0, 0, .8)');
 
 	return gradient;
 }

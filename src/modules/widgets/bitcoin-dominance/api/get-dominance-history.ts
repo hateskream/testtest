@@ -1,14 +1,15 @@
 import { add, sub } from 'date-fns';
+import { notNullish } from '@vueuse/core';
 
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import { removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { arrayToString } from '@/shared/lib';
 import { DominanceDateRange, type IDominanceHistory } from '../model/dominance.ts';
 
 const IS_USE_MOCK = true;
 
 export interface IGetDominanceHistoryRequest {
-	tickers: string;
+	tickers: string[];
 	range: DominanceDateRange;
 }
 
@@ -16,12 +17,17 @@ export async function getDominanceHistory(args: IGetDominanceHistoryRequest): Pr
 	const httpService = useHttpService();
 	const logger = useLogger();
 
-	const query = removeUndefinedPropertiesFromObject(args);
-
 	try {
-		return IS_USE_MOCK
-			? await getMockData(args)
-			: await httpService.get<IDominanceHistory>('/api/bitcoin-dominance/history', { query });
+		if (IS_USE_MOCK) {
+			return await getMockData(args);
+		}
+
+		return await httpService.get<IDominanceHistory>('/api/bitcoin-dominance/history', {
+			query: {
+				tickers: arrayToString(args.tickers),
+				range: args.range,
+			},
+		});
 	} catch (error) {
 		logger.error('Failed to get dominance history', error as Error);
 		throw error;
@@ -65,7 +71,8 @@ async function getMockData(args: IGetDominanceHistoryRequest) {
 	const endDate = add(new Date(), { days: 1 }).getTime();
 	const dateStep = (endDate - startDate) / 100;
 
-	const normalizedTickers = args.tickers.split(',').map(ticker => tickerToSymbolMock[ticker] ?? 'BTC');
+	const normalizedTickers = args.tickers.filter(ticker => notNullish(tickerToSymbolMock[ticker]))
+		.map(ticker => tickerToSymbolMock[ticker] ?? 'BTC');
 
 	const points = Array.from({ length: 100 }).map((_, key) => ({
 		timestamp: (new Date(startDate + key * dateStep)).toISOString(),

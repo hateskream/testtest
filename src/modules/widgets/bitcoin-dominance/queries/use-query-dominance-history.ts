@@ -11,7 +11,7 @@ export function useQueryDominanceHistory(
 	return useQuery({
 		queryKey: computed(() => ['dominance', toValue(tickers), toValue(range)]),
 		queryFn: () => getDominanceHistory({
-			tickers: toValue(tickers).join(','),
+			tickers: toValue(tickers),
 			range: toValue(range),
 		}),
 	});
