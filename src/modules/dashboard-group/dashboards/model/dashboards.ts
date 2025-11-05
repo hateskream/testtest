@@ -11,7 +11,7 @@ import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { TopIndicesWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
-import { PriceChartDashboard } from '@/modules/widgets/chart-price';
+import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
 import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
@@ -64,7 +64,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.TopIndices]: TopIndicesWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
-	[WidgetType.ChartPrice]: PriceChartDashboard,
+	[WidgetType.ChartPrice]: ChartPriceTvWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
 };
@@ -82,7 +82,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.TopIndices]: TopIndicesWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
-	[WidgetType.ChartPrice]: PriceChartDashboard,
+	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
 };

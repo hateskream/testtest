@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent } from '../../base';
+import { BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useChartPrice } from '../composables';
 import { BaseErrorComponent, ModalSubmenu } from '@/modules/widgets/base';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
-
-import PreloaderComponent from './preloader-component.vue';
+import { useChartPrice } from '../../composables';
+import { FiltersComponent, PreloaderComponent } from '../common';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../common/view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -43,6 +42,7 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const isBig = computed(() => props.meta.size.h >= 6 );
 
 function updateTicker(newValue: string[]) {
 	[selectedTicker.value] = newValue;
@@ -64,14 +64,23 @@ function updateTicker(newValue: string[]) {
 			<preloader-component v-if="props.meta.isLoading" />
 			<view-component
 				v-else
-				v-model:selected-ticker="selectedTicker"
-				v-model:time-range="timeRange"
-				:wachlists="wachlists"
 				:meta="meta"
-				@add-to-watchlist="handleAddToWatchlist"
-				@remove-from-watchlist="handleRemoveFromWatchlist"
-				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
-			/>
+				is-show-time-range
+				display-variant="tv"
+			>
+				<template #filters>
+					<filters-component
+						v-model:selected-ticker="selectedTicker"
+						v-model:time-range="timeRange"
+						:is-big="isBig"
+						:wachlists="wachlists"
+						display-variant="default"
+						@add-to-watchlist="handleAddToWatchlist"
+						@remove-from-watchlist="handleRemoveFromWatchlist"
+						@add-to-new-watchlist="handleAddTickerInNewWatchlist"
+					/>
+				</template>
+			</view-component>
 		</template>
 		<template #other>
 			<modal-submenu>

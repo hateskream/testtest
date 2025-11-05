@@ -10,6 +10,8 @@ import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue'
 
 interface ICellComponentProps {
 	isBig: boolean;
+	isShowTimeRange: boolean;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<ICellComponentProps>();
@@ -32,7 +34,15 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 </script>
 
 <template>
-	<div ref="container" :class="classes.root">
+	<div
+		ref="container"
+		:class="classes.root"
+		:style="{
+			padding: props.displayVariant === 'tv'
+				? '10px 8px 10px 16px;'
+				: '0 20px 10px 20px',
+		}"
+	>
 		<div ref="header" :class="classes.chartPrices">
 			<!-- At Close -->
 			<div>
@@ -95,7 +105,7 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 			:is-visible-history-graph="false"
 			:disable-scroll="false"
 			:is-visible-indicators="false"
-			:is-visible-range="props.isBig"
+			:is-visible-range="props.isBig && props.isShowTimeRange"
 			:range-list="[RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
 			@update="handleUpdateData"
 		/>
