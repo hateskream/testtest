@@ -36,6 +36,7 @@ interface IChartProps {
 	isVisibleIndicators?: boolean;
 	isVisibleRange?: boolean;
 	isVisibleRangeChange?: boolean;
+	isPaddedRange?: boolean;
 	colorSchema?: 'positive' | 'negative';
 }
 
@@ -44,6 +45,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleIndicators: true,
 	isVisibleRange: true,
 	isVisibleRangeChange: true,
+	isPaddedRange: false,
 	colorSchema: 'positive',
 });
 
@@ -472,7 +474,7 @@ onMounted(async () => {
 		</div>
 		<chart-range
 			v-if="isVisibleRange"
-			:class="classes.range"
+			:class="[classes.range, {[classes.padded]: props.isPaddedRange}]"
 			:active-range="currentRange"
 			:list="rangeList"
 			:disable-change="!isVisibleRangeChange"
@@ -507,6 +509,10 @@ onMounted(async () => {
 .range {
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+.range.padded {
+	margin-left: 10px;
 }
 
 .instruments {

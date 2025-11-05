@@ -60,18 +60,18 @@ const formattedMarketCaps = computed(() => props.tickers.map(ticker => formatMar
 	width: max-content;
 	height: 17px;
 	margin-bottom: 4px;
-	border-radius: 16px;
 	overflow: hidden;
-	gap: 1px;
 	font-weight: 440;
 	font-size: 10px;
+	border-radius: 16px;
+	gap: 1px;
 }
 
 .segment {
 	display: flex;
 	align-items: center;
-	background-color: var(--bg-color-surface-03);
 	padding: 6px;
+	background-color: var(--bg-color-surface-03);
 	gap: 6px;
 }
 

@@ -12,6 +12,7 @@ interface IViewComponentProps {
 	meta: IMeta;
 	data: IMarketCapHistory;
 	displaySettings: IDisplaySettings;
+	summaryClass?: string | string[];
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -31,7 +32,7 @@ const mockedSummary = {
 	<div
 		:class="[classes.root, {[classes.wide]: isWide}]"
 	>
-		<div :class="classes.summaryWrapper">
+		<div :class="[classes.summaryWrapper, props.summaryClass]">
 			<market-cap-tickers-summary v-if="props.data.tickers.length" :tickers="props.data.tickers" />
 			<market-cap-summary
 				v-else
@@ -72,7 +73,7 @@ const mockedSummary = {
 
 .chartWrapper {
 	flex: 1;
-	overflow: hidden;
 	height: 100%;
+	overflow: hidden;
 }
 </style>

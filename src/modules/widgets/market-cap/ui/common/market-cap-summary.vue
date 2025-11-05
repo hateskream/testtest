@@ -69,9 +69,9 @@ const preparedVolume = computed(() => formatValue(props.summary.volume));
 .change {
 	display: flex;
 	align-items: center;
-	gap: 4px;
-	font-size: 12px;
 	font-weight: 400;
+	font-size: 12px;
+	gap: 4px;
 }
 
 .positive {

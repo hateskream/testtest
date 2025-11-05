@@ -80,7 +80,10 @@ const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <=
 				:hide-axis="isHideAxis"
 				height="100%"
 			/>
-			<div v-if="meta.size.h >= 8 && meta.size.w >= 3" :class="classes.rangeWrapper">
+			<div
+				v-if="meta.size.h >= 8 && meta.size.w >= 3"
+				:class="[classes.rangeWrapper, {[classes.visibleAxis]: !isHideAxis}]"
+			>
 				<chart-range
 					:active-range="activeChartRange"
 					:list="chartRanges"
@@ -97,6 +100,7 @@ const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <=
 			:is-visible-indicators="false"
 			:is-visible-range="isShowChartRange"
 			:is-visible-range-change="props.displaySettings.isShowChange"
+			:is-padded-range="isShowChartRange"
 			:width="100"
 			height="100%"
 			disable-scroll
@@ -107,17 +111,21 @@ const isHideAxis = computed(() => props.meta.size.w <= 2 || props.meta.size.h <=
 
 <style module="classes">
 .root {
-	height: 100%;
-	width: 100%;
 	display: flex;
 	flex-direction: column;
+	width: 100%;
+	height: 100%;
 }
 
 .rangeWrapper {
-	margin-top: 16px;
+	padding: 16px 16px 10px;
 }
 
-.wrapper.visibleAxis {
+.rangeWrapper.visibleAxis {
+	padding-right: 0;
+}
+
+.root.visibleAxis {
 	padding-right: 16px;
 }
 </style>

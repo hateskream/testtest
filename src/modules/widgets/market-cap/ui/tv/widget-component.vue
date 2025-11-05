@@ -71,6 +71,7 @@ const emit = defineEmits<{
 				:meta="meta"
 				:display-settings="displaySettings"
 				:class="classes.content"
+				:summary-class="classes.summary"
 			/>
 		</template>
 		<template #change-display>
@@ -82,12 +83,15 @@ const emit = defineEmits<{
 
 <style module="classes">
 .filters {
-	padding: 0 16px;
 	margin-bottom: 16px;
+	padding: 0 16px;
 }
 
 .content {
-	padding: 0 16px 10px;
 	overflow: hidden;
+}
+
+.summary {
+	padding: 0 16px;
 }
 </style>
