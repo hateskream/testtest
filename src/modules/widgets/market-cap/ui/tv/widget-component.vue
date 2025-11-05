@@ -90,6 +90,7 @@ const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart &
 .filters {
 	margin-bottom: 16px;
 	padding: 0 16px;
+	gap: 6px;
 }
 
 .content {

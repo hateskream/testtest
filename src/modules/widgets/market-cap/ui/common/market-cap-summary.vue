@@ -37,7 +37,7 @@ const preparedVolume = computed(() => formatValue(props.summary.volume));
 				:class="[classes.change, props.summary.change24h > 0 ? classes.positive : classes.negative]"
 			>
 				<ui-icon
-					:id="IconIds.Gainers"
+					:id="props.summary.change24h > 0 ? IconIds.Gainers : IconIds.Loosers"
 					height="12px"
 					width="12px"
 				/>

@@ -26,8 +26,8 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 			autofocus
 		/>
 		<template v-if="props.isShowDateRange">
-			<ui-delimiter />
-			<modal-badge>
+			<ui-delimiter v-if="props.displayVariant === 'default'" />
+			<modal-badge :display-variant="props.displayVariant">
 				<template #title>
 					{{ dateRangeFilterValueToDisplay[activeDateRange].selected }}
 					<ui-icon
@@ -61,6 +61,5 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 .container {
 	display: flex;
 	align-items: center;
-	gap: 6px;
 }
 </style>

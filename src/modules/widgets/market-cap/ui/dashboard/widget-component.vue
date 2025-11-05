@@ -47,6 +47,7 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 				autofocus
 				is-show-date-range
 				:class="classes.filters"
+				display-variant="new"
 			/>
 		</template>
 		<template #title>
@@ -61,6 +62,7 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 				:data="data"
 				:meta="meta"
 				:display-settings="displaySettings"
+				:class="classes.content"
 			/>
 		</template>
 	</base-widget-dashboard>
@@ -68,6 +70,11 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 
 <style module="classes">
 .filters {
-	margin-bottom: 16px;
+	gap: 3px;
+}
+
+.content {
+	padding-left: 16px;
+	padding-top: 12px;
 }
 </style>
