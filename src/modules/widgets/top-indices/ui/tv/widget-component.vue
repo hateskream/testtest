@@ -3,15 +3,14 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseWidgetTvComponent } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useQueryTopIndices } from '../queries/get-top-indices';
-import { ALL_COLUMNS } from '../model';
+import { useQueryTopIndices } from '../../queries';
+import { ALL_COLUMNS } from '../../model';
 import { ErrorNetworkComponent } from '@/modules/widgets/base';
-
-import TopIndicesLoader from './layouts/loader-layout.vue';
+import { LoaderLayout } from '../common';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./layouts/main-layout.vue'),
-	loadingComponent: TopIndicesLoader,
+	loader: () => import('../common/main-layout.vue'),
+	loadingComponent: LoaderLayout,
 	errorComponent: BaseWidgetTvComponent,
 });
 
@@ -54,7 +53,7 @@ const isFixedWidth = computed(()=>{
 
 		<template #content>
 			<error-network-component v-if="isError" @retry="refetch" />
-			<top-indices-loader
+			<loader-layout
 				v-else-if="isNotData"
 			/>
 
@@ -63,6 +62,7 @@ const isFixedWidth = computed(()=>{
 				:is-fixed-width="isFixedWidth"
 				:rows="rows"
 				:columns="ALL_COLUMNS"
+				display-variant="tv"
 			/>
 		</template>
 	</base-widget-tv-component>
