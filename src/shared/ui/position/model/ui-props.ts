@@ -21,3 +21,7 @@ export interface IPositionTeleportProps {
 	disabled?: boolean;
 	defer?: boolean;
 }
+
+export type ISubpositionRootProps = IPositionRootProps;
+
+export type ISubpositionContentProps = IPositionContentProps;

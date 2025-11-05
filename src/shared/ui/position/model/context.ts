@@ -2,7 +2,7 @@ import type { MaybeRefOrGetter, Ref } from 'vue';
 
 import type { FloatingTriggers, IUseHoverEventsReturn } from '@/shared/ui/position';
 
-export interface IPositionRootContext {
+export interface IFloatingContext {
 	isOpen: Ref<boolean>;
 	isPinned: Ref<boolean>;
 	open: () => void;
@@ -15,4 +15,10 @@ export interface IPositionRootContext {
 	events: {
 		hover: IUseHoverEventsReturn;
 	};
+}
+
+export interface ISubFloatingContext extends IFloatingContext {
+	parent?: IFloatingContext | ISubFloatingContext;
+	pin: () => void;
+	unpin: () => void;
 }

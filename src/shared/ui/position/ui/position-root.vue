@@ -3,15 +3,17 @@ import { onUnmounted, ref } from 'vue';
 
 import {
 	providePinnedLevel,
-	providePinnedStack, useHoverEvents,
-	useProvideContext,
+	providePinnedStack,
+	useHoverEvents, useProvideFloatingContext,
 } from '../composables';
 import type { IPositionRootProps } from '../model';
 
 const level = providePinnedLevel(1);
 providePinnedStack();
 
-const props = defineProps<IPositionRootProps>();
+const props = withDefaults(defineProps<IPositionRootProps>(), {
+	trigger: 'click',
+});
 
 const isOpen = ref(false);
 const isPinned = ref(false);
@@ -45,7 +47,7 @@ const hoverEvents = useHoverEvents({
 	closeDelay: () => props.closeDelay ?? 0,
 });
 
-useProvideContext({
+useProvideFloatingContext({
 	isOpen,
 	isPinned,
 	open,

@@ -19,7 +19,7 @@ import {
 
 import { PositionTeleport } from '../../ui';
 import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
-import { providePinnedLevel, providePinnedStack } from '../../composables';
+import { providePinnedLevel, providePinnedStack, useProvideFloatingContext } from '../../composables';
 import type { IFloatingOptions } from '../../model';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
@@ -144,6 +144,9 @@ onUnmounted(() => {
 	removeEventListeners();
 	cleanup?.();
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+useProvideFloatingContext({} as any);
 </script>
 
 <template>

@@ -16,7 +16,7 @@ import type {
 } from '../model';
 import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
-import { UiSubposition } from '@/shared/ui/position';
+import { UiPosition, UiSubposition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
@@ -158,7 +158,7 @@ function updateColorDepth(newColorDepth: string) {
 
 		</div>
 		<div v-if="props.isShowDots" class="end-group">
-			<ui-subposition position="right-start" strategy="absolute">
+			<ui-position position="right-start" strategy="absolute">
 				<template #title>
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>
@@ -172,7 +172,7 @@ function updateColorDepth(newColorDepth: string) {
 						/>
 					</modal-badge-list>
 				</template>
-			</ui-subposition>
+			</ui-position>
 		</div>
 	</div>
 </template>
