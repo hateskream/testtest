@@ -22,6 +22,7 @@ export interface IUseExternalTooltipOptions {
 	valueSuffix?: string;
 	reversed?: boolean;
 	transformTitle?: (title: string[]) => string[];
+	transformRowValue?: (rowValue: string) => string;
 }
 
 export interface IUseExternalTooltipState {
@@ -48,10 +49,13 @@ function createRows(
 	if (args.mode === 'vaults') {
 		bodyLines.forEach((body, i) => {
 			const legend = args.legends?.[i];
+
+			const value = args.transformRowValue ? args.transformRowValue(body.toString()) : body.toString();
+
 			rows.push({
 				color: legend?.color ?? 'red',
 				text: legend?.text ?? '',
-				value: `${args.valuePrefix}${body.toString()}${args.valueSuffix}`,
+				value: `${args.valuePrefix}${value}${args.valueSuffix}`,
 			});
 		});
 	} else {
@@ -61,10 +65,12 @@ function createRows(
 
 			const labelColor = tooltip.labelColors?.[i]?.borderColor;
 
+			const transformedValue = args.transformRowValue ? args.transformRowValue(value) : value;
+
 			rows.push({
 				color: color ?? labelColor ?? 'transparent',
 				text: symbol ?? '',
-				value: `${args.valuePrefix}${(value ?? '').trim()}${args.valueSuffix}`,
+				value: `${args.valuePrefix}${(transformedValue ?? '').trim()}${args.valueSuffix}`,
 			});
 		});
 	}

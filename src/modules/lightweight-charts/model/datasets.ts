@@ -4,3 +4,9 @@ export interface IChartDominanceDataset {
 	order: number;
 	points: { x: string; y: number }[];
 }
+
+export interface IChartMarketCapDataset {
+	label: string;
+	color: string;
+	points: { x: number; y: number }[];
+}

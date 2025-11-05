@@ -2,11 +2,9 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { useQueryMarketCap } from '../../queries/use-query-market-cap.ts';
-import { useMarketCapStore } from '../../store/market-cap.ts';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { PreloaderComponent } from '../common';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
+import { useMarketCap } from './../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/base-view.vue'),
@@ -20,9 +18,18 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const marketCap = useMarketCapStore();
-
-const { data, isLoading, isError, refetch } = useQueryMarketCap(computed(() => marketCap.selectedTickers));
+const {
+	selectedTickers,
+	displaySettings,
+	activeDateRange,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useMarketCap({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 
 const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 </script>
@@ -34,9 +41,13 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 		:all-display-variants="props.meta.allDisplayVariants"
 	>
 		<template #filters>
-			<modal-ticker-selector-with-badge
-				v-model="marketCap.selectedTickers"
-				display-variant="new"
+			<market-cap-filters-panel
+				v-model:selected-tickers="selectedTickers"
+				v-model:date-range="activeDateRange"
+				:meta="props.meta"
+				:display-settings="displaySettings"
+				:class="classes.filters"
+				autofocus
 			/>
 		</template>
 		<template #title>
@@ -47,9 +58,17 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
+				v-model:date-range="activeDateRange"
 				:data="data"
 				:meta="meta"
+				:display-settings="displaySettings"
 			/>
 		</template>
 	</base-widget-dashboard>
 </template>
+
+<style module="classes">
+.filters {
+	margin-bottom: 16px;
+}
+</style>

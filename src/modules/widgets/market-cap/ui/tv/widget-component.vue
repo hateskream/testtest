@@ -2,11 +2,9 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { useQueryMarketCap } from '../../queries/use-query-market-cap.ts';
-import { useMarketCapStore } from '../../store/market-cap.ts';
-import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemCheckbox } from '@/modules/widgets/base';
-import { PreloaderComponent } from '../common';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemSwitch } from '@/modules/widgets/base';
+import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
+import { useMarketCap } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/base-view.vue'),
@@ -20,9 +18,19 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const marketCap = useMarketCapStore();
-
-const { data, isLoading, isError, refetch } = useQueryMarketCap(computed(() => marketCap.selectedTickers));
+const {
+	selectedTickers,
+	displaySettings,
+	resetAllChanges,
+	activeDateRange,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useMarketCap({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 
 const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
@@ -37,7 +45,7 @@ const emit = defineEmits<{
 	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
-		@reset="marketCap.resetAll"
+		@reset="resetAllChanges"
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
@@ -46,41 +54,40 @@ const emit = defineEmits<{
 			{{ props.meta.name }}
 		</template>
 		<template #content>
+			<market-cap-filters-panel
+				v-model:selected-tickers="selectedTickers"
+				v-model:date-range="activeDateRange"
+				:meta="props.meta"
+				:display-settings="displaySettings"
+				autofocus
+				:class="classes.filters"
+			/>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
 			<view-component
 				v-else-if="data"
+				v-model:date-range="activeDateRange"
 				:data="data"
 				:meta="meta"
+				:display-settings="displaySettings"
 				:class="classes.content"
-			>
-				<template #ticker-selector>
-					<modal-ticker-selector-with-badge
-						v-model="marketCap.selectedTickers"
-					/>
-				</template>
-			</view-component>
+			/>
 		</template>
 		<template #change-display>
-			<modal-item-checkbox
-				:model-value="marketCap.isShowChart"
-				@update:model-value="marketCap.toggleShowChart"
-			>
-				Chart
-			</modal-item-checkbox>
-			<modal-item-checkbox
-				:model-value="marketCap.isShowChange"
-				@update:model-value="marketCap.toggleShowChange"
-			>
-				Change, %
-			</modal-item-checkbox>
+			<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
+			<modal-item-switch v-model="displaySettings.isShowChange">Change, %</modal-item-switch>
 		</template>
 	</base-widget-tv-component>
 </template>
 
 <style module="classes">
+.filters {
+	padding: 0 16px;
+	margin-bottom: 16px;
+}
+
 .content {
-	padding: 0 16px 18px;
+	padding: 0 16px 10px;
 	overflow: hidden;
 }
 </style>

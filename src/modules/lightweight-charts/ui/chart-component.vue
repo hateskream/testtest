@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import {
 	AreaSeries,
+	type CandlestickData,
+	CandlestickSeries,
 	ColorType,
 	createChart,
-	type ISeriesApi,
-	LineSeries,
 	type IChartApi,
+	type ISeriesApi,
 	type LineData,
+	LineSeries,
+	type LogicalRangeChangeEventHandler,
 	type SeriesType,
 	type Time,
-	CandlestickSeries,
-	type CandlestickData,
-	type LogicalRangeChangeEventHandler,
 } from 'lightweight-charts';
-import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
-import { nextTick } from 'vue';
 import type { ChartType } from '@shared/component-library';
 
 import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
-import { IndicatorsChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
+import { type IChartUpdateEmitData, IndicatorsChart, TypeChart } from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
@@ -36,12 +35,16 @@ interface IChartProps {
 	rangeList: RangeChart[];
 	isVisibleIndicators?: boolean;
 	isVisibleRange?: boolean;
+	isVisibleRangeChange?: boolean;
+	colorSchema?: 'positive' | 'negative';
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleHistoryGraph: true,
 	isVisibleIndicators: true,
 	isVisibleRange: true,
+	isVisibleRangeChange: true,
+	colorSchema: 'positive',
 });
 
 defineExpose({
@@ -88,7 +91,15 @@ const handlerSubscribeVisibleLogicalRangeChange: LogicalRangeChangeEventHandler 
 	}
 };
 
-const currentRange = ref<RangeChart>(props.rangeList[props.rangeList.length - 1]);
+const modelValueRange = defineModel<RangeChart>('range');
+
+const currentRange = computed({
+	get: () => modelValueRange.value ?? props.rangeList[props.rangeList.length - 1],
+	set: (value) => {
+		modelValueRange.value = value;
+	},
+});
+
 
 const listTypeGraph = Object.entries(TypeChart).map(([title, val]) => ({ title, val }));
 
@@ -314,11 +325,11 @@ watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
 
 onMounted(async () => {
 	await nextTick();
+
 	chart.value = createChart(container.value as HTMLElement, {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
 		},
 
 		rightPriceScale: {
@@ -447,7 +458,6 @@ onMounted(async () => {
 				</template>
 			</modal-badge>
 		</div>
-
 		<div
 			:class="classes.mainChart"
 			:style="styleMainChart"
@@ -457,18 +467,17 @@ onMounted(async () => {
 				:data="preparedChartData"
 				:type="chartTypeForWebComponent"
 				:auto-size="true"
-				:color-scheme="'positive'"
+				:color-scheme="props.colorSchema"
 			/>
 		</div>
-
 		<chart-range
 			v-if="isVisibleRange"
 			:class="classes.range"
 			:active-range="currentRange"
 			:list="rangeList"
+			:disable-change="!isVisibleRangeChange"
 			@select="selectRange"
 		/>
-
 		<div
 			ref="history"
 			:class="classes.chartHistory"

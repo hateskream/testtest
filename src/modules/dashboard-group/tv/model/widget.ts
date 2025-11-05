@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { EnvironmentName, getAllEnableWidgets, getEnvironmentName, type WidgetFeature } from '@/shared/lib';
-import { WidgetType, isWidgetTypeKey } from '../../core';
+import { isWidgetTypeKey, WidgetType } from '../../core';
 
 export interface IPosition {
 	x: number;
@@ -105,8 +105,8 @@ const Performance: Preset = {
 };
 
 const MarketCap: Preset = {
-	name: 'MarketCap',
-	description: 'MarketCap',
+	name: 'Market Cap',
+	description: 'Market Cap',
 	minSize: { w: 1, h: 3 },
 	maxSize: { w: Infinity, h: Infinity },
 	defaultSize: { w: 3, h: 7 }, // так вставить в пресет дашборда

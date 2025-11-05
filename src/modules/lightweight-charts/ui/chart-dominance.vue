@@ -26,30 +26,8 @@ const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
 const EMPTY_AXES_OPTIONS = {
-	y: { display: false,
-		grid: {
-			display: false,
-			drawBorder: false,
-		},
-		ticks: {
-			display: false,
-			padding: 0,
-		},
-		border: {
-			display: false,
-		} },
-	x: { display: false,
-		grid: {
-			display: false,
-			drawBorder: false,
-		},
-		ticks: {
-			display: false,
-			padding: 0,
-		},
-		border: {
-			display: false,
-		} },
+	y: { display: false },
+	x: { type: 'time', display: false },
 };
 
 const DEFAULT_VERTICAL_AXIS = {

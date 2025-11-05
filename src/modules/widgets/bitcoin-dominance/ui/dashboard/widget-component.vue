@@ -47,6 +47,7 @@ const {
 				:meta="props.meta"
 				:display-settings="displaySettings"
 				:class="classes.filters"
+				display-variant="new"
 			/>
 		</template>
 		<template #title>
