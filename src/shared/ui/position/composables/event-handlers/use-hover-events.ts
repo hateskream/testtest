@@ -9,7 +9,15 @@ export interface IUseHoverEventsOptions {
 	hide: () => void;
 }
 
-export function useHoverEvents(options: IUseHoverEventsOptions) {
+export interface IUseHoverEventsReturn {
+	onMouseEnter: () => void;
+	onMouseLeave: () => void;
+	onFloatingEnter: () => void;
+	onFloatingLeave: (event: MouseEvent) => void;
+	clearTimers: () => void;
+}
+
+export function useHoverEvents(options: IUseHoverEventsOptions): IUseHoverEventsReturn {
 	const {
 		triggerRef,
 		isPinned,
@@ -33,23 +41,11 @@ export function useHoverEvents(options: IUseHoverEventsOptions) {
 		}
 	}
 
-	function onMouseEnter() {
-		if (toValue(isPinned)) {
-			return;
-		}
-
-		if (hideTimer) {
-			clearTimeout(hideTimer);
-			hideTimer = null;
-		}
-
-		if (showTimer) {
-			return;
-		}
-
+	function scheduleShow() {
+		clearTimers();
 		const delay = toValue(openDelay);
 		if (delay > 0) {
-			showTimer = window.setTimeout(() => {
+			showTimer = setTimeout(() => {
 				show();
 				showTimer = null;
 			}, delay);
@@ -58,19 +54,11 @@ export function useHoverEvents(options: IUseHoverEventsOptions) {
 		}
 	}
 
-	function onMouseLeave() {
-		if (toValue(isPinned)) {
-			return;
-		}
-
-		if (showTimer) {
-			clearTimeout(showTimer);
-			showTimer = null;
-		}
-
+	function scheduleHide() {
+		clearTimers();
 		const delay = toValue(closeDelay);
 		if (delay > 0) {
-			hideTimer = window.setTimeout(() => {
+			hideTimer = setTimeout(() => {
 				hide();
 				hideTimer = null;
 			}, delay);
@@ -79,15 +67,26 @@ export function useHoverEvents(options: IUseHoverEventsOptions) {
 		}
 	}
 
+	function onMouseEnter() {
+		if (toValue(isPinned)) {
+			return;
+		}
+		scheduleShow();
+	}
+
+	function onMouseLeave() {
+		if (toValue(isPinned)) {
+			return;
+		}
+		scheduleHide();
+	}
+
 	function onFloatingEnter() {
 		if (toValue(isPinned)) {
 			return;
 		}
 
-		if (hideTimer) {
-			clearTimeout(hideTimer);
-			hideTimer = null;
-		}
+		scheduleShow();
 	}
 
 	function onFloatingLeave(event: MouseEvent) {
@@ -102,7 +101,7 @@ export function useHoverEvents(options: IUseHoverEventsOptions) {
 			return;
 		}
 
-		onMouseLeave();
+		scheduleHide();
 	}
 
 	return {

@@ -2,9 +2,9 @@
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
-import type { IFloatingOptions } from '../model';
-import { matchesTrigger } from '../utils';
-import { providePinnedLevel, useHoverEvents, usePinnedLevel, usePinnedStack } from '../composables';
+import type { IFloatingOptions } from '../../model';
+import { matchesTrigger } from '../../utils';
+import { providePinnedLevel, useHoverEvents, usePinnedLevel, usePinnedStack } from '../../composables';
 
 interface ISubpositionProps extends IFloatingOptions {
 	hoverPadding?: number;

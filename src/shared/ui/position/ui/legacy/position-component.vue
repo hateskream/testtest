@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import type { IPositionProps } from '../../model';
+
+import PositionRoot from '../position-root.vue';
+import PositionTrigger from '../position-trigger.vue';
+import PositionTeleport from '../position-teleport.vue';
+import PositionContent from '../position-content.vue';
+
+const props = withDefaults(defineProps<IPositionProps>(), {
+	placement: 'right-end',
+	trigger: 'click',
+	offset: 6,
+	strategy: 'fixed',
+});
+</script>
+
+<template>
+	<position-root
+		:trigger="props.trigger"
+		:close-delay="props.closeDelay"
+		:open-delay="props.openDelay"
+		v-slot="{isOpen, isPinned}"
+	>
+		<position-trigger>
+			<slot
+				name="title"
+				:is-visible="isOpen"
+				:is-pinned="isPinned"
+			/>
+		</position-trigger>
+		<position-teleport>
+			<position-content
+				:offset="props.offset"
+				:strategy="props.strategy"
+				:placement="props.placement"
+			>
+				<slot name="content" />
+			</position-content>
+		</position-teleport>
+	</position-root>
+</template>
+
+<style scoped>
+.floating-inner {
+	z-index: 101;
+	max-height: 80svh;
+	border-radius: 6px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+</style>

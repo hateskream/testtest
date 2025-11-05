@@ -1,11 +1,7 @@
 <script setup lang="ts">
-interface IFloatingTeleportProps {
-	to?: string;
-	disabled?: boolean;
-	defer?: boolean;
-}
+import type { IPositionTeleportProps } from '../model';
 
-const props = withDefaults(defineProps<IFloatingTeleportProps>(), {
+const props = withDefaults(defineProps<IPositionTeleportProps>(), {
 	to: '#floating-host',
 	disabled: false,
 	defer: false,
@@ -21,7 +17,3 @@ const props = withDefaults(defineProps<IFloatingTeleportProps>(), {
 		<slot />
 	</teleport>
 </template>
-
-<style scoped>
-
-</style>

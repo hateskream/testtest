@@ -12,7 +12,10 @@ const emits = defineEmits<{
 </script>
 
 <template>
-	<ui-position :trigger="['click', 'hover']">
+	<ui-position
+		:trigger="['click', 'hover']"
+		:close-delay="400"
+	>
 		<template #title>
 			<ui-icon
 				:id="IconIds.ControlMore"

@@ -17,10 +17,10 @@ import {
 	type MaybeRefOrGetter,
 } from 'vue';
 
-import { FloatingTeleport } from '../ui';
-import { createVirtualFloatingNode, matchesTrigger } from '../utils';
-import { providePinnedLevel, providePinnedStack } from '../composables';
-import type { IFloatingOptions } from '../model';
+import { PositionTeleport } from '../../ui';
+import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
+import { providePinnedLevel, providePinnedStack } from '../../composables';
+import type { IFloatingOptions } from '../../model';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
 	trigger: 'click',
@@ -147,14 +147,22 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<floating-teleport>
+	<position-teleport>
 		<div
 			v-if="isVisible"
 			ref="floating"
 			:style="floatingStyles"
 			data-position
+			data-portal-content
 		>
 			<slot :close="handleClose" :is-visible="isVisible" />
 		</div>
-	</floating-teleport>
+	</position-teleport>
 </template>
+
+<style scoped>
+[data-portal-content] {
+	z-index: 101;
+	max-height: 80svh;
+}
+</style>
