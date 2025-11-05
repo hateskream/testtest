@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, toValue, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, nextTick, onMounted, onUnmounted, toValue, useTemplateRef, watch } from 'vue';
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 
 import type { ISubpositionContentProps } from '../../model';
@@ -10,8 +10,7 @@ const props = withDefaults(defineProps<ISubpositionContentProps>(), {
 	placement: 'bottom-start',
 	offset: 6,
 	strategy: 'absolute',
-	openDelay: 0,
-	closeDelay: 0,
+	hoverPadding: 4,
 });
 
 const contentRef = useTemplateRef('content');
@@ -28,11 +27,38 @@ const trigger = () => toValue(_trigger);
 
 let cleanup: null | (() => void) = null;
 
-const { floatingStyles, update } = useFloating(triggerRef, contentRef, {
+const { floatingStyles, update, placement } = useFloating(triggerRef, contentRef, {
 	placement: props.placement,
 	strategy: props.strategy,
 	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
 });
+
+const enhancedFloatingStyles = computed(() => {
+	if (!floatingStyles.value) {
+		return {};
+	}
+	const baseStyles = floatingStyles.value;
+
+	if (matchesTrigger(trigger(), 'hover')) {
+		const padding = props.hoverPadding;
+		let paddingStyle: CSSProperties = {};
+
+		if (placement.value?.startsWith('right')) {
+			paddingStyle = { paddingLeft: `${padding}px` };
+		} else if (placement.value?.startsWith('left')) {
+			paddingStyle = { paddingRight: `${padding}px` };
+		} else if (placement.value?.startsWith('top')) {
+			paddingStyle = { paddingBottom: `${padding}px`, marginBottom: `-${padding}px` };
+		} else if (placement.value?.startsWith('bottom')) {
+			paddingStyle = { paddingTop: `${padding}px`, marginTop: `-${padding}px` };
+		}
+
+		return { ...baseStyles, ...paddingStyle };
+	}
+
+	return baseStyles;
+});
+
 
 function handleOpen() {
 	nextTick(() => {
@@ -71,8 +97,8 @@ watch(isOpen, (v) => (v ? handleOpen() : dispose()));
 	<div
 		v-if="isOpen"
 		ref="content"
-		:style="floatingStyles"
-		data-position-content
+		:style="enhancedFloatingStyles"
+		data-subposition-content
 	>
 		<slot />
 	</div>

@@ -24,4 +24,6 @@ export interface IPositionTeleportProps {
 
 export type ISubpositionRootProps = IPositionRootProps;
 
-export type ISubpositionContentProps = IPositionContentProps;
+export interface ISubpositionContentProps extends IPositionContentProps {
+	hoverPadding?: number;
+}
