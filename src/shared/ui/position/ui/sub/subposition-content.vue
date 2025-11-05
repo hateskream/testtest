@@ -26,6 +26,7 @@ const contentRef = useTemplateRef('content');
 
 const {
 	isOpen,
+	isPinned,
 	triggerRef,
 	trigger: _trigger,
 	registerContent,
@@ -110,6 +111,8 @@ watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
 		ref="content"
 		:style="enhancedFloatingStyles"
 		data-subposition-content
+		:data-open="isOpen"
+		:data-pinned="isPinned"
 	>
 		<slot />
 	</div>

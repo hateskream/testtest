@@ -16,8 +16,6 @@ const props = withDefaults(defineProps<IPositionContentProps>(), {
 	placement: 'bottom-start',
 	offset: 6,
 	strategy: 'absolute',
-	openDelay: 0,
-	closeDelay: 0,
 });
 
 const contentRef = useTemplateRef('content');
@@ -25,6 +23,7 @@ const contentRef = useTemplateRef('content');
 const stack = usePinnedStack();
 const {
 	isOpen,
+	isPinned,
 	triggerRef,
 	trigger: _trigger,
 	registerContent,
@@ -121,6 +120,8 @@ watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
 		ref="content"
 		:style="floatingStyles"
 		data-position-content
+		:data-open="isOpen"
+		:data-pinned="isPinned"
 	>
 		<slot />
 	</div>
