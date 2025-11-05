@@ -52,6 +52,8 @@ const formattedMarketCaps = computed(() => props.tickers.map(ticker => formatMar
 	flex: 0 0 auto;
 	max-height: 100px;
 	overflow-y: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .ticker {
