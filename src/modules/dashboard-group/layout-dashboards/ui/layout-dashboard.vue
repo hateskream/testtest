@@ -29,17 +29,12 @@ const isMobile = computed(() => viewportWidth.value < 768 - 72*2);
 const preparedSlides = computed(
 	() => sections.value
 		.map(s => ({
-			// ...s,
-			// width: isMobile.value
-			// 	? viewportWidth.value
-			// 	: isSectionWidthLessThanViewport.value
-			// 		? normalizeWidth.value
-			// 		: s.width,
 			...s,
 			width: isMobile.value
 				? viewportWidth.value
-
-				: s.width,
+				: isSectionWidthLessThanViewport.value
+					? normalizeWidth.value
+					: s.width,
 		})),
 );
 
@@ -115,7 +110,6 @@ const {
 	flex-grow: 1;
 	flex-direction: column;
 	margin: 8px 0;
-	background: linear-gradient(140deg, rgb(17 17 19 / 80%) 22.94%, rgb(10 10 10 / 80%) 94.93%);
 	border: 1px solid #1d1d1e;
 	border-radius: 18px;
 }
