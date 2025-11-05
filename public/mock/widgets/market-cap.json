@@ -1,5 +1,14 @@
 [
     {
+        "id": "Crypto-BTCBitcoin",
+        "symbol": "BTC",
+        "name": "Bitcoin",
+        "type": "crypto",
+        "change24h": 0.93,
+				"color": "rgb(247, 169, 104)",
+        "fdv": "84232834934324.45"
+    },
+	  {
         "id": "Crypto-ADACardano",
         "symbol": "ADA",
         "name": "Cardano",
@@ -9,7 +18,7 @@
         "fdv": "84232834934324.45"
     },
     {
-        "id": "Crypto-TRXTron",
+        "id": "Crypto-TRXTRON",
         "symbol": "TRON",
         "name": "TRX",
         "type": "crypto",
@@ -27,7 +36,7 @@
         "fdv": "943299.45"
     },
     {
-        "id": "Stock-TSLATesla",
+        "id": "Stock-TSLA",
         "symbol": "TSLA",
         "name": "Tesla Inc",
         "type": "stock",
