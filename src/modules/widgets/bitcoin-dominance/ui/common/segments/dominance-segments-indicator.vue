@@ -31,6 +31,10 @@ const props = defineProps<IDominanceIndicatorProps>();
 	display: flex;
 	align-items: center;
 	margin-top: 10px;
+	padding: 1px;
+	gap: 1px;
+	background-color: rgba(5, 5, 5, 0.4);
+	border-radius: 4px;
 }
 
 .segment {

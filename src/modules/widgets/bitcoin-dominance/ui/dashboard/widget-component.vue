@@ -63,7 +63,7 @@ const {
 				:data="data"
 				:meta="props.meta"
 				:display-settings="displaySettings"
-				:class="classes.component"
+				:class="classes.content"
 			/>
 		</template>
 	</base-widget-dashboard>
@@ -71,6 +71,10 @@ const {
 
 <style module="classes">
 .filters {
-	margin-bottom: 16px;
+	gap: 3px;
+}
+
+.content {
+	padding: 12px 16px 0 20px;
 }
 </style>

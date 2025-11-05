@@ -74,7 +74,7 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 }
 
 .content {
-	padding-left: 16px;
+	padding-left: 20px;
 	padding-top: 12px;
 }
 </style>

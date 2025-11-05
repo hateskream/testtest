@@ -77,7 +77,7 @@ const props = defineProps<IViewComponentProps>();
 	align-items: center;
 	gap: 6px;
 	font-weight: 400;
-	font-size: 12px;
+	font-size: 13px;
 	color: var(--text-color-base-300);
 }
 
@@ -89,7 +89,8 @@ const props = defineProps<IViewComponentProps>();
 
 .value {
 	font-weight: 400;
-	font-size: 15px;
+	font-size: 16px;
 	color: #ffffff;
+	line-height: 160%;
 }
 </style>
