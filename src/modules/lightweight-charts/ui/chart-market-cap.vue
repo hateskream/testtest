@@ -23,29 +23,6 @@ const props = defineProps<IChartMarketCapProps>();
 const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
-const DEFAULT_VERTICAL_AXIS = {
-	type: 'linear',
-	position: 'right',
-	display: true,
-	ticks: {
-		maxTicksLimit: 6,
-		color: 'rgba(154, 154, 157, 1)',
-		callback: function (value: string) {
-			const pretty = prettyNumberWithKey(value, 2);
-
-			return `${pretty.value}${pretty.suffix}`;
-		},
-	},
-	grid: {
-		display: true,
-		color: '#373737',
-		circular: true,
-	},
-	border: {
-		dash: [2, 5],
-	},
-};
-
 function updateChartScales() {
 	if (!chart.value) {
 		return;
@@ -126,21 +103,38 @@ const rangeToScales = {
 	},
 };
 
-const EMPTY_AXES_OPTIONS = {
-	y: { display: false },
-	x: { type: 'time', display: false },
-};
-
 function buildScales() {
-	return props.hideAxis ? EMPTY_AXES_OPTIONS : {
-		y: DEFAULT_VERTICAL_AXIS,
+	return {
 		x: {
+			display: !props.hideAxis,
 			type: 'time',
 			ticks: {
 				maxTicksLimit: 12,
 				color: 'rgba(154, 154, 157, 1)',
 			},
 			...rangeToScales[props.range],
+		},
+		y: {
+			display: !props.hideAxis,
+			type: 'linear',
+			position: 'right',
+			ticks: {
+				maxTicksLimit: 6,
+				color: 'rgba(154, 154, 157, 1)',
+				callback: function (value: string) {
+					const pretty = prettyNumberWithKey(value, 2);
+
+					return `${pretty.value}${pretty.suffix}`;
+				},
+			},
+			grid: {
+				display: true,
+				color: '#373737',
+				circular: true,
+			},
+			border: {
+				dash: [2, 5],
+			},
 		},
 	};
 }

@@ -1,4 +1,4 @@
-import { sub } from 'date-fns';
+import { add, sub } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
@@ -61,14 +61,14 @@ function createTickerDominanceMock(ticker: string) {
 
 async function getMockData(args: IGetDominanceHistoryRequest) {
 	const daysCount = rangeDayCounts[args.range];
-	const startDate = sub(new Date(), { days: daysCount + 10 });
-	const endDate = Date.now();
-	const dateStep = (endDate - startDate.getTime()) / 100;
+	const startDate = sub(new Date(), { days: daysCount + 10 }).getTime();
+	const endDate = add(new Date(), { days: 1 }).getTime();
+	const dateStep = (endDate - startDate) / 100;
 
 	const normalizedTickers = args.tickers.split(',').map(ticker => tickerToSymbolMock[ticker] ?? 'BTC');
 
 	const points = Array.from({ length: 100 }).map((_, key) => ({
-		timestamp: (new Date(startDate.getTime() + key * dateStep)).toISOString(),
+		timestamp: (new Date(startDate + key * dateStep)).toISOString(),
 		dominance: Object.fromEntries(normalizedTickers.map(ticker => [ticker, createTickerDominanceMock(ticker)])),
 	}));
 

@@ -1,4 +1,4 @@
-import { sub } from 'date-fns';
+import { add, sub } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
@@ -52,13 +52,13 @@ function generateTickerValue(from: number, to: number) {
 function createTickerMock(range: MarketCapDateRange) {
 	const daysCount = rangeDayCounts[range];
 
-	const startDate = sub(new Date(), { days: daysCount + 10 });
-	const endDate = Date.now();
+	const startDate = sub(new Date(), { days: daysCount + 10 }).getTime();
+	const endDate = add(new Date(), { days: 1 }).getTime();
 
-	const dateStep = (endDate - startDate.getTime()) / 100;
+	const dateStep = (endDate - startDate) / 100;
 
 	const timestamps = Array.from({ length: 100 }).map(
-		(_, key) => (new Date(startDate.getTime() + key * dateStep)).getTime(),
+		(_, key) => (new Date(startDate + key * dateStep)).getTime(),
 	);
 
 	return {

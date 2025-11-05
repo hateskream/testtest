@@ -25,35 +25,6 @@ const props = withDefaults(defineProps<IChartDominanceProps>(), {
 const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
-const EMPTY_AXES_OPTIONS = {
-	y: { display: false },
-	x: { type: 'time', display: false },
-};
-
-const DEFAULT_VERTICAL_AXIS = {
-	type: 'linear',
-	position: 'right',
-	display: true,
-	min: 0,
-	max: 100,
-	ticks: {
-		maxTicksLimit: 6,
-		color: 'rgba(154, 154, 157, 1)',
-		callback: function (value: string) {
-			return value + '%';
-		},
-	},
-	grid: {
-		display: true,
-		color: '#373737',
-		circular: true,
-	},
-	border: {
-		dash: [2, 5],
-	},
-};
-
-
 function buildDatasets() {
 	return props.datasets.map(history => {
 		return {
@@ -143,15 +114,37 @@ const rangeToScales = {
 };
 
 function buildScales() {
-	return props.hideAxis ? EMPTY_AXES_OPTIONS : {
-		y: DEFAULT_VERTICAL_AXIS,
+	return {
 		x: {
+			display: !props.hideAxis,
 			type: 'time',
 			ticks: {
 				maxTicksLimit: 12,
 				color: 'rgba(154, 154, 157, 1)',
 			},
 			...rangeToScales[props.range],
+		},
+		y: {
+			type: 'linear',
+			position: 'right',
+			display: !props.hideAxis,
+			min: 0,
+			max: 100,
+			ticks: {
+				maxTicksLimit: 6,
+				color: 'rgba(154, 154, 157, 1)',
+				callback: function (value: string) {
+					return value + '%';
+				},
+			},
+			grid: {
+				display: true,
+				color: '#373737',
+				circular: true,
+			},
+			border: {
+				dash: [2, 5],
+			},
 		},
 	};
 }
@@ -163,15 +156,6 @@ const { state, handler } = useExternalTooltip({
 	valueSuffix: '%',
 	valuePrefix: '',
 	reversed: true,
-	transformTitle: (title) => {
-		return [(new Date(title[0])).toLocaleString(undefined, {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric',
-		})];
-	},
 });
 
 function createGradient(context2D: CanvasRenderingContext2D, from: number, to: number, color: string) {
