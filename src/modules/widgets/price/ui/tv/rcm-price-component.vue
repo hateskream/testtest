@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalItemSelector, ModalItemSwitch } from '../../base';
-import type { IDisplaySettings } from '../model';
+import { ModalItemSelector, ModalItemSwitch } from '@/modules/widgets/base';
+import type { IDisplaySettings } from '../../model';
 
 const settings = defineModel<IDisplaySettings>({ required: true });
 

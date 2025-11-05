@@ -1,7 +1,2 @@
-import DashboardComponent from './ui/dashboard-component.vue';
-import PreloaderComponent from './ui/preloader-component.vue';
-
-export {
-	DashboardComponent as PriceDashboard,
-	PreloaderComponent,
-};
+export { PriceDashboardWidget } from './ui/dashboard';
+export { PriceTvWidget } from './ui/tv';

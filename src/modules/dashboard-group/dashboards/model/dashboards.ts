@@ -4,7 +4,7 @@ import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
 import { NewsDashboard } from '@/modules/widgets/news';
-import { PriceDashboard } from '@/modules/widgets/price';
+import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
@@ -56,7 +56,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapTvWidget,
 	[WidgetType.News]: NewsDashboard,
-	[WidgetType.Price]: PriceDashboard,
+	[WidgetType.Price]: PriceTvWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
@@ -74,7 +74,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapDashboardWidget,
 	[WidgetType.News]: NewsDashboard,
-	[WidgetType.Price]: PriceDashboard,
+	[WidgetType.Price]: PriceDashboardWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,

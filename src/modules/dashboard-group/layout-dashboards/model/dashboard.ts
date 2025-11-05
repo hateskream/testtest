@@ -32,12 +32,12 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					widgetType:  WidgetType.TopIndices,
 					defaultDisplayVariant: 'default',
 				},
-				{
-					defaultState: 'stock',
-					height: Infinity,
-					widgetType:  WidgetType.Performance,
-					defaultDisplayVariant: 'bar',
-				},
+				// {
+				// 	defaultState: 'stock',
+				// 	height: Infinity,
+				// 	widgetType:  WidgetType.Performance,
+				// 	defaultDisplayVariant: 'bar',
+				// },
 			],
 		},
 		{

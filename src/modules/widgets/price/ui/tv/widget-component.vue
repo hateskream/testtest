@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent } from '../../base';
+import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { usePrice } from '../composables';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { usePrice } from '../../composables';
+import { PreloaderComponent } from '../common';
 
 import RcmPriceComponent from './rcm-price-component.vue';
-import PreloaderComponent from './preloader-component.vue';
+import HeaderComponent from './header-component.vue';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../common/view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -64,15 +64,20 @@ const emit = defineEmits<{
 			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
 			<view-component
 				v-else
-				v-model:market="activeMarket"
-				v-model:filters="filtersState"
-				:filters-values="filtersValues"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
 				@toggle-pin="togglePin"
-			/>
+			>
+				<template #header>
+					<header-component
+						v-model:market="activeMarket"
+						v-model:filters="filtersState"
+						:filters-values="filtersValues"
+					/>
+				</template>
+			</view-component>
 		</template>
 		<template #change-display>
 			<rcm-price-component v-model="currentSettings" />

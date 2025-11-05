@@ -20,11 +20,11 @@ const { width } = useElementSize(useTemplateRef('viewport'));
 const viewportWidth = computed(() => width.value);
 
 const isMobile = computed(() => viewportWidth.value < 768 - 72*2);
-// const isSectionWidthLessThanViewport = computed(() =>
-// 	sections.value.reduce((acc, s) => acc + s.width, 0) < viewportWidth.value,
-// );
-//
-// const normalizeWidth = computed(() => viewportWidth.value / sections.value.length);
+const isSectionWidthLessThanViewport = computed(() =>
+	sections.value.reduce((acc, s) => acc + s.width, 0) < viewportWidth.value,
+);
+
+const normalizeWidth = computed(() => viewportWidth.value / sections.value.length);
 
 const preparedSlides = computed(
 	() => sections.value

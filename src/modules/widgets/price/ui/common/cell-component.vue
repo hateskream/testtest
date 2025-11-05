@@ -6,7 +6,7 @@ import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 import type { IMeta } from '@/modules/dashboard-group';
-import type { IDisplaySettings, ITicker } from '../model';
+import type { IDisplaySettings, ITicker } from '../../model';
 import {
 	getNumberText,
 	getPercentData,
