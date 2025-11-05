@@ -65,6 +65,13 @@ useProvideFloatingContext({
 onUnmounted(() => {
 	close();
 });
+
+defineExpose({
+	isOpen,
+	isPinned,
+	open,
+	close,
+});
 </script>
 
 <template>

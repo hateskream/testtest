@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import type { IPositionProps } from '../../model';
 
 import PositionRoot from '../position-root.vue';
@@ -12,10 +14,25 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	offset: 6,
 	strategy: 'fixed',
 });
+
+const rootRef = useTemplateRef('root');
+
+defineExpose({
+	get isVisible() {
+		return rootRef.value?.isOpen ?? false;
+	},
+	get isPinned() {
+		return rootRef.value?.isPinned ?? false;
+	},
+	get handleOpen() {
+		return rootRef.value?.open;
+	},
+});
 </script>
 
 <template>
 	<position-root
+		ref="root"
 		:trigger="props.trigger"
 		:close-delay="props.closeDelay"
 		:open-delay="props.openDelay"
