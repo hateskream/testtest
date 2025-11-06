@@ -17,6 +17,7 @@ import {
 import { generateRows } from '@/shared/mock';
 import { type ISelectedFilter, ScreenerType } from '../../base/model';
 import type { StockTableRow } from '../model';
+import { delay } from '@/shared/lib/delay.ts';
 
 const IS_USE_MOCK = true;
 
@@ -89,25 +90,32 @@ export async function getScreenerStock(_: IGetScreenerRequest): Promise<IPrepare
 const columnTypes: ColumnWithoutSymbol[] = [
 	ColumnType.PriceCurrent,
 	ColumnType.Price1yRange,
-	ColumnType.MarketCap24h,
+	ColumnType.Price24hChart,
 	ColumnType.Beta5y,
-	ColumnType.LastDividend,
-	ColumnType.ChangePrice24hPercent,
 	ColumnType.ChangePrice24h,
+	ColumnType.ChangePrice24hPercent,
 	ColumnType.Volume24h,
 	ColumnType.VolumeAvg50d,
+	ColumnType.VolumeRel24h,
+	ColumnType.VolumeRelAvg50d,
+	ColumnType.PriceEarnings,
+	ColumnType.MarketCap24h,
+	ColumnType.EpsDil12mo,
+	ColumnType.EpsDilAvg50d,
+	ColumnType.EpsDilGrowth12mo,
+	ColumnType.EpsDilGrowthAvg50d,
+	ColumnType.DividendYield,
+	ColumnType.LastDividend,
 	ColumnType.Employees,
 	ColumnType.IpODate,
-	ColumnType.Industry,
 	ColumnType.Sector,
+	ColumnType.Industry,
+	ColumnType.AnalystRating,
 	ColumnType.Source,
-	ColumnType.Price24hChart,
 ];
 
 async function getMockData(): Promise<IPreparedResponse> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 500);
-	});
+	await delay(500);
 
 	return {
 		pagination: {

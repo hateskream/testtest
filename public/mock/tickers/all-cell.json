@@ -395,7 +395,71 @@
 			"cellType": "Text",
 			"columnType": "nextClosedDay",
 			"value": "Jun 19, 2025, Saturday"
+	},
+	"volumeRel24h": {
+		"cellType": "Number",
+		"columnType": "volumeRel24h",
+		"value": "30",
+		"currencySymbol": "$",
+		"magnitude": "billion",
+		"trend": "stable"
+	},
+	"volumeRelAvg50d": {
+		"cellType": "Number",
+		"columnType": "volumeRelAvg50d",
+		"value": "18",
+		"currencySymbol": "$",
+		"magnitude": "billion",
+		"trend": "stable"
+	},
+	"analystRating": {
+		"cellType": "Text",
+		"columnType": "analystRating",
+		"value": "Strong Buy"
+	},
+	"epsDil12mo": {
+		"cellType": "Number",
+		"columnType": "epsDil12mo",
+		"value": "3.10",
+		"currencySymbol": "$",
+		"magnitude": "none",
+		"trend": "stable"
+	},
+	"epsDilAvg50d": {
+		"cellType": "Number",
+		"columnType": "epsDilAvg50d",
+		"value": "3.10",
+		"currencySymbol": "$",
+		"magnitude": "none",
+		"trend": "stable"
+	},
+	"epsDilGrowth12mo": {
+		"cellType": "Number",
+		"columnType": "epsDilGrowth12mo",
+		"value": "81.60",
+		"magnitude": "none",
+		"trend": "increase"
+	},
+	"epsDilGrowthAvg50d": {
+		"cellType": "Number",
+		"columnType": "epsDilGrowthAvg50d",
+		"value": "81.60",
+		"magnitude": "none",
+		"trend": "increase"
+	},
+	"dividendYield": {
+		"cellType": "Number",
+		"columnType": "dividendYield",
+		"value": "0.02",
+		"magnitude": "none",
+		"trend": "stable"
+	},
+	"priceEarnings": {
+		"cellType": "Number",
+		"columnType": "priceEarnings",
+		"value": "57.6",
+		"magnitude": "none",
+		"trend": "stable"
 	}
-
 }
 
