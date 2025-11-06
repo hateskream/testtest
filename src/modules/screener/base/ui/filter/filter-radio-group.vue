@@ -53,7 +53,7 @@ watch(() => props.keyNumbers, value => {
 	} else {
 		stop();
 	}
-});
+}, { immediate: true });
 </script>
 
 <template>
