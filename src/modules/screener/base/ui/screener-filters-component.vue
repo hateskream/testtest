@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UiPosition } from '@/shared/ui/position';
-import { UiDelimiter } from '@/shared/ui/delimiter';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type FiltersDefinition, type FiltersState, type IFilterState, ScreenerType } from '../model';
 import { FilterBadgeModal } from './filter';
@@ -8,7 +7,7 @@ import { FilterBadgeModal } from './filter';
 import ScreenerModalFiltersComponent from './screener-modal-filters-component.vue';
 
 const filters = defineModel<FiltersState>('filters', { required: true });
-const markets = defineModel<string[]>('markets', { required: true });
+// const markets = defineModel<string[]>('markets', { required: true });
 
 interface IScreenerFiltersProps {
 	type: ScreenerType;
@@ -26,10 +25,6 @@ function updateFilter(key: string, state: IFilterState) {
 </script>
 <template>
 	<div :class="classes.container">
-		<div>
-			[MarketSelector]: {{markets}}
-		</div>
-		<ui-delimiter />
 		<ui-position position="right-start">
 			<template #title>
 				<ui-icon

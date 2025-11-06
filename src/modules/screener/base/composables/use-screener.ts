@@ -132,6 +132,13 @@ export function useScreener({ isEphemeral, defaultStateType = ScreenerType.Stock
 		state.value = getDefaultState(defaultStateType);
 	}
 
+	const activeSort = computed({
+		get: () => currentSettings.value.sort,
+		set: (sort: ISort | null) => {
+			currentSettings.value.sort = sort;
+		},
+	});
+
 	const filtersState = computed({
 		get(): FiltersState {
 			return Object.entries(currentSettings.value.filters).reduce(
@@ -185,6 +192,7 @@ export function useScreener({ isEphemeral, defaultStateType = ScreenerType.Stock
 		applyStateToParent,
 		resetAllChanges,
 		activeMarkets,
+		activeSort,
 	};
 }
 
