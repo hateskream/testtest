@@ -96,17 +96,17 @@ export const globalRoutes: RouteRecordRaw[] = [
 		name: RouteNames.News,
 		component: () => import('@/pages/news-page.vue'),
 	},
-];
-
-export const testRoutes: RouteRecordRaw[] = [
 	{
-		path: RoutePaths.Test,
-		name: RouteNames.Test,
-		component: () => import('@/pages/new-layout.vue'),
+		path: RoutePaths.Tv,
+		name: RouteNames.Tv,
+		component: () => import('@/pages/tv-page.vue'),
 	},
 	{
 		path: RoutePaths.Heatmap,
 		name: RouteNames.Heatmap,
 		component: () => import('@/pages/heatmap-page.vue'),
 	},
+];
+
+export const testRoutes: RouteRecordRaw[] = [
 ];

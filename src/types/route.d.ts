@@ -1,5 +1,6 @@
 export enum RouteNames {
 	Home = 'home',
+	Tv = 'tv',
 	Ticker = 'ticker',
 	TickerCrypto = 'ticker-crypto',
 	TickerStock = 'ticker-stock',
@@ -16,6 +17,7 @@ export enum RouteNames {
 
 export enum RouteLabels {
 	Home = 'Dashboard',
+	Tv = 'TV',
 	Heatmap = 'Heatmap',
 	TickerCrypto = 'Ticker Crypto',
 	TickerStock = 'Ticker Stock',
@@ -31,6 +33,7 @@ export enum RouteLabels {
 
 export enum RoutePaths {
 	Home = '/',
+	Tv = '/tv',
 	Ticker = '/ticker',
 	TickerCryptoWithId = 'crypto/:id',
 	TickerStockWithId = 'stock/:id',

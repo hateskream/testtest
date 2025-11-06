@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { RoutePaths } from '@/types/route.d';
 
 import MenuItem from './menu-item.vue';
-
 </script>
 
 <template>
@@ -20,13 +20,13 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.Cashflow"
 					:is-active="false"
 					text="Cashflow"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.Arbitrage"
 					:is-active="false"
 					text="Arbitrage"
-					link="/test"
+					link="/"
 				/>
 				<div :class="classes.line" />
 			</div>
@@ -35,37 +35,37 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.Board"
 					is-active
 					text="Board"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.Screen"
 					:is-active="false"
 					text="Screen"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.Heat"
 					:is-active="false"
 					text="Heat"
-					link="/test"
+					:link="RoutePaths.Heatmap"
 				/>
 				<menu-item
 					:icon="IconIds.Cal"
 					:is-active="false"
 					text="Cal"
-					link="/test"
+					:link="RoutePaths.Calendar"
 				/>
 				<menu-item
 					:icon="IconIds.News"
 					:is-active="false"
 					text="News"
-					link="/test"
+					:link="RoutePaths.News"
 				/>
 				<menu-item
 					:icon="IconIds.TV"
 					:is-active="false"
 					text="TV"
-					link="/test"
+					:link="RoutePaths.Tv"
 				/>
 			</div>
 			<div :class="classes.bottom">
@@ -73,7 +73,7 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.SetUp"
 					:is-active="false"
 					text="Set Up"
-					link="/test"
+					link="/"
 				/>
 			</div>
 		</div>
@@ -86,19 +86,19 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.Search"
 					:is-active="false"
 					text="Search"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.AskAI"
 					:is-active="false"
 					text="Ask AI"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.Watch"
 					:is-active="false"
 					text="Watch"
-					link="/test"
+					link="/"
 				/>
 			</div>
 			<div :class="[classes.iconContainer, classes.bottom]">
@@ -106,13 +106,13 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.Help"
 					:is-active="false"
 					text="Help"
-					link="/test"
+					link="/"
 				/>
 				<menu-item
 					:icon="IconIds.Tray"
 					:is-active="false"
 					text="Tray"
-					link="/test"
+					link="/"
 				/>
 			</div>
 		</div>

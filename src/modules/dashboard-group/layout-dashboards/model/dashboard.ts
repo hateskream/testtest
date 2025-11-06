@@ -118,18 +118,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 			],
 		},
-		{
-			name: 'News & Events',
-			width: 360,
-			widgets: [
-				{
-					defaultState: 'stock',
-					height: Infinity,
-					widgetType:  WidgetType.News,
-					defaultDisplayVariant: 'default',
-				},
-			],
-		},
+		// {
+		// 	name: 'News & Events',
+		// 	width: 360,
+		// 	widgets: [
+		// 		{
+		// 			defaultState: 'stock',
+		// 			height: Infinity,
+		// 			widgetType:  WidgetType.News,
+		// 			defaultDisplayVariant: 'default',
+		// 		},
+		// 	],
+		// },
 		{
 			name: 'Gainers',
 			width: 360,
@@ -154,18 +154,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 			],
 		},
-		{
-			name: 'US Economy',
-			width: 630,
-			widgets: [
-				{
-					defaultState: 'none', // сделать стейт
-					height: Infinity,
-					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
-					defaultDisplayVariant: 'default',
-				},
-			],
-		},
+		// {
+		// 	name: 'US Economy',
+		// 	width: 630,
+		// 	widgets: [
+		// 		{
+		// 			defaultState: 'none', // сделать стейт
+		// 			height: Infinity,
+		// 			widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
+		// 			defaultDisplayVariant: 'default',
+		// 		},
+		// 	],
+		// },
 	],
 };
 
