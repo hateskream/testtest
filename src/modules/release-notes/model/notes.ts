@@ -315,4 +315,73 @@ export const notes: IWeekGroup[] = [
 			},
 		],
 	},
+	{
+		week: '30-06 11 2025',
+		items: [
+			{
+				id: '42',
+				title: 'Использованы чарты из component-library',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Имплементированы чарты из component-library, теперь можно использовать чарты из component-library в дашборде',
+				productLink: '/',
+			},
+			{
+				id: '43',
+				title: 'Крупное обновление модуля новостей, страница новостей',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Добавлена страница новостей, в новость теперь можно зайти,чтобы прочитать тело новости. Добавлены адаптивные экраны для модуля новостей. Исправлено включение и выключение иконки источника новости.',
+				productLink: '/news',
+			},
+			{
+				id: '44',
+				title: 'Унифицирован визуал scrollbar\'ов на проекте ',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Теперь scrollbar\'ы имеют одинаковый визуал на всех страницах проекта, добавлен адаптивный визуал для firefox',
+				productLink: '/',
+			},
+			{
+				id: '45',
+				title: 'Унифицирован визуал scrollbar\'ов на проекте',
+				description: 'Теперь scrollbar\'ы имеют один и тот же визуал на всех страницах проекта',
+				productLink: '/',
+			},
+			{
+				id: '46',
+				title: 'Унифицированное скругление углов виджетов',
+				description: 'Теперь все виджеты имеют одинаковый визуал скругления углов. (Баг был в виджете heatmap)',
+				productLink: '/',
+			},
+			{
+				id: '47',
+				title: 'Исправлено наименование колонки в таблице performance виджета altcoin season',
+				description: 'Название изменено с "Chg%, 7d" на "Performance"',
+				productLink: '/',
+			},
+			{
+				id: '48',
+				title: 'Изменен скролл таблиц на соответствующий дизайну ',
+				description: '',
+				productLink: '/',
+			},
+			{
+				id: '49',
+				title: ' Исправлены таблицы уходящие в скролл при фиксированной ширине контейнера ',
+				description: 'виджеты top indicies, performance , все таблицы с 2 столбцами',
+				productLink: '/',
+			},
+			{
+				id: '50',
+				title: 'Доработаны виджеты Market Cap и Dominance',
+				// eslint-disable-next-line @stylistic/max-len
+				description: 'Адаптированы под разные размеры на дашборде, отображаемые данные и фильтры теперь связаны между собой. На графики добавлены тултипы с выводом информации о тикерах.',
+				productLink: '/',
+			},
+			{
+				id: '51',
+				title: 'UX улучшения',
+				description: 'Внедрены небольшие UX улучшения из прототипов - autofocus поиска, очистка поиска и т.д',
+				productLink: '/',
+			},
+		],
+	},
 ];
