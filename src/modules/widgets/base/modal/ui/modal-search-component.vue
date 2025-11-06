@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiIconControl } from '@/shared/ui/icon-control';
 import { BaseSearch } from '../..';
+import { UiTransitionFade } from '@/shared/ui/transition';
 
 interface IModalSearchProps {
 	placeholder?: string;
@@ -13,6 +15,12 @@ const props = defineProps<IModalSearchProps>();
 const model = defineModel<string>({
 	required: true,
 });
+
+const hasModelValue = computed(() => model.value.trim().length > 0);
+
+function clearModel() {
+	model.value = '';
+}
 
 const searchRef = useTemplateRef('search');
 
@@ -31,12 +39,19 @@ defineExpose({ focus });
 			height="24"
 			:class="classes.icon"
 		/>
-
 		<base-search
 			ref="search"
 			v-model="model"
 			:placeholder="props.placeholder"
 		/>
+		<ui-transition-fade>
+			<ui-icon-control
+				v-show="hasModelValue"
+				:icon="IconIds.Close"
+				:class="classes.close"
+				@click="clearModel"
+			/>
+		</ui-transition-fade>
 	</div>
 </template>
 
@@ -51,6 +66,12 @@ defineExpose({ focus });
 }
 
 .icon {
+	flex-shrink: 0;
 	color: var(--icon-color-base-300);
+}
+
+.close {
+	flex-shrink: 0;
+	margin-right: 6px;
 }
 </style>

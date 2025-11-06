@@ -58,6 +58,8 @@ const tickersData = computed<TickerDto[]>(() =>
 );
 
 const query = ref('');
+const preparedQuery = computed(() => query.value.trimStart().toLowerCase());
+const hasSearchQuery = computed(() => preparedQuery.value.length > 0);
 
 const activeGroup = ref<SymbolType | null>(
 	props.marketTypes.length === 1
@@ -80,10 +82,8 @@ const selectedTickers = computed(() => {
 	});
 
 	if (viewMode.value === FilterListType.Selected) {
-		const preparedQuery = query.value.toLowerCase();
-
 		allSelected = allSelected.filter((t) =>
-			[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery)),
+			[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
 		);
 	}
 
@@ -94,10 +94,8 @@ const selectedTickers = computed(() => {
 });
 
 const queredTickers = computed(() => {
-	const preparedQuery = query.value.toLowerCase();
-
 	return tickersData.value.filter((item) =>
-		[item.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery)),
+		[item.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
 	);
 });
 
@@ -241,7 +239,7 @@ defineExpose({ focusSearch });
 			<modal-filter-info
 				v-if="props.enableSelectedInfo"
 				v-model="viewMode"
-				:is-searching="query.length > 0"
+				:is-searching="hasSearchQuery"
 				:total-items="queredTickers.length"
 				:total-selected="selectedTickers.allSelected.length"
 			/>
@@ -251,7 +249,7 @@ defineExpose({ focusSearch });
 					<div v-for="(_, group) in groupedTickers" :key="group">
 						<modal-filter-row-title
 							:is-selected-all="isGroupTickersSelectedAll(group)"
-							:is-searching="query.length > 0"
+							:is-searching="hasSearchQuery"
 							:is-inside-open="false"
 							:enable-select-all="props.enableSelectAll"
 							@select-all="handleSelectAll(group)"
@@ -264,7 +262,7 @@ defineExpose({ focusSearch });
 								{{ groupedTickers[group].length }}
 							</template>
 						</modal-filter-row-title>
-						<template v-if="query.length > 0">
+						<template v-if="hasSearchQuery">
 							<div
 								v-if="groupedTickers[group].length === 0"
 								:class="classes.notFound"
@@ -286,7 +284,7 @@ defineExpose({ focusSearch });
 						v-if="availableSymbols.length > 1"
 						:is-back="true"
 						:is-selected-all="isGroupTickersSelectedAll(activeGroup)"
-						:is-searching="query.length > 0"
+						:is-searching="hasSearchQuery"
 						:is-inside-open="true"
 						:enable-select-all="props.enableSelectAll"
 						@click="activeGroup = null"
@@ -300,7 +298,7 @@ defineExpose({ focusSearch });
 						</template>
 					</modal-filter-row-title>
 					<div
-						v-if="query.length > 0 && groupedTickers[activeGroup].length === 0"
+						v-if="hasSearchQuery && groupedTickers[activeGroup].length === 0"
 						:class="classes.notFound"
 					>
 						Nothing found in {{ getGroupKey(activeGroup) }}
@@ -315,7 +313,7 @@ defineExpose({ focusSearch });
 			</template>
 			<template v-else>
 				<div
-					v-if="selectedTickers.allSelected.length === 0 && query.length > 0"
+					v-if="selectedTickers.allSelected.length === 0 && hasSearchQuery"
 					:class="classes.notFound"
 				>
 					Nothing found in selected items
