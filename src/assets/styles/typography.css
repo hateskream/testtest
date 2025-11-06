@@ -1,54 +1,68 @@
 :root {
-	--typography-paragraph-size-p03: 19px;
-	--typography-paragraph-size-p02: 17px;
-	--typography-paragraph-size-p01: 15px;
-	--typography-paragraph-size-p00: 13px;
-	--typography-paragraph-size-p-01: 12px;
-	--typography-paragraph-size-p-02: 10px;
-	--typography-headers-size-h05: 40px;
-	--typography-headers-size-h04: 32px;
-	--typography-headers-size-h03: 28px;
-	--typography-headers-size-h02: 22px;
-	--typography-headers-size-h01: 18px;
-	--typography-headers-size-h00: 15px;
+	/* 2.3.1 */
+	--font-title-600-size: clamp(34px, 2.3vw + 30px, 40px);
+	--font-title-500-size: clamp(29px, 2vw + 26px, 33.8px);
+	--font-title-400-size: clamp(22.8px, 1.6vw + 20px, 26.6px);
+	--font-title-300-size: clamp(18.5px, 1.3vw + 17px, 21px);
+	--font-title-200-size: clamp(15.5px, 1vw + 15px, 16.8px);
+	--font-title-100-size: clamp(12.8px, 0.9vw + 12px, 13.5px);
+	--font-text-500-r-size: 14.8px;
+	--font-text-400-r-size: 14.3px;
+	--font-text-300-r-size: 13.3px;
+	--font-text-200-r-size: 12.2px;
+	--font-text-100-r-size: 11px;
+	--font-text-50-r-size: 9px;
+	--font-text-500-b-size: var(--font-text-500-r-size);
+	--font-text-400-b-size: var(--font-text-400-r-size);
+	--font-text-300-b-size: var(--font-text-300-r-size);
+	--font-text-200-b-size: var(--font-text-200-r-size);
+	--font-text-100-b-size: var(--font-text-100-r-size);
+
+	/* 2.3.0 */
+	--typography-headers-size-h05: var(--font-title-600-size, 40px);
+	--typography-headers-size-h04: var(--font-title-500-size, 33.8px);
+	--typography-headers-size-h03: var(--font-title-500-size, 33.8px);
+	--typography-headers-size-h02: var(--font-title-400-size, 26.6px);
+	--typography-headers-size-h01: var(--font-title-300-size, 21px);
+	--typography-headers-size-h00: var(--font-title-200-size, 16.8px);
+	--typography-headers-size-h-01: var(--font-title-100-size, 12.8px);
+	--typography-headers-size-h-02: var(--font-title-100-size, 12.8px);
+	--typography-paragraph-size-p03: var(--font-text-500-r-size, 14.8px);
+	--typography-paragraph-size-p02: var(--font-text-500-r-size, 14.8px);
+	--typography-paragraph-size-p01: var(--font-text-400-r-size, 14.3px);
+	--typography-paragraph-size-p00: var(--font-text-300-r-size, 13.3px);
+	--typography-paragraph-size-p-01: var(--font-text-200-r-size, 12.2px);
+	--typography-paragraph-size-p-02: var(--font-text-100-r-size, 11px);
+	--typography-paragraph-size-p-03: var(--font-text-50-r-size, 9px);
+	--typography-menu-menu-title: var(--font-title-100-size, 12.8px);
+	--typography-menu-menu-item: var(--font-text-300-r-size, 13.3px);
+	--typography-menu-caption-title: var(--font-text-200-r-size, 12.2px);
+	--typography-menu-caption: var(--font-text-200-r-size, 12.2px);
 }
 
 /* tablet breakpoint */
 @media screen and (max-width: 992px) {
 	:root {
-		--typography-paragraph-size-p03: 19px;
-		--typography-paragraph-size-p02: 17px;
-		--typography-paragraph-size-p01: 15px;
-		--typography-paragraph-size-p00: 13px;
-		--typography-paragraph-size-p-01: 12px;
-		--typography-paragraph-size-p-02: 10px;
-		--typography-headers-size-h05: 38px;
-		--typography-headers-size-h04: 32px;
-		--typography-headers-size-h03: 24px;
-		--typography-headers-size-h02: 20px;
-		--typography-headers-size-h01: 17px;
-		--typography-headers-size-h00: 15px;
+		--font-text-500-r-size: 14.5px;
+		--font-text-400-r-size: 13.2px;
+		--font-text-300-r-size: 12.5px;
+		--font-text-200-r-size: 11.8px;
+		--font-text-100-r-size: 11px;
+		--font-text-50-r-size: 9px;
 	}
 }
 
 /* Mobile breakpoint */
 @media screen and (max-width: 768px) {
 	:root {
-		--typography-paragraph-size-p03: 19px;
-		--typography-paragraph-size-p02: 17px;
-		--typography-paragraph-size-p01: 15px;
-		--typography-paragraph-size-p00: 13px;
-		--typography-paragraph-size-p-01: 11px;
-		--typography-paragraph-size-p-02: 9px;
-		--typography-headers-size-h05: 32px;
-		--typography-headers-size-h04: 28px;
-		--typography-headers-size-h03: 24px;
-		--typography-headers-size-h02: 19px;
-		--typography-headers-size-h01: 16px;
-		--typography-headers-size-h00: 14px;
+		--font-text-500-r-size: 14.5px;
+		--font-text-400-r-size: 13.2px;
+		--font-text-300-r-size: 12.5px;
+		--font-text-200-r-size: 12.2px;
+		--font-text-100-r-size: 11px;
+		--font-text-50-r-size: 9px;
 	}
 }
-
 
 /* paragraph/p03 */
 .paragraph-p03 {
@@ -186,11 +200,11 @@
 
 /* controls/c00 */
 .controls-c00 {
-	font-weight: 440;
-	font-size: var(--typography-headers-size-h01);
-	line-height: 170%;
+	font-style: normal;
+	font-weight: 400;
+	font-size: var(--font-text-300-r-size, 13.3px);
+	line-height: 180%;
 	font-family: 'Roboto Flex', sans-serif;
-	text-align: center;
-	letter-spacing: 0.144px;
+	letter-spacing: 0.146px;
 }
 
