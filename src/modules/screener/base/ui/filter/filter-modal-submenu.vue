@@ -48,7 +48,7 @@ const hasSelectedValue = computed(() => {
 				</template>
 			</span>
 		</template>
-		<template #content="{ isVisible }">
+		<template #content>
 			<modal-submenu-content>
 				<template #content>
 					<modal-title>
@@ -57,7 +57,6 @@ const hasSelectedValue = computed(() => {
 					<filter-field
 						v-model="modelValue"
 						:config="props.config"
-						:key-numbers="isVisible"
 					/>
 				</template>
 			</modal-submenu-content>
