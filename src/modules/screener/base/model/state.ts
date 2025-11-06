@@ -139,12 +139,12 @@ export function hydrateFilters(filters: Filters): IFilterHydrateState[] {
 }
 
 export function rehydrateFilters(states: IFilterHydrateState[], preset: Filters): Filters {
-	try {
-		return Object
-			.entries(preset)
-			.reduce((acc, [key, value]) => {
-				const filter = findFilter(states, key);
+	return Object
+		.entries(preset)
+		.reduce((acc, [key, value]) => {
+			const filter = findFilter(states, key);
 
+			if (filter) {
 				acc[key] = {
 					config: value.config,
 					state: {
@@ -153,22 +153,12 @@ export function rehydrateFilters(states: IFilterHydrateState[], preset: Filters)
 						presetId: filter.presetId,
 					},
 				};
+			}
 
-				return acc;
-			}, {} as Partial<Filters>) as Filters;
-	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.log(e);
-		return preset;
-	}
+			return acc;
+		}, {} as Partial<Filters>) as Filters;
 }
 
-function findFilter(states: IFilterHydrateState[], filterType: string): IFilterHydrateState {
-	const state = states.find(col => col.filterType === filterType);
-
-	if (state) {
-		return state;
-	}
-
-	throw new Error(`Filter ${filterType} not found`);
+function findFilter(states: IFilterHydrateState[], filterType: string): IFilterHydrateState | undefined {
+	return states.find(col => col.filterType === filterType);
 }
