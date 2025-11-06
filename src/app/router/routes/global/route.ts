@@ -152,9 +152,6 @@ export const globalRoutes: RouteRecordRaw[] = [
 			},
 		],
 	},
-];
-
-export const testRoutes: RouteRecordRaw[] = [
 	{
 		path: RoutePaths.Tv,
 		name: RouteNames.Tv,
@@ -167,5 +164,4 @@ export const testRoutes: RouteRecordRaw[] = [
 	},
 ];
 
-export const testRoutes: RouteRecordRaw[] = [
-];
+export const testRoutes: RouteRecordRaw[] = [];

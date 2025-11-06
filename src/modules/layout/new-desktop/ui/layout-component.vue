@@ -41,7 +41,7 @@ import MenuItem from './menu-item.vue';
 					:icon="IconIds.Screen"
 					:is-active="false"
 					text="Screen"
-					link="/"
+					:link="RoutePaths.Screener"
 				/>
 				<menu-item
 					:icon="IconIds.Heat"
