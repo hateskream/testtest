@@ -36,6 +36,7 @@ const classesList = computed(() => ({
 
 <style module="classes">
 .icon {
+	flex-shrink: 0;
 	width: 20px;
 	height: 20px;
 	color: var(--icon-color-base-500);
@@ -43,7 +44,6 @@ const classesList = computed(() => ({
 	border-style: solid;
 	border-color: var(--bg-modal-color-base);
 	border-radius: 100px;
-	flex-shrink: 0;
 }
 
 .content:hover .icon {
