@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type IPositionProps } from '@/shared/ui/position';
-import { UiSubposition } from '@/shared/ui/position';
+import { type IPositionProps, UiSubposition } from '@/shared/ui/position';
 
 const props = withDefaults(defineProps<IPositionProps>(), {
 	teleport: false,
@@ -28,8 +27,8 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 			</div>
 		</template>
 
-		<template #content="{ isVisible }">
-			<slot name="content" :is-visible="isVisible" />
+		<template #content>
+			<slot name="content" />
 		</template>
 	</ui-subposition>
 </template>
