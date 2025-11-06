@@ -18,9 +18,9 @@
 						"symbolType": "PlainText",
 						"text": "BTC"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "5.2",
 						"trend": "increase"
 					}
@@ -33,9 +33,9 @@
 						"symbolType": "PlainText",
 						"text": "ETH"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "8.7",
 						"trend": "increase"
 					}
@@ -48,9 +48,9 @@
 						"symbolType": "PlainText",
 						"text": "BNB"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "2.3",
 						"trend": "increase"
 					}
@@ -63,9 +63,9 @@
 						"symbolType": "PlainText",
 						"text": "ADA"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "12.4",
 						"trend": "increase"
 					}
@@ -78,9 +78,9 @@
 						"symbolType": "PlainText",
 						"text": "SOL"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "18.9",
 						"trend": "increase"
 					}
@@ -93,9 +93,9 @@
 						"symbolType": "PlainText",
 						"text": "XRP"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "v",
 						"value": "5.6",
 						"trend": "increase"
 					}
@@ -108,9 +108,9 @@
 						"symbolType": "PlainText",
 						"text": "DOT"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "7.1",
 						"trend": "increase"
 					}
@@ -123,9 +123,9 @@
 						"symbolType": "PlainText",
 						"text": "DOGE"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "3.8",
 						"trend": "increase"
 					}
@@ -138,9 +138,9 @@
 						"symbolType": "PlainText",
 						"text": "AVAX"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "14.2",
 						"trend": "increase"
 					}
@@ -153,9 +153,9 @@
 						"symbolType": "PlainText",
 						"text": "MATIC"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "4.1",
 						"trend": "increase"
 					}
@@ -168,9 +168,9 @@
 						"symbolType": "PlainText",
 						"text": "LINK"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "9.6",
 						"trend": "increase"
 					}
@@ -183,9 +183,9 @@
 						"symbolType": "PlainText",
 						"text": "LTC"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "2.9",
 						"trend": "increase"
 					}
@@ -198,9 +198,9 @@
 						"symbolType": "PlainText",
 						"text": "UNI"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "11.3",
 						"trend": "increase"
 					}
@@ -213,9 +213,9 @@
 						"symbolType": "PlainText",
 						"text": "ATOM"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "7.2",
 						"trend": "increase"
 					}
@@ -228,9 +228,9 @@
 						"symbolType": "PlainText",
 						"text": "XLM"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "6.5",
 						"trend": "increase"
 					}
@@ -243,9 +243,9 @@
 						"symbolType": "PlainText",
 						"text": "ALGO"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "15.7",
 						"trend": "increase"
 					}
@@ -258,9 +258,9 @@
 						"symbolType": "PlainText",
 						"text": "VET"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "3.4",
 						"trend": "increase"
 					}
@@ -273,9 +273,9 @@
 						"symbolType": "PlainText",
 						"text": "FIL"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "4.8",
 						"trend": "increase"
 					}
@@ -288,9 +288,9 @@
 						"symbolType": "PlainText",
 						"text": "TRX"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "1.6",
 						"trend": "increase"
 					}
@@ -303,9 +303,9 @@
 						"symbolType": "PlainText",
 						"text": "XMR"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "8.9",
 						"trend": "increase"
 					}
@@ -318,9 +318,9 @@
 						"symbolType": "PlainText",
 						"text": "EOS"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "1.9",
 						"trend": "increase"
 					}
@@ -333,9 +333,9 @@
 						"symbolType": "PlainText",
 						"text": "XTZ"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "10.2",
 						"trend": "increase"
 					}
@@ -348,9 +348,9 @@
 						"symbolType": "PlainText",
 						"text": "AAVE"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "13.5",
 						"trend": "increase"
 					}
@@ -363,9 +363,9 @@
 						"symbolType": "PlainText",
 						"text": "SAND"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "22.1",
 						"trend": "increase"
 					}
@@ -378,9 +378,9 @@
 						"symbolType": "PlainText",
 						"text": "MANA"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "19.3",
 						"trend": "increase"
 					}
@@ -393,9 +393,9 @@
 						"symbolType": "PlainText",
 						"text": "SHIB"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "6.3",
 						"trend": "increase"
 					}
@@ -408,9 +408,9 @@
 						"symbolType": "PlainText",
 						"text": "APT"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "25.8",
 						"trend": "increase"
 					}
@@ -423,9 +423,9 @@
 						"symbolType": "PlainText",
 						"text": "GRT"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "16.4",
 						"trend": "increase"
 					}
@@ -438,9 +438,9 @@
 						"symbolType": "PlainText",
 						"text": "NEAR"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "9.7",
 						"trend": "increase"
 					}
@@ -453,9 +453,9 @@
 						"symbolType": "PlainText",
 						"text": "FTM"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "8.2",
 						"trend": "increase"
 					}
@@ -468,9 +468,9 @@
 						"symbolType": "PlainText",
 						"text": "HBAR"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "11.2",
 						"trend": "increase"
 					}
@@ -483,9 +483,9 @@
 						"symbolType": "PlainText",
 						"text": "ICP"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "3.1",
 						"trend": "increase"
 					}
@@ -498,9 +498,9 @@
 						"symbolType": "PlainText",
 						"text": "QNT"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "12.9",
 						"trend": "increase"
 					}
@@ -513,9 +513,9 @@
 						"symbolType": "PlainText",
 						"text": "ETC"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "7.6",
 						"trend": "increase"
 					}
@@ -528,9 +528,9 @@
 						"symbolType": "PlainText",
 						"text": "TON"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "4.8",
 						"trend": "increase"
 					}
@@ -543,9 +543,9 @@
 						"symbolType": "PlainText",
 						"text": "AXS"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "9.4",
 						"trend": "increase"
 					}
@@ -558,9 +558,9 @@
 						"symbolType": "PlainText",
 						"text": "CRV"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "12.5",
 						"trend": "increase"
 					}
@@ -573,9 +573,9 @@
 						"symbolType": "PlainText",
 						"text": "THETA"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "5.7",
 						"trend": "increase"
 					}
@@ -588,9 +588,9 @@
 						"symbolType": "PlainText",
 						"text": "1INCH"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "14.8",
 						"trend": "increase"
 					}
@@ -603,9 +603,9 @@
 						"symbolType": "PlainText",
 						"text": "SNX"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "2.7",
 						"trend": "increase"
 					}
@@ -618,9 +618,9 @@
 						"symbolType": "PlainText",
 						"text": "EGLD"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "17.2",
 						"trend": "increase"
 					}
@@ -633,9 +633,9 @@
 						"symbolType": "PlainText",
 						"text": "CHZ"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "20.5",
 						"trend": "increase"
 					}
@@ -648,9 +648,9 @@
 						"symbolType": "PlainText",
 						"text": "KAVA"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "5.1",
 						"trend": "increase"
 					}
@@ -663,9 +663,9 @@
 						"symbolType": "PlainText",
 						"text": "ZEC"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "1.3",
 						"trend": "increase"
 					}
@@ -678,9 +678,9 @@
 						"symbolType": "PlainText",
 						"text": "RUNE"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "6.9",
 						"trend": "increase"
 					}
@@ -693,9 +693,9 @@
 						"symbolType": "PlainText",
 						"text": "NEO"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "10.3",
 						"trend": "increase"
 					}
@@ -708,9 +708,9 @@
 						"symbolType": "PlainText",
 						"text": "FLOW"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "11.7",
 						"trend": "increase"
 					}
@@ -723,9 +723,9 @@
 						"symbolType": "PlainText",
 						"text": "BCH"
 					},
-					"changePrice24hPercent": {
+					"Performance": {
 						"cellType": "Percent",
-						"columnType": "changePrice24hPercent",
+						"columnType": "Performance",
 						"value": "2.1",
 						"trend": "increase"
 					}

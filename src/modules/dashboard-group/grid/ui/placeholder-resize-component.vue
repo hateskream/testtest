@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IWidget } from '@/modules/dashboard-group/core';
+import type { IWidget } from '@/modules/dashboard-group/tv';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 
 interface IPlaceholderResizeComponent {

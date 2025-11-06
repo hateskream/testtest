@@ -201,7 +201,7 @@ export function debugDashboardState(store: IDashboardGroupStore) {
 }
 
 export function generateDashboardLayout(
-	key: number,
+	// key: number,
 	widgets: IDashboardWidget[],
 ): unknown {
 	const formatted = widgets.map((w) => ({
@@ -216,8 +216,6 @@ export function generateDashboardLayout(
 			},
 		},
 	}));
-
-	console.log('colNum', key);
 	console.log(JSON.stringify(formatted, null, 2)); // красиво для копирования
 	return formatted;
 }

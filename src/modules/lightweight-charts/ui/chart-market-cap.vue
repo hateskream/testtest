@@ -1,167 +1,207 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-import { onMounted, shallowRef, useTemplateRef } from 'vue';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { type CSSProperties, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart } from 'chart.js/auto';
+import { sub } from 'date-fns';
 
-import { RangeChart } from '@/shared/ui/chart-range';
-import { getExternalTooltipSplitted } from '../utils';
+import { type IChartMarketCapDataset } from '../model';
+import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { MarketCapDateRange } from '@/modules/widgets/market-cap/model';
+import { prettyNumberWithKey } from '@/shared/lib';
 
-import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
-
-
-interface IChartProps {
+interface IChartMarketCapProps {
 	height: CSSProperties['height'];
-	isVisibleRange?: boolean;
-	rangeList: RangeChart[];
+	hideAxis?: boolean;
+	range: MarketCapDateRange;
+	datasets: IChartMarketCapDataset[];
 }
 
-withDefaults(defineProps<IChartProps>(), {
-	isVisibleRange: true,
-});
-
-
-const generateRandomBars = () => {
-	return Array.from({ length: 6 }, () => Math.round(Math.random() * 100));
-};
+const props = defineProps<IChartMarketCapProps>();
 
 const container = useTemplateRef('container');
 const chart = shallowRef<Chart>();
 
+function updateChartScales() {
+	if (!chart.value) {
+		return;
+	}
 
-const addTicker = (color: string, symbol: string) => {
-	chart.value!.data.datasets.push({
-		label: `${symbol}-${color}`,
-		data: generateRandomBars(),
-		borderColor: color,
-		borderWidth: 2,
-		pointStyle: false,
-		backgroundColor: 'rgba(217, 217, 217, 0.1)',
-		tension: 0.4,
-		cubicInterpolationMode: 'monotone',
+	chart.value.options.scales = buildScales();
+	chart.value.update();
+}
+
+function buildDatasets() {
+	return props.datasets.map(history => {
+		return {
+			label: history.label,
+			data: history.points,
+			borderColor: history.color,
+			borderWidth: 2,
+			type: 'line',
+			pointStyle: false,
+			tension: 0.4,
+			cubicInterpolationMode: 'monotone',
+		};
 	});
+}
 
-	chart.value!.update();
+function updateChartDatasets() {
+	if (!chart.value) {
+		return;
+	}
+
+	chart.value.data.datasets = buildDatasets();
+	chart.value.options.scales = buildScales();
+
+	chart.value.update();
+}
+
+const rangeToScales = {
+	[MarketCapDateRange.Day]: {
+		min: sub(new Date(), { days: 1 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'hour',
+		},
+	},
+	[MarketCapDateRange.Week]: {
+		min: sub(new Date(), { days: 7 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'day',
+		},
+	},
+	[MarketCapDateRange.Month]: {
+		min: sub(new Date(), { days: 30 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'day',
+		},
+	},
+	[MarketCapDateRange.SixMonths]: {
+		min: sub(new Date(), { days: 180 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'day',
+		},
+	},
+	[MarketCapDateRange.Year]: {
+		min: sub(new Date(), { years: 1 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'month',
+		},
+	},
+	[MarketCapDateRange.All]: {
+		min: sub(new Date(), { years: 1 }).getTime(),
+		max: Date.now(),
+		time: {
+			unit: 'month',
+		},
+	},
 };
 
-const removeTicker = (idx: number) => {
-	chart.value!.data.datasets.splice(idx, 1);
+function buildScales() {
+	return {
+		x: {
+			display: !props.hideAxis,
+			type: 'time',
+			ticks: {
+				maxTicksLimit: 12,
+				color: 'rgba(154, 154, 157, 1)',
+			},
+			...rangeToScales[props.range],
+		},
+		y: {
+			display: !props.hideAxis,
+			type: 'linear',
+			position: 'right',
+			ticks: {
+				maxTicksLimit: 6,
+				color: 'rgba(154, 154, 157, 1)',
+				callback: function (value: string) {
+					const pretty = prettyNumberWithKey(value, 2);
 
-	chart.value!.update();
-};
+					return `${pretty.value}${pretty.suffix}`;
+				},
+			},
+			grid: {
+				display: true,
+				color: '#373737',
+				circular: true,
+			},
+			border: {
+				dash: [2, 5],
+			},
+		},
+	};
+}
 
-defineExpose({
-	addTicker,
-	removeTicker,
+watch(() => props.datasets, updateChartDatasets, { deep: true });
+watch(() => props.hideAxis, updateChartScales);
+
+const { state, handler } = useExternalTooltip({
+	mode: 'split',
+	valueSuffix: '',
+	valuePrefix: '$',
+	reversed: true,
+	transformRowValue: (rowValue: string) => {
+		const normalizedDecimal = rowValue.replace(/[^\d,]+/g, '').replace(',', '.');
+		const pretty = prettyNumberWithKey(normalizedDecimal, 2);
+
+		return `${pretty.value}${pretty.suffix}`;
+	},
 });
 
-const externalTooltipHandler =getExternalTooltipSplitted();
-
 onMounted(() => {
-	const labels = ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024', 'Q1 2025', 'Q2 2025'];
-
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
 		type: 'line',
 		data: {
-			labels,
-			datasets:[],
+			datasets: buildDatasets(),
 		},
 		options: {
 			maintainAspectRatio: false,
+			layout: {
+				autoPadding: false,
+			},
 			normalized: true,
 			responsive: true,
 			interaction: {
 				mode: 'index',
 				intersect: false,
 			},
-			hover: {
-				mode: 'dataset',
-			},
-			// onHover: (_, activeElements, chartC) => {
-			// 	const { datasets } = chartC.config.data;
-
-			// 	if (activeElements[0]) {
-			// 		datasets.forEach(
-			// 			(ds, idx) => {
-			// 				if (idx !== activeElements[0].datasetIndex) {
-			// 					const color = ds.label?.split('-')[1];
-
-			// 					ds.borderColor = color?.replace(')', ', 0.1)');
-			// 				}
-			// 			},
-			// 		);
-			// 	} else {
-			// 		datasets.forEach(
-			// 			(ds ) => {
-			// 				const color = ds.label?.split('-')[1];
-
-			// 				ds.borderColor = color;
-			// 			},
-			// 		);
-			// 	}
-
-			// 	console.log(datasets);
-
-			// 	chartC.update();
-			// },
+			hover: { mode: 'dataset' },
 			plugins: {
 				legend: {
 					display: false,
 				},
-
-
 				tooltip: {
 					enabled: false,
 					position: 'nearest',
-					external: externalTooltipHandler,
+					external: handler,
 				},
 			},
-
-			scales: {
-				y: {
-					display: false,
-
-					grid: {
-						display: false,
-					},
-
-					border: {
-						display: false,
-					},
-				},
-
-				x: {
-					ticks: {
-						display: false,
-					},
-
-					grid: {
-						display: false,
-					},
-
-					border: {
-						display: false,
-					},
-				},
-
-			},
+			scales: buildScales(),
 		},
 	});
 });
 
+onUnmounted(() => {
+	if (chart.value) {
+		chart.value.destroy();
+	}
+});
 
 </script>
 
 <template>
 	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
-
-		<chart-range
-			v-if="isVisibleRange"
-			:class="classes.range"
-			:active-range="RangeChart['ALL']"
-			:list="rangeList"
-		/>
-
+		<teleport to="body">
+			<chart-external-tooltip v-bind="state" />
+		</teleport>
 	</div>
 </template>
 
@@ -171,6 +211,7 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	height: v-bind(height);
+	min-height: 0;
 }
 
 .mainChart {
@@ -178,10 +219,4 @@ onMounted(() => {
 	width: 100%;
 	height: 100%;
 }
-
-.range {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
 </style>

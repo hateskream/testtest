@@ -2,6 +2,7 @@
 import { computed, getCurrentInstance, ref } from 'vue';
 
 import { getComponentByType, CellType } from './cells/cell-types';
+import { getCellData } from './utils';
 import {
 	type IGenericTableColumn,
 	type IGenericTableSection,
@@ -37,6 +38,7 @@ export interface IProps<T> {
 	showHeader?: boolean;
 	tickerState?: ITickerState;
 	isUpdating?: boolean;
+	isFixedWidth?: boolean;
 }
 
 export interface IEmits<T> {
@@ -85,6 +87,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	sortConfig: () => ({ columnKey: '', direction: 'none' }),
 	showHeader: true,
 	isUpdating: false,
+	isFixedWidth: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -162,9 +165,9 @@ const getCellComponentForColumn = (
 		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
 		return getCellComponent('nothing');
 	}
-	console.log('columnType', columnType);
 	return getCellComponent(columnType);
 };
+
 
 </script>
 
@@ -214,16 +217,17 @@ const getCellComponentForColumn = (
 				<component
 					:is="getCellComponent(column.type)"
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
-					:data="cellProps.row.data[column.key]"
+					:data="getCellData(cellProps.row, column.key)"
 					:ticker-state="tickerState"
 					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component
-					:is="getCellComponentForColumn(column.type, cellProps.row.data[column.key], column.key)"
+					:is="getCellComponentForColumn(column.type, getCellData(cellProps.row, column.key), column.key)"
 					v-else
-					:data="cellProps.row.data[column.key]"
+					:data="getCellData(cellProps.row, column.key)"
 				/>
 			</template>
+
 		</template>
 
 		<!-- Forward section header slot -->
@@ -235,7 +239,7 @@ const getCellComponentForColumn = (
 
 
 		<!-- Forward pagination slot -->
-		<template #pagination>
+		<template #pagination v-if="$slots.pagination">
 			<slot name="pagination" />
 		</template>
 

@@ -1,34 +1,17 @@
 <script lang="ts" setup>
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type IPositionProps, UiPosition } from '@/shared/ui/position';
+import { type IPositionProps, UiSubposition } from '@/shared/ui/position';
 
 const props = withDefaults(defineProps<IPositionProps>(), {
 	teleport: false,
 	trigger: 'hover',
 	position: 'right-start',
-	positionOffset: 12,
+	offset: 6,
 });
 </script>
 
 <template>
-	<!--
-		вынести сюда modal-badge-list
-		<template #content>
-				<modal-badge-list>
-					<template #default>
-						<modal-item
-							v-for="d in props.dashboards"
-							:key="d.id"
-							:class="classes.item"
-							@click="emits('moveTo', d.id)"
-						>
-							{{ d.name }}
-						</modal-item>
-					</template>
-				</modal-badge-list>
-			</template>
-	-->
-	<ui-position
+	<ui-subposition
 		v-bind="props"
 	>
 		<template #title="{ isVisible }">
@@ -47,7 +30,7 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 		<template #content>
 			<slot name="content" />
 		</template>
-	</ui-position>
+	</ui-subposition>
 </template>
 
 <style module="classes">

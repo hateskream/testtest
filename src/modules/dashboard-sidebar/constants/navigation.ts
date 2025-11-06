@@ -16,9 +16,21 @@ export const navigation: INavigationItem[] = [
 		routeLabels: RouteLabels.Heatmap,
 	},
 	{
+		icon: IconIds.Screener,
+		id: IconIds.Screener,
+		routeName: RouteNames.Screener,
+		routeLabels: RouteLabels.Screener,
+	},
+	{
 		icon: IconIds.Calendar,
 		id: IconIds.Calendar,
 		routeName: RouteNames.Calendar,
 		routeLabels: RouteLabels.Calendar,
+	},
+	{
+		icon: IconIds.LogoWidgetNews,
+		id: IconIds.LogoWidgetNews,
+		routeName: RouteNames.News,
+		routeLabels: RouteLabels.News,
 	},
 ];

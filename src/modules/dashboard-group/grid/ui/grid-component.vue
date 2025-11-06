@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import type { IPosition, IWidget, WidgetType } from '@/modules/dashboard-group/core';
-import type { IWidgetState } from '@/modules/dashboard-group/core';
+import type { IPosition, IWidget, WidgetType } from '@/modules/dashboard-group';
+import type { IWidgetState } from '@/modules/dashboard-group/tv';
 
 import EditingGrid from './editing-grid.vue';
 import DashboardGrid from './dashboard-grid.vue';

@@ -1,21 +1,22 @@
 import type { Component } from 'vue';
 
-import { WidgetType } from '../../core';
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
-import { MarketCapDashboard } from '@/modules/widgets/market-cap';
+import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
 import { NewsDashboard } from '@/modules/widgets/news';
-import { PriceDashboard } from '@/modules/widgets/price';
+import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
-import { BitcoinDominance } from '@/modules/widgets/bitcoin-dominance';
-import { TopIndicesWidget } from '@/modules/widgets/top-indices';
+import { TopIndicesDashboardWidget, TopIndicesTvWidget } from '@/modules/widgets/top-indices';
 import { CalendarWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
-import { PriceChartDashboard } from '@/modules/widgets/chart-price';
+import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
+import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
+import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
+import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
 
 export interface ISize {
 	w: number;
@@ -39,6 +40,9 @@ export interface IMeta {
 		id: string;
 		name: string;
 	}[];
+	maxCountRowTable?: number;
+	activeDisplayVariant: DisplayVariant;
+	allDisplayVariants: DisplayVariant[];
 }
 
 interface IWidgetComponentProps {
@@ -47,26 +51,44 @@ interface IWidgetComponentProps {
 
 type WidgetComponent = Component<IWidgetComponentProps>;
 
-const components: Record<WidgetType, WidgetComponent> = {
+const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
-	[WidgetType.MarketCap]: MarketCapDashboard,
+	[WidgetType.MarketCap]: MarketCapTvWidget,
 	[WidgetType.News]: NewsDashboard,
-	[WidgetType.Price]: PriceDashboard,
+	[WidgetType.Price]: PriceTvWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-	[WidgetType.BitcoinDominance]: BitcoinDominance,
-	[WidgetType.TopIndices]: TopIndicesWidget,
+	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
+	[WidgetType.TopIndices]: TopIndicesTvWidget,
 	[WidgetType.Calendar]: CalendarWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
-	[WidgetType.ChartPrice]: PriceChartDashboard,
+	[WidgetType.ChartPrice]: ChartPriceTvWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
 };
 
-export function getWidgetComponent(type: WidgetType) {
-	return components[type];
+const componentsDashboard: Record<WidgetType, WidgetComponent> = {
+	[WidgetType.FearGreed]: FearGreedDashboard,
+	[WidgetType.Market]: MarketDashboard,
+	[WidgetType.MarketCap]: MarketCapDashboardWidget,
+	[WidgetType.News]: NewsDashboard,
+	[WidgetType.Price]: PriceDashboardWidget,
+	[WidgetType.Watchlist]: WatchlistDashboard,
+	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
+	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
+	[WidgetType.TopIndices]: TopIndicesDashboardWidget,
+	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Heatmap]: HeatmapDashboard,
+	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
+	[WidgetType.Exchange]: ExchangesDashboard,
+	[WidgetType.EthGas]: EthGasDashboard,
+};
+
+export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {
+	return widgetVariant === 'dashboard' ? componentsDashboard[widgetType] : componentsTv[widgetType];
 }
 
 const PREFIX_FULL_VIEW = 'ephemeral';

@@ -10,18 +10,20 @@ import MarketBadgeList from './market-badge-list.vue';
 interface IMarketBadgeProps {
 	title?: string;
 	excludeMarkets?: MarketType[];
+	displayVariant?: 'default' | 'new';
 }
 
 const props = withDefaults(defineProps<IMarketBadgeProps>(), {
 	title: 'Market',
 	excludeMarkets: () => [],
+	displayVariant: 'default',
 });
 
 const activeMarket = defineModel<MarketType>({ required: true });
 </script>
 
 <template>
-	<modal-badge>
+	<modal-badge :display-variant="props.displayVariant">
 		<template #title>
 			{{ getMarketLabel(activeMarket) }}
 			<ui-icon :id="IconIds.DropdownDown" />

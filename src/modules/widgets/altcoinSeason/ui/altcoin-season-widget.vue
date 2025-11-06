@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
 import { useAltcoinSeasonQuery } from '@/modules/widgets/altcoinSeason/queries';
 import { usePerformanceStore } from '../../performance/stores';
@@ -40,7 +40,7 @@ function resetAll() {
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		has-reset
 		:meta="props.meta"
 		:class="classes.altcoinSeasonWidget"
@@ -76,7 +76,7 @@ function resetAll() {
 		<template #filter>
 			<altcoin-season-time-filter v-model:period="period" />
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 
 <style module="classes">

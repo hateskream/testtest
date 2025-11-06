@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, useTemplateRef } from 'vue';
+import { computed, type CSSProperties, useTemplateRef, watch } from 'vue';
 
 import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 import { ModalBadgeTitle } from '../index';
@@ -10,19 +10,31 @@ interface IProps {
 	strategy?: 'fixed' | 'absolute';
 	uiPositionProps?: Omit<IPositionProps, 'strategy'>;
 	paddingLeft?: CSSProperties['paddingLeft'];
+	displayVariant?: 'default' | 'new';
 }
+
 const props = defineProps<IProps>();
+
+interface IEmits {
+	(e: 'change-visible', state: boolean): void;
+}
+
+const emit = defineEmits<IEmits>();
 
 // FIXME: Idk why but it doesnt work without type
 const positionRef = useTemplateRef<{ isVisible: boolean }>('position');
 
 const isVisible = computed(() => positionRef.value?.isVisible ?? false);
+
+watch(isVisible, (value) => {
+	emit('change-visible', value);
+});
 </script>
 
 <template>
 	<ui-position
 		ref="position"
-		position="bottom-start"
+		placement="bottom-start"
 		v-bind="props.uiPositionProps || {}"
 		:strategy="props.strategy"
 	>
@@ -31,6 +43,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 				:background-color="props.backgroundColor"
 				:color="props.color"
 				:padding-left="props.paddingLeft"
+				:display-variant="props.displayVariant"
 			>
 				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->
 				<slot name="title" :is-visible="isVisible" />
@@ -38,7 +51,7 @@ const isVisible = computed(() => positionRef.value?.isVisible ?? false);
 		</template>
 
 		<template #content>
-			<slot name="content" />
+			<slot name="content" :is-visible="isVisible" />
 		</template>
 	</ui-position>
 </template>

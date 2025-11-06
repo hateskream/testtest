@@ -33,7 +33,7 @@ defineProps<IProps>();
 	font-weight: 300;
 	font-size: 12px;
 	color: var(--text-color-base-300);
-	background-color: var(--bg-color-base-300);
-	border-radius: 6px;
+	border: 1px solid var(--border-color-surface-02);
+	border-radius: 9px;
 }
 </style>

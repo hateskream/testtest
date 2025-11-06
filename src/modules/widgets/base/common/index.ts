@@ -1,4 +1,5 @@
-import BaseDashboardComponent from './ui/base-dashboard-component.vue';
+import BaseWidgetTvComponent from './ui/base-widget-tv-component.vue';
+import BaseWidgetDashboard from './ui/base-widget-dashboard.vue';
 import ErrorNetworkComponent from './ui/error-network-component.vue';
 import BaseSwitchComponent from './ui/base-switch-component.vue';
 import BaseSearchComponent from './ui/base-search-component.vue';
@@ -6,9 +7,10 @@ import BaseErrorComponent from './ui/base-error-component.vue';
 import BaseLoaderComponent from './ui/base-loader-component.vue';
 
 export {
-	BaseDashboardComponent,
+	BaseWidgetTvComponent,
 	ErrorNetworkComponent,
 	BaseErrorComponent,
+	BaseWidgetDashboard,
 	BaseLoaderComponent,
 	BaseSwitchComponent as BaseSwitch,
 	BaseSearchComponent as BaseSearch,

@@ -47,13 +47,13 @@ export interface IPreparedResponse {
 	pagination: IPagination;
 }
 
-export async function getTopIndicesCrypto(_: IGetTopIndicesRequest): Promise<IPreparedResponse> {
+export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<IPreparedResponse> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
 	try {
 		if (IS_USE_MOCK) {
-			return getMockData();
+			return getMockData(req);
 		}
 
 		const response = await httpService.get<IGetTopIndicesResponse>('/api/top-indices');
@@ -71,10 +71,8 @@ const columnTypes: ColumnWithoutSymbol[] = [
 	ColumnType.Volatility,
 ];
 
-async function getMockData(): Promise<IPreparedResponse> {
-	await new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
+async function getMockData(req: IGetTopIndicesRequest): Promise<IPreparedResponse> {
+	const tickers: TopIndicesTableRow[] = await generateRows(SymbolType.Index, columnTypes);
 
 	return {
 		pagination: {
@@ -82,6 +80,6 @@ async function getMockData(): Promise<IPreparedResponse> {
 			limit: 10,
 			total: 10,
 		},
-		tickers: await generateRows(SymbolType.Index, columnTypes),
+		tickers: tickers.slice(0, req.limit),
 	};
 }

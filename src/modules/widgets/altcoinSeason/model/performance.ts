@@ -14,7 +14,7 @@ export enum DisplayVariant {
 
 export type PerformanceTableRow = TableRow<{
 	[ColumnType.Symbol]: ISymbolCell;
-	[ColumnType.ChangePrice24hPercent]: IPercentCell;
+	[ColumnType.Performance]: IPercentCell;
 }>;
 
 export const ALTCOIN_PERFORMANCE_COLUMNS: ITableColumn[] =
@@ -27,7 +27,7 @@ export const ALTCOIN_PERFORMANCE_COLUMNS: ITableColumn[] =
 				groupOrder: 0,
 			},
 			{
-				columnType: ColumnType.ChangePrice24hPercent,
+				columnType: ColumnType.Performance,
 				groupOrder: 0,
 				isShow: true,
 				isDraggable: true,

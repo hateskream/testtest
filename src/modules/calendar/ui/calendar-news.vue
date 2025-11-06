@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
-import { type IGetNewsRequest, NewsFiltersPanel, useNews, useQueryNews, ViewNewsComponent } from '@/modules/news';
+import {
+	NewsFiltersPanel,
+	NewsListComponent,
+	useNews,
+	useQueryNews,
+	type IGetNewsRequest,
+} from '@/modules/news';
 
 const {
 	segments,
@@ -39,6 +45,12 @@ const { data, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	limit: 10,
 })));
 
+const selectedNewsId = ref<string | null>(null);
+
+function selectNews(id: string) {
+	selectedNewsId.value = id;
+}
+
 const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
 </script>
 
@@ -58,10 +70,11 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 			@unselect-all="unselectAll"
 			@toggle-ticker="toggleTicker"
 		/>
-		<view-news-component
+		<news-list-component
 			:news="news"
 			:display-settings="displaySettings"
 			@next="fetchNextPage"
+			@select-news="selectNews"
 		/>
 	</div>
 </template>
@@ -85,5 +98,11 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.104px;
 	text-overflow: ellipsis;
+}
+
+.content {
+	display: flex;
+	height: 100%;
+	overflow: hidden;
 }
 </style>

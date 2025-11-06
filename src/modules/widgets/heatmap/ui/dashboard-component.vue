@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../base/index.ts';
 import { useHeatmap } from '../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { ChangeDisplay, InteractionSettings } from '@/modules/treemap';
@@ -143,7 +143,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -216,7 +216,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 				:active="mapColorDepthToSettings(activeColorDepth)"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 
 <style module="classes">

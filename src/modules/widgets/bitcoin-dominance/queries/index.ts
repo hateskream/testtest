@@ -1,1 +1,2 @@
-export * from './use-query-bitcoin-dominance';
+export * from './use-query-dominance-history';
+export * from './use-query-dominance-snapshot';

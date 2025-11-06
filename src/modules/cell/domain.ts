@@ -70,6 +70,16 @@ export enum ColumnType {
 	UpdateDate = 'updateDate',
 
 	Volatility = 'volatility',
+
+	AnalystRating = 'analystRating',
+	VolumeRel24h = 'volumeRel24h',
+	VolumeRelAvg50d = 'volumeRelAvg50d',
+	PriceEarnings = 'priceEarnings',
+	EpsDil12mo = 'epsDil12mo',
+	EpsDilAvg50d = 'epsDilAvg50d',
+	EpsDilGrowth12mo = 'epsDilGrowth12mo',
+	EpsDilGrowthAvg50d = 'epsDilGrowthAvg50d',
+	DividendYield = 'dividendYield',
 	TrustScore = 'trustScore',
 	Open = 'open',
 	Incentive = 'incentive',
@@ -82,6 +92,8 @@ export enum ColumnType {
 	DEXRank = 'DEXRank',
 	Country = 'country',
 	NextClosedDay = 'nextClosedDay',
+
+	Performance = 'Performance',
 }
 
 export enum CellType {
@@ -349,6 +361,18 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.DEXRank]: CellType.Number,
 	[ColumnType.Country]: CellType.Text,
 	[ColumnType.NextClosedDay]: CellType.Text,
+
+	[ColumnType.Performance]: CellType.Percent,
+
+	[ColumnType.AnalystRating]: CellType.Text,
+	[ColumnType.VolumeRel24h]: CellType.Number,
+	[ColumnType.VolumeRelAvg50d]: CellType.Number,
+	[ColumnType.PriceEarnings]: CellType.Number,
+	[ColumnType.EpsDil12mo]: CellType.Number,
+	[ColumnType.EpsDilAvg50d]: CellType.Number,
+	[ColumnType.EpsDilGrowth12mo]: CellType.Number,
+	[ColumnType.EpsDilGrowthAvg50d]: CellType.Number,
+	[ColumnType.DividendYield]: CellType.Number,
 };
 
 export type ColumnToCell = {
@@ -427,6 +451,18 @@ export type ColumnToCell = {
 	[ColumnType.DEXRank]: INumberCell;
 	[ColumnType.Country]: ITextCell;
 	[ColumnType.NextClosedDay]: ITextCell;
+
+	[ColumnType.Performance]: IPercentCell;
+
+	[ColumnType.AnalystRating]: ITextCell;
+	[ColumnType.VolumeRel24h]: INumberCell;
+	[ColumnType.VolumeRelAvg50d]: INumberCell;
+	[ColumnType.PriceEarnings]: INumberCell;
+	[ColumnType.EpsDil12mo]: INumberCell;
+	[ColumnType.EpsDilAvg50d]: INumberCell;
+	[ColumnType.EpsDilGrowth12mo]: INumberCell;
+	[ColumnType.EpsDilGrowthAvg50d]: INumberCell;
+	[ColumnType.DividendYield]: INumberCell;
 };
 
 export type CellByColumn<T extends ColumnType> = ColumnToCell[T];

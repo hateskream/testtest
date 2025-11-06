@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 interface ISearchComponentProps {
 	modelValue: string;
 	placeholder?: string;
@@ -18,10 +20,19 @@ function handleUpdate(e: Event) {
 	const target = e.target as HTMLInputElement;
 	emits('update:modelValue', target.value);
 }
+
+const input = useTemplateRef('input');
+
+function focus() {
+	input.value?.focus();
+}
+
+defineExpose({ focus });
 </script>
 
 <template>
 	<input
+		ref="input"
 		type="text"
 		:value="modelValue"
 		:class="classes.input"
@@ -39,8 +50,11 @@ function handleUpdate(e: Event) {
 	font-size: 13px;
 	line-height: normal;
 	text-align: left;
-	color: var(--text-color-base-100);
 	background-color: inherit;
 	border: none;
+
+	&::placeholder {
+		color: var(--text-color-base-100);
+	}
 }
 </style>

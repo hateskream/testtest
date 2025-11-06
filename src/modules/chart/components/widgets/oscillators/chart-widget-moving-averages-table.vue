@@ -140,6 +140,8 @@ const columns = [
 		visible: true,
 		type: CellType.TEXT,
 		group: { name: 'MA', displayName: 'MA' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'value',
@@ -151,6 +153,8 @@ const columns = [
 		visible: true,
 		type: CellType.NUMBER,
 		group: { name: 'MA', displayName: 'MA' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'signal',
@@ -162,8 +166,19 @@ const columns = [
 		visible: true,
 		type: CellType.PLATE,
 		group: { name: 'MA', displayName: 'MA' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 ];
+
+type TRow = {
+	data: {
+		name: { value: string | null };
+		value?: { value: string | number | null };
+		signal?: { value: string };
+	};
+};
+
 </script>
 
 <template>
@@ -191,9 +206,10 @@ const columns = [
 				:sticky-first-column="false"
 				:show-header="false"
 			>
+
 				<template #[`cell-name`]="{ row }">
 					<div :class="classes.left" class="paragraph-p-00">
-						{{ row.data.name?.value ?? '—' }}
+						{{ (row as TRow).data.name.value ?? '—' }}
 					</div>
 				</template>
 			</widget-typed-table>

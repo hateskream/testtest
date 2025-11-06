@@ -1,22 +1,35 @@
 <script setup lang="ts">
-import { computed, type CSSProperties } from 'vue';
+import { type CSSProperties } from 'vue';
 
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
 	color?: CSSProperties['color'];
 	paddingLeft?: CSSProperties['paddingLeft'];
+	displayVariant?: 'default' | 'new';
 }
-const props = defineProps<IProps>();
 
-const badgeColors = computed(() => ({
-	backgroundColor: props.backgroundColor ?? 'var(--bg-color-base-300)',
-	color: props.color ?? 'var(--text-color-base-300)',
-	paddingLeft: props.paddingLeft ?? '12px',
-}));
+const props = withDefaults(defineProps<IProps>(), {
+	backgroundColor: 'var(--bg-color-base-300)',
+	color: 'var(--text-color-base-300)',
+	paddingLeft: '12px',
+	displayVariant: 'default',
+});
 </script>
 
 <template>
-	<div :class="classes.title" :style="badgeColors">
+	<div
+		:class="[
+			classes.title,
+			{
+				[classes.new]: props.displayVariant === 'new',
+			},
+		]"
+		:style="{
+			backgroundColor: props.displayVariant === 'new' ? 'rgb(73 73 80 / 70%);' : props.backgroundColor,
+			color: props.displayVariant === 'new' ? 'rgb(255 255 255 / 96%);' : props.color ,
+			paddingLeft: props.displayVariant === 'new' ? '10px' : props.paddingLeft,
+		}"
+	>
 		<slot />
 	</div>
 </template>
@@ -29,11 +42,26 @@ const badgeColors = computed(() => ({
 	width: max-content;
 	height: 32px;
 	padding: 0 12px;
-	font-weight: 300;
-	font-size: 10px;
-	text-align: left;
+	font-style: normal;
+	font-weight: 450;
+	font-size: 11.8px;
+	line-height: 165%; /* 19.47px */
+	color: rgb(255 255 255 / 96%);
+	letter-spacing: 0.059px;
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;
+}
+
+.new {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 24px;
+	padding-right: 6px;
+	padding-left: 10px;
+	background: rgb(73 73 80 / 70%);
+	border-radius: 8px;
+	gap: 3px;
 }
 </style>

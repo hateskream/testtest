@@ -20,6 +20,9 @@ export interface IUseExternalTooltipOptions {
 	wrapperEl?: MaybeRefOrGetter<HTMLElement | null>;
 	valuePrefix?: string;
 	valueSuffix?: string;
+	reversed?: boolean;
+	transformTitle?: (title: string[]) => string[];
+	transformRowValue?: (rowValue: string) => string;
 }
 
 export interface IUseExternalTooltipState {
@@ -46,20 +49,28 @@ function createRows(
 	if (args.mode === 'vaults') {
 		bodyLines.forEach((body, i) => {
 			const legend = args.legends?.[i];
+
+			const value = args.transformRowValue ? args.transformRowValue(body.toString()) : body.toString();
+
 			rows.push({
-				color: legend?.color ?? 'transparent',
+				color: legend?.color ?? 'red',
 				text: legend?.text ?? '',
-				value: `${args.valuePrefix}${body.toString()}${args.valueSuffix}`,
+				value: `${args.valuePrefix}${value}${args.valueSuffix}`,
 			});
 		});
 	} else {
-		bodyLines.forEach((body) => {
+		bodyLines.forEach((body, i) => {
 			const [ticker, value] = body.toString().split(':');
 			const [symbol, color] = (ticker ?? '').split('-');
+
+			const labelColor = tooltip.labelColors?.[i]?.borderColor;
+
+			const transformedValue = args.transformRowValue ? args.transformRowValue(value) : value;
+
 			rows.push({
-				color: color ?? 'transparent',
+				color: color ?? labelColor ?? 'transparent',
 				text: symbol ?? '',
-				value: `${args.valuePrefix}${(value ?? '').trim()}${args.valueSuffix}`,
+				value: `${args.valuePrefix}${(transformedValue ?? '').trim()}${args.valueSuffix}`,
 			});
 		});
 	}
@@ -79,8 +90,18 @@ function createHandler(
 		return;
 	}
 
-	state.title = [...tooltip.title];
-	state.rows = createRows(tooltip, args);
+	if (args.transformTitle) {
+		state.title = args.transformTitle([...tooltip.title]);
+	} else {
+		state.title = [...tooltip.title];
+	}
+
+
+	const rows = createRows(tooltip, args);
+
+	state.rows = args.reversed ? [...rows].reverse() : rows;
+
+
 	state.padding = Number(tooltip.options.padding ?? 8);
 
 	const { canvas } = chart;
@@ -101,7 +122,7 @@ function createHandler(
 }
 
 export function useExternalTooltip(
-	args: IUseExternalTooltipOptions,
+	args: IUseExternalTooltipOptions = {},
 ) {
 	const state = reactive<IUseExternalTooltipState>({
 		visible: false,

@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 
-export function prettyNumberWithKey(val: string): {
+export function prettyNumberWithKey(val: string, precision: number = 1): {
 	value: string;
 	suffix: string;
 } {
@@ -12,8 +12,9 @@ export function prettyNumberWithKey(val: string): {
 		const suffix = suffixes[tier.toNumber() - 1];
 
 		const scaledNum = num.dividedBy(new Decimal(10).pow(tier.mul(3)));
+
 		return {
-			value: scaledNum.toFixed(1),
+			value: scaledNum.toFixed(precision),
 			suffix,
 		};
 	}

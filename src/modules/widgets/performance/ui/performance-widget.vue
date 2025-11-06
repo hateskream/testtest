@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseDashboardComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
 import { ALL_COLUMNS } from '../model';
 import { usePerformance } from '../composables';
 
@@ -49,7 +49,7 @@ const {
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -87,7 +87,7 @@ const {
 				v-model:quote-currency="quoteCurrency"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 
 <style module="classes">

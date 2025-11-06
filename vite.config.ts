@@ -10,7 +10,13 @@ const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
-		vue(),
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => tag === 'i88-chart',
+				},
+			},
+		}),
 		createSvgIconsPlugin({
 			iconDirs: [path.resolve(process.cwd(), './src/assets/icons')],
 			symbolId: 'icon-[name]',

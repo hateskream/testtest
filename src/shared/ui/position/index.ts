@@ -1,2 +1,4 @@
-export { default as UiPosition } from './position-component.vue';
-export * from './types';
+export * from './ui';
+export * from './composables';
+export * from './model';
+export * from './utils';

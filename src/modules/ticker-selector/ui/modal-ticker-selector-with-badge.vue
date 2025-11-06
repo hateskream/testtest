@@ -1,22 +1,30 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, useTemplateRef } from 'vue';
 
 import { ModalFilter } from './components/modal';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useQueryTickerSelector } from '../queries';
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
 import { ModalBadge } from '@/modules/widgets/base';
+import { marketToLabel, MarketType } from '@/modules/market';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';
 
 interface IProps {
 	selectionMode?: 'single' | 'multiple';
 	enableSelectedInfo?: boolean;
+	displayVariant?: 'default' | 'new';
+	searchPlaceholder?: string;
+	marketTypes?: MarketType[];
+	autofocus?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	selectionMode: 'multiple',
 	enableSelectedInfo: true,
+	displayVariant: 'default',
+	searchPlaceholder: 'Start typing the ticker...',
+	marketTypes: () => Object.values(MarketType),
 });
 
 const selectedTickers = defineModel<string[]>({
@@ -33,10 +41,22 @@ const selectedTickersMapped = computed(() => {
 		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW)
 		.map(getMappedRow);
 });
+
+const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
+
+const filterRef = useTemplateRef('filter');
+
+function onChangeVisible(state: boolean) {
+	if (state && props.autofocus) {
+		nextTick(() => {
+			filterRef.value?.focusSearch();
+		});
+	}
+}
 </script>
 
 <template>
-	<modal-badge>
+	<modal-badge :display-variant="props.displayVariant" @change-visible="onChangeVisible">
 		<template #title>
 			<div
 				v-if="selectedTickersMapped.length > 0"
@@ -54,34 +74,31 @@ const selectedTickersMapped = computed(() => {
 						:type="item.symbolType"
 					/>
 				</div>
-
 				<template v-if="selectedTickers.length > 3">
 					+ {{ selectedTickers.length }}
 				</template>
 			</div>
-
-
 			<div
 				v-if="selectedTickers.length === 0"
-				:class="classes.title"
 			>
-				Crypto
+				{{previewLabel}}
 			</div>
-
 			<ui-icon
 				:id="IconIds.DropdownDown"
 				width="12"
 				height="12"
 			/>
 		</template>
-
 		<template #content>
 			<modal-filter
 				v-if="data"
+				ref="filter"
 				v-model="selectedTickers"
 				:selection-mode="props.selectionMode"
 				:tickers="data.tickers"
 				:enable-selected-info="props.enableSelectedInfo"
+				:search-placeholder="props.searchPlaceholder"
+				:market-types="props.marketTypes"
 				@select="emits('select', $event)"
 				@unselect="emits('unselect', $event)"
 				@select-all="emits('selectAll', $event)"

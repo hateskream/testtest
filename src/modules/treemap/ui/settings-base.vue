@@ -16,7 +16,7 @@ import type {
 } from '../model';
 import { TitleViewVariant } from '../model';
 import { UiDriver } from '@/shared/ui/driver';
-import { UiPosition } from '@/shared/ui/position';
+import { UiPosition, UiSubposition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
@@ -124,7 +124,7 @@ function updateColorDepth(newColorDepth: string) {
 								{{ cb.displayName }}
 							</modal-item-selector>
 							<ui-driver />
-							<ui-position trigger="hover" :teleport="false">
+							<ui-subposition trigger="hover" :teleport="false">
 								<template #title>
 									<modal-item-interaction>
 										<!-- eslint-disable-next-line @stylistic/max-len -->
@@ -146,7 +146,7 @@ function updateColorDepth(newColorDepth: string) {
 										</template>
 									</modal-badge-list>
 								</template>
-							</ui-position>
+							</ui-subposition>
 						</template>
 					</modal-badge-list>
 				</template>

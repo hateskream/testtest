@@ -1,5 +1,7 @@
 export const RangeChart = {
+	'24H': '24H',
 	'1D': '1D',
+	'7D': '7D',
 	'1W': '1W',
 	'1M': '1M',
 	'3M': '3M',

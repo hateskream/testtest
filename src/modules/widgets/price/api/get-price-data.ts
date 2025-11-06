@@ -115,7 +115,8 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 				...t,
 				isPined: false,
 				isShow: true,
-			})),
+			}))
+			.slice(0, req.limit),
 		pinedTickers: marketToTickers[req.market]
 			.filter(t => req.pined.includes(t.tickerId))
 			.map(t => ({

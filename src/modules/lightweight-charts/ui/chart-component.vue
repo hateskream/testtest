@@ -1,29 +1,43 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import {
 	AreaSeries,
+	type CandlestickData,
+	CandlestickSeries,
 	ColorType,
 	createChart,
-	type ISeriesApi,
-	LineSeries,
 	type IChartApi,
+	type ISeriesApi,
 	type LineData,
+	LineSeries,
+	type LogicalRangeChangeEventHandler,
 	type SeriesType,
 	type Time,
-	CandlestickSeries,
-	type CandlestickData,
-	type LogicalRangeChangeEventHandler,
 } from 'lightweight-charts';
-import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
-import { nextTick } from 'vue';
+import type { ChartType } from '@shared/component-library';
 
-import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
-import { IndicatorsChart, TypeChart, type IChartUpdateEmitData } from '../model/chart';
+import {
+	calculateSMASeriesData,
+	convertTime,
+	generateCandleDataFromLineData,
+	generateLineData,
+	groupSeriesByRange,
+} from '../utils';
+import {
+	type IChartUpdateEmitData,
+	IndicatorsChart,
+	type ISharedChartMouseEventDetails,
+	type SharedChartMouseEvent,
+	TypeChart,
+} from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { prepareLineDataFromCandlestick, prepareSeries } from '../utils/prepare-series';
 import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
+import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import type { IUseExternalTooltipState } from '@/modules/lightweight-charts/composables';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -35,12 +49,23 @@ interface IChartProps {
 	rangeList: RangeChart[];
 	isVisibleIndicators?: boolean;
 	isVisibleRange?: boolean;
+	isVisibleRangeChange?: boolean;
+	isVisiblePriceScale?: boolean;
+	isVisibleTimeScale?: boolean;
+	isShowTooltip?: boolean;
+	isPaddedRange?: boolean;
+	colorSchema?: 'positive' | 'negative';
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleHistoryGraph: true,
 	isVisibleIndicators: true,
 	isVisibleRange: true,
+	isVisibleRangeChange: true,
+	isVisiblePriceScale: true,
+	isVisibleTimeScale: true,
+	isPaddedRange: false,
+	colorSchema: 'positive',
 });
 
 defineExpose({
@@ -49,6 +74,7 @@ defineExpose({
 
 interface IChartEmits {
 	(e: 'update', data: IChartUpdateEmitData): void;
+	(e: 'chart-hover', event: SharedChartMouseEvent): void;
 }
 
 const emits = defineEmits<IChartEmits>();
@@ -87,7 +113,15 @@ const handlerSubscribeVisibleLogicalRangeChange: LogicalRangeChangeEventHandler 
 	}
 };
 
-const currentRange = ref<RangeChart>(props.rangeList[props.rangeList.length - 1]);
+const modelValueRange = defineModel<RangeChart>('range');
+
+const currentRange = computed({
+	get: () => modelValueRange.value ?? props.rangeList[props.rangeList.length - 1],
+	set: (value) => {
+		modelValueRange.value = value;
+	},
+});
+
 
 const listTypeGraph = Object.entries(TypeChart).map(([title, val]) => ({ title, val }));
 
@@ -143,6 +177,29 @@ const styleMainChart = computed(() => {
 	return {
 		height: `calc(100% - ${otherElHeight}px)`,
 	};
+});
+
+const preparedChartData = computed(() => {
+	const data = groupedData.value[currentRange.value];
+
+	if (currentTypeGraph.value === TypeChart.Candlestick) {
+		return data;
+	} else {
+		return data.map(item => ({
+			time: item.time,
+			value: item.close,
+		}));
+	}
+});
+
+const chartTypeForWebComponent = computed<ChartType>(() => {
+	if (currentTypeGraph.value === TypeChart.Candlestick) {
+		return 'candlestick';
+	} else if (currentTypeGraph.value === TypeChart.Line) {
+		return 'area';
+	} else {
+		return 'area';
+	}
 });
 
 function regenerateData() {
@@ -233,16 +290,12 @@ function updateHistoryChartPropChange() {
 
 				rightPriceScale: {
 					scaleMargins: {
-						top: 0.3, // leave some space for the legend
+						top: 0.3,
 						bottom: 0.25,
 					},
-
-
 					minimumWidth: 55,
-
 					borderVisible: false,
 				},
-
 
 				grid: {
 					horzLines: {
@@ -291,26 +344,97 @@ function updateHistoryChartPropChange() {
 
 watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
 
+// tooltip
+
+const tooltipState = reactive<IUseExternalTooltipState>({
+	x: 0,
+	y: 0,
+	padding: 10,
+	visible: false,
+	title: [],
+	rows: [],
+});
+
+const tooltipRowColor = computed(() => props.colorSchema === 'positive'
+	? 'var(--metrics-color-positive-chart)'
+	: 'var(--metrics-color-negative-chart)',
+);
+
+function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
+	if (!state || !container.value) {
+		tooltipState.visible = false;
+		return;
+	}
+
+	const segment = groupedData.value[currentRange.value].find(sgm => sgm.time === state.time);
+
+	if (!segment) {
+		tooltipState.visible = false;
+		return;
+	}
+
+	const rect = (container.value as HTMLElement).getBoundingClientRect();
+
+	tooltipState.x = rect.left + state.x;
+	tooltipState.y = rect.top + state.y + 20;
+
+	const time = convertTime(segment.time);
+
+	tooltipState.title = [
+		(new Date(time)).toLocaleString(undefined, {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		}),
+	];
+
+	tooltipState.rows[0] = {
+		text: 'Price',
+		value: state.value.toString(),
+		color: tooltipRowColor.value,
+	};
+
+	tooltipState.visible = true;
+}
+
+function onChartHover(event: SharedChartMouseEvent) {
+	emits('chart-hover', event);
+
+	if (props.isShowTooltip) {
+		updateTooltipState(event.detail[0]);
+	}
+}
+
+// build chart
 
 onMounted(async () => {
 	await nextTick();
+
 	chart.value = createChart(container.value as HTMLElement, {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
-			background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
 		},
+
 		rightPriceScale: {
 			scaleMargins: {
-				top: 0.3, // leave some space for the legend
+				top: 0.3,
 				bottom: 0.25,
 			},
-
 			minimumWidth: 55,
 			borderVisible: false,
 		},
 
 		handleScale: !props.disableScroll,
+
+		timeScale: {
+			borderVisible: false,
+			timeVisible: true,
+			secondsVisible: false,
+		},
 
 		grid: {
 			vertLines: {
@@ -319,6 +443,10 @@ onMounted(async () => {
 			horzLines: {
 				visible: false,
 			},
+		},
+
+		crosshair: {
+			mode: 1,
 		},
 	});
 
@@ -417,27 +545,41 @@ onMounted(async () => {
 				</template>
 			</modal-badge>
 		</div>
-
 		<div
-			ref="container"
 			:class="classes.mainChart"
 			:style="styleMainChart"
 		>
+			<i88-chart
+				ref="container"
+				:data="preparedChartData"
+				:type="chartTypeForWebComponent"
+				:auto-size="true"
+				:color-scheme="props.colorSchema"
+				:show-price-scale="props.isVisiblePriceScale"
+				:show-time-scale="props.isVisibleTimeScale"
+				@chart-hover="onChartHover"
+			/>
 		</div>
-
 		<chart-range
 			v-if="isVisibleRange"
-			:class="classes.range"
+			:class="[classes.range, {[classes.padded]: props.isPaddedRange}]"
 			:active-range="currentRange"
 			:list="rangeList"
+			:disable-change="!isVisibleRangeChange"
 			@select="selectRange"
 		/>
-
 		<div
 			ref="history"
 			:class="classes.chartHistory"
 			:style="{ display: !!chartHistory ? 'block' : 'none'  }"
 		></div>
+		<teleport v-if="isShowTooltip" to="body">
+			<chart-external-tooltip v-bind="tooltipState">
+				<template v-if="$slots.tooltipContent" #content="contentProps">
+					<slot name="tooltipContent" v-bind="contentProps" />
+				</template>
+			</chart-external-tooltip>
+		</teleport>
 	</div>
 </template>
 
@@ -462,6 +604,10 @@ onMounted(async () => {
 .range {
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+.range.padded {
+	margin-left: 10px;
 }
 
 .instruments {

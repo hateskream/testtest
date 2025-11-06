@@ -2,6 +2,8 @@
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
+import type { IExtendedTableColumn } from '@/modules/widgets/widget-table/widget-typed-table.vue';
+
 type TPayoutType = 'cash' | 'stock' | 'special';
 
 const title = 'Dividends & Payouts';
@@ -258,7 +260,7 @@ const columns = [
 		type: CellType.PLATE,
 		group: { name: 'Div', displayName: 'Div' },
 	},
-];
+] as IExtendedTableColumn[];
 
 </script>
 

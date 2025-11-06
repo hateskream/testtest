@@ -52,7 +52,7 @@ const style = computed(() => {
 		v-model="isOpenFullView"
 	>
 		<component
-			:is="getWidgetComponent(props.meta.widgetType)"
+			:is="getWidgetComponent('tv',props.meta.widgetType)"
 			:meta="preparedMeta"
 			:style="style"
 		/>

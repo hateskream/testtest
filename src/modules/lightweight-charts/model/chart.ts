@@ -18,3 +18,12 @@ export interface IChartUpdateEmitData {
 	value: number;
 	time: Date;
 }
+
+export interface ISharedChartMouseEventDetails {
+	time: number | string;
+	value: number;
+	x: number;
+	y: number;
+}
+
+export type SharedChartMouseEvent = CustomEvent<[ISharedChartMouseEventDetails | null]>;

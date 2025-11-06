@@ -2,6 +2,7 @@
 import { ModalFilter } from './components/modal';
 import { useQueryTickerSelector } from '../queries';
 import type { ITickerEmits } from '../model';
+import { MarketType } from '@/modules/market';
 
 interface IProps {
 	isBackgroundTransparent?: boolean;
@@ -9,6 +10,8 @@ interface IProps {
 	enableSelectAll?: boolean;
 	textAboveSearch?: string;
 	selectionMode?: 'single' | 'multiple';
+	searchPlaceholder?: string;
+	marketTypes?: MarketType[];
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -17,6 +20,8 @@ const props = withDefaults(defineProps<IProps>(), {
 	enableSelectAll: true,
 	textAboveSearch: '',
 	selectionMode: 'multiple',
+	searchPlaceholder: 'Start typing the ticker...',
+	marketTypes: () => Object.values(MarketType),
 });
 
 const { data } = useQueryTickerSelector();
@@ -39,6 +44,8 @@ const emits = defineEmits<ITickerEmits>();
 		:enable-selected-info="props.enableSelectedInfo"
 		:enable-select-all="props.enableSelectAll"
 		:text-above-search="props.textAboveSearch"
+		:search-placeholder="props.searchPlaceholder"
+		:market-types="props.marketTypes"
 		@select="emits('select', $event)"
 		@unselect="emits('unselect', $event)"
 		@select-all="emits('selectAll', $event)"

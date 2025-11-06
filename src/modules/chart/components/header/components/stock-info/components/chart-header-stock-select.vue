@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
@@ -10,7 +10,7 @@ import { ChartCommonDropdownLayout } from '@/modules/chart/components/shared';
 const { exchanges, activeExchange } = storeToRefs(useChartStore());
 const { setActiveExchange } = useChartStore();
 
-const positionRef = ref<InstanceType<typeof UiPosition> | null>(null);
+const positionRef = useTemplateRef('position');
 const currencyName = computed(() => {
 	if (!activeExchange?.value) {
 		return;
@@ -29,8 +29,8 @@ const handleExchangeSelect = (exchangeId: number) => {
 <template>
 	<ui-position
 		v-if="activeExchange"
-		ref="positionRef"
-		position="bottom-start"
+		ref="position"
+		placement="bottom-start"
 		trigger="click"
 	>
 		<template #title="{ isVisible }">

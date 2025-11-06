@@ -2,13 +2,10 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { navigation } from '../constants';
 import { createRouteObject } from '../helpers';
-import { useActiveLink } from '../composables';
 
 const emits = defineEmits<{
 	expand: [];
 }>();
-
-const { isActive } = useActiveLink();
 </script>
 
 <template>
@@ -29,10 +26,6 @@ const { isActive } = useActiveLink();
 			>
 				<ui-icon
 					:id="item.icon"
-					:class="[
-						classes.iconWrapper,
-						{ [classes.active]: isActive(item.routeName) },
-					]"
 					width="20px"
 					height="20px"
 				/>
@@ -57,7 +50,7 @@ const { isActive } = useActiveLink();
 	}
 }
 
-.active {
-	color: #ffffff;
+.activeLink {
+	color: var(--text-color-base-500);
 }
 </style>

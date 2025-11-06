@@ -28,3 +28,7 @@ export interface IGetNewsRequest {
 	activeSort: SortState;
 	locations: IActiveLocation[];
 }
+
+export interface IGetNewsDetailsRequest {
+	id: string;
+}

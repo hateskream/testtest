@@ -4,7 +4,7 @@ import { computed, useTemplateRef } from 'vue';
 import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 
 const props = withDefaults(defineProps<IPositionProps>(), {
-	position: 'bottom-start',
+	placement: 'bottom-start',
 });
 
 // FIXME: Idk why but it doesnt work without type

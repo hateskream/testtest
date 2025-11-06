@@ -7,7 +7,7 @@ export { default as ChartDividends } from './ui/chart-dividends.vue';
 export { default as ChartBalanceSheet } from './ui/chart-balance-sheet.vue';
 export { default as ChartIncomeStatement } from './ui/chart-income-statement.vue';
 export { default as ChartMarketCap } from './ui/chart-market-cap.vue';
-export { default as ChartBitcoinDominance } from './ui/chart-bitcoin-dominance.vue';
+export { default as ChartDominance } from './ui/chart-dominance.vue';
 export { default as ChartAltcoinSeason } from './ui/chart-altcoin-season.vue';
 export { default as ChartTooltip } from './ui/chart-tooltip.vue';
 export { default as ChartEps } from './ui/chart-eps.vue';
@@ -19,4 +19,4 @@ export { default as ChartTrailingReturns } from './ui/chart-trailing-returns.vue
 export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue';
 export { default as ChartStylebox } from './ui/chart-stylebox.vue';
 export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
-export { default as ChartExternalTooltip } from './ui/chart-external-tooltip.vue';
+export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';

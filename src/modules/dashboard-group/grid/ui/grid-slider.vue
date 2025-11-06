@@ -3,8 +3,7 @@ import { computed, useTemplateRef } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { IDashboard } from '../model';
-import type { IPosition, WidgetType } from '@/modules/dashboard-group/core';
-import type { IWidgetState } from '@/modules/dashboard-group/core';
+import type { IPosition, WidgetType, IWidgetState } from '@/modules/dashboard-group';
 import { useDelayedLoading } from '@/shared/composables';
 
 import GridComponent from './grid-component.vue';

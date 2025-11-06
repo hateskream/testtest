@@ -333,6 +333,8 @@ const columns = [
 		visible: true,
 		type: CellType.SYMBOL,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'marketValue',
@@ -344,6 +346,8 @@ const columns = [
 		visible: true,
 		type: CellType.NUMBER,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'currentPrice',
@@ -355,6 +359,8 @@ const columns = [
 		visible: true,
 		type: CellType.NUMBER,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'ytdReturns',
@@ -366,6 +372,8 @@ const columns = [
 		visible: true,
 		type: CellType.PERCENT,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'percentOfFund',
@@ -377,6 +385,8 @@ const columns = [
 		visible: true,
 		type: CellType.NUMBER,
 		group: { name: 'Holdings', displayName: 'Holdings' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 ];
 

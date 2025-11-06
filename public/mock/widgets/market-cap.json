@@ -1,21 +1,30 @@
 [
     {
+        "id": "Crypto-BTCBitcoin",
+        "symbol": "BTC",
+        "name": "Bitcoin",
+        "type": "crypto",
+        "change24h": 0.93,
+				"color": "rgb(247, 169, 104)",
+        "marketCap": "84232834934324.45"
+    },
+	  {
         "id": "Crypto-ADACardano",
         "symbol": "ADA",
         "name": "Cardano",
         "type": "crypto",
         "change24h": 0.93,
         "color": " rgb(247, 169, 104)",
-        "fdv": "84232834934324.45"
+        "marketCap": "84232834934324.45"
     },
     {
-        "id": "Crypto-TRXTron",
+        "id": "Crypto-TRXTRON",
         "symbol": "TRON",
         "name": "TRX",
         "type": "crypto",
         "change24h": 12,
         "color": " rgb(42, 135, 211)",
-        "fdv": "8743253453.45"
+        "marketCap": "8743253453.45"
     },
     {
         "id": "Crypto-SOLSolana",
@@ -24,15 +33,15 @@
         "type": "crypto",
         "change24h": -0.5,
         "color": " rgb(42, 211, 98)",
-        "fdv": "943299.45"
+        "marketCap": "943299.45"
     },
     {
-        "id": "Stock-TSLATesla",
+        "id": "Stock-TSLA",
         "symbol": "TSLA",
         "name": "Tesla Inc",
         "type": "stock",
         "change24h": -4,
         "color": " rgb(211, 67, 42)",
-        "fdv": "44883234838.45"
+        "marketCap": "44883234838.45"
     }
 ]

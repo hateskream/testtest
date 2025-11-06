@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { IWidgetPreset } from '@/modules/dashboard-group/core';
-import { WidgetType } from '@/modules/dashboard-group/core';
+import { WidgetType, type IWidgetPreset } from '@/modules/dashboard-group';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import DraggableElement from './draggable-element.vue';

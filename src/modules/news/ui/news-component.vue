@@ -30,12 +30,17 @@ const time = computed(() =>
 
 <template>
 	<div :class="classes.container">
-		<div :class="classes.newsLeftImageWrapper">
-			<ui-image
-				:class="classes.newsLeftImage"
-				:src="Image"
-			/>
-		</div>
+		<ui-transition-fade>
+			<div
+				v-if="props.displaySettings.isShowSource"
+				:class="classes.newsLeftImageWrapper"
+			>
+				<ui-image
+					:class="classes.newsLeftImage"
+					:src="Image"
+				/>
+			</div>
+		</ui-transition-fade>
 
 		<div :class="classes.newsContent">
 			<div :class="classes.newsTitle">
@@ -125,6 +130,7 @@ const time = computed(() =>
 	width: 100%;
 	padding: 14px 12px;
 	border-radius: 18px;
+	cursor: pointer;
 	transition: background-color 0.3s ease;
 	gap: 6px;
 }

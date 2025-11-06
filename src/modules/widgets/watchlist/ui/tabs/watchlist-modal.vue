@@ -82,7 +82,6 @@ function onClickAction(action: TabAction, id: string) {
 							<ui-position
 								strategy="absolute"
 								trigger="hover"
-								:teleport="false"
 							>
 								<template #title>
 									<span :class="classes.menuActionTitle">

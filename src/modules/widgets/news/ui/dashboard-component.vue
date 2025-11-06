@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseDashboardComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
+import { BaseWidgetTvComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
-	type IGetNewsRequest,
+	NewsContentWrapper,
 	NewsFilters,
 	NewsFiltersPanel,
+	type IGetNewsRequest,
 	type SettingKey,
-	toggleSetting,
 	useNews,
 	useQueryNews,
+	toggleSetting,
 } from '@/modules/news';
+import { NewsDetails, useNewsDetailsState } from '@/modules/news-details';
 
 import PreloaderComponent from './preloader-component.vue';
 
-
 const ViewComponent = defineAsyncComponent({
-	// FIXME: WE SHOULD NOT USE ITEMS FROM MODULES DIRECTLY
-	loader: () => import('@/modules/news/ui/view-news-component.vue'),
+	loader: () => import('./view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -68,6 +68,7 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 	limit: 10,
 })));
 
+const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
 
 const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
@@ -85,7 +86,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -101,7 +102,10 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 
 		</template>
 		<template #content>
-			<div :class="classes.content">
+			<news-content-wrapper
+				v-model:news-id="selectedNewsId"
+				:class="classes.content"
+			>
 				<news-filters-panel
 					v-model:selected-scores="selectedScores"
 					v-model:selected-segments="selectedMarketSegments"
@@ -119,11 +123,19 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				<preloader-component v-else-if="isNotData" />
 				<view-component
 					v-else-if="news"
+					v-model:news-id="selectedNewsId"
 					:news="news"
 					:display-settings="displaySettings"
 					@next="fetchNextPage"
 				/>
-			</div>
+
+				<template v-if="selectedNewsId" #details>
+					<news-details
+						:uuid="selectedNewsId"
+						@back="selectedNewsId = null"
+					/>
+				</template>
+			</news-content-wrapper>
 		</template>
 
 		<template #change-display>
@@ -180,7 +192,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				@toggle-ticker="toggleTicker"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>
 <style module="classes">
 .titleContainer {
@@ -192,7 +204,9 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 
 .content {
 	display: flex;
-	flex-direction: column;
 	height: 100%;
+	overflow: hidden;
+	border-bottom-right-radius: 18px;
+	border-bottom-left-radius: 18px;
 }
 </style>

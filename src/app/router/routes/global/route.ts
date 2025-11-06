@@ -1,10 +1,23 @@
 import { type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router';
 
-import { type ITickerRouteParams, RouteNames, RoutePaths, RouteTickerType } from '@/types/route.d';
+import {
+	type IScreenerRouteParams,
+	type ITickerRouteParams,
+	RouteNames,
+	RoutePaths,
+	RouteScreenerType,
+	RouteTickerType,
+} from '@/types/route.d';
 
 const createTickerProps = (type: RouteTickerType) => {
 	return (route: RouteLocationNormalized): ITickerRouteParams => ({
 		id: parseInt(route.params.id as string, 10),
+		type,
+	});
+};
+
+const createScreenerProps = (type: RouteScreenerType) => {
+	return (): IScreenerRouteParams => ({
 		type,
 	});
 };
@@ -91,13 +104,58 @@ export const globalRoutes: RouteRecordRaw[] = [
 		name: RouteNames.Calendar,
 		component: () => import('@/pages/calendar-page.vue'),
 	},
-];
-
-export const testRoutes: RouteRecordRaw[] = [
 	{
-		path: RoutePaths.Test,
-		name: RouteNames.Test,
-		component: () => import('@/pages/test-page.vue'),
+		path: RoutePaths.News,
+		name: RouteNames.News,
+		component: () => import('@/pages/news-page.vue'),
+	},
+	{
+		path: RoutePaths.Screener,
+		name: RouteNames.Screener,
+		redirect: { name: RouteNames.ScreenerStock },
+		children: [
+			{
+				path: RoutePaths.ScreenerStock,
+				name: RouteNames.ScreenerStock,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.STOCK),
+			},
+			{
+				path: RoutePaths.ScreenerCrypto,
+				name: RouteNames.ScreenerCrypto,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.CRYPTO),
+			},
+			{
+				path: RoutePaths.ScreenerBond,
+				name: RouteNames.ScreenerBond,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.BOND),
+			},
+			{
+				path: RoutePaths.ScreenerEtf,
+				name: RouteNames.ScreenerEtf,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.ETF),
+			},
+			{
+				path: RoutePaths.ScreenerCex,
+				name: RouteNames.ScreenerCex,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.CEX),
+			},
+			{
+				path: RoutePaths.ScreenerDex,
+				name: RouteNames.ScreenerDex,
+				component: () => import('@/pages/screener-page.vue'),
+				props: createScreenerProps(RouteScreenerType.DEX),
+			},
+		],
+	},
+	{
+		path: RoutePaths.Tv,
+		name: RouteNames.Tv,
+		component: () => import('@/pages/tv-page.vue'),
 	},
 	{
 		path: RoutePaths.Heatmap,
@@ -105,3 +163,5 @@ export const testRoutes: RouteRecordRaw[] = [
 		component: () => import('@/pages/heatmap-page.vue'),
 	},
 ];
+
+export const testRoutes: RouteRecordRaw[] = [];

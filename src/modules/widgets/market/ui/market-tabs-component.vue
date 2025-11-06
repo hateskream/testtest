@@ -41,7 +41,7 @@ function updateFilter(filterKey: string, filterValue: string) {
 		</div>
 
 		<div :class="classes.iconAllFilter">
-			<ui-position position="right-start">
+			<ui-position placement="right-start">
 				<template #title>
 					<ui-icon
 						:id="IconIds.NewsFilter"

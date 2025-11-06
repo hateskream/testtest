@@ -1,59 +1,83 @@
+import { add, sub } from 'date-fns';
+
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
-import { ImageTypePath } from '@/shared/lib/get-image-path';
-import type { IMarketCapCurrency } from '../model/market-cap';
+import { arrayToString } from '@/shared/lib';
+import { type IMarketCapHistory, type IMarketCapTicker, MarketCapDateRange } from '../model/market-cap';
 import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
 export interface IGetMarketCapRequest {
-	tickersIds: string;
+	tickers: string[];
+	range: MarketCapDateRange;
 }
 
-export interface IGetMarketResponse {
-	data: IMarketCapCurrency[];
-}
-
-export interface IMarketCapDomain extends IMarketCapCurrency {
-	srcValue: string;
-}
-
-export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketCapDomain[]> {
+export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketCapHistory> {
 	const httpService = useHttpService();
 	const logger = useLogger();
 
-	const query = removeUndefinedPropertiesFromObject(args);
-
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData(args)
-			: await httpService.get<IGetMarketResponse>('/api/market', {
-				query,
-			});
+		if (IS_USE_MOCK) {
+			return await getMockData(args);
+		}
 
-		return prepareResponse(response.data);
+		return await httpService.get<IMarketCapHistory>('/api/market', {
+			query: {
+				tickers: arrayToString(args.tickers),
+				range: args.range,
+			},
+		});
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
 }
 
-function prepareResponse(data: IMarketCapCurrency[]): IMarketCapDomain[] {
-	return data.map(item => ({
-		...item,
-		srcValue: getImagePath(item.symbol, item.type === 'crypto' ? ImageTypePath.Currency : ImageTypePath.Stock),
-	}));
+const { getMock } = useFetchMock<IMarketCapTicker[]>('/mock/widgets/market-cap.json');
+
+const rangeDayCounts: Record<MarketCapDateRange, number> = {
+	[MarketCapDateRange.Day]: 1,
+	[MarketCapDateRange.Week]: 7,
+	[MarketCapDateRange.Month]: 30,
+	[MarketCapDateRange.SixMonths]: 180,
+	[MarketCapDateRange.Year]: 365,
+	[MarketCapDateRange.All]: 365,
+};
+
+function generateTickerValue(from: number, to: number) {
+	return from + Math.random() * (to - from);
 }
 
-const { getMock } = useFetchMock<IMarketCapCurrency[]>('/mock/widgets/market-cap.json');
+function createTickerMock(range: MarketCapDateRange) {
+	const daysCount = rangeDayCounts[range];
 
-async function getMockData(args: IGetMarketCapRequest): Promise<IGetMarketResponse> {
-	const mockData = await getMock();
+	const startDate = sub(new Date(), { days: daysCount + 10 }).getTime();
+	const endDate = add(new Date(), { days: 1 }).getTime();
 
-	const response: IGetMarketResponse = {
-		data: mockData.filter(item => args.tickersIds.includes(item.id)),
+	const dateStep = (endDate - startDate) / 100;
+
+	const timestamps = Array.from({ length: 100 }).map(
+		(_, key) => (new Date(startDate + key * dateStep)).getTime(),
+	);
+
+	return {
+		prices: timestamps.map(time => [time, generateTickerValue(1_000, 3_000)]),
+		market_caps: timestamps.map(time => [time, generateTickerValue(1_000_000_000_000, 1_100_100_000_000)]),
+		volumes: timestamps.map(time => [time, generateTickerValue(1_000_000_000_000, 2_000_000_000_000)]),
 	};
-
-	return response;
 }
+
+async function getMockData(args: IGetMarketCapRequest) {
+	const tickers = await getMock();
+
+	const filteredTickers = tickers.filter(ticker => args.tickers.includes(ticker.id));
+
+	const data = Object.fromEntries(filteredTickers.map(ticker => [ticker.symbol, createTickerMock(args.range)]));
+
+	return {
+		tickers: filteredTickers,
+		data,
+	} as IMarketCapHistory;
+}
+

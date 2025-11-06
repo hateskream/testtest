@@ -102,7 +102,7 @@ function onRenameTab(id: string, name: string) {
 }
 
 function openModal(index: number) {
-	positionRefs.value?.[index].handleClick();
+	positionRefs.value?.[index].handleOpen?.();
 }
 
 function selectTicker(tickerId: string) {
@@ -247,9 +247,16 @@ function selectTicker(tickerId: string) {
 	background: var(--bg-color-base-300);
 	border-radius: 9999px;
 	gap: 4px;
-	scrollbar-width: thin;
-	scrollbar-color: rgb(255 255 255 / 25%) rgb(255 255 255 / 5%);
+	scrollbar-gutter: stable;
 }
+
+
+@supports (-moz-appearance: none) {
+	body {
+		scrollbar-width: thin;
+	}
+}
+
 
 .tabMerged {
 	display: none;

@@ -117,7 +117,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</div>
 		</template>
 		<template v-else>
-			<ui-position :teleport="false">
+			<ui-position>
 				<template #title>
 					<div :class="classes.forexGroup">
 						<div :class="classes.right">

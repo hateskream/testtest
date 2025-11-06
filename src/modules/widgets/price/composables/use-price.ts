@@ -66,12 +66,14 @@ interface IOptions {
 	widgetId: string;
 	isEphemeral: boolean;
 	defaultStateType: string;
+	maxCountRows?: number;
 }
 
 export function usePrice({
 	widgetId,
 	isEphemeral,
 	defaultStateType,
+	maxCountRows,
 }: IOptions) {
 	const {
 		useStateQuery,
@@ -93,6 +95,8 @@ export function usePrice({
 	const state = ref<IState>(getDefaultsState(defaultStateType));
 	const currentSettings = ref<IDisplaySettings>(getDefaultsSettings());
 	const pinnedTickers = ref<string[]>([]);
+
+	const hasPin = maxCountRows === undefined;
 
 	const activeMarket = computed({
 		get: () => state.value.activeMarket,
@@ -122,7 +126,7 @@ export function usePrice({
 		state.value.settings[state.value.activeMarket].filtersState = newFilters;
 	}, { deep: true });
 
-	const limit = 50;
+	const limit = maxCountRows ?? 150;
 
 	const {
 		data: dataResponse,
@@ -134,7 +138,7 @@ export function usePrice({
 		refetch,
 	} = useQueryPrice(
 		activeMarket,
-		pinnedTickers,
+		hasPin ? pinnedTickers : [],
 		limit,
 	);
 
@@ -254,5 +258,6 @@ export function usePrice({
 		filtersValues,
 		filtersState,
 		applyStateToParent,
+		hasPin,
 	};
 }

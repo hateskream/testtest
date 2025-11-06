@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { offset, shift, useFloating, flip, autoUpdate, type Placement } from '@floating-ui/vue';
-import { ref, useTemplateRef } from 'vue';
+import { ref, computed, watch, useTemplateRef, onUnmounted } from 'vue';
+import { offset, shift, flip, type Placement } from '@floating-ui/vue';
+
+import { UiPositionPortal, type IPositionProps } from '@/shared/ui/position';
 
 interface IProps {
 	forceHide?: boolean;
@@ -14,60 +16,83 @@ const props = withDefaults(defineProps<IProps>(), {
 	position: 'bottom',
 });
 
-const reference = useTemplateRef('reference');
-const floating = useTemplateRef('floating');
-
-const { floatingStyles } = useFloating(reference, floating, {
-	strategy: 'fixed',
-	placement: props.position,
-	middleware: [offset(6), flip(), shift({ padding: 5 })],
-	whileElementsMounted: autoUpdate,
-});
+const reference = useTemplateRef<HTMLElement>('referenceRef');
+const layer = useTemplateRef('layerRef');
 
 const isVisible = ref(false);
 const timeout = ref<number | null>(null);
 
-function handleMouseover() {
-	if (timeout.value) {
+const layerOptions = computed<IPositionProps>(() => ({
+	strategy: 'fixed',
+	placement: props.position,
+	offset: 6,
+	middleware: [offset(6), flip(), shift({ padding: 5 })],
+}));
+
+function openNow() {
+	if (!reference.value) {
 		return;
 	}
+	layer.value?.openAt(reference.value);
+	isVisible.value = true;
+}
 
+function closeNow() {
+	layer.value?.close();
+	isVisible.value = false;
+}
+
+function handleMouseover() {
+	if (props.forceHide || timeout.value || isVisible.value) {
+		return;
+	}
 	timeout.value = setTimeout(() => {
-		isVisible.value = true;
+		openNow();
+		timeout.value && clearTimeout(timeout.value);
+		timeout.value = null;
 	}, props.showInMs);
 }
 
 function handleMouseleave() {
 	if (timeout.value) {
 		clearTimeout(timeout.value);
-
 		timeout.value = null;
-
-		isVisible.value = false;
+	}
+	if (isVisible.value) {
+		closeNow();
 	}
 }
+
+watch(() => props.forceHide, value => {
+	if (value) {
+		closeNow();
+	}
+});
+
+onUnmounted(() => {
+	if (timeout.value) {
+		clearTimeout(timeout.value);
+	}
+});
 </script>
 
 <template>
 	<div>
 		<div
-			ref="reference"
+			ref="referenceRef"
 			@mouseover="handleMouseover"
 			@mouseleave="handleMouseleave"
 		>
 			<slot name="default" />
 		</div>
-		<transition name="fade">
-			<div
-				v-show="isVisible && !forceHide"
-				ref="floating"
-				:style="floatingStyles"
-				:class="classes.content"
-				class="content-anchor"
-			>
-				<slot name="content" />
-			</div>
-		</transition>
+
+		<ui-position-portal ref="layerRef" v-bind="layerOptions">
+			<transition name="fade" appear>
+				<div :class="classes.content" class="content-anchor">
+					<slot name="content" />
+				</div>
+			</transition>
+		</ui-position-portal>
 	</div>
 </template>
 

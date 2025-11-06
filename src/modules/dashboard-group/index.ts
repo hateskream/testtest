@@ -9,6 +9,21 @@ export {
 	DashboardGroupTabs,
 } from './tabs';
 
-export { useDashboardGroup, useGridLayout } from './core';
+export {
+	type IWidgetState,
+	type IWidget,
+	type IPosition,
+	type IWidgetPreset,
+
+	useDashboardGroup,
+	useGridLayout,
+} from './tv';
+
+export {
+	LayoutDashboard,
+	type DisplayVariant,
+} from './layout-dashboards';
+
+export * from './core';
 
 export * from './dashboards';

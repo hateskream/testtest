@@ -1,6 +1,6 @@
 import { inject, provide, readonly, ref, type Ref } from 'vue';
 
-import type { IWidgetPreset } from '../../core';
+import type { IWidgetPreset } from '../../tv';
 
 const provideDndKey = Symbol('provideDndKey');
 

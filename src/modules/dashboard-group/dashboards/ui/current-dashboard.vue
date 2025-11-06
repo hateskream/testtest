@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import {
 	type IWidget,
-} from '../../core';
+} from '../../tv';
 import { getWidgetComponent, type IMeta } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 
@@ -51,12 +51,14 @@ const meta = computed((): IMeta => ({
 	isOpenFull: false,
 	columnWidth: props.columnWidth,
 	rowHeight: props.rowHeight,
+	activeDisplayVariant: 'default',
+	allDisplayVariants: [],
 }));
 </script>
 
 <template>
 	<component
-		:is="getWidgetComponent(props.dashboardItem.widgetType)"
+		:is="getWidgetComponent('tv', props.dashboardItem.widgetType)"
 		:meta="meta"
 		:data-loading="loading"
 		@delete="emit('delete')"

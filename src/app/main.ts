@@ -2,6 +2,7 @@ import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import VCalendar from 'v-calendar';
+import { registerComponent } from '@shared/component-library';
 
 import { router } from './router';
 import { validateConfig } from '@/shared/lib';
@@ -26,6 +27,8 @@ if (!compareVersions()) {
 	localStorage.clear();
 	updateVersion();
 }
+registerComponent('i88-chart');
+
 
 const app = createApp(App);
 

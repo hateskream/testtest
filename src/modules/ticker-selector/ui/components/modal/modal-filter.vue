@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, useTemplateRef } from 'vue';
 
 import {
 	FilterListType,
-	type TickerDto,
 	type ITickerEmits,
 	type ITickerSelectAction,
+	MarketToSymbol,
 	SymbolToName,
+	type TickerDto,
 } from '@/modules/ticker-selector/model/filter-ticker';
 import { ModalSearch } from '@/modules/widgets/base';
 import { compareStrings } from '@/shared/lib';
+import { MarketType } from '@/modules/market';
 import { SymbolType } from '@/modules/cell';
 
 import ModalFilterInfo from './modal-filter-info.vue';
@@ -24,6 +26,8 @@ interface IModalFilterTickerProps {
 	enableSelectAll?: boolean;
 	textAboveSearch?: string;
 	selectionMode?: 'single' | 'multiple';
+	searchPlaceholder?: string;
+	marketTypes: MarketType[];
 }
 
 type IGroupedTicker = Record<SymbolType, TickerDto[]>;
@@ -33,6 +37,7 @@ const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
 	enableSelectedInfo: true,
 	textAboveSearch: '',
 	selectionMode: 'multiple',
+	searchPlaceholder: 'Start typing the ticker...',
 });
 
 type IEmits = ITickerEmits & {
@@ -43,15 +48,25 @@ const emits = defineEmits<IEmits>();
 
 const getGroupKey = (type: SymbolType) => SymbolToName[type];
 
+const availableSymbols = computed(() => props.marketTypes.map(type => MarketToSymbol[type]));
+
 const tickersData = computed<TickerDto[]>(() =>
-	props.tickers.map((t) => ({
+	props.tickers.filter(ticker => availableSymbols.value.includes(ticker.symbol.symbolType!)).map((t) => ({
 		tickerId: t.tickerId,
 		symbol: t.symbol,
 	})),
 );
 
 const query = ref('');
-const activeGroup = ref<SymbolType | null>(null);
+const preparedQuery = computed(() => query.value.trimStart().toLowerCase());
+const hasSearchQuery = computed(() => preparedQuery.value.length > 0);
+
+const activeGroup = ref<SymbolType | null>(
+	props.marketTypes.length === 1
+		? MarketToSymbol[props.marketTypes[0]]
+		: null,
+);
+
 const viewMode = ref<FilterListType>(FilterListType.All);
 
 const selectedTickers = computed(() => {
@@ -68,7 +83,7 @@ const selectedTickers = computed(() => {
 
 	if (viewMode.value === FilterListType.Selected) {
 		allSelected = allSelected.filter((t) =>
-			[t.tickerId.toLowerCase()].some((s) => s.includes(query.value)),
+			[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
 		);
 	}
 
@@ -78,21 +93,30 @@ const selectedTickers = computed(() => {
 	};
 });
 
-const queredTickers = computed(() =>
-	tickersData.value.filter((item) =>
-		[item.tickerId.toLowerCase()].some((s) => s.includes(query.value)),
-	),
-);
+const queredTickers = computed(() => {
+	return tickersData.value.filter((item) =>
+		[item.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
+	);
+});
 
 const groupedTickers = computed<IGroupedTicker>(() => {
-	const group: IGroupedTicker = {} as IGroupedTicker;
-	tickersData.value.forEach((item) => (group[item.symbol.symbolType!] = []));
+	const group = {} as IGroupedTicker;
+
+	tickersData.value.forEach(ticker => {
+		const type = ticker.symbol.symbolType;
+
+		if (type && !group[type]) {
+			group[type] = [];
+		}
+	});
+
 	queredTickers.value.forEach((item) => {
 		const type = item.symbol.symbolType;
 		if (type) {
-			(group[item.symbol.symbolType!] ??= []).push(item);
+			(group[type] ??= []).push(item);
 		}
 	});
+
 	return group;
 });
 
@@ -132,7 +156,7 @@ function handleToggleSelect(action: ITickerSelectAction) {
 	}
 
 	nextTick(() => {
-		if (props.modelValue.length === 0 && props.selectionMode === 'multiple') {
+		if (props.modelValue.length === 0 && props.selectionMode === 'multiple' && props.marketTypes.length > 1) {
 			viewMode.value = FilterListType.All;
 			activeGroup.value = null;
 		}
@@ -169,6 +193,14 @@ function handleSelectAll(groupName: SymbolType) {
 		}
 	}
 }
+
+const searchRef = useTemplateRef('search');
+
+function focusSearch() {
+	searchRef.value?.focus();
+}
+
+defineExpose({ focusSearch });
 </script>
 
 
@@ -196,14 +228,18 @@ function handleSelectAll(groupName: SymbolType) {
 				</div>
 
 				<div :class="classes.search">
-					<modal-search v-model="query" />
+					<modal-search
+						ref="search"
+						v-model="query"
+						:placeholder="searchPlaceholder"
+					/>
 				</div>
 			</div>
 
 			<modal-filter-info
 				v-if="props.enableSelectedInfo"
 				v-model="viewMode"
-				:is-searching="query.length > 0"
+				:is-searching="hasSearchQuery"
 				:total-items="queredTickers.length"
 				:total-selected="selectedTickers.allSelected.length"
 			/>
@@ -213,7 +249,7 @@ function handleSelectAll(groupName: SymbolType) {
 					<div v-for="(_, group) in groupedTickers" :key="group">
 						<modal-filter-row-title
 							:is-selected-all="isGroupTickersSelectedAll(group)"
-							:is-searching="query.length > 0"
+							:is-searching="hasSearchQuery"
 							:is-inside-open="false"
 							:enable-select-all="props.enableSelectAll"
 							@select-all="handleSelectAll(group)"
@@ -226,11 +262,9 @@ function handleSelectAll(groupName: SymbolType) {
 								{{ groupedTickers[group].length }}
 							</template>
 						</modal-filter-row-title>
-
-
-						<template v-if="query.length > 0">
+						<template v-if="hasSearchQuery">
 							<div
-								v-if=" groupedTickers[group].length === 0"
+								v-if="groupedTickers[group].length === 0"
 								:class="classes.notFound"
 							>
 								Nothing found in {{ getGroupKey(group) }}
@@ -247,9 +281,10 @@ function handleSelectAll(groupName: SymbolType) {
 				</template>
 				<template v-else>
 					<modal-filter-row-title
+						v-if="availableSymbols.length > 1"
 						:is-back="true"
 						:is-selected-all="isGroupTickersSelectedAll(activeGroup)"
-						:is-searching="query.length > 0"
+						:is-searching="hasSearchQuery"
 						:is-inside-open="true"
 						:enable-select-all="props.enableSelectAll"
 						@click="activeGroup = null"
@@ -262,18 +297,23 @@ function handleSelectAll(groupName: SymbolType) {
 							{{ groupedTickers[activeGroup!].length }}
 						</template>
 					</modal-filter-row-title>
-
+					<div
+						v-if="hasSearchQuery && groupedTickers[activeGroup].length === 0"
+						:class="classes.notFound"
+					>
+						Nothing found in {{ getGroupKey(activeGroup) }}
+					</div>
 					<modal-filter-row
+						v-else
 						:list="groupedTickers[activeGroup!]"
 						:selected-ids-map="modelValue"
 						@update="handleToggleSelect"
 					/>
 				</template>
 			</template>
-
 			<template v-else>
 				<div
-					v-if="selectedTickers.allSelected.length === 0 && query.length > 0"
+					v-if="selectedTickers.allSelected.length === 0 && hasSearchQuery"
 					:class="classes.notFound"
 				>
 					Nothing found in selected items
@@ -321,40 +361,10 @@ function handleSelectAll(groupName: SymbolType) {
 	scrollbar-color: var(--border-color-base-300) transparent;
 }
 
-.content::-webkit-scrollbar {
-	width: 6px;
-	opacity: 0;
-	transition: opacity 0.3s;
-}
-
-.content::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-.content::-webkit-scrollbar-thumb {
-	background-color: var(--border-color-base-300);
-	border-radius: 6px;
-}
-
-.content:hover::-webkit-scrollbar {
-	opacity: 1;
-}
-
 .header {
 	position: sticky;
 	top: 0;
 	padding-bottom: 22px;
-}
-
-.listItemDataImage {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	padding: 4px;
-	border: 1px solid var(--border-color-base-300);
-	border-radius: 100px;
 }
 
 .notFound {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, watch } from 'vue';
 
-import { BaseDashboardComponent } from '../../base';
+import { BaseWidgetTvComponent } from '../../base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTickers } from '../queries';
 import { useWatchlistWidget } from '../composables';
@@ -69,7 +69,7 @@ const safeData = computed(() => data.value ?? lastData.value);
 </script>
 
 <template>
-	<base-dashboard-component
+	<base-widget-tv-component
 		:meta="props.meta"
 		has-reset
 		@reset="resetAllChanges"
@@ -109,5 +109,5 @@ const safeData = computed(() => data.value ?? lastData.value);
 				@remove-section="handlerRemoveSectionFromWatchlist"
 			/>
 		</template>
-	</base-dashboard-component>
+	</base-widget-tv-component>
 </template>

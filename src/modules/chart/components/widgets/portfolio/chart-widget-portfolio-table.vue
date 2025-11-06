@@ -2,6 +2,7 @@
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
+
 import CellStringComponent from '@/modules/widgets/widget-table/cells/cell-string-component.vue';
 
 const items = [
@@ -124,6 +125,8 @@ const columns = [
 		visible: true,
 		type: CellType.TEXT,
 		group: { name: 'Info', displayName: 'Info' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'dia',
@@ -135,6 +138,8 @@ const columns = [
 		visible: true,
 		type: CellType.TEXT,
 		group: { name: 'Info', displayName: 'Info' },
+		minWidth: 100,
+		maxWidth: 200,
 	},
 	{
 		key: 'sp500',
@@ -145,9 +150,21 @@ const columns = [
 		draggable: false,
 		visible: true,
 		type: CellType.TEXT,
+		minWidth: 100,
+		maxWidth: 200,
 		group: { name: 'Info', displayName: 'Info' },
 	},
 ];
+
+
+type TRow = {
+	data: {
+		characteristic: {
+			cellType: string;
+			value: string;
+		};
+	};
+};
 
 </script>
 
@@ -166,7 +183,7 @@ const columns = [
 				:show-header="true"
 			>
 				<template #[`cell-characteristic`]="{ row }">
-					<cell-string-component :align="`left`" :data="row.data.characteristic" />
+					<cell-string-component :align="`left`" :data="(row as TRow).data.characteristic" />
 				</template>
 			</widget-typed-table>
 		</template>

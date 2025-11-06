@@ -1,24 +1,38 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const props = withDefaults(defineProps<{
 	placeholder?: string;
+	showIcon?: boolean;
 }>(), {
 	placeholder: 'Type to search...',
+	showIcon: true,
 });
 
 const model = defineModel<string>();
+
+const input = useTemplateRef('input');
+
+function focus() {
+	input.value?.focus();
+}
+
+defineExpose({ focus });
 </script>
 
 <template>
 	<div :class="classes.root">
 		<ui-icon
+			v-if="showIcon"
 			:id="IconIds.Search"
 			:class="classes.icon"
 			width="20px"
 			height="20px"
 		/>
 		<input
+			ref="input"
 			v-model="model"
 			type="text"
 			:placeholder="props.placeholder"
