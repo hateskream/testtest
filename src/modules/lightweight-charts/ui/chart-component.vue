@@ -17,13 +17,27 @@ import {
 } from 'lightweight-charts';
 import type { ChartType } from '@shared/component-library';
 
-import { calculateSMASeriesData, generateCandleDataFromLineData, generateLineData, groupSeriesByRange } from '../utils';
-import { type IChartUpdateEmitData, IndicatorsChart, TypeChart } from '../model/chart';
+import {
+	calculateSMASeriesData,
+	convertTime,
+	generateCandleDataFromLineData,
+	generateLineData,
+	groupSeriesByRange,
+} from '../utils';
+import {
+	type IChartUpdateEmitData,
+	IndicatorsChart,
+	type ISharedChartMouseEventDetails,
+	type SharedChartMouseEvent,
+	TypeChart,
+} from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { prepareLineDataFromCandlestick, prepareSeries } from '../utils/prepare-series';
 import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
+import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import type { IUseExternalTooltipState } from '@/modules/lightweight-charts/composables';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -38,6 +52,7 @@ interface IChartProps {
 	isVisibleRangeChange?: boolean;
 	isVisiblePriceScale?: boolean;
 	isVisibleTimeScale?: boolean;
+	isShowTooltip?: boolean;
 	isPaddedRange?: boolean;
 	colorSchema?: 'positive' | 'negative';
 }
@@ -59,6 +74,7 @@ defineExpose({
 
 interface IChartEmits {
 	(e: 'update', data: IChartUpdateEmitData): void;
+	(e: 'chart-hover', event: SharedChartMouseEvent): void;
 }
 
 const emits = defineEmits<IChartEmits>();
@@ -328,6 +344,71 @@ function updateHistoryChartPropChange() {
 
 watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
 
+// tooltip
+
+const tooltipState = reactive<IUseExternalTooltipState>({
+	x: 0,
+	y: 0,
+	padding: 10,
+	visible: false,
+	title: [],
+	rows: [],
+});
+
+const tooltipRowColor = computed(() => props.colorSchema === 'positive'
+	? 'var(--metrics-color-positive-chart)'
+	: 'var(--metrics-color-negative-chart)',
+);
+
+function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
+	if (!state || !container.value) {
+		tooltipState.visible = false;
+		return;
+	}
+
+	const segment = groupedData.value[currentRange.value].find(sgm => sgm.time === state.time);
+
+	if (!segment) {
+		tooltipState.visible = false;
+		return;
+	}
+
+	const rect = (container.value as HTMLElement).getBoundingClientRect();
+
+	tooltipState.x = rect.left + state.x;
+	tooltipState.y = rect.top + state.y + 20;
+
+	const time = convertTime(segment.time);
+
+	tooltipState.title = [
+		(new Date(time)).toLocaleString(undefined, {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		}),
+	];
+
+	tooltipState.rows[0] = {
+		text: 'Price',
+		value: state.value.toString(),
+		color: tooltipRowColor.value,
+	};
+
+	tooltipState.visible = true;
+}
+
+function onChartHover(event: SharedChartMouseEvent) {
+	emits('chart-hover', event);
+
+	if (props.isShowTooltip) {
+		updateTooltipState(event.detail[0]);
+	}
+}
+
+// build chart
 
 onMounted(async () => {
 	await nextTick();
@@ -476,6 +557,7 @@ onMounted(async () => {
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
 				:show-time-scale="props.isVisibleTimeScale"
+				@chart-hover="onChartHover"
 			/>
 		</div>
 		<chart-range
@@ -491,6 +573,13 @@ onMounted(async () => {
 			:class="classes.chartHistory"
 			:style="{ display: !!chartHistory ? 'block' : 'none'  }"
 		></div>
+		<teleport v-if="isShowTooltip" to="body">
+			<chart-external-tooltip v-bind="tooltipState">
+				<template v-if="$slots.tooltipContent" #content="contentProps">
+					<slot name="tooltipContent" v-bind="contentProps" />
+				</template>
+			</chart-external-tooltip>
+		</teleport>
 	</div>
 </template>
 

@@ -19,4 +19,4 @@ export { default as ChartTrailingReturns } from './ui/chart-trailing-returns.vue
 export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue';
 export { default as ChartStylebox } from './ui/chart-stylebox.vue';
 export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
-export { default as ChartExternalTooltip } from './ui/chart-external-tooltip.vue';
+export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';
