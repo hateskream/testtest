@@ -8,6 +8,7 @@ import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
+import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
 interface IMarketCapChartProps {
 	meta: IMeta;
@@ -90,22 +91,33 @@ const preparedDatasets = computed(() => {
 				/>
 			</div>
 		</template>
-		<chart-component
-			v-else-if="props.summary"
-			v-model:range="activeChartRange"
-			:range-list="chartRanges"
-			:is-visible-history-graph="false"
-			:is-visible-indicators="false"
-			:is-visible-range="props.isShowRange"
-			:is-visible-range-change="props.displaySettings.isShowChange"
-			:is-visible-price-scale="isShowAxes"
-			:is-visible-time-scale="isShowAxes"
-			:is-padded-range="props.isShowRange"
-			:width="100"
-			height="100%"
-			disable-scroll
-			:color-schema="chartColorSchema"
-		/>
+		<template v-else-if="props.summary">
+			<chart-component
+				v-model:range="activeChartRange"
+				:range-list="chartRanges"
+				:is-visible-history-graph="false"
+				:is-visible-indicators="false"
+				:is-visible-range="props.isShowRange"
+				:is-visible-range-change="props.displaySettings.isShowChange"
+				:is-visible-price-scale="isShowAxes"
+				:is-visible-time-scale="isShowAxes"
+				:is-padded-range="props.isShowRange"
+				is-show-tooltip
+				:width="100"
+				height="100%"
+				disable-scroll
+				:color-schema="chartColorSchema"
+			>
+				<template #tooltipContent="{rows, title}">
+					<market-cap-chart-tooltip
+						v-if="rows.length"
+						:title="title[0]"
+						:color="rows[0].color"
+						:value="rows[0].value"
+					/>
+				</template>
+			</chart-component>
+		</template>
 	</div>
 </template>
 
