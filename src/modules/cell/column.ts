@@ -9,8 +9,8 @@ export interface ITableColumn {
 	displayColumnName: string;
 	displayShortColumnName: string;
 	isDraggable: boolean;
-	minWidth: number;
-	maxWidth: number;
+	minWidth: string | number;
+	maxWidth: string | number;
 	curWidth?: number;
 	group: {
 		order: number;
@@ -19,6 +19,7 @@ export interface ITableColumn {
 	columnType: ColumnType;
 	type: CellType;
 	width?: number;
+	extended?: boolean;
 }
 
 interface INotFullCol {
@@ -26,6 +27,10 @@ interface INotFullCol {
 	isDraggable: boolean;
 	groupOrder: number;
 	columnType: ColumnType;
+	minWidth?: number | string;
+	maxWidth?: number | string;
+	width?: number | string;
+	extended?: boolean;
 }
 
 function createTableColumn(col: INotFullCol): ITableColumn {
@@ -40,8 +45,10 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 		order: 0,
 		displayColumnName: display.columnName,
 		displayShortColumnName: display.settingsName,
-		minWidth: display.minWidth,
-		maxWidth: display.maxWidth,
+		minWidth: col.minWidth ?? display.minWidth,
+		maxWidth: col.maxWidth ?? display.maxWidth,
+		width: col.width ?? display.width,
+		...(col.extended ? { extended: col.extended } : {}),
 		// TODO: tooltip
 		// tooltip: display.tooltip,
 	};

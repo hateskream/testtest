@@ -3,7 +3,7 @@ import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
 
 
-import CellStringComponent from '@/modules/widgets/widget-table/cells/cell-string-component.vue';
+import CellStringComponent from '@/modules/widgets/widget-table/cells/table-cell-string-component.vue';
 
 const items = [
 	{

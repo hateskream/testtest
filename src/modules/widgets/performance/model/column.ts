@@ -14,6 +14,7 @@ export const ALL_COLUMNS: ITableColumn[] =
 				groupOrder: 0,
 				isShow: true,
 				isDraggable: true,
+				extended: true,
 			},
 		],
 	);

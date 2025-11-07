@@ -1,18 +1,18 @@
 import { type Component } from 'vue';
 
 
-import TableCellSymbol from './table-cell-symbol.vue';
-import StringCellComponent from './cell-string-component.vue';
-import CellEmptyStateComponent from './cell-empty-state-component.vue';
-import CellNumberComponent from './cell-number-component.vue';
-import CellPercentComponent from './cell-percent-component.vue';
-import CellPlate from './cell-plate.vue';
-import TableCellChart from './table-cell-chart.vue';
-import TableCellRange from './table-cell-range.vue';
-import TableCellScore from './table-cell-score.vue';
-import TableCellIsOpen from './table-cell-is-open.vue';
-import TableCellCheck from './table-cell-check.vue';
-import TableCellSchedule from './table-cell-schedule.vue';
+import TableCellSymbolComponent from './table-cell-symbol-component.vue';
+import TableCellStringComponent from './table-cell-string-component.vue';
+import TableCellEmptyStateComponent from './table-cell-empty-state-component.vue';
+import TableCellNumberComponent from './table-cell-number-component.vue';
+import TableCellPercentComponent from './table-cell-percent-component.vue';
+import TableCellPlateComponent from './table-cell-plate-component.vue';
+import TableCellChartComponent from './table-cell-chart-component.vue';
+import TableCellRangeComponent from './table-cell-range-component.vue';
+import TableCellScoreComponent from './table-cell-score-component.vue';
+import TableCellIsOpenComponent from './table-cell-is-open-component.vue';
+import TableCellCheckComponent from './table-cell-check-component.vue';
+import TableCellScheduleComponent from './table-cell-schedule-component.vue';
 
 export enum CellType {
 	SYMBOL = 'symbol',
@@ -32,24 +32,21 @@ export enum CellType {
 
 
 const components: Record<CellType, Component> = {
-	// FIXME: Why there is so many items for symbol?
-	[CellType.SYMBOL]: TableCellSymbol,
-	[CellType.IMAGE_STRING]: TableCellSymbol,
-	[CellType.NUMBER]: CellNumberComponent,
-	[CellType.PERCENT]: CellPercentComponent,
-	// TODO: add range component and add it here instead CellEmptyStateComponent
-	[CellType.RANGE]: TableCellRange,
-	[CellType.TEXT]: StringCellComponent,
-	[CellType.PLATE]: CellPlate,
-	// TODO: add chart component and add it here in
-	[CellType.CHART]: TableCellChart,
-	[CellType.EMPTY]: CellEmptyStateComponent,
-	[CellType.SCORE]: TableCellScore,
-	[CellType.IS_OPEN]: TableCellIsOpen,
-	[CellType.CHECK]: TableCellCheck,
-	[CellType.SCHEDULE]: TableCellSchedule,
+	[CellType.SYMBOL]: TableCellSymbolComponent,
+	[CellType.IMAGE_STRING]: TableCellSymbolComponent,
+	[CellType.NUMBER]: TableCellNumberComponent,
+	[CellType.PERCENT]: TableCellPercentComponent,
+	[CellType.RANGE]: TableCellRangeComponent,
+	[CellType.TEXT]: TableCellStringComponent,
+	[CellType.PLATE]: TableCellPlateComponent,
+	[CellType.CHART]: TableCellChartComponent,
+	[CellType.EMPTY]: TableCellEmptyStateComponent,
+	[CellType.SCORE]: TableCellScoreComponent,
+	[CellType.IS_OPEN]: TableCellIsOpenComponent,
+	[CellType.CHECK]: TableCellCheckComponent,
+	[CellType.SCHEDULE]: TableCellScheduleComponent,
 };
 
 export function getComponentByType(key: CellType | undefined | null): Component {
-	return components[key as CellType] || CellEmptyStateComponent;
+	return components[key as CellType] || TableCellEmptyStateComponent;
 }

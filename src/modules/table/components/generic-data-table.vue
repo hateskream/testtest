@@ -31,7 +31,7 @@ export interface IProps<T> {
 	showHeader?: boolean;
 	canAddSections?: boolean;
 	isUpdating?: boolean;
-	showScrollbarsOnHover?: boolean; // New prop for hover behavior
+	showScrollbarsOnHover?: boolean;
 	isFixedWidth?: boolean;
 }
 
@@ -75,7 +75,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	canAddSections: false,
 	isUpdating: false,
-	showScrollbarsOnHover: true, // Default to true
+	showScrollbarsOnHover: true,
 });
 
 const emit = defineEmits<IEmits<T>>();

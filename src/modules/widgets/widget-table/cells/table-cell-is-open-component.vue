@@ -32,7 +32,7 @@ const isShowMoon = computed(()=>{
 </script>
 
 <template>
-	<div :class="classes.chartContainer">
+	<div :class="classes.isOpenContainer">
 		<span :class="classes.value" class="paragraph-p-00 color-base">{{ displayText }}
 			<ui-icon
 				v-if="isShowMoon"
@@ -47,13 +47,13 @@ const isShowMoon = computed(()=>{
 </template>
 
 <style module="classes">
-.chartContainer {
+.isOpenContainer {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
 	gap: 8px;
 	width: 100%;
-	height: 32px;
+	height: 22px;
 }
 
 

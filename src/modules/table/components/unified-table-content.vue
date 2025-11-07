@@ -617,7 +617,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 }
 
 .tableRow {
-	height: 48px;
+	height: 40px;
 }
 
 .tableRowHovered {
@@ -634,7 +634,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 
 .tableCell {
 	position: relative;
-	padding: 8px 12px;
+	padding: 8px 10px;
 	overflow: hidden;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -754,7 +754,9 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 /* Row actions */
 .rowActions {
 	position: sticky;
+	height:100%;
 	right: 0;
+	top: 50%;
 	display: flex;
 	justify-content: center;
 	align-items: center;

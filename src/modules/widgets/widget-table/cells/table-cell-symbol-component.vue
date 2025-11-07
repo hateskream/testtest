@@ -29,7 +29,7 @@ const emits = defineEmits<{
 			:src="props.data.srcImg"
 			:ticker="props.data.ticker || ''"
 			:size="20"
-			:padding="6"
+			:padding="0"
 			@click="emits('click-symbol')"
 		/>
 
@@ -50,7 +50,7 @@ const emits = defineEmits<{
 		<div
 			v-if="props.data.symbolType === 'PlainText'
 				&& props.data.text"
-			:class="[classes.text, 'paragraph-p-00', 'symbolCellText']"
+			:class="[classes.text, 'symbolCellText']"
 			@click="emits('click-symbol')"
 		>
 			{{ props.data.text }}
@@ -60,7 +60,6 @@ const emits = defineEmits<{
 			<!-- Show ticker for all types -->
 			<span
 				v-if="props.tickerState.isShowTicker && props.data.ticker"
-				class="paragraph-p-00"
 				:class="classes.tickerFullName"
 			>
 				{{ props.data.ticker }}
@@ -72,7 +71,6 @@ const emits = defineEmits<{
 					&& props.tickerState.isShowTicker
 					&& props.data.leftTicker
 					&& props.data.rightTicker"
-				class="paragraph-p-00"
 			>
 				{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
 			</span>
@@ -113,14 +111,10 @@ const emits = defineEmits<{
 
 .tickerName {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 2px;
-
-	.tickerFullName {
-		line-height: 1;
-	}
-
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	line-height: 1;
 	cursor: pointer;
 }
 
@@ -129,13 +123,12 @@ const emits = defineEmits<{
 }
 
 .description {
-	font-size: 11px;
-	line-height: 1.2;
+	font-size: 13px;
+	line-height: 1;
 	color: var(--text-color-base-300);
 }
 
 .text {
-	text-align: right;
 	color: var(--text-color-base-500);
 }
 </style>
