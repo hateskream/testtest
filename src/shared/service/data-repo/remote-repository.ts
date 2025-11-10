@@ -46,7 +46,7 @@ export class RemoteRepository<TData, TSchema> extends BaseRepository<TData, TSch
 		return this.httpService.get<TSchema>(this.urlGet, {
 			query: {
 				userId: this.userId,
-				entityId: this.entityId,
+				widgetId: this.entityId,
 			},
 		});
 	}
@@ -58,7 +58,7 @@ export class RemoteRepository<TData, TSchema> extends BaseRepository<TData, TSch
 			{
 				query: {
 					userId: this.userId,
-					entityId: this.entityId,
+					widgetId: this.entityId,
 				},
 			});
 	}
