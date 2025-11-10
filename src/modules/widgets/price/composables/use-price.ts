@@ -87,8 +87,8 @@ export function usePrice({
 		schema: stateSchema,
 		hydrateFn: (s: StateSchemaType): IState => s,
 		rehydrateFn: (s: IState): StateSchemaType => s,
-		urlGet: '',
-		urlSet: '',
+		urlGet: '/api/v1/price/settings',
+		urlSet: '/api/v1/price/settings',
 	});
 
 	const state = ref<IState>(getDefaultsState(defaultStateType));
