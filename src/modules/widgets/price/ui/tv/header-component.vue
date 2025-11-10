@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiPosition } from '@/shared/ui/position';
-import {
-	MarketBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-	ModalSubmenu,
-	MarketBadgeList,
-} from '@/modules/widgets/base';
+import { MarketBadge, MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type MarketType } from '@/modules/market';
 import {
-	FilterType,
-	filterTypeToName,
 	type FiltersState,
 	type FiltersValues,
+	FilterType,
+	filterTypeToName,
+	marketTypeToPriceMarketType,
+	PriceMarketType,
+	priceMarketTypeToMarketType,
 } from '../../model';
 import { FilterComponent } from '../common';
 
@@ -24,7 +21,14 @@ interface IFilterComponentProps {
 
 const props = defineProps<IFilterComponentProps>();
 
-const activeMarket = defineModel<MarketType>('market', { required: true });
+const activeMarket = defineModel<PriceMarketType, string, MarketType, MarketType>('market',
+	{
+		required: true,
+		get: priceMarketTypeToMarketType,
+		set: marketTypeToPriceMarketType,
+	},
+);
+
 const filters = defineModel<FiltersState>('filters', { required: true });
 
 function updateFilter(filterKey: FilterType, filterValue: string) {

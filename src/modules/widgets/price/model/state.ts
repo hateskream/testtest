@@ -1,12 +1,12 @@
-import { MarketType } from '@/modules/market';
 import {
 	FilterType,
+	type FilterValue,
 	MarketTrendFilterValue,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
-	type FilterValue,
 } from './filters';
+import { PriceMarketType } from '@/modules/widgets/price/model/market.ts';
 
 export interface IDisplaySettings {
 	isShowChart: boolean;
@@ -24,10 +24,10 @@ interface ISettings {
 	};
 }
 
-type SettingsByMarketType = Record<MarketType, ISettings>;
+type SettingsByMarketType = Record<PriceMarketType, ISettings>;
 
 export interface IState {
-	activeMarket: MarketType;
+	activeMarket: PriceMarketType;
 	settings: SettingsByMarketType;
 }
 
@@ -44,7 +44,7 @@ export function getDefaultsSettings(): IDisplaySettings {
 }
 
 const defaultSettingsByMarket: SettingsByMarketType = {
-	[MarketType.Crypto]: {
+	[PriceMarketType.Crypto]: {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
@@ -52,7 +52,7 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 		},
 	},
-	[MarketType.Stock]: {
+	[PriceMarketType.Stock]: {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
@@ -60,14 +60,14 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 		},
 	},
-	[MarketType.Forex]: {
+	[PriceMarketType.Forex]: {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
 			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 		},
 	},
-	[MarketType.Commodities]: {
+	[PriceMarketType.Commodity]: {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
@@ -75,7 +75,7 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 		},
 	},
-	[MarketType.Indices]: {
+	[PriceMarketType.Index]: {
 		display: getDefaultsSettings(),
 		pinned: [],
 		filtersState: {
@@ -86,22 +86,22 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 
 
 export function getDefaultsState(defaultStateType: string): IState {
-	let activeMarket: MarketType = MarketType.Crypto;
+	let activeMarket: PriceMarketType = PriceMarketType.Crypto;
 
 	if (defaultStateType === 'stock') {
-		activeMarket = MarketType.Stock;
+		activeMarket = PriceMarketType.Stock;
 	}
 
 	if (defaultStateType === 'forex') {
-		activeMarket = MarketType.Forex;
+		activeMarket = PriceMarketType.Forex;
 	}
 
-	if (defaultStateType === 'commodities') {
-		activeMarket = MarketType.Commodities;
+	if (defaultStateType === 'commodity') {
+		activeMarket = PriceMarketType.Commodity;
 	}
 
-	if (defaultStateType === 'indices') {
-		activeMarket = MarketType.Indices;
+	if (defaultStateType === 'index') {
+		activeMarket = PriceMarketType.Index;
 	}
 
 	return {

@@ -1,11 +1,11 @@
-import { MarketType } from '@/modules/market';
 import { IconIds } from '@/shared/ui/icon';
+import { PriceMarketType } from './market';
 
 export enum FilterType {
-	MarketTrend = 'market-trend',
-	RankingAndNew = 'ranking-and-new',
-	Sector = 'sector-filter',
-	TimeRange = 'time-range',
+	MarketTrend = 'trend',
+	RankingAndNew = 'ranking',
+	Sector = 'sector',
+	TimeRange = 'range',
 }
 
 export enum MarketTrendFilterValue {
@@ -40,12 +40,12 @@ export enum TimeRangeFilterValue {
 
 export type FilterValue = MarketTrendFilterValue | RankingAndNewFilterValue | SectorFilterValue | TimeRangeFilterValue;
 
-export const filtersByMarketType: Record<MarketType, FilterType[]> = {
-	[MarketType.Crypto]: [FilterType.RankingAndNew, FilterType.TimeRange],
-	[MarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
-	[MarketType.Forex]: [FilterType.TimeRange],
-	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
-	[MarketType.Indices]: [FilterType.TimeRange],
+export const filtersByMarketType: Record<PriceMarketType, FilterType[]> = {
+	[PriceMarketType.Crypto]: [FilterType.RankingAndNew, FilterType.TimeRange],
+	[PriceMarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
+	[PriceMarketType.Forex]: [FilterType.TimeRange],
+	[PriceMarketType.Commodity]: [FilterType.Sector, FilterType.TimeRange],
+	[PriceMarketType.Index]: [FilterType.TimeRange],
 };
 
 export const filterTypeToValue: Record<FilterType, FilterValue[]> = {

@@ -1,26 +1,26 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { type ITicker as ITickerDomain, type TickerWithoutState } from '../model';
+import { type FiltersState, type ITicker as ITickerDomain, PriceMarketType, type TickerWithoutState } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import {
 	ColumnType,
-	mapTickersToTableRows,
-	SymbolType,
 	type ColumnWithoutSymbol,
+	mapTickersToTableRows,
 	type NumberDto,
 	type PercentDto,
 	type SvgChartDto,
 	type SymbolDto,
+	SymbolType,
 } from '@/modules/cell';
-import { MarketType } from '@/modules/market';
 import { generateRows } from '@/shared/mock';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 interface IGetPriceRequest {
-	market: MarketType;
+	market: PriceMarketType;
 	pined: string[];
 	offset: number;
 	limit: number;
+	filters: FiltersState;
 }
 
 interface ITicker {
@@ -62,10 +62,17 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 			return getMockData(req);
 		}
 
-		const response = await httpService.get<IGetPriceResponse>('/api/market');
+		const response = await httpService.get<IGetPriceResponse>('/api/v1/price/data', {
+			query: {
+				market: req.market,
+				pinnedIds: req.pined.length ? req.pined.join(',') : undefined,
+				offset: req.offset,
+				limit: req.limit,
+				...req.filters,
+			},
+		});
 
 		return prepareResponse(response);
-
 	} catch (error) {
 		logger.error('Failed to get price', error as Error);
 		throw error;
@@ -96,12 +103,12 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 	]);
 
 	const marketToTickers = {
-		[MarketType.Crypto]: crypto,
-		[MarketType.Stock]: stocks,
-		[MarketType.Forex]: forex,
-		[MarketType.Indices]: indices,
-		[MarketType.Commodities]: commodities,
-	} as Record<MarketType, TickerWithoutState[]>;
+		[PriceMarketType.Crypto]: crypto,
+		[PriceMarketType.Stock]: stocks,
+		[PriceMarketType.Forex]: forex,
+		[PriceMarketType.Index]: indices,
+		[PriceMarketType.Commodity]: commodities,
+	} as Record<PriceMarketType, TickerWithoutState[]>;
 
 	const response: IPriceData = {
 		pagination: {

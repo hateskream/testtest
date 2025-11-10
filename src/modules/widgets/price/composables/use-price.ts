@@ -3,22 +3,21 @@ import { z } from 'zod';
 
 import {
 	filtersByMarketType,
+	type FiltersValues,
 	FilterType,
 	filterTypeToValue,
 	filterValueToDisplay,
 	getDefaultsSettings,
 	getDefaultsState,
+	type IDisplaySettings,
+	type IState,
 	MarketTrendFilterValue,
+	PriceMarketType,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
-	type FiltersState,
-	type FiltersValues,
-	type IDisplaySettings,
-	type IState,
 } from '../model';
 import { useQueryPrice } from '../queries';
-import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
 
 const MarketTrendFilterValueSchema = z.nativeEnum(MarketTrendFilterValue);
@@ -50,13 +49,13 @@ const ISettingsSchema = z.object({
 });
 
 export const stateSchema = z.object({
-	activeMarket: z.nativeEnum(MarketType),
+	activeMarket: z.nativeEnum(PriceMarketType),
 	settings: z.object({
-		[MarketType.Crypto]: ISettingsSchema,
-		[MarketType.Stock]: ISettingsSchema,
-		[MarketType.Forex]: ISettingsSchema,
-		[MarketType.Commodities]: ISettingsSchema,
-		[MarketType.Indices]: ISettingsSchema,
+		[PriceMarketType.Crypto]: ISettingsSchema,
+		[PriceMarketType.Stock]: ISettingsSchema,
+		[PriceMarketType.Forex]: ISettingsSchema,
+		[PriceMarketType.Commodity]: ISettingsSchema,
+		[PriceMarketType.Index]: ISettingsSchema,
 	}),
 });
 
@@ -100,7 +99,7 @@ export function usePrice({
 
 	const activeMarket = computed({
 		get: () => state.value.activeMarket,
-		set: (val: MarketType) => {
+		set: (val: PriceMarketType) => {
 			state.value.activeMarket = val;
 		},
 	});
@@ -114,17 +113,14 @@ export function usePrice({
 			}), {}),
 	);
 
-	const filtersState = ref<FiltersState>(
-		state.value.settings[state.value.activeMarket].filtersState,
-	);
-
-	watch(() => state.value.activeMarket, newMarket => {
-		filtersState.value = state.value.settings[newMarket].filtersState;
-	}, { immediate: true });
-
-	watch(filtersState, newFilters => {
-		state.value.settings[state.value.activeMarket].filtersState = newFilters;
-	}, { deep: true });
+	const filtersState = computed({
+		get() {
+			return state.value.settings[state.value.activeMarket].filtersState;
+		},
+		set(value) {
+			state.value.settings[state.value.activeMarket].filtersState = value;
+		},
+	});
 
 	const limit = maxCountRows ?? 150;
 
@@ -138,6 +134,7 @@ export function usePrice({
 		refetch,
 	} = useQueryPrice(
 		activeMarket,
+		filtersState,
 		hasPin ? pinnedTickers : [],
 		limit,
 	);
@@ -146,6 +143,7 @@ export function usePrice({
 		data: dataState,
 		isLoading: isLoadingState,
 	} = useStateQuery();
+
 	const { mutate } = useStateMutation();
 
 	const isNotData = computed(() => !!dataResponse.value && isLoading.value && !isLoadingState.value);
@@ -205,7 +203,7 @@ export function usePrice({
 			currentSettings.value = state.value.settings[newMarket].display;
 			pinnedTickers.value = state.value.settings[newMarket].pinned;
 		},
-	), { immediate: true };
+	);
 
 	watch(
 		currentSettings,
@@ -218,9 +216,9 @@ export function usePrice({
 		state.value = getDefaultsState(defaultStateType);
 	}
 
-	function loadMore() {
+	async function loadMore() {
 		if (hasNextPage.value && !isFetchingNextPage.value) {
-			fetchNextPage();
+			await fetchNextPage();
 		}
 	}
 
@@ -259,5 +257,7 @@ export function usePrice({
 		filtersState,
 		applyStateToParent,
 		hasPin,
+		tickersIsLoading: isLoading,
+		hasNextPage,
 	};
 }

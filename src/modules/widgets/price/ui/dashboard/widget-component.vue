@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
+import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -29,12 +30,26 @@ const {
 	filtersValues,
 	filtersState,
 	hasPin,
+	loadMore,
+	hasNextPage,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
 	maxCountRows: props.meta.maxCountRowTable,
 });
+
+async function loadMoreTickets($state: IInfiniteStateHandler) {
+	await loadMore();
+
+	if (fetchTickersError.value) {
+		$state.error();
+	} else if (hasNextPage.value) {
+		$state.loaded();
+	} else {
+		$state.complete();
+	}
+}
 </script>
 
 <template>
@@ -61,6 +76,7 @@ const {
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
+				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			/>
 		</template>
