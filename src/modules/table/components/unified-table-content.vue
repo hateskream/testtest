@@ -69,7 +69,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 const emit = defineEmits<IEmits<T>>();
 
 const { sortData } = useTableData();
-const { getColumnStyles, getTotalColumnSpan } = useTableLayout();
+const { getColumnStyles } = useTableLayout();
 
 // State
 const hoveredRowId = ref<string | null>(null);
@@ -83,17 +83,13 @@ const isSectioned = computed(() => {
 	return props.sections && props.sections.length > 0;
 });
 
-// Common computed properties
-const hasActionsOrSettings = computed(() => props.enableRowActions || props.enableColumnSettings);
-
-const shouldUseColspan = computed(() => props.enableColumnSettings && !props.enableRowActions);
 
 const columnStyles = computed(() => {
 	return getColumnStyles(props.columns);
 });
 
 const totalColumnSpan = computed(() => {
-	return getTotalColumnSpan(props.columns.length, hasActionsOrSettings.value);
+	return props.columns.length;
 });
 
 const dragGroup = computed(() => {
@@ -411,13 +407,14 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 
 	return {
 		...(index !== 0 ?
-			{ width:
-					`calc(var(--col-${index}-width)
-					${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)` } : {}),
+			{
+				width:
+					`var(--col-${index}-width)`,
+			}
+			:{}),
 
 		minWidth:
-			`calc(var(--col-${index}-min-width) +
-			${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)`,
+			`var(--col-${index}-min-width)`,
 	};
 
 };
@@ -496,10 +493,10 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 					<td
 						v-for="(column, cellIndex) in columns"
 						:key="`${getRowId(item)}-${column.key}`"
-						:colspan="shouldUseColspan && cellIndex + 1 === columns.length ? 2 : 1"
 						:class="[
 							classes.tableCell,
 							{
+								[classes.borderBottom]: Array.isArray(columns) && columns.length > 3,
 								[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
 								[classes.stickyFirstCellHovered]: cellIndex === 0
 									&& stickyFirstColumn && hoveredRowId === getRowId(item),
@@ -754,14 +751,14 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 /* Row actions */
 .rowActions {
 	position: sticky;
-	height:100%;
-	right: 0;
 	top: 50%;
+	right: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width: 70px;
 	min-width: 50px;
+	height: 100%;
 	opacity: 0;
 }
 
@@ -879,5 +876,10 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	font-style: italic;
 	font-size: 14px;
 	color: var(--text-color-base-300, #9a9a9d);
+}
+
+
+.borderBottom {
+	border-bottom: 1px solid var(--border-color-surface-01);
 }
 </style>

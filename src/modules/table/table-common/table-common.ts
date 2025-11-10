@@ -177,12 +177,6 @@ export function useTableLayout() {
 		return styles;
 	};
 
-	const getTotalColumnSpan = (
-		visibleColumnsCount: number,
-		hasActionsOrSettings: boolean,
-	): number => {
-		return hasActionsOrSettings ? visibleColumnsCount + 1 : visibleColumnsCount;
-	};
 
 	const getDataColumnSpan = (visibleColumnsCount: number): number => {
 		return visibleColumnsCount;
@@ -190,7 +184,6 @@ export function useTableLayout() {
 
 	return {
 		getColumnStyles,
-		getTotalColumnSpan,
 		getDataColumnSpan,
 	};
 }

@@ -157,7 +157,6 @@ const draggableColumns = computed({
 	},
 });
 
-const shouldUseColspan = computed(() => !props.enableColumnSettings && props.enableRowActions);
 const calculateStyles = (index: number) => {
 	if (props.isFixedWidth) {
 		if (index === 0) {
@@ -169,13 +168,13 @@ const calculateStyles = (index: number) => {
 
 	return {
 		...(index !== 0 ?
-			{ width:
-					`calc(var(--col-${index}-width)
-					${shouldUseColspan.value && index + 1 === columns.length ? 70 : 0}px)` } : {}),
+			{
+				width:
+					`calc(var(--col-${index}-width)`,
+			}:{}),
 
 		minWidth:
-			`calc(var(--col-${index}-min-width) +
-			${shouldUseColspan.value && index + 1 === columns.length ? 70 : 0}px)`,
+			`calc(var(--col-${index}-min-width)`,
 	};
 
 };
@@ -239,9 +238,8 @@ const calculateStyles = (index: number) => {
 								:sort-icon="getSortIcon(getSortDirection(column.key))"
 							>
 								<span
-									:class="[
-										classes.headerLabel,
-										{[classes.colspanFix]: shouldUseColspan && index + 1 === columns.length}]"
+									:class="
+										classes.headerLabel"
 								>
 									{{ column.label }}
 								</span>
@@ -286,7 +284,9 @@ const calculateStyles = (index: number) => {
 
 <style module="classes">
 .tableHeader {
+	padding: 4px 0;
 	background: var(--bg-color-surface-01, #1a1a1a);
+	border-bottom: 1px solid var(--border-color-surface-02);
 }
 
 .tableHeader.sticky {
@@ -336,7 +336,7 @@ const calculateStyles = (index: number) => {
 		);
 
 	.headerContent {
-		min-width: var(--col-0-width);
+		min-width: var(--col-0-width, 0);
 	}
 }
 

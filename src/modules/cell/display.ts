@@ -659,6 +659,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Analyst rating',
 		groupName: 'Other',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeRel24h]: {
@@ -667,6 +668,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h',
 		groupName: 'Rel. volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeRelAvg50d]: {
@@ -675,6 +677,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '50d',
 		groupName: 'Rel. volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceEarnings]: {
@@ -683,6 +686,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'P/E',
 		groupName: 'P/E',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDil12mo]: {
@@ -691,6 +695,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'EPS dil.',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilAvg50d]: {
@@ -699,6 +704,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'EPS dil.',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilGrowth12mo]: {
@@ -707,6 +713,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'EPS dil. growth',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilGrowthAvg50d]: {
@@ -715,6 +722,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'EPS dil. growth',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.DividendYield]: {
@@ -723,6 +731,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'Div Yield',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 };
