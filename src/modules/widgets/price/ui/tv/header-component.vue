@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiPosition } from '@/shared/ui/position';
 import { MarketBadge, MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type MarketType } from '@/modules/market';
 import {
 	type FiltersState,
 	type FiltersValues,
@@ -14,6 +15,7 @@ import {
 	priceMarketTypeToMarketType,
 } from '../../model';
 import { FilterComponent } from '../common';
+import type { MarketType } from '@/modules/market';
 
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
@@ -21,15 +23,17 @@ interface IFilterComponentProps {
 
 const props = defineProps<IFilterComponentProps>();
 
-const activeMarket = defineModel<PriceMarketType, string, MarketType, MarketType>('market',
-	{
-		required: true,
-		get: priceMarketTypeToMarketType,
-		set: marketTypeToPriceMarketType,
-	},
-);
-
+const activePriceMarket = defineModel<PriceMarketType>('market', { required: true });
 const filters = defineModel<FiltersState>('filters', { required: true });
+
+const activeMarket = computed({
+	get() {
+		return priceMarketTypeToMarketType(activePriceMarket.value);
+	},
+	set(value: MarketType) {
+		activePriceMarket.value = marketTypeToPriceMarketType(value);
+	},
+});
 
 function updateFilter(filterKey: FilterType, filterValue: string) {
 	filters.value = {
@@ -43,7 +47,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	<div :class="classes.priceHeader">
 		<div :class="classes.maximized">
 			<filter-component
-				v-model:market="activeMarket"
+				v-model:market="activePriceMarket"
 				v-model:filters="filters"
 				display-type="tv"
 				:filters-values="props.filtersValues"
@@ -51,11 +55,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 		</div>
 		<div :class="classes.minimized">
 			<market-badge v-model="activeMarket" />
-
-			<div :class="classes.lineDelimiterGroup">
-				<ui-delimiter />
-			</div>
-
+			<ui-delimiter />
 			<ui-position :class="[classes.burger, classes.filter]">
 				<template #title>
 					<ui-icon
@@ -134,7 +134,9 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	}
 
 	.minimized {
-		display: contents;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
 	.burger {

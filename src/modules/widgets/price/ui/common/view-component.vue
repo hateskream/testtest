@@ -52,7 +52,7 @@ const loadingDistance = computed(() => {
 });
 
 const loadingSkeletonCount = computed(() => {
-	return props.meta.size.w / 2;
+	return Math.ceil(props.meta.size.w / 2) || 1;
 });
 </script>
 
@@ -84,6 +84,7 @@ const loadingSkeletonCount = computed(() => {
 			>
 				<template #loader>
 					<div :class="classes.loader">
+						{{loadingSkeletonCount}}
 						<ui-skeleton
 							v-for="key in loadingSkeletonCount"
 							:key="key"
