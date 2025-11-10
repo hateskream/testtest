@@ -4,7 +4,7 @@ import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import type { ISection, IWatchlist } from '@/modules/watchlist';
-import { EventType, Impact } from '@/modules/calendar';
+import { EventType, EventTypeModal, Impact } from '@/modules/calendar';
 import { formattedLabel, isAllSelected, toggleAllSelect } from '@/modules/calendar/utils/toolbar.ts';
 
 const props = defineProps<{
@@ -93,29 +93,10 @@ const emits = defineEmits<{
 			</template>
 
 			<template #content>
-				<modal-badge-list>
-					<template #title>
-						Event Type
-					</template>
-
-					<template #default>
-						<modal-item-checkbox
-							:model-value="isAllSelected(eventState, Object.values(EventType))"
-							@click="eventState = toggleAllSelect(eventState, Object.values(EventType))"
-						>
-							All
-						</modal-item-checkbox>
-
-						<modal-item-checkbox
-							v-for="(event, index) in props.eventTypes"
-							:key="index"
-							:model-value="eventState.has(event)"
-							@click="emits('toggleEventType', event)"
-						>
-							{{event}}
-						</modal-item-checkbox>
-					</template>
-				</modal-badge-list>
+				<event-type-modal
+					v-model="eventState"
+					:event-types="props.eventTypes"
+				/>
 			</template>
 		</modal-badge>
 

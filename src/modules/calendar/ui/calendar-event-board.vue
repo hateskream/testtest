@@ -1,262 +1,36 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
-
 import {
-	type DateYYYYMMDD,
-	type ICalendarEvent,
 	type IEventBoardResponse,
-	toIsoUtcDate,
-	toUtcIsoDate,
 } from '@/modules/calendar';
 
-import CalendarEventCard from './calendar-event-card.vue';
+import CalendarEventBoardTv from './event-board/calendar-event-board-tv.vue';
+import CalendarEventBoardDashboard from '@/modules/calendar/ui/event-board/calendar-event-board-dashboard.vue';
 
 interface ICalendarEventBoardProps {
 	eventBoard: IEventBoardResponse[];
 	eventBoardFavorites: string[];
+	displayVariant?: 'new' | 'default';
 }
 
-const props = defineProps<ICalendarEventBoardProps>();
+const props = withDefaults(defineProps<ICalendarEventBoardProps>(), {
+	displayVariant: 'default',
+});
+
 const emits = defineEmits<{
 	toggleEventBoard: [id: string];
 }>();
-
-const now = new Date();
-
-function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = 'en-US') {
-	const date = new Date(dateStr);
-
-	const sameYear = date.getFullYear() === now.getFullYear();
-	const sameMonth = sameYear && date.getMonth() === now.getMonth();
-
-	const weekdayFormatter = new Intl.DateTimeFormat(locale, {
-		weekday: 'short',
-	});
-	const dayFormatter = new Intl.DateTimeFormat(locale, {
-		day: 'numeric',
-	});
-
-	const weekday = weekdayFormatter.format(date);
-	const day = dayFormatter.format(date);
-
-	if (sameMonth) {
-		return `${weekday} ${day}`;
-	} else if (sameYear) {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
-			month: 'long',
-		});
-
-		const month = monthFormatter.format(date);
-
-		return `${month}, ${weekday} ${day}`;
-	} else {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
-			month: 'long',
-		});
-		const yearFormatter = new Intl.DateTimeFormat(locale, {
-			year: 'numeric',
-		});
-
-		const month = monthFormatter.format(date);
-		const year = yearFormatter.format(date);
-
-		return `${month} ${year}, ${weekday} ${day}`;
-	}
-}
-
-const HOUR = 60 * 60 * 1000;
-
-function groupEventsByHour(events: ICalendarEvent[]) {
-	const groups: Record<string, ICalendarEvent[]> = {};
-
-	for (const ev of events) {
-		if (!ev.eventDatetime) {
-			continue;
-		}
-
-		const date = new Date(ev.eventDatetime);
-		const hour = date.toLocaleTimeString([], {
-			hour: '2-digit',
-			minute: '2-digit',
-			hour12: false,
-		});
-
-		(groups[hour] ??= []).push(ev);
-	}
-
-	return Object.entries(groups)
-		.sort(([a], [b]) => (a > b ? 1 : -1))
-		.map(([hour, e]) => ({ hour, events: e }));
-}
-
-function getHourStatus(dayDate: DateYYYYMMDD, hour: string) {
-	const [hh, mm = '0'] = hour.split(':');
-
-	const start = toIsoUtcDate(dayDate);
-	start.setHours(Number(hh), Number(mm), 0, 0);
-
-	const diff = start.getTime() - now.getTime();
-
-	return {
-		soon: diff > 0 && diff <= HOUR,
-		missed: diff <= 0,
-	};
-}
-
-const groupedBoard = computed(() =>
-	props.eventBoard.map(day => {
-		const grouped = groupEventsByHour(day.events).map(group => ({
-			...group,
-			...getHourStatus(day.date as DateYYYYMMDD, group.hour),
-			events: group.events.map(event => ({
-				...event,
-				favorite: props.eventBoardFavorites.includes(event.id),
-			})),
-		}));
-
-		return { ...day, grouped };
-	}),
-);
-
-const containerRef = useTemplateRef('container');
-
-function scrollToDate(
-	date: DateYYYYMMDD,
-	param: ScrollIntoViewOptions = {},
-) {
-	const scroller = containerRef.value;
-	if (!scroller) {
-		return;
-	}
-
-	const behavior = (param.behavior as ScrollBehavior) ?? 'smooth';
-	const dayEl = scroller.querySelector<HTMLElement>(`[data-date="${date}"]`);
-	if (!dayEl) {
-		return;
-	}
-
-	const today = toUtcIsoDate(now);
-
-	if (date !== today) {
-		dayEl.scrollIntoView({ block: 'start', behavior });
-		return;
-	}
-
-	const day = groupedBoard.value.find(d => d.date === date);
-	const groups = day?.grouped ?? [];
-	if (!groups.length) {
-		dayEl.scrollIntoView({ block: 'start', behavior });
-		return;
-	}
-
-	const toMin = (hhmm: string) => {
-		const [hh, mm = '0'] = hhmm.split(':');
-		return (+hh) * 60 + (+mm);
-	};
-	const nowMin = now.getHours() * 60 + now.getMinutes();
-
-	const targetHour =
-		groups
-			.filter(g => !g.missed)
-			.sort((a, b) => toMin(a.hour) - toMin(b.hour))
-			.find(g => toMin(g.hour) >= nowMin)?.hour
-		?? groups.find(g => !g.missed)?.hour
-		?? groups[groups.length - 1]?.hour;
-
-	if (targetHour) {
-		const hourEl = scroller.querySelector<HTMLElement>(`[data-date="${date}"] [data-hour="${targetHour}"]`);
-		if (hourEl) {
-			const er = hourEl.getBoundingClientRect();
-			const sr = scroller.getBoundingClientRect();
-			const top = scroller.scrollTop + (er.top - sr.top) - 44; // sticky header offset
-			scroller.scrollTo({ top, behavior });
-			return;
-		}
-	}
-
-	dayEl.scrollIntoView({ block: 'start', behavior });
-}
-
-defineExpose({ scrollToDate });
-
-const LIGHT_COLORS = {
-	favorite: {
-		'--light-start': 'rgba(230,171,10,0)',
-		'--light-mid': 'rgba(230,171,10,0.2)',
-		'--light-border': 'rgba(230,171,10,0.7)',
-	},
-	soon: {
-		'--light-start': 'rgba(230,0,0,0)',
-		'--light-mid': 'rgba(230,0,0,0.2)',
-		'--light-border': 'rgba(230,0,0,0.7)',
-	},
-	none: {
-		'--light-start': 'transparent',
-		'--light-mid': 'transparent',
-		'--light-border': 'transparent',
-	},
-} as const;
 </script>
 
 <template>
-	<div ref="container" :class="classes.calendarEventBoard">
-		<template
-			v-for="day in groupedBoard"
-			:key="day.date"
-		>
-			<div
-				v-if="day.events.length"
-				ref="boards"
-				:class="classes.eventSection"
-				:data-date="day.date"
-			>
-				<div :class="classes.boardDate">
-					{{ formatEventDate(day.date as DateYYYYMMDD) }}
-				</div>
-
-				<div
-					v-for="group in day.grouped"
-					:key="group.hour"
-					:class="[
-						classes.hourSection,
-						group.missed && classes.missed
-					]"
-					:data-hour="group.hour"
-				>
-					<div v-if="group.soon" />
-					<div
-						:class="[classes.hourLabel, classes.lightning]"
-						:style="
-							group.events[0].favorite ? LIGHT_COLORS.favorite :
-							group.soon ? LIGHT_COLORS.soon : LIGHT_COLORS.none
-						"
-					>
-						{{ group.hour }}
-					</div>
-
-					<div
-						v-for="(event, i) in group.events"
-						:key="`${day.date}-${group.hour}-${i}`"
-						:class="[
-							classes.dayBoard,
-							(event.favorite || group.soon) && classes.lightning
-						]"
-						:style="
-							event.favorite ? LIGHT_COLORS.favorite :
-							group.soon ? LIGHT_COLORS.soon : LIGHT_COLORS.none
-						"
-					>
-						<calendar-event-card
-							v-bind="event"
-							:is-missed="group.missed"
-							:is-favorite="event.favorite"
-							@toggle-favorite="emits('toggleEventBoard', $event)"
-						/>
-					</div>
-				</div>
-			</div>
-		</template>
-	</div>
+	<calendar-event-board-tv
+		v-if="displayVariant === 'default'"
+		v-bind="props"
+		@toggle-event-board="emits('toggleEventBoard', $event)"
+	/>
+	<calendar-event-board-dashboard
+		v-else
+		v-bind="props"
+	/>
 </template>
 
 <style module="classes">

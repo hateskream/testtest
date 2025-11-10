@@ -5,10 +5,10 @@ import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/bas
 import type { IMeta } from '@/modules/dashboard-group';
 import { useCalendarState } from '@/modules/calendar';
 
-import CalendarLoader from './views/calendar-loader.vue';
+import CalendarLoader from '../views/calendar-loader.vue';
 
 const CalendarMain = defineAsyncComponent({
-	loader: () => import('./views/calendar-main.vue'),
+	loader: () => import('../views/calendar-main.vue'),
 	loadingComponent: CalendarLoader,
 	errorComponent: BaseErrorComponent,
 });

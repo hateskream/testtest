@@ -9,7 +9,7 @@ import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { TopIndicesDashboardWidget, TopIndicesTvWidget } from '@/modules/widgets/top-indices';
-import { CalendarWidget } from '@/modules/widgets/calendar-widget';
+import { CalendarDashboardWidget, CalendarTvWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
@@ -62,7 +62,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
 	[WidgetType.TopIndices]: TopIndicesTvWidget,
-	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Calendar]: CalendarTvWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
 	[WidgetType.ChartPrice]: ChartPriceTvWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
@@ -80,7 +80,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
 	[WidgetType.TopIndices]: TopIndicesDashboardWidget,
-	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Calendar]: CalendarDashboardWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
 	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,

@@ -16,6 +16,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 	Stock: [],
 	Main: [
 		{
+			name: 'US Economy',
+			width: 560,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.Calendar,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
 			name: 'Market Momentum',
 			width: 560,
 			widgets: [

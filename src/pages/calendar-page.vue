@@ -4,7 +4,7 @@ import { useTemplateRef } from 'vue';
 import {
 	CalendarEmptyEventBoard,
 	CalendarLayout,
-	CalendarNews,
+	CalendarNews, type IEventBoardExposed,
 	markets,
 	useCalendarState,
 	useEventBoardScroll,
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	initialDate: () => new Date(),
 });
 
-const eventBoardRef = useTemplateRef('event-board-component');
+const eventBoardRef = useTemplateRef<IEventBoardExposed>('event-board-component');
 
 const {
 	isDailyCalendarLoading,

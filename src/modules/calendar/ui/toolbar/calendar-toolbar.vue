@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalSubmenuContent } from '@/modules/widgets/base';
+import { ModalBadge, ModalSubmenuContent } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
@@ -13,12 +13,13 @@ import {
 	markets as marketsData,
 } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
-import { getMarketLabel, isAllSelected, toggleAllSelect, toggleSet } from '@/modules/calendar/utils/toolbar.ts';
+import { getMarketLabel, isAllSelected, toggleSet } from '@/modules/calendar/utils/toolbar.ts';
 
 import CalendarWeekRangeSelect from '../calendar/calendar-week-select.vue';
 import CalendarToolbarEnd from './calendar-toolbar-end.vue';
 import CalendarToolbarStartMinified from '@/modules/calendar/ui/toolbar/calendar-toolbar-start-minified.vue';
 import CalendarToolbarStartMaximized from '@/modules/calendar/ui/toolbar/calendar-toolbar-start-maximized.vue';
+import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
 
 interface ICalendarProps {
 	initialDate: Date;
@@ -77,16 +78,8 @@ const marketIcons = computed(() => {
 	).map(v => v.icon);
 });
 
-function toggleMarket(id: MarketIds) {
-	countryState.value = toggleSet(countryState.value, id);
-}
-
 function toggleImpact(id: Impact) {
 	impactState.value = toggleSet(impactState.value, id);
-}
-
-function toggleEventType(id: EventType) {
-	eventState.value = toggleSet(eventState.value, id);
 }
 
 const selectedWatchlistSection = computed(() => {
@@ -165,47 +158,7 @@ const label = computed(() => {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list>
-						<template #title>Markets</template>
-						<template #default>
-							<modal-item-checkbox
-								:model-value="isAllSelected(countryState, Object.values(MarketIds))"
-								@click="countryState = toggleAllSelect(countryState, Object.values(MarketIds))"
-							>
-								<div :class="classes.modalItem">
-									<div :class="classes.iconWrapper">
-										<ui-icon
-											:id="IconIds.Globus"
-											width="14px"
-											height="14px"
-										/>
-									</div>
-									<span>
-										Entire World
-									</span>
-								</div>
-							</modal-item-checkbox>
-							<modal-item-checkbox
-								v-for="market in props.markets"
-								:key="market.label"
-								:model-value="countryState.has(market.id)"
-								@update:model-value="toggleMarket(market.id)"
-							>
-								<div :class="classes.modalItem">
-									<div :class="classes.iconWrapper">
-										<ui-icon
-											:id="market.icon"
-											width="14px"
-											height="14px"
-										/>
-									</div>
-									<span>
-										{{market.label}}
-									</span>
-								</div>
-							</modal-item-checkbox>
-						</template>
-					</modal-badge-list>
+					<markets-modal v-model="countryState" :markets="props.markets" />
 				</template>
 			</modal-badge>
 
@@ -223,7 +176,6 @@ const label = computed(() => {
 				:class="classes.minified"
 				@select-watchlist-section="selectWatchlistSection"
 				@update-watchlist-catalog="updateWatchlistCatalog"
-				@toggle-event-type="toggleEventType"
 				@toggle-impact="toggleImpact"
 			/>
 
@@ -239,7 +191,6 @@ const label = computed(() => {
 				:class="classes.maximized"
 				@select-watchlist-section="selectWatchlistSection"
 				@update-watchlist-catalog="updateWatchlistCatalog"
-				@toggle-event-type="toggleEventType"
 				@toggle-impact="toggleImpact"
 			/>
 
