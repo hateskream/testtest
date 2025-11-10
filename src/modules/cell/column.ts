@@ -18,7 +18,7 @@ export interface ITableColumn {
 	};
 	columnType: ColumnType;
 	type: CellType;
-	width?: number;
+	width?: number | string;
 	extended?: boolean;
 }
 
@@ -47,7 +47,7 @@ function createTableColumn(col: INotFullCol): ITableColumn {
 		displayShortColumnName: display.settingsName,
 		minWidth: col.minWidth ?? display.minWidth,
 		maxWidth: col.maxWidth ?? display.maxWidth,
-		width: col.width ?? display.width,
+		...(col.width || display.width ? { width:col.width ?? display.width } : {}),
 		...(col.extended ? { extended: col.extended } : {}),
 		// TODO: tooltip
 		// tooltip: display.tooltip,
