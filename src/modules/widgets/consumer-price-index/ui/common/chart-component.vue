@@ -76,10 +76,3 @@ onMounted(() => {
 <template>
 	<canvas ref="container"  />
 </template>
-
-<style module="classes">
-.chart {
-	/* height: 100%; */
-	height: 300px !important;
-}
-</style>

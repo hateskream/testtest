@@ -97,6 +97,11 @@ const NonfarmPayrolls : Preset = {
 	displayVariants: ['default'],
 };
 
+const NominalGDP : Preset = {
+	name: 'Nominal gross domestic product',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -115,6 +120,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.EthGas]: EthGas,
 	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndex,
 	[WidgetType.NonfarmPayrolls]: NonfarmPayrolls,
+	[WidgetType.NominalGDP]: NominalGDP,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
