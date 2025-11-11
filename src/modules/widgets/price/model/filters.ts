@@ -3,7 +3,7 @@ import { PriceMarketType } from './market';
 
 export enum FilterType {
 	MarketTrend = 'trend',
-	RankingAndNew = 'ranking',
+	RankingAndNew = 'rank',
 	Sector = 'sector',
 	TimeRange = 'range',
 }
