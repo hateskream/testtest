@@ -17,6 +17,7 @@ import { EthGasDashboard } from '@/modules/widgets/eth-gas';
 import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
 import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
 import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
+import { ConsumerPriceIndexDashboardWidget } from '@/modules/widgets/consumer-price-index';
 
 export interface ISize {
 	w: number;
@@ -85,6 +86,7 @@ const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
+	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndexDashboardWidget,
 };
 
 export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {

@@ -87,6 +87,11 @@ const EthGas: Preset = {
 	displayVariants: ['default'],
 };
 
+const ConsumerPriceIndex : Preset = {
+	name: 'Consumer price index',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -103,6 +108,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.ChartPrice]: ChartPrice,
 	[WidgetType.Exchange]: Exchange,
 	[WidgetType.EthGas]: EthGas,
+	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndex,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
