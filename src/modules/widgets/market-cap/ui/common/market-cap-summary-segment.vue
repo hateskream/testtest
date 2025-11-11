@@ -24,9 +24,9 @@ const props = defineProps<IMarketCapSummarySegmentProps>();
 }
 
 .name {
-	margin-bottom: 6px;
-	font-weight: 440;
-	font-size: 12px;
+	margin-bottom: 2px;
+	font-size: 13.3px;
+	line-height: 180%;
 	color: var(--text-color-base-300);
 }
 

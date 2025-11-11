@@ -97,6 +97,7 @@ const preparedDatasets = computed(() => {
 				:range-list="chartRanges"
 				:is-visible-history-graph="false"
 				:is-visible-indicators="false"
+				:is-visible-price-line="isShowAxes"
 				:is-visible-range="props.isShowRange"
 				:is-visible-range-change="props.displaySettings.isShowChange"
 				:is-visible-price-scale="isShowAxes"

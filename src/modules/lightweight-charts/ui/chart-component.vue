@@ -54,6 +54,7 @@ interface IChartProps {
 	isVisibleTimeScale?: boolean;
 	isShowTooltip?: boolean;
 	isPaddedRange?: boolean;
+	isVisiblePriceLine?: boolean;
 	colorSchema?: 'positive' | 'negative';
 }
 
@@ -65,6 +66,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisiblePriceScale: true,
 	isVisibleTimeScale: true,
 	isPaddedRange: false,
+	isVisiblePriceLine: true,
 	colorSchema: 'positive',
 });
 
@@ -557,6 +559,7 @@ onMounted(async () => {
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
 				:show-time-scale="props.isVisibleTimeScale"
+				:price-visible="props.isVisiblePriceLine"
 				@chart-hover="onChartHover"
 			/>
 		</div>

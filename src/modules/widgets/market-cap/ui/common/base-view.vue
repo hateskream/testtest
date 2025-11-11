@@ -67,7 +67,7 @@ const chartRangeCanBeShowed = computed(() => props.meta.size.h > 7 && props.meta
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	gap: 16px;
+	gap: 12px;
 }
 
 .root.wide {
