@@ -13,7 +13,7 @@ import {
 } from '@/modules/cell';
 import { generateRows } from '@/shared/mock';
 
-const IS_USE_MOCK = false;
+const IS_USE_MOCK = true;
 
 interface IGetPriceRequest {
 	market: PriceMarketType;
