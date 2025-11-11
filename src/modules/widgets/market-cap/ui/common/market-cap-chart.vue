@@ -11,7 +11,7 @@ import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
 interface IMarketCapChartProps {
-	meta: IMeta;
+	// meta: IMeta;
 	data: IMarketCapHistory;
 	summary?: IMarketCapSummary;
 	displaySettings: IDisplaySettings;

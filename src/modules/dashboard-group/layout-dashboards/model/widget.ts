@@ -92,6 +92,11 @@ const ConsumerPriceIndex : Preset = {
 	displayVariants: ['default'],
 };
 
+const NonfarmPayrolls : Preset = {
+	name: 'Nonfarm Payrolls (1Y)',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -109,6 +114,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.Exchange]: Exchange,
 	[WidgetType.EthGas]: EthGas,
 	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndex,
+	[WidgetType.NonfarmPayrolls]: NonfarmPayrolls,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {

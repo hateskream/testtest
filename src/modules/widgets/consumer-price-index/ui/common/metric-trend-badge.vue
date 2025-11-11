@@ -46,7 +46,7 @@ const props = defineProps<IMetricTrendBadge>();
 }
 
 .down > .value {
-	color: #ff0000;
+	color: #fc1d4d;
 }
 
 .icon {
@@ -58,6 +58,6 @@ const props = defineProps<IMetricTrendBadge>();
 }
 
 .down > .icon {
-	color: #ff0000;
+	color: #fc1d4d;
 }
 </style>

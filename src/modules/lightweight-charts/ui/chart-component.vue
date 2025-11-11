@@ -7,6 +7,7 @@ import {
 	CandlestickSeries,
 	ColorType,
 	createChart,
+	CrosshairMode,
 	type IChartApi,
 	type ISeriesApi,
 	type LineData,
@@ -55,6 +56,8 @@ interface IChartProps {
 	isShowTooltip?: boolean;
 	isVisiblePriceLine?: boolean;
 	colorSchema?: 'positive' | 'negative';
+	crosshairMode?: CrosshairMode;
+	priceVisible?: boolean;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -66,6 +69,8 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleTimeScale: true,
 	isVisiblePriceLine: true,
 	colorSchema: 'positive',
+	crosshairMode: CrosshairMode.Normal,
+	priceVisible: true,
 });
 
 defineExpose({
@@ -541,6 +546,8 @@ onMounted(async () => {
 				:show-price-scale="props.isVisiblePriceScale"
 				:show-time-scale="props.isVisibleTimeScale"
 				:price-visible="props.isVisiblePriceLine"
+				:crosshair-mode="props.crosshairMode"
+				:price-visible="props.priceVisible"
 				@chart-hover="onChartHover"
 			/>
 		</div>
