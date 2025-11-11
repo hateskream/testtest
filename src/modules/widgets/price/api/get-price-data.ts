@@ -12,6 +12,7 @@ import {
 	SymbolType,
 } from '@/modules/cell';
 import { generateRows } from '@/shared/mock';
+import { delay } from '@/shared/lib/delay.ts';
 
 const IS_USE_MOCK = true;
 
@@ -94,6 +95,8 @@ const columnTypes: ColumnWithoutSymbol[] = [
 ];
 
 async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
+	await delay(1000);
+
 	const [crypto, commodities, forex, indices, stocks] = await Promise.all([
 		generateRows(SymbolType.Crypto, columnTypes),
 		generateRows(SymbolType.Commodity, columnTypes),
@@ -114,7 +117,7 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 		pagination: {
 			offset: req.offset,
 			limit: req.limit,
-			total: 10,
+			total: 50,
 		},
 		tickers: marketToTickers[req.market]
 			.filter(t => !req.pined.includes(t.tickerId))
