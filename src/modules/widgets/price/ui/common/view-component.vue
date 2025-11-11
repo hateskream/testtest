@@ -84,7 +84,6 @@ const loadingSkeletonCount = computed(() => {
 			>
 				<template #loader>
 					<div :class="classes.loader">
-						{{loadingSkeletonCount}}
 						<ui-skeleton
 							v-for="key in loadingSkeletonCount"
 							:key="key"
