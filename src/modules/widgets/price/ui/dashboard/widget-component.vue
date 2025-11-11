@@ -68,7 +68,7 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 		</template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
+			<preloader-component v-else-if="isNotData || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
 				v-else
 				display-variant="new"
@@ -82,3 +82,9 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 		</template>
 	</base-widget-dashboard>
 </template>
+
+<style module="classes">
+.preloader {
+	padding: 0 20px;
+}
+</style>
