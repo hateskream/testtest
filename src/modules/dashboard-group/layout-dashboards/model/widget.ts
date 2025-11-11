@@ -87,7 +87,7 @@ const EthGas: Preset = {
 	displayVariants: ['default'],
 };
 
-const presets: Record<WidgetType, Preset> = {
+const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
 	[WidgetType.Price]: Price,
@@ -105,8 +105,11 @@ const presets: Record<WidgetType, Preset> = {
 	[WidgetType.EthGas]: EthGas,
 };
 
-function createPreset(widgetType: WidgetType): IWidgetPreset {
+function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 	const preset = presets[widgetType];
+	if (!preset) {
+		return null;
+	}
 
 	return {
 		...preset,
@@ -128,8 +131,13 @@ export function createWidget(
 	displayVariant: DisplayVariant,
 	defaultStateType = '',
 	maxCountRow?: number,
-) : IWidget {
+) : IWidget | null {
 	const preset = createPreset(widgetType);
+	if (!preset) {
+		// eslint-disable-next-line no-console
+		console.error(`Preset not found for widget type: ${widgetType}`);
+		return null;
+	}
 
 	return {
 		...preset,

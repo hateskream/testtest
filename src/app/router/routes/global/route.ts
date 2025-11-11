@@ -171,4 +171,10 @@ export const globalRoutes: RouteRecordRaw[] = [
 	},
 ];
 
-export const testRoutes: RouteRecordRaw[] = [];
+export const testRoutes: RouteRecordRaw[] = [
+	{
+		path: RoutePaths.Test,
+		name: RouteNames.Test,
+		component: () => import('@/pages/test-page.vue'),
+	},
+];

@@ -51,7 +51,7 @@ interface IWidgetComponentProps {
 
 type WidgetComponent = Component<IWidgetComponentProps>;
 
-const componentsTv: Record<WidgetType, WidgetComponent> = {
+const componentsTv: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapTvWidget,
@@ -69,7 +69,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.EthGas]: EthGasDashboard,
 };
 
-const componentsDashboard: Record<WidgetType, WidgetComponent> = {
+const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapDashboardWidget,

@@ -29,6 +29,7 @@ export function createSectionFromPreset({ widgets, name, width }: ISectionPreset
 		widgets: widgets
 			.map(({ widgetType, defaultState, height, maxCountRow, defaultDisplayVariant }) =>
 				createWidget(widgetType, height, defaultDisplayVariant, defaultState, maxCountRow),
-			),
+			)
+			.filter(w => w !== null),
 	};
 }

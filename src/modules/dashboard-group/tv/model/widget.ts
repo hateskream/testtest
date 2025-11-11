@@ -177,7 +177,7 @@ const EthGas: Preset = {
 	defaultSize: { w: 2, h: 4 },
 };
 
-const ProdPresets: AllPresets = {
+const ProdPresets: Presets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
 	[WidgetType.Price]: Price,
@@ -195,7 +195,7 @@ const ProdPresets: AllPresets = {
 	[WidgetType.EthGas]: EthGas,
 };
 
-const DevPresets: AllPresets = {
+const DevPresets: Presets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
 	[WidgetType.Price]: Price,
@@ -213,7 +213,7 @@ const DevPresets: AllPresets = {
 	[WidgetType.EthGas]: EthGas,
 };
 
-const DemoPresets: AllPresets = {
+const DemoPresets: Presets = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
 	[WidgetType.Price]: Price,
@@ -231,7 +231,7 @@ const DemoPresets: AllPresets = {
 	[WidgetType.EthGas]: EthGas,
 };
 
-function getCurrentPresets(): AllPresets {
+function getCurrentPresets(): Presets {
 	const environment = getEnvironmentName();
 
 	switch (environment) {
