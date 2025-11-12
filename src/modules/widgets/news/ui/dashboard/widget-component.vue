@@ -45,7 +45,6 @@ const {
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
-	showAllSegments: true,
 });
 
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({

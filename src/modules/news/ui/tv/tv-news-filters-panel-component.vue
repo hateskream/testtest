@@ -19,7 +19,7 @@ import {
 	titleGenerator,
 	toggleFilter,
 } from '../../model';
-import { NewsMarketModal } from '@/modules/news';
+import { NewsSegmentModal } from '@/modules/news';
 
 import NewsFilters from '../news-filters-component.vue';
 
@@ -108,7 +108,13 @@ function toggleSource(source: Source) {
 					</template>
 
 					<template #content>
-						<news-market-modal v-model:market="selectedSegments" />
+						<news-segment-modal
+							:segments="props.segments"
+							:selected-segment-tickers="props.selectedSegmentsTickers"
+							@select-all="emits('selectAll', $event)"
+							@unselect-all="emits('unselectAll', $event)"
+							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+						/>
 					</template>
 				</modal-badge>
 			</div>

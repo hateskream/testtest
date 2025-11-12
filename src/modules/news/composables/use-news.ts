@@ -24,10 +24,9 @@ interface IOptions {
 	widgetId: string;
 	isEphemeral: boolean;
 	defaultStateType?: string;
-	showAllSegments?: boolean;
 }
 
-export function useNews({ widgetId, isEphemeral, defaultStateType, showAllSegments }: IOptions) {
+export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -64,7 +63,7 @@ export function useNews({ widgetId, isEphemeral, defaultStateType, showAllSegmen
 		selectAll,
 		unselectAll,
 		toggleTicker,
-	} = useSegment(showAllSegments ? new Set(Object.values(MarketType)) : selectedSegments);
+	} = useSegment(selectedSegments, defaultStateType);
 
 	const selectedScores = computed({
 		get: (): Set<Score> => state.value.score,
