@@ -163,6 +163,10 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 .section {
 	display: flex;
 	flex-direction: column;
+	max-height: 450px;
+	margin: 0 -6px;
+	padding: 0 6px;
+	overflow-y: auto;
 }
 
 .accordion:hover .selectUnSelectAll {
