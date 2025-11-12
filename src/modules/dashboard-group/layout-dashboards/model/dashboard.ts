@@ -324,6 +324,27 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
+				{
+					defaultState: '',
+					height: 350,
+
+					widgetType:  WidgetType.RealGDP,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: '',
+					height: 190,
+
+					widgetType:  WidgetType.UnemploymentRate,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: '',
+					height: 190,
+
+					widgetType:  WidgetType.NonfarmPayrolls,
+					defaultDisplayVariant: 'default',
+				},
 			],
 		},
 		// {

@@ -20,6 +20,8 @@ import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-domin
 import { ConsumerPriceIndexDashboardWidget } from '@/modules/widgets/consumer-price-index';
 import { NonfarmPayrollsDashboardWidget } from '@/modules/widgets/nonfarm-payrolls';
 import { NominalGdpDashboardWidget } from '@/modules/widgets/nominal-gdp';
+import { UnemploymentRateDashboardWidget } from '@/modules/widgets/unemployment-rate';
+import { RealGdpDashboardWidget } from '@/modules/widgets/real-gdp';
 
 export interface ISize {
 	w: number;
@@ -91,6 +93,8 @@ const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndexDashboardWidget,
 	[WidgetType.NonfarmPayrolls]: NonfarmPayrollsDashboardWidget,
 	[WidgetType.NominalGDP]: NominalGdpDashboardWidget,
+	[WidgetType.UnemploymentRate]: UnemploymentRateDashboardWidget,
+	[WidgetType.RealGDP]: RealGdpDashboardWidget,
 };
 
 export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {

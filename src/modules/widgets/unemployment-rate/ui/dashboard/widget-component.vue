@@ -33,13 +33,13 @@ interface IMetricTrendBadge {
 }
 
 const metricBadge: IMetricTrendBadge = {
-	label: 'Payrolls down YoY',
-	value: 70,
-	unit: '',
+	label: 'Rate up YoY',
+	value: 0.1,
+	unit: 'pp',
 	trend: 'up' as const,
 	isPercent: true,
-	topValue: 22274,
-	isTopValuePercent: false,
+	topValue: 4.3,
+	isTopValuePercent: true,
 	isGood: false,
 };
 </script>

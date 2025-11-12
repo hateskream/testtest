@@ -18,7 +18,7 @@ const props = defineProps<IMetricTrendBadge>();
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<span>{{ topValue }} {{ isTopValuePercent ? '%' : '' }}</span>
+			<span>{{ topValue }} {{ isTopValuePercent ? '%' : '' }}:&nbsp;</span>
 		</div>
 		<div :class="classes.bottom">
 			<span>{{ label }}:&nbsp;</span>

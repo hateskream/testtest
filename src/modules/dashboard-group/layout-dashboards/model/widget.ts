@@ -102,6 +102,16 @@ const NominalGDP : Preset = {
 	displayVariants: ['default'],
 };
 
+const RealGDP : Preset = {
+	name: 'Real gross domestic product',
+	displayVariants: ['default'],
+};
+
+const UnemploymentRate : Preset = {
+	name: 'Unemployment Rate (1Y)',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -121,6 +131,8 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndex,
 	[WidgetType.NonfarmPayrolls]: NonfarmPayrolls,
 	[WidgetType.NominalGDP]: NominalGDP,
+	[WidgetType.UnemploymentRate]: UnemploymentRate,
+	[WidgetType.RealGDP]: RealGDP,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
