@@ -4,6 +4,8 @@ import { computed } from 'vue';
 import type { IDashboardTab } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
+import ComingSoonTooltip from '@/modules/layout/new-desktop/ui/coming-soon-tooltip.vue';
+
 interface IHeaderDesktop {
 	tabs: IDashboardTab[];
 }
@@ -24,31 +26,49 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 				height="20px"
 			/>
 			<div :class="classes.tabs">
-				<button
-					v-for="tab in tabs"
+				<template
+					v-for="tab in props.tabs"
 					:key="tab.id"
-					:class="[classes.tab, active === tab && classes.active]"
-					@click="active = tab"
 				>
-					{{ tab.name }}
-				</button>
+					<coming-soon-tooltip
+						v-if="tab.isComingSoon"
+						:title="tab.name"
+						:text="tab.comingSoonText!"
+					>
+						<button
+							:class="[classes.tab, active === tab && classes.active]"
+							@click="active = tab"
+						>
+							{{ tab.name }}
+						</button>
+					</coming-soon-tooltip>
+					<button
+						v-else
+						:class="[classes.tab, active === tab && classes.active]"
+						@click="active = tab"
+					>
+						{{ tab.name }}
+					</button>
+				</template>
 			</div>
 		</div>
 
 		<div :class="classes.right">
-			<div :class="classes.add">
-				<ui-icon
-					:id="IconIds.Plus"
-					width="16px"
-					height="16px"
-				/>
-				Add
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-				/>
-			</div>
+			<coming-soon-tooltip title="Add widgets" text="Customize your dashboard with new tools — coming soon.">
+				<div :class="classes.add">
+					<ui-icon
+						:id="IconIds.Plus"
+						width="16px"
+						height="16px"
+					/>
+					Add
+					<ui-icon
+						:id="IconIds.DropdownDown"
+						width="12"
+						height="12"
+					/>
+				</div>
+			</coming-soon-tooltip>
 			<div :class="classes.divider" />
 			<ui-icon
 				:id="IconIds.ControlRightMenu"

@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch, useTemplateRef, onUnmounted } from 'vue';
-import { offset, shift, flip, type Placement } from '@floating-ui/vue';
+import { computed, onUnmounted, ref, useTemplateRef, watch } from 'vue';
+import { flip, offset, type Placement, shift } from '@floating-ui/vue';
 
-import { UiPositionPortal, type IPositionProps } from '@/shared/ui/position';
+import { type IPositionProps, UiPositionPortal } from '@/shared/ui/position';
 
 interface IProps {
 	forceHide?: boolean;
 	showInMs?: number;
 	position?: Placement;
+	blur?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	forceHide: false,
 	showInMs: 800,
 	position: 'bottom',
+	blur: true,
 });
 
 const reference = useTemplateRef<HTMLElement>('referenceRef');
@@ -88,7 +90,7 @@ onUnmounted(() => {
 
 		<ui-position-portal ref="layerRef" v-bind="layerOptions">
 			<transition name="fade" appear>
-				<div :class="classes.content" class="content-anchor">
+				<div :class="[classes.content, { [classes.blur]: props.blur }]" class="content-anchor">
 					<slot name="content" />
 				</div>
 			</transition>
@@ -103,10 +105,15 @@ onUnmounted(() => {
 	padding: 4px 10px;
 	font-size: 12px;
 	color: var(--text-color-base-300);
-	background: var(--bg-color-base-500);
+	background-color: var(--surface-modal, rgb(30 30 32 / 88%));
 	border: 1px solid var(--border-color-base-300);
 	border-radius: 8px;
+	backdrop-filter: blur(2.5px);
+}
+
+.blur {
 	backdrop-filter: blur(16px);
+	background-color: var(--bg-color-base-500);
 }
 </style>
 

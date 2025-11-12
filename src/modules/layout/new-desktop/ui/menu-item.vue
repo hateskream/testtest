@@ -43,12 +43,14 @@ const props = defineProps<IMenuItem>();
 	align-items: center;
 	width: 36px;
 	height: 36px;
-	background: rgb(73 73 80 / 32%);
-	border-radius: 12px;
+	background-color: var(--bg-100, rgb(73 73 80 / 32%));
+	border-radius: var(--radius-04, 12px);
+	transition: background-color 0.3s ease;
 }
 
-.container:hover {
-	background: rgb(73 73 80 / 48%);
+.icon {
+	color: var(--contrast-contrast-60, rgb(255 255 255 / 40%));
+	transition: color 0.3s ease;
 }
 
 .active .icon {
@@ -59,9 +61,26 @@ const props = defineProps<IMenuItem>();
 	font-style: normal;
 	font-weight: 540;
 	font-size: 9px;
-	line-height: 150%; /* 13.5px */
+	line-height: 150%;
 	text-align: center;
-	color: rgb(255 255 255 / 60%);
+	color: var(--text-300, rgb(255 255 255 / 60%));
 	letter-spacing: 0.072px;
+	transition: color 0.3s ease;
 }
+
+.root:hover,
+.root.active {
+	& .container {
+		background-color: var(--bg-300, rgb(73 73 80 / 44%));
+	}
+
+	& .text {
+		color: var(--text-500, rgb(255 255 255 / 96%));
+	}
+
+	& .icon {
+		color: var(--icon-500, #ffffff);
+	}
+}
+
 </style>

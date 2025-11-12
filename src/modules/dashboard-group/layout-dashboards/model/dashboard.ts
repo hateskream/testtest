@@ -7,6 +7,8 @@ export interface IDashboard {
 	id: string;
 	name: string;
 	sections: ISection[];
+	isComingSoon?: boolean;
+	comingSoonText?: string;
 }
 
 export type PresetName = 'Crypto' | 'Stock' | 'Main';
@@ -181,10 +183,26 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 	],
 };
 
+function isComingSoonPreset(presetName: PresetName) {
+	return presetName !== 'Main';
+}
+
+const comingSoonPresets: Record<PresetName, string | undefined> = {
+	Crypto: 'Track and analyze crypto market — coming soon.',
+	Stock: 'Dive into global stock data — coming soon.',
+	Main: undefined,
+} as const;
+
+function getComingSoonText(presetName: PresetName): string | undefined {
+	return comingSoonPresets[presetName];
+}
+
 export function createDashboardFromPreset(presetName: PresetName): IDashboard {
 	return {
 		id: uuidv4(),
 		name: presetName,
 		sections: presets[presetName].map(createSectionFromPreset),
+		isComingSoon: isComingSoonPreset(presetName),
+		comingSoonText: getComingSoonText(presetName),
 	};
 }

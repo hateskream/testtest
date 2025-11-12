@@ -2,10 +2,10 @@ import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
 
 import {
+	createDashboardGroup,
 	type IDashboardGroup,
 	type IDashboardTab,
 	type ISection,
-	createDashboardGroup,
 	rehydrateWidget,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
@@ -42,6 +42,8 @@ const DashboardSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	sections: z.array(SectionSchema),
+	isComingSoon: z.boolean().optional(),
+	comingSoonText: z.string().optional(),
 });
 
 export type Dashboard = z.infer<typeof DashboardSchema>;
@@ -85,6 +87,8 @@ export function useDashboardLayout() {
 		state.value.dashboards.map(d => ({
 			id: d.id,
 			name: d.name,
+			isComingSoon: d.isComingSoon,
+			comingSoonText: d.comingSoonText,
 			isActive: d.id === activeDashboardId.value,
 		})),
 	);
@@ -134,6 +138,8 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					displayVariant: widget.displayVariant,
 				})),
 			})),
+			isComingSoon: dashboard.isComingSoon,
+			comingSoonText: dashboard.comingSoonText,
 		})),
 	};
 }
@@ -160,6 +166,8 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 						))
 					.filter(w => w !== null),
 			})),
+			isComingSoon: d.isComingSoon,
+			comingSoonText: d.comingSoonText,
 		})),
 	};
 }
