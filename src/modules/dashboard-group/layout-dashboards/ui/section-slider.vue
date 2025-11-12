@@ -36,7 +36,7 @@ const containerRef = useTemplateRef<HTMLDivElement>('container');
 
 const sectionHeight = computed(() => {
 	if (containerRef.value) {
-		return containerRef.value.clientHeight - 32;
+		return containerRef.value.clientHeight - 14;
 	}
 	return 0;
 });
@@ -106,6 +106,7 @@ const sectionHeight = computed(() => {
 	display: flex;
 	flex-grow: 1;
 	padding-right: 44px;
+	overflow: hidden;
 }
 
 .track {
