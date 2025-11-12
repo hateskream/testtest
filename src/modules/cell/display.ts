@@ -1,4 +1,10 @@
-import { isCryptoSymbolCell, isForexSymbolCell, isIndexSymbolCell, isStockSymbolCell } from './check';
+import {
+	isCommoditySymbolCell,
+	isCryptoSymbolCell,
+	isForexSymbolCell,
+	isIndexSymbolCell,
+	isStockSymbolCell,
+} from './check';
 import { ColumnType, type INumberCell, type IPercentCell, type ISymbolCell, Magnitude, Trend } from './domain';
 
 export function getMagnitudeText(magnitude: Magnitude): string {
@@ -53,6 +59,10 @@ export function getTickerName(symbolCell: ISymbolCell) {
 	}
 
 	if (isIndexSymbolCell(symbolCell)) {
+		return symbolCell.ticker;
+	}
+
+	if (isCommoditySymbolCell(symbolCell)) {
 		return symbolCell.ticker;
 	}
 

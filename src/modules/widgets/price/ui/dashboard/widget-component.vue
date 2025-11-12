@@ -24,7 +24,6 @@ const {
 	currentSettings,
 	tickers,
 	fetchTickersError,
-	isNotData,
 	togglePin,
 	refetch,
 	filtersValues,
@@ -32,6 +31,7 @@ const {
 	hasPin,
 	loadMore,
 	hasNextPage,
+	tickersIsLoading,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -68,7 +68,7 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 		</template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData || props.meta.isLoading" :class="classes.preloader" />
+			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
 				v-else
 				display-variant="new"
