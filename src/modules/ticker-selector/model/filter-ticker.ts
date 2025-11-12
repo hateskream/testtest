@@ -132,3 +132,11 @@ export function getMappedRow(item: TickerDto): ITickerMapped {
 			};
 	}
 }
+
+export function isCryptoTicker(ticker: ITickerMapped) {
+	return ticker.symbolType === SymbolType.Crypto;
+}
+
+export function isForexTicker(ticker: ITickerMapped) {
+	return ticker.symbolType === SymbolType.Forex;
+}

@@ -9,6 +9,7 @@ import { ModalBadge } from '@/modules/widgets/base';
 import { marketToLabel, MarketType } from '@/modules/market';
 
 import ModalFilterTickerIcon from './components/modal/modal-filter-ticker-icon.vue';
+import ModalFilterTickerLabel from './components/modal/modal-filter-ticker-label.vue';
 
 interface IProps {
 	selectionMode?: 'single' | 'multiple';
@@ -17,6 +18,7 @@ interface IProps {
 	searchPlaceholder?: string;
 	marketTypes?: MarketType[];
 	autofocus?: boolean;
+	showLabel?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -48,36 +50,46 @@ const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
 <template>
 	<modal-badge :display-variant="props.displayVariant">
 		<template #title>
-			<div
-				v-if="selectedTickersMapped.length > 0"
-				:class="classes.iconsWrapper"
-			>
+			<div :class="classes.header">
 				<div
-					v-for="item in selectedTickersMapped"
-					:key="item.tickerId"
-					:class="classes.iconsItem"
+					v-if="selectedTickersMapped.length > 0"
+					:class="classes.iconsWrapper"
 				>
-					<modal-filter-ticker-icon
-						:size="14"
-						:ticker="item.ticker"
-						:src-image="item.srcImage"
-						:type="item.symbolType"
-					/>
+					<div
+						v-for="item in selectedTickersMapped"
+						:key="item.tickerId"
+						:class="classes.iconsItem"
+					>
+						<modal-filter-ticker-icon
+							:size="14"
+							:ticker="item.ticker"
+							:src-image="item.srcImage"
+							:type="item.symbolType"
+						/>
+					</div>
+					<template v-if="selectedTickers.length > 3">
+						+ {{ selectedTickers.length }}
+					</template>
 				</div>
-				<template v-if="selectedTickers.length > 3">
-					+ {{ selectedTickers.length }}
-				</template>
+				<div
+					v-if="selectedTickers.length === 0"
+				>
+					{{previewLabel}}
+				</div>
+				<div v-else-if="props.showLabel" :class="classes.labels">
+					<modal-filter-ticker-label
+						v-for="ticker in selectedTickersMapped"
+						:key="ticker.tickerId"
+						:ticker="ticker"
+					/>
+					<span v-if="selectedTickersMapped.length > 1" :class="classes.labelsDelimiter">,</span>
+				</div>
+				<ui-icon
+					:id="IconIds.DropdownDown"
+					width="12"
+					height="12"
+				/>
 			</div>
-			<div
-				v-if="selectedTickers.length === 0"
-			>
-				{{previewLabel}}
-			</div>
-			<ui-icon
-				:id="IconIds.DropdownDown"
-				width="12"
-				height="12"
-			/>
 		</template>
 		<template #content>
 			<modal-filter
@@ -98,6 +110,12 @@ const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
 </template>
 
 <style module="classes">
+.header {
+	display: flex;
+	gap: 4px;
+	align-items: center;
+}
+
 .iconsItem {
 	margin-left: -12px;
 	border-radius: 100%;
@@ -111,5 +129,16 @@ const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
 	display: flex;
 	align-items: center;
 	gap: 4px;
+}
+
+.labels {
+	max-width: 120px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.labelsDelimiter {
+	margin-right: 3px;
 }
 </style>

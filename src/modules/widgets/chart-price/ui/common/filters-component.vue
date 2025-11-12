@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
@@ -29,12 +31,14 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 function updateTicker(newValue: string[]) {
 	[selectedTicker.value] = newValue;
 }
+
+const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
 </script>
 <template>
 	<div
 		:class="classes.header"
 		:style="{
-			marginInline: props.displayVariant === 'default' ? '12px' : '0',
+			marginInline: isDefaultDisplayVariant ? '12px' : '0',
 		}"
 	>
 		<modal-ticker-selector-with-badge
@@ -42,10 +46,10 @@ function updateTicker(newValue: string[]) {
 			:enable-selected-info="false"
 			selection-mode="single"
 			:display-variant="props.displayVariant"
+			:show-label="!isDefaultDisplayVariant"
 			autofocus
 			@update:model-value="updateTicker"
 		/>
-
 		<template v-if="!props.isBig">
 			<div :class="classes.lineDelimiterGroup">
 				<ui-delimiter />
