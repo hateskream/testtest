@@ -11,7 +11,8 @@ import {
 	type SelectedSegmentTickersState,
 	NewsLocationFilter,
 	NewsSegmentModal,
-	sortToName, isAllSelectedInSegment, hasInSegment, parseTicker,
+	sortToName,
+	getSegmentsTitleStr,
 } from '@/modules/news';
 import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 
@@ -45,31 +46,7 @@ const sortTitle = computed(() => {
 });
 
 const displayItems = computed(() => {
-	const segmentItems: string[] = [];
-	const tickerItems: string[] = [];
-
-	for (const segment of props.segments) {
-		if (isAllSelectedInSegment(segment.id, props.segments, props.selectedSegmentsTickers)) {
-			segmentItems.push(segment.label);
-			continue;
-		}
-
-		for (const ticker of segment.tickers) {
-			if (hasInSegment(segment.id, ticker, props.selectedSegmentsTickers)) {
-				tickerItems.push(parseTicker(segment.id, ticker));
-			}
-		}
-	}
-
-	const items = [...segmentItems, ...tickerItems];
-
-	if (items.length > 2) {
-		const visible = items.slice(0, 2).join(', ');
-		const rest = `+${items.length - 2}`;
-		return `${visible} ${rest}`;
-	}
-
-	return items.join(', ') || 'All';
+	return getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers) || 'Unset';
 });
 </script>
 

@@ -23,8 +23,8 @@ import {
 	toggleFilter,
 	toggleSort, Include, includeToName, ActiveDateRange, dateRangeStateToName,
 } from '../model';
-import { marketToLabel, type MarketType } from '@/modules/market';
-import { getSelectedCountryNames, NewsSegmentModal } from '@/modules/news';
+import { type MarketType } from '@/modules/market';
+import { getSegmentsTitleStr, getSelectedCountryNames, NewsSegmentModal } from '@/modules/news';
 import { formatWithCount } from '@/shared/lib';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 
@@ -42,7 +42,7 @@ const emits = defineEmits<{
 }>();
 
 // const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
-const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
+// const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
 // const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
 const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
 const sortBy = defineModel<SortState>('sortBy', { required: true });
@@ -51,17 +51,7 @@ const include = defineModel<Set<Include>>('include', { required: true });
 const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
 
 const tickersLabel = computed(() => {
-	const tickersTitle = formatWithCount(selectedSegments.value, 'All');
-
-	if (tickersTitle.empty || !tickersTitle.first) {
-		return null;
-	}
-
-	if (tickersTitle.restCount) {
-		return `· ${marketToLabel[tickersTitle.first]}, ${tickersTitle.restCount ? ` +${tickersTitle.restCount}` : ''}`;
-	}
-
-	return `· ${marketToLabel[tickersTitle.first]}`;
+	return getSegmentsTitleStr(props.segments, props.selectedSegmentTickers, 1) || 'Unset';
 });
 
 const locationLabel = computed(() => {
@@ -102,7 +92,7 @@ function toggleInclude(value: Include) {
 			<subposition-trigger>
 				<modal-item-interaction>
 					<span>Tickers
-						<span v-if="tickersLabel" :class="classes.additional">{{tickersLabel}}</span>
+						<span v-if="tickersLabel" :class="classes.additional">· {{tickersLabel}}</span>
 					</span>
 				</modal-item-interaction>
 			</subposition-trigger>

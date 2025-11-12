@@ -5,7 +5,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadge, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { marketToLabel, type MarketType } from '@/modules/market';
+import { type MarketType } from '@/modules/market';
 import {
 	ActiveDateRange,
 	type ILocation, Include,
@@ -19,7 +19,7 @@ import {
 	titleGenerator,
 	toggleFilter,
 } from '../../model';
-import { NewsSegmentModal } from '@/modules/news';
+import { getSegmentsTitleStr, NewsSegmentModal } from '@/modules/news';
 
 import NewsFilters from '../news-filters-component.vue';
 
@@ -45,7 +45,9 @@ const sortBy = defineModel<SortState>('sortBy', { required: true });
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
 
-const titleSegment = computed((): string => titleGenerator(selectedSegments.value, marketToLabel));
+const titleSegment = computed(
+	(): string => getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers, 1) || 'Unset',
+);
 const titleSource = computed((): string => titleGenerator(selectedSources.value, sourceToName));
 
 // function toggleScore(score: Score) {

@@ -34,7 +34,7 @@ const classList = computed(() => ({
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-01, 12px);
 	line-height: 170%;
-	color: var(--color-text-active-base-300-active, #ffffff);
+	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.096px;
 	white-space: nowrap;
 	background-color: var(--bg-color-base-300);
@@ -50,6 +50,7 @@ const classList = computed(() => ({
 }
 
 .tab:hover:not(.active) {
+	color: #ffffff;
 	background-color: rgb(64 64 64 / 40%);
 }
 

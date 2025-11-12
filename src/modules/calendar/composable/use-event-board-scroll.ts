@@ -28,7 +28,7 @@ export function useEventBoardScroll(options: IUseEventBoardScroll) {
 
 		const iso = toUtcIsoDate(date);
 
-		ref.value?.scrollToDate(iso, {
+		ref.value?.scrollToDate?.(iso, {
 			behavior: 'auto',
 		});
 	}
