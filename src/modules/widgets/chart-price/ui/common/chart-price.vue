@@ -1,31 +1,52 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue';
-import { useElementSize } from '@vueuse/core';
+import { computed, ref } from 'vue';
 
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { RangeChart } from '@/shared/ui/chart-range';
+import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
+import { randomFloat } from '@/shared/lib/random.ts';
+import { TimeRangeFilterValue } from '@/modules/widgets/chart-price/model';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+import ChartPriceHeader from '@/modules/widgets/chart-price/ui/common/chart-price-header.vue';
 
-interface ICellComponentProps {
+interface IChartPriceProps {
 	isBig: boolean;
+	isShowAxes: boolean;
 	isShowTimeRange: boolean;
+	isShowChart?: boolean;
 	displayVariant: 'tv' | 'dashboard';
 }
 
-const props = defineProps<ICellComponentProps>();
+const props = defineProps<IChartPriceProps>();
 
-const { height: containerHeight } = useElementSize(useTemplateRef('container'));
-const { height: headerHeight } = useElementSize(useTemplateRef('header'));
+const dateRange = defineModel<TimeRangeFilterValue>('range', { required: true });
 
-const chartHeight = computed(() => {
-	return containerHeight.value - headerHeight.value - 30;
-});
+const isTvDisplayVariant = computed(() => props.displayVariant === 'tv');
+
+const dateRangeToRangeChart: Record<TimeRangeFilterValue, RangeChartType> = {
+	[TimeRangeFilterValue.Day]: RangeChart['1D'],
+	[TimeRangeFilterValue.Week]: RangeChart['7D'],
+	[TimeRangeFilterValue.Month]: RangeChart['1M'],
+	[TimeRangeFilterValue.ThreeMonths]: RangeChart['6M'],
+	[TimeRangeFilterValue.SixMonths]: RangeChart['3M'],
+	[TimeRangeFilterValue.Year]: RangeChart['1Y'],
+};
+
+const chartRanges = Object.values(TimeRangeFilterValue).map(key => dateRangeToRangeChart[key]);
 
 const currentPrice = ref<IChartUpdateEmitData>({
-	value: 0,
+	value: randomFloat(0, 10),
 	time: new Date(),
+});
+
+// TODO: Внедрить данные из API
+const generatedChangeData = computed(() => {
+	const change = randomFloat(-2, 2);
+
+	return {
+		value: change,
+		percent: change / currentPrice.value.value * 100,
+	};
 });
 
 function handleUpdateData(data: IChartUpdateEmitData) {
@@ -34,152 +55,79 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 </script>
 
 <template>
-	<div
-		ref="container"
-		:class="classes.root"
-		:style="{
-			padding: props.displayVariant === 'tv'
-				? '10px 8px 10px 16px;'
-				: '0 20px 10px 20px',
-		}"
-	>
-		<div ref="header" :class="classes.chartPrices">
-			<!-- At Close -->
-			<div>
-				<div :class="classes.chartPrice">
-					<div :class="classes.chartPriceTime">
-						At Close: {{ currentPrice.time.toUTCString() }}
-					</div>
-					<div :class="classes.chartPriceTitle">
-						<div :class="classes.chartPriceTitleValue">
-							$ {{ currentPrice.value.toFixed(2) }}
-						</div>
-
-						<div :class="classes.chartPriceTitleChange">
-							<div :class="classes.chartPriceTitleChangeIcon">
-								<ui-icon
-									:id="IconIds.Gainers"
-									height="12px"
-									width="12px"
-								/>
-							</div>
-
-							<div :class="classes.chartPriceTitleChangeValue">
-								0.93 (0.33%)
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div :class="classes.afterHours">
-				<div :class="classes.chartPrice">
-					<div :class="classes.chartPriceTime">
-						After Hours
-					</div>
-					<div :class="classes.chartPriceTitle">
-						<div :class="classes.chartPriceTitleValue">
-							$ {{ (+currentPrice.value + 5).toFixed(2) }}
-						</div>
-						<div :class="classes.chartPriceTitleChange">
-							<div :class="classes.chartPriceTitleChangeIcon">
-								<ui-icon
-									:id="IconIds.Gainers"
-									height="12px"
-									width="12px"
-								/>
-							</div>
-
-							<div :class="classes.chartPriceTitleChangeValue">
-								0.93 (0.33%)
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<chart-component
-			width="100%"
-			:height="chartHeight"
-			:is-visible-history-graph="false"
-			:disable-scroll="false"
-			:is-visible-indicators="false"
-			:is-visible-range="props.isBig && props.isShowTimeRange"
-			:range-list="[RangeChart['1D'], RangeChart['1W'], RangeChart['1M'], RangeChart['1Y'], RangeChart.ALL]"
-			@update="handleUpdateData"
+	<div :class="classes.root">
+		<chart-price-header
+			:price="currentPrice.value"
+			:close-time="currentPrice.time"
+			:change="generatedChangeData"
+			:show-time="isTvDisplayVariant"
+			:class="[classes.header, {
+				[classes.tv]: isTvDisplayVariant
+			}]"
 		/>
+		<div
+			v-if="isShowChart"
+			:class="[classes.chartWrapper, {
+				[classes.full]: props.isBig,
+				[classes.tv]: isTvDisplayVariant
+			}]"
+		>
+			<chart-component
+				width="100%"
+				height="100%"
+				:range="dateRange"
+				is-show-tooltip
+				:is-visible-history-graph="false"
+				:disable-scroll="false"
+				:is-visible-indicators="false"
+				:is-visible-range="props.isBig && props.isShowTimeRange"
+				:is-visible-price-line="props.isShowAxes"
+				:is-visible-price-scale="props.isShowAxes"
+				:is-visible-time-scale="props.isShowAxes"
+				:range-list="chartRanges"
+				:class="classes.chart"
+				@update="handleUpdateData"
+			/>
+		</div>
 	</div>
 </template>
 
 <style module="classes">
 .root {
+	display: flex;
+	flex-direction: column;
 	height: 100%;
-	padding: 10px 8px 10px 16px;
-	container-type: inline-size;
-	container-name: root;
 }
 
-.chartPriceTitleChangeIcon {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: rgb(4 237 160 / 100%);
+.header.tv {
+	margin: 0 16px;
 }
 
-.chartPrice {
-	min-width: 210px;
+.header:not(.tv) {
+	margin: 0 20px;
 }
 
-.chartPrices {
-	display: flex;
-	align-items: center;
-	margin-top: 12px;
-	margin-bottom: 20px;
-	gap: 28px;
-}
+.chartWrapper {
+	flex: 1;
+	padding: 0 0 12px 20px;
 
-.chartPriceTime {
-	margin-bottom: 12px;
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--text-color-base-300);
-}
-
-.chartPriceTitle {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-}
-
-.chartPriceTitleValue {
-	font-weight: 340;
-	font-size: 24px;
-	color: var(--text-color-base-500);
-}
-
-.chartPriceTitleChange {
-	display: flex;
-	align-items: center;
-	padding: 7px 9px 7px 7px;
-	background-color: var(--metrics-bg-control-300);
-	border-radius: 16px;
-	gap: 4px;
-}
-
-.chartPriceTitleChangeValue {
-	font-weight: 440;
-	font-size: 12px;
-	color: var(--metrics-color-positive-chart);
-}
-
-.afterHours {
-	display: block;
-}
-
-@container root (max-width: 448px) {
-	.afterHours {
-		display: none;
+	&.tv {
+		padding: 0 0 16px 16px;
 	}
+
+	&.full {
+		padding-left: 20px;
+	}
+
+	&.full.tv {
+		padding: 0 16px 16px;
+	}
+}
+
+.chart {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 }
 </style>

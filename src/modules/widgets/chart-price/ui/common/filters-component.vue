@@ -6,6 +6,7 @@ import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IFiltersComponentProps {
 	watchlists: IWatchlistData[];
@@ -33,14 +34,11 @@ function updateTicker(newValue: string[]) {
 }
 
 const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
+
+const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 </script>
 <template>
-	<div
-		:class="classes.header"
-		:style="{
-			marginInline: isDefaultDisplayVariant ? '12px' : '0',
-		}"
-	>
+	<div :class="classes.header">
 		<modal-ticker-selector-with-badge
 			:model-value="[selectedTicker]"
 			:enable-selected-info="false"
@@ -50,14 +48,16 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 			autofocus
 			@update:model-value="updateTicker"
 		/>
-		<template v-if="!props.isBig">
-			<div :class="classes.lineDelimiterGroup">
-				<ui-delimiter />
-			</div>
-
-			<modal-badge :class="classes.filter">
+		<template v-if="!props.isBig || !isDefaultDisplayVariant">
+			<ui-delimiter v-if="isDefaultDisplayVariant" />
+			<modal-badge :display-variant="props.displayVariant">
 				<template #title>
-					{{ filterValueToDisplay[timeRange].label }}
+					<span>{{ filterValueToDisplay[timeRange].label }}</span>
+					<ui-icon
+						:id="IconIds.DropdownDown"
+						width="12"
+						height="12"
+					/>
 				</template>
 				<template #content>
 					<modal-badge-list>
@@ -82,6 +82,7 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 		<add-to-watchlist
 			:watchlists="props.watchlists"
 			:ticker-id="selectedTicker"
+			:class="classes.watchlist"
 			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
 			@add-to-new-watchlist="emits('add-to-new-watchlist')"
@@ -90,27 +91,13 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 </template>
 
 <style module="classes">
-.filter {
-	margin-left: 6px;
-}
-
 .header {
 	display: flex;
 	align-items: center;
+	gap: v-bind(gapInPx);
 }
 
-.header > :last-child {
+.watchlist {
 	margin-left: auto;
-}
-
-.chart {
-	height: calc(100% - 38px);
-}
-
-.lineDelimiterGroup {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	margin-left: 6px;
 }
 </style>

@@ -60,6 +60,7 @@ function updateTicker(newValue: string[]) {
 			<preloader-component v-if="props.meta.isLoading" />
 			<view-component
 				v-else
+				v-model:range="timeRange"
 				:meta="meta"
 				:is-show-time-range="false"
 				display-variant="dashboard"

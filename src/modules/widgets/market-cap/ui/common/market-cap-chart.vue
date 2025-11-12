@@ -102,7 +102,6 @@ const preparedDatasets = computed(() => {
 				:is-visible-range-change="props.displaySettings.isShowChange"
 				:is-visible-price-scale="isShowAxes"
 				:is-visible-time-scale="isShowAxes"
-				:is-padded-range="props.isShowRange"
 				is-show-tooltip
 				:width="100"
 				height="100%"

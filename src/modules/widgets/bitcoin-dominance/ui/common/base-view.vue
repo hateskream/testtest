@@ -150,8 +150,8 @@ const isSmall = computed(() => props.meta.size.w === 1);
 
 .segments {
 	flex: 1 1 auto;
-	max-height: 165px;
 	min-height: 0;
+	max-height: 165px;
 }
 
 .top.small .segments {

@@ -53,7 +53,6 @@ interface IChartProps {
 	isVisiblePriceScale?: boolean;
 	isVisibleTimeScale?: boolean;
 	isShowTooltip?: boolean;
-	isPaddedRange?: boolean;
 	isVisiblePriceLine?: boolean;
 	colorSchema?: 'positive' | 'negative';
 }
@@ -65,7 +64,6 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleRangeChange: true,
 	isVisiblePriceScale: true,
 	isVisibleTimeScale: true,
-	isPaddedRange: false,
 	isVisiblePriceLine: true,
 	colorSchema: 'positive',
 });
@@ -162,22 +160,6 @@ const styleRoot = computed(() => {
 
 	return {
 		height: props.height,
-	};
-});
-
-const styleMainChart = computed(() => {
-	let otherElHeight = 0;
-
-	if (props.isVisibleRange) {
-		otherElHeight += 50;
-	}
-
-	if (chartHistory.value) {
-		otherElHeight += 180;
-	}
-
-	return {
-		height: `calc(100% - ${otherElHeight}px)`,
 	};
 });
 
@@ -549,7 +531,6 @@ onMounted(async () => {
 		</div>
 		<div
 			:class="classes.mainChart"
-			:style="styleMainChart"
 		>
 			<i88-chart
 				ref="container"
@@ -563,15 +544,16 @@ onMounted(async () => {
 				@chart-hover="onChartHover"
 			/>
 		</div>
-		<chart-range
-			v-if="isVisibleRange"
-			:class="[classes.range, {[classes.padded]: props.isPaddedRange}]"
-			:active-range="currentRange"
-			:list="rangeList"
-			:disable-change="!isVisibleRangeChange"
-			@select="selectRange"
-		/>
+		<div v-if="isVisibleRange" :class="classes.rangeWrapper">
+			<chart-range
+				:active-range="currentRange"
+				:list="rangeList"
+				:disable-change="!isVisibleRangeChange"
+				@select="selectRange"
+			/>
+		</div>
 		<div
+			v-if="!!chartHistory"
 			ref="history"
 			:class="classes.chartHistory"
 			:style="{ display: !!chartHistory ? 'block' : 'none'  }"
@@ -595,6 +577,7 @@ onMounted(async () => {
 }
 
 .mainChart {
+	flex: 1 1 auto;
 	width: 100%;
 }
 
@@ -604,13 +587,12 @@ onMounted(async () => {
 	height: 100%;
 }
 
-.range {
+.rangeWrapper {
 	margin-top: 10px;
 	margin-bottom: 10px;
-}
-
-.range.padded {
-	margin-left: 10px;
+	overflow-x: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .instruments {
