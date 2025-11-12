@@ -38,7 +38,7 @@ const BitcoinDominance: Preset = {
 };
 
 const Price: Preset = {
-	name: 'Price',
+	name: 'Price list',
 	displayVariants: ['list'],
 };
 
