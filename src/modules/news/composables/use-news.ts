@@ -64,7 +64,7 @@ export function useNews({ widgetId, isEphemeral, defaultStateType, showAllSegmen
 		selectAll,
 		unselectAll,
 		toggleTicker,
-	} = useSegment(showAllSegments ? new Set([]) : selectedSegments);
+	} = useSegment(showAllSegments ? new Set(Object.values(MarketType)) : selectedSegments);
 
 	const selectedScores = computed({
 		get: (): Set<Score> => state.value.score,
