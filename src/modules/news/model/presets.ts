@@ -1,5 +1,5 @@
 import {
-	ActiveDateRange, ensureSegmentsTickersLoaded,
+	ActiveDateRange,
 	type IState,
 	LOCATIONS_DEFAULT,
 	parseTicker,
@@ -103,36 +103,34 @@ export function getDefaultSegmentTickers(defaultState?: string) {
 		return new Set(segment.tickers.map(ticker => parseTicker(id, ticker)));
 	};
 
-	ensureSegmentsTickersLoaded().then(() => {
-		switch (defaultState) {
-			case 'crypto':
-				map[MarketType.Crypto] = selectAll(MarketType.Crypto);
-				break;
+	switch (defaultState) {
+		case 'crypto':
+			map[MarketType.Crypto] = selectAll(MarketType.Crypto);
+			break;
 
-			case 'stock':
-				map[MarketType.Stock] = selectAll(MarketType.Stock);
-				break;
+		case 'stock':
+			map[MarketType.Stock] = selectAll(MarketType.Stock);
+			break;
 
-			case 'forex':
-				map[MarketType.Forex] = selectAll(MarketType.Forex);
-				break;
+		case 'forex':
+			map[MarketType.Forex] = selectAll(MarketType.Forex);
+			break;
 
-			case 'commodities':
-				map[MarketType.Commodities] = selectAll(MarketType.Commodities);
-				break;
+		case 'commodities':
+			map[MarketType.Commodities] = selectAll(MarketType.Commodities);
+			break;
 
-			case 'indices':
-				map[MarketType.Indices] = selectAll(MarketType.Indices);
-				break;
+		case 'indices':
+			map[MarketType.Indices] = selectAll(MarketType.Indices);
+			break;
 
-			case 'full-metrics':
-			default:
-				for (const seg of segmentsData) {
-					map[seg.id] = selectAll(seg.id);
-				}
-				break;
-		}
-	});
+		case 'full-metrics':
+		default:
+			for (const seg of segmentsData) {
+				map[seg.id] = selectAll(seg.id);
+			}
+			break;
+	}
 
 	return map;
 }

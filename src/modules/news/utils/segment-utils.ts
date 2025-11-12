@@ -38,6 +38,10 @@ export function getSegmentsTitleStr(
 	const segmentItems: string[] = [];
 	const tickerItems: string[] = [];
 
+	if (!Object.values(selected).length) {
+		return '';
+	}
+
 	for (const segment of segments) {
 		if (isAllSelectedInSegment(segment.id, segments, selected)) {
 			segmentItems.push(segment.label);

@@ -1,8 +1,13 @@
-import { computed, type MaybeRefOrGetter, ref, toValue } from 'vue';
+import { computed, type MaybeRefOrGetter, onMounted, ref, toValue } from 'vue';
 
 import { MarketType } from '@/modules/market';
 import type { ITickerData } from '@/shared/mock';
-import { type ISegmentRequest, type SelectAllFrom, type SelectedSegmentTickersState } from '@/modules/news/model';
+import {
+	ensureSegmentsTickersLoaded,
+	type ISegmentRequest,
+	type SelectAllFrom,
+	type SelectedSegmentTickersState,
+} from '@/modules/news/model';
 import { segmentsData } from '@/modules/news/model/segment-modal';
 import * as utils from '@/modules/news/utils';
 import { getDefaultSegmentTickers } from '@/modules/news/model/presets.ts';
@@ -12,8 +17,14 @@ export function useSegment(
 	defaultState?: string,
 ) {
 	const selectedSegmentTickers = ref<SelectedSegmentTickersState>(
-		getDefaultSegmentTickers(defaultState),
+		{},
 	);
+
+	onMounted(async () => {
+		await ensureSegmentsTickersLoaded();
+
+		selectedSegmentTickers.value = getDefaultSegmentTickers(defaultState);
+	});
 
 	const segments = computed(() => {
 		const selected = toValue(selectedSegments);
