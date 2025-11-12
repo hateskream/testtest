@@ -1,10 +1,9 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import { getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
+import { delay, getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import type { IDominanceSnapshot } from '../model/dominance.ts';
 import { useFetchMock } from '@/shared/mock';
-import { delay } from '@/shared/lib/delay.ts';
 
 const IS_USE_MOCK = true;
 

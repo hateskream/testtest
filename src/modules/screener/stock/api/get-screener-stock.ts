@@ -17,7 +17,7 @@ import {
 import { generateRows } from '@/shared/mock';
 import { type ISelectedFilter, ScreenerType } from '../../base/model';
 import type { StockTableRow } from '../model';
-import { delay } from '@/shared/lib/delay.ts';
+import { delay } from '@/shared/lib';
 
 const IS_USE_MOCK = true;
 

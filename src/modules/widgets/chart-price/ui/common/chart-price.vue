@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
-import { randomFloat } from '@/shared/lib/random.ts';
+import { randomFloat } from '@/shared/lib';
 import { TimeRangeFilterValue } from '@/modules/widgets/chart-price/model';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';

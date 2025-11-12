@@ -12,7 +12,7 @@ import {
 	SymbolType,
 } from '@/modules/cell';
 import { generateRows } from '@/shared/mock';
-import { delay } from '@/shared/lib/delay.ts';
+import { delay } from '@/shared/lib';
 import { MarketType } from '@/modules/market';
 
 const IS_USE_MOCK = false;
