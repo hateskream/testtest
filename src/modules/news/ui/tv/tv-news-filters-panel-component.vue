@@ -46,7 +46,7 @@ const sortBy = defineModel<SortState>('sortBy', { required: true });
 const locations = defineModel<ILocation[]>('locations', { required: true });
 
 const titleSegment = computed(
-	(): string => getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers, 1) || 'Unset',
+	(): string => getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers, 1) || 'Market',
 );
 const titleSource = computed((): string => titleGenerator(selectedSources.value, sourceToName));
 

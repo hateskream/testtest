@@ -46,7 +46,7 @@ const sortTitle = computed(() => {
 });
 
 const displayItems = computed(() => {
-	return getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers) || 'Unset';
+	return getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers) || 'Market';
 });
 </script>
 

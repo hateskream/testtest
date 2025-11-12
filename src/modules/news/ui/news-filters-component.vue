@@ -51,7 +51,7 @@ const include = defineModel<Set<Include>>('include', { required: true });
 const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
 
 const tickersLabel = computed(() => {
-	return getSegmentsTitleStr(props.segments, props.selectedSegmentTickers, 1) || 'Unset';
+	return getSegmentsTitleStr(props.segments, props.selectedSegmentTickers, 1);
 });
 
 const locationLabel = computed(() => {
