@@ -12,6 +12,7 @@ interface IProps {
 	selectionMode?: 'single' | 'multiple';
 	searchPlaceholder?: string;
 	marketTypes?: MarketType[];
+	displayVariant: 'new' | 'default';
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -46,6 +47,7 @@ const emits = defineEmits<ITickerEmits>();
 		:text-above-search="props.textAboveSearch"
 		:search-placeholder="props.searchPlaceholder"
 		:market-types="props.marketTypes"
+		:display-variant="props.displayVariant"
 		@select="emits('select', $event)"
 		@unselect="emits('unselect', $event)"
 		@select-all="emits('selectAll', $event)"

@@ -64,6 +64,7 @@ const emit = defineEmits<{
 			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
 			<view-component
 				v-else
+				display-variant="default"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"

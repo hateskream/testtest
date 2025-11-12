@@ -64,7 +64,10 @@ const iconSize = computed(() => {
 	align-items: center;
 	padding: 4px;
 	text-align: center;
+	background: transparent;
+	backdrop-filter: none;
 	border-radius: 999px;
+	isolation: isolate;
 }
 
 .iconContainer {

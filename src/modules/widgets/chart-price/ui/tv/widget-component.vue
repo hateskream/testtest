@@ -91,6 +91,7 @@ function updateTicker(newValue: string[]) {
 						:enable-selected-info="false"
 						:enable-select-all="false"
 						selection-mode="single"
+						display-variant="default"
 						@update:model-value="updateTicker"
 					/>
 				</template>

@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	flex-wrap: wrap;
 	align-items: center;
 	width: max-content;
-	height: 32px;
+	min-height: 32px;
 	padding: 0 12px;
 	font-style: normal;
 	font-weight: 450;
@@ -57,7 +57,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 24px;
+	min-height: 24px;
 	padding-right: 6px;
 	padding-left: 10px;
 	background: rgb(73 73 80 / 70%);

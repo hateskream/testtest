@@ -56,6 +56,7 @@ const {
 			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
 			<view-component
 				v-else
+				display-variant="new"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"

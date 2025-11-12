@@ -14,6 +14,7 @@ interface IViewComponentProps {
 	settings: IDisplaySettings;
 	meta: IMeta;
 	hasPin: boolean;
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -53,6 +54,7 @@ const gridTemplateContent = computed(() => {
 						:ticker="ticker"
 						:meta="meta"
 						:has-pin="props.hasPin"
+						:display-variant="props.displayVariant"
 						@toggle-pin="emit('togglePin', $event)"
 					/>
 				</div>

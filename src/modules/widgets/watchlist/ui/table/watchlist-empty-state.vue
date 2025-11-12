@@ -5,6 +5,10 @@ import { ModalTickerSelector } from '@/modules/ticker-selector';
 import type { ITickersAddPayload } from '../../model';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
+const props = defineProps<{
+	displayVariant: 'new' | 'default';
+}>();
+
 const emit = defineEmits<{
 	(event: 'add-tickers', payload: ITickersAddPayload): void;
 }>();
@@ -47,6 +51,7 @@ function onClickSave() {
 			:is-background-transparent="true"
 			:enable-selected-info="false"
 			:enable-select-all="false"
+			:display-variant="props.displayVariant"
 			text-above-search="Add symbols"
 		/>
 

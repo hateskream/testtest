@@ -14,6 +14,7 @@ import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
 interface IProps {
 	list: TickerDto[];
 	selectedIdsMap: string[];
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<IProps>();
@@ -52,6 +53,7 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 					:src-image="item.srcImage"
 					:ticker="item.ticker"
 					:size="12"
+					:display-variant="displayVariant"
 				/>
 			</div>
 		</template>
@@ -63,7 +65,6 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 24px;
 	height: 24px;
 }
 </style>

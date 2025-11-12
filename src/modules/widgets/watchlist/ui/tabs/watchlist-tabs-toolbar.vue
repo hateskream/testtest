@@ -26,6 +26,7 @@ interface ITabWithEditing extends ITab {
 interface ITabsComponentProps {
 	tabs: ITab[];
 	selectedTickers: string[];
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<ITabsComponentProps>();
@@ -173,6 +174,7 @@ function selectTicker(tickerId: string) {
 										<modal-ticker-selector
 											:model-value="selectedTickers"
 											:enable-select-all="false"
+											:display-variant="props.displayVariant"
 											@select="selectTicker"
 											@unselect="emit('remove-ticker', { tickerId: $event })"
 										/>
@@ -216,6 +218,7 @@ function selectTicker(tickerId: string) {
 					<watchlist-modal
 						:tabs="localTabs"
 						:selected-tickers="props.selectedTickers"
+						:display-variant="props.displayVariant"
 						@on-click-action="onClickAction"
 						@select-ticker="selectTicker"
 						@remove-ticker="emit('remove-ticker', $event)"

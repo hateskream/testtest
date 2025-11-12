@@ -43,6 +43,7 @@ const mappedTickers = computed<ITickerMapped[]>(() => {
 				:ticker="item.ticker"
 				:class="classes.badgeImage"
 				:size="12"
+				display-variant="default"
 			/>
 		</div>
 		<div :class="classes.badgeTitle">

@@ -16,12 +16,15 @@ import {
 	isPlaneTextSymbolCell,
 } from '@/modules/cell';
 
+import ForexTickerIconDashboard from '@/shared/ui/ticker/dashboard/forex-ticker-icon-dashboard.vue';
+
 
 interface ICellComponentProps {
 	ticker: ITicker;
 	settings: IDisplaySettings;
 	meta: IMeta;
 	hasPin: boolean;
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<ICellComponentProps>();
@@ -48,12 +51,23 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						:ticker="props.ticker.symbol.ticker"
 					/>
 
-					<forex-ticker-icon
-						v-else-if="isForexSymbolCell(props.ticker.symbol)"
-						:src="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
-						:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
-						:domain="props.ticker.symbol.rightTicker"
-					/>
+					<template v-else-if="isForexSymbolCell(props.ticker.symbol)">
+						<forex-ticker-icon-dashboard
+							v-if="props.displayVariant === 'new'"
+							:src-image="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
+							:display-variant="props.displayVariant"
+							:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
+							:size="40"
+							:padding="0"
+						/>
+
+						<forex-ticker-icon
+							v-else
+							:src="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
+							:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
+							:domain="props.ticker.symbol.rightTicker"
+						/>
+					</template>
 				</div>
 			</ui-transition-fade>
 

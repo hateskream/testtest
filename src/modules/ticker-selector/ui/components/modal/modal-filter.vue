@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, useTemplateRef } from 'vue';
 
 import {
 	FilterListType,
@@ -29,6 +29,7 @@ interface IModalFilterTickerProps {
 	selectionMode?: 'single' | 'multiple';
 	searchPlaceholder?: string;
 	marketTypes: MarketType[];
+	displayVariant: 'new' | 'default';
 }
 
 type IGroupedTicker = Record<SymbolType, TickerDto[]>;
@@ -194,6 +195,14 @@ function handleSelectAll(groupName: SymbolType) {
 		}
 	}
 }
+
+const searchRef = useTemplateRef('search');
+
+function focusSearch() {
+	searchRef.value?.focus();
+}
+
+defineExpose({ focusSearch });
 </script>
 
 
@@ -222,6 +231,7 @@ function handleSelectAll(groupName: SymbolType) {
 
 				<div :class="classes.search">
 					<modal-search
+						ref="search"
 						v-model="query"
 						:placeholder="searchPlaceholder"
 						:autofocus="props.autofocus"
@@ -266,6 +276,7 @@ function handleSelectAll(groupName: SymbolType) {
 								v-else
 								:list="groupedTickers[group!].slice(0, 3)"
 								:selected-ids-map="modelValue"
+								:display-variant="props.displayVariant"
 								@update="handleToggleSelect"
 							/>
 						</template>
@@ -300,6 +311,7 @@ function handleSelectAll(groupName: SymbolType) {
 						v-else
 						:list="groupedTickers[activeGroup!]"
 						:selected-ids-map="modelValue"
+						:display-variant="props.displayVariant"
 						@update="handleToggleSelect"
 					/>
 				</template>
@@ -315,6 +327,7 @@ function handleSelectAll(groupName: SymbolType) {
 					v-else
 					:list="selectedTickers.allSelected"
 					:selected-ids-map="modelValue"
+					:display-variant="props.displayVariant"
 					@update="handleToggleSelect"
 				/>
 			</template>

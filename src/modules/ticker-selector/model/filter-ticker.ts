@@ -52,7 +52,7 @@ export interface ITickerEmits {
 	(e: 'unselectAll', item: string[]): void;
 }
 
-export const ACTIVE_TICKER_LIST_COUNT_SHOW = 3;
+export const ACTIVE_TICKER_LIST_COUNT_SHOW = 2;
 
 export const SymbolToName: Record<SymbolType, string> = {
 	[SymbolType.Index]: 'Index',
