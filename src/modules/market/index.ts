@@ -2,8 +2,8 @@ export enum MarketType {
 	Crypto = 'crypto',
 	Stock = 'stock',
 	Forex = 'forex',
-	Commodities = 'commodities',
-	Indices = 'indices',
+	Commodities = 'commodity',
+	Indices = 'index',
 }
 
 export const marketToLabel: Record<MarketType, string> = {
