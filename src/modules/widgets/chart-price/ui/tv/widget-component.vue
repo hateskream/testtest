@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, ModalSubmenu } from '@/modules/widgets/base';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
@@ -23,7 +22,7 @@ const props = defineProps<IWidgetComponentProps>();
 const {
 	selectedTicker,
 	timeRange,
-	wachlists,
+	watchlists,
 
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
@@ -73,7 +72,7 @@ function updateTicker(newValue: string[]) {
 						v-model:selected-ticker="selectedTicker"
 						v-model:time-range="timeRange"
 						:is-big="isBig"
-						:wachlists="wachlists"
+						:watchlists="watchlists"
 						display-variant="default"
 						@add-to-watchlist="handleAddToWatchlist"
 						@remove-from-watchlist="handleRemoveFromWatchlist"

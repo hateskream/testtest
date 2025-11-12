@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import {
-	mapRow,
-	mapColumn,
-	type ITableColumn,
-	type TableRow,
-} from '@/modules/cell';
+import { type ITableColumn, mapColumn, mapRow, type TableRow } from '@/modules/cell';
 import { type IWatchlistAction } from '../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
@@ -15,14 +10,14 @@ import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.
 
 interface IViewComponentProps {
 	rows: TableRow[];
-	wachlists: IWatchlistData[];
+	watchlists: IWatchlistData[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
-	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'add-to-watchlist', watchlists: IWatchlistAction): void;
+	(e: 'remove-from-watchlist', watchlists: IWatchlistAction): void;
 	(e: 'add-to-new-watchlist', tickerId: string): void;
 }>();
 
@@ -57,7 +52,7 @@ const genericRows = computed(() =>
 			<template #row-actions="{tickerId} : {tickerId: string}">
 				<add-to-watchlist
 					:ticker-id="tickerId"
-					:wachlists="props.wachlists"
+					:watchlists="props.watchlists"
 					@add-to-watchlist="emits('add-to-watchlist', $event)"
 					@remove-from-watchlist="emits('remove-from-watchlist', $event)"
 					@add-to-new-watchlist="emits('add-to-new-watchlist', $event)"

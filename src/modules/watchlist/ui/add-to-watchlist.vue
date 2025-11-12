@@ -2,22 +2,18 @@
 import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
-import {
-	ModalBadgeList,
-	ModalItemSelector,
-	ModalItem,
-} from '@/modules/widgets/base';
+import { ModalBadgeList, ModalItem, ModalItemSelector } from '@/modules/widgets/base';
 
 interface IProps {
-	wachlists: IWatchlistData[];
+	watchlists: IWatchlistData[];
 	tickerId: string;
 }
 
 const props = defineProps<IProps>();
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
-	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'add-to-watchlist', watchlists: IWatchlistAction): void;
+	(e: 'remove-from-watchlist', watchlists: IWatchlistAction): void;
 	(e: 'add-to-new-watchlist', tickerId: string): void;
 }>();
 
@@ -52,7 +48,7 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 			<modal-badge-list>
 				<template #title>Add to watchlist</template>
 
-				<template v-for="watchlist in props.wachlists" :key="watchlist.tabId">
+				<template v-for="watchlist in props.watchlists" :key="watchlist.tabId">
 					<modal-item-selector
 						:model-value="isOnWatchlist(watchlist, props.tickerId)"
 						@update:model-value="clickRowAction(watchlist, props.tickerId)"

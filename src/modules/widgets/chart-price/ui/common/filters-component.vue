@@ -3,14 +3,10 @@ import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import {
-	ModalBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-} from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 
 interface IFiltersComponentProps {
-	wachlists: IWatchlistData[];
+	watchlists: IWatchlistData[];
 	isBig: boolean;
 	displayVariant: 'default' | 'new';
 }
@@ -21,8 +17,8 @@ const selectedTicker = defineModel<string>('selectedTicker', { required: true })
 const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlistsId: string): void;
-	(e: 'remove-from-watchlist', wachlistsId: string): void;
+	(e: 'add-to-watchlist', watchlistId: string): void;
+	(e: 'remove-from-watchlist', watchlistId: string): void;
 	(e: 'add-to-new-watchlist'): void;
 }>();
 
@@ -79,9 +75,8 @@ function updateTicker(newValue: string[]) {
 				</template>
 			</modal-badge>
 		</template>
-
 		<add-to-watchlist
-			:wachlists="props.wachlists"
+			:watchlists="props.watchlists"
 			:ticker-id="selectedTicker"
 			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"

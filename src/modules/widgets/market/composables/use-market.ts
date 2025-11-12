@@ -82,7 +82,7 @@ export function useMarket({
 	});
 
 	const {
-		actionableWatchlists: wachlists,
+		actionableWatchlists: watchlists,
 		addToWatchlist,
 		removeFromWatchlist,
 		addTickerInNewWatchlist,
@@ -200,7 +200,7 @@ export function useMarket({
 		filtersValues,
 		filtersState,
 
-		wachlists,
+		watchlists,
 
 		resetAllChanges,
 

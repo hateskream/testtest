@@ -29,7 +29,7 @@ export function useChartPrice({
 	defaultStateType,
 }: IOptions) {
 	const {
-		actionableWatchlists: wachlists,
+		actionableWatchlists: watchlists,
 		addToWatchlist,
 		removeFromWatchlist,
 		addTickerInNewWatchlist,
@@ -115,7 +115,7 @@ export function useChartPrice({
 		selectedTicker,
 		timeRange,
 		state,
-		wachlists,
+		watchlists,
 
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,
