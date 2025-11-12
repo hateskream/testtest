@@ -177,7 +177,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 	Main: [
 		{
 			name: 'US Economy',
-			width: 560,
+			width: 360,
 			widgets: [
 				{
 					defaultState: 'stock',

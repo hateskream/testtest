@@ -14,7 +14,7 @@ interface ISectionComponentProps {
 
 const props = defineProps<ISectionComponentProps>();
 
-const cardStyle = computed(() => ({ width: `${props.section.width}px` }));
+const cardStyle = computed(() => ({ width: `${props.section.width}px`, maxWidth: `${props.section.width}px` }));
 
 const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_COL_WIDTH, MAX_COL_WIDTH));
 </script>

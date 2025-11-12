@@ -22,6 +22,7 @@ import { NonfarmPayrollsDashboardWidget } from '@/modules/widgets/nonfarm-payrol
 import { NominalGdpDashboardWidget } from '@/modules/widgets/nominal-gdp';
 import { UnemploymentRateDashboardWidget } from '@/modules/widgets/unemployment-rate';
 import { RealGdpDashboardWidget } from '@/modules/widgets/real-gdp';
+import { NewsSummaryDashboardWidget } from '@/modules/widgets/news-summary';
 
 export interface ISize {
 	w: number;
@@ -95,6 +96,7 @@ const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.NominalGDP]: NominalGdpDashboardWidget,
 	[WidgetType.UnemploymentRate]: UnemploymentRateDashboardWidget,
 	[WidgetType.RealGDP]: RealGdpDashboardWidget,
+	[WidgetType.NewsSummary]: NewsSummaryDashboardWidget,
 };
 
 export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {

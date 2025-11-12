@@ -112,6 +112,11 @@ const UnemploymentRate : Preset = {
 	displayVariants: ['default'],
 };
 
+const NewsSummary : Preset = {
+	name: 'News Summary',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -133,6 +138,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.NominalGDP]: NominalGDP,
 	[WidgetType.UnemploymentRate]: UnemploymentRate,
 	[WidgetType.RealGDP]: RealGDP,
+	[WidgetType.NewsSummary]: NewsSummary,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {

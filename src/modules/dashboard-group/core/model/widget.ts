@@ -19,6 +19,7 @@ export enum WidgetType {
 	NominalGDP = 'nominal-gdp',
 	RealGDP = 'real-gdp',
 	UnemploymentRate ='unemployment-rate',
+	NewsSummary = 'news-summary',
 }
 
 export function isWidgetTypeKey(value: string): value is WidgetType {
