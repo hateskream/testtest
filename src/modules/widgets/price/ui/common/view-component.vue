@@ -127,6 +127,6 @@ const loadingSkeletonCount = computed(() => {
 	display: flex;
 	gap: 10px;
 	margin-bottom: 16px;
-	padding: 0 8px 012px;
+	padding: 0 0 0 8px;
 }
 </style>

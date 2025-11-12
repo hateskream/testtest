@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 import type { IMeta } from '@/modules/dashboard-group';
@@ -97,8 +96,9 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						:class="classes.chart"
 					>
 						<img
-							:src="MockChart"
-							style="  width: 90px; height: 36px; object-fit: contain;"
+							v-if="props.ticker.price24hChart.src.length"
+							:src="props.ticker.price24hChart.src"
+							style="width: 90px; height: 36px; object-fit: contain;"
 							alt="chart"
 							fetchpriority="high"
 						/>
@@ -224,7 +224,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	display: inline-flex;
 	font-style: normal;
 	font-weight: 400;
-	font-size: var(--font-text-300-r-Size, 12.5px);
+	font-size: var(--font-text-300-r-size, 12.5px);
 	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
 	letter-spacing: 0.075px;
@@ -235,7 +235,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	display: flex;
 	overflow-x: auto;
 	font-weight: 400;
-	font-size: var(--font-text-300-r-Size, 13.3px);
+	font-size: var(--font-text-300-r-size, 13.3px);
 	line-height: 180%;
 	letter-spacing: 0.146px;
 	scrollbar-width: none;
