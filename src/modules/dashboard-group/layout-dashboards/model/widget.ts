@@ -87,33 +87,38 @@ const EthGas: Preset = {
 	displayVariants: ['default'],
 };
 
-const ConsumerPriceIndex : Preset = {
+const ConsumerPriceIndex: Preset = {
 	name: 'Consumer price index',
 	displayVariants: ['default'],
 };
 
-const NonfarmPayrolls : Preset = {
+const NonfarmPayrolls: Preset = {
 	name: 'Nonfarm Payrolls (1Y)',
 	displayVariants: ['default'],
 };
 
-const NominalGDP : Preset = {
+const NominalGDP: Preset = {
 	name: 'Nominal gross domestic product',
 	displayVariants: ['default'],
 };
 
-const RealGDP : Preset = {
+const RealGDP: Preset = {
 	name: 'Real gross domestic product',
 	displayVariants: ['default'],
 };
 
-const UnemploymentRate : Preset = {
+const UnemploymentRate: Preset = {
 	name: 'Unemployment Rate (1Y)',
 	displayVariants: ['default'],
 };
 
-const NewsSummary : Preset = {
+const NewsSummary: Preset = {
 	name: 'News Summary',
+	displayVariants: ['default'],
+};
+
+const HighImpactHourMap: Preset = {
+	name: 'High Impact Hour Map (Today) ',
 	displayVariants: ['default'],
 };
 
@@ -139,6 +144,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.UnemploymentRate]: UnemploymentRate,
 	[WidgetType.RealGDP]: RealGDP,
 	[WidgetType.NewsSummary]: NewsSummary,
+	[WidgetType.HighImpactHourMap]: HighImpactHourMap,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {

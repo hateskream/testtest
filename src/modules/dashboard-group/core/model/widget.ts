@@ -20,6 +20,7 @@ export enum WidgetType {
 	RealGDP = 'real-gdp',
 	UnemploymentRate ='unemployment-rate',
 	NewsSummary = 'news-summary',
+	HighImpactHourMap = 'high-impact-hour-map',
 }
 
 export function isWidgetTypeKey(value: string): value is WidgetType {
