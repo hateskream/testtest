@@ -27,9 +27,9 @@ const dateRangeToRangeChart: Record<TimeRangeFilterValue, RangeChartType> = {
 	[TimeRangeFilterValue.Day]: RangeChart['1D'],
 	[TimeRangeFilterValue.Week]: RangeChart['7D'],
 	[TimeRangeFilterValue.Month]: RangeChart['1M'],
-	[TimeRangeFilterValue.ThreeMonths]: RangeChart['6M'],
-	[TimeRangeFilterValue.SixMonths]: RangeChart['3M'],
+	[TimeRangeFilterValue.SixMonths]: RangeChart['6M'],
 	[TimeRangeFilterValue.Year]: RangeChart['1Y'],
+	[TimeRangeFilterValue.All]: RangeChart['ALL'],
 };
 
 const chartRanges = Object.values(TimeRangeFilterValue).map(key => dateRangeToRangeChart[key]);
