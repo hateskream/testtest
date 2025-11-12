@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import {
 	FilterListType,
@@ -24,6 +24,7 @@ interface IModalFilterTickerProps {
 	isBackgroundTransparent?: boolean;
 	enableSelectedInfo?: boolean;
 	enableSelectAll?: boolean;
+	autofocus?: boolean;
 	textAboveSearch?: string;
 	selectionMode?: 'single' | 'multiple';
 	searchPlaceholder?: string;
@@ -193,14 +194,6 @@ function handleSelectAll(groupName: SymbolType) {
 		}
 	}
 }
-
-const searchRef = useTemplateRef('search');
-
-function focusSearch() {
-	searchRef.value?.focus();
-}
-
-defineExpose({ focusSearch });
 </script>
 
 
@@ -229,9 +222,9 @@ defineExpose({ focusSearch });
 
 				<div :class="classes.search">
 					<modal-search
-						ref="search"
 						v-model="query"
 						:placeholder="searchPlaceholder"
+						:autofocus="props.autofocus"
 					/>
 				</div>
 			</div>

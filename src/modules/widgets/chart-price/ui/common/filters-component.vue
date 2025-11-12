@@ -46,6 +46,7 @@ function updateTicker(newValue: string[]) {
 			:enable-selected-info="false"
 			selection-mode="single"
 			:display-variant="props.displayVariant"
+			autofocus
 			@update:model-value="updateTicker"
 		/>
 

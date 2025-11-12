@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, onMounted, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiIconControl } from '@/shared/ui/icon-control';
@@ -8,6 +8,7 @@ import { UiTransitionFade } from '@/shared/ui/transition';
 
 interface IModalSearchProps {
 	placeholder?: string;
+	autofocus?: boolean;
 }
 
 const props = defineProps<IModalSearchProps>();
@@ -29,6 +30,12 @@ function focus() {
 }
 
 defineExpose({ focus });
+
+onMounted(() => {
+	if (props.autofocus) {
+		focus();
+	}
+});
 </script>
 
 <template>

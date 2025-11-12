@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 
 import { ModalFilter } from './components/modal';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -43,20 +43,10 @@ const selectedTickersMapped = computed(() => {
 });
 
 const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
-
-const filterRef = useTemplateRef('filter');
-
-function onChangeVisible(state: boolean) {
-	if (state && props.autofocus) {
-		nextTick(() => {
-			filterRef.value?.focusSearch();
-		});
-	}
-}
 </script>
 
 <template>
-	<modal-badge :display-variant="props.displayVariant" @change-visible="onChangeVisible">
+	<modal-badge :display-variant="props.displayVariant">
 		<template #title>
 			<div
 				v-if="selectedTickersMapped.length > 0"
@@ -92,13 +82,13 @@ function onChangeVisible(state: boolean) {
 		<template #content>
 			<modal-filter
 				v-if="data"
-				ref="filter"
 				v-model="selectedTickers"
 				:selection-mode="props.selectionMode"
 				:tickers="data.tickers"
 				:enable-selected-info="props.enableSelectedInfo"
 				:search-placeholder="props.searchPlaceholder"
 				:market-types="props.marketTypes"
+				:autofocus="props.autofocus"
 				@select="emits('select', $event)"
 				@unselect="emits('unselect', $event)"
 				@select-all="emits('selectAll', $event)"
