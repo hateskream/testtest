@@ -224,9 +224,9 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	display: inline-flex;
 	font-style: normal;
 	font-weight: 400;
-	font-size: var(--Font-Text-300-R-Size, 12.5px);
+	font-size: var(--font-text-300-r-Size, 12.5px);
 	line-height: 180%;
-	color: var(--Text-300, rgb(255 255 255 / 62%));
+	color: var(--text-300, rgb(255 255 255 / 62%));
 	letter-spacing: 0.075px;
 	gap: 2px;
 }
@@ -235,7 +235,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	display: flex;
 	overflow-x: auto;
 	font-weight: 400;
-	font-size: var(--Font-Text-300-R-Size, 13.3px);
+	font-size: var(--font-text-300-r-Size, 13.3px);
 	line-height: 180%;
 	letter-spacing: 0.146px;
 	scrollbar-width: none;
