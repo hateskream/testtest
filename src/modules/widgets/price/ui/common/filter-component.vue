@@ -5,16 +5,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 import { MarketBadge, ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { MarketType } from '@/modules/market';
-import {
-	type FiltersState,
-	type FiltersValues,
-	FilterType,
-	filterTypeToName,
-	filterValueToDisplay,
-	marketTypeToPriceMarketType,
-	PriceMarketType,
-	priceMarketTypeToMarketType,
-} from '../../model';
+import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
 
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
@@ -23,14 +14,7 @@ interface IFilterComponentProps {
 
 const props = defineProps<IFilterComponentProps>();
 
-const activeMarket = defineModel<PriceMarketType, string, MarketType, MarketType>('market',
-	{
-		required: true,
-		get: priceMarketTypeToMarketType,
-		set: marketTypeToPriceMarketType,
-	},
-);
-
+const activeMarket = defineModel<MarketType>('market', { required: true });
 const filters = defineModel<FiltersState>('filters', { required: true });
 
 const displayVariant = computed(() =>

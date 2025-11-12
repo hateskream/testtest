@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { type FiltersState, type ITicker as ITickerDomain, PriceMarketType, type TickerWithoutState } from '../model';
+import { type FiltersState, type ITicker as ITickerDomain, type TickerWithoutState } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import {
 	ColumnType,
@@ -13,11 +13,12 @@ import {
 } from '@/modules/cell';
 import { generateRows } from '@/shared/mock';
 import { delay } from '@/shared/lib/delay.ts';
+import { MarketType } from '@/modules/market';
 
 const IS_USE_MOCK = true;
 
 interface IGetPriceRequest {
-	market: PriceMarketType;
+	market: MarketType;
 	pined: string[];
 	offset: number;
 	limit: number;
@@ -106,12 +107,12 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 	]);
 
 	const marketToTickers = {
-		[PriceMarketType.Crypto]: crypto,
-		[PriceMarketType.Stock]: stocks,
-		[PriceMarketType.Forex]: forex,
-		[PriceMarketType.Index]: indices,
-		[PriceMarketType.Commodity]: commodities,
-	} as Record<PriceMarketType, TickerWithoutState[]>;
+		[MarketType.Crypto]: crypto,
+		[MarketType.Stock]: stocks,
+		[MarketType.Forex]: forex,
+		[MarketType.Indices]: indices,
+		[MarketType.Commodities]: commodities,
+	} as Record<MarketType, TickerWithoutState[]>;
 
 	const response: IPriceData = {
 		pagination: {

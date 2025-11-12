@@ -12,13 +12,13 @@ import {
 	type IDisplaySettings,
 	type IState,
 	MarketTrendFilterValue,
-	PriceMarketType,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
 } from '../model';
 import { useQueryPrice } from '../queries';
 import { createStateQueries } from '@/shared/service/data-repo';
+import { MarketType } from '@/modules/market';
 
 const MarketTrendFilterValueSchema = z.nativeEnum(MarketTrendFilterValue);
 const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
@@ -49,13 +49,13 @@ const ISettingsSchema = z.object({
 });
 
 export const stateSchema = z.object({
-	activeMarket: z.nativeEnum(PriceMarketType),
+	activeMarket: z.nativeEnum(MarketType),
 	settings: z.object({
-		[PriceMarketType.Crypto]: ISettingsSchema,
-		[PriceMarketType.Stock]: ISettingsSchema,
-		[PriceMarketType.Forex]: ISettingsSchema,
-		[PriceMarketType.Commodity]: ISettingsSchema,
-		[PriceMarketType.Index]: ISettingsSchema,
+		[MarketType.Crypto]: ISettingsSchema,
+		[MarketType.Stock]: ISettingsSchema,
+		[MarketType.Forex]: ISettingsSchema,
+		[MarketType.Commodities]: ISettingsSchema,
+		[MarketType.Indices]: ISettingsSchema,
 	}),
 });
 
@@ -99,7 +99,7 @@ export function usePrice({
 
 	const activeMarket = computed({
 		get: () => state.value.activeMarket,
-		set: (val: PriceMarketType) => {
+		set: (val: MarketType) => {
 			state.value.activeMarket = val;
 		},
 	});

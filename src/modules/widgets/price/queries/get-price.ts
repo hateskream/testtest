@@ -6,10 +6,11 @@ import { ColumnType, type ColumnWithoutSymbol } from '@/modules/cell';
 import { CellUpdater, type Message } from '@/shared/service/real-time';
 import { type QueryData, updateInfiniteQueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
-import type { FiltersState, PriceMarketType } from '../model';
+import type { FiltersState } from '../model';
+import type { MarketType } from '@/modules/market';
 
 export function useQueryPrice(
-	market: MaybeRefOrGetter<PriceMarketType>,
+	market: MaybeRefOrGetter<MarketType>,
 	filters: MaybeRefOrGetter<FiltersState>,
 	pined: MaybeRefOrGetter<string[]>,
 	limit: number,

@@ -1,19 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiPosition } from '@/shared/ui/position';
 import { MarketBadge, MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import {
-	type FiltersState,
-	type FiltersValues,
-	FilterType,
-	filterTypeToName,
-	marketTypeToPriceMarketType,
-	PriceMarketType,
-	priceMarketTypeToMarketType,
-} from '../../model';
+import { type FiltersState, type FiltersValues, FilterType, filterTypeToName } from '../../model';
 import { FilterComponent } from '../common';
 import type { MarketType } from '@/modules/market';
 
@@ -23,17 +13,8 @@ interface IFilterComponentProps {
 
 const props = defineProps<IFilterComponentProps>();
 
-const activePriceMarket = defineModel<PriceMarketType>('market', { required: true });
+const activeMarket = defineModel<MarketType>('market', { required: true });
 const filters = defineModel<FiltersState>('filters', { required: true });
-
-const activeMarket = computed({
-	get() {
-		return priceMarketTypeToMarketType(activePriceMarket.value);
-	},
-	set(value: MarketType) {
-		activePriceMarket.value = marketTypeToPriceMarketType(value);
-	},
-});
 
 function updateFilter(filterKey: FilterType, filterValue: string) {
 	filters.value = {
@@ -47,7 +28,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	<div :class="classes.priceHeader">
 		<div :class="classes.maximized">
 			<filter-component
-				v-model:market="activePriceMarket"
+				v-model:market="activeMarket"
 				v-model:filters="filters"
 				display-type="tv"
 				:filters-values="props.filtersValues"
