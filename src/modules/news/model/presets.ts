@@ -1,5 +1,6 @@
-import { type IState, LOCATIONS_DEFAULT, Score, Sentiment } from '@/modules/news';
+import { ActiveDateRange, type IState, LOCATIONS_DEFAULT, Score, Sentiment } from '@/modules/news';
 import { MarketType } from '@/modules/market';
+import { getEndOfWeek, getStartOfWeek, toUtcIsoDate } from '@/modules/calendar';
 
 export const DEFAULT_STATE: IState = {
 	score: new Set(),
@@ -17,6 +18,12 @@ export const DEFAULT_STATE: IState = {
 		isShowScore: true,
 	},
 	locations: LOCATIONS_DEFAULT,
+	include: new Set(),
+	activeDateRange: ActiveDateRange.All,
+	dateRange: {
+		from: toUtcIsoDate(getStartOfWeek(new Date())),
+		to: toUtcIsoDate(getEndOfWeek(new Date())),
+	},
 };
 
 export function getDefaultState(defaultState?: string): IState {

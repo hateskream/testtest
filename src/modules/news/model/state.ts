@@ -1,15 +1,23 @@
-import { compareArray, compareFilter, type Score, type Sentiment, type Source } from './filters';
+import {
+	compareArray,
+	compareFilter,
+	ActiveDateRange,
+	Include,
+	type Score,
+	type Sentiment,
+	type Source,
+} from './filters';
 import { compareDisplaySettings, type IDisplaySettings } from './display';
 import {
-	compareLocations,
-	getActiveLocations,
 	type IActiveLocation,
 	type ILocation,
 	LOCATIONS_DEFAULT,
 	rehydrateLocations,
 } from './location';
+import { compareLocations, getActiveLocations } from '../utils';
 import { compareSort, type SortState } from './sort';
 import { MarketType } from '@/modules/market';
+import type { IDateRange } from '@/shared/ui/calendar';
 
 export interface IState {
 	score: Set<Score>;
@@ -20,6 +28,9 @@ export interface IState {
 	activeSort: SortState;
 	displaySettings: IDisplaySettings;
 	locations: ILocation[];
+	include: Set<Include>;
+	activeDateRange: ActiveDateRange;
+	dateRange: IDateRange;
 }
 
 export interface IHydratedState {
@@ -31,6 +42,9 @@ export interface IHydratedState {
 	activeSort: SortState;
 	displaySettings: IDisplaySettings;
 	locations: IActiveLocation[];
+	include: Include[];
+	activeDateRange: ActiveDateRange;
+	dateRange: IDateRange;
 }
 
 export function hydrateState({
@@ -42,6 +56,9 @@ export function hydrateState({
 	activeSort,
 	displaySettings,
 	locations,
+	include,
+	activeDateRange,
+	dateRange,
 }: IState) {
 	return {
 		score: Array.from(score),
@@ -52,6 +69,9 @@ export function hydrateState({
 		activeSort: activeSort,
 		displaySettings: displaySettings,
 		locations: getActiveLocations(locations),
+		include: Array.from(include),
+		activeDateRange: activeDateRange,
+		dateRange: dateRange,
 	};
 }
 
@@ -64,6 +84,9 @@ export function rehydrateState({
 	activeSort,
 	displaySettings,
 	locations,
+	include,
+	activeDateRange,
+	dateRange,
 }: IHydratedState,
 ): IState {
 	return {
@@ -75,6 +98,9 @@ export function rehydrateState({
 		activeSort,
 		displaySettings,
 		locations: rehydrateLocations(LOCATIONS_DEFAULT, locations),
+		include: new Set(include),
+		activeDateRange: activeDateRange,
+		dateRange: dateRange,
 	};
 }
 
@@ -91,26 +117,30 @@ export function compareState(state1: IState, state2: IState): boolean {
 	if (!compareFilter(state1.source, state2.source)) {
 		return false;
 	}
-
 	if (!compareTicker(state1.selectedTickers, state2.selectedTickers)) {
 		return false;
 	}
-
 	if (!compareSort(state1.activeSort, state2.activeSort)) {
 		return false;
 	}
-
 	if (!compareDisplaySettings(state1.displaySettings, state2.displaySettings)) {
 		return false;
 	}
-
 	if (!compareLocations(state1.locations, state2.locations)) {
+		return false;
+	}
+	if (!compareArray(Array.from(state1.include), Array.from(state2.include))) {
+		return false;
+	}
+	if (state1.activeDateRange !== state2.activeDateRange) {
+		return false;
+	}
+	if (state1.dateRange.from !== state2.dateRange.from || state1.dateRange.to !== state2.dateRange.to) {
 		return false;
 	}
 
 	return true;
 }
-
 
 function compareTicker(arr1: unknown[], arr2: unknown[]): boolean {
 	if (arr1.length !== arr2.length) {

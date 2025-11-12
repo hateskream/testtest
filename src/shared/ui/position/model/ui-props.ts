@@ -5,7 +5,7 @@ import type { FloatingTriggers, IFloatingOptions } from './global-position';
 export type IPositionProps = IFloatingOptions;
 
 export interface IPositionRootProps {
-	trigger: FloatingTriggers | FloatingTriggers[];
+	trigger?: FloatingTriggers | FloatingTriggers[];
 	openDelay?: number;
 	closeDelay?: number;
 }

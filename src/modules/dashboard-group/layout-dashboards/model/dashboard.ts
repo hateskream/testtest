@@ -53,6 +53,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			],
 		},
 		{
+			name: 'News & Events',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
 			name: 'Overview',
 			width: 360,
 			widgets: [
@@ -130,18 +142,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 			],
 		},
-		// {
-		// 	name: 'News & Events',
-		// 	width: 360,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'stock',
-		// 			height: Infinity,
-		// 			widgetType:  WidgetType.News,
-		// 			defaultDisplayVariant: 'default',
-		// 		},
-		// 	],
-		// },
 		{
 			name: 'Gainers',
 			width: 360,

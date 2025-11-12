@@ -1,127 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import Image from '@/assets/images/stock/META.png';
-import { UiImage } from '@/shared/ui/image';
 import { type INews } from '../model/news';
-import { UiTransitionFade } from '@/shared/ui/transition';
-import { UiTooltip } from '@/shared/ui/tooltip';
 import type { IDisplaySettings } from '../model';
 
-import NewsIconScoreComponent from './news-icon-score-component.vue';
+import TvNewsComponent from '@/modules/news/ui/tv/tv-news-component.vue';
+import DashboardNewsComponent from '@/modules/news/ui/dashboard/dashboard-news-component.vue';
 
 interface INewsComponent {
 	news: INews;
 	displaySettings: IDisplaySettings;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<INewsComponent>();
-
-const time = computed(() =>
-	new Date(props.news.timestamp).toLocaleDateString('en-US', {
-		day: '2-digit',
-		month: 'short',
-		hour12: true,
-		hour: '2-digit',
-		minute: '2-digit',
-	}),
-);
 </script>
 
 <template>
-	<div :class="classes.container">
-		<ui-transition-fade>
-			<div
-				v-if="props.displaySettings.isShowSource"
-				:class="classes.newsLeftImageWrapper"
-			>
-				<ui-image
-					:class="classes.newsLeftImage"
-					:src="Image"
-				/>
-			</div>
-		</ui-transition-fade>
-
-		<div :class="classes.newsContent">
-			<div :class="classes.newsTitle">
-				<h3>{{ props.news.title }}</h3>
-			</div>
-
-			<ui-transition-fade>
-				<div
-					v-if="props.displaySettings.isShowDesc"
-					:class="classes.newsDesc"
-				>
-					<p>
-						{{ props.news.description }}
-					</p>
-				</div>
-			</ui-transition-fade>
-
-			<div :class="classes.newsOther">
-				<ui-transition-fade>
-					<div v-if="props.displaySettings.isShowDate">
-						<time
-							:class="classes.newsOtherText"
-							:datetime="time"
-						>
-							{{ time }}
-						</time>
-					</div>
-				</ui-transition-fade>
-
-				<ui-transition-fade>
-					<span
-						v-if="props.displaySettings.isShowDate && props.displaySettings.isShowAuthor"
-						:class="classes.newsOtherText"
-					>
-						·
-					</span>
-				</ui-transition-fade>
-
-				<ui-transition-fade>
-					<div v-if="props.displaySettings.isShowAuthor">
-						<small :class="[classes.newsOtherText, classes.newsOtherAuthorText]">
-							{{ props.news.author }}
-						</small>
-					</div>
-				</ui-transition-fade>
-
-				<ui-transition-fade>
-					<div
-						v-if="props.displaySettings.isShowSymbols"
-						:class="classes.newsStocks"
-					>
-						<template
-							v-for="stock in props.news.stocks"
-							:key="stock.ticker"
-						>
-							<ui-tooltip>
-								<template #content>
-									{{ stock.name }}
-								</template>
-
-								<div :class="classes.newsStock">
-									<ui-image
-										:class="classes.newsStockImage"
-										:src="stock.srcImage"
-										replacement="/images/market/ADA.png"
-									/>
-								</div>
-							</ui-tooltip>
-						</template>
-					</div>
-				</ui-transition-fade>
-
-				<ui-transition-fade>
-					<news-icon-score-component
-						v-if="props.displaySettings.isShowScore"
-						:score="props.news.score"
-					/>
-				</ui-transition-fade>
-			</div>
-		</div>
-	</div>
+	<tv-news-component v-if="displayVariant === 'tv'" v-bind="props" />
+	<dashboard-news-component v-else v-bind="props" />
 </template>
 
 <style module="classes">

@@ -13,12 +13,12 @@ import {
 	useQueryNews,
 	toggleSetting,
 } from '@/modules/news';
-import { NewsDetails, useNewsDetailsState } from '@/modules/news-details';
+import { NewsDetails, NewsDetailsControls, useNewsDetailsState } from '@/modules/news-details';
 
-import PreloaderComponent from './preloader-component.vue';
+import PreloaderComponent from '../common/preloader-component.vue';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../common/view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -47,6 +47,9 @@ const {
 	activeLocations,
 	selectedTickers,
 	sortBy,
+	include,
+	activeDateRange,
+	dateRange,
 
 	resetAllChanges,
 	applyStateToParent,
@@ -99,11 +102,11 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 			<div :class="classes.titleContainer">
 				<span>{{ props.meta.name }}</span>
 			</div>
-
 		</template>
+
 		<template #content>
 			<news-content-wrapper
-				v-model:news-id="selectedNewsId"
+				:state="!!selectedNewsId"
 				:class="classes.content"
 			>
 				<news-filters-panel
@@ -113,8 +116,12 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					v-model:selected-sources="selectedSources"
 					v-model:locations="locations"
 					v-model:sort-by="sortBy"
+					v-model:include="include"
+					v-model:active-date-range="activeDateRange"
+					v-model:date-range="dateRange"
 					:segments="segments"
 					:selected-segments-tickers="selectedSegmentTickers"
+					display-variant="tv"
 					@select-all="selectAll"
 					@unselect-all="unselectAll"
 					@toggle-ticker="toggleTicker"
@@ -126,14 +133,14 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					v-model:news-id="selectedNewsId"
 					:news="news"
 					:display-settings="displaySettings"
+					display-variant="tv"
 					@next="fetchNextPage"
 				/>
 
 				<template v-if="selectedNewsId" #details>
-					<news-details
-						:uuid="selectedNewsId"
-						@back="selectedNewsId = null"
-					/>
+					<news-details-controls @back="selectedNewsId = null" />
+
+					<news-details :uuid="selectedNewsId" />
 				</template>
 			</news-content-wrapper>
 		</template>
@@ -185,6 +192,8 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:selected-sources="selectedSources"
 				v-model:sort-by="sortBy"
 				v-model:locations="locations"
+				v-model:include="include"
+				v-model:active-date-range="activeDateRange"
 				:segments="segments"
 				:selected-segment-tickers="selectedSegmentTickers"
 				@select-all="selectAll"

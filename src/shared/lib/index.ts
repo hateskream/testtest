@@ -9,3 +9,4 @@ export * from './feature-toggle';
 export * from './query-params';
 export * from './functions';
 export * from './query-utils';
+export * from './format-with-count.ts';

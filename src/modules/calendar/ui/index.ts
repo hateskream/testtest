@@ -1,6 +1,3 @@
-export { default as CalendarDaySelect } from './calendar/calendar-day-select.vue';
-export { default as CalendarWeekSelect } from './calendar/calendar-week-select.vue';
-
 export { default as CalendarToolbar } from './toolbar/calendar-toolbar.vue';
 
 export { default as CalendarLayout } from './calendar-layout.vue';

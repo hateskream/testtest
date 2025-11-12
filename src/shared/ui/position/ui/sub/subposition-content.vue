@@ -16,7 +16,7 @@ import { matchesTrigger } from '../../utils';
 import { useSubFloatingContext } from '../../composables';
 
 const props = withDefaults(defineProps<ISubpositionContentProps>(), {
-	placement: 'bottom-start',
+	placement: 'right-end',
 	offset: 6,
 	strategy: 'absolute',
 	hoverPadding: 4,

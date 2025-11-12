@@ -15,8 +15,9 @@ import ModalFilterTitle from './modal-filter-title-component.vue';
 <style module="classes">
 .container {
 	width: max-content;
-	min-width: 463px;
-	padding: 0 6px;
+	max-height: 80svh;
+	padding: 6px;
+	overflow-y: auto;
 	background: var(--bg-modal-color-base);
 	border: 1px solid var(--border-modal-color-base);
 	border-radius: 18px;

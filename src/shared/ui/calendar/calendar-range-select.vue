@@ -2,16 +2,27 @@
 import { DatePicker } from 'v-calendar';
 import { computed } from 'vue';
 
-import { type IEventBoardRange, toUtcIsoDate } from '@/modules/calendar';
+import { type DateYYYYMMDD, toUtcIsoDate } from '@/modules/calendar';
 
-const dateRange = defineModel<IEventBoardRange>({
+interface IDateRange {
+	from: DateYYYYMMDD;
+	to: DateYYYYMMDD;
+}
+
+const props = defineProps<{
+	view: 'monthly' | 'weekly';
+}>();
+
+const dateRange = defineModel<IDateRange>({
 	required: true,
 });
 
 const proxy = computed({
 	set: ({ start, end }: { start: Date; end: Date }) => {
-		dateRange.value.from = toUtcIsoDate(start);
-		dateRange.value.to = toUtcIsoDate(end);
+		dateRange.value = {
+			from: toUtcIsoDate(start),
+			to: toUtcIsoDate(end),
+		};
 	},
 	get: () => {
 		return {
@@ -26,7 +37,7 @@ const proxy = computed({
 	<div :class="classes.calendarComponent">
 		<date-picker
 			:model-value="proxy"
-			:view="'weekly'"
+			:view="props.view"
 			title-position="left"
 			transparent
 			borderless

@@ -3,7 +3,7 @@ import type { Component } from 'vue';
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
-import { NewsDashboard } from '@/modules/widgets/news';
+import { NewsDashboardWidget, NewsTvWidget } from '@/modules/widgets/news';
 import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
 import { PerformanceWidget } from '@/modules/widgets/performance';
@@ -55,7 +55,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapTvWidget,
-	[WidgetType.News]: NewsDashboard,
+	[WidgetType.News]: NewsTvWidget,
 	[WidgetType.Price]: PriceTvWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,
@@ -73,7 +73,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapDashboardWidget,
-	[WidgetType.News]: NewsDashboard,
+	[WidgetType.News]: NewsDashboardWidget,
 	[WidgetType.Price]: PriceDashboardWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
 	[WidgetType.Performance]: PerformanceWidget,

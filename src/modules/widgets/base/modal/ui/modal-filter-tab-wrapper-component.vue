@@ -29,16 +29,18 @@ const classList = computed(() => ({
 	justify-content: center;
 	align-items: center;
 	height: auto;
-	padding: 8px 12px;
-	font-weight: 380;
-	font-size: 10px;
+	padding: 6px 12px;
+	font-style: normal;
+	font-weight: 440;
+	font-size: var(--typography-paragraph-size-p-01, 12px);
 	line-height: 170%;
-	color: #adadad;
-	letter-spacing: 0.04px;
+	color: var(--color-text-active-base-300-active, #ffffff);
+	letter-spacing: 0.096px;
 	white-space: nowrap;
 	background-color: var(--bg-color-base-300);
 	border-radius: 42px;
 	cursor: pointer;
+	transition: background-color 0.15s ease-in-out, color 0.15s, border-color 0.15s ease-in-out;
 	gap: 6px;
 }
 

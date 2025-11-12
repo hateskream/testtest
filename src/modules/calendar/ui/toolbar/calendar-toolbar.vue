@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { ModalBadge, ModalSubmenuContent } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+import { CalendarRangeSelect } from '@/shared/ui/calendar';
 import {
 	EventType,
 	type IEventBoardRange,
@@ -15,7 +16,6 @@ import {
 import type { IWatchlist } from '@/modules/watchlist';
 import { getMarketLabel, isAllSelected, toggleSet } from '@/modules/calendar/utils/toolbar.ts';
 
-import CalendarWeekRangeSelect from '../calendar/calendar-week-select.vue';
 import CalendarToolbarEnd from './calendar-toolbar-end.vue';
 import CalendarToolbarStartMinified from '@/modules/calendar/ui/toolbar/calendar-toolbar-start-minified.vue';
 import CalendarToolbarStartMaximized from '@/modules/calendar/ui/toolbar/calendar-toolbar-start-maximized.vue';
@@ -209,7 +209,10 @@ const label = computed(() => {
 				<template #content>
 					<modal-submenu-content>
 						<template #content>
-							<calendar-week-range-select v-model="range" />
+							<calendar-range-select
+								v-model="range"
+								view="weekly"
+							/>
 						</template>
 
 					</modal-submenu-content>

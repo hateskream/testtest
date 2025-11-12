@@ -8,6 +8,7 @@ import {
 interface IViewNewsComponentProps {
 	news: INews[];
 	displaySettings: IDisplaySettings;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<IViewNewsComponentProps>();
@@ -21,7 +22,8 @@ const selectedNewsId = defineModel<string | null>('newsId', {
 	<news-list-component
 		:news="props.news"
 		:display-settings="props.displaySettings"
-		@select-news="selectedNewsId = $event"
+		:display-variant="props.displayVariant"
+		@select-news="selectedNewsId = $event.id"
 	/>
 </template>
 

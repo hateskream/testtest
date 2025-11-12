@@ -11,7 +11,8 @@ import {
 } from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
 import { LayoutComponent } from '@/modules/layout';
-import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarDaySelect } from '@/shared/ui/calendar';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;

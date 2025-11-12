@@ -1,29 +1,32 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { UiDriver } from '@/shared/ui/driver';
-import { UiSubposition } from '@/shared/ui/position';
+import { SubpositionContent, SubpositionRoot, SubpositionTrigger } from '@/shared/ui/position';
+import { UiPresence } from '@/shared/ui/presence';
+import { UiTransitionFade } from '@/shared/ui/transition';
 import {
-	ModalFilterTabWrapper,
+	ModalItem,
 	ModalFilterTitle,
 	ModalItemInteraction,
 	ModalItemSelector,
+	ModalFilterTabWrapper,
 } from '@/modules/widgets/base';
 import {
 	type ILocation,
 	type ISegmentData,
-	type Score,
-	scoreToName,
 	type SelectedSegmentTickersState,
-	type Sentiment,
-	sentimentToName,
 	type SortState,
-	sortToName,
 	type Source,
+	sortToName,
 	sourceToName,
 	toggleFilter,
-	toggleSort,
+	toggleSort, Include, includeToName, ActiveDateRange, dateRangeStateToName,
 } from '../model';
-import { getAllMarkets, type MarketType } from '@/modules/market';
-import { NewsSegmentModal } from '@/modules/news';
+import { marketToLabel, type MarketType } from '@/modules/market';
+import { getSelectedCountryNames, NewsSegmentModal } from '@/modules/news';
+import { formatWithCount } from '@/shared/lib';
+import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
@@ -38,26 +41,47 @@ const emits = defineEmits<{
 	toggleTicker: [id: MarketType, tickerId: string];
 }>();
 
-const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
+// const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
 const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
-const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
+// const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
 const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
-
 const sortBy = defineModel<SortState>('sortBy', { required: true });
-
 const locations = defineModel<ILocation[]>('locations', { required: true });
+const include = defineModel<Set<Include>>('include', { required: true });
+const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
 
-function toggleScore(score: Score) {
-	selectedScores.value = toggleFilter(selectedScores.value, score);
-}
+const tickersLabel = computed(() => {
+	const tickersTitle = formatWithCount(selectedSegments.value, 'All');
 
-function toggleSegment(segment: MarketType) {
-	selectedSegments.value = toggleFilter(selectedSegments.value, segment);
-}
+	if (tickersTitle.empty || !tickersTitle.first) {
+		return null;
+	}
 
-function toggleSentiment(sentiment: Sentiment) {
-	selectedSentiment.value = toggleFilter(selectedSentiment.value, sentiment);
-}
+	if (tickersTitle.restCount) {
+		return `· ${marketToLabel[tickersTitle.first]}, ${tickersTitle.restCount ? ` +${tickersTitle.restCount}` : ''}`;
+	}
+
+	return `· ${marketToLabel[tickersTitle.first]}`;
+});
+
+const locationLabel = computed(() => {
+	const names = getSelectedCountryNames(locations.value);
+
+	const totalCountries = locations.value.reduce(
+		(acc, loc) => acc + loc.countries.length,
+		0,
+	);
+
+	if (names.length === totalCountries) {
+		return 'All';
+	}
+
+	return formatWithCount(names, {
+		default: '',
+		separator: ', ',
+		prefix: '+',
+	}).toString();
+});
 
 function toggleSource(source: Source) {
 	selectedSources.value = toggleFilter(selectedSources.value, source);
@@ -66,155 +90,124 @@ function toggleSource(source: Source) {
 function toggleSortBy(sort: SortState) {
 	sortBy.value = toggleSort(sortBy.value, sort);
 }
+
+function toggleInclude(value: Include) {
+	include.value = toggleFilter(include.value, value);
+}
 </script>
 
 <template>
-	<div :class="classes.rowWrapper">
-		<div
-			:class="classes.row"
-		>
-			<div :class="classes.rowTitle">
-				Score
-			</div>
+	<div :class="classes.container">
+		<subposition-root trigger="hover" v-slot="{isOpen}">
+			<subposition-trigger>
+				<modal-item-interaction>
+					<span>Tickers
+						<span v-if="tickersLabel" :class="classes.additional">{{tickersLabel}}</span>
+					</span>
+				</modal-item-interaction>
+			</subposition-trigger>
+			<ui-presence :state="isOpen" v-slot="{present}">
+				<ui-transition-fade>
+					<subposition-content v-if="present">
+						<news-segment-modal
+							:segments="props.segments"
+							:selected-segment-tickers="props.selectedSegmentTickers"
+							@select-all="emits('selectAll', $event)"
+							@unselect-all="emits('unselectAll', $event)"
+							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+						/>
+					</subposition-content>
+				</ui-transition-fade>
+			</ui-presence>
+		</subposition-root>
 
-			<div
-				:class="classes.tabs"
-			>
+		<subposition-root trigger="hover" v-slot="{isOpen}">
+			<subposition-trigger>
+				<modal-item-interaction>
+					<span>Location
+						<span v-if="locationLabel" :class="classes.additional">· {{locationLabel}}</span>
+					</span>
+				</modal-item-interaction>
+			</subposition-trigger>
+			<ui-presence :state="isOpen" v-slot="{present}">
+				<ui-transition-fade>
+					<subposition-content v-if="present">
+						<news-location-filter-component v-model:locations="locations" />
+					</subposition-content>
+				</ui-transition-fade>
+			</ui-presence>
+		</subposition-root>
+
+		<modal-item :class="classes.select">
+			<div :class="classes.rowTitle">Include</div>
+			<div :class="classes.tips">
 				<modal-filter-tab-wrapper
-					v-for="(name, key) in scoreToName"
-					:key="key"
-					:is-active="selectedScores.has(key)"
-					@click="toggleScore(key)"
+					v-for="namedInclude in Include"
+					:key="namedInclude"
+					:is-active="include.has(namedInclude)"
+					@click="toggleInclude(namedInclude)"
 				>
+					{{includeToName[namedInclude]}}
+				</modal-filter-tab-wrapper>
+			</div>
+		</modal-item>
+
+		<modal-item :class="classes.select">
+			<div :class="classes.rowTitle">Source</div>
+			<div :class="classes.tips">
+				<modal-filter-tab-wrapper
+					v-for="[source, label] in Object.entries(sourceToName)"
+					:key="source"
+					:is-active="selectedSources.has(source as Source)"
+					@click="toggleSource(source as Source)"
+				>
+					{{label}}
+				</modal-filter-tab-wrapper>
+			</div>
+		</modal-item>
+
+		<modal-item :class="classes.select">
+			<div :class="classes.rowTitle">Date range</div>
+			<ui-segmented-control v-model="activeDateRange">
+				<ui-segmented-control-item
+					v-for="date in ActiveDateRange"
+					:key="date"
+					:value="date"
+				>
+					{{dateRangeStateToName[date]}}
+				</ui-segmented-control-item>
+			</ui-segmented-control>
+		</modal-item>
+
+		<ui-driver />
+
+		<div>
+			<modal-filter-title>Sort By</modal-filter-title>
+
+			<modal-item-selector
+				v-for="(name, key) in sortToName"
+				:key="key"
+				:model-value="sortBy === key"
+				@update:model-value="toggleSortBy(key)"
+			>
+				<template v-if="typeof name === 'string'">
 					{{ name }}
-				</modal-filter-tab-wrapper>
-			</div>
+				</template>
+				<div v-else>
+					{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
+						{{name.additional}}
+					</span>
+				</div>
+			</modal-item-selector>
 		</div>
-	</div>
-
-	<div :class="classes.rowWrapper">
-		<div
-			:class="classes.row"
-		>
-			<div :class="classes.rowTitle">
-				Segment
-			</div>
-
-			<div
-				:class="classes.tabs"
-			>
-				<modal-filter-tab-wrapper
-					v-for="{type, label} in getAllMarkets()"
-					:key="type"
-					:is-active="selectedSegments.has(type)"
-					@click="toggleSegment(type)"
-				>
-					{{ label }}
-				</modal-filter-tab-wrapper>
-			</div>
-		</div>
-	</div>
-
-	<div :class="classes.rowWrapper">
-		<div
-			:class="classes.row"
-		>
-			<div :class="classes.rowTitle">
-				Sentiment
-			</div>
-
-			<div
-				:class="classes.tabs"
-			>
-				<modal-filter-tab-wrapper
-					v-for="(name, key) in sentimentToName"
-					:key="key"
-					:is-active="selectedSentiment.has(key)"
-					@click="toggleSentiment(key)"
-				>
-					{{ name }}
-				</modal-filter-tab-wrapper>
-			</div>
-		</div>
-	</div>
-
-	<div :class="classes.rowWrapper">
-		<div
-			:class="classes.row"
-		>
-			<div :class="classes.rowTitle">
-				Source
-			</div>
-
-			<div
-				:class="classes.tabs"
-			>
-				<modal-filter-tab-wrapper
-					v-for="(name, key) in sourceToName"
-					:key="key"
-					:is-active="selectedSources.has(key)"
-					@click="toggleSource(key)"
-				>
-					{{ name }}
-				</modal-filter-tab-wrapper>
-			</div>
-		</div>
-	</div>
-
-	<ui-subposition
-		trigger="hover"
-	>
-		<template #title>
-			<modal-item-interaction> Location </modal-item-interaction>
-		</template>
-
-		<template #content>
-			<news-location-filter-component v-model:locations="locations" />
-		</template>
-	</ui-subposition>
-
-	<ui-subposition
-		trigger="hover"
-	>
-		<template #title>
-			<modal-item-interaction> Ticker </modal-item-interaction>
-		</template>
-
-		<template #content>
-			<news-segment-modal
-				:segments="props.segments"
-				:selected-segment-tickers="props.selectedSegmentTickers"
-				@select-all="emits('selectAll', $event)"
-				@unselect-all="emits('unselectAll', $event)"
-				@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-			/>
-		</template>
-	</ui-subposition>
-
-	<ui-driver />
-
-	<div>
-		<modal-filter-title> Sort By</modal-filter-title>
-
-		<modal-item-selector
-			v-for="(name, key) in sortToName"
-			:key="key"
-			:model-value="sortBy === key"
-			@update:model-value="toggleSortBy(key)"
-		>
-			<template v-if="typeof name === 'string'">
-				{{ name }}
-			</template>
-			<div v-else>
-				{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
-					{{name.additional}}
-				</span>
-			</div>
-		</modal-item-selector>
 	</div>
 </template>
 
 <style module="classes">
+.container {
+	width: 389px;
+}
+
 .tabs {
 	display: flex;
 	gap: 8px;
@@ -223,19 +216,31 @@ function toggleSortBy(sort: SortState) {
 
 .row {
 	display: flex;
-	align-items: center;
-	padding: 4px 12px;
+	align-items: flex-start;
+	align-self: stretch;
 }
 
 .rowTitle {
-	flex: 0 100px;
-	font-size: 12px;
-	text-align: left;
-	color: var(--text-color-base-300);
+	padding: 10px 18px 10px 0;
 }
 
 .rowTitle::first-letter {
 	text-transform: uppercase;
+}
+
+.select:hover {
+	background-color: unset !important;
+	cursor: unset;
+}
+
+.tips {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	align-items: center;
+	margin-left: auto;
+	padding: 4px 0;
+	gap: 8px;
 }
 
 .additional {

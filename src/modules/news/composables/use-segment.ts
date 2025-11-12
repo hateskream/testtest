@@ -21,7 +21,6 @@ export function useSegment(
 		getDefaultTickers(),
 	);
 
-	// FIXME: asynchronous fetch from repository not triggers DOM updates
 	const segments = computed(() => {
 		const selected = toValue(selectedSegments);
 
