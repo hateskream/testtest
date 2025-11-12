@@ -91,7 +91,6 @@ const isSmall = computed(() => props.meta.size.w === 1);
 				:class="classes.segments"
 				:is-show-segments="isShowSegments"
 				:is-show-indicator="props.displaySettings.isShowIndicator"
-				:meta="props.meta"
 			/>
 			<dominance-historical-grid
 				v-if="isShowHistorical"
@@ -152,6 +151,7 @@ const isSmall = computed(() => props.meta.size.w === 1);
 .segments {
 	flex: 1 1 auto;
 	max-height: 165px;
+	min-height: 0;
 }
 
 .top.small .segments {

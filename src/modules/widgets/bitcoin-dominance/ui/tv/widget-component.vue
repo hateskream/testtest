@@ -110,6 +110,6 @@ const emit = defineEmits<{
 }
 
 .segments {
-	padding: 10px 16px 16px;
+	padding: 0 16px 16px;
 }
 </style>
