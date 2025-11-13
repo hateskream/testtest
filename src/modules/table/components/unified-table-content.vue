@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { ref, computed, nextTick } from 'vue';
+import {ref, computed, nextTick} from 'vue';
 import draggable from 'vuedraggable';
 
 import type {
@@ -12,7 +12,7 @@ import type {
 	IDragDropEvent,
 	IDragEvent,
 } from '../type';
-import { useTableData, useTableLayout } from '../table-common';
+import {useTableData, useTableLayout} from '../table-common';
 
 export interface ITableItem<T> {
 	id: string;
@@ -45,13 +45,21 @@ export interface IProps<T> {
 
 export interface IEmits<T> {
 	(e: 'update:sections', sections: IGenericTableSection<T>[]): void;
+
 	(e: 'update:rows', rows: IGenericTableRow<T>[]): void;
+
 	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
+
 	(e: 'rowDeleted', payload: { rowId: string; sectionId?: string }): void;
+
 	(e: 'sectionToggled', sectionId: string): void;
+
 	(e: 'sectionAdded', sectionName: string): void;
+
 	(e: 'sectionDeleted', sectionId: string): void;
+
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
+
 	(e: 'click-on-row', tickerId: string): void;
 }
 
@@ -68,8 +76,8 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 
 const emit = defineEmits<IEmits<T>>();
 
-const { sortData } = useTableData();
-const { getColumnStyles } = useTableLayout();
+const {sortData} = useTableData();
+const {getColumnStyles} = useTableLayout();
 
 // State
 const hoveredRowId = ref<string | null>(null);
@@ -240,8 +248,8 @@ const handleSectionedDragChange = (evt: IDragEvent<ITableItem<T>>) => {
 		const movedItem = evt.moved.element;
 
 		if (movedItem.type === 'row') {
-			const { newIndex } = evt.moved;
-			const { oldIndex } = evt.moved;
+			const {newIndex} = evt.moved;
+			const {oldIndex} = evt.moved;
 			const currentItems = flattenedItems.value;
 			const targetItem = currentItems[newIndex];
 			let targetSectionId = movedItem.sectionId;
@@ -399,9 +407,9 @@ const cancelAddSection = () => {
 const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) => {
 	if (props.isFixedWidth) {
 		if (index === 0) {
-			return { width: '100%' };
+			return {width: '100%'};
 		} else {
-			return { width: '50%' };
+			return {width: '50%'};
 		}
 	}
 
@@ -411,7 +419,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 				width:
 					`var(--col-${index}-width)`,
 			}
-			:{}),
+			: {}),
 
 		minWidth:
 			`var(--col-${index}-min-width)`,
@@ -470,7 +478,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 							</div>
 						</div>
 						<div :class="classes.sectionHeaderRight" @click.stop>
-							<slot name="section-actions" :section-id="item.section!.id" />
+							<slot name="section-actions" :section-id="item.section!.id"/>
 						</div>
 					</div>
 				</td>
@@ -524,11 +532,13 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 							{ [classes.rowActionsHovered]: hoveredRowId === getRowId(item) }
 						]"
 					>
-						<slot
-							name="row-actions"
-							:ticker-id="getRowId(item)"
-							:section-id="isSectioned && item.type === 'row' ? item.sectionId : undefined"
-						/>
+						<div :class="classes.rowActionsWrapper">
+							<slot
+								name="row-actions"
+								:ticker-id="getRowId(item)"
+								:section-id="isSectioned && item.type === 'row' ? item.sectionId : undefined"
+							/>
+						</div>
 					</td>
 				</template>
 			</tr>
@@ -644,21 +654,19 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	position: sticky;
 	left: 0;
 	z-index: 10;
-	background:
-		linear-gradient(
-			to right,
-			var(--table-bg-color, #1a1a1a) 65%,
-			rgb(26 26 26 / 0%) 100%
-		);
+	background: linear-gradient(
+		to right,
+		var(--table-bg-color, #1a1a1a) 65%,
+		rgb(26 26 26 / 0%) 100%
+	);
 }
 
 .stickyFirstCellHovered {
-	background:
-		linear-gradient(
-			to right,
-			rgb(32 32 32 / 100%) 65%,
-			rgb(32 32 32 / 0%) 100%
-		);
+	background: linear-gradient(
+		to right,
+		rgb(32 32 32 / 100%) 65%,
+		rgb(32 32 32 / 0%) 100%
+	);
 }
 
 /* Section styles */
@@ -749,26 +757,34 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 }
 
 /* Row actions */
+
 .rowActions {
 	position: sticky;
-	top: 50%;
 	right: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	width: 70px;
 	min-width: 50px;
-	height: 100%;
+	padding: 0;
 	opacity: 0;
+	vertical-align: middle;
+
+	.rowActionsWrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 .rowActionsHovered {
-	background:
-		linear-gradient(
-			to left,
-			rgb(32 32 32 / 100%) 65%,
-			rgb(32 32 32 / 0%) 100%
-		);
+	background: linear-gradient(
+		to left,
+		rgb(32 32 32 / 100%) 65%,
+		rgb(32 32 32 / 0%) 100%
+	);
 }
 
 .columnSettings {
