@@ -76,8 +76,20 @@ function isSelected(date: Date) {
 	padding: 12px;
 	border: 1px solid var(--color-border-base-300, rgb(97 97 97 / 30%));
 	border-radius: 18px;
-	gap: 24px;
 	cursor: pointer;
+	transition-timing-function: ease;
+	transition-duration: 0.25s;
+	transition-property: border, background-color;
+	gap: 24px;
+}
+
+.dayCard:not(.today):hover {
+	background: var(--color-bg-hover-surface-01-hover, rgb(37 35 35 / 30%));
+	border: 1px solid var(--color-border-hover-base-300-hover, rgb(166 166 166 / 30%));
+}
+
+.dayCard.selected:hover {
+	border: 1px solid var(--color-border-base-300, rgb(97 97 97));
 }
 
 .today {
