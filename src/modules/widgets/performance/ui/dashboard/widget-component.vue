@@ -6,7 +6,6 @@ import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base'
 import { ALL_COLUMNS } from '../../model';
 import { usePerformance } from '../../composables';
 
-import PerformanceFilter from '../modals/performance-filters.vue';
 import PerformanceLoader from '../layouts/performance-loader.vue';
 import PerformanceHeader from '@/modules/widgets/performance/ui/header/performance-header.vue';
 

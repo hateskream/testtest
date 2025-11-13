@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import {
-	BaseSwitch,
 	ModalBadge,
 	ModalBadgeList,
 	ModalItemSelector,
