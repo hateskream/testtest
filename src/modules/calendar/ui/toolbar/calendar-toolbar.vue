@@ -278,6 +278,7 @@ const label = computed(() => {
 
 .label {
 	display: block;
+	width: 180px;
 }
 
 .minified {
@@ -296,9 +297,7 @@ const label = computed(() => {
 	.maximized {
 		display: none;
 	}
-}
 
-@container toolbar (max-width: 452px) {
 	.label {
 		display: none;
 	}
