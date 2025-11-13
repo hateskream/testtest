@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { useDebounce } from '@vueuse/core';
 
 import { ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
@@ -89,11 +89,18 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 		emits('unselectAll', segmentId);
 	}
 }
+
+const searchRef = useTemplateRef('searchEl');
+
+onMounted(() => {
+	searchRef.value?.focus?.();
+});
 </script>
 
 <template>
 	<modal-badge-list :class="classes.root">
 		<ui-search
+			ref="searchEl"
 			v-model="search"
 			:class="classes.search"
 			placeholder="Start typing the ticker..."
