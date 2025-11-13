@@ -20,14 +20,12 @@ const props = withDefaults(defineProps<IProps>(), {
 	<div
 		:class="[
 			classes.title,
-			{
-				[classes.new]: props.displayVariant === 'new',
-			},
+			props.displayVariant === 'new' ? classes.new : classes.old,
 		]"
 		:style="{
-			backgroundColor: props.displayVariant === 'new' ? 'rgb(73 73 80 / 70%)' : props.backgroundColor,
-			color: props.displayVariant === 'new' ? 'rgb(255 255 255 / 96%)' : props.color ,
-			paddingLeft: props.displayVariant === 'new' ? '10px' : props.paddingLeft,
+			'--bg': props.backgroundColor,
+			'--color': props.color,
+			'--pl': props.paddingLeft,
 		}"
 	>
 		<slot />
@@ -41,25 +39,35 @@ const props = withDefaults(defineProps<IProps>(), {
 	align-items: center;
 	width: max-content;
 	min-height: 32px;
-	padding: 0 12px;
+	padding: 0 var(--pl, 12px);
 	font-style: normal;
 	font-weight: 450;
 	font-size: 11.8px;
-	line-height: 165%; /* 19.47px */
-	color: rgb(255 255 255 / 96%);
+	line-height: 165%;
+	color: var(--color);
 	letter-spacing: 0.059px;
+	background: var(--bg);
 	border-radius: 18px;
 	cursor: pointer;
 	gap: 4px;
 }
 
+.title.old {
+	transition: color 0.2s ease, background 0.2s ease;
+}
+
+.title.old:hover {
+	color: var(--control-secondary-object, #adadad);
+	background: var(--color-bg-hover-base-300-hover, rgb(64 64 64 / 40%));
+}
+
 .new {
-	display: flex;
 	justify-content: center;
 	align-items: center;
 	min-height: 24px;
 	padding-right: 6px;
 	padding-left: 10px;
+	color: rgb(255 255 255 / 96%);
 	background: rgb(73 73 80 / 70%);
 	border-radius: 8px;
 	gap: 3px;
