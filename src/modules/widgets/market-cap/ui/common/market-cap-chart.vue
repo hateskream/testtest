@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import { type IDisplaySettings, type IMarketCapHistory, type IMarketCapSummary, MarketCapDateRange } from '../../model';
-import type { IMeta } from '@/modules/dashboard-group';
 import { ChartMarketCap } from '@/modules/lightweight-charts';
 import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
 
@@ -11,7 +10,6 @@ import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
 interface IMarketCapChartProps {
-	// meta: IMeta;
 	data: IMarketCapHistory;
 	summary?: IMarketCapSummary;
 	displaySettings: IDisplaySettings;
