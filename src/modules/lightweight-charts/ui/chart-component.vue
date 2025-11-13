@@ -55,7 +55,7 @@ interface IChartProps {
 	isVisibleTimeScale?: boolean;
 	isShowTooltip?: boolean;
 	isVisiblePriceLine?: boolean;
-	colorSchema?: 'positive' | 'negative';
+	colorSchema?: 'positive' | 'negative' | 'neutral';
 	crosshairMode?: CrosshairMode;
 	priceVisible?: boolean;
 }

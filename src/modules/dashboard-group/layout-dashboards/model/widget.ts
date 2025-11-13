@@ -122,6 +122,11 @@ const HighImpactHourMap: Preset = {
 	displayVariants: ['default'],
 };
 
+const UsInflation: Preset = {
+	name: 'US Inflation (1Y)',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -145,6 +150,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.RealGDP]: RealGDP,
 	[WidgetType.NewsSummary]: NewsSummary,
 	[WidgetType.HighImpactHourMap]: HighImpactHourMap,
+	[WidgetType.UsInflation]: UsInflation,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
