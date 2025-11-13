@@ -194,9 +194,9 @@ const label = computed(() => {
 			>
 				<template #title="{ isVisible }">
 					<ui-icon
-						:id="IconIds.Calendar"
-						width="12px"
-						height="12px"
+						:id="IconIds.CalendarV2"
+						width="20px"
+						height="20px"
 						:class="['dropdown-icon', { 'rotated': isVisible }]"
 					/>
 				</template>
