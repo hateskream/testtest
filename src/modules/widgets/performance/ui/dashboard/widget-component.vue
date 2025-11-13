@@ -3,7 +3,7 @@ import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { ALL_COLUMNS } from '../../model';
+import {ALL_COLUMNS, DisplayVariant} from '../../model';
 import { usePerformance } from '../../composables';
 
 import PerformanceLoader from '../layouts/performance-loader.vue';
@@ -43,8 +43,9 @@ const {
 <template>
 	<base-widget-dashboard
 		:title="props.meta.name"
-		:active-display-variant="props.meta.activeDisplayVariant"
+		:active-display-variant="currentDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@update:active-display-variant="(val) => currentDisplayVariant = val as DisplayVariant"
 	>
 		<template #filters>
 			<performance-header

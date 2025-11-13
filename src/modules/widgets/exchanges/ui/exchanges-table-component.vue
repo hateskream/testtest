@@ -45,6 +45,7 @@ const genericRows = computed(() =>
 .scrollable {
 	position: relative;
 	height: 100%;
+	min-height: 0;
 }
 
 .favorite {

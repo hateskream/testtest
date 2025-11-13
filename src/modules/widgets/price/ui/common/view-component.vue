@@ -109,6 +109,7 @@ const loadingSkeletonCount = computed(() => {
 .scrollable {
 	position: relative;
 	flex: 1;
+	min-height: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
 }

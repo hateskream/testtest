@@ -72,6 +72,7 @@ function handleScroll(event: Event) {
 
 .scrollable {
 	position: relative;
+	min-height: 0;
 	overflow-x: hidden;
 }
 
