@@ -200,14 +200,11 @@ defineExpose({ scrollToDate });
 				<div
 					v-for="group in day.grouped"
 					:key="group.hour"
-					:class="[
-						classes.hourSection,
-						group.missed && classes.missed
-					]"
+					:class="[classes.hourSection]"
 					:data-hour="group.hour"
 				>
 					<div
-						:class="[classes.hourLabel, classes.lightning]"
+						:class="[classes.hourLabel, classes.lightning, group.missed && classes.missed]"
 						:style="getHighlightColor(group.events[0].favorite, group.soon)"
 					>
 						{{ group.hour }}

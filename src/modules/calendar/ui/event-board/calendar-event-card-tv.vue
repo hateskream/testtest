@@ -66,11 +66,7 @@ const eventStartsIn = computed(() => {
 </script>
 
 <template>
-	<div
-		:class="[
-			classes.calendarEventCard
-		]"
-	>
+	<div :class="[classes.card, props.isMissed && classes.missed]" @click="openEventCard">
 		<div :class="classes.cardHeader">
 			<div :class="classes.flexStart">
 				<div :class="classes.eventType">
@@ -99,7 +95,7 @@ const eventStartsIn = computed(() => {
 			</div>
 		</div>
 		<div :class="classes.cardHeadline">
-			<div :class="classes.eventTitle" @click="openEventCard">
+			<div :class="classes.eventTitle">
 				<div v-if="props.marketId" :class="classes.iconWrapper">
 					<ui-icon
 						:id="markets.find(v => v.id === props.marketId)?.icon ?? IconIds.Globus"
@@ -142,9 +138,9 @@ const eventStartsIn = computed(() => {
 					{{ props.text }}
 				</div>
 
-				<external-link :to="props.link">{{ props.linkText }}</external-link>
+				<external-link :to="props.link" @click.stop>{{ props.linkText }}</external-link>
 
-				<div :class="classes.launcChartAction">
+				<div :class="classes.launcChartAction" @click.stop>
 					<ui-icon
 						:id="IconIds.GraphIcon"
 						width="20"
@@ -159,7 +155,7 @@ const eventStartsIn = computed(() => {
 </template>
 
 <style module="classes">
-.calendarEventCard {
+.card {
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
@@ -169,6 +165,20 @@ const eventStartsIn = computed(() => {
 	gap: 12px;
 	container-type: inline-size;
 	container-name: event-card;
+	cursor: pointer;
+	transition: opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.card:hover {
+	background: #1b1b1d;
+}
+
+.card.missed {
+	opacity: 0.4;
+}
+
+.card.missed:hover {
+	opacity: 0.95;
 }
 
 .buttonIcon {
@@ -177,7 +187,6 @@ const eventStartsIn = computed(() => {
 	padding: 0;
 	line-height: 0;
 	color: rgb(100 101 104 / 100%);
-	cursor: pointer;
 }
 
 .favorite {

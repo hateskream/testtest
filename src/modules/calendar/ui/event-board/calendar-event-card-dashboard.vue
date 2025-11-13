@@ -50,7 +50,7 @@ const openEventCard = () => {
 </script>
 
 <template>
-	<div :class="classes.card">
+	<div :class="[classes.card, props.isMissed && classes.missed]" @click="openEventCard">
 		<div :class="classes.inner">
 			<div :class="classes.container">
 				<div :class="classes.cell">
@@ -64,7 +64,7 @@ const openEventCard = () => {
 							{{eventTitle}}
 						</span>
 					</div>
-					<button :class="classes.dropdown" @click="openEventCard">
+					<button :class="classes.dropdown">
 						<ui-icon
 							:id="IconIds.DropdownDown"
 							width="16px"
@@ -117,7 +117,22 @@ const openEventCard = () => {
 	align-items: flex-start;
 	align-self: stretch;
 	padding: 1px 0;
+	border-radius: var(--radius-04-in, 20px);
+	cursor: pointer;
 	gap: 10px;
+	transition: opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.card:hover {
+	background-color: var(--atom-base-90, rgb(73 73 80 / 15%));
+}
+
+.missed {
+	opacity: 0.4;
+}
+
+.missed:hover {
+	opacity: 0.95;
 }
 
 .inner {
@@ -176,7 +191,6 @@ const openEventCard = () => {
 	gap: var(--padding-padding-s0, 0);
 	aspect-ratio: 1/1;
 	color: var(--contrast-contrast-60, rgb(255 255 255 / 40%));
-	cursor: pointer;
 }
 
 .dropdown:hover {
@@ -218,26 +232,6 @@ const openEventCard = () => {
 	padding-bottom: var(--padding-padding-s4, 6px);
 	gap: var(--padding-padding-s12, 24px);
 	overflow: hidden;
-}
-
-.details[data-state='closed'] {
-	max-height: 0;
-	transform: translateY(-4px);
-	opacity: 0;
-	transition:
-		opacity 0.18s ease,
-		max-height 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-		transform 0.22s ease;
-}
-
-.details[data-state='open'] {
-	max-height: 500px;
-	transform: translateY(0);
-	opacity: 1;
-	transition:
-		opacity 0.22s ease,
-		max-height 0.26s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-		transform 0.26s ease;
 }
 
 .detailsContent {
@@ -296,7 +290,7 @@ const openEventCard = () => {
 .card-expand-enter-active,
 .card-expand-leave-active {
 	overflow: hidden;
-	transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
+	transition: max-height 250ms ease, opacity 250ms ease, transform 250ms ease;
 }
 
 .card-expand-enter-to,
