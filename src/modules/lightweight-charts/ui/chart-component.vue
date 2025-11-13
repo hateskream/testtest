@@ -545,9 +545,8 @@ onMounted(async () => {
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
 				:show-time-scale="props.isVisibleTimeScale"
-				:price-visible="props.isVisiblePriceLine"
+				:price-visible="props.isVisiblePriceLine && props.priceVisible"
 				:crosshair-mode="props.crosshairMode"
-				:price-visible="props.priceVisible"
 				@chart-hover="onChartHover"
 			/>
 		</div>

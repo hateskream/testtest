@@ -127,6 +127,11 @@ const UsInflation: Preset = {
 	displayVariants: ['default'],
 };
 
+const FederalFunds: Preset = {
+	name: 'Federal funds',
+	displayVariants: ['default'],
+};
+
 const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
@@ -151,6 +156,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.NewsSummary]: NewsSummary,
 	[WidgetType.HighImpactHourMap]: HighImpactHourMap,
 	[WidgetType.UsInflation]: UsInflation,
+	[WidgetType.FederalFunds]: FederalFunds,
 };
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {

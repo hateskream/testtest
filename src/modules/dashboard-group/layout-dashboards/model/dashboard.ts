@@ -13,228 +13,10 @@ export interface IDashboard {
 
 export type PresetName = 'Crypto' | 'Stock' | 'Main';
 
-// const presets: Record<PresetName, ISectionPreset[]> = {
-// 	Crypto: [],
-// 	Stock: [],
-// 	Main: [
-// 		{
-// 			name: 'Market Momentum',
-// 			width: 560,
-// 			widgets: [
-// 				{
-// 					defaultState: 'stock',
-// 					height: 465,
-// 					widgetType:  WidgetType.ChartPrice,
-// 					defaultDisplayVariant: 'chart',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 406,
-// 					maxCountRow: 7,
-// 					widgetType:  WidgetType.TopIndices,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'stock',
-// 					height: Infinity,
-// 					widgetType:  WidgetType.Performance,
-// 					defaultDisplayVariant: 'bar',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'Overview',
-// 			width: 360,
-// 			widgets: [
-// 				{
-// 					defaultState: 'crypto',
-// 					height: 226,
-// 					widgetType:  WidgetType.MarketCap,
-// 					defaultDisplayVariant: 'chart',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 175,
-// 					widgetType:  WidgetType.BitcoinDominance,
-// 					defaultDisplayVariant: 'tile',
-// 				},
-// 				{
-// 					defaultState: 'USDollar', // сделать стейт
-// 					height: 156,
-// 					widgetType:  WidgetType.ChartPrice,
-// 					defaultDisplayVariant: 'tile',
-// 				},
-// 				{
-// 					defaultState: 'Gold', // сделать стейт
-// 					height: 156,
-// 					widgetType:  WidgetType.ChartPrice,
-// 					defaultDisplayVariant: 'tile',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'Cross-Market Insight',
-// 			width: 328,
-// 			widgets: [
-// 				{
-// 					defaultState: 'commodity',
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'crypto',
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'stock',
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'forex',
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'eth', // добавить
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'index',
-// 					height: 337,
-// 					maxCountRow: 4,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'News & Events',
-// 			width: 360,
-// 			widgets: [
-// 				{
-// 					defaultState: 'stock',
-// 					height: 268,
-// 					widgetType:  WidgetType.NewsSummary,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'stock',
-// 					height: 240,
-// 					widgetType:  WidgetType.HighImpactHourMap,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'stock',
-// 					height: Infinity,
-// 					widgetType:  WidgetType.News,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'Gainers',
-// 			width: 360,
-// 			widgets: [
-// 				{
-// 					defaultState: 'stock-gainers', // сделать стейт
-// 					height: Infinity,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'Losers',
-// 			width: 360,
-// 			widgets: [
-// 				{
-// 					defaultState: 'stock-gainers', // сделать стейт
-// 					height: Infinity,
-// 					widgetType:  WidgetType.Price,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 			],
-// 		},
-// 		{
-// 			name: 'US Economy',
-// 			width: 630,
-// 			widgets: [
-// 				{
-// 					defaultState: 'none',
-// 					height: 350,
-// 					widgetType:  WidgetType.ConsumerPriceIndex,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 350,
-// 					widgetType:  WidgetType.NominalGDP,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 350,
-// 					widgetType:  WidgetType.NominalGDP,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 350,
-// 					widgetType:  WidgetType.RealGDP,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 190,
-// 					widgetType:  WidgetType.UnemploymentRate,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none',
-// 					height: 190,
-// 					widgetType:  WidgetType.NonfarmPayrolls,
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 				{
-// 					defaultState: 'none', // сделать стейт
-// 					height: Infinity,
-// 					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
-// 					defaultDisplayVariant: 'default',
-// 				},
-// 			],
-// 		},
-// 	],
-// };
-
 const presets: Record<PresetName, ISectionPreset[]> = {
 	Crypto: [],
 	Stock: [],
 	Main: [
-		{
-			name: 'US Economy',
-			width: 360,
-			widgets: [
-				{
-					defaultState: 'stock',
-					height: Infinity,
-					widgetType:  WidgetType.Calendar,
-					defaultDisplayVariant: 'default',
-				},
-			],
-		},
 		{
 			name: 'Market Momentum',
 			width: 560,
@@ -257,18 +39,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					height: Infinity,
 					widgetType:  WidgetType.Performance,
 					defaultDisplayVariant: 'bar',
-				},
-			],
-		},
-		{
-			name: 'News & Events',
-			width: 360,
-			widgets: [
-				{
-					defaultState: 'stock',
-					height: Infinity,
-					widgetType:  WidgetType.News,
-					defaultDisplayVariant: 'default',
 				},
 			],
 		},
@@ -300,6 +70,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',
 				},
+				{
+					defaultState: 'stock',
+					height: 125,
+					widgetType:  WidgetType.UsInflation,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'stock',
+					height: 125,
+					widgetType:  WidgetType.FederalFunds,
+					defaultDisplayVariant: 'chart',
+				},
 			],
 		},
 		{
@@ -308,44 +90,68 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'commodity',
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'crypto',
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'forex',
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'eth', // добавить
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'index',
-					height: 352,
+					height: 337,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'News & Events',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 268,
+					widgetType:  WidgetType.NewsSummary,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: 240,
+					widgetType:  WidgetType.HighImpactHourMap,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
 					defaultDisplayVariant: 'default',
 				},
 			],
@@ -369,46 +175,63 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'stock-gainers', // сделать стейт
 					height: Infinity,
+
 					widgetType:  WidgetType.Price,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: '',
-					height: 350,
-
-					widgetType:  WidgetType.RealGDP,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: '',
-					height: 190,
-
-					widgetType:  WidgetType.UnemploymentRate,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: '',
-					height: 190,
-
-					widgetType:  WidgetType.NonfarmPayrolls,
 					defaultDisplayVariant: 'default',
 				},
 			],
 		},
-		// {
-		// 	name: 'US Economy',
-		// 	width: 630,
-		// 	widgets: [
-		// 		{
-		// 			defaultState: 'none', // сделать стейт
-		// 			height: Infinity,
-		// 			widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
-		// 			defaultDisplayVariant: 'default',
-		// 		},
-		// 	],
-		// },
+		{
+			name: 'US Economy',
+			width: 630,
+			widgets: [
+				{
+					defaultState: 'none',
+					height: 350,
+					widgetType:  WidgetType.ConsumerPriceIndex,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 350,
+					widgetType:  WidgetType.NominalGDP,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 350,
+					widgetType:  WidgetType.NominalGDP,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 350,
+					widgetType:  WidgetType.RealGDP,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 190,
+					widgetType:  WidgetType.UnemploymentRate,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 190,
+					widgetType:  WidgetType.NonfarmPayrolls,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none', // сделать стейт
+					height: Infinity,
+					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
 	],
 };
+
 
 function isComingSoonPreset(presetName: PresetName) {
 	return presetName !== 'Main';

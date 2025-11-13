@@ -25,6 +25,7 @@ import { RealGdpDashboardWidget } from '@/modules/widgets/real-gdp';
 import { NewsSummaryDashboardWidget } from '@/modules/widgets/news-summary';
 import { HighImpactHourMapDashboardWidget } from '@/modules/widgets/high-impact-hour-map';
 import { UsInflationDashboardWidget } from '@/modules/widgets/us-inflation';
+import { FederalFundsDashboardWidget } from '@/modules/widgets/federal-funds';
 
 export interface ISize {
 	w: number;
@@ -101,6 +102,7 @@ const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.NewsSummary]: NewsSummaryDashboardWidget,
 	[WidgetType.HighImpactHourMap]: HighImpactHourMapDashboardWidget,
 	[WidgetType.UsInflation]: UsInflationDashboardWidget,
+	[WidgetType.FederalFunds]: FederalFundsDashboardWidget,
 };
 
 export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {

@@ -22,6 +22,7 @@ export enum WidgetType {
 	NewsSummary = 'news-summary',
 	HighImpactHourMap = 'high-impact-hour-map',
 	UsInflation = 'us-inflation',
+	FederalFunds = 'federal-funds',
 }
 
 export function isWidgetTypeKey(value: string): value is WidgetType {
