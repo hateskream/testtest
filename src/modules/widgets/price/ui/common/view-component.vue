@@ -13,6 +13,7 @@ interface IViewComponentProps {
 	settings: IDisplaySettings;
 	meta: IMeta;
 	hasPin: boolean;
+	hasInfinityLoading: boolean;
 	displayVariant: 'new' | 'default';
 }
 
@@ -77,7 +78,7 @@ const loadingSkeletonCount = computed(() => {
 				</div>
 			</div>
 			<ui-infinite-loading
-				v-if="props.tickers.length && scroller"
+				v-if="props.tickers.length && scroller && props.hasInfinityLoading"
 				:distance="loadingDistance"
 				:scroller="(scroller)!"
 				@infinite="emit('load-more', $event)"

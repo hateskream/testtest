@@ -4,6 +4,7 @@ import { useLogger } from '@/shared/service/logger';
 import {
 	ColumnType,
 	type ColumnWithoutSymbol,
+	type IStockSymbolCell,
 	mapTickersToTableRows,
 	type NumberDto,
 	type PercentDto,
@@ -81,10 +82,41 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 	}
 }
 
+
+// TODO: Убрать после фикса беков по API
+function prepareTickers(tickers: ITicker[]) {
+	return tickers.map(ticker => {
+		if (ticker.symbol.symbolType === 'Forex') {
+			let { leftTicker, rightTicker, leftSrcImg, rightSrcImg } = ticker.symbol;
+
+			if (!leftTicker && !rightTicker) {
+				[leftTicker, rightTicker] = (ticker.symbol as unknown as IStockSymbolCell).ticker.split('/');
+			}
+
+			if (!leftSrcImg && !rightSrcImg) {
+				leftSrcImg = rightSrcImg = (ticker.symbol as unknown as IStockSymbolCell).srcImg;
+			}
+
+			return {
+				...ticker,
+				symbol: {
+					...ticker.symbol,
+					leftTicker,
+					rightTicker,
+					leftSrcImg,
+					rightSrcImg,
+				},
+			};
+		}
+
+		return ticker;
+	});
+}
+
 function prepareResponse({ data }: IGetPriceResponse): IPriceData {
 	return {
-		tickers: mapTickersToTableRows<ITickerDomain>(data.tickers),
-		pinedTickers: mapTickersToTableRows<ITickerDomain>(data.pinedTickers),
+		tickers: mapTickersToTableRows<ITickerDomain>(prepareTickers(data.tickers)),
+		pinedTickers: mapTickersToTableRows<ITickerDomain>(prepareTickers(data.pinedTickers)),
 		pagination: data.pagination,
 	};
 }

@@ -1,5 +1,6 @@
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
+import { notNullish } from '@vueuse/core';
 
 import {
 	filtersByMarketType,
@@ -180,10 +181,17 @@ export function usePrice({
 			.map(id => pinedTickers.find(t => t.tickerId === id))
 			.filter(t => !!t);
 
-		return [
+		const sortedTickers = [
 			...sortedPinedTickers,
 			...otherTickers,
 		];
+
+		// TODO: Убрать, когда бек починит limit, будет ненужным
+		if (notNullish(maxCountRows) && sortedTickers.length > maxCountRows) {
+			return sortedTickers.slice(0, maxCountRows);
+		}
+
+		return sortedTickers;
 	});
 
 	watch(dataState, newState => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
+import { notNullish } from '@vueuse/core';
 
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
@@ -50,6 +51,8 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 		$state.complete();
 	}
 }
+
+const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTable));
 </script>
 
 <template>
@@ -76,6 +79,7 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
+				:has-infinity-loading="hasInfinityLoading"
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			/>

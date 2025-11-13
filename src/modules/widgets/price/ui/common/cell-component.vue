@@ -57,7 +57,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 							:src-image="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
 							:display-variant="props.displayVariant"
 							:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
-							:size="40"
+							:size="20"
 							:padding="0"
 						/>
 
