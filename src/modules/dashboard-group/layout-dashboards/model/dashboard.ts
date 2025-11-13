@@ -102,42 +102,42 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'commodity',
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'crypto',
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'forex',
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'eth', // добавить
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'index',
-					height: 337,
+					height: 352,
 					maxCountRow: 4,
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
