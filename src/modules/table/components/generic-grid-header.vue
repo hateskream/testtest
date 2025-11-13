@@ -209,7 +209,6 @@ const calculateStyles = (index: number) => {
 					]"
 					:title="column.label"
 					:style="calculateStyles(index)"
-					:colspan="shouldUseColspan && index + 1 === columns.length ? 2 : 1"
 				>
 					<div :class="classes.headerContent">
 						<div
@@ -286,7 +285,7 @@ const calculateStyles = (index: number) => {
 .tableHeader {
 	padding: 4px 0;
 	background: var(--bg-color-surface-01, #1a1a1a);
-	border-bottom: 1px solid var(--border-color-surface-02);
+	box-shadow: 0 1px 0 0 var(--border-color-surface-02);
 }
 
 .tableHeader.sticky {

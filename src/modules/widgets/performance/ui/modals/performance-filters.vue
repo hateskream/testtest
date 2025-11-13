@@ -3,11 +3,12 @@ import { computed } from 'vue';
 
 import {
 	BaseSwitch,
+	ModalBadge,
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base/';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { UiPosition } from '@/shared/ui/position';
+import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	Currency,
 	type DateRange,
@@ -26,7 +27,12 @@ const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
-const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
+
+interface IFiltersPanelProps {
+	displaySource?: 'default' | 'new';
+}
+
+const props = defineProps<IFiltersPanelProps>();
 
 const isStock = computed((): boolean => isDataRangeStock(date.value));
 </script>
@@ -56,6 +62,8 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</button>
 		</div>
 
+		<ui-delimiter v-if="props.displaySource === 'default'" />
+
 		<div :class="classes.label">Filter</div>
 
 		<template v-if="isStock">
@@ -82,6 +90,8 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 					</button>
 				</div>
 			</div>
+
+			<ui-delimiter v-if="props.displaySource === 'default'" />
 
 			<div :class="classes.subBlock">
 				<div :class="classes.subLabel">Period</div>
@@ -117,7 +127,9 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</div>
 		</template>
 		<template v-else>
-			<ui-position>
+			<ui-delimiter v-if="props.displaySource === 'default'" />
+
+			<modal-badge :display-variant="props.displaySource">
 				<template #title>
 					<div :class="classes.forexGroup">
 						<div :class="classes.right">
@@ -146,9 +158,11 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 						</template>
 					</modal-badge-list>
 				</template>
-			</ui-position>
+			</modal-badge>
 
-			<ui-position>
+			<ui-delimiter v-if="props.displaySource === 'default'" />
+
+			<modal-badge :display-variant="props.displaySource">
 				<template #title>
 					<div :class="classes.forexGroup">
 						<div :class="classes.right">
@@ -178,47 +192,49 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 						</template>
 					</modal-badge-list>
 				</template>
-			</ui-position>
+			</modal-badge>
 		</template>
-		<div :class="classes.subBlock">
-			<div :class="classes.subLabel">Display</div>
-			<div :class="classes.switchGroup">
-				<button
-					:class="[
-						classes.switch,
-						displayVariant === DisplayVariant.Bar && classes.active
-					]"
-					@click="displayVariant = DisplayVariant.Bar"
-				>
-					<ui-icon
-						:id="IconIds.Bars"
-						width="16"
-						height="16"
-					/>
-					Bar
-				</button>
-				<button
-					:class="[
-						classes.switch,
-						displayVariant === DisplayVariant.List && classes.active
-					]"
-					@click="displayVariant = DisplayVariant.List"
-				>
-					<ui-icon
-						:id="IconIds.List"
-						width="16"
-						height="16"
-					/>
-					List
-				</button>
+
+		<template v-if="props.displaySource === 'new'">
+			<div :class="classes.subBlock">
+				<div :class="classes.subLabel">Display</div>
+				<div :class="classes.switchGroup">
+					<button
+						:class="[
+							classes.switch,
+							displayVariant === DisplayVariant.Bar && classes.active
+						]"
+						@click="displayVariant = DisplayVariant.Bar"
+					>
+						<ui-icon
+							:id="IconIds.Bars"
+							width="16"
+							height="16"
+						/>
+						Bar
+					</button>
+					<button
+						:class="[
+							classes.switch,
+							displayVariant === DisplayVariant.List && classes.active
+						]"
+						@click="displayVariant = DisplayVariant.List"
+					>
+						<ui-icon
+							:id="IconIds.List"
+							width="16"
+							height="16"
+						/>
+						List
+					</button>
+				</div>
 			</div>
-		</div>
+		</template>
+
+		<ui-delimiter v-if="props.displaySource === 'default'" />
 
 		<div :class="[classes.label, classes.settings]">Settings</div>
-		<div :class="classes.toggleRow" @click="isCompactMode = !isCompactMode">
-			<span :class="classes.subLabel">Compact mode</span>
-			<base-switch :is-active="isCompactMode" />
-		</div>
+
 	</div>
 </template>
 

@@ -18,9 +18,22 @@ const props = defineProps<IPerformanceTableProps>();
 
 const { goToTickerPage } = useGoToTickerPage();
 
+// Функция для генерации случайного процента от -100 до 100
+const getRandomPercent = () => {
+	return (Math.random() * 200 - 100).toFixed(2);
+};
+
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
+
+const maxAbsValue = computed(() => {
+	if (props.displayVariant === DisplayVariant.List) {
+		return undefined;
+	}
+	// Для простоты устанавливаем maxAbsValue в 100
+	return 100;
+});
 
 const genericRows = computed(() =>
 	props.rows.map(ticker => {
@@ -28,7 +41,12 @@ const genericRows = computed(() =>
 
 		if (props.displayVariant === DisplayVariant.List) {
 			percent.maxAbsValue = undefined;
+		} else {
+			percent.maxAbsValue = maxAbsValue.value;
 		}
+
+		// Мокаем случайное значение процента
+		percent.value = getRandomPercent();
 
 		return mapRow({
 			...ticker,
@@ -44,6 +62,7 @@ const genericRows = computed(() =>
 			<widget-typed-table
 				:columns="genericColumns"
 				:rows="genericRows"
+				:show-header="false"
 				:enable-drag-drop="false"
 				:enable-column-reordering="true"
 				:enable-sorting="false"
@@ -51,7 +70,6 @@ const genericRows = computed(() =>
 				:sticky-header="true"
 				:sticky-first-column="true"
 				:enable-row-actions="false"
-				:show-header="true"
 				@click-on-ticker="goToTickerPage"
 			/>
 		</div>

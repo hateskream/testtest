@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import vueDevTools from 'vite-plugin-vue-devtools';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
@@ -21,7 +22,7 @@ export default defineConfig({
 			iconDirs: [path.resolve(process.cwd(), './src/assets/icons')],
 			symbolId: 'icon-[name]',
 		}),
-		// vueDevTools(),
+		vueDevTools(),
 	],
 	define: {
 		// eslint-disable-next-line @typescript-eslint/naming-convention

@@ -6,7 +6,7 @@ import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/m
 import { NewsDashboardWidget, NewsTvWidget } from '@/modules/widgets/news';
 import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
-import { PerformanceWidget } from '@/modules/widgets/performance';
+import { PerformanceTvWidget, PerformanceDashboardWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { TopIndicesDashboardWidget, TopIndicesTvWidget } from '@/modules/widgets/top-indices';
 import { CalendarDashboardWidget, CalendarTvWidget } from '@/modules/widgets/calendar-widget';
@@ -58,7 +58,7 @@ const componentsTv: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.News]: NewsTvWidget,
 	[WidgetType.Price]: PriceTvWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.Performance]: PerformanceTvWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
 	[WidgetType.TopIndices]: TopIndicesTvWidget,
@@ -76,7 +76,7 @@ const componentsDashboard: Record<WidgetType, WidgetComponent> = {
 	[WidgetType.News]: NewsDashboardWidget,
 	[WidgetType.Price]: PriceDashboardWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.Performance]: PerformanceDashboardWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
 	[WidgetType.TopIndices]: TopIndicesDashboardWidget,

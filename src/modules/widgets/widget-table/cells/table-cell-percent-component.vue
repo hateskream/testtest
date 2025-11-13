@@ -54,25 +54,28 @@ const barColor = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.rootBarCell" class="percentCell">
-		<div
-			v-if="props.data.maxAbsValue"
-			:class="classes.barContainer"
-		>
-			<div
-				:class="classes.bar"
-				:style="{
-					width: `${barWidth}%`,
-					backgroundColor: barColor
-				}"
-			/>
-		</div>
+	<div
+		:class="[
+			classes.rootBarCell,
+			props.data.maxAbsValue ? classes.leftAlign : ''
+		]"
+		class="percentCell"
+	>
 		<span
 			class="paragraph-p-00"
+			:class="props.data.maxAbsValue ? classes.percentWithBar : ''"
 			:style="{ color: barColor }"
 		>
 			{{ displayValue }}
 		</span>
+		<div
+			v-if="props.data.maxAbsValue"
+			:class="classes.bar"
+			:style="{
+				width: `${barWidth}%`,
+				backgroundColor: barColor
+			}"
+		/>
 	</div>
 </template>
 
@@ -86,17 +89,18 @@ const barColor = computed(() => {
 	gap: 12px;
 }
 
-.barContainer {
-	position: relative;
-	flex: 1;
-	min-width: 80px;
-	height: 8px;
-	border-radius: 2px;
+.leftAlign {
+	justify-content: flex-start;
+}
+
+.percentWithBar {
+	min-width: 60px;
+	text-align: right;
 }
 
 .bar {
 	min-width: 8px;
-	height: 100%;
+	height: 8px;
 	border-radius: 4px;
 }
 </style>

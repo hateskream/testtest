@@ -2,15 +2,12 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiPosition } from '@/shared/ui/position';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	MarketBadge,
 	ModalBadge,
 	ModalBadgeList,
-	ModalFilter,
 	ModalItemSelector,
-	ModalItemSwitch,
 } from '@/modules/widgets/base';
 import {
 	Currency,
@@ -20,21 +17,19 @@ import {
 	isDataRangeStock,
 	Stock,
 	stockToLabel,
-	SymbolDisplayVariant,
 } from '../../model';
 import { MarketType } from '@/modules/market';
 
-import PerformanceFilters from '../modals/performance-filters.vue';
 import ViewToggle from './view-toggle.vue';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
-const symbolDisplayVariant = defineModel<SymbolDisplayVariant>('symbolDisplay');
+
 const quoteCurrency = defineModel<Currency>('quoteCurrency');
 
 const activeMarket = defineModel<MarketType>('activeMarket', { required: true });
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
-const isCompactMode = defineModel<boolean>('isCompactMode', { required: true });
+const displayStyle = defineModel<'new' | 'default'>('displayStyle', { required: true });
 
 const dataLabel = computed((): Record<string, string> =>
 	getDateLabelByType(isDataRangeStock(date.value)),
@@ -42,7 +37,6 @@ const dataLabel = computed((): Record<string, string> =>
 
 const dataKeys = computed((): string[] => Object.keys(getDateLabelByType(isDataRangeStock(date.value))));
 
-const iconCurrentModeVariant = computed((): IconIds => isCompactMode.value ? IconIds.ToFull : IconIds.ToCompact);
 
 function updateStock(s: Stock) {
 	stock.value = s;
@@ -58,7 +52,7 @@ function updateCurrency(v: Currency) {
 </script>
 
 <template>
-	<div :class="classes.performanceHeader">
+	<div :class="[classes.performanceHeader, classes[displayStyle]]">
 		<div :class="classes.listFilters">
 			<market-badge
 				v-model="activeMarket"
@@ -67,40 +61,18 @@ function updateCurrency(v: Currency) {
 					MarketType.Crypto,
 					MarketType.Indices
 				]"
+				:display-variant="displayStyle"
 			/>
 
-			<ui-delimiter />
+			<ui-delimiter v-if="displayStyle === 'default' " />
 
-			<ui-position :class="classes.iconAllFilter">
+			<modal-badge
+				v-if="stock"
+				:class="classes.stock"
+				:display-variant="displayStyle"
+			>
 				<template #title>
-					<ui-icon
-						:id="IconIds.NewsFilter"
-						width="20"
-						height="20"
-						:class="classes.icon"
-					/>
-				</template>
-
-				<template #content>
-					<modal-filter>
-						<template #content>
-							<performance-filters
-								v-model:active-market="activeMarket"
-								v-model:is-compact-mode="isCompactMode"
-								v-model:display-variant="displayVariant"
-								v-model:stock="stock"
-								v-model:date="date"
-								v-model:symbol-display="symbolDisplayVariant"
-								v-model:quote-currency="quoteCurrency"
-							/>
-						</template>
-					</modal-filter>
-				</template>
-			</ui-position>
-
-			<modal-badge v-if="stock" :class="classes.stock">
-				<template #title>
-					{{stock}}
+					{{ stock }}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
@@ -120,9 +92,13 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge v-if="quoteCurrency" :class="classes.currency">
+			<modal-badge
+				v-if="quoteCurrency"
+				:class="classes.currency"
+				:display-variant="displayStyle"
+			>
 				<template #title>
-					{{quoteCurrency}}
+					{{ quoteCurrency }}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
@@ -142,9 +118,9 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge :class="classes.date">
+			<modal-badge :class="classes.date" :display-variant="displayStyle">
 				<template #title>
-					{{date}}
+					{{ date }}
 					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
@@ -164,31 +140,8 @@ function updateCurrency(v: Currency) {
 				</template>
 			</modal-badge>
 
-			<modal-badge :class="classes.settings" padding-left="2px">
-				<template #title>
-					<div :class="classes.mode">
-						<ui-icon
-							:id="iconCurrentModeVariant"
-							width="14"
-							height="14"
-						/>
-					</div>
-
-					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
-				</template>
-
-				<template #content>
-					<modal-badge-list>
-						<template #title>Settings</template>
-
-						<modal-item-switch v-model="isCompactMode">
-							Compact mode
-						</modal-item-switch>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
 		</div>
-		<view-toggle v-model:display-variant="displayVariant" />
+		<view-toggle v-if="displayStyle === 'default'" v-model:display-variant="displayVariant" />
 	</div>
 </template>
 
@@ -197,10 +150,18 @@ function updateCurrency(v: Currency) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 10px 0 16px;
+	padding: 0 10px 0 0;
 	border-bottom: 1px solid var(--border-color-base-100);
 	gap: 6px;
 	container: toolbar / inline-size;
+
+	&.default {
+		padding-left: 16px;
+	}
+
+	&.new {
+		padding-left: 0;
+	}
 }
 
 .listFilters {
@@ -211,38 +172,9 @@ function updateCurrency(v: Currency) {
 	gap: 6px;
 }
 
-.iconAllFilter {
-	display: none;
-	line-height: 0;
-	cursor: pointer;
-}
-
 .icon {
 	color: var(--icon-color-base-300);
 }
 
-.mode {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 28px;
-	height: 28px;
-	border: 0.5px solid var(--color-border-surface-02, rgb(199 199 199 / 10%));
-	border-radius: var(--radius-full, 9999px);
-	backdrop-filter: blur(5px);
-}
 
-@container toolbar (max-width: 500px) {
-	.settings,
-	.date,
-	.currency,
-	.stock {
-		display: none;
-	}
-
-	.iconAllFilter {
-		display: block;
-	}
-}
 </style>
