@@ -102,8 +102,8 @@ const isSectionedTable = computed(() => localSections.value.length > 0);
 const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	if (!element || element === document.body || element === document.documentElement) {
 		if (element) {
-			const computed = getComputedStyle(element);
-			const bgColor = computed.backgroundColor;
+			const computedElStyle = getComputedStyle(element);
+			const bgColor = computedElStyle.backgroundColor;
 
 			if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
 				return bgColor;
@@ -112,8 +112,8 @@ const getRealBackgroundColor = (element: HTMLElement | null): string => {
 		return 'var(--bg-color-surface-01, #1a1a1a)';
 	}
 
-	const computed = getComputedStyle(element);
-	const bgColor = computed.backgroundColor;
+	const computedStyle = getComputedStyle(element);
+	const bgColor = computedStyle.backgroundColor;
 
 	if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
 		return bgColor;
