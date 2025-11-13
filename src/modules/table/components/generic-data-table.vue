@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, watch, onMounted, type Ref } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
@@ -88,6 +88,9 @@ const localSortConfig = ref<ISortConfig>({ ...props.sortConfig });
 // Hover state for container
 const isContainerHovered = ref(false);
 
+// Table background color detection
+const tableBackgroundColor = ref<string>('');
+
 const visibleColumns = computed(() =>
 	localColumns.value
 		.filter(col => col.visible)
@@ -95,6 +98,29 @@ const visibleColumns = computed(() =>
 );
 
 const isSectionedTable = computed(() => localSections.value.length > 0);
+
+const getRealBackgroundColor = (element: HTMLElement | null): string => {
+	if (!element || element === document.body || element === document.documentElement) {
+		if (element) {
+			const computed = getComputedStyle(element);
+			const bgColor = computed.backgroundColor;
+
+			if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+				return bgColor;
+			}
+		}
+		return 'var(--bg-color-surface-01, #1a1a1a)';
+	}
+
+	const computed = getComputedStyle(element);
+	const bgColor = computed.backgroundColor;
+
+	if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+		return bgColor;
+	}
+
+	return getRealBackgroundColor(element.parentElement);
+};
 
 watch(() => props.columns, (newColumns) => {
 	localColumns.value = [...newColumns];
@@ -291,10 +317,25 @@ const isFixedWidth = computed(()=>{
 	return props.isFixedWidth || visibleColumns.value.length === 2;
 });
 
+onMounted(() => {
+	if (containerRef.value) {
+		tableBackgroundColor.value = getRealBackgroundColor(containerRef.value.parentElement);
+	}
+});
+
+watch(containerRef, (newRef) => {
+	if (newRef) {
+		tableBackgroundColor.value = getRealBackgroundColor(newRef.parentElement);
+	}
+});
+
 </script>
 
 <template>
-	<div :class="classes.tableContainer">
+	<div
+		:class="classes.tableContainer"
+		:style="{ '--table-bg-color': tableBackgroundColor }"
+	>
 		<!-- Inject scrollbar styles -->
 		<component :is="'style'">{{ scrollbarStyles }}</component>
 
@@ -312,7 +353,12 @@ const isFixedWidth = computed(()=>{
 				@mouseenter="handleContainerMouseEnter"
 				@mouseleave="handleContainerMouseLeave"
 			>
-				<table :class="classes.dataTable" :style="{width: isFixedWidth ? '100%' : 'auto'}">
+				<table
+					:class="classes.dataTable"
+					:style="{
+						width: isFixedWidth ? '100%' : 'auto'
+					}"
+				>
 					<generic-grid-header
 						v-if="props.showHeader"
 						:is-fixed-width="isFixedWidth"
@@ -494,6 +540,7 @@ const isFixedWidth = computed(()=>{
 	min-height: 0;
 	padding-bottom: 2px;
 	overflow: hidden;
+	background: var(--table-bg-color, #fff);
 }
 
 .scrollContent {
@@ -538,7 +585,7 @@ const isFixedWidth = computed(()=>{
 	min-width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
-	background: var(--bg-color-surface-01, #1a1a1a);
+	background: var(--table-bg-color);
 }
 
 .paginationWrapper {

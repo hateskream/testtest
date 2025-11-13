@@ -647,7 +647,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	background:
 		linear-gradient(
 			to right,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
+			var(--table-bg-color, #1a1a1a) 65%,
 			rgb(26 26 26 / 0%) 100%
 		);
 }
