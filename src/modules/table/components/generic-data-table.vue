@@ -33,6 +33,7 @@ export interface IProps<T> {
 	isUpdating?: boolean;
 	showScrollbarsOnHover?: boolean;
 	isFixedWidth?: boolean;
+	backgroundColor?: string | undefined;
 }
 
 export interface IEmits<T> {
@@ -76,6 +77,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	canAddSections: false,
 	isUpdating: false,
 	showScrollbarsOnHover: true,
+	backgroundColor: undefined
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -137,6 +139,13 @@ watch(() => props.rows, (newUnsortedRows) => {
 watch(() => props.sortConfig, (newSortConfig) => {
 	localSortConfig.value = { ...newSortConfig };
 }, { deep: true });
+
+// Watch for backgroundColor prop changes
+watch(() => props.backgroundColor, (newColor) => {
+	if (newColor) {
+		tableBackgroundColor.value = newColor;
+	}
+}, { immediate: false });
 
 const handleColumnsUpdate = (columns: IGenericTableColumn[]) => {
 	localColumns.value = [...columns];
@@ -318,14 +327,11 @@ const isFixedWidth = computed(()=>{
 });
 
 onMounted(() => {
-	if (containerRef.value) {
+	// If backgroundColor prop is provided, use it. Otherwise, compute from parent element
+	if (props.backgroundColor) {
+		tableBackgroundColor.value = props.backgroundColor;
+	} else if (containerRef.value) {
 		tableBackgroundColor.value = getRealBackgroundColor(containerRef.value.parentElement);
-	}
-});
-
-watch(containerRef, (newRef) => {
-	if (newRef) {
-		tableBackgroundColor.value = getRealBackgroundColor(newRef.parentElement);
 	}
 });
 
@@ -540,7 +546,7 @@ watch(containerRef, (newRef) => {
 	min-height: 0;
 	padding-bottom: 2px;
 	overflow: hidden;
-	background: var(--table-bg-color, #fff);
+	background: var(--table-bg-color, #ffffff);
 }
 
 .scrollContent {
