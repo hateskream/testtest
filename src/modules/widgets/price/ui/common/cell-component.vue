@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import MockChart from '@/assets/images/mock/transparent-chart.svg';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
@@ -96,8 +97,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						:class="classes.chart"
 					>
 						<img
-							v-if="props.ticker.price24hChart.src.length"
-							:src="props.ticker.price24hChart.src"
+							:src="MockChart"
 							style="width: 90px; height: 36px; object-fit: contain;"
 							alt="chart"
 							fetchpriority="high"

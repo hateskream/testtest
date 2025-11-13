@@ -40,7 +40,6 @@ const iconSize = computed(() => {
 		]"
 	>
 		<ui-image
-			v-show="isImageLoaded"
 			:class="classes.iconContainer"
 			:src="props.src"
 			:width="iconSize"

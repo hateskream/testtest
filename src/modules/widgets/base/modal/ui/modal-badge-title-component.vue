@@ -25,8 +25,8 @@ const props = withDefaults(defineProps<IProps>(), {
 			},
 		]"
 		:style="{
-			backgroundColor: props.displayVariant === 'new' ? 'rgb(73 73 80 / 70%);' : props.backgroundColor,
-			color: props.displayVariant === 'new' ? 'rgb(255 255 255 / 96%);' : props.color ,
+			backgroundColor: props.displayVariant === 'new' ? 'rgb(73 73 80 / 70%)' : props.backgroundColor,
+			color: props.displayVariant === 'new' ? 'rgb(255 255 255 / 96%)' : props.color ,
 			paddingLeft: props.displayVariant === 'new' ? '10px' : props.paddingLeft,
 		}"
 	>

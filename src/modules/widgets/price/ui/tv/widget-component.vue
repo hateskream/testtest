@@ -84,6 +84,7 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
+				has-infinity-loading
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			>
