@@ -1,15 +1,17 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { computed, onUnmounted, toValue, type MaybeRefOrGetter } from 'vue';
+import { computed, type MaybeRefOrGetter, onUnmounted, toValue } from 'vue';
 
 import { getPrice, type IPriceData } from '../api';
-import type { MarketType } from '@/modules/market';
 import { ColumnType, type ColumnWithoutSymbol } from '@/modules/cell';
 import { CellUpdater, type Message } from '@/shared/service/real-time';
-import { updateInfiniteQueryData, type QueryData } from '@/shared/lib';
+import { type QueryData, updateInfiniteQueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
+import type { FiltersState } from '../model';
+import type { MarketType } from '@/modules/market';
 
 export function useQueryPrice(
 	market: MaybeRefOrGetter<MarketType>,
+	filters: MaybeRefOrGetter<FiltersState>,
 	pined: MaybeRefOrGetter<string[]>,
 	limit: number,
 ) {
@@ -34,13 +36,14 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', toValue(market), ...toValue(pined), limit]),
+		queryKey: computed(() => ['price', toValue(market), ...toValue(pined), limit, toValue(filters)]),
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),
 				pined: toValue(pined),
 				offset: pageParam,
 				limit: toValue(limit),
+				filters: toValue(filters),
 			}),
 		initialPageParam: 0,
 		getNextPageParam: (lastPage) => {

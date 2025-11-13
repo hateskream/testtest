@@ -19,7 +19,7 @@ interface IChartRangeEmits {
 	(e: 'select', data: RangeChart): void;
 }
 
-const emits = defineEmits<IChartRangeEmits>();
+const emit = defineEmits<IChartRangeEmits>();
 
 const ranges = computed(() => {
 	return props.list.map((item) => ({
@@ -33,18 +33,20 @@ function generateRandom() {
 	return (Math.random() * (32 - 1) + 1).toFixed(2);
 }
 
+const changeIsVisible = computed(() => props.type === 'default' && !props.disableChange);
 </script>
 
 <template>
-	<div :class="['range', `range-${type}`]">
+	<div class="range" :class="[`range-${type}`]">
 		<div
 			v-for="item in ranges"
 			:key="item.val"
-			:class="['rangeItem', { ['rangeItemActive']: activeRange === item.val }]"
-			@click="emits('select', item.val)"
+			class="rangeItem"
+			:class="{ rangeItemActive: activeRange === item.val }"
+			@click="emit('select', item.val)"
 		>
 			<span class="rangeTitle">{{ item.title }}</span>
-			<span v-if="type === 'default' && !disableChange" class="rangeChange">{{ item.num }}%</span>
+			<span v-if="changeIsVisible" class="rangeChange">{{ item.num }}%</span>
 		</div>
 	</div>
 </template>
@@ -84,14 +86,13 @@ function generateRandom() {
 	text-align: center;
 	border-radius: 16px;
 	cursor: pointer;
-	gap: 4px;
+	gap: 6px;
 }
 
 
 .rangeItemActive {
 	background-color: var(--bg-color-base-300-activated);
 }
-
 
 .range-light {
 	padding: 16px 0;

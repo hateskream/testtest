@@ -1,11 +1,11 @@
-import { MarketType } from '@/modules/market';
 import { IconIds } from '@/shared/ui/icon';
+import { MarketType } from '@/modules/market';
 
 export enum FilterType {
-	MarketTrend = 'market-trend',
-	RankingAndNew = 'ranking-and-new',
-	Sector = 'sector-filter',
-	TimeRange = 'time-range',
+	MarketTrend = 'trend',
+	RankingAndNew = 'rank',
+	Sector = 'sector',
+	TimeRange = 'range',
 }
 
 export enum MarketTrendFilterValue {

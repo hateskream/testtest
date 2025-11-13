@@ -1,25 +1,25 @@
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
+import { notNullish } from '@vueuse/core';
 
 import {
 	filtersByMarketType,
+	type FiltersValues,
 	FilterType,
 	filterTypeToValue,
 	filterValueToDisplay,
 	getDefaultsSettings,
 	getDefaultsState,
+	type IDisplaySettings,
+	type IState,
 	MarketTrendFilterValue,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
-	type FiltersState,
-	type FiltersValues,
-	type IDisplaySettings,
-	type IState,
 } from '../model';
 import { useQueryPrice } from '../queries';
-import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
+import { MarketType } from '@/modules/market';
 
 const MarketTrendFilterValueSchema = z.nativeEnum(MarketTrendFilterValue);
 const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
@@ -88,8 +88,8 @@ export function usePrice({
 		schema: stateSchema,
 		hydrateFn: (s: StateSchemaType): IState => s,
 		rehydrateFn: (s: IState): StateSchemaType => s,
-		urlGet: '',
-		urlSet: '',
+		urlGet: '/api/v1/price/settings',
+		urlSet: '/api/v1/price/settings',
 	});
 
 	const state = ref<IState>(getDefaultsState(defaultStateType));
@@ -114,17 +114,14 @@ export function usePrice({
 			}), {}),
 	);
 
-	const filtersState = ref<FiltersState>(
-		state.value.settings[state.value.activeMarket].filtersState,
-	);
-
-	watch(() => state.value.activeMarket, newMarket => {
-		filtersState.value = state.value.settings[newMarket].filtersState;
-	}, { immediate: true });
-
-	watch(filtersState, newFilters => {
-		state.value.settings[state.value.activeMarket].filtersState = newFilters;
-	}, { deep: true });
+	const filtersState = computed({
+		get() {
+			return state.value.settings[state.value.activeMarket].filtersState;
+		},
+		set(value) {
+			state.value.settings[state.value.activeMarket].filtersState = value;
+		},
+	});
 
 	const limit = maxCountRows ?? 150;
 
@@ -138,6 +135,7 @@ export function usePrice({
 		refetch,
 	} = useQueryPrice(
 		activeMarket,
+		filtersState,
 		hasPin ? pinnedTickers : [],
 		limit,
 	);
@@ -146,6 +144,7 @@ export function usePrice({
 		data: dataState,
 		isLoading: isLoadingState,
 	} = useStateQuery();
+
 	const { mutate } = useStateMutation();
 
 	const isNotData = computed(() => !!dataResponse.value && isLoading.value && !isLoadingState.value);
@@ -182,10 +181,17 @@ export function usePrice({
 			.map(id => pinedTickers.find(t => t.tickerId === id))
 			.filter(t => !!t);
 
-		return [
+		const sortedTickers = [
 			...sortedPinedTickers,
 			...otherTickers,
 		];
+
+		// TODO: Убрать, когда бек починит limit, будет ненужным
+		if (notNullish(maxCountRows) && sortedTickers.length > maxCountRows) {
+			return sortedTickers.slice(0, maxCountRows);
+		}
+
+		return sortedTickers;
 	});
 
 	watch(dataState, newState => {
@@ -205,7 +211,7 @@ export function usePrice({
 			currentSettings.value = state.value.settings[newMarket].display;
 			pinnedTickers.value = state.value.settings[newMarket].pinned;
 		},
-	), { immediate: true };
+	);
 
 	watch(
 		currentSettings,
@@ -218,9 +224,9 @@ export function usePrice({
 		state.value = getDefaultsState(defaultStateType);
 	}
 
-	function loadMore() {
+	async function loadMore() {
 		if (hasNextPage.value && !isFetchingNextPage.value) {
-			fetchNextPage();
+			await fetchNextPage();
 		}
 	}
 
@@ -259,5 +265,7 @@ export function usePrice({
 		filtersState,
 		applyStateToParent,
 		hasPin,
+		tickersIsLoading: isLoading,
+		hasNextPage,
 	};
 }

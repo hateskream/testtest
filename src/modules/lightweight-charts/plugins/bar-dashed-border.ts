@@ -27,6 +27,11 @@ export const barDashedBorderPlugin = {
 	id: 'DashedBorder',
 	afterDatasetDraw(chart: Chart<'bar'>, args: { index: number; meta: ChartMeta<'bar'> }) {
 		args.meta.data.forEach(function (element) {
+			// @ts-expect-error non-error, cause empty object provides by default
+			if (typeof element.height === 'number' && element.height === 0) {
+				return;
+			}
+
 			const { ctx } = chart;
 
 			// @ts-expect-error non-error, cause empty object provides by default
@@ -35,18 +40,24 @@ export const barDashedBorderPlugin = {
 			const right = element.x + half;
 			const top = element.y;
 			const width = right - left;
-
 			// @ts-expect-error non-error, cause empty object provides by default
 			const { height } = element;
 
 			ctx.beginPath();
-			ctx.lineWidth = element.options.borderWidth;
-			ctx.strokeStyle = element.options.borderColor;
+			ctx.lineWidth = element.options.borderWidth ?? 1;
 
-			ctx.setLineDash([3, 3]);
+			const bg = element.options.backgroundColor as string;
+
+			// FIXME PLEASE FIX
+			if (bg.includes('255, 127, 53')) {
+				ctx.setLineDash([3, 3]);
+				ctx.strokeStyle = '#FF8D29';
+			} else {
+				ctx.setLineDash([]);
+				ctx.strokeStyle = '#FFFFFF';
+			}
 
 			drawRoundedRect(ctx, left, top, width, height, element.options.borderRadius);
-
 			ctx.stroke();
 			ctx.save();
 		});

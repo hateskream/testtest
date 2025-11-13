@@ -1,6 +1,6 @@
 import { MarketType } from '@/modules/market';
 import type { ITickerData } from '@/shared/mock';
-import type { SelectedSegmentTickersState } from '@/modules/news';
+import type { ISegmentData, SelectedSegmentTickersState } from '@/modules/news';
 
 export function parseTicker(segmentId: MarketType, ticker: ITickerData) {
 	return segmentId === MarketType.Forex ? `${ticker.left}${ticker.right}` : ticker.left;
@@ -28,4 +28,39 @@ export function hasInSegment(
 	selected: SelectedSegmentTickersState,
 ): boolean {
 	return selected[segmentId]?.has(parseTicker(segmentId, ticker)) ?? false;
+}
+
+export function getSegmentsTitleStr(
+	segments: ISegmentData[],
+	selected: SelectedSegmentTickersState,
+	showItems = 2,
+) {
+	const segmentItems: string[] = [];
+	const tickerItems: string[] = [];
+
+	if (!Object.values(selected).length) {
+		return '';
+	}
+
+	for (const segment of segments) {
+		if (isAllSelectedInSegment(segment.id, segments, selected)) {
+			segmentItems.push(segment.label);
+			continue;
+		}
+
+		for (const ticker of segment.tickers) {
+			if (hasInSegment(segment.id, ticker, selected)) {
+				tickerItems.push(parseTicker(segment.id, ticker));
+			}
+		}
+	}
+
+	const items = [...segmentItems, ...tickerItems];
+	if (items.length > showItems) {
+		const visible = items.slice(0, showItems).join(', ');
+		const rest = `+${items.length - showItems}`;
+		return `${visible} ${rest}`;
+	}
+
+	return items.join(', ');
 }

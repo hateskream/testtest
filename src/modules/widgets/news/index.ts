@@ -1,3 +1,2 @@
-import DashboardComponent from './ui/dashboard-component.vue';
-
-export { DashboardComponent as NewsDashboard };
+export { NewsTvWidget } from './ui/tv';
+export { NewsDashboardWidget } from './ui/dashboard';

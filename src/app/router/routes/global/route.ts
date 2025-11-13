@@ -108,6 +108,13 @@ export const globalRoutes: RouteRecordRaw[] = [
 		path: RoutePaths.News,
 		name: RouteNames.News,
 		component: () => import('@/pages/news-page.vue'),
+		children: [
+			{
+				name: RouteNames.NewsDetails,
+				path: RoutePaths.NewsDetails,
+				component: () => import('@/pages/news-page.vue'),
+			},
+		],
 	},
 	{
 		path: RoutePaths.Screener,
@@ -164,4 +171,10 @@ export const globalRoutes: RouteRecordRaw[] = [
 	},
 ];
 
-export const testRoutes: RouteRecordRaw[] = [];
+export const testRoutes: RouteRecordRaw[] = [
+	{
+		path: RoutePaths.Test,
+		name: RouteNames.Test,
+		component: () => import('@/pages/home-page.vue'),
+	},
+];

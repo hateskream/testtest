@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseWidgetDashboard } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, ModalSubmenu } from '@/modules/widgets/base';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
@@ -23,7 +22,7 @@ const props = defineProps<IWidgetComponentProps>();
 const {
 	selectedTicker,
 	timeRange,
-	wachlists,
+	watchlists,
 
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
@@ -50,7 +49,7 @@ function updateTicker(newValue: string[]) {
 				v-model:selected-ticker="selectedTicker"
 				v-model:time-range="timeRange"
 				:is-big="true"
-				:wachlists="wachlists"
+				:watchlists="watchlists"
 				display-variant="new"
 				@add-to-watchlist="handleAddToWatchlist"
 				@remove-from-watchlist="handleRemoveFromWatchlist"
@@ -61,6 +60,7 @@ function updateTicker(newValue: string[]) {
 			<preloader-component v-if="props.meta.isLoading" />
 			<view-component
 				v-else
+				v-model:range="timeRange"
 				:meta="meta"
 				:is-show-time-range="false"
 				display-variant="dashboard"
@@ -75,6 +75,7 @@ function updateTicker(newValue: string[]) {
 						:enable-selected-info="false"
 						:enable-select-all="false"
 						selection-mode="single"
+						display-variant="new"
 						@update:model-value="updateTicker"
 					/>
 				</template>

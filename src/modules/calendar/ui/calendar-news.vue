@@ -27,6 +27,9 @@ const {
 	activeLocations,
 	selectedTickers,
 	sortBy,
+	include,
+	activeDateRange,
+	dateRange,
 } = useNews({
 	widgetId: 'calendar-page-news',
 	isEphemeral: false,
@@ -64,6 +67,10 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 			v-model:selected-sources="selectedSources"
 			v-model:locations="locations"
 			v-model:sort-by="sortBy"
+			v-model:include="include"
+			v-model:active-date-range="activeDateRange"
+			v-model:date-range="dateRange"
+			display-variant="tv"
 			:segments="segments"
 			:selected-segments-tickers="selectedSegmentTickers"
 			@select-all="selectAll"
@@ -73,8 +80,9 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 		<news-list-component
 			:news="news"
 			:display-settings="displaySettings"
+			display-variant="tv"
 			@next="fetchNextPage"
-			@select-news="selectNews"
+			@select-news="selectNews($event.id)"
 		/>
 	</div>
 </template>

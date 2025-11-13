@@ -1,3 +1,4 @@
-import PerformanceWidget from './ui/performance-widget.vue';
+import { PerformanceTvWidget, PerformanceDashboardWidget } from './ui';
 
-export { PerformanceWidget };
+
+export { PerformanceTvWidget, PerformanceDashboardWidget };

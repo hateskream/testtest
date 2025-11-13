@@ -1,4 +1,10 @@
-import { isCryptoSymbolCell, isForexSymbolCell, isIndexSymbolCell, isStockSymbolCell } from './check';
+import {
+	isCommoditySymbolCell,
+	isCryptoSymbolCell,
+	isForexSymbolCell,
+	isIndexSymbolCell,
+	isStockSymbolCell,
+} from './check';
 import { ColumnType, type INumberCell, type IPercentCell, type ISymbolCell, Magnitude, Trend } from './domain';
 
 export function getMagnitudeText(magnitude: Magnitude): string {
@@ -56,6 +62,10 @@ export function getTickerName(symbolCell: ISymbolCell) {
 		return symbolCell.ticker;
 	}
 
+	if (isCommoditySymbolCell(symbolCell)) {
+		return symbolCell.ticker;
+	}
+
 	return '';
 }
 
@@ -87,6 +97,7 @@ interface IColumnDisplay {
 	groupName: string;
 	minWidth: number;
 	maxWidth: number;
+	width: number;
 }
 
 export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
@@ -96,6 +107,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Symbol',
 		groupName: 'Symbol',
 		minWidth: 100,
+		width: 200,
 		maxWidth: Infinity,
 	},
 	[ColumnType.PriceCurrent]: {
@@ -104,6 +116,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Current',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceMin24h]: {
@@ -112,6 +125,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Low, 24h',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceMax24h]: {
@@ -120,6 +134,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'High, 24h',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceMin1y]: {
@@ -128,6 +143,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Low, Year',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceMax1y]: {
@@ -136,6 +152,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'High, Year',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceAvg50d]: {
@@ -144,6 +161,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceAvg200d]: {
@@ -152,6 +170,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 200d',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Price1yRange]: {
@@ -160,6 +179,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Range, 1y',
 		groupName: 'Price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceOpen]: {
@@ -168,6 +188,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Day',
 		groupName: 'Open price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceClose]: {
@@ -176,6 +197,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Previous day',
 		groupName: 'Close price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Price24hChart]: {
@@ -184,6 +206,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h',
 		groupName: 'Price chart',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Price7dChart]: {
@@ -192,6 +215,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '7d',
 		groupName: 'Price chart',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Price30dChart]: {
@@ -200,6 +224,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '30d',
 		groupName: 'Price chart',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.ChangePrice24h]: {
@@ -208,6 +233,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h',
 		groupName: 'Price change',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.ChangePrice1hPercent]: {
@@ -216,6 +242,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '1h, %',
 		groupName: 'Price change',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.ChangePrice24hPercent]: {
@@ -224,6 +251,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h, %',
 		groupName: 'Price change',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.ChangePrice7dPercent]: {
@@ -232,6 +260,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '7d, %',
 		groupName: 'Price change',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.ChangePrice30dPercent]: {
@@ -240,6 +269,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '30d, %',
 		groupName: 'Price change',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Volume24h]: {
@@ -248,6 +278,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h',
 		groupName: 'Volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	// FIXME: Кто такой этот relative volume? Из какого маркета? Я не нашел в макете
@@ -257,6 +288,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Rel vol, 10d',
 		groupName: 'Volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeAvg10d]: {
@@ -265,6 +297,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 10d',
 		groupName: 'Volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeAvg50d]: {
@@ -273,6 +306,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'Volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketCap24h]: {
@@ -281,6 +315,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Market cap',
 		groupName: 'Market cap',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketCapRank]: {
@@ -289,6 +324,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Rank',
 		groupName: 'Market cap',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketCapFullyDiluted]: {
@@ -297,6 +333,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Fully diluted valuation',
 		groupName: 'Market cap',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketCapChange24h]: {
@@ -305,6 +342,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Change, 24h',
 		groupName: 'Market cap',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketCapChange24hPercent]: {
@@ -313,6 +351,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Change 24h, %',
 		groupName: 'Market cap',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.CirculatingSupply]: {
@@ -321,6 +360,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Circulating',
 		groupName: 'Supply',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.TotalSupply]: {
@@ -329,6 +369,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Total',
 		groupName: 'Supply',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MaxSupply]: {
@@ -337,6 +378,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Max',
 		groupName: 'Supply',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeHigh]: {
@@ -345,6 +387,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'All time high',
 		groupName: 'ATH price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeHighChangePercent]: {
@@ -353,6 +396,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Change, %',
 		groupName: 'ATH price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeHighDate]: {
@@ -361,6 +405,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Date',
 		groupName: 'ATH price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeLow]: {
@@ -369,6 +414,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'All time low',
 		groupName: 'ATL price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeLowChangePercent]: {
@@ -377,6 +423,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Change, %',
 		groupName: 'ATL price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AllTimeLowDate]: {
@@ -385,6 +432,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Date',
 		groupName: 'ATL price',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	// FIXME: А эти два столбца откуда родились? Не могу найти в макете
@@ -394,6 +442,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'RSI',
 		groupName: 'Technical indicators',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.RSIChart]: {
@@ -402,6 +451,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'RSI Chart',
 		groupName: 'Technical indicators',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Beta5y]: {
@@ -410,6 +460,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Beta, 5y',
 		groupName: 'Beta',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.LastDividend]: {
@@ -418,6 +469,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Last dividend',
 		groupName: 'Div Yield',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Employees]: {
@@ -426,6 +478,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Employees',
 		groupName: 'Company',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.IpODate]: {
@@ -434,6 +487,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'IPO date',
 		groupName: 'Company',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Sector]: {
@@ -442,6 +496,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Sector',
 		groupName: 'Company',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Industry]: {
@@ -450,6 +505,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Industry',
 		groupName: 'Company',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Source]: {
@@ -458,6 +514,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Source',
 		groupName: 'Source',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	// FIXME: Поидее должно быть в крипто, но в макете нет
@@ -467,6 +524,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'List',
 		groupName: 'Other',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.UpdateDate]: {
@@ -475,6 +533,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Time',
 		groupName: 'Update date',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Volatility]: {
@@ -483,6 +542,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Volatility',
 		groupName: 'Other',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.TrustScore]: {
@@ -491,6 +551,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Trust score',
 		groupName: 'Trust score',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Open]: {
@@ -499,6 +560,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Is open',
 		groupName: 'Is open',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Incentive]: {
@@ -507,6 +569,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Incentive',
 		groupName: 'Incentive',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.MarketHours]: {
@@ -515,6 +578,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Market Hours',
 		groupName: 'Market Hours',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Volume24hNorm]: {
@@ -523,6 +587,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName:'Vol norm, 24h',
 		groupName: 'Volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Coins]: {
@@ -531,6 +596,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName:'Coins',
 		groupName: 'Coins',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Pairs]: {
@@ -539,6 +605,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName:'Pairs',
 		groupName: 'Pairs',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Launched]: {
@@ -547,6 +614,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Launched',
 		groupName: 'Launched',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.DEXRank]: {
@@ -555,6 +623,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Rank',
 		groupName: 'Rank',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.Country]: {
@@ -563,6 +632,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Country',
 		groupName: 'Country',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.NextClosedDay]: {
@@ -570,6 +640,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		tooltip: 'Next closed day',
 		settingsName: 'Next closed day',
 		groupName: 'Next closed day',
+		width: 200,
 		minWidth: 100,
 		maxWidth: 200,
 	},
@@ -579,6 +650,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Performance',
 		groupName: 'Performance',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.AnalystRating]: {
@@ -587,6 +659,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Analyst rating',
 		groupName: 'Other',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeRel24h]: {
@@ -595,6 +668,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '24h',
 		groupName: 'Rel. volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.VolumeRelAvg50d]: {
@@ -603,6 +677,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '50d',
 		groupName: 'Rel. volume',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.PriceEarnings]: {
@@ -611,6 +686,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'P/E',
 		groupName: 'P/E',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDil12mo]: {
@@ -619,6 +695,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'EPS dil.',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilAvg50d]: {
@@ -627,6 +704,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'EPS dil.',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilGrowth12mo]: {
@@ -635,6 +713,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'EPS dil. growth',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.EpsDilGrowthAvg50d]: {
@@ -643,6 +722,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: 'Average, 50d',
 		groupName: 'EPS dil. growth',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 	[ColumnType.DividendYield]: {
@@ -651,6 +731,7 @@ export const columnDisplay: Record<ColumnType, IColumnDisplay> = {
 		settingsName: '12mo',
 		groupName: 'Div Yield',
 		minWidth: 100,
+		width: 200,
 		maxWidth: 200,
 	},
 };

@@ -1,3 +1,1 @@
-import SearchComponent from './search-component.vue';
-
-export { SearchComponent as UiSearch };
+export { default as UiSearch } from './search-component.vue';

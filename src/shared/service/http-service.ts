@@ -8,7 +8,7 @@ export const enum HttpMethod {
 }
 
 export interface IOptions {
-	query?: Record<string, string | number | boolean>;
+	query?: Record<string, string | number | boolean | undefined>;
 	signal?: AbortSignal;
 	headers?: Record<string, string>;
 	retries?: number;

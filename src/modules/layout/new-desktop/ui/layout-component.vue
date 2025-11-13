@@ -1,8 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { RoutePaths } from '@/types/route.d';
+import { type IMenuItem, menuItems } from '@/modules/layout/new-desktop/model';
 
 import MenuItem from './menu-item.vue';
+import ComingSoonTooltip from '@/modules/layout/new-desktop/ui/coming-soon-tooltip.vue';
+
+const route = useRoute();
+
+function isActiveLink(link: IMenuItem['link']) {
+	if (typeof link === 'string') {
+		return link === route.path;
+	}
+
+	return link.name === route.name;
+}
+
+const preparedMenuItems = computed(() => menuItems.map(item => ({
+	...item,
+	isActive: isActiveLink(item.link),
+})));
 </script>
 
 <template>
@@ -31,42 +50,28 @@ import MenuItem from './menu-item.vue';
 				<div :class="classes.line" />
 			</div>
 			<div :class="classes.iconContainer">
-				<menu-item
-					:icon="IconIds.Board"
-					is-active
-					text="Board"
-					link="/"
-				/>
-				<menu-item
-					:icon="IconIds.Screen"
-					:is-active="false"
-					text="Screen"
-					:link="RoutePaths.Screener"
-				/>
-				<menu-item
-					:icon="IconIds.Heat"
-					:is-active="false"
-					text="Heat"
-					:link="RoutePaths.Heatmap"
-				/>
-				<menu-item
-					:icon="IconIds.Cal"
-					:is-active="false"
-					text="Cal"
-					:link="RoutePaths.Calendar"
-				/>
-				<menu-item
-					:icon="IconIds.News"
-					:is-active="false"
-					text="News"
-					:link="RoutePaths.News"
-				/>
-				<menu-item
-					:icon="IconIds.TV"
-					:is-active="false"
-					text="TV"
-					:link="RoutePaths.Tv"
-				/>
+				<template v-for="item in preparedMenuItems" :key="item.text">
+					<coming-soon-tooltip
+						v-if="item.comingSoon"
+						:title="item.comingSoon.title"
+						:text="item.comingSoon.text"
+						:release="item.comingSoon.release"
+					>
+						<menu-item
+							:icon="item.icon"
+							:is-active="item.isActive"
+							:text="item.text"
+							:link="item.link"
+						/>
+					</coming-soon-tooltip>
+					<menu-item
+						v-else
+						:icon="item.icon"
+						:is-active="item.isActive"
+						:text="item.text"
+						:link="item.link"
+					/>
+				</template>
 			</div>
 			<div :class="classes.bottom">
 				<menu-item
@@ -82,32 +87,52 @@ import MenuItem from './menu-item.vue';
 		</div>
 		<div :class="[classes.panel, classes.rightPanel]">
 			<div :class="classes.iconContainer">
-				<menu-item
-					:icon="IconIds.Search"
-					:is-active="false"
-					text="Search"
-					link="/"
-				/>
-				<menu-item
-					:icon="IconIds.AskAI"
-					:is-active="false"
-					text="Ask AI"
-					link="/"
-				/>
-				<menu-item
-					:icon="IconIds.Watch"
-					:is-active="false"
-					text="Watch"
-					link="/"
-				/>
+				<coming-soon-tooltip
+					title="Search"
+					text="Discover tickers, data, and markets — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Search"
+						:is-active="false"
+						text="Search"
+						link="/"
+					/>
+				</coming-soon-tooltip>
+				<coming-soon-tooltip
+					title="Ask AI"
+					text="Get instant insights powered by AI — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.AskAI"
+						:is-active="false"
+						text="Ask AI"
+						link="/"
+					/>
+				</coming-soon-tooltip>
+				<coming-soon-tooltip
+					title="Watchlist"
+					text="Track your favorite symbols — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Watch"
+						:is-active="false"
+						text="Watch"
+						link="/"
+					/>
+				</coming-soon-tooltip>
 			</div>
 			<div :class="[classes.iconContainer, classes.bottom]">
-				<menu-item
-					:icon="IconIds.Help"
-					:is-active="false"
-					text="Help"
-					link="/"
-				/>
+				<coming-soon-tooltip
+					title="Help"
+					text="Find answers and guidance — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Help"
+						:is-active="false"
+						text="Help"
+						link="/"
+					/>
+				</coming-soon-tooltip>
 				<menu-item
 					:icon="IconIds.Tray"
 					:is-active="false"

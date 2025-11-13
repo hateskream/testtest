@@ -20,6 +20,7 @@ export enum RouteNames {
 	ScreenerCex = 'screener-cex',
 	ScreenerDex = 'screener-dex',
 	News = 'News',
+	NewsDetails = 'NewsDetails',
 }
 
 export enum RouteLabels {
@@ -73,6 +74,7 @@ export enum RoutePaths {
 	ScreenerCex = '/screener/cex',
 	ScreenerDex = '/screener/dex',
 	News = '/news',
+	NewsDetails = ':slug/:id',
 }
 
 export enum RouteTickerType {

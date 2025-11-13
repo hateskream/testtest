@@ -69,16 +69,20 @@ export const segmentsData: ISegmentData[] = [
 	},
 ];
 
-Promise.all([
-	getTickersByMarketType(MarketType.Crypto),
-	getTickersByMarketType(MarketType.Stock),
-	getTickersByMarketType(MarketType.Forex),
-	getTickersByMarketType(MarketType.Commodities),
-	getTickersByMarketType(MarketType.Indices),
-]).then(([crypto, stock, forex, commodities, indices]) => {
-	segmentsData[0].tickers = crypto;
-	segmentsData[1].tickers = stock;
-	segmentsData[2].tickers = forex;
-	segmentsData[3].tickers = commodities;
-	segmentsData[4].tickers = indices;
-});
+export async function ensureSegmentsTickersLoaded() {
+	const needFetch = segmentsData.filter(seg => seg.tickers.length === 0);
+
+	if (needFetch.length === 0) {
+		return;
+	}
+
+	const promises = needFetch.map(seg => getTickersByMarketType(seg.id));
+	const results = await Promise.all(promises);
+
+	for (let i = 0; i < needFetch.length; i+=1) {
+		needFetch[i].tickers = results[i];
+	}
+}
+
+// TODO: Normally preload these data in some root file
+ensureSegmentsTickersLoaded();

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
+import { notNullish } from '@vueuse/core';
 
-import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
+import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -23,18 +25,34 @@ const {
 	currentSettings,
 	tickers,
 	fetchTickersError,
-	isNotData,
 	togglePin,
 	refetch,
 	filtersValues,
 	filtersState,
 	hasPin,
+	loadMore,
+	hasNextPage,
+	tickersIsLoading,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
 	maxCountRows: props.meta.maxCountRowTable,
 });
+
+async function loadMoreTickets($state: IInfiniteStateHandler) {
+	await loadMore();
+
+	if (fetchTickersError.value) {
+		$state.error();
+	} else if (hasNextPage.value) {
+		$state.loaded();
+	} else {
+		$state.complete();
+	}
+}
+
+const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTable));
 </script>
 
 <template>
@@ -53,15 +71,24 @@ const {
 		</template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
+			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
 				v-else
+				display-variant="new"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
+				:has-infinity-loading="hasInfinityLoading"
+				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			/>
 		</template>
 	</base-widget-dashboard>
 </template>
+
+<style module="classes">
+.preloader {
+	padding: 0 20px;
+}
+</style>

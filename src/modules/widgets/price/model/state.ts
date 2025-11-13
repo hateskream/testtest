@@ -1,12 +1,12 @@
-import { MarketType } from '@/modules/market';
 import {
 	FilterType,
+	type FilterValue,
 	MarketTrendFilterValue,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
-	type FilterValue,
 } from './filters';
+import { MarketType } from '@/modules/market';
 
 export interface IDisplaySettings {
 	isShowChart: boolean;
@@ -43,65 +43,115 @@ export function getDefaultsSettings(): IDisplaySettings {
 	return { ...defaultSettings };
 }
 
+const defaultSettingsCrypto: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
+const defaultSettingsStock: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
+const defaultSettingsForex: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
+const defaultSettingsCommodities: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.Sector]: SectorFilterValue.All,
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
+const defaultSettingsIndices: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
 const defaultSettingsByMarket: SettingsByMarketType = {
-	[MarketType.Crypto]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Stock]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Forex]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Commodities]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.Sector]: SectorFilterValue.All,
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
-	[MarketType.Indices]: {
-		display: getDefaultsSettings(),
-		pinned: [],
-		filtersState: {
-			[FilterType.TimeRange]: TimeRangeFilterValue.Day,
-		},
-	},
+	[MarketType.Crypto]: defaultSettingsCrypto,
+	[MarketType.Stock]: defaultSettingsStock,
+	[MarketType.Forex]: defaultSettingsForex,
+	[MarketType.Commodities]: defaultSettingsCommodities,
+	[MarketType.Indices]: defaultSettingsIndices,
 };
 
 
 export function getDefaultsState(defaultStateType: string): IState {
+	const ddd = defaultStateType.split('-');
+
+	const [market, filter] = ddd;
+
 	let activeMarket: MarketType = MarketType.Crypto;
 
-	if (defaultStateType === 'stock') {
+	if (market === 'stock') {
 		activeMarket = MarketType.Stock;
+
+		if (filter === 'gainers') {
+			return {
+				activeMarket,
+				settings: {
+					[MarketType.Crypto]: defaultSettingsCrypto,
+					[MarketType.Stock]: {
+						...defaultSettingsStock,
+						filtersState: {
+							[FilterType.RankingAndNew]: RankingAndNewFilterValue.Gainers,
+						},
+					},
+					[MarketType.Forex]: defaultSettingsForex,
+					[MarketType.Commodities]: defaultSettingsCommodities,
+					[MarketType.Indices]: defaultSettingsIndices,
+				},
+			};
+		}
 	}
 
-	if (defaultStateType === 'forex') {
+	if (market === 'forex') {
 		activeMarket = MarketType.Forex;
 	}
 
-	if (defaultStateType === 'commodities') {
+	if (market === 'commodity') {
 		activeMarket = MarketType.Commodities;
 	}
 
-	if (defaultStateType === 'indices') {
+	if (market === 'index') {
 		activeMarket = MarketType.Indices;
+	}
+
+	if (filter === 'gainers') {
+		return {
+			activeMarket,
+			settings: {
+				[MarketType.Crypto]: {
+					...defaultSettingsCrypto,
+					filtersState: {
+						[FilterType.RankingAndNew]: RankingAndNewFilterValue.Gainers,
+					},
+				},
+				[MarketType.Stock]: defaultSettingsStock,
+				[MarketType.Forex]: defaultSettingsForex,
+				[MarketType.Commodities]: defaultSettingsCommodities,
+				[MarketType.Indices]: defaultSettingsIndices,
+			},
+		};
 	}
 
 	return {

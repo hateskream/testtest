@@ -29,7 +29,7 @@ const {
 	filtersValues,
 	filtersState,
 
-	wachlists,
+	watchlists,
 
 	resetAllChanges,
 
@@ -93,7 +93,7 @@ const emit = defineEmits<{
 				v-model:columns="columns"
 				:filters-values="filtersValues"
 				:rows="rows"
-				:wachlists="wachlists"
+				:watchlists="watchlists"
 				@add-to-watchlist="handleAddToWatchlist"
 				@remove-from-watchlist="handleRemoveFromWatchlist"
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"

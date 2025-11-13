@@ -63,6 +63,7 @@ export function useExchanges(widgetId: string) {
 
 	const state = ref<IState>(getDefaultState());
 
+
 	const currentSettings = ref<ISettings>(getDefaultSettings());
 
 	const activeMarket = computed({
@@ -85,7 +86,6 @@ export function useExchanges(widgetId: string) {
 			currentSettings.value.sort = sort;
 		},
 	});
-
 
 	watch(dataState, newState => {
 		if (newState) {

@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, watch, onMounted, type Ref } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
@@ -31,8 +31,9 @@ export interface IProps<T> {
 	showHeader?: boolean;
 	canAddSections?: boolean;
 	isUpdating?: boolean;
-	showScrollbarsOnHover?: boolean; // New prop for hover behavior
+	showScrollbarsOnHover?: boolean;
 	isFixedWidth?: boolean;
+	backgroundColor?: string | undefined;
 }
 
 export interface IEmits<T> {
@@ -75,7 +76,8 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	canAddSections: false,
 	isUpdating: false,
-	showScrollbarsOnHover: true, // Default to true
+	showScrollbarsOnHover: true,
+	backgroundColor: undefined,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -88,6 +90,9 @@ const localSortConfig = ref<ISortConfig>({ ...props.sortConfig });
 // Hover state for container
 const isContainerHovered = ref(false);
 
+// Table background color detection
+const tableBackgroundColor = ref<string>('');
+
 const visibleColumns = computed(() =>
 	localColumns.value
 		.filter(col => col.visible)
@@ -95,6 +100,29 @@ const visibleColumns = computed(() =>
 );
 
 const isSectionedTable = computed(() => localSections.value.length > 0);
+
+const getRealBackgroundColor = (element: HTMLElement | null): string => {
+	if (!element || element === document.body || element === document.documentElement) {
+		if (element) {
+			const computedElStyle = getComputedStyle(element);
+			const bgColor = computedElStyle.backgroundColor;
+
+			if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+				return bgColor;
+			}
+		}
+		return 'var(--bg-color-surface-01, #1a1a1a)';
+	}
+
+	const computedStyle = getComputedStyle(element);
+	const bgColor = computedStyle.backgroundColor;
+
+	if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+		return bgColor;
+	}
+
+	return getRealBackgroundColor(element.parentElement);
+};
 
 watch(() => props.columns, (newColumns) => {
 	localColumns.value = [...newColumns];
@@ -111,6 +139,13 @@ watch(() => props.rows, (newUnsortedRows) => {
 watch(() => props.sortConfig, (newSortConfig) => {
 	localSortConfig.value = { ...newSortConfig };
 }, { deep: true });
+
+// Watch for backgroundColor prop changes
+watch(() => props.backgroundColor, (newColor) => {
+	if (newColor) {
+		tableBackgroundColor.value = newColor;
+	}
+}, { immediate: false });
 
 const handleColumnsUpdate = (columns: IGenericTableColumn[]) => {
 	localColumns.value = [...columns];
@@ -291,10 +326,22 @@ const isFixedWidth = computed(()=>{
 	return props.isFixedWidth || visibleColumns.value.length === 2;
 });
 
+onMounted(() => {
+	// If backgroundColor prop is provided, use it. Otherwise, compute from parent element
+	if (props.backgroundColor) {
+		tableBackgroundColor.value = props.backgroundColor;
+	} else if (containerRef.value) {
+		tableBackgroundColor.value = getRealBackgroundColor(containerRef.value.parentElement);
+	}
+});
+
 </script>
 
 <template>
-	<div :class="classes.tableContainer">
+	<div
+		:class="classes.tableContainer"
+		:style="{ '--table-bg-color': tableBackgroundColor }"
+	>
 		<!-- Inject scrollbar styles -->
 		<component :is="'style'">{{ scrollbarStyles }}</component>
 
@@ -312,7 +359,12 @@ const isFixedWidth = computed(()=>{
 				@mouseenter="handleContainerMouseEnter"
 				@mouseleave="handleContainerMouseLeave"
 			>
-				<table :class="classes.dataTable" :style="{width: isFixedWidth ? '100%' : 'auto'}">
+				<table
+					:class="classes.dataTable"
+					:style="{
+						width: isFixedWidth ? '100%' : 'auto'
+					}"
+				>
 					<generic-grid-header
 						v-if="props.showHeader"
 						:is-fixed-width="isFixedWidth"
@@ -494,6 +546,7 @@ const isFixedWidth = computed(()=>{
 	min-height: 0;
 	padding-bottom: 2px;
 	overflow: hidden;
+	background: var(--table-bg-color, #ffffff);
 }
 
 .scrollContent {
@@ -538,7 +591,7 @@ const isFixedWidth = computed(()=>{
 	min-width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
-	background: var(--bg-color-surface-01, #1a1a1a);
+	background: var(--table-bg-color);
 }
 
 .paginationWrapper {

@@ -1,12 +1,11 @@
 import { computed, ref, watch } from 'vue';
 
 import {
-	compareState,
-	getActiveLocations,
+	compareState, ActiveDateRange,
 	getDefaultState,
 	hydrateState,
 	type IDisplaySettings,
-	type ILocation,
+	type ILocation, Include,
 	type IState,
 	rehydrateState,
 	Score,
@@ -16,8 +15,10 @@ import {
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
+import { getActiveLocations } from '../utils';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
+import type { IDateRange } from '@/shared/ui/calendar';
 
 interface IOptions {
 	widgetId: string;
@@ -62,7 +63,7 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 		selectAll,
 		unselectAll,
 		toggleTicker,
-	} = useSegment(selectedSegments);
+	} = useSegment(selectedSegments, defaultStateType);
 
 	const selectedScores = computed({
 		get: (): Set<Score> => state.value.score,
@@ -113,7 +114,30 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 		},
 	});
 
-	const activeLocations = computed(() => getActiveLocations(locations.value));
+	const activeLocations = computed(
+		() => getActiveLocations(locations.value),
+	);
+
+	const include = computed({
+		get: () => state.value.include,
+		set: (val: Set<Include>) => {
+			state.value.include = val;
+		},
+	});
+
+	const activeDateRange = computed({
+		get: () => state.value.activeDateRange,
+		set: (val: ActiveDateRange) => {
+			state.value.activeDateRange = val;
+		},
+	});
+
+	const dateRange = computed({
+		get: () => state.value.dateRange,
+		set: (val: IDateRange) => {
+			state.value.dateRange = val;
+		},
+	});
 
 	watch(dataState, newState => {
 		if (newState && !compareState(state.value, newState)) {
@@ -147,6 +171,9 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 		locations,
 		sortBy,
 		activeLocations,
+		include,
+		activeDateRange,
+		dateRange,
 
 		resetAllChanges,
 		applyStateToParent,

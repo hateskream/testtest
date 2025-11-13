@@ -2,21 +2,10 @@
 import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import {
-	MarketBadge,
-	ModalBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-} from '@/modules/widgets/base';
+import { MarketBadge, ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { MarketType } from '@/modules/market';
-import {
-	FilterType,
-	filterTypeToName,
-	filterValueToDisplay,
-	type FiltersState,
-	type FiltersValues,
-} from '../../model';
+import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
 
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
@@ -32,6 +21,8 @@ const displayVariant = computed(() =>
 	props.displayType === 'tv' ? 'default' : 'new',
 );
 
+const gapInPx = computed(() => props.displayType === 'tv' ? '6px' : '3px');
+
 function updateFilter(filterKey: FilterType, filterValue: string) {
 	filters.value = {
 		...filters.value,
@@ -46,18 +37,11 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 			v-model="activeMarket"
 			:display-variant="displayVariant"
 		/>
-
-		<div :class="classes.lineDelimiterGroup">
-			<ui-delimiter />
-		</div>
-
+		<ui-delimiter />
 		<modal-badge
 			v-for="(filterState, filterKey) in filters"
 			:key="filterKey"
 			:display-variant="displayVariant"
-			:style="{
-				marginLeft: props.displayType === 'tv' ? '6px' : '3px',
-			}"
 		>
 			<template #title v-if="filterState">
 				{{ filterValueToDisplay[filterState].label }}
@@ -93,9 +77,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 <style module="classes">
 .root {
 	display: flex;
-}
-
-.filter {
-	margin-left: 6px;
+	align-items: center;
+	gap: v-bind(gapInPx);
 }
 </style>

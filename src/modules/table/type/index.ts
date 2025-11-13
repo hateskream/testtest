@@ -26,9 +26,9 @@ export interface IGenericTableColumn {
 	sortable: boolean;
 	draggable: boolean;
 	visible: boolean;
-	width?: number;
-	minWidth: number;
-	maxWidth: number;
+	width?: number | string;
+	minWidth: number | string;
+	maxWidth: number | string;
 	type: TableColumnType | string;
 	group?: {
 		name: string;

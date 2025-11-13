@@ -88,26 +88,24 @@ defineOptions({ inheritAttrs: false });
 </script>
 
 <template>
-	<div>
-		<slot v-if="!isImageLoaded && showLoader" name="loading">
-			<ui-skeleton
-				:style="inlineStyles"
-				:shape="'rectangle'"
-				:animation="'wave'"
-				:opacity="0.5"
-			/>
-		</slot>
-
-		<slot v-else-if="!isValidSrc && isImageLoaded" name="error" />
-
-		<img
-			v-else-if="currentSrc && isValidSrc"
-			ref="refImg"
-			:src="currentSrc"
-			:alt="props.alt"
-			loading="lazy"
-			:style="inlineStyles"
-			v-bind="$attrs"
+	<slot v-if="!isImageLoaded && showLoader" name="loading">
+		<ui-skeleton
+			:size="props.width"
+			:shape="'rectangle'"
+			:animation="'wave'"
+			:opacity="0.5"
 		/>
-	</div>
+	</slot>
+
+	<slot v-else-if="!isValidSrc && isImageLoaded" name="error" />
+
+	<img
+		v-else-if="currentSrc && isValidSrc"
+		ref="refImg"
+		:src="currentSrc"
+		:alt="props.alt"
+		loading="lazy"
+		:style="inlineStyles"
+		v-bind="$attrs"
+	/>
 </template>

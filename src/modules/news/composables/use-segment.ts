@@ -1,27 +1,31 @@
-import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
+import { computed, type MaybeRefOrGetter, onMounted, ref, toValue } from 'vue';
 
 import { MarketType } from '@/modules/market';
 import type { ITickerData } from '@/shared/mock';
-import { type ISegmentRequest, type SelectAllFrom, type SelectedSegmentTickersState } from '@/modules/news/model';
+import {
+	ensureSegmentsTickersLoaded,
+	type ISegmentRequest,
+	type SelectAllFrom,
+	type SelectedSegmentTickersState,
+} from '@/modules/news/model';
 import { segmentsData } from '@/modules/news/model/segment-modal';
 import * as utils from '@/modules/news/utils';
+import { getDefaultSegmentTickers } from '@/modules/news/model/presets.ts';
 
 export function useSegment(
 	selectedSegments: MaybeRefOrGetter<Set<MarketType>>,
+	defaultState?: string,
 ) {
-	const getDefaultTickers = (): SelectedSegmentTickersState => {
-		const map: SelectedSegmentTickersState = {};
-		for (const seg of segmentsData) {
-			map[seg.id] = new Set(seg.tickers.map(t => utils.parseTicker(seg.id, t)));
-		}
-		return map;
-	};
-
 	const selectedSegmentTickers = ref<SelectedSegmentTickersState>(
-		getDefaultTickers(),
+		{},
 	);
 
-	// FIXME: asynchronous fetch from repository not triggers DOM updates
+	onMounted(async () => {
+		await ensureSegmentsTickersLoaded();
+
+		selectedSegmentTickers.value = getDefaultSegmentTickers(defaultState);
+	});
+
 	const segments = computed(() => {
 		const selected = toValue(selectedSegments);
 
@@ -31,27 +35,6 @@ export function useSegment(
 
 		return segmentsData.filter((s) => selected.has(s.id));
 	});
-
-	watch(segments, (segment) => {
-		const validIds = new Set(segment.map((s) => s.id));
-		const filtered: Record<string, Set<string>> = {};
-
-		for (const [id, set] of Object.entries(selectedSegmentTickers.value)) {
-			if (validIds.has(id as MarketType)) {
-				filtered[id] = set;
-			}
-		}
-
-		for (const seg of segment) {
-			if (!filtered[seg.id]) {
-				filtered[seg.id] = new Set(seg.tickers.map(t => utils.parseTicker(seg.id, t)));
-			}
-		}
-
-		if (Object.keys(filtered).length !== Object.keys(selectedSegmentTickers.value).length) {
-			selectedSegmentTickers.value = filtered;
-		}
-	}, { deep: true, immediate: true });
 
 	const isAllSelected = computed((): boolean => {
 		for (const type of Object.values(MarketType)) {

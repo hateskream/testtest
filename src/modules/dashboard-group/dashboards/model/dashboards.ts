@@ -3,13 +3,13 @@ import type { Component } from 'vue';
 import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
 import { MarketDashboard } from '@/modules/widgets/market';
 import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
-import { NewsDashboard } from '@/modules/widgets/news';
+import { NewsDashboardWidget, NewsTvWidget } from '@/modules/widgets/news';
 import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
 import { WatchlistDashboard } from '@/modules/widgets/watchlist';
-import { PerformanceWidget } from '@/modules/widgets/performance';
+import { PerformanceTvWidget, PerformanceDashboardWidget } from '@/modules/widgets/performance';
 import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
 import { TopIndicesDashboardWidget, TopIndicesTvWidget } from '@/modules/widgets/top-indices';
-import { CalendarWidget } from '@/modules/widgets/calendar-widget';
+import { CalendarDashboardWidget, CalendarTvWidget } from '@/modules/widgets/calendar-widget';
 import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
@@ -17,6 +17,15 @@ import { EthGasDashboard } from '@/modules/widgets/eth-gas';
 import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
 import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
 import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
+import { ConsumerPriceIndexDashboardWidget } from '@/modules/widgets/consumer-price-index';
+import { NonfarmPayrollsDashboardWidget } from '@/modules/widgets/nonfarm-payrolls';
+import { NominalGdpDashboardWidget } from '@/modules/widgets/nominal-gdp';
+import { UnemploymentRateDashboardWidget } from '@/modules/widgets/unemployment-rate';
+import { RealGdpDashboardWidget } from '@/modules/widgets/real-gdp';
+import { NewsSummaryDashboardWidget } from '@/modules/widgets/news-summary';
+import { HighImpactHourMapDashboardWidget } from '@/modules/widgets/high-impact-hour-map';
+import { UsInflationDashboardWidget } from '@/modules/widgets/us-inflation';
+import { FederalFundsDashboardWidget } from '@/modules/widgets/federal-funds';
 
 export interface ISize {
 	w: number;
@@ -51,40 +60,49 @@ interface IWidgetComponentProps {
 
 type WidgetComponent = Component<IWidgetComponentProps>;
 
-const componentsTv: Record<WidgetType, WidgetComponent> = {
+const componentsTv: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapTvWidget,
-	[WidgetType.News]: NewsDashboard,
+	[WidgetType.News]: NewsTvWidget,
 	[WidgetType.Price]: PriceTvWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.Performance]: PerformanceTvWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
 	[WidgetType.TopIndices]: TopIndicesTvWidget,
-	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Calendar]: CalendarTvWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
 	[WidgetType.ChartPrice]: ChartPriceTvWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
 };
 
-const componentsDashboard: Record<WidgetType, WidgetComponent> = {
+const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
 	[WidgetType.FearGreed]: FearGreedDashboard,
 	[WidgetType.Market]: MarketDashboard,
 	[WidgetType.MarketCap]: MarketCapDashboardWidget,
-	[WidgetType.News]: NewsDashboard,
+	[WidgetType.News]: NewsDashboardWidget,
 	[WidgetType.Price]: PriceDashboardWidget,
 	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceWidget,
+	[WidgetType.Performance]: PerformanceDashboardWidget,
 	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
 	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
 	[WidgetType.TopIndices]: TopIndicesDashboardWidget,
-	[WidgetType.Calendar]: CalendarWidget,
+	[WidgetType.Calendar]: CalendarDashboardWidget,
 	[WidgetType.Heatmap]: HeatmapDashboard,
 	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
 	[WidgetType.Exchange]: ExchangesDashboard,
 	[WidgetType.EthGas]: EthGasDashboard,
+	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndexDashboardWidget,
+	[WidgetType.NonfarmPayrolls]: NonfarmPayrollsDashboardWidget,
+	[WidgetType.NominalGDP]: NominalGdpDashboardWidget,
+	[WidgetType.UnemploymentRate]: UnemploymentRateDashboardWidget,
+	[WidgetType.RealGDP]: RealGdpDashboardWidget,
+	[WidgetType.NewsSummary]: NewsSummaryDashboardWidget,
+	[WidgetType.HighImpactHourMap]: HighImpactHourMapDashboardWidget,
+	[WidgetType.UsInflation]: UsInflationDashboardWidget,
+	[WidgetType.FederalFunds]: FederalFundsDashboardWidget,
 };
 
 export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {

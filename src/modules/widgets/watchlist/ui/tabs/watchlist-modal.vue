@@ -15,6 +15,7 @@ interface ITabWithEditing extends ITab {
 const props = defineProps<{
 	tabs: ITabWithEditing[];
 	selectedTickers: string[];
+	displayVariant: 'new' | 'default';
 }>();
 
 const emits = defineEmits<{
@@ -90,6 +91,7 @@ function onClickAction(action: TabAction, id: string) {
 								</template>
 								<template #content>
 									<modal-ticker-selector
+										:display-variant="props.displayVariant"
 										:model-value="props.selectedTickers"
 										:enable-select-all="false"
 										@select="emits('selectTicker', $event)"

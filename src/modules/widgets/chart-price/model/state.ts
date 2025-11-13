@@ -1,4 +1,10 @@
-import { createTickerId, createTickerIdForex, createTickerIdIndex, SymbolType } from '@/modules/cell';
+import {
+	createTickerId,
+	createTickerIdCommodity,
+	createTickerIdForex,
+	createTickerIdIndex,
+	SymbolType,
+} from '@/modules/cell';
 import {
 	TimeRangeFilterValue,
 } from './time-range';
@@ -18,6 +24,20 @@ export function getDefaultsState(defaultStateType: string): IState {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Forex,
 			createTickerIdForex('EUR', 'USD'),
+		);
+	}
+
+	if (defaultStateType === 'USDollar') {
+		defaultSelectedTicker = createTickerId(
+			SymbolType.Index,
+			createTickerIdIndex('DXY'),
+		);
+	}
+
+	if (defaultStateType === 'Gold') {
+		defaultSelectedTicker = createTickerId(
+			SymbolType.Commodity,
+			createTickerIdCommodity('XAUUSD'),
 		);
 	}
 

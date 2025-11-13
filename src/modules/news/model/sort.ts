@@ -1,3 +1,5 @@
+import { Include } from '@/modules/news';
+
 export enum Sort {
 	DateNewest = 'date:newest',
 	DateOldest = 'date:oldest',
@@ -37,4 +39,8 @@ export function compareSort(sort1: SortState, sort2: SortState): boolean {
 		return false;
 	}
 	return sort1 === sort2;
+}
+
+export function compareInclude(include1: Include, include2: Include) {
+	return include1 === include2;
 }

@@ -780,6 +780,10 @@
         }
     ],
     "Index": [
+				{
+            "left": "DXY",
+            "right": "US dollar index"
+        },
         {
             "left": "SPX",
             "right": "S&P 500"
@@ -963,10 +967,6 @@
         {
             "left": "MSCIJAPAN",
             "right": "MSCI Japan"
-        },
-        {
-            "left": "MSCIKOREA",
-            "right": "MSCI Korea"
         }
     ],
     "PlainText": [

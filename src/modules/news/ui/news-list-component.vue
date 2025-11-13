@@ -6,13 +6,14 @@ import NewsComponent from './news-component.vue';
 interface IViewNewsComponentProps {
 	news: INews[];
 	displaySettings: IDisplaySettings;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<IViewNewsComponentProps>();
 
 const emits = defineEmits<{
 	next: [];
-	'select-news': [id: string];
+	'select-news': [{ id: string; slug: string }];
 }>();
 
 let ticking = false;
@@ -50,7 +51,11 @@ function handleScroll(event: Event) {
 					:key="item.id"
 					:news="item"
 					:display-settings="props.displaySettings"
-					@click="emits('select-news', item.id)"
+					:display-variant="props.displayVariant"
+					@click="emits('select-news', {
+						id: item.id,
+						slug: item.slug,
+					})"
 				/>
 			</div>
 		</div>
@@ -67,6 +72,7 @@ function handleScroll(event: Event) {
 
 .scrollable {
 	position: relative;
+	min-height: 0;
 	overflow-x: hidden;
 }
 

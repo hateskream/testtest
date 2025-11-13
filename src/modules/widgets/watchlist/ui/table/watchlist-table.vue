@@ -24,6 +24,7 @@ interface IWatchlistTableProps {
 	tickers: TableRow[];
 	columns: ITableColumn[];
 	sections: ISectionUi[];
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<IWatchlistTableProps>();
@@ -99,6 +100,7 @@ function selectTicker(tickerId: string, sectionId: string) {
 							<modal-ticker-selector
 								:model-value="selectedTickers"
 								:enable-select-all="false"
+								:display-variant="props.displayVariant"
 								@select="selectTicker($event, sectionId)"
 								@unselect="emit('remove-ticker', { tickerId: $event })"
 							/>
@@ -122,6 +124,7 @@ function selectTicker(tickerId: string, sectionId: string) {
 		</widget-typed-table>
 		<watchlist-empty-state
 			v-else
+			:display-variant="props.displayVariant"
 			@add-ticker="emit('add-ticker', $event)"
 			@remove-ticker="emit('remove-ticker', $event)"
 			@add-tickers="emit('add-tickers', $event)"

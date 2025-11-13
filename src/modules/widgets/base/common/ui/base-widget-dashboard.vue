@@ -101,7 +101,8 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 .titleHeader {
 	display: flex;
 	align-items: center;
-	padding: 8px 10px;
+	height: 40px;
+	padding: 0 10px;
 }
 
 .titleText {

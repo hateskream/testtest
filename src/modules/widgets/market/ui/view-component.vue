@@ -10,14 +10,14 @@ import MarketTableComponent from './market-table-component.vue';
 interface IViewComponentProps {
 	rows: TableRow[];
 	filtersValues: FiltersValues;
-	wachlists: IWatchlistData[];
+	watchlists: IWatchlistData[];
 }
 
 const props = defineProps<IViewComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'add-to-watchlist', wachlists: IWatchlistAction): void;
-	(e: 'remove-from-watchlist', wachlists: IWatchlistAction): void;
+	(e: 'add-to-watchlist', watchlists: IWatchlistAction): void;
+	(e: 'remove-from-watchlist', watchlists: IWatchlistAction): void;
 	(e: 'add-to-new-watchlist', tickerId: string): void;
 }>();
 
@@ -37,7 +37,7 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 		<market-table-component
 			v-model:columns="columns"
 			:rows="props.rows"
-			:wachlists="props.wachlists"
+			:watchlists="props.watchlists"
 			@add-to-watchlist="emits('add-to-watchlist', $event)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event)"
 			@add-to-new-watchlist="emits('add-to-new-watchlist', $event)"

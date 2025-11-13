@@ -40,19 +40,21 @@ function onRenameTab(id: string, name: string) {
 			<watchlist-tabs-toolbar
 				:selected-tickers="props.selectedTickers"
 				:tabs="props.tabs"
+				display-variant="default"
+				\@remove-ticker="emit('remove-ticker', $event)"
 				@add-tab="emit('add-tab')"
 				@rename-tab="onRenameTab"
 				@switch-tab="emit('switch-tab', $event)"
 				@duplicate-tab="emit('duplicate-tab', $event)"
 				@delete-tab="emit('delete-tab', $event)"
 				@add-ticker="emit('add-ticker', $event)"
-				@remove-ticker="emit('remove-ticker', $event)"
 			/>
 			<watchlist-table
 				:columns="props.columns"
 				:sections="props.sections"
 				:tickers="props.tickers"
 				:selected-tickers="props.selectedTickers"
+				display-variant="default"
 				@add-ticker="emit('add-ticker', $event)"
 				@remove-ticker="emit('remove-ticker', $event)"
 				@add-tickers="emit('add-tickers', $event)"

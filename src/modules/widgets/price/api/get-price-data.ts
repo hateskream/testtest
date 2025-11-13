@@ -1,26 +1,29 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { type ITicker as ITickerDomain, type TickerWithoutState } from '../model';
+import { type FiltersState, type ITicker as ITickerDomain, type TickerWithoutState } from '../model';
 import { useLogger } from '@/shared/service/logger';
 import {
 	ColumnType,
-	mapTickersToTableRows,
-	SymbolType,
 	type ColumnWithoutSymbol,
+	type IStockSymbolCell,
+	mapTickersToTableRows,
 	type NumberDto,
 	type PercentDto,
 	type SvgChartDto,
 	type SymbolDto,
+	SymbolType,
 } from '@/modules/cell';
-import { MarketType } from '@/modules/market';
 import { generateRows } from '@/shared/mock';
+import { delay } from '@/shared/lib';
+import { MarketType } from '@/modules/market';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 interface IGetPriceRequest {
 	market: MarketType;
 	pined: string[];
 	offset: number;
 	limit: number;
+	filters: FiltersState;
 }
 
 interface ITicker {
@@ -62,20 +65,58 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 			return getMockData(req);
 		}
 
-		const response = await httpService.get<IGetPriceResponse>('/api/market');
+		const response = await httpService.get<IGetPriceResponse>('/api/v1/price/data', {
+			query: {
+				market: req.market,
+				pinnedIds: req.pined.length ? req.pined.join(',') : undefined,
+				offset: req.offset,
+				limit: req.limit,
+				...req.filters,
+			},
+		});
 
 		return prepareResponse(response);
-
 	} catch (error) {
 		logger.error('Failed to get price', error as Error);
 		throw error;
 	}
 }
 
+
+// TODO: Убрать после фикса беков по API
+function prepareTickers(tickers: ITicker[]) {
+	return tickers.map(ticker => {
+		if (ticker.symbol.symbolType === 'Forex') {
+			let { leftTicker, rightTicker, leftSrcImg, rightSrcImg } = ticker.symbol;
+
+			if (!leftTicker && !rightTicker) {
+				[leftTicker, rightTicker] = (ticker.symbol as unknown as IStockSymbolCell).ticker.split('/');
+			}
+
+			if (!leftSrcImg && !rightSrcImg) {
+				leftSrcImg = rightSrcImg = (ticker.symbol as unknown as IStockSymbolCell).srcImg;
+			}
+
+			return {
+				...ticker,
+				symbol: {
+					...ticker.symbol,
+					leftTicker,
+					rightTicker,
+					leftSrcImg,
+					rightSrcImg,
+				},
+			};
+		}
+
+		return ticker;
+	});
+}
+
 function prepareResponse({ data }: IGetPriceResponse): IPriceData {
 	return {
-		tickers: mapTickersToTableRows<ITickerDomain>(data.tickers),
-		pinedTickers: mapTickersToTableRows<ITickerDomain>(data.pinedTickers),
+		tickers: mapTickersToTableRows<ITickerDomain>(prepareTickers(data.tickers)),
+		pinedTickers: mapTickersToTableRows<ITickerDomain>(prepareTickers(data.pinedTickers)),
 		pagination: data.pagination,
 	};
 }
@@ -87,6 +128,8 @@ const columnTypes: ColumnWithoutSymbol[] = [
 ];
 
 async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
+	await delay(1000);
+
 	const [crypto, commodities, forex, indices, stocks] = await Promise.all([
 		generateRows(SymbolType.Crypto, columnTypes),
 		generateRows(SymbolType.Commodity, columnTypes),
@@ -107,7 +150,7 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 		pagination: {
 			offset: req.offset,
 			limit: req.limit,
-			total: 10,
+			total: 50,
 		},
 		tickers: marketToTickers[req.market]
 			.filter(t => !req.pined.includes(t.tickerId))

@@ -6,7 +6,7 @@ import {
 	CalendarEventBoard,
 	CalendarToolbar,
 	EventType,
-	type IDailyCalendarInfoResponse,
+	type IDailyCalendarInfoResponse, type IEventBoardExposed,
 	type IEventBoardRange,
 	type IEventBoardResponse,
 	Impact,
@@ -51,7 +51,7 @@ const eventState = defineModel<Set<EventType>>('eventState', { required: true })
 const watchlistIdState = defineModel<string | null>('watchlistIdState', { required: true });
 const watchlistSectionState = defineModel<string | null>('watchlistSectionState', { required: true });
 
-const eventBoardRef = useTemplateRef('event-board-component');
+const eventBoardRef = useTemplateRef<IEventBoardExposed>('event-board-component');
 
 useEventBoardScroll({
 	ref: eventBoardRef,

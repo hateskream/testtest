@@ -4,14 +4,15 @@ import { useTemplateRef } from 'vue';
 import {
 	CalendarEmptyEventBoard,
 	CalendarLayout,
-	CalendarNews,
+	CalendarNews, type IEventBoardExposed,
 	markets,
 	useCalendarState,
 	useEventBoardScroll,
 } from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
 import { LayoutComponent } from '@/modules/layout';
-import { CalendarDaySelect, CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarDaySelect } from '@/shared/ui/calendar';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;
@@ -25,7 +26,7 @@ const props = withDefaults(defineProps<ICalendarWeeklyContainerProps>(), {
 	initialDate: () => new Date(),
 });
 
-const eventBoardRef = useTemplateRef('event-board-component');
+const eventBoardRef = useTemplateRef<IEventBoardExposed>('event-board-component');
 
 const {
 	isDailyCalendarLoading,

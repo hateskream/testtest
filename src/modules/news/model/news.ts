@@ -8,6 +8,7 @@ export interface ITicker {
 
 export interface INews {
 	id: string;
+	slug: string;
 	description: string;
 	timestamp: number;
 	author: string;

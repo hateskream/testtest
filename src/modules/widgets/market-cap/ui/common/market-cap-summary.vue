@@ -27,11 +27,9 @@ const preparedVolume = computed(() => formatValue(props.summary.volume));
 </script>
 
 <template>
-	<div
-		:class="classes.root"
-	>
+	<div :class="classes.root">
 		<market-cap-summary-segment name="Market cap">
-			<div :class="classes.title">$ {{preparedMarketCap}}</div>
+			<div :class="classes.title">$ {{ preparedMarketCap }}</div>
 			<div
 				v-if="props.displaySettings.isShowChange"
 				:class="[classes.change, props.summary.change24h > 0 ? classes.positive : classes.negative]"
@@ -47,7 +45,7 @@ const preparedVolume = computed(() => formatValue(props.summary.volume));
 			</div>
 		</market-cap-summary-segment>
 		<market-cap-summary-segment name="Volume">
-			<div  :class="classes.title">$ {{preparedVolume}}</div>
+			<div :class="classes.title">$ {{ preparedVolume }}</div>
 		</market-cap-summary-segment>
 	</div>
 </template>
@@ -63,15 +61,18 @@ const preparedVolume = computed(() => formatValue(props.summary.volume));
 }
 
 .title {
-	font-size: 16px;
+	font-size: 16.8px;
+	line-height: 160%;
 }
 
 .change {
 	display: flex;
 	align-items: center;
 	font-weight: 400;
-	font-size: 12px;
 	gap: 4px;
+	font-size: 12.5px;
+	line-height: 180%;
+	letter-spacing: 0.075px;
 }
 
 .positive {

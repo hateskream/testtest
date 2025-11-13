@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import MockChart from '@/assets/images/mock/transparent-chart.svg';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import MockChart from '@/assets/images/mock/chart.svg';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
 import type { IMeta } from '@/modules/dashboard-group';
@@ -16,12 +16,15 @@ import {
 	isPlaneTextSymbolCell,
 } from '@/modules/cell';
 
+import ForexTickerIconDashboard from '@/shared/ui/ticker/dashboard/forex-ticker-icon-dashboard.vue';
+
 
 interface ICellComponentProps {
 	ticker: ITicker;
 	settings: IDisplaySettings;
 	meta: IMeta;
 	hasPin: boolean;
+	displayVariant: 'new' | 'default';
 }
 
 const props = defineProps<ICellComponentProps>();
@@ -46,14 +49,26 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						v-if="!isForexSymbolCell(props.ticker.symbol) && !isPlaneTextSymbolCell(props.ticker.symbol)"
 						:src="props.ticker.symbol.srcImg"
 						:ticker="props.ticker.symbol.ticker"
+						:size="20"
 					/>
 
-					<forex-ticker-icon
-						v-else-if="isForexSymbolCell(props.ticker.symbol)"
-						:src="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
-						:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
-						:domain="props.ticker.symbol.rightTicker"
-					/>
+					<template v-else-if="isForexSymbolCell(props.ticker.symbol)">
+						<forex-ticker-icon-dashboard
+							v-if="props.displayVariant === 'new'"
+							:src-image="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
+							:display-variant="props.displayVariant"
+							:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
+							:size="20"
+							:padding="0"
+						/>
+
+						<forex-ticker-icon
+							v-else
+							:src="[props.ticker.symbol.leftSrcImg, props.ticker.symbol.rightSrcImg]"
+							:ticker="`${props.ticker.symbol.leftTicker}/${props.ticker.symbol.rightTicker}`"
+							:domain="props.ticker.symbol.rightTicker"
+						/>
+					</template>
 				</div>
 			</ui-transition-fade>
 
@@ -67,7 +82,6 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						<ui-transition-fade>
 							<div
 								v-if="props.settings.isShowPercentageChange"
-								:class="classes.change"
 								:style="{
 									color: priceChange.color
 								}"
@@ -84,7 +98,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 					>
 						<img
 							:src="MockChart"
-							style="  width: 90px; height: 40px; object-fit: contain;"
+							style="width: 90px; height: 36px; object-fit: contain;"
 							alt="chart"
 							fetchpriority="high"
 						/>
@@ -173,7 +187,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 .desc {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 1px;
 }
 
 .icon {
@@ -190,12 +204,12 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	display: flex;
 	flex-grow: 1;
 	align-items: center;
-	padding: 4px;
+	padding: 6px 10px;
 	border-radius: 16px;
 }
 
 .logo {
-	margin-right: 12px;
+	margin-right: 6px;
 }
 
 .container {
@@ -208,25 +222,31 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 .ticker {
 	display: inline-flex;
-	font-weight: 300;
-	line-height: 150%;
-	color: var(--text-color-base-100);
+	font-style: normal;
+	font-weight: 400;
+	font-size: var(--font-text-300-r-size, 12.5px);
+	line-height: 180%;
+	color: var(--text-300, rgb(255 255 255 / 62%));
+	letter-spacing: 0.075px;
 	gap: 2px;
 }
 
 .containerSecond {
 	display: flex;
+	overflow-x: auto;
+	font-weight: 400;
+	font-size: var(--font-text-300-r-size, 13.3px);
+	line-height: 180%;
+	letter-spacing: 0.146px;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 	gap: 4px;
-	line-height: 125%;
 }
 
 .price {
+	flex-shrink: 0;
 	font-weight: 440;
 	color: var(--text-color-base-500);
-}
-
-.change {
-	font-weight: 440;
 }
 
 .enterActive,

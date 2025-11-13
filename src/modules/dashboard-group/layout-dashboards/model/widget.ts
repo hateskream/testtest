@@ -38,7 +38,7 @@ const BitcoinDominance: Preset = {
 };
 
 const Price: Preset = {
-	name: 'Price',
+	name: 'Price list',
 	displayVariants: ['list'],
 };
 
@@ -87,7 +87,52 @@ const EthGas: Preset = {
 	displayVariants: ['default'],
 };
 
-const presets: Record<WidgetType, Preset> = {
+const ConsumerPriceIndex: Preset = {
+	name: 'Consumer price index',
+	displayVariants: ['default'],
+};
+
+const NonfarmPayrolls: Preset = {
+	name: 'Nonfarm Payrolls (1Y)',
+	displayVariants: ['default'],
+};
+
+const NominalGDP: Preset = {
+	name: 'Nominal gross domestic product',
+	displayVariants: ['default'],
+};
+
+const RealGDP: Preset = {
+	name: 'Real gross domestic product',
+	displayVariants: ['default'],
+};
+
+const UnemploymentRate: Preset = {
+	name: 'Unemployment Rate (1Y)',
+	displayVariants: ['default'],
+};
+
+const NewsSummary: Preset = {
+	name: 'News Summary',
+	displayVariants: ['default'],
+};
+
+const HighImpactHourMap: Preset = {
+	name: 'High Impact Hour Map (Today) ',
+	displayVariants: ['default'],
+};
+
+const UsInflation: Preset = {
+	name: 'US Inflation (1Y)',
+	displayVariants: ['default'],
+};
+
+const FederalFunds: Preset = {
+	name: 'Federal funds',
+	displayVariants: ['default'],
+};
+
+const presets: Partial<Record<WidgetType, Preset>> = {
 	[WidgetType.FearGreed]: FearGreed,
 	[WidgetType.Market]: Market,
 	[WidgetType.Price]: Price,
@@ -103,10 +148,22 @@ const presets: Record<WidgetType, Preset> = {
 	[WidgetType.ChartPrice]: ChartPrice,
 	[WidgetType.Exchange]: Exchange,
 	[WidgetType.EthGas]: EthGas,
+	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndex,
+	[WidgetType.NonfarmPayrolls]: NonfarmPayrolls,
+	[WidgetType.NominalGDP]: NominalGDP,
+	[WidgetType.UnemploymentRate]: UnemploymentRate,
+	[WidgetType.RealGDP]: RealGDP,
+	[WidgetType.NewsSummary]: NewsSummary,
+	[WidgetType.HighImpactHourMap]: HighImpactHourMap,
+	[WidgetType.UsInflation]: UsInflation,
+	[WidgetType.FederalFunds]: FederalFunds,
 };
 
-function createPreset(widgetType: WidgetType): IWidgetPreset {
+function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 	const preset = presets[widgetType];
+	if (!preset) {
+		return null;
+	}
 
 	return {
 		...preset,
@@ -128,8 +185,13 @@ export function createWidget(
 	displayVariant: DisplayVariant,
 	defaultStateType = '',
 	maxCountRow?: number,
-) : IWidget {
+) : IWidget | null {
 	const preset = createPreset(widgetType);
+	if (!preset) {
+		// eslint-disable-next-line no-console
+		console.error(`Preset not found for widget type: ${widgetType}`);
+		return null;
+	}
 
 	return {
 		...preset,

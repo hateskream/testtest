@@ -1,15 +1,15 @@
 [
 	{
-		"date": "2025-10-17",
+		"date": "2025-11-10",
 		"events": [
 			{
-				"id": "Fri Oct 17 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Mon Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "AAPL",
 				"additional": "Apple Inc.",
 				"symbolType": "Stock",
 				"eventType": "Earnings",
 				"eventTitle": "Apple Inc. Earnings Report",
-				"eventDatetime": "2025-10-17T09:15",
+				"eventDatetime": "2025-11-10T09:15",
 				"metrics": [
 					{ "label": "EPS", "value": "1.82" },
 					{ "label": "Rev.", "value": "118.40 B" },
@@ -22,14 +22,14 @@
 				"impact": "High"
 			},
 			{
-				"id": "Fri Oct 17 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Mon Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "ETH",
 				"additional": "Ethereum",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Ethereum",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-17T12:42",
+				"eventDatetime": "2025-11-10T12:42",
 				"metrics": [
 					{ "label": "Amount", "value": "$3.12" },
 					{ "label": "Unlock %", "value": "6.25%" }
@@ -41,13 +41,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Fri Oct 17 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Mon Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "DAX",
 				"additional": "DAX (Germany)",
 				"symbolType": "Index",
 				"eventType": "News",
 				"eventTitle": "DAX (Germany) News",
-				"eventDatetime": "2025-10-17T14:05",
+				"eventDatetime": "2025-11-10T14:05",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Positive" }
 				],
@@ -58,18 +58,18 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Fri Oct 17 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Mon Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "CL",
 				"additional": "WTI Crude Oil",
 				"symbolType": "Commodity",
 				"eventType": "Dividends",
 				"eventTitle": "WTI Crude Oil Dividends",
 				"eventTitleDescription": "Monthly",
-				"eventDatetime": "2025-10-17T06:50",
+				"eventDatetime": "2025-11-10T06:50",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.42" },
-					{ "label": "Ex-date", "value": "Oct 15, 2025" },
-					{ "label": "Pay date", "value": "Oct 25, 2025" },
+					{ "label": "Ex-date", "value": "Nov 08, 2025" },
+					{ "label": "Pay date", "value": "Nov 18, 2025" },
 					{ "label": "Div. yield", "value": "4.02%" }
 				],
 				"section": "Commodity",
@@ -79,13 +79,13 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Fri Oct 17 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Mon Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "EUR",
 				"additional": "USD",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "EURUSD Economic",
-				"eventDatetime": "2025-10-17T18:21",
+				"eventDatetime": "2025-11-10T18:21",
 				"metrics": [
 					{ "label": "Actual", "value": "2.14" },
 					{ "label": "Forecast", "value": "1.90" },
@@ -96,20 +96,15 @@
 				"linkText": "Details",
 				"marketId": "entire-world",
 				"impact": "High"
-			}
-		]
-	},
-	{
-		"date": "2025-10-18",
-		"events": [
+			},
 			{
-				"id": "Sat Oct 18 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Tue Nov 10 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "MSFT",
 				"additional": "Microsoft Corporation",
 				"symbolType": "Stock",
 				"eventType": "News",
 				"eventTitle": "Microsoft Corporation News",
-				"eventDatetime": "2025-10-18T10:32",
+				"eventDatetime": "2025-11-11T23:00",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Neutral" }
 				],
@@ -118,16 +113,21 @@
 				"linkText": "Details",
 				"marketId": "usa",
 				"impact": "Low"
-			},
+			}
+		]
+	},
+	{
+		"date": "2025-11-11",
+		"events": [
 			{
-				"id": "Sat Oct 18 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Tue Nov 11 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "SOL",
 				"additional": "Solana",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Solana",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-18T01:45",
+				"eventDatetime": "2025-11-11T01:45",
 				"metrics": [
 					{ "label": "Amount", "value": "$1.11" },
 					{ "label": "Unlock %", "value": "10.32%" }
@@ -139,18 +139,18 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Sat Oct 18 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Tue Nov 11 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "NIKKEI",
 				"additional": "Nikkei 225",
 				"symbolType": "Index",
 				"eventType": "Dividends",
 				"eventTitle": "Nikkei 225 Dividends",
 				"eventTitleDescription": "Quarterly",
-				"eventDatetime": "2025-10-18T07:18",
+				"eventDatetime": "2025-11-11T07:18",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.61" },
-					{ "label": "Ex-date", "value": "Oct 17, 2025" },
-					{ "label": "Pay date", "value": "Oct 31, 2025" },
+					{ "label": "Ex-date", "value": "Nov 10, 2025" },
+					{ "label": "Pay date", "value": "Nov 24, 2025" },
 					{ "label": "Div. yield", "value": "2.35%" }
 				],
 				"section": "Index",
@@ -160,13 +160,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Sat Oct 18 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Tue Nov 11 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "HG",
 				"additional": "Copper (COMEX)",
 				"symbolType": "Commodity",
 				"eventType": "News",
 				"eventTitle": "Copper (COMEX) News",
-				"eventDatetime": "2025-10-18T16:40",
+				"eventDatetime": "2025-11-11T16:40",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Positive" }
 				],
@@ -177,13 +177,13 @@
 				"impact": "High"
 			},
 			{
-				"id": "Sat Oct 18 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Tue Nov 11 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "GBP",
 				"additional": "JPY",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "GBPJPY Economic",
-				"eventDatetime": "2025-10-18T20:55",
+				"eventDatetime": "2025-11-11T20:55",
 				"metrics": [
 					{ "label": "Actual", "value": "-1.72" },
 					{ "label": "Forecast", "value": "0.64" },
@@ -198,16 +198,16 @@
 		]
 	},
 	{
-		"date": "2025-10-19",
+		"date": "2025-11-12",
 		"events": [
 			{
-				"id": "Sun Oct 19 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Wed Nov 12 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "NVDA",
 				"additional": "NVIDIA Corporation",
 				"symbolType": "Stock",
 				"eventType": "Conference",
 				"eventTitle": "NVIDIA Corporation Conference",
-				"eventDatetime": "2025-10-19T13:05",
+				"eventDatetime": "2025-11-12T13:05",
 				"metrics": [
 					{ "label": "Speaker", "value": "CFO" },
 					{ "label": "Venue", "value": "NYC" }
@@ -219,14 +219,14 @@
 				"impact": "High"
 			},
 			{
-				"id": "Sun Oct 19 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Wed Nov 12 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "ADA",
 				"additional": "Cardano",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Cardano",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-19T02:27",
+				"eventDatetime": "2025-11-12T02:27",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.37" },
 					{ "label": "Unlock %", "value": "12.41%" }
@@ -238,13 +238,13 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Sun Oct 19 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Wed Nov 12 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "MSCIWORLD",
 				"additional": "MSCI World",
 				"symbolType": "Index",
 				"eventType": "News",
 				"eventTitle": "MSCI World News",
-				"eventDatetime": "2025-10-19T06:44",
+				"eventDatetime": "2025-11-12T06:44",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Negative" }
 				],
@@ -255,13 +255,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Sun Oct 19 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Wed Nov 12 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "ZW",
 				"additional": "Wheat",
 				"symbolType": "Commodity",
 				"eventType": "Earnings",
 				"eventTitle": "Wheat Earnings Report",
-				"eventDatetime": "2025-10-19T11:52",
+				"eventDatetime": "2025-11-12T11:52",
 				"metrics": [
 					{ "label": "EPS", "value": "0.74" },
 					{ "label": "Rev.", "value": "12.43 B" },
@@ -274,13 +274,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Sun Oct 19 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Wed Nov 12 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "USD",
 				"additional": "TRY",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "USDTRY Economic",
-				"eventDatetime": "2025-10-19T20:18",
+				"eventDatetime": "2025-11-12T20:18",
 				"metrics": [
 					{ "label": "Actual", "value": "4.18" },
 					{ "label": "Forecast", "value": "3.62" },
@@ -295,16 +295,16 @@
 		]
 	},
 	{
-		"date": "2025-10-20",
+		"date": "2025-11-13",
 		"events": [
 			{
-				"id": "Mon Oct 20 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "AMZN",
 				"additional": "Amazon.com, Inc.",
 				"symbolType": "Stock",
 				"eventType": "Revenue",
 				"eventTitle": "Amazon.com, Inc. Revenue",
-				"eventDatetime": "2025-10-20T08:41",
+				"eventDatetime": "2025-11-13T08:41",
 				"metrics": [
 					{ "label": "Quarter", "value": "Q3 2025" },
 					{ "label": "Revenue", "value": "165.22 B" }
@@ -316,14 +316,14 @@
 				"impact": "High"
 			},
 			{
-				"id": "Mon Oct 20 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "DOGE",
 				"additional": "Dogecoin",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Dogecoin",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-20T00:55",
+				"eventDatetime": "2025-11-13T00:55",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.09" },
 					{ "label": "Unlock %", "value": "8.02%" }
@@ -335,13 +335,13 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Mon Oct 20 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "S&P500",
 				"additional": "S&P 500",
 				"symbolType": "Index",
 				"eventType": "Economic",
 				"eventTitle": "S&P 500 Economic",
-				"eventDatetime": "2025-10-20T12:33",
+				"eventDatetime": "2025-11-13T12:33",
 				"metrics": [
 					{ "label": "Actual", "value": "1.92" },
 					{ "label": "Forecast", "value": "1.75" },
@@ -354,17 +354,17 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Mon Oct 20 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "GC",
 				"additional": "Gold (COMEX)",
 				"symbolType": "Commodity",
 				"eventType": "Dividends",
 				"eventTitle": "Gold (COMEX) Dividends",
-				"eventDatetime": "2025-10-20T17:29",
+				"eventDatetime": "2025-11-13T17:29",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.27" },
-					{ "label": "Ex-date", "value": "Oct 18, 2025" },
-					{ "label": "Pay date", "value": "Oct 26, 2025" },
+					{ "label": "Ex-date", "value": "Nov 11, 2025" },
+					{ "label": "Pay date", "value": "Nov 19, 2025" },
 					{ "label": "Div. yield", "value": "1.98%" }
 				],
 				"section": "Commodity",
@@ -374,13 +374,13 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Mon Oct 20 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "AUD",
 				"additional": "USD",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "AUDUSD Economic",
-				"eventDatetime": "2025-10-20T22:10",
+				"eventDatetime": "2025-11-13T22:10",
 				"metrics": [
 					{ "label": "Actual", "value": "-0.84" },
 					{ "label": "Forecast", "value": "0.20" },
@@ -395,16 +395,16 @@
 		]
 	},
 	{
-		"date": "2025-10-21",
+		"date": "2025-11-14",
 		"events": [
 			{
-				"id": "Tue Oct 21 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Fri Nov 14 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "TSLA",
 				"additional": "Tesla, Inc.",
 				"symbolType": "Stock",
 				"eventType": "Splits",
 				"eventTitle": "Tesla, Inc. Splits",
-				"eventDatetime": "2025-10-21T11:14",
+				"eventDatetime": "2025-11-14T11:14",
 				"metrics": [
 					{ "label": "Ratio", "value": "1:5" }
 				],
@@ -415,14 +415,14 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Tue Oct 21 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Fri Nov 14 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "MATIC",
 				"additional": "Polygon",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Polygon",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-21T03:22",
+				"eventDatetime": "2025-11-14T03:22",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.48" },
 					{ "label": "Unlock %", "value": "9.67%" }
@@ -434,13 +434,13 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Tue Oct 21 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Fri Nov 14 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "EUROSTOXX50",
 				"additional": "Euro Stoxx 50",
 				"symbolType": "Index",
 				"eventType": "News",
 				"eventTitle": "Euro Stoxx 50 News",
-				"eventDatetime": "2025-10-21T07:49",
+				"eventDatetime": "2025-11-14T07:49",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Positive" }
 				],
@@ -451,13 +451,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Tue Oct 21 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Fri Nov 14 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "PA",
 				"additional": "Palladium (COMEX)",
 				"symbolType": "Commodity",
 				"eventType": "Earnings",
 				"eventTitle": "Palladium (COMEX) Earnings Report",
-				"eventDatetime": "2025-10-21T15:36",
+				"eventDatetime": "2025-11-14T15:36",
 				"metrics": [
 					{ "label": "EPS", "value": "0.41" },
 					{ "label": "Rev.", "value": "9.12 B" },
@@ -470,13 +470,13 @@
 				"impact": "High"
 			},
 			{
-				"id": "Tue Oct 21 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Fri Nov 14 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "USD",
 				"additional": "CNY",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "USDCNY Economic",
-				"eventDatetime": "2025-10-21T20:11",
+				"eventDatetime": "2025-11-14T20:11",
 				"metrics": [
 					{ "label": "Actual", "value": "3.57" },
 					{ "label": "Forecast", "value": "2.90" },
@@ -491,20 +491,20 @@
 		]
 	},
 	{
-		"date": "2025-10-22",
+		"date": "2025-11-15",
 		"events": [
 			{
-				"id": "Wed Oct 22 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Sat Nov 15 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "GOOGL",
 				"additional": "Alphabet Inc. (Class A)",
 				"symbolType": "Stock",
 				"eventType": "Dividends",
 				"eventTitle": "Alphabet Inc. (Class A) Dividends",
-				"eventDatetime": "2025-10-22T09:02",
+				"eventDatetime": "2025-11-15T09:02",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.08" },
-					{ "label": "Ex-date", "value": "Oct 20, 2025" },
-					{ "label": "Pay date", "value": "Nov 04, 2025" },
+					{ "label": "Ex-date", "value": "Nov 13, 2025" },
+					{ "label": "Pay date", "value": "Nov 28, 2025" },
 					{ "label": "Div. yield", "value": "0.34%" }
 				],
 				"section": "Stock",
@@ -514,14 +514,14 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Wed Oct 22 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Sat Nov 15 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "AVAX",
 				"additional": "Avalanche",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Avalanche",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-22T02:40",
+				"eventDatetime": "2025-11-15T02:40",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.72" },
 					{ "label": "Unlock %", "value": "7.44%" }
@@ -533,13 +533,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Wed Oct 22 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Sat Nov 15 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "HSI",
 				"additional": "Hang Seng Index",
 				"symbolType": "Index",
 				"eventType": "Economic",
 				"eventTitle": "Hang Seng Index Economic",
-				"eventDatetime": "2025-10-22T13:28",
+				"eventDatetime": "2025-11-15T13:28",
 				"metrics": [
 					{ "label": "Actual", "value": "1.21" },
 					{ "label": "Forecast", "value": "0.80" },
@@ -552,13 +552,13 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Wed Oct 22 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Sat Nov 15 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "NG",
 				"additional": "Natural Gas",
 				"symbolType": "Commodity",
 				"eventType": "News",
 				"eventTitle": "Natural Gas News",
-				"eventDatetime": "2025-10-22T15:51",
+				"eventDatetime": "2025-11-15T15:51",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Negative" }
 				],
@@ -569,13 +569,13 @@
 				"impact": "High"
 			},
 			{
-				"id": "Wed Oct 22 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Sat Nov 15 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "EUR",
 				"additional": "GBP",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "EURGBP Economic",
-				"eventDatetime": "2025-10-22T21:47",
+				"eventDatetime": "2025-11-15T21:47",
 				"metrics": [
 					{ "label": "Actual", "value": "0.66" },
 					{ "label": "Forecast", "value": "0.40" },
@@ -590,16 +590,16 @@
 		]
 	},
 	{
-		"date": "2025-10-23",
+		"date": "2025-11-16",
 		"events": [
 			{
-				"id": "Thu Oct 23 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
+				"id": "Sun Nov 16 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
 				"ticker": "META",
 				"additional": "Meta Platforms, Inc.",
 				"symbolType": "Stock",
 				"eventType": "Earnings",
 				"eventTitle": "Meta Platforms, Inc. Earnings Report",
-				"eventDatetime": "2025-10-23T08:58",
+				"eventDatetime": "2025-11-16T08:58",
 				"metrics": [
 					{ "label": "EPS", "value": "4.02" },
 					{ "label": "Rev.", "value": "142.77 B" },
@@ -612,14 +612,14 @@
 				"impact": "High"
 			},
 			{
-				"id": "Thu Oct 23 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
+				"id": "Sun Nov 16 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
 				"ticker": "TON",
 				"additional": "Toncoin",
 				"symbolType": "Crypto",
 				"eventType": "Crypto",
 				"eventTitle": "Toncoin",
 				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-23T05:20",
+				"eventDatetime": "2025-11-16T05:20",
 				"metrics": [
 					{ "label": "Amount", "value": "$2.94" },
 					{ "label": "Unlock %", "value": "13.56%" }
@@ -631,13 +631,13 @@
 				"impact": "High"
 			},
 			{
-				"id": "Thu Oct 23 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+				"id": "Sun Nov 16 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
 				"ticker": "FTSE",
 				"additional": "FTSE 100",
 				"symbolType": "Index",
 				"eventType": "News",
 				"eventTitle": "FTSE 100 News",
-				"eventDatetime": "2025-10-23T09:47",
+				"eventDatetime": "2025-11-16T09:47",
 				"metrics": [
 					{ "label": "Sentiment", "value": "Neutral" }
 				],
@@ -648,17 +648,17 @@
 				"impact": "Low"
 			},
 			{
-				"id": "Thu Oct 23 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
+				"id": "Sun Nov 16 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
 				"ticker": "SI",
 				"additional": "Silver (COMEX)",
 				"symbolType": "Commodity",
 				"eventType": "Dividends",
 				"eventTitle": "Silver (COMEX) Dividends",
-				"eventDatetime": "2025-10-23T16:05",
+				"eventDatetime": "2025-11-16T16:05",
 				"metrics": [
 					{ "label": "Amount", "value": "$0.18" },
-					{ "label": "Ex-date", "value": "Oct 21, 2025" },
-					{ "label": "Pay date", "value": "Oct 30, 2025" },
+					{ "label": "Ex-date", "value": "Nov 14, 2025" },
+					{ "label": "Pay date", "value": "Nov 23, 2025" },
 					{ "label": "Div. yield", "value": "1.22%" }
 				],
 				"section": "Commodity",
@@ -668,117 +668,17 @@
 				"impact": "Medium"
 			},
 			{
-				"id": "Thu Oct 23 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
+				"id": "Sun Nov 16 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
 				"ticker": "USD",
 				"additional": "MXN",
 				"symbolType": "Forex",
 				"eventType": "Economic",
 				"eventTitle": "USDMXN Economic",
-				"eventDatetime": "2025-10-23T19:39",
+				"eventDatetime": "2025-11-16T19:39",
 				"metrics": [
 					{ "label": "Actual", "value": "-0.73" },
 					{ "label": "Forecast", "value": "0.50" },
 					{ "label": "Previous", "value": "2.31" }
-				],
-				"section": "Forex",
-				"link": "",
-				"linkText": "Details",
-				"marketId": "entire-world",
-				"impact": "High"
-			}
-		]
-	},
-	{
-		"date": "2025-10-24",
-		"events": [
-			{
-				"id": "Fri Oct 24 2025 03:00:00 GMT+0300 (Москва, стандартное время)0",
-				"ticker": "JPM",
-				"additional": "JPMorgan Chase & Co.",
-				"symbolType": "Stock",
-				"eventType": "Dividends",
-				"eventTitle": "JPMorgan Chase & Co. Dividends",
-				"eventDatetime": "2025-10-24T07:31",
-				"metrics": [
-					{ "label": "Amount", "value": "$1.05" },
-					{ "label": "Ex-date", "value": "Oct 22, 2025" },
-					{ "label": "Pay date", "value": "Nov 01, 2025" },
-					{ "label": "Div. yield", "value": "2.09%" }
-				],
-				"section": "Stock",
-				"link": "",
-				"linkText": "Details",
-				"marketId": "usa",
-				"impact": "Medium"
-			},
-			{
-				"id": "Fri Oct 24 2025 03:00:00 GMT+0300 (Москва, стандартное время)1",
-				"ticker": "BTC",
-				"additional": "Bitcoin",
-				"symbolType": "Crypto",
-				"eventType": "Crypto",
-				"eventTitle": "Bitcoin",
-				"eventTitleDescription": "Unlock",
-				"eventDatetime": "2025-10-24T02:58",
-				"metrics": [
-					{ "label": "Amount", "value": "$5.00" },
-					{ "label": "Unlock %", "value": "4.10%" }
-				],
-				"section": "Crypto",
-				"link": "",
-				"linkText": "Details",
-				"marketId": "entire-world",
-				"impact": "Low"
-			},
-			{
-				"id": "Fri Oct 24 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
-				"ticker": "SSE50",
-				"additional": "SSE 50 (China)",
-				"symbolType": "Index",
-				"eventType": "Conference",
-				"eventTitle": "SSE 50 (China) Conference",
-				"eventDatetime": "2025-10-24T09:06",
-				"metrics": [
-					{ "label": "Speaker", "value": "CEO" },
-					{ "label": "Venue", "value": "Shanghai" }
-				],
-				"section": "Index",
-				"link": "",
-				"linkText": "Details",
-				"marketId": "hongkong",
-				"impact": "Medium"
-			},
-			{
-				"id": "Fri Oct 24 2025 03:00:00 GMT+0300 (Москва, стандартное время)3",
-				"ticker": "RB",
-				"additional": "RBOB Gasoline",
-				"symbolType": "Commodity",
-				"eventType": "Earnings",
-				"eventTitle": "RBOB Gasoline Earnings Report",
-				"eventDatetime": "2025-10-24T15:44",
-				"metrics": [
-					{ "label": "EPS", "value": "0.21" },
-					{ "label": "Rev.", "value": "6.37 B" },
-					{ "label": "Guide", "value": "Down" }
-				],
-				"section": "Commodity",
-				"link": "",
-				"linkText": "Details",
-				"marketId": "usa",
-				"impact": "Low"
-			},
-			{
-				"id": "Fri Oct 24 2025 03:00:00 GMT+0300 (Москва, стандартное время)4",
-				"ticker": "CAD",
-				"additional": "CHF",
-				"symbolType": "Forex",
-				"eventType": "Economic",
-				"eventTitle": "CADCHF Economic",
-				"eventDatetime": "2025-10-24T20:27",
-				"metrics": [
-					{ "label": "Actual", "value": "1.18" },
-					{ "label": "Forecast", "value": "0.35" },
-					{ "label": "Previous", "value": "-0.22" }
 				],
 				"section": "Forex",
 				"link": "",

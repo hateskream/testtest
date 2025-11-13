@@ -27,9 +27,30 @@
 .container {
 	width: max-content;
 	min-width: 208px;
+	max-height: 80svh;
 	padding: 6px;
+	overflow-y: auto;
 	background: var(--bg-modal-color-base);
 	border: 1px solid var(--border-modal-color-base);
 	border-radius: 18px;
+	scrollbar-gutter: stable;
+}
+
+@supports (-moz-appearance: none) {
+	.container:not(:hover) {
+		scrollbar-width: none;
+	}
+
+	.container {
+		scrollbar-width: unset;
+	}
+}
+
+.container:not(:hover)::-webkit-scrollbar {
+	display: none;
+}
+
+.container:hover::-webkit-scrollbar {
+	width: 6px;
 }
 </style>

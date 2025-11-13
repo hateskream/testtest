@@ -1,5 +1,3 @@
-import { compareStrings } from '@/shared/lib';
-
 export interface ICountry {
 	name: string;
 	code: string;
@@ -13,158 +11,9 @@ export interface ILocation {
 	countries: ICountry[];
 }
 
-export function toggleLocationRegion(locationFilters: ILocation[], region: string) {
-	const locationIdx = locationFilters.findIndex(item =>
-		compareStrings(region, item.region),
-	)!;
-
-	const isActive = !locationFilters[locationIdx].isActive;
-
-	const countries = locationFilters[locationIdx].countries.map(item => ({
-		...item,
-		isActive,
-	}));
-
-	locationFilters[locationIdx] = {
-		...locationFilters[locationIdx],
-		countries,
-		isActive,
-	};
-
-	return [...locationFilters];
-}
-
-export function toggleLocationCountry(locationFilters: ILocation[], region: string, countryCode: string) {
-	const locationIdx = locationFilters.findIndex(item =>
-		compareStrings(region, item.region),
-	)!;
-
-	let activeCountries = 0;
-
-	const countries = locationFilters[locationIdx].countries.map(item => {
-		if (compareStrings(countryCode, item.code)) {
-			if (!item.isActive) {
-				activeCountries += 1;
-			}
-
-			return {
-				...item,
-				isActive: !item.isActive,
-			};
-		}
-
-		if (item.isActive) {
-			activeCountries += 1;
-		}
-
-		return item;
-	});
-
-	const isActive = activeCountries !== 0;
-
-	locationFilters[locationIdx] = {
-		...locationFilters[locationIdx],
-		countries,
-		isActive,
-	};
-
-	return [...locationFilters];
-}
-
 export interface IActiveLocation {
 	region: string;
 	countries: string[];
-}
-
-export function getActiveLocations(locationFilters: ILocation[]): IActiveLocation[] {
-	const countries: { region: string; countries: string[] }[] = [];
-
-	locationFilters.forEach(location => {
-		if (location.isActive) {
-			const countryActiveCodes: string[] = [];
-
-			location.countries.forEach(country => {
-				country.isActive && countryActiveCodes.push(country.code);
-			});
-
-			countries.push({
-				region: location.region,
-				countries: countryActiveCodes,
-			});
-		}
-	});
-
-	return countries;
-}
-
-export function rehydrateLocations(locationFilters: ILocation[], activeLocations: IActiveLocation[]): ILocation[] {
-	if (activeLocations.length === 0) {
-		return locationFilters;
-	}
-
-	const updatedLocations = JSON.parse(JSON.stringify(locationFilters)) as ILocation[];
-
-	updatedLocations.forEach(location => {
-		location.isActive = false;
-		location.countries.forEach(country => {
-			country.isActive = false;
-		});
-	});
-
-	activeLocations.forEach(activeLocation => {
-		const locationToUpdate = updatedLocations.find(loc => loc.region === activeLocation.region);
-		if (locationToUpdate) {
-			locationToUpdate.isActive = true;
-
-			activeLocation.countries.forEach(countryCode => {
-				const countryToUpdate = locationToUpdate.countries.find(country => country.code === countryCode);
-				if (countryToUpdate) {
-					countryToUpdate.isActive = true;
-				}
-			});
-		}
-	});
-
-	return updatedLocations;
-}
-
-export function compareLocations(locations1: ILocation[], locations2: ILocation[]): boolean {
-	if (locations1.length !== locations2.length) {
-		return false;
-	}
-	for (let i = 0; i < locations1.length; i += 1) {
-		if (!compareLocation(locations1[i], locations2[i])) {
-			return false;
-		}
-	}
-	return true;
-}
-
-function compareLocation(location1: ILocation, location2: ILocation): boolean {
-	if (
-		location1.region !== location2.region ||
-        location1.isActive !== location2.isActive ||
-        location1.isCanAllSwitch !== location2.isCanAllSwitch
-	) {
-		return false;
-	}
-	return compareCountries(location1.countries, location2.countries);
-}
-
-function compareCountries(countries1: ICountry[], countries2: ICountry[]): boolean {
-	if (countries1.length !== countries2.length) {
-		return false;
-	}
-	for (let i = 0; i < countries1.length; i += 1) {
-		if (
-			countries1[i].name !== countries2[i].name ||
-            countries1[i].code !== countries2[i].code ||
-            countries1[i].isActive !== countries2[i].isActive
-		) {
-			return false;
-		}
-	}
-	return true;
 }
 
 export const LOCATIONS_DEFAULT: ILocation[] = [
@@ -413,3 +262,46 @@ export const LOCATIONS_DEFAULT: ILocation[] = [
 		region: 'Mcodedle East & Africa',
 	},
 ];
+
+export const REGION_RELATIONS: Record<string, string[]> = {
+	'Europe': ['Western Europe', 'Eastern Europe'],
+	'Asia-Pacific': ['Developed', 'Emerging'],
+};
+
+export const PARENT_OF_REGION: Record<string, string> = Object.entries(REGION_RELATIONS)
+	.flatMap(([parent, children]) => children.map(child => [child, parent] as const))
+	.reduce((acc, [child, parent]) => {
+		acc[child] = parent;
+		return acc;
+	}, {} as Record<string, string>);
+
+export function rehydrateLocations(locationFilters: ILocation[], activeLocations: IActiveLocation[]): ILocation[] {
+	if (activeLocations.length === 0) {
+		return locationFilters;
+	}
+
+	const updatedLocations = JSON.parse(JSON.stringify(locationFilters)) as ILocation[];
+
+	updatedLocations.forEach(location => {
+		location.isActive = false;
+		location.countries.forEach(country => {
+			country.isActive = false;
+		});
+	});
+
+	activeLocations.forEach(activeLocation => {
+		const locationToUpdate = updatedLocations.find(loc => loc.region === activeLocation.region);
+		if (locationToUpdate) {
+			locationToUpdate.isActive = true;
+
+			activeLocation.countries.forEach(countryCode => {
+				const countryToUpdate = locationToUpdate.countries.find(country => country.code === countryCode);
+				if (countryToUpdate) {
+					countryToUpdate.isActive = true;
+				}
+			});
+		}
+	});
+
+	return updatedLocations;
+}

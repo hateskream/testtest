@@ -65,6 +65,8 @@ const formattedMarketCaps = computed(() => props.tickers.map(ticker => formatMar
 	overflow: hidden;
 	font-weight: 440;
 	font-size: 10px;
+	line-height: 170%;
+	letter-spacing: 0.08px;
 	border-radius: 16px;
 	gap: 1px;
 }
@@ -72,7 +74,7 @@ const formattedMarketCaps = computed(() => props.tickers.map(ticker => formatMar
 .segment {
 	display: flex;
 	align-items: center;
-	padding: 6px;
+	padding: 0 6px;
 	background-color: var(--bg-color-surface-03);
 	gap: 6px;
 }

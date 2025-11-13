@@ -1,22 +1,11 @@
 <script setup lang="ts">
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiPosition } from '@/shared/ui/position';
-import {
-	MarketBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-	ModalSubmenu,
-	MarketBadgeList,
-} from '@/modules/widgets/base';
+import { MarketBadge, MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { type MarketType } from '@/modules/market';
-import {
-	FilterType,
-	filterTypeToName,
-	type FiltersState,
-	type FiltersValues,
-} from '../../model';
+import { type FiltersState, type FiltersValues, FilterType, filterTypeToName } from '../../model';
 import { FilterComponent } from '../common';
+import type { MarketType } from '@/modules/market';
 
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
@@ -47,11 +36,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 		</div>
 		<div :class="classes.minimized">
 			<market-badge v-model="activeMarket" />
-
-			<div :class="classes.lineDelimiterGroup">
-				<ui-delimiter />
-			</div>
-
+			<ui-delimiter />
 			<ui-position :class="[classes.burger, classes.filter]">
 				<template #title>
 					<ui-icon
@@ -130,7 +115,9 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 	}
 
 	.minimized {
-		display: contents;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
 	.burger {

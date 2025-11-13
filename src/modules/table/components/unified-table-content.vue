@@ -45,13 +45,21 @@ export interface IProps<T> {
 
 export interface IEmits<T> {
 	(e: 'update:sections', sections: IGenericTableSection<T>[]): void;
+
 	(e: 'update:rows', rows: IGenericTableRow<T>[]): void;
+
 	(e: 'rowMoved', payload: IDragDropEvent<T>): void;
+
 	(e: 'rowDeleted', payload: { rowId: string; sectionId?: string }): void;
+
 	(e: 'sectionToggled', sectionId: string): void;
+
 	(e: 'sectionAdded', sectionName: string): void;
+
 	(e: 'sectionDeleted', sectionId: string): void;
+
 	(e: 'sectionRenamed', payload: { sectionId: string; newName: string }): void;
+
 	(e: 'click-on-row', tickerId: string): void;
 }
 
@@ -69,7 +77,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 const emit = defineEmits<IEmits<T>>();
 
 const { sortData } = useTableData();
-const { getColumnStyles, getTotalColumnSpan } = useTableLayout();
+const { getColumnStyles } = useTableLayout();
 
 // State
 const hoveredRowId = ref<string | null>(null);
@@ -83,17 +91,13 @@ const isSectioned = computed(() => {
 	return props.sections && props.sections.length > 0;
 });
 
-// Common computed properties
-const hasActionsOrSettings = computed(() => props.enableRowActions || props.enableColumnSettings);
-
-const shouldUseColspan = computed(() => props.enableColumnSettings && !props.enableRowActions);
 
 const columnStyles = computed(() => {
 	return getColumnStyles(props.columns);
 });
 
 const totalColumnSpan = computed(() => {
-	return getTotalColumnSpan(props.columns.length, hasActionsOrSettings.value);
+	return props.columns.length;
 });
 
 const dragGroup = computed(() => {
@@ -411,13 +415,14 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 
 	return {
 		...(index !== 0 ?
-			{ width:
-					`calc(var(--col-${index}-width)
-					${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)` } : {}),
+			{
+				width:
+					`var(--col-${index}-width)`,
+			}
+			: {}),
 
 		minWidth:
-			`calc(var(--col-${index}-min-width) +
-			${shouldUseColspan.value && index + 1 === columnsPayload.length ? 70 : 0}px)`,
+			`var(--col-${index}-min-width)`,
 	};
 
 };
@@ -496,10 +501,10 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 					<td
 						v-for="(column, cellIndex) in columns"
 						:key="`${getRowId(item)}-${column.key}`"
-						:colspan="shouldUseColspan && cellIndex + 1 === columns.length ? 2 : 1"
 						:class="[
 							classes.tableCell,
 							{
+								[classes.borderBottom]: Array.isArray(columns) && columns.length > 3,
 								[classes.stickyFirstCell]: cellIndex === 0 && stickyFirstColumn,
 								[classes.stickyFirstCellHovered]: cellIndex === 0
 									&& stickyFirstColumn && hoveredRowId === getRowId(item),
@@ -527,11 +532,13 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 							{ [classes.rowActionsHovered]: hoveredRowId === getRowId(item) }
 						]"
 					>
-						<slot
-							name="row-actions"
-							:ticker-id="getRowId(item)"
-							:section-id="isSectioned && item.type === 'row' ? item.sectionId : undefined"
-						/>
+						<div :class="classes.rowActionsWrapper">
+							<slot
+								name="row-actions"
+								:ticker-id="getRowId(item)"
+								:section-id="isSectioned && item.type === 'row' ? item.sectionId : undefined"
+							/>
+						</div>
 					</td>
 				</template>
 			</tr>
@@ -617,7 +624,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 }
 
 .tableRow {
-	height: 48px;
+	height: 40px;
 }
 
 .tableRowHovered {
@@ -634,7 +641,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 
 .tableCell {
 	position: relative;
-	padding: 8px 12px;
+	padding: 8px 10px;
 	overflow: hidden;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -650,7 +657,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	background:
 		linear-gradient(
 			to right,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
+			var(--table-bg-color, #1a1a1a) 65%,
 			rgb(26 26 26 / 0%) 100%
 		);
 }
@@ -751,25 +758,41 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	text-overflow: ellipsis;
 }
 
-/* Row actions */
+/* Row actions - FIXED */
+
 .rowActions {
 	position: sticky;
 	right: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 70px;
-	min-width: 50px;
+	z-index: 11; /* Higher than stickyFirstCell (z-index: 10) */
+	width: 0;
+	min-width: 0;
+	padding: 0;
+	overflow: visible;
+	vertical-align: middle;
 	opacity: 0;
+
+	.rowActionsWrapper {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: auto;
+		padding-right: 14px;
+		background:
+			linear-gradient(
+				to left,
+				rgb(32 32 32 / 100%) 65%,
+				rgb(32 32 32 / 0%) 100%
+			);
+		pointer-events: auto;
+	}
 }
 
 .rowActionsHovered {
-	background:
-		linear-gradient(
-			to left,
-			rgb(32 32 32 / 100%) 65%,
-			rgb(32 32 32 / 0%) 100%
-		);
+	opacity: 1;
 }
 
 .columnSettings {
@@ -877,5 +900,10 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	font-style: italic;
 	font-size: 14px;
 	color: var(--text-color-base-300, #9a9a9d);
+}
+
+
+.borderBottom {
+	border-bottom: 1px solid var(--border-color-surface-01);
 }
 </style>

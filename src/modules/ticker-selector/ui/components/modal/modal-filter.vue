@@ -24,10 +24,12 @@ interface IModalFilterTickerProps {
 	isBackgroundTransparent?: boolean;
 	enableSelectedInfo?: boolean;
 	enableSelectAll?: boolean;
+	autofocus?: boolean;
 	textAboveSearch?: string;
 	selectionMode?: 'single' | 'multiple';
 	searchPlaceholder?: string;
 	marketTypes: MarketType[];
+	displayVariant: 'new' | 'default';
 }
 
 type IGroupedTicker = Record<SymbolType, TickerDto[]>;
@@ -210,42 +212,45 @@ defineExpose({ focusSearch });
 		:style="isBackgroundTransparent && { background: 'transparent' }"
 	>
 		<div :class="classes.content">
-			<div
-				:class="classes.header"
-				:style="isBackgroundTransparent
-					? {
-						background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-01) 22%)',
-					}
-					: {
-						background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',
-					}"
-			>
+			<div :class="classes.top">
 				<div
-					v-if="props.textAboveSearch"
-					:class="classes.textAboveSearch"
+					:class="classes.header"
+					:style="isBackgroundTransparent
+						? {
+							background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-01) 22%)',
+						}
+						: {
+							background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',
+						}"
 				>
-					{{ props.textAboveSearch }}
+					<div
+						v-if="props.textAboveSearch"
+						:class="classes.textAboveSearch"
+					>
+						{{ props.textAboveSearch }}
+					</div>
+
+					<div :class="classes.search">
+						<modal-search
+							ref="search"
+							v-model="query"
+							:placeholder="searchPlaceholder"
+							:autofocus="props.autofocus"
+						/>
+					</div>
 				</div>
 
-				<div :class="classes.search">
-					<modal-search
-						ref="search"
-						v-model="query"
-						:placeholder="searchPlaceholder"
-					/>
-				</div>
+				<modal-filter-info
+					v-if="props.enableSelectedInfo"
+					v-model="viewMode"
+					:is-searching="hasSearchQuery"
+					:total-items="queredTickers.length"
+					:total-selected="selectedTickers.allSelected.length"
+				/>
 			</div>
 
-			<modal-filter-info
-				v-if="props.enableSelectedInfo"
-				v-model="viewMode"
-				:is-searching="hasSearchQuery"
-				:total-items="queredTickers.length"
-				:total-selected="selectedTickers.allSelected.length"
-			/>
-
-			<template v-if="viewMode === FilterListType.All">
-				<template v-if="activeGroup === null">
+			<div v-if="viewMode === FilterListType.All">
+				<div v-if="activeGroup === null" :class="classes.bottom">
 					<div v-for="(_, group) in groupedTickers" :key="group">
 						<modal-filter-row-title
 							:is-selected-all="isGroupTickersSelectedAll(group)"
@@ -273,13 +278,13 @@ defineExpose({ focusSearch });
 								v-else
 								:list="groupedTickers[group!].slice(0, 3)"
 								:selected-ids-map="modelValue"
+								:display-variant="props.displayVariant"
 								@update="handleToggleSelect"
 							/>
 						</template>
-
 					</div>
-				</template>
-				<template v-else>
+				</div>
+				<div v-else :class="classes.bottom">
 					<modal-filter-row-title
 						v-if="availableSymbols.length > 1"
 						:is-back="true"
@@ -307,10 +312,11 @@ defineExpose({ focusSearch });
 						v-else
 						:list="groupedTickers[activeGroup!]"
 						:selected-ids-map="modelValue"
+						:display-variant="props.displayVariant"
 						@update="handleToggleSelect"
 					/>
-				</template>
-			</template>
+				</div>
+			</div>
 			<template v-else>
 				<div
 					v-if="selectedTickers.allSelected.length === 0 && hasSearchQuery"
@@ -322,6 +328,7 @@ defineExpose({ focusSearch });
 					v-else
 					:list="selectedTickers.allSelected"
 					:selected-ids-map="modelValue"
+					:display-variant="props.displayVariant"
 					@update="handleToggleSelect"
 				/>
 			</template>
@@ -336,6 +343,7 @@ defineExpose({ focusSearch });
 	flex-direction: column;
 	width: 286px;
 	height: 100%;
+	max-height: 80svh;
 	padding: 6px;
 	overflow: hidden;
 	background: var(--bg-modal-color-base);
@@ -355,16 +363,37 @@ defineExpose({ focusSearch });
 
 .content {
 	flex: 1;
-	overflow-x: hidden;
-	overflow-y: auto;
-	scrollbar-width: thin;
-	scrollbar-color: var(--border-color-base-300) transparent;
+	margin: -6px;
+	padding: 6px;
 }
 
 .header {
-	position: sticky;
-	top: 0;
 	padding-bottom: 22px;
+}
+
+.bottom {
+	max-height: 450px;
+	margin: 0 -6px;
+	padding: 6px;
+	overflow-y: scroll;
+}
+
+@supports (-moz-appearance: none) {
+	.bottom:not(:hover) {
+		scrollbar-width: none;
+	}
+
+	.bottom {
+		scrollbar-width: unset;
+	}
+}
+
+.bottom:not(:hover)::-webkit-scrollbar {
+	display: none;
+}
+
+.bottom:hover::-webkit-scrollbar {
+	width: 6px;
 }
 
 .notFound {

@@ -6,6 +6,8 @@ import { getMockNewsDetailsData } from './mock/mock-news-details-data';
 const IS_USE_MOCK = true;
 
 export interface IGetNewsDetailsResponse {
+	id: string;
+	slug: string;
 	title: string;
 	article: string;
 	date: number;

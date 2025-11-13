@@ -14,6 +14,15 @@ export enum WidgetType {
 	ChartPrice = 'chart-price',
 	Exchange = 'exchange',
 	EthGas = 'eth-gas',
+	ConsumerPriceIndex = 'consumer-price-index',
+	NonfarmPayrolls = 'nonfarm-payrolls',
+	NominalGDP = 'nominal-gdp',
+	RealGDP = 'real-gdp',
+	UnemploymentRate ='unemployment-rate',
+	NewsSummary = 'news-summary',
+	HighImpactHourMap = 'high-impact-hour-map',
+	UsInflation = 'us-inflation',
+	FederalFunds = 'federal-funds',
 }
 
 export function isWidgetTypeKey(value: string): value is WidgetType {

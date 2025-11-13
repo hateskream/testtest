@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { PreloaderComponent } from '../common';
+import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading/model.ts';
 
 import RcmPriceComponent from './rcm-price-component.vue';
 import HeaderComponent from './header-component.vue';
@@ -26,14 +27,16 @@ const {
 	currentSettings,
 	tickers,
 	fetchTickersError,
-	isNotData,
 	resetAllChanges,
 	togglePin,
+	loadMore,
 	refetch,
 	filtersValues,
 	filtersState,
 	applyStateToParent,
 	hasPin,
+	hasNextPage,
+	tickersIsLoading,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -46,6 +49,18 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+async function loadMoreTickets($state: IInfiniteStateHandler) {
+	await loadMore();
+
+	if (fetchTickersError.value) {
+		$state.error();
+	} else if (hasNextPage.value) {
+		$state.loaded();
+	} else {
+		$state.complete();
+	}
+}
 </script>
 
 <template>
@@ -61,13 +76,16 @@ const emit = defineEmits<{
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData || props.meta.isLoading" />
+			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" />
 			<view-component
 				v-else
+				display-variant="default"
 				:tickers="tickers"
 				:settings="currentSettings"
 				:meta="meta"
 				:has-pin="hasPin"
+				has-infinity-loading
+				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			>
 				<template #header>
@@ -75,6 +93,7 @@ const emit = defineEmits<{
 						v-model:market="activeMarket"
 						v-model:filters="filtersState"
 						:filters-values="filtersValues"
+						:class="classes.header"
 					/>
 				</template>
 			</view-component>
@@ -84,3 +103,9 @@ const emit = defineEmits<{
 		</template>
 	</base-widget-tv-component>
 </template>
+
+<style module="classes">
+.header {
+	margin-bottom: 10px;
+}
+</style>

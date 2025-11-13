@@ -32,6 +32,26 @@ export const sourceToName: Readonly<Record<Source, string>> = {
 	[Source.Benzinga]: 'Benzinga',
 };
 
+export enum Include {
+	GeneralNews = 'GeneralNews',
+	PressReleases = 'PressReleases',
+}
+
+export const includeToName: Readonly<Record<Include, string>> = {
+	[Include.GeneralNews]: 'General News',
+	[Include.PressReleases]: 'Press Releases',
+};
+
+export enum ActiveDateRange {
+	All = 'All',
+	SelectPeriod = 'SelectPeriod',
+}
+
+export const dateRangeStateToName: Readonly<Record<ActiveDateRange, string>> = {
+	[ActiveDateRange.All]: 'All',
+	[ActiveDateRange.SelectPeriod]: 'Select period',
+};
+
 export function toggleFilter<T>(selected: Set<T>, value: T): Set<T> {
 	const newSet = new Set(selected);
 	newSet.has(value) ? newSet.delete(value) : newSet.add(value);
