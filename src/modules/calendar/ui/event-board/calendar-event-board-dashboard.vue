@@ -241,12 +241,6 @@ defineExpose({ scrollToDate });
 	overflow-y: scroll;
 	gap: 12px;
 	border-radius: 16px;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-}
-
-.calendarEventBoard::-webkit-scrollbar {
-	display: none;
 }
 
 .boardDate {
