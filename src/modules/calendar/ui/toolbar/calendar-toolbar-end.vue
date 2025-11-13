@@ -33,9 +33,9 @@ const emits = defineEmits<{
 			@click="emits('reset-week')"
 		>
 			<ui-icon
-				:id="IconIds.Calendar"
-				width="12"
-				height="12"
+				:id="IconIds.CalendarV2"
+				width="20px"
+				height="20px"
 				:class="['dropdown-icon', classes.calendarIcon]"
 			/>
 			<span :class="classes.redDot" />
@@ -97,8 +97,8 @@ const emits = defineEmits<{
 
 .redDot {
 	position: absolute;
-	right: 8px;
-	bottom: 8px;
+	right: 7px;
+	bottom: 6px;
 	width: 6px;
 	height: 6px;
 	background-color: rgb(230 0 0 / 100%);
