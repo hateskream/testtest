@@ -69,7 +69,7 @@ const emits = defineEmits<{
 
 .label {
 	margin-left: 12px;
-	font-weight: 600;
+	font-weight: 440;
 	font-size: 0.875rem;
 	text-align: right;
 }

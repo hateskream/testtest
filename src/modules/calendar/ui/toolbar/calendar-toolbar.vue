@@ -276,6 +276,10 @@ const label = computed(() => {
 	}
 }
 
+.label {
+	display: block;
+}
+
 .minified {
 	display: none;
 }
