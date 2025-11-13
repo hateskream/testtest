@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell';
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -54,6 +55,11 @@ const genericRows = computed(() =>
 		});
 	}),
 );
+
+const emit = defineEmits<{
+	(e: 'togglePin', tickerId: string): void;
+}>();
+
 </script>
 
 <template>
@@ -69,9 +75,21 @@ const genericRows = computed(() =>
 				:enable-column-settings="false"
 				:sticky-header="true"
 				:sticky-first-column="true"
-				:enable-row-actions="false"
+				:enable-row-actions="true"
 				@click-on-ticker="goToTickerPage"
-			/>
+			>
+				<template #row-actions="{tickerId} : {tickerId: string}">
+					<div
+						@click="emit('togglePin', tickerId)"
+					>
+						<ui-icon
+							:id="IconIds.Pin"
+							:width="20"
+							:height="20"
+						/>
+					</div>
+				</template>
+			</widget-typed-table>
 		</div>
 	</div>
 </template>

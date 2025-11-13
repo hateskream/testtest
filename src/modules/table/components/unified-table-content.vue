@@ -758,14 +758,16 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	text-overflow: ellipsis;
 }
 
-/* Row actions */
+/* Row actions - FIXED */
 
 .rowActions {
 	position: sticky;
 	right: 0;
-	width: 70px;
-	min-width: 50px;
+	z-index: 11; /* Higher than stickyFirstCell (z-index: 10) */
+	width: 0;
+	min-width: 0;
 	padding: 0;
+	overflow: visible;
 	vertical-align: middle;
 	opacity: 0;
 
@@ -774,20 +776,23 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 		top: 0;
 		right: 0;
 		bottom: 0;
-		left: 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width: auto;
+		padding-right: 14px;
+		background:
+			linear-gradient(
+				to left,
+				rgb(32 32 32 / 100%) 65%,
+				rgb(32 32 32 / 0%) 100%
+			);
+		pointer-events: auto;
 	}
 }
 
 .rowActionsHovered {
-	background:
-		linear-gradient(
-			to left,
-			rgb(32 32 32 / 100%) 65%,
-			rgb(32 32 32 / 0%) 100%
-		);
+	opacity: 1;
 }
 
 .columnSettings {

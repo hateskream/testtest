@@ -77,7 +77,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	canAddSections: false,
 	isUpdating: false,
 	showScrollbarsOnHover: true,
-	backgroundColor: undefined
+	backgroundColor: undefined,
 });
 
 const emit = defineEmits<IEmits<T>>();
