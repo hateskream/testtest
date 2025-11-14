@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import type { DisplayVariant } from '@/modules/dashboard-group';
 import { UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
+
+import WidgetDashboardControls from '@/modules/widgets/base/common/ui/controls/widget-dashboard-controls.vue';
 
 
 interface IBaseDashboardComponentProps {
@@ -24,6 +26,8 @@ const preparedAllDisplayVariants = computed(() =>
 );
 
 const countMore = computed(() => props.allDisplayVariants.length - preparedAllDisplayVariants.value.length);
+
+const isControlsExpanded = ref<boolean>(true);
 </script>
 
 <template>
@@ -59,6 +63,21 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 						{{countMore}} more...
 					</div>
 				</div>
+
+				<widget-dashboard-controls
+					v-model="isControlsExpanded"
+					:class="classes.controls"
+				>
+					<template #nav-menu>
+						<slot name="nav-menu" />
+					</template>
+					<template #settings-menu>
+						<slot name="settings-menu" />
+					</template>
+					<template #extra-menu>
+						<slot name="extra-menu" />
+					</template>
+				</widget-dashboard-controls>
 			</div>
 
 			<div
@@ -121,6 +140,7 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 
 .displayVariant {
 	display: flex;
+	align-items: center;
 	padding: 0 10px 0 6px;
 	color: rgb(255 255 255 / 60%);
 	cursor: pointer;
@@ -145,6 +165,15 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 	text-overflow: ellipsis;
 }
 
+.controls {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.titleHeader:hover .controls {
+	opacity: 1;
+}
+
 .filters {
 	padding: 6px 16px 6px 20px;
 }
@@ -156,3 +185,5 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 	overflow-y: hidden;
 }
 </style>
+
+

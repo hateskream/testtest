@@ -3,6 +3,7 @@ export enum IconIds {
 	FearGreedHalfCircle = 'fear-greed-half-circle',
 	ControlMore = 'control-more',
 	ControlShare = 'control-share',
+	DoubleChevron = 'double-chevron',
 	Home = 'home',
 	Chart = 'chart',
 	Calendar = 'calendar',
@@ -130,4 +131,5 @@ export enum IconIds {
 	Screener = 'screener',
 	SelectAll = 'select-all',
 	Settings = 'settings',
+	SettingsV2 = 'settings-v2',
 }
