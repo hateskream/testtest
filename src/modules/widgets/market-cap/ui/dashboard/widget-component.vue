@@ -6,7 +6,6 @@ import {
 	BaseErrorComponent,
 	BaseWidgetDashboard,
 	ModalItemSwitch,
-	WidgetContextMenu,
 } from '@/modules/widgets/base';
 import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
 import { useMarketCap } from './../../composables';
@@ -23,7 +22,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const emit = defineEmits<{
+const emits = defineEmits<{
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
@@ -47,9 +46,14 @@ const {
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<market-cap-filters-panel
@@ -78,20 +82,9 @@ const {
 			/>
 		</template>
 
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@reset="resetAllChanges"
-				@delete="emit('delete')"
-				@duplicate="emit('duplicate')"
-				@move-to="emit('moveTo', $event)"
-			>
-				<template #change-display>
-					<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
-					<modal-item-switch v-model="displaySettings.isShowChange">Change, %</modal-item-switch>
-				</template>
-			</widget-context-menu>
+		<template #change-display>
+			<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
+			<modal-item-switch v-model="displaySettings.isShowChange">Change, %</modal-item-switch>
 		</template>
 	</base-widget-dashboard>
 </template>

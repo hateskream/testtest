@@ -2,7 +2,7 @@
 import { defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent, FiltersPanel } from '../common';
 
 const ViewComponent = defineAsyncComponent({
@@ -116,9 +116,13 @@ const timeZoneDisplay: Record<TimeZoneUTC, string> = {
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
 	>
 		<template #filters>
 			<filters-panel
@@ -136,16 +140,6 @@ const timeZoneDisplay: Record<TimeZoneUTC, string> = {
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
 				v-else
-			/>
-		</template>
-
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
 			/>
 		</template>
 	</base-widget-dashboard>

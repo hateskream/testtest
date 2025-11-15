@@ -144,6 +144,7 @@ function handleOpenFullView() {
 			<full-view-dashboard
 				v-model="isOpenFullView"
 				:meta="props.meta"
+				display-variant="tv"
 			/>
 		</teleport>
 	</div>

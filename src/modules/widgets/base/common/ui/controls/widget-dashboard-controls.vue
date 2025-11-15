@@ -3,6 +3,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const state = defineModel<boolean>({ required: true });
 
+defineProps<{
+	hideControls?: boolean;
+}>();
+
 function toggle() {
 	state.value = !state.value;
 }
@@ -13,6 +17,7 @@ function toggle() {
 		<transition name="slide-right">
 			<div v-if="state" :class="classes.expanded">
 				<button
+					v-if="!hideControls"
 					:class="[classes.control, classes.stateButton]"
 					@click="toggle"
 				>
@@ -28,6 +33,7 @@ function toggle() {
 			>
 				<div v-if="!state" :class="classes.minified">
 					<button
+						v-if="!hideControls"
 						:class="[classes.control, classes.stateButton]"
 						@click="toggle"
 					>
@@ -51,6 +57,7 @@ function toggle() {
 	align-items: center;
 	margin-left: auto;
 	gap: var(--padding-padding-s3, 4px);
+	padding-right: 4px;
 }
 
 .expanded,

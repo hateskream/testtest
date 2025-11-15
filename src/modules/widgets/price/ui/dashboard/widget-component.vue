@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 import { notNullish } from '@vueuse/core';
 
-import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
@@ -82,9 +82,14 @@ defineExpose({ scrollBy });
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<filter-component
@@ -111,19 +116,8 @@ defineExpose({ scrollBy });
 			/>
 		</template>
 
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
-				@reset="resetAllChanges"
-			>
-				<template #change-display>
-					<rcm-price-component v-model="currentSettings" />
-				</template>
-			</widget-context-menu>
+		<template #change-display>
+			<rcm-price-component v-model="currentSettings" />
 		</template>
 	</base-widget-dashboard>
 </template>

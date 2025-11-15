@@ -7,6 +7,7 @@ import { generateId, getWidgetComponent, type IMeta } from '../model';
 
 interface IProps {
 	meta: IMeta;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<IProps>();
@@ -29,15 +30,27 @@ const HORIZONTAL_PADDING = 130;
 const style = computed(() => {
 	const { maxSize, columnWidth, rowHeight } = props.meta;
 
-	let width = window.innerWidth - HORIZONTAL_PADDING;
-	if (Number.isFinite(maxSize.w)) {
-		width = maxSize.w * columnWidth;
+	if (props.displayVariant === 'tv') {
+		let width = window.innerWidth - HORIZONTAL_PADDING;
+
+		if (Number.isFinite(maxSize.w)) {
+			width = maxSize.w * columnWidth;
+		}
+
+		let height = window.innerHeight - VERTICAL_PADDING;
+		if (Number.isFinite(maxSize.h)) {
+			height = maxSize.h * rowHeight;
+		}
+
+		return {
+			width: `${width}px`,
+			height: `${height}px`,
+		};
 	}
 
-	let height = window.innerHeight - VERTICAL_PADDING;
-	if (Number.isFinite(maxSize.h)) {
-		height = maxSize.h * rowHeight;
-	}
+	// TODO: size calculation for fullscreen dashboard widgets
+	const width = 4 * columnWidth;
+	const height = 8 * rowHeight;
 
 	return {
 		width: `${width}px`,
@@ -52,7 +65,7 @@ const style = computed(() => {
 		v-model="isOpenFullView"
 	>
 		<component
-			:is="getWidgetComponent('tv',props.meta.widgetType)"
+			:is="getWidgetComponent(props.displayVariant, props.meta.widgetType)"
 			:meta="preparedMeta"
 			:style="style"
 		/>

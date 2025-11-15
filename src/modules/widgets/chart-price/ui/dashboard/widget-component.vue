@@ -5,7 +5,6 @@ import {
 	BaseErrorComponent,
 	BaseWidgetDashboard,
 	ModalSubmenu,
-	WidgetContextMenu,
 } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
@@ -52,9 +51,14 @@ function updateTicker(newValue: string[]) {
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<filters-component
@@ -68,6 +72,7 @@ function updateTicker(newValue: string[]) {
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
 			/>
 		</template>
+
 		<template #content>
 			<preloader-component v-if="props.meta.isLoading" />
 			<view-component
@@ -76,17 +81,6 @@ function updateTicker(newValue: string[]) {
 				:meta="meta"
 				:is-show-time-range="false"
 				display-variant="dashboard"
-			/>
-		</template>
-
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
-				@reset="resetAllChanges"
 			/>
 		</template>
 

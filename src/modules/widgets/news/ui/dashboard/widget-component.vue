@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch, WidgetContextMenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch } from '@/modules/widgets/base';
 import {
 	type IGetNewsRequest,
 	NewsFilters,
@@ -41,6 +41,7 @@ const ViewComponent = defineAsyncComponent({
 });
 
 const {
+	resetAllChanges,
 	selectAll,
 	unselectAll,
 	toggleTicker,
@@ -102,9 +103,14 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<news-filters-panel
@@ -147,71 +153,61 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 			</news-content-wrapper>
 		</template>
 
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
+		<template #change-display>
+			<modal-item-switch
+				:model-value="displaySettings.isShowDate"
+				@update:model-value="toggleDisplaySettings('isShowDate')"
 			>
-				<template #change-display>
-					<modal-item-switch
-						:model-value="displaySettings.isShowDate"
-						@update:model-value="toggleDisplaySettings('isShowDate')"
-					>
-						Date
-					</modal-item-switch>
-					<modal-item-switch
-						:model-value="displaySettings.isShowSource"
-						@update:model-value="toggleDisplaySettings('isShowSource')"
-					>
-						Source
-					</modal-item-switch>
-					<modal-item-switch
-						:model-value="displaySettings.isShowDesc"
-						@update:model-value="toggleDisplaySettings('isShowDesc')"
-					>
-						Description
-					</modal-item-switch>
-					<modal-item-switch
-						:model-value="displaySettings.isShowAuthor"
-						@update:model-value="toggleDisplaySettings('isShowAuthor')"
-					>
-						Author
-					</modal-item-switch>
-					<modal-item-switch
-						:model-value="displaySettings.isShowSymbols"
-						@update:model-value="toggleDisplaySettings('isShowSymbols')"
-					>
-						Symbols
-					</modal-item-switch>
-					<modal-item-switch
-						:model-value="displaySettings.isShowScore"
-						@update:model-value="toggleDisplaySettings('isShowScore')"
-					>
-						Score
-					</modal-item-switch>
-				</template>
+				Date
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowSource"
+				@update:model-value="toggleDisplaySettings('isShowSource')"
+			>
+				Source
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowDesc"
+				@update:model-value="toggleDisplaySettings('isShowDesc')"
+			>
+				Description
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowAuthor"
+				@update:model-value="toggleDisplaySettings('isShowAuthor')"
+			>
+				Author
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowSymbols"
+				@update:model-value="toggleDisplaySettings('isShowSymbols')"
+			>
+				Symbols
+			</modal-item-switch>
+			<modal-item-switch
+				:model-value="displaySettings.isShowScore"
+				@update:model-value="toggleDisplaySettings('isShowScore')"
+			>
+				Score
+			</modal-item-switch>
+		</template>
 
-				<template #filter>
-					<news-filters
-						v-model:selected-scores="selectedScores"
-						v-model:selected-segments="selectedMarketSegments"
-						v-model:selected-sentiment="selectedSentiment"
-						v-model:selected-sources="selectedSources"
-						v-model:sort-by="sortBy"
-						v-model:locations="locations"
-						v-model:include="include"
-						v-model:active-date-range="activeDateRange"
-						:segments="segments"
-						:selected-segment-tickers="selectedSegmentTickers"
-						@select-all="selectAll"
-						@unselect-all="unselectAll"
-						@toggle-ticker="toggleTicker"
-					/>
-				</template>
-			</widget-context-menu>
+		<template #filter>
+			<news-filters
+				v-model:selected-scores="selectedScores"
+				v-model:selected-segments="selectedMarketSegments"
+				v-model:selected-sentiment="selectedSentiment"
+				v-model:selected-sources="selectedSources"
+				v-model:sort-by="sortBy"
+				v-model:locations="locations"
+				v-model:include="include"
+				v-model:active-date-range="activeDateRange"
+				:segments="segments"
+				:selected-segment-tickers="selectedSegmentTickers"
+				@select-all="selectAll"
+				@unselect-all="unselectAll"
+				@toggle-ticker="toggleTicker"
+			/>
 		</template>
 
 		<template #nav-menu>

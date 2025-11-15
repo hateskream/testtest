@@ -28,6 +28,9 @@ defineExpose({
 	get handleOpen() {
 		return rootRef.value?.open;
 	},
+	get handleClose() {
+		return rootRef.value?.close;
+	},
 });
 </script>
 

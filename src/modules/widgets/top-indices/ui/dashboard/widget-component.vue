@@ -5,7 +5,7 @@ import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base/
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../../queries';
 import { ALL_COLUMNS } from '../../model';
-import { ErrorNetworkComponent, WidgetContextMenu } from '@/modules/widgets/base';
+import { ErrorNetworkComponent } from '@/modules/widgets/base';
 import { LoaderLayout } from '../common';
 
 const ViewComponent = defineAsyncComponent({
@@ -35,9 +35,13 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
 	>
 		<template #content>
 			<error-network-component v-if="isError" @retry="refetch" />
@@ -49,16 +53,6 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 				:rows="rows"
 				:columns="ALL_COLUMNS"
 				display-variant="dashboard"
-			/>
-		</template>
-
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
 			/>
 		</template>
 	</base-widget-dashboard>

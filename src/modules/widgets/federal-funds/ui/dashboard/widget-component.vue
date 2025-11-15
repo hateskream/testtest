@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
 
 const ViewComponent = defineAsyncComponent({
@@ -30,9 +30,13 @@ const refetch = () => {};
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
 	>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
@@ -40,16 +44,6 @@ const refetch = () => {};
 			<view-component
 				v-else
 				:value="4.50"
-			/>
-		</template>
-
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
 			/>
 		</template>
 	</base-widget-dashboard>

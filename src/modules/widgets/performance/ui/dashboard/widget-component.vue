@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { ALL_COLUMNS, DisplayVariant } from '../../model';
 import { usePerformance } from '../../composables';
 
@@ -40,6 +40,7 @@ const {
 	activeMarket,
 	quoteCurrency,
 	refetch,
+	resetAllChanges,
 } = usePerformance({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -49,10 +50,15 @@ const {
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="currentDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
 		@update:active-display-variant="(val) => currentDisplayVariant = val as DisplayVariant"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<performance-header
@@ -84,26 +90,16 @@ const {
 			/>
 		</template>
 
-		<template #settings-menu>
-			<widget-context-menu
-				:title="props.meta.name"
-				:dashboards="props.meta.dashboards"
-				@delete="emits('delete')"
-				@duplicate="emits('duplicate')"
-				@move-to="emits('moveTo', $event)"
-			>
-				<template #filter>
-					<performance-filter
-						v-model:active-market="activeMarket"
-						v-model:is-compact-mode="isCompactMode"
-						v-model:display-variant="currentDisplayVariant"
-						v-model:stock="currentStock"
-						v-model:date="currentDate"
-						v-model:symbol-display="currentSymbolDisplayVariant"
-						v-model:quote-currency="quoteCurrency"
-					/>
-				</template>
-			</widget-context-menu>
+		<template #filter>
+			<performance-filter
+				v-model:active-market="activeMarket"
+				v-model:is-compact-mode="isCompactMode"
+				v-model:display-variant="currentDisplayVariant"
+				v-model:stock="currentStock"
+				v-model:date="currentDate"
+				v-model:symbol-display="currentSymbolDisplayVariant"
+				v-model:quote-currency="quoteCurrency"
+			/>
 		</template>
 	</base-widget-dashboard>
 </template>
