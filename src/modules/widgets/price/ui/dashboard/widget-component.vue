@@ -2,11 +2,13 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 import { notNullish } from '@vueuse/core';
 
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
+
+import RcmPriceComponent from '@/modules/widgets/price/ui/tv/rcm-price-component.vue';
 
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
@@ -24,6 +26,12 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const refView = ref<IWidgetExposed | null>(null);
 
 const {
@@ -39,6 +47,7 @@ const {
 	loadMore,
 	hasNextPage,
 	tickersIsLoading,
+	resetAllChanges,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -100,6 +109,21 @@ defineExpose({ scrollBy });
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			/>
+		</template>
+
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@move-to="emits('moveTo', $event)"
+				@reset="resetAllChanges"
+			>
+				<template #change-display>
+					<rcm-price-component v-model="currentSettings" />
+				</template>
+			</widget-context-menu>
 		</template>
 	</base-widget-dashboard>
 </template>

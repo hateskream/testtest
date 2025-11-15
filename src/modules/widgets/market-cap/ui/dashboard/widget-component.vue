@@ -2,7 +2,12 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import {
+	BaseErrorComponent,
+	BaseWidgetDashboard,
+	ModalItemSwitch,
+	WidgetContextMenu,
+} from '@/modules/widgets/base';
 import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
 import { useMarketCap } from './../../composables';
 
@@ -18,6 +23,12 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emit = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const {
 	selectedTickers,
 	selectedMarkets,
@@ -27,6 +38,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
+	resetAllChanges,
 } = useMarketCap({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -64,6 +76,22 @@ const {
 				:display-settings="displaySettings"
 				:class="classes.content"
 			/>
+		</template>
+
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@reset="resetAllChanges"
+				@delete="emit('delete')"
+				@duplicate="emit('duplicate')"
+				@move-to="emit('moveTo', $event)"
+			>
+				<template #change-display>
+					<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
+					<modal-item-switch v-model="displaySettings.isShowChange">Change, %</modal-item-switch>
+				</template>
+			</widget-context-menu>
 		</template>
 	</base-widget-dashboard>
 </template>

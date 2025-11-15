@@ -2,12 +2,13 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, WidgetContextMenu } from '@/modules/widgets/base';
 import { ALL_COLUMNS, DisplayVariant } from '../../model';
 import { usePerformance } from '../../composables';
 
 import PerformanceLoader from '../layouts/performance-loader.vue';
 import PerformanceHeader from '@/modules/widgets/performance/ui/header/performance-header.vue';
+import PerformanceFilter from '@/modules/widgets/performance/ui/modals/performance-filters.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../layouts/performance-view.vue'),
@@ -21,11 +22,17 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
 
 const {
 	currentStock,
 	currentDate,
 	currentDisplayVariant,
+	isCompactMode,
 	tickers,
 	isError,
 	isLoading,
@@ -77,7 +84,27 @@ const {
 			/>
 		</template>
 
-
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@move-to="emits('moveTo', $event)"
+			>
+				<template #filter>
+					<performance-filter
+						v-model:active-market="activeMarket"
+						v-model:is-compact-mode="isCompactMode"
+						v-model:display-variant="currentDisplayVariant"
+						v-model:stock="currentStock"
+						v-model:date="currentDate"
+						v-model:symbol-display="currentSymbolDisplayVariant"
+						v-model:quote-currency="quoteCurrency"
+					/>
+				</template>
+			</widget-context-menu>
+		</template>
 	</base-widget-dashboard>
 </template>
 

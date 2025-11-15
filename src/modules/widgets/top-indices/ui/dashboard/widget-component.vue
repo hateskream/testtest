@@ -5,7 +5,7 @@ import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base/
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../../queries';
 import { ALL_COLUMNS } from '../../model';
-import { ErrorNetworkComponent } from '@/modules/widgets/base';
+import { ErrorNetworkComponent, WidgetContextMenu } from '@/modules/widgets/base';
 import { LoaderLayout } from '../common';
 
 const ViewComponent = defineAsyncComponent({
@@ -19,6 +19,12 @@ interface ITopIndicesWidgetProps {
 }
 
 const props = defineProps<ITopIndicesWidgetProps>();
+
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
 
 const { data, isLoading, isError, refetch } = useQueryTopIndices(props.meta.maxCountRowTable ?? 50);
 
@@ -43,6 +49,16 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 				:rows="rows"
 				:columns="ALL_COLUMNS"
 				display-variant="dashboard"
+			/>
+		</template>
+
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@move-to="emits('moveTo', $event)"
 			/>
 		</template>
 	</base-widget-dashboard>

@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch, WidgetContextMenu } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
 import { useDominance } from '../../composables';
 
@@ -20,6 +20,12 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const {
 	displaySettings,
 	selectedTickers,
@@ -28,6 +34,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
+	resetAllChanges,
 } = useDominance({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -65,6 +72,23 @@ const {
 				:display-settings="displaySettings"
 				:class="classes.content"
 			/>
+		</template>
+
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@move-to="emits('moveTo', $event)"
+				@reset="resetAllChanges"
+			>
+				<template #change-display>
+					<modal-item-switch v-model="displaySettings.isShowIndicator">Segmented indicator</modal-item-switch>
+					<modal-item-switch v-model="displaySettings.isShowHistorical">Historical values</modal-item-switch>
+					<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
+				</template>
+			</widget-context-menu>
 		</template>
 	</base-widget-dashboard>
 </template>

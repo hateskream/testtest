@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiPosition } from '@/shared/ui/position';
 
 const state = defineModel<boolean>({ required: true });
 
@@ -20,35 +19,7 @@ function toggle() {
 					<ui-icon :id="IconIds.DoubleChevron" />
 				</button>
 
-				<ui-position>
-					<template #title>
-						<button :class="classes.control">
-							<ui-icon :id="IconIds.Burger" />
-						</button>
-					</template>
-					<template #content>
-						<slot name="nav-menu" />
-					</template>
-				</ui-position>
-
-				<ui-position>
-					<template #title>
-						<button :class="classes.control">
-							<ui-icon :id="IconIds.SettingsV2" />
-						</button>
-					</template>
-					<template #content>
-						<slot name="settings-menu" />
-					</template>
-				</ui-position>
-
-				<button :class="classes.control">
-					<ui-icon
-						:id="IconIds.ControlFullView"
-						width="20px"
-						height="20px"
-					/>
-				</button>
+				<slot name="expanded" />
 			</div>
 
 			<transition
@@ -65,17 +36,7 @@ function toggle() {
 						/>
 					</button>
 
-					<ui-position>
-						<template #title>
-							<button :class="classes.control">
-								<ui-icon :id="IconIds.ThreeDots" />
-							</button>
-						</template>
-
-						<template #content>
-							<slot name="extra-menu" />
-						</template>
-					</ui-position>
+					<slot name="minified" />
 				</div>
 			</transition>
 		</transition>
@@ -102,22 +63,19 @@ function toggle() {
 	opacity: 1;
 }
 
-.control {
+.stateButton {
 	width: 24px;
 	height: 24px;
 	padding: 0;
 	line-height: 0;
 	color: var(--text-color-base-100);
 	cursor: pointer;
-}
-
-.control:hover {
-	color: var(--text-color-base-500, #ffffff);
-}
-
-.stateButton {
 	opacity: 0;
 	transition: opacity 0.15s ease;
+}
+
+.stateButton:hover {
+	color: var(--text-color-base-500, #ffffff);
 }
 
 .expanded .stateButton {

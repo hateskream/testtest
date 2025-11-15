@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, useSlots } from 'vue';
 
 import type { DisplayVariant } from '@/modules/dashboard-group';
-import { UiIcon } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
+import { UiPosition } from '@/shared/ui/position';
 
-import WidgetDashboardControls from '@/modules/widgets/base/common/ui/controls/widget-dashboard-controls.vue';
+import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
 
 
 interface IBaseDashboardComponentProps {
@@ -28,6 +29,16 @@ const preparedAllDisplayVariants = computed(() =>
 const countMore = computed(() => props.allDisplayVariants.length - preparedAllDisplayVariants.value.length);
 
 const isControlsExpanded = ref<boolean>(true);
+
+defineSlots<{
+	'nav-menu': unknown;
+	'settings-menu': unknown;
+	'extra-menu': unknown;
+	'filters': unknown;
+	'content': unknown;
+}>();
+
+const slots = useSlots();
 </script>
 
 <template>
@@ -68,14 +79,56 @@ const isControlsExpanded = ref<boolean>(true);
 					v-model="isControlsExpanded"
 					:class="classes.controls"
 				>
-					<template #nav-menu>
-						<slot name="nav-menu" />
+					<template #expanded>
+						<ui-position
+							v-if="slots['nav-menu']"
+							placement="bottom-start"
+						>
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.Burger" />
+								</button>
+							</template>
+							<template #content>
+								<slot name="nav-menu" />
+							</template>
+						</ui-position>
+
+						<ui-position
+							v-if="slots['settings-menu']"
+							placement="bottom-start"
+						>
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.SettingsV2" />
+								</button>
+							</template>
+							<template #content>
+								<slot name="settings-menu" />
+							</template>
+						</ui-position>
+
+						<button :class="classes.control">
+							<ui-icon
+								:id="IconIds.ControlFullView"
+								width="20px"
+								height="20px"
+							/>
+						</button>
 					</template>
-					<template #settings-menu>
-						<slot name="settings-menu" />
-					</template>
-					<template #extra-menu>
-						<slot name="extra-menu" />
+
+					<template #minified>
+						<ui-position placement="bottom-start">
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.ThreeDots" />
+								</button>
+							</template>
+
+							<template #content>
+								<slot name="extra-menu" />
+							</template>
+						</ui-position>
 					</template>
 				</widget-dashboard-controls>
 			</div>
@@ -172,6 +225,19 @@ const isControlsExpanded = ref<boolean>(true);
 
 .titleHeader:hover .controls {
 	opacity: 1;
+}
+
+.control {
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	line-height: 0;
+	color: var(--text-color-base-100);
+	cursor: pointer;
+}
+
+.control:hover {
+	color: var(--text-color-base-500, #ffffff);
 }
 
 .filters {

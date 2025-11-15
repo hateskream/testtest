@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
+import {
+	BaseErrorComponent,
+	BaseWidgetDashboard,
+	ModalSubmenu,
+	WidgetContextMenu,
+} from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
@@ -19,6 +24,12 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const {
 	selectedTicker,
 	timeRange,
@@ -27,6 +38,7 @@ const {
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
 	handleAddTickerInNewWatchlist,
+	resetAllChanges,
 } = useChartPrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -66,6 +78,18 @@ function updateTicker(newValue: string[]) {
 				display-variant="dashboard"
 			/>
 		</template>
+
+		<template #settings-menu>
+			<widget-context-menu
+				:title="props.meta.name"
+				:dashboards="props.meta.dashboards"
+				@delete="emits('delete')"
+				@duplicate="emits('duplicate')"
+				@move-to="emits('moveTo', $event)"
+				@reset="resetAllChanges"
+			/>
+		</template>
+
 		<template #other>
 			<modal-submenu>
 				<template #title>Choose ticker</template>
