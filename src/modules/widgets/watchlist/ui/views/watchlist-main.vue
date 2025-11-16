@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TableRow, ITableColumn } from '@/modules/cell';
+import type { ITableColumn, TableRow } from '@/modules/cell';
 import type { ISectionUi, ITab, ITickerAddPayload, ITickerRemovePayload, ITickersAddPayload } from '../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
@@ -41,7 +41,7 @@ function onRenameTab(id: string, name: string) {
 				:selected-tickers="props.selectedTickers"
 				:tabs="props.tabs"
 				display-variant="default"
-				\@remove-ticker="emit('remove-ticker', $event)"
+				@remove-ticker="emit('remove-ticker', $event)"
 				@add-tab="emit('add-tab')"
 				@rename-tab="onRenameTab"
 				@switch-tab="emit('switch-tab', $event)"
