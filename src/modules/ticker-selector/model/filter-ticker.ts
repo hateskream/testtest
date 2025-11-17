@@ -7,6 +7,7 @@ import {
 	type TableRowDto,
 } from '@/modules/cell';
 import { MarketType } from '@/modules/market';
+import { IconIds } from '@/shared/ui/icon';
 
 export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
@@ -39,6 +40,13 @@ export type ITickerMapped =
 		symbolType?: SymbolType.Forex | null;
 		tickerId: string;
 	};
+
+export interface IMarketMapped {
+	name: string;
+	label: string;
+	marketType: MarketType;
+	icon: IconIds;
+}
 
 export interface ITickerSelectAction {
 	isSelected: boolean;
@@ -129,6 +137,46 @@ export function getMappedRow(item: TickerDto): ITickerMapped {
 				name: item.symbol.cellType,
 				ticker: item.tickerId,
 				symbolType: item.symbol.symbolType,
+			};
+	}
+}
+
+export function getMappedMarket(market: MarketType): IMarketMapped {
+	switch (market) {
+		case MarketType.Crypto:
+			return {
+				name: 'Crypto',
+				label: 'All cryptocurrencies',
+				marketType: MarketType.Crypto,
+				icon: IconIds.Cryptos,
+			};
+		case MarketType.Stock:
+			return {
+				name: 'Stock',
+				label: 'All stocks',
+				marketType: MarketType.Stock,
+				icon: IconIds.SelectAll,
+			};
+		case MarketType.Forex:
+			return {
+				name: 'Forex',
+				label: 'All forex pairs',
+				marketType: MarketType.Forex,
+				icon: IconIds.SelectAll,
+			};
+		case MarketType.Commodities:
+			return {
+				name: 'Commodities',
+				label: 'All commodities',
+				marketType: MarketType.Commodities,
+				icon: IconIds.SelectAll,
+			};
+		case MarketType.Indices:
+			return {
+				name: 'Indices',
+				label: 'All indices',
+				marketType: MarketType.Indices,
+				icon: IconIds.SelectAll,
 			};
 	}
 }

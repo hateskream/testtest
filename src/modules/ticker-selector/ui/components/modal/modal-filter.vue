@@ -1,34 +1,73 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import {
 	FilterListType,
 	type ITickerEmits,
 	type ITickerSelectAction,
 	MarketToSymbol,
-	SymbolToName,
 	type TickerDto,
 } from '@/modules/ticker-selector/model/filter-ticker';
-import { ModalSearch } from '@/modules/widgets/base';
-import { compareStrings } from '@/shared/lib';
 import { MarketType } from '@/modules/market';
 import { SymbolType } from '@/modules/cell';
 
 import ModalFilterInfo from './modal-filter-info.vue';
 import ModalFilterRow from './modal-filter-row.vue';
-import ModalFilterRowTitle from './modal-filter-row-title.vue';
+import ModalFilterHeader from '@/modules/ticker-selector/ui/components/modal/modal-filter-header.vue';
+import ModalFilterGroup from '@/modules/ticker-selector/ui/components/modal/modal-filter-group.vue';
+import ModalFilterList from '@/modules/ticker-selector/ui/components/modal/modal-filter-list.vue';
+import ModalFilterEmptyState from '@/modules/ticker-selector/ui/components/modal/modal-filter-empty-state.vue';
+import ModalFilterSelectedMarkets
+	from '@/modules/ticker-selector/ui/components/modal/modal-filter-selected-markets.vue';
 
-interface IModalFilterTickerProps {
+export interface IModalFilterTickerProps {
 	tickers: TickerDto[];
-	modelValue: string[];
 	isBackgroundTransparent?: boolean;
+
+	/**
+	 * Show "All" and "Selected" tabs before options
+	 */
 	enableSelectedInfo?: boolean;
+
+	/**
+	 * Enable to select all options in group
+	 */
 	enableSelectAll?: boolean;
+
+	/**
+	 * Enable markets selection using v-model:markets (crypto, stock, forex, etc..)
+	 */
+	enableMarkets?: boolean;
+
+	/**
+	 * Focus search input on open modal
+	 */
 	autofocus?: boolean;
+
+	/**
+	 * Change from "Selected" tab to "All" when selected tickers are empty
+	 */
+	closeEmptySelected?: boolean;
+
 	textAboveSearch?: string;
+
+	/**
+	 * @default multiple
+	 */
 	selectionMode?: 'single' | 'multiple';
+
+	/**
+	 * @default Start typing the ticker...
+	 */
 	searchPlaceholder?: string;
+
+	/**
+	 * Available market types for selection
+	 * @example [MarketType.Crypto, MarketType.Stock]
+	 * @default Object.values(MarketType)
+	 */
 	marketTypes: MarketType[];
+
 	displayVariant: 'new' | 'default';
 }
 
@@ -37,20 +76,19 @@ type IGroupedTicker = Record<SymbolType, TickerDto[]>;
 const props = withDefaults(defineProps<IModalFilterTickerProps>(), {
 	isBackgroundTransparent: false,
 	enableSelectedInfo: true,
+	closeEmptySelected: true,
 	textAboveSearch: '',
 	selectionMode: 'multiple',
 	searchPlaceholder: 'Start typing the ticker...',
 });
 
-type IEmits = ITickerEmits & {
-	(e: 'update:modelValue', data: string[]): void;
-};
+const tickersModel = defineModel<string[]>({ default: () => [] });
+const marketsModel = defineModel<MarketType[]>('markets', { default: () => [] });
 
-const emits = defineEmits<IEmits>();
-
-const getGroupKey = (type: SymbolType) => SymbolToName[type];
+const emit = defineEmits<ITickerEmits>();
 
 const availableSymbols = computed(() => props.marketTypes.map(type => MarketToSymbol[type]));
+const isSingleSelectionMode = computed(() => props.selectionMode === 'single');
 
 const tickersData = computed<TickerDto[]>(() =>
 	props.tickers.filter(ticker => availableSymbols.value.includes(ticker.symbol.symbolType!)).map((t) => ({
@@ -65,37 +103,25 @@ const hasSearchQuery = computed(() => preparedQuery.value.length > 0);
 
 const activeGroup = ref<SymbolType | null>(
 	props.marketTypes.length === 1
-		? MarketToSymbol[props.marketTypes[0]]
+		? marketToSymbol(props.marketTypes[0])
 		: null,
 );
 
 const viewMode = ref<FilterListType>(FilterListType.All);
 
 const selectedTickers = computed(() => {
-	const groupedSelectedCount: Record<string, number> = {};
-
-	let allSelected = tickersData.value.filter((t) => {
-		const isSelected = props.modelValue.includes(t.tickerId);
-		if (isSelected) {
-			const groupName = t.symbol.symbolType!;
-			groupedSelectedCount[groupName] = (groupedSelectedCount[groupName] ?? 0) + 1;
-		}
-		return isSelected;
-	});
+	const selected = tickersData.value.filter(t => tickersModel.value.includes(t.tickerId));
 
 	if (viewMode.value === FilterListType.Selected) {
-		allSelected = allSelected.filter((t) =>
+		return selected.filter((t) =>
 			[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
 		);
 	}
 
-	return {
-		groupedSelectedCount,
-		allSelected,
-	};
+	return selected;
 });
 
-const queredTickers = computed(() => {
+const queriedTickers = computed(() => {
 	return tickersData.value.filter((item) =>
 		[item.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
 	);
@@ -112,7 +138,7 @@ const groupedTickers = computed<IGroupedTicker>(() => {
 		}
 	});
 
-	queredTickers.value.forEach((item) => {
+	queriedTickers.value.forEach((item) => {
 		const type = item.symbol.symbolType;
 		if (type) {
 			(group[type] ??= []).push(item);
@@ -122,215 +148,209 @@ const groupedTickers = computed<IGroupedTicker>(() => {
 	return group;
 });
 
-function isGroupTickersSelectedAll(group: SymbolType) {
-	return groupedTickers.value[group].length === selectedTickers.value.groupedSelectedCount[group];
-}
+const selectedTickerIdsByGroup = computed(() => {
+	return Object.entries(groupedTickers.value).reduce((acc, [group, tickers]) => {
+		acc[group as SymbolType] = tickers
+			.filter(t => tickersModel.value.includes(t.tickerId))
+			.map(t => t.tickerId);
 
-/** 🧩 Обновлённая логика выбора элемента */
+		return acc;
+	}, {} as Record<SymbolType, string[]>);
+});
+
 function handleToggleSelect(action: ITickerSelectAction) {
-	if (props.selectionMode === 'single') {
+	if (action.isSelected) {
+		if (isSingleSelectionMode.value) {
+			tickersModel.value = [action.tickerId];
+			emit('select', action.tickerId);
 
-		if (action.isSelected) {
-
-			emits('update:modelValue', [action.tickerId]);
-			emits('select', action.tickerId);
-		} else {
-
-			if (props.modelValue.length > 1) {
-				const next = props.modelValue.filter((id) => id !== action.tickerId);
-				emits('update:modelValue', next);
-				emits('unselect', action.tickerId);
-			}
+			return;
 		}
-	} else {
 
-		if (!action.isSelected) {
-			const next = props.modelValue.filter((id) => id !== action.tickerId);
-			emits('update:modelValue', next);
-			emits('unselect', action.tickerId);
-		} else {
-			const ticker = tickersData.value.find((i) => compareStrings(i.tickerId, action.tickerId));
-			if (ticker) {
-				emits('update:modelValue', [...new Set([...props.modelValue, ticker.tickerId])]);
-				emits('select', ticker.tickerId);
-			}
+		if (!tickersModel.value.includes(action.tickerId)) {
+			tickersModel.value = [...tickersModel.value, action.tickerId];
 		}
-	}
 
-	nextTick(() => {
-		if (props.modelValue.length === 0 && props.selectionMode === 'multiple' && props.marketTypes.length > 1) {
-			viewMode.value = FilterListType.All;
-			activeGroup.value = null;
-		}
-	});
-}
-
-/** 🧩 Обновлён handleSelectAll (в single режиме — просто выбирает первый) */
-function handleSelectAll(groupName: SymbolType) {
-	if (props.selectionMode === 'single') {
-		const group = groupedTickers.value[groupName];
-		if (group.length > 0) {
-			const first = group[0].tickerId;
-			emits('update:modelValue', [first]);
-			emits('selectAll', [first]);
-		}
+		emit('select', action.tickerId);
 		return;
 	}
 
+	if (isSingleSelectionMode.value && tickersModel.value.length < 2) {
+		return;
+	}
 
-	const group = groupedTickers.value[groupName];
-	if (isGroupTickersSelectedAll(groupName)) {
-		const toUnselect = new Set(group.map((t) => t.tickerId));
-		const next = props.modelValue.filter((m) => !toUnselect.has(m));
-		emits('unselectAll', next);
-		emits('update:modelValue', next);
-	} else {
-		const additions: string[] = group
-			.filter((t) => !props.modelValue.includes(t.tickerId))
-			.map((i) => i.tickerId);
-		if (additions.length) {
-			const tickers = [...props.modelValue, ...additions];
-			emits('update:modelValue', tickers);
-			emits('selectAll', tickers);
-		}
+	tickersModel.value = tickersModel.value.filter((id) => id !== action.tickerId);
+	emit('unselect', action.tickerId);
+
+	if (
+		tickersModel.value.length === 0
+		&& !isSingleSelectionMode.value
+		&& props.marketTypes.length > 1
+		&& props.closeEmptySelected
+	) {
+		nextTick(() => {
+			viewMode.value = FilterListType.All;
+			activeGroup.value = null;
+		});
 	}
 }
 
-const searchRef = useTemplateRef('search');
+function isGroupTickersSelectedAll(group: SymbolType) {
+	const tickers = groupedTickers.value[group];
 
-function focusSearch() {
-	searchRef.value?.focus();
+	const modelValueSet = new Set(tickersModel.value);
+
+	return tickers.every((t) => modelValueSet.has(t.tickerId));
 }
 
-defineExpose({ focusSearch });
+function toggleSelectAll(groupName: SymbolType) {
+	const tickers = groupedTickers.value[groupName];
+
+	if (isSingleSelectionMode.value) {
+		if (tickers.length > 0) {
+			const firstTickerId = tickers[0].tickerId;
+
+			tickersModel.value = [firstTickerId];
+			emit('selectAll', [firstTickerId]);
+		}
+
+		return;
+	}
+
+	if (isGroupTickersSelectedAll(groupName)) {
+		const toUnselect = new Set(tickers.map((t) => t.tickerId));
+		const next = tickersModel.value.filter((m) => !toUnselect.has(m));
+
+		tickersModel.value = next;
+		emit('unselectAll', next);
+
+		return;
+	}
+
+	const additions: string[] = tickers
+		.filter((t) => !tickersModel.value.includes(t.tickerId))
+		.map((i) => i.tickerId);
+
+	if (additions.length) {
+		const preparedSelectedTickers = [...tickersModel.value, ...additions];
+
+		tickersModel.value = preparedSelectedTickers;
+		emit('selectAll', preparedSelectedTickers);
+	}
+}
+
+// markets
+
+function marketToSymbol(market: MarketType) {
+	return MarketToSymbol[market];
+}
+
+function symbolToMarket(symbol: SymbolType): MarketType | null {
+	const maybeMarket = Object.entries(MarketToSymbol).find(([_, smb]) => (smb as SymbolType) === symbol)?.[0];
+
+	if (maybeMarket) {
+		return maybeMarket as MarketType;
+	}
+
+	return null;
+}
+
+function isSelectedMarket(market: MarketType) {
+	return marketsModel.value.includes(market);
+}
+
+const activeMarket = computed(() => {
+	if (!activeGroup.value) {
+		return null;
+	}
+
+	return symbolToMarket(activeGroup.value);
+});
+
+const activeMarketIsSelected = computed(() => {
+	if (!activeMarket.value) {
+		return false;
+	}
+
+	return isSelectedMarket(activeMarket.value);
+});
+
+function toggleMarket(market: MarketType) {
+	if (isSelectedMarket(market)) {
+		marketsModel.value = marketsModel.value.filter(m => m !== market);
+	} else {
+		if (isSingleSelectionMode.value) {
+			marketsModel.value = [market];
+		} else {
+			marketsModel.value = [...marketsModel.value, market];
+		}
+	}
+}
 </script>
 
-
 <template>
-	<div
-		:class="classes.wrapper"
-		:style="isBackgroundTransparent && { background: 'transparent' }"
-	>
+	<div :class="[classes.wrapper, {[classes.transparent]: props.isBackgroundTransparent}]">
 		<div :class="classes.content">
-			<div :class="classes.top">
-				<div
-					:class="classes.header"
-					:style="isBackgroundTransparent
-						? {
-							background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-01) 22%)',
-						}
-						: {
-							background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',
-						}"
-				>
-					<div
-						v-if="props.textAboveSearch"
-						:class="classes.textAboveSearch"
-					>
-						{{ props.textAboveSearch }}
-					</div>
-
-					<div :class="classes.search">
-						<modal-search
-							ref="search"
-							v-model="query"
-							:placeholder="searchPlaceholder"
-							:autofocus="props.autofocus"
-						/>
-					</div>
-				</div>
-
+			<div>
+				<modal-filter-header
+					v-model:query="query"
+					:autofocus="props.autofocus"
+					:search-placeholder="props.searchPlaceholder"
+					:text-above-search="props.textAboveSearch"
+					:is-background-transparent="props.isBackgroundTransparent"
+				/>
 				<modal-filter-info
 					v-if="props.enableSelectedInfo"
 					v-model="viewMode"
 					:is-searching="hasSearchQuery"
-					:total-items="queredTickers.length"
-					:total-selected="selectedTickers.allSelected.length"
+					:total-items="queriedTickers.length"
+					:total-selected="selectedTickers.length + marketsModel.length"
 				/>
 			</div>
-
 			<div v-if="viewMode === FilterListType.All">
-				<div v-if="activeGroup === null" :class="classes.bottom">
-					<div v-for="(_, group) in groupedTickers" :key="group">
-						<modal-filter-row-title
-							:is-selected-all="isGroupTickersSelectedAll(group)"
-							:is-searching="hasSearchQuery"
-							:is-inside-open="false"
-							:enable-select-all="props.enableSelectAll"
-							@select-all="handleSelectAll(group)"
-							@click="activeGroup = group"
-						>
-							<template #title>
-								{{ getGroupKey(group) }}
-							</template>
-							<template #count>
-								{{ groupedTickers[group].length }}
-							</template>
-						</modal-filter-row-title>
-						<template v-if="hasSearchQuery">
-							<div
-								v-if="groupedTickers[group].length === 0"
-								:class="classes.notFound"
-							>
-								Nothing found in {{ getGroupKey(group) }}
-							</div>
-							<modal-filter-row
-								v-else
-								:list="groupedTickers[group!].slice(0, 3)"
-								:selected-ids-map="modelValue"
-								:display-variant="props.displayVariant"
-								@update="handleToggleSelect"
-							/>
-						</template>
-					</div>
-				</div>
-				<div v-else :class="classes.bottom">
-					<modal-filter-row-title
-						v-if="availableSymbols.length > 1"
-						:is-back="true"
-						:is-selected-all="isGroupTickersSelectedAll(activeGroup)"
-						:is-searching="hasSearchQuery"
-						:is-inside-open="true"
-						:enable-select-all="props.enableSelectAll"
-						@click="activeGroup = null"
-						@select-all="handleSelectAll(activeGroup)"
-					>
-						<template #title>
-							{{ getGroupKey(activeGroup) }}
-						</template>
-						<template #count>
-							{{ groupedTickers[activeGroup!].length }}
-						</template>
-					</modal-filter-row-title>
-					<div
-						v-if="hasSearchQuery && groupedTickers[activeGroup].length === 0"
-						:class="classes.notFound"
-					>
-						Nothing found in {{ getGroupKey(activeGroup) }}
-					</div>
-					<modal-filter-row
-						v-else
-						:list="groupedTickers[activeGroup!]"
-						:selected-ids-map="modelValue"
-						:display-variant="props.displayVariant"
-						@update="handleToggleSelect"
-					/>
-				</div>
+				<modal-filter-group
+					v-if="activeGroup"
+					:group="activeGroup"
+					:market="activeMarket"
+					:tickers="groupedTickers[activeGroup]"
+					:selected-ticker-ids="selectedTickerIdsByGroup[activeGroup]"
+					:enable-back="availableSymbols.length > 1"
+					:enable-select-all="props.enableSelectAll"
+					:is-searching="hasSearchQuery"
+					:display-variant="props.displayVariant"
+					:enable-markets="props.enableMarkets"
+					:is-selected-market="activeMarketIsSelected"
+					@toggle-market="toggleMarket(activeMarket!)"
+					@select-all="toggleSelectAll(activeGroup)"
+					@update="handleToggleSelect"
+					@back="activeGroup = null"
+				/>
+				<modal-filter-list
+					v-else
+					:grouped-tickers="groupedTickers"
+					:grouped-selected-ticker-ids="selectedTickerIdsByGroup"
+					:display-variant="props.displayVariant"
+					:is-searching="hasSearchQuery"
+					:enable-select-all="props.enableSelectAll"
+					@select-all="toggleSelectAll"
+					@select-group="activeGroup = $event"
+				/>
 			</div>
 			<template v-else>
-				<div
-					v-if="selectedTickers.allSelected.length === 0 && hasSearchQuery"
-					:class="classes.notFound"
-				>
+				<modal-filter-empty-state v-if="selectedTickers.length === 0 && hasSearchQuery">
 					Nothing found in selected items
-				</div>
+				</modal-filter-empty-state>
 				<modal-filter-row
 					v-else
-					:list="selectedTickers.allSelected"
-					:selected-ids-map="modelValue"
+					:list="selectedTickers"
+					:selected-ids-map="tickersModel"
 					:display-variant="props.displayVariant"
 					@update="handleToggleSelect"
-				/>
+				>
+					<template v-if="props.enableMarkets" #before-tickers>
+						<modal-filter-selected-markets :selected-markets="marketsModel" @toggle-market="toggleMarket" />
+					</template>
+				</modal-filter-row>
 			</template>
 		</div>
 	</div>
@@ -351,44 +371,15 @@ defineExpose({ focusSearch });
 	border-radius: 18px;
 }
 
+.wrapper.transparent {
+	background: transparent;
+}
+
 .content {
 	flex: 1;
 	max-height: 650px;
 	margin: -6px;
 	padding: 6px;
 	overflow-y: hidden;
-}
-
-.textAboveSearch {
-	padding: 12px;
-	font-style: normal;
-	text-align: center;
-}
-
-.search {
-	padding-inline: 12px;
-}
-
-.header {
-	padding-bottom: 22px;
-}
-
-.bottom {
-	margin: 0 -6px;
-	padding: 6px;
-	overflow-y: hidden;
-}
-
-.notFound {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 112px;
-	font-style: normal;
-	font-weight: 440;
-	font-size: 11px;
-	text-align: center;
-	color: var(--text-color-base-300);
-	letter-spacing: 0.088px;
 }
 </style>
