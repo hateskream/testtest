@@ -15,7 +15,7 @@ import type { IPositionContentProps } from '../model';
 const props = withDefaults(defineProps<IPositionContentProps>(), {
 	placement: 'bottom-start',
 	offset: 6,
-	strategy: 'absolute',
+	strategy: 'fixed',
 });
 
 const contentRef = useTemplateRef('content');
@@ -38,7 +38,12 @@ let cleanup: null | (() => void) = null;
 const { floatingStyles, update } = useFloating(triggerRef, contentRef, {
 	placement: props.placement,
 	strategy: props.strategy,
-	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
+	middleware: [offset(props.offset), flip(), shift({
+		padding: 4,
+		rootBoundary: 'viewport',
+		boundary: 'clippingAncestors',
+		crossAxis: true,
+	})],
 });
 
 function onBodyPointerDown(e: PointerEvent) {
