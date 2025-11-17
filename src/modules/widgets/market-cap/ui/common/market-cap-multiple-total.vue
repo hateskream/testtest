@@ -1,46 +1,74 @@
 <script setup lang="ts">
-
 import { computed } from 'vue';
 
-import type { IMarketCapTicker } from '../../model';
+import type { IMarketCapMarket, IMarketCapTicker, IMarketCapTotal } from '../../model';
 import { prettyNumberWithKey } from '@/shared/lib';
 
 interface IMarketCapTickersSummaryProps {
 	tickers: IMarketCapTicker[];
+	markets: IMarketCapMarket[];
+	total: IMarketCapTotal;
 }
 
 const props = defineProps<IMarketCapTickersSummaryProps>();
 
-function formatMarketCap(value: string) {
-	const prepared = prettyNumberWithKey(value, 2);
-
+function formatMarketCap(value: number) {
+	const prepared = prettyNumberWithKey(value.toString(), 2);
 	return `${prepared.value} ${prepared.suffix}`;
 }
 
-const formattedMarketCaps = computed(() => props.tickers.map(ticker => formatMarketCap(ticker.marketCap)));
+const preparedTickersTotal = computed(() => {
+	return props.tickers.map(ticker => {
+		return {
+			id: ticker.id,
+			label: ticker.symbol,
+			color: ticker.color,
+			marketCap: formatMarketCap(props.total.marketCap[ticker.id]),
+			volume: props.total.volume[ticker.id],
+			changePercent: props.total.changePercent[ticker.id],
+		};
+	});
+});
+
+const preparedMarketsTotal = computed(() => {
+	return props.markets.map(market => {
+		return {
+			id: market.id,
+			label: market.id,
+			color: market.color,
+			marketCap: formatMarketCap(props.total.marketCap[market.id]),
+			volume: props.total.volume[market.id],
+			changePercent: props.total.changePercent[market.id],
+		};
+	});
+});
+
+const preparedTotals = computed(() => {
+	return [...preparedMarketsTotal.value, ...preparedTickersTotal.value];
+});
 </script>
 
 <template>
 	<div :class="classes.list">
 		<div
-			v-for="(item, key) in props.tickers"
-			:key="item.id"
+			v-for="entity in preparedTotals"
+			:key="entity.id"
 			:class="classes.ticker"
 		>
 			<div :class="[classes.segment, classes.name]">
-				<div :class="classes.circle" :style="{ backgroundColor: item.color }"></div>
+				<div :class="classes.circle" :style="{ backgroundColor: entity.color }"></div>
 				<span>
-					{{ item.symbol }}
+					{{ entity.label }}
 				</span>
 			</div>
 			<div :class="classes.segment">
 				<div :class="classes.value">
-					${{ formattedMarketCaps[key] }}
+					${{ entity.marketCap }}
 				</div>
 				<div
-					:class="[classes.change, item.change24h > 0 ? classes.positive : classes.negative]"
+					:class="[entity.changePercent > 0 ? classes.positive : classes.negative]"
 				>
-					{{ item.change24h }}%
+					{{ entity.changePercent }}%
 				</div>
 			</div>
 		</div>

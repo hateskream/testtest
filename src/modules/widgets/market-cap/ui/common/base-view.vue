@@ -4,8 +4,7 @@ import { computed } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { type IDisplaySettings, type IMarketCapHistory, MarketCapDateRange } from '../../model';
 
-import MarketCapTickersSummary from './market-cap-tickers-summary.vue';
-import MarketCapSummary from './market-cap-summary.vue';
+import MarketCapTotal from './market-cap-total.vue';
 import MarketCapChart from './market-cap-chart.vue';
 
 interface IViewComponentProps {
@@ -22,38 +21,34 @@ const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required:
 
 const isWide = computed(() => !props.displaySettings.isShowChart || props.meta.size.h <= 3);
 
-// TODO: Вынести в апи, когда опишем конечные контракты
-const mockedSummary = {
-	marketCap: (1_000_000_000 + Math.random() * 2_000_000_000).toString(),
-	volume: (1_000_000_000 + Math.random() * 2_000_000_000).toString(),
-	change24h: -10 + Math.random() * 20,
-};
-
 const isShowChartAxes = computed(() => props.meta.size.w > 2 && props.meta.size.h > 7);
 const chartRangeCanBeShowed = computed(() => props.meta.size.h > 7 && props.meta.size.w > 2);
+
+const tickers = computed(() => props.data.tickers ?? []);
+const markets = computed(() => props.data.markets ?? []);
+const total = computed(() => props.data.data.total ?? {});
 </script>
 
 <template>
-	<div
-		:class="[classes.root, {[classes.wide]: isWide}]"
-	>
-		<div :class="[classes.summaryWrapper, props.summaryClass]">
-			<market-cap-tickers-summary v-if="props.data.tickers.length" :tickers="props.data.tickers" />
-			<market-cap-summary
-				v-else
-				:meta="props.meta"
-				:display-settings="props.displaySettings"
-				:summary="mockedSummary"
-			/>
-		</div>
+	<div :class="[classes.root, {[classes.wide]: isWide}]">
+		<market-cap-total
+			:meta="props.meta"
+			:display-settings="props.displaySettings"
+			:tickers="tickers"
+			:markets="markets"
+			:total="total"
+			:class="[classes.summaryWrapper, props.summaryClass]"
+		/>
 		<template v-if="props.displaySettings.isShowChart && props.meta.size.h > 3">
 			<div :class="classes.chartWrapper">
 				<market-cap-chart
 					v-model:date-range="activeDateRange"
 					:meta="props.meta"
-					:data="props.data"
 					:display-settings="props.displaySettings"
-					:summary="mockedSummary"
+					:tickers="tickers"
+					:markets="markets"
+					:total="total"
+					:points="props.data.data.points"
 					:is-show-range="props.isShowChartRange && chartRangeCanBeShowed"
 					:is-show-axes="isShowChartAxes"
 				/>

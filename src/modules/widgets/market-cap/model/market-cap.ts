@@ -1,36 +1,51 @@
+import { MarketType } from '@/modules/market';
+
 export enum MarketCapDateRange {
 	Day= '1D',
-	Week = '1W',
+	Week = '7D',
 	Month = '1M',
 	SixMonths = '6M',
 	Year = '1Y',
 	All = 'ALL',
 }
 
+export type MarketCapType = MarketType.Crypto | MarketType.Stock;
 
 export interface IMarketCapTicker {
 	id: string;
-	name: string;
 	symbol: string;
-	change24h: number;
 	color: string;
-	marketCap: string;
-	type: 'stock' | 'crypto';
 }
 
-export interface IMarketCapTickerHistory {
-	prices: [number, number][];
-	market_caps: [number, number][];
-	volumes: [number, number][];
+export interface IMarketCapMarket {
+	id: string;
+	color: string;
+}
+
+export interface IMarketCapPoint {
+	timestamp: number;
+	marketCap: Record<string, number>;
+	volume: Record<string, number>;
+}
+
+export interface IMarketCapTotal {
+	marketCap: Record<string, number>;
+	volume: Record<string, number>;
+	changePercent: Record<string, number>;
+}
+
+export interface IMarketCapTotalValue {
+	marketCap: number;
+	volume: number;
+	changePercent: number;
 }
 
 export interface IMarketCapHistory {
 	tickers: IMarketCapTicker[];
-	data: Record<string, IMarketCapTickerHistory>;
-}
-
-export interface IMarketCapSummary {
-	marketCap: string;
-	volume: string;
-	change24h: number;
+	markets: IMarketCapMarket[];
+	range: MarketCapDateRange;
+	data: {
+		points: IMarketCapPoint[];
+		total: IMarketCapTotal;
+	};
 }

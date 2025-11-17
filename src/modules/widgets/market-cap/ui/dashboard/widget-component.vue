@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -20,6 +20,7 @@ const props = defineProps<IWidgetComponentProps>();
 
 const {
 	selectedTickers,
+	selectedMarkets,
 	displaySettings,
 	activeDateRange,
 	data,
@@ -30,8 +31,6 @@ const {
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 });
-
-const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 </script>
 
 <template>
@@ -43,10 +42,11 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 		<template #filters>
 			<market-cap-filters-panel
 				v-model:selected-tickers="selectedTickers"
+				v-model:selected-markets="selectedMarkets"
 				v-model:date-range="activeDateRange"
+				:class="classes.filters"
 				autofocus
 				is-show-date-range
-				:class="classes.filters"
 				display-variant="new"
 			/>
 		</template>
@@ -55,7 +55,7 @@ const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta
 		</template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
 				v-else-if="data"
 				v-model:date-range="activeDateRange"

@@ -1,47 +1,39 @@
-[
-    {
-        "id": "Crypto-BTC_Bitcoin",
-        "symbol": "BTC",
-        "name": "Bitcoin",
-        "type": "crypto",
-        "change24h": 0.93,
-				"color": "rgb(247, 169, 104)",
-        "marketCap": "84232834934324.45"
-    },
-	  {
-        "id": "Crypto-ADA_Cardano",
-        "symbol": "ADA",
-        "name": "Cardano",
-        "type": "crypto",
-        "change24h": 0.93,
-        "color": " rgb(247, 169, 104)",
-        "marketCap": "84232834934324.45"
-    },
-    {
-        "id": "Crypto-TRX_TRON",
-        "symbol": "TRON",
-        "name": "TRX",
-        "type": "crypto",
-        "change24h": 12,
-        "color": " rgb(42, 135, 211)",
-        "marketCap": "8743253453.45"
-    },
-    {
-        "id": "Crypto-SOL_Solana",
-        "symbol": "SOL",
-        "name": "Solana",
-        "type": "crypto",
-        "change24h": -0.5,
-        "color": " rgb(42, 211, 98)",
-        "marketCap": "943299.45"
-    },
-    {
-        "id": "Stock-TSLA",
-        "symbol": "TSLA",
-        "name": "Tesla Inc",
-        "type": "stock",
-        "change24h": -4,
-        "color": " rgb(211, 67, 42)",
-        "marketCap": "44883234838.45"
-    }
-]
+{
+	"tickers": [
+		{
+			"id": "Crypto-BTC_Bitcoin",
+			"symbol": "BTC",
+			"color": "rgb(247, 169, 104)"
+		},
+		{
+			"id": "Crypto-ADA_Cardano",
+			"symbol": "ADA",
+			"color": "rgb(247, 169, 104)"
+		},
+		{
+			"id": "Crypto-TRX_TRON",
+			"symbol": "TRON",
+			"color": "rgb(42, 135, 211)"
+		},
+		{
+			"id": "Crypto-SOL_Solana",
+			"symbol": "SOL",
+			"color": "rgb(42, 211, 98)"
+		},
+		{
+			"id": "Stock-TSLA",
+			"symbol": "TSLA",
+			"color": "rgb(211, 67, 42)"
+		}
+	],
+	"markets": [
+		{
+			"id": "crypto",
+			"color": "rgb(211, 67, 42)"
+		},
+		{
+			"id": "stock",
+			"color": "rgb(211, 67, 42)"
+		}
+	]
+}

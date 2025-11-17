@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { notNullish } from '@vueuse/core';
 
-import { type IDisplaySettings, type IMarketCapHistory, type IMarketCapSummary, MarketCapDateRange } from '../../model';
+import {
+	type IDisplaySettings,
+	type IMarketCapMarket,
+	type IMarketCapPoint,
+	type IMarketCapTicker,
+	type IMarketCapTotal,
+	type IMarketCapTotalValue,
+	MarketCapDateRange,
+} from '../../model';
 import { ChartMarketCap } from '@/modules/lightweight-charts';
 import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
 
@@ -10,8 +19,10 @@ import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
 interface IMarketCapChartProps {
-	data: IMarketCapHistory;
-	summary?: IMarketCapSummary;
+	markets: IMarketCapMarket[];
+	tickers: IMarketCapTicker[];
+	points: IMarketCapPoint[];
+	total: IMarketCapTotal;
 	displaySettings: IDisplaySettings;
 	isShowRange?: boolean;
 	isShowAxes?: boolean;
@@ -44,7 +55,24 @@ const activeChartRange = computed({
 	},
 });
 
-const chartColorSchema = computed(() => props.summary && props.summary.change24h > 0 ? 'positive' : 'negative');
+const totalCount = computed(() => props.markets.length + props.tickers.length);
+
+const singleTotalValue = computed(() => {
+	if (totalCount.value > 1) {
+		return null;
+	}
+
+	const target = props.markets.length > 0 ? props.markets[0] : props.tickers[0];
+
+	return {
+		marketCap: props.total.marketCap[target.id],
+		volume: props.total.volume[target.id],
+		changePercent: props.total.changePercent[target.id],
+	} as IMarketCapTotalValue;
+});
+
+const chartColorSchema = computed(() => singleTotalValue.value
+	&& singleTotalValue.value.changePercent > 0 ? 'positive' : 'negative');
 
 function selectDateRange(rangeChart: RangeChartType) {
 	const dateRangeFilter = Object.entries(dateRangeToRangeChart)
@@ -56,21 +84,31 @@ function selectDateRange(rangeChart: RangeChartType) {
 }
 
 const preparedDatasets = computed(() => {
-	const { tickers } = props.data;
-
-	return tickers.map(ticker => {
+	const preparedTickers = props.tickers.map(ticker => {
 		return {
 			label: ticker.symbol,
 			color: ticker.color,
-			points: props.data.data[ticker.symbol].market_caps.map(cap => ({ x: cap[0], y: cap[1] })),
+			points: props.points.map(point => ({ x: point.timestamp, y: point.marketCap[ticker.id] }))
+				.filter(point => notNullish(point.y)),
 		};
 	});
+
+	const preparedMarkets = props.markets.map(market => {
+		return {
+			label: market.id,
+			color: market.color,
+			points: props.points.map(point => ({ x: point.timestamp, y: point.marketCap[market.id] }))
+				.filter(point => notNullish(point.y)),
+		};
+	});
+
+	return [...preparedTickers, ...preparedMarkets];
 });
 </script>
 
 <template>
 	<div :class="[classes.root, {[classes.visibleAxis]: props.isShowAxes}]">
-		<template v-if="props.data.tickers.length">
+		<template v-if="totalCount > 1">
 			<chart-market-cap
 				:datasets="preparedDatasets"
 				:range="activeDateRange"
@@ -89,7 +127,7 @@ const preparedDatasets = computed(() => {
 				/>
 			</div>
 		</template>
-		<template v-else-if="props.summary">
+		<template v-else-if="singleTotalValue">
 			<chart-component
 				v-model:range="activeChartRange"
 				:range-list="chartRanges"
