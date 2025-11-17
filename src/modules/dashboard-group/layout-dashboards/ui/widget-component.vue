@@ -43,8 +43,8 @@ const meta = computed((): IMeta => ({
 		w: props.colCount,
 	},
 	maxSize: {
-		h: 0,
-		w: 0,
+		h: cellSize.value.count,
+		w: props.colCount,
 	},
 	name: props.widget.name,
 	defaultStateType: props.widget.defaultStateType,

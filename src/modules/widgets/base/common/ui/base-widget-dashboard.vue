@@ -41,6 +41,10 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 const isFullscreen = ref<boolean>(false);
 const isControlsExpanded = ref<boolean>(true);
 
+/*
+* filters is slot for toolbar view
+* filter is slot for context menu modal
+* */
 defineSlots<{
 	'filters': unknown;
 	'content': unknown;

@@ -30,27 +30,16 @@ const HORIZONTAL_PADDING = 130;
 const style = computed(() => {
 	const { maxSize, columnWidth, rowHeight } = props.meta;
 
-	if (props.displayVariant === 'tv') {
-		let width = window.innerWidth - HORIZONTAL_PADDING;
+	let width = window.innerWidth - HORIZONTAL_PADDING;
 
-		if (Number.isFinite(maxSize.w)) {
-			width = maxSize.w * columnWidth;
-		}
-
-		let height = window.innerHeight - VERTICAL_PADDING;
-		if (Number.isFinite(maxSize.h)) {
-			height = maxSize.h * rowHeight;
-		}
-
-		return {
-			width: `${width}px`,
-			height: `${height}px`,
-		};
+	if (Number.isFinite(maxSize.w)) {
+		width = maxSize.w * columnWidth;
 	}
 
-	// TODO: size calculation for fullscreen dashboard widgets
-	const width = 4 * columnWidth;
-	const height = 8 * rowHeight;
+	let height = window.innerHeight - VERTICAL_PADDING;
+	if (Number.isFinite(maxSize.h)) {
+		height = maxSize.h * rowHeight;
+	}
 
 	return {
 		width: `${width}px`,
