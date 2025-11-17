@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, ref, watch, onMounted, type Ref } from 'vue';
+import {computed, ref, watch, onMounted, type Ref, nextTick} from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
@@ -149,6 +149,8 @@ watch(() => props.backgroundColor, (newColor) => {
 
 const handleColumnsUpdate = (columns: IGenericTableColumn[]) => {
 	localColumns.value = [...columns];
+	recalculateColumnWidths();
+	tableWidth.value = 'auto';
 	emit('update:columns', columns);
 };
 
@@ -164,6 +166,7 @@ const handleUnsortedRowsUpdate = (rows: IGenericTableRow<T>[]) => {
 
 const handleSortUpdate = (config: ISortConfig) => {
 	localSortConfig.value = { ...config };
+	recalculateColumnWidths();
 	emit('update:sortConfig', config);
 	emit('columnSorted', {
 		columnKey: config.columnKey,
@@ -322,18 +325,88 @@ const handleContainerMouseLeave = () => {
 	isContainerHovered.value = false;
 };
 
-const isFixedWidth = computed(()=>{
-	return props.isFixedWidth || visibleColumns.value.length === 2;
-});
+const tableRef = ref<HTMLTableElement | null>(null)
+const columnWidths = ref<string[]|undefined>(undefined);
+const tableWidth = ref('auto');
+let columnLayout = ref<'percent'|'px'>(props.isFixedWidth?'percent':'px');
+const recalculateColumnWidths = async ()=>{
+	await nextTick();
+	const table = tableRef.value
+	if (!table) return
+	const headerRow = table.tHead?.rows[0] || table.rows[0]
+	if (!headerRow) return
+	const headerCells = Array.from(headerRow.cells)
+	if (headerCells.length === 0) return
+	const widths = headerCells.map(cell =>
+		cell.getBoundingClientRect().width
+	)
 
-onMounted(() => {
+	if (!containerRef.value) return;
+	const totalWidth = containerRef.value?.getBoundingClientRect().width;
+	const COLUMN_MIN_WIDTH=50;
+
+	const {minColWidth} = visibleColumns.value.reduce((acc,col)=>{
+		acc.minColWidth+=col.minWidth||COLUMN_MIN_WIDTH;
+		return acc;
+	},{
+		minColWidth:0,
+	})
+
+	if (visibleColumns.value?.length<3) columnLayout.value = 'percent';
+	if (minColWidth>totalWidth) columnLayout.value = 'px';
+	else columnLayout.value = 'percent';
+
+	const WIDTH_MULTIPLIER = 1.15;
+	if (columnLayout.value === 'px') {
+		let sum = 0;
+		columnWidths.value = widths.map((w,i) => {
+			const col = visibleColumns.value[i];
+			if (!col){
+				sum+=w;
+				return w+'px';
+			}
+			const width = Math.min(col.maxWidth||Infinity,Math.max(col.minWidth,w*WIDTH_MULTIPLIER));
+			sum+=width;
+			return w * WIDTH_MULTIPLIER+'px';
+		})
+		tableWidth.value = sum+'px';
+	}
+	else{
+		tableWidth.value = '100%';
+		const columnWidthSum = widths.reduce((sum,w,i) => {
+			const col = visibleColumns.value[i];
+			if (!col) return sum+w;
+			const width = Math.min(col.maxWidth||Infinity,Math.max(col.minWidth,w*WIDTH_MULTIPLIER));
+			return sum+width;
+		},0)
+		let widthRemaining = Math.max(0,totalWidth-columnWidthSum);
+		columnWidths.value = widths.map((w,i) => {
+			  if (i===0) return 100*(w+widthRemaining)/totalWidth+'%';
+				return 100*w/totalWidth+'%';
+		})
+	}
+}
+
+const hadnleColumnResize = (i,width)=>{
+	if (columnLayout.value!=='px') return;
+	const maxWidth = visibleColumns.value?.[i]?.maxWidth||500;
+	const minWidth = visibleColumns.value?.[i]?.minWidth||0;
+	const oldWidth = parseFloat(columnWidths.value[i]);
+	const newWidth = Math.min(maxWidth,Math.max(minWidth,width));
+	columnWidths.value[i] = newWidth+'px';
+	tableWidth.value = (parseFloat(tableWidth.value) + newWidth - oldWidth)+'px';
+}
+
+onMounted( () => {
 	// If backgroundColor prop is provided, use it. Otherwise, compute from parent element
 	if (props.backgroundColor) {
 		tableBackgroundColor.value = props.backgroundColor;
 	} else if (containerRef.value) {
 		tableBackgroundColor.value = getRealBackgroundColor(containerRef.value.parentElement);
 	}
+	recalculateColumnWidths();
 });
+
 
 </script>
 
@@ -360,18 +433,21 @@ onMounted(() => {
 				@mouseleave="handleContainerMouseLeave"
 			>
 				<table
+					ref="tableRef"
 					:class="classes.dataTable"
 					:style="{
-						width: isFixedWidth ? '100%' : 'auto'
+						'table-layout':'fixed',
+						width: tableWidth
 					}"
 				>
 					<generic-grid-header
 						v-if="props.showHeader"
-						:is-fixed-width="isFixedWidth"
 						:columns="visibleColumns"
+						:column-widths="columnWidths"
 						:all-columns="localColumns"
 						:sort-config="localSortConfig"
 						:enable-reordering="enableColumnReordering"
+						:enable-resizing="columnLayout==='px'"
 						:enable-sorting="enableSorting"
 						:enable-column-settings="enableColumnSettings"
 						:enable-row-actions="enableRowActions"
@@ -379,6 +455,7 @@ onMounted(() => {
 						:sticky-first-column="stickyFirstColumn"
 						@update:columns="handleColumnsUpdate"
 						@update:sort="handleSortUpdate"
+						@update:column-width="hadnleColumnResize"
 					>
 						<template
 							v-for="(column, index) in visibleColumns"
@@ -407,10 +484,10 @@ onMounted(() => {
 					</generic-grid-header>
 
 					<unified-table-content
-						:is-fixed-width="isFixedWidth"
 						:sections="isSectionedTable ? localSections : []"
 						:rows="isSectionedTable ? [] : localUnsortedRows"
 						:columns="visibleColumns"
+						:column-widths="columnWidths"
 						:sort-config="localSortConfig"
 						:container-width="containerWidth"
 						:can-add-sections="canAddSections"
@@ -588,7 +665,7 @@ onMounted(() => {
 
 .dataTable {
 	width: auto;
-	min-width: 100%;
+	//min-width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: var(--table-bg-color);

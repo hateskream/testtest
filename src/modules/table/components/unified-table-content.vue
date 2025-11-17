@@ -26,10 +26,10 @@ export interface IProps<T> {
 	// Data sources (one will be used based on mode)
 	sections?: IGenericTableSection<T>[];
 	rows?: IGenericTableRow<T>[];
-	isFixedWidth?: boolean;
 
 	// Common props
 	columns: IGenericTableColumn[];
+	columnWidths:string[]|undefined;
 	sortConfig: ISortConfig;
 	containerWidth?: number;
 
@@ -71,7 +71,6 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	enableRowActions: true,
 	enableColumnSettings: false,
 	canAddSections: false,
-	isFixedWidth: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -404,28 +403,6 @@ const cancelAddSection = () => {
 	showAddSectionInput.value = false;
 };
 
-const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) => {
-	if (props.isFixedWidth) {
-		if (index === 0) {
-			return { width: '100%' };
-		} else {
-			return { width: '50%' };
-		}
-	}
-
-	return {
-		...(index !== 0 ?
-			{
-				width:
-					`var(--col-${index}-width)`,
-			}
-			: {}),
-
-		minWidth:
-			`var(--col-${index}-min-width)`,
-	};
-
-};
 
 </script>
 
@@ -510,8 +487,9 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 									&& stickyFirstColumn && hoveredRowId === getRowId(item),
 							}
 						]"
-						:style="calculateStyles(cellIndex, columns)"
+						:style="{ width: columnWidths?.[cellIndex] ?? undefined }"
 					>
+						<div>
 						<slot
 							:name="`cell-${cellIndex}`"
 							:row="getRow(item)!"
@@ -522,6 +500,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 						>
 							{{ getRow(item)?.data[column.key] }}
 						</slot>
+						</div>
 					</td>
 
 					<td
@@ -643,11 +622,20 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	position: relative;
 	padding: 8px 10px;
 	overflow: hidden;
+	text-overflow: ellipsis;
 	vertical-align: middle;
 	white-space: nowrap;
-	text-overflow: ellipsis;
 	background: transparent;
 	border: none;
+	&>div{
+		display: block;           /* critical: make it a block */
+		width: 100%;              /* now this = 100px */
+		max-width: 100%;
+		overflow: hidden;         /* or overflow-x:auto for scrollbar */
+		text-overflow: ellipsis;  /* optional */
+		white-space: nowrap;      /* optional: no wrapping */
+		box-sizing: border-box;
+	}
 }
 
 .stickyFirstCell {

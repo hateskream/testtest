@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed } from 'vue';
+import {computed, onUnmounted, ref} from 'vue';
 import draggable from 'vuedraggable';
 
 import type { IGenericTableColumn, ISortConfig } from '../type';
@@ -13,19 +13,20 @@ interface IProps {
 	columns: IGenericTableColumn[];
 	allColumns: IGenericTableColumn[];
 	sortConfig: ISortConfig;
+	columnWidths:string[]|undefined;
 	enableReordering?: boolean;
+	enableResizing?: boolean;
 	enableSorting?: boolean;
 	enableColumnSettings?: boolean;
 	enableRowActions?: boolean;
 	sticky?: boolean;
 	stickyFirstColumn?: boolean;
-	isFixedWidth?: boolean;
 }
 
 interface IEmits {
 	(e: 'update:columns', columns: IGenericTableColumn[]): void;
-
 	(e: 'update:sort', config: ISortConfig): void;
+	(e: 'update:columnWidth', index:number,width:number): void;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -157,27 +158,28 @@ const draggableColumns = computed({
 	},
 });
 
-const calculateStyles = (index: number) => {
-	if (props.isFixedWidth) {
-		if (index === 0) {
-			return { width: '100%' };
-		} else {
-			return { width: '50%' };
-		}
-	}
-
-	return {
-		...(index !== 0 ?
-			{
-				width:
-					`calc(var(--col-${index}-width)`,
-			}:{}),
-
-		minWidth:
-			`calc(var(--col-${index}-min-width)`,
-	};
-
-};
+const resizeStartX = ref<number|null>(null);
+const startResizeWidth = ref<number|null>(null)
+const resizeIndex = ref<number|null>(null)
+const onMouseMove = e=>{
+	const dx = e.clientX - resizeStartX.value;
+	emit('update:columnWidth',resizeIndex.value,startResizeWidth.value+dx);
+}
+const onMouseUp = e=>{
+	document.removeEventListener('mousemove',onMouseMove);
+	document.removeEventListener('mouseup',onMouseUp);
+}
+const startResize = (index,e)=> {
+	resizeIndex.value = index;
+	startResizeWidth.value = parseFloat(props.columnWidths[index]);
+	resizeStartX.value = e.clientX;
+	document.addEventListener('mousemove',onMouseMove);
+	document.addEventListener('mouseup',onMouseUp);
+}
+onUnmounted(()=>{
+	document.removeEventListener('mousemove',onMouseMove);
+	document.removeEventListener('mouseup',onMouseUp);
+})
 
 </script>
 
@@ -187,7 +189,7 @@ const calculateStyles = (index: number) => {
 	>
 		<draggable
 			v-model="draggableColumns"
-			:disabled="!enableReordering"
+			:disabled="!enableReordering||enableResizing"
 			:filter="`.${ignoreDragClass}`"
 			:move="handleMove"
 			:class="classes.headerRow"
@@ -208,7 +210,7 @@ const calculateStyles = (index: number) => {
 						}
 					]"
 					:title="column.label"
-					:style="calculateStyles(index)"
+					:style="{ width: columnWidths?.[index] ?? undefined }"
 				>
 					<div :class="classes.headerContent">
 						<div
@@ -228,6 +230,9 @@ const calculateStyles = (index: number) => {
 								{{ getSortIcon(getSortDirection(column.key)) }}
 							</span>
 						</div>
+						<span :class="classes.columnResizer"
+									v-if="enableResizing"
+									@mousedown="startResize(index,$event)"></span>
 						<div :class="classes.headerMain">
 							<slot
 								:name="`header-${index}`"
@@ -260,6 +265,7 @@ const calculateStyles = (index: number) => {
 							[classes.stickySettings]: sticky
 						}
 					]"
+					:style="{ width: columnWidths?.[draggableColumns?.length] ?? undefined }"
 				>
 					<slot name="header-settings">
 						<generic-column-settings
@@ -309,6 +315,25 @@ const calculateStyles = (index: number) => {
 	white-space: nowrap;
 	background: var(--bg-color-surface-01, #1a1a1a);
 	user-select: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	&>div{
+		display: flex;
+		width: 100%;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		box-sizing: border-box;
+	}
+	.columnResizer{
+		position: absolute;
+		right:2px;
+		top:10%;
+		height: 80%;
+		width:20px;
+		background: #666;
+	}
 }
 
 .headerCell.draggable {
@@ -333,10 +358,6 @@ const calculateStyles = (index: number) => {
 			var(--bg-color-surface-01, #1a1a1a) 65%,
 			rgb(26 26 26 / 0%) 100%
 		);
-
-	.headerContent {
-		min-width: var(--col-0-width, 0);
-	}
 }
 
 .firstColumn {
