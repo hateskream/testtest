@@ -1,3 +1,5 @@
+import type { ChartClickData } from '@shared/component-library';
+
 export const IndicatorsChart = {
 	Main: 'Main',
 	SMA: 'SMA',
@@ -19,11 +21,4 @@ export interface IChartUpdateEmitData {
 	time: Date;
 }
 
-export interface ISharedChartMouseEventDetails {
-	time: number | string;
-	value: number;
-	x: number;
-	y: number;
-}
-
-export type SharedChartMouseEvent = CustomEvent<[ISharedChartMouseEventDetails | null]>;
+export type SharedChartMouseEvent = CustomEvent<ChartClickData[]>;

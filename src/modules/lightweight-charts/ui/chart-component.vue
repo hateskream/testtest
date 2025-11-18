@@ -16,7 +16,8 @@ import {
 	type SeriesType,
 	type Time,
 } from 'lightweight-charts';
-import type { ChartType } from '@shared/component-library';
+import type { ChartClickData, ChartData, ChartType } from '@shared/component-library';
+import { unrefElement } from '@vueuse/core';
 
 import {
 	calculateSMASeriesData,
@@ -25,13 +26,7 @@ import {
 	generateLineData,
 	groupSeriesByRange,
 } from '../utils';
-import {
-	type IChartUpdateEmitData,
-	IndicatorsChart,
-	type ISharedChartMouseEventDetails,
-	type SharedChartMouseEvent,
-	TypeChart,
-} from '../model/chart';
+import { type IChartUpdateEmitData, IndicatorsChart, type SharedChartMouseEvent, TypeChart } from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
@@ -88,7 +83,7 @@ type IGroupedData = {
 	[x in RangeChart]: CandlestickData[]
 };
 
-const container = useTemplateRef('container');
+const container = useTemplateRef<HTMLElement>('container');
 const history = useTemplateRef('history');
 const chart = ref<IChartApi | null>();
 const chartHistory = ref<IChartApi | null>();
@@ -172,12 +167,12 @@ const preparedChartData = computed(() => {
 	const data = groupedData.value[currentRange.value];
 
 	if (currentTypeGraph.value === TypeChart.Candlestick) {
-		return data;
+		return data as ChartData[];
 	} else {
 		return data.map(item => ({
 			time: item.time,
 			value: item.close,
-		}));
+		})) as ChartData[];
 	}
 });
 
@@ -349,7 +344,7 @@ const tooltipRowColor = computed(() => props.colorSchema === 'positive'
 	: 'var(--metrics-color-negative-chart)',
 );
 
-function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
+function updateTooltipState(state: ChartClickData | null) {
 	if (!state || !container.value) {
 		tooltipState.visible = false;
 		return;
@@ -362,7 +357,7 @@ function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
 		return;
 	}
 
-	const rect = (container.value as HTMLElement).getBoundingClientRect();
+	const rect = unrefElement(container)!.getBoundingClientRect();
 
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
@@ -402,7 +397,11 @@ function onChartHover(event: SharedChartMouseEvent) {
 onMounted(async () => {
 	await nextTick();
 
-	chart.value = createChart(container.value as HTMLElement, {
+	if (!container.value) {
+		return;
+	}
+
+	chart.value = createChart(unrefElement(container)!, {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
