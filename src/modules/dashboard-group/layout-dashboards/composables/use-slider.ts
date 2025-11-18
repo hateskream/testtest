@@ -1,11 +1,11 @@
 import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef } from 'vue';
 
-const PADDING_VIEWPORT = 44;
+const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
 export function useSlider(opts: {
 	slidesWidth: MaybeRefOrGetter<number[]>;
 	gap?: number;
-	viewportWidth: ShallowRef<number, number>;
+	viewportWidth: MaybeRefOrGetter<number>;
 	isMobile: ShallowRef<boolean, boolean>;
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
@@ -22,15 +22,14 @@ export function useSlider(opts: {
 
 	const trackStyle = computed(() => ({
 		transform: `translateX(${translateX.value}px)`,
-		gap: `${gap}px`,
 	}));
 
-	watch(viewportWidth, () => setTranslateX(translateX.value));
+	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
 
 
 	function clampTranslate(x: number) {
 		const maxTranslate = 0;
-		const minTranslate = Math.min(0, viewportWidth.value - totalTrackWidth.value);
+		const minTranslate = Math.min(0, toValue(viewportWidth) - totalTrackWidth.value);
 		return Math.max(minTranslate, Math.min(maxTranslate, x));
 	}
 
@@ -125,7 +124,7 @@ export function useSlider(opts: {
 
 			const isLeft = dx < 0;
 
-			if (Math.abs(dx) < viewportWidth.value / 5) {
+			if (Math.abs(dx) < toValue(viewportWidth) / 5) {
 				setTranslateX(translateX.value - dx);
 				return;
 			}
@@ -155,7 +154,7 @@ export function useSlider(opts: {
 
 	const canPrev = computed(() => translateX.value < 0);
 	const canNext = computed(() => {
-		const minTranslate = viewportWidth.value - totalTrackWidth.value;
+		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
 		return translateX.value > minTranslate;
 	});
 

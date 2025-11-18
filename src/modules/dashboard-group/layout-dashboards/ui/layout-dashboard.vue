@@ -51,6 +51,7 @@ const {
 } = useSlider({
 	slidesWidth: computed (() => preparedSlides.value.map(s => s.width)),
 	viewportWidth,
+	gap: 23,
 	isMobile,
 });
 

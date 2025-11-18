@@ -86,7 +86,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 	justify-content: space-between;
 	align-items: center;
 	height: 44px;
-	padding: 0 10px 0 16px;
+	padding: 0 18px 0 16px;
 	color: #ffffff;
 }
 

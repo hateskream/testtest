@@ -12,7 +12,6 @@ interface ISectionSliderProps {
 	slides: ISection[];
 	trackStyle: {
 		transform: string;
-		gap: string;
 	};
 	canPrev: boolean;
 	canNext: boolean;
@@ -71,14 +70,18 @@ const sectionHeight = computed(() => {
 					<section-component
 						:section="s"
 						:parent-height="sectionHeight"
+						:style="{
+							...i !== 0 ? { 'margin-left': '10px' } : {},
+							...{ 'margin-right': '10px' }
+						}"
 					/>
 					<div
-						v-if="i < props.slides.length - 1"
 						:class="classes.sizer"
 					/>
 				</template>
 			</div>
 		</div>
+		<div :class="classes.placeholder" />
 		<div :class="classes.content">
 			<button
 				:disabled="!props.canPrev"
@@ -105,6 +108,7 @@ const sectionHeight = computed(() => {
 
 <style module="classes">
 .root {
+	position: relative;
 	display: flex;
 	flex-grow: 1;
 }
@@ -113,27 +117,36 @@ const sectionHeight = computed(() => {
 	position: relative;
 	display: flex;
 	flex-grow: 1;
-	padding-right: 44px;
+	margin-right: 6px;
+	margin-left: 20px;
 	overflow: hidden;
+	border-radius: 24px;
 }
 
 .track {
 	display: flex;
 	flex-grow: 1;
 	align-items: stretch;
-	padding-right: 10px;
-	padding-left: 10px;
 	transition: transform 300ms cubic-bezier(0.22, 0.9, 0.2, 1);
 	will-change: transform;
 }
 
+.placeholder {
+	width: 52px;
+}
+
 .content {
+	position: absolute;
+	right: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	min-width: 44px;
+	min-width: 52px;
+	height: 100%;
 	padding-top: 10px;
+	background: rgb(0 0 0 / 74%);
 	gap: 8px;
+	backdrop-filter: blur(12px);
 }
 
 .control {
