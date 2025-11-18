@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, useTemplateRef } from 'vue';
+import { computed, useCssModule, useTemplateRef, watch } from 'vue';
 
 import { useDashboardLayout, useSlider } from '../composables';
 
@@ -47,11 +47,25 @@ const {
 	next,
 	prev,
 	goTo,
+	isDragging,
 } = useSlider({
 	slidesWidth: computed (() => preparedSlides.value.map(s => s.width)),
 	viewportWidth,
 	isMobile,
 });
+
+const classes = useCssModule('classes');
+
+watch(
+	isDragging,
+	() => {
+		if (isDragging.value) {
+			document.body.classList.add(classes['no-select']);
+		} else {
+			document.body.classList.remove(classes['no-select']);
+		}
+	},
+);
 
 </script>
 
@@ -118,5 +132,9 @@ const {
 	.container {
 		border-radius: 34px;
 	}
+}
+
+.no-select {
+	user-select: none !important;
 }
  </style>

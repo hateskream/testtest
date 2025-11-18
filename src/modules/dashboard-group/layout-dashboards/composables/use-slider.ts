@@ -10,6 +10,7 @@ export function useSlider(opts: {
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
 	const translateX = ref(0);
+	const isDragging = ref(false);
 
 	const slides = computed(() => toValue(slidesWidth));
 
@@ -54,6 +55,7 @@ export function useSlider(opts: {
 			pointer.lastY = e.clientY;
 			pointer.isHorizontal = false;
 			pointer.hasDirection = false;
+			isDragging.value = true;
 		},
 		onPointerMove(e: PointerEvent) {
 			if (!pointer.isDown) {
@@ -76,6 +78,7 @@ export function useSlider(opts: {
 			pointer.lastY = e.clientY;
 		},
 		onPointerUp() {
+			isDragging.value = false;
 			pointer.isDown = false;
 			pointer.hasDirection = false;
 		},
@@ -190,5 +193,6 @@ export function useSlider(opts: {
 		pointerState,
 		goTo,
 		currentIndex,
+		isDragging,
 	};
 }
