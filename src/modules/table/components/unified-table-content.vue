@@ -490,16 +490,16 @@ const cancelAddSection = () => {
 						:style="{ width: columnWidths?.[cellIndex] ?? undefined }"
 					>
 						<div>
-						<slot
-							:name="`cell-${cellIndex}`"
-							:row="getRow(item)!"
-							:column="column"
-							:cell-index="cellIndex"
-							:row-index="itemIndex"
-							:value="getRow(item)!.data[column.key]"
-						>
-							{{ getRow(item)?.data[column.key] }}
-						</slot>
+							<slot
+								:name="`cell-${cellIndex}`"
+								:row="getRow(item)!"
+								:column="column"
+								:cell-index="cellIndex"
+								:row-index="itemIndex"
+								:value="getRow(item)!.data[column.key]"
+							>
+								{{ getRow(item)?.data[column.key] }}
+							</slot>
 						</div>
 					</td>
 
@@ -622,19 +622,20 @@ const cancelAddSection = () => {
 	position: relative;
 	padding: 8px 10px;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	vertical-align: middle;
 	white-space: nowrap;
+	text-overflow: ellipsis;
 	background: transparent;
 	border: none;
-	&>div{
+
+	& > div {
 		display: block;           /* critical: make it a block */
+		box-sizing: border-box;
 		width: 100%;              /* now this = 100px */
 		max-width: 100%;
 		overflow: hidden;         /* or overflow-x:auto for scrollbar */
-		text-overflow: ellipsis;  /* optional */
 		white-space: nowrap;      /* optional: no wrapping */
-		box-sizing: border-box;
+		text-overflow: ellipsis;  /* optional */
 	}
 }
 

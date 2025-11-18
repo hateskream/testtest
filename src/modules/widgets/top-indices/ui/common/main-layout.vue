@@ -33,6 +33,7 @@ const genericRows = computed(() =>
 		}"
 	>
 		<div :class="classes.scrollable">
+			{{genericColumns}}
 			<widget-typed-table
 				:columns="genericColumns"
 				:rows="genericRows"

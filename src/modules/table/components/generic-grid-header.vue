@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import {computed, onUnmounted, ref} from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import type { IGenericTableColumn, ISortConfig } from '../type';
@@ -26,7 +26,7 @@ interface IProps {
 interface IEmits {
 	(e: 'update:columns', columns: IGenericTableColumn[]): void;
 	(e: 'update:sort', config: ISortConfig): void;
-	(e: 'update:columnWidth', index:number,width:number): void;
+	(e: 'update:columnWidth', index:number, width:number): void;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -159,27 +159,27 @@ const draggableColumns = computed({
 });
 
 const resizeStartX = ref<number|null>(null);
-const startResizeWidth = ref<number|null>(null)
-const resizeIndex = ref<number|null>(null)
+const startResizeWidth = ref<number|null>(null);
+const resizeIndex = ref<number|null>(null);
 const onMouseMove = e=>{
 	const dx = e.clientX - resizeStartX.value;
-	emit('update:columnWidth',resizeIndex.value,startResizeWidth.value+dx);
-}
+	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value+dx);
+};
 const onMouseUp = e=>{
-	document.removeEventListener('mousemove',onMouseMove);
-	document.removeEventListener('mouseup',onMouseUp);
-}
-const startResize = (index,e)=> {
+	document.removeEventListener('mousemove', onMouseMove);
+	document.removeEventListener('mouseup', onMouseUp);
+};
+const startResize = (index, e)=> {
 	resizeIndex.value = index;
 	startResizeWidth.value = parseFloat(props.columnWidths[index]);
 	resizeStartX.value = e.clientX;
-	document.addEventListener('mousemove',onMouseMove);
-	document.addEventListener('mouseup',onMouseUp);
-}
+	document.addEventListener('mousemove', onMouseMove);
+	document.addEventListener('mouseup', onMouseUp);
+};
 onUnmounted(()=>{
-	document.removeEventListener('mousemove',onMouseMove);
-	document.removeEventListener('mouseup',onMouseUp);
-})
+	document.removeEventListener('mousemove', onMouseMove);
+	document.removeEventListener('mouseup', onMouseUp);
+});
 
 </script>
 
@@ -230,9 +230,11 @@ onUnmounted(()=>{
 								{{ getSortIcon(getSortDirection(column.key)) }}
 							</span>
 						</div>
-						<span :class="classes.columnResizer"
-									v-if="enableResizing"
-									@mousedown="startResize(index,$event)"></span>
+						<span
+							v-if="enableResizing"
+							:class="classes.columnResizer"
+							@mousedown="startResize(index,$event)"
+						></span>
 						<div :class="classes.headerMain">
 							<slot
 								:name="`header-${index}`"
@@ -307,32 +309,34 @@ onUnmounted(()=>{
 .headerCell {
 	position: relative;
 	padding: 0 12px;
+	overflow: hidden;
 	font-weight: 440;
 	font-size: 12px;
 	vertical-align: middle;
 	text-align: right;
 	color: var(--text-color-base-100, #ffffff);
 	white-space: nowrap;
+	text-overflow: ellipsis;
 	background: var(--bg-color-surface-01, #1a1a1a);
 	user-select: none;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	&>div{
+
+	& > div {
 		display: flex;
+		box-sizing: border-box;
 		width: 100%;
 		max-width: 100%;
 		overflow: hidden;
-		text-overflow: ellipsis;
 		white-space: nowrap;
-		box-sizing: border-box;
+		text-overflow: ellipsis;
 	}
-	.columnResizer{
+
+	.columnResizer {
 		position: absolute;
-		right:2px;
-		top:10%;
+		top: 10%;
+		right: 2px;
+		width: 20px;
 		height: 80%;
-		width:20px;
-		background: #666;
+		background: #666666;
 	}
 }
 

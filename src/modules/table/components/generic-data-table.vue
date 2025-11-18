@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import {computed, ref, watch, onMounted, type Ref, nextTick} from 'vue';
+import { computed, ref, watch, onMounted, type Ref, nextTick } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
@@ -82,6 +82,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 
 const emit = defineEmits<IEmits<T>>();
 
+// Local state refs
 const localColumns = ref<IGenericTableColumn[]>([...props.columns]);
 const localSections = ref<IGenericTableSection<T>[]>([...props.sections]);
 const localUnsortedRows = ref<IGenericTableRow<T>[]>([...props.rows]);
@@ -93,6 +94,21 @@ const isContainerHovered = ref(false);
 // Table background color detection
 const tableBackgroundColor = ref<string>('');
 
+// Container and scroll refs
+const containerRef: Ref<HTMLDivElement | null> = ref(null);
+const scrollContainerRef: Ref<HTMLDivElement | null> = ref(null);
+
+// Table sizing refs - declared before functions that use them
+const tableRef = ref<HTMLTableElement | null>(null);
+const columnWidths = ref<string[]|undefined>(undefined);
+const tableWidth = ref('auto');
+let columnLayout = ref<'percent'|'px'>(props.isFixedWidth?'percent':'px');
+
+// Animation control
+const isAnimating = ref(false);
+const shouldFinishAnimation = ref(false);
+
+// Computed properties
 const visibleColumns = computed(() =>
 	localColumns.value
 		.filter(col => col.visible)
@@ -101,6 +117,29 @@ const visibleColumns = computed(() =>
 
 const isSectionedTable = computed(() => localSections.value.length > 0);
 
+const { width: containerWidth }: { width: Ref<number> } = useElementSize(containerRef);
+
+// Custom scrollbar with hover visibility
+const {
+	showVerticalScrollbar,
+	showHorizontalScrollbar,
+	verticalThumbTop,
+	horizontalThumbLeft,
+	isDraggingVertical,
+	isDraggingHorizontal,
+	verticalTrackRef,
+	horizontalTrackRef,
+	handleVerticalMouseDown,
+	handleHorizontalMouseDown,
+	handleVerticalTrackClick,
+	handleHorizontalTrackClick,
+	scrollbarStyles,
+	config: scrollbarConfig,
+} = useCustomScrollbar(scrollContainerRef, {
+	showOnHover: props.showScrollbarsOnHover,
+});
+
+// Utility functions
 const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	if (!element || element === document.body || element === document.documentElement) {
 		if (element) {
@@ -124,29 +163,95 @@ const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	return getRealBackgroundColor(element.parentElement);
 };
 
-watch(() => props.columns, (newColumns) => {
-	localColumns.value = [...newColumns];
-}, { deep: true });
-
-watch(() => props.sections, (newSections) => {
-	localSections.value = [...newSections];
-}, { deep: true });
-
-watch(() => props.rows, (newUnsortedRows) => {
-	localUnsortedRows.value = [...newUnsortedRows];
-}, { deep: true });
-
-watch(() => props.sortConfig, (newSortConfig) => {
-	localSortConfig.value = { ...newSortConfig };
-}, { deep: true });
-
-// Watch for backgroundColor prop changes
-watch(() => props.backgroundColor, (newColor) => {
-	if (newColor) {
-		tableBackgroundColor.value = newColor;
+const recalculateColumnWidths = async ()=>{
+	await nextTick();
+	const table = tableRef.value;
+	if (!table) {
+		return;
 	}
-}, { immediate: false });
+	const headerRow = table.tHead?.rows[0] || table.rows[0];
+	if (!headerRow) {
+		return;
+	}
+	const headerCells = Array.from(headerRow.cells);
+	if (headerCells.length === 0) {
+		return;
+	}
+	const widths = headerCells.map(cell =>
+		cell.getBoundingClientRect().width,
+	);
 
+	if (!containerRef.value) {
+		return;
+	}
+	const totalWidth = containerRef.value?.getBoundingClientRect().width;
+	const COLUMN_MIN_WIDTH=50;
+
+	const { minColWidth } = visibleColumns.value.reduce((acc, col)=>{
+		acc.minColWidth+=col.minWidth||COLUMN_MIN_WIDTH;
+		return acc;
+	}, {
+		minColWidth:0,
+	});
+
+	if (visibleColumns.value?.length<3) {
+		columnLayout.value = 'percent';
+	}
+	if (minColWidth>totalWidth) {
+		columnLayout.value = 'px';
+	} else {
+		columnLayout.value = 'percent';
+	}
+
+	const WIDTH_MULTIPLIER = 1.15;
+	if (columnLayout.value === 'px') {
+		let sum = 0;
+		columnWidths.value = widths.map((w, i) => {
+			const col = visibleColumns.value[i];
+			if (!col) {
+				sum+=w;
+				return w+'px';
+			}
+			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w*WIDTH_MULTIPLIER));
+			sum+=width;
+			return w * WIDTH_MULTIPLIER+'px';
+		});
+		tableWidth.value = sum+'px';
+	} else {
+		tableWidth.value = '100%';
+		const columnWidthSum = widths.reduce((sum, w, i) => {
+			const col = visibleColumns.value[i];
+			if (!col) {
+				return sum+w;
+			}
+			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w));
+			return sum+width;
+		}, 0);
+		let widthRemaining = Math.max(0, totalWidth-columnWidthSum);
+		columnWidths.value = widths.map((w, i) => {
+			const col = visibleColumns.value[i];
+			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w));
+			if (i===0) {
+				return 100*(width+widthRemaining)/totalWidth+'%';
+			}
+			return 100*width/totalWidth+'%';
+		});
+	}
+};
+
+const handleColumnResize = (i, width)=>{
+	if (columnLayout.value!=='px') {
+		return;
+	}
+	const maxWidth = visibleColumns.value?.[i]?.maxWidth||500;
+	const minWidth = visibleColumns.value?.[i]?.minWidth||0;
+	const oldWidth = parseFloat(columnWidths.value[i]);
+	const newWidth = Math.min(maxWidth, Math.max(minWidth, width));
+	columnWidths.value[i] = newWidth+'px';
+	tableWidth.value = (parseFloat(tableWidth.value) + newWidth - oldWidth)+'px';
+};
+
+// Event handlers
 const handleColumnsUpdate = (columns: IGenericTableColumn[]) => {
 	localColumns.value = [...columns];
 	recalculateColumnWidths();
@@ -271,34 +376,44 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	emit('sectionRenamed', payload);
 };
 
-const containerRef: Ref<HTMLDivElement | null> = ref(null);
-const scrollContainerRef: Ref<HTMLDivElement | null> = ref(null);
+const handleAnimationIteration = () => {
+	if (shouldFinishAnimation.value) {
+		isAnimating.value = false;
+		shouldFinishAnimation.value = false;
+	}
+};
 
-const { width: containerWidth }: { width: Ref<number> } = useElementSize(containerRef);
+const handleContainerMouseEnter = () => {
+	isContainerHovered.value = true;
+};
 
-// Custom scrollbar with hover visibility
-const {
-	showVerticalScrollbar,
-	showHorizontalScrollbar,
-	verticalThumbTop,
-	horizontalThumbLeft,
-	isDraggingVertical,
-	isDraggingHorizontal,
-	verticalTrackRef,
-	horizontalTrackRef,
-	handleVerticalMouseDown,
-	handleHorizontalMouseDown,
-	handleVerticalTrackClick,
-	handleHorizontalTrackClick,
-	scrollbarStyles,
-	config: scrollbarConfig,
-} = useCustomScrollbar(scrollContainerRef, {
-	showOnHover: props.showScrollbarsOnHover,
-});
+const handleContainerMouseLeave = () => {
+	isContainerHovered.value = false;
+};
 
-// Animation control
-const isAnimating = ref(false);
-const shouldFinishAnimation = ref(false);
+// Watchers
+watch(() => props.columns, (newColumns) => {
+	localColumns.value = [...newColumns];
+}, { deep: true });
+
+watch(() => props.sections, (newSections) => {
+	localSections.value = [...newSections];
+}, { deep: true });
+
+watch(() => props.rows, (newUnsortedRows) => {
+	localUnsortedRows.value = [...newUnsortedRows];
+}, { deep: true });
+
+watch(() => props.sortConfig, (newSortConfig) => {
+	localSortConfig.value = { ...newSortConfig };
+}, { deep: true });
+
+// Watch for backgroundColor prop changes
+watch(() => props.backgroundColor, (newColor) => {
+	if (newColor) {
+		tableBackgroundColor.value = newColor;
+	}
+}, { immediate: false });
 
 watch(() => props.isUpdating, (newValue) => {
 	if (newValue) {
@@ -309,94 +424,7 @@ watch(() => props.isUpdating, (newValue) => {
 	}
 }, { immediate: true });
 
-const handleAnimationIteration = () => {
-	if (shouldFinishAnimation.value) {
-		isAnimating.value = false;
-		shouldFinishAnimation.value = false;
-	}
-};
-
-// Handle container hover
-const handleContainerMouseEnter = () => {
-	isContainerHovered.value = true;
-};
-
-const handleContainerMouseLeave = () => {
-	isContainerHovered.value = false;
-};
-
-const tableRef = ref<HTMLTableElement | null>(null)
-const columnWidths = ref<string[]|undefined>(undefined);
-const tableWidth = ref('auto');
-let columnLayout = ref<'percent'|'px'>(props.isFixedWidth?'percent':'px');
-const recalculateColumnWidths = async ()=>{
-	await nextTick();
-	const table = tableRef.value
-	if (!table) return
-	const headerRow = table.tHead?.rows[0] || table.rows[0]
-	if (!headerRow) return
-	const headerCells = Array.from(headerRow.cells)
-	if (headerCells.length === 0) return
-	const widths = headerCells.map(cell =>
-		cell.getBoundingClientRect().width
-	)
-
-	if (!containerRef.value) return;
-	const totalWidth = containerRef.value?.getBoundingClientRect().width;
-	const COLUMN_MIN_WIDTH=50;
-
-	const {minColWidth} = visibleColumns.value.reduce((acc,col)=>{
-		acc.minColWidth+=col.minWidth||COLUMN_MIN_WIDTH;
-		return acc;
-	},{
-		minColWidth:0,
-	})
-
-	if (visibleColumns.value?.length<3) columnLayout.value = 'percent';
-	if (minColWidth>totalWidth) columnLayout.value = 'px';
-	else columnLayout.value = 'percent';
-
-	const WIDTH_MULTIPLIER = 1.15;
-	if (columnLayout.value === 'px') {
-		let sum = 0;
-		columnWidths.value = widths.map((w,i) => {
-			const col = visibleColumns.value[i];
-			if (!col){
-				sum+=w;
-				return w+'px';
-			}
-			const width = Math.min(col.maxWidth||Infinity,Math.max(col.minWidth,w*WIDTH_MULTIPLIER));
-			sum+=width;
-			return w * WIDTH_MULTIPLIER+'px';
-		})
-		tableWidth.value = sum+'px';
-	}
-	else{
-		tableWidth.value = '100%';
-		const columnWidthSum = widths.reduce((sum,w,i) => {
-			const col = visibleColumns.value[i];
-			if (!col) return sum+w;
-			const width = Math.min(col.maxWidth||Infinity,Math.max(col.minWidth,w*WIDTH_MULTIPLIER));
-			return sum+width;
-		},0)
-		let widthRemaining = Math.max(0,totalWidth-columnWidthSum);
-		columnWidths.value = widths.map((w,i) => {
-			  if (i===0) return 100*(w+widthRemaining)/totalWidth+'%';
-				return 100*w/totalWidth+'%';
-		})
-	}
-}
-
-const hadnleColumnResize = (i,width)=>{
-	if (columnLayout.value!=='px') return;
-	const maxWidth = visibleColumns.value?.[i]?.maxWidth||500;
-	const minWidth = visibleColumns.value?.[i]?.minWidth||0;
-	const oldWidth = parseFloat(columnWidths.value[i]);
-	const newWidth = Math.min(maxWidth,Math.max(minWidth,width));
-	columnWidths.value[i] = newWidth+'px';
-	tableWidth.value = (parseFloat(tableWidth.value) + newWidth - oldWidth)+'px';
-}
-
+// Lifecycle hooks
 onMounted( () => {
 	// If backgroundColor prop is provided, use it. Otherwise, compute from parent element
 	if (props.backgroundColor) {
@@ -406,7 +434,6 @@ onMounted( () => {
 	}
 	recalculateColumnWidths();
 });
-
 
 </script>
 
@@ -455,7 +482,7 @@ onMounted( () => {
 						:sticky-first-column="stickyFirstColumn"
 						@update:columns="handleColumnsUpdate"
 						@update:sort="handleSortUpdate"
-						@update:column-width="hadnleColumnResize"
+						@update:column-width="handleColumnResize"
 					>
 						<template
 							v-for="(column, index) in visibleColumns"
@@ -665,7 +692,6 @@ onMounted( () => {
 
 .dataTable {
 	width: auto;
-	//min-width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: var(--table-bg-color);
