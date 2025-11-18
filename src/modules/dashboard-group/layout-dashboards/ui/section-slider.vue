@@ -46,64 +46,69 @@ const sectionHeight = computed(() => {
 </script>
 
 <template>
-	<div
-		ref="container"
-		:class="classes.viewport"
-		@wheel="emits('wheel', $event)"
-		@pointerdown="emits('pointerDown', $event)"
-		@pointermove="emits('pointerMove', $event)"
-		@pointerup="emits('pointerUp')"
-		@pointercancel="emits('pointerUp')"
-		@pointerleave="emits('pointerUp')"
-		@touchstart="emits('touchStart', $event)"
-		@touchmove="emits('touchMove', $event)"
-		@touchend="emits('touchEnd')"
-	>
+	<div :class="classes.root">
 		<div
-			:class="classes.track"
-			:style="props.trackStyle"
+			ref="container"
+			:class="classes.viewport"
+			@wheel="emits('wheel', $event)"
+			@pointerdown="emits('pointerDown', $event)"
+			@pointermove="emits('pointerMove', $event)"
+			@pointerup="emits('pointerUp')"
+			@pointercancel="emits('pointerUp')"
+			@pointerleave="emits('pointerUp')"
+			@touchstart="emits('touchStart', $event)"
+			@touchmove="emits('touchMove', $event)"
+			@touchend="emits('touchEnd')"
 		>
-			<template
-				v-for="(s, i) in props.slides"
-				:key="s.id"
+			<div
+				:class="classes.track"
+				:style="props.trackStyle"
 			>
-				<section-component
-					:section="s"
-					:parent-height="sectionHeight"
-				/>
-				<div
-					v-if="i < props.slides.length - 1"
-					:class="classes.sizer"
-				/>
-			</template>
-		</div>
-		<div :class="classes.panel">
-			<div :class="classes.content">
-				<button
-					:disabled="!props.canPrev"
-					:class="classes.control"
-					@click="emits('prev')"
+				<template
+					v-for="(s, i) in props.slides"
+					:key="s.id"
 				>
-					<ui-icon :id="IconIds.Prev" />
-				</button>
-				<button
-					:disabled="!props.canNext"
-					:class="classes.control"
-					@click="emits('next')"
-				>
-					<ui-icon
-						:id="IconIds.Prev"
-						:style="{
-							transform: `rotate(180deg)`
-						}"
+					<section-component
+						:section="s"
+						:parent-height="sectionHeight"
 					/>
-				</button>
+					<div
+						v-if="i < props.slides.length - 1"
+						:class="classes.sizer"
+					/>
+				</template>
 			</div>
+		</div>
+		<div :class="classes.content">
+			<button
+				:disabled="!props.canPrev"
+				:class="classes.control"
+				@click="emits('prev')"
+			>
+				<ui-icon :id="IconIds.Prev" />
+			</button>
+			<button
+				:disabled="!props.canNext"
+				:class="classes.control"
+				@click="emits('next')"
+			>
+				<ui-icon
+					:id="IconIds.Prev"
+					:style="{
+						transform: `rotate(180deg)`
+					}"
+				/>
+			</button>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
+.root {
+	display: flex;
+	flex-grow: 1;
+}
+
 .viewport {
 	position: relative;
 	display: flex;
@@ -122,21 +127,11 @@ const sectionHeight = computed(() => {
 	will-change: transform;
 }
 
-.panel {
-	position: absolute;
-	right: 0;
-	width: 60px;
-	height: 100%;
-	padding-left: 16px;
-	background: linear-gradient(90deg, rgb(0 0 0 / 0%) 0%, #000000 70%);
-}
-
 .content {
-	position: relative;
-	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	min-width: 44px;
 	padding-top: 10px;
 	gap: 8px;
 }
