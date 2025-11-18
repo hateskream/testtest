@@ -187,6 +187,7 @@ const sectionHeight = computed(() => {
 	margin-right: 6px;
 	margin-left: 20px;
 	overflow: hidden;
+	border-radius: 24px;
 }
 
 .track {
