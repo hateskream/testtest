@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import { computed } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { ISection } from '../model';
@@ -32,11 +33,13 @@ const emits = defineEmits<{
 	(e: 'goTo', index: number): void;
 }>();
 
-const containerRef = useTemplateRef<HTMLDivElement>('container');
+const { height } = useElementSize(
+	useTemplateRef<HTMLDivElement>('container'),
+);
 
 const sectionHeight = computed(() => {
-	if (containerRef.value) {
-		return containerRef.value.clientHeight - 14;
+	if (height.value) {
+		return height.value - 14;
 	}
 	return 0;
 });
