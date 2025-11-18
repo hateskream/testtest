@@ -26,6 +26,8 @@ const tickerType = computed((): TickerType => {
 
 	return mapping[props.type];
 });
+
+// TODO: useAppHead with resolver ticker name
 </script>
 
 <template>
