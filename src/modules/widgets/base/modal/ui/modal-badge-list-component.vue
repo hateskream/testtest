@@ -37,7 +37,8 @@
 
 .scroll {
 	max-height: calc(80svh - 46px);
-	padding: 6px;
+	margin: 0 -6px;
+	padding: 0 12px 6px;
 	overflow-y: auto;
 	scrollbar-gutter: stable;
 }
