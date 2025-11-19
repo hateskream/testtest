@@ -15,9 +15,9 @@ export const ALL_COLUMNS: ITableColumn[] =
 				isShow: true,
 				isDraggable: true,
 				extended: true,
-				maxWidth: '200px',
-				minWidth: '200px',
-				width: '200px',
+				maxWidth: 200,
+				minWidth: 200,
+				width: 200,
 			},
 		],
 	);
