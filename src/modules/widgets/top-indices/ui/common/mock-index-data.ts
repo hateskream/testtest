@@ -34,9 +34,8 @@ export const mockIndexData = [
 				indexName: 'Brazil',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',
@@ -56,9 +55,8 @@ export const mockIndexData = [
 				indexName: 'Sweden',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',
@@ -78,9 +76,8 @@ export const mockIndexData = [
 				indexName: 'Spain',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',
@@ -100,9 +97,8 @@ export const mockIndexData = [
 				indexName: 'Germany',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',
@@ -122,9 +118,8 @@ export const mockIndexData = [
 				indexName: 'Italy',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',
@@ -144,9 +139,8 @@ export const mockIndexData = [
 				indexName: 'Brazil',
 			},
 			changePrice24h: {
-				value: '38',
+				value: '+ 38',
 				currencySymbol: '$',
-				magnitude: '+',
 			},
 			changePrice24hPercent: {
 				value: '1.00',

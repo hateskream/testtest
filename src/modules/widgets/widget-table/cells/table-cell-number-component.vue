@@ -25,7 +25,7 @@ const formattedValue = computed(() => {
 			prefix: props.data.currencySymbol || '',
 			value: props.data.value,
 			suffix: props.data.magnitude || '',
-			default: '—',
+			default: props.data.value,
 			trend: props.data.trend,
 		};
 	}
@@ -46,7 +46,7 @@ const formattedValue = computed(() => {
 		prefix,
 		value,
 		suffix,
-		default: numFormat.format(+props.data.value),
+		default: isNaN(Number(props.data.value))? props.data.value : numFormat.format(+props.data.value),
 		trend: props.data.trend,
 	};
 });
