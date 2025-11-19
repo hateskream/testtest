@@ -29,7 +29,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'none',
-					height: 301,
+					height: 308,
 					maxCountRow: 6,
 					widgetType:  WidgetType.TopIndices,
 					defaultDisplayVariant: 'default',

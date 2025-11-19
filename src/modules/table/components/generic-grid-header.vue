@@ -334,7 +334,8 @@ onUnmounted(()=>{
 		position: absolute;
 		top: 10%;
 		right: 2px;
-		width: 20px;
+		display: none;
+		width: 3px;
 		height: 80%;
 		background: #666666;
 	}

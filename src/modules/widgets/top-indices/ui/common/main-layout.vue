@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapColumn, mapRow, type ITableColumn, type TableRow } from '@/modules/cell';
+import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 import { useGoToTickerPage } from '@/modules/chart';
+import { mockIndexData } from './mock-index-data.ts';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -20,8 +21,10 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-const genericRows = computed(() =>
-	props.rows.map(ticker => mapRow(ticker)),
+// Используем готовый объект с перебитыми данными
+const genericRows = computed(() => {
+	return mockIndexData;
+},
 );
 </script>
 
@@ -33,7 +36,6 @@ const genericRows = computed(() =>
 		}"
 	>
 		<div :class="classes.scrollable">
-			{{genericColumns}}
 			<widget-typed-table
 				:columns="genericColumns"
 				:rows="genericRows"

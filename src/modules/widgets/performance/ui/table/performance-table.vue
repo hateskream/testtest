@@ -5,6 +5,7 @@ import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { mockedSectorRows } from '@/modules/widgets/performance/ui/table/mocked-sector-data.ts';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -19,10 +20,20 @@ const props = defineProps<IPerformanceTableProps>();
 
 const { goToTickerPage } = useGoToTickerPage();
 
-// Функция для генерации случайного процента от -100 до 100
-const getRandomPercent = () => {
-	return (Math.random() * 200 - 100).toFixed(2);
-};
+
+// Создаем мутированные данные на основе props.rows и mockedSectorRows
+const mutatedRowData = computed(() => {
+	return mockedSectorRows.map((mockedRow, index) => {
+		const originalRow = props.rows[index % props.rows.length] || props.rows[0];
+
+		return {
+			...originalRow,
+			tickerId: mockedRow.tickerId,
+			symbol: mockedRow.symbol,
+			changePrice24hPercent: mockedRow.changePrice24hPercent,
+		} as PerformanceTableRow;
+	});
+});
 
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
@@ -32,12 +43,12 @@ const maxAbsValue = computed(() => {
 	if (props.displayVariant === DisplayVariant.List) {
 		return undefined;
 	}
-	// Для простоты устанавливаем maxAbsValue в 100
-	return 100;
+	return 20;
 });
 
-const genericRows = computed(() =>
-	props.rows.map(ticker => {
+
+const genericRows = computed(() => {
+	return mutatedRowData.value.map(ticker => {
 		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
 
 		if (props.displayVariant === DisplayVariant.List) {
@@ -46,15 +57,13 @@ const genericRows = computed(() =>
 			percent.maxAbsValue = maxAbsValue.value;
 		}
 
-		// Мокаем случайное значение процента
-		percent.value = getRandomPercent();
 
 		return mapRow({
 			...ticker,
 			[ColumnType.ChangePrice24hPercent]: percent,
 		});
-	}),
-);
+	});
+});
 
 const emit = defineEmits<{
 	(e: 'togglePin', tickerId: string): void;
@@ -68,6 +77,7 @@ const emit = defineEmits<{
 			<widget-typed-table
 				:columns="genericColumns"
 				:rows="genericRows"
+				:ticker-state="{isShowTicker:true, isShowDescription: true, isShowLogo: false}"
 				:show-header="false"
 				:enable-drag-drop="false"
 				:enable-column-reordering="true"

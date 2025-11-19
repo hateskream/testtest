@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, getCurrentInstance, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 
 import { getComponentByType, CellType } from './cells/cell-types';
 import { getCellData } from './utils';
@@ -167,6 +167,11 @@ const getCellComponentForColumn = (
 	}
 	return getCellComponent(columnType);
 };
+
+
+onMounted(()=> {
+	props.tickerState?.isShowLogo === false? showImage.value = false : '';
+});
 
 
 </script>

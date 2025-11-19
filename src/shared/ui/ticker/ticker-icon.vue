@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 
 import { UiImage } from '../image';
+import { UiIcon } from '@/shared/ui/icon';
+import { IconIds } from '@/shared/ui/icon';
 
 import iconPlaceholder from './icon-placeholder.vue';
 
@@ -16,12 +18,14 @@ const isImageLoaded = ref(false);
 
 const props = defineProps<ITickerIconProps>();
 
+const isIconId = computed(() => {
+	return Object.values(IconIds).includes(props.src as IconIds);
+});
+
 const wrapperSize = computed(() => {
-	// This is used to set the size of the wrapper div
-	// to ensure the icon is centered and has padding
 	return {
-		width: props.size ? `${props.size + (props.padding !== undefined ? props.padding :8)}px` : '40px',
-		height: props.size ? `${props.size + (props.padding !== undefined ? props.padding: 8)}px` : '40px',
+		width: props.size ? `${props.size + (props.padding !== undefined ? props.padding : 8)}px` : '40px',
+		height: props.size ? `${props.size + (props.padding !== undefined ? props.padding : 8)}px` : '40px',
 	};
 });
 
@@ -35,11 +39,20 @@ const iconSize = computed(() => {
 	<div
 		:class="classes.tickerIcon"
 		:style="[
-			{ border: isImageLoaded ? `1px solid var(--border-color-base-300)` : 'none' },
+			{ border: !isIconId && isImageLoaded ? `1px solid var(--border-color-base-300)` : 'none' },
 			wrapperSize
 		]"
 	>
+
+		<ui-icon
+			v-if="isIconId"
+			:id="props.src as IconIds"
+			:width="iconSize"
+			:height="iconSize"
+		/>
+
 		<ui-image
+			v-else
 			:class="classes.iconContainer"
 			:src="props.src"
 			:width="iconSize"

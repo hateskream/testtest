@@ -510,6 +510,7 @@ const cancelAddSection = () => {
 							classes.tableCell,
 							{ [classes.rowActionsHovered]: hoveredRowId === getRowId(item) }
 						]"
+						:style="{ width: columnWidths?.[columns?.length] ?? undefined }"
 					>
 						<div :class="classes.rowActionsWrapper">
 							<slot
@@ -603,7 +604,7 @@ const cancelAddSection = () => {
 }
 
 .tableRow {
-	height: 40px;
+	height: 36px;
 }
 
 .tableRowHovered {
@@ -620,7 +621,7 @@ const cancelAddSection = () => {
 
 .tableCell {
 	position: relative;
-	padding: 8px 10px;
+	padding: 6px 10px;
 	overflow: hidden;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -891,8 +892,18 @@ const cancelAddSection = () => {
 	color: var(--text-color-base-300, #9a9a9d);
 }
 
+.borderBottom::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 1px;
+	background: var(--border-color-surface-01);
+	pointer-events: none;
+}
 
-.borderBottom {
-	border-bottom: 1px solid var(--border-color-surface-01);
+.tableRow:last-of-type .borderBottom::after {
+	display: none;
 }
 </style>

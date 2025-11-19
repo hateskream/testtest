@@ -20,6 +20,7 @@ const props = defineProps<IProps>();
 
 const displayValue = computed(() => {
 	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
+		console.log('here?');
 		return '—';
 	}
 	if (props.data.value === '0') {
