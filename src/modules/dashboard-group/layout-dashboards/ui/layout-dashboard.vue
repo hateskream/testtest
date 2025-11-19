@@ -125,6 +125,7 @@ watch(
 	flex-grow: 1;
 	flex-direction: column;
 	margin: 8px 0;
+	overflow: hidden;
 	border: 1px solid #1d1d1e;
 	border-radius: 18px;
 }
