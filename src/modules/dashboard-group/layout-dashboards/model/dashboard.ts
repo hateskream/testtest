@@ -36,7 +36,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
-					height: Infinity,
+					height: 496,
 					widgetType:  WidgetType.Performance,
 					defaultDisplayVariant: 'bar',
 				},
