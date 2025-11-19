@@ -29,9 +29,7 @@ export const globalRoutes: RouteRecordRaw[] = [
 		component: () => import('@/pages/home-page.vue'),
 		meta: {
 			title: 'i88 — Track and analyze markets',
-			description: 'Where the world charts, chats, and trades markets. ' +
-				'We\'re a supercharged super-charting platform and social network for traders and investors. ' +
-				'Free to sign up.',
+			description: 'Where the world charts, chats, and trades markets. Free to sign up.',
 		},
 	},
 	{
