@@ -85,6 +85,7 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 .widgets {
 	display: flex;
 	flex-direction: column;
+	border-radius: 24px;
 	gap: 6px;
 	/* stylelint-disable-next-line color-named */
 	mask-image:

@@ -186,6 +186,7 @@ const sectionHeight = computed(() => {
 	flex-grow: 1;
 	margin-right: 6px;
 	margin-left: 20px;
+	padding-top: 8px;
 	overflow: hidden;
 }
 
