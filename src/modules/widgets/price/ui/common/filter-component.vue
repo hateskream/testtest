@@ -2,8 +2,7 @@
 import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { MarketBadge, ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { MarketBadge, ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import type { MarketType } from '@/modules/market';
 import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
 
@@ -38,19 +37,13 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 			:display-variant="displayVariant"
 		/>
 		<ui-delimiter />
-		<modal-badge
+		<modal-badge-dropdown
 			v-for="(filterState, filterKey) in filters"
 			:key="filterKey"
 			:display-variant="displayVariant"
 		>
 			<template #title v-if="filterState">
 				{{ filterValueToDisplay[filterState].label }}
-
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="20"
-					height="20"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -70,7 +63,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 					</template>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 	</div>
 </template>
 

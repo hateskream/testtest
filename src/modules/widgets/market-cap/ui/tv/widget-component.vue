@@ -65,6 +65,7 @@ const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart &
 				:is-show-date-range="isShowFilterDateRange"
 				autofocus
 				:class="classes.filters"
+				display-variant="default"
 			/>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />

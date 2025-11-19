@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { UiIcon, IconIds } from '@/shared/ui/icon';
-import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList } from '@/modules/widgets/base';
 import { type MarketType } from '@/modules/market';
 import {
 	type ILocation,
@@ -52,17 +51,11 @@ const displayItems = computed(() => {
 
 <template>
 	<div :class="classes.root">
-		<modal-badge display-variant="new">
+		<modal-badge-dropdown display-variant="new">
 			<template #title>
 				<span :class="classes.capitalize">
 					{{displayItems}}
 				</span>
-
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="20"
-					height="20"
-				/>
 			</template>
 			<template #content>
 				<news-segment-modal
@@ -73,30 +66,18 @@ const displayItems = computed(() => {
 					@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
 				/>
 			</template>
-		</modal-badge>
-		<modal-badge display-variant="new">
+		</modal-badge-dropdown>
+		<modal-badge-dropdown display-variant="new">
 			<template #title>
 				Location
-
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="20"
-					height="20"
-				/>
 			</template>
 			<template #content>
 				<news-location-filter v-model:locations="locations" />
 			</template>
-		</modal-badge>
-		<modal-badge display-variant="new">
+		</modal-badge-dropdown>
+		<modal-badge-dropdown display-variant="new">
 			<template #title>
 				{{sortTitle}}
-
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="20"
-					height="20"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -106,7 +87,7 @@ const displayItems = computed(() => {
 					/>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 	</div>
 </template>
 

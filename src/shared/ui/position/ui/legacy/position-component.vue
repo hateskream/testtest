@@ -56,7 +56,11 @@ defineExpose({
 						:strategy="props.strategy"
 						:placement="props.placement"
 					>
-						<slot name="content" />
+						<slot
+							name="content"
+							:is-visible="isOpen"
+							:is-pinned="isPinned"
+						/>
 					</position-content>
 				</transition>
 			</ui-presence>

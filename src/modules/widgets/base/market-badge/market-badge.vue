@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
-	ModalBadge,
+	ModalBadgeDropdown,
 } from '@/modules/widgets/base';
 import { getMarketLabel, type MarketType } from '@/modules/market';
 
@@ -23,10 +22,9 @@ const activeMarket = defineModel<MarketType>({ required: true });
 </script>
 
 <template>
-	<modal-badge :display-variant="props.displayVariant">
+	<modal-badge-dropdown :display-variant="props.displayVariant">
 		<template #title>
 			{{ getMarketLabel(activeMarket) }}
-			<ui-icon :id="IconIds.DropdownDown" />
 		</template>
 
 		<template #content>
@@ -36,5 +34,5 @@ const activeMarket = defineModel<MarketType>({ required: true });
 				:exclude-markets="props.excludeMarkets"
 			/>
 		</template>
-	</modal-badge>
+	</modal-badge-dropdown>
 </template>

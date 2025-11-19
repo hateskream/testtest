@@ -2,10 +2,9 @@
 import { computed } from 'vue';
 
 import { ModalFilter } from './components/modal';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useQueryTickerSelector } from '../queries';
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
-import { ModalBadge } from '@/modules/widgets/base';
+import { ModalBadgeDropdown } from '@/modules/widgets/base';
 import { marketToLabel, MarketType } from '@/modules/market';
 import { SymbolType } from '@/modules/cell';
 import { ModalFilterTickerIcon, ModalFilterTickerLabel } from '@/modules/ticker-selector/ui/components/modal';
@@ -63,7 +62,7 @@ function getPadding(symbol: SymbolType | null | undefined) {
 </script>
 
 <template>
-	<modal-badge :display-variant="props.displayVariant">
+	<modal-badge-dropdown :display-variant="props.displayVariant">
 		<template #title>
 			<div :class="classes.header">
 				<div
@@ -99,11 +98,6 @@ function getPadding(symbol: SymbolType | null | undefined) {
 					/>
 					<span v-if="selectedTickersMapped.length > 1" :class="classes.labelsDelimiter">,</span>
 				</div>
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-				/>
 			</div>
 		</template>
 		<template #content>
@@ -122,7 +116,7 @@ function getPadding(symbol: SymbolType | null | undefined) {
 				@select-all="emits('selectAll', $event)"
 			/>
 		</template>
-	</modal-badge>
+	</modal-badge-dropdown>
 </template>
 
 <style module="classes">

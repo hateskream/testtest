@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
+import {
+	ModalBadgeDropdown,
+	ModalBadgeList,
+	ModalItemCheckbox,
+	ModalItemSelector,
+} from '@/modules/widgets/base';
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import type { ISection, IWatchlist } from '@/modules/watchlist';
@@ -29,18 +33,13 @@ const emits = defineEmits<{
 
 <template>
 	<div>
-		<modal-badge
+		<modal-badge-dropdown
 			v-if="watchlists.length"
 			strategy="absolute"
+			display-variant="default"
 		>
-			<template #title="{ isVisible }">
+			<template #title>
 				<span>Watchlist</span>
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-					:class="['dropdown-icon', { 'rotated': isVisible }]"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -73,23 +72,15 @@ const emits = defineEmits<{
 					</template>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 
-		<modal-badge
-			strategy="absolute"
-		>
-			<template #title="{ isVisible }">
+		<modal-badge-dropdown display-variant="default">
+			<template #title>
 				<span>
 					{{
 						formattedLabel(Array.from(eventState), Object.values(EventType), 'All', 'Event Type')
 					}}
 				</span>
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-					:class="['dropdown-icon', { 'rotated': isVisible }]"
-				/>
 			</template>
 
 			<template #content>
@@ -98,23 +89,17 @@ const emits = defineEmits<{
 					:event-types="props.eventTypes"
 				/>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 
-		<modal-badge
-			strategy="absolute"
+		<modal-badge-dropdown
+			display-variant="default"
 		>
-			<template #title="{ isVisible }">
+			<template #title>
 				<span>
 					{{
 						formattedLabel(Array.from(impactState), Object.values(Impact), 'All', 'Impact')
 					}}
 				</span>
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-					:class="['dropdown-icon', { 'rotated': isVisible }]"
-				/>
 			</template>
 
 			<template #content>
@@ -141,6 +126,6 @@ const emits = defineEmits<{
 					</template>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 	</div>
 </template>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+
 interface IFiltersPanelProps {
-	displayVariant?: 'default' | 'new';
+	displayVariant: 'default' | 'new';
 	dataRanges: string[];
 	displayValueDataRange: Record<string, string>;
 	cpis: string[];
@@ -17,14 +17,9 @@ const activeCPI = defineModel<string>('cpi', { required: true });
 
 <template>
 	<div :class="classes.container">
-		<modal-badge :display-variant="props.displayVariant">
+		<modal-badge-dropdown :display-variant="props.displayVariant">
 			<template #title>
 				{{ displayValueDataRange[activeDateRange] }}
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -44,16 +39,11 @@ const activeCPI = defineModel<string>('cpi', { required: true });
 					</template>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 
-		<modal-badge :display-variant="props.displayVariant">
+		<modal-badge-dropdown :display-variant="props.displayVariant">
 			<template #title>
 				{{ displayValueCpi[activeCPI] }}
-				<ui-icon
-					:id="IconIds.DropdownDown"
-					width="12"
-					height="12"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -73,7 +63,7 @@ const activeCPI = defineModel<string>('cpi', { required: true });
 					</template>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 	</div>
 </template>
 

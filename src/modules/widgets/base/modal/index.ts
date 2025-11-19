@@ -10,6 +10,7 @@ export { default as ModalSubmenu } from './ui/modal-submenu-component.vue';
 export { default as ModalSubmenuContent } from './ui/modal-submenu-content-component.vue';
 export { default as ModalBadgeTitle } from './ui/modal-badge-title-component.vue';
 export { default as ModalBadge } from './ui/modal-badge-component.vue';
+export { default as ModalBadgeDropdown } from './ui/modal-badge-dropdown.vue';
 export { default as ModalItemInteraction } from './ui/modal-item-interaction-component.vue';
 export { default as ModalSearch } from './ui/modal-search-component.vue';
 export { default as ModalItemSelector } from './ui/modal-item-selector-component.vue';

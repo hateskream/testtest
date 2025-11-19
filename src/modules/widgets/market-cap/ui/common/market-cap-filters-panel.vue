@@ -2,8 +2,7 @@
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { dateRangeFilterValueToDisplay, MarketCapDateRange } from '../../model';
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
 const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
@@ -11,7 +10,7 @@ const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required:
 
 interface IMarketCapFiltersPanelProps {
 	isShowDateRange?: boolean;
-	displayVariant?: 'default' | 'new';
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IMarketCapFiltersPanelProps>();
@@ -27,14 +26,9 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 		/>
 		<template v-if="props.isShowDateRange">
 			<ui-delimiter v-if="props.displayVariant === 'default'" />
-			<modal-badge :display-variant="props.displayVariant">
+			<modal-badge-dropdown :display-variant="props.displayVariant">
 				<template #title>
 					{{ dateRangeFilterValueToDisplay[activeDateRange].selected }}
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-					/>
 				</template>
 				<template #content>
 					<modal-badge-list>
@@ -52,7 +46,7 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 						</template>
 					</modal-badge-list>
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 		</template>
 	</div>
 </template>
