@@ -7,7 +7,7 @@
 			<slot name="title" />
 		</div>
 
-		<div>
+		<div :class="classes.scroll">
 			<slot />
 		</div>
 	</div>
@@ -15,7 +15,7 @@
 
 <style module="classes">
 .title {
-	padding: 12px 12px 10px;
+	padding: 18px 18px 10px;
 	font-style: normal;
 	font-weight: 300;
 	font-size: 13px;
@@ -25,32 +25,38 @@
 }
 
 .container {
+	box-sizing: border-box;
 	width: max-content;
 	min-width: 208px;
-	max-height: 80svh;
-	padding: 6px;
-	overflow-y: auto;
+	height: 100%;
+	overflow: hidden;
 	background: var(--bg-modal-color-base);
 	border: 1px solid var(--border-modal-color-base);
 	border-radius: 18px;
+}
+
+.scroll {
+	max-height: calc(80svh - 46px);
+	padding: 6px;
+	overflow-y: auto;
 	scrollbar-gutter: stable;
 }
 
 @supports (-moz-appearance: none) {
-	.container:not(:hover) {
+	.scroll:not(:hover) {
 		scrollbar-width: none;
 	}
 
-	.container {
+	.scroll {
 		scrollbar-width: unset;
 	}
 }
 
-.container:not(:hover)::-webkit-scrollbar {
+.scroll:not(:hover)::-webkit-scrollbar {
 	display: none;
 }
 
-.container:hover::-webkit-scrollbar {
+.scroll:hover::-webkit-scrollbar {
 	width: 6px;
 }
 </style>

@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	placement: 'right-end',
 	trigger: 'click',
 	offset: 6,
-	strategy: 'fixed',
+	strategy: 'absolute',
 });
 
 const rootRef = useTemplateRef('root');

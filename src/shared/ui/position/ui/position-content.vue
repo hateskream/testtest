@@ -15,7 +15,7 @@ import type { IPositionContentProps } from '../model';
 const props = withDefaults(defineProps<IPositionContentProps>(), {
 	placement: 'bottom-start',
 	offset: 6,
-	strategy: 'fixed',
+	strategy: 'absolute',
 });
 
 const contentRef = useTemplateRef('content');
@@ -39,9 +39,10 @@ const { floatingStyles, update } = useFloating(triggerRef, contentRef, {
 	placement: props.placement,
 	strategy: props.strategy,
 	middleware: [offset(props.offset), flip(), shift({
-		padding: 4,
+		padding: 8,
 		rootBoundary: 'viewport',
 		boundary: 'clippingAncestors',
+		mainAxis: true,
 		crossAxis: true,
 	})],
 });
