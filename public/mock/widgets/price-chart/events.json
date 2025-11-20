@@ -1,0 +1,59 @@
+[
+	{
+		"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+		"ticker": "S&P500",
+		"additional": "S&P 500",
+		"symbolType": "Index",
+		"eventType": "Economic",
+		"eventTitle": "S&P 500 Economic",
+		"eventDatetime": "2025-11-13T12:33",
+		"metrics": [
+			{ "label": "Actual", "value": "1.92" },
+			{ "label": "Forecast", "value": "1.75" },
+			{ "label": "Previous", "value": "0.87" }
+		],
+		"section": "Index",
+		"link": "",
+		"linkText": "Details",
+		"marketId": "usa",
+		"impact": "Medium"
+	},
+	{
+		"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+		"ticker": "S&P500",
+		"additional": "S&P 500",
+		"symbolType": "Index",
+		"eventType": "Economic",
+		"eventTitle": "S&P 500 Economic",
+		"eventDatetime": "2025-11-13T12:33",
+		"metrics": [
+			{ "label": "Actual", "value": "1.92" },
+			{ "label": "Forecast", "value": "1.75" },
+			{ "label": "Previous", "value": "0.87" }
+		],
+		"section": "Index",
+		"link": "",
+		"linkText": "Details",
+		"marketId": "usa",
+		"impact": "Medium"
+	},
+	{
+		"id": "Thu Nov 13 2025 03:00:00 GMT+0300 (Москва, стандартное время)2",
+		"ticker": "S&P500",
+		"additional": "S&P 500",
+		"symbolType": "Index",
+		"eventType": "Economic",
+		"eventTitle": "S&P 500 Economic",
+		"eventDatetime": "2025-11-13T12:33",
+		"metrics": [
+			{ "label": "Actual", "value": "1.92" },
+			{ "label": "Forecast", "value": "1.75" },
+			{ "label": "Previous", "value": "0.87" }
+		],
+		"section": "Index",
+		"link": "",
+		"linkText": "Details",
+		"marketId": "usa",
+		"impact": "Medium"
+	}
+]

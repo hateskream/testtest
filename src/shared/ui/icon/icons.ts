@@ -105,6 +105,7 @@ export enum IconIds {
 	ControlCheck = 'control-check',
 	ControlClose = 'control-close',
 	Prev = 'prev',
+	History = 'history',
 
 	LogoWithoutText = 'logo-without-text',
 	Cashflow = 'cashflow',

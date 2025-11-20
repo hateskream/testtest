@@ -4,7 +4,8 @@ import { computed, ref } from 'vue';
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
 import { randomFloat } from '@/shared/lib';
-import { TimeRangeFilterValue } from '@/modules/widgets/chart-price/model';
+import type { ICalendarEvent } from '@/modules/calendar';
+import { getMarketSegmentStateColor, type IMarketSegment, TimeRangeFilterValue } from '../../model';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 import ChartPriceHeader from '@/modules/widgets/chart-price/ui/common/chart-price-header.vue';
@@ -14,14 +15,28 @@ interface IChartPriceProps {
 	isShowAxes: boolean;
 	isShowTimeRange: boolean;
 	isShowChart?: boolean;
+	isShowEventsTimeline?: boolean;
 	displayVariant: 'tv' | 'dashboard';
+	events?: ICalendarEvent[];
+	marketSegments?: IMarketSegment[];
 }
 
-const props = defineProps<IChartPriceProps>();
+const props = withDefaults(defineProps<IChartPriceProps>(), {
+	events: () => [],
+	marketSegments: () => [],
+});
 
 const dateRange = defineModel<TimeRangeFilterValue>('range', { required: true });
 
 const isTvDisplayVariant = computed(() => props.displayVariant === 'tv');
+
+const eventsTimelinePadding = computed(() => {
+	if (isTvDisplayVariant.value) {
+		return props.isBig ? '0' : '0 16px 0 0';
+	}
+
+	return '0 20px 0 0';
+});
 
 const dateRangeToRangeChart: Record<TimeRangeFilterValue, RangeChartType> = {
 	[TimeRangeFilterValue.Day]: RangeChart['1D'],
@@ -33,6 +48,18 @@ const dateRangeToRangeChart: Record<TimeRangeFilterValue, RangeChartType> = {
 };
 
 const chartRanges = Object.values(TimeRangeFilterValue).map(key => dateRangeToRangeChart[key]);
+
+const activeChartRange = computed({
+	get: () => dateRangeToRangeChart[dateRange.value],
+	set: (newRange) => {
+		const dateRangeFilter = Object.entries(dateRangeToRangeChart)
+			.find(([_, value]) => value === newRange);
+
+		if (dateRangeFilter) {
+			dateRange.value = dateRangeFilter[0] as TimeRangeFilterValue;
+		}
+	},
+});
 
 const currentPrice = ref<IChartUpdateEmitData>({
 	value: randomFloat(0, 10),
@@ -52,6 +79,18 @@ const generatedChangeData = computed(() => {
 function handleUpdateData(data: IChartUpdateEmitData) {
 	currentPrice.value = data;
 }
+
+const timelineSegments = computed(() => {
+	return props.marketSegments.map(segment => {
+		return {
+			from: segment.from,
+			to: segment.to,
+			title: segment.title,
+			color: getMarketSegmentStateColor(segment.state),
+		};
+	});
+});
+
 </script>
 
 <template>
@@ -73,9 +112,9 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 			}]"
 		>
 			<chart-component
+				v-model:range="activeChartRange"
 				width="100%"
 				height="100%"
-				:range="dateRange"
 				is-show-tooltip
 				:is-visible-history-graph="false"
 				:disable-scroll="false"
@@ -83,9 +122,15 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 				:is-visible-range="props.isBig && props.isShowTimeRange"
 				:is-visible-price-line="props.isShowAxes"
 				:is-visible-price-scale="props.isShowAxes"
-				:is-visible-time-scale="props.isShowAxes"
+				:is-visible-time-scale="props.isShowAxes && !props.isShowEventsTimeline"
+				:is-visible-events-timeline="props.isShowEventsTimeline"
 				:range-list="chartRanges"
+				:right-offset-pixels="20"
 				:class="classes.chart"
+				:events="props.events"
+				:timeline-segments="timelineSegments"
+				:events-timeline-padding="eventsTimelinePadding"
+				fade-left
 				@update="handleUpdateData"
 			/>
 		</div>
@@ -108,7 +153,8 @@ function handleUpdateData(data: IChartUpdateEmitData) {
 }
 
 .chartWrapper {
-	flex: 1;
+	flex: 1 1 0;
+	min-height: 0;
 	padding: 0 0 12px 20px;
 
 	&.tv {
