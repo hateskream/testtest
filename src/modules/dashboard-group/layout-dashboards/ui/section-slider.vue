@@ -210,14 +210,14 @@ const sectionHeight = computed(() => {
 
 .topLeft {
 	position: absolute;
-	top: 0;
+	top: 8px;
 	left: 20px;
 	pointer-events: none;
 }
 
 .topRight {
 	position: absolute;
-	top: 0;
+	top: 8px;
 	right: 0;
 	pointer-events: none;
 }
