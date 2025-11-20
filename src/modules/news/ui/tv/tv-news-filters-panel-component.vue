@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadge, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { type MarketType } from '@/modules/market';
 import {
@@ -97,16 +97,9 @@ function toggleSource(source: Source) {
 	<div :class="classes.container">
 		<div :class="classes.listFilters">
 			<div :class="classes.listFilterWithDelimiter">
-				<modal-badge>
+				<modal-badge-dropdown display-variant="default">
 					<template #title>
 						{{ titleSegment || 'All' }}
-
-						<ui-icon
-							:id="IconIds.DropdownDown"
-							width="12"
-							height="12"
-							:class="classes.icon"
-						/>
 					</template>
 
 					<template #content>
@@ -118,7 +111,7 @@ function toggleSource(source: Source) {
 							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
 						/>
 					</template>
-				</modal-badge>
+				</modal-badge-dropdown>
 			</div>
 
 			<ui-delimiter :class="classes.listFilterGroupDelimeter" />
@@ -167,16 +160,9 @@ function toggleSource(source: Source) {
 					v-if="selectedSources.size > 0"
 					:class="classes.listFilterWithDelimiter"
 				>
-					<modal-badge>
+					<modal-badge-dropdown display-variant="default">
 						<template #title>
 							{{ titleSource }}
-
-							<ui-icon
-								:id="IconIds.DropdownDown"
-								width="12"
-								height="12"
-								:class="classes.icon"
-							/>
 						</template>
 
 						<template #content>
@@ -198,7 +184,7 @@ function toggleSource(source: Source) {
 								</template>
 							</modal-badge-list>
 						</template>
-					</modal-badge>
+					</modal-badge-dropdown>
 				</div>
 			</div>
 		</div>

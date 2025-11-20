@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import VCalendar from 'v-calendar';
 import { registerComponent } from '@shared/component-library';
+import { createHead } from '@unhead/vue/client';
 
 import { router } from './router';
 import { validateConfig } from '@/shared/lib';
@@ -36,5 +37,8 @@ app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
 app.use(VCalendar);
+
+const head = createHead();
+app.use(head);
 
 app.mount('#app');

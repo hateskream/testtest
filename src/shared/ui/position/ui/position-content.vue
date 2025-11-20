@@ -38,7 +38,13 @@ let cleanup: null | (() => void) = null;
 const { floatingStyles, update } = useFloating(triggerRef, contentRef, {
 	placement: props.placement,
 	strategy: props.strategy,
-	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
+	middleware: [offset(props.offset), flip(), shift({
+		padding: 8,
+		rootBoundary: 'viewport',
+		boundary: 'clippingAncestors',
+		mainAxis: true,
+		crossAxis: true,
+	})],
 });
 
 function onBodyPointerDown(e: PointerEvent) {

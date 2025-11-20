@@ -1,6 +1,6 @@
 [
     {
-        "id": "Crypto-BTCBitcoin",
+        "id": "Crypto-BTC_Bitcoin",
         "symbol": "BTC",
         "name": "Bitcoin",
         "type": "crypto",
@@ -9,7 +9,7 @@
         "marketCap": "84232834934324.45"
     },
 	  {
-        "id": "Crypto-ADACardano",
+        "id": "Crypto-ADA_Cardano",
         "symbol": "ADA",
         "name": "Cardano",
         "type": "crypto",
@@ -18,7 +18,7 @@
         "marketCap": "84232834934324.45"
     },
     {
-        "id": "Crypto-TRXTRON",
+        "id": "Crypto-TRX_TRON",
         "symbol": "TRON",
         "name": "TRX",
         "type": "crypto",
@@ -27,7 +27,7 @@
         "marketCap": "8743253453.45"
     },
     {
-        "id": "Crypto-SOLSolana",
+        "id": "Crypto-SOL_Solana",
         "symbol": "SOL",
         "name": "Solana",
         "type": "crypto",

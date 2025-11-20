@@ -26,10 +26,10 @@ export interface IProps<T> {
 	// Data sources (one will be used based on mode)
 	sections?: IGenericTableSection<T>[];
 	rows?: IGenericTableRow<T>[];
-	isFixedWidth?: boolean;
 
 	// Common props
 	columns: IGenericTableColumn[];
+	columnWidths:string[]|undefined;
 	sortConfig: ISortConfig;
 	containerWidth?: number;
 
@@ -71,7 +71,6 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	enableRowActions: true,
 	enableColumnSettings: false,
 	canAddSections: false,
-	isFixedWidth: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -404,28 +403,6 @@ const cancelAddSection = () => {
 	showAddSectionInput.value = false;
 };
 
-const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) => {
-	if (props.isFixedWidth) {
-		if (index === 0) {
-			return { width: '100%' };
-		} else {
-			return { width: '50%' };
-		}
-	}
-
-	return {
-		...(index !== 0 ?
-			{
-				width:
-					`var(--col-${index}-width)`,
-			}
-			: {}),
-
-		minWidth:
-			`var(--col-${index}-min-width)`,
-	};
-
-};
 
 </script>
 
@@ -510,18 +487,20 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 									&& stickyFirstColumn && hoveredRowId === getRowId(item),
 							}
 						]"
-						:style="calculateStyles(cellIndex, columns)"
+						:style="{ width: columnWidths?.[cellIndex] ?? undefined }"
 					>
-						<slot
-							:name="`cell-${cellIndex}`"
-							:row="getRow(item)!"
-							:column="column"
-							:cell-index="cellIndex"
-							:row-index="itemIndex"
-							:value="getRow(item)!.data[column.key]"
-						>
-							{{ getRow(item)?.data[column.key] }}
-						</slot>
+						<div>
+							<slot
+								:name="`cell-${cellIndex}`"
+								:row="getRow(item)!"
+								:column="column"
+								:cell-index="cellIndex"
+								:row-index="itemIndex"
+								:value="getRow(item)!.data[column.key]"
+							>
+								{{ getRow(item)?.data[column.key] }}
+							</slot>
+						</div>
 					</td>
 
 					<td
@@ -531,6 +510,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 							classes.tableCell,
 							{ [classes.rowActionsHovered]: hoveredRowId === getRowId(item) }
 						]"
+						:style="{ width: columnWidths?.[columns?.length] ?? undefined }"
 					>
 						<div :class="classes.rowActionsWrapper">
 							<slot
@@ -624,7 +604,7 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 }
 
 .tableRow {
-	height: 40px;
+	height: 36px;
 }
 
 .tableRowHovered {
@@ -641,13 +621,23 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 
 .tableCell {
 	position: relative;
-	padding: 8px 10px;
+	padding: 6px 10px;
 	overflow: hidden;
 	vertical-align: middle;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	background: transparent;
 	border: none;
+
+	& > div {
+		display: block;           /* critical: make it a block */
+		box-sizing: border-box;
+		width: 100%;              /* now this = 100px */
+		max-width: 100%;
+		overflow: hidden;         /* or overflow-x:auto for scrollbar */
+		white-space: nowrap;      /* optional: no wrapping */
+		text-overflow: ellipsis;  /* optional */
+	}
 }
 
 .stickyFirstCell {
@@ -902,8 +892,18 @@ const calculateStyles = (index: number, columnsPayload: IGenericTableColumn[]) =
 	color: var(--text-color-base-300, #9a9a9d);
 }
 
+.borderBottom::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 1px;
+	background: var(--border-color-surface-01);
+	pointer-events: none;
+}
 
-.borderBottom {
-	border-bottom: 1px solid var(--border-color-surface-01);
+.tableRow:last-of-type .borderBottom::after {
+	display: none;
 }
 </style>

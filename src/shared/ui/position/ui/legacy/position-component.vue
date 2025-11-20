@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	placement: 'right-end',
 	trigger: 'click',
 	offset: 6,
-	strategy: 'fixed',
+	strategy: 'absolute',
 });
 
 const rootRef = useTemplateRef('root');
@@ -56,7 +56,11 @@ defineExpose({
 						:strategy="props.strategy"
 						:placement="props.placement"
 					>
-						<slot name="content" />
+						<slot
+							name="content"
+							:is-visible="isOpen"
+							:is-pinned="isPinned"
+						/>
 					</position-content>
 				</transition>
 			</ui-presence>

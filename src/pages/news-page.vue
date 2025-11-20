@@ -2,14 +2,15 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	type IGetNewsRequest,
 	NewsContentWrapper,
 	NewsFiltersPanel,
 	NewsListComponent,
-	useNews, useNewsPage,
+	useNews,
+	useNewsPage,
 	useQueryNews,
 } from '@/modules/news';
 import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
@@ -84,8 +85,8 @@ const { redirect } = useNewsPage();
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #header>
+	<app-layout>
+		<div :class="classes.container">
 			<div :class="classes.header">
 				<button :class="classes.button" @click="goBack">
 					<ui-icon
@@ -96,8 +97,6 @@ const { redirect } = useNewsPage();
 					News
 				</button>
 			</div>
-		</template>
-		<template #content>
 			<news-content-wrapper :state="isOpen">
 				<template #default>
 					<news-filters-panel
@@ -144,11 +143,15 @@ const { redirect } = useNewsPage();
 					<news-details :uuid="uuid" />
 				</template>
 			</news-content-wrapper>
-		</template>
-	</layout-component>
+		</div>
+	</app-layout>
 </template>
 
 <style module="classes">
+.container {
+	padding: 20px;
+}
+
 .header {
 	padding: 0 8px;
 	font-style: normal;

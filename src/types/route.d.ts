@@ -1,3 +1,5 @@
+import 'vue-router';
+
 export enum RouteNames {
 	Home = 'home',
 	Tv = 'tv',
@@ -103,4 +105,12 @@ export enum RouteScreenerType {
 export interface IScreenerRouteParams {
 	id?: string;
 	type: RouteScreenerType;
+}
+
+declare module 'vue-router' {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	interface RouteMeta {
+		title?: string;
+		description?: string;
+	}
 }

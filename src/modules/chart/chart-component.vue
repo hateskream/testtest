@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useElementSize, useWindowSize } from '@vueuse/core';
 
 
@@ -7,10 +7,7 @@ import { useChartStore } from '@/modules/chart/store';
 import { Chart } from '@/modules/lightweight-charts';
 import { ChartHeaderComponent } from './components/header';
 import { ChartColumnsLayout, ChartLayout } from './ui';
-import {
-	CHART_COMPONENT_MAP,
-	type CHART_SECTION_COMPONENT, TickerType, getChartSectionsByType,
-} from './models';
+import { CHART_COMPONENT_MAP, type CHART_SECTION_COMPONENT, getChartSectionsByType, TickerType } from './models';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
 
@@ -123,6 +120,16 @@ watch(() => props.type, (newType) => {
 	}
 }, { immediate: true });
 
+const currentChartRanges = [
+	RangeChart['1D'],
+	RangeChart['1W'],
+	RangeChart['1M'],
+	RangeChart['3M'],
+	RangeChart['6M'],
+	RangeChart['YTD'],
+	RangeChart['1Y'],
+	RangeChart['ALL'],
+];
 </script>
 
 <template>
@@ -146,7 +153,7 @@ watch(() => props.type, (newType) => {
 					:width="chartWidth"
 					:height="chartHeight"
 					:disable-scroll="disableScroll"
-					:range-list="Object.values(RangeChart)"
+					:range-list="currentChartRanges"
 				/>
 			</div>
 		</template>

@@ -91,6 +91,10 @@ export enum IconIds {
 	Canada = 'canada',
 	HongKong = 'hong-kong',
 	UnitedKingdom = 'united-kingdom',
+	Italy = 'italy',
+	Brazil = 'brazil',
+	Sweden = 'sweden',
+	Spain = 'spain',
 	Burger = 'burger',
 	Sentiment = 'sentiment',
 	EventBoardEmpty = 'event-board-empty',
@@ -101,6 +105,7 @@ export enum IconIds {
 	ControlCheck = 'control-check',
 	ControlClose = 'control-close',
 	Prev = 'prev',
+	History = 'history',
 
 	LogoWithoutText = 'logo-without-text',
 	Cashflow = 'cashflow',

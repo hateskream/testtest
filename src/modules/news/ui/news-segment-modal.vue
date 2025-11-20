@@ -152,6 +152,7 @@ onMounted(() => {
 <style module="classes">
 .root {
 	min-width: 250px;
+	scrollbar-width: none;
 }
 
 .search {
@@ -174,6 +175,7 @@ onMounted(() => {
 	margin: 0 -6px;
 	padding: 0 6px;
 	overflow-y: auto;
+	scrollbar-gutter: stable;
 }
 
 .accordion:hover .selectUnSelectAll {

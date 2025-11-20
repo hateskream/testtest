@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	MarketBadge,
-	ModalBadge,
+	ModalBadgeDropdown,
 	ModalBadgeList,
 	ModalItemSelector,
 } from '@/modules/widgets/base';
@@ -66,14 +65,13 @@ function updateCurrency(v: Currency) {
 
 			<ui-delimiter v-if="displayStyle === 'default' " />
 
-			<modal-badge
+			<modal-badge-dropdown
 				v-if="stock"
 				:class="classes.stock"
 				:display-variant="displayStyle"
 			>
 				<template #title>
 					{{ stock }}
-					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
 				<template #content>
@@ -90,16 +88,15 @@ function updateCurrency(v: Currency) {
 						</template>
 					</modal-badge-list>
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 
-			<modal-badge
+			<modal-badge-dropdown
 				v-if="quoteCurrency"
 				:class="classes.currency"
 				:display-variant="displayStyle"
 			>
 				<template #title>
 					{{ quoteCurrency }}
-					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
 				<template #content>
@@ -116,12 +113,11 @@ function updateCurrency(v: Currency) {
 						</template>
 					</modal-badge-list>
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 
-			<modal-badge :class="classes.date" :display-variant="displayStyle">
+			<modal-badge-dropdown :class="classes.date" :display-variant="displayStyle">
 				<template #title>
 					{{ date }}
-					<ui-icon :id="IconIds.DropdownDown" :class="classes.icon" />
 				</template>
 
 				<template #content>
@@ -138,7 +134,7 @@ function updateCurrency(v: Currency) {
 						</template>
 					</modal-badge-list>
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 
 		</div>
 		<view-toggle v-if="displayStyle === 'default'" v-model:display-variant="displayVariant" />

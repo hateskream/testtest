@@ -40,6 +40,7 @@ export interface ICalendarEvent {
 	text?: string;
 	link?: string;
 	linkText?: string;
+	imageUrl?: string;
 }
 
 export interface IEventBoardResponse {

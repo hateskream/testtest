@@ -25,7 +25,7 @@ export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		selectedTickers: ['Crypto-BTCBitcoin', 'Crypto-ETHEthereum'],
+		selectedTickers: ['Crypto-BTC_Bitcoin', 'Crypto-ETH_Ethereum'],
 		dateRange: DominanceDateRange.All,
 		displaySettings: {
 			isShowHistorical: true,

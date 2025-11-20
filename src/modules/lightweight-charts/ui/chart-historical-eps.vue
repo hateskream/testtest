@@ -32,7 +32,10 @@ onMounted(() => {
 		data: quarterData[q],
 		backgroundColor: labels.map((_, i) => i < 7 ? greyShades[idx] : orangeShades[idx]),
 		borderColor: '#FF8D29',
-		borderRadius: 10,
+		borderRadius: 5,
+		barThickness: 15,
+		maxBarThickness: 15,
+		barPercentage: 1,
 	}));
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {

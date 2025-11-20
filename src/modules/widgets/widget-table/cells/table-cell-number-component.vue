@@ -22,10 +22,10 @@ const props = defineProps<IProps>();
 const formattedValue = computed(() => {
 	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
 		return {
-			prefix: '',
-			value: '—',
-			suffix: '',
-			default: '—',
+			prefix: props.data.currencySymbol || '',
+			value: props.data.value,
+			suffix: props.data.magnitude || '',
+			default: props.data.value,
 			trend: props.data.trend,
 		};
 	}
@@ -46,7 +46,7 @@ const formattedValue = computed(() => {
 		prefix,
 		value,
 		suffix,
-		default: numFormat.format(+props.data.value),
+		default: isNaN(Number(props.data.value))? props.data.value : numFormat.format(+props.data.value),
 		trend: props.data.trend,
 	};
 });
@@ -84,7 +84,7 @@ const trendClass = computed(() => {
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13px;
-	color: var(--text-color-base-100);
+	color: var(--text-color-base-500);
 }
 
 .suffix {

@@ -51,7 +51,6 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	padding: 0 10px;
 	overflow: auto;
 	color: #ffffff;
 }
@@ -70,8 +69,6 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	position: relative;
 	flex-grow: 1;
 	overflow: hidden;
-	border-top-left-radius: 24px;
-	border-top-right-radius: 24px;
 }
 
 .widgetsContainer {
@@ -82,8 +79,6 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	left: 0;
 	padding-bottom: 25px;
 	overflow-y: auto;
-	border-top-left-radius: 24px;
-	border-top-right-radius: 24px;
 	scrollbar-width: none;
 }
 

@@ -5,8 +5,7 @@ import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 
 interface IFiltersComponentProps {
 	watchlists: IWatchlistData[];
@@ -50,14 +49,9 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 		/>
 		<template v-if="!props.isBig || !isDefaultDisplayVariant">
 			<ui-delimiter v-if="isDefaultDisplayVariant" />
-			<modal-badge :display-variant="props.displayVariant">
+			<modal-badge-dropdown :display-variant="props.displayVariant">
 				<template #title>
 					<span>{{ filterValueToDisplay[timeRange].label }}</span>
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-					/>
 				</template>
 				<template #content>
 					<modal-badge-list>
@@ -77,7 +71,7 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 						</template>
 					</modal-badge-list>
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 		</template>
 		<add-to-watchlist
 			:watchlists="props.watchlists"

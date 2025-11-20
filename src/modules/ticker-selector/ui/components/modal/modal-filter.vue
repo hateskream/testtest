@@ -351,6 +351,14 @@ defineExpose({ focusSearch });
 	border-radius: 18px;
 }
 
+.content {
+	flex: 1;
+	max-height: 650px;
+	margin: -6px;
+	padding: 6px;
+	overflow-y: hidden;
+}
+
 .textAboveSearch {
 	padding: 12px;
 	font-style: normal;
@@ -361,39 +369,14 @@ defineExpose({ focusSearch });
 	padding-inline: 12px;
 }
 
-.content {
-	flex: 1;
-	margin: -6px;
-	padding: 6px;
-}
-
 .header {
 	padding-bottom: 22px;
 }
 
 .bottom {
-	max-height: 450px;
 	margin: 0 -6px;
 	padding: 6px;
-	overflow-y: scroll;
-}
-
-@supports (-moz-appearance: none) {
-	.bottom:not(:hover) {
-		scrollbar-width: none;
-	}
-
-	.bottom {
-		scrollbar-width: unset;
-	}
-}
-
-.bottom:not(:hover)::-webkit-scrollbar {
-	display: none;
-}
-
-.bottom:hover::-webkit-scrollbar {
-	width: 6px;
+	overflow-y: hidden;
 }
 
 .notFound {

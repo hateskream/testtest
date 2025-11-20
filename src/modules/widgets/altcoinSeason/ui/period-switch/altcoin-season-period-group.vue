@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { type Period } from '@/modules/widgets/altcoinSeason/model';
 
 const props = defineProps<{
@@ -12,15 +11,9 @@ const selectedPeriod = defineModel<Period>('period', { required: true });
 
 <template>
 	<div :class="classes.altcoinSeasonPeriodGroup">
-		<modal-badge>
+		<modal-badge-dropdown display-variant="default">
 			<template #title>
 				{{selectedPeriod}}
-				<ui-icon
-					:id="IconIds.Arrow"
-					width="10px"
-					height="10px"
-					:class="classes.arrow"
-				/>
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -38,7 +31,7 @@ const selectedPeriod = defineModel<Period>('period', { required: true });
 					</modal-item-selector>
 				</modal-badge-list>
 			</template>
-		</modal-badge>
+		</modal-badge-dropdown>
 	</div>
 </template>
 

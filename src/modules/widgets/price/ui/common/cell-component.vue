@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import MockChart from '@/assets/images/mock/transparent-chart.svg';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
@@ -97,10 +96,12 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						:class="classes.chart"
 					>
 						<img
-							:src="MockChart"
-							style="width: 90px; height: 36px; object-fit: contain;"
+							v-if="props.ticker.price24hChart.src?.length"
+							:src="props.ticker.price24hChart.src"
+							style="width: 90px; height: 36px; object-fit: cover;"
 							alt="chart"
 							fetchpriority="high"
+							:class="classes.chartImage"
 						/>
 					</div>
 				</ui-transition-fade>
@@ -155,21 +156,22 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 .hoverActions {
 	position: absolute;
-	top: 50%;
-	right: 4px;
+	top: 4px;
+	right: 8px;
 	display: none;
 	justify-content: center;
 	align-items: center;
 	width: 15%;
 	max-width: 56px;
-	height: 100%;
+	height: calc(100% - 8px);
 	padding: 0 6px 0 12px;
-	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
-	transform: translateY(-50%);
+	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-02) 30%);
+	border-radius: 0 16px 16px 0;
 }
 
 .hoverActionIcon {
 	color: var(--icon-color-base-300);
+	transform: rotateZ(45deg);
 }
 
 .pined {
@@ -206,6 +208,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	align-items: center;
 	padding: 6px 10px;
 	border-radius: 16px;
+	transition: background-color 0.3s ease;
 }
 
 .logo {
@@ -257,5 +260,9 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 .enterFrom,
 .leaveTo {
 	opacity: 0;
+}
+
+.chartImage {
+	mask-image: linear-gradient(to right, transparent, #000000 30%);
 }
 </style>

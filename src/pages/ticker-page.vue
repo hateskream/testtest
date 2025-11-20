@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 import { ChartComponent } from '@/modules/chart';
 import { RouteTickerType } from '@/types/route.d';
 import { TickerType } from '@/modules/chart/models';
@@ -26,12 +26,20 @@ const tickerType = computed((): TickerType => {
 
 	return mapping[props.type];
 });
+
+// TODO: useAppHead with resolver ticker name
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #content>
+	<app-layout>
+		<div :class="classes.container">
 			<chart-component :id="props.id" :type="tickerType" />
-		</template>
-	</layout-component>
+		</div>
+	</app-layout>
 </template>
+
+<style module="classes">
+.container {
+	padding: 20px;
+}
+</style>

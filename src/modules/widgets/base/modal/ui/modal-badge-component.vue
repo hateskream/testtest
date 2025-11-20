@@ -45,7 +45,6 @@ watch(isVisible, (value) => {
 				:padding-left="props.paddingLeft"
 				:display-variant="props.displayVariant"
 			>
-				<!-- FIXME: I dont think that its should be in title, but i dont know how to put it in root -->
 				<slot name="title" :is-visible="isVisible" />
 			</modal-badge-title>
 		</template>

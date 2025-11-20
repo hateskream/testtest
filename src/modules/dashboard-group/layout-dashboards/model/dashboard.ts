@@ -29,14 +29,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'none',
-					height: 301,
+					height: 308,
 					maxCountRow: 6,
 					widgetType:  WidgetType.TopIndices,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
-					height: Infinity,
+					height: 496,
 					widgetType:  WidgetType.Performance,
 					defaultDisplayVariant: 'bar',
 				},
@@ -189,12 +189,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultState: 'none',
 					height: 350,
 					widgetType:  WidgetType.ConsumerPriceIndex,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: 'none',
-					height: 350,
-					widgetType:  WidgetType.NominalGDP,
 					defaultDisplayVariant: 'default',
 				},
 				{

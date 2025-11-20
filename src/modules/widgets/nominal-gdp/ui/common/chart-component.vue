@@ -40,13 +40,17 @@ onMounted(() => {
 				: orangeShades[0], // оранжевые всегда
 		),
 		borderColor: idx === 0 ? '#EBEBEB' : '#FF8D29',
-		borderRadius: 10,
+		borderRadius: 5,
 		hoverBackgroundColor: labels.map((_, i) =>
 			idx === 0
 				? i < 8 ? greyShades[1] : 'transparent'
 				: orangeShades[0],
 		),
 		hoverBorderColor: idx === 0 ? '#EBEBEB' : '#FF8D29',
+
+		maxBarThickness: 15,
+		barPercentage: 1,
+		categoryPercentage: 0.7,
 	}));
 
 	chart.value = new Chart(container.value as HTMLCanvasElement, {

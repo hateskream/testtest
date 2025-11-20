@@ -521,7 +521,7 @@ export function createTickerIdFromCell(symbolCell: ISymbolCell): string {
 }
 
 export function createTickerIdCrypto(ticker: string, blockchain: string): string {
-	return ticker + blockchain;
+	return ticker + '_' + blockchain.replace(' ', '');
 }
 
 export function createTickerIdStock(ticker: string): string {
@@ -537,7 +537,7 @@ export function createTickerIdCommodity(ticker: string): string {
 }
 
 export function createTickerIdForex(leftTicker: string, rightTicker: string): string {
-	return leftTicker + rightTicker;
+	return leftTicker + '_' + rightTicker;
 }
 
 

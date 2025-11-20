@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 import { RouteNames } from '@/types/route.d';
 
 const router = useRouter();
@@ -15,14 +15,12 @@ function goBack() {
 
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #content>
-			<div :class="classes.wrapper">
-				<div>Welcome to non existing Automobiles Section Page</div>
-				<button class="testButton" @click="goBack">Go Back</button>
-			</div>
-		</template>
-	</layout-component>
+	<app-layout>
+		<div :class="classes.wrapper">
+			<div>Welcome to non existing Automobiles Section Page</div>
+			<button class="testButton" @click="goBack">Go Back</button>
+		</div>
+	</app-layout>
 </template>
 <style module="classes">
 .wrapper {
@@ -32,6 +30,7 @@ function goBack() {
 	align-items: center;
 	width: 100%;
 	gap: 10px;
+	padding: 20px;
 
 	div {
 		font-size: 32px;

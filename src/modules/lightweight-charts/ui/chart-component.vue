@@ -16,7 +16,8 @@ import {
 	type SeriesType,
 	type Time,
 } from 'lightweight-charts';
-import type { ChartType } from '@shared/component-library';
+import type { ChartClickData, ChartData, ChartType } from '@shared/component-library';
+import { unrefElement } from '@vueuse/core';
 
 import {
 	calculateSMASeriesData,
@@ -25,20 +26,18 @@ import {
 	generateLineData,
 	groupSeriesByRange,
 } from '../utils';
-import {
-	type IChartUpdateEmitData,
-	IndicatorsChart,
-	type ISharedChartMouseEventDetails,
-	type SharedChartMouseEvent,
-	TypeChart,
-} from '../model/chart';
+import { type IChartUpdateEmitData, IndicatorsChart, type SharedChartMouseEvent, TypeChart } from '../model/chart';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { prepareLineDataFromCandlestick, prepareSeries } from '../utils/prepare-series';
-import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
+import { getChartRangeOffset, RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import type { IUseExternalTooltipState } from '@/modules/lightweight-charts/composables';
+import type { ICalendarEvent } from '@/modules/calendar';
+import type { IChartTimelineSegment } from '@/modules/lightweight-charts/model/chart-timeline.ts';
+import { ChartEvents } from './events';
+import { ChartTimeline } from './timeline';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -53,11 +52,17 @@ interface IChartProps {
 	isVisibleRangeChange?: boolean;
 	isVisiblePriceScale?: boolean;
 	isVisibleTimeScale?: boolean;
+	isVisibleEventsTimeline?: boolean;
+	eventsTimelinePadding?: CSSProperties['padding'];
+	fadeLeft?: boolean;
 	isShowTooltip?: boolean;
 	isVisiblePriceLine?: boolean;
 	colorSchema?: 'positive' | 'negative' | 'neutral';
 	crosshairMode?: CrosshairMode;
 	priceVisible?: boolean;
+	rightOffsetPixels?: number;
+	events?: ICalendarEvent[];
+	timelineSegments?: IChartTimelineSegment[];
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -71,6 +76,10 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	colorSchema: 'positive',
 	crosshairMode: CrosshairMode.Normal,
 	priceVisible: true,
+	rightOffsetPixels: 0,
+	events: () => [],
+	timelineSegments: () => [],
+	eventsTimelinePadding: '0px',
 });
 
 defineExpose({
@@ -88,7 +97,7 @@ type IGroupedData = {
 	[x in RangeChart]: CandlestickData[]
 };
 
-const container = useTemplateRef('container');
+const container = useTemplateRef<HTMLElement>('container');
 const history = useTemplateRef('history');
 const chart = ref<IChartApi | null>();
 const chartHistory = ref<IChartApi | null>();
@@ -107,7 +116,7 @@ const indicators = reactive<
 const handlerSubscribeVisibleLogicalRangeChangeHistory: LogicalRangeChangeEventHandler = range => {
 	if (range) {
 		// debounceUpdate(targetChart, range);
-		chartHistory.value?.timeScale().setVisibleLogicalRange(range);
+		// chartHistory.value?.timeScale().setVisibleLogicalRange(range);
 	}
 };
 
@@ -126,6 +135,10 @@ const currentRange = computed({
 		modelValueRange.value = value;
 	},
 });
+
+const currentRangeOffset = computed(() => getChartRangeOffset(currentRange.value));
+const currentRangeStartTime = computed(() => currentRangeOffset.value.from.getTime());
+const currentRangeEndTime = computed(() => currentRangeOffset.value.to.getTime());
 
 
 const listTypeGraph = Object.entries(TypeChart).map(([title, val]) => ({ title, val }));
@@ -172,12 +185,12 @@ const preparedChartData = computed(() => {
 	const data = groupedData.value[currentRange.value];
 
 	if (currentTypeGraph.value === TypeChart.Candlestick) {
-		return data;
+		return data as ChartData[];
 	} else {
 		return data.map(item => ({
 			time: item.time,
 			value: item.close,
-		}));
+		})) as ChartData[];
 	}
 });
 
@@ -197,7 +210,6 @@ function regenerateData() {
 
 function selectRange(range: RangeChart) {
 	currentRange.value = range;
-
 	updateIndicators();
 }
 
@@ -222,7 +234,7 @@ function updateIndicators() {
 	});
 
 	chart.value!.timeScale().fitContent();
-	chartHistory.value?.timeScale()?.fitContent?.();
+	// chartHistory.value?.timeScale()?.fitContent?.();
 
 	emits('update', {
 		value: mainData.value[mainData.value.length - 1].close,
@@ -276,24 +288,23 @@ function updateHistoryChartPropChange() {
 					textColor: '#9A9A9D',
 					background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
 				},
-
 				rightPriceScale: {
-					scaleMargins: {
-						top: 0.3,
-						bottom: 0.25,
-					},
-					minimumWidth: 55,
+					visible: false,
+				},
+				timeScale: {
 					borderVisible: false,
 				},
-
 				grid: {
 					horzLines: {
 						visible: false,
 					},
 					vertLines: {
 						color: '#37364E',
+						visible: false,
 					},
 				},
+				handleScale: false,
+				handleScroll: false,
 			});
 
 
@@ -324,7 +335,7 @@ function updateHistoryChartPropChange() {
 		chart.value!.timeScale()
 			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChangeHistory);
 
-		chartHistory.value?.remove?.();
+		// chartHistory.value?.remove?.();
 
 	}
 
@@ -346,10 +357,9 @@ const tooltipState = reactive<IUseExternalTooltipState>({
 
 const tooltipRowColor = computed(() => props.colorSchema === 'positive'
 	? 'var(--metrics-color-positive-chart)'
-	: 'var(--metrics-color-negative-chart)',
-);
+	: 'var(--metrics-color-negative-chart)');
 
-function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
+function updateTooltipState(state: ChartClickData | null) {
 	if (!state || !container.value) {
 		tooltipState.visible = false;
 		return;
@@ -362,7 +372,7 @@ function updateTooltipState(state: ISharedChartMouseEventDetails | null) {
 		return;
 	}
 
-	const rect = (container.value as HTMLElement).getBoundingClientRect();
+	const rect = unrefElement(container)!.getBoundingClientRect();
 
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
@@ -402,7 +412,11 @@ function onChartHover(event: SharedChartMouseEvent) {
 onMounted(async () => {
 	await nextTick();
 
-	chart.value = createChart(container.value as HTMLElement, {
+	if (!container.value) {
+		return;
+	}
+
+	chart.value = createChart(unrefElement(container)!, {
 		autoSize: true,
 		layout: {
 			textColor: '#9A9A9D',
@@ -462,7 +476,6 @@ onMounted(async () => {
 			},
 		},
 	);
-
 
 	updateIndicators();
 
@@ -534,9 +547,7 @@ onMounted(async () => {
 				</template>
 			</modal-badge>
 		</div>
-		<div
-			:class="classes.mainChart"
-		>
+		<div :class="classes.mainChart">
 			<i88-chart
 				ref="container"
 				:data="preparedChartData"
@@ -547,7 +558,26 @@ onMounted(async () => {
 				:show-time-scale="props.isVisibleTimeScale"
 				:price-visible="props.isVisiblePriceLine && props.priceVisible"
 				:crosshair-mode="props.crosshairMode"
+				:right-offset-pixels="props.rightOffsetPixels"
+				:fade-left="props.fadeLeft"
 				@chart-hover="onChartHover"
+			/>
+		</div>
+		<div
+			v-if="isVisibleEventsTimeline"
+			:class="classes.events"
+			:style="{ padding: eventsTimelinePadding }"
+		>
+			<chart-events
+				v-if="props.events.length"
+				:start-time="currentRangeStartTime"
+				:end-time="currentRangeEndTime"
+				:events="props.events"
+			/>
+			<chart-timeline
+				:start-time="currentRangeStartTime"
+				:end-time="currentRangeEndTime"
+				:segments="props.timelineSegments"
 			/>
 		</div>
 		<div v-if="isVisibleRange" :class="classes.rangeWrapper">
@@ -559,10 +589,9 @@ onMounted(async () => {
 			/>
 		</div>
 		<div
-			v-if="!!chartHistory"
+			v-if="isVisibleHistoryGraph"
 			ref="history"
 			:class="classes.chartHistory"
-			:style="{ display: !!chartHistory ? 'block' : 'none'  }"
 		></div>
 		<teleport v-if="isShowTooltip" to="body">
 			<chart-external-tooltip v-bind="tooltipState">
@@ -580,20 +609,25 @@ onMounted(async () => {
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
+	min-height: 0;
 }
 
 .mainChart {
 	flex: 1 1 auto;
 	width: 100%;
+	height: 100%;
+	min-height: 0;
 }
 
 .chartHistory {
-	flex-grow: 1;
+	display: block;
 	width: 100%;
-	height: 100%;
+	height: 80px;
+	min-height: 0;
 }
 
 .rangeWrapper {
+	flex-shrink: 0;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	overflow-x: auto;
@@ -610,5 +644,14 @@ onMounted(async () => {
 
 :global(a#tv-attr-logo) {
 	display: none !important;
+}
+
+.events {
+	display: flex;
+	flex-shrink: 0;
+	flex-direction: column;
+	min-height: 0;
+	margin-top: 5px;
+	gap: 5px;
 }
 </style>

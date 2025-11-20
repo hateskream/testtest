@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ModalBadge, ModalSubmenuContent } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeDropdown, ModalSubmenuContent } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { CalendarRangeSelect } from '@/shared/ui/calendar';
@@ -130,11 +130,11 @@ const label = computed(() => {
 <template>
 	<div :class="classes.calendarToolbar">
 		<div :class="classes.toolbarStart">
-			<modal-badge
+			<modal-badge-dropdown
 				class="market-modal"
-				strategy="absolute"
+				display-variant="default"
 			>
-				<template #title="{ isVisible }">
+				<template #title>
 					<span
 						v-for="icon in marketIcons.slice(0, 3)"
 						:key="icon"
@@ -150,17 +150,11 @@ const label = computed(() => {
 					<span>
 						{{ marketLabel }}
 					</span>
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-						:class="['dropdown-icon', { 'rotated': isVisible }]"
-					/>
 				</template>
 				<template #content>
 					<markets-modal v-model="countryState" :markets="props.markets" />
 				</template>
-			</modal-badge>
+			</modal-badge-dropdown>
 
 			<ui-delimiter />
 
