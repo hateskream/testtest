@@ -200,12 +200,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'none',
 					height: 350,
-					widgetType:  WidgetType.NominalGDP,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: 'none',
-					height: 350,
 					widgetType:  WidgetType.RealGDP,
 					defaultDisplayVariant: 'default',
 				},
