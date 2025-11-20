@@ -38,3 +38,4 @@ window.getGridInfo()
 * .gitlab-ci\snippets - setup и lint
 * .gitlab-ci\templates - основной CI/CD
 * .gitlab-ci.yml - генератор переменных и билда
+

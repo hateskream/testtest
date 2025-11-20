@@ -1,11 +1,10 @@
 install_dependencies:
   stage: setup
   image:
-    name: node:24.7.0-alpine
+    name: node:25.2.1-alpine
     pull_policy: if-not-present
 
   script:
-    - npm install
     - npm ci
 
   cache:
