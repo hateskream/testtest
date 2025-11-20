@@ -155,21 +155,22 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 
 .hoverActions {
 	position: absolute;
-	top: 50%;
-	right: 4px;
+	top: 4px;
+	right: 8px;
 	display: none;
 	justify-content: center;
 	align-items: center;
 	width: 15%;
 	max-width: 56px;
-	height: 100%;
+	height: calc(100% - 8px);
 	padding: 0 6px 0 12px;
-	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-01) 40%);
-	transform: translateY(-50%);
+	background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, var(--bg-color-surface-02) 30%);
+	border-radius: 0 16px 16px 0;
 }
 
 .hoverActionIcon {
 	color: var(--icon-color-base-300);
+	transform: rotateZ(45deg);
 }
 
 .pined {
@@ -206,6 +207,7 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 	align-items: center;
 	padding: 6px 10px;
 	border-radius: 16px;
+	transition: background-color 0.3s ease;
 }
 
 .logo {
