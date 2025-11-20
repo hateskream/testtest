@@ -28,6 +28,10 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 		[filterKey]: filterValue,
 	};
 }
+
+const isTv = computed(()=>{
+	return displayVariant.value === 'default';
+});
 </script>
 
 <template>
@@ -36,7 +40,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 			v-model="activeMarket"
 			:display-variant="displayVariant"
 		/>
-		<ui-delimiter />
+		<ui-delimiter v-if="isTv" />
 		<modal-badge-dropdown
 			v-for="(filterState, filterKey) in filters"
 			:key="filterKey"
