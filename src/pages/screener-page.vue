@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 import { ScreenerComponent, ScreenerTabsComponent, ScreenerType } from '@/modules/screener/base';
 import { UiSearch } from '@/shared/ui/input';
 import { RouteScreenerType } from '@/types/route.d';
@@ -35,8 +35,8 @@ const screenerTypeLabel = computed(() => screenerTypeToLabel[screenerType.value]
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #header>
+	<app-layout>
+		<div :class="classes.container">
 			<div :class="classes.header">
 				<ui-search
 					:class="classes.search"
@@ -44,17 +44,19 @@ const screenerTypeLabel = computed(() => screenerTypeToLabel[screenerType.value]
 				/>
 				<screener-tabs-component :class="classes.tabs"  />
 			</div>
-		</template>
-		<template #content>
 			<div :class="classes.root">
 				<h2 :class="classes.title">{{screenerTypeLabel}}</h2>
 				<screener-component :type="screenerType" />
 			</div>
-		</template>
-	</layout-component>
+		</div>
+	</app-layout>
 </template>
 
 <style module="classes">
+.container {
+	padding: 20px;
+}
+
 .header {
 	position: relative;
 }
@@ -68,6 +70,8 @@ const screenerTypeLabel = computed(() => screenerTypeToLabel[screenerType.value]
 }
 
 .search {
+	position: relative;
+	z-index: 2;
 	width: 300px;
 	padding: 12px;
 	border: 1px solid var(--border-color-surface-02);

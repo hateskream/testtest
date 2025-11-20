@@ -4,13 +4,14 @@ import { useTemplateRef } from 'vue';
 import {
 	CalendarEmptyEventBoard,
 	CalendarLayout,
-	CalendarNews, type IEventBoardExposed,
+	CalendarNews,
+	type IEventBoardExposed,
 	markets,
 	useCalendarState,
 	useEventBoardScroll,
 } from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 import { CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { CalendarDaySelect } from '@/shared/ui/calendar';
 
@@ -64,11 +65,9 @@ useEventBoardScroll({
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #header>
-			<div :class="classes.header">Calendar</div>
-		</template>
-		<template #content>
+	<app-layout>
+		<div :class="classes.container">
+			<h2 :class="classes.header">Calendar</h2>
 			<calendar-layout>
 				<template #content>
 					<calendar-toolbar
@@ -125,12 +124,17 @@ useEventBoardScroll({
 					<calendar-news />
 				</template>
 			</calendar-layout>
-		</template>
-	</layout-component>
+		</div>
+	</app-layout>
 </template>
 
 <style module="classes">
+.container {
+	padding: 20px;
+}
+
 .header {
+	margin: 16px 0;
 	font-style: normal;
 	font-weight: 340;
 	font-size: 32px;

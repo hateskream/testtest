@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TreemapComponent, useDisplaySettings } from '@/modules/treemap';
-import { LayoutComponent } from '@/modules/layout';
+import { AppLayout } from '@/modules/layout';
 
 const {
 	marketSettings,
@@ -21,12 +21,9 @@ const {
 </script>
 
 <template>
-	<layout-component :is-curtain-fixed="false">
-		<template #header>
-			<div :class="classes.header">Heatmap</div>
-		</template>
-		<template #content>
-
+	<app-layout>
+		<div :class="classes.container">
+			<h2 :class="classes.header">Heatmap</h2>
 			<treemap-component
 				v-model:market="marketSettings"
 				v-model:size-by="sizeBySettings"
@@ -43,12 +40,17 @@ const {
 				:active-display-value="activeDisplayValue"
 				:active-group-by="activeGroupBy"
 			/>
-		</template>
-	</layout-component>
+		</div>
+	</app-layout>
 </template>
 
 <style module="classes">
+.container {
+	padding: 20px;
+}
+
 .header {
+	margin: 16px 0;
 	font-style: normal;
 	font-weight: 340;
 	font-size: 36px;
