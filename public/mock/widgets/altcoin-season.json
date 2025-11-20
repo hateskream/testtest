@@ -11,7 +11,7 @@
     "top100": {
 			"tickers": [
 				{
-					"tickerId": "Crypto-BTCBitcoin",
+					"tickerId": "Crypto-BTC_Bitcoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -26,7 +26,7 @@
 					}
 			},
 				{
-					"tickerId": "Crypto-ETHEthereum",
+					"tickerId": "Crypto-ETH_Ethereum",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -41,7 +41,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-BNBBinanceCoin",
+					"tickerId": "Crypto-BNB_BinanceCoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -56,7 +56,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ADACardano",
+					"tickerId": "Crypto-ADA_Cardano",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -71,7 +71,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-SOLSolana",
+					"tickerId": "Crypto-SOL_Solana",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -86,7 +86,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-XRPXRP(Ripple)",
+					"tickerId": "Crypto-XRP_XRP(Ripple)",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -101,7 +101,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-DOTPolkadot",
+					"tickerId": "Crypto-DOT_Polkadot",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -116,7 +116,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-DOGEDogecoin",
+					"tickerId": "Crypto-DOG_EDogecoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -131,7 +131,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-AVAXAvalanche",
+					"tickerId": "Crypto-AVAX_Avalanche",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -146,7 +146,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-MATICPolygon",
+					"tickerId": "Crypto-MATIC_Polygon",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -161,7 +161,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-LINKChainlink",
+					"tickerId": "Crypto-LINK_Chainlink",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -176,7 +176,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-LTCLitecoin",
+					"tickerId": "Crypto-LTC_Litecoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -191,7 +191,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-UNIUniswap",
+					"tickerId": "Crypto-UNI_Uniswap",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -206,7 +206,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ATOMCosmos",
+					"tickerId": "Crypto-ATOM_Cosmos",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -221,7 +221,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-XLMStellar",
+					"tickerId": "Crypto-XLM_Stellar",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -236,7 +236,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ALGOAlgorand",
+					"tickerId": "Crypto-ALGO_Algorand",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -251,7 +251,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-VETVeChain",
+					"tickerId": "Crypto-VET_VeChain",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -266,7 +266,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-FILFilecoin",
+					"tickerId": "Crypto-FIL_Filecoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -281,7 +281,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-TRXTRON",
+					"tickerId": "Crypto-TRX_TRON",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -296,7 +296,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-XMRMonero",
+					"tickerId": "Crypto-XMR_Monero",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -311,7 +311,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-EOSEOS",
+					"tickerId": "Crypto-EOS_EOS",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -326,7 +326,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-XTZTezos",
+					"tickerId": "Crypto-XTZ_Tezos",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -341,7 +341,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-AAVEAave",
+					"tickerId": "Crypto-AAVE_Aave",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -356,7 +356,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-SANDTheSandbox",
+					"tickerId": "Crypto-SAND_TheSandbox",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -371,7 +371,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-MANADecentraland",
+					"tickerId": "Crypto-MANA_Decentraland",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -386,7 +386,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-SHIBShibaInu",
+					"tickerId": "Crypto-SHIB_ShibaInu",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -401,7 +401,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-APTAptos",
+					"tickerId": "Crypto-APT_Aptos",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -416,7 +416,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-GRTTheGraph",
+					"tickerId": "Crypto-GRT_TheGraph",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -431,7 +431,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-NEARNEARProtocol",
+					"tickerId": "Crypto-NEAR_NEARProtocol",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -446,7 +446,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-FTMFantom",
+					"tickerId": "Crypto-FTM_Fantom",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -461,7 +461,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-HBARHedera",
+					"tickerId": "Crypto-HBAR_Hedera",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -476,7 +476,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ICPInternetComputer",
+					"tickerId": "Crypto-ICP_InternetComputer",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -491,7 +491,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-QNTQuant",
+					"tickerId": "Crypto-QNT_Quant",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -506,7 +506,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ETCEthereumClassic",
+					"tickerId": "Crypto-ETC_EthereumClassic",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -521,7 +521,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-TONToncoin",
+					"tickerId": "Crypto-TON_Toncoin",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -536,7 +536,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-AXSAxieInfinity",
+					"tickerId": "Crypto-AXS_AxieInfinity",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -551,7 +551,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-CRVCurveDAO",
+					"tickerId": "Crypto-CRV_CurveDAO",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -566,7 +566,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-THETATheta",
+					"tickerId": "Crypto-THETA_Theta",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -581,7 +581,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-1INCH1inch",
+					"tickerId": "Crypto-1INCH_1inch",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -596,7 +596,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-SNXSynthetix",
+					"tickerId": "Crypto-SNX_Synthetix",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -611,7 +611,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-EGLDElrond(MultiversX)",
+					"tickerId": "Crypto-EGLD_Elrond(MultiversX)",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -626,7 +626,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-CHZChiliz",
+					"tickerId": "Crypto-CHZ_Chiliz",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -641,7 +641,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-KAVAKava",
+					"tickerId": "Crypto-KAVA_Kava",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -656,7 +656,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-ZECZcash",
+					"tickerId": "Crypto-ZEC_Zcash",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -671,7 +671,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-RUNETHORChain",
+					"tickerId": "Crypto-RUNE_THORChain",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -686,7 +686,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-NEONEO",
+					"tickerId": "Crypto-NEO_NEO",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -701,7 +701,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-FLOWFlow",
+					"tickerId": "Crypto-FLOW_Flow",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",
@@ -716,7 +716,7 @@
 					}
 				},
 				{
-					"tickerId": "Crypto-BCHBitcoinCash",
+					"tickerId": "Crypto-BCH_BitcoinCash",
 					"symbol": {
 						"cellType": "Symbol",
 						"columnType": "symbol",

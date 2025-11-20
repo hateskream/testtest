@@ -44,9 +44,9 @@ const rangeDayCounts: Record<DominanceDateRange, number> = {
 };
 
 const tickerToSymbolMock: Record<string, string> = {
-	'Crypto-BTCBitcoin': 'BTC',
-	'Crypto-ETHEthereum': 'ETH',
-	'Crypto-SOLSolana': 'SOL',
+	'Crypto-BTC_Bitcoin': 'BTC',
+	'Crypto-ETH_Ethereum': 'ETH',
+	'Crypto-SOL_Solana': 'SOL',
 };
 
 const tickerDominanceMockStandard: Record<string, number> = {
