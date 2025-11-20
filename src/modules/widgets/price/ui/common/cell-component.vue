@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import MockChart from '@/assets/images/mock/transparent-chart.svg';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { forexTickerIcon, tickerIcon } from '@/shared/ui/ticker';
@@ -97,10 +96,12 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 						:class="classes.chart"
 					>
 						<img
-							:src="MockChart"
-							style="width: 90px; height: 36px; object-fit: contain;"
+							v-if="props.ticker.price24hChart.src?.length"
+							:src="props.ticker.price24hChart.src"
+							style="width: 90px; height: 36px; object-fit: cover;"
 							alt="chart"
 							fetchpriority="high"
+							:class="classes.chartImage"
 						/>
 					</div>
 				</ui-transition-fade>
@@ -259,5 +260,9 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 .enterFrom,
 .leaveTo {
 	opacity: 0;
+}
+
+.chartImage {
+	mask-image: linear-gradient(to right, transparent, #000000 30%);
 }
 </style>

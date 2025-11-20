@@ -16,7 +16,7 @@ import { generateRows } from '@/shared/mock';
 import { delay } from '@/shared/lib';
 import { MarketType } from '@/modules/market';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 interface IGetPriceRequest {
 	market: MarketType;
