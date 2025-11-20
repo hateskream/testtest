@@ -18,9 +18,21 @@ function isActiveLink(link: IMenuItem['link']) {
 	return link.name === route.name;
 }
 
+function isNestedActiveLink(link: IMenuItem['link']) {
+	if (route.matched.length === 1) {
+		return false;
+	}
+
+	if (typeof link === 'string') {
+		return link === route.matched[0].path;
+	}
+
+	return link.name === route.matched[0].name;
+}
+
 const preparedMenuItems = computed(() => menuItems.map(item => ({
 	...item,
-	isActive: isActiveLink(item.link),
+	isActive: isActiveLink(item.link) || isNestedActiveLink(item.link),
 })));
 </script>
 
