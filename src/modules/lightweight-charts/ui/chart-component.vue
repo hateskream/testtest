@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import {
 	AreaSeries,
 	type CandlestickData,
@@ -17,6 +16,10 @@ import {
 	type Time,
 } from 'lightweight-charts';
 import type { ChartClickData, ChartData, ChartType } from '@shared/component-library';
+import {
+	LastPriceAnimationMode,
+	type LastPriceAnimationMode as LastPriceAnimationModeType,
+} from '@shared/component-library';
 import { unrefElement } from '@vueuse/core';
 
 import {
@@ -63,6 +66,7 @@ interface IChartProps {
 	rightOffsetPixels?: number;
 	events?: ICalendarEvent[];
 	timelineSegments?: IChartTimelineSegment[];
+	lastPriceAnimation?: LastPriceAnimationModeType;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -80,6 +84,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	events: () => [],
 	timelineSegments: () => [],
 	eventsTimelinePadding: '0px',
+	lastPriceAnimation: LastPriceAnimationMode.Continuous,
 });
 
 defineExpose({
@@ -560,6 +565,7 @@ onMounted(async () => {
 				:crosshair-mode="props.crosshairMode"
 				:right-offset-pixels="props.rightOffsetPixels"
 				:fade-left="props.fadeLeft"
+				:last-price-animation="props.lastPriceAnimation"
 				@chart-hover="onChartHover"
 			/>
 		</div>
