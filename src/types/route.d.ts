@@ -110,7 +110,15 @@ export interface IScreenerRouteParams {
 declare module 'vue-router' {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface RouteMeta {
+		/**
+		 * Keep titles under 60 characters to avoid truncation in search results
+		 */
 		title?: string;
+		titleTemplate?: string;
 		description?: string;
+		/**
+		 * Image url for og:image and twitter:image
+		 */
+		image?: string;
 	}
 }
