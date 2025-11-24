@@ -136,7 +136,6 @@ export function usePrice({
 	} = useQueryPrice(
 		activeMarket,
 		filtersState,
-		hasPin ? pinnedTickers : [],
 		limit,
 	);
 
@@ -240,13 +239,17 @@ export function usePrice({
 
 	function pin(tickerId: string) {
 		const newPinnedTickers = [...pinnedTickers.value, tickerId];
+
 		pinnedTickers.value = newPinnedTickers;
+
 		state.value.settings[state.value.activeMarket].pinned = newPinnedTickers;
 	}
 
 	function unpin(tickerId: string) {
 		const newPinnedTickers = pinnedTickers.value.filter(id => id !== tickerId);
+
 		pinnedTickers.value = newPinnedTickers;
+
 		state.value.settings[state.value.activeMarket].pinned = newPinnedTickers;
 	}
 

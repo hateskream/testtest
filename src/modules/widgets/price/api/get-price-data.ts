@@ -20,7 +20,6 @@ const IS_USE_MOCK = false;
 
 interface IGetPriceRequest {
 	market: MarketType;
-	pined: string[];
 	offset: number;
 	limit: number;
 	filters: FiltersState;
@@ -68,7 +67,6 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 		const response = await httpService.get<IGetPriceResponse>('/api/v1/price/data', {
 			query: {
 				market: req.market,
-				pinnedIds: req.pined.length ? req.pined.join(',') : undefined,
 				offset: req.offset,
 				limit: req.limit,
 				...req.filters,
@@ -146,30 +144,21 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 		[MarketType.Commodities]: commodities,
 	} as Record<MarketType, TickerWithoutState[]>;
 
-	const response: IPriceData = {
+	return {
 		pagination: {
 			offset: req.offset,
 			limit: req.limit,
 			total: 50,
 		},
 		tickers: marketToTickers[req.market]
-			.filter(t => !req.pined.includes(t.tickerId))
 			.map(t => ({
 				...t,
 				isPined: false,
 				isShow: true,
 			}))
 			.slice(0, req.limit),
-		pinedTickers: marketToTickers[req.market]
-			.filter(t => req.pined.includes(t.tickerId))
-			.map(t => ({
-				...t,
-				isPined: true,
-				isShow: true,
-			})),
+		pinedTickers: [],
 	};
-
-	return response;
 }
 
 
