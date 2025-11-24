@@ -46,15 +46,15 @@ const {
 	maxCountRows: props.meta.maxCountRowTable,
 });
 
-async function loadMoreTickets($state: IInfiniteStateHandler) {
+async function loadMoreTickets(state: IInfiniteStateHandler) {
 	await loadMore();
 
 	if (fetchTickersError.value) {
-		$state.error();
+		state.error();
 	} else if (hasNextPage.value) {
-		$state.loaded();
+		state.loaded();
 	} else {
-		$state.complete();
+		state.complete();
 	}
 }
 

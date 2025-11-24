@@ -21,7 +21,7 @@ const props = defineProps<IViewComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'toggle-pin', tickerId: string): void;
-	(e: 'load-more', $state: IInfiniteStateHandler): void;
+	(e: 'load-more', state: IInfiniteStateHandler): void;
 }>();
 
 const gridTemplateContent = computed(() => {
