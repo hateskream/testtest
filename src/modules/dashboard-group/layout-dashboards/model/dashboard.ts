@@ -173,9 +173,8 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
-					defaultState: 'stock-gainers',
+					defaultState: 'stock-losers',
 					height: Infinity,
-
 					widgetType:  WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
