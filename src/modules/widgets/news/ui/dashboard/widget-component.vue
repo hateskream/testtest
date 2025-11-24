@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -9,6 +9,10 @@ import { NewsFiltersPanel, NewsContentWrapper } from '@/modules/news';
 import { NewsDetailsControls, NewsDetails } from '@/modules/news-details';
 
 import PreloaderComponent from '../common/preloader-component.vue';
+
+interface IWidgetExposed {
+	scrollBy: (px: number) => void;
+}
 
 interface IWidgetComponentProps {
 	meta: IMeta;
@@ -64,6 +68,18 @@ const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
 const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
 
 const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
+
+const viewRef = ref<IWidgetExposed | null>(null);
+
+function scrollBy(px: number) {
+	if (!viewRef.value) {
+		return;
+	}
+
+	viewRef.value.scrollBy(px);
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
@@ -97,6 +113,7 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 			<news-content-wrapper v-else-if="news" :state="!!selectedNewsId">
 				<template #default>
 					<view-component
+						ref="viewRef"
 						v-model:news-id="selectedNewsId"
 						:news="news"
 						:display-settings="displaySettings"

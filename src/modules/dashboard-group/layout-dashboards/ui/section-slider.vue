@@ -34,7 +34,6 @@ const emits = defineEmits<{
 const { height } = useElementSize(
 	useTemplateRef<HTMLDivElement>('container'),
 );
-
 </script>
 
 <template>
