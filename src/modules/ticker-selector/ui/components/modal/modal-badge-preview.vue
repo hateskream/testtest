@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, type IMarketMapped, type ITickerMapped } from '../../../model';
 import { SymbolType } from '@/modules/cell';
 
@@ -88,11 +87,6 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 			</div>
 		</template>
 		<div v-else>{{ props.emptyLabel }}</div>
-		<ui-icon
-			:id="IconIds.DropdownDown"
-			width="12"
-			height="12"
-		/>
 	</div>
 </template>
 
