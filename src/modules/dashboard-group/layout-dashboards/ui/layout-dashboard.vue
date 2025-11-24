@@ -88,7 +88,7 @@ watch(
 				:can-next="canNext"
 				:can-prev="canPrev"
 				:translate-x="translateX"
-				:viewport-width="viewportWidth"
+				:current-index="currentIndex"
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"

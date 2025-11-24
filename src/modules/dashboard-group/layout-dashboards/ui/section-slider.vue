@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload } from '../model';
@@ -7,12 +7,16 @@ import type { ISection, ISectionWheelPayload } from '../model';
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
 
+interface IPreparedSection extends ISection {
+	isVisible: boolean;
+}
+
 interface ISectionSliderProps {
 	slides: ISection[];
+	currentIndex: number;
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
-	viewportWidth: number;
 }
 
 const props = defineProps<ISectionSliderProps>();
@@ -31,7 +35,7 @@ const emits = defineEmits<{
 	(e: 'goTo', index: number): void;
 }>();
 
-const { height } = useElementSize(
+const { height, width } = useElementSize(
 	useTemplateRef<HTMLDivElement>('container'),
 );
 
@@ -57,6 +61,56 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 
 	section?.scrollToWidget(widgetId);
 }
+
+const preparedSlides = ref<IPreparedSection[]>([]);
+
+const sizeVisibleWidow = computed(() => {
+	let acc = 0;
+	let index = 0;
+
+	while (acc < width.value && index < props.slides.length) {
+		acc += props.slides[index += 1].width;
+	}
+
+	return index;
+});
+
+watch(
+	() => props.slides,
+	newSlides => {
+		if (sizeVisibleWidow.value === 0) {
+			return;
+		}
+
+		setPreparedSlides(newSlides, sizeVisibleWidow.value);
+	},
+	{ immediate: true },
+);
+
+watch(
+	() => sizeVisibleWidow.value,
+	visibleWindowSize => {
+		setPreparedSlides(props.slides, visibleWindowSize);
+	},
+);
+
+watch(
+	() => props.currentIndex,
+	(newIndex, oldIndex) => {
+		if (newIndex === oldIndex || newIndex < oldIndex) {
+			return;
+		}
+
+		setPreparedSlides(props.slides, sizeVisibleWidow.value + newIndex);
+	},
+);
+
+function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
+	preparedSlides.value = newSlides.map((s, i) => ({
+		...s,
+		isVisible: i < visibleWindowSize,
+	}));
+}
 </script>
 
 <template>
@@ -80,10 +134,7 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 					transform: `translateX(${props.translateX}px)`
 				}"
 			>
-				<template
-					v-for="(s, i) in props.slides"
-					:key="s.id"
-				>
+				<template v-for="(s, i) in props.slides" :key="s.id">
 					<section-component
 						ref="sectionRefs"
 						:section="s"
@@ -262,6 +313,65 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
+}
+
+.loader {
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
+}
+
+.section {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	align-items: center;
+}
+
+.content {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 52px;
+	height: 100%;
+	padding-top: 10px;
+	background: rgb(0 0 0 / 74%);
+	gap: 8px;
+	backdrop-filter: blur(12px);
+}
+
+.control {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+	color: rgb(255 255 255 / 50%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	backdrop-filter: blur(4px);
+	cursor: pointer;
+}
+
+.control:disabled {
+	color: rgb(255 255 255 / 50%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	cursor: not-allowed;
+	opacity: 0.7;
+	backdrop-filter: blur(4px);
+}
+
+.control:hover {
+	color: rgb(255 255 255 / 100%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	backdrop-filter: blur(4px);
 }
 
 .sizer {

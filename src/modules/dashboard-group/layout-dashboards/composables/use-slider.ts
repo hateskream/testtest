@@ -9,10 +9,11 @@ export function useSlider(opts: {
 	isMobile: ShallowRef<boolean, boolean>;
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
+
 	const translateX = ref(0);
 	const isDragging = ref(false);
-
 	const slides = computed(() => toValue(slidesWidth));
+	const currentIndex = ref(0);
 
 	const totalTrackWidth = computed(() => {
 		const cardSum = slides.value.reduce((s, c) => s + (c || 0), 0);
@@ -20,8 +21,17 @@ export function useSlider(opts: {
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
-	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
+	const slideOffsets = computed(() => {
+		const offsets: number[] = [];
+		let acc = 0;
+		for (let i = 0; i < slides.value.length; i+=1) {
+			offsets.push(-acc);
+			acc += (slides.value[i] || 0) + gap;
+		}
+		return offsets;
+	});
 
+	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
 
 	function clampTranslate(x: number) {
 		const maxTranslate = 0;
@@ -31,6 +41,76 @@ export function useSlider(opts: {
 
 	function setTranslateX(x: number) {
 		translateX.value = clampTranslate(x);
+	}
+
+	function nearestIndexFromTranslate(x: number) {
+		const offsets = slideOffsets.value;
+		if (!offsets.length) {
+			return 0;
+		}
+		let best = 0;
+		let bestDist = Math.abs(x - offsets[0]);
+		for (let i = 1; i < offsets.length; i++) {
+			const d = Math.abs(x - offsets[i]);
+			if (d < bestDist) {
+				bestDist = d;
+				best = i;
+			}
+		}
+		return best;
+	}
+
+	const canPrev = computed(() => translateX.value < 0);
+	const canNext = computed(() => {
+		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
+		return translateX.value > minTranslate;
+	});
+
+	watch(
+		() => translateX.value,
+		(newX) => {
+			if (isDragging.value) {
+				return;
+			}
+
+			const nearest = nearestIndexFromTranslate(newX);
+			if (nearest !== currentIndex.value) {
+				currentIndex.value = nearest;
+			}
+		},
+	);
+
+	function snapToIndex(index: number) {
+		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
+		currentIndex.value = clamped;
+		setTranslateX(getSlideOffset(clamped));
+	}
+
+	function next() {
+		if (!canNext.value) {
+			return;
+		}
+		snapToIndex(currentIndex.value + 1);
+	}
+
+	function prev() {
+		if (!canPrev.value) {
+			return;
+		}
+		snapToIndex(currentIndex.value - 1);
+	}
+
+	function goTo(index: number) {
+		if (index < 0 || index >= slides.value.length) {
+			return;
+		}
+		snapToIndex(index);
+	}
+
+	function getSlideOffset(index: number) {
+		const widths = slides.value.slice(0, index);
+		const sum = widths.reduce((s, w) => s + w, 0);
+		return -(sum + gap * index);
 	}
 
 	const pointer = {
@@ -76,15 +156,19 @@ export function useSlider(opts: {
 			isDragging.value = false;
 			pointer.isDown = false;
 			pointer.hasDirection = false;
-		},
 
+			const nearest = nearestIndexFromTranslate(translateX.value);
+			snapToIndex(nearest);
+		},
 
 		onTouchStart(e: TouchEvent) {
 			pointer.isDown = true;
 			pointer.lastX = e.touches[0].clientX;
 			pointer.lastY = e.touches[0].clientY;
+			pointer.startX = e.touches[0].clientX;
 			pointer.isHorizontal = false;
 			pointer.hasDirection = false;
+			isDragging.value = true;
 		},
 		onTouchMove(e: TouchEvent) {
 			if (!pointer.isDown) {
@@ -111,27 +195,11 @@ export function useSlider(opts: {
 		onTouchEnd() {
 			pointer.isDown = false;
 			pointer.hasDirection = false;
+			isDragging.value = false;
 
-			if (!isMobile.value) {
-				return;
-			}
-
-			const dx = pointer.lastX - pointer.startX;
-
-			const isLeft = dx < 0;
-
-			if (Math.abs(dx) < toValue(viewportWidth) / 5) {
-				setTranslateX(translateX.value - dx);
-				return;
-			}
-
-			if (isLeft) {
-				next();
-			} else {
-				prev();
-			}
+			const nearest = nearestIndexFromTranslate(translateX.value);
+			snapToIndex(nearest);
 		},
-
 
 		onWheel(e: WheelEvent) {
 			const { deltaX, deltaY } = e;
@@ -142,42 +210,11 @@ export function useSlider(opts: {
 		},
 	};
 
-	function getSlideOffset(index: number) {
-		const widths = slides.value.slice(0, index);
-		const sum = widths.reduce((s, w) => s + w, 0);
-		return -(sum + gap * index);
-	}
+	watch(() => toValue(viewportWidth), () => {
+		setTranslateX(translateX.value);
 
-	const canPrev = computed(() => translateX.value < 0);
-	const canNext = computed(() => {
-		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
-		return translateX.value > minTranslate;
+		setTranslateX(getSlideOffset(currentIndex.value));
 	});
-
-	const currentIndex = ref(0);
-	function next() {
-		if (!canNext.value) {
-			return;
-		}
-		currentIndex.value = Math.min(slides.value.length - 1, currentIndex.value + 1);
-		setTranslateX(getSlideOffset(currentIndex.value));
-	}
-	function prev() {
-		if (!canPrev.value) {
-			return;
-		}
-		currentIndex.value = Math.max(0, currentIndex.value - 1);
-		setTranslateX(getSlideOffset(currentIndex.value));
-	}
-
-	function goTo(index: number) {
-		if (index < 0 || index >= slides.value.length) {
-			return;
-		}
-
-		currentIndex.value = index;
-		setTranslateX(getSlideOffset(index));
-	}
 
 	return {
 		translateX: readonly(translateX),
