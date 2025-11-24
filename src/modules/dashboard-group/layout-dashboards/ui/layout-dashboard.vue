@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, useCssModule, useTemplateRef, watch } from 'vue';
+import { computed, defineAsyncComponent, useCssModule, useTemplateRef, watch } from 'vue';
 
 import { useDashboardLayout, useSlider } from '../composables';
 
 import HeaderDesktop from './header-desktop.vue';
 import HeaderMobile from './header-mobile.vue';
-import SectionSlider from './section-slider.vue';
 import PaginationMobile from './pagination-mobile.vue';
+import SliderLoader from './slider-loader.vue';
+
+const SectionSlider = defineAsyncComponent({
+	loader: () => import('./section-slider.vue'),
+	loadingComponent: SliderLoader,
+	errorComponent: SliderLoader,
+});
 
 const emits = defineEmits<{
 	(e: 'close'): void;
