@@ -83,7 +83,7 @@ function createPointsMock(args: IGetMarketCapRequest) {
 	return timestamps.map(time => {
 		return {
 			timestamp: time,
-			market_cap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
+			marketCap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
 			volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
 		};
 	});
@@ -98,9 +98,9 @@ function createTotalMock(args: IGetMarketCapRequest) {
 	}
 
 	return {
-		market_cap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
+		marketCap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
 		volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
-		change_percent: generateSegment(-5, 5),
+		changePercent: generateSegment(-5, 5),
 	};
 
 }
@@ -117,6 +117,7 @@ async function getMockData(args: IGetMarketCapRequest) {
 	};
 
 	return {
+		range: args.range,
 		tickers: filteredTickers,
 		markets: filteredMarkets,
 		data,

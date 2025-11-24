@@ -9,15 +9,15 @@ const chart = shallowRef<Chart>();
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const labels: string[] = [];
-for (let y = 2023; y <= 2025; y++) {
-	for (let m = 0; m < 12; m++) {
+for (let y = 2023; y <= 2025; y += 1) {
+	for (let m = 0; m < 12; m += 1) {
 		labels.push(`${months[m]} ${y}`);
 	}
 }
 
 function makeSeries(seed: number, base: number, vol: number) {
 	let v = base, out = [];
-	for (let i = 0; i < labels.length; i++) {
+	for (let i = 0; i < labels.length; i += 1) {
 		const seasonal = Math.sin((i + seed) / 6) * 0.6;
 		const noise = (Math.random() - 0.5) * vol;
 		const dip = (i > 17 && i < 21) ? -0.6 : 0;

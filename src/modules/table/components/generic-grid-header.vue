@@ -165,7 +165,7 @@ const onMouseMove = e=>{
 	const dx = e.clientX - resizeStartX.value;
 	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value+dx);
 };
-const onMouseUp = e=>{
+const onMouseUp = _ =>{
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 };
