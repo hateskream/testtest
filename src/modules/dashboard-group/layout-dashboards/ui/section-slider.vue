@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
-import { computed } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -36,12 +35,6 @@ const { height } = useElementSize(
 	useTemplateRef<HTMLDivElement>('container'),
 );
 
-const sectionHeight = computed(() => {
-	if (height.value) {
-		return height.value - 14;
-	}
-	return 0;
-});
 </script>
 
 <template>
@@ -69,7 +62,7 @@ const sectionHeight = computed(() => {
 				>
 					<section-component
 						:section="s"
-						:parent-height="sectionHeight"
+						:parent-height="height"
 						:style="{
 							...i !== 0 ? { 'margin-left': '10px' } : {},
 							...{ 'margin-right': '10px' }

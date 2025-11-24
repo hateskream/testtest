@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import type { ISection } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
@@ -14,9 +14,27 @@ interface ISectionComponentProps {
 
 const props = defineProps<ISectionComponentProps>();
 
+const widgetRefs = ref<InstanceType<typeof WidgetComponent>[]>([]);
+
+const lastWidget = computed(() => widgetRefs.value[widgetRefs.value.length - 1]);
+
 const cardStyle = computed(() => ({ width: `${props.section.width}px`, maxWidth: `${props.section.width}px` }));
 
 const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_COL_WIDTH, MAX_COL_WIDTH));
+
+const isOneInSection = computed(() => props.section.widgets.length === 1);
+
+function onWheel(event: WheelEvent) {
+
+	if (isOneInSection.value) {
+		event.preventDefault();
+		const { deltaY } = event;
+
+		lastWidget.value?.scrollBy(deltaY);
+		return;
+	}
+
+}
 </script>
 
 <template>
@@ -24,14 +42,19 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 		:class="classes.section"
 		:style="cardStyle"
 	>
-		<div :class="classes.scroll">
-			<div :class="classes.widgetsContainer">
-
+		<div
+			:class="classes.scroll"
+		>
+			<div
+				:class="classes.widgetsContainer"
+				@wheel.capture="onWheel"
+			>
 				<h2 :class="classes.sectionTitle">{{ props.section.name }} </h2>
 
 				<div :class="classes.widgets">
 					<widget-component
 						v-for="widget in props.section.widgets"
+						ref="widgetRefs"
 						:key="widget.id"
 						:widget="widget"
 						:col-count="cellSize.count"
@@ -80,6 +103,7 @@ const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_CO
 	padding-bottom: 25px;
 	overflow-y: auto;
 	scrollbar-width: none;
+	overscroll-behavior: contain;
 }
 
 .widgets {

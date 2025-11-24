@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -7,6 +7,10 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
+
+interface IWidgetExposed {
+	scrollBy: (px: number) => void;
+}
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -19,6 +23,8 @@ interface IWidgetComponentProps {
 }
 
 const props = defineProps<IWidgetComponentProps>();
+
+const refView = ref<IWidgetExposed | null>(null);
 
 const {
 	activeMarket,
@@ -53,6 +59,16 @@ async function loadMoreTickets($state: IInfiniteStateHandler) {
 }
 
 const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTable));
+
+function scrollBy(px: number) {
+	if (!refView.value) {
+		return;
+	}
+
+	refView.value.scrollBy(px);
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
@@ -74,6 +90,7 @@ const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTabl
 			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
 				v-else
+				ref="refView"
 				display-variant="new"
 				:tickers="tickers"
 				:settings="currentSettings"

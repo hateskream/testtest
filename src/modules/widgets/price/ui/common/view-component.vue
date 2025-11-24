@@ -55,6 +55,16 @@ const loadingDistance = computed(() => {
 const loadingSkeletonCount = computed(() => {
 	return Math.ceil(props.meta.size.w / 2) || 1;
 });
+
+function scrollBy(px: number) {
+	if (!scroller.value) {
+		return;
+	}
+
+	scroller.value.scrollTop += px;
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
@@ -110,6 +120,7 @@ const loadingSkeletonCount = computed(() => {
 	position: relative;
 	flex: 1;
 	min-height: 0;
+	padding-bottom: 50px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
