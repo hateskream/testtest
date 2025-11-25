@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { BaseSwitch } from '../..';
-import { ModalItem } from '../index';
+import BaseSwitchComponent from '../../common/ui/base-switch-component.vue';
+import ModalItemComponent from './modal-item-component.vue';
 
 const model = defineModel<boolean>({
 	required: true,
@@ -8,14 +8,14 @@ const model = defineModel<boolean>({
 </script>
 
 <template>
-	<modal-item
+	<modal-item-component
 		:class="classes.content"
 		@click="model = !model"
 	>
 		<slot name="default" />
 
-		<base-switch :is-active="model" />
-	</modal-item>
+		<base-switch-component :is-active="model" />
+	</modal-item-component>
 </template>
 
 <style module="classes">

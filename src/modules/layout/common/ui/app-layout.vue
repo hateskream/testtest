@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from 'vue';
 
-import { HomeMobile, NewLayout } from '@/modules/layout';
+// import { HomeMobile, NewLayout } from '@/modules/layout';
 import { useIsMobile } from '@/shared/composables';
+import { NewLayout } from '../../new-desktop';
+
+import HomeMobile from '../../mobile/ui/home-mobile.vue';
 
 const isMobile = useIsMobile();
 

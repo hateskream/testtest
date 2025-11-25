@@ -9,12 +9,13 @@ import {
 } from './filters';
 import { compareDisplaySettings, type IDisplaySettings } from './display';
 import {
+	compareLocations,
+	getActiveLocations,
 	type IActiveLocation,
 	type ILocation,
 	LOCATIONS_DEFAULT,
 	rehydrateLocations,
 } from './location';
-import { compareLocations, getActiveLocations } from '../utils';
 import { compareSort, type SortState } from './sort';
 import { MarketType } from '@/modules/market';
 import type { IDateRange } from '@/shared/ui/calendar';

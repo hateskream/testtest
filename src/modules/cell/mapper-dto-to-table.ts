@@ -1,9 +1,11 @@
+import { isEmptyCell } from './check';
 import {
 	CellType,
 	ColumnType,
 	columnToCell,
 	type Cell,
 } from './domain';
+import type { CellDto } from './dto';
 import {
 	mapSymbol,
 	mapNumber,
@@ -11,12 +13,13 @@ import {
 	mapText,
 	mapSvgChart,
 	mapRange,
-	isEmptyCell,
-	type TableRow,
 	mapLabel,
-	mapScore, mapOpen, mapCheck, mapSchedule,
-} from '.';
-import type { CellDto } from './dto';
+	mapScore,
+	mapOpen,
+	mapCheck,
+	mapSchedule,
+} from './mapper-dto';
+import type { TableRow } from './row';
 
 
 // Generic ticker interface with DTO types

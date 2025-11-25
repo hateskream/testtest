@@ -14,7 +14,6 @@ import { HeatmapDashboard } from '@/modules/widgets/heatmap';
 import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
 import { ExchangesDashboard } from '@/modules/widgets/exchanges';
 import { EthGasDashboard } from '@/modules/widgets/eth-gas';
-import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
 import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
 import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
 import { ConsumerPriceIndexDashboardWidget } from '@/modules/widgets/consumer-price-index';
@@ -26,6 +25,8 @@ import { NewsSummaryDashboardWidget } from '@/modules/widgets/news-summary';
 import { HighImpactHourMapDashboardWidget } from '@/modules/widgets/high-impact-hour-map';
 import { UsInflationDashboardWidget } from '@/modules/widgets/us-inflation';
 import { FederalFundsDashboardWidget } from '@/modules/widgets/federal-funds';
+import { WidgetType } from '../../core';
+import type { DisplayVariant } from '../../layout-dashboards';
 
 export interface ISize {
 	w: number;

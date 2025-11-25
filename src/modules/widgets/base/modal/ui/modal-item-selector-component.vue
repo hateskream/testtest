@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import { ModalItem } from '../index';
+import ModalItemComponent from './modal-item-component.vue';
+
 
 interface IProps {
 	modelValue: boolean;
@@ -24,14 +25,14 @@ const classesList = computed(() => ({
 </script>
 
 <template>
-	<modal-item
+	<modal-item-component
 		:class="classes.content"
 		@click="emits('update:modelValue', !modelValue)"
 	>
 		<slot name="default" />
 
 		<div :class="classesList" />
-	</modal-item>
+	</modal-item-component>
 </template>
 
 <style module="classes">

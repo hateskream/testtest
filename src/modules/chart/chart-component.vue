@@ -4,12 +4,14 @@ import { useElementSize, useWindowSize } from '@vueuse/core';
 
 
 import { useChartStore } from '@/modules/chart/store';
-import { Chart } from '@/modules/lightweight-charts';
+// import { Chart } from '@/modules/lightweight-charts';
 import { ChartHeaderComponent } from './components/header';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 import { CHART_COMPONENT_MAP, type CHART_SECTION_COMPONENT, getChartSectionsByType, TickerType } from './models';
 import { RangeChart } from '@/shared/ui/chart-range';
 import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
+
+import ChartComponent from '../lightweight-charts/ui/chart-component.vue';
 
 const { randomizeExchanges, setMode } = useChartStore();
 
@@ -31,7 +33,7 @@ const selectedItem = ref<string | null>(null);
 
 const chartLayoutEl = ref<InstanceType<typeof ChartLayout> | null>(null);
 const chartContainerEl = ref<HTMLDivElement | null>(null);
-const chartRef = ref<InstanceType<typeof Chart> | null>(null);
+const chartRef = ref<InstanceType<typeof ChartComponent> | null>(null);
 
 const itemRefs = ref<Map<string, HTMLElement>>(new Map());
 
@@ -148,7 +150,7 @@ const currentChartRanges = [
 				ref="chartContainerEl"
 				:class="classes.placeholderTop"
 			>
-				<chart
+				<chart-component
 					ref="chartRef"
 					:width="chartWidth"
 					:height="chartHeight"

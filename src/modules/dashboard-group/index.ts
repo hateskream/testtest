@@ -15,7 +15,6 @@ export {
 	type IPosition,
 	type IWidgetPreset,
 
-	useDashboardGroup,
 	useGridLayout,
 } from './tv';
 

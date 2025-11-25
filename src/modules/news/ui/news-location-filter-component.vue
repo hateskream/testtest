@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { BaseSwitch, ModalFilter, ModalFilterTabWrapper } from '@/modules/widgets/base';
-import type { ILocation } from '../model';
-import { toggleLocationCountry, toggleLocationRegion } from '../utils';
+import { toggleLocationCountry, toggleLocationRegion, type ILocation } from '../model';
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
 

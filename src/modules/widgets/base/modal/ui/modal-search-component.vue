@@ -3,8 +3,9 @@ import { computed, onMounted, useTemplateRef } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiIconControl } from '@/shared/ui/icon-control';
-import { BaseSearch } from '../..';
 import { UiTransitionFade } from '@/shared/ui/transition';
+
+import BaseSearchComponent from '../../common/ui/base-search-component.vue';
 
 interface IModalSearchProps {
 	placeholder?: string;
@@ -46,7 +47,7 @@ onMounted(() => {
 			height="24"
 			:class="classes.icon"
 		/>
-		<base-search
+		<base-search-component
 			ref="search"
 			v-model="model"
 			:placeholder="props.placeholder"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { getWidgetComponent, type IMeta } from '../../dashboards';
+import { getWidgetComponent, type IMeta } from '../../dashboards/model';
 import type { DisplayVariant, IWidget } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';

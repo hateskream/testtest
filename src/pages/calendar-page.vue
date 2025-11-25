@@ -12,8 +12,11 @@ import {
 } from '@/modules/calendar';
 import { EventType, Impact } from '@/modules/calendar/models';
 import { AppLayout } from '@/modules/layout';
-import { CalendarEventBoard, CalendarToolbar, CalendarWeeklyInfo } from '@/modules/calendar/ui';
+import { CalendarWeeklyInfo } from '@/modules/calendar/ui';
 import { CalendarDaySelect } from '@/shared/ui/calendar';
+
+import CalendarEventBoard from '@/modules/calendar/ui/calendar-event-board.vue';
+import CalendarToolbar from '@/modules/calendar/ui/toolbar/calendar-toolbar.vue';
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;

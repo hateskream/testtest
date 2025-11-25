@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/vue-query';
 
-import { useRepository } from '../composables';
+import { useRepository } from '../composables/use-repository';
 import type { ISettings } from '../model';
 import { queryClient } from '@/shared/service/query-client';
 
-const SETTINGS_QUERY_KEY = 'fear-greed-settings';
+const SETTINGS_QUERY_KEY = 'eth-gas-settings';
 
 export const useGetSettings = (widgetId: string) => {
 	const repository = useRepository(widgetId);

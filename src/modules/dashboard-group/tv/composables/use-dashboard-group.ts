@@ -1,7 +1,6 @@
 import { computed, nextTick, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
-import { WidgetType } from '@/modules/dashboard-group';
 import {
 	type IDashboardTab,
 	type IPosition,
@@ -24,6 +23,7 @@ import {
 	deleteDashboard as deleteDashboardModel,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
+import type { WidgetType } from '../../core/model/widget';
 
 const PositionSchema = z.object({
 	x: z.number(),

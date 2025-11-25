@@ -4,7 +4,6 @@ import { useTemplateRef } from 'vue';
 import {
 	CalendarEmptyEventBoard,
 	CalendarEventBoard,
-	CalendarToolbar,
 	EventType,
 	type IDailyCalendarInfoResponse, type IEventBoardExposed,
 	type IEventBoardRange,
@@ -16,6 +15,9 @@ import {
 	useEventBoardScroll,
 } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
+
+import CalendarToolbar from '@/modules/calendar/ui/toolbar/calendar-toolbar.vue';
+
 
 interface ICalendarWeeklyContainerProps {
 	locale?: string;

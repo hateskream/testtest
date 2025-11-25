@@ -17,10 +17,11 @@ import {
 	type MaybeRefOrGetter,
 } from 'vue';
 
-import { PositionTeleport } from '../../ui';
 import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
 import { providePinnedLevel, providePinnedStack, useProvideFloatingContext } from '../../composables';
 import type { IFloatingOptions } from '../../model';
+
+import PositionTeleport from '../position-teleport.vue';
 
 const props = withDefaults(defineProps<IFloatingOptions>(), {
 	trigger: 'click',

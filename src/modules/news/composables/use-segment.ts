@@ -7,10 +7,12 @@ import {
 	type ISegmentRequest,
 	type SelectAllFrom,
 	type SelectedSegmentTickersState,
+	parseTicker,
+	segmentsData,
+	getDefaultSegmentTickers,
+	hasInSegment as hasInSegmentModel,
+	isAllSelectedInSegment as isAllSelectedInSegmentModel,
 } from '@/modules/news/model';
-import { segmentsData } from '@/modules/news/model/segment-modal';
-import * as utils from '@/modules/news/utils';
-import { getDefaultSegmentTickers } from '@/modules/news/model/presets.ts';
 
 export function useSegment(
 	selectedSegments: MaybeRefOrGetter<Set<MarketType>>,
@@ -65,7 +67,7 @@ export function useSegment(
 
 		for (const segment of segments.value) {
 			const selected = selectedSegmentTickers.value[segment.id] ?? new Set();
-			const allIds = segment.tickers.map(t => utils.parseTicker(segment.id, t));
+			const allIds = segment.tickers.map(t => parseTicker(segment.id, t));
 
 			if (selected.size === allIds.length) {
 				selectAllFrom.push(segment.id);
@@ -84,7 +86,7 @@ export function useSegment(
 	});
 
 	function isAllSelectedInSegment(segmentId: MarketType): boolean {
-		return utils.isAllSelectedInSegment(segmentId, segments.value, selectedSegmentTickers.value);
+		return isAllSelectedInSegmentModel(segmentId, segments.value, selectedSegmentTickers.value);
 	}
 
 	function toggleTicker(segmentId: MarketType, tickerId: string) {
@@ -110,7 +112,7 @@ export function useSegment(
 
 		selectedSegmentTickers.value = {
 			...selectedSegmentTickers.value,
-			[segmentId]: new Set(seg.tickers.map((t) => utils.parseTicker(segmentId, t))),
+			[segmentId]: new Set(seg.tickers.map((t) => parseTicker(segmentId, t))),
 		};
 	}
 
@@ -121,7 +123,7 @@ export function useSegment(
 	}
 
 	function hasInSegment(segmentId: MarketType, ticker: ITickerData) {
-		return utils.hasInSegment(segmentId, ticker, selectedSegmentTickers.value);
+		return hasInSegmentModel(segmentId, ticker, selectedSegmentTickers.value);
 	}
 
 	return {
