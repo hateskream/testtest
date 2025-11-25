@@ -17,6 +17,16 @@ function formatMarketCap(value: number) {
 	return `${prepared.value} ${prepared.suffix}`;
 }
 
+function formatChangePercent(value: number) {
+	if (value < 0) {
+		// by design
+		// eslint-disable-next-line no-irregular-whitespace
+		return `- ${Math.abs(value).toFixed(2)}`;
+	}
+
+	return value.toFixed(2);
+}
+
 const preparedTickersTotal = computed(() => {
 	return props.tickers.map(ticker => {
 		return {
@@ -26,6 +36,7 @@ const preparedTickersTotal = computed(() => {
 			marketCap: formatMarketCap(props.total.marketCap[ticker.id]),
 			volume: props.total.volume[ticker.id],
 			changePercent: props.total.changePercent[ticker.id],
+			formattedChangePercent: formatChangePercent(props.total.changePercent[ticker.id]),
 		};
 	});
 });
@@ -39,6 +50,7 @@ const preparedMarketsTotal = computed(() => {
 			marketCap: formatMarketCap(props.total.marketCap[market.id]),
 			volume: props.total.volume[market.id],
 			changePercent: props.total.changePercent[market.id],
+			formattedChangePercent: formatChangePercent(props.total.changePercent[market.id]),
 		};
 	});
 });
@@ -68,7 +80,7 @@ const preparedTotals = computed(() => {
 				<div
 					:class="[entity.changePercent > 0 ? classes.positive : classes.negative]"
 				>
-					{{ entity.changePercent }}%
+					{{ entity.formattedChangePercent }}%
 				</div>
 			</div>
 		</div>
@@ -92,10 +104,10 @@ const preparedTotals = computed(() => {
 	margin-bottom: 4px;
 	overflow: hidden;
 	font-weight: 440;
-	font-size: 10px;
+	font-size: var(--typography-paragraph-size-p-02, 10px);
 	line-height: 170%;
 	letter-spacing: 0.08px;
-	border-radius: 16px;
+	border-radius: var(--radius-full, 9999px);
 	gap: 1px;
 }
 

@@ -138,11 +138,12 @@ const preparedDatasets = computed(() => {
 				:is-visible-range-change="props.displaySettings.isShowChange"
 				:is-visible-price-scale="isShowAxes"
 				:is-visible-time-scale="isShowAxes"
-				is-show-tooltip
 				:width="100"
+				:color-schema="chartColorSchema"
+				is-show-tooltip
 				height="100%"
 				disable-scroll
-				:color-schema="chartColorSchema"
+				fade-left
 			>
 				<template #tooltipContent="{rows, title}">
 					<market-cap-chart-tooltip

@@ -24,6 +24,8 @@ function formatValue(value: number) {
 
 const preparedMarketCap = computed(() => formatValue(props.marketCap));
 const preparedVolume = computed(() => formatValue(props.volume));
+
+const preparedChangePercent = computed(() => Math.abs(props.changePercent).toFixed(2));
 </script>
 
 <template>
@@ -36,11 +38,11 @@ const preparedVolume = computed(() => formatValue(props.volume));
 			>
 				<ui-icon
 					:id="props.changePercent > 0 ? IconIds.Gainers : IconIds.Loosers"
-					height="12px"
-					width="12px"
+					height="6px"
+					width="6px"
 				/>
 				<div>
-					{{ props.changePercent.toFixed(2) }}%
+					{{ preparedChangePercent }}%
 				</div>
 			</div>
 		</market-cap-total-segment>
@@ -61,18 +63,21 @@ const preparedVolume = computed(() => formatValue(props.volume));
 }
 
 .title {
-	font-size: 16.8px;
+	font-weight: 440;
+	font-size: var(--font-title-200-size, 16.8px);
 	line-height: 160%;
+	color: var(--text-500, rgb(255 255 255 / 96%));
+	letter-spacing: 0.134px;
 }
 
 .change {
 	display: flex;
 	align-items: center;
 	font-weight: 400;
-	gap: 4px;
-	font-size: 12.5px;
+	font-size: var(--font-text-200-r-size, 12.2px);
 	line-height: 180%;
-	letter-spacing: 0.075px;
+	letter-spacing: 0.122px;
+	gap: 2px;
 }
 
 .positive {
@@ -80,6 +85,6 @@ const preparedVolume = computed(() => formatValue(props.volume));
 }
 
 .negative {
-	color: var(--metrics-color-negative-chart);
+	color: var(--atom-warning-00, #fc1d4d);
 }
 </style>
