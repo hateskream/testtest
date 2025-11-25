@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { LastPriceAnimationMode } from '@shared/component-library';
 
 import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
+import { Chart } from '@/modules/lightweight-charts';
 import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
 import { randomFloat } from '@/shared/lib';
 import type { ICalendarEvent } from '@/modules/calendar';
 import { getMarketSegmentStateColor, type IMarketSegment, TimeRangeFilterValue } from '../../model';
 
-import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
-import ChartPriceHeader from '@/modules/widgets/chart-price/ui/common/chart-price-header.vue';
+import ChartPriceHeader from './chart-price-header.vue';
 
 interface IChartPriceProps {
 	isBig: boolean;
@@ -91,6 +92,7 @@ const timelineSegments = computed(() => {
 	});
 });
 
+const chartColorSchema = computed(() => generatedChangeData.value.value > 0 ? 'positive' : 'negative');
 </script>
 
 <template>
@@ -111,7 +113,7 @@ const timelineSegments = computed(() => {
 				[classes.tv]: isTvDisplayVariant
 			}]"
 		>
-			<chart-component
+			<chart
 				v-model:range="activeChartRange"
 				width="100%"
 				height="100%"
@@ -130,6 +132,8 @@ const timelineSegments = computed(() => {
 				:events="props.events"
 				:timeline-segments="timelineSegments"
 				:events-timeline-padding="eventsTimelinePadding"
+				:last-price-animation="LastPriceAnimationMode.Continuous"
+				:color-schema="chartColorSchema"
 				fade-left
 				@update="handleUpdateData"
 			/>

@@ -84,7 +84,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	events: () => [],
 	timelineSegments: () => [],
 	eventsTimelinePadding: '0px',
-	lastPriceAnimation: LastPriceAnimationMode.Continuous,
+	lastPriceAnimation: LastPriceAnimationMode.Disabled,
 });
 
 defineExpose({
