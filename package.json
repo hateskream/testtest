@@ -16,7 +16,7 @@
   "dependencies": {
     "@floating-ui/vue": "1.1.6",
     "@popperjs/core": "2.11.8",
-    "@shared/component-library": "0.1.5",
+    "@shared/component-library": "0.1.6",
     "@tanstack/vue-query": "5.67.3",
     "@types/markdown-it": "^14.1.2",
     "@unhead/vue": "2.0.12",
