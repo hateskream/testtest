@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { notNullish } from '@vueuse/core';
+import type { LineData } from '@shared/component-library';
 
 import {
 	type IDisplaySettings,
@@ -11,11 +12,9 @@ import {
 	type IMarketCapTotalValue,
 	MarketCapDateRange,
 } from '../../model';
-import { ChartMarketCap } from '@/modules/lightweight-charts';
-import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
+import { Chart, ChartMarketCap } from '@/modules/lightweight-charts';
+import { ChartRange, type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
 
-import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
-import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
 interface IMarketCapChartProps {
@@ -29,6 +28,8 @@ interface IMarketCapChartProps {
 }
 
 const props = defineProps<IMarketCapChartProps>();
+
+// date range
 
 const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
 
@@ -55,25 +56,6 @@ const activeChartRange = computed({
 	},
 });
 
-const totalCount = computed(() => props.markets.length + props.tickers.length);
-
-const singleTotalValue = computed(() => {
-	if (totalCount.value > 1) {
-		return null;
-	}
-
-	const target = props.markets.length > 0 ? props.markets[0] : props.tickers[0];
-
-	return {
-		marketCap: props.total.marketCap[target.id],
-		volume: props.total.volume[target.id],
-		changePercent: props.total.changePercent[target.id],
-	} as IMarketCapTotalValue;
-});
-
-const chartColorSchema = computed(() => singleTotalValue.value
-	&& singleTotalValue.value.changePercent > 0 ? 'positive' : 'negative');
-
 function selectDateRange(rangeChart: RangeChartType) {
 	const dateRangeFilter = Object.entries(dateRangeToRangeChart)
 		.find(([_, value]) => value === rangeChart);
@@ -83,7 +65,40 @@ function selectDateRange(rangeChart: RangeChartType) {
 	}
 }
 
-const preparedDatasets = computed(() => {
+// target entity
+
+const totalCount = computed(() => props.markets.length + props.tickers.length);
+
+const singleTargetEntity = computed(() => {
+	if (totalCount.value > 1) {
+		return null;
+	}
+
+	return props.markets.length > 0 ? props.markets[0] : props.tickers[0];
+});
+
+// total
+
+const singleTotalValue = computed(() => {
+	if (!singleTargetEntity.value) {
+		return null;
+	}
+
+	const entityId = singleTargetEntity.value.id;
+
+	return {
+		marketCap: props.total.marketCap[entityId],
+		volume: props.total.volume[entityId],
+		changePercent: props.total.changePercent[entityId],
+	} as IMarketCapTotalValue;
+});
+
+// dataset
+
+const chartColorSchema = computed(() => singleTotalValue.value
+	&& singleTotalValue.value.changePercent > 0 ? 'positive' : 'negative');
+
+const preparedEntitiesDatasets = computed(() => {
 	const preparedTickers = props.tickers.map(ticker => {
 		return {
 			label: ticker.symbol,
@@ -104,13 +119,25 @@ const preparedDatasets = computed(() => {
 
 	return [...preparedTickers, ...preparedMarkets];
 });
+
+const preparedSingleEntityDataset = computed(() => {
+	if (!singleTargetEntity.value) {
+		return null;
+	}
+
+	const entityId = singleTargetEntity.value.id;
+
+	return props.points.map((point): LineData => {
+		return { time: point.timestamp, value: point.marketCap[entityId] };
+	});
+});
 </script>
 
 <template>
 	<div :class="[classes.root, {[classes.visibleAxis]: props.isShowAxes}]">
 		<template v-if="totalCount > 1">
 			<chart-market-cap
-				:datasets="preparedDatasets"
+				:datasets="preparedEntitiesDatasets"
 				:range="activeDateRange"
 				:hide-axis="!props.isShowAxes"
 				height="100%"
@@ -127,9 +154,10 @@ const preparedDatasets = computed(() => {
 				/>
 			</div>
 		</template>
-		<template v-else-if="singleTotalValue">
-			<chart-component
+		<template v-else-if="singleTargetEntity">
+			<chart
 				v-model:range="activeChartRange"
+				:data="preparedSingleEntityDataset"
 				:range-list="chartRanges"
 				:is-visible-history-graph="false"
 				:is-visible-indicators="false"
@@ -153,7 +181,7 @@ const preparedDatasets = computed(() => {
 						:value="rows[0].value"
 					/>
 				</template>
-			</chart-component>
+			</chart>
 		</template>
 	</div>
 </template>
