@@ -1,4 +1,5 @@
 import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef, readonly } from 'vue';
+import debounce from 'lodash/debounce';
 
 const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
@@ -36,7 +37,6 @@ export function useSlider(opts: {
 	const seenSlides = new Set<number>();
 
 	const visibleSlidesCount = computed(() => {
-		// FIX ME MAGIC NUMBER
 		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
 
 		const offset = -translateX.value;
@@ -46,13 +46,10 @@ export function useSlider(opts: {
 
 		for (let i = 0; i < slides.value.length; i += 1) {
 			const w = slides.value[i];
+			const s = acc;
+			const e = acc + w;
 
-			const slideStart = acc;
-			const slideEnd = acc + w;
-
-			const intersects = slideEnd > offset && slideStart < end;
-
-			if (intersects) {
+			if (e > offset && s < end) {
 				seenSlides.add(i);
 			}
 
@@ -77,8 +74,10 @@ export function useSlider(opts: {
 		if (!offsets.length) {
 			return 0;
 		}
+
 		let best = 0;
 		let bestDist = Math.abs(x - offsets[0]);
+
 		for (let i = 1; i < offsets.length; i += 1) {
 			const d = Math.abs(x - offsets[i]);
 			if (d < bestDist) {
@@ -116,30 +115,39 @@ export function useSlider(opts: {
 	}
 
 	function next() {
-		if (!canNext.value) {
-			return;
+		if (canNext.value) {
+			snapToIndex(currentIndex.value + 1);
 		}
-		snapToIndex(currentIndex.value + 1);
 	}
 
 	function prev() {
-		if (!canPrev.value) {
-			return;
+		if (canPrev.value) {
+			snapToIndex(currentIndex.value - 1);
 		}
-		snapToIndex(currentIndex.value - 1);
 	}
 
 	function goTo(index: number) {
-		if (index < 0 || index >= slides.value.length) {
-			return;
+		if (index >= 0 && index < slides.value.length) {
+			snapToIndex(index);
 		}
-		snapToIndex(index);
 	}
 
 	function getSlideOffset(index: number) {
 		const widths = slides.value.slice(0, index);
 		const sum = widths.reduce((s, w) => s + w, 0);
 		return -(sum + gap * index);
+	}
+
+	const wheelScrolling = ref(false);
+
+	const endWheel = debounce(() => {
+		wheelScrolling.value = false;
+	}, 120);
+
+
+	function onWheelStart() {
+		wheelScrolling.value = true;
+		endWheel();
 	}
 
 	const pointer = {
@@ -165,6 +173,7 @@ export function useSlider(opts: {
 			if (!pointer.isDown) {
 				return;
 			}
+
 			const dx = e.clientX - pointer.lastX;
 			const dy = e.clientY - pointer.lastY;
 
@@ -182,9 +191,13 @@ export function useSlider(opts: {
 			pointer.lastY = e.clientY;
 		},
 		onPointerUp() {
-			isDragging.value = false;
 			pointer.isDown = false;
 			pointer.hasDirection = false;
+			isDragging.value = false;
+
+			if (wheelScrolling.value) {
+				return;
+			}
 
 			const nearest = nearestIndexFromTranslate(translateX.value);
 			snapToIndex(nearest);
@@ -203,8 +216,10 @@ export function useSlider(opts: {
 			if (!pointer.isDown) {
 				return;
 			}
+
 			const x = e.touches[0].clientX;
 			const y = e.touches[0].clientY;
+
 			const dx = x - pointer.lastX;
 			const dy = y - pointer.lastY;
 
@@ -226,22 +241,30 @@ export function useSlider(opts: {
 			pointer.hasDirection = false;
 			isDragging.value = false;
 
+			if (wheelScrolling.value) {
+				return;
+			}
+
 			const nearest = nearestIndexFromTranslate(translateX.value);
 			snapToIndex(nearest);
 		},
 
 		onWheel(e: WheelEvent) {
-			const { deltaX, deltaY } = e;
-			if (Math.abs(deltaX) > Math.abs(deltaY)) {
-				e.preventDefault();
-				setTranslateX(translateX.value - deltaX);
-			}
+			onWheelStart();
+
+			const { deltaX, deltaY, shiftKey } = e;
+			const smoothFactor = shiftKey ? 0.25 : 1;
+
+			const primaryDelta =
+				Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
+
+			e.preventDefault();
+			setTranslateX(translateX.value - primaryDelta * smoothFactor);
 		},
 	};
 
 	watch(() => toValue(viewportWidth), () => {
 		setTranslateX(translateX.value);
-
 		setTranslateX(getSlideOffset(currentIndex.value));
 	});
 
