@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, watch } from 'vue';
+import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload } from '../model';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+           (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
 
 interface IPreparedSection extends ISection {
 	isVisible: boolean;
@@ -36,9 +39,9 @@ const emits = defineEmits<{
 	(e: 'goTo', index: number): void;
 }>();
 
-const { height } = useElementSize(
-	useTemplateRef<HTMLDivElement>('container'),
-);
+const containerRef = useTemplateRef<HTMLDivElement>('container');
+
+const { height } = useElementSize(containerRef);
 
 const sectionRefs = ref<InstanceType<typeof SectionComponent>[]>([]);
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
@@ -83,11 +86,43 @@ watch(
 	},
 );
 
+onMounted(() => {
+	if (!containerRef.value) {
+		return;
+	}
+
+	if (isIOS) {
+		containerRef.value.addEventListener(
+			'touchmove',
+			iosOnTouchMove,
+			{ passive: false },
+		);
+	}
+});
+
+onUnmounted(() => {
+	if (isIOS) {
+		containerRef.value?.removeEventListener('touchmove', iosOnTouchMove);
+	}
+});
+
 function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	preparedSlides.value = newSlides.map((s, i) => ({
 		...s,
 		isVisible: i < visibleWindowSize,
 	}));
+}
+
+function iosOnTouchMove(event: TouchEvent) {
+	emits('touchMove', event);
+}
+
+function onTouchMove(event: TouchEvent) {
+	if (isIOS) {
+		return;
+	}
+
+	emits('touchMove', event);
 }
 </script>
 
@@ -103,7 +138,7 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 			@pointercancel="emits('pointerUp')"
 			@pointerleave="emits('pointerUp')"
 			@touchstart="emits('touchStart', $event)"
-			@touchmove="emits('touchMove', $event)"
+			@touchmove="onTouchMove"
 			@touchend="emits('touchEnd')"
 		>
 			<div
@@ -230,6 +265,7 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	margin-left: 20px;
 	padding-top: 8px;
 	overflow: hidden;
+	touch-action: pan-y;
 }
 
 .track {
