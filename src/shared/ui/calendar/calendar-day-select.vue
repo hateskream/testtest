@@ -15,7 +15,7 @@ const selectedDate = defineModel<Date>({ required: true });
 			title-position="left"
 			transparent
 			borderless
-			color="red"
+			color="white"
 			is-dark
 			trim-weeks
 			:highlight-today="true"
@@ -38,4 +38,16 @@ const selectedDate = defineModel<Date>({ required: true });
 .calendar {
 	width: 100%;
 }
+</style>
+
+<style scoped>
+:deep(.vc-day.is-today .vc-day-content:not(.vc-highlight-content-solid)) {
+	font-weight: 700;
+	color: #ffffff;
+	background-color: #ff0000;
+}
+</style>
+
+<style src="./styles.css">
+
 </style>

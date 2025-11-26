@@ -1,0 +1,24 @@
+.vc-white {
+	--vc-accent-50: #fef2f2;
+	--vc-accent-100: #fef2f2;
+	--vc-accent-200: #fef2f2;
+	--vc-accent-300: #fef2f2;
+	--vc-accent-400: #fef2f2;
+	--vc-accent-500: #fef2f2;
+	--vc-accent-600: #fef2f2;
+	--vc-accent-700: #fef2f2;
+	--vc-accent-800: rgb(254 242 242 / 15%);
+	--vc-accent-900: #fef2f2;
+}
+
+.vc-dark {
+	--vc-hover-bg: rgb(255 255 255 / 5%);
+}
+
+.vc-highlight-content-solid {
+	color: #1b1b1d !important;
+}
+
+.vc-focus:focus-within {
+	box-shadow: none;
+}

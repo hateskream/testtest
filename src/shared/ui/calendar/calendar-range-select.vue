@@ -41,7 +41,7 @@ const proxy = computed({
 			title-position="left"
 			transparent
 			borderless
-			color="red"
+			color="white"
 			is-dark
 			is-range
 			trim-weeks
