@@ -24,7 +24,7 @@ export function useSlider(opts: {
 	const slideOffsets = computed(() => {
 		const offsets: number[] = [];
 		let acc = 0;
-		for (let i = 0; i < slides.value.length; i+=1) {
+		for (let i = 0; i < slides.value.length; i += 1) {
 			offsets.push(-acc);
 			acc += (slides.value[i] || 0) + gap;
 		}
@@ -32,6 +32,35 @@ export function useSlider(opts: {
 	});
 
 	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
+
+	const seenSlides = new Set<number>();
+
+	const visibleSlidesCount = computed(() => {
+		// FIX ME MAGIC NUMBER
+		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+
+		const offset = -translateX.value;
+		const end = offset + vp;
+
+		let acc = 0;
+
+		for (let i = 0; i < slides.value.length; i += 1) {
+			const w = slides.value[i];
+
+			const slideStart = acc;
+			const slideEnd = acc + w;
+
+			const intersects = slideEnd > offset && slideStart < end;
+
+			if (intersects) {
+				seenSlides.add(i);
+			}
+
+			acc += w + gap;
+		}
+
+		return seenSlides.size;
+	});
 
 	function clampTranslate(x: number) {
 		const maxTranslate = 0;
@@ -50,7 +79,7 @@ export function useSlider(opts: {
 		}
 		let best = 0;
 		let bestDist = Math.abs(x - offsets[0]);
-		for (let i = 1; i < offsets.length; i++) {
+		for (let i = 1; i < offsets.length; i += 1) {
 			const d = Math.abs(x - offsets[i]);
 			if (d < bestDist) {
 				bestDist = d;
@@ -226,5 +255,6 @@ export function useSlider(opts: {
 		goTo,
 		currentIndex,
 		isDragging,
+		visibleSlidesCount,
 	};
 }

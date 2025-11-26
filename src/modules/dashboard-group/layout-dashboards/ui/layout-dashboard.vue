@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, defineAsyncComponent, useCssModule, useTemplateRef, watch } from 'vue';
+import { computed, useCssModule, useTemplateRef, watch } from 'vue';
 
 import { useDashboardLayout, useSlider } from '../composables';
 
 import HeaderDesktop from './header-desktop.vue';
 import HeaderMobile from './header-mobile.vue';
 import PaginationMobile from './pagination-mobile.vue';
-import SliderLoader from './slider-loader.vue';
-
-const SectionSlider = defineAsyncComponent({
-	loader: () => import('./section-slider.vue'),
-	loadingComponent: SliderLoader,
-	errorComponent: SliderLoader,
-});
+import SectionSlider from './section-slider.vue';
 
 const emits = defineEmits<{
 	(e: 'close'): void;
@@ -54,6 +48,7 @@ const {
 	prev,
 	goTo,
 	isDragging,
+	visibleSlidesCount,
 } = useSlider({
 	slidesWidth: computed (() => preparedSlides.value.map(s => s.width)),
 	viewportWidth,
@@ -89,6 +84,7 @@ watch(
 				:can-prev="canPrev"
 				:translate-x="translateX"
 				:current-index="currentIndex"
+				:visible-slides-count="visibleSlidesCount"
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"

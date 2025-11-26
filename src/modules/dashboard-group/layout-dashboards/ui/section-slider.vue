@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload } from '../model';
@@ -14,6 +14,7 @@ interface IPreparedSection extends ISection {
 interface ISectionSliderProps {
 	slides: ISection[];
 	currentIndex: number;
+	visibleSlidesCount: number;
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
@@ -35,7 +36,7 @@ const emits = defineEmits<{
 	(e: 'goTo', index: number): void;
 }>();
 
-const { height, width } = useElementSize(
+const { height } = useElementSize(
 	useTemplateRef<HTMLDivElement>('container'),
 );
 
@@ -64,44 +65,21 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 
 const preparedSlides = ref<IPreparedSection[]>([]);
 
-const sizeVisibleWidow = computed(() => {
-	let acc = 0;
-	let index = 0;
-
-	while (acc < width.value && index < props.slides.length) {
-		acc += props.slides[index += 1].width;
-	}
-
-	return index;
-});
-
 watch(
 	() => props.slides,
 	newSlides => {
-		if (sizeVisibleWidow.value === 0) {
-			return;
-		}
-
-		setPreparedSlides(newSlides, sizeVisibleWidow.value);
-	},
-	{ immediate: true },
-);
-
-watch(
-	() => sizeVisibleWidow.value,
-	visibleWindowSize => {
-		setPreparedSlides(props.slides, visibleWindowSize);
+		setPreparedSlides(newSlides, props.visibleSlidesCount);
 	},
 );
 
 watch(
-	() => props.currentIndex,
-	(newIndex, oldIndex) => {
-		if (newIndex === oldIndex || newIndex < oldIndex) {
+	() => props.visibleSlidesCount,
+	(newCount, oldCount) => {
+		if (newCount === oldCount || newCount < oldCount) {
 			return;
 		}
 
-		setPreparedSlides(props.slides, sizeVisibleWidow.value + newIndex);
+		setPreparedSlides(props.slides, newCount);
 	},
 );
 
@@ -134,20 +112,22 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 					transform: `translateX(${props.translateX}px)`
 				}"
 			>
-				<template v-for="(s, i) in props.slides" :key="s.id">
-					<section-component
-						ref="sectionRefs"
-						:section="s"
-						:parent-height="height"
+				<template v-for="(s, i) in preparedSlides" :key="s.id">
+					<div
+						:class="classes.section"
 						:style="{
 							...i !== 0 ? { 'margin-left': '10px' } : {},
 							...{ 'margin-right': '10px' }
 						}"
-						@section-wheel="onSectionWheel"
-					/>
-					<div
-						:class="classes.sizer"
-					/>
+					>
+						<section-component
+							:section="s"
+							:parent-height="height"
+							:is-visible="s.isVisible"
+							@section-wheel="onSectionWheel"
+						/>
+					</div>
+					<div :class="classes.sizer" />
 				</template>
 			</div>
 		</div>
@@ -239,6 +219,7 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	position: relative;
 	display: flex;
 	flex-grow: 1;
+	flex-direction: column;
 }
 
 .viewport {
@@ -313,13 +294,6 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
-}
-
-.loader {
-	display: flex;
-	flex-grow: 1;
-	justify-content: center;
-	align-items: center;
 }
 
 .section {
