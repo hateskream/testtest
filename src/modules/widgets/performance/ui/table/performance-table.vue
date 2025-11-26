@@ -5,7 +5,6 @@ import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { mockedSectorRows } from '@/modules/widgets/performance/ui/table/mocked-sector-data.ts';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -21,20 +20,6 @@ const props = defineProps<IPerformanceTableProps>();
 const { goToTickerPage } = useGoToTickerPage();
 
 
-// Создаем мутированные данные на основе props.rows и mockedSectorRows
-const mutatedRowData = computed(() => {
-	return mockedSectorRows.map((mockedRow, index) => {
-		const originalRow = props.rows[index % props.rows.length] || props.rows[0];
-
-		return {
-			...originalRow,
-			tickerId: mockedRow.tickerId,
-			symbol: mockedRow.symbol,
-			changePrice24hPercent: mockedRow.changePrice24hPercent,
-		} as PerformanceTableRow;
-	});
-});
-
 const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
@@ -48,7 +33,7 @@ const maxAbsValue = computed(() => {
 
 
 const genericRows = computed(() => {
-	return mutatedRowData.value.map(ticker => {
+	return props.rows.map(ticker => {
 		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
 
 		if (props.displayVariant === DisplayVariant.List) {

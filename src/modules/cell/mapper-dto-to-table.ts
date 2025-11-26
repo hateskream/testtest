@@ -30,6 +30,9 @@ export type TableRowDto<T = Partial<Record<ColumnType, CellDto>>> = {
  * @returns Array of TableRow objects with mapped cells
  */
 export function mapTickersToTableRows<T extends TableRow>(tickers: TableRowDto[]): T[] {
+	if (!tickers) {
+		return [];
+	}
 	return tickers
 		.map(ticker => {
 			const mappedTicker: Partial<TableRow> = {
@@ -57,19 +60,21 @@ export function mapTickersToTableRows<T extends TableRow>(tickers: TableRowDto[]
 			return mappedTicker as T;
 		})
 		.filter(ticker => {
-			// Filter out tickers with all empty cells
 			return Object
 				.values(ticker)
 				.map((maybeCell) => {
-					if (typeof maybeCell === 'string') {
+					if (typeof maybeCell === 'string' || typeof maybeCell === 'undefined') {
 						return null;
 					}
 					return maybeCell;
 				})
 				.filter(el => el !== null)
-				.every(cell => !isEmptyCell(cell));
+				.every(cell => {
+					return !isEmptyCell(cell);
+				});
 		});
 }
+
 
 /**
  * Prepare response helper function for market APIs

@@ -13,8 +13,9 @@ import type { PerformanceTableRow } from '../model/row';
 import { generateRows } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 import type { TickerWithoutState } from '../../price/model';
+import type { DateRange } from '../model';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
@@ -48,6 +49,7 @@ export interface IGetPerformanceRequest {
 	pined: string[];
 	offset: number;
 	limit: number;
+	dateRange: DateRange;
 }
 
 export async function getPerformance(args: IGetPerformanceRequest): Promise<IPerformanceData> {
@@ -59,9 +61,18 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 			return getMockData(args);
 		}
 
-		const response = await httpService.get<IGetPerformanceResponse>('/api/market');
-
-		return prepareResponse(response);
+		const response = await httpService.get<IGetPerformanceResponse>('/api/v1/performance/data', {
+			query: {
+				market: 'Stock',
+				dateRange: args.dateRange,
+				limit: args.limit,
+				offset: args.offset,
+			},
+		});
+		console.log(response,'response1');
+		const responseUpdated = prepareResponse(response);
+		console.log(responseUpdated, 'response2')
+		return responseUpdated
 	} catch (error) {
 		logger.error('Failed to get performance data', error as Error);
 		throw error;
