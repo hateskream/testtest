@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, watch } from 'vue';
+import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartDataset, type ChartOptions, type Plugin } from 'chart.js/auto';
+
+import { barSolidBottomLinePlugin, barUnderlineTicksPlugin } from '@/modules/lightweight-charts/plugins';
 
 export type BarDataset = ChartDataset<'bar'>;
 
@@ -20,6 +22,10 @@ const props = withDefaults(defineProps<IChartBarProps>(), {
 const container = useTemplateRef('container');
 const chart = shallowRef<Chart<'bar'> | null>(null);
 
+const preparedPlugins = computed(() => {
+	return [...props.plugins, barUnderlineTicksPlugin, barSolidBottomLinePlugin];
+});
+
 const defaultOptions: ChartOptions<'bar'> = {
 	maintainAspectRatio: false,
 	normalized: true,
@@ -32,8 +38,26 @@ const defaultOptions: ChartOptions<'bar'> = {
 		y: {
 			beginAtZero: props.beginAtZero,
 			position: 'right',
-			grid: { display: true, color: '#373737', circular: true },
-			border: { dash: [2, 5] },
+			grid: {
+				display: true,
+				color: (context) => {
+					if (context.index > 0) {
+						return 'rgba(73, 73, 80, 0.44)';
+					}
+
+					return undefined;
+				},
+				circular: true,
+				drawTicks: false,
+			},
+			border: {
+				dash: [2, 2],
+			},
+			ticks: {
+				align: 'end',
+				crossAlign: 'far',
+				labelOffset: -5,
+			},
 		},
 		x: {
 			ticks: { padding: 10 },
@@ -58,7 +82,7 @@ function createChart() {
 			datasets: props.datasets,
 			labels: props.labels,
 		},
-		plugins: props.plugins,
+		plugins: preparedPlugins.value,
 		options: {
 			...defaultOptions,
 			...props.options,

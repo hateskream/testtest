@@ -78,6 +78,10 @@ onMounted(() => {
 						circular: true,
 					},
 					border: { dash: [2, 5] },
+					ticks: {
+						align: 'end',
+						crossAlign: 'far',
+					},
 				},
 				x: {
 					ticks: { padding: 10 },
