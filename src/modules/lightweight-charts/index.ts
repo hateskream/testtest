@@ -20,3 +20,5 @@ export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue
 export { default as ChartStylebox } from './ui/chart-stylebox.vue';
 export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
 export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';
+
+export { default as ChartBar, type BarDataset } from './ui/chart-bar.vue';

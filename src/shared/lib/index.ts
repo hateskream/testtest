@@ -14,3 +14,4 @@ export * from './random';
 export * from './delay';
 export * from './array';
 export * from './time';
+export * from './clone';

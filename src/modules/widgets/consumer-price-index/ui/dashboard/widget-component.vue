@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { PreloaderComponent, FiltersPanel } from '../common';
+import { FiltersPanel, PreloaderComponent } from '../common';
+import { useCpi } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -17,64 +18,23 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
 
-const isError = false;
-const isLoading = false;
-const refetch = () => {};
-
-const metricBadge = {
-	label: 'Growth YoY',
-	value: 2.6,
-	unit: 'points',
-	trend: 'up' as const,
-	isPercent: false,
-};
-
-const items = [
-	{
-		label: 'CPI',
-		color: '#fff',
-	},
-];
-
-enum DateRange {
-	Day= '1D',
-	Week = '1W',
-	Month = '1M',
-	SixMonths = '6M',
-	Year = '1Y',
-	All = 'ALL',
-}
-
-const dateRange = ref(DateRange.Year);
-
-const dateRangeFilterValueToDisplay: Record<DateRange, string> = {
-	[DateRange.Day]: '1 D',
-	[DateRange.Week]: '7 days',
-	[DateRange.Month]: '1 month',
-	[DateRange.SixMonths]: '6 months',
-	[DateRange.Year]: '1 Y',
-	[DateRange.All]: 'All',
-};
-
-enum CPI {
-	Points = 'points',
-	ChangeDelta = 'change-delta',
-	ChangePercent = 'change-percent',
-}
-
-const cpi = ref(CPI.Points);
-
-const cpiFilterValueToDisplay: Record<CPI, string> = {
-	[CPI.Points]: 'Points',
-	[CPI.ChangeDelta]: 'Change',
-	[CPI.ChangePercent]: 'Change, %',
-};
+const {
+	activeMetric,
+	activeRange,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useCpi({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 </script>
 
 <template>
@@ -83,19 +43,16 @@ const cpiFilterValueToDisplay: Record<CPI, string> = {
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
-		@delete="emits('delete')"
-		@duplicate="emits('duplicate')"
-		@move-to="emits('moveTo', $event)"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
 	>
 		<template #filters>
 			<filters-panel
-				v-model:date-range="dateRange"
-				v-model:cpi="cpi"
+				v-model:range="activeRange"
+				v-model:metric="activeMetric"
 				display-variant="new"
-				:data-ranges="Object.values(DateRange)"
-				:cpis="Object.values(CPI)"
-				:display-value-data-range="dateRangeFilterValueToDisplay"
-				:display-value-cpi="cpiFilterValueToDisplay"
+				is-show-range
 			/>
 		</template>
 		<template #title>
@@ -105,9 +62,8 @@ const cpiFilterValueToDisplay: Record<CPI, string> = {
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else
-				:metric-badge="metricBadge"
-				:legend="items"
+				v-else-if="data"
+				:data="data"
 			/>
 		</template>
 	</base-widget-dashboard>
