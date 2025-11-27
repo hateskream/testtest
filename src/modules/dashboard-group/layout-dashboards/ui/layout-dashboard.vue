@@ -39,6 +39,7 @@ const preparedSlides = computed(
 );
 
 const {
+	translateX,
 	trackStyle,
 	pointerState,
 	canNext,
@@ -82,6 +83,8 @@ watch(
 				:track-style="trackStyle"
 				:can-next="canNext"
 				:can-prev="canPrev"
+				:translate-x="translateX"
+				:viewport-width="viewportWidth"
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"
@@ -92,6 +95,7 @@ watch(
 				@touch-start="pointerState.onTouchStart"
 				@touch-move="pointerState.onTouchMove"
 				@touch-end="pointerState.onTouchEnd"
+				@update-section="sections = $event"
 			/>
 		</div>
 		<pagination-mobile

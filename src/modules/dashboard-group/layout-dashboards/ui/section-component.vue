@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
-import type { ISection } from '../model';
+import type { ISection, ISectionWheelPayload } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
 import { MIN_COL_WIDTH, MAX_COL_WIDTH } from '../../tv';
+import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
 
 import WidgetComponent from './widget-component.vue';
 
@@ -20,6 +21,10 @@ interface ISectionComponentProps {
 }
 
 const props = defineProps<ISectionComponentProps>();
+
+const emits = defineEmits<{
+	'section-wheel': [ISectionWheelPayload];
+}>();
 
 const widgetRefs = ref<InstanceType<typeof WidgetComponent>[]>([]);
 
@@ -39,7 +44,7 @@ const heightWithoutLastWidget = computed(() =>
 );
 
 const isLastWidgetHasInfinityHeight = computed(() =>
-	props.section.widgets[props.section.widgets.length - 1].height === Infinity,
+	props.section.widgets?.[props.section.widgets.length - 1]?.height === Infinity,
 );
 
 const hasPaddingBottom = computed(() => !isOneInSection.value && !isLastWidgetHasInfinityHeight.value );
@@ -50,13 +55,53 @@ const height = computed(() =>
 		: props.parentHeight,
 );
 
+function emitScrollInfo() {
+	if (!scrollRef.value) {
+		return;
+	}
+
+	const el = scrollRef.value;
+	const scrollTop = Math.round(el.scrollTop);
+	const total = widgetRefs.value.length;
+
+	if (total === 1 || el.scrollHeight <= el.clientHeight) {
+		emits('section-wheel', {
+			sectionId: props.section.id,
+			passedWidgets: total,
+		});
+		return;
+	}
+
+	let passed = 0;
+
+	for (const w of widgetRefs.value) {
+		const widgetEl = w.$el as HTMLElement;
+
+		const widgetTop = Math.round(widgetEl.offsetTop);
+
+		if (scrollTop >= widgetTop) {
+			passed+=1;
+		}
+	}
+
+	const remaining = Math.round(el.scrollHeight - el.clientHeight - scrollTop);
+	if (remaining <= 2) {
+		passed = total;
+	}
+
+	emits('section-wheel', {
+		sectionId: props.section.id,
+		passedWidgets: passed,
+	});
+}
+
 function onWheel(event: WheelEvent) {
 	if (!scrollRef.value) {
 		return;
 	}
 
 	const { target, deltaY } = event;
-	if (target === null || target instanceof HTMLElement === false) {
+	if (target === null || !(target instanceof HTMLElement)) {
 		return;
 	}
 
@@ -71,9 +116,61 @@ function onWheel(event: WheelEvent) {
 		event.preventDefault();
 
 		scrollRef.value.scrollTop += deltaY;
+		emitScrollInfo();
 		return;
 	}
 }
+
+async function scrollToWidget(widgetId: string) {
+	if (!scrollRef.value) {
+		return;
+	}
+
+	const el = scrollRef.value;
+
+	const widget = widgetRefs.value.find(
+		(w) => w.$props.widget.id === widgetId,
+	);
+
+	if (!widget) {
+		return;
+	}
+
+	const widgetEl = widget.$el as HTMLElement;
+
+	const containerTop = el.getBoundingClientRect().top;
+	const widgetTop = widgetEl.getBoundingClientRect().top;
+	const rawOffset = widgetTop - containerTop + el.scrollTop;
+
+	const offset = Math.min(rawOffset, el.scrollHeight - el.clientHeight);
+
+	const distance = Math.abs(offset - el.scrollTop);
+
+	const scaleFactor = 300;
+	const minDuration = 150;
+	const maxDuration = 1200;
+
+	const duration = Math.min(
+		maxDuration,
+		Math.max(
+			minDuration,
+			Math.max(minDuration, scaleFactor * Math.log(distance + 1)),
+		),
+	);
+
+	await smoothScrollTo(el, offset, {
+		duration,
+		onUpdate: emitScrollInfo,
+	});
+}
+
+onMounted(() => {
+	emitScrollInfo();
+});
+
+defineExpose({
+	scrollToWidget,
+});
 </script>
 
 <template>

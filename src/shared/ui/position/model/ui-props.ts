@@ -14,6 +14,7 @@ export interface IPositionContentProps {
 	placement?: Placement;
 	offset?: number;
 	strategy?: Strategy;
+	transform?: boolean;
 }
 
 export interface IPositionTeleportProps {

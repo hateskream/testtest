@@ -1,4 +1,4 @@
-import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef } from 'vue';
+import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef, readonly } from 'vue';
 
 const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
@@ -184,6 +184,7 @@ export function useSlider(opts: {
 	}
 
 	return {
+		translateX: readonly(translateX),
 		trackStyle,
 		canPrev,
 		canNext,

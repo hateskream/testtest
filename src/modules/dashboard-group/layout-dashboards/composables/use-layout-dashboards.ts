@@ -93,9 +93,36 @@ export function useDashboardLayout() {
 		})),
 	);
 
-	const sections = computed<ISection[]>(() =>
-		state.value.dashboards.find(el => el.id === activeDashboardId.value)?.sections || [],
-	);
+	const sections = computed<ISection[]>({
+		get() {
+			return (
+				state.value.dashboards.find(d => d.id === activeDashboardId.value)?.sections
+				|| []
+			);
+		},
+		set(newSections) {
+			const { dashboards } = state.value;
+
+			const index = dashboards.findIndex(
+				d => d.id === activeDashboardId.value,
+			);
+
+			if (index === -1) {
+				return;
+			}
+
+			const updatedDashboards = dashboards.map((d, i) =>
+				i === index
+					? { ...d, sections: newSections }
+					: d,
+			);
+
+			state.value = {
+				...state.value,
+				dashboards: updatedDashboards,
+			};
+		},
+	});
 
 	watch(data, newState => {
 		if (newState) {

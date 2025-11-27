@@ -21,6 +21,11 @@ export interface ISectionPreset {
 	}[];
 }
 
+export interface ISectionWheelPayload {
+	sectionId: string;
+	passedWidgets: number;
+}
+
 export function createSectionFromPreset({ widgets, name, width }: ISectionPreset): ISection {
 	return {
 		id: uuidv4(),

@@ -71,7 +71,6 @@ defineExpose({
 <style scoped>
 .floating-inner {
 	z-index: 101;
-	max-height: 80svh;
 	border-radius: 6px;
 }
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { ISection } from '../model';
+import type { ISection, ISectionWheelPayload } from '../model';
 
+import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
 
 interface ISectionSliderProps {
@@ -14,11 +14,14 @@ interface ISectionSliderProps {
 	};
 	canPrev: boolean;
 	canNext: boolean;
+	translateX: number;
+	viewportWidth: number;
 }
 
 const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
+	(e: 'updateSection', newSection: ISection[]): void;
 	(e: 'pointerDown', event: PointerEvent): void;
 	(e: 'pointerMove', event: PointerEvent): void;
 	(e: 'pointerUp'): void;
@@ -34,14 +37,37 @@ const emits = defineEmits<{
 const { height } = useElementSize(
 	useTemplateRef<HTMLDivElement>('container'),
 );
+
+const sectionRefs = ref<InstanceType<typeof SectionComponent>[]>([]);
+const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
+
+function onSectionWheel(payload: ISectionWheelPayload) {
+	sectionWheelState.value[payload.sectionId] = {
+		...payload,
+	};
+}
+
+function scrollToWidget(sectionId: string, widgetId: string) {
+	const index = props.slides.findIndex(s => s.id === sectionId);
+
+	if (index !== -1) {
+		emits('goTo', index);
+	}
+
+	const section = sectionRefs.value.find(
+		(s) => s.$props.section.id === sectionId,
+	);
+
+	section?.scrollToWidget(widgetId);
+}
 </script>
 
 <template>
-	<div :class="classes.root">
+	<div id="slider" :class="classes.root">
 		<div
 			ref="container"
 			:class="classes.viewport"
-			@wheel="emits('wheel', $event)"
+			@wheel.capture="emits('wheel', $event)"
 			@pointerdown="emits('pointerDown', $event)"
 			@pointermove="emits('pointerMove', $event)"
 			@pointerup="emits('pointerUp')"
@@ -60,12 +86,14 @@ const { height } = useElementSize(
 					:key="s.id"
 				>
 					<section-component
+						ref="sectionRefs"
 						:section="s"
 						:parent-height="height"
 						:style="{
 							...i !== 0 ? { 'margin-left': '10px' } : {},
 							...{ 'margin-right': '10px' }
 						}"
+						@section-wheel="onSectionWheel"
 					/>
 					<div
 						:class="classes.sizer"
@@ -74,7 +102,6 @@ const { height } = useElementSize(
 			</div>
 		</div>
 		<div :class="classes.maskContainer">
-
 			<div :class="classes.topLeft">
 				<svg
 					width="32"
@@ -141,27 +168,19 @@ const { height } = useElementSize(
 				</svg>
 			</div>
 		</div>
-		<div :class="classes.content">
-			<button
-				:disabled="!props.canPrev"
-				:class="classes.control"
-				@click="emits('prev')"
-			>
-				<ui-icon :id="IconIds.Prev" />
-			</button>
-			<button
-				:disabled="!props.canNext"
-				:class="classes.control"
-				@click="emits('next')"
-			>
-				<ui-icon
-					:id="IconIds.Prev"
-					:style="{
-						transform: `rotate(180deg)`
-					}"
-				/>
-			</button>
-		</div>
+
+		<section-sidebar
+			:slides="props.slides"
+			:slides-wheel="sectionWheelState"
+			:can-next="props.canNext"
+			:can-prev="props.canPrev"
+			:translate-x="props.translateX"
+			@prev="emits('prev')"
+			@next="emits('next')"
+			@go-to="emits('goTo', $event)"
+			@update-section="emits('updateSection', $event)"
+			@scroll-to-widget="scrollToWidget"
+		/>
 	</div>
 </template>
 
@@ -244,51 +263,6 @@ const { height } = useElementSize(
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
-}
-
-.content {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	min-width: 52px;
-	height: 100%;
-	padding-top: 10px;
-	background: rgb(0 0 0 / 74%);
-	gap: 8px;
-	backdrop-filter: blur(12px);
-}
-
-.control {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: 24px;
-	color: rgb(255 255 255 / 50%);
-	background: rgb(73 73 80 / 32%);
-	border-radius: 8px;
-	backdrop-filter: blur(4px);
-	cursor: pointer;
-}
-
-.control:disabled {
-	color: rgb(255 255 255 / 50%);
-	background: rgb(73 73 80 / 32%);
-	border-radius: 8px;
-	cursor: not-allowed;
-	opacity: 0.7;
-	backdrop-filter: blur(4px);
-}
-
-.control:hover {
-	color: rgb(255 255 255 / 100%);
-	background: rgb(73 73 80 / 32%);
-	border-radius: 8px;
-	backdrop-filter: blur(4px);
 }
 
 .sizer {

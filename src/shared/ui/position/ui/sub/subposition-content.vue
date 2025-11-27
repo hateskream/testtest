@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<ISubpositionContentProps>(), {
 	offset: 6,
 	strategy: 'absolute',
 	hoverPadding: 4,
+	transform: true,
 });
 
 const contentRef = useTemplateRef('content');
@@ -41,6 +42,7 @@ const { floatingStyles, update, placement } = useFloating(triggerRef, contentRef
 	placement: props.placement,
 	strategy: props.strategy,
 	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
+	transform: true,
 });
 
 const enhancedFloatingStyles = computed(() => {
