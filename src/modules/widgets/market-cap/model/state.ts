@@ -27,9 +27,8 @@ export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		// TODO: Поменять на 'Crypto-BTC-Bitcoin', когда бекенд прикрутит tickerId
-		selectedTickers: ['BTC'],
-		selectedMarkets: [],
+		selectedTickers: [],
+		selectedMarkets: [MarketType.Crypto],
 		dateRange: MarketCapDateRange.Month,
 		displaySettings: {
 			isShowChart: true,
