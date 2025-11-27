@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, wa
 import { Chart, type ChartDataset, type ChartOptions, type Plugin } from 'chart.js/auto';
 
 import { barSolidBottomLinePlugin, barUnderlineTicksPlugin } from '@/modules/lightweight-charts/plugins';
+import { prettyNumberWithKey } from '@/shared/lib';
 
 export type BarDataset = ChartDataset<'bar'>;
 
@@ -49,6 +50,7 @@ const defaultOptions: ChartOptions<'bar'> = {
 				},
 				circular: true,
 				drawTicks: false,
+
 			},
 			border: {
 				dash: [2, 2],
@@ -57,12 +59,17 @@ const defaultOptions: ChartOptions<'bar'> = {
 				align: 'end',
 				crossAlign: 'far',
 				labelOffset: -5,
+				callback: (value) => {
+					const pretty = prettyNumberWithKey(value.toString());
+					return `${pretty.value}${pretty.suffix}`;
+				},
 			},
 		},
 		x: {
 			ticks: { padding: 10 },
 			grid: { display: false },
 			border: { display: false },
+			stacked: false,
 		},
 	},
 };

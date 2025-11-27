@@ -1,4 +1,4 @@
-import type { Chart, ChartMeta } from 'chart.js';
+import type { Chart, ChartMeta, Plugin } from 'chart.js';
 
 function drawRoundedRect(
 	ctx: CanvasRenderingContext2D,
@@ -42,7 +42,7 @@ function drawRoundedRectFilled(
 
 const originalColors = new Map();
 
-export const barDashedBorderPlugin = {
+export const barDashedBorderPlugin: Plugin = {
 	id: 'DashedBorder',
 	beforeDatasetDraw(_chart: Chart<'bar'>, args: { index: number; meta: ChartMeta<'bar'> }) {
 		args.meta.data.forEach(function (element, index) {

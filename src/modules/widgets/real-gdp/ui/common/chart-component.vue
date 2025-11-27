@@ -1,78 +1,68 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from 'vue';
-import { Chart } from 'chart.js/auto';
+import { computed } from 'vue';
+import type { ChartOptions, TooltipOptions } from 'chart.js';
 
-import { barDashedBorderPlugin } from '@/modules/lightweight-charts/plugins/bar-dashed-border';
+import type { BarDataset } from '@/modules/lightweight-charts';
+import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import type { IRealGdpHistoryPoint } from '../../model';
 
-const container = useTemplateRef('container');
-const chart = ref<Chart>();
+interface IChartComponentProps {
+	points: IRealGdpHistoryPoint[];
+}
 
-const generateRandomBars = () => {
-	return Array.from({ length: 10 }, () => Math.round(Math.random() * 100));
-};
+const props = defineProps<IChartComponentProps>();
 
-onMounted(() => {
-	const data = generateRandomBars();
+const preparedLabels = computed(() => props.points.map(point => point.label));
+const preparedData = computed(() => props.points.map(point => point.history));
 
-	const labels = ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'];
-
-	chart.value = new Chart(container.value as HTMLCanvasElement, {
-		type: 'bar',
-		data: {
-			labels,
-			datasets: [
-				{
-					data,
-					backgroundColor: 'rgba(255, 255, 255, 1)',
-					borderColor: '#FFFFFF',
-					borderRadius: 5,
-					hoverBackgroundColor: 'rgba(255, 255, 255, 0.9)',
-					hoverBorderColor: '#FFFFFF',
-
-					barThickness: 15,
-					maxBarThickness: 15,
-				},
-			],
-		},
-		plugins: [barDashedBorderPlugin],
-		options: {
-			maintainAspectRatio: false,
-			normalized: true,
-			responsive: true,
-			plugins: {
-				legend: { display: false },
-				tooltip: { enabled: false },
-			},
-			scales: {
-				y: {
-					beginAtZero: true,
-					position: 'right',
-					grid: {
-						display: true,
-						color: '#373737',
-						circular: true,
-					},
-					border: {
-						dash: [2, 5],
-					},
-				},
-				x: {
-					ticks: {
-						padding: 10,
-					},
-					grid: {
-						display: false,
-					},
-					border: {
-						display: false,
-					},
-				},
-			},
-		},
-	});
+const preparedDatasets = computed((): [BarDataset] => {
+	return [{
+		data: preparedData.value,
+		backgroundColor: 'rgba(255, 255, 255, 1)',
+		borderColor: '#FFFFFF',
+		borderRadius: 5,
+		hoverBackgroundColor: 'rgba(255, 255, 255, 0.9)',
+		hoverBorderColor: '#FFFFFF',
+		barThickness: 15,
+		maxBarThickness: 15,
+		barPercentage: 1,
+	}];
 });
+
+// tooltip
+
+const { state, handler } = useExternalTooltip({
+	mode: 'split',
+	valueSuffix: '',
+	valuePrefix: '',
+});
+
+const options = {
+	interaction: {
+		mode: 'index',
+		intersect: false,
+	},
+	hover: { mode: 'dataset' },
+	plugins: {
+		legend: {
+			display: false,
+		},
+		tooltip: {
+			enabled: false,
+			external: handler as unknown as TooltipOptions<'bar'>['external'],
+		},
+	},
+} as const satisfies ChartOptions<'bar'>;
 </script>
 
 <template>
-	<canvas ref="container"  />
+	<chart-bar
+		:datasets="preparedDatasets"
+		:labels="preparedLabels"
+		:options="options"
+	/>
+	<teleport to="body">
+		<chart-external-tooltip v-bind="state" />
+	</teleport>
 </template>
