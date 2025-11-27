@@ -40,7 +40,6 @@ const preparedSlides = computed(
 
 const {
 	translateX,
-	trackStyle,
 	pointerState,
 	canNext,
 	canPrev,
@@ -80,7 +79,6 @@ watch(
 			/>
 			<section-slider
 				:slides="preparedSlides"
-				:track-style="trackStyle"
 				:can-next="canNext"
 				:can-prev="canPrev"
 				:translate-x="translateX"

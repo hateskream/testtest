@@ -20,10 +20,6 @@ export function useSlider(opts: {
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
-	const trackStyle = computed(() => ({
-		transform: `translateX(${translateX.value}px)`,
-	}));
-
 	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
 
 
@@ -185,7 +181,6 @@ export function useSlider(opts: {
 
 	return {
 		translateX: readonly(translateX),
-		trackStyle,
 		canPrev,
 		canNext,
 		next,

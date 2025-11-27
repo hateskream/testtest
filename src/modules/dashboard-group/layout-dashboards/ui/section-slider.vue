@@ -9,9 +9,6 @@ import SectionComponent from './section-component.vue';
 
 interface ISectionSliderProps {
 	slides: ISection[];
-	trackStyle: {
-		transform: string;
-	};
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
@@ -79,7 +76,9 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 		>
 			<div
 				:class="classes.track"
-				:style="props.trackStyle"
+				:style="{
+					transform: `translateX(${props.translateX}px)`
+				}"
 			>
 				<template
 					v-for="(s, i) in props.slides"
