@@ -7,6 +7,7 @@ import { registerComponent } from '@shared/component-library';
 import { router } from './router';
 import { createAppHead } from './head';
 import { validateConfig } from '@/shared/lib';
+// eslint-disable-next-line import/order
 import { queryClient } from '@/shared/service/query-client';
 
 import '@/assets/styles/base.css';
