@@ -6,7 +6,7 @@ import { CpiMetric, CpiRange } from './../model';
 
 export function useQueryCpi(metric: MaybeRefOrGetter<CpiMetric>, range: MaybeRefOrGetter<CpiRange>) {
 	return useQuery({
-		queryKey:  ['market-cap', metric, range],
+		queryKey:  ['cpi', metric, range],
 		queryFn: () => getCpi({ metric: toValue(metric), range: toValue(range) }),
 	});
 }
