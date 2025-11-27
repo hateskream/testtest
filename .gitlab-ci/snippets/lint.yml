@@ -1,7 +1,7 @@
 .lint_configuration:
   stage: lint
   image:
-    name: node:24.7.0-alpine
+    name: node:25.2.1-alpine
     pull_policy: if-not-present
 
   dependencies:

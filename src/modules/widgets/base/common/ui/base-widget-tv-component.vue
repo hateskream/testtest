@@ -114,13 +114,13 @@ function handleOpenFullView() {
 				@move-to="emits('moveTo', $event)"
 				@open-full="handleOpenFullView"
 			>
-				<template #filter>
+				<template v-if="slots.filter" #filter>
 					<slot name="filter" />
 				</template>
-				<template #change-display>
+				<template v-if="slots['change-display']" #change-display>
 					<slot name="change-display" />
 				</template>
-				<template #other>
+				<template v-if="slots['other']" #other>
 					<slot name="other" />
 				</template>
 			</widget-context-menu>
@@ -144,6 +144,7 @@ function handleOpenFullView() {
 			<full-view-dashboard
 				v-model="isOpenFullView"
 				:meta="props.meta"
+				display-variant="tv"
 			/>
 		</teleport>
 	</div>

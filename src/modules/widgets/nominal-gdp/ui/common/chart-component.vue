@@ -1,95 +1,110 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef } from 'vue';
-import { Chart } from 'chart.js/auto';
+import { computed } from 'vue';
+import type { ChartOptions, TooltipOptions } from 'chart.js';
 
-import { barDashedBorderPlugin } from '@/modules/lightweight-charts/plugins/bar-dashed-border';
+import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import {
+	barDashedBorderConfigurablePlugin,
+	type IBarDashedBorderPluginConfig,
+} from '@/modules/lightweight-charts/plugins';
+import type { INominalGdpHistoryPoint } from '../../model';
 
-const container = useTemplateRef('container');
-const chart = ref<Chart>();
+interface IChartComponentProps {
+	points: INominalGdpHistoryPoint[];
+}
 
-onMounted(() => {
-	const greyShades = [
-		'rgba(255, 127, 53, 0.20)',
-		'#EBEBEB',
-	];
-	const orangeShades = [
-		'rgba(255, 127, 53, 0.20)',
-		'rgba(255,255,255,0.1)',
-	];
+const props = defineProps<IChartComponentProps>();
 
-	const labels = [
-		'2018', '2019', '2020', '2021', '2022',
-		'2023', '2024', '2025', '2026', '2027',
-	];
+const preparedLabels = computed(() => props.points.map(point => point.label));
 
-	const greyBars = [0.4, 0.7, 1.1, 0.8, 1.6, 1.3, 1.6, 1.8, 0, 0];
+const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPluginConfig>)[] => {
+	return [
+		{
+			data: props.points.map(point => point.forecast),
+			backgroundColor: (context) => {
+				if (!context.chart.chartArea) {
+					return;
+				}
 
-	const orangeBars = [1.8, 1.9, 2.0, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.3];
+				const { chart: currentChart } = context;
 
-	const quarterData: { [x: string]: number[] } = {
-		Q12024: greyBars,
-		Q22024: orangeBars,
-	};
-
-	const datasets = Object.keys(quarterData).map((q, idx) => ({
-		label: q,
-		data: quarterData[q],
-		backgroundColor: labels.map((_, i) =>
-			idx === 0
-				? i < 8 ? greyShades[1] : 'transparent' // серые до 2025 включительно
-				: orangeShades[0], // оранжевые всегда
-		),
-		borderColor: idx === 0 ? '#EBEBEB' : '#FF8D29',
-		borderRadius: 5,
-		hoverBackgroundColor: labels.map((_, i) =>
-			idx === 0
-				? i < 8 ? greyShades[1] : 'transparent'
-				: orangeShades[0],
-		),
-		hoverBorderColor: idx === 0 ? '#EBEBEB' : '#FF8D29',
-
-		maxBarThickness: 15,
-		barPercentage: 1,
-		categoryPercentage: 0.7,
-	}));
-
-	chart.value = new Chart(container.value as HTMLCanvasElement, {
-		type: 'bar',
-		data: {
-			labels,
-			datasets,
-		},
-		plugins: [barDashedBorderPlugin],
-		options: {
-			maintainAspectRatio: false,
-			normalized: true,
-			responsive: true,
-			plugins: {
-				legend: { display: false },
-				tooltip: { enabled: false },
+				return createGradient(
+					currentChart.ctx,
+					currentChart.chartArea.top,
+					currentChart.chartArea.bottom,
+				);
 			},
-			scales: {
-				y: {
-					beginAtZero: true,
-					position: 'right',
-					grid: {
-						display: true,
-						color: '#373737',
-						circular: true,
-					},
-					border: { dash: [2, 5] },
-				},
-				x: {
-					ticks: { padding: 10 },
-					grid: { display: false },
-					border: { display: false },
-				},
+			borderColor: '#FF8D29',
+			borderRadius: 5,
+			maxBarThickness: 15,
+			barPercentage: 1,
+			categoryPercentage: 0.7,
+			dashedBorder: {
+				dash: [2, 2],
+				dashOffset: 0,
+				width: 1,
+				color: '#FF8D29',
+				radius: 5,
 			},
 		},
-	});
+		{
+			data: props.points.map(point => point.history).filter(point => point !== 0),
+			backgroundColor: 'rgba(255, 255, 255, 0.90)',
+			borderColor: 'rgba(255, 255, 255, 0.90)',
+			borderRadius: 5,
+			maxBarThickness: 15,
+			barPercentage: 1,
+			categoryPercentage: 0.7,
+		},
+	];
 });
+
+function createGradient(context2D: CanvasRenderingContext2D, from: number, to: number) {
+	const gradient = context2D.createLinearGradient(0, from, 0, to);
+
+	gradient.addColorStop(0, 'rgba(255, 127, 53, 0.20)');
+	gradient.addColorStop(1, 'rgba(153, 76, 32, 0.14)');
+
+	return gradient;
+}
+
+// tooltip
+
+const { state, handler } = useExternalTooltip({
+	mode: 'split',
+	valueSuffix: '',
+	valuePrefix: '',
+});
+
+const options = {
+	interaction: {
+		mode: 'index',
+		intersect: false,
+	},
+	hover: { mode: 'dataset' },
+	plugins: {
+		legend: {
+			display: false,
+		},
+		tooltip: {
+			enabled: false,
+			external: handler as unknown as TooltipOptions<'bar'>['external'],
+		},
+	},
+} as const satisfies ChartOptions<'bar'>;
+
+const plugins = [barDashedBorderConfigurablePlugin];
 </script>
 
 <template>
-	<canvas ref="container" />
+	<chart-bar
+		:datasets="preparedDatasets"
+		:labels="preparedLabels"
+		:options="options"
+		:plugins="plugins"
+	/>
+	<teleport to="body">
+		<chart-external-tooltip v-bind="state" />
+	</teleport>
 </template>

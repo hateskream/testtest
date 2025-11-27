@@ -1,0 +1,50 @@
+{
+	"range": "1Y",
+	"points": [
+		{
+			"label": "Nov 2024",
+			"history": 316.449
+		},
+		{
+			"label": "Dec 2024",
+			"history": 317.603
+		},
+		{
+			"label": "Jan 2025",
+			"history": 319.086
+		},
+		{
+			"label": "Feb 2025",
+			"history": 319.775
+		},
+		{
+			"label": "Mar 2025",
+			"history": 319.615
+		},
+		{
+			"label": "Apr 2025",
+			"history": 320.321
+		},
+		{
+			"label": "May 2025",
+			"history": 320.58
+		},
+		{
+			"label": "Jun 2025",
+			"history": 321.5
+		},
+		{
+			"label": "Jul 2025",
+			"history": 322.132
+		},
+		{
+			"label": "Aug 2025",
+			"history": 323.364
+		},
+		{
+			"label": "Sep 2025",
+			"history": 324.368
+		}
+	],
+	"growth_yoy": 7.918999999999983
+}

@@ -1,0 +1,131 @@
+{
+	"metric": "nominal",
+	"range": "25Y",
+	"points": [
+		{
+			"label": "2003",
+			"history": 11772.234,
+			"forecast": 11639.27277
+		},
+		{
+			"label": "2004",
+			"history": 12527.214,
+			"forecast": 12253.143965
+		},
+		{
+			"label": "2005",
+			"history": 13324.204,
+			"forecast": 12949.865375
+		},
+		{
+			"label": "2006",
+			"history": 14039.56,
+			"forecast": 13636.5862275
+		},
+		{
+			"label": "2007",
+			"history": 14715.058,
+			"forecast": 14277.641837500001
+		},
+		{
+			"label": "2008",
+			"history": 14608.209,
+			"forecast": 14842.039145
+		},
+		{
+			"label": "2009",
+			"history": 14651.249,
+			"forecast": 15183.9291125
+		},
+		{
+			"label": "2010",
+			"history": 15309.474,
+			"forecast": 15591.4612
+		},
+		{
+			"label": "2011",
+			"history": 15842.259,
+			"forecast": 16162.30518
+		},
+		{
+			"label": "2012",
+			"history": 16420.419,
+			"forecast": 16744.590855
+		},
+		{
+			"label": "2013",
+			"history": 17192.019,
+			"forecast": 17339.0267475
+		},
+		{
+			"label": "2014",
+			"history": 17912.079,
+			"forecast": 17975.066235
+		},
+		{
+			"label": "2015",
+			"history": 18435.137,
+			"forecast": 18499.928975
+		},
+		{
+			"label": "2016",
+			"history": 19089.379,
+			"forecast": 19045.635244999998
+		},
+		{
+			"label": "2017",
+			"history": 20037.088,
+			"forecast": 19766.605355
+		},
+		{
+			"label": "2018",
+			"history": 20917.867,
+			"forecast": 20637.6272575
+		},
+		{
+			"label": "2019",
+			"history": 21933.217,
+			"forecast": 21423.7749875
+		},
+		{
+			"label": "2020",
+			"history": 22087.16,
+			"forecast": 22145.2497625
+		},
+		{
+			"label": "2021",
+			"history": 24813.6,
+			"forecast": 23616.8242625
+		},
+		{
+			"label": "2022",
+			"history": 26770.514,
+			"forecast": 25850.6445775
+		},
+		{
+			"label": "2023",
+			"history": 28424.722,
+			"forecast": 27385.437845
+		},
+		{
+			"label": "2024",
+			"history": 29825.182,
+			"forecast": 28696.0925
+		},
+		{
+			"label": "2025",
+			"history": 30485.729,
+			"forecast": 30003.27
+		},
+		{
+			"label": "2026",
+			"history": 0,
+			"forecast": 31325.905
+		},
+		{
+			"label": "2027",
+			"history": 0,
+			"forecast": 32659.9875
+		}
+	]
+}

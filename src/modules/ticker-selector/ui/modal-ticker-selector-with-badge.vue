@@ -3,20 +3,72 @@ import { computed } from 'vue';
 
 import { ModalFilter } from './components/modal';
 import { useQueryTickerSelector } from '../queries';
-import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedRow, type ITickerEmits } from '../model';
+import { ACTIVE_TICKER_LIST_COUNT_SHOW, getMappedMarket, getMappedRow, type ITickerEmits } from '../model';
 import { ModalBadgeDropdown } from '@/modules/widgets/base';
-import { marketToLabel, MarketType } from '@/modules/market';
-import { SymbolType } from '@/modules/cell';
-import { ModalFilterTickerIcon, ModalFilterTickerLabel } from '@/modules/ticker-selector/ui/components/modal';
+import { MarketType } from '@/modules/market';
+
+import ModalBadgePreview from '@/modules/ticker-selector/ui/components/modal/modal-badge-preview.vue';
 
 interface IProps {
+	/**
+	 * @default multiple
+	 */
 	selectionMode?: 'single' | 'multiple';
+
+	/**
+	 * Show "All" and "Selected" tabs before options
+	 */
 	enableSelectedInfo?: boolean;
+
+	/**
+	 * Enable markets selection using v-model:markets (crypto, stock, forex, etc..)
+	 */
+	enableMarkets?: boolean;
+
+	/**
+	 * Enable to select all options in group
+	 */
+	enableSelectAll?: boolean;
+
+	/**
+	 * @default default
+	 */
 	displayVariant?: 'default' | 'new';
+
+	/**
+	 * @default Start typing the ticker...
+	 */
 	searchPlaceholder?: string;
+
+	/**
+	 * Available market types for selection
+	 * @example [MarketType.Crypto, MarketType.Stock]
+	 * @default Object.values(MarketType)
+	 */
 	marketTypes?: MarketType[];
+
+	/**
+	 * Focus search input on open modal
+	 */
 	autofocus?: boolean;
+
+	/**
+	 * Show selected option label in badge
+	 */
 	showLabel?: boolean;
+
+	/**
+	 * Show selected option icon in badge
+	 */
+	showIcon?: boolean;
+
+	/**
+	 * Change from "Selected" tab to "All" when selected tickers are empty
+	 */
+	closeEmptySelected?: boolean;
+
+	isBackgroundTransparent?: boolean;
+	textAboveSearch?: string;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -24,12 +76,13 @@ const props = withDefaults(defineProps<IProps>(), {
 	enableSelectedInfo: true,
 	displayVariant: 'default',
 	searchPlaceholder: 'Start typing the ticker...',
+	textAboveSearch: '',
 	marketTypes: () => Object.values(MarketType),
+	showIcon: true,
 });
 
-const selectedTickers = defineModel<string[]>({
-	default: [],
-});
+const selectedTickers = defineModel<string[]>({ default: () => [] });
+const selectedMarkets = defineModel<MarketType[]>('markets', { default: () => [] });
 
 const { data } = useQueryTickerSelector();
 
@@ -42,75 +95,43 @@ const selectedTickersMapped = computed(() => {
 		.map(getMappedRow);
 });
 
-const previewLabel = computed(() => marketToLabel[props.marketTypes[0]]);
-
-function getSize(symbol: SymbolType | null | undefined) {
-	if (props.displayVariant === 'new' || !symbol) {
-		return 14;
-	}
-
-	return symbol === SymbolType.Forex ? 20 : 14;
-}
-
-function getPadding(symbol: SymbolType | null | undefined) {
-	if (props.displayVariant === 'new' || !symbol) {
-		return undefined;
-	}
-
-	return symbol === SymbolType.Forex ? 12 : undefined;
-}
+const selectedMarketsMapped = computed(() => {
+	return selectedMarkets.value
+		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW - selectedTickersMapped.value.length)
+		.map(getMappedMarket);
+});
 </script>
 
 <template>
 	<modal-badge-dropdown :display-variant="props.displayVariant">
 		<template #title>
-			<div :class="classes.header">
-				<div
-					v-if="selectedTickersMapped.length > 0"
-					:class="classes.iconsWrapper"
-				>
-					<div
-						v-for="item in selectedTickersMapped"
-						:key="item.tickerId"
-						:class="classes.iconsItem"
-					>
-						<modal-filter-ticker-icon
-							:src-image="item.srcImage"
-							:type="item.symbolType"
-							:ticker="item.ticker"
-							:size="getSize(item.symbolType)"
-							:padding="getPadding(item.symbolType)"
-							:display-variant="props.displayVariant"
-						/>
-					</div>
-					<template v-if="selectedTickers.length > ACTIVE_TICKER_LIST_COUNT_SHOW">
-						+ {{ selectedTickers.length - ACTIVE_TICKER_LIST_COUNT_SHOW }}
-					</template>
-				</div>
-				<div v-if="selectedTickers.length === 0">
-					{{previewLabel}}
-				</div>
-				<div v-else-if="props.showLabel" :class="classes.labels">
-					<modal-filter-ticker-label
-						v-for="ticker in selectedTickersMapped"
-						:key="ticker.tickerId"
-						:ticker="ticker"
-					/>
-					<span v-if="selectedTickersMapped.length > 1" :class="classes.labelsDelimiter">,</span>
-				</div>
-			</div>
+			<modal-badge-preview
+				:selected-tickers="selectedTickersMapped"
+				:selected-markets="selectedMarketsMapped"
+				:total-selected-count="selectedTickers.length + selectedMarkets.length"
+				:display-variant="props.displayVariant"
+				:show-label="props.showLabel"
+				:show-icon="props.showIcon"
+				:market-types="props.marketTypes"
+			/>
 		</template>
 		<template #content>
 			<modal-filter
 				v-if="data"
 				v-model="selectedTickers"
+				v-model:markets="selectedMarkets"
 				:selection-mode="props.selectionMode"
 				:tickers="data.tickers"
 				:enable-selected-info="props.enableSelectedInfo"
+				:enable-markets="props.enableMarkets"
+				:enable-select-all="props.enableSelectAll"
 				:search-placeholder="props.searchPlaceholder"
 				:market-types="props.marketTypes"
 				:display-variant="displayVariant"
 				:autofocus="props.autofocus"
+				:close-empty-selected="props.closeEmptySelected"
+				:is-background-transparent="props.isBackgroundTransparent"
+				:text-above-search="props.textAboveSearch"
 				@select="emits('select', $event)"
 				@unselect="emits('unselect', $event)"
 				@select-all="emits('selectAll', $event)"
@@ -118,37 +139,3 @@ function getPadding(symbol: SymbolType | null | undefined) {
 		</template>
 	</modal-badge-dropdown>
 </template>
-
-<style module="classes">
-.header {
-	display: flex;
-	gap: 4px;
-	align-items: center;
-}
-
-.iconsItem {
-	margin-left: -12px;
-	border-radius: 100%;
-}
-
-.iconsItem:first-child {
-	margin-left: 0;
-}
-
-.iconsWrapper {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.labels {
-	max-width: 120px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.labelsDelimiter {
-	margin-right: 3px;
-}
-</style>

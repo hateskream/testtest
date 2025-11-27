@@ -12,21 +12,20 @@ import type { MarketType } from '@/modules/market';
 export function useQueryPrice(
 	market: MaybeRefOrGetter<MarketType>,
 	filters: MaybeRefOrGetter<FiltersState>,
-	pined: MaybeRefOrGetter<string[]>,
 	limit: number,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
 	cellUpdater.register(ColumnType.PriceCurrent, updatedData => {
 		queryClient.setQueryData(
-			['price', toValue(market), ...toValue(pined), limit],
+			['price', toValue(market), limit],
 			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
 
 	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
 		queryClient.setQueryData(
-			['price', toValue(market), ...toValue(pined), limit],
+			['price', toValue(market), limit],
 			(oldData: QueryData<IPriceData>) => updateQueryData(oldData as QueryData<IPriceData>, updatedData),
 		);
 	});
@@ -36,11 +35,10 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', toValue(market), ...toValue(pined), limit, toValue(filters)]),
+		queryKey: computed(() => ['price', toValue(market), limit, toValue(filters)]),
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),
-				pined: toValue(pined),
 				offset: pageParam,
 				limit: toValue(limit),
 				filters: toValue(filters),

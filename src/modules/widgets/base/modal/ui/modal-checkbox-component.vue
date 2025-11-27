@@ -1,37 +1,21 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ModalItem } from '../index';
 
-interface IProps {
-	modelValue: boolean;
+const modelValue = defineModel<boolean>({ default: false });
+
+function toggle() {
+	modelValue.value = !modelValue.value;
 }
-
-interface IEmits {
-	(e: 'update:modelValue', data: boolean): void;
-}
-
-const props = defineProps<IProps>();
-
-const emits = defineEmits<IEmits>();
-
-const classes = useCssModule('classes');
-
-const classesList = computed(() => ({
-	[classes.icon]: true,
-	[classes.iconActive]: props.modelValue,
-}));
 </script>
 
 <template>
 	<modal-item
 		:class="classes.content"
-		@click="emits('update:modelValue', !modelValue)"
+		@click="toggle"
 	>
 		<slot name="default" />
-
-		<div :class="classesList">
+		<div :class="[classes.icon, { [classes.iconActive]: modelValue }]">
 			<ui-icon
 				v-if="modelValue"
 				:id="IconIds.RcmCheckbox"

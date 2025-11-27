@@ -1,6 +1,6 @@
 export { type IDashboardGroup, createDashboardGroup } from './dashboard-group';
 
-export { type ISection } from './section';
+export { type ISection, type ISectionWheelPayload } from './section';
 
 export { rehydrateWidget, type IWidget, type DisplayVariant } from './widget';
 

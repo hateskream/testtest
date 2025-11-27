@@ -183,56 +183,54 @@ defineExpose({ scrollToDate });
 
 <template>
 	<div ref="container" :class="classes.calendarEventBoard">
-		<template
-			v-for="day in groupedBoard"
-			:key="day.date"
-		>
-			<div
-				v-if="day.events.length"
-				ref="boards"
-				:class="classes.eventSection"
-				:data-date="day.date"
+		<div :class="classes.wrapper">
+			<template
+				v-for="day in groupedBoard"
+				:key="day.date"
 			>
-				<div :class="classes.boardDate">
-					{{ formatEventDate(day.date as DateYYYYMMDD) }}
-				</div>
-
 				<div
-					v-for="group in day.grouped"
-					:key="group.hour"
-					:class="[
-						classes.hourSection,
-						group.missed && classes.missed
-					]"
-					:data-hour="group.hour"
+					v-if="day.events.length"
+					ref="boards"
+					:class="classes.eventSection"
+					:data-date="day.date"
 				>
-					<div v-if="group.soon" />
-					<div
-						:class="[classes.hourLabel, classes.lightning]"
-						:style="getHighlightColor(group.events[0].favorite, group.soon)"
-					>
-						{{ group.hour }}
+					<div :class="classes.boardDate">
+						{{ formatEventDate(day.date as DateYYYYMMDD) }}
 					</div>
 
 					<div
-						v-for="(event, i) in group.events"
-						:key="`${day.date}-${group.hour}-${i}`"
-						:class="[
-							classes.dayBoard,
-							(event.favorite || group.soon) && classes.lightning
-						]"
-						:style="getHighlightColor(event.favorite, group.soon)"
+						v-for="group in day.grouped"
+						:key="group.hour"
+						:class="classes.hourSection"
+						:data-hour="group.hour"
 					>
-						<calendar-event-card-tv
-							v-bind="event"
-							:is-missed="group.missed"
-							:is-favorite="event.favorite"
-							@toggle-favorite="emits('toggleEventBoard', $event)"
-						/>
+						<div
+							:class="[classes.hourLabel, classes.lightning, group.missed && classes.groupMissed]"
+							:style="getHighlightColor(group.events[0].favorite, group.soon)"
+						>
+							{{ group.hour }}
+						</div>
+
+						<div
+							v-for="(event, i) in group.events"
+							:key="`${day.date}-${group.hour}-${i}`"
+							:class="[
+								classes.dayBoard,
+								(event.favorite || group.soon) && classes.lightning
+							]"
+							:style="getHighlightColor(event.favorite, group.soon)"
+						>
+							<calendar-event-card-tv
+								v-bind="event"
+								:is-missed="group.missed"
+								:is-favorite="event.favorite"
+								@toggle-favorite="emits('toggleEventBoard', $event)"
+							/>
+						</div>
 					</div>
 				</div>
-			</div>
-		</template>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -242,16 +240,15 @@ defineExpose({ scrollToDate });
 	flex: 1 0 0;
 	flex-direction: column;
 	align-self: stretch;
-	overflow-y: scroll;
+	padding-top: 16px;
+	overflow-y: hidden;
 	background: var(--color-bg-surface-01, #0c0c0d);
-	gap: 12px;
 	border-radius: 16px;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
+	gap: 12px;
 }
 
-.calendarEventBoard::-webkit-scrollbar {
-	display: none;
+.wrapper {
+	overflow-y: scroll;
 }
 
 .boardDate {
@@ -303,6 +300,10 @@ defineExpose({ scrollToDate });
 	align-self: stretch;
 }
 
+.groupMissed {
+	opacity: 0.4;
+}
+
 .hourLabel {
 	position: relative;
 	display: flex;
@@ -325,10 +326,5 @@ defineExpose({ scrollToDate });
 	flex-direction: column;
 	width: 100%;
 	padding: 0 6px 6px 8px;
-}
-
-.missed {
-	cursor: default;
-	opacity: 0.4;
 }
 </style>

@@ -21,7 +21,7 @@ const props = defineProps<IViewComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'toggle-pin', tickerId: string): void;
-	(e: 'load-more', $state: IInfiniteStateHandler): void;
+	(e: 'load-more', state: IInfiniteStateHandler): void;
 }>();
 
 const gridTemplateContent = computed(() => {
@@ -55,6 +55,16 @@ const loadingDistance = computed(() => {
 const loadingSkeletonCount = computed(() => {
 	return Math.ceil(props.meta.size.w / 2) || 1;
 });
+
+function scrollBy(px: number) {
+	if (!scroller.value) {
+		return;
+	}
+
+	scroller.value.scrollTop += px;
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>

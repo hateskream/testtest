@@ -34,6 +34,8 @@ const time = computed(() =>
 				<ui-image
 					:class="classes.icon"
 					:src="Image"
+					width="14px"
+					height="14px"
 				/>
 			</div>
 		</ui-transition-fade>
@@ -128,6 +130,7 @@ const time = computed(() =>
 	justify-content: center;
 	align-items: center;
 	width: 14px;
+	min-width: 14px;
 	height: 14px;
 	aspect-ratio: 1/1;
 	border-radius: 2px;

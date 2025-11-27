@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onBeforeMount, ref } from 'vue';
 
 import {
 	getMappedRow,
@@ -10,6 +10,7 @@ import {
 
 import ModalFilterTickerItem from './modal-filter-ticker-item.vue';
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
+import ModalFilterScrollable from './modal-filter-scrollable.vue';
 
 interface IProps {
 	list: TickerDto[];
@@ -23,75 +24,60 @@ interface IEmits {
 	(e: 'update', data: ITickerSelectAction): void;
 }
 
-const emits = defineEmits<IEmits>();
+const emit = defineEmits<IEmits>();
 
-const mappedTickers = computed<ITickerMapped[]>(() => {
-	return props.list.map((item) => {
-		return getMappedRow(item);
+const mappedTickers = ref<ITickerMapped[]>([]);
+
+const selectedTickers = computed(() => new Set(props.selectedIdsMap));
+
+function onUpdate(tickerId: string, state: boolean) {
+	emit('update', {
+		tickerId: tickerId,
+		isSelected: state,
 	});
+}
+
+onBeforeMount(() => {
+	mappedTickers.value = props.list.map(getMappedRow);
 });
 </script>
 
 <template>
-	<div :class="classes.bottom">
+	<modal-filter-scrollable>
+		<slot name="before-tickers" />
 		<modal-filter-ticker-item
 			v-for="item in mappedTickers"
 			:key="item.tickerId"
-			:is-selected="selectedIdsMap.includes(item.tickerId)"
+			:is-selected="selectedTickers.has(item.tickerId)"
 			:ticker="item.ticker"
 			:name="item.name"
-			@update="
-				emits('update', {
-					tickerId: item.tickerId,
-					isSelected: !selectedIdsMap.includes(item.tickerId),
-				})
-			"
+			:class="classes.listItem"
+			@update="onUpdate(item.tickerId, $event)"
 		>
 			<template #image>
-				<div :class="classes.listItemDataImageWrapper">
+				<div :class="classes.listWrapper">
 					<modal-filter-ticker-icon
 						:type="item.symbolType"
 						:src-image="item.srcImage"
 						:ticker="item.ticker"
-						:size="12"
+						:size="22"
 						:display-variant="displayVariant"
 					/>
 				</div>
 			</template>
 		</modal-filter-ticker-item>
-	</div>
+	</modal-filter-scrollable>
 </template>
 
 <style module="classes">
-.bottom {
-	max-height: 450px;
-	margin: 0 -6px;
-	padding: 6px;
-	overflow-y: scroll;
-}
-
-@supports (-moz-appearance: none) {
-	.bottom:not(:hover) {
-		scrollbar-width: none;
-	}
-
-	.container {
-		scrollbar-width: unset;
-	}
-}
-
-.bottom:not(:hover)::-webkit-scrollbar {
-	display: none;
-}
-
-.bottom:hover::-webkit-scrollbar {
-	width: 6px;
-}
-
-.listItemDataImageWrapper {
+.listWrapper {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 24px;
+}
+
+.listItem {
+	flex-shrink: 0;
 }
 </style>

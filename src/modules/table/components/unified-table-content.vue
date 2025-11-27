@@ -1,16 +1,16 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { ref, computed, nextTick } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import type {
-	IGenericTableSection,
-	IGenericTableColumn,
-	IGenericTableRow,
-	ISortConfig,
 	IDragDropEvent,
 	IDragEvent,
+	IGenericTableColumn,
+	IGenericTableRow,
+	IGenericTableSection,
+	ISortConfig,
 } from '../type';
 import { useTableData, useTableLayout } from '../table-common';
 
@@ -194,7 +194,7 @@ const tableItems = computed({
 		}
 		return sortedRows.value;
 	},
-	set: (value) => {
+	set: (_) => {
 		// This setter is used by draggable v-model
 		// The actual updates happen through drag events
 	},

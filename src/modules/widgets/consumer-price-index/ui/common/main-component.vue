@@ -1,44 +1,50 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import type { ICpiHistory } from '../../model';
+
 import ChartComponent from './chart-component.vue';
 import ChartLegend from './chart-legend.vue';
-import MetricTrendBadge from './metric-trend-badge.vue';
-
-interface IMetricTrendBadge {
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isPercent: boolean;
-}
+import type { IMetricTrendTag } from './metric-trend-tag.vue';
+import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
-	metricBadge: IMetricTrendBadge;
-	legend: {
-		label: string;
-		color: string;
-	}[];
+	data: ICpiHistory;
 }
 
 const props = defineProps<IMainComponentProps>();
 
+const metricTag = computed((): IMetricTrendTag => {
+	return {
+		value: Math.abs(props.data.growth_yoy),
+		// TODO: Points/Change/ChangePercent filter
+		unit: 'points',
+		trend: props.data.growth_yoy > 0 ? 'up' : 'down',
+		isPercent: false,
+	};
+});
+
+const legends = [
+	{
+		label: 'CPI',
+		color: '#fff',
+	},
+];
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.header">
-			<metric-trend-badge
-				:label="props.metricBadge.label"
-				:value="props.metricBadge.value"
-				:unit="props.metricBadge.unit"
-				:trend="props.metricBadge.trend"
-				:is-percent="props.metricBadge.isPercent"
+			<metric-trend-tag
+				:value="metricTag.value"
+				:unit="metricTag.unit"
+				:trend="metricTag.trend"
+				:is-percent="metricTag.isPercent"
 			/>
-			<chart-legend
-				:items="props.legend"
-			/>
+			<chart-legend :items="legends" />
 		</div>
 		<div :class="classes.chart">
-			<chart-component />
+			<chart-component :points="props.data.points" />
 		</div>
 	</div>
 </template>
@@ -58,5 +64,6 @@ const props = defineProps<IMainComponentProps>();
 
 .chart {
 	flex-grow: 1;
+	padding: 0 20px;
 }
 </style>

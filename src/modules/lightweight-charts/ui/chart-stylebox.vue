@@ -39,11 +39,11 @@ const styleBoxPlugin: Plugin = {
 		ctx.strokeStyle = COLORS.grid;
 		ctx.lineWidth = 1;
 		ctx.beginPath();
-		for (let r = 1; r < GRID.rows; r++) {
+		for (let r = 1; r < GRID.rows; r += 1) {
 			const y = Math.round(a.top + r * ch) + 0.5;
 			ctx.moveTo(a.left, y); ctx.lineTo(a.right, y);
 		}
-		for (let c = 1; c < GRID.cols; c++) {
+		for (let c = 1; c < GRID.cols; c += 1) {
 			const x = Math.round(a.left + c * cw) + 0.5;
 			ctx.moveTo(x, a.top); ctx.lineTo(x, a.bottom);
 		}

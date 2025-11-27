@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import { getWidgetComponent, type IMeta } from '../../dashboards';
 import type { DisplayVariant, IWidget } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
 import { calcSizeSideGridCell } from '../model/widget';
+
+interface IWidgetExposed {
+	scrollBy: (px: number) => void;
+}
 
 interface IWidgetComponentProps {
 	widget: IWidget;
@@ -17,6 +21,8 @@ interface IWidgetComponentProps {
 }
 
 const props = defineProps<IWidgetComponentProps>();
+
+const refComponent = ref<IWidgetExposed | null>(null);
 
 const { loading } = useDelayedLoading();
 
@@ -37,8 +43,8 @@ const meta = computed((): IMeta => ({
 		w: props.colCount,
 	},
 	maxSize: {
-		h: 0,
-		w: 0,
+		h: cellSize.value.count,
+		w: props.colCount,
 	},
 	name: props.widget.name,
 	defaultStateType: props.widget.defaultStateType,
@@ -53,11 +59,21 @@ const meta = computed((): IMeta => ({
 	allDisplayVariants: props.allDisplayVariants,
 }));
 
+function scrollBy(px: number) {
+	if (!refComponent.value) {
+		return;
+	}
+
+	refComponent.value.scrollBy(px);
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
 	<component
 		:is="getWidgetComponent('dashboard',props.widget.widgetType)"
+		ref="refComponent"
 		:meta="meta"
 		:style="{
 			height: `${height}px`

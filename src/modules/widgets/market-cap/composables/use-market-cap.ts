@@ -6,6 +6,7 @@ import {
 	type IDisplaySettings,
 	type IState,
 	MarketCapDateRange,
+	type MarketCapType,
 	stateSchema,
 	type StateSchemaType,
 } from '../model';
@@ -50,6 +51,13 @@ export function useMarketCap({
 		},
 	});
 
+	const selectedMarkets = computed({
+		get: () => state.value.selectedMarkets,
+		set: (val: MarketCapType[]) => {
+			state.value.selectedMarkets = val;
+		},
+	});
+
 	const activeDateRange = computed({
 		get: () => state.value.dateRange,
 		set: (val: MarketCapDateRange) => {
@@ -83,6 +91,7 @@ export function useMarketCap({
 
 		activeDateRange.value = defaultState.dateRange;
 		selectedTickers.value = defaultState.selectedTickers;
+		selectedMarkets.value = defaultState.selectedMarkets;
 	}
 
 	const {
@@ -90,10 +99,11 @@ export function useMarketCap({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryMarketCap(selectedTickers, activeDateRange);
+	} = useQueryMarketCap(selectedTickers, selectedMarkets, activeDateRange);
 
 	return {
 		selectedTickers,
+		selectedMarkets,
 		activeDateRange,
 		displaySettings,
 		data,

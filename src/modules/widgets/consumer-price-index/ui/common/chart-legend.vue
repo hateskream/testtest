@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 interface IChartLegend {
 	items: {
 		label: string;
@@ -8,7 +7,6 @@ interface IChartLegend {
 }
 
 const props = defineProps<IChartLegend>();
-
 </script>
 
 <template>
@@ -36,9 +34,9 @@ const props = defineProps<IChartLegend>();
 	align-items: center;
 	font-style: normal;
 	font-weight: 400;
-	font-size: 11px;
+	font-size: var(--font-text-100-r-size, 11px);
 	line-height: 180%;
-	color: rgb(255 255 255 / 62%);
+	color: var(--text-300, rgb(255 255 255 / 62%));
 	letter-spacing: 0.088px;
 	gap: 4px;
 }

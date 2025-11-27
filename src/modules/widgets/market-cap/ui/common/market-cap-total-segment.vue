@@ -24,10 +24,11 @@ const props = defineProps<IMarketCapSummarySegmentProps>();
 }
 
 .name {
-	margin-bottom: 2px;
-	font-size: 13.3px;
+	font-weight: 400;
+	font-size: var(--font-text-200-r-size, 12.2px);
 	line-height: 180%;
 	color: var(--text-color-base-300);
+	letter-spacing: 0.122px;
 }
 
 .row {

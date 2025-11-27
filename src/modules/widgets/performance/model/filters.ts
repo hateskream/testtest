@@ -15,12 +15,13 @@ export enum DateRangeStock {
 }
 
 export enum DateRangeForex {
-	Day = '1D',
-	Week = '1W',
-	Month = '1M',
-	ThreeMonths = '3M',
-	SixMonths = '6M',
-	Year = '1Y',
+	Day = '1d',
+	FiveDays = '5d',
+	Month = '1m',
+	SixMonths = '6m',
+	Year = '1y',
+	FiveYears = '5y',
+	All = 'All',
 }
 
 export type DateRange = DateRangeStock | DateRangeForex;
@@ -34,11 +35,12 @@ export const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, strin
 	[DateRangeStock.Yesterday]: 'Yesterday',
 	[DateRangeStock.Week]: 'Week',
 	[DateRangeForex.Day]: '1D',
-	[DateRangeForex.Week]: '1W',
 	[DateRangeForex.Month]: '1M',
-	[DateRangeForex.ThreeMonths]: '3M',
+	[DateRangeForex.FiveDays]: '5D',
 	[DateRangeForex.SixMonths]: '6M',
 	[DateRangeForex.Year]: '1Y',
+	[DateRangeForex.FiveYears]: '5Y',
+	[DateRangeForex.All]: 'All',
 };
 
 export function getDateLabelByType(isStock: boolean):

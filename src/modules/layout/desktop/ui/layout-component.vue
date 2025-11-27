@@ -291,6 +291,7 @@ function minifySidebar() {
 }
 
 .rightPanel {
+	z-index: 10;
 	display: flex;
 	background-color: var(--bg-color-surface-00);
 }

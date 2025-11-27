@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<IPositionContentProps>(), {
 	placement: 'bottom-start',
 	offset: 6,
 	strategy: 'absolute',
+	transform: true,
 });
 
 const contentRef = useTemplateRef('content');
@@ -45,6 +46,7 @@ const { floatingStyles, update } = useFloating(triggerRef, contentRef, {
 		mainAxis: true,
 		crossAxis: true,
 	})],
+	transform: () => props.transform,
 });
 
 function onBodyPointerDown(e: PointerEvent) {
@@ -136,6 +138,5 @@ watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
 <style>
 [data-position-content] {
 	z-index: 101;
-	max-height: 80svh;
 }
 </style>

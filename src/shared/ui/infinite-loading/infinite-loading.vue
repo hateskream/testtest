@@ -5,7 +5,7 @@ import { type IInfiniteStateHandler, State } from './model.ts';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
-const emit = defineEmits<{ infinite: [$state: IInfiniteStateHandler] }>();
+const emit = defineEmits<{ infinite: [state: IInfiniteStateHandler] }>();
 
 interface IInfiniteLoadingProps {
 	top?: boolean;

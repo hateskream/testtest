@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import type { IDisplaySettings, INews } from '../model';
 
 import NewsComponent from './news-component.vue';
@@ -16,35 +18,56 @@ const emits = defineEmits<{
 	'select-news': [{ id: string; slug: string }];
 }>();
 
+const scrollerRef = useTemplateRef('scroller');
+
 let ticking = false;
+
+function checkBottom(el: HTMLElement) {
+	const remaining = el.scrollHeight - el.scrollTop - el.clientHeight;
+
+	if (remaining <= 450) {
+		emits('next');
+	}
+}
 
 function handleScroll(event: Event) {
 	if (ticking) {
 		return;
 	}
+
 	ticking = true;
 
 	requestAnimationFrame(() => {
-		const el = event.target as HTMLElement;
+		const el = event.target as HTMLElement | null;
 
-		if (!el) {
-			ticking = false; return;
-		}
-
-		const remaining = el.scrollHeight - el.scrollTop - el.clientHeight;
-
-		if (remaining <= 450) {
-			emits('next');
+		if (el) {
+			checkBottom(el);
 		}
 
 		ticking = false;
 	});
 }
+
+function scrollBy(px: number) {
+	if (!scrollerRef.value) {
+		return;
+	}
+
+	scrollerRef.value.scrollTop += px;
+
+	checkBottom(scrollerRef.value);
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
 	<div :class="classes.root">
-		<div :class="classes.scrollable" @scroll="handleScroll">
+		<div
+			ref="scroller"
+			:class="classes.scrollable"
+			@scroll="handleScroll"
+		>
 			<div :class="classes.content">
 				<news-component
 					v-for="item in props.news"
@@ -52,10 +75,7 @@ function handleScroll(event: Event) {
 					:news="item"
 					:display-settings="props.displaySettings"
 					:display-variant="props.displayVariant"
-					@click="emits('select-news', {
-						id: item.id,
-						slug: item.slug,
-					})"
+					@click="emits('select-news', { id: item.id, slug: item.slug })"
 				/>
 			</div>
 		</div>
@@ -74,6 +94,7 @@ function handleScroll(event: Event) {
 	position: relative;
 	min-height: 0;
 	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .content {

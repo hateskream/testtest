@@ -167,7 +167,7 @@ export function usePerformance({
 		state.value.settings[state.value.activeMarket].pinned = [...newPinned];
 	});
 
-	const limit = 50;
+	const limit = 15;
 	const {
 		data: dataResponse,
 		fetchNextPage,
@@ -176,7 +176,7 @@ export function usePerformance({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryPerformance(activeMarket, pinnedTickers, limit);
+	} = useQueryPerformance(activeMarket, pinnedTickers, currentDate, currentStock, limit);
 
 	const tickers = computed((): ITicker[] => {
 		if (!dataResponse.value) {

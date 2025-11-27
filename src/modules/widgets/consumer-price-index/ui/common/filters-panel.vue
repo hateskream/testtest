@@ -1,49 +1,23 @@
 <script setup lang="ts">
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { CpiMetric, CpiRange, metricFilterValueToDisplay, rangeFilterValueToDisplay } from '../../model';
 
 interface IFiltersPanelProps {
+	isShowRange?: boolean;
 	displayVariant: 'default' | 'new';
-	dataRanges: string[];
-	displayValueDataRange: Record<string, string>;
-	cpis: string[];
-	displayValueCpi: Record<string, string>;
 }
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeDateRange = defineModel<string>('dateRange', { required: true });
-const activeCPI = defineModel<string>('cpi', { required: true });
+const activeRange = defineModel<CpiRange>('range', { required: true });
+const activeMetric = defineModel<CpiMetric>('metric', { required: true });
 </script>
 
 <template>
 	<div :class="classes.container">
 		<modal-badge-dropdown :display-variant="props.displayVariant">
 			<template #title>
-				{{ displayValueDataRange[activeDateRange] }}
-			</template>
-			<template #content>
-				<modal-badge-list>
-					<template #title>
-						Date range
-					</template>
-					<template
-						v-for="filterKey in props.dataRanges"
-						:key="filterKey"
-					>
-						<modal-item-selector
-							:model-value="filterKey === activeDateRange"
-							@update:model-value="activeDateRange = filterKey"
-						>
-							{{ displayValueDataRange[filterKey] }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
-
-		<modal-badge-dropdown :display-variant="props.displayVariant">
-			<template #title>
-				{{ displayValueCpi[activeCPI] }}
+				{{ metricFilterValueToDisplay[activeMetric] }}
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -51,14 +25,37 @@ const activeCPI = defineModel<string>('cpi', { required: true });
 						CPI
 					</template>
 					<template
-						v-for="filterKey in props.cpis"
+						v-for="filterKey in CpiMetric"
 						:key="filterKey"
 					>
 						<modal-item-selector
-							:model-value="filterKey === activeDateRange"
-							@update:model-value="activeCPI = filterKey"
+							:model-value="filterKey === activeMetric"
+							@update:model-value="activeMetric = filterKey"
 						>
-							{{ displayValueCpi[filterKey] }}
+							{{ metricFilterValueToDisplay[filterKey] }}
+						</modal-item-selector>
+					</template>
+				</modal-badge-list>
+			</template>
+		</modal-badge-dropdown>
+		<modal-badge-dropdown v-if="props.isShowRange" :display-variant="props.displayVariant">
+			<template #title>
+				{{ rangeFilterValueToDisplay[activeRange].selected }}
+			</template>
+			<template #content>
+				<modal-badge-list>
+					<template #title>
+						Date range
+					</template>
+					<template
+						v-for="filterKey in CpiRange"
+						:key="filterKey"
+					>
+						<modal-item-selector
+							:model-value="filterKey === activeRange"
+							@update:model-value="activeRange = filterKey"
+						>
+							{{ rangeFilterValueToDisplay[filterKey].option }}
 						</modal-item-selector>
 					</template>
 				</modal-badge-list>

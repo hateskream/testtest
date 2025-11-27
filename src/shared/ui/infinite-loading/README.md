@@ -46,7 +46,7 @@ interface IInfiniteStateHandler {
 #### `complete`
 
 - **Details**:
-	Used to create a custom display message when there is no more data (`$state.complete`)
+	Used to create a custom display message when there is no more data (`state.complete`)
 
 - **example**:
 
@@ -63,7 +63,7 @@ interface IInfiniteStateHandler {
 
 - **bind**: `retry` function
 - **Details**:
-	Used to create a custom display message when an error occurs (`$state.error`)
+	Used to create a custom display message when an error occurs (`state.error`)
 
 - **example**:
 
@@ -91,20 +91,20 @@ interface IInfiniteStateHandler {
 
 	const scrollable = useTemplateRef('scrollable');
 
-	async function loadMore($state: IInfiniteStateHandler) {
+	async function loadMore(state: IInfiniteStateHandler) {
 		try {
 			const response = await getProducts({offset: offset.value, limit});
 
 			if (response.length < limit) {
-				$state.complete();
+				state.complete();
 			} else {
-				$state.loaded();
+				state.loaded();
 			}
 
 			products.push(...response);
 			offset.value += response.length;
 		} catch (error) {
-			$state.error();
+			state.error();
 		}
 	}
 </script>

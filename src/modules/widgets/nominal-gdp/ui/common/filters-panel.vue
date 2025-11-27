@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { NominalGdpRange, rangeFilterValueToDisplay } from '../../model';
 
 interface IFiltersPanelProps {
 	displayVariant: 'default' | 'new';
-	dataRanges: string[];
-	displayValueDataRange: Record<string, string>;
 }
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeDateRange = defineModel<string>('dateRange', { required: true });
+const activeRange = defineModel<NominalGdpRange>('range', { required: true });
 </script>
 
 <template>
 	<div :class="classes.container">
 		<modal-badge-dropdown :display-variant="props.displayVariant">
 			<template #title>
-				{{ displayValueDataRange[activeDateRange] }}
+				{{ rangeFilterValueToDisplay[activeRange].selected }}
 			</template>
 			<template #content>
 				<modal-badge-list>
@@ -24,14 +23,14 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 						Date range
 					</template>
 					<template
-						v-for="filterKey in props.dataRanges"
+						v-for="filterKey in NominalGdpRange"
 						:key="filterKey"
 					>
 						<modal-item-selector
-							:model-value="filterKey === activeDateRange"
-							@update:model-value="activeDateRange = filterKey"
+							:model-value="filterKey === activeRange"
+							@update:model-value="activeRange = filterKey"
 						>
-							{{ displayValueDataRange[filterKey] }}
+							{{ rangeFilterValueToDisplay[filterKey].option }}
 						</modal-item-selector>
 					</template>
 				</modal-badge-list>

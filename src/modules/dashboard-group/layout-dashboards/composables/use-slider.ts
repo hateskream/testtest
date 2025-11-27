@@ -1,4 +1,4 @@
-import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef } from 'vue';
+import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef, readonly } from 'vue';
 
 const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
@@ -19,10 +19,6 @@ export function useSlider(opts: {
 		const gaps = Math.max(0, slides.value.length - 1) * gap;
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
-
-	const trackStyle = computed(() => ({
-		transform: `translateX(${translateX.value}px)`,
-	}));
 
 	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
 
@@ -184,7 +180,7 @@ export function useSlider(opts: {
 	}
 
 	return {
-		trackStyle,
+		translateX: readonly(translateX),
 		canPrev,
 		canNext,
 		next,

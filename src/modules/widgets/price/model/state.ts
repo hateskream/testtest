@@ -105,7 +105,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (market === 'stock') {
 		activeMarket = MarketType.Stock;
 
-		if (filter === 'gainers') {
+		if (filter === 'gainers' || filter === 'losers') {
 			return {
 				activeMarket,
 				settings: {
@@ -113,7 +113,10 @@ export function getDefaultsState(defaultStateType: string): IState {
 					[MarketType.Stock]: {
 						...defaultSettingsStock,
 						filtersState: {
-							[FilterType.RankingAndNew]: RankingAndNewFilterValue.Gainers,
+							[FilterType.MarketTrend]: filter === 'gainers'
+								? MarketTrendFilterValue.Gainers
+								: MarketTrendFilterValue.Losers,
+							[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 						},
 					},
 					[MarketType.Forex]: defaultSettingsForex,

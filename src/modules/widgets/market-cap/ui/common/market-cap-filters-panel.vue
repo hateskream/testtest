@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import { dateRangeFilterValueToDisplay, MarketCapDateRange } from '../../model';
+import { dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
 const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
+const selectedMarkets = defineModel<MarketCapType[]>('selectedMarkets', { required: true });
 const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
 
 interface IMarketCapFiltersPanelProps {
@@ -20,9 +21,14 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 	<div :class="classes.container">
 		<modal-ticker-selector-with-badge
 			v-model="selectedTickers"
+			v-model:markets="selectedMarkets"
 			:market-types="[MarketType.Crypto, MarketType.Stock]"
 			:display-variant="props.displayVariant"
+			:close-empty-selected="false"
+			:show-icon="selectedTickers.length > 0"
+			:show-label="selectedTickers.length === 0"
 			autofocus
+			enable-markets
 		/>
 		<template v-if="props.isShowDateRange">
 			<ui-delimiter v-if="props.displayVariant === 'default'" />

@@ -20,6 +20,7 @@ const props = defineProps<IWidgetComponentProps>();
 
 const {
 	selectedTickers,
+	selectedMarkets,
 	displaySettings,
 	resetAllChanges,
 	activeDateRange,
@@ -61,6 +62,7 @@ const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart &
 		<template #content>
 			<market-cap-filters-panel
 				v-model:selected-tickers="selectedTickers"
+				v-model:selected-markets="selectedMarkets"
 				v-model:date-range="activeDateRange"
 				:is-show-date-range="isShowFilterDateRange"
 				autofocus

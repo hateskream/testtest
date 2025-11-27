@@ -7,6 +7,7 @@ import { generateId, getWidgetComponent, type IMeta } from '../model';
 
 interface IProps {
 	meta: IMeta;
+	displayVariant: 'tv' | 'dashboard';
 }
 
 const props = defineProps<IProps>();
@@ -30,6 +31,7 @@ const style = computed(() => {
 	const { maxSize, columnWidth, rowHeight } = props.meta;
 
 	let width = window.innerWidth - HORIZONTAL_PADDING;
+
 	if (Number.isFinite(maxSize.w)) {
 		width = maxSize.w * columnWidth;
 	}
@@ -52,7 +54,7 @@ const style = computed(() => {
 		v-model="isOpenFullView"
 	>
 		<component
-			:is="getWidgetComponent('tv',props.meta.widgetType)"
+			:is="getWidgetComponent(props.displayVariant, props.meta.widgetType)"
 			:meta="preparedMeta"
 			:style="style"
 		/>

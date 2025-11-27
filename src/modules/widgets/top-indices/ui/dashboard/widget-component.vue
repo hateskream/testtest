@@ -20,6 +20,12 @@ interface ITopIndicesWidgetProps {
 
 const props = defineProps<ITopIndicesWidgetProps>();
 
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const { data, isLoading, isError, refetch } = useQueryTopIndices(props.meta.maxCountRowTable ?? 50);
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
@@ -29,9 +35,13 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
 	>
 		<template #content>
 			<error-network-component v-if="isError" @retry="refetch" />

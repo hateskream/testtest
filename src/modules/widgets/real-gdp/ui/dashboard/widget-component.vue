@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { PreloaderComponent, FiltersPanel } from '../common';
+import { FiltersPanel, PreloaderComponent } from '../common';
+import { useRealGdp } from '@/modules/widgets/real-gdp/composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -17,60 +18,38 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const isError = false;
-const isLoading = false;
-const refetch = () => {};
+const emit = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
 
-const metricBadge = {
-	label: 'Growth YoY',
-	value: 2.3,
-	unit: '',
-	trend: 'up' as const,
-	isPercent: true,
-};
-
-const items = [
-	{
-		label: 'Real GDP',
-		color: '#fff',
-	},
-];
-
-enum DateRange {
-	Day= '1D',
-	Week = '1W',
-	Month = '1M',
-	SixMonths = '6M',
-	Year = '1Y',
-	TenYears = '10Y',
-	All = 'ALL',
-}
-
-const dateRange = ref(DateRange.TenYears);
-
-const dateRangeFilterValueToDisplay: Record<DateRange, string> = {
-	[DateRange.Day]: '1 D',
-	[DateRange.Week]: '7 days',
-	[DateRange.Month]: '1 month',
-	[DateRange.SixMonths]: '6 months',
-	[DateRange.Year]: '1 Y',
-	[DateRange.TenYears]: '10Y',
-	[DateRange.All]: 'All',
-};
+const {
+	activeRange,
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useRealGdp({
+	widgetId: props.meta.widgetId,
+	isEphemeral: props.meta.isOpenFull,
+});
 </script>
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
 	>
 		<template #filters>
 			<filters-panel
-				v-model:date-range="dateRange"
+				v-model:range="activeRange"
 				display-variant="new"
-				:data-ranges="Object.values(DateRange)"
-				:display-value-data-range="dateRangeFilterValueToDisplay"
 			/>
 		</template>
 		<template #title>
@@ -80,9 +59,8 @@ const dateRangeFilterValueToDisplay: Record<DateRange, string> = {
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else
-				:metric-badge="metricBadge"
-				:legend="items"
+				v-else-if="data"
+				:data="data"
 			/>
 		</template>
 	</base-widget-dashboard>

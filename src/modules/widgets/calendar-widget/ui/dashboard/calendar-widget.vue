@@ -74,6 +74,7 @@ useEventBoardScroll({
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"

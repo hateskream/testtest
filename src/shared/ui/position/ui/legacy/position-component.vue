@@ -28,6 +28,9 @@ defineExpose({
 	get handleOpen() {
 		return rootRef.value?.open;
 	},
+	get handleClose() {
+		return rootRef.value?.close;
+	},
 });
 </script>
 
@@ -71,7 +74,6 @@ defineExpose({
 <style scoped>
 .floating-inner {
 	z-index: 101;
-	max-height: 80svh;
 	border-radius: 6px;
 }
 

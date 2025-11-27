@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -7,6 +7,12 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
+
+import RcmPriceComponent from '@/modules/widgets/price/ui/tv/rcm-price-component.vue';
+
+interface IWidgetExposed {
+	scrollBy: (px: number) => void;
+}
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -19,6 +25,14 @@ interface IWidgetComponentProps {
 }
 
 const props = defineProps<IWidgetComponentProps>();
+
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
+const refView = ref<IWidgetExposed | null>(null);
 
 const {
 	activeMarket,
@@ -33,6 +47,7 @@ const {
 	loadMore,
 	hasNextPage,
 	tickersIsLoading,
+	resetAllChanges,
 } = usePrice({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -40,26 +55,41 @@ const {
 	maxCountRows: props.meta.maxCountRowTable,
 });
 
-async function loadMoreTickets($state: IInfiniteStateHandler) {
+async function loadMoreTickets(state: IInfiniteStateHandler) {
 	await loadMore();
 
 	if (fetchTickersError.value) {
-		$state.error();
+		state.error();
 	} else if (hasNextPage.value) {
-		$state.loaded();
+		state.loaded();
 	} else {
-		$state.complete();
+		state.complete();
 	}
 }
 
 const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTable));
+
+function scrollBy(px: number) {
+	if (!refView.value) {
+		return;
+	}
+
+	refView.value.scrollBy(px);
+}
+
+defineExpose({ scrollBy });
 </script>
 
 <template>
 	<base-widget-dashboard
+		:meta="props.meta"
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emits('delete')"
+		@duplicate="emits('duplicate')"
+		@move-to="emits('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<filter-component
@@ -74,6 +104,7 @@ const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTabl
 			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" :class="classes.preloader" />
 			<view-component
 				v-else
+				ref="refView"
 				display-variant="new"
 				:tickers="tickers"
 				:settings="currentSettings"
@@ -83,6 +114,10 @@ const hasInfinityLoading = computed(() => !notNullish(props.meta.maxCountRowTabl
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
 			/>
+		</template>
+
+		<template #change-display>
+			<rcm-price-component v-model="currentSettings" />
 		</template>
 	</base-widget-dashboard>
 </template>

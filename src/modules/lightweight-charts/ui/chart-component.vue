@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 import {
 	AreaSeries,
 	type CandlestickData,
@@ -17,25 +16,29 @@ import {
 	type Time,
 } from 'lightweight-charts';
 import type { ChartClickData, ChartData, ChartType } from '@shared/component-library';
+import {
+	LastPriceAnimationMode,
+	type LastPriceAnimationMode as LastPriceAnimationModeType,
+} from '@shared/component-library';
 import { unrefElement } from '@vueuse/core';
 
 import {
 	calculateSMASeriesData,
-	convertTime,
 	generateCandleDataFromLineData,
 	generateLineData,
 	groupSeriesByRange,
+	prepareLineDataFromCandlestick,
+	prepareSeries,
 } from '../utils';
-import { type IChartUpdateEmitData, IndicatorsChart, type SharedChartMouseEvent, TypeChart } from '../model/chart';
+import type { IChartTimelineSegment, IChartUpdateEmitData, SharedChartMouseEvent } from '../model';
+import { IndicatorsChart, TypeChart } from '../model';
+import type { IUseExternalTooltipState } from '../composables';
+import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
-import { prepareLineDataFromCandlestick, prepareSeries } from '../utils/prepare-series';
 import { getChartRangeOffset, RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import type { IUseExternalTooltipState } from '@/modules/lightweight-charts/composables';
 import type { ICalendarEvent } from '@/modules/calendar';
-import type { IChartTimelineSegment } from '@/modules/lightweight-charts/model/chart-timeline.ts';
+import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';
 
@@ -63,6 +66,8 @@ interface IChartProps {
 	rightOffsetPixels?: number;
 	events?: ICalendarEvent[];
 	timelineSegments?: IChartTimelineSegment[];
+	data?: ChartData[] | null;
+	lastPriceAnimation?: LastPriceAnimationModeType;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -80,6 +85,8 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	events: () => [],
 	timelineSegments: () => [],
 	eventsTimelinePadding: '0px',
+	lastPriceAnimation: LastPriceAnimationMode.Disabled,
+	data: null,
 });
 
 defineExpose({
@@ -182,6 +189,10 @@ const styleRoot = computed(() => {
 });
 
 const preparedChartData = computed(() => {
+	if (props.data) {
+		return props.data;
+	}
+
 	const data = groupedData.value[currentRange.value];
 
 	if (currentTypeGraph.value === TypeChart.Candlestick) {
@@ -365,7 +376,7 @@ function updateTooltipState(state: ChartClickData | null) {
 		return;
 	}
 
-	const segment = groupedData.value[currentRange.value].find(sgm => sgm.time === state.time);
+	const segment = preparedChartData.value.find(sgm => sgm.time === state.time);
 
 	if (!segment) {
 		tooltipState.visible = false;
@@ -377,10 +388,8 @@ function updateTooltipState(state: ChartClickData | null) {
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
 
-	const time = convertTime(segment.time);
-
 	tooltipState.title = [
-		(new Date(time)).toLocaleString(undefined, {
+		(new Date(segment.time)).toLocaleString(undefined, {
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric',
@@ -560,6 +569,7 @@ onMounted(async () => {
 				:crosshair-mode="props.crosshairMode"
 				:right-offset-pixels="props.rightOffsetPixels"
 				:fade-left="props.fadeLeft"
+				:last-price-animation="props.lastPriceAnimation"
 				@chart-hover="onChartHover"
 			/>
 		</div>

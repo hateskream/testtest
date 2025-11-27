@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, useSlots, useTemplateRef } from 'vue';
 
-import type { DisplayVariant } from '@/modules/dashboard-group';
-import { UiIcon } from '@/shared/ui/icon';
+import { type DisplayVariant, FullViewDashboard, type IMeta } from '@/modules/dashboard-group';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
+import { UiPosition } from '@/shared/ui/position';
+import { WidgetContextMenu } from '@/modules/widgets/base';
+import { ModalBadgeList } from '@/modules/widgets/base';
+
+import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
 
 
 interface IBaseDashboardComponentProps {
+	meta: IMeta;
 	title: string;
 	allDisplayVariants: DisplayVariant[];
 }
 
 const props = defineProps<IBaseDashboardComponentProps>();
+
+const emits = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+	(e: 'reset'): void;
+}>();
 
 const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant', { required: true });
 
@@ -24,6 +37,39 @@ const preparedAllDisplayVariants = computed(() =>
 );
 
 const countMore = computed(() => props.allDisplayVariants.length - preparedAllDisplayVariants.value.length);
+
+const isFullscreen = ref<boolean>(false);
+const isControlsExpanded = ref<boolean>(true);
+
+/*
+* filters is slot for toolbar view
+* filter is slot for context menu modal
+* */
+defineSlots<{
+	'filters': unknown;
+	'content': unknown;
+
+	'nav-menu': unknown;
+	'settings-menu': unknown;
+	'extra-menu': unknown;
+
+	'change-display': unknown;
+	'filter': unknown;
+	'other': unknown;
+}>();
+
+const slots = useSlots();
+
+const hasExpandedView = computed(() => {
+	return !!(slots['change-display'] || slots['settings-menu'] || slots['nav-menu']);
+});
+
+const contextMenuRef = useTemplateRef('context-menu');
+
+function handleFullscreen() {
+	isFullscreen.value = true;
+	contextMenuRef.value?.handleClose?.();
+}
 </script>
 
 <template>
@@ -59,6 +105,93 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 						{{countMore}} more...
 					</div>
 				</div>
+
+				<widget-dashboard-controls
+					v-if="!props.meta.isOpenFull"
+					:model-value="hasExpandedView && isControlsExpanded"
+					:hide-controls="!hasExpandedView"
+					:class="classes.controls"
+					@update:model-value="(value) => isControlsExpanded = value"
+				>
+					<template #expanded>
+						<ui-position
+							v-if="slots['nav-menu']"
+							placement="bottom-start"
+						>
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.Burger" />
+								</button>
+							</template>
+							<template #content>
+								<slot name="nav-menu" />
+							</template>
+						</ui-position>
+
+						<ui-position
+							v-if="hasExpandedView"
+							placement="bottom-start"
+						>
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.SettingsV2" />
+								</button>
+							</template>
+							<template #content>
+								<template v-if="slots['settings-menu']">
+									<slot name="settings-menu" />
+								</template>
+
+								<modal-badge-list v-else-if="slots['change-display']">
+									<slot name="change-display" />
+								</modal-badge-list>
+							</template>
+						</ui-position>
+
+						<button :class="classes.control" @click="handleFullscreen">
+							<ui-icon
+								:id="IconIds.ControlFullView"
+								width="20px"
+								height="20px"
+							/>
+						</button>
+					</template>
+
+					<template #minified>
+						<ui-position
+							ref="context-menu"
+							placement="bottom-start"
+						>
+							<template #title>
+								<button :class="classes.control">
+									<ui-icon :id="IconIds.ThreeDots" />
+								</button>
+							</template>
+
+							<template #content>
+								<widget-context-menu
+									:title="props.meta.name"
+									:dashboards="props.meta.dashboards"
+									@delete="emits('delete')"
+									@duplicate="emits('duplicate')"
+									@move-to="emits('moveTo', $event)"
+									@reset="emits('reset')"
+									@open-full="handleFullscreen"
+								>
+									<template #change-display v-if="slots['change-display']">
+										<slot name="change-display" />
+									</template>
+									<template #filter v-if="slots['filter']">
+										<slot name="filter" />
+									</template>
+									<template #other v-if="slots['other']">
+										<slot name="other" />
+									</template>
+								</widget-context-menu>
+							</template>
+						</ui-position>
+					</template>
+				</widget-dashboard-controls>
 			</div>
 
 			<div
@@ -71,6 +204,14 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 		<div :class="classes.content">
 			<slot name="content" />
 		</div>
+
+		<teleport to="body">
+			<full-view-dashboard
+				v-model="isFullscreen"
+				:meta="props.meta"
+				display-variant="dashboard"
+			/>
+		</teleport>
 	</div>
 </template>
 
@@ -121,6 +262,7 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 
 .displayVariant {
 	display: flex;
+	align-items: center;
 	padding: 0 10px 0 6px;
 	color: rgb(255 255 255 / 60%);
 	cursor: pointer;
@@ -145,6 +287,28 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 	text-overflow: ellipsis;
 }
 
+.controls {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.titleHeader:hover .controls {
+	opacity: 1;
+}
+
+.control {
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	line-height: 0;
+	color: var(--text-color-base-100);
+	cursor: pointer;
+}
+
+.control:hover {
+	color: var(--text-color-base-500, #ffffff);
+}
+
 .filters {
 	padding: 6px 16px 6px 20px;
 }
@@ -156,3 +320,5 @@ const countMore = computed(() => props.allDisplayVariants.length - preparedAllDi
 	overflow-y: hidden;
 }
 </style>
+
+

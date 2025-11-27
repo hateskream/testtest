@@ -2,6 +2,7 @@
 import { computed, type CSSProperties } from 'vue';
 
 import { ChartExternalTooltipRow } from '@/modules/lightweight-charts';
+import { prettyNumberWithKey } from '@/shared/lib';
 
 interface IMarketCapChartTooltipProps {
 	color: CSSProperties['background-color'];
@@ -11,8 +12,10 @@ interface IMarketCapChartTooltipProps {
 
 const props = defineProps<IMarketCapChartTooltipProps>();
 
-// TODO: После подключения к АПИ нужно будет парсить через PrettyNumber для единиц (K, T, B, M, etc)
-const preparedValue = computed(() => `$${props.value}`);
+const preparedValue = computed(() => {
+	const { row } = prettyNumberWithKey(props.value.toString());
+	return `$${row}`;
+});
 </script>
 
 <template>

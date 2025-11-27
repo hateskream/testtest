@@ -45,22 +45,23 @@ export function toWeekDays(
 		const hit = apiMap.get(key);
 		const dayEvents = eventsByDate.get(key) ?? [];
 
-		const now = new Date();
 		const isToday = isSameCalendarDay(d, today);
 
-		const hasSoon = isToday && dayEvents.some(ev => {
-			if (!ev.eventDatetime) {
-				return false;
-			}
-			const startAt = new Date(ev.eventDatetime);
-			const diff = startAt.getTime() - now.getTime();
-			return diff > 0 && diff <= 60 * 60 * 1000;
-		});
+		// const now = new Date();
+		// const hasSoon = isToday && dayEvents.some(ev => {
+		// 	if (!ev.eventDatetime) {
+		// 		return false;
+		// 	}
+		// 	const startAt = new Date(ev.eventDatetime);
+		// 	const diff = startAt.getTime() - now.getTime();
+		// 	return diff > 0 && diff <= 60 * 60 * 1000;
+		// });
 
 		const hasFavorite = dayEvents.some(ev => favorites.includes(ev.id));
 
 		const colorDots: { color: CSSProperties['color'] }[] = [];
-		if (hasSoon) {
+
+		if (isToday) {
 			colorDots.push({ color: 'red' });
 		}
 		if (hasFavorite) {
@@ -72,9 +73,9 @@ export function toWeekDays(
 			{ label: 'Earnings', value: hit.metrics.earnings },
 			{ label: 'Dividends', value: hit.metrics.dividends },
 		] : [
-			{ label: 'Economic', value: 'N/A' },
-			{ label: 'Earnings', value: 'N/A' },
-			{ label: 'Dividends', value: 'N/A' },
+			{ label: 'Economic', value: 'N/A' } as const,
+			{ label: 'Earnings', value: 'N/A' } as const,
+			{ label: 'Dividends', value: 'N/A' } as const,
 		];
 
 		return {
@@ -86,6 +87,6 @@ export function toWeekDays(
 			isCurrentWeek: currentWeek,
 			metrics,
 			colorDots,
-		} as IWeeklyDayInfo;
+		};
 	});
 }
