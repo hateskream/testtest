@@ -120,7 +120,6 @@ defineExpose({ scrollBy });
 	position: relative;
 	flex: 1;
 	min-height: 0;
-	padding-bottom: 50px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }

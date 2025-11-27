@@ -3,7 +3,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import type { ISection, ISectionWheelPayload } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
-import { MIN_COL_WIDTH, MAX_COL_WIDTH } from '../../tv';
+import { MAX_COL_WIDTH, MIN_COL_WIDTH } from '../../tv';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
 
 import WidgetComponent from './widget-component.vue';
@@ -49,10 +49,16 @@ const isLastWidgetHasInfinityHeight = computed(() =>
 
 const hasPaddingBottom = computed(() => !isOneInSection.value && !isLastWidgetHasInfinityHeight.value );
 
-const height = computed(() =>
-	isLastWidgetHasInfinityHeight.value
+const height = computed(() => {
+	if (isOneInSection.value && isLastWidgetHasInfinityHeight.value) {
+		// TODO: Серьезно обсудить с дизайном скроллинг одного бесконечного виджета
+		return props.parentHeight - HEIGHT_TITLE;
+	}
+
+	return isLastWidgetHasInfinityHeight.value
 		? props.parentHeight + HEIGHT_ROUNDING_BOTTOM
-		: props.parentHeight,
+		: props.parentHeight;
+},
 );
 
 function emitScrollInfo() {
