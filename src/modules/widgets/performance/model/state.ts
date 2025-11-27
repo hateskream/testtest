@@ -39,7 +39,7 @@ const defaultStockSettings: ISettingsStock = {
 };
 
 const defaultForexSettings: ISettingsForex = {
-	periodForex: DateRangeForex.Week,
+	periodForex: DateRangeForex.FiveDays,
 	symbolDisplayVariant: SymbolDisplayVariant.Ticker,
 	displayVariant: DisplayVariant.Bar,
 	isCompactMode: false,

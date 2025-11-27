@@ -20,10 +20,6 @@ import {
 } from './domain';
 
 export function isEmptyCell(cell: Cell): cell is IEmptyCell {
-	if (!cell.cellType) {
-		console.log(cell, 'errorCell');
-	}
-	console.log('errorCell2', cell);
 	return cell.cellType === CellType.Empty;
 }
 

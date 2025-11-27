@@ -176,7 +176,7 @@ export function usePerformance({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryPerformance(activeMarket, pinnedTickers, currentDate, limit);
+	} = useQueryPerformance(activeMarket, pinnedTickers, currentDate, currentStock, limit);
 
 	const tickers = computed((): ITicker[] => {
 		if (!dataResponse.value) {

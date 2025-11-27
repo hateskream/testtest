@@ -8,12 +8,13 @@ import {
 	type PercentDto,
 	type SymbolDto,
 	type TableRowDto,
+	createTickerIdFromCell,
 } from '@/modules/cell';
 import type { PerformanceTableRow } from '../model/row';
 import { generateRows } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 import type { TickerWithoutState } from '../../price/model';
-import type { DateRange } from '../model';
+import { type DateRange, Stock } from '../model';
 
 const IS_USE_MOCK = false;
 
@@ -50,6 +51,7 @@ export interface IGetPerformanceRequest {
 	offset: number;
 	limit: number;
 	dateRange: DateRange;
+	stockFilter?: Stock;
 }
 
 export async function getPerformance(args: IGetPerformanceRequest): Promise<IPerformanceData> {
@@ -63,27 +65,74 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 
 		const response = await httpService.get<IGetPerformanceResponse>('/api/v1/performance/data', {
 			query: {
-				market: 'Stock',
+				market: args.market,
 				dateRange: args.dateRange,
 				limit: args.limit,
 				offset: args.offset,
+				stockFilter: args.stockFilter,
 			},
 		});
-		console.log(response,'response1');
+
 		const responseUpdated = prepareResponse(response);
-		console.log(responseUpdated, 'response2')
-		return responseUpdated
+		console.log(responseUpdated, ' updated');
+		return responseUpdated;
 	} catch (error) {
 		logger.error('Failed to get performance data', error as Error);
 		throw error;
 	}
 }
 
+
+function remapForexSymbol(ticker: TickerDto): TickerDto {
+	const { symbol } = ticker;
+
+	if (symbol.symbolType === 'Forex' && 'ticker' in symbol) {
+		const forexTicker = (symbol as Record<string, unknown>).ticker as string;
+		const srcImg = (symbol as Record<string, unknown>).srcImg as string;
+		const leftTicker = forexTicker.substring(0, 3);
+		const rightTicker = forexTicker.substring(3, 6);
+
+		return {
+			...ticker,
+			symbol: {
+				cellType: symbol.cellType,
+				columnType: symbol.columnType,
+				symbolType: symbol.symbolType,
+				leftSrcImg: srcImg,
+				rightSrcImg: srcImg,
+				leftTicker,
+				rightTicker,
+			} as SymbolDto,
+		};
+	}
+
+	return ticker;
+}
+
 function prepareResponse({ data }: IGetPerformanceResponse): IPerformanceData {
+
+	const tickers = data?.tickers ?? [];
+	const pinedTickers = data?.pinedTickers ?? [];
+	const pagination = data?.pagination ?? { total: 0, offset: 0, limit: 0 };
+
+
+	const remappedTickers = tickers.map(remapForexSymbol);
+	const remappedPinedTickers = pinedTickers.map(remapForexSymbol);
+
+	const mappedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedTickers).map(ticker => ({
+		...ticker,
+		tickerId: createTickerIdFromCell(ticker.symbol),
+	}));
+
+	const mappedPinedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedPinedTickers).map(ticker => ({
+		...ticker,
+		tickerId: createTickerIdFromCell(ticker.symbol),
+	}));
+
 	return {
-		tickers: mapTickersToTableRows<PerformanceTableRow>(data.tickers),
-		pinedTickers: mapTickersToTableRows<PerformanceTableRow>(data.pinedTickers),
-		pagination: data.pagination,
+		tickers: mappedTickers,
+		pinedTickers: mappedPinedTickers,
+		pagination,
 	};
 }
 

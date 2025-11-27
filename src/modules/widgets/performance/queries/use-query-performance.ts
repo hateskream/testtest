@@ -4,16 +4,17 @@ import { computed, onUnmounted, toValue } from 'vue';
 
 import { getPerformance } from '../api';
 import { ColumnType } from '@/modules/cell';
-import { updateQueryData, type QueryData } from '@/shared/lib';
+import { type QueryData, updateQueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { CellUpdater } from '@/shared/service/real-time';
-import type { MarketType } from '@/modules/market';
-import type { DateRange } from '../model';
+import { type DateRange, Stock } from '../model';
+import { MarketType } from '@/modules/market';
 
 export function useQueryPerformance(
 	market: MaybeRefOrGetter<MarketType>,
 	pined: MaybeRefOrGetter<string[]>,
 	dateRange: MaybeRefOrGetter<DateRange>,
+	stockFilter: MaybeRefOrGetter<Stock | undefined>,
 	limit: number,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
@@ -38,6 +39,7 @@ export function useQueryPerformance(
 			pined: toValue(pined),
 			offset: pageParam,
 			dateRange: toValue(dateRange),
+			...(toValue(market) === MarketType.Stock ? { stockFilter: toValue(stockFilter) } : {}),
 			limit,
 		}),
 
