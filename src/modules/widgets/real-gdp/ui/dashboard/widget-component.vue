@@ -18,6 +18,12 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emit = defineEmits<{
+	(e: 'delete'): void;
+	(e: 'moveTo', dashboardId: string): void;
+	(e: 'duplicate'): void;
+}>();
+
 const {
 	activeRange,
 	data,
@@ -36,6 +42,9 @@ const {
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@delete="emit('delete')"
+		@duplicate="emit('duplicate')"
+		@move-to="emit('moveTo', $event)"
 	>
 		<template #filters>
 			<filters-panel
