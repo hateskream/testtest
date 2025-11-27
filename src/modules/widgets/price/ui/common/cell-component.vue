@@ -224,14 +224,19 @@ const priceChange = computed(() => getPercentData(props.ticker.changePrice24hPer
 }
 
 .ticker {
-	display: inline-flex;
+	display: -webkit-box;
+	overflow: hidden;
 	font-style: normal;
 	font-weight: 400;
 	font-size: var(--font-text-300-r-size, 12.5px);
 	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
 	letter-spacing: 0.075px;
+	text-overflow: ellipsis;
 	gap: 2px;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
 }
 
 .containerSecond {
