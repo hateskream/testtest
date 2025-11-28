@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 
 import type { ISection, IWidget, ISectionWheelPayload } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
@@ -110,7 +110,7 @@ function emitScrollInfo() {
 
 const scrollTop = ref(0);
 
-const seenWidgets = new Set<number>();
+const seenWidgets = reactive(new Set<number>());
 
 const visibleWidgetsWithAccumulation = computed(() => {
 	const container = scrollRef.value;
@@ -123,10 +123,10 @@ const visibleWidgetsWithAccumulation = computed(() => {
 
 	while (index < props.section.widgets.length && acc < container.clientHeight + scrollTop.value) {
 		acc += props.section.widgets[index].height + WIDGET_GAP;
-		index++;
+		index+=1;
 	}
 
-	for (let i = 0; i < index; i++) {
+	for (let i = 0; i < index; i+=1) {
 		seenWidgets.add(i);
 	}
 

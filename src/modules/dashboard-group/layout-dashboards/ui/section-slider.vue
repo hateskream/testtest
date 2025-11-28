@@ -43,7 +43,7 @@ const containerRef = useTemplateRef<HTMLDivElement>('container');
 
 const { height } = useElementSize(containerRef);
 
-const sectionRefs = ref<InstanceType<typeof SectionComponent>[]>([]);
+const sectionRefs = useTemplateRef<InstanceType<typeof SectionComponent>[]>('sectionElement');
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
 
 function onSectionWheel(payload: ISectionWheelPayload) {
@@ -59,8 +59,8 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 		emits('goTo', index);
 	}
 
-	const section = sectionRefs.value.find(
-		(s) => s.$props.section.id === sectionId,
+	const section = sectionRefs.value?.find(
+		(s) => s?.$props.section.id === sectionId,
 	);
 
 	section?.scrollToWidget(widgetId);
@@ -131,7 +131,7 @@ function onTouchMove(event: TouchEvent) {
 		<div
 			ref="container"
 			:class="classes.viewport"
-			@wheel.capture="emits('wheel', $event)"
+			@wheel="emits('wheel', $event)"
 			@pointerdown="emits('pointerDown', $event)"
 			@pointermove="emits('pointerMove', $event)"
 			@pointerup="emits('pointerUp')"
@@ -156,6 +156,7 @@ function onTouchMove(event: TouchEvent) {
 						}"
 					>
 						<section-component
+							ref="sectionElement"
 							:section="s"
 							:parent-height="height"
 							:is-visible="s.isVisible"
@@ -235,6 +236,7 @@ function onTouchMove(event: TouchEvent) {
 		</div>
 
 		<section-sidebar
+			:current-index="props.currentIndex"
 			:slides="props.slides"
 			:slides-wheel="sectionWheelState"
 			:can-next="props.canNext"
