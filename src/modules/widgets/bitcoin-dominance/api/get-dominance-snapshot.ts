@@ -50,14 +50,14 @@ export async function getDominanceSnapshot(args: IGetDominanceSnapshotRequest): 
 		}
 	}
 
+	if (IS_USE_MOCK) {
+		return await getMockData(args);
+	}
+
 	try {
-		const response = IS_USE_MOCK
-			? await getMockData(args)
-			: await httpService.get<IDominanceSnapshotResponse>('/api/v1/dominance/data', { query });
+		const response = await httpService.get<IDominanceSnapshotResponse>('/api/v1/dominance/data', { query });
 
-		const result = prepareResponse(response.data);
-
-		return result;
+		return prepareResponse(response.data);
 	} catch (error) {
 		logger.error('Failed to get dominance snapshot', error as Error);
 		throw error;
@@ -80,14 +80,12 @@ function prepareResponse(data: IDominanceSnapshotApiResponse[]): IDominanceDomai
 	}));
 }
 
-const { getMock } = useFetchMock<IDominanceSnapshotApiResponse[]>('/mock/widgets/dominance/snapshot.json');
+const { getMock } = useFetchMock<IDominanceDomain[]>('/mock/widgets/dominance/snapshot.json');
 
 async function getMockData(args: IGetDominanceSnapshotRequest) {
 	await delay(500);
 
 	const response = await getMock();
 
-	return {
-		data: response.filter(item => args.tickers.includes(item.symbol)),
-	} as IDominanceSnapshotResponse;
+	return response.filter(item => args.tickers.includes(item.symbol));
 }
