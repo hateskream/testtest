@@ -22,6 +22,18 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 560,
 			widgets: [
 				{
+					defaultState: 'none',
+					height: 400,
+					widgetType: WidgetType.UnemploymentRate,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'none',
+					height: 400,
+					widgetType: WidgetType.NonfarmPayrolls,
+					defaultDisplayVariant: 'default',
+				},
+				{
 					defaultState: 'stock',
 					height: 465,
 					widgetType:  WidgetType.ChartPrice,
