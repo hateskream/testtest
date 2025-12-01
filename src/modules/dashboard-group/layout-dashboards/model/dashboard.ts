@@ -60,13 +60,13 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'USDollar',
-					height: 156,
+					height: 136,
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',
 				},
 				{
 					defaultState: 'Gold',
-					height: 156,
+					height: 136,
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',
 				},
