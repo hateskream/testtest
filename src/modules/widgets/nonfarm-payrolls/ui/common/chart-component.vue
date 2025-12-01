@@ -15,8 +15,6 @@ interface IMarketCapChartProps {
 }
 
 const props = defineProps<IMarketCapChartProps>();
-
-
 </script>
 
 <template>
@@ -37,5 +35,6 @@ const props = defineProps<IMarketCapChartProps>();
 		disable-scroll
 		:color-schema="props.chartColorSchema"
 		:data="props.points"
+		fade-left
 	/>
 </template>

@@ -4,7 +4,6 @@ import { CrosshairMode } from 'lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
-
 </script>
 
 <template>
@@ -24,5 +23,6 @@ import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue'
 		height="100%"
 		disable-scroll
 		color-schema="neutral"
+		fade-left
 	/>
 </template>
