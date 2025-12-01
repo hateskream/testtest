@@ -32,7 +32,6 @@ export async function getUnemploymentRate(
 	}
 }
 
-// Функция преобразования данных
 export function transformUnemploymentRateData(
 	data: IUnemploymentRateResponse,
 ): IUnemploymentRateData {

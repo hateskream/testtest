@@ -27,7 +27,6 @@ export interface IUnemploymentRateResponse {
 	points: IUnemploymentRatePoint[];
 }
 
-// Расширенный интерфейс с преобразованными данными
 export interface IUnemploymentRateData {
 	badge: IMetricTrendBadge;
 	points: IUnemploymentRatePoint[];
