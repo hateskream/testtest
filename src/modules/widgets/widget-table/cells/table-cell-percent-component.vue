@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const COLORS = {
-	POSITIVE: '#04EDA0',
-	NEGATIVE: '#FC4A6B',
-} as const;
+import { Trend } from '@/modules/cell';
 
 export interface IPercentData {
 	value?: string;
-	trend?: string;
+	trend?: Trend;
 	maxAbsValue?: number;
 }
 
@@ -18,14 +15,32 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
+const isDownTrend = computed(() => {
+	if (props.data.trend) {
+		return props.data.trend === Trend.DOWN;
+	}
+
+	return +(props.data.value ?? 0) < 0;
+});
+
+const isUpTrend = computed(() => {
+	if (props.data.trend) {
+		return props.data.trend === Trend.UP;
+	}
+
+	return +(props.data.value ?? 0) > 0;
+});
+
 const displayValue = computed(() => {
 	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
 		return '—';
 	}
+
 	if (props.data.value === '0') {
 		return props.data.value;
 	}
-	return `${props.data.value}%`;
+
+	return `${Math.abs(+props.data.value)}%`;
 });
 
 const barWidth = computed(() => {
@@ -35,46 +50,30 @@ const barWidth = computed(() => {
 	}
 
 	const absValue = Math.abs(+value);
-	const maxAbs = maxAbsValue;
-	return Math.min((absValue / maxAbs) * 100, 100);
-});
-
-const barColor = computed(() => {
-
-	if (props.data.trend === 'increase') {
-		return COLORS.POSITIVE;
-	}
-	if (props.data.trend === 'decrease') {
-		return COLORS.NEGATIVE;
-	}
-
-	const numValue = +(props.data.value ?? 0);
-	return numValue >= 0 ? COLORS.POSITIVE : COLORS.NEGATIVE;
+	return Math.min((absValue / maxAbsValue) * 100, 100);
 });
 </script>
 
 <template>
 	<div
-		:class="[
-			classes.rootBarCell,
-			props.data.maxAbsValue ? classes.leftAlign : ''
-		]"
+		:class="[classes.rootBarCell, {
+			[classes.leftAlign]: props.data.maxAbsValue,
+			[classes.negative]: isDownTrend,
+			[classes.positive]: isUpTrend
+		}]"
 		class="percentCell"
 	>
 		<span
 			class="paragraph-p-00"
-			:class="props.data.maxAbsValue ? classes.percentWithBar : ''"
-			:style="{ color: barColor }"
+			:class="[classes.percent, { [classes.percentWithBar]: props.data.maxAbsValue }]"
 		>
-			{{ displayValue }}
+			<span v-if="isDownTrend">−&nbsp;</span>
+			<span>{{ displayValue }}</span>
 		</span>
 		<div
 			v-if="props.data.maxAbsValue"
 			:class="classes.bar"
-			:style="{
-				width: `${barWidth}%`,
-				backgroundColor: barColor
-			}"
+			:style="{ width: `${barWidth}%` }"
 		/>
 	</div>
 </template>
@@ -98,9 +97,25 @@ const barColor = computed(() => {
 	text-align: right;
 }
 
+.rootBarCell.positive .percent {
+	color: var(--success-success-00, #04eda0);
+}
+
+.rootBarCell.negative .percent {
+	color: var(--warning-warning-00, #fc1d4d);
+}
+
 .bar {
 	min-width: 8px;
 	height: 8px;
 	border-radius: 4px;
+}
+
+.rootBarCell.positive .bar {
+	background-color: var(--success-success-00, #04eda0);
+}
+
+.rootBarCell.negative .bar {
+	background-color: var(--warning-warning-00, #fc1d4d);
 }
 </style>

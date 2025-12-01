@@ -25,6 +25,14 @@ const preparedTime = computed(() =>
 		hour12: true,
 	}),
 );
+
+const changeValue = computed(() => {
+	return Math.abs(props.change.value).toFixed(2);
+});
+
+const changePercent = computed(() => {
+	return Math.abs(props.change.percent).toFixed(2);
+});
 </script>
 
 <template>
@@ -46,14 +54,16 @@ const preparedTime = computed(() =>
 				>
 					<ui-icon
 						:id="props.change.value > 0 ? IconIds.Gainers : IconIds.Loosers"
-						height="12px"
-						width="12px"
+						height="8px"
+						width="8px"
 						:class="classes.segmentChangeIcon"
 					/>
 					<div :class="classes.segmentChangeValue">
-						{{ props.change.value.toFixed(2) }} ({{
-							props.change.percent.toFixed(2)
-						}}%)
+						<span>{{changeValue}}</span>
+						<span> (</span>
+						<span v-if="props.change.percent < 0">−&nbsp;</span>
+						<span>{{changePercent}}</span>
+						<span>%)</span>
 					</div>
 				</div>
 			</div>
@@ -120,7 +130,7 @@ const preparedTime = computed(() =>
 
 .segmentChangeValue {
 	font-weight: 400;
-	font-size: 13.3px;
+	font-size: var(--font-text-300-r-size, 13.3px);
 	line-height: 180%;
 	letter-spacing: 0.146px;
 }
