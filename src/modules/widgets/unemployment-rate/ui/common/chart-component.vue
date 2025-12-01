@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { CrosshairMode, type CandlestickData, type Time } from 'lightweight-charts';
+import { CrosshairMode } from 'lightweight-charts';
+import type { ChartData } from '@shared/component-library';
 
 import { RangeChart } from '@/shared/ui/chart-range';
 
@@ -13,24 +14,18 @@ interface IMarketCapChartProps {
 
 const props = defineProps<IMarketCapChartProps>();
 
-const chartData = computed<CandlestickData[]>(() => {
+const chartData = computed<ChartData[]>(() => {
 	return props.points.map(point => {
-		const time = Math.floor(new Date(point.label).getTime() / 1000) as Time;
-		const value = point.history;
-
 		return {
-			time,
-			open: value,
-			high: value,
-			low: value,
-			close: value,
-		};
-	}).sort((a, b) => (a.time as number) - (b.time as number));
+			time: point.label,
+			value: point.history,
+		} as ChartData;
+	});
 });
+
 </script>
 
 <template>
-	{{chartData}}
 	<chart-component
 		:range-list="Object.values(RangeChart)"
 		:is-visible-history-graph="false"

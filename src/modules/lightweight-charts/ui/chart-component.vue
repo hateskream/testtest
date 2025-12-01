@@ -76,7 +76,6 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisibleRange: true,
 	isVisibleRangeChange: true,
 	isVisiblePriceScale: true,
-	isVisiblePriceScale: true,
 	isVisibleTimeScale: true,
 	isVisiblePriceLine: true,
 	colorSchema: 'positive',
