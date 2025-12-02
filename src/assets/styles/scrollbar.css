@@ -43,13 +43,11 @@ body * {
 /* =================== Firefox =================== */
 
 @supports (-moz-appearance: none) {
-	/* Скрываем скролл глобально */
 	body * {
 		scrollbar-width: thin;
 		scrollbar-color: transparent transparent;
 	}
 
-	/* Появляется только тягалка при hover */
 	body *:hover {
 		scrollbar-color: var(--scrollbar-color) transparent;
 	}
