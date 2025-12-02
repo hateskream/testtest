@@ -144,14 +144,26 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Economic Calendar',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
 					height: 240,
 					widgetType:  WidgetType.HighImpactHourMap,
 					defaultDisplayVariant: 'default',
 				},
 				{
-					defaultState: 'stock',
+					defaultState: 'economic',
 					height: Infinity,
-					widgetType:  WidgetType.News,
+					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл
 					defaultDisplayVariant: 'default',
 				},
 			],
@@ -212,12 +224,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultState: 'none',
 					height: 190,
 					widgetType:  WidgetType.NonfarmPayrolls,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: 'none', // сделать стейт
-					height: Infinity,
-					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
 					defaultDisplayVariant: 'default',
 				},
 			],

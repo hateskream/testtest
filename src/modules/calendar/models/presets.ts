@@ -126,6 +126,15 @@ export function getDefaultState(defaultState?: string): ToolbarSchemaType {
 				watchlistSection: null,
 			};
 
+		case 'economic':
+			return {
+				marketId: ALL_MARKETS,
+				impact: [Impact.Medium],
+				eventType: [EventType.Economic],
+				watchlistId: null,
+				watchlistSection: null,
+			};
+
 		default:
 			return {
 				...DEFAULT_STATE,
