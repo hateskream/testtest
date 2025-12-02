@@ -8,6 +8,7 @@ export interface IMetricTrendBadge {
 	isGood: boolean;
 	isPercent: boolean;
 }
+
 export interface INonfarmPayrollsChange {
 	value: number;
 	unit: string;
@@ -29,5 +30,8 @@ export interface INonfarmPayrollsResponse {
 
 export interface INonfarmPayrollsData {
 	badge: IMetricTrendBadge;
-	points: INonfarmPayrollsPoint[];
+	points: {
+		time: string;
+		value: number;
+	}[];
 }

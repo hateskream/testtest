@@ -14,8 +14,8 @@ interface IMetricTrendBadge {
 }
 
 interface IPoints {
-	label: string;
-	history: number;
+	time: string;
+	value: number;
 }
 
 interface IMainComponentProps {

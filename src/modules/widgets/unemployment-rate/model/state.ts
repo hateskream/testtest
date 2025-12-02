@@ -8,6 +8,7 @@ export interface IMetricTrendBadge {
 	isGood: boolean;
 	isPercent: boolean;
 }
+
 export interface IUnemploymentRateChange {
 	value: number;
 	unit: string;
@@ -29,5 +30,5 @@ export interface IUnemploymentRateResponse {
 
 export interface IUnemploymentRateData {
 	badge: IMetricTrendBadge;
-	points: IUnemploymentRatePoint[];
+	points: { time: string; value: number }[];
 }

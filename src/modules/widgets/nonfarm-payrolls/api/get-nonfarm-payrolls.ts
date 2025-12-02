@@ -38,7 +38,7 @@ export function transformNonfarmPayrollsData(
 	const badge: IMetricTrendBadge = {
 		topValue: parseFloat(data.primaryValue),
 		isTopValuePercent: data.primaryValueUnit === '%',
-		label: 'vs previous period',
+		label: 'Payrolls down YoY',
 		value: data.change.value,
 		unit: data.change.unit,
 		trend: data.change.direction,
@@ -46,9 +46,14 @@ export function transformNonfarmPayrollsData(
 		isPercent: data.change.unit === '%' || data.change.unit === 'pp',
 	};
 
+	const points = data.points.map(point => ({
+		time: point.label,
+		value: point.history,
+	}));
+
 	return {
 		badge,
-		points: data.points,
+		points,
 	};
 }
 

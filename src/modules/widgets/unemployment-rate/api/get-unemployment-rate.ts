@@ -38,17 +38,21 @@ export function transformUnemploymentRateData(
 	const badge: IMetricTrendBadge = {
 		topValue: parseFloat(data.primaryValue),
 		isTopValuePercent: data.primaryValueUnit === '%',
-		label: 'vs previous period',
+		label: 'Rate up YoY',
 		value: data.change.value,
 		unit: data.change.unit,
 		trend: data.change.direction,
 		isGood: data.change.isPositive,
 		isPercent: data.change.unit === '%' || data.change.unit === 'pp',
 	};
+	const points = data.points.map(point => ({
+		time: point.label,
+		value: point.history,
+	}));
 
 	return {
 		badge,
-		points: data.points,
+		points,
 	};
 }
 
