@@ -26,12 +26,12 @@ const props = defineProps<IMainComponentProps>();
 			<div :class="classes.text">
 				Inflation down YoY:
 			</div>
-			<div :class="classes.text">
+			<div :class="[classes.text, classes.trend]">
 				{{ props.second }} pp
 				<ui-icon
 					:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
-					height="12px"
-					width="12px"
+					height="6px"
+					width="6px"
 					:class="classes.icon"
 				/>
 			</div>
@@ -69,8 +69,10 @@ const props = defineProps<IMainComponentProps>();
 
 .flag {
 	width: 20px;
-	height: 14px;
-	border-radius: 2px;
+	height: 20px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: 25%;
 }
 
 .text {
@@ -82,8 +84,10 @@ const props = defineProps<IMainComponentProps>();
 	letter-spacing: 0.122px;
 }
 
-.icon {
-	margin-left: 6px;
+.trend {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--padding-padding-s4, 6px);
 }
 
 .chart {

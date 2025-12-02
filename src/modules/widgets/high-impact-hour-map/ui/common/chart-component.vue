@@ -149,8 +149,10 @@ const colorMap: Record<string, string> = {
 
 .flag {
 	width: 20px;
-	height: 14px;
-	border-radius: 2px;
+	height: 20px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: 25%;
 }
 
 .time {
