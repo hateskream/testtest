@@ -138,7 +138,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 268,
+					height: 245,
 					widgetType:  WidgetType.NewsSummary,
 					defaultDisplayVariant: 'default',
 				},
