@@ -1,5 +1,16 @@
-import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef, readonly } from 'vue';
-import debounce from 'lodash/debounce';
+import {
+	ref,
+	computed,
+	watch,
+	type MaybeRefOrGetter,
+	toValue,
+	type ShallowRef,
+	readonly,
+	onBeforeUnmount,
+	onMounted,
+} from 'vue';
+import throttle from 'lodash/throttle';
+
 
 const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
@@ -7,6 +18,7 @@ export function useSlider(opts: {
 	slidesWidth: MaybeRefOrGetter<number[]>;
 	gap?: number;
 	viewportWidth: MaybeRefOrGetter<number>;
+	container: MaybeRefOrGetter<HTMLDivElement | null>;
 	isMobile: ShallowRef<boolean, boolean>;
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
@@ -32,31 +44,14 @@ export function useSlider(opts: {
 		return offsets;
 	});
 
-	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
-
 	const seenSlides = new Set<number>();
 
-	const visibleSlidesCount = computed(() => {
-		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+	const visibleSlidesCount = ref(0);
 
-		const offset = -translateX.value;
-		const end = offset + vp;
-
-		let acc = 0;
-
-		for (let i = 0; i < slides.value.length; i += 1) {
-			const w = slides.value[i];
-			const s = acc;
-			const e = acc + w;
-
-			if (e > offset && s < end) {
-				seenSlides.add(i);
-			}
-
-			acc += w + gap;
-		}
-
-		return seenSlides.size;
+	const canPrev = computed(() => translateX.value < 0);
+	const canNext = computed(() => {
+		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
+		return translateX.value > minTranslate;
 	});
 
 	function clampTranslate(x: number) {
@@ -65,7 +60,21 @@ export function useSlider(opts: {
 		return Math.max(minTranslate, Math.min(maxTranslate, x));
 	}
 
+	let raf = 0;
+	function setTranslateXRAF(x: number) {
+		cancelAnimationFrame(raf);
+		raf = requestAnimationFrame(() => {
+			setTranslateX(x);
+		});
+	}
+
+
 	function setTranslateX(x: number) {
+		if (isMobile.value) {
+			translateX.value = nearestIndexFromTranslate(clampTranslate(x));
+			return;
+		}
+
 		translateX.value = clampTranslate(x);
 	}
 
@@ -87,26 +96,6 @@ export function useSlider(opts: {
 		}
 		return best;
 	}
-
-	const canPrev = computed(() => translateX.value < 0);
-	const canNext = computed(() => {
-		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
-		return translateX.value > minTranslate;
-	});
-
-	watch(
-		() => translateX.value,
-		(newX) => {
-			if (isDragging.value) {
-				return;
-			}
-
-			const nearest = nearestIndexFromTranslate(newX);
-			if (nearest !== currentIndex.value) {
-				currentIndex.value = nearest;
-			}
-		},
-	);
 
 	function snapToIndex(index: number) {
 		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
@@ -138,141 +127,130 @@ export function useSlider(opts: {
 		return -(sum + gap * index);
 	}
 
-	const wheelScrolling = ref(false);
+	let currentX = 0;
+	let startX = 0;
 
-	const endWheel = debounce(() => {
-		wheelScrolling.value = false;
-	}, 120);
+	function onPointerDown(e: PointerEvent) {
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
 
-	function onWheelStart() {
-		wheelScrolling.value = true;
-		endWheel();
+		isDragging.value = true;
+		startX = e.clientX - currentX;
+		el.setPointerCapture(e.pointerId);
 	}
 
-	const supportsPointer = typeof window !== 'undefined' && 'PointerEvent' in window;
+	let lastUpdate = 0;
 
-	const pointer = {
-		isDown: false,
-		lastX: 0,
-		startX: 0,
-		lastY: 0,
-		isHorizontal: false,
-		hasDirection: false,
-	};
 
-	const pointerHandlers = {
-		onPointerDown(e: PointerEvent | MouseEvent | TouchEvent) {
-			pointer.isDown = true;
-			isDragging.value = true;
-
-			if (supportsPointer) {
-				const ev = e as PointerEvent;
-				pointer.lastX = ev.clientX;
-				pointer.startX = ev.clientX;
-				pointer.lastY = ev.clientY;
-			} else if (e instanceof TouchEvent) {
-				pointer.lastX = e.touches[0].clientX;
-				pointer.startX = e.touches[0].clientX;
-				pointer.lastY = e.touches[0].clientY;
-			} else {
-				const ev = e as MouseEvent;
-				pointer.lastX = ev.clientX;
-				pointer.startX = ev.clientX;
-				pointer.lastY = ev.clientY;
-			}
-
-			pointer.isHorizontal = false;
-			pointer.hasDirection = false;
-		},
-
-		onPointerMove(e: PointerEvent | MouseEvent | TouchEvent) {
-			if (!pointer.isDown) {
-				return;
-			}
-
-			let x: number, y: number;
-
-			if (supportsPointer) {
-				const ev = e as PointerEvent;
-				x = ev.clientX;
-				y = ev.clientY;
-			} else if (e instanceof TouchEvent) {
-				x = e.touches[0].clientX;
-				y = e.touches[0].clientY;
-			} else {
-				const ev = e as MouseEvent;
-				x = ev.clientX;
-				y = ev.clientY;
-			}
-
-			const dx = x - pointer.lastX;
-			const dy = y - pointer.lastY;
-
-			if (!pointer.hasDirection) {
-				pointer.hasDirection = true;
-				pointer.isHorizontal = Math.abs(dx) > Math.abs(dy);
-			}
-
-			if (pointer.isHorizontal) {
-				e.preventDefault();
-				setTranslateX(translateX.value + dx);
-			}
-
-			pointer.lastX = x;
-			pointer.lastY = y;
-		},
-
-		onPointerUp() {
-			pointer.isDown = false;
-			pointer.hasDirection = false;
-			isDragging.value = false;
-
-			if (wheelScrolling.value) {
-				return;
-			}
-
-			const nearest = nearestIndexFromTranslate(translateX.value);
-			snapToIndex(nearest);
-		},
-
-		onWheel(e: WheelEvent) {
-			onWheelStart();
-
-			const { deltaX, deltaY, shiftKey } = e;
-			const smoothFactor = shiftKey ? 0.25 : 1;
-
-			const primaryDelta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
-
-			e.preventDefault();
-			setTranslateX(translateX.value - primaryDelta * smoothFactor);
-		},
-	};
-
-	const pointerState = (() => {
-		if (supportsPointer) {
-			return {
-				onPointerDown: pointerHandlers.onPointerDown,
-				onPointerMove: pointerHandlers.onPointerMove,
-				onPointerUp: pointerHandlers.onPointerUp,
-				onPointerCancel: pointerHandlers.onPointerUp,
-				onWheel: pointerHandlers.onWheel,
-			};
-		} else {
-			return {
-				onTouchStart: pointerHandlers.onPointerDown,
-				onTouchMove: pointerHandlers.onPointerMove,
-				onTouchEnd: pointerHandlers.onPointerUp,
-				onMouseDown: pointerHandlers.onPointerDown,
-				onMouseMove: pointerHandlers.onPointerMove,
-				onMouseUp: pointerHandlers.onPointerUp,
-				onWheel: pointerHandlers.onWheel,
-			};
+	function onPointerMove(e: PointerEvent) {
+		const now = performance.now();
+		if (now - lastUpdate < 33) {
+			// e.preventDefault();
+			return;
 		}
-	})();
+		lastUpdate = now;
+
+		if (!isDragging.value) {
+			return;
+		}
+		currentX = e.clientX - startX;
+		setTranslateXRAF(currentX);
+	}
+
+	function onPointerUp(e: PointerEvent) {
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
+
+		isDragging.value = false;
+		el.releasePointerCapture(e.pointerId);
+	}
+
+	function onWheel(e: WheelEvent) {
+		const now = performance.now();
+		if (now - lastUpdate < 33) {
+			e.preventDefault();
+			return;
+		}
+		lastUpdate = now;
+
+		if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+			return;
+		}
+
+		e.preventDefault();
+
+		let delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
+
+		delta = Math.sign(delta) * Math.min(Math.abs(delta), 60);
+
+		delta *= 1.8;
+
+		currentX -= delta;
+
+		setTranslateXRAF(currentX);
+	}
+
+	function updateVisibleSlides() {
+		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+		const offset = -translateX.value;
+		const end = offset + vp;
+
+		let acc = 0;
+		for (let i = 0; i < slides.value.length; i++) {
+			const w = slides.value[i];
+			const s = acc;
+			const e = acc + w;
+
+			if (e > offset && s < end) {
+				seenSlides.add(i);
+			}
+			acc += w + gap;
+		}
+
+		return seenSlides.size;
+	}
+
 
 	watch(() => toValue(viewportWidth), () => {
-		setTranslateX(translateX.value);
-		setTranslateX(getSlideOffset(currentIndex.value));
+		setTranslateXRAF(getSlideOffset(currentIndex.value));
+	});
+
+	const updateVisibleSlidesThrottled = throttle(() => {
+		visibleSlidesCount.value = updateVisibleSlides();
+	}, 60);
+
+	watch(translateX, () => {
+		updateVisibleSlidesThrottled();
+	});
+
+	onMounted(() => {
+		const el = toValue(opts.container);
+		if (!el) {
+			// eslint-disable-next-line no-console
+			console.error('Container not found');
+			return;
+		}
+
+		const container = el.parentElement!;
+
+		el.addEventListener('pointerdown', onPointerDown);
+		el.addEventListener('pointermove', onPointerMove);
+		el.addEventListener('pointerup', onPointerUp);
+		el.addEventListener('pointercancel', onPointerUp);
+
+		container.addEventListener('wheel', onWheel, { passive: false });
+
+		onBeforeUnmount(() => {
+			el.removeEventListener('pointerdown', onPointerDown);
+			el.removeEventListener('pointermove', onPointerMove);
+			el.removeEventListener('pointerup', onPointerUp);
+			el.removeEventListener('pointercancel', onPointerUp);
+			container.removeEventListener('wheel', onWheel);
+		});
 	});
 
 	return {
@@ -281,7 +259,6 @@ export function useSlider(opts: {
 		canNext,
 		next,
 		prev,
-		pointerState,
 		goTo,
 		currentIndex,
 		isDragging,

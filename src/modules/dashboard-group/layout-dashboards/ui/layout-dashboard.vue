@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, useCssModule, useTemplateRef, watch } from 'vue';
+import { computed, ref, useCssModule, useTemplateRef, watch } from 'vue';
 
 import { useDashboardLayout, useSlider } from '../composables';
 
@@ -38,9 +38,10 @@ const preparedSlides = computed(
 		})),
 );
 
+const sliderRef = ref<typeof SectionSlider | null>(null);
+
 const {
 	translateX,
-	pointerState,
 	canNext,
 	canPrev,
 	currentIndex,
@@ -54,6 +55,7 @@ const {
 	viewportWidth,
 	gap: 23,
 	isMobile,
+	container: computed(() => sliderRef.value?.trackRef),
 });
 
 const classes = useCssModule('classes');
@@ -79,6 +81,7 @@ watch(
 				:tabs="tabs"
 			/>
 			<section-slider
+				ref="sliderRef"
 				:slides="preparedSlides"
 				:can-next="canNext"
 				:can-prev="canPrev"
@@ -88,13 +91,6 @@ watch(
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"
-				@wheel="pointerState.onWheel"
-				@pointer-down="pointerState.onPointerDown"
-				@pointer-move="pointerState.onPointerMove"
-				@pointer-up="pointerState.onPointerUp"
-				@touch-start="pointerState.onTouchStart"
-				@touch-move="pointerState.onTouchMove"
-				@touch-end="pointerState.onTouchEnd"
 				@update-section="sections = $event"
 			/>
 		</div>

@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload } from '../model';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-           (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
 
 interface IPreparedSection extends ISection {
 	isVisible: boolean;
@@ -27,21 +24,14 @@ const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
 	(e: 'updateSection', newSection: ISection[]): void;
-	(e: 'pointerDown', event: PointerEvent): void;
-	(e: 'pointerMove', event: PointerEvent): void;
-	(e: 'pointerUp'): void;
-	(e: 'touchStart', event: TouchEvent): void;
-	(e: 'touchMove', event: TouchEvent): void;
-	(e: 'touchEnd'): void;
-	(e: 'wheel', event: WheelEvent): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
 }>();
 
-const containerRef = useTemplateRef<HTMLDivElement>('container');
+const trackRef = useTemplateRef<HTMLDivElement>('track');
 
-const { height } = useElementSize(containerRef);
+const { height } = useElementSize(trackRef);
 
 const sectionRefs = useTemplateRef<InstanceType<typeof SectionComponent>[]>('sectionElement');
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
@@ -85,27 +75,6 @@ watch(
 		setPreparedSlides(props.slides, newCount);
 	},
 );
-
-onMounted(() => {
-	if (!containerRef.value) {
-		return;
-	}
-
-	if (isIOS) {
-		containerRef.value.addEventListener(
-			'touchmove',
-			iosOnTouchMove,
-			{ passive: false },
-		);
-	}
-});
-
-onUnmounted(() => {
-	if (isIOS) {
-		containerRef.value?.removeEventListener('touchmove', iosOnTouchMove);
-	}
-});
-
 function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	preparedSlides.value = newSlides.map((s, i) => ({
 		...s,
@@ -113,38 +82,19 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	}));
 }
 
-function iosOnTouchMove(event: TouchEvent) {
-	emits('touchMove', event);
-}
-
-function onTouchMove(event: TouchEvent) {
-	if (isIOS) {
-		return;
-	}
-
-	emits('touchMove', event);
-}
+defineExpose({ trackRef });
 </script>
 
 <template>
 	<div id="slider" :class="classes.root">
 		<div
-			ref="container"
 			:class="classes.viewport"
-			@wheel="emits('wheel', $event)"
-			@pointerdown="emits('pointerDown', $event)"
-			@pointermove="emits('pointerMove', $event)"
-			@pointerup="emits('pointerUp')"
-			@pointercancel="emits('pointerUp')"
-			@pointerleave="emits('pointerUp')"
-			@touchstart="emits('touchStart', $event)"
-			@touchmove="onTouchMove"
-			@touchend="emits('touchEnd')"
 		>
 			<div
+				ref="track"
 				:class="classes.track"
 				:style="{
-					transform: `translateX(${props.translateX}px)`
+					'--track': `${props.translateX}px`,
 				}"
 			>
 				<template v-for="(s, i) in preparedSlides" :key="s.id">
@@ -267,14 +217,19 @@ function onTouchMove(event: TouchEvent) {
 	margin-left: 20px;
 	padding-top: 8px;
 	overflow: hidden;
+	user-select: none;
 	touch-action: pan-y;
+	overscroll-behavior: contain;
 }
 
 .track {
 	display: flex;
 	flex-grow: 1;
 	align-items: stretch;
-	transition: transform 300ms cubic-bezier(0.22, 0.9, 0.2, 1);
+	transform: translateX(var(--track));
+	backface-visibility: hidden;
+	perspective: 1000px;
+	user-select: none;
 	will-change: transform;
 }
 
