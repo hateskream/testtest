@@ -27,7 +27,6 @@ body * {
 	background: var(--scrollbar-color);
 }
 
-/* Трек остаётся прозрачным всегда */
 *:hover::-webkit-scrollbar-track {
 	background: transparent;
 }
@@ -39,8 +38,6 @@ body * {
 ::-webkit-scrollbar-corner {
 	background: transparent;
 }
-
-/* =================== Firefox =================== */
 
 @supports (-moz-appearance: none) {
 	body * {
