@@ -132,7 +132,6 @@ defineExpose({ trackRef });
 				</svg>
 			</div>
 
-
 			<div :class="classes.topRight">
 				<svg
 					width="32"
@@ -146,23 +145,6 @@ defineExpose({ trackRef });
 					/>
 				</svg>
 			</div>
-
-			<div :class="classes.bottomLeft">
-				<svg
-					width="32"
-					height="32"
-					viewBox="0 0 32 32"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<g transform="rotate(180 16 16)">
-						<path
-							d="M32 32C32 14.3269 17.6731 1.70846e-07 0 3.81596e-07L32 0L32 32Z"
-							fill="rgb(3 3 3 / 100%)"
-						/>
-					</g>
-				</svg>
-			</div>
-
 
 			<div :class="classes.bottomRight">
 				<div :class="classes.blur"></div>
@@ -213,8 +195,9 @@ defineExpose({ trackRef });
 	display: flex;
 	flex-grow: 1;
 	margin-right: 6px;
-	margin-left: 20px;
 	padding-top: 8px;
+	padding-left: 20px;
+	overflow: hidden;
 	overflow-x: auto;
 	scroll-snap-type: x mandatory;
 	scroll-behavior: smooth;
@@ -246,7 +229,7 @@ defineExpose({ trackRef });
 .topLeft {
 	position: absolute;
 	top: 8px;
-	left: 20px;
+	left: 0;
 	pointer-events: none;
 }
 
@@ -254,13 +237,6 @@ defineExpose({ trackRef });
 	position: absolute;
 	top: 8px;
 	right: 0;
-	pointer-events: none;
-}
-
-.bottomLeft {
-	position: absolute;
-	bottom: -3px;
-	left: 20px;
 	pointer-events: none;
 }
 
