@@ -1,6 +1,12 @@
-:root {
-	--scrollar-color: rgb(44 44 44 / 50%);
+body * {
+	scrollbar-gutter: stable;
 }
+
+
+:root {
+	--scrollbar-color: rgb(44 44 44 / 50%);
+}
+
 
 ::-webkit-scrollbar {
 	width: 6px;
@@ -8,13 +14,22 @@
 }
 
 ::-webkit-scrollbar-track {
-	background: none;
+	background: transparent;
 	border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--scrollar-color);
+	background: transparent;
 	border-radius: 6px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+	background: var(--scrollbar-color);
+}
+
+/* Трек остаётся прозрачным всегда */
+*:hover::-webkit-scrollbar-track {
+	background: transparent;
 }
 
 ::-webkit-scrollbar-button {
@@ -22,28 +37,20 @@
 }
 
 ::-webkit-scrollbar-corner {
-	background: rgb(255 255 255 / 5%);
+	background: transparent;
 }
+
+/* =================== Firefox =================== */
 
 @supports (-moz-appearance: none) {
-	body {
-		scrollbar-width: unset;
-		scrollbar-color: var(--scrollar-color) transparent;
+	/* Скрываем скролл глобально */
+	body * {
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
 	}
-}
 
-* {
-	scrollbar-width: none; /* Firefox */
-}
-
-*::-webkit-scrollbar {
-	display: none; /* Chrome/Safari/Edge */
-}
-
-*:hover {
-	scrollbar-width: auto; /* Firefox  */
-}
-
-*:hover::-webkit-scrollbar {
-	display: block; /* Chrome/Safari/Edge */
+	/* Появляется только тягалка при hover */
+	body *:hover {
+		scrollbar-color: var(--scrollbar-color) transparent;
+	}
 }
