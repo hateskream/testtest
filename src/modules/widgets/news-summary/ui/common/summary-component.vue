@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { UiClamped } from '@/shared/ui/clamped';
 
 interface ISummaryComponentProps {
 	text: string;
@@ -6,14 +7,13 @@ interface ISummaryComponentProps {
 }
 
 const props = defineProps<ISummaryComponentProps>();
-
 </script>
 
 <template>
 	<div :class="classes.container">
-		<div :class="classes.text">
+		<ui-clamped :class="classes.text" :rows="3">
 			{{ props.text }}
-		</div>
+		</ui-clamped>
 		<div :class="classes.summaryAt">
 			Summarized at {{ props.summaryAt }}
 		</div>
