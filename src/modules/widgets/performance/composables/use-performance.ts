@@ -167,7 +167,7 @@ export function usePerformance({
 		state.value.settings[state.value.activeMarket].pinned = [...newPinned];
 	});
 
-	const limit = 15;
+	const limit = 11;
 	const {
 		data: dataResponse,
 		fetchNextPage,

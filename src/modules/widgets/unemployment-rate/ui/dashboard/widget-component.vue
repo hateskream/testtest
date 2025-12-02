@@ -26,8 +26,6 @@ const {
 	isLoading,
 } = useUnemploymentRate({
 	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
-	defaultStateType: props.meta.defaultStateType,
 });
 
 </script>
@@ -46,7 +44,7 @@ const {
 				v-else
 				:metric-badge="currentData!.badge"
 				:points="currentData!.points"
-				chart-color-schema="negative"
+				:chart-color-schema="currentData!.badge.isGood ? 'positive' : 'negative'"
 			/>
 		</template>
 	</base-widget-dashboard>

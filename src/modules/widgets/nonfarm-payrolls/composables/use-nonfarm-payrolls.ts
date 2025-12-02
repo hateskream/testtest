@@ -1,10 +1,10 @@
-import { useQueryUnemploymentRate } from '../queries/use-query-unemployment.ts';
+import { useQueryNonfarmPayrolls } from '../queries/use-query-nonfarm-payrolls';
 
 interface IOptions {
 	widgetId: string;
 }
 
-export function useUnemploymentRate({
+export function useNonfarmPayrolls({
 	widgetId,
 }: IOptions) {
 
@@ -14,7 +14,7 @@ export function useUnemploymentRate({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryUnemploymentRate(widgetId);
+	} = useQueryNonfarmPayrolls(widgetId);
 
 	return {
 		isError,

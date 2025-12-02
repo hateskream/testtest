@@ -31,3 +31,19 @@
 		scrollbar-color: var(--scrollar-color) transparent;
 	}
 }
+
+* {
+	scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+	display: none; /* Chrome/Safari/Edge */
+}
+
+*:hover {
+	scrollbar-width: auto; /* Firefox  */
+}
+
+*:hover::-webkit-scrollbar {
+	display: block; /* Chrome/Safari/Edge */
+}

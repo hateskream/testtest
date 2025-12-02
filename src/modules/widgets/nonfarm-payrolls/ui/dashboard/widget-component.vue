@@ -4,6 +4,7 @@ import { defineAsyncComponent } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
+import { useNonfarmPayrolls } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -17,31 +18,14 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const isError = false;
-const isLoading = false;
-const refetch = () => {};
-
-interface IMetricTrendBadge {
-	topValue: number;
-	isTopValuePercent: boolean;
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isGood: boolean;
-	isPercent: boolean;
-}
-
-const metricBadge: IMetricTrendBadge = {
-	label: 'Payrolls down YoY',
-	value: 70,
-	unit: '',
-	trend: 'up' as const,
-	isPercent: true,
-	topValue: 22274,
-	isTopValuePercent: false,
-	isGood: false,
-};
+const {
+	currentData,
+	refetch,
+	isError,
+	isLoading,
+} = useNonfarmPayrolls({
+	widgetId: props.meta.widgetId,
+});
 </script>
 
 <template>
@@ -56,8 +40,9 @@ const metricBadge: IMetricTrendBadge = {
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
 				v-else
-				:metric-badge="metricBadge"
-				chart-color-schema="negative"
+				:metric-badge="currentData!.badge"
+				:points="currentData!.points"
+				:chart-color-schema="currentData!.badge.isGood ? 'positive' : 'negative'"
 			/>
 		</template>
 	</base-widget-dashboard>
