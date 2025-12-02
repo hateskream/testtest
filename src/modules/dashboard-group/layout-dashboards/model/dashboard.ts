@@ -72,13 +72,13 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
-					height: 125,
+					height: 145,
 					widgetType:  WidgetType.UsInflation,
 					defaultDisplayVariant: 'chart',
 				},
 				{
 					defaultState: 'stock',
-					height: 125,
+					height: 135,
 					widgetType:  WidgetType.FederalFunds,
 					defaultDisplayVariant: 'chart',
 				},
