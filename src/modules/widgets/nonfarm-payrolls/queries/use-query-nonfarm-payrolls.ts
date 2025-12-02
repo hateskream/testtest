@@ -10,7 +10,7 @@ export function useQueryNonfarmPayrolls(
 
 
 	return useQuery({
-		queryKey: computed(() => ['unemployment-rate', widgetId]),
+		queryKey: computed(() => ['nonfarm-payrolls', widgetId]),
 		queryFn: () =>
 			useGetNonfarmPayrolls({
 				widgetId: widgetId,
