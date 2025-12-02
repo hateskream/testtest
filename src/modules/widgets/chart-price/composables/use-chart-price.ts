@@ -1,11 +1,7 @@
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
 
-import {
-	getDefaultsState,
-	TimeRangeFilterValue,
-	type IState,
-} from '../model';
+import { getDefaultsState, type IState, TimeRangeFilterValue } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useWatchlist } from '@/modules/watchlist';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
@@ -33,6 +29,7 @@ export function useChartPrice({
 		addToWatchlist,
 		removeFromWatchlist,
 		addTickerInNewWatchlist,
+		toggleFavoriteWatchlist,
 	} = useWatchlist();
 
 	const {
@@ -111,6 +108,15 @@ export function useChartPrice({
 		addTickerInNewWatchlist(selectedTicker.value, marketType);
 	}
 
+	function handleToggleFavoriteWatchlist() {
+		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		if (!marketType) {
+			return;
+		}
+
+		toggleFavoriteWatchlist(selectedTicker.value, marketType);
+	}
+
 	return {
 		selectedTicker,
 		timeRange,
@@ -120,6 +126,7 @@ export function useChartPrice({
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,
 		handleAddTickerInNewWatchlist,
+		handleToggleFavoriteWatchlist,
 		resetAllChanges,
 		applyStateToParent,
 	};

@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed, useTemplateRef } from 'vue';
+import { onLongPress } from '@vueuse/core';
+
 import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
+import { isOnFavoritesWatchlist, isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
 import { ModalBadgeList, ModalItem, ModalItemSelector } from '@/modules/widgets/base';
 
 interface IProps {
@@ -12,10 +15,11 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	(e: 'add-to-watchlist', watchlists: IWatchlistAction): void;
 	(e: 'remove-from-watchlist', watchlists: IWatchlistAction): void;
 	(e: 'add-to-new-watchlist', tickerId: string): void;
+	(e: 'toggle-favorite'): void;
 }>();
 
 function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
@@ -25,21 +29,31 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 	};
 
 	if (isOnWatchlist(watchlist, tickerId)) {
-		emits('remove-from-watchlist', payload);
+		emit('remove-from-watchlist', payload);
 	} else {
-		emits('add-to-watchlist', payload);
+		emit('add-to-watchlist', payload);
 	}
 }
+
+// favorites
+
+const isFavoriteTicker = computed(() =>isOnFavoritesWatchlist(props.watchlists, props.tickerId));
+
+function onMouseUp(_duration: number, _distance: number, isLongPress: boolean) {
+	if (!isLongPress) {
+		emit('toggle-favorite');
+	}
+}
+
+onLongPress(useTemplateRef('favorite'), () => {}, { onMouseUp });
 </script>
 
 <template>
 	<ui-position>
 		<template #title>
-			<div
-				:class="classes.favorite"
-			>
+			<div ref="favorite" :class="classes.favorite">
 				<ui-icon
-					:id="IconIds.Favorite"
+					:id="isFavoriteTicker ? IconIds.FavoriteFill : IconIds.Favorite"
 					width="16px"
 					height="16px"
 				/>
@@ -58,7 +72,7 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 					</modal-item-selector>
 				</template>
 
-				<modal-item @click="emits('add-to-new-watchlist', props.tickerId)">
+				<modal-item @click="emit('add-to-new-watchlist', props.tickerId)">
 					<div :class="classes.new">
 						<ui-icon
 							:id="IconIds.Plus"

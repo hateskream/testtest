@@ -18,10 +18,11 @@ const props = defineProps<IFiltersComponentProps>();
 const selectedTicker = defineModel<string>('selectedTicker', { required: true });
 const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	(e: 'add-to-watchlist', watchlistId: string): void;
 	(e: 'remove-from-watchlist', watchlistId: string): void;
 	(e: 'add-to-new-watchlist'): void;
+	(e: 'toggle-favorite-watchlist'): void;
 }>();
 
 function updateFilter(newValue: TimeRangeFilterValue) {
@@ -81,6 +82,7 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
 			@add-to-new-watchlist="emits('add-to-new-watchlist')"
+			@toggle-favorite="emit('toggle-favorite-watchlist')"
 		/>
 	</div>
 </template>

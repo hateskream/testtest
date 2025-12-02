@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import {
-	BaseErrorComponent,
-	BaseWidgetDashboard,
-	ModalSubmenu,
-} from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
@@ -37,6 +33,7 @@ const {
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
 	handleAddTickerInNewWatchlist,
+	handleToggleFavoriteWatchlist,
 	resetAllChanges,
 } = useChartPrice({
 	widgetId: props.meta.widgetId,
@@ -70,6 +67,7 @@ function updateTicker(newValue: string[]) {
 				@add-to-watchlist="handleAddToWatchlist"
 				@remove-from-watchlist="handleRemoveFromWatchlist"
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
+				@toggle-favorite-watchlist="handleToggleFavoriteWatchlist"
 			/>
 		</template>
 
