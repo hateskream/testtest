@@ -167,6 +167,10 @@ function onWheel(event: WheelEvent) {
 		return;
 	}
 
+	if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+		return;
+	}
+
 	const { target, deltaY } = event;
 	if (target === null || !(target instanceof HTMLElement)) {
 		return;
@@ -183,18 +187,10 @@ function onWheel(event: WheelEvent) {
 		event.preventDefault();
 
 		scrollRef.value.scrollTop += deltaY;
-		updateScrollTop(deltaY);
+		scrollTop.value = scrollRef.value.scrollTop;
 		emitScrollInfo();
 		return;
 	}
-}
-
-function updateScrollTop(deltaY: number) {
-	if (!scrollRef.value) {
-		return;
-	}
-	scrollRef.value.scrollTop += deltaY;
-	scrollTop.value = scrollRef.value.scrollTop;
 }
 
 async function scrollToWidget(widgetId: string) {
@@ -321,7 +317,6 @@ defineExpose({
 .scroll {
 	position: relative;
 	flex-grow: 1;
-	overflow: hidden;
 }
 
 .widgetsContainer {
@@ -330,9 +325,16 @@ defineExpose({
 	right: 0;
 	bottom: 0;
 	left: 0;
-	overflow-y: auto;
+	overflow-y: scroll;
+	user-select: none;
 	scrollbar-width: none;
-	overscroll-behavior: contain;
+	overscroll-behavior-y: contain;
+	overscroll-behavior-x: auto;
+}
+
+.widgetsContainer::-webkit-scrollbar {
+	width: 0;
+	height: 0;
 }
 
 .widgets {

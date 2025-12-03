@@ -88,14 +88,12 @@ defineExpose({ trackRef });
 <template>
 	<div id="slider" :class="classes.root">
 		<div
+			ref="track"
 			:class="classes.viewport"
 		>
 			<div
-				ref="track"
+
 				:class="classes.track"
-				:style="{
-					'--track': `${props.translateX}px`,
-				}"
 			>
 				<template v-for="(s, i) in preparedSlides" :key="s.id">
 					<div
@@ -210,27 +208,24 @@ defineExpose({ trackRef });
 }
 
 .viewport {
+	touch-action: none;
 	position: relative;
 	display: flex;
 	flex-grow: 1;
 	margin-right: 6px;
 	margin-left: 20px;
 	padding-top: 8px;
-	overflow: hidden;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	-webkit-overflow-scrolling: touch;
 	user-select: none;
-	touch-action: pan-y;
-	overscroll-behavior: contain;
 }
 
 .track {
 	display: flex;
 	flex-grow: 1;
 	align-items: stretch;
-	transform: translateX(var(--track));
-	backface-visibility: hidden;
-	perspective: 1000px;
-	user-select: none;
-	will-change: transform;
 }
 
 .maskContainer {
