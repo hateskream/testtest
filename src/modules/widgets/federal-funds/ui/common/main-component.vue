@@ -1,9 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import type { IFederalFundsDomain } from '@/modules/widgets/federal-funds/model';
+
 interface IMainComponentProps {
-	value: number;
+	data: IFederalFundsDomain;
 }
 
 const props = defineProps<IMainComponentProps>();
+
+const reviewDateLabel = computed(() => {
+	// TODO: [PERF] Вынести в DateFormatter
+	return new Date(props.data.next_review_date).toLocaleDateString([], {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	});
+});
 </script>
 
 <template>
@@ -14,10 +27,10 @@ const props = defineProps<IMainComponentProps>();
 				src="https://flagcdn.com/us.svg"
 				alt="US flag"
 			/>
-			<span>{{ props.value }}%</span>
+			<span>{{ props.data.rate }}%</span>
 		</div>
 		<div :class="classes.text">
-			Next FOMC review scheduled for Sep 16, 2025.
+			Next FOMC review scheduled for {{ reviewDateLabel }}
 		</div>
 	</div>
 </template>

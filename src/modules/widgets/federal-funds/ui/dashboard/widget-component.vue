@@ -4,6 +4,7 @@ import { defineAsyncComponent } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
+import { useFederalFunds } from '@/modules/widgets/federal-funds/composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -23,9 +24,12 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
-const isError = false;
-const isLoading = false;
-const refetch = () => {};
+const {
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useFederalFunds({ widgetId: props.meta.widgetId });
 </script>
 
 <template>
@@ -42,8 +46,8 @@ const refetch = () => {};
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else
-				:value="4.50"
+				v-else-if="data"
+				:data="data"
 			/>
 		</template>
 	</base-widget-dashboard>
