@@ -8,6 +8,7 @@ import {
 	GlassmorphModalTitle,
 	GlassmorphModalWrapper,
 } from '@/shared/ui/glassmorph-modal';
+import { isFeatureEnabled } from '@/shared/lib';
 
 const props = defineProps<{
 	slides: ISection[];
@@ -38,6 +39,10 @@ function updateSections(v: ISection[]) {
 }
 
 function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
+	if (!isFeatureEnabled('DRAG_WIDGET_ENABLED')) {
+		return;
+	}
+
 	const next = localSections.value.map((s, i) =>
 		i === sectionIndex
 			? { ...s, widgets: [...widgets] }

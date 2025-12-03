@@ -230,9 +230,14 @@ function rehydrate(data: DashboardGroup, colNum: number): IDashboardGroup {
 					.entries(dashboard.layout)
 					.map(([key, widgets]) => [
 						Number(key),
-						widgets.map(widget =>
-							rehydrateWidget(widget.id, widget.type, widget.position, widget.defaultStateType),
-						),
+						widgets.map((widget) =>
+							rehydrateWidget(
+								widget.id,
+								widget.type,
+								widget.position,
+								widget.defaultStateType,
+							),
+						).filter(x => x !== null),
 					]),
 			),
 		})),
