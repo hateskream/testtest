@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import { CrosshairMode } from 'lightweight-charts';
+import { computed } from 'vue';
 
 import { RangeChart } from '@/shared/ui/chart-range';
+import { Chart } from '@/modules/lightweight-charts';
+import type { IUSInflationPoint } from '../../model';
 
-import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+interface IChartComponentProps {
+	points: IUSInflationPoint[];
+}
+
+const props = defineProps<IChartComponentProps>();
+
+const preparedDatasets = computed(() => {
+	return props.points.map(point => ({ time: point.label, value: point.value }));
+});
 </script>
 
 <template>
-	<chart-component
+	<chart
 		:range-list="Object.values(RangeChart)"
 		:is-visible-history-graph="false"
 		:is-visible-indicators="false"
@@ -20,6 +31,7 @@ import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue'
 		:crosshair-mode="CrosshairMode.Hidden"
 		:price-visible="false"
 		:width="100"
+		:data="preparedDatasets"
 		height="100%"
 		disable-scroll
 		color-schema="neutral"

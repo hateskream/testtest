@@ -4,6 +4,7 @@ import { defineAsyncComponent } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
+import { useUsInflation } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -23,10 +24,14 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
-const isError = false;
-const isLoading = false;
-const refetch = () => {};
-
+const {
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useUsInflation({
+	widgetId: props.meta.widgetId,
+});
 </script>
 
 <template>
@@ -43,10 +48,8 @@ const refetch = () => {};
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else
-				:value="2.3"
-				:second="0.5"
-				trend="down"
+				v-else-if="data"
+				:data="data"
 			/>
 		</template>
 	</base-widget-dashboard>

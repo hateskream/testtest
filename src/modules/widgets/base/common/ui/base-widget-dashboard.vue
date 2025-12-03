@@ -5,8 +5,7 @@ import { type DisplayVariant, FullViewDashboard, type IMeta } from '@/modules/da
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
 import { UiPosition } from '@/shared/ui/position';
-import { WidgetContextMenu } from '@/modules/widgets/base';
-import { ModalBadgeList } from '@/modules/widgets/base';
+import { ModalBadgeList, WidgetContextMenu } from '@/modules/widgets/base';
 import { isFeatureEnabled } from '@/shared/lib';
 
 import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
