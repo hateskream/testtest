@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { LastPriceAnimationMode } from '@shared/component-library';
+import { computed } from 'vue';
+import { LastPriceAnimationMode, type LineData } from '@shared/component-library';
 
-import { type IChartUpdateEmitData } from '@/modules/lightweight-charts/model';
 import { Chart } from '@/modules/lightweight-charts';
 import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
-import { randomFloat } from '@/shared/lib';
 import type { ICalendarEvent } from '@/modules/calendar';
-import { getMarketSegmentStateColor, type IMarketSegment, TimeRangeFilterValue } from '../../model';
+import {
+	getMarketSegmentStateColor,
+	type IChartPriceCurrent,
+	type IChartPricePoint,
+	type IMarketSegment,
+	TimeRangeFilterValue,
+} from '../../model';
 
 import ChartPriceHeader from './chart-price-header.vue';
 
@@ -20,6 +24,8 @@ interface IChartPriceProps {
 	displayVariant: 'tv' | 'dashboard';
 	events?: ICalendarEvent[];
 	marketSegments?: IMarketSegment[];
+	points: IChartPricePoint[];
+	current: IChartPriceCurrent;
 }
 
 const props = withDefaults(defineProps<IChartPriceProps>(), {
@@ -62,24 +68,9 @@ const activeChartRange = computed({
 	},
 });
 
-const currentPrice = ref<IChartUpdateEmitData>({
-	value: randomFloat(0, 10),
-	time: new Date(),
+const closeTime = computed(() => {
+	return new Date(props.current.updatedAt);
 });
-
-// TODO: Внедрить данные из API
-const generatedChangeData = computed(() => {
-	const change = randomFloat(-2, 2);
-
-	return {
-		value: change,
-		percent: change / currentPrice.value.value * 100,
-	};
-});
-
-function handleUpdateData(data: IChartUpdateEmitData) {
-	currentPrice.value = data;
-}
 
 const timelineSegments = computed(() => {
 	return props.marketSegments.map(segment => {
@@ -92,15 +83,20 @@ const timelineSegments = computed(() => {
 	});
 });
 
-const chartColorSchema = computed(() => generatedChangeData.value.value > 0 ? 'positive' : 'negative');
+const chartColorSchema = computed(() => props.current.changePercent > 0 ? 'positive' : 'negative');
+
+const preparedChartData = computed(() => {
+	return props.points.map((point): LineData => ({ time: point.timestamp, value: point.price }));
+});
 </script>
 
 <template>
 	<div :class="classes.root">
 		<chart-price-header
-			:price="currentPrice.value"
-			:close-time="currentPrice.time"
-			:change="generatedChangeData"
+			:price="props.current.price"
+			:close-time="closeTime"
+			:change-percent="props.current.changePercent"
+			:change-delta="props.current.delta"
 			:show-time="isTvDisplayVariant"
 			:class="[classes.header, {
 				[classes.tv]: isTvDisplayVariant
@@ -115,6 +111,7 @@ const chartColorSchema = computed(() => generatedChangeData.value.value > 0 ? 'p
 		>
 			<chart
 				v-model:range="activeChartRange"
+				:data="preparedChartData"
 				width="100%"
 				height="100%"
 				is-show-tooltip
@@ -135,7 +132,6 @@ const chartColorSchema = computed(() => generatedChangeData.value.value > 0 ? 'p
 				:last-price-animation="LastPriceAnimationMode.Continuous"
 				:color-schema="chartColorSchema"
 				fade-left
-				@update="handleUpdateData"
 			/>
 		</div>
 	</div>

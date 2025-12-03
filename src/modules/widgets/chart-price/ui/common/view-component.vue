@@ -3,7 +3,11 @@ import { computed } from 'vue';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { TimeRangeFilterValue } from '@/modules/widgets/chart-price/model';
+import {
+	type IChartPriceCurrent,
+	type IChartPricePoint,
+	TimeRangeFilterValue,
+} from '@/modules/widgets/chart-price/model';
 import { EventType, type ICalendarEvent, Impact, MarketIds } from '@/modules/calendar';
 import { MarketType } from '@/modules/market';
 import { randomInt } from '@/shared/lib';
@@ -15,6 +19,8 @@ interface IViewComponentProps {
 	meta: IMeta;
 	isShowTimeRange: boolean;
 	displayVariant: 'tv' | 'dashboard';
+	points: IChartPricePoint[];
+	current: IChartPriceCurrent;
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -106,6 +112,8 @@ const mockedMarketSegments: IMarketSegment[] = [
 			:is-show-time-range="props.isShowTimeRange && props.meta.size.w > 2"
 			:is-show-axes="isShowAxes"
 			:is-show-events-timeline="isShowChatEventsTimeline"
+			:current="props.current"
+			:points="props.points"
 			:class="classes.chart"
 			:events="mockedEvents"
 			:market-segments="mockedMarketSegments"

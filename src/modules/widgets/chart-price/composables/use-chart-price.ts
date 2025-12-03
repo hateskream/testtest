@@ -5,6 +5,7 @@ import { getDefaultsState, type IState, TimeRangeFilterValue } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useWatchlist } from '@/modules/watchlist';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import { useQueryChartPrice } from '../queries';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),
@@ -82,12 +83,14 @@ export function useChartPrice({
 		mutate(newState);
 	}, { deep: true });
 
+	const selectedMarketType = computed(() => resolveMarketTypeFromTicker(selectedTicker.value)!);
+
 	function resetAllChanges() {
 		state.value = getDefaultsState(defaultStateType);
 	}
 
 	function handleAddToWatchlist(watchlistId: string ) {
-		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		const marketType = selectedMarketType.value;
 		if (!marketType) {
 			return;
 		}
@@ -100,7 +103,7 @@ export function useChartPrice({
 	}
 
 	function handleAddTickerInNewWatchlist() {
-		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		const marketType = selectedMarketType.value;
 		if (!marketType) {
 			return;
 		}
@@ -117,11 +120,23 @@ export function useChartPrice({
 		toggleFavoriteWatchlist(selectedTicker.value, marketType);
 	}
 
+	const {
+		data,
+		isLoading,
+		isError,
+		refetch,
+	} = useQueryChartPrice(selectedTicker, selectedMarketType, timeRange);
+
 	return {
 		selectedTicker,
 		timeRange,
 		state,
 		watchlists,
+
+		data,
+		isLoading,
+		isError,
+		refetch,
 
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,

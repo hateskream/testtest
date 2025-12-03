@@ -30,6 +30,11 @@ const {
 	timeRange,
 	watchlists,
 
+	data,
+	isLoading,
+	isError,
+	refetch,
+
 	handleAddToWatchlist,
 	handleRemoveFromWatchlist,
 	handleAddTickerInNewWatchlist,
@@ -72,11 +77,14 @@ function updateTicker(newValue: string[]) {
 		</template>
 
 		<template #content>
-			<preloader-component v-if="props.meta.isLoading" />
+			<base-error-component v-if="isError" @retry="refetch" />
+			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
-				v-else
+				v-else-if="data"
 				v-model:range="timeRange"
 				:meta="meta"
+				:points="data.points"
+				:current="data.current"
 				:is-show-time-range="false"
 				display-variant="dashboard"
 			/>
