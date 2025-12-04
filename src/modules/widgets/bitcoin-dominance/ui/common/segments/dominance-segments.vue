@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { IDominanceSnapshot, IDominanceSnapshotValues } from '../../../model';
+import type { IDominanceSnapshot } from '../../../model';
 
 import DominanceSegmentsIndicator from './dominance-segments-indicator.vue';
 
 interface IViewComponentProps {
 	snapshots: IDominanceSnapshot[];
-	other: IDominanceSnapshotValues;
 	isShowSegments?: boolean;
 	isShowIndicator?: boolean;
 }
@@ -31,23 +30,10 @@ const props = defineProps<IViewComponentProps>();
 					{{ item.dominance.current.toFixed(1) }}%
 				</div>
 			</div>
-			<div
-				:class="classes.ticker"
-			>
-				<div :class="classes.name">
-					<div :class="classes.circle" :style="{backgroundColor: '#fff'}"></div>
-					<span>Other</span>
-				</div>
-
-				<div :class="classes.value">
-					{{ props.other.current.toFixed(1) }}%
-				</div>
-			</div>
 		</div>
 		<dominance-segments-indicator
 			v-if="isShowIndicator"
 			:snapshots="props.snapshots"
-			:other="props.other"
 		/>
 	</div>
 </template>

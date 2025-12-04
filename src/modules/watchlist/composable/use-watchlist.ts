@@ -1,25 +1,25 @@
-import { computed, ref } from 'vue';
-import { watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import z from 'zod';
 
 import {
-	type IActionableWatchlist,
-	type IWatchlist,
 	addNewWatchlist as addNewWatchlistModel,
-	renameWatchlist as renameWatchlistModel,
-	removeWatchlist as removeWatchlistModel,
-	duplicateWatchlist as duplicateWatchlistModel,
 	addTickerInNewWatchlist as addTickerInNewWatchlistModel,
-	deleteSectionFromWatchlist as deleteSectionFromWatchlistModel,
 	addTickerInWatchlist,
+	createFavoritesWatchlist,
+	deleteSectionFromWatchlist as deleteSectionFromWatchlistModel,
 	deleteTickerFromWatchlist,
+	duplicateWatchlist as duplicateWatchlistModel,
 	getActionableWatchlists,
-	type IState,
 	getDefaultState,
+	type IActionableWatchlist,
+	type IState,
+	type IWatchlist,
+	removeWatchlist as removeWatchlistModel,
+	renameWatchlist as renameWatchlistModel,
+	SpecificSectionType,
 } from '../model';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { SpecificSectionType } from '../model';
 
 const sectionSchema = z.object({
 	id: z.string(),
@@ -32,6 +32,7 @@ const watchlistSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	sections: z.array(sectionSchema),
+	isFavorites: z.boolean(),
 });
 
 const stateSchema = z.array(watchlistSchema);
@@ -87,6 +88,12 @@ export function useWatchlist() {
 	}
 
 	function removeWatchlist(tabId: string) {
+		const watchlist = watchlists.value.find(w => w.id === tabId);
+
+		if (watchlist && watchlist.isFavorites) {
+			throw new Error('Cannot remove favorites watchlist');
+		}
+
 		watchlists.value = removeWatchlistModel(watchlists.value, tabId);
 	}
 
@@ -110,6 +117,50 @@ export function useWatchlist() {
 		watchlists.value = deleteSectionFromWatchlistModel(watchlists.value, watchlistId, sectionId);
 	}
 
+	// favorites
+
+	function getFavoritesWatchlist() {
+		return watchlists.value.find(w => w.isFavorites);
+	}
+
+	function addToFavoritesWatchlist(tickerId: string, market: MarketType) {
+		let favorites = getFavoritesWatchlist();
+		if (!favorites) {
+			favorites = createFavoritesWatchlist();
+
+			watchlists.value = [favorites, ...watchlists.value];
+		}
+
+		watchlists.value = addTickerInWatchlist(watchlists.value, favorites.id, tickerId, market);
+	}
+
+	function removeFromFavoritesWatchlist(tickerId: string) {
+		const favorites = getFavoritesWatchlist();
+		if (!favorites) {
+			return;
+		}
+
+		watchlists.value = deleteTickerFromWatchlist(watchlists.value, favorites.id, tickerId);
+	}
+
+	function isInFavoritesWatchlist(tickerId: string) {
+		const favorites = getFavoritesWatchlist();
+		if (!favorites) {
+			return false;
+		}
+
+		return favorites.sections.some(s => s.tickerIds.includes(tickerId));
+	}
+
+	function toggleFavoriteWatchlist(tickerId: string, market: MarketType) {
+		if (isInFavoritesWatchlist(tickerId)) {
+			removeFromFavoritesWatchlist(tickerId);
+		} else {
+			addToFavoritesWatchlist(tickerId, market);
+		}
+	}
+
+
 	return {
 		watchlists,
 		actionableWatchlists,
@@ -125,5 +176,8 @@ export function useWatchlist() {
 		addToWatchlist,
 		removeFromWatchlist,
 		addTickerInNewWatchlist,
+
+		isInFavoritesWatchlist,
+		toggleFavoriteWatchlist,
 	};
 }

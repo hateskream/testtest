@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ModalSearch } from '@/modules/widgets/base';
+import { useTemplateRef } from 'vue';
+
+import { TvModalDivider, UiModalSearch } from '@/shared/ui/modal';
+import type { FilterListType } from '@/modules/ticker-selector/model';
 
 interface IModalFilterHeaderProps {
 	isBackgroundTransparent?: boolean;
+	viewMode: FilterListType;
 	autofocus?: boolean;
 	textAboveSearch?: string;
 	searchPlaceholder?: string;
+	showDriver: boolean;
 }
 
 const props = withDefaults(defineProps<IModalFilterHeaderProps>(), {
@@ -15,20 +20,20 @@ const props = withDefaults(defineProps<IModalFilterHeaderProps>(), {
 });
 
 const queryModel = defineModel<string>('query', { default: '' });
+
+const searchRef = useTemplateRef('search');
+
+function searchFocus() {
+	searchRef.value?.searchFocus();
+}
+
+defineExpose({
+	searchFocus,
+});
 </script>
 
-
 <template>
-	<div
-		:class="classes.header"
-		:style="isBackgroundTransparent
-			? {
-				background: 'linear-gradient(to top, transparent 0, var(--bg-color-surface-01) 22%)',
-			}
-			: {
-				background: 'linear-gradient(to top, transparent 0, var(--bg-modal-color-base) 22%)',
-			}"
-	>
+	<div :class="classes.header">
 		<div
 			v-if="props.textAboveSearch"
 			:class="classes.textAboveSearch"
@@ -37,27 +42,26 @@ const queryModel = defineModel<string>('query', { default: '' });
 		</div>
 
 		<div :class="classes.search">
-			<modal-search
+			<ui-modal-search
+				ref="search"
 				v-model="queryModel"
 				:placeholder="props.searchPlaceholder"
 				:autofocus="props.autofocus"
 			/>
 		</div>
+
+		<tv-modal-divider v-if="showDriver" />
 	</div>
 </template>
 
 <style module="classes">
+.header {
+	width: 100%;
+}
+
 .textAboveSearch {
 	padding: 12px;
 	font-style: normal;
 	text-align: center;
-}
-
-.search {
-	padding-inline: 12px;
-}
-
-.header {
-	margin-bottom: 20px;
 }
 </style>

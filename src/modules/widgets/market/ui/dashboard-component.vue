@@ -91,6 +91,7 @@ const emit = defineEmits<{
 				v-model:filters="filtersState"
 				v-model:market="activeMarket"
 				v-model:columns="columns"
+				display-variant="new"
 				:filters-values="filtersValues"
 				:rows="rows"
 				:watchlists="watchlists"

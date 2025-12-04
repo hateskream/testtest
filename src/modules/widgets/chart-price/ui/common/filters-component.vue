@@ -18,10 +18,11 @@ const props = defineProps<IFiltersComponentProps>();
 const selectedTicker = defineModel<string>('selectedTicker', { required: true });
 const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	(e: 'add-to-watchlist', watchlistId: string): void;
 	(e: 'remove-from-watchlist', watchlistId: string): void;
 	(e: 'add-to-new-watchlist'): void;
+	(e: 'toggle-favorite-watchlist'): void;
 }>();
 
 function updateFilter(newValue: TimeRangeFilterValue) {
@@ -54,7 +55,7 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 					<span>{{ filterValueToDisplay[timeRange].label }}</span>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<template #title>
 							Time Range
 						</template>
@@ -77,9 +78,11 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 			:watchlists="props.watchlists"
 			:ticker-id="selectedTicker"
 			:class="classes.watchlist"
-			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
-			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
-			@add-to-new-watchlist="emits('add-to-new-watchlist')"
+			:display-variant
+			@add-to-watchlist="emit('add-to-watchlist', $event.watchlistId)"
+			@remove-from-watchlist="emit('remove-from-watchlist', $event.watchlistId)"
+			@add-to-new-watchlist="emit('add-to-new-watchlist')"
+			@toggle-favorite="emit('toggle-favorite-watchlist')"
 		/>
 	</div>
 </template>

@@ -6,7 +6,7 @@ import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemSwitch } from '@/mo
 import { PreloaderComponent } from '../common';
 import { useDominance } from '../../composables';
 import { UiEmptyState } from '@/shared/ui/empty-state';
-import { UiPillButton } from '@/shared/ui/pill';
+import { UiPillItem } from '@/shared/ui/pill';
 
 import DominanceFiltersPanel from '@/modules/widgets/bitcoin-dominance/ui/common/dominance-filters-panel.vue';
 
@@ -62,6 +62,7 @@ const emit = defineEmits<{
 			<dominance-filters-panel
 				v-model:selected-tickers="selectedTickers"
 				v-model:date-range="activeDateRange"
+				display-variant="default"
 				:meta="props.meta"
 				:display-settings="displaySettings"
 				:class="classes.filters"
@@ -82,9 +83,9 @@ const emit = defineEmits<{
 			/>
 			<ui-empty-state v-else>
 				<template #footer>
-					<ui-pill-button :class="classes.reset" @click="resetAllFilters">
+					<ui-pill-item :class="classes.reset" @click="resetAllFilters">
 						Reset filters
-					</ui-pill-button>
+					</ui-pill-item>
 				</template>
 			</ui-empty-state>
 		</template>

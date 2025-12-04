@@ -1,14 +1,11 @@
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
 
-import {
-	getDefaultsState,
-	TimeRangeFilterValue,
-	type IState,
-} from '../model';
+import { getDefaultsState, type IState, TimeRangeFilterValue } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useWatchlist } from '@/modules/watchlist';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import { useQueryChartPrice } from '../queries';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),
@@ -33,6 +30,7 @@ export function useChartPrice({
 		addToWatchlist,
 		removeFromWatchlist,
 		addTickerInNewWatchlist,
+		toggleFavoriteWatchlist,
 	} = useWatchlist();
 
 	const {
@@ -85,12 +83,14 @@ export function useChartPrice({
 		mutate(newState);
 	}, { deep: true });
 
+	const selectedMarketType = computed(() => resolveMarketTypeFromTicker(selectedTicker.value)!);
+
 	function resetAllChanges() {
 		state.value = getDefaultsState(defaultStateType);
 	}
 
 	function handleAddToWatchlist(watchlistId: string ) {
-		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		const marketType = selectedMarketType.value;
 		if (!marketType) {
 			return;
 		}
@@ -103,7 +103,7 @@ export function useChartPrice({
 	}
 
 	function handleAddTickerInNewWatchlist() {
-		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		const marketType = selectedMarketType.value;
 		if (!marketType) {
 			return;
 		}
@@ -111,15 +111,37 @@ export function useChartPrice({
 		addTickerInNewWatchlist(selectedTicker.value, marketType);
 	}
 
+	function handleToggleFavoriteWatchlist() {
+		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		if (!marketType) {
+			return;
+		}
+
+		toggleFavoriteWatchlist(selectedTicker.value, marketType);
+	}
+
+	const {
+		data,
+		isLoading,
+		isError,
+		refetch,
+	} = useQueryChartPrice(selectedTicker, selectedMarketType, timeRange);
+
 	return {
 		selectedTicker,
 		timeRange,
 		state,
 		watchlists,
 
+		data,
+		isLoading,
+		isError,
+		refetch,
+
 		handleAddToWatchlist,
 		handleRemoveFromWatchlist,
 		handleAddTickerInNewWatchlist,
+		handleToggleFavoriteWatchlist,
 		resetAllChanges,
 		applyStateToParent,
 	};

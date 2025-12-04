@@ -94,7 +94,7 @@ const preparedOffsets = computed(() => {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list display-variant="default">
 						<template #title>Related events</template>
 						<template #default>
 							<div :class="classes.scrollable">

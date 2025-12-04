@@ -60,25 +60,25 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'USDollar',
-					height: 156,
+					height: 136,
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',
 				},
 				{
 					defaultState: 'Gold',
-					height: 156,
+					height: 136,
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',
 				},
 				{
 					defaultState: 'stock',
-					height: 125,
+					height: 145,
 					widgetType:  WidgetType.UsInflation,
 					defaultDisplayVariant: 'chart',
 				},
 				{
 					defaultState: 'stock',
-					height: 125,
+					height: 135,
 					widgetType:  WidgetType.FederalFunds,
 					defaultDisplayVariant: 'chart',
 				},
@@ -138,10 +138,22 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 268,
+					height: 245,
 					widgetType:  WidgetType.NewsSummary,
 					defaultDisplayVariant: 'default',
 				},
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Economic Calendar',
+			width: 360,
+			widgets: [
 				{
 					defaultState: 'stock',
 					height: 240,
@@ -149,9 +161,9 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultDisplayVariant: 'default',
 				},
 				{
-					defaultState: 'stock',
+					defaultState: 'economic',
 					height: Infinity,
-					widgetType:  WidgetType.News,
+					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл
 					defaultDisplayVariant: 'default',
 				},
 			],
@@ -212,12 +224,6 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultState: 'none',
 					height: 190,
 					widgetType:  WidgetType.NonfarmPayrolls,
-					defaultDisplayVariant: 'default',
-				},
-				{
-					defaultState: 'none', // сделать стейт
-					height: Infinity,
-					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл ы
 					defaultDisplayVariant: 'default',
 				},
 			],

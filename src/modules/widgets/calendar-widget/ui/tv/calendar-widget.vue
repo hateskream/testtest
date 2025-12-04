@@ -86,6 +86,7 @@ const isLoading = computed(
 				v-model:event-state="eventType"
 				v-model:watchlist-id-state="watchlistId"
 				v-model:watchlist-section-state="watchlistSection"
+				display-variant="default"
 				:event-board-favorites="eventBoardFavorites"
 				:base-date="baseDate"
 				:locale="locale"

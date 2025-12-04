@@ -12,10 +12,10 @@ import {
 	Sentiment,
 	type SortState,
 	Source,
+	getActiveLocations,
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
-import { getActiveLocations } from '../utils';
 import { MarketType } from '@/modules/market';
 import { createStateQueries } from '@/shared/service/data-repo';
 import type { IDateRange } from '@/shared/ui/calendar';

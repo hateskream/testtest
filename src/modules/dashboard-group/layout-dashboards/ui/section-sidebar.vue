@@ -11,9 +11,9 @@ import SectionTocModal from './section-toc-modal.vue';
 const props = defineProps<{
 	slides: ISection[];
 	slidesWheel: Record<string, ISectionWheelPayload>;
+	currentIndex: number;
 	canPrev: boolean;
 	canNext: boolean;
-	translateX: number;
 }>();
 
 const emits = defineEmits<{
@@ -41,39 +41,17 @@ const sticks = computed(() =>
 	]),
 );
 
-const activeSectionIndex = computed(() => {
-	if (!props.canNext) {
-		return sticks.value.length - 1;
-	}
-
-	const x = Math.abs(props.translateX);
-
-	let offset = 0;
-
-	for (let i = 0; i < props.slides.length; i += 1) {
-		const nextOffset = offset + props.slides[i].width;
-
-		if (x < nextOffset) {
-			return i;
-		}
-
-		offset = nextOffset;
-	}
-
-	return props.slides.length - 1;
-});
-
 const activeStickIndex = computed(() => {
 	if (!props.canNext) {
 		return -1;
 	}
 
-	const sectionId = props.slides[activeSectionIndex.value].id;
+	const sectionId = props.slides[props.currentIndex].id;
 	const wheel = props.slidesWheel[sectionId];
 
 	if (!wheel || wheel.passedWidgets === 0) {
 		return sticks.value.findIndex(
-			(s) => s.type === 'section' && s.index === activeSectionIndex.value,
+			(s) => s.type === 'section' && s.index === props.currentIndex,
 		);
 	}
 

@@ -1,9 +1,11 @@
+<script setup lang="ts">
+import { TvModalContent } from '@/shared/ui/modal';
+</script>
+
 <template>
-	<div :class="classes.submenu">
-		<div :class="classes.content">
-			<slot name="content" />
-		</div>
-	</div>
+	<tv-modal-content :class="classes.submenu">
+		<slot name="content" />
+	</tv-modal-content>
 </template>
 
 <style module="classes">

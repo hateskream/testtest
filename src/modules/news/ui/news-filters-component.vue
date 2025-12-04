@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { UiDriver } from '@/shared/ui/driver';
-import { SubpositionContent, SubpositionRoot, SubpositionTrigger } from '@/shared/ui/position';
+import { PositionTeleport, SubpositionContent, SubpositionRoot, SubpositionTrigger } from '@/shared/ui/position';
 import { UiPresence } from '@/shared/ui/presence';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import {
@@ -31,6 +31,7 @@ import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmente
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 
 const props = defineProps<{
+	displayVariant: 'new' | 'default';
 	segments: ISegmentData[];
 	selectedSegmentTickers: SelectedSegmentTickersState;
 }>();
@@ -96,19 +97,22 @@ function toggleInclude(value: Include) {
 					</span>
 				</modal-item-interaction>
 			</subposition-trigger>
-			<ui-presence :state="isOpen" v-slot="{present}">
-				<ui-transition-fade>
-					<subposition-content v-if="present">
-						<news-segment-modal
-							:segments="props.segments"
-							:selected-segment-tickers="props.selectedSegmentTickers"
-							@select-all="emits('selectAll', $event)"
-							@unselect-all="emits('unselectAll', $event)"
-							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-						/>
-					</subposition-content>
-				</ui-transition-fade>
-			</ui-presence>
+			<position-teleport>
+				<ui-presence :state="isOpen" v-slot="{present}">
+					<ui-transition-fade>
+						<subposition-content v-if="present" placement="right-start">
+							<news-segment-modal
+								:display-variant
+								:segments="props.segments"
+								:selected-segment-tickers="props.selectedSegmentTickers"
+								@select-all="emits('selectAll', $event)"
+								@unselect-all="emits('unselectAll', $event)"
+								@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+							/>
+						</subposition-content>
+					</ui-transition-fade>
+				</ui-presence>
+			</position-teleport>
 		</subposition-root>
 
 		<subposition-root trigger="hover" v-slot="{isOpen}">
@@ -119,13 +123,18 @@ function toggleInclude(value: Include) {
 					</span>
 				</modal-item-interaction>
 			</subposition-trigger>
-			<ui-presence :state="isOpen" v-slot="{present}">
-				<ui-transition-fade>
-					<subposition-content v-if="present">
-						<news-location-filter-component v-model:locations="locations" />
-					</subposition-content>
-				</ui-transition-fade>
-			</ui-presence>
+			<position-teleport>
+				<ui-presence :state="isOpen" v-slot="{present}">
+					<ui-transition-fade>
+						<subposition-content v-if="present" placement="right-start">
+							<news-location-filter-component
+								v-model:locations="locations"
+								:display-variant
+							/>
+						</subposition-content>
+					</ui-transition-fade>
+				</ui-presence>
+			</position-teleport>
 		</subposition-root>
 
 		<modal-item :class="classes.select">
@@ -216,6 +225,12 @@ function toggleInclude(value: Include) {
 
 .rowTitle::first-letter {
 	text-transform: uppercase;
+}
+
+.select {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .select:hover {

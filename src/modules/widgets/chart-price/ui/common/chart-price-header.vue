@@ -2,29 +2,53 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { prettyNumberWithKey } from '@/shared/lib';
 
 interface IChartPriceHeaderProps {
 	showTime?: boolean;
 	price: number;
-	change: {
-		value: number;
-		percent: number;
-	};
+	changePercent: number;
+	changeDelta: number;
 	closeTime: Date;
 }
 
 const props = defineProps<IChartPriceHeaderProps>();
 
-const preparedTime = computed(() =>
-	props.closeTime.toLocaleString(undefined, {
+const preparedTime = computed(() => {
+	return props.closeTime.toLocaleString(undefined, {
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric',
 		hour: 'numeric',
 		minute: '2-digit',
 		hour12: true,
-	}),
-);
+	});
+});
+
+const isUpTrend = computed(() => props.changePercent > 0);
+
+const formattedPrice = computed(() => {
+	if (props.price >= 100_000) {
+		const { row } = prettyNumberWithKey(props.price.toString());
+		return row;
+	}
+
+	if (props.price >= 1_000) {
+		const formatter = new Intl.NumberFormat('en');
+		return formatter.format(props.price).replace(',', ' ');
+	}
+
+	return props.price.toFixed(2);
+});
+
+const formattedChangeDelta = computed(() => {
+	const { row } = prettyNumberWithKey(Math.abs(props.changeDelta), 2);
+	return row;
+});
+
+const formattedChangePercent = computed(() => {
+	return Math.abs(props.changePercent).toFixed(2);
+});
 </script>
 
 <template>
@@ -36,24 +60,26 @@ const preparedTime = computed(() =>
 			<div :class="classes.segmentRow">
 				<div :class="classes.segmentValue">
 					<span>$</span>
-					<span>{{ props.price.toFixed(2) }}</span>
+					<span>{{ formattedPrice }}</span>
 				</div>
 				<div
 					:class="[
 						classes.segmentChange,
-						props.change.value > 0 ? classes.positive : classes.negative,
+						isUpTrend ? classes.positive : classes.negative,
 					]"
 				>
 					<ui-icon
-						:id="props.change.value > 0 ? IconIds.Gainers : IconIds.Loosers"
-						height="12px"
-						width="12px"
+						:id="isUpTrend ? IconIds.Gainers : IconIds.Loosers"
+						height="8px"
+						width="8px"
 						:class="classes.segmentChangeIcon"
 					/>
 					<div :class="classes.segmentChangeValue">
-						{{ props.change.value.toFixed(2) }} ({{
-							props.change.percent.toFixed(2)
-						}}%)
+						<span>{{formattedChangeDelta}}</span>
+						<span> (</span>
+						<span v-if="props.changePercent < 0">−&nbsp;</span>
+						<span>{{formattedChangePercent}}</span>
+						<span>%)</span>
 					</div>
 				</div>
 			</div>
@@ -120,7 +146,7 @@ const preparedTime = computed(() =>
 
 .segmentChangeValue {
 	font-weight: 400;
-	font-size: 13.3px;
+	font-size: var(--font-text-300-r-size, 13.3px);
 	line-height: 180%;
 	letter-spacing: 0.146px;
 }

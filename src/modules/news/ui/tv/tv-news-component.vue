@@ -4,8 +4,9 @@ import { computed } from 'vue';
 import Image from '@/assets/images/stock/META.png';
 import { UiImage } from '@/shared/ui/image';
 import { UiTransitionFade } from '@/shared/ui/transition';
-import { UiTooltip } from '@/shared/ui/tooltip';
+import { UiPositionTooltip } from '@/shared/ui/position';
 import type { IDisplaySettings, INews } from '../../model';
+import { TvTooltipWrapper } from '@/shared/ui/tooltip';
 
 import NewsIconScoreComponent from '../news-icon-score-component.vue';
 
@@ -96,11 +97,7 @@ const time = computed(() =>
 							v-for="stock in props.news.stocks"
 							:key="stock.ticker"
 						>
-							<ui-tooltip>
-								<template #content>
-									{{ stock.name }}
-								</template>
-
+							<ui-position-tooltip>
 								<div :class="classes.newsStock">
 									<ui-image
 										:class="classes.newsStockImage"
@@ -108,7 +105,13 @@ const time = computed(() =>
 										replacement="/images/market/ADA.png"
 									/>
 								</div>
-							</ui-tooltip>
+
+								<template #content>
+									<tv-tooltip-wrapper>
+										{{ stock.name }}
+									</tv-tooltip-wrapper>
+								</template>
+							</ui-position-tooltip>
 						</template>
 					</div>
 				</ui-transition-fade>

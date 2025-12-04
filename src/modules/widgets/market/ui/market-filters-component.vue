@@ -12,6 +12,7 @@ const filters = defineModel<FiltersState>('filters', { required: true });
 
 const props = defineProps<{
 	filtersValues: FiltersValues;
+	displayVariant: 'default' | 'new';
 }>();
 
 const emits = defineEmits<{
@@ -20,7 +21,7 @@ const emits = defineEmits<{
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<template #title> Filter </template>
 
 		<modal-submenu
@@ -32,7 +33,11 @@ const emits = defineEmits<{
 			</template>
 
 			<template #content>
-				<market-badge-list v-model="market" title="Categories" />
+				<market-badge-list
+					v-model="market"
+					title="Categories"
+					:display-variant
+				/>
 			</template>
 		</modal-submenu>
 
@@ -55,7 +60,7 @@ const emits = defineEmits<{
 			</template>
 
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template v-if="props.filtersValues['status']?.length">
 						<modal-item-selector
 							v-for="filterValue in props.filtersValues['status']"

@@ -5,8 +5,8 @@ import { type DisplayVariant, FullViewDashboard, type IMeta } from '@/modules/da
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { displayVariantToIcon, displayVariantToName } from '../model';
 import { UiPosition } from '@/shared/ui/position';
-import { WidgetContextMenu } from '@/modules/widgets/base';
-import { ModalBadgeList } from '@/modules/widgets/base';
+import { ModalBadgeList, WidgetContextMenu } from '@/modules/widgets/base';
+import { isFeatureEnabled } from '@/shared/lib';
 
 import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
 
@@ -25,6 +25,8 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 	(e: 'reset'): void;
 }>();
+
+const isWidgetActionsEnabled = isFeatureEnabled('CONTEXT_MENU_WIDGET_ACTIONS');
 
 const activeDisplayVariant = defineModel<DisplayVariant>('activeDisplayVariant', { required: true });
 
@@ -67,6 +69,10 @@ const hasExpandedView = computed(() => {
 const contextMenuRef = useTemplateRef('context-menu');
 
 function handleFullscreen() {
+	if (!isWidgetActionsEnabled) {
+		return;
+	}
+
 	isFullscreen.value = true;
 	contextMenuRef.value?.handleClose?.();
 }
@@ -142,7 +148,7 @@ function handleFullscreen() {
 									<slot name="settings-menu" />
 								</template>
 
-								<modal-badge-list v-else-if="slots['change-display']">
+								<modal-badge-list v-else-if="slots['change-display']" display-variant="new">
 									<slot name="change-display" />
 								</modal-badge-list>
 							</template>
@@ -168,10 +174,11 @@ function handleFullscreen() {
 								</button>
 							</template>
 
-							<template #content>
+							<template #content v-if="isWidgetActionsEnabled">
 								<widget-context-menu
 									:title="props.meta.name"
 									:dashboards="props.meta.dashboards"
+									display-variant="new"
 									@delete="emits('delete')"
 									@duplicate="emits('duplicate')"
 									@move-to="emits('moveTo', $event)"

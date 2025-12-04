@@ -15,9 +15,7 @@ const easeInOutCubic: ScrollEasing = t =>
 const easeOutQuint: ScrollEasing = t => 1 - Math.pow(1 - t, 5);
 const easeOutExpo: ScrollEasing = t => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 const easeInOutQuint: ScrollEasing = t =>
-	t < 0.5
-		? 16 * t * t * t * t * t
-		: 1 - Math.pow(-2 * t + 2, 5) / 2;
+	t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
 
 export const ScrollEasings = {
 	cubic: easeInOutCubic,
@@ -25,6 +23,7 @@ export const ScrollEasings = {
 	outExpo: easeOutExpo,
 	inOutQuint: easeInOutQuint,
 };
+
 
 export function smoothScrollTo(
 	element: HTMLElement | Window,
@@ -40,14 +39,19 @@ export function smoothScrollTo(
 		onUpdate,
 	} = options;
 
+	let activeRAF = 0;
+
 	return new Promise<void>((resolve) => {
-		const start = element instanceof Window
-			? axis === 'y'
-				? element.scrollY
-				: element.scrollX
-			: axis === 'y'
-				? element.scrollTop
-				: element.scrollLeft;
+		cancelAnimationFrame(activeRAF);
+
+		const start =
+			element instanceof Window
+				? axis === 'y'
+					? element.scrollY
+					: element.scrollX
+				: axis === 'y'
+					? element.scrollTop
+					: element.scrollLeft;
 
 		const target = to + offset;
 		const change = target - start;
@@ -92,12 +96,12 @@ export function smoothScrollTo(
 			onUpdate?.(current);
 
 			if (elapsed < duration) {
-				requestAnimationFrame(animate);
+				activeRAF = requestAnimationFrame(animate);
 			} else {
 				resolve();
 			}
 		};
 
-		requestAnimationFrame(animate);
+		activeRAF = requestAnimationFrame(animate);
 	});
 }

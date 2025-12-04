@@ -3,11 +3,11 @@ import { computed, watch } from 'vue';
 
 import { useScreener } from '../composables';
 import { type FilterCondition, ScreenerType } from '../model';
-import { ScreenerFiltersComponent } from '../ui';
 import { UiSkeletonGroup } from '@/shared/ui/skeleton';
 import { useQueryScreener } from '@/modules/screener/base/queries/use-query-screener.ts';
 
 import ScreenerTableComponent from '@/modules/screener/base/ui/screener-table-component.vue';
+import ScreenerFiltersComponent from './screener-filters-component.vue';
 
 const props = defineProps<{
 	type: ScreenerType;

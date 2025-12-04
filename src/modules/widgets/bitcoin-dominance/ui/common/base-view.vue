@@ -3,12 +3,7 @@ import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
-import {
-	DominanceDateRange,
-	type IDisplaySettings,
-	type IDominanceSnapshot,
-	type IDominanceSnapshotValues,
-} from '../../model';
+import { DominanceDateRange, type IDisplaySettings, type IDominanceSnapshot } from '../../model';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import DominanceHistoricalGrid from './historical/dominance-historical-grid.vue';
@@ -26,21 +21,6 @@ interface IViewComponentProps {
 const props = defineProps<IViewComponentProps>();
 
 const activeDateRange = defineModel<DominanceDateRange>('dateRange', { required: true });
-
-const sortedSnapshots = computed(() => [...props.data].sort(
-	(a, b) => +b.dominance.current - +a.dominance.current),
-);
-
-const otherDominanceValues = computed(() => {
-	return sortedSnapshots.value.reduce((acc, item) => {
-		acc.current -= item.dominance.current;
-		acc.yesterday -= item.dominance.yesterday;
-		acc.week -= item.dominance.week;
-		acc.year -= item.dominance.year;
-
-		return acc;
-	}, { current: 100, yesterday: 100, week: 100, year: 100 } as IDominanceSnapshotValues);
-});
 
 const dateRangeToRangeChart: Record<DominanceDateRange, RangeChartType> = {
 	[DominanceDateRange.Day]: RangeChart['24H'],
@@ -77,7 +57,7 @@ const isSmall = computed(() => props.meta.size.w === 1);
 <template>
 	<div :class="classes.root">
 		<div
-			v-if="sortedSnapshots.length > 0"
+			v-if="props.data.length > 0"
 			:class="[
 				classes.top,
 				props.segmentsClass,
@@ -86,28 +66,26 @@ const isSmall = computed(() => props.meta.size.w === 1);
 		>
 			<dominance-segments
 				v-if="props.displaySettings.isShowIndicator || isShowSegments"
-				:snapshots="sortedSnapshots"
-				:other="otherDominanceValues"
+				:snapshots="props.data"
 				:class="classes.segments"
 				:is-show-segments="isShowSegments"
 				:is-show-indicator="props.displaySettings.isShowIndicator"
 			/>
 			<dominance-historical-grid
 				v-if="isShowHistorical"
-				:snapshots="sortedSnapshots"
-				:other="otherDominanceValues"
+				:snapshots="props.data"
 				:is-show-today="!props.displaySettings.isShowIndicator"
 				:class="classes.historical"
 				:meta="props.meta"
 			/>
 		</div>
 		<template
-			v-if="props.displaySettings.isShowChart && meta.size.h > 5 && sortedSnapshots.length > 0"
+			v-if="props.displaySettings.isShowChart && meta.size.h > 5 && props.data.length > 0"
 		>
 			<dominance-history-chart
 				:meta="props.meta"
 				:date-range="activeDateRange"
-				:data="sortedSnapshots"
+				:data="props.data"
 				:selected-tickers="props.selectedTickers"
 				:class="classes.chart"
 			/>

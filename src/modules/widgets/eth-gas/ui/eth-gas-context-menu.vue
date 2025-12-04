@@ -22,6 +22,7 @@ const emit = defineEmits<{
 	<widget-context-menu
 		:dashboards="meta.dashboards"
 		:title="props.title"
+		display-variant="default"
 		@delete="emit('delete')"
 		@reset="emit('reset')"
 	>

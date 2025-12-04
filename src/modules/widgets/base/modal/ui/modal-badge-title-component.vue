@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	align-items: center;
 	min-height: 24px;
 	padding-right: 6px;
-	padding-left: 10px;
+	padding-left: var(--pl, 10px);
 	color: rgb(255 255 255 / 96%);
 	background: rgb(73 73 80 / 70%);
 	border-radius: 8px;

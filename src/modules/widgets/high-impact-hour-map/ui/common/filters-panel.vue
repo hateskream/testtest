@@ -19,7 +19,7 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 				{{ displayValueDataRange[activeDateRange] }}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						Time zone
 					</template>

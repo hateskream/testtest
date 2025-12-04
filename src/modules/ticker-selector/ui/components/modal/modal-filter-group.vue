@@ -9,7 +9,6 @@ import type { MarketType } from '@/modules/market';
 import ModalFilterRow from './modal-filter-row.vue';
 import ModalFilterRowTitle from './modal-filter-row-title.vue';
 import ModalFilterEmptyState from './modal-filter-empty-state.vue';
-import ModalFilterScrollable from './modal-filter-scrollable.vue';
 import ModalFilterRowItem from './modal-filter-row-item.vue';
 
 interface IModalFilterGroupProps {
@@ -52,15 +51,15 @@ const mappedMarket = computed(() => {
 const isSelectedAll = computed(() => props.selectedTickerIds.length === props.tickers.length);
 </script>
 
-
 <template>
-	<modal-filter-scrollable>
+	<div>
 		<modal-filter-row-title
 			v-if="enableBack"
 			:is-selected-all="isSelectedAll"
 			:is-searching="props.isSearching"
 			:enable-select-all="props.enableSelectAll"
 			:class="classes.title"
+			:display-variant
 			is-back
 			is-inside-open
 			@click="emit('back')"
@@ -100,7 +99,7 @@ const isSelectedAll = computed(() => props.selectedTickerIds.length === props.ti
 				</modal-filter-row-item>
 			</template>
 		</modal-filter-row>
-	</modal-filter-scrollable>
+	</div>
 </template>
 
 <style module="classes">

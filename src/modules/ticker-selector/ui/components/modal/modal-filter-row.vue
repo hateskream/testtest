@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import {
 	getMappedRow,
@@ -10,12 +10,12 @@ import {
 
 import ModalFilterTickerItem from './modal-filter-ticker-item.vue';
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
-import ModalFilterScrollable from './modal-filter-scrollable.vue';
 
 interface IProps {
 	list: TickerDto[];
 	selectedIdsMap: string[];
 	displayVariant: 'new' | 'default';
+	isSearching?: boolean;
 }
 
 const props = defineProps<IProps>();
@@ -37,13 +37,13 @@ function onUpdate(tickerId: string, state: boolean) {
 	});
 }
 
-onBeforeMount(() => {
+watch(props.list, () => {
 	mappedTickers.value = props.list.map(getMappedRow);
-});
+}, { deep: true, immediate: true });
 </script>
 
 <template>
-	<modal-filter-scrollable>
+	<div :class="classes.wrapper">
 		<slot name="before-tickers" />
 		<modal-filter-ticker-item
 			v-for="item in mappedTickers"
@@ -66,10 +66,36 @@ onBeforeMount(() => {
 				</div>
 			</template>
 		</modal-filter-ticker-item>
-	</modal-filter-scrollable>
+	</div>
 </template>
 
 <style module="classes">
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	max-height: 300px;
+	overflow: scroll;
+	gap: 2px;
+}
+
+@supports (-moz-appearance: none) {
+	.wrapper:not(:hover) {
+		scrollbar-width: none;
+	}
+
+	.wrapper {
+		scrollbar-width: unset;
+	}
+}
+
+.wrapper:not(:hover)::-webkit-scrollbar {
+	display: none;
+}
+
+.wrapper:hover::-webkit-scrollbar {
+	width: 6px;
+}
+
 .listWrapper {
 	display: flex;
 	justify-content: center;

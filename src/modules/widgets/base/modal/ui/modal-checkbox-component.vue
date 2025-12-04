@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalItem } from '../index';
+
+import ModalItemComponent from './modal-item-component.vue';
 
 const modelValue = defineModel<boolean>({ default: false });
 
@@ -10,7 +11,7 @@ function toggle() {
 </script>
 
 <template>
-	<modal-item
+	<modal-item-component
 		:class="classes.content"
 		@click="toggle"
 	>
@@ -22,7 +23,7 @@ function toggle() {
 				width="12px"
 			/>
 		</div>
-	</modal-item>
+	</modal-item-component>
 </template>
 
 <style module="classes">

@@ -51,6 +51,7 @@ const genericRows = computed(() =>
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">
 				<add-to-watchlist
+					display-variant="default"
 					:ticker-id="tickerId"
 					:watchlists="props.watchlists"
 					@add-to-watchlist="emits('add-to-watchlist', $event)"

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalItem } from '../index';
+
+import ModalItemComponent from './modal-item-component.vue';
 </script>
 
 <template>
-	<modal-item :class="classes.root">
+	<modal-item-component :class="classes.root">
 		<slot />
 
 		<ui-icon
@@ -13,11 +14,16 @@ import { ModalItem } from '../index';
 			width="6"
 			height="20"
 		/>
-	</modal-item>
+	</modal-item-component>
 </template>
 
 <style module="classes">
 .root {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-sizing: border-box;
+	width: 100%;
 	cursor: pointer;
 }
 

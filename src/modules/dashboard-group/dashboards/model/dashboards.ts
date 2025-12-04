@@ -1,31 +1,8 @@
-import type { Component } from 'vue';
+/* eslint-disable @stylistic/max-len */
+import type { AsyncComponentLoader } from 'vue';
 
-import { FearGreedDashboard } from '@/modules/widgets/fear-greed';
-import { MarketDashboard } from '@/modules/widgets/market';
-import { MarketCapDashboardWidget, MarketCapTvWidget } from '@/modules/widgets/market-cap';
-import { NewsDashboardWidget, NewsTvWidget } from '@/modules/widgets/news';
-import { PriceDashboardWidget, PriceTvWidget } from '@/modules/widgets/price';
-import { WatchlistDashboard } from '@/modules/widgets/watchlist';
-import { PerformanceTvWidget, PerformanceDashboardWidget } from '@/modules/widgets/performance';
-import { AltcoinSeasonWidget } from '@/modules/widgets/altcoinSeason';
-import { TopIndicesDashboardWidget, TopIndicesTvWidget } from '@/modules/widgets/top-indices';
-import { CalendarDashboardWidget, CalendarTvWidget } from '@/modules/widgets/calendar-widget';
-import { HeatmapDashboard } from '@/modules/widgets/heatmap';
-import { ChartPriceDashboardWidget, ChartPriceTvWidget } from '@/modules/widgets/chart-price';
-import { ExchangesDashboard } from '@/modules/widgets/exchanges';
-import { EthGasDashboard } from '@/modules/widgets/eth-gas';
-import { WidgetType, type DisplayVariant } from '@/modules/dashboard-group';
-import { BitcoinDominanceTvWidget } from '@/modules/widgets/bitcoin-dominance/ui/tv';
-import { BitcoinDominanceDashboardWidget } from '@/modules/widgets/bitcoin-dominance/ui/dashboard';
-import { ConsumerPriceIndexDashboardWidget } from '@/modules/widgets/consumer-price-index';
-import { NonfarmPayrollsDashboardWidget } from '@/modules/widgets/nonfarm-payrolls';
-import { NominalGdpDashboardWidget } from '@/modules/widgets/nominal-gdp';
-import { UnemploymentRateDashboardWidget } from '@/modules/widgets/unemployment-rate';
-import { RealGdpDashboardWidget } from '@/modules/widgets/real-gdp';
-import { NewsSummaryDashboardWidget } from '@/modules/widgets/news-summary';
-import { HighImpactHourMapDashboardWidget } from '@/modules/widgets/high-impact-hour-map';
-import { UsInflationDashboardWidget } from '@/modules/widgets/us-inflation';
-import { FederalFundsDashboardWidget } from '@/modules/widgets/federal-funds';
+import { WidgetType } from '../../core';
+import type { DisplayVariant } from '../../layout-dashboards';
 
 export interface ISize {
 	w: number;
@@ -54,59 +31,58 @@ export interface IMeta {
 	allDisplayVariants: DisplayVariant[];
 }
 
-interface IWidgetComponentProps {
-	meta: IMeta;
-}
+export function getWidgetComponent(
+	widgetVariant: 'tv' | 'dashboard',
+	widgetType: WidgetType,
+): AsyncComponentLoader {
+	const widgetComponents = {
+		[WidgetType.FearGreed]: () => import('@/modules/widgets/fear-greed').then(m => m.FearGreedDashboard),
+		[WidgetType.Market]: () => import('@/modules/widgets/market').then(m => m.MarketDashboard),
+		[WidgetType.MarketCap]: () => import('@/modules/widgets/market-cap').then(m => m.MarketCapTvWidget),
+		[WidgetType.News]: () => import('@/modules/widgets/news').then(m => m.NewsTvWidget),
+		[WidgetType.Price]: () => import('@/modules/widgets/price').then(m => m.PriceTvWidget),
+		[WidgetType.Watchlist]: () => import('@/modules/widgets/watchlist').then(m => m.WatchlistDashboard),
+		[WidgetType.Performance]: () => import('@/modules/widgets/performance').then(m => m.PerformanceTvWidget),
+		[WidgetType.AltcoinSeason]: () => import('@/modules/widgets/altcoinSeason').then(m => m.AltcoinSeasonWidget),
+		[WidgetType.BitcoinDominance]: () => import('@/modules/widgets/bitcoin-dominance/ui/tv').then(m => m.BitcoinDominanceTvWidget),
+		[WidgetType.TopIndices]: () => import('@/modules/widgets/top-indices').then(m => m.TopIndicesTvWidget),
+		[WidgetType.Calendar]: () => import('@/modules/widgets/calendar-widget').then(m => m.CalendarTvWidget),
+		[WidgetType.Heatmap]: () => import('@/modules/widgets/heatmap').then(m => m.HeatmapDashboard),
+		[WidgetType.ChartPrice]: () => import('@/modules/widgets/chart-price').then(m => m.ChartPriceTvWidget),
+		[WidgetType.Exchange]: () => import('@/modules/widgets/exchanges').then(m => m.ExchangesDashboard),
+		[WidgetType.EthGas]: () => import('@/modules/widgets/eth-gas').then(m => m.EthGasDashboard),
 
-type WidgetComponent = Component<IWidgetComponentProps>;
+		[WidgetType.MarketCap + '_dash']: () => import('@/modules/widgets/market-cap').then(m => m.MarketCapDashboardWidget),
+		[WidgetType.News + '_dash']: () => import('@/modules/widgets/news').then(m => m.NewsDashboardWidget),
+		[WidgetType.Price + '_dash']: () => import('@/modules/widgets/price').then(m => m.PriceDashboardWidget),
+		[WidgetType.Performance + '_dash']: () => import('@/modules/widgets/performance').then(m => m.PerformanceDashboardWidget),
+		[WidgetType.BitcoinDominance + '_dash']: () => import('@/modules/widgets/bitcoin-dominance/ui/dashboard').then(m => m.BitcoinDominanceDashboardWidget),
+		[WidgetType.TopIndices + '_dash']: () => import('@/modules/widgets/top-indices').then(m => m.TopIndicesDashboardWidget),
+		[WidgetType.Calendar + '_dash']: () => import('@/modules/widgets/calendar-widget').then(m => m.CalendarDashboardWidget),
+		[WidgetType.ChartPrice + '_dash']: () => import('@/modules/widgets/chart-price').then(m => m.ChartPriceDashboardWidget),
 
-const componentsTv: Partial<Record<WidgetType, WidgetComponent>> = {
-	[WidgetType.FearGreed]: FearGreedDashboard,
-	[WidgetType.Market]: MarketDashboard,
-	[WidgetType.MarketCap]: MarketCapTvWidget,
-	[WidgetType.News]: NewsTvWidget,
-	[WidgetType.Price]: PriceTvWidget,
-	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceTvWidget,
-	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-	[WidgetType.BitcoinDominance]: BitcoinDominanceTvWidget,
-	[WidgetType.TopIndices]: TopIndicesTvWidget,
-	[WidgetType.Calendar]: CalendarTvWidget,
-	[WidgetType.Heatmap]: HeatmapDashboard,
-	[WidgetType.ChartPrice]: ChartPriceTvWidget,
-	[WidgetType.Exchange]: ExchangesDashboard,
-	[WidgetType.EthGas]: EthGasDashboard,
-};
+		[WidgetType.ConsumerPriceIndex]: () => import('@/modules/widgets/consumer-price-index').then(m => m.ConsumerPriceIndexDashboardWidget),
+		[WidgetType.NonfarmPayrolls]: () => import('@/modules/widgets/nonfarm-payrolls').then(m => m.NonfarmPayrollsDashboardWidget),
+		[WidgetType.NominalGDP]: () => import('@/modules/widgets/nominal-gdp').then(m => m.NominalGdpDashboardWidget),
+		[WidgetType.UnemploymentRate]: () => import('@/modules/widgets/unemployment-rate').then(m => m.UnemploymentRateDashboardWidget),
+		[WidgetType.RealGDP]: () => import('@/modules/widgets/real-gdp').then(m => m.RealGdpDashboardWidget),
+		[WidgetType.NewsSummary]: () => import('@/modules/widgets/news-summary').then(m => m.NewsSummaryDashboardWidget),
+		[WidgetType.HighImpactHourMap]: () => import('@/modules/widgets/high-impact-hour-map').then(m => m.HighImpactHourMapDashboardWidget),
+		[WidgetType.UsInflation]: () => import('@/modules/widgets/us-inflation').then(m => m.UsInflationDashboardWidget),
+		[WidgetType.FederalFunds]: () => import('@/modules/widgets/federal-funds').then(m => m.FederalFundsDashboardWidget),
+	};
 
-const componentsDashboard: Partial<Record<WidgetType, WidgetComponent>> = {
-	[WidgetType.FearGreed]: FearGreedDashboard,
-	[WidgetType.Market]: MarketDashboard,
-	[WidgetType.MarketCap]: MarketCapDashboardWidget,
-	[WidgetType.News]: NewsDashboardWidget,
-	[WidgetType.Price]: PriceDashboardWidget,
-	[WidgetType.Watchlist]: WatchlistDashboard,
-	[WidgetType.Performance]: PerformanceDashboardWidget,
-	[WidgetType.AltcoinSeason]: AltcoinSeasonWidget,
-	[WidgetType.BitcoinDominance]: BitcoinDominanceDashboardWidget,
-	[WidgetType.TopIndices]: TopIndicesDashboardWidget,
-	[WidgetType.Calendar]: CalendarDashboardWidget,
-	[WidgetType.Heatmap]: HeatmapDashboard,
-	[WidgetType.ChartPrice]: ChartPriceDashboardWidget,
-	[WidgetType.Exchange]: ExchangesDashboard,
-	[WidgetType.EthGas]: EthGasDashboard,
-	[WidgetType.ConsumerPriceIndex]: ConsumerPriceIndexDashboardWidget,
-	[WidgetType.NonfarmPayrolls]: NonfarmPayrollsDashboardWidget,
-	[WidgetType.NominalGDP]: NominalGdpDashboardWidget,
-	[WidgetType.UnemploymentRate]: UnemploymentRateDashboardWidget,
-	[WidgetType.RealGDP]: RealGdpDashboardWidget,
-	[WidgetType.NewsSummary]: NewsSummaryDashboardWidget,
-	[WidgetType.HighImpactHourMap]: HighImpactHourMapDashboardWidget,
-	[WidgetType.UsInflation]: UsInflationDashboardWidget,
-	[WidgetType.FederalFunds]: FederalFundsDashboardWidget,
-};
+	const key = widgetVariant === 'dashboard'
+		? widgetType + '_dash'
+		: widgetType;
 
-export function getWidgetComponent(widgetVariant: 'tv' | 'dashboard', widgetType: WidgetType) {
-	return widgetVariant === 'dashboard' ? componentsDashboard[widgetType] : componentsTv[widgetType];
+	const loader = widgetComponents[key] ?? widgetComponents[widgetType];
+	if (!loader) {
+		// eslint-disable-next-line no-console
+		console.error(`Widget ${widgetType} not found widget variant: ${widgetVariant}`);
+	}
+
+	return loader;
 }
 
 const PREFIX_FULL_VIEW = 'ephemeral';

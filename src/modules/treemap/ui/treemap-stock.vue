@@ -20,6 +20,8 @@ import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
 
 interface ITreemapStockProps {
+	displayVariant: 'default' | 'new';
+
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
@@ -74,6 +76,7 @@ function setSelectGroup(id: string | null) {
 <template>
 	<div :class="classes.root">
 		<settings-base
+			:display-variant
 			:market="market"
 			:color-by="colorBy"
 			:color-depth="colorDepth"
@@ -92,6 +95,7 @@ function setSelectGroup(id: string | null) {
 				:setting="sizeBy"
 				:active="activeSizeBy"
 				:icon="IconIds.Size"
+				:display-variant
 			/>
 			<setting-component
 				v-if="!props.isNoGroup"
@@ -99,6 +103,7 @@ function setSelectGroup(id: string | null) {
 				:setting="groupBy"
 				:active="activeGroupBy"
 				:icon="IconIds.GroupBy"
+				:display-variant
 			/>
 		</settings-base>
 		<ui-treemap-layout :data="group">

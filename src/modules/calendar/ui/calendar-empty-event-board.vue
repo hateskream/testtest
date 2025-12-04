@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiPillButton } from '@/shared/ui/pill';
+import { UiPillItem } from '@/shared/ui/pill';
 
 const emits = defineEmits(['reset']);
 </script>
@@ -23,9 +23,9 @@ const emits = defineEmits(['reset']);
 		<p :class="classes.paragraph">
 			Nothing Here
 		</p>
-		<ui-pill-button :class="classes.butt" @click="emits('reset')">
+		<ui-pill-item :class="classes.butt" @click="emits('reset')">
 			Reset filters
-		</ui-pill-button>
+		</ui-pill-item>
 	</div>
 </template>
 

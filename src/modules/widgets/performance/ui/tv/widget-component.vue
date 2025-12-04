@@ -95,6 +95,7 @@ const {
 				v-model:date="currentDate"
 				v-model:symbol-display="currentSymbolDisplayVariant"
 				v-model:quote-currency="quoteCurrency"
+				display-source="default"
 			/>
 		</template>
 	</base-widget-tv-component>

@@ -104,6 +104,7 @@ function toggleSource(source: Source) {
 
 					<template #content>
 						<news-segment-modal
+							display-variant="default"
 							:segments="props.segments"
 							:selected-segment-tickers="props.selectedSegmentsTickers"
 							@select-all="emits('selectAll', $event)"
@@ -142,6 +143,7 @@ function toggleSource(source: Source) {
 									v-model:locations="locations"
 									v-model:include="include"
 									v-model:active-date-range="activeDateRange"
+									display-variant="default"
 									:segments="props.segments"
 									:selected-segment-tickers="props.selectedSegmentsTickers"
 									@select-all="emits('selectAll', $event)"
@@ -166,7 +168,7 @@ function toggleSource(source: Source) {
 						</template>
 
 						<template #content>
-							<modal-badge-list>
+							<modal-badge-list display-variant="default">
 								<template #title>
 									Source
 								</template>

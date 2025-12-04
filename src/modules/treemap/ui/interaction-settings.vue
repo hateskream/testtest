@@ -3,6 +3,7 @@ import { ModalBadgeList, ModalItemSelector, ModalSubmenu } from '@/modules/widge
 import type { ISettings, ISingleSetting } from '../model';
 
 interface IProps {
+	displayVariant: 'default' | 'new';
 	title: string;
 	active: ISettings;
 }
@@ -31,7 +32,7 @@ function update(newValue: string) {
 			</div>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list :display-variant>
 				<template #default>
 					<modal-item-selector
 						v-for="dv in setting.values"

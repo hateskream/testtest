@@ -19,6 +19,8 @@ import { useHeatmapForex } from '../composables';
 import SettingsBase from './settings-base.vue';
 
 interface ITreemapCryptoProps {
+	displayVariant: 'default' | 'new';
+
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
@@ -61,6 +63,7 @@ const {
 			v-model:display-value="displayValue"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="title"
+			:display-variant
 			:active-market="props.activeMarket"
 			:active-color-by="props.activeColorBy"
 			:active-color-depth="props.activeColorDepth"

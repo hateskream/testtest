@@ -1,4 +1,18 @@
-import { ref, computed, watch, type MaybeRefOrGetter, toValue, type ShallowRef, readonly } from 'vue';
+import {
+	ref,
+	computed,
+	type MaybeRefOrGetter,
+	toValue,
+	type ShallowRef,
+	readonly,
+	onBeforeUnmount,
+	onMounted,
+	watch,
+} from 'vue';
+import throttle from 'lodash/throttle';
+
+import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
+
 
 const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
 
@@ -6,13 +20,15 @@ export function useSlider(opts: {
 	slidesWidth: MaybeRefOrGetter<number[]>;
 	gap?: number;
 	viewportWidth: MaybeRefOrGetter<number>;
+	container: MaybeRefOrGetter<HTMLDivElement | null>;
 	isMobile: ShallowRef<boolean, boolean>;
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
+
 	const translateX = ref(0);
 	const isDragging = ref(false);
-
 	const slides = computed(() => toValue(slidesWidth));
+	const currentIndex = ref(0);
 
 	const totalTrackWidth = computed(() => {
 		const cardSum = slides.value.reduce((s, c) => s + (c || 0), 0);
@@ -20,164 +36,225 @@ export function useSlider(opts: {
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
-	watch(() => toValue(viewportWidth), () => setTranslateX(translateX.value));
+	const slideOffsets = computed(() => {
+		const offsets: number[] = [];
+		let acc = 0;
+		for (let i = 0; i < slides.value.length; i += 1) {
+			offsets.push(acc);
+			acc += (slides.value[i] || 0) + gap;
+		}
+		return offsets;
+	});
 
+	const seenSlides = new Set<number>();
 
-	function clampTranslate(x: number) {
-		const maxTranslate = 0;
-		const minTranslate = Math.min(0, toValue(viewportWidth) - totalTrackWidth.value);
-		return Math.max(minTranslate, Math.min(maxTranslate, x));
-	}
+	const visibleSlidesCount = computed(() => {
+		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+		const offset = translateX.value;
+		const end = offset + vp;
 
-	function setTranslateX(x: number) {
-		translateX.value = clampTranslate(x);
-	}
+		let acc = 0;
+		// eslint-disable-next-line no-plusplus
+		for (let i = 0; i < slides.value.length; i++) {
+			const w = slides.value[i];
+			const s = acc;
+			const e = acc + w;
 
-	const pointer = {
-		isDown: false,
-		lastX: 0,
-		startX: 0,
-		lastY: 0,
-		isHorizontal: false,
-		hasDirection: false,
-	};
-
-	const pointerState = {
-		onPointerDown(e: PointerEvent) {
-			pointer.isDown = true;
-			pointer.lastX = e.clientX;
-			pointer.startX = e.clientX;
-			pointer.lastY = e.clientY;
-			pointer.isHorizontal = false;
-			pointer.hasDirection = false;
-			isDragging.value = true;
-		},
-		onPointerMove(e: PointerEvent) {
-			if (!pointer.isDown) {
-				return;
+			if (e > offset && s < end) {
+				seenSlides.add(i);
 			}
-			const dx = e.clientX - pointer.lastX;
-			const dy = e.clientY - pointer.lastY;
+			acc += w + gap;
+		}
 
-			if (!pointer.hasDirection) {
-				pointer.hasDirection = true;
-				pointer.isHorizontal = Math.abs(dx) > Math.abs(dy);
-			}
+		return seenSlides.size;
+	});
 
-			if (pointer.isHorizontal) {
-				e.preventDefault();
-				setTranslateX(translateX.value + dx);
-			}
-
-			pointer.lastX = e.clientX;
-			pointer.lastY = e.clientY;
-		},
-		onPointerUp() {
-			isDragging.value = false;
-			pointer.isDown = false;
-			pointer.hasDirection = false;
-		},
-
-
-		onTouchStart(e: TouchEvent) {
-			pointer.isDown = true;
-			pointer.lastX = e.touches[0].clientX;
-			pointer.lastY = e.touches[0].clientY;
-			pointer.isHorizontal = false;
-			pointer.hasDirection = false;
-		},
-		onTouchMove(e: TouchEvent) {
-			if (!pointer.isDown) {
-				return;
-			}
-			const x = e.touches[0].clientX;
-			const y = e.touches[0].clientY;
-			const dx = x - pointer.lastX;
-			const dy = y - pointer.lastY;
-
-			if (!pointer.hasDirection) {
-				pointer.hasDirection = true;
-				pointer.isHorizontal = Math.abs(dx) > Math.abs(dy);
-			}
-
-			if (pointer.isHorizontal) {
-				e.preventDefault();
-				setTranslateX(translateX.value + dx);
-			}
-
-			pointer.lastX = x;
-			pointer.lastY = y;
-		},
-		onTouchEnd() {
-			pointer.isDown = false;
-			pointer.hasDirection = false;
-
-			if (!isMobile.value) {
-				return;
-			}
-
-			const dx = pointer.lastX - pointer.startX;
-
-			const isLeft = dx < 0;
-
-			if (Math.abs(dx) < toValue(viewportWidth) / 5) {
-				setTranslateX(translateX.value - dx);
-				return;
-			}
-
-			if (isLeft) {
-				next();
-			} else {
-				prev();
-			}
-		},
-
-
-		onWheel(e: WheelEvent) {
-			const { deltaX, deltaY } = e;
-			if (Math.abs(deltaX) > Math.abs(deltaY)) {
-				e.preventDefault();
-				setTranslateX(translateX.value - deltaX);
-			}
-		},
-	};
-
-	function getSlideOffset(index: number) {
-		const widths = slides.value.slice(0, index);
-		const sum = widths.reduce((s, w) => s + w, 0);
-		return -(sum + gap * index);
-	}
-
-	const canPrev = computed(() => translateX.value < 0);
+	const canPrev = computed(() => translateX.value > 0);
 	const canNext = computed(() => {
 		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
 		return translateX.value > minTranslate;
 	});
 
-	const currentIndex = ref(0);
-	function next() {
-		if (!canNext.value) {
-			return;
-		}
-		currentIndex.value = Math.min(slides.value.length - 1, currentIndex.value + 1);
-		setTranslateX(getSlideOffset(currentIndex.value));
+	watch(
+		isDragging,
+		() => {
+			const el = toValue(opts.container);
+			if (!el) {
+				return;
+			}
+
+			if (isDragging.value) {
+				el.style.scrollSnapType = 'none';
+				el.style.scrollBehavior = 'auto';
+			} else {
+				el.style.scrollSnapType = '';
+				el.style.scrollBehavior = '';
+			}
+		},
+	);
+
+	function clamp(x: number) {
+		const maxScroll = Math.max(0, totalTrackWidth.value - toValue(viewportWidth));
+		return Math.max(0, Math.min(maxScroll, x));
 	}
-	function prev() {
-		if (!canPrev.value) {
+
+	function setScroll(x: number) {
+		const el = toValue(opts.container);
+		if (!el) {
 			return;
 		}
-		currentIndex.value = Math.max(0, currentIndex.value - 1);
-		setTranslateX(getSlideOffset(currentIndex.value));
+
+		let currentX = clamp(x);
+
+		if (isMobile.value) {
+			currentX = nearestIndexFromTranslate(x);
+		}
+
+		el.scrollLeft = currentX;
+		translateX.value = currentX;
+	}
+
+	let RAF = 0;
+	function setScrollRAF(scrollX: number) {
+		cancelAnimationFrame(RAF);
+		RAF = requestAnimationFrame(() => {
+			setScroll(scrollX);
+		});
+	}
+
+	function nearestIndexFromTranslate(x: number) {
+		const offsets = slideOffsets.value;
+		if (!offsets.length) {
+			return 0;
+		}
+
+		let best = 0;
+		let bestDist = Math.abs(x - offsets[0]);
+
+		for (let i = 1; i < offsets.length; i += 1) {
+			const d = Math.abs(x - offsets[i]);
+			if (d < bestDist) {
+				bestDist = d;
+				best = i;
+			}
+		}
+		return best;
+	}
+
+	function snapToIndex(index: number) {
+		const el = toValue(opts.container);
+
+		if (!el) {
+			return;
+		}
+
+		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
+		currentIndex.value = clamped;
+
+		smoothScrollTo(el, getSlideOffset(clamped), {
+			duration: 300,
+			axis: 'x',
+		});
+	}
+
+	function next() {
+		if (canNext.value) {
+			snapToIndex(currentIndex.value + 1);
+		}
+	}
+
+	function prev() {
+		if (canPrev.value) {
+			snapToIndex(currentIndex.value - 1);
+		}
 	}
 
 	function goTo(index: number) {
-		if (index < 0 || index >= slides.value.length) {
+		if (index >= 0 && index < slides.value.length) {
+			snapToIndex(index);
+		}
+	}
+
+	function getSlideOffset(index: number) {
+		const widths = slides.value.slice(0, index);
+		const sum = widths.reduce((s, w) => s + w, 0);
+		return sum + gap * index;
+	}
+
+	let startX = 0;
+	let startScrollLeft = 0;
+
+	function onPointerDown(e: PointerEvent) {
+		const el = toValue(opts.container);
+		if (!el) {
 			return;
 		}
 
-		currentIndex.value = index;
-		setTranslateX(getSlideOffset(index));
+		e.preventDefault();
+
+		isDragging.value = true;
+
+		startX = e.clientX;
+		startScrollLeft = el.scrollLeft;
 	}
+
+	function onPointerMove(e: PointerEvent) {
+		if (!isDragging.value) {
+			return;
+		}
+
+		const dx = e.clientX - startX;
+		const nextScroll = startScrollLeft - dx;
+
+		setScrollRAF(nextScroll);
+	}
+
+	function onPointerUp() {
+		isDragging.value = false;
+	}
+
+
+	function handleScroll() {
+		const el = toValue(opts.container);
+
+		if (!el) {
+			// eslint-disable-next-line no-console
+			console.error('Container not found');
+			return;
+		}
+
+		translateX.value = el.scrollLeft;
+	}
+
+	const throttledHandleScroll = throttle(handleScroll, 33);
+
+	onMounted(() => {
+		const el = toValue(opts.container);
+		if (!el) {
+			// eslint-disable-next-line no-console
+			console.error('Container not found');
+			return;
+		}
+
+		handleScroll();
+
+		// el.addEventListener('pointerdown', onPointerDown);
+		el.addEventListener('pointerdown', onPointerDown, { passive: false });
+
+		el.addEventListener('pointermove', onPointerMove);
+		el.addEventListener('pointerup', onPointerUp);
+		el.addEventListener('pointercancel', onPointerUp);
+		el.addEventListener('scroll', throttledHandleScroll);
+
+
+		onBeforeUnmount(() => {
+			el.removeEventListener('pointerdown', onPointerDown);
+			el.removeEventListener('pointermove', onPointerMove);
+			el.removeEventListener('pointerup', onPointerUp);
+			el.removeEventListener('pointercancel', onPointerUp);
+			el.removeEventListener('scroll', throttledHandleScroll);
+		});
+	});
 
 	return {
 		translateX: readonly(translateX),
@@ -185,9 +262,8 @@ export function useSlider(opts: {
 		canNext,
 		next,
 		prev,
-		pointerState,
 		goTo,
 		currentIndex,
-		isDragging,
+		visibleSlidesCount,
 	};
 }

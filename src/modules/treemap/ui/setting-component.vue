@@ -11,6 +11,7 @@ interface IProps {
 	title: string;
 	active: ISettings;
 	icon?: IconIds;
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IProps>();
@@ -41,7 +42,7 @@ function update(newValue: string) {
 			/>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list :display-variant>
 				<template #title>{{ props.title }}</template>
 				<template #default>
 					<modal-item-selector

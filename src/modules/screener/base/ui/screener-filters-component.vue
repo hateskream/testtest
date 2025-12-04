@@ -44,6 +44,7 @@ function updateFilter(key: string, state: IFilterState) {
 		<filter-badge-modal
 			v-for="(config, key) in props.definitions"
 			:key="key"
+			display-variant="new"
 			:config="config"
 			:model-value="filters[key]"
 			@update:model-value="updateFilter(key, $event)"

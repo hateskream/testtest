@@ -10,27 +10,30 @@ export interface IWatchlist {
 	id: string;
 	name: string;
 	sections: ISection[];
+	isFavorites: boolean;
 }
 
 export interface IActionableWatchlist {
 	watchlistId: string;
 	name: string;
 	tickers: string[];
+	isFavorites: boolean;
 }
 
 const MAX_WATCHLIST_COUNT = 10;
 
 export function getDefaultState(): IWatchlist[] {
 	return [
-		createEmptyWatchlist(),
+		createFavoritesWatchlist(),
 	];
 }
 
 export function getActionableWatchlists(watchlists: IWatchlist[]): IActionableWatchlist[] {
 	return watchlists
-		.map(({ id, name, sections }) => ({
+		.map(({ id, name, sections, isFavorites }) => ({
 			watchlistId: id,
 			name,
+			isFavorites,
 			tickers: sections
 				.flatMap(section => section.tickerIds),
 		}));
@@ -43,7 +46,7 @@ export function addNewWatchlist(watchlists: IWatchlist[]): IWatchlist[] {
 
 	return [
 		...watchlists,
-		createEmptyWatchlist(),
+		createFavoritesWatchlist(),
 	];
 }
 
@@ -143,11 +146,21 @@ export function deleteSectionFromWatchlist(
 		}));
 }
 
-function createEmptyWatchlist(): IWatchlist {
+export function createFavoritesWatchlist(): IWatchlist {
 	return {
 		id: uuidv4(),
 		name: 'Favorites',
 		sections: [],
+		isFavorites: true,
+	};
+}
+
+function createEmptyWatchlist(): IWatchlist {
+	return {
+		id: uuidv4(),
+		name: 'Watchlist',
+		sections: [],
+		isFavorites: false,
 	};
 }
 
@@ -162,10 +175,21 @@ export interface IWatchlistData {
 	watchlistId: string;
 	name: string;
 	tickers: string[];
+	isFavorites: boolean;
 }
 
 export function isOnWatchlist(data: IWatchlistData, tickerId: string): boolean {
 	return data.tickers.includes(tickerId);
+}
+
+export function isOnFavoritesWatchlist(watchlists: IWatchlistData[], tickerId: string): boolean {
+	const favorites = watchlists.find(w => w.isFavorites);
+
+	if (!favorites) {
+		return false;
+	}
+
+	return favorites.tickers.includes(tickerId);
 }
 
 export interface IWatchlistAction {

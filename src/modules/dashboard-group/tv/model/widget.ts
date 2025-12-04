@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { EnvironmentName, getAllEnableWidgets, getEnvironmentName, type WidgetFeature } from '@/shared/lib';
+import { EnvironmentName, getEnvironmentName } from '@/shared/lib';
 import { isWidgetTypeKey, WidgetType } from '../../core';
 
 export interface IPosition {
@@ -246,42 +246,24 @@ function getCurrentPresets(): Presets {
 	}
 }
 
-export const FEATURE_TO_WIDGET_TYPE: Record<WidgetFeature, WidgetType> = {
-	'WIDGET_ALTCOIN_SEASON': WidgetType.AltcoinSeason,
-	'WIDGET_FEAR_GREED': WidgetType.FearGreed,
-	'WIDGET_MARKET': WidgetType.Market,
-	'WIDGET_MARKET_CAP': WidgetType.MarketCap,
-	'WIDGET_NEWS': WidgetType.News,
-	'WIDGET_PERFORMANCE': WidgetType.Performance,
-	'WIDGET_PRICE_LIST': WidgetType.Price,
-	'WIDGET_WATCH_LIST': WidgetType.Watchlist,
-	'WIDGET_BITCOIN_DOMINANCE': WidgetType.BitcoinDominance,
-	'WIDGET_TOP_INDICES': WidgetType.TopIndices,
-	'WIDGET_CALENDAR': WidgetType.Calendar,
-	'WIDGET_HEATMAP': WidgetType.Heatmap,
-	'WIDGET_CHART_PRICE': WidgetType.ChartPrice,
-	'WIDGET_EXCHANGE': WidgetType.Exchange,
-	'WIDGET_ETH_GAS': WidgetType.EthGas,
-};
-
 function getPresets(): Presets {
 	const currentPresets = getCurrentPresets();
-	const enableWidgets = getAllEnableWidgets();
-
 	const result: Partial<AllPresets> = {};
 
-	for (const featureWidget of enableWidgets) {
-		const widgetType = FEATURE_TO_WIDGET_TYPE[featureWidget];
+	for (const widgetType of Object.values(WidgetType)) {
 		result[widgetType] = currentPresets[widgetType];
 	}
 
 	return result;
 }
 
-function getPresetByType(widgetType: WidgetType): IPresetOptions {
+function getPresetByType(widgetType: WidgetType): IPresetOptions | null {
 	const preset = getPresets()[widgetType];
+
 	if (!preset) {
-		throw new Error(`Preset not found for widget type: ${widgetType}`);
+		/* eslint-disable no-console */
+		console.warn(`Preset not found for widget type: ${widgetType}`);
+		return null;
 	}
 
 	return {
@@ -290,7 +272,7 @@ function getPresetByType(widgetType: WidgetType): IPresetOptions {
 	};
 }
 
-function createPreset(typeStr: string): IWidgetPreset {
+function createPreset(typeStr: string): IWidgetPreset | null {
 	const type = createWidgetTypeFromString(typeStr);
 
 	return getPresetByType(type);
@@ -299,7 +281,9 @@ function createPreset(typeStr: string): IWidgetPreset {
 export function allWidgets(): IWidgetPreset[] {
 	const presets = getPresets();
 
-	return Object.keys(presets).map(createPreset);
+	return Object.keys(presets)
+		.map(createPreset)
+		.filter(x => x !== null);
 }
 
 export interface IWidget extends IWidgetPreset {
@@ -308,8 +292,12 @@ export interface IWidget extends IWidgetPreset {
 	id: string;
 }
 
-export function createWidget(type: string, position: IPosition, defaultStateType = ''): IWidget {
+export function createWidget(type: string, position: IPosition, defaultStateType = ''): IWidget | null {
 	const preset = createPreset(type);
+
+	if (!preset) {
+		return null;
+	}
 
 	return {
 		...preset,
@@ -319,8 +307,17 @@ export function createWidget(type: string, position: IPosition, defaultStateType
 	};
 }
 
-export function rehydrateWidget(id: string, type: string, position: IPosition, defaultStateType: string): IWidget {
+export function rehydrateWidget(
+	id: string,
+	type: string,
+	position: IPosition,
+	defaultStateType: string,
+): IWidget | null {
 	const preset = createPreset(type);
+
+	if (!preset) {
+		return null;
+	}
 
 	return {
 		...preset,

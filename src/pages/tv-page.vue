@@ -5,15 +5,19 @@ import { templateRef } from '@vueuse/core';
 import { dashboardStateUtility } from '@/shared/lib/dashboard-state-utility';
 import { LayoutComponent } from '@/modules/layout';
 import {
+	DashboardGroupTabs,
+} from '@/modules/dashboard-group/tabs';
+import {
 	DashboardGrid,
+	GhostComponentBase,
 	useDndHandler,
 	useDelete,
-	GhostComponentBase,
+} from '@/modules/dashboard-group/grid';
+import {
 	useGridLayout,
-	useDashboardGroup,
-	DashboardGroupTabs,
-} from '@/modules/dashboard-group';
+} from '@/modules/dashboard-group/tv';
 import { DashboardsCurtain, DeleteComponent } from '@/modules/dashboards-curtain';
+import { useDashboardGroup } from '@/modules/dashboard-group/tv/composables/use-dashboard-group';
 
 const { provideSetterDndHandler, onDrag, onDragEnd, setNewDashboard	} = useDndHandler();
 const { provideCanDelete, setCanDelete } = useDelete();

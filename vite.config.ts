@@ -5,12 +5,14 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
+		visualizer({ open: true }),
 		vue({
 			template: {
 				compilerOptions: {
@@ -74,9 +76,25 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				manualChunks: {
-					vue: ['vue', 'vue-router', 'pinia'],
-					chart: ['chart.js', 'chartjs-plugin-annotation', 'chartjs-chart-treemap'],
-					utils: ['uuid', 'mitt', 'zod'],
+					vue: ['vue', 'vue-router', 'pinia', '@unhead/vue'],
+					tanstack: ['@tanstack/vue-query'],
+					chart: [
+						'chart.js',
+						'chartjs-adapter-date-fns',
+						'chartjs-plugin-annotation',
+						'chartjs-chart-treemap',
+					],
+					lightweightCharts: ['lightweight-charts', 'fancy-canvas'],
+					vcalendar: ['v-calendar'],
+					vuedraggable: ['vuedraggable'],
+					datefns: ['date-fns'],
+					markdown: ['markdown-it', 'dompurify'],
+					indicators: ['technicalindicators'],
+					vueuse: ['@vueuse/core', '@vueuse/integrations'],
+					socket: ['socket.io-client'],
+					grid: ['grid-layout-plus'],
+					utils: ['uuid', 'mitt', 'zod', 'decimal.js', 'ofetch'],
+					sharedComponents: ['@shared/component-library'],
 				},
 				chunkFileNames: 'assets/js/[name]-[hash].js',
 				entryFileNames: 'assets/js/[name]-[hash].js',

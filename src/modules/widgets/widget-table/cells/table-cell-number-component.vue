@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { prettyNumberWithKey } from '@/shared/lib';
-import { UiTooltip } from '@/shared/ui/tooltip';
+import { UiPositionTooltip } from '@/shared/ui/position/ui/tooltip';
 import { getNumberTrendClass } from '../model';
 
 export interface INumberCell {
@@ -58,7 +58,7 @@ const trendClass = computed(() => {
 
 <template>
 	<div class="wrapper">
-		<ui-tooltip :show-in-ms="100">
+		<ui-position-tooltip :open-delay="100">
 			<template #default>
 				<div :class="[classes.number, classes[trendClass]]" class="paragraph-p-00">
 					<span :class="classes.prefix">{{ formattedValue.prefix }}</span>
@@ -74,7 +74,7 @@ const trendClass = computed(() => {
 					<span>{{ formattedValue.suffix }}</span>
 				</div>
 			</template>
-		</ui-tooltip>
+		</ui-position-tooltip>
 	</div>
 </template>
 

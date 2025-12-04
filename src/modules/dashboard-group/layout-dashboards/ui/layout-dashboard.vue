@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, useCssModule, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import { useDashboardLayout, useSlider } from '../composables';
 
 import HeaderDesktop from './header-desktop.vue';
 import HeaderMobile from './header-mobile.vue';
-import SectionSlider from './section-slider.vue';
 import PaginationMobile from './pagination-mobile.vue';
+import SectionSlider from './section-slider.vue';
 
 const emits = defineEmits<{
 	(e: 'close'): void;
@@ -38,36 +38,24 @@ const preparedSlides = computed(
 		})),
 );
 
+const sliderRef = ref<typeof SectionSlider | null>(null);
+
 const {
 	translateX,
-	pointerState,
 	canNext,
 	canPrev,
 	currentIndex,
 	next,
 	prev,
 	goTo,
-	isDragging,
+	visibleSlidesCount,
 } = useSlider({
 	slidesWidth: computed (() => preparedSlides.value.map(s => s.width)),
 	viewportWidth,
 	gap: 23,
 	isMobile,
+	container: computed(() => sliderRef.value?.trackRef),
 });
-
-const classes = useCssModule('classes');
-
-watch(
-	isDragging,
-	() => {
-		if (isDragging.value) {
-			document.body.classList.add(classes['no-select']);
-		} else {
-			document.body.classList.remove(classes['no-select']);
-		}
-	},
-);
-
 </script>
 
 <template>
@@ -78,21 +66,16 @@ watch(
 				:tabs="tabs"
 			/>
 			<section-slider
+				ref="sliderRef"
 				:slides="preparedSlides"
 				:can-next="canNext"
 				:can-prev="canPrev"
 				:translate-x="translateX"
-				:viewport-width="viewportWidth"
+				:current-index="currentIndex"
+				:visible-slides-count="visibleSlidesCount"
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"
-				@wheel="pointerState.onWheel"
-				@pointer-down="pointerState.onPointerDown"
-				@pointer-move="pointerState.onPointerMove"
-				@pointer-up="pointerState.onPointerUp"
-				@touch-start="pointerState.onTouchStart"
-				@touch-move="pointerState.onTouchMove"
-				@touch-end="pointerState.onTouchEnd"
 				@update-section="sections = $event"
 			/>
 		</div>
@@ -136,9 +119,5 @@ watch(
 	.container {
 		border-radius: 34px;
 	}
-}
-
-.no-select {
-	user-select: none !important;
 }
  </style>

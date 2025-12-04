@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IPositionProps, UiSubposition } from '@/shared/ui/position';
+import { UiModalItem } from '@/shared/ui/modal-items';
 
 const props = withDefaults(defineProps<IPositionProps>(), {
 	teleport: false,
@@ -11,20 +12,20 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 </script>
 
 <template>
-	<ui-subposition
-		v-bind="props"
-	>
-		<template #title="{ isVisible }">
-			<div :class="[classes.title, { [classes.titleActive]: isVisible }]">
+	<ui-subposition v-bind="props">
+		<template #title>
+			<ui-modal-item :class="classes.item">
 				<slot name="title" />
 
-				<ui-icon
-					:id="IconIds.RcmArrowRight"
-					:class="classes.iconArrowRight"
-					width="6"
-					height="20"
-				/>
-			</div>
+				<div :class="classes.wrapper">
+					<ui-icon
+						:id="IconIds.RcmArrowRight"
+						:class="classes.iconArrowRight"
+						width="12px"
+						height="12px"
+					/>
+				</div>
+			</ui-modal-item>
 		</template>
 
 		<template #content>
@@ -40,24 +41,22 @@ const props = withDefaults(defineProps<IPositionProps>(), {
 	min-width: 204px;
 }
 
-.iconArrowRight {
-	color: #7a7a7a;
-}
-
-.title {
+.item {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 12px;
-	font-weight: 300;
-	font-size: 12px;
-	color: var(--text-color-base-500);
-	border-radius: 18px;
 	cursor: pointer;
-	transition: background-color 0.3s ease;
 }
 
-.titleActive {
-	background-color: var(--bg-color-surface-01-effect);
+.wrapper {
+	display: grid;
+	width: 24px;
+	height: 24px;
+	transform: translateX(0.5px);
+	place-items: center;
+}
+
+.iconArrowRight {
+	color: #7a7a7a;
 }
 </style>

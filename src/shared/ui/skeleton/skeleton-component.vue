@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue';
 import { computed, useCssModule } from 'vue';
 
 interface IUiSkeletonProps {
-	width?: string;
+	width?: CSSProperties['width'];
 	height?: CSSProperties['height'];
 	shape?: 'circle' | 'rectangle';
 	size?: string | null;

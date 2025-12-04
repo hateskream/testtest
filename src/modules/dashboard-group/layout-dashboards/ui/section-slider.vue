@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload } from '../model';
@@ -7,35 +7,33 @@ import type { ISection, ISectionWheelPayload } from '../model';
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
 
+interface IPreparedSection extends ISection {
+	isVisible: boolean;
+}
+
 interface ISectionSliderProps {
 	slides: ISection[];
+	currentIndex: number;
+	visibleSlidesCount: number;
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
-	viewportWidth: number;
 }
 
 const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
 	(e: 'updateSection', newSection: ISection[]): void;
-	(e: 'pointerDown', event: PointerEvent): void;
-	(e: 'pointerMove', event: PointerEvent): void;
-	(e: 'pointerUp'): void;
-	(e: 'touchStart', event: TouchEvent): void;
-	(e: 'touchMove', event: TouchEvent): void;
-	(e: 'touchEnd'): void;
-	(e: 'wheel', event: WheelEvent): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
 }>();
 
-const { height } = useElementSize(
-	useTemplateRef<HTMLDivElement>('container'),
-);
+const trackRef = useTemplateRef<HTMLDivElement>('track');
 
-const sectionRefs = ref<InstanceType<typeof SectionComponent>[]>([]);
+const { height } = useElementSize(trackRef);
+
+const sectionRefs = useTemplateRef<InstanceType<typeof SectionComponent>[]>('sectionElement');
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
 
 function onSectionWheel(payload: ISectionWheelPayload) {
@@ -51,52 +49,69 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 		emits('goTo', index);
 	}
 
-	const section = sectionRefs.value.find(
-		(s) => s.$props.section.id === sectionId,
+	const section = sectionRefs.value?.find(
+		(s) => s?.$props.section.id === sectionId,
 	);
 
 	section?.scrollToWidget(widgetId);
 }
+
+const preparedSlides = ref<IPreparedSection[]>([]);
+
+watch(
+	() => props.slides,
+	newSlides => {
+		setPreparedSlides(newSlides, props.visibleSlidesCount);
+	},
+);
+
+watch(
+	() => props.visibleSlidesCount,
+	(newCount, oldCount) => {
+		if (newCount === oldCount || newCount < oldCount) {
+			return;
+		}
+
+		setPreparedSlides(props.slides, newCount);
+	},
+);
+function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
+	preparedSlides.value = newSlides.map((s, i) => ({
+		...s,
+		isVisible: i < visibleWindowSize,
+	}));
+}
+
+defineExpose({ trackRef });
 </script>
 
 <template>
 	<div id="slider" :class="classes.root">
 		<div
-			ref="container"
+			ref="track"
 			:class="classes.viewport"
-			@wheel.capture="emits('wheel', $event)"
-			@pointerdown="emits('pointerDown', $event)"
-			@pointermove="emits('pointerMove', $event)"
-			@pointerup="emits('pointerUp')"
-			@pointercancel="emits('pointerUp')"
-			@pointerleave="emits('pointerUp')"
-			@touchstart="emits('touchStart', $event)"
-			@touchmove="emits('touchMove', $event)"
-			@touchend="emits('touchEnd')"
 		>
 			<div
+
 				:class="classes.track"
-				:style="{
-					transform: `translateX(${props.translateX}px)`
-				}"
 			>
-				<template
-					v-for="(s, i) in props.slides"
-					:key="s.id"
-				>
-					<section-component
-						ref="sectionRefs"
-						:section="s"
-						:parent-height="height"
+				<template v-for="(s, i) in preparedSlides" :key="s.id">
+					<div
+						:class="classes.section"
 						:style="{
 							...i !== 0 ? { 'margin-left': '10px' } : {},
 							...{ 'margin-right': '10px' }
 						}"
-						@section-wheel="onSectionWheel"
-					/>
-					<div
-						:class="classes.sizer"
-					/>
+					>
+						<section-component
+							ref="sectionElement"
+							:section="s"
+							:parent-height="height"
+							:is-visible="s.isVisible"
+							@section-wheel="onSectionWheel"
+						/>
+					</div>
+					<div :class="classes.sizer" />
 				</template>
 			</div>
 		</div>
@@ -117,7 +132,6 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 				</svg>
 			</div>
 
-
 			<div :class="classes.topRight">
 				<svg
 					width="32"
@@ -131,23 +145,6 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 					/>
 				</svg>
 			</div>
-
-			<div :class="classes.bottomLeft">
-				<svg
-					width="32"
-					height="32"
-					viewBox="0 0 32 32"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<g transform="rotate(180 16 16)">
-						<path
-							d="M32 32C32 14.3269 17.6731 1.70846e-07 0 3.81596e-07L32 0L32 32Z"
-							fill="rgb(3 3 3 / 100%)"
-						/>
-					</g>
-				</svg>
-			</div>
-
 
 			<div :class="classes.bottomRight">
 				<div :class="classes.blur"></div>
@@ -169,6 +166,7 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 		</div>
 
 		<section-sidebar
+			:current-index="props.currentIndex"
 			:slides="props.slides"
 			:slides-wheel="sectionWheelState"
 			:can-next="props.canNext"
@@ -188,24 +186,34 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 	position: relative;
 	display: flex;
 	flex-grow: 1;
+	flex-direction: column;
 }
 
 .viewport {
+	touch-action: none;
 	position: relative;
 	display: flex;
 	flex-grow: 1;
 	margin-right: 6px;
-	margin-left: 20px;
 	padding-top: 8px;
+	padding-left: 20px;
 	overflow: hidden;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	-webkit-overflow-scrolling: touch;
+	user-select: none;
+}
+
+.viewport::-webkit-scrollbar {
+	width: 0;
+	height: 0;
 }
 
 .track {
 	display: flex;
 	flex-grow: 1;
 	align-items: stretch;
-	transition: transform 300ms cubic-bezier(0.22, 0.9, 0.2, 1);
-	will-change: transform;
 }
 
 .maskContainer {
@@ -221,7 +229,7 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 .topLeft {
 	position: absolute;
 	top: 8px;
-	left: 20px;
+	left: 0;
 	pointer-events: none;
 }
 
@@ -229,13 +237,6 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 	position: absolute;
 	top: 8px;
 	right: 0;
-	pointer-events: none;
-}
-
-.bottomLeft {
-	position: absolute;
-	bottom: -3px;
-	left: 20px;
 	pointer-events: none;
 }
 
@@ -262,6 +263,58 @@ function scrollToWidget(sectionId: string, widgetId: string) {
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
+}
+
+.section {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	align-items: center;
+}
+
+.content {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 52px;
+	height: 100%;
+	padding-top: 10px;
+	background: rgb(0 0 0 / 74%);
+	gap: 8px;
+	backdrop-filter: blur(12px);
+}
+
+.control {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	height: 24px;
+	color: rgb(255 255 255 / 50%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	backdrop-filter: blur(4px);
+	cursor: pointer;
+}
+
+.control:disabled {
+	color: rgb(255 255 255 / 50%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	cursor: not-allowed;
+	opacity: 0.7;
+	backdrop-filter: blur(4px);
+}
+
+.control:hover {
+	color: rgb(255 255 255 / 100%);
+	background: rgb(73 73 80 / 32%);
+	border-radius: 8px;
+	backdrop-filter: blur(4px);
 }
 
 .sizer {

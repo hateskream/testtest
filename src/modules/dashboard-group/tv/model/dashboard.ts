@@ -2,13 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
 	createWidget,
-	FEATURE_TO_WIDGET_TYPE,
 	type IPosition,
 	type IWidget,
 	type IWidgetState,
 } from './widget';
 import { WidgetType } from '@/modules/dashboard-group';
-import { getAllEnableWidgets } from '@/shared/lib/feature-toggle';
 import { NAME_TO_PRESET, type PresetName } from './dashbord-presets';
 
 type Layout = Record<number, IWidget[]>;
@@ -33,18 +31,6 @@ export function fromInnerToPublicDashboard(dashboard: IDashboardPrivate): IDashb
 		...dashboard,
 		widgets: getWidgets(dashboard),
 	};
-}
-
-// Lazy initialization of enabled widgets to avoid circular dependency issues
-let enableWidgets: Set<WidgetType> | null = null;
-
-function getEnabledWidgets(): Set<WidgetType> {
-	if (enableWidgets === null) {
-		enableWidgets = new Set(
-			getAllEnableWidgets().map(feature => FEATURE_TO_WIDGET_TYPE[feature]),
-		);
-	}
-	return enableWidgets;
 }
 
 function getWidgets(dashboard: IDashboardPrivate): IWidget[] {
@@ -157,7 +143,7 @@ export function addWidget(
 	const newLayout: Layout = {};
 	// eslint-disable-next-line no-restricted-syntax
 	for (const key in dashboard.layout) {
-		newLayout[key] = [...dashboard.layout[key], widget];
+		newLayout[key] = [...dashboard.layout[key], widget!];
 	}
 
 	return changeWidgetsState(
@@ -198,7 +184,6 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 
 	Object.entries(preset).forEach(([cn, instances]) => {
 		const widgets = instances
-			.filter(instance => getEnabledWidgets().has(instance.type as WidgetType))
 			.map(instance => {
 				return createWidget(
 					instance.type,
@@ -210,7 +195,7 @@ export function createDashboardFromPreset(presetName: PresetName, order: number,
 					},
 					instance.defaultStateType || 'none',
 				);
-			});
+			}).filter((x) => x !== null);
 
 		if (widgets.length > 0) {
 			layout[Number(cn)] = widgets;

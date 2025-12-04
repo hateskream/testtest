@@ -73,9 +73,7 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 			},
 		});
 
-		const responseUpdated = prepareResponse(response);
-		console.log(responseUpdated, ' updated');
-		return responseUpdated;
+		return prepareResponse(response);
 	} catch (error) {
 		logger.error('Failed to get performance data', error as Error);
 		throw error;

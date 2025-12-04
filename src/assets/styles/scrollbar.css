@@ -1,5 +1,5 @@
 :root {
-	--scrollar-color: rgb(44 44 44 / 50%);
+	--scrollbar-color: rgb(44 44 44 / 50%);
 }
 
 ::-webkit-scrollbar {
@@ -8,13 +8,17 @@
 }
 
 ::-webkit-scrollbar-track {
-	background: none;
+	background: transparent;
 	border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--scrollar-color);
+	background: transparent;
 	border-radius: 6px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+	background: var(--scrollbar-color);
 }
 
 ::-webkit-scrollbar-button {
@@ -22,12 +26,16 @@
 }
 
 ::-webkit-scrollbar-corner {
-	background: rgb(255 255 255 / 5%);
+	background: transparent;
 }
 
 @supports (-moz-appearance: none) {
-	body {
-		scrollbar-width: unset;
-		scrollbar-color: var(--scrollar-color) transparent;
+	body * {
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
+	}
+
+	body *:hover {
+		scrollbar-color: var(--scrollbar-color) transparent;
 	}
 }

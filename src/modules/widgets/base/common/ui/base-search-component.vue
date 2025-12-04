@@ -50,6 +50,8 @@ defineExpose({ focus });
 	font-size: 13px;
 	line-height: normal;
 	text-align: left;
+	color: var(--text-color-base-500);
+	caret-color: var(--text-color-base-300-activated);
 	background-color: inherit;
 	border: none;
 

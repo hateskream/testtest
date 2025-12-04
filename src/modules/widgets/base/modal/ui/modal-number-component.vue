@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ModalItem } from '../index';
+import ModalItemComponent from './modal-item-component.vue';
+
 
 interface IProps {
 	value: string | number;
@@ -9,11 +10,11 @@ defineProps<IProps>();
 </script>
 
 <template>
-	<modal-item :class="classes.content">
+	<modal-item-component :class="classes.content">
 		<slot name="default" />
 
 		<span :class="classes.number">{{ value }}</span>
-	</modal-item>
+	</modal-item-component>
 </template>
 
 <style module="classes">

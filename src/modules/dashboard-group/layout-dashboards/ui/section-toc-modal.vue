@@ -4,10 +4,11 @@ import { ref, watch } from 'vue';
 
 import type { ISection, IWidget } from '../model';
 import {
-	GlassmorphModalContent,
-	GlassmorphModalTitle,
-	GlassmorphModalWrapper,
-} from '@/shared/ui/glassmorph-modal';
+	DashboardModalContent,
+	DashboardModalTitle,
+	DashboardModalWrapper,
+} from '@/shared/ui/modal';
+import { isFeatureEnabled } from '@/shared/lib';
 
 const props = defineProps<{
 	slides: ISection[];
@@ -38,6 +39,10 @@ function updateSections(v: ISection[]) {
 }
 
 function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
+	if (!isFeatureEnabled('DRAG_WIDGET_ENABLED')) {
+		return;
+	}
+
 	const next = localSections.value.map((s, i) =>
 		i === sectionIndex
 			? { ...s, widgets: [...widgets] }
@@ -50,11 +55,11 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 </script>
 
 <template>
-	<glassmorph-modal-wrapper>
-		<glassmorph-modal-title>
+	<dashboard-modal-wrapper>
+		<dashboard-modal-title bordered>
 			Table of contents
-		</glassmorph-modal-title>
-		<glassmorph-modal-content>
+		</dashboard-modal-title>
+		<dashboard-modal-content>
 			<div :class="classes.toc">
 				<draggable
 					:model-value="props.slides"
@@ -99,8 +104,8 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 					</template>
 				</draggable>
 			</div>
-		</glassmorph-modal-content>
-	</glassmorph-modal-wrapper>
+		</dashboard-modal-content>
+	</dashboard-modal-wrapper>
 </template>
 
 <style module="classes">
@@ -109,6 +114,7 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 	flex-direction: column;
 	align-items: flex-start;
 	gap: var(--padding-padding-s5, 8px);
+	padding: 4px 10px 22px;
 }
 
 .section {

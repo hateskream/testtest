@@ -36,7 +36,11 @@ defineProps<IProps>();
 	display: flex;
 }
 
+.item:first-child {
+	mask: radial-gradient(circle 15px at right 50%, transparent 0, transparent 6px, #ffffff 9px);
+}
+
 .item:not(:first-child) {
-	margin-left: -8px;
+	margin-left: -4px;
 }
 </style>

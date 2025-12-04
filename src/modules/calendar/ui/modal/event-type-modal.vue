@@ -7,6 +7,7 @@ const state = defineModel<Set<EventType>>({ required: true });
 
 const props = defineProps<{
 	eventTypes: EventType[];
+	displayVariant: 'default' | 'new';
 }>();
 
 function toggleEventType(id: EventType) {
@@ -15,7 +16,7 @@ function toggleEventType(id: EventType) {
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<template #title>
 			Event Type
 		</template>

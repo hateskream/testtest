@@ -34,7 +34,7 @@ function onClickAction(action: TabAction, id: string) {
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<template #title>
 			Watchlists
 		</template>
@@ -60,7 +60,7 @@ function onClickAction(action: TabAction, id: string) {
 					</div>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<modal-item
 							@click.stop="onClickAction(TabAction.Rename, tab.id)"
 						>

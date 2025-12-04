@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { templateRef } from '@vueuse/core';
 
 import type { ITab } from '../model';
@@ -94,7 +94,7 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 			v-if="editing"
 			ref="tabRenameInputRef"
 			v-model="tabName"
-			:class="{ [classes.initialEdit]: isInitialEdit }"
+			:class="[classes.input, { [classes.initialEdit]: isInitialEdit }]"
 			autofocus
 			@blur="finishEditing"
 			@keyup.enter="finishEditing"
@@ -114,7 +114,7 @@ function adjustInputWidth(input: HTMLInputElement, text: string) {
 	background-color: #ffffff;
 }
 
-input {
+.input {
 	min-width: 1ch;
 	padding: 0;
 	font-weight: 300;
@@ -129,16 +129,16 @@ input {
 	caret-color: var(--text-color-base-300-activated);
 }
 
-input:focus {
+.input:focus {
 	caret-color: var(--text-color-base-300-activated);
 }
 
-input.initialEdit {
+.input.initialEdit {
 	color: var(--text-color-contrast-500);
 	background-color: #ffffff;
 }
 
-input::selection {
+.input::selection {
 	color: var(--text-color-contrast-500);
 	background-color: #ffffff;
 }

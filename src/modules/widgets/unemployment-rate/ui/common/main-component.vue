@@ -13,9 +13,15 @@ interface IMetricTrendBadge {
 	isPercent: boolean;
 }
 
+interface IPoints {
+	time: string;
+	value: number;
+}
+
 interface IMainComponentProps {
 	metricBadge: IMetricTrendBadge;
 	chartColorSchema: 'positive' | 'negative';
+	points: IPoints[];
 }
 
 const props = defineProps<IMainComponentProps>();
@@ -39,6 +45,7 @@ const props = defineProps<IMainComponentProps>();
 		<div :class="classes.chart">
 			<chart-component
 				:chart-color-schema="props.chartColorSchema"
+				:points="props.points"
 			/>
 		</div>
 	</div>

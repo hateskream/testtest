@@ -33,6 +33,7 @@ const {
 				v-model:group-by="groupBySettings"
 				v-model:is-show-logo="isShowLogo"
 				v-model:title="titleSetting"
+				display-variant="new"
 				:active-market="activeMarket"
 				:active-color-by="activeColorBy"
 				:active-color-depth="activeColorDepth"

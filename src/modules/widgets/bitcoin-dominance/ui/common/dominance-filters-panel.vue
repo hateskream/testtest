@@ -14,7 +14,7 @@ const activeDateRange = defineModel<DominanceDateRange>('dateRange', { required:
 interface IDominanceFiltersPanelProps {
 	meta: IMeta;
 	displaySettings: IDisplaySettings;
-	displayVariant?: 'default' | 'new';
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IDominanceFiltersPanelProps>();
@@ -43,7 +43,7 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 				/>
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						Date range
 					</template>

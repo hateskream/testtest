@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
 import {
 	FilterListType,
@@ -10,6 +10,7 @@ import {
 } from '@/modules/ticker-selector/model/filter-ticker';
 import { MarketType } from '@/modules/market';
 import { SymbolType } from '@/modules/cell';
+import { UiModalContent, UiModalWrapper } from '@/shared/ui/modal';
 
 import ModalFilterInfo from './modal-filter-info.vue';
 import ModalFilterRow from './modal-filter-row.vue';
@@ -110,15 +111,19 @@ const activeGroup = ref<SymbolType | null>(
 const viewMode = ref<FilterListType>(FilterListType.All);
 
 const selectedTickers = computed(() => {
-	const selected = tickersData.value.filter(t => tickersModel.value.includes(t.tickerId));
+	return tickersData.value.filter(t => tickersModel.value.includes(t.tickerId));
+});
 
-	if (viewMode.value === FilterListType.Selected) {
-		return selected.filter((t) =>
-			[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
-		);
+const selectedQueriedTickers = computed(() => {
+	return selectedTickers.value.filter((t) =>
+		[t.tickerId.toLowerCase()].some((s) => s.includes(preparedQuery.value)),
+	);
+});
+
+watch(() => selectedTickers.value.length, (length) => {
+	if (length === 0) {
+		viewMode.value = FilterListType.All;
 	}
-
-	return selected;
 });
 
 const queriedTickers = computed(() => {
@@ -286,28 +291,44 @@ function toggleMarket(market: MarketType) {
 		}
 	}
 }
+
+const headerRef = useTemplateRef('header');
+
+function searchFocus() {
+	headerRef.value?.searchFocus();
+}
 </script>
 
 <template>
-	<div :class="[classes.wrapper, {[classes.transparent]: props.isBackgroundTransparent}]">
-		<div :class="classes.content">
-			<div>
-				<modal-filter-header
-					v-model:query="query"
-					:autofocus="props.autofocus"
-					:search-placeholder="props.searchPlaceholder"
-					:text-above-search="props.textAboveSearch"
-					:is-background-transparent="props.isBackgroundTransparent"
-				/>
-				<modal-filter-info
-					v-if="props.enableSelectedInfo"
-					v-model="viewMode"
-					:is-searching="hasSearchQuery"
-					:total-items="queriedTickers.length"
-					:total-selected="selectedTickers.length + marketsModel.length"
-				/>
-			</div>
-			<div v-if="viewMode === FilterListType.All">
+	<ui-modal-wrapper
+		:class="[classes.wrapper]"
+		:display-variant
+		@click="searchFocus"
+	>
+		<modal-filter-header
+			ref="header"
+			v-model:query="query"
+			:view-mode="viewMode"
+			:autofocus="props.autofocus"
+			:search-placeholder="props.searchPlaceholder"
+			:text-above-search="props.textAboveSearch"
+			:is-background-transparent="props.isBackgroundTransparent"
+			:show-driver="displayVariant === 'default'"
+		/>
+
+		<modal-filter-info
+			v-if="props.enableSelectedInfo"
+			v-model="viewMode"
+			:is-searching="hasSearchQuery"
+			:total-items="queriedTickers.length"
+			:total-selected="selectedQueriedTickers.length + marketsModel.length"
+		/>
+
+		<ui-modal-content>
+			<div
+				v-if="viewMode === FilterListType.All"
+				:class="{[classes.unscrollable]: !hasSearchQuery}"
+			>
 				<modal-filter-group
 					v-if="activeGroup"
 					:group="activeGroup"
@@ -333,16 +354,17 @@ function toggleMarket(market: MarketType) {
 					:is-searching="hasSearchQuery"
 					:enable-select-all="props.enableSelectAll"
 					@select-all="toggleSelectAll"
-					@select-group="activeGroup = $event"
+					@ticker-select="handleToggleSelect($event)"
+					@select-group="(v) => activeGroup = v"
 				/>
 			</div>
 			<template v-else>
-				<modal-filter-empty-state v-if="selectedTickers.length === 0 && hasSearchQuery">
+				<modal-filter-empty-state v-if="selectedQueriedTickers.length === 0 && hasSearchQuery">
 					Nothing found in selected items
 				</modal-filter-empty-state>
 				<modal-filter-row
 					v-else
-					:list="selectedTickers"
+					:list="selectedQueriedTickers"
 					:selected-ids-map="tickersModel"
 					:display-variant="props.displayVariant"
 					@update="handleToggleSelect"
@@ -352,34 +374,19 @@ function toggleMarket(market: MarketType) {
 					</template>
 				</modal-filter-row>
 			</template>
-		</div>
-	</div>
+		</ui-modal-content>
+	</ui-modal-wrapper>
 </template>
 
 <style module="classes">
 .wrapper {
 	position: relative;
-	display: flex;
-	flex-direction: column;
-	width: 286px;
+	width: 312px;
 	height: 100%;
-	max-height: 80svh;
-	padding: 6px;
 	overflow: hidden;
-	background: var(--bg-modal-color-base);
-	border: 1px solid rgb(199 199 199 / 10%);
-	border-radius: 18px;
 }
 
-.wrapper.transparent {
-	background: transparent;
-}
-
-.content {
-	flex: 1;
-	max-height: 650px;
-	margin: -6px;
-	padding: 6px;
-	overflow-y: hidden;
+.unscrollable {
+	overflow: hidden;
 }
 </style>

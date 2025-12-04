@@ -3,6 +3,10 @@ import { ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
 import { getAllMarkets, type MarketType } from '@/modules/market';
 import { toggleFilter } from '@/modules/news';
 
+defineProps<{
+	displayVariant: 'default' | 'new';
+}>();
+
 const market = defineModel<Set<MarketType>>('market', { required: true });
 
 function toggleSegment(segment: MarketType) {
@@ -11,7 +15,7 @@ function toggleSegment(segment: MarketType) {
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<modal-item-selector
 			v-for="{type, label} in getAllMarkets()"
 			:key="type"

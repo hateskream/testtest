@@ -15,6 +15,8 @@ import TreemapStock from './treemap-stock.vue';
 import TreemapForex from './treemap-forex.vue';
 
 interface ITreemapCryptoProps {
+	displayVariant: 'default' | 'new';
+
 	activeMarket: IMarket | undefined;
 	activeColorBy: IColorBy | null;
 	activeColorDepth: IColorDepth | null;
@@ -54,6 +56,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
+			:display-variant
 			:active-market="props.activeMarket!"
 			:active-color-by="props.activeColorBy!"
 			:active-color-depth="props.activeColorDepth!"
@@ -72,6 +75,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
+			:display-variant
 			:active-market="props.activeMarket!"
 			:active-color-by="props.activeColorBy!"
 			:active-color-depth="props.activeColorDepth!"
@@ -90,6 +94,7 @@ const titleSetting = defineModel<TitleViewVariant>('title', { required: true });
 			v-model:display-value="displayValueSettings"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="titleSetting"
+			:display-variant
 			:active-market="props.activeMarket!"
 			:active-color-by="props.activeColorBy!"
 			:active-color-depth="props.activeColorDepth!"

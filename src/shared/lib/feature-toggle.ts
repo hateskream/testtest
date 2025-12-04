@@ -6,29 +6,10 @@ function checkIsConfigValidated() {
 	}
 }
 
-const ALL_WIDGETS = [
-	'WIDGET_ALTCOIN_SEASON',
-	'WIDGET_FEAR_GREED',
-	'WIDGET_MARKET',
-	'WIDGET_MARKET_CAP',
-	'WIDGET_NEWS',
-	'WIDGET_PERFORMANCE',
-	'WIDGET_PRICE_LIST',
-	'WIDGET_WATCH_LIST',
-	'WIDGET_BITCOIN_DOMINANCE',
-	'WIDGET_TOP_INDICES',
-	'WIDGET_CALENDAR',
-	'WIDGET_HEATMAP',
-	'WIDGET_CHART_PRICE',
-	'WIDGET_EXCHANGE',
-	'WIDGET_ETH_GAS',
-] as const;
-
-export type WidgetFeature = typeof ALL_WIDGETS[number];
-
 export const ALL_FEATURES = [
 	'DASHBOARD_PRESETS',
-	...ALL_WIDGETS,
+	'DRAG_WIDGET_ENABLED',
+	'CONTEXT_MENU_WIDGET_ACTIONS',
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];
@@ -42,10 +23,6 @@ export function isFeatureEnabled(feature: FeatureName): boolean {
 
 	const envVar = import.meta.env[`VITE_FEATURE_${feature}`] as string;
 	return envVar.toLowerCase() === 'true';
-}
-
-export function getAllEnableWidgets(): WidgetFeature[] {
-	return ALL_WIDGETS.filter(feature => isFeatureEnabled(feature));
 }
 
 function validateFeatureConfig(): void {

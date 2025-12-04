@@ -108,6 +108,7 @@ function handleOpenFullView() {
 			<widget-context-menu
 				:dashboards="props.meta.dashboards"
 				:title="props.meta.name"
+				display-variant="default"
 				@delete="emits('delete')"
 				@duplicate="emits('duplicate')"
 				@reset="emits('reset')"

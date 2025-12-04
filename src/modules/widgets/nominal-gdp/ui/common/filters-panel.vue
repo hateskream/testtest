@@ -18,7 +18,7 @@ const activeRange = defineModel<NominalGdpRange>('range', { required: true });
 				{{ rangeFilterValueToDisplay[activeRange].selected }}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						Date range
 					</template>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 
-import type { ISection, ISectionWheelPayload } from '../model';
+import type { ISection, IWidget, ISectionWheelPayload } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
-import { MAX_COL_WIDTH, MIN_COL_WIDTH } from '../../tv';
+import { MIN_COL_WIDTH, MAX_COL_WIDTH } from '../../tv';
+import { UiSkeleton } from '@/shared/ui/skeleton';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
 
 import WidgetComponent from './widget-component.vue';
@@ -15,9 +16,14 @@ const HEIGHT_TITLE = 50;
 
 const HEIGHT_ROUNDING_BOTTOM = 25;
 
+interface IPreparedWidget extends IWidget {
+	isVisible: boolean;
+}
+
 interface ISectionComponentProps {
 	section: ISection;
 	parentHeight: number;
+	isVisible: boolean;
 }
 
 const props = defineProps<ISectionComponentProps>();
@@ -27,6 +33,8 @@ const emits = defineEmits<{
 }>();
 
 const widgetRefs = ref<InstanceType<typeof WidgetComponent>[]>([]);
+
+const preparedWidgets = ref<IPreparedWidget[]>([]);
 
 const scrollRef = useTemplateRef('scroll');
 
@@ -58,8 +66,7 @@ const height = computed(() => {
 	return isLastWidgetHasInfinityHeight.value
 		? props.parentHeight + HEIGHT_ROUNDING_BOTTOM
 		: props.parentHeight;
-},
-);
+});
 
 function emitScrollInfo() {
 	if (!scrollRef.value) {
@@ -101,8 +108,66 @@ function emitScrollInfo() {
 	});
 }
 
+const scrollTop = ref(0);
+
+const seenWidgets = reactive(new Set<number>());
+
+const visibleWidgetsWithAccumulation = computed(() => {
+	const container = scrollRef.value;
+	if (!container) {
+		return seenWidgets.size;
+	}
+
+	let acc = HEIGHT_TITLE;
+	let index = 0;
+
+	while (index < props.section.widgets.length && acc < container.clientHeight + scrollTop.value) {
+		acc += props.section.widgets[index].height + WIDGET_GAP;
+		index+=1;
+	}
+
+	for (let i = 0; i < index; i+=1) {
+		seenWidgets.add(i);
+	}
+
+	return seenWidgets.size;
+});
+
+
+watch(
+	() => props.section.widgets,
+	newWidgets => {
+		if (visibleWidgetsWithAccumulation.value === 0) {
+			return;
+		}
+		prepare(newWidgets, visibleWidgetsWithAccumulation.value);
+	},
+);
+
+watch(
+	visibleWidgetsWithAccumulation,
+	(newCount, oldCount) => {
+		if (newCount === oldCount || newCount < oldCount) {
+			return;
+		}
+		prepare(props.section.widgets, newCount);
+	},
+);
+
+
+function prepare(newWidgets: IWidget[], visibleWindowSize: number) {
+	preparedWidgets.value = newWidgets.map((w, i) => ({
+		...w,
+		isVisible: i < visibleWindowSize,
+	}));
+}
+
 function onWheel(event: WheelEvent) {
 	if (!scrollRef.value) {
+		return;
+	}
+
+	if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
 		return;
 	}
 
@@ -122,6 +187,7 @@ function onWheel(event: WheelEvent) {
 		event.preventDefault();
 
 		scrollRef.value.scrollTop += deltaY;
+		scrollTop.value = scrollRef.value.scrollTop;
 		emitScrollInfo();
 		return;
 	}
@@ -184,9 +250,13 @@ defineExpose({
 		:class="classes.section"
 		:style="cardStyle"
 	>
-		<div
-			:class="classes.scroll"
-		>
+		<ui-skeleton
+			v-if="!props.isVisible"
+			border-radius="24px"
+			width="100%"
+			height="100%"
+		/>
+		<div v-else :class="classes.scroll">
 			<div
 				ref="scroll"
 				:class="classes.widgetsContainer"
@@ -195,19 +265,22 @@ defineExpose({
 				}"
 				@wheel.capture="onWheel"
 			>
-				<h2 :class="classes.sectionTitle">{{ props.section.name }}</h2>
+				<h2 :class="classes.sectionTitle">
+					{{ props.section.name }}
+				</h2>
 
 				<div :class="classes.widgets">
 					<widget-component
-						v-for="widget in props.section.widgets"
-						ref="widgetRefs"
+						v-for="widget in preparedWidgets"
 						:key="widget.id"
+						ref="widgetRefs"
 						:widget="widget"
 						:col-count="cellSize.count"
 						:column-width="cellSize.size"
 						:parent-height="height"
 						:active-display-variant="widget.displayVariant"
 						:all-display-variants="widget.displayVariants"
+						:is-visible="widget.isVisible"
 					/>
 				</div>
 			</div>
@@ -234,10 +307,16 @@ defineExpose({
 	letter-spacing: 0.134px;
 }
 
+.loader {
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
+}
+
 .scroll {
 	position: relative;
 	flex-grow: 1;
-	overflow: hidden;
 }
 
 .widgetsContainer {
@@ -246,9 +325,16 @@ defineExpose({
 	right: 0;
 	bottom: 0;
 	left: 0;
-	overflow-y: auto;
+	overflow-y: scroll;
+	user-select: none;
 	scrollbar-width: none;
-	overscroll-behavior: contain;
+	overscroll-behavior-y: contain;
+	overscroll-behavior-x: auto;
+}
+
+.widgetsContainer::-webkit-scrollbar {
+	width: 0;
+	height: 0;
 }
 
 .widgets {

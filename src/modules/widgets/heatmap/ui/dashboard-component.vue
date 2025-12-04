@@ -169,6 +169,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 					v-model:group-by="groupBySettings"
 					v-model:is-show-logo="isShowLogo"
 					v-model:title="titleSetting"
+					display-variant="new"
 					:active-market="activeMarket"
 					:active-color-by="activeColorBy"
 					:active-color-depth="activeColorDepth"
@@ -187,6 +188,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 				v-model:display-value="displayValueSettings"
 				v-model:is-show-logo="isShowLogo"
 				v-model:title="titleSetting"
+				display-variant="new"
 				:active-display-value="activeDisplayValue"
 			/>
 		</template>
@@ -195,24 +197,28 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 				v-if="activeMarket"
 				v-model="marketSettingsProxy"
 				title="Market"
+				display-variant="new"
 				:active="mapMarketToSettings(activeMarket)"
 			/>
 			<interaction-settings
 				v-if="activeColorBy"
 				v-model="colorBySettings"
 				title="Color by"
+				display-variant="new"
 				:active="activeColorBy.colorBy"
 			/>
 			<interaction-settings
 				v-if="hasSizeBy && activeSizeBy"
 				v-model="sizeBySettings"
 				title="Size by"
+				display-variant="new"
 				:active="activeSizeBy"
 			/>
 			<interaction-settings
 				v-if="hasColorDepth && activeColorDepth"
 				v-model="colorDepthSettingsProxy"
 				title="Color depth"
+				display-variant="new"
 				:active="mapColorDepthToSettings(activeColorDepth)"
 			/>
 		</template>

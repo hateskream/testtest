@@ -7,6 +7,7 @@ import InteractionSettings from './interaction-settings.vue';
 
 interface IProps {
 	activeDisplayValue: ISettings;
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IProps>();
@@ -31,7 +32,7 @@ function updateTitle(newTitle: TitleViewVariant) {
 			Title : {{ title }}
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list :display-variant>
 				<template #default>
 					<modal-item-selector
 						v-for="t in TitleViewVariant"
@@ -49,5 +50,6 @@ function updateTitle(newTitle: TitleViewVariant) {
 		v-model="displayValue"
 		:active="props.activeDisplayValue"
 		title="Display value"
+		:display-variant
 	/>
 </template>

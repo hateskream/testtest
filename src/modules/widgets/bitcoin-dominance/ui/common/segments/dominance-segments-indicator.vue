@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { IDominanceSnapshot, IDominanceSnapshotValues } from '../../../model';
-
+import type { IDominanceSnapshot } from '../../../model';
 
 interface IDominanceIndicatorProps {
 	snapshots: IDominanceSnapshot[];
-	other: IDominanceSnapshotValues;
 }
 
 const props = defineProps<IDominanceIndicatorProps>();
@@ -18,12 +16,7 @@ const props = defineProps<IDominanceIndicatorProps>();
 			:class="classes.segment"
 			:style="{background: item.color, width: `${item.dominance.current}%`}"
 		/>
-		<div
-			:class="classes.segment"
-			:style="{background: '#fff', width: `${props.other.current}%`}"
-		/>
 	</div>
-
 </template>
 
 <style module="classes">

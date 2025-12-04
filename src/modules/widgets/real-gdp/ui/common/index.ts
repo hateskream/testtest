@@ -1,7 +1,2 @@
-import PreloaderComponent from './preloader-component.vue';
-import FiltersPanel from './filters-panel.vue';
-
-export {
-	PreloaderComponent,
-	FiltersPanel,
-};
+export { default as PreloaderComponent } from './preloader-component.vue';
+export { default as FiltersPanel } from './filters-panel.vue';

@@ -1,15 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import type { IUSInflationDomain } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 
 interface IMainComponentProps {
-	value: number;
-	second: number;
-	trend: 'up' | 'down';
+	data: IUSInflationDomain;
 }
 
 const props = defineProps<IMainComponentProps>();
+
+const isUpTrend = computed(() => props.data.yoy_change.direction === 'up');
+
+const trendLabel = computed(() => {
+	return isUpTrend.value ? 'growth' : 'down';
+});
 </script>
 
 <template>
@@ -21,23 +28,22 @@ const props = defineProps<IMainComponentProps>();
 					src="https://flagcdn.com/us.svg"
 					alt="US flag"
 				/>
-				<span>{{ props.value }}%</span>
+				<span>{{ props.data.current_value }}%</span>
 			</div>
 			<div :class="classes.text">
-				Inflation down YoY:
+				Inflation {{ trendLabel }} YoY:
 			</div>
-			<div :class="classes.text">
-				{{ props.second }} pp
+			<div :class="[classes.text, classes.trend]">
+				{{ props.data.yoy_change.value }} pp
 				<ui-icon
-					:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
-					height="12px"
-					width="12px"
-					:class="classes.icon"
+					:id="isUpTrend ? IconIds.Gainers : IconIds.Loosers"
+					height="6px"
+					width="6px"
 				/>
 			</div>
 		</div>
 		<div :class="classes.chart">
-			<chart-component />
+			<chart-component :points="props.data.chart" />
 		</div>
 	</div>
 </template>
@@ -69,8 +75,10 @@ const props = defineProps<IMainComponentProps>();
 
 .flag {
 	width: 20px;
-	height: 14px;
-	border-radius: 2px;
+	height: 20px;
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: 25%;
 }
 
 .text {
@@ -82,8 +90,10 @@ const props = defineProps<IMainComponentProps>();
 	letter-spacing: 0.122px;
 }
 
-.icon {
-	margin-left: 6px;
+.trend {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--padding-padding-s4, 6px);
 }
 
 .chart {

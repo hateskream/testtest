@@ -50,7 +50,7 @@ const isTv = computed(()=>{
 				{{ filterValueToDisplay[filterState].label }}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						{{ filterTypeToName[filterKey] }}
 					</template>

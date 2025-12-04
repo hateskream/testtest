@@ -44,7 +44,7 @@ const emits = defineEmits<{
 			/>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list display-variant="default">
 				<modal-title>
 					Filters
 				</modal-title>
@@ -92,7 +92,11 @@ const emits = defineEmits<{
 						}}
 					</template>
 					<template #content>
-						<event-type-modal v-model="eventState" :event-types="props.eventTypes" />
+						<event-type-modal
+							v-model="eventState"
+							display-variant="default"
+							:event-types="props.eventTypes"
+						/>
 					</template>
 				</modal-submenu>
 

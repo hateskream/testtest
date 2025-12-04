@@ -103,7 +103,10 @@ const selectedMarketsMapped = computed(() => {
 </script>
 
 <template>
-	<modal-badge-dropdown :display-variant="props.displayVariant">
+	<modal-badge-dropdown
+		:padding-left="selectedTickers.length && props.displayVariant !== 'default' ? `4px` : undefined"
+		:display-variant="props.displayVariant"
+	>
 		<template #title>
 			<modal-badge-preview
 				:selected-tickers="selectedTickersMapped"

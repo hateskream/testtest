@@ -2,7 +2,8 @@
 import { computed, type CSSProperties, useTemplateRef, watch } from 'vue';
 
 import { type IPositionProps, UiPosition } from '@/shared/ui/position';
-import { ModalBadgeTitle } from '../index';
+
+import ModalBadgeTitleComponent from './modal-badge-title-component.vue';
 
 interface IProps {
 	backgroundColor?: CSSProperties['backgroundColor'];
@@ -37,16 +38,22 @@ watch(isVisible, (value) => {
 		placement="bottom-start"
 		v-bind="props.uiPositionProps || {}"
 		:strategy="props.strategy"
+		:auto-update="{
+			ancestorScroll: false,
+			ancestorResize: false,
+			elementResize: true,
+			layoutShift: false
+		}"
 	>
 		<template #title>
-			<modal-badge-title
+			<modal-badge-title-component
 				:background-color="props.backgroundColor"
 				:color="props.color"
 				:padding-left="props.paddingLeft"
 				:display-variant="props.displayVariant"
 			>
 				<slot name="title" :is-visible="isVisible" />
-			</modal-badge-title>
+			</modal-badge-title-component>
 		</template>
 
 		<template #content>

@@ -5,8 +5,13 @@ import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
 
+interface IPoints {
+	time: string;
+	value: number;
+}
 interface IMarketCapChartProps {
 	chartColorSchema: 'positive' | 'negative';
+	points: IPoints[];
 }
 
 const props = defineProps<IMarketCapChartProps>();
@@ -29,5 +34,7 @@ const props = defineProps<IMarketCapChartProps>();
 		height="100%"
 		disable-scroll
 		:color-schema="props.chartColorSchema"
+		:data="props.points"
+		fade-left
 	/>
 </template>

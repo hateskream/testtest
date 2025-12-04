@@ -20,7 +20,6 @@ import {
 import {
 	type IWidget,
 	type IPosition,
-	useLayout,
 	type ILayoutItem,
 	duplicate,
 	mapToWidgetState,
@@ -30,6 +29,7 @@ import { CurrentDashboardSymbol } from '../model';
 import type { IWidgetState, WidgetType } from '@/modules/dashboard-group';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { useDelayedLoading } from '@/shared/composables';
+import { useLayout } from '../../tv/composables/use-layout';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';

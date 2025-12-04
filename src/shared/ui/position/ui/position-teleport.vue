@@ -4,7 +4,7 @@ import type { IPositionTeleportProps } from '../model';
 const props = withDefaults(defineProps<IPositionTeleportProps>(), {
 	to: '#floating-host',
 	disabled: false,
-	defer: false,
+	defer: true,
 });
 </script>
 

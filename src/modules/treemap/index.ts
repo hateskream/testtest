@@ -1,4 +1,3 @@
-import { useDisplaySettings } from './composables';
-import { TreemapComponent, ChangeDisplay, InteractionSettings } from './ui';
+export { useDisplaySettings } from './composables';
 
-export { useDisplaySettings, TreemapComponent, ChangeDisplay, InteractionSettings };
+export * from './ui';

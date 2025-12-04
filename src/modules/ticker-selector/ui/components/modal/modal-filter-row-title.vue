@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IProps {
+	displayVariant: 'new' | 'default';
 	isBack?: boolean;
 	isSelectedAll: boolean;
 	isSearching: boolean;
@@ -9,7 +12,7 @@ interface IProps {
 	enableSelectAll?: boolean;
 }
 
-withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps>(), {
 	isBack: false,
 	enableSelectAll: true,
 });
@@ -19,15 +22,34 @@ interface IEmits {
 }
 
 const emits = defineEmits<IEmits>();
+
+const isNewUi = computed(() => props.displayVariant === 'new');
 </script>
 
 <template>
-	<div :class="classes.title">
+	<div
+		:class="[
+			classes.title,
+			isInsideOpen && classes.insideOpen,
+			isNewUi ? classes.new : classes.old
+		]"
+	>
 		<div :class="classes.titleText">
-			<ui-icon v-if="isBack" :id="IconIds.Back" />
-			<slot name="title" />
-			<span>·</span>
-			<span :class="classes.titleBadge">
+			<ui-icon
+				v-if="isBack"
+				:id="IconIds.Arrow"
+				width="12px"
+				height="12px"
+				:class="classes.back"
+			/>
+
+			<span>
+				<slot name="title" />
+			</span>
+
+			<span v-if="!isNewUi">·</span>
+
+			<span v-if="!isNewUi" :class="classes.titleBadge">
 				<slot name="count" />
 			</span>
 		</div>
@@ -44,8 +66,8 @@ const emits = defineEmits<IEmits>();
 			<ui-icon
 				v-if="!isInsideOpen"
 				:id="IconIds.Arrow"
-				width="12"
-				height="12"
+				width="12px"
+				height="12px"
 				:class="classes.titleIconContinue"
 			/>
 		</div>
@@ -54,15 +76,25 @@ const emits = defineEmits<IEmits>();
 
 <style module="classes">
 .title {
+	position: static;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	height: 44px;
-	margin-top: 4px;
-	border-radius: 20px;
+	margin-bottom: 2px;
 	cursor: pointer;
 	transition: background 0.3s ease, color 0.3s ease;
 	padding-inline: 12px;
+}
+
+.new {
+	height: 40px;
+	border-radius: 12px;
+}
+
+.old {
+	height: 44px;
+	border-radius: 20px;
 }
 
 .titleText {
@@ -75,6 +107,15 @@ const emits = defineEmits<IEmits>();
 	text-transform: capitalize;
 	letter-spacing: 0.052px;
 	gap: 6px;
+}
+
+.title.insideOpen .titleText {
+	color: rgb(255 255 255 / 100%);
+}
+
+.back {
+	color: var(--text-color-base-300);
+	transform: rotate(180deg);
 }
 
 .title:hover {

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IDominanceSnapshot, IDominanceSnapshotValues } from '../../../model';
+import type { IDominanceSnapshot } from '../../../model';
 import type { IMeta } from '@/modules/dashboard-group';
 
 import DominanceHistoricalGridCell from './dominance-historical-grid-cell.vue';
 
 interface IHistoricalRowProps {
 	snapshots: IDominanceSnapshot[];
-	other: IDominanceSnapshotValues;
 	isShowToday?: boolean;
 	meta: IMeta;
 }
@@ -61,22 +60,6 @@ const filteredLabels = computed(() => {
 					{{ item.dominance.year.toFixed(1) }}%
 				</dominance-historical-grid-cell>
 			</template>
-			<dominance-historical-grid-cell :class="[classes.name, classes.cell]">
-				<div :class="classes.dot" :style="{backgroundColor: '#fff'}"></div>
-				<span>Other</span>
-			</dominance-historical-grid-cell>
-			<dominance-historical-grid-cell v-if="isShowToday" :class="classes.cell">
-				{{ other.current.toFixed(1) }}%
-			</dominance-historical-grid-cell>
-			<dominance-historical-grid-cell :class="classes.cell">
-				{{ other.yesterday.toFixed(1) }}%
-			</dominance-historical-grid-cell>
-			<dominance-historical-grid-cell :class="classes.cell">
-				{{ other.week.toFixed(1) }}%
-			</dominance-historical-grid-cell>
-			<dominance-historical-grid-cell :class="[classes.cell, classes.last]">
-				{{ other.year.toFixed(1) }}%
-			</dominance-historical-grid-cell>
 		</div>
 	</div>
 </template>

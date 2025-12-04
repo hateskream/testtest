@@ -25,11 +25,9 @@ class HttpService {
 			'Content-Type': 'application/json',
 		},
 		onRequestError({ error }) {
-			// eslint-disable-next-line no-console
 			console.error('Request error:', error);
 		},
 		onResponseError({ response }) {
-			// eslint-disable-next-line no-console
 			console.error('Response error:', response.status, response.statusText);
 		},
 	});
@@ -67,8 +65,7 @@ class HttpService {
 			});
 		} catch (error) {
 			throw new Error(
-				`HTTP ${method} request failed:
-				${error instanceof Error ? error.message : String(error)}`,
+				`HTTP ${method} request failed: ${error instanceof Error ? error.message : String(error)}`,
 			);
 		}
 	}

@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<IProps>(), {
 			<div :class="[classes.segment, classes.inner]"></div>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list display-variant="default">
 				<template #default>
 					<div :class="classes.title">{{ props.title }}</div>
 				</template>
