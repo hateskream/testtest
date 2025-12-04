@@ -1,12 +1,6 @@
-body * {
-	scrollbar-gutter: stable;
-}
-
-
 :root {
 	--scrollbar-color: rgb(44 44 44 / 50%);
 }
-
 
 ::-webkit-scrollbar {
 	width: 6px;
@@ -25,10 +19,6 @@ body * {
 
 *:hover::-webkit-scrollbar-thumb {
 	background: var(--scrollbar-color);
-}
-
-*:hover::-webkit-scrollbar-track {
-	background: transparent;
 }
 
 ::-webkit-scrollbar-button {
