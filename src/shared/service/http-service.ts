@@ -54,15 +54,22 @@ class HttpService {
 		options: IOptions & { body?: BodyType } = {},
 	): Promise<T> {
 		try {
-			return await this.fetchInstance<T>(url, {
+			const requestConfig: any = {
 				method,
 				query: options.query,
 				body: options.body,
 				signal: options.signal,
 				headers: options.headers,
-				retry: options.retries,
-				timeout: options.timeout,
-			});
+			};
+
+			if (options.retries !== undefined) {
+				requestConfig.retry = options.retries;
+			}
+			if (options.timeout !== undefined) {
+				requestConfig.timeout = options.timeout;
+			}
+
+			return await this.fetchInstance<T>(url, requestConfig);
 		} catch (error) {
 			throw new Error(
 				`HTTP ${method} request failed: ${error instanceof Error ? error.message : String(error)}`,
