@@ -82,10 +82,36 @@ function prepareResponse(data: IDominanceSnapshotApiResponse[]): IDominanceDomai
 
 const { getMock } = useFetchMock<IDominanceDomain[]>('/mock/widgets/dominance/snapshot.json');
 
-async function getMockData(args: IGetDominanceSnapshotRequest) {
+async function getMockData(args: IGetDominanceSnapshotRequest): Promise<IDominanceDomain[]> {
 	await delay(500);
 
 	const response = await getMock();
 
-	return response.filter(item => args.tickers.includes(item.symbol));
+	const tickers = response.filter(item => args.tickers.includes(item.symbol));
+
+	const other = tickers.reduce(
+		(acc, ticker) => {
+			acc.dominance.current -= ticker.dominance.current;
+			acc.dominance.yesterday -= ticker.dominance.yesterday;
+			acc.dominance.week -= ticker.dominance.week;
+			acc.dominance.year -= ticker.dominance.year;
+
+			return acc;
+		},
+		{
+			id: 'other',
+			symbol: 'Other',
+			name: 'Other',
+			dominance: {
+				current: 100,
+				yesterday: 100,
+				week: 100,
+				year: 100,
+			},
+			color: '#ffffff',
+			srcValue: '',
+		},
+	);
+
+	return [...tickers, other];
 }
