@@ -37,10 +37,10 @@ defineProps<IProps>();
 }
 
 .item:first-child {
-	mask: radial-gradient(circle 15px at right 50%, transparent 0, transparent 13px, #ffffff 13px);
+	mask: radial-gradient(circle 15px at right 50%, transparent 0, transparent 6px, #ffffff 9px);
 }
 
 .item:not(:first-child) {
-	margin-left: -12px;
+	margin-left: -4px;
 }
 </style>
