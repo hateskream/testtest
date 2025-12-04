@@ -7,6 +7,7 @@ import {
 	readonly,
 	onBeforeUnmount,
 	onMounted,
+	watch,
 } from 'vue';
 import throttle from 'lodash/throttle';
 
@@ -73,6 +74,24 @@ export function useSlider(opts: {
 		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
 		return translateX.value > minTranslate;
 	});
+
+	watch(
+		isDragging,
+		() => {
+			const el = toValue(opts.container);
+			if (!el) {
+				return;
+			}
+
+			if (isDragging.value) {
+				el.style.scrollSnapType = 'none';
+				el.style.scrollBehavior = 'auto';
+			} else {
+				el.style.scrollSnapType = '';
+				el.style.scrollBehavior = '';
+			}
+		},
+	);
 
 	function clamp(x: number) {
 		const maxScroll = Math.max(0, totalTrackWidth.value - toValue(viewportWidth));
@@ -171,23 +190,16 @@ export function useSlider(opts: {
 			return;
 		}
 
+		e.preventDefault();
+
 		isDragging.value = true;
 
 		startX = e.clientX;
 		startScrollLeft = el.scrollLeft;
-		el.style.scrollSnapType = 'none';
-		el.style.scrollBehavior = 'auto';
-
-		el.setPointerCapture(e.pointerId);
 	}
 
 	function onPointerMove(e: PointerEvent) {
 		if (!isDragging.value) {
-			return;
-		}
-
-		const el = toValue(opts.container);
-		if (!el) {
 			return;
 		}
 
@@ -197,17 +209,8 @@ export function useSlider(opts: {
 		setScrollRAF(nextScroll);
 	}
 
-	function onPointerUp(e: PointerEvent) {
-		const el = toValue(opts.container);
-		if (!el) {
-			return;
-		}
-
+	function onPointerUp() {
 		isDragging.value = false;
-		el.style.scrollSnapType = '';
-		el.style.scrollBehavior = '';
-
-		el.releasePointerCapture(e.pointerId);
 	}
 
 
@@ -235,7 +238,9 @@ export function useSlider(opts: {
 
 		handleScroll();
 
-		el.addEventListener('pointerdown', onPointerDown);
+		// el.addEventListener('pointerdown', onPointerDown);
+		el.addEventListener('pointerdown', onPointerDown, { passive: false });
+
 		el.addEventListener('pointermove', onPointerMove);
 		el.addEventListener('pointerup', onPointerUp);
 		el.addEventListener('pointercancel', onPointerUp);
@@ -259,7 +264,6 @@ export function useSlider(opts: {
 		prev,
 		goTo,
 		currentIndex,
-		isDragging,
 		visibleSlidesCount,
 	};
 }

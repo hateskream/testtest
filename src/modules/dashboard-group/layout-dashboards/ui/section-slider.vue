@@ -222,6 +222,11 @@ defineExpose({ trackRef });
 	user-select: none;
 }
 
+.viewport::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
 .track {
 	display: flex;
 	flex-grow: 1;
