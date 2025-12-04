@@ -42,7 +42,7 @@ const emits = defineEmits<{
 				<span>Watchlist</span>
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list display-variant="default">
 					<modal-title>
 						Watchlist
 					</modal-title>
@@ -87,6 +87,7 @@ const emits = defineEmits<{
 				<event-type-modal
 					v-model="eventState"
 					:event-types="props.eventTypes"
+					display-variant="default"
 				/>
 			</template>
 		</modal-badge-dropdown>
@@ -103,7 +104,7 @@ const emits = defineEmits<{
 			</template>
 
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list display-variant="default">
 					<template #title>
 						Impact
 					</template>

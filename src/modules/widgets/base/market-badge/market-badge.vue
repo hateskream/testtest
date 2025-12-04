@@ -32,6 +32,7 @@ const activeMarket = defineModel<MarketType>({ required: true });
 				v-model="activeMarket"
 				:title="props.title"
 				:exclude-markets="props.excludeMarkets"
+				:display-variant
 			/>
 		</template>
 	</modal-badge-dropdown>

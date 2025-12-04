@@ -81,6 +81,7 @@ useEventBoardScroll({
 						v-model:watchlist-id-state="watchlistId"
 						v-model:watchlist-section-state="watchlistSection"
 						v-model:range-state="weekRange"
+						display-variant="new"
 						:initial-date="props.initialDate"
 						:base-date="baseDate"
 						:markets="markets"

@@ -5,8 +5,9 @@ import Image from '@/assets/images/stock/META.png';
 import BTCImage from '@/assets/images/market/BTC.png';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiImage } from '@/shared/ui/image';
-import { UiTooltip } from '@/shared/ui/tooltip';
+import { UiPositionTooltip } from '@/shared/ui/position';
 import type { IDisplaySettings, INews } from '../../model';
+import { DashboardTooltipWrapper } from '@/shared/ui/tooltip';
 
 interface INewsComponent {
 	news: INews;
@@ -78,18 +79,20 @@ const time = computed(() =>
 								v-for="stock in props.news.stocks"
 								:key="stock.ticker"
 							>
-								<ui-tooltip>
-									<template #content>
-										{{ stock.name }}
-									</template>
-
+								<ui-position-tooltip>
 									<div :class="classes.stock">
 										<ui-image
 											:class="classes.stockImage"
 											:src="BTCImage"
 										/>
 									</div>
-								</ui-tooltip>
+
+									<template #content>
+										<dashboard-tooltip-wrapper>
+											{{ stock.name }}
+										</dashboard-tooltip-wrapper>
+									</template>
+								</ui-position-tooltip>
 							</template>
 						</div>
 					</ui-transition-fade>

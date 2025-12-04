@@ -19,11 +19,11 @@ import {
 
 import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
 import { providePinnedLevel, providePinnedStack, useProvideFloatingContext } from '../../composables';
-import type { IFloatingOptions } from '../../model';
+import type { IPositionProps } from '../../model';
 
 import PositionTeleport from '../position-teleport.vue';
 
-const props = withDefaults(defineProps<IFloatingOptions>(), {
+const props = withDefaults(defineProps<IPositionProps>(), {
 	trigger: 'click',
 	placement: 'right-start',
 	strategy: 'fixed',

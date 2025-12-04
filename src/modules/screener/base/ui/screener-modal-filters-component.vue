@@ -20,7 +20,7 @@ function updateFilter(key: string, state: IFilterState) {
 }
 </script>
 <template>
-	<modal-badge-list>
+	<modal-badge-list display-variant="new">
 		<template #title>Filters</template>
 		<filter-modal-submenu
 			v-for="(filter, key) in props.definitions"

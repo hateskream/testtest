@@ -7,8 +7,9 @@ export { default as SubpositionRoot } from './sub/subposition-root.vue';
 export { default as SubpositionTrigger } from './sub/subposition-trigger.vue';
 export { default as SubpositionContent } from './sub/subposition-content.vue';
 
-export { default as UiPosition } from './legacy/position-component.vue';
-export { default as UiSubposition } from './legacy/subposition-component.vue';
-export { default as UiPositionPortal } from './legacy/position-portal-component.vue';
+export { default as UiPosition } from './sugar/position-component.vue';
+export { default as UiSubposition } from './sugar/subposition-component.vue';
+export { default as UiPositionPortal } from './sugar/position-portal-component.vue';
+export { default as UiPositionTooltip } from './sugar/ui-position-tooltip.vue';
 
 export { default as FloatingHost } from './host/floating-host.vue';

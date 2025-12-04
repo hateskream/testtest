@@ -16,7 +16,7 @@ const selectedPeriod = defineModel<Period>('period', { required: true });
 				{{selectedPeriod}}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list display-variant="default">
 					<template #title>
 						Period
 					</template>

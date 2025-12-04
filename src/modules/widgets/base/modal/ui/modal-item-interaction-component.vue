@@ -19,6 +19,11 @@ import ModalItemComponent from './modal-item-component.vue';
 
 <style module="classes">
 .root {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-sizing: border-box;
+	width: 100%;
 	cursor: pointer;
 }
 

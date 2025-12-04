@@ -20,7 +20,7 @@ const activeMetric = defineModel<CpiMetric>('metric', { required: true });
 				{{ metricFilterValueToDisplay[activeMetric] }}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						CPI
 					</template>
@@ -43,7 +43,7 @@ const activeMetric = defineModel<CpiMetric>('metric', { required: true });
 				{{ rangeFilterValueToDisplay[activeRange].selected }}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						Date range
 					</template>

@@ -1,1 +1,1 @@
-export { TabsComponent as DashboardGroupTabs } from './ui';
+export * from './ui';

@@ -8,6 +8,7 @@ const state = defineModel<Set<MarketIds>>({ required: true });
 
 const props = defineProps<{
 	markets: IMarketData[];
+	displayVariant: 'new' | 'default';
 }>();
 
 function toggleMarket(id: MarketIds) {
@@ -16,7 +17,7 @@ function toggleMarket(id: MarketIds) {
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<template #title>Markets</template>
 		<template #default>
 			<modal-item-checkbox

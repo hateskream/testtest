@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { UiPresence } from '@/shared/ui/presence';
-import type { IFloatingOptions } from '../../model';
+import type { IPositionProps } from '../../model';
 import { matchesTrigger } from '../../utils';
+import { PositionTeleport } from '@/shared/ui/position';
 
 import SubpositionRoot from '../sub/subposition-root.vue';
 import SubpositionTrigger from '../sub/subposition-trigger.vue';
 import SubpositionContent from '../sub/subposition-content.vue';
 
-interface ISubpositionProps extends IFloatingOptions {
+interface ISubpositionProps extends IPositionProps {
 	hoverPadding?: number;
 }
 
@@ -43,18 +44,21 @@ const props = withDefaults(defineProps<ISubpositionProps>(), {
 			/>
 		</subposition-trigger>
 
-		<ui-presence :state="isOpen" v-slot="{present}">
-			<transition name="fade">
-				<subposition-content
-					v-if="present"
-					:offset="props.offset"
-					:strategy="props.strategy"
-					:placement="props.placement"
-				>
-					<slot name="content" />
-				</subposition-content>
-			</transition>
-		</ui-presence>
+		<position-teleport>
+			<ui-presence :state="isOpen" v-slot="{present}">
+				<transition name="fade">
+					<subposition-content
+						v-if="present"
+						:offset="props.offset"
+						:strategy="props.strategy"
+						:placement="props.placement"
+						:auto-update="props.autoUpdate"
+					>
+						<slot name="content" />
+					</subposition-content>
+				</transition>
+			</ui-presence>
+		</position-teleport>
 	</subposition-root>
 </template>
 

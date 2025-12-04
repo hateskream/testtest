@@ -75,7 +75,7 @@ function updateCurrency(v: Currency) {
 				</template>
 
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant="displayStyle">
 						<template #title>Stock</template>
 
 						<template v-for="s in Stock" :key="s">
@@ -100,7 +100,7 @@ function updateCurrency(v: Currency) {
 				</template>
 
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant="displayStyle">
 						<template #title>Quote currency</template>
 
 						<template v-for="c in Currency" :key="c">
@@ -121,7 +121,7 @@ function updateCurrency(v: Currency) {
 				</template>
 
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant="displayStyle">
 						<template #title>Date</template>
 
 						<template v-for="r in dataKeys" :key="r">

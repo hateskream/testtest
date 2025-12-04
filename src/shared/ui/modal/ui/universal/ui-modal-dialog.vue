@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, watch, ref, onBeforeUnmount, useCssModule } from 'vue';
 
-import { lockFocus, unlockFocus } from './focus-lock';
+import { lockFocus, unlockFocus } from '../../utils';
 
 enum KeyboardKeys {
 	Esc = 'Escape',

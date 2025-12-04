@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { UiTooltip } from '@/shared/ui/tooltip';
+import { UiPositionTooltip } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 </script>
 
 <template>
-	<ui-tooltip
-		:show-in-ms="10"
-		position="top"
+	<ui-position-tooltip
+		:open-delay="10"
+		placement="top"
 		:class="classes.tooltipWrapper"
 	>
 		<template #default>
@@ -20,9 +21,11 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 			</div>
 		</template>
 		<template #content>
-			<slot>This is so important content for this help</slot>
+			<ui-tooltip-wrapper display-variant="new">
+				<slot>This is so important content for this help</slot>
+			</ui-tooltip-wrapper>
 		</template>
-	</ui-tooltip>
+	</ui-position-tooltip>
 </template>
 
 <style module="classes">

@@ -20,6 +20,7 @@ import CalendarToolbar from '@/modules/calendar/ui/toolbar/calendar-toolbar.vue'
 
 
 interface ICalendarWeeklyContainerProps {
+	displayVariant: 'new' | 'default';
 	locale?: string;
 	weekStartsOn?: 'monday' | 'sunday';
 	currentDate?: Date;
@@ -71,6 +72,7 @@ useEventBoardScroll({
 			v-model:watchlist-id-state="watchlistIdState"
 			v-model:watchlist-section-state="watchlistSectionState"
 			v-model:range-state="weekRange"
+			:display-variant
 			:initial-date="props.currentDate"
 			:base-date="baseDate"
 			:markets="markets"

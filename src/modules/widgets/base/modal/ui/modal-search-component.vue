@@ -68,7 +68,6 @@ onMounted(() => {
 	display: flex;
 	align-items: center;
 	min-width: 253px;
-	height: 48px;
 	border-bottom: 1px solid rgb(255 255 255 / 12%);
 	gap: 6px;
 }

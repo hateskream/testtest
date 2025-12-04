@@ -12,6 +12,7 @@ import FilterField from './filter-field.vue';
 const modelValue = defineModel<IFilterState>({ required: true });
 
 interface IFilterBadgeModalProps {
+	displayVariant: 'default' | 'new';
 	config: IFilterConfig;
 }
 
@@ -60,7 +61,7 @@ const badgeColor = computed(() => hasSelectedValue.value ? 'var(--text-color-bas
 			/>
 		</template>
 		<template #content="{ isVisible }">
-			<modal-badge-list :class="classes.modalBadgeList">
+			<modal-badge-list :class="classes.modalBadgeList" :display-variant>
 				<template #title>
 					{{ props.config.field.description ?? props.config.field.label }}
 				</template>

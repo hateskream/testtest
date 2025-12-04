@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
+import { type CSSProperties, useTemplateRef } from 'vue';
 
 import { type IPositionProps, UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -15,17 +15,34 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+
+const triggerRef = useTemplateRef('trigger');
+
+function getDynamicPlacement() {
+	if (!triggerRef.value) {
+		return 'bottom-start';
+	}
+
+	const el = triggerRef.value.$el as HTMLElement;
+	const rect = el.getBoundingClientRect();
+	const middle = window.innerHeight / 2;
+
+	return rect.top > middle ? 'top-start' : 'bottom-start';
+}
 </script>
 
 <template>
 	<ui-position
 		ref="position"
-		placement="bottom-start"
+		:placement="getDynamicPlacement"
 		v-bind="props.uiPositionProps || {}"
-		:strategy="props.strategy"
+		:strategy="'fixed'"
+		:auto-update="false"
+		memorize
 	>
 		<template #title="{isVisible}">
 			<modal-badge-title
+				ref="trigger"
 				:background-color="props.backgroundColor"
 				:color="props.color"
 				:padding-left="props.paddingLeft"

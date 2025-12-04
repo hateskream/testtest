@@ -5,13 +5,14 @@ import { useDebounce } from '@vueuse/core';
 import { ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
 import { UiSearch } from '@/shared/ui/input';
 import { UiDriver } from '@/shared/ui/driver';
-import { UiPillButton } from '@/shared/ui/pill';
+import { UiPillItem } from '@/shared/ui/pill';
 import { UiAccordion } from '@/shared/ui/accordion';
 import { MarketType } from '@/modules/market';
 import { type ISegmentData, SegmentFilterIds, segmentFilters } from '@/modules/news/model';
 import { hasInSegment, isAllSelectedInSegment, parseTicker, type SelectedSegmentTickersState } from '@/modules/news';
 
 const props = defineProps<{
+	displayVariant: 'default' | 'new';
 	segments: ISegmentData[];
 	selectedSegmentTickers: SelectedSegmentTickersState;
 }>();
@@ -98,7 +99,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<modal-badge-list :class="classes.root">
+	<modal-badge-list :class="classes.root" :display-variant>
 		<ui-search
 			ref="searchEl"
 			v-model="search"
@@ -107,14 +108,14 @@ onMounted(() => {
 		/>
 		<ui-driver />
 		<div :class="classes.controls">
-			<ui-pill-button
+			<ui-pill-item
 				v-for="filter in segmentFilters"
 				:key="filter.id"
 				:model-value="filter.id === model"
 				@click="model = filter.id"
 			>
 				{{filter.label}} · {{getTickersCount(filter.id, props.segments)}}
-			</ui-pill-button>
+			</ui-pill-item>
 		</div>
 
 		<div :class="classes.section">

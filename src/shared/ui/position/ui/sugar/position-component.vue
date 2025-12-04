@@ -10,6 +10,7 @@ import PositionTeleport from '../position-teleport.vue';
 import PositionContent from '../position-content.vue';
 
 const props = withDefaults(defineProps<IPositionProps>(), {
+	autoUpdate: true,
 	placement: 'right-end',
 	trigger: 'click',
 	offset: 6,
@@ -58,6 +59,8 @@ defineExpose({
 						:offset="props.offset"
 						:strategy="props.strategy"
 						:placement="props.placement"
+						:auto-update="props.autoUpdate"
+						:memorize
 					>
 						<slot
 							name="content"

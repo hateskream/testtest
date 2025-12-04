@@ -8,6 +8,7 @@ import MarketTabsComponent from './market-tabs-component.vue';
 import MarketTableComponent from './market-table-component.vue';
 
 interface IViewComponentProps {
+	displayVariant: 'default' | 'new';
 	rows: TableRow[];
 	filtersValues: FiltersValues;
 	watchlists: IWatchlistData[];
@@ -33,6 +34,7 @@ const columns = defineModel<ITableColumn[]>('columns', { required: true });
 			v-model:market="market"
 			v-model:columns="columns"
 			:filters-values="props.filtersValues"
+			:display-variant
 		/>
 		<market-table-component
 			v-model:columns="columns"

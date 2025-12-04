@@ -9,6 +9,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 const emits = defineEmits<{
 	(e: 'delete'): void;
 }>();
+
+defineProps<{
+	displayVariant: 'default' | 'new';
+}>();
 </script>
 
 <template>
@@ -23,7 +27,7 @@ const emits = defineEmits<{
 			/>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list :display-variant>
 				<template #title>Dashboard settings</template>
 				<template #default>
 					<modal-item

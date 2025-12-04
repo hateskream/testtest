@@ -141,7 +141,7 @@ function selectTicker(tickerId: string) {
 					</template>
 
 					<template #content>
-						<modal-badge-list>
+						<modal-badge-list :display-variant>
 							<template #title>{{ tab.name }}</template>
 							<modal-item
 								@click="onClickAction(TabAction.Rename, tab.id)"

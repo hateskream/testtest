@@ -106,6 +106,7 @@ function onRenameTab(id: string, name: string) {
 		</tab-wrapper>
 
 		<settings-dashboards
+			display-variant="default"
 			:class="classes.settings"
 			@delete="onDelete"
 		/>

@@ -37,7 +37,7 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 					{{ dateRangeFilterValueToDisplay[activeDateRange].selected }}
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<template #title>Date</template>
 						<template
 							v-for="filterKey in MarketCapDateRange"

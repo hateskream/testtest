@@ -7,6 +7,7 @@ import { ModalBadgeList, ModalItem, ModalItemSelector } from '@/modules/widgets/
 interface IProps {
 	watchlists: IWatchlistData[];
 	tickerId: string;
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IProps>();
@@ -45,7 +46,7 @@ function clickRowAction(watchlist: IWatchlistData, tickerId: string) {
 			</div>
 		</template>
 		<template #content>
-			<modal-badge-list>
+			<modal-badge-list :display-variant>
 				<template #title>Add to watchlist</template>
 
 				<template v-for="watchlist in props.watchlists" :key="watchlist.tabId">

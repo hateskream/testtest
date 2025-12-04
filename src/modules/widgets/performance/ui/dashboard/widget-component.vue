@@ -94,6 +94,7 @@ const {
 				v-model:date="currentDate"
 				v-model:symbol-display="currentSymbolDisplayVariant"
 				v-model:quote-currency="quoteCurrency"
+				display-source="new"
 			/>
 		</template>
 	</base-widget-dashboard>

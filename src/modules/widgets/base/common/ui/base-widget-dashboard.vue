@@ -149,7 +149,7 @@ function handleFullscreen() {
 									<slot name="settings-menu" />
 								</template>
 
-								<modal-badge-list v-else-if="slots['change-display']">
+								<modal-badge-list v-else-if="slots['change-display']" display-variant="new">
 									<slot name="change-display" />
 								</modal-badge-list>
 							</template>
@@ -179,6 +179,7 @@ function handleFullscreen() {
 								<widget-context-menu
 									:title="props.meta.name"
 									:dashboards="props.meta.dashboards"
+									display-variant="new"
 									@delete="emits('delete')"
 									@duplicate="emits('duplicate')"
 									@move-to="emits('moveTo', $event)"

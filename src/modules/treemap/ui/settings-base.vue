@@ -23,6 +23,8 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 import ChangeDisplay from './change-display.vue';
 
 interface ISettingsBase {
+	displayVariant: 'default' | 'new';
+
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
@@ -74,7 +76,7 @@ function updateColorDepth(newColorDepth: string) {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<template #title>Market</template>
 						<template #default>
 							<modal-item-selector
@@ -112,7 +114,7 @@ function updateColorDepth(newColorDepth: string) {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<template #title>Color by</template>
 						<template #default>
 							<modal-item-selector
@@ -132,7 +134,7 @@ function updateColorDepth(newColorDepth: string) {
 									</modal-item-interaction>
 								</template>
 								<template #content>
-									<modal-badge-list>
+									<modal-badge-list :display-variant>
 										<template #title>Color depth</template>
 										<template #default>
 											<modal-item-selector
@@ -163,11 +165,12 @@ function updateColorDepth(newColorDepth: string) {
 					<ui-icon :id="IconIds.ThreeDots" class="icon" />
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<change-display
 							v-model:display-value="displayValue"
 							v-model:is-show-logo="isShowLogo"
 							v-model:title="title"
+							:display-variant
 							:active-display-value="props.activeDisplayValue"
 						/>
 					</modal-badge-list>

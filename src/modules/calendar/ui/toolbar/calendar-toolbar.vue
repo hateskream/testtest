@@ -23,6 +23,7 @@ import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
 import CalendarRangeSelect from '@/shared/ui/calendar/calendar-range-select.vue';
 
 interface ICalendarProps {
+	displayVariant: 'new' | 'default';
 	initialDate: Date;
 	baseDate: Date;
 	markets: IMarketData[];
@@ -153,7 +154,11 @@ const label = computed(() => {
 					</span>
 				</template>
 				<template #content>
-					<markets-modal v-model="countryState" :markets="props.markets" />
+					<markets-modal
+						v-model="countryState"
+						:markets="props.markets"
+						:display-variant="props.displayVariant"
+					/>
 				</template>
 			</modal-badge-dropdown>
 

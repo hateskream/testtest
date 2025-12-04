@@ -59,6 +59,7 @@ const displayItems = computed(() => {
 			</template>
 			<template #content>
 				<news-segment-modal
+					display-variant="new"
 					:segments="props.segments"
 					:selected-segment-tickers="props.selectedSegmentsTickers"
 					@select-all="emits('selectAll', $event)"
@@ -72,7 +73,7 @@ const displayItems = computed(() => {
 				Location
 			</template>
 			<template #content>
-				<news-location-filter v-model:locations="locations" />
+				<news-location-filter v-model:locations="locations" display-variant="new" />
 			</template>
 		</modal-badge-dropdown>
 		<modal-badge-dropdown display-variant="new">
@@ -80,7 +81,7 @@ const displayItems = computed(() => {
 				{{sortTitle}}
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list display-variant="new">
 					<calendar-range-select
 						v-model="dateRange"
 						view="monthly"

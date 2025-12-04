@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { BaseSwitch, ModalFilter, ModalFilterTabWrapper } from '@/modules/widgets/base';
+import { BaseSwitch, ModalFilterTabWrapper } from '@/modules/widgets/base';
 import { toggleLocationCountry, toggleLocationRegion, type ILocation } from '../model';
+import { UiModalContent, UiModalTitle, UiModalWrapper } from '@/shared/ui/modal';
 
+defineProps<{
+	displayVariant: 'new' | 'default';
+}>();
 const locations = defineModel<ILocation[]>('locations', { required: true });
 
 function toggleRegion(region: string) {
@@ -14,53 +18,30 @@ function toggleCountry(region: string, countryCode: string) {
 </script>
 
 <template>
-	<modal-filter>
-		<template #title> Location </template>
+	<ui-modal-wrapper :display-variant="displayVariant">
+		<ui-modal-title> Location </ui-modal-title>
 
-		<template #content>
-			<div :class="classes.container">
-				<div
-					v-for="location in locations"
-					:key="location.region"
-					:class="classes.row"
-				>
-					<div v-if="location.isCanAllSwitch">
-						<div :class="classes.top">
-							<span :class="[classes.rowTitle, location.isActive && classes.titleActive]">
-								{{ location.region }}
-							</span>
+		<ui-modal-content>
+			<div
+				v-for="location in locations"
+				:key="location.region"
+				:class="classes.row"
+			>
+				<div v-if="location.isCanAllSwitch">
+					<div :class="classes.top">
+						<span :class="[classes.rowTitle, location.isActive && classes.titleActive]">
+							{{ location.region }}
+						</span>
 
-							<base-switch
-								:class="classes.switch"
-								:is-active="location.isActive"
-								@click="toggleRegion(location.region)"
-							/>
-						</div>
-
-						<div v-if="location.countries.length" :class="classes.content">
-							<div :class="classes.virtual"></div>
-							<div :class="classes.tabs">
-								<modal-filter-tab-wrapper
-									v-for="country in location.countries"
-									:key="country.code"
-									:is-active="country.isActive"
-									@click.stop.prevent="toggleCountry(location.region, country.code)"
-								>
-									{{ country.name }}
-								</modal-filter-tab-wrapper>
-							</div>
-						</div>
+						<base-switch
+							:class="classes.switch"
+							:is-active="location.isActive"
+							@click="toggleRegion(location.region)"
+						/>
 					</div>
 
-					<div v-else :class="classes.sub">
-						<div :class="classes.top">
-							<span
-								:class="[classes.rowTitle, location.isActive && classes.titleActive]"
-							>
-								{{location.region}}
-							</span>
-						</div>
-
+					<div v-if="location.countries.length" :class="classes.content">
+						<div :class="classes.virtual"></div>
 						<div :class="classes.tabs">
 							<modal-filter-tab-wrapper
 								v-for="country in location.countries"
@@ -73,9 +54,30 @@ function toggleCountry(region: string, countryCode: string) {
 						</div>
 					</div>
 				</div>
+
+				<div v-else :class="classes.sub">
+					<div :class="classes.top">
+						<span
+							:class="[classes.rowTitle, location.isActive && classes.titleActive]"
+						>
+							{{location.region}}
+						</span>
+					</div>
+
+					<div :class="classes.tabs">
+						<modal-filter-tab-wrapper
+							v-for="country in location.countries"
+							:key="country.code"
+							:is-active="country.isActive"
+							@click.stop.prevent="toggleCountry(location.region, country.code)"
+						>
+							{{ country.name }}
+						</modal-filter-tab-wrapper>
+					</div>
+				</div>
 			</div>
-		</template>
-	</modal-filter>
+		</ui-modal-content>
+	</ui-modal-wrapper>
 </template>
 
 <style module="classes">

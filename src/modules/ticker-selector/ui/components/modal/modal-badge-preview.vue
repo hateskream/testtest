@@ -60,6 +60,7 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 						:display-variant="props.displayVariant"
 					/>
 				</div>
+
 				<div
 					v-for="market in props.selectedMarkets"
 					:key="market.marketType"
@@ -67,6 +68,7 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 				>
 					<modal-filter-market-icon :icon="market.icon" />
 				</div>
+
 				<template v-if="props.totalSelectedCount > ACTIVE_TICKER_LIST_COUNT_SHOW">
 					+ {{ props.totalSelectedCount - ACTIVE_TICKER_LIST_COUNT_SHOW }}
 				</template>
@@ -98,8 +100,16 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 }
 
 .iconsItem {
-	margin-left: -12px;
 	border-radius: 100%;
+	mask: radial-gradient(circle 9px at right 50%, transparent 0, transparent 11px, #ffffff 8px);
+}
+
+.iconsItem + .iconsItem {
+	margin-left: -8px;
+}
+
+.iconsItem:last-child {
+	mask: none;
 }
 
 .iconsItem:first-child {
@@ -109,7 +119,6 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 .iconsWrapper {
 	display: flex;
 	align-items: center;
-	gap: 4px;
 }
 
 .labels {

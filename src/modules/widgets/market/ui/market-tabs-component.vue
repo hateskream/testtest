@@ -10,6 +10,7 @@ import type { ITableColumn } from '@/modules/cell';
 import MarketFiltersComponent from './market-filters-component.vue';
 
 interface IMarketTabsComponentProps {
+	displayVariant: 'default' | 'new';
 	filtersValues: FiltersValues;
 }
 
@@ -56,6 +57,7 @@ function updateFilter(filterKey: string, filterValue: string) {
 						v-model:filters="filters"
 						v-model:market="market"
 						v-model:columns="columns"
+						:display-variant
 						:filters-values="props.filtersValues"
 					/>
 				</template>

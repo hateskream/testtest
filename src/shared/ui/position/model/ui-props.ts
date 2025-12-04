@@ -1,8 +1,19 @@
-import type { Placement, Strategy } from '@floating-ui/vue';
+import type { AutoUpdateOptions, Middleware, Placement, Strategy } from '@floating-ui/vue';
 
-import type { FloatingTriggers, IFloatingOptions } from './global-position';
+export type FloatingTriggers = 'click' | 'hover' | 'contextmenu';
 
-export type IPositionProps = IFloatingOptions;
+export interface IPositionProps {
+	autoUpdate?: AutoUpdateOptions | boolean;
+	placement?: (() => Placement) | Placement;
+	strategy?: Strategy;
+	offset?: number;
+	middleware?: Middleware[];
+	trigger?: FloatingTriggers | FloatingTriggers[];
+	openDelay?: number;
+	closeDelay?: number;
+	transform?: boolean;
+	memorize?: boolean;
+}
 
 export interface IPositionRootProps {
 	trigger?: FloatingTriggers | FloatingTriggers[];
@@ -11,10 +22,12 @@ export interface IPositionRootProps {
 }
 
 export interface IPositionContentProps {
-	placement?: Placement;
+	autoUpdate?: AutoUpdateOptions | boolean;
+	placement?: (() => Placement) | Placement;
 	offset?: number;
 	strategy?: Strategy;
 	transform?: boolean;
+	memorize?: boolean;
 }
 
 export interface IPositionTeleportProps {
@@ -27,4 +40,8 @@ export type ISubpositionRootProps = IPositionRootProps;
 
 export interface ISubpositionContentProps extends IPositionContentProps {
 	hoverPadding?: number;
+}
+
+export function parseAutoUpdate(autoUpdate: AutoUpdateOptions | boolean) {
+	return typeof autoUpdate === 'boolean' ? {} : autoUpdate;
 }

@@ -10,6 +10,7 @@ import { getAllMarkets, type MarketType } from '@/modules/market';
 interface IMarketBadgeProps {
 	title: string;
 	excludeMarkets?: MarketType[];
+	displayVariant: 'new' | 'default';
 }
 
 const props = withDefaults(defineProps<IMarketBadgeProps>(), {
@@ -26,7 +27,7 @@ function updateMarket(market: MarketType) {
 </script>
 
 <template>
-	<modal-badge-list>
+	<modal-badge-list :display-variant>
 		<template #title>{{ props.title }}</template>
 
 		<template v-for="market in markets" :key="market.type">

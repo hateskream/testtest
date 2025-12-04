@@ -28,7 +28,7 @@ const activeMarket = defineModel<MarketType>('activeMarket', { required: true })
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
 
 interface IFiltersPanelProps {
-	displaySource?: 'default' | 'new';
+	displaySource: 'default' | 'new';
 }
 
 const props = defineProps<IFiltersPanelProps>();
@@ -145,7 +145,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 					</div>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant="props.displaySource">
 						<template #title>Quote currency</template>
 						<template v-for="c in Currency" :key="c">
 							<modal-item-selector
@@ -178,7 +178,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 					</div>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant="props.displaySource">
 						<template #title>Date</template>
 
 						<template v-for="r in DateRangeForex" :key="r">

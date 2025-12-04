@@ -27,7 +27,7 @@ const slots = useSlots();
 		<modal-submenu-component v-if="slots.filter">
 			<template #title>Filter</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list display-variant="default">
 					<slot name="filter" />
 				</modal-badge-list>
 			</template>

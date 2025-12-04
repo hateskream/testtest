@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { UiModal } from '@/shared/ui/modal';
+import { UiModalDialog } from '@/shared/ui/modal';
 
 import ModalBody from './modal-body.vue';
 
@@ -15,9 +15,9 @@ function toggleModal(): void {
 <template>
 	<div>
 		<div class="activator" @click="toggleModal">i</div>
-		<ui-modal v-model="isOpen">
+		<ui-modal-dialog v-model="isOpen">
 			<modal-body class="modal" @close="toggleModal" />
-		</ui-modal>
+		</ui-modal-dialog>
 	</div>
 </template>
 

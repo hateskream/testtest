@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UiTooltip } from '@/shared/ui/tooltip';
+import { UiPositionTooltip } from '@/shared/ui/position/ui/tooltip';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IInfoTooltipProps {
@@ -10,9 +10,9 @@ const props = defineProps<IInfoTooltipProps>();
 </script>
 
 <template>
-	<ui-tooltip
-		:show-in-ms="10"
-		position="top"
+	<ui-position-tooltip
+		:open-delay="10"
+		placement="top"
 		:class="classes.tooltipWrapper"
 	>
 		<template #default>
@@ -28,7 +28,7 @@ const props = defineProps<IInfoTooltipProps>();
 		<template #content>
 			<slot>{{ props.text }}</slot>
 		</template>
-	</ui-tooltip>
+	</ui-position-tooltip>
 </template>
 
 <style module="classes">

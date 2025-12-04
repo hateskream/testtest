@@ -202,6 +202,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:locations="locations"
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
+				display-variant="new"
 				:segments="segments"
 				:selected-segment-tickers="selectedSegmentTickers"
 				@select-all="selectAll"
@@ -211,7 +212,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 		</template>
 
 		<template #nav-menu>
-			<modal-badge-list>
+			<modal-badge-list display-variant="new">
 				<news-filters
 					v-model:selected-scores="selectedScores"
 					v-model:selected-segments="selectedMarketSegments"
@@ -221,6 +222,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					v-model:locations="locations"
 					v-model:include="include"
 					v-model:active-date-range="activeDateRange"
+					display-variant="new"
 					:segments="segments"
 					:selected-segment-tickers="selectedSegmentTickers"
 					@select-all="selectAll"

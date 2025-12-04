@@ -38,6 +38,12 @@ watch(isVisible, (value) => {
 		placement="bottom-start"
 		v-bind="props.uiPositionProps || {}"
 		:strategy="props.strategy"
+		:auto-update="{
+			ancestorScroll: false,
+			ancestorResize: false,
+			elementResize: true,
+			layoutShift: false
+		}"
 	>
 		<template #title>
 			<modal-badge-title-component

@@ -29,6 +29,6 @@ const isSelectedModel = computed({
 			<slot name="image" />
 		</template>
 		<template #name>{{ props.ticker }}</template>
-		<template #label>{{ props.name }}</template>
+		<template v-if="props.name" #label>{{ props.name }}</template>
 	</modal-filter-row-item>
 </template>

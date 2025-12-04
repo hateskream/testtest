@@ -194,6 +194,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:locations="locations"
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
+				display-variant="new"
 				:segments="segments"
 				:selected-segment-tickers="selectedSegmentTickers"
 				@select-all="selectAll"

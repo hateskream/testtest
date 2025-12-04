@@ -91,6 +91,7 @@ useEventBoardScroll({
 						<markets-modal
 							v-model="marketId"
 							:markets="markets"
+							display-variant="new"
 						/>
 					</template>
 				</modal-badge>
@@ -105,6 +106,7 @@ useEventBoardScroll({
 						<event-type-modal
 							v-model="eventType"
 							:event-types="Object.values(EventType)"
+							display-variant="new"
 						/>
 					</template>
 				</modal-badge>

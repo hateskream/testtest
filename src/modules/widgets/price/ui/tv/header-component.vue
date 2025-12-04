@@ -46,13 +46,17 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list display-variant="default">
 						<modal-submenu>
 							<template #title>
 								Market
 							</template>
 							<template #content>
-								<market-badge-list v-model="activeMarket" title="Market" />
+								<market-badge-list
+									v-model="activeMarket"
+									display-variant="default"
+									title="Market"
+								/>
 							</template>
 						</modal-submenu>
 
@@ -64,7 +68,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 								{{ filterTypeToName[filterKey] }}
 							</template>
 							<template #content>
-								<modal-badge-list>
+								<modal-badge-list display-variant="default">
 									<template #title>
 										{{ filterTypeToName[filterKey] }}
 									</template>

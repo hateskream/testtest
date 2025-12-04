@@ -40,6 +40,7 @@ const searchedTickers = computed(() => props.tickers.slice(0, 3));
 		:is-searching="props.isSearching"
 		:is-inside-open="false"
 		:enable-select-all="props.enableSelectAll"
+		:display-variant
 		@select-all="emit('select-all')"
 		@click="emit('select-group')"
 	>

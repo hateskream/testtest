@@ -7,15 +7,16 @@ import {
 	onMounted,
 	onUnmounted,
 	useTemplateRef,
-	type CSSProperties,
+	type CSSProperties, ref,
 } from 'vue';
 import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 
-import type { ISubpositionContentProps } from '../../model';
+import { type ISubpositionContentProps, parseAutoUpdate } from '../../model';
 import { matchesTrigger } from '../../utils';
 import { useSubFloatingContext } from '../../composables';
 
 const props = withDefaults(defineProps<ISubpositionContentProps>(), {
+	autoUpdate: true,
 	placement: 'right-end',
 	offset: 6,
 	strategy: 'absolute',
@@ -41,7 +42,11 @@ let cleanup: null | (() => void) = null;
 const { floatingStyles, update, placement } = useFloating(triggerRef, contentRef, {
 	placement: props.placement,
 	strategy: props.strategy,
-	middleware: [offset(props.offset), flip(), shift({ padding: 4 })],
+	middleware: [
+		offset(props.offset),
+		shift({ padding: 8 }),
+		flip({ padding: 8 }),
+	],
 	transform: true,
 });
 
@@ -71,6 +76,7 @@ const enhancedFloatingStyles = computed(() => {
 	return baseStyles;
 });
 
+const memorizedStyles = ref<CSSStyleValue | null>(null);
 
 function handleOpen() {
 	nextTick(() => {
@@ -78,7 +84,14 @@ function handleOpen() {
 			return;
 		}
 
-		cleanup = autoUpdate(triggerRef.value, contentRef.value, update);
+		if (!props.memorize && props.autoUpdate) {
+			cleanup = autoUpdate(
+				triggerRef.value,
+				contentRef.value,
+				update,
+				parseAutoUpdate(props.autoUpdate),
+			);
+		}
 
 		if (matchesTrigger(trigger(), 'hover')) {
 			contentRef.value.addEventListener('mouseenter', events.hover.onFloatingEnter);
@@ -90,6 +103,7 @@ function handleOpen() {
 function dispose() {
 	cleanup?.();
 	cleanup = null;
+	memorizedStyles.value = null;
 	contentRef.value?.removeEventListener('mouseenter', events.hover.onFloatingEnter);
 	contentRef.value?.removeEventListener('mouseleave', events.hover.onFloatingLeave);
 }
@@ -105,13 +119,25 @@ onUnmounted(dispose);
 watch(isOpen, (v) => (v ? handleOpen() : dispose()), {
 	immediate: true,
 });
+
+watch(enhancedFloatingStyles, (value, oldValue) => {
+	if (!props.memorize) {
+		return;
+	}
+
+	if (isOpen.value && !oldValue) {
+		memorizedStyles.value = value;
+	} else {
+		memorizedStyles.value = null;
+	}
+}, { deep: true });
 </script>
 
 <template>
 	<div
 		v-if="isOpen"
 		ref="content"
-		:style="enhancedFloatingStyles"
+		:style="memorizedStyles || enhancedFloatingStyles"
 		data-subposition-content
 		:data-open="isOpen"
 		:data-pinned="isPinned"

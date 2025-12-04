@@ -4,25 +4,16 @@
 
 <template>
 	<div :class="classes.content">
-		<slot	/>
+		<slot />
 	</div>
 </template>
 
 <style module="classes">
 .content {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	min-width: 230px;
-	max-width: 360px;
-	max-height: calc(500px - 40px);
-	padding:
-		var(--padding-padding-s5, 8px)
-		var(--padding-padding-s9, 16px)
-		var(--padding-padding-s13, 28px)
-		var(--padding-padding-s9, 16px);
+	max-height: calc(80svh - 46px);
+	margin: 0 -6px;
+	padding: 0 12px 6px;
 	overflow-y: auto;
-	scrollbar-gutter: stable;
 }
 
 @supports (-moz-appearance: none) {

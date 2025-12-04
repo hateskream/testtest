@@ -54,7 +54,7 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 					<span>{{ filterValueToDisplay[timeRange].label }}</span>
 				</template>
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list :display-variant>
 						<template #title>
 							Time Range
 						</template>
@@ -77,6 +77,7 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 			:watchlists="props.watchlists"
 			:ticker-id="selectedTicker"
 			:class="classes.watchlist"
+			:display-variant
 			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
 			@add-to-new-watchlist="emits('add-to-new-watchlist')"

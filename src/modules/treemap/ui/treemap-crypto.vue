@@ -20,6 +20,8 @@ import SettingsBase from './settings-base.vue';
 import SettingComponent from './setting-component.vue';
 
 interface ITreemapCryptoProps {
+	displayVariant: 'default' | 'new';
+
 	activeMarket: IMarket;
 	activeColorBy: IColorBy;
 	activeColorDepth: IColorDepth;
@@ -66,6 +68,7 @@ const {
 			v-model:display-value="displayValue"
 			v-model:is-show-logo="isShowLogo"
 			v-model:title="title"
+			:display-variant
 			:active-market="props.activeMarket"
 			:active-color-by="props.activeColorBy"
 			:active-color-depth="props.activeColorDepth"
@@ -77,6 +80,7 @@ const {
 				title="Size by"
 				:setting="sizeBy"
 				:active="activeSizeBy"
+				:display-variant
 				:icon="IconIds.Size"
 			/>
 		</settings-base>

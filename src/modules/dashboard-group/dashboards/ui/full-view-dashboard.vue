@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { useDelayedLoading } from '@/shared/composables';
-import { UiModal } from '@/shared/ui/modal';
+import { UiModalDialog } from '@/shared/ui/modal';
 import { generateId, getWidgetComponent, type IMeta } from '../model';
 
 interface IProps {
@@ -49,7 +49,7 @@ const style = computed(() => {
 </script>
 
 <template>
-	<ui-modal
+	<ui-modal-dialog
 		ref="rootRef"
 		v-model="isOpenFullView"
 	>
@@ -58,5 +58,5 @@ const style = computed(() => {
 			:meta="preparedMeta"
 			:style="style"
 		/>
-	</ui-modal>
+	</ui-modal-dialog>
 </template>

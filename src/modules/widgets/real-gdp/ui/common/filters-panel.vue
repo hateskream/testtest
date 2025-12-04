@@ -4,7 +4,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { rangeFilterValueToDisplay, RealGdpRange } from '../../model';
 
 interface IFiltersPanelProps {
-	displayVariant?: 'default' | 'new';
+	displayVariant: 'default' | 'new';
 }
 
 const props = defineProps<IFiltersPanelProps>();
@@ -24,7 +24,7 @@ const activeRange = defineModel<RealGdpRange>('range', { required: true });
 				/>
 			</template>
 			<template #content>
-				<modal-badge-list>
+				<modal-badge-list :display-variant>
 					<template #title>
 						Date range
 					</template>

@@ -510,7 +510,7 @@ onMounted(async () => {
 				</template>
 
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list display-variant="default">
 						<template #title>
 							Indicators
 						</template>
@@ -539,7 +539,7 @@ onMounted(async () => {
 				</template>
 
 				<template #content>
-					<modal-badge-list>
+					<modal-badge-list display-variant="default">
 						<template #title>
 							Type
 						</template>
