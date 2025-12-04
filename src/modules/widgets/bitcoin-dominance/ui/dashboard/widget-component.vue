@@ -93,6 +93,6 @@ const {
 }
 
 .content {
-	padding: 12px 16px 0 20px;
+	padding: 12px 16px 12px 20px;
 }
 </style>
