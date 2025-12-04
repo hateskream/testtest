@@ -93,7 +93,7 @@ export default defineConfig({
 					vueuse: ['@vueuse/core', '@vueuse/integrations'],
 					socket: ['socket.io-client'],
 					grid: ['grid-layout-plus'],
-					utils: ['uuid', 'mitt', 'zod', 'decimal.js', 'ofetch'],
+					utils: ['uuid', 'mitt', 'zod', 'ofetch'],
 					sharedComponents: ['@shared/component-library'],
 				},
 				chunkFileNames: 'assets/js/[name]-[hash].js',
