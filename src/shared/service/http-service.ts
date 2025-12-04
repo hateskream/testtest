@@ -54,7 +54,15 @@ class HttpService {
 		options: IOptions & { body?: BodyType } = {},
 	): Promise<T> {
 		try {
-			const requestConfig: any = {
+			const requestConfig: {
+				method: HttpMethod;
+				query?: Record<string, string | number | boolean | undefined>;
+				body?: BodyType;
+				signal?: AbortSignal;
+				headers?: Record<string, string>;
+				retry?: number;
+				timeout?: number;
+			} = {
 				method,
 				query: options.query,
 				body: options.body,
