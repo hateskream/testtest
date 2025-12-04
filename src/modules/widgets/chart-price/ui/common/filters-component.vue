@@ -79,9 +79,9 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 			:ticker-id="selectedTicker"
 			:class="classes.watchlist"
 			:display-variant
-			@add-to-watchlist="emits('add-to-watchlist', $event.watchlistId)"
-			@remove-from-watchlist="emits('remove-from-watchlist', $event.watchlistId)"
-			@add-to-new-watchlist="emits('add-to-new-watchlist')"
+			@add-to-watchlist="emit('add-to-watchlist', $event.watchlistId)"
+			@remove-from-watchlist="emit('remove-from-watchlist', $event.watchlistId)"
+			@add-to-new-watchlist="emit('add-to-new-watchlist')"
 			@toggle-favorite="emit('toggle-favorite-watchlist')"
 		/>
 	</div>
