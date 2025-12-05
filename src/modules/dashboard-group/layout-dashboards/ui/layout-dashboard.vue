@@ -13,7 +13,7 @@ const emits = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-const { sections, tabs } = useDashboardLayout();
+const { sections, tabs, changeActiveDashboard } = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
 
@@ -64,6 +64,7 @@ const {
 			<header-desktop
 				v-if="!isMobile"
 				:tabs="tabs"
+				@change-active="changeActiveDashboard"
 			/>
 			<section-slider
 				ref="sliderRef"

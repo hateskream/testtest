@@ -7,6 +7,7 @@ import {
 	type IDashboardTab,
 	type ISection,
 	rehydrateWidget,
+	changeActiveDashboard as changeActiveDashboardModel,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 
@@ -139,9 +140,14 @@ export function useDashboardLayout() {
 
 	}, { deep: true });
 
+	function changeActiveDashboard(id: string) {
+		state.value = changeActiveDashboardModel(state.value, id);
+	}
+
 	return {
 		tabs,
 		sections,
+		changeActiveDashboard,
 	};
 }
 

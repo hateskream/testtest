@@ -12,6 +12,10 @@ interface IHeaderDesktop {
 
 const props = defineProps<IHeaderDesktop>();
 
+const emits = defineEmits<{
+	changeActive: [id: string];
+}>();
+
 const active = computed(() => props.tabs.find(el => el.isActive));
 </script>
 
@@ -44,7 +48,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 					<button
 						v-else
 						:class="[classes.tab, active === tab && classes.active]"
-						@click="active = tab"
+						@click="emits('changeActive', tab.id)"
 					>
 						{{ tab.name }}
 					</button>
