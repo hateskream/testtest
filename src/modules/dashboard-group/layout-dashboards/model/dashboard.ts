@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { createSectionFromPreset, type ISection, type ISectionPreset } from './section';
 import { WidgetType } from '../../core';
+import { isFeatureEnabled } from '@/shared/lib';
 
 export interface IDashboard {
 	id: string;
@@ -232,8 +233,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 };
 
 
+const enabledDashboardPresets: Record<PresetName, boolean> = {
+	Main: true,
+	Crypto: isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
+	Stock: isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
+};
+
 function isComingSoonPreset(presetName: PresetName) {
-	return presetName !== 'Main';
+	return !enabledDashboardPresets[presetName];
 }
 
 const comingSoonPresets: Record<PresetName, string | undefined> = {

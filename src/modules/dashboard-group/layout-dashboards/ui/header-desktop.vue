@@ -37,7 +37,6 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 					>
 						<button
 							:class="[classes.tab, active === tab && classes.active]"
-							@click="active = tab"
 						>
 							{{ tab.name }}
 						</button>
