@@ -73,7 +73,13 @@ export default defineConfig({
 		transformer: 'lightningcss',
 		lightningcss: {
 			targets: browserslistToTargets(
-				browserslist('> 0.5%, last 2 versions, not dead'),
+				browserslist(`
+					last 5 years,
+					> 0.5%,
+					not dead,
+					iOS >= 13,
+					Safari >= 13
+				`),
 			),
 			cssModules: {
 				pattern: '[local]__[hash]',
