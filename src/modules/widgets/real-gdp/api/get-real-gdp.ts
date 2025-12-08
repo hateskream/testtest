@@ -42,16 +42,8 @@ export async function getRealGdp(args: IGetRealGdpRequest): Promise<IRealGdpHist
 function prepareResponse(response: IGetRealGdpResponse): IRealGdpHistory {
 	return {
 		range: response.range,
-		points: preparePoints(response.points, response.range),
+		points: response.points,
 	};
-}
-
-function preparePoints(points: IRealGdpHistoryPoint[], range: RealGdpRange) {
-	if (range === RealGdpRange.TwentyFiveYears || range === RealGdpRange.All) {
-		return points.filter((_, key) => key % 3 === 0);
-	}
-
-	return points;
 }
 
 const { getMock } = useFetchMock<IGetRealGdpResponse>('/mock/widgets/gdp/real.json');
