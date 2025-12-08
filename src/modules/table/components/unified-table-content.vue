@@ -31,7 +31,6 @@ export interface IProps<T> {
 	columns: IGenericTableColumn[];
 	columnWidths:string[]|undefined;
 	sortConfig: ISortConfig;
-	containerWidth?: number;
 
 	// Feature flags
 	enableDragDrop?: boolean;
