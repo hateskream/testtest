@@ -25,9 +25,11 @@ class HttpService {
 			'Content-Type': 'application/json',
 		},
 		onRequestError({ error }) {
+			// eslint-disable-next-line no-console
 			console.error('Request error:', error);
 		},
 		onResponseError({ response }) {
+			// eslint-disable-next-line no-console
 			console.error('Response error:', response.status, response.statusText);
 		},
 	});

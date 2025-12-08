@@ -1,14 +1,14 @@
 <script setup lang="ts" generic="T">
 import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 
-import { getComponentByType, CellType } from './cells/cell-types';
+import { CellType, getComponentByType } from './cells/cell-types';
 import { getCellData } from './utils';
 import {
-	type IGenericTableColumn,
-	type IGenericTableSection,
-	type IGenericTableRow,
-	type ISortConfig,
 	type IDragDropEvent,
+	type IGenericTableColumn,
+	type IGenericTableRow,
+	type IGenericTableSection,
+	type ISortConfig,
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
 import { ModalFilterTabWrapper } from '@/modules/widgets/base';
@@ -162,6 +162,7 @@ const getCellComponentForColumn = (
 	columnKey: string,
 ) => {
 	if (!cellData) {
+		// eslint-disable-next-line no-console
 		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
 		return getCellComponent('nothing');
 	}

@@ -355,7 +355,7 @@ function searchFocus() {
 					:enable-select-all="props.enableSelectAll"
 					@select-all="toggleSelectAll"
 					@ticker-select="handleToggleSelect($event)"
-					@select-group="(v) => activeGroup = v"
+					@select-group="activeGroup = $event"
 				/>
 			</div>
 			<template v-else>
