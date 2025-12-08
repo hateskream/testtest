@@ -190,19 +190,20 @@ defineExpose({ trackRef });
 }
 
 .viewport {
-	touch-action: none;
 	position: relative;
 	display: flex;
 	flex-grow: 1;
 	margin-right: 6px;
 	padding-top: 8px;
+	padding-right: 52px;
 	padding-left: 20px;
 	overflow: hidden;
 	overflow-x: auto;
+	user-select: none;
+	touch-action: none;
 	scroll-snap-type: x mandatory;
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
-	user-select: none;
 }
 
 .viewport::-webkit-scrollbar {
