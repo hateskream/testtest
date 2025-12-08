@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
 import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import {
 	barDashedBorderConfigurablePlugin,
 	type IBarDashedBorderPluginConfig,
 } from '@/modules/lightweight-charts/plugins';
 import type { INominalGdpHistoryPoint } from '../../model';
+
+const BAR_WIDTH = 15;
+const BAR_SPACE = 5;
 
 interface IChartComponentProps {
 	points: INominalGdpHistoryPoint[];
@@ -16,12 +19,18 @@ interface IChartComponentProps {
 
 const props = defineProps<IChartComponentProps>();
 
-const preparedLabels = computed(() => props.points.map(point => point.label));
+const { points: filteredPoints } = useAdaptiveBarPoints(
+	() => props.points,
+	useTemplateRef('wrapper'),
+	{ barWidth: BAR_WIDTH * 2 + BAR_SPACE },
+);
+
+const preparedLabels = computed(() => filteredPoints.value.map(point => point.label));
 
 const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPluginConfig>)[] => {
 	return [
 		{
-			data: props.points.map(point => point.forecast),
+			data: filteredPoints.value.map(point => point.forecast),
 			backgroundColor: (context) => {
 				if (!context.chart.chartArea) {
 					return;
@@ -37,7 +46,7 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 			},
 			borderColor: '#FF8D29',
 			borderRadius: 5,
-			maxBarThickness: 15,
+			maxBarThickness: BAR_WIDTH,
 			barPercentage: 1,
 			categoryPercentage: 0.7,
 			dashedBorder: {
@@ -49,11 +58,11 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 			},
 		},
 		{
-			data: props.points.map(point => point.history).filter(point => point !== 0),
+			data: filteredPoints.value.map(point => point.history).filter(point => point !== 0),
 			backgroundColor: 'rgba(255, 255, 255, 0.90)',
 			borderColor: 'rgba(255, 255, 255, 0.90)',
 			borderRadius: 5,
-			maxBarThickness: 15,
+			maxBarThickness: BAR_WIDTH,
 			barPercentage: 1,
 			categoryPercentage: 0.7,
 		},
@@ -98,13 +107,21 @@ const plugins = [barDashedBorderConfigurablePlugin];
 </script>
 
 <template>
-	<chart-bar
-		:datasets="preparedDatasets"
-		:labels="preparedLabels"
-		:options="options"
-		:plugins="plugins"
-	/>
-	<teleport to="body">
-		<chart-external-tooltip v-bind="state" />
-	</teleport>
+	<div ref="wrapper" :class="classes.wrapper">
+		<chart-bar
+			:datasets="preparedDatasets"
+			:labels="preparedLabels"
+			:options="options"
+			:plugins="plugins"
+		/>
+		<teleport to="body">
+			<chart-external-tooltip v-bind="state" />
+		</teleport>
+	</div>
 </template>
+
+<style module="classes">
+.wrapper {
+	height: 100%;
+}
+</style>

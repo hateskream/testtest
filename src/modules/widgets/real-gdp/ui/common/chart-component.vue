@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import type { IRealGdpHistoryPoint } from '../../model';
+
+const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
 	points: IRealGdpHistoryPoint[];
@@ -13,8 +15,14 @@ interface IChartComponentProps {
 
 const props = defineProps<IChartComponentProps>();
 
-const preparedLabels = computed(() => props.points.map(point => point.label));
-const preparedData = computed(() => props.points.map(point => point.history));
+const { points: filteredPoints } = useAdaptiveBarPoints(
+	() => props.points,
+	useTemplateRef('wrapper'),
+	{ barWidth: BAR_WIDTH },
+);
+
+const preparedLabels = computed(() => filteredPoints.value.map(point => point.label));
+const preparedData = computed(() => filteredPoints.value.map(point => point.history));
 
 const preparedDatasets = computed((): [BarDataset] => {
 	return [{
@@ -57,12 +65,20 @@ const options = {
 </script>
 
 <template>
-	<chart-bar
-		:datasets="preparedDatasets"
-		:labels="preparedLabels"
-		:options="options"
-	/>
-	<teleport to="body">
-		<chart-external-tooltip v-bind="state" />
-	</teleport>
+	<div ref="wrapper" :class="classes.wrapper">
+		<chart-bar
+			:datasets="preparedDatasets"
+			:labels="preparedLabels"
+			:options="options"
+		/>
+		<teleport to="body">
+			<chart-external-tooltip v-bind="state" />
+		</teleport>
+	</div>
 </template>
+
+<style module="classes">
+.wrapper {
+	height: 100%;
+}
+</style>

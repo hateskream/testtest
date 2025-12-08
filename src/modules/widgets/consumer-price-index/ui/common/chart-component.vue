@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import type { ICpiHistoryPoint } from '../../model';
+
+const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
 	points: ICpiHistoryPoint[];
 }
 
 const props = defineProps<IChartComponentProps>();
+
+const { points: filteredPoints } = useAdaptiveBarPoints(
+	() => props.points,
+	useTemplateRef('wrapper'),
+	{ barWidth: BAR_WIDTH },
+);
 
 function parsePointDate(date: string) {
 	if (/\d{4}-\d{2}/g.test(date)) {
@@ -27,13 +35,13 @@ function parsePointDate(date: string) {
 }
 
 const preparedLabels = computed(() => {
-	if (!props.points.length) {
+	if (!filteredPoints.value.length) {
 		return [];
 	}
 
-	let [, lastYear] = parsePointDate(props.points[0].label);
+	let [, lastYear] = parsePointDate(filteredPoints.value[0].label);
 
-	return props.points.map(point => {
+	return filteredPoints.value.map(point => {
 		const [month, year] = parsePointDate(point.label);
 
 		if (year !== lastYear) {
@@ -45,7 +53,7 @@ const preparedLabels = computed(() => {
 	});
 });
 
-const preparedData = computed(() => props.points.map(point => point.history));
+const preparedData = computed(() => filteredPoints.value.map(point => point.history));
 
 const preparedDatasets = computed((): [BarDataset] => {
 	return [{
@@ -55,8 +63,8 @@ const preparedDatasets = computed((): [BarDataset] => {
 		borderRadius: 5,
 		hoverBackgroundColor: 'rgba(255, 255, 255, 0.9)',
 		hoverBorderColor: '#FFFFFF',
-		barThickness: 15,
-		maxBarThickness: 15,
+		barThickness: BAR_WIDTH,
+		maxBarThickness: BAR_WIDTH,
 		barPercentage: 1,
 	}];
 });
@@ -88,12 +96,20 @@ const options = {
 </script>
 
 <template>
-	<chart-bar
-		:datasets="preparedDatasets"
-		:labels="preparedLabels"
-		:options="options"
-	/>
-	<teleport to="body">
-		<chart-external-tooltip v-bind="state" />
-	</teleport>
+	<div ref="wrapper" :class="classes.wrapper">
+		<chart-bar
+			:datasets="preparedDatasets"
+			:labels="preparedLabels"
+			:options="options"
+		/>
+		<teleport to="body">
+			<chart-external-tooltip v-bind="state" />
+		</teleport>
+	</div>
 </template>
+
+<style module="classes">
+.wrapper {
+	height: 100%;
+}
+</style>
