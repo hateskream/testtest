@@ -14,7 +14,12 @@ import throttle from 'lodash/throttle';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
 
 
-const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
+const LEFT_OFFSET = 20;
+const RIGHT_OFFSET = 10 + 10 + 3;
+const BORDER_WIDTH = 2;
+const SIDEBAR_WIDTH = 52;
+
+const PADDING_VIEWPORT = LEFT_OFFSET + RIGHT_OFFSET + BORDER_WIDTH + SIDEBAR_WIDTH;
 
 export function useSlider(opts: {
 	slidesWidth: MaybeRefOrGetter<number[]>;
@@ -49,7 +54,7 @@ export function useSlider(opts: {
 	const seenSlides = new Set<number>();
 
 	const visibleSlidesCount = computed(() => {
-		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - SIDEBAR_WIDTH);
 		const offset = translateX.value;
 		const end = offset + vp;
 

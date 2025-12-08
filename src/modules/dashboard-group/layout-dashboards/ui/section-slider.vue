@@ -193,7 +193,7 @@ defineExpose({ trackRef });
 	position: relative;
 	display: flex;
 	flex-grow: 1;
-	margin-right: 6px;
+	margin-right: 10px;
 	padding-top: 8px;
 	padding-right: 52px;
 	padding-left: 20px;
