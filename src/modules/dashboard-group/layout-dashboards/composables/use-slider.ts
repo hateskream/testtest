@@ -1,12 +1,12 @@
 import {
-	ref,
 	computed,
 	type MaybeRefOrGetter,
-	toValue,
-	type ShallowRef,
-	readonly,
 	onBeforeUnmount,
 	onMounted,
+	readonly,
+	ref,
+	type ShallowRef,
+	toValue,
 	watch,
 } from 'vue';
 import throttle from 'lodash/throttle';
@@ -38,6 +38,7 @@ export function useSlider(opts: {
 	const totalTrackWidth = computed(() => {
 		const cardSum = slides.value.reduce((s, c) => s + (c || 0), 0);
 		const gaps = Math.max(0, slides.value.length - 1) * gap;
+
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
@@ -76,8 +77,9 @@ export function useSlider(opts: {
 
 	const canPrev = computed(() => translateX.value > 0);
 	const canNext = computed(() => {
-		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
-		return translateX.value > minTranslate;
+		const maxTranslate = totalTrackWidth.value - toValue(viewportWidth);
+
+		return translateX.value < maxTranslate;
 	});
 
 	watch(
@@ -156,7 +158,7 @@ export function useSlider(opts: {
 		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
 		currentIndex.value = clamped;
 
-		smoothScrollTo(el, getSlideOffset(clamped), {
+		void smoothScrollTo(el, getSlideOffset(clamped), {
 			duration: 300,
 			axis: 'x',
 		});
