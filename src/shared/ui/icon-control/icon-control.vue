@@ -36,8 +36,8 @@ const props = withDefaults(defineProps<IUiIconControlProps>(), {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: v-bind(props.size);
-	height: v-bind(props.size);
+	width: v-bind(size);
+	height: v-bind(size);
 	background-color: var(--icon-color-base-300);
 	border-radius: 50%;
 	cursor: pointer;
