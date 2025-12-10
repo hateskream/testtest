@@ -25,11 +25,9 @@ class HttpService {
 			'Content-Type': 'application/json',
 		},
 		onRequestError({ error }) {
-			// eslint-disable-next-line no-console
 			console.error('Request error:', error);
 		},
 		onResponseError({ response }) {
-			// eslint-disable-next-line no-console
 			console.error('Response error:', response.status, response.statusText);
 		},
 	});
@@ -55,32 +53,46 @@ class HttpService {
 		method: HttpMethod,
 		options: IOptions & { body?: BodyType } = {},
 	): Promise<T> {
+		const controller = new AbortController();
+
+		const timeout = options.timeout ?? 10000;
+
+		const timeoutPromise = new Promise<never>((_, reject) => {
+			setTimeout(() => {
+				controller.abort();
+				reject(new Error(`Request timeout after ${timeout}ms`));
+			}, timeout);
+		});
+
+		const requestConfig: {
+			method: HttpMethod;
+			query?: Record<string, string | number | boolean | undefined>;
+			body?: BodyType;
+			signal?: AbortSignal;
+			headers?: Record<string, string>;
+			retry?: number;
+			timeout?: number;
+		} = {
+			method,
+			query: options.query,
+			body: options.body,
+			signal: options.signal || controller.signal,
+			headers: options.headers,
+		};
+
+		if (options.retries !== undefined) {
+			requestConfig.retry = options.retries;
+		}
+		if (options.timeout !== undefined) {
+			requestConfig.timeout = options.timeout;
+		}
+
+		const requestPromise = this.fetchInstance<T>(url, requestConfig);
+
 		try {
-			const requestConfig: {
-				method: HttpMethod;
-				query?: Record<string, string | number | boolean | undefined>;
-				body?: BodyType;
-				signal?: AbortSignal;
-				headers?: Record<string, string>;
-				retry?: number;
-				timeout?: number;
-			} = {
-				method,
-				query: options.query,
-				body: options.body,
-				signal: options.signal,
-				headers: options.headers,
-			};
-
-			if (options.retries !== undefined) {
-				requestConfig.retry = options.retries;
-			}
-			if (options.timeout !== undefined) {
-				requestConfig.timeout = options.timeout;
-			}
-
-			return await this.fetchInstance<T>(url, requestConfig);
+			return await Promise.race([requestPromise, timeoutPromise]);
 		} catch (error) {
+			controller.abort();
 			throw new Error(
 				`HTTP ${method} request failed: ${error instanceof Error ? error.message : String(error)}`,
 			);
