@@ -6,9 +6,11 @@ import { ModalBadgeClear } from '@/modules/widgets/base';
 const props = withDefaults(defineProps<{
 	hideClear?: boolean;
 	dragThreshold?: number;
+	displayVariant?: 'default' | 'new';
 }>(), {
 	hideClear: false,
 	dragThreshold: 4,
+	displayVariant: 'default',
 });
 
 const emits = defineEmits<{
@@ -81,7 +83,7 @@ function onPointerUp() {
 	<div :class="classes.filtersContainer">
 		<div
 			ref="scrollable"
-			:class="classes.filters"
+			:class="[classes.filters, { [classes.new]: props.displayVariant === 'new' }]"
 			@scroll.prevent.stop
 			@pointerdown.prevent.stop="onPointerDown"
 			@pointermove.prevent.stop="onPointerMove"
@@ -89,10 +91,10 @@ function onPointerUp() {
 			@pointercancel.prevent.stop
 		>
 			<slot />
-
 			<slot name="clear">
 				<modal-badge-clear
 					v-if="!hideClear"
+					:display-variant="props.displayVariant"
 					:class="classes.clear"
 					@click="emits('onClearClick')"
 				/>
@@ -112,7 +114,7 @@ function onPointerUp() {
 	overflow-x: scroll;
 	cursor: grab;
 	user-select: none;
-	gap: 3px;
+	gap: 6px;
 	touch-action: pan-x;
 	overscroll-behavior-x: contain;
 	scrollbar-width: none;
@@ -121,6 +123,10 @@ function onPointerUp() {
 .filters::-webkit-scrollbar {
 	width: 0;
 	height: 0;
+}
+
+.filters.new {
+	gap: 3px;
 }
 
 .filters:active {
@@ -152,7 +158,6 @@ function onPointerUp() {
 
 .clear {
 	opacity: 0;
-	transition: opacity 0.2s ease-in-out;
 }
 
 .filtersContainer:hover .clear {

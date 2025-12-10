@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+
+interface IModalBadgeClearProps {
+	displayVariant?: 'default' | 'new';
+}
+
+const props = withDefaults(defineProps<IModalBadgeClearProps>(), {
+	displayVariant: 'default',
+});
 </script>
 
 <template>
-	<button :class="classes.clearBadge">
+	<button :class="[classes.clearBadge, { [classes.new]: props.displayVariant === 'new' }]">
 		<span :class="classes.iconWrapper">
 			<ui-icon
 				:id="IconIds.CloseThicc"
@@ -20,22 +28,25 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 .clearBadge {
 	display: flex;
 	align-items: center;
-	height: var(--height-height-s12, 24px);
+	height: var(--height-height-s14, 32px);
 	padding:
 		var(--padding-padding-s3, 4px) var(--tile-padding-md-in, 10px)
 		var(--padding-padding-s3, 4px) var(--tile-padding-md-out, 6px);
 	font-style: normal;
 	font-weight: 450;
 	font-size: 11.8px;
-	line-height: 165%;
-	color: rgb(255 255 255 / 96%);
-	background: none;
-	border-radius: var(--radius-radius-s12-24, 9.2px);
+	color: var(--text-300, rgb(255 255 255 / 60%));
+	border-radius: 18px;
 	cursor: pointer;
 	transition-timing-function: ease-in-out;
 	transition-duration: 0.2s;
-	transition-property: color, background-color;
+	transition-property: color, background-color, opacity;
 	gap: var(--padding-padding-s3, 4px);
+}
+
+.clearBadge.new {
+	height: var(--height-height-s12, 24px);
+	border-radius: var(--radius-radius-s12-24, 9.2px);
 }
 
 .iconWrapper {
@@ -45,19 +56,23 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	width: 16px;
 	height: 16px;
 	line-height: 0;
-	background: #292d32;
+	color: rgb(217 217 217 / 50%);
+	background-color: #353535;
 	border-radius: 50%;
-	opacity: 0.2;
-	fill: rgb(217 217 217 / 100%);
+	transition: background-color 0.2s ease-in-out;
 }
 
 .clearBadge:hover {
 	color: var(--text-color-base-500);
-	background: var(--base-base-80, rgb(73 73 80 / 22%));
+	background-color: var(--base-base-80, rgb(73 73 80 / 22%));
 }
 
 .clearBadge:active {
 	color: var(--text-color-base-500);
-	background: var(--bg-500, rgb(73 73 80 / 70%));
+	background-color: var(--bg-500, rgb(73 73 80 / 70%));
+}
+
+.clearBadge:active .iconWrapper {
+	background-color: #4f4f54;
 }
 </style>
