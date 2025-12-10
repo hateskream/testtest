@@ -30,6 +30,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
+	resetAllChanges,
 } = useNominalGdp({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -50,6 +51,7 @@ const {
 			<filters-panel
 				v-model:range="activeRange"
 				display-variant="new"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

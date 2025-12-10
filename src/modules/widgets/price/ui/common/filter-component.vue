@@ -2,9 +2,20 @@
 import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { MarketBadge, ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import {
+	MarketBadge,
+	ModalBadgeDropdown,
+	ModalBadgeList,
+	ModalItemSelector,
+	WidgetFiltersScrollable,
+} from '@/modules/widgets/base';
 import type { MarketType } from '@/modules/market';
 import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
+
 
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
@@ -20,8 +31,6 @@ const displayVariant = computed(() =>
 	props.displayType === 'tv' ? 'default' : 'new',
 );
 
-const gapInPx = computed(() => props.displayType === 'tv' ? '6px' : '3px');
-
 function updateFilter(filterKey: FilterType, filterValue: string) {
 	filters.value = {
 		...filters.value,
@@ -35,7 +44,10 @@ const isTv = computed(()=>{
 </script>
 
 <template>
-	<div :class="classes.root">
+	<widget-filters-scrollable
+		:display-variant="displayVariant"
+		@on-clear-click="emit('reset')"
+	>
 		<market-badge
 			v-model="activeMarket"
 			:display-variant="displayVariant"
@@ -68,13 +80,5 @@ const isTv = computed(()=>{
 				</modal-badge-list>
 			</template>
 		</modal-badge-dropdown>
-	</div>
+	</widget-filters-scrollable>
 </template>
-
-<style module="classes">
-.root {
-	display: flex;
-	align-items: center;
-	gap: v-bind(gapInPx);
-}
-</style>

@@ -94,6 +94,7 @@ async function loadMoreTickets(state: IInfiniteStateHandler) {
 						v-model:filters="filtersState"
 						:filters-values="filtersValues"
 						:class="classes.header"
+						@reset="resetAllChanges"
 					/>
 				</template>
 			</view-component>

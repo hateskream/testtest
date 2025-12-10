@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { rangeFilterValueToDisplay, RealGdpRange } from '../../model';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
 
 interface IFiltersPanelProps {
 	displayVariant: 'default' | 'new';
@@ -13,7 +17,10 @@ const activeRange = defineModel<RealGdpRange>('range', { required: true });
 </script>
 
 <template>
-	<div :class="classes.container">
+	<widget-filters-scrollable
+		:display-variant="props.displayVariant"
+		@on-clear-click="emit('reset')"
+	>
 		<modal-badge :display-variant="props.displayVariant">
 			<template #title>
 				{{ rangeFilterValueToDisplay[activeRange].selected }}
@@ -42,13 +49,5 @@ const activeRange = defineModel<RealGdpRange>('range', { required: true });
 				</modal-badge-list>
 			</template>
 		</modal-badge>
-	</div>
+	</widget-filters-scrollable>
 </template>
-
-<style module="classes">
-.container {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-</style>

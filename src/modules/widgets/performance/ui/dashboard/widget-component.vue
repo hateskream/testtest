@@ -69,6 +69,7 @@ const {
 				v-model:quote-currency="quoteCurrency"
 				v-model:symbol-display="currentSymbolDisplayVariant"
 				display-style="new"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

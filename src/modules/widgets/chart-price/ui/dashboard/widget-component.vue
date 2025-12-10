@@ -110,6 +110,7 @@ watch(widgetLabel, (label) => {
 				@remove-from-watchlist="handleRemoveFromWatchlist"
 				@add-to-new-watchlist="handleAddTickerInNewWatchlist"
 				@toggle-favorite-watchlist="handleToggleFavoriteWatchlist"
+				@reset-all-changes="resetAllChanges"
 			/>
 		</template>
 

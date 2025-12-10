@@ -58,7 +58,7 @@ const displayItems = computed(() => {
 
 <template>
 	<div :class="classes.root">
-		<widget-filters-scrollable @on-clear-click="emits('resetAllChanges')">
+		<widget-filters-scrollable display-variant="new" @on-clear-click="emits('resetAllChanges')">
 			<modal-badge-dropdown display-variant="new">
 				<template #title>
 					<span :class="classes.capitalize">

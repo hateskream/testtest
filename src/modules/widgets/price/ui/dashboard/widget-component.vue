@@ -106,6 +106,7 @@ defineExpose({ scrollBy });
 				v-model:filters="filtersState"
 				:filters-values="filtersValues"
 				display-type="dashboard"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #content>

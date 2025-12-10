@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
 
-import { BaseWidgetDashboard, ModalBadge } from '@/modules/widgets/base';
+import { BaseWidgetDashboard, ModalBadge, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	CalendarEmptyEventBoard,
 	CalendarEventBoard,
 	EventType,
-	EventTypeModal, type IEventBoardExposed,
+	EventTypeModal,
+	type IEventBoardExposed,
 	MarketIds,
 	markets,
 	markets as marketsData,
-	useCalendarState, useEventBoardScroll,
+	useCalendarState,
+	useEventBoardScroll,
 } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { formattedLabel, getMarketLabel, isAllSelected } from '@/modules/calendar/utils/toolbar.ts';
@@ -80,7 +82,10 @@ useEventBoardScroll({
 		:all-display-variants="props.meta.allDisplayVariants"
 	>
 		<template #filters>
-			<div :class="classes.filters">
+			<widget-filters-scrollable
+				display-variant="new"
+				@on-clear-click="resetAll"
+			>
 				<modal-badge display-variant="new">
 					<template #title>
 						<ui-icon :id="marketIcon" />
@@ -110,7 +115,7 @@ useEventBoardScroll({
 						/>
 					</template>
 				</modal-badge>
-			</div>
+			</widget-filters-scrollable>
 		</template>
 		<template #content>
 			<div v-if="isEventBoardLoading" class="loading" />
@@ -131,14 +136,3 @@ useEventBoardScroll({
 		</template>
 	</base-widget-dashboard>
 </template>
-
-<style module="classes">
-.filters {
-	display: flex;
-	gap: 3px;
-}
-
-.board {
-	overflow-y: scroll;
-}
-</style>

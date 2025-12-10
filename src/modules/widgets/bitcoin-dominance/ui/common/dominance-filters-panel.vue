@@ -4,9 +4,13 @@ import { computed } from 'vue';
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { dateRangeFilterValueToDisplay, DominanceDateRange, type IDisplaySettings } from '../../model';
-import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadge, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
 
 const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
 const activeDateRange = defineModel<DominanceDateRange>('dateRange', { required: true });
@@ -26,7 +30,10 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 </script>
 
 <template>
-	<div :class="classes.container">
+	<widget-filters-scrollable
+		:display-variant="props.displayVariant"
+		@on-clear-click="emit('reset')"
+	>
 		<modal-ticker-selector-with-badge
 			v-model="selectedTickers"
 			:market-types="[MarketType.Crypto]"
@@ -61,13 +68,5 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 				</modal-badge-list>
 			</template>
 		</modal-badge>
-	</div>
+	</widget-filters-scrollable>
 </template>
-
-<style module="classes">
-.container {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-</style>

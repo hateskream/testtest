@@ -28,7 +28,6 @@ const {
 	activeDateRange,
 	applyStateToParent,
 	resetAllChanges,
-	resetAllFilters,
 	data,
 	isLoading,
 	isError,
@@ -66,6 +65,7 @@ const emit = defineEmits<{
 				:meta="props.meta"
 				:display-settings="displaySettings"
 				:class="classes.filters"
+				@reset="resetAllChanges"
 			/>
 			<base-error-component
 				v-if="isError"
@@ -83,7 +83,7 @@ const emit = defineEmits<{
 			/>
 			<ui-empty-state v-else>
 				<template #footer>
-					<ui-pill-item :class="classes.reset" @click="resetAllFilters">
+					<ui-pill-item :class="classes.reset" @click="resetAllChanges">
 						Reset filters
 					</ui-pill-item>
 				</template>
@@ -99,6 +99,7 @@ const emit = defineEmits<{
 
 <style module="classes">
 .filters {
+	flex-shrink: 0;
 	margin-bottom: 15px;
 	padding: 0 16px;
 }

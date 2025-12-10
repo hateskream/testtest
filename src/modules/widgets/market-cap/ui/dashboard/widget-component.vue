@@ -2,11 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import {
-	BaseErrorComponent,
-	BaseWidgetDashboard,
-	ModalItemSwitch,
-} from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch } from '@/modules/widgets/base';
 import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
 import { useMarketCap } from './../../composables';
 
@@ -61,9 +57,10 @@ const {
 				v-model:selected-markets="selectedMarkets"
 				v-model:date-range="activeDateRange"
 				:class="classes.filters"
-				autofocus
-				is-show-date-range
 				display-variant="new"
+				is-show-date-range
+				autofocus
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>
@@ -81,7 +78,6 @@ const {
 				:class="classes.content"
 			/>
 		</template>
-
 		<template #change-display>
 			<modal-item-switch v-model="displaySettings.isShowChart">Chart</modal-item-switch>
 			<modal-item-switch v-model="displaySettings.isShowChange">Change, %</modal-item-switch>

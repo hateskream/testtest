@@ -86,6 +86,7 @@ function updateTicker(newValue: string[]) {
 						@add-to-watchlist="handleAddToWatchlist"
 						@remove-from-watchlist="handleRemoveFromWatchlist"
 						@add-to-new-watchlist="handleAddTickerInNewWatchlist"
+						@reset-all-changes="resetAllChanges"
 					/>
 				</template>
 			</view-component>

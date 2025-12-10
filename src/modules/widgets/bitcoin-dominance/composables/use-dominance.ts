@@ -78,13 +78,6 @@ export function useDominance({
 		state.value = getDefaultState();
 	}
 
-	function resetAllFilters() {
-		const defaultState = getDefaultState();
-
-		activeDateRange.value = defaultState.dateRange;
-		selectedTickers.value = defaultState.selectedTickers;
-	}
-
 	const {
 		data,
 		isLoading,
@@ -103,6 +96,5 @@ export function useDominance({
 		refetch,
 		resetAllChanges,
 		applyStateToParent,
-		resetAllFilters,
 	};
 }
