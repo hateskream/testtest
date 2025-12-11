@@ -41,6 +41,13 @@ export function getDefaultsState(defaultStateType: string): IState {
 		);
 	}
 
+	if (defaultStateType === 'NDX') {
+		defaultSelectedTicker = createTickerId(
+			SymbolType.Index,
+			createTickerIdIndex('NDX'),
+		);
+	}
+
 	return {
 		selectedTicker: defaultSelectedTicker,
 		timeRange: TimeRangeFilterValue.Day,
