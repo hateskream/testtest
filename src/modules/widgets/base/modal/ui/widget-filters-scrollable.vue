@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { reactive, useTemplateRef } from 'vue';
+
 import { ModalBadgeClear } from '@/modules/widgets/base';
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
 	hideClear?: boolean;
 	dragThreshold?: number;
 }>(), {
@@ -13,66 +15,66 @@ const emits = defineEmits<{
 	onClearClick: [];
 }>();
 
-// const scrollableRef = useTemplateRef('scrollable');
-//
-// const state = reactive({
-// 	isDown: false,
-// 	isDragging: false,
-// 	startX: 0,
-// 	startScroll: 0,
-// 	pointerId: null as (number | null),
-// });
-//
-// function onPointerDown(e: PointerEvent) {
-// 	if (!scrollableRef.value) {
-// 		return;
-// 	}
-//
-// 	state.isDown = true;
-// 	state.isDragging = false;
-// 	state.startX = e.clientX;
-// 	state.startScroll = scrollableRef.value.scrollLeft;
-// 	state.pointerId = e.pointerId;
-// }
-//
-// function onPointerMove(e: PointerEvent) {
-// 	if (!state.isDown || !scrollableRef.value) {
-// 		return;
-// 	}
-//
-// 	const dx = e.clientX - state.startX;
-//
-// 	if (!state.isDragging) {
-// 		if (Math.abs(dx) < props.dragThreshold) {
-// 			return;
-// 		}
-//
-// 		state.isDragging = true;
-// 		e.preventDefault();
-// 		e.stopPropagation();
-// 		scrollableRef.value.setPointerCapture(state.pointerId!);
-// 	}
-//
-// 	e.preventDefault();
-// 	e.stopPropagation();
-//
-// 	scrollableRef.value.scrollLeft =
-// 		state.startScroll - dx;
-// }
-//
-// function onPointerUp() {
-// 	if (!scrollableRef.value) {
-// 		return;
-// 	}
-//
-// 	if (state.pointerId !== null) {
-// 		scrollableRef.value.releasePointerCapture(state.pointerId);
-// 	}
-//
-// 	state.isDown = false;
-// 	state.isDragging = false;
-// 	state.pointerId = null;
-// }
+const scrollableRef = useTemplateRef('scrollable');
+
+const state = reactive({
+	isDown: false,
+	isDragging: false,
+	startX: 0,
+	startScroll: 0,
+	pointerId: null as (number | null),
+});
+
+function onPointerDown(e: PointerEvent) {
+	if (!scrollableRef.value) {
+		return;
+	}
+
+	state.isDown = true;
+	state.isDragging = false;
+	state.startX = e.clientX;
+	state.startScroll = scrollableRef.value.scrollLeft;
+	state.pointerId = e.pointerId;
+}
+
+function onPointerMove(e: PointerEvent) {
+	if (!state.isDown || !scrollableRef.value) {
+		return;
+	}
+
+	const dx = e.clientX - state.startX;
+
+	if (!state.isDragging) {
+		if (Math.abs(dx) < props.dragThreshold) {
+			return;
+		}
+
+		state.isDragging = true;
+		e.preventDefault();
+		e.stopPropagation();
+		scrollableRef.value.setPointerCapture(state.pointerId!);
+	}
+
+	e.preventDefault();
+	e.stopPropagation();
+
+	scrollableRef.value.scrollLeft =
+		state.startScroll - dx;
+}
+
+function onPointerUp() {
+	if (!scrollableRef.value) {
+		return;
+	}
+
+	if (state.pointerId !== null) {
+		scrollableRef.value.releasePointerCapture(state.pointerId);
+	}
+
+	state.isDown = false;
+	state.isDragging = false;
+	state.pointerId = null;
+}
 </script>
 
 <template>
@@ -81,9 +83,9 @@ const emits = defineEmits<{
 			ref="scrollable"
 			:class="classes.filters"
 			@scroll.prevent.stop
-			@pointerdown.prevent.stop
-			@pointermove.prevent.stop
-			@pointerup.prevent.stop
+			@pointerdown.prevent.stop="onPointerDown"
+			@pointermove.prevent.stop="onPointerMove"
+			@pointerup.prevent.stop="onPointerUp"
 			@pointercancel.prevent.stop
 		>
 			<slot />
@@ -113,6 +115,12 @@ const emits = defineEmits<{
 	gap: 3px;
 	touch-action: pan-x;
 	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+	width: 0;
+	height: 0;
 }
 
 .filters:active {

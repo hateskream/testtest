@@ -204,6 +204,7 @@ defineExpose({ trackRef });
 	scroll-snap-type: x mandatory;
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
 }
 
 .viewport::-webkit-scrollbar {
