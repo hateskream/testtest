@@ -30,6 +30,7 @@ const props = defineProps<ISectionComponentProps>();
 
 const emits = defineEmits<{
 	'section-wheel': [ISectionWheelPayload];
+	'set-widget-state-type': [string, string];
 }>();
 
 const widgetRefs = ref<InstanceType<typeof WidgetComponent>[]>([]);
@@ -236,6 +237,10 @@ async function scrollToWidget(widgetId: string) {
 	});
 }
 
+function setWidgetStateType(widgetId: string, stateType: string) {
+	emits('set-widget-state-type', widgetId, stateType);
+}
+
 onMounted(() => {
 	emitScrollInfo();
 });
@@ -281,6 +286,7 @@ defineExpose({
 						:active-display-variant="widget.displayVariant"
 						:all-display-variants="widget.displayVariants"
 						:is-visible="widget.isVisible"
+						@set-widget-state-type="setWidgetStateType"
 					/>
 				</div>
 			</div>

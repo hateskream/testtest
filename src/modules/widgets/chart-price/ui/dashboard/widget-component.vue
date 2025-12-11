@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, watch } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
+import { getMappedRow, isCryptoTicker, isForexTicker } from '@/modules/ticker-selector/model';
+import { useQueryTickerSelector } from '@/modules/ticker-selector/queries';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -20,6 +22,7 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const emits = defineEmits<{
+	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
@@ -49,6 +52,40 @@ const {
 function updateTicker(newValue: string[]) {
 	[selectedTicker.value] = newValue;
 }
+
+const { data: tickersData, isSuccess: isSuccess } = useQueryTickerSelector();
+
+const widgetLabel = computed(() => {
+	if (!selectedTicker.value || !isSuccess.value) {
+		return null;
+	}
+
+	const item = tickersData.value?.tickers
+		.find(t => t.tickerId === selectedTicker.value);
+
+	if (!item) {
+		return null;
+	}
+
+	const row = getMappedRow(item);
+
+	return isCryptoTicker(row) || isForexTicker(row)
+		? row.ticker
+		: row.name;
+});
+
+// TODO: add stateType onTickersLoaded
+watch(widgetLabel, (label) => {
+	if (!label) {
+		return;
+	}
+
+	emits(
+		'set-widget-state-type',
+		props.meta.widgetId,
+		label,
+	);
+}, { immediate: true });
 </script>
 
 <template>

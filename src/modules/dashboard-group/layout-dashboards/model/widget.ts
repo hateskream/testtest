@@ -172,11 +172,12 @@ function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 }
 
 export interface IWidget extends IWidgetPreset {
+	id: string;
 	height: number;
 	displayVariant: DisplayVariant;
 	defaultStateType: string;
+	stateType?: string;
 	maxCountRow?: number;
-	id: string;
 }
 
 export function createWidget(
@@ -184,6 +185,7 @@ export function createWidget(
 	height: number,
 	displayVariant: DisplayVariant,
 	defaultStateType = '',
+	stateType = '',
 	maxCountRow?: number,
 ) : IWidget | null {
 	const preset = createPreset(widgetType);
@@ -196,6 +198,7 @@ export function createWidget(
 	return {
 		...preset,
 		height,
+		stateType,
 		id: uuidv4(),
 		defaultStateType,
 		displayVariant,
@@ -209,6 +212,7 @@ export function rehydrateWidget(
 	height: number,
 	displayVariant: DisplayVariant,
 	defaultStateType: string,
+	stateType = '',
 	maxCountRow?: number,
 ): IWidget | null {
 	if (isWidgetTypeKey(widgetType) === false) {
@@ -230,6 +234,7 @@ export function rehydrateWidget(
 		height,
 		displayVariant,
 		defaultStateType,
+		stateType,
 		maxCountRow,
 	};
 }

@@ -91,44 +91,50 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'commodity',
+					stateType: 'Commodity',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'crypto',
+					stateType: 'Crypto',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
+					stateType: 'Stock',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'forex',
+					stateType: 'Forex',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				// {
-				// 	defaultState: 'eth', // добавить
-				//  height: 354,
+				// 	defaultState: 'eth',
+				// 	stateType: 'Eth',
+				// 	height: 354,
 				// 	maxCountRow: 4,
-				// 	widgetType:  WidgetType.Price,
+				// 	widgetType: WidgetType.Price,
 				// 	defaultDisplayVariant: 'default',
 				// },
 				{
 					defaultState: 'index',
+					stateType: 'Index',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 			],
@@ -174,6 +180,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
+					stateType: 'Stock',
 					defaultState: 'stock-gainers',
 					height: Infinity,
 					widgetType:  WidgetType.Price,
@@ -186,6 +193,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
+					stateType: 'Stock',
 					defaultState: 'stock-losers',
 					height: Infinity,
 					widgetType:  WidgetType.Price,

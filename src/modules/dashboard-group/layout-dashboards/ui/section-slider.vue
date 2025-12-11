@@ -23,6 +23,7 @@ interface ISectionSliderProps {
 const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
+	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'updateSection', newSection: ISection[]): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
@@ -75,11 +76,16 @@ watch(
 		setPreparedSlides(props.slides, newCount);
 	},
 );
+
 function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	preparedSlides.value = newSlides.map((s, i) => ({
 		...s,
 		isVisible: i < visibleWindowSize,
 	}));
+}
+
+function setWidgetStateType(widgetId: string, stateType: string) {
+	emits('set-widget-state-type', widgetId, stateType);
 }
 
 defineExpose({ trackRef });
@@ -109,6 +115,7 @@ defineExpose({ trackRef });
 							:parent-height="height"
 							:is-visible="s.isVisible"
 							@section-wheel="onSectionWheel"
+							@set-widget-state-type="setWidgetStateType"
 						/>
 					</div>
 					<div :class="classes.sizer" />
