@@ -82,7 +82,7 @@ const tickerIcon = computed(() => {
 
 		<div
 			v-if="props.data.symbolType === 'PlainText'
-     && props.data.text"
+				&& props.data.text"
 			:class="[classes.text, 'symbolCellText']"
 			@click="handleClick"
 		>
@@ -98,41 +98,41 @@ const tickerIcon = computed(() => {
 				v-if="props.tickerState.isShowTicker && props.data.ticker"
 				:class="classes.tickerFullName"
 			>
-     {{ props.data.ticker }}
-    </span>
+				{{ props.data.ticker }}
+			</span>
 
 			<!-- Show Forex pair for Forex -->
 			<span
 				v-if="props.data.symbolType === 'Forex'
-      && props.tickerState.isShowTicker
-      && props.data.leftTicker
-      && props.data.rightTicker"
+					&& props.tickerState.isShowTicker
+					&& props.data.leftTicker
+					&& props.data.rightTicker"
 			>
-     {{ props.data.leftTicker }}/{{ props.data.rightTicker }}
-    </span>
+				{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
+			</span>
 
 			<!-- Show description based on symbol type -->
 			<span v-if="props.tickerState.isShowDescription" :class="classes.description">
-     <template v-if="props.data.symbolType === 'Index' && props.data.indexName">
-      {{ props.data.indexName }}
-     </template>
-     <template v-else-if="props.data.symbolType === 'Commodity' && props.data.commodityName">
-      {{ props.data.commodityName }}
-     </template>
-     <template v-else-if="props.data.symbolType === 'Stock' && props.data.companyName">
-      {{ props.data.companyName }}
-     </template>
-     <template v-else-if="props.data.symbolType === 'Crypto' && props.data.blockchain">
-      {{ props.data.blockchain }}
-     </template>
-     <template
-			 v-else-if="props.data.symbolType === 'Forex'
-       && props.data.leftTicker
-       && props.data.rightTicker"
-		 >
-      {{ props.data.leftTicker }}/{{ props.data.rightTicker }}
-     </template>
-    </span>
+				<template v-if="props.data.symbolType === 'Index' && props.data.indexName">
+					{{ props.data.indexName }}
+				</template>
+				<template v-else-if="props.data.symbolType === 'Commodity' && props.data.commodityName">
+					{{ props.data.commodityName }}
+				</template>
+				<template v-else-if="props.data.symbolType === 'Stock' && props.data.companyName">
+					{{ props.data.companyName }}
+				</template>
+				<template v-else-if="props.data.symbolType === 'Crypto' && props.data.blockchain">
+					{{ props.data.blockchain }}
+				</template>
+				<template
+					v-else-if="props.data.symbolType === 'Forex'
+						&& props.data.leftTicker
+						&& props.data.rightTicker"
+				>
+					{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
+				</template>
+			</span>
 		</div>
 	</div>
 </template>

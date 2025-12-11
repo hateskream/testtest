@@ -89,7 +89,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	isUpdating: false,
 	isFixedWidth: false,
-	disableTickerClick: false
+	disableTickerClick: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
