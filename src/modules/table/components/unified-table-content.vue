@@ -429,6 +429,7 @@ const cancelAddSection = () => {
 							(!isSectioned || item.type === 'row') && hoveredRowId === getRowId(item)
 					}
 				]"
+				data-icon-glow-trigger
 				@click="isSectioned && item.type === 'section-header'
 					? handleSectionToggle(item.section!.id) : emit('click-on-row', getRowId(item))"
 				@mouseenter="(!isSectioned || item.type === 'row') && handleRowMouseEnter(getRowId(item))"

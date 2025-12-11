@@ -28,6 +28,7 @@ const emits = defineEmits<{
 	selectAll: [id: MarketType];
 	unselectAll: [id: MarketType];
 	toggleTicker: [id: MarketType, tickerId: string];
+	resetAllChanges: [];
 }>();
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
@@ -78,5 +79,6 @@ const dateRange = defineModel<IDateRange>('dateRange', { required: true });
 		@select-all="emits('selectAll', $event)"
 		@unselect-all="emits('unselectAll', $event)"
 		@toggle-ticker="(v1: MarketType, v2: string) => emits('toggleTicker', v1, v2)"
+		@reset-all-changes="emits('resetAllChanges')"
 	/>
 </template>

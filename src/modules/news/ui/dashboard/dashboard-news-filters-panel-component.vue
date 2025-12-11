@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ModalBadgeDropdown, ModalBadgeList } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList, ModalFilterTitle, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { type MarketType } from '@/modules/market';
 import {
 	type ILocation,
@@ -15,6 +15,8 @@ import {
 } from '@/modules/news';
 import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 
+import SortbyModalInner from '../modal/sortby-modal-inner.vue';
+
 const props = defineProps<{
 	segments: ISegmentData[];
 	selectedSegmentsTickers: SelectedSegmentTickersState;
@@ -24,7 +26,12 @@ const emits = defineEmits<{
 	selectAll: [id: MarketType];
 	unselectAll: [id: MarketType];
 	toggleTicker: [id: MarketType, tickerId: string];
+	resetAllChanges: [];
 }>();
+
+defineOptions({
+	inheritAttrs: false,
+});
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
 const sortBy = defineModel<SortState>('sortBy', { required: true });
@@ -32,7 +39,7 @@ const dateRange = defineModel<IDateRange>('dateRange', { required: true });
 
 const sortTitle = computed(() => {
 	if (!sortBy.value) {
-		return 'Date';
+		return 'Sort By';
 	}
 
 	const value = sortToName[sortBy.value];
@@ -51,50 +58,68 @@ const displayItems = computed(() => {
 
 <template>
 	<div :class="classes.root">
-		<modal-badge-dropdown display-variant="new">
-			<template #title>
-				<span :class="classes.capitalize">
-					{{displayItems}}
-				</span>
-			</template>
-			<template #content>
-				<news-segment-modal
-					display-variant="new"
-					:segments="props.segments"
-					:selected-segment-tickers="props.selectedSegmentsTickers"
-					@select-all="emits('selectAll', $event)"
-					@unselect-all="emits('unselectAll', $event)"
-					@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-				/>
-			</template>
-		</modal-badge-dropdown>
-		<modal-badge-dropdown display-variant="new">
-			<template #title>
-				Location
-			</template>
-			<template #content>
-				<news-location-filter v-model:locations="locations" display-variant="new" />
-			</template>
-		</modal-badge-dropdown>
-		<modal-badge-dropdown display-variant="new">
-			<template #title>
-				{{sortTitle}}
-			</template>
-			<template #content>
-				<modal-badge-list display-variant="new">
-					<calendar-range-select
-						v-model="dateRange"
-						view="monthly"
+		<widget-filters-scrollable @on-clear-click="emits('resetAllChanges')">
+			<modal-badge-dropdown display-variant="new">
+				<template #title>
+					<span :class="classes.capitalize">
+						{{displayItems}}
+					</span>
+				</template>
+				<template #content>
+					<news-segment-modal
+						display-variant="new"
+						:segments="props.segments"
+						:selected-segment-tickers="props.selectedSegmentsTickers"
+						@select-all="emits('selectAll', $event)"
+						@unselect-all="emits('unselectAll', $event)"
+						@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
 					/>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
+				</template>
+			</modal-badge-dropdown>
+			<modal-badge-dropdown display-variant="new">
+				<template #title>
+					Location
+				</template>
+				<template #content>
+					<news-location-filter v-model:locations="locations" display-variant="new" />
+				</template>
+			</modal-badge-dropdown>
+			<modal-badge-dropdown display-variant="new">
+				<template #title>
+					Date
+				</template>
+				<template #content>
+					<modal-badge-list display-variant="new">
+						<calendar-range-select
+							v-model="dateRange"
+							view="monthly"
+						/>
+					</modal-badge-list>
+				</template>
+			</modal-badge-dropdown>
+
+			<modal-badge-dropdown display-variant="new">
+				<template #title>
+					{{sortTitle}}
+				</template>
+				<template #content>
+					<modal-badge-list display-variant="new">
+						<modal-filter-title>Sort By</modal-filter-title>
+
+						<sortby-modal-inner v-model="sortBy" />
+					</modal-badge-list>
+				</template>
+			</modal-badge-dropdown>
+		</widget-filters-scrollable>
 	</div>
 </template>
 
 <style module="classes">
 .root {
 	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
 	gap: 3px;
 }
 

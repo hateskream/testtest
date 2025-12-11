@@ -30,6 +30,7 @@ const {
 	selectedSegmentTickers,
 	selectedSegmentRequest,
 
+	resetAllChanges,
 	selectAll,
 	unselectAll,
 	toggleTicker,
@@ -115,6 +116,7 @@ const { redirect } = useNewsPage();
 						@select-all="selectAll"
 						@unselect-all="unselectAll"
 						@toggle-ticker="toggleTicker"
+						@reset-all-changes="resetAllChanges"
 					/>
 
 					<base-error-component v-if="isError" @retry="refetch" />
@@ -140,7 +142,7 @@ const { redirect } = useNewsPage();
 				</template>
 
 				<template #details v-if="uuid">
-					<news-details :uuid="uuid" />
+					<news-details :uuid="uuid" display-variant="new" />
 				</template>
 			</news-content-wrapper>
 		</div>

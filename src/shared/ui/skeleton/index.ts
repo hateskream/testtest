@@ -1,4 +1,2 @@
-import SkeletonComponent from './skeleton-component.vue';
-import SkeletonGroup from './skeleton-group.vue';
-
-export { SkeletonComponent as UiSkeleton, SkeletonGroup as UiSkeletonGroup };
+export { default as UiSkeleton } from './skeleton-component.vue';
+export { default as UiSkeletonGroup } from './skeleton-group.vue';

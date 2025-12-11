@@ -102,7 +102,7 @@ function prepareResponse({ data, pagination }: IGetNewsResponse): IGetNewsRespon
 			srcSourceImage: '',
 			stocks: item.stocks.map(stock => ({
 				...stock,
-				srcImage: getImagePath(stock.ticker, ImageTypePath.Stock),
+				srcImage: [getImagePath(stock.ticker, ImageTypePath.Stock)],
 			})),
 		})),
 	};

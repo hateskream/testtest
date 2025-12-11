@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UiSkeleton from '@/shared/ui/skeleton/skeleton-component.vue';
+import { UiSkeleton } from '@/shared/ui/skeleton';
 
 const props = defineProps<{
 	size?: string;
@@ -13,5 +13,6 @@ const props = defineProps<{
 		:shape="'rectangle'"
 		:animation="'wave'"
 		:opacity="0.5"
+		border-radius="50%"
 	/>
 </template>

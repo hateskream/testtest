@@ -16,3 +16,5 @@ export { default as ModalSearch } from './ui/modal-search-component.vue';
 export { default as ModalItemSelector } from './ui/modal-item-selector-component.vue';
 export { default as WidgetContextMenu } from './ui/widget-context-menu.vue';
 export { default as WidgetContextMenuFullView } from './ui/widget-context-menu-full-view.vue';
+export { default as ModalBadgeClear } from './ui/modal-badge-clear.vue';
+export { default as WidgetFiltersScrollable } from './ui/widget-filters-scrollable.vue';

@@ -5,7 +5,6 @@ import { readFileSync } from 'fs';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
-import vueDevTools from 'vite-plugin-vue-devtools';
 import { visualizer } from 'rollup-plugin-visualizer';
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
@@ -48,7 +47,6 @@ export default defineConfig({
 			iconDirs: [path.resolve(process.cwd(), './src/assets/icons')],
 			symbolId: 'icon-[name]',
 		}),
-		vueDevTools(),
 		filterDeepWarnings(),
 	],
 	define: {

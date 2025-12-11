@@ -69,7 +69,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	padding-left: var(--pl, 10px);
 	color: rgb(255 255 255 / 96%);
 	background: rgb(73 73 80 / 70%);
-	border-radius: 8px;
+	border-radius: var(--radius-radius-s12-24, 9.2px);
 	gap: 3px;
 }
 </style>

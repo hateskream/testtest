@@ -108,9 +108,11 @@ const time = computed(() =>
 	align-items: flex-start;
 	align-self: stretch;
 	padding: 14px 12px;
-	gap: 6px;
+	border-radius: var(--radius-radius-s20-72, 28.4px);
 	cursor: pointer;
+	transition: background-color 0.2s ease-in-out;
 	user-select: none;
+	gap: 6px;
 }
 
 .container:hover {

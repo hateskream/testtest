@@ -3,7 +3,7 @@ import { type IActiveLocation, type ISegmentRequest, Score, Sentiment, type Sort
 export interface ITicker {
 	ticker: string;
 	name: string;
-	srcImage: string;
+	srcImage: string[];
 }
 
 export interface INews {

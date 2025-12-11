@@ -125,6 +125,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					@select-all="selectAll"
 					@unselect-all="unselectAll"
 					@toggle-ticker="toggleTicker"
+					@reset-all-changes="resetAllChanges"
 				/>
 				<base-error-component v-if="isError" @retry="refetch" />
 				<preloader-component v-else-if="isNotData" />
@@ -140,7 +141,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				<template v-if="selectedNewsId" #details>
 					<news-details-controls @back="selectedNewsId = null" />
 
-					<news-details :uuid="selectedNewsId" />
+					<news-details :uuid="selectedNewsId" display-variant="default" />
 				</template>
 			</news-content-wrapper>
 		</template>

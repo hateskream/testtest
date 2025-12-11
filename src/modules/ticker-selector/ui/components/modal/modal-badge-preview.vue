@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, type IMarketMapped, type ITickerMapped } from '../../../model';
-import { SymbolType } from '@/modules/cell';
 
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
 import ModalFilterTickerLabel from './modal-filter-ticker-label.vue';
@@ -23,22 +22,6 @@ const props = withDefaults(defineProps<IModalBadgePreviewProps>(), {
 	emptyLabel: 'Tickers',
 });
 
-function getSize(symbol: SymbolType | null | undefined) {
-	if (props.displayVariant === 'new' || !symbol) {
-		return 14;
-	}
-
-	return symbol === SymbolType.Forex ? 20 : 14;
-}
-
-function getPadding(symbol: SymbolType | null | undefined) {
-	if (props.displayVariant === 'new' || !symbol) {
-		return undefined;
-	}
-
-	return symbol === SymbolType.Forex ? 12 : undefined;
-}
-
 const selectedItemsCount = computed(() => props.selectedTickers.length + props.selectedMarkets.length);
 </script>
 
@@ -50,13 +33,13 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 					v-for="item in props.selectedTickers"
 					:key="item.tickerId"
 					:class="classes.iconsItem"
+					data-icon-glow-trigger
 				>
 					<modal-filter-ticker-icon
 						:src-image="item.srcImage"
 						:type="item.symbolType"
 						:ticker="item.ticker"
-						:size="getSize(item.symbolType)"
-						:padding="getPadding(item.symbolType)"
+						:size="22"
 						:display-variant="props.displayVariant"
 					/>
 				</div>
@@ -68,11 +51,12 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 				>
 					<modal-filter-market-icon :icon="market.icon" />
 				</div>
-
-				<template v-if="props.totalSelectedCount > ACTIVE_TICKER_LIST_COUNT_SHOW">
-					+ {{ props.totalSelectedCount - ACTIVE_TICKER_LIST_COUNT_SHOW }}
-				</template>
 			</div>
+
+			<span v-if="props.totalSelectedCount > ACTIVE_TICKER_LIST_COUNT_SHOW" :class="classes.counter">
+				+ {{ props.totalSelectedCount - ACTIVE_TICKER_LIST_COUNT_SHOW }}
+			</span>
+
 			<div v-if="props.showLabel" :class="classes.labels">
 				<modal-filter-ticker-label
 					v-for="ticker in props.selectedTickers"

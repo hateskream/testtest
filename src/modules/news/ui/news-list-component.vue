@@ -68,7 +68,10 @@ defineExpose({ scrollBy });
 			:class="classes.scrollable"
 			@scroll="handleScroll"
 		>
-			<div :class="classes.content">
+			<div
+				:class="classes.content"
+				:style="props.displayVariant === 'dashboard' && {padding: `4px`}"
+			>
 				<news-component
 					v-for="item in props.news"
 					:key="item.id"

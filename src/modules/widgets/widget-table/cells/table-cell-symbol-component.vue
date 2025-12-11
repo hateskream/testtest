@@ -1,8 +1,10 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import { computed } from 'vue';
+
 import type { ITableSymbolCell } from '../model';
-import { tickerIcon, forexTickerIcon } from '@/shared/ui/ticker';
+import { UniversalTickerIcon } from '@/shared/ui/ticker';
 
 interface IProps {
 	data: ITableSymbolCell;
@@ -19,32 +21,56 @@ const props = defineProps<IProps>();
 const emits = defineEmits<{
 	(e: 'click-symbol'): void;
 }>();
+
+const tickerIcon = computed(() => {
+	const { data } = props;
+
+	if (!props.tickerState.isShowLogo) {
+		return null;
+	}
+
+	if (
+		data.symbolType === 'Forex' &&
+		data.leftSrcImg &&
+		data.rightSrcImg &&
+		props.tickerState.isShowLogo
+	) {
+		const ticker = `${data.leftTicker}/${data.rightTicker}`;
+
+		return {
+			symbol: data.symbolType,
+			src: [data.leftSrcImg, data.rightSrcImg],
+			ticker: ticker,
+			domain: ticker,
+			size: 20,
+		};
+	}
+
+	if (
+		data.symbolType !== 'Forex' &&
+		data.srcImg &&
+		props.tickerState.isShowLogo
+	) {
+		return {
+			symbol: data.symbolType,
+			src: data.srcImg,
+			ticker: data.ticker || '',
+			size: 20,
+		};
+	}
+
+	return null;
+});
 </script>
 
 <template>
 	<div :class="classes.tableIcon">
-		<!-- Crypto, Stock, Commodity, Index symbols -->
-		<ticker-icon
-			v-if="props.data.symbolType !== 'Forex' && props.data.srcImg && props.tickerState.isShowLogo"
-			:src="props.data.srcImg"
-			:ticker="props.data.ticker || ''"
-			:size="20"
-			:padding="0"
-			@click="emits('click-symbol')"
-		/>
-
-		<!-- Forex symbols -->
-		<forex-ticker-icon
-			v-if="props.data.symbolType === 'Forex'
-				&& props.data.leftSrcImg
-				&& props.data.rightSrcImg
-				&& props.tickerState.isShowLogo"
-			:src="[props.data.leftSrcImg, props.data.rightSrcImg]"
-			:ticker="`${props.data.leftTicker}/${props.data.rightTicker}`"
-			:domain="`${props.data.leftTicker}/${props.data.rightTicker}`"
-			:size="26"
-			:padding="0"
-			@click="emits('click-symbol')"
+		<universal-ticker-icon
+			v-if="tickerIcon"
+			:symbol-type="tickerIcon.symbol"
+			:src="tickerIcon.src"
+			:size="tickerIcon.size"
+			:ticker="tickerIcon.ticker"
 		/>
 
 		<div

@@ -28,6 +28,7 @@ export enum IconIds {
 	ScoreMedium = 'score-medium',
 	NewsFilter = 'news-filter',
 	Close = 'close',
+	CloseThicc = 'close-thicc',
 	GeneralMore = 'general-more',
 	Moon = 'moon',
 	Sun = 'sun',
