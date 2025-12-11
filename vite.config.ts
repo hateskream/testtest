@@ -1,13 +1,36 @@
+/* eslint-disable no-console */
 import path from 'path';
 import { readFileSync } from 'fs';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
-import vueDevTools from 'vite-plugin-vue-devtools';
 import { visualizer } from 'rollup-plugin-visualizer';
+import browserslist from 'browserslist';
+import { browserslistToTargets } from 'lightningcss';
+import type { Plugin } from 'vite';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+
+// Plugin to filter out :deep warnings from lightningcss
+const filterDeepWarnings = (): Plugin => {
+	return {
+		name: 'filter-deep-warnings',
+		buildStart() {
+			const originalWarn = console.warn;
+			console.warn = (...args: unknown[]) => {
+				const message = String(args[0] || '');
+				if (
+					message.includes('\'deep\' is not recognized') ||
+					message.includes('\'v-deep\' is not recognized')
+				) {
+					return;
+				}
+				originalWarn.apply(console, args);
+			};
+		},
+	};
+};
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,7 +47,7 @@ export default defineConfig({
 			iconDirs: [path.resolve(process.cwd(), './src/assets/icons')],
 			symbolId: 'icon-[name]',
 		}),
-		vueDevTools(),
+		filterDeepWarnings(),
 	],
 	define: {
 		// eslint-disable-next-line @typescript-eslint/naming-convention
@@ -44,11 +67,29 @@ export default defineConfig({
 			},
 		},
 	},
+	css: {
+		transformer: 'lightningcss',
+		lightningcss: {
+			targets: browserslistToTargets(
+				browserslist(`
+					last 5 years,
+					> 0.5%,
+					not dead,
+					iOS >= 13,
+					Safari >= 13
+				`),
+			),
+			cssModules: {
+				pattern: '[local]__[hash]',
+			},
+		},
+	},
 	build: {
 		target: 'es2017',
 		cssCodeSplit: true,
 		sourcemap: false,
 		minify: 'terser',
+		cssMinify: 'lightningcss',
 		terserOptions: {
 			parse: {
 				ecma: 2017,

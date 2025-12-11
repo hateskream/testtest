@@ -9,7 +9,6 @@ import {
 	ModalItem,
 	ModalFilterTitle,
 	ModalItemInteraction,
-	ModalItemSelector,
 	ModalFilterTabWrapper,
 } from '@/modules/widgets/base';
 import {
@@ -18,10 +17,12 @@ import {
 	type SelectedSegmentTickersState,
 	type SortState,
 	type Source,
-	sortToName,
+	includeToName,
 	sourceToName,
+	dateRangeStateToName,
 	toggleFilter,
-	toggleSort, Include, includeToName, ActiveDateRange, dateRangeStateToName,
+	Include,
+	ActiveDateRange,
 } from '../model';
 import { type MarketType } from '@/modules/market';
 import { getSegmentsTitleStr, getSelectedCountryNames, NewsSegmentModal } from '@/modules/news';
@@ -29,6 +30,7 @@ import { formatWithCount } from '@/shared/lib';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
+import SortbyModalInner from '@/modules/news/ui/modal/sortby-modal-inner.vue';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
@@ -78,9 +80,6 @@ function toggleSource(source: Source) {
 	selectedSources.value = toggleFilter(selectedSources.value, source);
 }
 
-function toggleSortBy(sort: SortState) {
-	sortBy.value = toggleSort(sortBy.value, sort);
-}
 
 function toggleInclude(value: Include) {
 	include.value = toggleFilter(include.value, value);
@@ -183,21 +182,7 @@ function toggleInclude(value: Include) {
 		<div>
 			<modal-filter-title>Sort By</modal-filter-title>
 
-			<modal-item-selector
-				v-for="(name, key) in sortToName"
-				:key="key"
-				:model-value="sortBy === key"
-				@update:model-value="toggleSortBy(key)"
-			>
-				<template v-if="typeof name === 'string'">
-					{{ name }}
-				</template>
-				<div v-else>
-					{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
-						{{name.additional}}
-					</span>
-				</div>
-			</modal-item-selector>
+			<sortby-modal-inner v-model="sortBy" />
 		</div>
 	</div>
 </template>
@@ -248,11 +233,5 @@ function toggleInclude(value: Include) {
 	gap: 8px;
 }
 
-.additional {
-	color: var(--color-text-base-300, #9a9a9d);
-}
 
-.additional.active {
-	color: var(--color-text-active-base-300-active, #ffffff);
-}
 </style>

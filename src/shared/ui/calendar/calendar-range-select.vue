@@ -1,33 +1,34 @@
 <script setup lang="ts">
-import { DatePicker } from 'v-calendar';
-import { computed } from 'vue';
-
 import { type DateYYYYMMDD, toUtcIsoDate } from '@/modules/calendar';
+import { type DatePickerRangeObject, UiDatePicker } from '@/shared/ui/date-picker';
 
 interface IDateRange {
 	from: DateYYYYMMDD;
 	to: DateYYYYMMDD;
 }
 
+interface IDatePickerModel {
+	start: Date;
+	end: Date;
+}
+
 const props = defineProps<{
 	view: 'monthly' | 'weekly';
 }>();
 
-const dateRange = defineModel<IDateRange>({
-	required: true,
-});
 
-const proxy = computed({
-	set: ({ start, end }: { start: Date; end: Date }) => {
-		dateRange.value = {
-			from: toUtcIsoDate(start),
-			to: toUtcIsoDate(end),
+const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePickerModel>({
+	required: true,
+	get({ from, to }) {
+		return {
+			start: new Date(from + 'T00:00:00Z'),
+			end: new Date(to + 'T00:00:00Z'),
 		};
 	},
-	get: () => {
+	set({ start, end }) {
 		return {
-			start: new Date(dateRange.value.from + 'T00:00:00Z'),
-			end: new Date(dateRange.value.to + 'T00:00:00Z'),
+			from: toUtcIsoDate(start),
+			to: toUtcIsoDate(end),
 		};
 	},
 });
@@ -35,21 +36,10 @@ const proxy = computed({
 
 <template>
 	<div :class="classes.calendarComponent">
-		<date-picker
-			:model-value="proxy"
+		<ui-date-picker
+			v-model="dateRange"
 			:view="props.view"
-			title-position="left"
-			transparent
-			borderless
-			color="white"
-			is-dark
 			is-range
-			trim-weeks
-			:highlight-today="true"
-			:masks="{ title: 'MMMM yyyy' }"
-			:locale="{ firstDayOfWeek: 2 }"
-			:class="classes.calendar"
-			@update:model-value="proxy = $event"
 		/>
 	</div>
 </template>
@@ -58,9 +48,5 @@ const proxy = computed({
 .calendarComponent {
 	display: flex;
 	align-self: stretch;
-}
-
-.calendar {
-	width: 100%;
 }
 </style>

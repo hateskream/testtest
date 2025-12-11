@@ -1,3 +1,1 @@
-import ImageComponent from './image-component.vue';
-
-export { ImageComponent as UiImage };
+export { default as UiImage } from './image-component.vue';

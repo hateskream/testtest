@@ -129,6 +129,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				@select-all="selectAll"
 				@unselect-all="unselectAll"
 				@toggle-ticker="toggleTicker"
+				@reset-all-changes="resetAllChanges"
 			/>
 		</template>
 		<template #content>
@@ -148,7 +149,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 
 				<template #details v-if="selectedNewsId">
 					<news-details-controls @back="selectedNewsId = null" />
-					<news-details :uuid="selectedNewsId" />
+					<news-details :uuid="selectedNewsId" display-variant="new" />
 				</template>
 			</news-content-wrapper>
 		</template>

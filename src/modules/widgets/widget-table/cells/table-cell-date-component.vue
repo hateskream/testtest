@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 
 interface IProps {
-	data:{
-		value:string;
+	data: {
+		value: string;
 	};
 }
 
@@ -13,7 +13,6 @@ const formattedValue = computed(() => {
 	try {
 		return new Date(props.data.value).toLocaleDateString('ru-RU');
 	} catch {
-		console.log('error date', props.data);
 		return '—';
 	}
 });

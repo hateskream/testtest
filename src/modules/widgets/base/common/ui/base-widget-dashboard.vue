@@ -76,6 +76,8 @@ function handleFullscreen() {
 	isFullscreen.value = true;
 	contextMenuRef.value?.handleClose?.();
 }
+
+const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_VARIANTS');
 </script>
 
 <template>
@@ -87,7 +89,7 @@ function handleFullscreen() {
 				</div>
 
 				<div
-					v-if="props.allDisplayVariants.length > 1"
+					v-if="props.allDisplayVariants.length > 1 && isDisplayVariantEnabled"
 					:class="classes.displayVariantContainer"
 				>
 					<div
@@ -113,7 +115,7 @@ function handleFullscreen() {
 				</div>
 
 				<widget-dashboard-controls
-					v-if="!props.meta.isOpenFull"
+					v-if="isWidgetActionsEnabled && !props.meta.isOpenFull"
 					:model-value="hasExpandedView && isControlsExpanded"
 					:hide-controls="!hasExpandedView"
 					:class="classes.controls"
@@ -201,13 +203,11 @@ function handleFullscreen() {
 				</widget-dashboard-controls>
 			</div>
 
-			<div
-				v-if="$slots.filters"
-				:class="classes.filters"
-			>
+			<div v-if="$slots.filters" :class="classes.filters">
 				<slot name="filters" />
 			</div>
 		</div>
+
 		<div :class="classes.content">
 			<slot name="content" />
 		</div>
@@ -316,8 +316,14 @@ function handleFullscreen() {
 	color: var(--text-color-base-500, #ffffff);
 }
 
+
 .filters {
-	padding: 6px 16px 6px 20px;
+	display: flex;
+	align-items: center;
+	align-self: stretch;
+	width: 100%;
+	height: var(--height-height-s15, 36px);
+	padding: 0 var(--padding-padding-s11, 20px);
 }
 
 .content {

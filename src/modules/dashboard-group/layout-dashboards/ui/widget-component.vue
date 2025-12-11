@@ -24,6 +24,10 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emits = defineEmits<{
+	'set-widget-state-type': [string, string];
+}>();
+
 const { loading, triggerLoading } = useDelayedLoading({ immediate: false });
 
 const loaded = ref(false);
@@ -87,6 +91,10 @@ function scrollBy(px: number) {
 	refComponent.value.scrollBy(px);
 }
 
+function setWidgetStateType(widgetId: string, stateType: string) {
+	emits('set-widget-state-type', widgetId, stateType);
+}
+
 defineExpose({ scrollBy });
 </script>
 
@@ -102,6 +110,7 @@ defineExpose({ scrollBy });
 					:is="component"
 					ref="refComponent"
 					:meta="meta"
+					@set-widget-state-type="setWidgetStateType"
 				/>
 			</template>
 			<template #fallback>

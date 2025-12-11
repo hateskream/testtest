@@ -1,14 +1,14 @@
 <script setup lang="ts" generic="T">
 import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 
-import { getComponentByType, CellType } from './cells/cell-types';
+import { CellType, getComponentByType } from './cells/cell-types';
 import { getCellData } from './utils';
 import {
-	type IGenericTableColumn,
-	type IGenericTableSection,
-	type IGenericTableRow,
-	type ISortConfig,
 	type IDragDropEvent,
+	type IGenericTableColumn,
+	type IGenericTableRow,
+	type IGenericTableSection,
+	type ISortConfig,
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
 import { ModalFilterTabWrapper } from '@/modules/widgets/base';
@@ -39,6 +39,7 @@ export interface IProps<T> {
 	tickerState?: ITickerState;
 	isUpdating?: boolean;
 	isFixedWidth?: boolean;
+	disableTickerClick?: boolean;
 }
 
 export interface IEmits<T> {
@@ -88,6 +89,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	isUpdating: false,
 	isFixedWidth: false,
+	disableTickerClick: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -162,6 +164,7 @@ const getCellComponentForColumn = (
 	columnKey: string,
 ) => {
 	if (!cellData) {
+		// eslint-disable-next-line no-console
 		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
 		return getCellComponent('nothing');
 	}
@@ -224,6 +227,7 @@ onMounted(()=> {
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
 					:data="getCellData(cellProps.row, column.key)"
 					:ticker-state="tickerState"
+					:disable-ticker-click="props.disableTickerClick"
 					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component

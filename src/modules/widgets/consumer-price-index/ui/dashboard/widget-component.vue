@@ -31,6 +31,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
+	resetAllChanges,
 } = useCpi({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -53,6 +54,7 @@ const {
 				v-model:metric="activeMetric"
 				display-variant="new"
 				is-show-range
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

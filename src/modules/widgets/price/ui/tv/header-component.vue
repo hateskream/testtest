@@ -7,6 +7,10 @@ import { type FiltersState, type FiltersValues, FilterType, filterTypeToName } f
 import { FilterComponent } from '../common';
 import type { MarketType } from '@/modules/market';
 
+const emit = defineEmits<{
+	reset: [];
+}>();
+
 interface IFilterComponentProps {
 	filtersValues: FiltersValues;
 }
@@ -32,6 +36,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 				v-model:filters="filters"
 				display-type="tv"
 				:filters-values="props.filtersValues"
+				@reset="emit('reset')"
 			/>
 		</div>
 		<div :class="classes.minimized">

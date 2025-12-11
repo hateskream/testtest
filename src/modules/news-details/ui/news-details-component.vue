@@ -2,17 +2,20 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { sourceToName, useNewsPage } from '@/modules/news';
-import { tickerIcon } from '@/shared/ui/ticker';
+import { useNewsPage } from '@/modules/news';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
 import { NewsIconScore } from '@/modules/news';
 import { RouteNames } from '@/types/route.d';
+import { isFeatureEnabled } from '@/shared/lib';
 
 import NewsDetailsSkeletonComponent from './details/news-details-skeleton-component.vue';
+import NewsDetailsSourcesComponent from './details/news-details-sources-component.vue';
+import NewsDetailsTickersComponent from './details/news-details-tickers-component.vue';
 
 const props = defineProps<{
+	displayVariant: 'new' | 'default';
 	uuid: string;
 }>();
 
@@ -72,36 +75,19 @@ const isNewsPage = computed(
 
 				<aside :class="classes.sidebar">
 					<div :class="classes.sidebarRow">
-						<section :class="classes.sources">
-							<h3 :class="classes.subheading">Sources</h3>
-							<ul :class="classes.sourceList">
-								<li v-for="source in newsDetails.sources" :key="source">
-									<a :href="source">{{ sourceToName[source] }}</a>
-								</li>
-							</ul>
-							<span :class="classes.note">Summarised by i88</span>
-						</section>
+						<news-details-sources-component
+							:sources="newsDetails.sources"
+						/>
 
-						<section :class="classes.tickers">
-							<h3 :class="classes.subheading">Tickers</h3>
-							<ul :class="classes.tickerList">
-								<li v-for="ticker in newsDetails.stocks" :key="ticker.name">
-									<div :class="classes.tickerItem">
-										<ticker-icon
-											:ticker="ticker.ticker"
-											:src="ticker.srcImage"
-											:size="12"
-										/>
-										<span :class="classes.tickerSymbol">{{ ticker.ticker }}</span>
-										<span :class="classes.tickerChange">1.10%</span>
-									</div>
-								</li>
-							</ul>
-						</section>
+						<news-details-tickers-component
+							:stocks="newsDetails.stocks"
+							:display-variant
+						/>
 					</div>
 
 					<section v-if="!isNewsPage" :class="classes.redirectPage">
 						<router-link
+							v-if="isFeatureEnabled('NEWS_PAGE_ENABLED')"
 							:to="getPathString(newsDetails.id, newsDetails.slug, {memo: true})"
 							:class="classes.link"
 						>
@@ -190,64 +176,6 @@ const isNewsPage = computed(
 	font-size: 18px;
 	line-height: 1;
 	color: #ffffff;
-}
-
-.sources,
-.tickers {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	width: 100%;
-}
-
-.sourceList {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-}
-
-.sourceList a {
-	font-weight: 440;
-	font-size: 12px;
-	line-height: 1.7;
-	color: var(--color-text-base-300, #9a9a9d);
-	text-decoration: underline dotted;
-	text-underline-offset: 2px;
-}
-
-.note {
-	font-weight: 440;
-	font-size: 10px;
-	line-height: 1.7;
-	color: var(--color-text-base-100, #646568);
-}
-
-.tickerList {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-}
-
-.tickerItem {
-	display: flex;
-	align-items: center;
-	width: max-content;
-	padding: 2px 6px 2px 2px;
-	background: var(--color-bg-base-300, rgb(37 37 39 / 50%));
-	border-radius: 9999px;
-	gap: 4px;
-}
-
-.tickerSymbol {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--color-text-base-500, #ffffff);
-}
-
-.tickerChange {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--color-metrics-positive-copy, #04eda0);
 }
 
 .link {

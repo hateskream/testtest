@@ -15,3 +15,10 @@ export function createDashboardGroup(): IDashboardGroup {
 		dashboards: [mainDashboard, cryptoDashboard, stockDashboard],
 	};
 }
+
+export function changeActiveDashboard(dg: IDashboardGroup, id: string): IDashboardGroup {
+	return {
+		...dg,
+		activeDashboardId: id,
+	};
+}

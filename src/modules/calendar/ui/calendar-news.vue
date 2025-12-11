@@ -15,6 +15,7 @@ const {
 	selectedSegmentTickers,
 	selectedSegmentRequest,
 
+	resetAllChanges,
 	selectAll,
 	unselectAll,
 	toggleTicker,
@@ -76,6 +77,7 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 			@select-all="selectAll"
 			@unselect-all="unselectAll"
 			@toggle-ticker="toggleTicker"
+			@reset-all-changes="resetAllChanges"
 		/>
 		<news-list-component
 			:news="news"

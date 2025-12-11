@@ -8,14 +8,14 @@
 	"score": 87,
 	"stocks": [
 		{
-			"ticker": "AAPL",
+			"ticker": "Stock-AAPL",
 			"name": "Apple Inc.",
-			"srcImage": "https://logo.clearbit.com/apple.com"
+			"srcImage": ["https://logo.clearbit.com/apple.com"]
 		},
 		{
-			"ticker": "MSFT",
+			"ticker": "Stock-MSFT",
 			"name": "Microsoft Corporation",
-			"srcImage": "https://logo.clearbit.com/microsoft.com"
+			"srcImage": ["https://logo.clearbit.com/microsoft.com"]
 		}
 	],
 	"sources": [

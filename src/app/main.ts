@@ -1,21 +1,16 @@
 import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
-import VCalendar from 'v-calendar';
 import { registerComponent } from '@shared/component-library';
 
-import { router } from './router';
-import { createAppHead } from './head';
-import { validateConfig } from '@/shared/lib';
-// eslint-disable-next-line import/order
-import { queryClient } from '@/shared/service/query-client';
-
 import '@/assets/styles/base.css';
-import 'v-calendar/style.css';
-
 import 'virtual:svg-icons-register';
 
-
+import { validateConfig } from '@/shared/lib';
+import { queryClient } from '@/shared/service/query-client';
+import { registerVCalendar } from '@/shared/ui/date-picker/setup';
+import { router } from './router';
+import { createAppHead } from './head';
 import { useStorageVersion } from '@/shared/composables';
 
 import App from './app.vue';
@@ -36,8 +31,8 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
-app.use(VCalendar);
-
 app.use(createAppHead({ appName: 'i88' }));
+
+registerVCalendar(app);
 
 app.mount('#app');

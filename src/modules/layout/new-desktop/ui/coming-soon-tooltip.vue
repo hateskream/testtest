@@ -1,20 +1,28 @@
 <script setup lang="ts">
+import type { Placement } from '@floating-ui/vue';
+
 import { UiPositionTooltip } from '@/shared/ui/position';
 import { DashboardTooltipWrapper } from '@/shared/ui/tooltip';
 
 const props = withDefaults(defineProps<{
 	title: string;
 	text: string;
+	placement?: Placement;
 	release?: string;
-}>(), { release: 'Soon' });
+	disable?: boolean;
+}>(), {
+	release: 'Soon',
+	placement: 'right',
+	disable: false,
+});
 </script>
 
 <template>
 	<ui-position-tooltip
 		:open-delay="600"
-		placement="right"
+		:placement="placement"
 	>
-		<template #content>
+		<template v-if="!disable" #content>
 			<dashboard-tooltip-wrapper>
 				<div :class="classes.root">
 					<div :class="classes.header">

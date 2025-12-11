@@ -99,9 +99,10 @@ const time = computed(() =>
 						>
 							<ui-position-tooltip>
 								<div :class="classes.newsStock">
+									<!--				ToDo: fix srcImage[0]					-->
 									<ui-image
 										:class="classes.newsStockImage"
-										:src="stock.srcImage"
+										:src="stock.srcImage[0]"
 										replacement="/images/market/ADA.png"
 									/>
 								</div>

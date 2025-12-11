@@ -37,7 +37,7 @@ function onUpdate(tickerId: string, state: boolean) {
 	});
 }
 
-watch(props.list, () => {
+watch(() => props.list, () => {
 	mappedTickers.value = props.list.map(getMappedRow);
 }, { deep: true, immediate: true });
 </script>
@@ -60,7 +60,7 @@ watch(props.list, () => {
 						:type="item.symbolType"
 						:src-image="item.srcImage"
 						:ticker="item.ticker"
-						:size="22"
+						:size="30"
 						:display-variant="displayVariant"
 					/>
 				</div>

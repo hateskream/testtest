@@ -23,6 +23,7 @@ interface ISectionSliderProps {
 const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
+	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'updateSection', newSection: ISection[]): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
@@ -75,11 +76,16 @@ watch(
 		setPreparedSlides(props.slides, newCount);
 	},
 );
+
 function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	preparedSlides.value = newSlides.map((s, i) => ({
 		...s,
 		isVisible: i < visibleWindowSize,
 	}));
+}
+
+function setWidgetStateType(widgetId: string, stateType: string) {
+	emits('set-widget-state-type', widgetId, stateType);
 }
 
 defineExpose({ trackRef });
@@ -109,6 +115,7 @@ defineExpose({ trackRef });
 							:parent-height="height"
 							:is-visible="s.isVisible"
 							@section-wheel="onSectionWheel"
+							@set-widget-state-type="setWidgetStateType"
 						/>
 					</div>
 					<div :class="classes.sizer" />
@@ -190,19 +197,21 @@ defineExpose({ trackRef });
 }
 
 .viewport {
-	touch-action: none;
 	position: relative;
 	display: flex;
 	flex-grow: 1;
-	margin-right: 6px;
+	margin-right: 10px;
 	padding-top: 8px;
+	padding-right: 52px;
 	padding-left: 20px;
 	overflow: hidden;
 	overflow-x: auto;
+	user-select: none;
+	touch-action: none;
 	scroll-snap-type: x mandatory;
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
-	user-select: none;
+	scrollbar-width: none;
 }
 
 .viewport::-webkit-scrollbar {

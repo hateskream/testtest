@@ -7,6 +7,7 @@ import {
 	ModalBadgeDropdown,
 	ModalBadgeList,
 	ModalItemSelector,
+	WidgetFiltersScrollable,
 } from '@/modules/widgets/base';
 import {
 	Currency,
@@ -20,6 +21,10 @@ import {
 import { MarketType } from '@/modules/market';
 
 import ViewToggle from './view-toggle.vue';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
@@ -52,7 +57,10 @@ function updateCurrency(v: Currency) {
 
 <template>
 	<div :class="[classes.performanceHeader, classes[displayStyle]]">
-		<div :class="classes.listFilters">
+		<widget-filters-scrollable
+			:display-variant="displayStyle"
+			@on-clear-click="emit('reset')"
+		>
 			<market-badge
 				v-model="activeMarket"
 				:exclude-markets="[
@@ -135,8 +143,7 @@ function updateCurrency(v: Currency) {
 					</modal-badge-list>
 				</template>
 			</modal-badge-dropdown>
-
-		</div>
+		</widget-filters-scrollable>
 		<view-toggle v-if="displayStyle === 'default'" v-model:display-variant="displayVariant" />
 	</div>
 </template>
@@ -146,10 +153,10 @@ function updateCurrency(v: Currency) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width: 100%;
 	padding: 0 10px 0 0;
 	border-bottom: 1px solid var(--border-color-base-100);
 	gap: 6px;
-	container: toolbar / inline-size;
 
 	&.default {
 		padding-left: 16px;
@@ -159,18 +166,4 @@ function updateCurrency(v: Currency) {
 		padding-left: 0;
 	}
 }
-
-.listFilters {
-	display: flex;
-	align-items: center;
-	max-width: 100%;
-	overflow-x: auto;
-	gap: 6px;
-}
-
-.icon {
-	color: var(--icon-color-base-300);
-}
-
-
 </style>

@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import { ALL_COLUMNS } from '../../model';
 import { usePerformance } from '../../composables';
 
@@ -69,6 +69,7 @@ const {
 				v-model:quote-currency="quoteCurrency"
 				v-model:symbol-display="currentSymbolDisplayVariant"
 				:display-style="`default`"
+				@reset="resetAllChanges"
 			/>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<performance-loader v-else-if="isLoading || props.meta.isLoading" />

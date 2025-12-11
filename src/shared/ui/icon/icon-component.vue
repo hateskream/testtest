@@ -36,5 +36,6 @@ const inlineStyles = computed<Partial<CSSProperties>>(() => ({
 	height: 1em;
 	overflow: hidden;
 	fill: currentcolor;
+	line-height: 0;
 }
 </style>

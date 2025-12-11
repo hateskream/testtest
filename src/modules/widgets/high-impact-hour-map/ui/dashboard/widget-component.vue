@@ -3,7 +3,7 @@ import { defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { PreloaderComponent, FiltersPanel } from '../common';
+import { FiltersPanel, PreloaderComponent } from '../common';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -112,6 +112,10 @@ const timeZoneDisplay: Record<TimeZoneUTC, string> = {
 	[TimeZoneUTC.UTCp14]: 'UTC+14:00',
 };
 
+function resetAllChanges() {
+	timeZone.value = TimeZoneUTC.UTC0;
+}
+
 </script>
 
 <template>
@@ -130,6 +134,7 @@ const timeZoneDisplay: Record<TimeZoneUTC, string> = {
 				display-variant="new"
 				:data-ranges="Object.values(TimeZoneUTC)"
 				:display-value-data-range="timeZoneDisplay"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

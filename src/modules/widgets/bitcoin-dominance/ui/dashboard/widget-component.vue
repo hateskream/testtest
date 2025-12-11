@@ -60,6 +60,7 @@ const {
 				:display-settings="displaySettings"
 				:class="classes.filters"
 				display-variant="new"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

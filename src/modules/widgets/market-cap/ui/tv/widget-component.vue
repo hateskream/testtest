@@ -65,9 +65,10 @@ const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart &
 				v-model:selected-markets="selectedMarkets"
 				v-model:date-range="activeDateRange"
 				:is-show-date-range="isShowFilterDateRange"
-				autofocus
 				:class="classes.filters"
 				display-variant="default"
+				autofocus
+				@reset="resetAllChanges"
 			/>
 			<base-error-component v-if="isError" @retry="refetch" />
 			<preloader-component v-else-if="isNotData" />
@@ -91,6 +92,7 @@ const isShowFilterDateRange = computed(() => displaySettings.value.isShowChart &
 
 <style module="classes">
 .filters {
+	flex-shrink: 0;
 	margin-bottom: 16px;
 	padding: 0 16px;
 	gap: 6px;

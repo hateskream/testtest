@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent, shallowRef, watch } from 'vue';
 
 import { useDelayedLoading } from '@/shared/composables';
 import { UiModalDialog } from '@/shared/ui/modal';
@@ -14,7 +14,7 @@ const props = defineProps<IProps>();
 
 const isOpenFullView = defineModel<boolean>({ required: true });
 
-const { loading } = useDelayedLoading();
+const { loading, triggerLoading } = useDelayedLoading();
 
 const preparedMeta = computed((): IMeta => ({
 	...props.meta,
@@ -46,6 +46,24 @@ const style = computed(() => {
 		height: `${height}px`,
 	};
 });
+
+const component = shallowRef(null);
+
+watch(isOpenFullView, (value) => {
+	if (!value) {
+		loading.value = false;
+		component.value = null;
+		return;
+	}
+
+	loading.value = true;
+
+	component.value = defineAsyncComponent({
+		loader: getWidgetComponent('tv', props.meta.widgetType),
+	});
+
+	triggerLoading();
+}, { immediate: true });
 </script>
 
 <template>
@@ -54,7 +72,7 @@ const style = computed(() => {
 		v-model="isOpenFullView"
 	>
 		<component
-			:is="getWidgetComponent(props.displayVariant, props.meta.widgetType)"
+			:is="component"
 			:meta="preparedMeta"
 			:style="style"
 		/>

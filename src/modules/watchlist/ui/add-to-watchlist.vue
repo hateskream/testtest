@@ -6,12 +6,15 @@ import { UiPosition } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { isOnFavoritesWatchlist, isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
 import { ModalBadgeList, ModalItem, ModalItemSelector } from '@/modules/widgets/base';
+import { isFeatureEnabled } from '@/shared/lib';
 
 interface IProps {
 	watchlists: IWatchlistData[];
 	tickerId: string;
 	displayVariant: 'default' | 'new';
 }
+
+const isEnabled = isFeatureEnabled('SHOW_DASHBOARD_WATCHLIST');
 
 const props = defineProps<IProps>();
 
@@ -49,7 +52,7 @@ onLongPress(useTemplateRef('favorite'), () => {}, { onMouseUp });
 </script>
 
 <template>
-	<ui-position>
+	<ui-position v-if="isEnabled">
 		<template #title>
 			<div ref="favorite" :class="classes.favorite">
 				<ui-icon

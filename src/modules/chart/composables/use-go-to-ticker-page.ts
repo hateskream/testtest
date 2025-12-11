@@ -1,19 +1,53 @@
 import { useRouter } from 'vue-router';
 
 import { SymbolType, decodeTickerId } from '@/modules/cell';
-import { RouteNames } from '@/types/route.d';
+import { RouteNames, RoutePaths } from '@/types/route.d';
 
-const symbolTypeToPage: Record<SymbolType, RouteNames> = {
-	[SymbolType.Index]: RouteNames.TickerIndices,
-	[SymbolType.Commodity]: RouteNames.TickerCommodities,
-	[SymbolType.Stock]: RouteNames.TickerStock,
-	[SymbolType.Crypto]: RouteNames.TickerCrypto,
-	[SymbolType.Forex]: RouteNames.TickerForex,
-	[SymbolType.PlaneText]: RouteNames.TickerStock,
+interface ISymbolPage {
+	name: RouteNames;
+	path: RoutePaths;
+}
+
+const symbolTypeToPage: Record<SymbolType, ISymbolPage> = {
+	[SymbolType.Index]: {
+		name: RouteNames.TickerIndices,
+		path: RoutePaths.TickerIndices,
+	},
+	[SymbolType.Commodity]: {
+		name: RouteNames.TickerCommodities,
+		path: RoutePaths.TickerCommodities,
+	},
+	[SymbolType.Stock]: {
+		name: RouteNames.TickerStock,
+		path: RoutePaths.TickerStock,
+	},
+	[SymbolType.Crypto]: {
+		name: RouteNames.TickerCrypto,
+		path: RoutePaths.TickerCrypto,
+	},
+	[SymbolType.Forex]: {
+		name: RouteNames.TickerForex,
+		path: RoutePaths.TickerForex,
+	},
+	[SymbolType.PlaneText]: {
+		name: RouteNames.TickerStock,
+		path: RoutePaths.TickerStock,
+	},
 };
+
 
 export function useGoToTickerPage() {
 	const router = useRouter();
+
+	function goToTickerPageLink(rawId: string) {
+		const { symbolType, tickerId } = decodeTickerId(rawId) || {};
+
+		if (!symbolType || !tickerId) {
+			return '';
+		}
+
+		return `/ticker/${symbolTypeToPage[symbolType].path}/${tickerId}`;
+	}
 
 	function goToTickerPage(rawId: string) {
 		const { symbolType, tickerId } = decodeTickerId(rawId) || {};
@@ -23,12 +57,13 @@ export function useGoToTickerPage() {
 		}
 
 		router.push({
-			name: symbolTypeToPage[symbolType],
+			name: symbolTypeToPage[symbolType].name,
 			params: { id: tickerId },
 		});
 	}
 
 	return {
+		goToTickerPageLink,
 		goToTickerPage,
 	};
 }

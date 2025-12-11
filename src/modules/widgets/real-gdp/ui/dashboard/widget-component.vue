@@ -30,6 +30,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
+	resetAllChanges,
 } = useRealGdp({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -45,11 +46,13 @@ const {
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@reset="resetAllChanges"
 	>
 		<template #filters>
 			<filters-panel
 				v-model:range="activeRange"
 				display-variant="new"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #title>

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { createSectionFromPreset, type ISection, type ISectionPreset } from './section';
 import { WidgetType } from '../../core';
+import { isFeatureEnabled } from '@/shared/lib';
 
 export interface IDashboard {
 	id: string;
@@ -14,8 +15,246 @@ export interface IDashboard {
 export type PresetName = 'Crypto' | 'Stock' | 'Main';
 
 const presets: Record<PresetName, ISectionPreset[]> = {
-	Crypto: [],
-	Stock: [],
+	Crypto: [
+		{
+			name: 'Market Momentum',
+			width: 560,
+			widgets: [
+				{
+					defaultState: 'crypto',
+					height: 418,
+					widgetType:  WidgetType.ChartPrice,
+					defaultDisplayVariant: 'chart',
+				},
+				// {
+				// 	defaultState: 'none',
+				// 	height: 928,
+				// 	maxCountRow: 6,
+				// 	widgetType:  WidgetType.Market,
+				// 	defaultDisplayVariant: 'default',
+				// }
+			],
+		},
+		{
+			name: 'Overview',
+			width: 360,
+			widgets: [
+				// {
+				// 	defaultState: 'none',
+				// 	height: 226,
+				// 	widgetType:  WidgetType.FearGreed,
+				// 	defaultDisplayVariant: 'chart',
+				// },
+				// {
+				// 	defaultState: 'none',
+				// 	height: 171,
+				// 	widgetType:  WidgetType.EthGas,
+				// 	defaultDisplayVariant: 'default',
+				// },
+				{
+					defaultState: 'none',
+					height: 290,
+					widgetType:  WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				{
+					defaultState: 'none',
+					height: 204,
+					widgetType:  WidgetType.BitcoinDominance,
+					defaultDisplayVariant: 'default',
+				},
+				// {
+				// 	defaultState: 'none',
+				// 	height: 712,
+				// 	widgetType:  WidgetType.AltcoinSeason,
+				// 	defaultDisplayVariant: 'default',
+				// }
+			],
+		},
+		{
+			name: 'News',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 245,
+					widgetType:  WidgetType.NewsSummary,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Gainers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-gainers',
+					height: Infinity,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Losers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-losers',
+					height: Infinity,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		// {
+		// 	name: 'Performance map',
+		// 	width: 560,
+		// 	widgets: [
+		// 		{
+		// 			defaultState: 'none',
+		// 			height: 560,
+		// 			widgetType:  WidgetType.Heatmap,
+		// 			defaultDisplayVariant: 'default',
+		// 		}
+		// 	],
+		// },
+	],
+	Stock: [
+		{
+			name: 'Market Momentum',
+			width: 560,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 465,
+					widgetType:  WidgetType.ChartPrice,
+					defaultDisplayVariant: 'chart',
+				},
+				// {
+				// 	defaultState: 'stock',
+				// 	height: 928,
+				// 	maxCountRow: 6,
+				// 	widgetType:  WidgetType.Market,
+				// 	defaultDisplayVariant: 'default',
+				// },
+			],
+		},
+		{
+			name: 'Overview',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 132,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: 132,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: 496,
+					widgetType:  WidgetType.Performance,
+					defaultDisplayVariant: 'bar',
+				},
+				{
+					defaultState: 'stock',
+					height: 226,
+					widgetType:  WidgetType.MarketCap,
+					defaultDisplayVariant: 'chart',
+				},
+				// {
+				// 	defaultState: 'stock',
+				// 	height: 316,
+				// 	widgetType:  WidgetType.Exchange,
+				// 	defaultDisplayVariant: 'default',
+				// }
+			],
+		},
+		{
+			name: 'Economic Calendar',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 240,
+					widgetType:  WidgetType.HighImpactHourMap,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'economic',
+					height: Infinity,
+					widgetType:  WidgetType.Calendar, // сделать бесконечный скролл
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'News',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock',
+					height: 245,
+					widgetType:  WidgetType.NewsSummary,
+					defaultDisplayVariant: 'default',
+				},
+				{
+					defaultState: 'stock',
+					height: Infinity,
+					widgetType:  WidgetType.News,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Gainers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-gainers',
+					height: Infinity,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		{
+			name: 'Losers',
+			width: 360,
+			widgets: [
+				{
+					defaultState: 'stock-losers',
+					height: Infinity,
+					widgetType:  WidgetType.Price,
+					defaultDisplayVariant: 'default',
+				},
+			],
+		},
+		// {
+		// 	name: 'Performance map',
+		// 	width: 560,
+		// 	widgets: [
+		// 		{
+		// 			defaultState: 'none',
+		// 			height: 560,
+		// 			widgetType:  WidgetType.Heatmap,
+		// 			defaultDisplayVariant: 'default',
+		// 		}
+		// 	],
+		// },
+	],
 	Main: [
 		{
 			name: 'Market Momentum',
@@ -90,44 +329,50 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'commodity',
+					stateType: 'Commodity',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'crypto',
+					stateType: 'Crypto',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
+					stateType: 'Stock',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'forex',
+					stateType: 'Forex',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 				// {
-				// 	defaultState: 'eth', // добавить
-				//  height: 354,
+				// 	defaultState: 'eth',
+				// 	stateType: 'Eth',
+				// 	height: 354,
 				// 	maxCountRow: 4,
-				// 	widgetType:  WidgetType.Price,
+				// 	widgetType: WidgetType.Price,
 				// 	defaultDisplayVariant: 'default',
 				// },
 				{
 					defaultState: 'index',
+					stateType: 'Index',
 					height: 354,
 					maxCountRow: 4,
-					widgetType:  WidgetType.Price,
+					widgetType: WidgetType.Price,
 					defaultDisplayVariant: 'default',
 				},
 			],
@@ -173,6 +418,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
+					stateType: 'Stock',
 					defaultState: 'stock-gainers',
 					height: Infinity,
 					widgetType:  WidgetType.Price,
@@ -185,6 +431,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
+					stateType: 'Stock',
 					defaultState: 'stock-losers',
 					height: Infinity,
 					widgetType:  WidgetType.Price,
@@ -232,8 +479,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 };
 
 
+const enabledDashboardPresets: Record<PresetName, boolean> = {
+	Main: true,
+	Crypto: isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
+	Stock: isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
+};
+
 function isComingSoonPreset(presetName: PresetName) {
-	return presetName !== 'Main';
+	return !enabledDashboardPresets[presetName];
 }
 
 const comingSoonPresets: Record<PresetName, string | undefined> = {

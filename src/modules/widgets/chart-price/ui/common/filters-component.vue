@@ -5,7 +5,7 @@ import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 
 interface IFiltersComponentProps {
 	watchlists: IWatchlistData[];
@@ -23,6 +23,7 @@ const emit = defineEmits<{
 	(e: 'remove-from-watchlist', watchlistId: string): void;
 	(e: 'add-to-new-watchlist'): void;
 	(e: 'toggle-favorite-watchlist'): void;
+	(e: 'reset-all-changes'): void;
 }>();
 
 function updateFilter(newValue: TimeRangeFilterValue) {
@@ -34,50 +35,53 @@ function updateTicker(newValue: string[]) {
 }
 
 const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
-
-const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 </script>
 <template>
 	<div :class="classes.header">
-		<modal-ticker-selector-with-badge
-			:model-value="[selectedTicker]"
-			:enable-selected-info="false"
-			selection-mode="single"
+		<widget-filters-scrollable
 			:display-variant="props.displayVariant"
-			:show-label="!isDefaultDisplayVariant"
-			autofocus
-			@update:model-value="updateTicker"
-		/>
-		<template v-if="!props.isBig || !isDefaultDisplayVariant">
-			<ui-delimiter v-if="isDefaultDisplayVariant" />
-			<modal-badge-dropdown :display-variant="props.displayVariant">
-				<template #title>
-					<span>{{ filterValueToDisplay[timeRange].label }}</span>
-				</template>
-				<template #content>
-					<modal-badge-list :display-variant>
-						<template #title>
-							Time Range
-						</template>
-						<template
-							v-for="filterValue in TimeRangeFilterValue"
-							:key="filterValue"
-						>
-							<modal-item-selector
-								:model-value="filterValue === timeRange"
-								@update:model-value="updateFilter(filterValue)"
+			:class="classes.filters"
+			@on-clear-click="emit('reset-all-changes')"
+		>
+			<modal-ticker-selector-with-badge
+				:model-value="[selectedTicker]"
+				:enable-selected-info="false"
+				selection-mode="single"
+				:display-variant="props.displayVariant"
+				:show-label="!isDefaultDisplayVariant"
+				autofocus
+				@update:model-value="updateTicker"
+			/>
+			<template v-if="!props.isBig || !isDefaultDisplayVariant">
+				<ui-delimiter v-if="isDefaultDisplayVariant" />
+				<modal-badge-dropdown :display-variant="props.displayVariant">
+					<template #title>
+						<span>{{ filterValueToDisplay[timeRange].label }}</span>
+					</template>
+					<template #content>
+						<modal-badge-list :display-variant>
+							<template #title>
+								Time Range
+							</template>
+							<template
+								v-for="filterValue in TimeRangeFilterValue"
+								:key="filterValue"
 							>
-								{{ filterValueToDisplay[filterValue].label }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge-dropdown>
-		</template>
+								<modal-item-selector
+									:model-value="filterValue === timeRange"
+									@update:model-value="updateFilter(filterValue)"
+								>
+									{{ filterValueToDisplay[filterValue].label }}
+								</modal-item-selector>
+							</template>
+						</modal-badge-list>
+					</template>
+				</modal-badge-dropdown>
+			</template>
+		</widget-filters-scrollable>
 		<add-to-watchlist
 			:watchlists="props.watchlists"
 			:ticker-id="selectedTicker"
-			:class="classes.watchlist"
 			:display-variant
 			@add-to-watchlist="emit('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emit('remove-from-watchlist', $event.watchlistId)"
@@ -90,11 +94,9 @@ const gapInPx = computed(() => isDefaultDisplayVariant.value ? '6px' : '3px');
 <style module="classes">
 .header {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	gap: v-bind(gapInPx);
-}
-
-.watchlist {
-	margin-left: auto;
+	gap: 6px;
+	width: 100%;
 }
 </style>

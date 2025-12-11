@@ -1,18 +1,23 @@
 import { computed, ref, watch } from 'vue';
 
 import {
-	compareState, ActiveDateRange,
 	getDefaultState,
 	hydrateState,
-	type IDisplaySettings,
-	type ILocation, Include,
-	type IState,
 	rehydrateState,
+	compareState,
+	getActiveLocations,
+	getDefaultSegmentTickers,
+
+	type IState,
+	type IDisplaySettings,
+	type ILocation,
+	type SortState,
+
+	ActiveDateRange,
+	Include,
 	Score,
 	Sentiment,
-	type SortState,
 	Source,
-	getActiveLocations,
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
@@ -151,6 +156,7 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 
 	function resetAllChanges() {
 		state.value = getDefaultState(defaultStateType);
+		selectedSegmentTickers.value = getDefaultSegmentTickers(defaultStateType);
 	}
 
 	return {

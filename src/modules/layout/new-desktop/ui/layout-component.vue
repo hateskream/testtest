@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IMenuItem, menuItems } from '@/modules/layout/new-desktop/model';
+import { isFeatureEnabled } from '@/shared/lib';
 
 import MenuItem from './menu-item.vue';
 import ComingSoonTooltip from '@/modules/layout/new-desktop/ui/coming-soon-tooltip.vue';
@@ -47,18 +48,32 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 						height="18px"
 					/>
 				</div>
-				<menu-item
-					:icon="IconIds.Cashflow"
-					:is-active="false"
-					text="Cashflow"
-					link="/"
-				/>
-				<menu-item
-					:icon="IconIds.Arbitrage"
-					:is-active="false"
-					text="Arbitrage"
-					link="/"
-				/>
+				<coming-soon-tooltip
+					:disable="isFeatureEnabled('SHOW_CASHFLOW_PAGE_LINK')"
+					title="Cashflow"
+					text="Analyze your cash flow effortlessly — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Cashflow"
+						:is-active="false"
+						text="Cashflow"
+						link="/"
+					/>
+				</coming-soon-tooltip>
+
+				<coming-soon-tooltip
+					:disable="isFeatureEnabled('SHOW_ARBITRAGE_PAGE_LINK')"
+					title="Arbitrage"
+					text="Discover real-time arbitrage opportunities — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Arbitrage"
+						:is-active="false"
+						text="Arbitrage"
+						link="/"
+					/>
+				</coming-soon-tooltip>
+
 				<div :class="classes.line" />
 			</div>
 			<div :class="classes.iconContainer">
@@ -86,12 +101,18 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 				</template>
 			</div>
 			<div :class="classes.bottom">
-				<menu-item
-					:icon="IconIds.SetUp"
-					:is-active="false"
-					text="Set Up"
-					link="/"
-				/>
+				<coming-soon-tooltip
+					:disable="isFeatureEnabled('SHOW_SET_UP_PAGE_LINK')"
+					title="Set Up"
+					text="Customize your experience with a personal setup — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.SetUp"
+						:is-active="false"
+						text="Set Up"
+						link="/"
+					/>
+				</coming-soon-tooltip>
 			</div>
 		</div>
 		<div :class="classes.center">
@@ -100,6 +121,8 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 		<div :class="[classes.panel, classes.rightPanel]">
 			<div :class="classes.iconContainer">
 				<coming-soon-tooltip
+					placement="left"
+					:disable="isFeatureEnabled('SHOW_SEARCH_PAGE_LINK')"
 					title="Search"
 					text="Discover tickers, data, and markets — coming soon."
 				>
@@ -111,6 +134,8 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 					/>
 				</coming-soon-tooltip>
 				<coming-soon-tooltip
+					placement="left"
+					:disable="isFeatureEnabled('SHOW_ASK_AI_PAGE_LINK')"
 					title="Ask AI"
 					text="Get instant insights powered by AI — coming soon."
 				>
@@ -122,6 +147,8 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 					/>
 				</coming-soon-tooltip>
 				<coming-soon-tooltip
+					placement="left"
+					:disable="isFeatureEnabled('SHOW_DASHBOARD_WATCHLIST')"
 					title="Watchlist"
 					text="Track your favorite symbols — coming soon."
 				>
@@ -135,6 +162,8 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 			</div>
 			<div :class="[classes.iconContainer, classes.bottom]">
 				<coming-soon-tooltip
+					placement="left"
+					:disable="isFeatureEnabled('SHOW_HELP_PAGE_LINK')"
 					title="Help"
 					text="Find answers and guidance — coming soon."
 				>
@@ -145,12 +174,20 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 						link="/"
 					/>
 				</coming-soon-tooltip>
-				<menu-item
-					:icon="IconIds.Tray"
-					:is-active="false"
-					text="Tray"
-					link="/"
-				/>
+
+				<coming-soon-tooltip
+					placement="left"
+					:disable="isFeatureEnabled('SHOW_TRAY_PAGE_LINK')"
+					title="Tray"
+					text="Access your quick-view tray for essentials — coming soon."
+				>
+					<menu-item
+						:icon="IconIds.Tray"
+						:is-active="false"
+						text="Tray"
+						link="/"
+					/>
+				</coming-soon-tooltip>
 			</div>
 		</div>
 	</div>

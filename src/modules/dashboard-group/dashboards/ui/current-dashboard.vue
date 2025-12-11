@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent, onMounted, shallowRef } from 'vue';
 
 import {
 	type IWidget,
 } from '../../tv';
 import { getWidgetComponent, type IMeta } from '../model';
 import { useDelayedLoading } from '@/shared/composables';
+import { UiSkeleton } from '@/shared/ui/skeleton';
 
 interface IGroupComponentProps {
 	dashboardItem: IWidget;
@@ -29,7 +30,7 @@ const emit = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 }>();
 
-const { loading } = useDelayedLoading();
+const { loading, triggerLoading } = useDelayedLoading();
 
 const meta = computed((): IMeta => ({
 	market: '',
@@ -54,14 +55,43 @@ const meta = computed((): IMeta => ({
 	activeDisplayVariant: 'default',
 	allDisplayVariants: [],
 }));
+
+const component = shallowRef(null);
+
+onMounted( async () => {
+	loading.value = true;
+
+	component.value = defineAsyncComponent({
+		loader: getWidgetComponent('tv', props.dashboardItem.widgetType),
+	});
+
+	triggerLoading();
+});
 </script>
 
 <template>
-	<component
-		:is="getWidgetComponent('tv', props.dashboardItem.widgetType)"
-		:meta="meta"
-		:data-loading="loading"
-		@delete="emit('delete')"
-		@move-to="emit('moveTo', $event)"
+	<suspense v-if="!loading">
+		<component
+			:is="component"
+			:meta="meta"
+			:data-loading="loading"
+			@delete="emit('delete')"
+			@move-to="emit('moveTo', $event)"
+		/>
+
+		<template #fallback>
+			<ui-skeleton
+				border-radius="18px"
+				width="100%"
+				height="100%"
+			/>
+		</template>
+	</suspense>
+
+	<ui-skeleton
+		v-else
+		border-radius="18px"
+		width="100%"
+		height="100%"
 	/>
 </template>

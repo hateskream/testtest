@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from 'vue';
+import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -27,6 +27,7 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const emits = defineEmits<{
+	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
@@ -53,6 +54,14 @@ const {
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
 	maxCountRows: props.meta.maxCountRowTable,
+});
+
+watch(activeMarket, (value) => {
+	emits(
+		'set-widget-state-type',
+		props.meta.widgetId,
+		value.charAt(0).toUpperCase() + value.slice(1),
+	);
 });
 
 async function loadMoreTickets(state: IInfiniteStateHandler) {
@@ -97,6 +106,7 @@ defineExpose({ scrollBy });
 				v-model:filters="filtersState"
 				:filters-values="filtersValues"
 				display-type="dashboard"
+				@reset="resetAllChanges"
 			/>
 		</template>
 		<template #content>

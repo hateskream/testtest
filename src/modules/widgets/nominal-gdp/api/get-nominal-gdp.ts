@@ -42,16 +42,8 @@ export async function getNominalGdp(args: IGetNominalGdpRequest): Promise<INomin
 function prepareResponse(response: IGetNominalGdpResponse): INominalGdpHistory {
 	return {
 		range: response.range,
-		points: preparePoints(response.points, response.range),
+		points: response.points,
 	};
-}
-
-function preparePoints(points: INominalGdpHistoryPoint[], range: NominalGdpRange) {
-	if (range === NominalGdpRange.TwentyFiveYears || range === NominalGdpRange.All) {
-		return points.filter((_, key) => key % 3 === 0);
-	}
-
-	return points;
 }
 
 const { getMock } = useFetchMock<IGetNominalGdpResponse>('/mock/widgets/gdp/nominal.json');

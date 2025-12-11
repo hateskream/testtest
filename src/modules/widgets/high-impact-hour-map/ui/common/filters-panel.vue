@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
 
 interface IFiltersPanelProps {
 	displayVariant: 'default' | 'new';
@@ -13,7 +17,10 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 </script>
 
 <template>
-	<div :class="classes.container">
+	<widget-filters-scrollable
+		:display-variant="props.displayVariant"
+		@on-clear-click="emit('reset')"
+	>
 		<modal-badge-dropdown :display-variant="props.displayVariant">
 			<template #title>
 				{{ displayValueDataRange[activeDateRange] }}
@@ -37,7 +44,7 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 				</modal-badge-list>
 			</template>
 		</modal-badge-dropdown>
-	</div>
+	</widget-filters-scrollable>
 </template>
 
 <style module="classes">

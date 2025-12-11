@@ -96,7 +96,7 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 										:class="classes.widget"
 										@click.stop="emits('scroll-to-widget', section.id, widget.id)"
 									>
-										{{ widget.name }}
+										{{ widget.name }} <span v-if="widget.stateType">— {{widget.stateType}}</span>
 									</div>
 								</template>
 							</draggable>

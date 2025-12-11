@@ -2,8 +2,12 @@
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
 import { dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+
+const emit = defineEmits<{
+	reset: [];
+}>();
 
 const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
 const selectedMarkets = defineModel<MarketCapType[]>('selectedMarkets', { required: true });
@@ -18,7 +22,10 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 </script>
 
 <template>
-	<div :class="classes.container">
+	<widget-filters-scrollable
+		:display-variant="props.displayVariant"
+		@on-clear-click="emit('reset')"
+	>
 		<modal-ticker-selector-with-badge
 			v-model="selectedTickers"
 			v-model:markets="selectedMarkets"
@@ -54,7 +61,7 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 				</template>
 			</modal-badge-dropdown>
 		</template>
-	</div>
+	</widget-filters-scrollable>
 </template>
 
 <style module="classes">

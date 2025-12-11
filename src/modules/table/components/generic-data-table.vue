@@ -1,17 +1,10 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, ref, watch, onMounted, type Ref, nextTick } from 'vue';
-import { useElementSize } from '@vueuse/core';
+import { computed, nextTick, onMounted, type Ref, ref, watch } from 'vue';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
-import type {
-	IGenericTableColumn,
-	IGenericTableSection,
-	IGenericTableRow,
-	ISortConfig,
-	IDragDropEvent,
-} from '../type';
+import type { IDragDropEvent, IGenericTableColumn, IGenericTableRow, IGenericTableSection, ISortConfig } from '../type';
 
 import GenericGridHeader from './generic-grid-header.vue';
 import UnifiedTableContent from './unified-table-content.vue';
@@ -116,8 +109,6 @@ const visibleColumns = computed(() =>
 );
 
 const isSectionedTable = computed(() => localSections.value.length > 0);
-
-const { width: containerWidth }: { width: Ref<number> } = useElementSize(containerRef);
 
 // Custom scrollbar with hover visibility
 const {
@@ -516,7 +507,6 @@ onMounted( () => {
 						:columns="visibleColumns"
 						:column-widths="columnWidths"
 						:sort-config="localSortConfig"
-						:container-width="containerWidth"
 						:can-add-sections="canAddSections"
 						:enable-drag-drop="enableDragDrop"
 						:sticky-first-column="stickyFirstColumn"

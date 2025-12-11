@@ -162,7 +162,7 @@ function handleOpenFullView() {
 }
 
 .notResizing {
-	background-color: var(--bg-color-surface-01);
+	background-color: rgb(20 20 21 / 92%);
 }
 
 .container {

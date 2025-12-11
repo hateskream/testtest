@@ -7,6 +7,7 @@ import {
 	type IDashboardTab,
 	type ISection,
 	rehydrateWidget,
+	changeActiveDashboard as changeActiveDashboardModel,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 
@@ -22,6 +23,7 @@ const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default'])
 const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
+	stateType: z.string().optional(),
 	height: z.number(),
 	displayVariant: DisplayVariantSchema,
 	maxCountRow: z.number().optional(),
@@ -139,9 +141,28 @@ export function useDashboardLayout() {
 
 	}, { deep: true });
 
+	function changeActiveDashboard(id: string) {
+		state.value = changeActiveDashboardModel(state.value, id);
+	}
+
+	function setWidgetStateType(
+		widgetId: string,
+		stateType: string,
+	) {
+		sections.value = sections.value.map(
+			section => ({
+				...section,
+				widgets: section.widgets
+					.map(widget => widget.id === widgetId ? { ...widget, stateType } : widget ),
+			}),
+		);
+	}
+
 	return {
 		tabs,
 		sections,
+		changeActiveDashboard,
+		setWidgetStateType,
 	};
 }
 
@@ -158,6 +179,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 				widgets: section.widgets.map((widget) => ({
 					id: widget.id,
 					defaultStateType: widget.defaultStateType,
+					stateType: widget.stateType,
 					widgetType: widget.widgetType,
 					name: widget.name,
 					height: widget.height,
@@ -189,6 +211,7 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 							w.height,
 							w.displayVariant,
 							w.defaultStateType,
+							w.stateType,
 							w.maxCountRow,
 						))
 					.filter(w => w !== null),

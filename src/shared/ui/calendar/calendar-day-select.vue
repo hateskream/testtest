@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import { DatePicker } from 'v-calendar';
+import type { DatePickerModel } from '@/shared/ui/date-picker';
+import { UiDatePicker } from '@/shared/ui/date-picker';
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	'update-week': [Date];
 }>();
 
 const selectedDate = defineModel<Date>({ required: true });
+
+function updateWeek(model: DatePickerModel) {
+	emit('update-week', model as Date);
+}
 </script>
 
 <template>
 	<div :class="classes.calendarComponent">
-		<date-picker
+		<ui-date-picker
 			v-model="selectedDate"
-			title-position="left"
-			transparent
-			borderless
-			color="white"
-			is-dark
-			trim-weeks
-			:highlight-today="true"
-			:masks="{ title: 'MMMM yyyy' }"
-			:locale="{ firstDayOfWeek: 2 }"
-			:view="'monthly'"
-			:class="classes.calendar"
-			@update:model-value="emits('update-week', $event)"
+			view="monthly"
+			@update:model-value="updateWeek"
 		/>
 	</div>
 </template>
@@ -33,10 +28,6 @@ const selectedDate = defineModel<Date>({ required: true });
 	display: flex;
 	align-self: stretch;
 	padding: 16px;
-}
-
-.calendar {
-	width: 100%;
 }
 </style>
 

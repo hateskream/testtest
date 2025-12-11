@@ -1,4 +1,4 @@
-export { type IDashboardGroup, createDashboardGroup } from './dashboard-group';
+export { type IDashboardGroup, createDashboardGroup, changeActiveDashboard } from './dashboard-group';
 
 export { type ISection, type ISectionWheelPayload } from './section';
 

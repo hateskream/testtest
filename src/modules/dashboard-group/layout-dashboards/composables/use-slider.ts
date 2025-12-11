@@ -1,12 +1,12 @@
 import {
-	ref,
 	computed,
 	type MaybeRefOrGetter,
-	toValue,
-	type ShallowRef,
-	readonly,
 	onBeforeUnmount,
 	onMounted,
+	readonly,
+	ref,
+	type ShallowRef,
+	toValue,
 	watch,
 } from 'vue';
 import throttle from 'lodash/throttle';
@@ -14,7 +14,12 @@ import throttle from 'lodash/throttle';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
 
 
-const PADDING_VIEWPORT = 52 + 20 + 2 + 13 + 6;
+const LEFT_OFFSET = 20;
+const RIGHT_OFFSET = 10 + 10 + 3;
+const BORDER_WIDTH = 2;
+const SIDEBAR_WIDTH = 52;
+
+const PADDING_VIEWPORT = LEFT_OFFSET + RIGHT_OFFSET + BORDER_WIDTH + SIDEBAR_WIDTH;
 
 export function useSlider(opts: {
 	slidesWidth: MaybeRefOrGetter<number[]>;
@@ -33,6 +38,7 @@ export function useSlider(opts: {
 	const totalTrackWidth = computed(() => {
 		const cardSum = slides.value.reduce((s, c) => s + (c || 0), 0);
 		const gaps = Math.max(0, slides.value.length - 1) * gap;
+
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
@@ -49,7 +55,7 @@ export function useSlider(opts: {
 	const seenSlides = new Set<number>();
 
 	const visibleSlidesCount = computed(() => {
-		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - 45);
+		const vp = toValue(viewportWidth) - (isMobile.value ? 0 : PADDING_VIEWPORT - SIDEBAR_WIDTH);
 		const offset = translateX.value;
 		const end = offset + vp;
 
@@ -71,8 +77,9 @@ export function useSlider(opts: {
 
 	const canPrev = computed(() => translateX.value > 0);
 	const canNext = computed(() => {
-		const minTranslate = toValue(viewportWidth) - totalTrackWidth.value;
-		return translateX.value > minTranslate;
+		const maxTranslate = totalTrackWidth.value - toValue(viewportWidth);
+
+		return translateX.value < maxTranslate;
 	});
 
 	watch(
@@ -151,7 +158,7 @@ export function useSlider(opts: {
 		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
 		currentIndex.value = clamped;
 
-		smoothScrollTo(el, getSlideOffset(clamped), {
+		void smoothScrollTo(el, getSlideOffset(clamped), {
 			duration: 300,
 			axis: 'x',
 		});
