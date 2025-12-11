@@ -31,7 +31,7 @@ export const IMAGE_BLACKLIST_CONFIG: IImageBlacklistConfig = {
 
 export function isTickerBlacklisted(
 	ticker: string,
-	config: IImageBlacklistConfig = IMAGE_BLACKLIST_CONFIG
+	config: IImageBlacklistConfig = IMAGE_BLACKLIST_CONFIG,
 ): boolean {
 	if (!ticker) {
 		return false;
@@ -90,7 +90,7 @@ export function extractTickerFromImageUrl(src: string): string | null {
 
 export function shouldBlockImageUrl(
 	src: string,
-	config: IImageBlacklistConfig = IMAGE_BLACKLIST_CONFIG
+	config: IImageBlacklistConfig = IMAGE_BLACKLIST_CONFIG,
 ): boolean {
 	const ticker = extractTickerFromImageUrl(src);
 
