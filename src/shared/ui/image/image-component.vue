@@ -2,6 +2,7 @@
 import { computed, watch, ref, type CSSProperties } from 'vue';
 
 import { UiSkeleton } from '../skeleton';
+import { shouldBlockImageUrl } from './image-blacklist';
 
 interface IUiImage {
 	height?: string;
@@ -11,6 +12,7 @@ interface IUiImage {
 	replacement?: string;
 	loading?: 'lazy' | 'eager';
 	showLoader?: boolean;
+	skipBlacklist?: boolean;
 }
 
 const props = withDefaults(defineProps<IUiImage>(), {
@@ -20,11 +22,13 @@ const props = withDefaults(defineProps<IUiImage>(), {
 	height: '100%',
 	replacement: '',
 	showLoader: false,
+	skipBlacklist: false,
 });
 
 const emit = defineEmits<{
 	(e: 'loaded'): void;
 	(e: 'error'): void;
+	(e: 'blacklisted', ticker: string): void;
 }>();
 
 const refImg = ref<HTMLImageElement | null>(null);
@@ -44,6 +48,14 @@ watch(
 		currentSrc.value = props.replacement;
 
 		if (!newSrc) {
+			return;
+		}
+
+		if (!props.skipBlacklist && shouldBlockImageUrl(newSrc)) {
+			isValidSrc.value = false;
+			isImageLoaded.value = true;
+			emit('blacklisted', newSrc);
+			emit('error');
 			return;
 		}
 
@@ -84,6 +96,7 @@ async function tryLoadImage(src: string): Promise<boolean> {
 		img.src = src;
 	});
 }
+
 defineOptions({ inheritAttrs: false });
 </script>
 
