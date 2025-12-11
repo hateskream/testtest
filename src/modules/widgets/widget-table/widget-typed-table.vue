@@ -39,6 +39,7 @@ export interface IProps<T> {
 	tickerState?: ITickerState;
 	isUpdating?: boolean;
 	isFixedWidth?: boolean;
+	disableTickerClick?: boolean;
 }
 
 export interface IEmits<T> {
@@ -88,6 +89,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	showHeader: true,
 	isUpdating: false,
 	isFixedWidth: false,
+	disableTickerClick: false
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -225,6 +227,7 @@ onMounted(()=> {
 					v-if="column.type === 'symbol' || column.type === 'image-string'"
 					:data="getCellData(cellProps.row, column.key)"
 					:ticker-state="tickerState"
+					:disable-ticker-click="props.disableTickerClick"
 					@click-symbol="emit('click-on-ticker', cellProps.row.id)"
 				/>
 				<component

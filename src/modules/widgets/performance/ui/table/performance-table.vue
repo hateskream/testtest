@@ -71,6 +71,7 @@ const emit = defineEmits<{
 				:sticky-header="true"
 				:sticky-first-column="true"
 				:enable-row-actions="false"
+				:disable-ticker-click="true"
 				@click-on-ticker="goToTickerPage"
 			>
 				<template #row-actions="{tickerId} : {tickerId: string}">

@@ -8,6 +8,7 @@ import { UniversalTickerIcon } from '@/shared/ui/ticker';
 
 interface IProps {
 	data: ITableSymbolCell;
+	disableTickerClick?: boolean | undefined;
 	tickerState: {
 		isShowLogo: boolean;
 		isShowTicker: boolean;
@@ -21,6 +22,12 @@ const props = defineProps<IProps>();
 const emits = defineEmits<{
 	(e: 'click-symbol'): void;
 }>();
+
+const handleClick = () => {
+	if (!props.disableTickerClick) {
+		emits('click-symbol');
+	}
+};
 
 const tickerIcon = computed(() => {
 	const { data } = props;
@@ -64,7 +71,7 @@ const tickerIcon = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.tableIcon">
+	<div :class="[classes.tableIcon, { [classes.clickable]: !disableTickerClick }]">
 		<universal-ticker-icon
 			v-if="tickerIcon"
 			:symbol-type="tickerIcon.symbol"
@@ -75,54 +82,57 @@ const tickerIcon = computed(() => {
 
 		<div
 			v-if="props.data.symbolType === 'PlainText'
-				&& props.data.text"
+     && props.data.text"
 			:class="[classes.text, 'symbolCellText']"
-			@click="emits('click-symbol')"
+			@click="handleClick"
 		>
 			{{ props.data.text }}
 		</div>
 
-		<div :class="classes.tickerName" @click="emits('click-symbol')">
+		<div
+			:class="[classes.tickerName, { [classes.clickable]: !disableTickerClick }]"
+			@click="handleClick"
+		>
 			<!-- Show ticker for all types -->
 			<span
 				v-if="props.tickerState.isShowTicker && props.data.ticker"
 				:class="classes.tickerFullName"
 			>
-				{{ props.data.ticker }}
-			</span>
+     {{ props.data.ticker }}
+    </span>
 
 			<!-- Show Forex pair for Forex -->
 			<span
 				v-if="props.data.symbolType === 'Forex'
-					&& props.tickerState.isShowTicker
-					&& props.data.leftTicker
-					&& props.data.rightTicker"
+      && props.tickerState.isShowTicker
+      && props.data.leftTicker
+      && props.data.rightTicker"
 			>
-				{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
-			</span>
+     {{ props.data.leftTicker }}/{{ props.data.rightTicker }}
+    </span>
 
 			<!-- Show description based on symbol type -->
 			<span v-if="props.tickerState.isShowDescription" :class="classes.description">
-				<template v-if="props.data.symbolType === 'Index' && props.data.indexName">
-					{{ props.data.indexName }}
-				</template>
-				<template v-else-if="props.data.symbolType === 'Commodity' && props.data.commodityName">
-					{{ props.data.commodityName }}
-				</template>
-				<template v-else-if="props.data.symbolType === 'Stock' && props.data.companyName">
-					{{ props.data.companyName }}
-				</template>
-				<template v-else-if="props.data.symbolType === 'Crypto' && props.data.blockchain">
-					{{ props.data.blockchain }}
-				</template>
-				<template
-					v-else-if="props.data.symbolType === 'Forex'
-						&& props.data.leftTicker
-						&& props.data.rightTicker"
-				>
-					{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
-				</template>
-			</span>
+     <template v-if="props.data.symbolType === 'Index' && props.data.indexName">
+      {{ props.data.indexName }}
+     </template>
+     <template v-else-if="props.data.symbolType === 'Commodity' && props.data.commodityName">
+      {{ props.data.commodityName }}
+     </template>
+     <template v-else-if="props.data.symbolType === 'Stock' && props.data.companyName">
+      {{ props.data.companyName }}
+     </template>
+     <template v-else-if="props.data.symbolType === 'Crypto' && props.data.blockchain">
+      {{ props.data.blockchain }}
+     </template>
+     <template
+			 v-else-if="props.data.symbolType === 'Forex'
+       && props.data.leftTicker
+       && props.data.rightTicker"
+		 >
+      {{ props.data.leftTicker }}/{{ props.data.rightTicker }}
+     </template>
+    </span>
 		</div>
 	</div>
 </template>
@@ -132,6 +142,9 @@ const tickerIcon = computed(() => {
 	display: flex;
 	align-items: center;
 	gap: 8px;
+}
+
+.tableIcon.clickable {
 	cursor: pointer;
 }
 
@@ -141,10 +154,13 @@ const tickerIcon = computed(() => {
 	gap: 6px;
 	font-size: 13px;
 	line-height: 1;
+}
+
+.tickerName.clickable {
 	cursor: pointer;
 }
 
-.tickerName :first-child:hover {
+.tickerName.clickable :first-child:hover {
 	text-decoration: underline;
 }
 
