@@ -77,8 +77,8 @@ async function getMockData(req: IGetTopIndicesRequest): Promise<IPreparedRespons
 	return {
 		pagination: {
 			offset: 0,
-			limit: 10,
-			total: 10,
+			limit: req.limit,
+			total: req.limit,
 		},
 		tickers: tickers.slice(0, req.limit),
 	};
