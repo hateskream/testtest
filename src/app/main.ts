@@ -3,21 +3,26 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import { registerComponent } from '@shared/component-library';
 
-import { router } from './router';
-import { createAppHead } from './head';
-import { queryClient } from '@/shared/service/query-client';
-import { validateConfig } from '@/shared/lib';
-import { registerVCalendar } from '@/shared/ui/date-picker/setup';
-
 import '@/assets/styles/base.css';
-
 import 'virtual:svg-icons-register';
 
+import { validateConfig } from '@/shared/lib';
+import { queryClient } from '@/shared/service/query-client';
+import { registerVCalendar } from '@/shared/ui/date-picker/setup';
+import { router } from './router';
+import { createAppHead } from './head';
+import { useStorageVersion } from '@/shared/composables';
 
 import App from './app.vue';
 
 validateConfig();
 
+const { compareVersions, updateVersion } = useStorageVersion();
+
+if (!compareVersions()) {
+	localStorage.clear();
+	updateVersion();
+}
 registerComponent('i88-chart');
 
 

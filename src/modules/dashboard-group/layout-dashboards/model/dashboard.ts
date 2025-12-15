@@ -151,15 +151,15 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
-					defaultState: 'stock',
+					defaultState: 'SPX',
 					height: 132,
-					widgetType:  WidgetType.Price,
+					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'default',
 				},
 				{
-					defaultState: 'stock',
+					defaultState: 'NDX',
 					height: 132,
-					widgetType:  WidgetType.Price,
+					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'default',
 				},
 				{
