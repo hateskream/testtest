@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IUSInflationDomain } from '../../model';
+import { UiText } from '@/shared/ui/text';
 
 import ChartComponent from './chart-component.vue';
 
@@ -28,13 +29,17 @@ const trendLabel = computed(() => {
 					src="https://flagcdn.com/us.svg"
 					alt="US flag"
 				/>
-				<span>{{ props.data.current_value }}%</span>
+				<ui-text token="title-200">{{ props.data.current_value }}%</ui-text>
 			</div>
 			<div :class="classes.text">
-				Inflation {{ trendLabel }} YoY:
+				<ui-text token="text-200-r">
+					Inflation {{ trendLabel }} YoY:
+				</ui-text>
 			</div>
 			<div :class="[classes.text, classes.trend]">
-				{{ props.data.yoy_change.value }} pp
+				<ui-text token="text-200-r">
+					{{ props.data.yoy_change.value }} pp
+				</ui-text>
 				<ui-icon
 					:id="isUpTrend ? IconIds.Gainers : IconIds.Loosers"
 					height="6px"
@@ -64,12 +69,7 @@ const trendLabel = computed(() => {
 .title {
 	display: flex;
 	align-items: center;
-	font-style: normal;
-	font-weight: 440;
-	font-size: 16.8px;
-	line-height: 160%; /* 26.88px */
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.134px;
 	gap: 6px;
 }
 
@@ -82,12 +82,7 @@ const trendLabel = computed(() => {
 }
 
 .text {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 12.2px;
-	line-height: 180%; /* 21.96px */
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.122px;
 }
 
 .trend {

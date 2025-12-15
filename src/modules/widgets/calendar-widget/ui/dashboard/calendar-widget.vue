@@ -17,6 +17,7 @@ import {
 } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { formattedLabel, getMarketLabel, isAllSelected } from '@/modules/calendar/utils/toolbar.ts';
+import { UiText } from '@/shared/ui/text';
 
 import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
 
@@ -89,7 +90,7 @@ useEventBoardScroll({
 				<modal-badge display-variant="new">
 					<template #title>
 						<ui-icon :id="marketIcon" />
-						{{marketLabel}}
+						<ui-text token="text-200-r" as="div">{{marketLabel}}</ui-text>
 						<ui-icon :id="IconIds.DropdownDown" />
 					</template>
 					<template #content>

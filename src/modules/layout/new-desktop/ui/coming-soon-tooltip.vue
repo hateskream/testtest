@@ -3,6 +3,8 @@ import type { Placement } from '@floating-ui/vue';
 
 import { UiPositionTooltip } from '@/shared/ui/position';
 import { DashboardTooltipWrapper } from '@/shared/ui/tooltip';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 const props = withDefaults(defineProps<{
 	title: string;
@@ -26,10 +28,21 @@ const props = withDefaults(defineProps<{
 			<dashboard-tooltip-wrapper>
 				<div :class="classes.root">
 					<div :class="classes.header">
-						<span :class="classes.title">{{ props.title }}</span>
+						<ui-clamped
+							:class="classes.title"
+							:rows="1"
+							as="span"
+						>
+							<ui-text token="text-200-b">{{ props.title }}</ui-text>
+						</ui-clamped>
 						<span :class="classes.release">{{ props.release }}</span>
 					</div>
-					<p :class="classes.text">{{ props.text }}</p>
+					<ui-text
+						:class="classes.text"
+						token="text-200-r"
+						tag="p"
+					>
+						{{ props.text }}</ui-text>
 				</div>
 			</dashboard-tooltip-wrapper>
 		</template>
@@ -55,18 +68,8 @@ const props = withDefaults(defineProps<{
 }
 
 .title {
-	display: -webkit-box;
 	flex: 1 0 0;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 510;
-	font-size: var(--font-text-200-b-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.122px;
-	text-overflow: ellipsis;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
 }
 
 .release {
@@ -84,11 +87,6 @@ const props = withDefaults(defineProps<{
 }
 
 .text {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.122px;
 }
 </style>

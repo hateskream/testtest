@@ -5,6 +5,7 @@ import { useElementSize, useNow } from '@vueuse/core';
 
 import type { IChartTimelineSegment } from '../../model/chart-timeline.ts';
 import { getTimezoneOffset, toTime } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 import ChartTimelineDelimiter from './chart-timeline-delimiter.vue';
 import ChartTimelineSegment from './chart-timeline-segment.vue';
@@ -100,7 +101,13 @@ const currentPercent = computed(() => (now.value.getTime() - preparedStartTime.v
 
 <template>
 	<div ref="timeline" :class="classes.timeline">
-		<div :class="classes.timezone">UTC{{ timezone }}</div>
+		<ui-text
+			:class="classes.timezone"
+			token="text-100-r"
+			as="div"
+		>
+			UTC{{ timezone }}
+		</ui-text>
 		<div v-if="timelineWidth" :class="classes.timelineSegments">
 			<template v-if="beforeSegmentWidth">
 				<chart-timeline-segment :width="beforeSegmentWidth + '%'" />
@@ -149,11 +156,7 @@ const currentPercent = computed(() => (now.value.getTime() - preparedStartTime.v
 	position: absolute;
 	top: 0;
 	left: 0;
-	font-weight: 400;
-	font-size: var(--font-text-100-r-size, 11px);
-	line-height: 180%;
 	color: var(--text-100, rgb(255 255 255 / 30%));
-	letter-spacing: 0.088px;
 }
 
 .timelineSegments {

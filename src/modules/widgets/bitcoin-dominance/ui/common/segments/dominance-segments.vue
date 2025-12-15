@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IDominanceSnapshot } from '../../../model';
+import { UiText } from '@/shared/ui/text';
 
 import DominanceSegmentsIndicator from './dominance-segments-indicator.vue';
 
@@ -22,13 +23,16 @@ const props = defineProps<IViewComponentProps>();
 			>
 				<div :class="classes.name">
 					<div :class="classes.circle" :style="{backgroundColor: item.color}"></div>
-					<span>
+					<ui-text token="text-200-r">
 						{{ item.symbol }}
-					</span>
+					</ui-text>
 				</div>
-				<div :class="classes.value">
+				<ui-text
+					:class="classes.value"
+					token="title-200"
+				>
 					{{ item.dominance.current.toFixed(1) }}%
-				</div>
+				</ui-text>
 			</div>
 		</div>
 		<dominance-segments-indicator
@@ -62,8 +66,6 @@ const props = defineProps<IViewComponentProps>();
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	font-weight: 400;
-	font-size: 13px;
 	color: var(--text-color-base-300);
 }
 
@@ -74,9 +76,6 @@ const props = defineProps<IViewComponentProps>();
 }
 
 .value {
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 160%;
-	color: #ffffff;
+	color: var(--text-500, rgb(255 255 255 / 96%));
 }
 </style>

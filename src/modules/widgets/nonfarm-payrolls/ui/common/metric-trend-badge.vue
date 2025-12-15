@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { prettyNumberWithKey } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IMetricTrendBadge {
 	topValue: number;
@@ -26,13 +27,13 @@ const preparedTopValue = computed(() => {
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<span>{{ preparedTopValue }} {{ isTopValuePercent ? '%' : '' }}</span>
+			<ui-text token="title-200">{{ preparedTopValue }}{{ isTopValuePercent ? '%' : '' }}:&nbsp;</ui-text>
 		</div>
 		<div :class="classes.bottom">
-			<span>{{ label }}:&nbsp;</span>
-			<span :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
+			<ui-text token="text-200-r">{{ label }}:&nbsp;</ui-text>
+			<ui-text token="text-200-r" :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
 				{{ isGood ? '+' : '-' }}{{ value }}{{ unit }}
-			</span>
+			</ui-text>
 			<ui-icon
 				:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
 				height="12px"
@@ -51,21 +52,13 @@ const preparedTopValue = computed(() => {
 }
 
 .topValue {
-	font-weight: 440;
-	font-size: 16.8px;
-	line-height: 160%;
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.134px;
 }
 
 .bottom {
 	display: flex;
 	align-items: center;
-	font-weight: 400;
-	font-size: 13.3px;
-	line-height: 180%;
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.146px;
 }
 
 .value {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IModalBadgeClearProps {
 	displayVariant?: 'default' | 'new';
@@ -19,8 +20,7 @@ const props = withDefaults(defineProps<IModalBadgeClearProps>(), {
 				height="6px"
 			/>
 		</span>
-
-		Clear
+		<ui-text token="text-200-r">Clear</ui-text>
 	</button>
 </template>
 
@@ -32,9 +32,6 @@ const props = withDefaults(defineProps<IModalBadgeClearProps>(), {
 	padding:
 		var(--padding-padding-s3, 4px) var(--tile-padding-md-in, 10px)
 		var(--padding-padding-s3, 4px) var(--tile-padding-md-out, 6px);
-	font-style: normal;
-	font-weight: 450;
-	font-size: 11.8px;
 	color: var(--text-300, rgb(255 255 255 / 60%));
 	border-radius: 18px;
 	cursor: pointer;

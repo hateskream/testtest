@@ -9,6 +9,7 @@ import {
 	toUtcIsoDate,
 } from '@/modules/calendar';
 import { getHighlightColor } from '@/modules/calendar/models/colors.ts';
+import { UiText } from '@/shared/ui/text';
 
 import CalendarEventCardDashboard from './calendar-event-card-dashboard.vue';
 
@@ -194,7 +195,9 @@ defineExpose({ scrollToDate });
 				:data-date="day.date"
 			>
 				<div :class="classes.boardDate">
-					{{ formatEventDate(day.date as DateYYYYMMDD) }}
+					<ui-text token="title-200">
+						{{ formatEventDate(day.date as DateYYYYMMDD) }}
+					</ui-text>
 				</div>
 
 				<div
@@ -207,7 +210,7 @@ defineExpose({ scrollToDate });
 						:class="[classes.hourLabel, classes.lightning, group.missed && classes.missed]"
 						:style="getHighlightColor(group.events[0].favorite, group.soon)"
 					>
-						{{ group.hour }}
+						<ui-text token="text-100-r">{{ group.hour }}</ui-text>
 					</div>
 
 					<div
@@ -254,12 +257,7 @@ defineExpose({ scrollToDate });
 	height: var(--height-height-s15, 36px);
 	padding-left: var(--padding-padding-s11, 20px);
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--font-title-200-size, 16.8px);
-	line-height: 160%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.134px;
 	text-overflow: ellipsis;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 	-webkit-box-orient: vertical;
@@ -307,11 +305,6 @@ defineExpose({ scrollToDate });
 	align-items: center;
 	height: 30px;
 	padding: 8px 18px 0;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	letter-spacing: 0.08px;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 	gap: 10px;
 }

@@ -2,6 +2,7 @@
 import { computed, type CSSProperties } from 'vue';
 
 import type { IUseExternalTooltipState } from '../../composables';
+import { UiText } from '@/shared/ui/text';
 
 import ChartExternalTooltipRow from './chart-external-tooltip-row.vue';
 
@@ -39,7 +40,9 @@ const rootStyles = computed<CSSProperties>(() => ({
 					v-for="t in title"
 					:key="t"
 					:class="classes.title"
-				>{{ t }}</div>
+				>
+					<ui-text token="text-100-r">{{ t }}</ui-text>
+				</div>
 			</article>
 		</slot>
 	</div>
@@ -63,12 +66,11 @@ const rootStyles = computed<CSSProperties>(() => ({
 	display: flex;
 	flex-direction: column;
 	margin: 0;
-	gap: 6px;
-	padding: 4px;
+	gap: 2px;
+	padding: 0 4px;
 }
 
 .title {
-	font-size: 10px;
 	color: rgb(154 154 157 / 100%);
 }
 </style>

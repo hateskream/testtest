@@ -7,6 +7,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { isOnFavoritesWatchlist, isOnWatchlist, type IWatchlistAction, type IWatchlistData } from '../model';
 import { ModalBadgeList, ModalItem, ModalItemSelector } from '@/modules/widgets/base';
 import { isFeatureEnabled } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IProps {
 	watchlists: IWatchlistData[];
@@ -71,7 +72,7 @@ onLongPress(useTemplateRef('favorite'), () => {}, { onMouseUp });
 						:model-value="isOnWatchlist(watchlist, props.tickerId)"
 						@update:model-value="clickRowAction(watchlist, props.tickerId)"
 					>
-						{{ watchlist.name }}
+						<ui-text token="text-300-r">{{ watchlist.name }}</ui-text>
 					</modal-item-selector>
 				</template>
 

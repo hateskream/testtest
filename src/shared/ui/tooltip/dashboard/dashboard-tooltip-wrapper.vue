@@ -3,7 +3,7 @@
 </script>
 
 <template>
-	<div :class="classes.tooltip">
+	<div :class="classes.tooltip" class="text-200-r">
 		<slot />
 	</div>
 </template>
@@ -14,7 +14,6 @@
 	display: flex;
 	width: max-content;
 	padding: var(--padding-padding-s6, 4px) var(--padding-padding-s8, 10px);
-	font-size: 12px;
 	color: var(--text-color-base-300);
 	background: var(--surface-modal, rgb(30 30 32 / 88%));
 	background-color: var(--surface-modal, rgb(30 30 32 / 88%));

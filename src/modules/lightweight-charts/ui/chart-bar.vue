@@ -63,10 +63,26 @@ const defaultOptions: ChartOptions<'bar'> = {
 					const pretty = prettyNumberWithKey(value.toString());
 					return `${pretty.value}${pretty.suffix}`;
 				},
+				font: {
+					family: '\'Roboto Flex\', sans-serif',
+					size: 11,
+					weight: 400,
+					lineHeight: '19.8px',
+				},
+				color: 'rgba(255, 255, 255, 0.62)',
 			},
 		},
 		x: {
-			ticks: { padding: 10 },
+			ticks: {
+				padding: 10,
+				font: {
+					family: '\'Roboto Flex\', sans-serif',
+					size: 11,
+					weight: 400,
+					lineHeight: '19.8px',
+				},
+				color: 'rgba(255, 255, 255, 0.30)',
+			},
 			grid: { display: false },
 			border: { display: false },
 			stacked: false,

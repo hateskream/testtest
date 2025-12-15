@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
 </script>
 
 <template>
-	<div :class="classes.item">
-		<slot name="default" />
-	</div>
+	<ui-text
+		:class="classes.item"
+		token="text-300-r"
+		as="div"
+	>
+		<slot />
+	</ui-text>
 </template>
 
 <style module="classes">
@@ -15,12 +20,7 @@
 	height: 36px;
 	min-height: 36px;
 	padding: 0 10px;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
 	color: var(--color-text-base-500, #ffffff);
-	letter-spacing: 0.146px;
 	border-radius: var(--radius-radius-s14-32, 12.4px);
 	user-select: none;
 }

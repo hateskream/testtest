@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 
+import { UiText } from '@/shared/ui/text';
+
 interface IProps {
 	label?: string;
 	labelColor?: CSSProperties['color'];
@@ -16,7 +18,13 @@ const props = withDefaults(defineProps<IProps>(), {
 
 <template>
 	<div :class="classes.container">
-		<span v-if="props.label.length" :class="classes.label">{{ props.label }}</span>
+		<ui-text
+			v-if="props.label.length"
+			token="text-100-r"
+			:class="classes.label"
+		>
+			{{ props.label }}
+		</ui-text>
 		<div :class="classes.delimiter"></div>
 	</div>
 </template>
@@ -40,10 +48,6 @@ const props = withDefaults(defineProps<IProps>(), {
 
 .label {
 	width: max-content;
-	font-weight: 400;
-	font-size: var(--font-text-100-r-size, 11px);
-	line-height: 180%;
 	color: v-bind(labelColor);
-	letter-spacing: 0.088px;
 }
 </style>

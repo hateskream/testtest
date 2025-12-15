@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { prettyNumberWithKey } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IChartPriceHeaderProps {
 	showTime?: boolean;
@@ -58,10 +59,10 @@ const formattedChangePercent = computed(() => {
 				At Close: {{ preparedTime }}
 			</p>
 			<div :class="classes.segmentRow">
-				<div :class="classes.segmentValue">
+				<ui-text token="title-300" :class="classes.segmentValue">
 					<span>$</span>
 					<span>{{ formattedPrice }}</span>
-				</div>
+				</ui-text>
 				<div
 					:class="[
 						classes.segmentChange,
@@ -74,13 +75,13 @@ const formattedChangePercent = computed(() => {
 						width="8px"
 						:class="classes.segmentChangeIcon"
 					/>
-					<div :class="classes.segmentChangeValue">
+					<ui-text token="text-300-r">
 						<span>{{formattedChangeDelta}}</span>
 						<span> (</span>
 						<span v-if="props.changePercent < 0">−&nbsp;</span>
 						<span>{{formattedChangePercent}}</span>
 						<span>%)</span>
-					</div>
+					</ui-text>
 				</div>
 			</div>
 		</div>
@@ -116,11 +117,7 @@ const formattedChangePercent = computed(() => {
 
 .segmentValue {
 	display: flex;
-	font-weight: 440;
-	font-size: 21px;
-	line-height: 150%;
 	color: var(--text-color-base-500);
-	letter-spacing: 0.168px;
 	gap: 2px;
 }
 
@@ -142,12 +139,5 @@ const formattedChangePercent = computed(() => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.segmentChangeValue {
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
-	letter-spacing: 0.146px;
 }
 </style>

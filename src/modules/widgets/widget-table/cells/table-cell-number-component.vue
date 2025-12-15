@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiPositionTooltip } from '@/shared/ui/position/ui/tooltip';
 import { getNumberTrendClass } from '../model';
+import { UiText } from '@/shared/ui/text';
 
 export interface INumberCell {
 	value?: string;
@@ -61,17 +62,17 @@ const trendClass = computed(() => {
 		<ui-position-tooltip :open-delay="100">
 			<template #default>
 				<div :class="[classes.number, classes[trendClass]]" class="paragraph-p-00">
-					<span :class="classes.prefix">{{ formattedValue.prefix }}</span>
-					<span :class="classes.formatted">{{ formattedValue.value }}</span>
-					<span :class="classes.suffix">{{ formattedValue.suffix }}</span>
+					<ui-text token="text-300-r" :class="classes.prefix">{{ formattedValue.prefix }}</ui-text>
+					<ui-text token="text-300-r" :class="classes.formatted">{{ formattedValue.value }}</ui-text>
+					<ui-text token="text-300-r" :class="classes.suffix">{{ formattedValue.suffix }}</ui-text>
 				</div>
 			</template>
 
 			<template #content>
 				<div :class="classes.number" class="paragraph-p-00">
-					<span>{{ formattedValue.prefix }}</span>
-					<span>{{ formattedValue.default }}</span>
-					<span>{{ formattedValue.suffix }}</span>
+					<ui-text token="text-300-r">{{ formattedValue.prefix }}</ui-text>
+					<ui-text token="text-300-r">{{ formattedValue.default }}</ui-text>
+					<ui-text token="text-300-r">{{ formattedValue.suffix }}</ui-text>
 				</div>
 			</template>
 		</ui-position-tooltip>
@@ -81,22 +82,15 @@ const trendClass = computed(() => {
 <style module="classes">
 .prefix {
 	margin-right: 2px;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13px;
 	color: var(--text-color-base-500);
 }
 
 .suffix {
 	margin-left: 4px;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13px;
 	color: var(--text-color-base-300);
 }
 
 .formatted {
-	line-height: 1;
 	color: var(--text-color-base-500);
 }
 

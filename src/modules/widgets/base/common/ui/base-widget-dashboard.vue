@@ -7,6 +7,8 @@ import { displayVariantToIcon, displayVariantToName } from '../model';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeList, WidgetContextMenu } from '@/modules/widgets/base';
 import { isFeatureEnabled } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
 
@@ -84,10 +86,13 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 	<div :class="classes.container">
 		<div :class="classes.title">
 			<div :class="classes.titleHeader">
-				<div :class="classes.titleText">
+				<ui-text
+					:class="classes.titleText"
+					token="text-200-r"
+					as="div"
+				>
 					{{ props.title }}
-				</div>
-
+				</ui-text>
 				<div
 					v-if="props.allDisplayVariants.length > 1 && isDisplayVariantEnabled"
 					:class="classes.displayVariantContainer"
@@ -104,14 +109,21 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 						@click="activeDisplayVariant = displayVariant"
 					>
 						<ui-icon :id="displayVariantToIcon[displayVariant]" />
-						<div :class="classes.displayVariantText">{{ displayVariantToName[displayVariant] }}</div>
+						<ui-text
+							token="text-200-b"
+							as="div"
+						>
+							<ui-clamped :rows="1">{{ displayVariantToName[displayVariant] }}</ui-clamped>
+						</ui-text>
 					</div>
-					<div
+					<ui-text
 						v-if="countMore > 1"
-						:class="[classes.displayVariant, classes.displayVariantText]"
+						:class="classes.displayVariant"
+						token="text-200-b"
+						as="div"
 					>
-						{{countMore}} more...
-					</div>
+						<ui-clamped :rows="1">{{countMore}} more...</ui-clamped>
+					</ui-text>
 				</div>
 
 				<widget-dashboard-controls
@@ -254,13 +266,8 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 }
 
 .titleText {
-	padding: 4px  10px;
-	font-style: normal;
-	font-weight: 450;
-	font-size: 11.8px;
-	line-height: 165%; /* 19.47px */
+	padding: 4px 10px;
 	color: #ffffff;
-	letter-spacing: 0.059px;
 }
 
 .displayVariantContainer {
@@ -282,16 +289,6 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 
 .activeDisplayVariant {
 	color: #ffffff;
-}
-
-.displayVariantText {
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 520;
-	font-size: 11.8px;
-	line-height: 165%; /* 19.47px */
-	letter-spacing: 0.059px;
-	text-overflow: ellipsis;
 }
 
 .controls {

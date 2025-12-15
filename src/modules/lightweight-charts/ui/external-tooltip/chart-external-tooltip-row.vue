@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { type CSSProperties } from 'vue';
 
+import { UiText } from '@/shared/ui/text';
+
 interface IChartExternalTooltipRowProps {
 	color: CSSProperties['background-color'];
 	text: string;
@@ -14,9 +16,9 @@ const props = defineProps<IChartExternalTooltipRowProps>();
 	<div :class="classes.row">
 		<div :class="classes.left">
 			<span :class="classes.dot" :style="{ background: props.color }" />
-			<span :class="classes.symbol">{{ props.text }}</span>
+			<ui-text token="text-200-r">{{ props.text }}</ui-text>
 		</div>
-		<div :class="classes.value">{{ props.value }}</div>
+		<ui-text token="text-200-b">{{ props.value }}</ui-text>
 	</div>
 </template>
 
@@ -40,13 +42,5 @@ const props = defineProps<IChartExternalTooltipRowProps>();
 	height: 10px;
 	border-width: 2px;
 	border-radius: 20px;
-}
-
-.symbol {
-	font-size: 10px;
-}
-
-.value {
-	font-size: 12px;
 }
 </style>

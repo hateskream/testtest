@@ -3,12 +3,9 @@ import draggable from 'vuedraggable';
 import { ref, watch } from 'vue';
 
 import type { ISection, IWidget } from '../model';
-import {
-	DashboardModalContent,
-	DashboardModalTitle,
-	DashboardModalWrapper,
-} from '@/shared/ui/modal';
+import { DashboardModalContent, DashboardModalTitle, DashboardModalWrapper } from '@/shared/ui/modal';
 import { isFeatureEnabled } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 const props = defineProps<{
 	slides: ISection[];
@@ -73,13 +70,13 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 				>
 					<template #item="{ element: section, index }">
 						<div :class="classes.section">
-							<div
+							<ui-text
 								:class="[classes.title, 'section-title']"
+								token="text-200-r"
 								@click.stop="emits('go-to', index)"
 							>
 								{{ section.name }}
-							</div>
-
+							</ui-text>
 							<draggable
 								:model-value="section.widgets"
 								item-key="id"
@@ -92,12 +89,14 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 								@update:model-value="(v: IWidget[]) => updateWidgets(index, v)"
 							>
 								<template #item="{ element: widget }">
-									<div
+									<ui-text
 										:class="classes.widget"
+										as="div"
+										token="text-200-r"
 										@click.stop="emits('scroll-to-widget', section.id, widget.id)"
 									>
-										{{ widget.name }} <span v-if="widget.stateType">— {{widget.stateType}}</span>
-									</div>
+										{{ widget.name }} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
+									</ui-text>
 								</template>
 							</draggable>
 						</div>
@@ -125,12 +124,7 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 
 .title {
 	padding-bottom: 8px;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.122px;
 	cursor: pointer;
 }
 
@@ -165,12 +159,7 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 
 .widget {
 	padding: 0 8px;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.122px;
 	border-radius: var(--radius-radius-s12-24, 9.2px);
 	cursor: pointer;
 }

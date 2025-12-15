@@ -5,6 +5,7 @@ import { computed } from 'vue';
 
 import type { ITableSymbolCell } from '../model';
 import { UniversalTickerIcon } from '@/shared/ui/ticker';
+import { UiText } from '@/shared/ui/text';
 
 interface IProps {
 	data: ITableSymbolCell;
@@ -94,25 +95,30 @@ const tickerIcon = computed(() => {
 			@click="handleClick"
 		>
 			<!-- Show ticker for all types -->
-			<span
+			<ui-text
 				v-if="props.tickerState.isShowTicker && props.data.ticker"
-				:class="classes.tickerFullName"
+				token="text-300-r"
 			>
 				{{ props.data.ticker }}
-			</span>
+			</ui-text>
 
 			<!-- Show Forex pair for Forex -->
-			<span
+			<ui-text
 				v-if="props.data.symbolType === 'Forex'
 					&& props.tickerState.isShowTicker
 					&& props.data.leftTicker
 					&& props.data.rightTicker"
+				token="text-300-r"
 			>
 				{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
-			</span>
+			</ui-text>
 
 			<!-- Show description based on symbol type -->
-			<span v-if="props.tickerState.isShowDescription" :class="classes.description">
+			<ui-text
+				v-if="props.tickerState.isShowDescription"
+				:class="classes.description"
+				token="text-300-r"
+			>
 				<template v-if="props.data.symbolType === 'Index' && props.data.indexName">
 					{{ props.data.indexName }}
 				</template>
@@ -132,7 +138,7 @@ const tickerIcon = computed(() => {
 				>
 					{{ props.data.leftTicker }}/{{ props.data.rightTicker }}
 				</template>
-			</span>
+			</ui-text>
 		</div>
 	</div>
 </template>
@@ -152,8 +158,6 @@ const tickerIcon = computed(() => {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	font-size: 13px;
-	line-height: 1;
 }
 
 .tickerName.clickable {
@@ -165,8 +169,6 @@ const tickerIcon = computed(() => {
 }
 
 .description {
-	font-size: 13px;
-	line-height: 1;
 	color: var(--text-color-base-300);
 }
 

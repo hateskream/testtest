@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ModalItemCheckbox } from '@/modules/widgets/base';
+import { UiText } from '@/shared/ui/text';
 
 interface IModalFilterRowItemProps {
 	uppercaseName?: boolean;
@@ -17,14 +18,14 @@ const modelValue = defineModel<boolean>({ default: false });
 		<div :class="classes.wrapper">
 			<slot name="image" />
 			<div :class="classes.row">
-				<span :class="[classes.name, { [classes.uppercase]: props.uppercaseName }]">
+				<ui-text :class="[classes.name, { [classes.uppercase]: props.uppercaseName }]" token="text-300-r">
 					<slot name="name" />
-				</span>
+				</ui-text>
 				<template v-if="$slots.label">
 					<span>·</span>
-					<span :class="classes.label">
+					<ui-text :class="classes.label" token="text-300-r">
 						<slot name="label" />
-					</span>
+					</ui-text>
 				</template>
 			</div>
 		</div>
@@ -47,9 +48,6 @@ const modelValue = defineModel<boolean>({ default: false });
 }
 
 .name {
-	font-style: normal;
-	font-weight: 300;
-	font-size: 12px;
 	color: var(--text-color-base-500);
 }
 
@@ -58,9 +56,6 @@ const modelValue = defineModel<boolean>({ default: false });
 }
 
 .label {
-	font-style: normal;
-	font-weight: 300;
-	font-size: 12px;
 	color: var(--text-color-base-300);
 	text-transform: capitalize;
 }
