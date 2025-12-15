@@ -365,15 +365,6 @@
 	font-variation-settings: var(--font-title-600-font-variation, normal);
 }
 
-/* paragraph/p03 */
-.paragraph-p03 {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--typography-paragraph-size-p03);
-	line-height: 140%; /* 26.6px */
-	font-family: 'Roboto Flex', sans-serif;
-	letter-spacing: 0.152px;
-}
 
 /* paragraph/p02 */
 .paragraph-p02 {
@@ -441,25 +432,6 @@
 	letter-spacing: 0.08px;
 }
 
-/* header/h05 */
-.header-h05 {
-	font-style: normal;
-	font-weight: 460;
-	font-size: var(--typography-headers-size-h05);
-	line-height: 130%; /* 52px */
-	font-family: 'Roboto Flex', sans-serif;
-}
-
-
-/* header/h04 */
-.header-h04 {
-	font-style: normal;
-	font-weight: 460;
-	font-size: var(--typography-headers-size-h04);
-	line-height: 130%; /* 41.6px */
-	font-family: 'Roboto Flex', sans-serif;
-}
-
 /* header/h03 */
 .header-h03 {
 	font-style: normal;
@@ -498,14 +470,3 @@
 	font-family: 'Roboto Flex', sans-serif;
 	letter-spacing: 0.075px;
 }
-
-/* controls/c00 */
-.controls-c00 {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
-	font-family: 'Roboto Flex', sans-serif;
-	letter-spacing: 0.146px;
-}
-
