@@ -4,13 +4,14 @@ import { computed } from 'vue';
 import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
 import { useGoToTickerPage } from '@/modules/chart';
 import { mockIndexData } from './mock-index-data.ts';
-
-import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
+import type { IMeta } from '@/modules/dashboard-group';
+import { WidgetTypedTable } from '@/modules/widgets/widget-table';
 
 interface IViewComponentProps {
 	rows: TableRow[];
 	columns: ITableColumn[];
 	displayVariant: 'tv' | 'dashboard';
+	meta?: IMeta;
 }
 
 const props = defineProps<IViewComponentProps>();
@@ -23,7 +24,7 @@ const genericColumns = computed(() =>
 
 // Используем готовый объект с перебитыми данными
 const genericRows = computed(() => {
-	return mockIndexData;
+	return mockIndexData.slice(0, props?.meta?.maxCountRowTable? props?.meta?.maxCountRowTable : 100);
 },
 );
 </script>

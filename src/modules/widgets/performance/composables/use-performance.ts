@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
 import {
@@ -50,12 +50,14 @@ interface IOptions {
 	widgetId: string;
 	isEphemeral: boolean;
 	defaultStateType: string;
+	limit?: Ref<number>;
 }
 
 export function usePerformance({
 	widgetId,
 	isEphemeral,
 	defaultStateType,
+	limit = ref(11),
 }: IOptions) {
 	const {
 		useStateQuery,
@@ -167,7 +169,6 @@ export function usePerformance({
 		state.value.settings[state.value.activeMarket].pinned = [...newPinned];
 	});
 
-	const limit = 11;
 	const {
 		data: dataResponse,
 		fetchNextPage,

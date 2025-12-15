@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import type { MaybeRefOrGetter } from 'vue';
+import type { MaybeRefOrGetter, Ref } from 'vue';
 import { computed, onUnmounted, toValue } from 'vue';
 
 import { getPerformance } from '../api';
@@ -15,13 +15,13 @@ export function useQueryPerformance(
 	pined: MaybeRefOrGetter<string[]>,
 	dateRange: MaybeRefOrGetter<DateRange>,
 	stockFilter: MaybeRefOrGetter<Stock | undefined>,
-	limit: number,
+	limit: Ref<number>,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
 	cellUpdater.register(ColumnType.ChangePrice24hPercent, updatedData => {
 		queryClient.setQueryData(
-			['performance', toValue(market), toValue(pined)],
+			['performance', toValue(market), toValue(pined), toValue(limit)],
 			(oldData: QueryData) => updateQueryData(oldData as QueryData, updatedData),
 		);
 	});
@@ -32,7 +32,7 @@ export function useQueryPerformance(
 
 	return useInfiniteQuery({
 		queryKey: computed(() => {
-			return ['performance', toValue(market), toValue(pined), toValue(dateRange)];
+			return ['performance', toValue(market), toValue(pined), toValue(dateRange), toValue(limit)];
 		}),
 		queryFn: ({ pageParam = 0 }) => getPerformance({
 			market: toValue(market),
@@ -40,7 +40,7 @@ export function useQueryPerformance(
 			offset: pageParam,
 			dateRange: toValue(dateRange),
 			...(toValue(market) === MarketType.Stock ? { stockFilter: toValue(stockFilter) } : {}),
-			limit,
+			limit: toValue(limit),
 		}),
 
 		initialPageParam: 0,
@@ -50,7 +50,7 @@ export function useQueryPerformance(
 			}
 
 			const { total, offset } = lastPage.pagination;
-			const nextOffset = offset + limit;
+			const nextOffset = offset + toValue(limit);
 			return nextOffset < total ? nextOffset : undefined;
 		},
 	});

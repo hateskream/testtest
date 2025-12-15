@@ -269,12 +269,13 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'none',
 					height: 308,
-					maxCountRow: 6,
+					maxCountRow: 7,
 					widgetType:  WidgetType.TopIndices,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
+					maxCountRow: 11,
 					height: 496,
 					widgetType:  WidgetType.Performance,
 					defaultDisplayVariant: 'bar',

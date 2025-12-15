@@ -26,7 +26,9 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
-const { data, isLoading, isError, refetch } = useQueryTopIndices(props.meta.maxCountRowTable ?? 50);
+const limit = computed(() => props.meta.maxCountRowTable ?? 50);
+
+const { data, isLoading, isError, refetch } = useQueryTopIndices(limit);
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 
@@ -50,6 +52,7 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 			/>
 			<view-component
 				v-else
+				:meta="props.meta"
 				:rows="rows"
 				:columns="ALL_COLUMNS"
 				display-variant="dashboard"
