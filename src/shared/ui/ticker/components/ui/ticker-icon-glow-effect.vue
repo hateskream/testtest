@@ -2,6 +2,7 @@
 import { computed, toValue } from 'vue';
 
 import { useTickerIconContext } from '../../composables';
+import { shouldBlockImageUrl } from '@/shared/service/images';
 
 const props = defineProps<{
 	iconSrc?: string;
@@ -10,13 +11,19 @@ const props = defineProps<{
 
 const context = useTickerIconContext();
 
-const src = computed(() =>
-	props.iconSrc ?? toValue(context?.iconSrc),
-);
+const src = computed(() => {
+	const url = props.iconSrc ?? toValue(context?.iconSrc);
+	if (url && shouldBlockImageUrl(url)) {
+		return '';
+	}
+
+	return url || '';
+});
 </script>
 
 <template>
 	<div
+		v-if="src"
 		:style="{
 			backgroundImage: `url(${src})`,
 		}"
