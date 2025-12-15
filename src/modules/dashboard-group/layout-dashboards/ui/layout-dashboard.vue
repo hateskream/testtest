@@ -13,7 +13,13 @@ const emits = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-const { sections, tabs, changeActiveDashboard, setWidgetStateType } = useDashboardLayout();
+const {
+	sections,
+	tabs,
+	changeActiveDashboard,
+	setWidgetStateType,
+	changeWidthSection,
+} = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
 
@@ -79,6 +85,7 @@ const {
 				@next="next"
 				@update-section="sections = $event"
 				@set-widget-state-type="setWidgetStateType"
+				@change-width="changeWidthSection"
 			/>
 		</div>
 		<pagination-mobile

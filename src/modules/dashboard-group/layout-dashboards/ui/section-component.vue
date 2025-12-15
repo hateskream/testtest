@@ -6,15 +6,13 @@ import { calcSizeSideGridCell } from '../model/widget';
 import { MAX_COL_WIDTH, MIN_COL_WIDTH } from '../../tv';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
-import { UiText } from '@/shared/ui/text';
+import { useResizable } from '../composables';
+import { isFeatureEnabled } from '@/shared/lib';
 
 import WidgetComponent from './widget-component.vue';
 
 const WIDGET_GAP = 6;
-const WIDGET_GAP_PX = `${WIDGET_GAP}px`;
-
 const HEIGHT_TITLE = 50;
-
 const HEIGHT_ROUNDING_BOTTOM = 25;
 
 interface IPreparedWidget extends IWidget {
@@ -25,6 +23,7 @@ interface ISectionComponentProps {
 	section: ISection;
 	parentHeight: number;
 	isVisible: boolean;
+	hasMarginLeft: boolean;
 }
 
 const props = defineProps<ISectionComponentProps>();
@@ -32,7 +31,18 @@ const props = defineProps<ISectionComponentProps>();
 const emits = defineEmits<{
 	'section-wheel': [ISectionWheelPayload];
 	'set-widget-state-type': [string, string];
+	'change-width': [string, number];
+	'change-height': [string, string, number];
+	'change-max-count-row': [string, string, number];
 }>();
+
+const { size } = useResizable(
+	useTemplateRef('sizer'),
+	useTemplateRef('section'),
+	{
+		isActivated: () => isFeatureEnabled('RESIZE_WIDTH_SECTIONS'),
+	},
+);
 
 const widgetRefs = ref<InstanceType<typeof WidgetComponent>[]>([]);
 
@@ -42,7 +52,10 @@ const scrollRef = useTemplateRef('scroll');
 
 const lastWidget = computed(() => widgetRefs.value[widgetRefs.value.length - 1]);
 
-const cardStyle = computed(() => ({ width: `${props.section.width}px`, maxWidth: `${props.section.width}px` }));
+const cardStyle = computed(() =>({
+	width: `${props.section.width}px`,
+	maxWidth: `${props.section.width}px`,
+}));
 
 const cellSize = computed(() => calcSizeSideGridCell(props.section.width, MIN_COL_WIDTH, MAX_COL_WIDTH));
 
@@ -59,7 +72,7 @@ const isLastWidgetHasInfinityHeight = computed(() =>
 
 const hasPaddingBottom = computed(() => !isOneInSection.value && !isLastWidgetHasInfinityHeight.value );
 
-const height = computed(() => {
+const heightSection = computed(() => {
 	if (isOneInSection.value && isLastWidgetHasInfinityHeight.value) {
 		// TODO: Серьезно обсудить с дизайном скроллинг одного бесконечного виджета
 		return props.parentHeight - HEIGHT_TITLE;
@@ -149,13 +162,19 @@ watch(
 watch(
 	visibleWidgetsWithAccumulation,
 	(newCount, oldCount) => {
-		if (newCount === oldCount || newCount < oldCount) {
+		if (newCount <= oldCount) {
 			return;
 		}
 		prepare(props.section.widgets, newCount);
 	},
 );
 
+watch(
+	size,
+	newWidth => {
+		emits('change-width', props.section.id, newWidth);
+	},
+);
 
 function prepare(newWidgets: IWidget[], visibleWindowSize: number) {
 	preparedWidgets.value = newWidgets.map((w, i) => ({
@@ -242,6 +261,14 @@ function setWidgetStateType(widgetId: string, stateType: string) {
 	emits('set-widget-state-type', widgetId, stateType);
 }
 
+function onChangeWidgetHeight(widgetId: string, height: number) {
+	emits('change-height', props.section.id, widgetId, height);
+}
+
+function onChangeMaxCountRowWidget(widgetId: string, maxCountRow: number) {
+	emits('change-max-count-row', props.section.id, widgetId, maxCountRow);
+}
+
 onMounted(() => {
 	emitScrollInfo();
 });
@@ -252,60 +279,90 @@ defineExpose({
 </script>
 
 <template>
-	<section
-		:class="classes.section"
-		:style="cardStyle"
+	<div
+		:class="classes.root"
+		:style="{
+			...props.hasMarginLeft ? { 'margin-left': '10px' } : {},
+			...{ 'margin-right': '10px' }
+		}"
 	>
-		<ui-skeleton
-			v-if="!props.isVisible"
-			border-radius="24px"
-			width="100%"
-			height="100%"
-		/>
-		<div v-else :class="classes.scroll">
-			<div
-				ref="scroll"
-				:class="classes.widgetsContainer"
-				:style="{
-					'padding-bottom': hasPaddingBottom ? '25px' : 0
-				}"
-				@wheel.capture="onWheel"
-			>
-				<ui-text
-					:class="classes.sectionTitle"
-					token="title-200"
-					as="h2"
+		<section
+			ref="section"
+			:class="classes.section"
+			:style="cardStyle"
+		>
+			<ui-skeleton
+				v-if="!props.isVisible"
+				border-radius="24px"
+				width="100%"
+				height="100%"
+			/>
+			<div v-else :class="classes.scroll">
+				<div
+					ref="scroll"
+					:class="classes.widgetsContainer"
+					:style="{
+						'padding-bottom': hasPaddingBottom ? '25px' : 0
+					}"
+					@wheel.capture="onWheel"
 				>
-					{{ props.section.name }}
-				</ui-text>
+					<h2 :class="classes.sectionTitle">
+						{{ props.section.name }}
+					</h2>
 
-				<div :class="classes.widgets">
-					<widget-component
-						v-for="widget in preparedWidgets"
-						:key="widget.id"
-						ref="widgetRefs"
-						:widget="widget"
-						:col-count="cellSize.count"
-						:column-width="cellSize.size"
-						:parent-height="height"
-						:active-display-variant="widget.displayVariant"
-						:all-display-variants="widget.displayVariants"
-						:is-visible="widget.isVisible"
-						@set-widget-state-type="setWidgetStateType"
-					/>
+					<div :class="classes.widgets">
+						<widget-component
+							v-for="widget in preparedWidgets"
+							:key="widget.id"
+							ref="widgetRefs"
+							:widget="widget"
+							:col-count="cellSize.count"
+							:column-width="cellSize.size"
+							:parent-height="heightSection"
+							:active-display-variant="widget.displayVariant"
+							:all-display-variants="widget.displayVariants"
+							:is-visible="widget.isVisible"
+							@set-widget-state-type="setWidgetStateType"
+							@change-height="onChangeWidgetHeight"
+							@change-max-count-row="onChangeMaxCountRowWidget"
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	</div>
+	<div
+		ref="sizer"
+		:class="classes.sizer"
+	/>
 </template>
 
 <style module="classes">
+.root {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	align-items: center;
+}
+
 .section {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
 	overflow: auto;
 	color: #ffffff;
+	will-change: width;
+	contain: layout size style;
+}
+
+.sizer {
+	width: 4px;
+	height: 32px;
+	margin: auto;
+	background: #d9d9d9;
+	border-radius: 4px;
+	cursor: grab;
+	opacity: 0.3;
 }
 
 .sectionTitle {
@@ -347,7 +404,6 @@ defineExpose({
 	display: flex;
 	flex-direction: column;
 	border-radius: 24px;
-	gap: v-bind(WIDGET_GAP_PX);
 	/* stylelint-disable-next-line color-named */
 	mask-image:
 		radial-gradient(circle 24px at top left, transparent 0, black 0),

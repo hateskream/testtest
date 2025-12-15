@@ -25,6 +25,7 @@ const props = defineProps<ISectionSliderProps>();
 const emits = defineEmits<{
 	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'updateSection', newSection: ISection[]): void;
+	(e: 'change-width', sectionId: string, width: number): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
@@ -69,7 +70,7 @@ watch(
 watch(
 	() => props.visibleSlidesCount,
 	(newCount, oldCount) => {
-		if (newCount === oldCount || newCount < oldCount) {
+		if (newCount <= oldCount) {
 			return;
 		}
 
@@ -88,6 +89,10 @@ function setWidgetStateType(widgetId: string, stateType: string) {
 	emits('set-widget-state-type', widgetId, stateType);
 }
 
+function onChangeWidthSection(sectionId: string, width: number) {
+	emits('change-width', sectionId, width);
+}
+
 defineExpose({ trackRef });
 </script>
 
@@ -98,28 +103,20 @@ defineExpose({ trackRef });
 			:class="classes.viewport"
 		>
 			<div
-
 				:class="classes.track"
 			>
-				<template v-for="(s, i) in preparedSlides" :key="s.id">
-					<div
-						:class="classes.section"
-						:style="{
-							...i !== 0 ? { 'margin-left': '10px' } : {},
-							...{ 'margin-right': '10px' }
-						}"
-					>
-						<section-component
-							ref="sectionElement"
-							:section="s"
-							:parent-height="height"
-							:is-visible="s.isVisible"
-							@section-wheel="onSectionWheel"
-							@set-widget-state-type="setWidgetStateType"
-						/>
-					</div>
-					<div :class="classes.sizer" />
-				</template>
+				<section-component
+					v-for="(s, i) in preparedSlides"
+					:key="s.id"
+					ref="sectionElement"
+					:section="s"
+					:has-margin-left="i !== 0"
+					:parent-height="height"
+					:is-visible="s.isVisible"
+					@section-wheel="onSectionWheel"
+					@set-widget-state-type="setWidgetStateType"
+					@change-width="onChangeWidthSection"
+				/>
 			</div>
 		</div>
 		<div :class="classes.maskContainer">
@@ -324,16 +321,6 @@ defineExpose({ trackRef });
 	background: rgb(73 73 80 / 32%);
 	border-radius: 8px;
 	backdrop-filter: blur(4px);
-}
-
-.sizer {
-	width: 3px;
-	height: 32px;
-	margin: auto;
-	background: #d9d9d9;
-	border-radius: 4px;
-	cursor: grab;
-	opacity: 0.3;
 }
 
 @media (max-width: 768px) {

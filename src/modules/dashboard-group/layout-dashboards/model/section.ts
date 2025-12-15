@@ -40,3 +40,7 @@ export function createSectionFromPreset({ widgets, name, width }: ISectionPreset
 			.filter(w => w !== null),
 	};
 }
+
+export function changeWidth(section: ISection, width: number) {
+	return section.width !== width ? { ...section, width } : section;
+}

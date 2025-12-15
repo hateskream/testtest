@@ -8,8 +8,10 @@ import {
 	type ISection,
 	rehydrateWidget,
 	changeActiveDashboard as changeActiveDashboardModel,
+	changeWidth,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
+import { updateById } from '@/shared/lib';
 
 const WidgetPresetSchema = z.object({
 	widgetType: z.string(),
@@ -103,25 +105,16 @@ export function useDashboardLayout() {
 			);
 		},
 		set(newSections) {
-			const { dashboards } = state.value;
-
-			const index = dashboards.findIndex(
-				d => d.id === activeDashboardId.value,
-			);
-
-			if (index === -1) {
-				return;
-			}
-
-			const updatedDashboards = dashboards.map((d, i) =>
-				i === index
-					? { ...d, sections: newSections }
-					: d,
-			);
-
 			state.value = {
 				...state.value,
-				dashboards: updatedDashboards,
+				dashboards: updateById(
+					state.value.dashboards,
+					activeDashboardId.value,
+					(d) => ({
+						...d,
+						sections: newSections,
+					}),
+				),
 			};
 		},
 	});
@@ -145,6 +138,14 @@ export function useDashboardLayout() {
 		state.value = changeActiveDashboardModel(state.value, id);
 	}
 
+	function changeWidthSection(sectionId: string, width: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => changeWidth(s, width),
+		);
+	}
+
 	function setWidgetStateType(
 		widgetId: string,
 		stateType: string,
@@ -163,6 +164,7 @@ export function useDashboardLayout() {
 		sections,
 		changeActiveDashboard,
 		setWidgetStateType,
+		changeWidthSection,
 	};
 }
 

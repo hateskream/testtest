@@ -1,0 +1,121 @@
+import { ref, onBeforeUnmount, type Ref, onMounted, readonly } from 'vue';
+
+type ResizeAxis = 'horizontal' | 'vertical';
+
+interface IUseResizableOptions {
+	axis?: ResizeAxis;
+	minWidth?: number;
+	maxWidth?: number;
+	minHeight?: number;
+	maxHeight?: number;
+}
+
+export function useResizable(
+	handleRef: Ref<HTMLElement | null>,
+	resizeTargetRef: Ref<HTMLElement | null>,
+	options: IUseResizableOptions = {},
+) {
+	const {
+		axis = 'horizontal',
+		minWidth = 0,
+		maxWidth = Infinity,
+		minHeight = 0,
+		maxHeight = Infinity,
+	} = options;
+
+	const isResizing = ref(false);
+	const size = ref(0);
+
+	let startX = 0;
+	let startY = 0;
+	let startSize = 0;
+
+	let rafId: number | null = null;
+
+	const onPointerMove = (e: PointerEvent) => {
+		if (!isResizing.value) {
+			return;
+		}
+
+		const dx = e.clientX - startX;
+		const dy = e.clientY - startY;
+
+		if (rafId) {
+			cancelAnimationFrame(rafId);
+		}
+
+		rafId = requestAnimationFrame(() => {
+			let newSize = startSize;
+			if (axis === 'horizontal') {
+				newSize = Math.min(Math.max(startSize + dx, minWidth), maxWidth);
+			} else if (axis === 'vertical') {
+				newSize = Math.min(Math.max(startSize + dy, minHeight), maxHeight);
+			}
+
+			size.value = newSize;
+			rafId = null;
+		});
+	};
+
+	const onPointerUp = (e: PointerEvent) => {
+		isResizing.value = false;
+
+		const handle = handleRef.value;
+		if (handle && handle.hasPointerCapture(e.pointerId)) {
+			handle.releasePointerCapture(e.pointerId);
+		}
+
+		document.removeEventListener('pointermove', onPointerMove);
+		document.removeEventListener('pointerup', onPointerUp);
+		document.removeEventListener('pointercancel', onPointerUp);
+	};
+
+	const startResize = (e: PointerEvent) => {
+		const handle = handleRef.value;
+		const target = resizeTargetRef.value;
+
+		if (!handle || !target) {
+			return;
+		}
+
+		e.stopPropagation();
+		handle.setPointerCapture(e.pointerId);
+
+		isResizing.value = true;
+
+		startX = e.clientX;
+		startY = e.clientY;
+
+		startSize =
+      axis === 'horizontal' ? target.offsetWidth : target.offsetHeight;
+
+		size.value = startSize;
+
+		document.addEventListener('pointermove', onPointerMove, { passive: true });
+		document.addEventListener('pointerup', onPointerUp);
+		document.addEventListener('pointercancel', onPointerUp);
+	};
+
+	onMounted(() => {
+		const handle = handleRef.value;
+		if (handle) {
+			handle.addEventListener('pointerdown', startResize);
+		}
+	});
+
+	onBeforeUnmount(() => {
+		const handle = handleRef.value;
+		if (handle) {
+			handle.removeEventListener('pointerdown', startResize);
+
+			document.removeEventListener('pointermove', onPointerMove);
+			document.removeEventListener('pointerup', onPointerUp);
+			document.removeEventListener('pointercancel', onPointerUp);
+		}
+	});
+
+	return {
+		isResizing: readonly(isResizing),
+		size: readonly(size),
+	};
+}
