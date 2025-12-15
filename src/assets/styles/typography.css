@@ -1,24 +1,158 @@
 :root {
 	/* 2.3.1 */
+
+	/* title */
 	--font-title-600-size: clamp(34px, 2.3vw + 30px, 40px);
 	--font-title-500-size: clamp(29px, 2vw + 26px, 33.8px);
 	--font-title-400-size: clamp(22.8px, 1.6vw + 20px, 26.6px);
 	--font-title-300-size: clamp(18.5px, 1.3vw + 17px, 21px);
 	--font-title-200-size: clamp(15.5px, 1vw + 15px, 16.8px);
 	--font-title-100-size: clamp(12.8px, 0.9vw + 12px, 13.5px);
+
+	/* text */
 	--font-text-500-r-size: 14.8px;
 	--font-text-400-r-size: 14.3px;
 	--font-text-300-r-size: 13.3px;
 	--font-text-200-r-size: 12.2px;
 	--font-text-100-r-size: 11px;
 	--font-text-50-r-size: 9px;
+	--font-text-50-r-up-size: 8.5px;
 	--font-text-500-b-size: var(--font-text-500-r-size);
 	--font-text-400-b-size: var(--font-text-400-r-size);
 	--font-text-300-b-size: var(--font-text-300-r-size);
 	--font-text-200-b-size: var(--font-text-200-r-size);
 	--font-text-100-b-size: var(--font-text-100-r-size);
 
+	/* font-weight */
+
+	/* title */
+	--font-title-600-weight: 480;
+	--font-title-500-weight: 440;
+	--font-title-400-weight: 400;
+	--font-title-300-weight: 440;
+	--font-title-200-weight: 440;
+	--font-title-100-weight: 440;
+
+	/* text */
+	--font-text-500-r-weight: 400;
+	--font-text-400-r-weight: 400;
+	--font-text-300-r-weight: 400;
+	--font-text-200-r-weight: 400;
+	--font-text-100-r-up-weight: 450;
+	--font-text-100-r-weight: 400;
+	--font-text-50-r-weight: 520;
+	--font-text-500-b-weight: 540;
+	--font-text-400-b-weight: 540;
+	--font-text-300-b-weight: 540;
+	--font-text-200-b-weight: 510;
+	--font-text-100-b-weight: 540;
+
+	/* line-height */
+
+	/* title */
+	--font-title-600-line-height: 125%;
+	--font-title-500-line-height: 125%;
+	--font-title-400-line-height: 135%;
+	--font-title-300-line-height: 150%;
+	--font-title-200-line-height: 160%;
+	--font-title-100-line-height: 170%;
+
+	/* text */
+	--font-text-500-r-line-height: 190%;
+	--font-text-400-r-line-height: 185%;
+	--font-text-300-r-line-height: 180%;
+	--font-text-200-r-line-height: 180%;
+	--font-text-100-r-line-height: 180%;
+	--font-text-50-r-line-height: 180%;
+	--font-text-500-b-line-height: 190%;
+	--font-text-400-b-line-height: 185%;
+	--font-text-300-b-line-height: 180%;
+	--font-text-200-b-line-height: 180%;
+	--font-text-100-b-line-height: 180%;
+
+	/* letter-spacing */
+
+	/* title */
+	--font-title-600-letter-spacing: 0;
+	--font-title-500-letter-spacing: 0;
+	--font-title-400-letter-spacing: calc(var(--font-title-400-size) / 100 * 0.4);
+	--font-title-300-letter-spacing: calc(var(--font-title-300-size) / 100 * 0.8);
+	--font-title-200-letter-spacing: calc(var(--font-title-200-size) / 100 * 0.8);
+	--font-title-100-letter-spacing: calc(var(--font-title-100-size) / 100 * 0.8);
+
+	/* text */
+	--font-text-500-r-letter-spacing: calc(var(--font-text-500-r-size) / 100 * 0.8);
+	--font-text-400-r-letter-spacing: calc(var(--font-text-400-r-size) / 100 * 0.8);
+	--font-text-300-r-letter-spacing: calc(var(--font-text-300-r-size) / 100 * 1.1);
+	--font-text-200-r-letter-spacing: calc(var(--font-text-200-r-size) / 100 * 1);
+	--font-text-100-r-letter-spacing: calc(var(--font-text-400-r-size) / 100 * 0.8);
+	--font-text-50-r-up-letter-spacing: calc(var(--font-text-400-r-size) / 100 * 0.6);
+	--font-text-50-r-letter-spacing: calc(var(--font-text-400-r-size) / 100 * 0.6);
+	--font-text-500-b-letter-spacing: calc(var(--font-text-400-b-size) / 100 * 0.8);
+	--font-text-400-b-letter-spacing: calc(var(--font-text-400-b-size) / 100 * 0.8);
+	--font-text-300-b-letter-spacing: calc(var(--font-text-400-b-size) / 100 * 0.6);
+	--font-text-200-b-letter-spacing: calc(var(--font-text-400-b-size) / 100 * 1);
+	--font-text-100-b-letter-spacing: calc(var(--font-text-400-b-size) / 100 * 0.8);
+
+	/* font-variation */
+
+	/* title */
+	--font-title-600-font-variation:
+		'GRAD' -41,
+		'XOPQ' 124,
+		'XTRA' 468,
+		'YOPQ' 79,
+		'YTAS' 750,
+		'YTDE' -203,
+		'YTFI' 738,
+		'YTLC' 514,
+		'YTUC' 712,
+		'Slant' 0,
+		'Width' 127;
+	--font-title-500-font-variation: var(--font-title-600-font-variation);
+	--font-title-400-font-variation: var(--font-title-600-font-variation);
+	--font-title-300-font-variation: var(--font-title-600-font-variation);
+	--font-title-200-font-variation: var(--font-title-600-font-variation);
+	--font-title-100-font-variation: var(--font-title-600-font-variation);
+
+	/* text */
+	--font-text-500-r-font-variation:
+		'GRAD' 0,
+		'XOPQ' 96,
+		'XTRA' 468,
+		'YOPQ' 79,
+		'YTAS' 750,
+		'YTDE' -203,
+		'YTFI' 738,
+		'YTLC' 514,
+		'YTUC' 712,
+		'Slant' 0,
+		'Width' 132;
+	--font-text-400-r-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-300-r-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-200-r-font-variation:
+		'GRAD' 0,
+		'XOPQ' 96,
+		'XTRA' 468,
+		'YOPQ' 79,
+		'YTAS' 750,
+		'YTDE' -203,
+		'YTFI' 738,
+		'YTLC' 514,
+		'YTUC' 712,
+		'Slant' 0,
+		'Width' 115;
+	--font-text-100-r-font-variation: var(--font-text-200-r-font-variation);
+	--font-text-50-r-font-variation: var(--font-text-200-r-font-variation);
+	--font-text-500-b-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-400-b-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-300-b-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-200-b-font-variation: var(--font-text-500-r-font-variation);
+	--font-text-100-b-font-variation: var(--font-text-500-r-font-variation);
+
+
 	/* 2.3.0 */
+
 	--typography-headers-size-h05: var(--font-title-600-size, 40px);
 	--typography-headers-size-h04: var(--font-title-500-size, 33.8px);
 	--typography-headers-size-h03: var(--font-title-500-size, 33.8px);
@@ -49,6 +183,7 @@
 		--font-text-200-r-size: 11.8px;
 		--font-text-100-r-size: 11px;
 		--font-text-50-r-size: 9px;
+		--font-text-50-r-up-size: 8.5px;
 	}
 }
 
@@ -61,7 +196,173 @@
 		--font-text-200-r-size: 12.2px;
 		--font-text-100-r-size: 11px;
 		--font-text-50-r-size: 9px;
+		--font-text-50-r-up-size: 8.2px;
 	}
+}
+
+.text-50-r,
+.text-50-r-up {
+	font-weight: var(--font-text-50-r-weight);
+	font-size: var(--font-text-50-r-size);
+	line-height: var(--font-text-50-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-50-r-letter-spacing);
+	font-variation-settings: var(--font-text-50-r-font-variation, normal);
+}
+
+.text-50-r-up {
+	font-size: var(--font-text-50-r-up-size);
+	text-transform: uppercase;
+}
+
+.text-100-r,
+.text-100-r-up {
+	font-weight: var(--font-text-100-r-weight);
+	font-size: var(--font-text-100-r-size);
+	line-height: var(--font-text-100-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-100-r-letter-spacing);
+	font-variation-settings: var(--font-text-100-r-font-variation, normal);
+}
+
+.text-100-r-up {
+	font-weight: var(--font-text-100-r-up-weight);
+	text-transform: uppercase;
+}
+
+.text-100-b {
+	font-weight: var(--font-text-100-b-weight);
+	font-size: var(--font-text-100-b-size);
+	line-height: var(--font-text-100-b-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-100-b-letter-spacing);
+	font-variation-settings: var(--font-text-100-b-font-variation, normal);
+}
+
+.text-200-r {
+	font-weight: var(--font-text-200-r-weight);
+	font-size: var(--font-text-200-r-size);
+	line-height: var(--font-text-200-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-200-r-letter-spacing);
+	font-variation-settings: var(--font-text-200-r-font-variation, normal);
+}
+
+.text-200-b {
+	font-weight: var(--font-text-200-b-weight);
+	font-size: var(--font-text-200-b-size);
+	line-height: var(--font-text-200-b-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-200-b-letter-spacing);
+	font-variation-settings: var(--font-text-200-b-font-variation, normal);
+}
+
+.text-300-r {
+	font-weight: var(--font-text-300-r-weight);
+	font-size: var(--font-text-300-r-size);
+	line-height: var(--font-text-300-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-300-r-letter-spacing);
+	font-variation-settings: var(--font-text-300-r-font-variation, normal);
+}
+
+.text-300-b {
+	font-weight: var(--font-text-300-b-weight);
+	font-size: var(--font-text-300-b-size);
+	line-height: var(--font-text-300-b-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-300-b-letter-spacing);
+	font-variation-settings: var(--font-text-300-b-font-variation, normal);
+}
+
+.text-400-r {
+	font-weight: var(--font-text-400-r-weight);
+	font-size: var(--font-text-400-r-size);
+	line-height: var(--font-text-400-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-400-r-letter-spacing);
+	font-variation-settings: var(--font-text-400-r-font-variation, normal);
+}
+
+.text-400-b {
+	font-weight: var(--font-text-400-b-weight);
+	font-size: var(--font-text-400-b-size);
+	line-height: var(--font-text-400-b-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-400-b-letter-spacing);
+	font-variation-settings: var(--font-text-400-b-font-variation, normal);
+}
+
+.text-500-r {
+	font-weight: var(--font-text-500-r-weight);
+	font-size: var(--font-text-500-r-size);
+	line-height: var(--font-text-500-r-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-500-r-letter-spacing);
+	font-variation-settings: var(--font-text-500-r-font-variation, normal);
+}
+
+.text-500-b {
+	font-weight: var(--font-text-500-b-weight);
+	font-size: var(--font-text-500-b-size);
+	line-height: var(--font-text-500-b-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-text-500-b-letter-spacing);
+	font-variation-settings: var(--font-text-500-b-font-variation, normal);
+}
+
+.title-100 {
+	font-weight: var(--font-title-100-weight);
+	font-size: var(--font-title-100-size);
+	line-height: var(--font-title-100-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-100-letter-spacing);
+	font-variation-settings: var(--font-title-100-font-variation, normal);
+}
+
+.title-200 {
+	font-weight: var(--font-title-200-weight);
+	font-size: var(--font-title-200-size);
+	line-height: var(--font-title-200-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-200-letter-spacing);
+	font-variation-settings: var(--font-title-200-font-variation, normal);
+}
+
+.title-300 {
+	font-weight: var(--font-title-300-weight);
+	font-size: var(--font-title-300-size);
+	line-height: var(--font-title-300-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-300-letter-spacing);
+	font-variation-settings: var(--font-title-300-font-variation, normal);
+}
+
+.title-400 {
+	font-weight: var(--font-title-400-weight);
+	font-size: var(--font-title-400-size);
+	line-height: var(--font-title-400-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-400-letter-spacing);
+	font-variation-settings: var(--font-title-400-font-variation, normal);
+}
+
+.title-500 {
+	font-weight: var(--font-title-500-weight);
+	font-size: var(--font-title-500-size);
+	line-height: var(--font-title-500-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-500-letter-spacing);
+	font-variation-settings: var(--font-title-500-font-variation, normal);
+}
+
+.title-600 {
+	font-weight: var(--font-title-600-weight);
+	font-size: var(--font-title-600-size);
+	line-height: var(--font-title-600-line-height);
+	font-family: 'Roboto Flex', sans-serif;
+	letter-spacing: var(--font-title-600-letter-spacing);
+	font-variation-settings: var(--font-title-600-font-variation, normal);
 }
 
 /* paragraph/p03 */
