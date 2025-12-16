@@ -82,10 +82,12 @@ build:
 # Дополнительные сборки для main
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+      	rm -rf dist
         mv dist-stage dist
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
-        rm -rf dist/*
+
+        rm -rf dist
         mv dist-prod dist
         docker build -t $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID .
         docker push $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID
