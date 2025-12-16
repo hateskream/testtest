@@ -8,6 +8,8 @@ export interface IWidgetPreset {
 	widgetType: WidgetType;
 	displayVariants: DisplayVariant[];
 	name: string;
+	snapStep?: number;
+	hasFilters?: boolean;
 }
 
 type Preset = Omit<IWidgetPreset, 'widgetType'>;
@@ -40,6 +42,8 @@ const BitcoinDominance: Preset = {
 const Price: Preset = {
 	name: 'Price list',
 	displayVariants: ['list'],
+	snapStep: 68.85,
+	hasFilters: true,
 };
 
 const News: Preset = {
@@ -203,6 +207,26 @@ export function createWidget(
 		defaultStateType,
 		displayVariant,
 		maxCountRow,
+	};
+}
+
+export function changeMaxCountRow(
+	widget: IWidget,
+	maxCountRow: number,
+): IWidget {
+	return {
+		...widget,
+		maxCountRow,
+	};
+}
+
+export function changeHeight(
+	widget: IWidget,
+	height: number,
+): IWidget {
+	return {
+		...widget,
+		height,
 	};
 }
 

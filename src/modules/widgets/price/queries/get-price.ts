@@ -12,7 +12,7 @@ import type { MarketType } from '@/modules/market';
 export function useQueryPrice(
 	market: MaybeRefOrGetter<MarketType>,
 	filters: MaybeRefOrGetter<FiltersState>,
-	limit: number,
+	limit: MaybeRefOrGetter<number>,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
@@ -35,7 +35,7 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', toValue(market), limit, toValue(filters)]),
+		queryKey: computed(() => ['price', toValue(market), toValue(limit), toValue(filters)]),
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),
@@ -50,7 +50,7 @@ export function useQueryPrice(
 			}
 
 			const { total, offset } = lastPage.pagination;
-			const nextOffset = offset + limit;
+			const nextOffset = offset + toValue(limit);
 			return nextOffset < total ? nextOffset : undefined;
 		},
 	});

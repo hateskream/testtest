@@ -9,6 +9,8 @@ import {
 	rehydrateWidget,
 	changeActiveDashboard as changeActiveDashboardModel,
 	changeWidth,
+	changeHeight,
+	changeMaxCountRow,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { updateById } from '@/shared/lib';
@@ -146,6 +148,36 @@ export function useDashboardLayout() {
 		);
 	}
 
+	function changeHeighWidget(sectionId: string, widgetId: string, height: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => ({
+				...s,
+				widgets: updateById(
+					s.widgets,
+					widgetId,
+					(w) => changeHeight(w, height),
+				),
+			}),
+		);
+	}
+
+	function changeMaxCountRowWidget(sectionId: string, widgetId: string, height: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => ({
+				...s,
+				widgets: updateById(
+					s.widgets,
+					widgetId,
+					(w) => changeMaxCountRow(w, height),
+				),
+			}),
+		);
+	}
+
 	function setWidgetStateType(
 		widgetId: string,
 		stateType: string,
@@ -165,6 +197,8 @@ export function useDashboardLayout() {
 		changeActiveDashboard,
 		setWidgetStateType,
 		changeWidthSection,
+		changeHeighWidget,
+		changeMaxCountRowWidget,
 	};
 }
 

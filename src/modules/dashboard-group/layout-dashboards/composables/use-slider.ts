@@ -15,7 +15,7 @@ import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
 
 
 const LEFT_OFFSET = 20;
-const RIGHT_OFFSET = 10 + 10 + 3;
+const RIGHT_OFFSET = 10 + 10 + 4;
 const BORDER_WIDTH = 2;
 const SIDEBAR_WIDTH = 52;
 

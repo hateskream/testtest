@@ -26,6 +26,8 @@ const emits = defineEmits<{
 	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'updateSection', newSection: ISection[]): void;
 	(e: 'change-width', sectionId: string, width: number): void;
+	(e: 'change-height', sectionId: string, widgetId: string, height: number): void;
+	(e: 'change-max-count-row', sectionId: string, widgetId: string, maxCountRow: number): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
@@ -33,7 +35,7 @@ const emits = defineEmits<{
 
 const trackRef = useTemplateRef<HTMLDivElement>('track');
 
-const { height } = useElementSize(trackRef);
+const { height: trackHeight } = useElementSize(trackRef);
 
 const sectionRefs = useTemplateRef<InstanceType<typeof SectionComponent>[]>('sectionElement');
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
@@ -93,6 +95,14 @@ function onChangeWidthSection(sectionId: string, width: number) {
 	emits('change-width', sectionId, width);
 }
 
+function onChangeHeight(sectionId: string, widgetId: string, height: number) {
+	emits('change-height', sectionId, widgetId, height);
+}
+
+function onChangeMaxCountRow(sectionId: string, widgetId: string, maxCountRow: number) {
+	emits('change-max-count-row', sectionId, widgetId, maxCountRow);
+}
+
 defineExpose({ trackRef });
 </script>
 
@@ -111,11 +121,13 @@ defineExpose({ trackRef });
 					ref="sectionElement"
 					:section="s"
 					:has-margin-left="i !== 0"
-					:parent-height="height"
+					:parent-height="trackHeight"
 					:is-visible="s.isVisible"
 					@section-wheel="onSectionWheel"
 					@set-widget-state-type="setWidgetStateType"
 					@change-width="onChangeWidthSection"
+					@change-height="onChangeHeight"
+					@change-max-count-row="onChangeMaxCountRow"
 				/>
 			</div>
 		</div>

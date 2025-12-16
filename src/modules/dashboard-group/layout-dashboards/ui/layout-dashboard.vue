@@ -19,6 +19,8 @@ const {
 	changeActiveDashboard,
 	setWidgetStateType,
 	changeWidthSection,
+	changeHeighWidget,
+	changeMaxCountRowWidget,
 } = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
@@ -86,6 +88,8 @@ const {
 				@update-section="sections = $event"
 				@set-widget-state-type="setWidgetStateType"
 				@change-width="changeWidthSection"
+				@change-height="changeHeighWidget"
+				@change-max-count-row="changeMaxCountRowWidget"
 			/>
 		</div>
 		<pagination-mobile

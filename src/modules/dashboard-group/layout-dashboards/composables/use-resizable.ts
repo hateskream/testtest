@@ -8,6 +8,7 @@ interface IUseResizableOptions {
 	maxWidth?: number;
 	minHeight?: number;
 	maxHeight?: number;
+	cbOnPointerUp?: () => void;
 }
 
 export function useResizable(
@@ -21,14 +22,15 @@ export function useResizable(
 		maxWidth = Infinity,
 		minHeight = 0,
 		maxHeight = Infinity,
+		cbOnPointerUp,
 	} = options;
 
 	const isResizing = ref(false);
 	const size = ref(0);
+	const startSize = ref(0);
 
 	let startX = 0;
 	let startY = 0;
-	let startSize = 0;
 
 	let rafId: number | null = null;
 
@@ -45,11 +47,11 @@ export function useResizable(
 		}
 
 		rafId = requestAnimationFrame(() => {
-			let newSize = startSize;
+			let newSize = startSize.value;
 			if (axis === 'horizontal') {
-				newSize = Math.min(Math.max(startSize + dx, minWidth), maxWidth);
+				newSize = Math.min(Math.max(startSize.value + dx, minWidth), maxWidth);
 			} else if (axis === 'vertical') {
-				newSize = Math.min(Math.max(startSize + dy, minHeight), maxHeight);
+				newSize = Math.min(Math.max(startSize.value + dy, minHeight), maxHeight);
 			}
 
 			size.value = newSize;
@@ -68,6 +70,8 @@ export function useResizable(
 		document.removeEventListener('pointermove', onPointerMove);
 		document.removeEventListener('pointerup', onPointerUp);
 		document.removeEventListener('pointercancel', onPointerUp);
+
+		cbOnPointerUp?.();
 	};
 
 	const startResize = (e: PointerEvent) => {
@@ -83,17 +87,17 @@ export function useResizable(
 
 		isResizing.value = true;
 
-		startX = e.clientX;
-		startY = e.clientY;
-
-		startSize =
-      axis === 'horizontal' ? target.offsetWidth : target.offsetHeight;
-
-		size.value = startSize;
-
 		document.addEventListener('pointermove', onPointerMove, { passive: true });
 		document.addEventListener('pointerup', onPointerUp);
 		document.addEventListener('pointercancel', onPointerUp);
+
+		startX = e.clientX;
+		startY = e.clientY;
+
+		startSize.value =
+      axis === 'horizontal' ? target.offsetWidth : target.offsetHeight;
+
+		size.value = startSize.value;
 	};
 
 	onMounted(() => {
