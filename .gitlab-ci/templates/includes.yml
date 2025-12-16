@@ -29,12 +29,12 @@ app_build:
     - NEW_VERSION="$MAJOR_MINOR.$CI_PIPELINE_IID"
     - npm version $NEW_VERSION --no-git-tag-version
     - |
-      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
         cp .gitlab-ci/envs/front_config/.env.dev .env || true
         DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
       fi
     - |
-      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         # Сборка для stage
         cp .gitlab-ci/envs/front_config/.env.stage .env || true
         DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
@@ -75,13 +75,13 @@ build:
     - export IMAGE_TAG="$CI_COMMIT_SANITIZED-$CI_PIPELINE_IID"
 # Сборка для всех веток (кроме main) с .env.dev
     - |
-      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
       fi
 # Дополнительные сборки для main
     - |
-      if [ "$CI_COMMIT_BRANCH" != "main" ]; then
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         mv dist-stage dist
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
