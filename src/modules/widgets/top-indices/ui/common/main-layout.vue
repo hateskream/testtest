@@ -23,21 +23,21 @@ const genericColumns = computed(() =>
 );
 
 const genericRows = computed(() => {
-	const source = mockIndexData
-	const limit = props?.meta?.maxCountRowTable ?? 100
+	const source = mockIndexData;
+	const limit = props?.meta?.maxCountRowTable ?? 100;
 
 	if (!Array.isArray(source) || source.length === 0) {
-		return []
+		return [];
 	}
 
-	const result = []
+	const result = [];
 
 	for (let i = 0; i < limit; i++) {
-		result.push(source[i % source.length])
+		result.push(source[i % source.length]);
 	}
 
-	return result
-})
+	return result;
+});
 </script>
 
 <template>
