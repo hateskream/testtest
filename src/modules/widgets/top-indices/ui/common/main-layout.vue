@@ -22,11 +22,22 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-// Используем готовый объект с перебитыми данными
 const genericRows = computed(() => {
-	return mockIndexData.slice(0, props?.meta?.maxCountRowTable? props?.meta?.maxCountRowTable : 100);
-},
-);
+	const source = mockIndexData
+	const limit = props?.meta?.maxCountRowTable ?? 100
+
+	if (!Array.isArray(source) || source.length === 0) {
+		return []
+	}
+
+	const result = []
+
+	for (let i = 0; i < limit; i++) {
+		result.push(source[i % source.length])
+	}
+
+	return result
+})
 </script>
 
 <template>
