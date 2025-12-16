@@ -152,7 +152,7 @@ onMounted(() => {
 
 <style module="classes">
 .root {
-	min-width: 250px;
+	width: 285px;
 	scrollbar-width: none;
 }
 
