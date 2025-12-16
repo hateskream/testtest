@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
 
@@ -10,6 +11,8 @@ export interface IWidgetPreset {
 	name: string;
 	snapStep?: number;
 	hasFilters?: boolean;
+	minHeight?: number;
+	maxHeight?: number;
 }
 
 type Preset = Omit<IWidgetPreset, 'widgetType'>;
@@ -17,6 +20,7 @@ type Preset = Omit<IWidgetPreset, 'widgetType'>;
 const ChartPrice: Preset = {
 	name: 'Price',
 	displayVariants: ['chart', 'tile'],
+	minHeight: 400,
 };
 
 const TopIndices: Preset = {
@@ -32,6 +36,8 @@ const Performance: Preset = {
 const MarketCap: Preset = {
 	name: 'Market cap',
 	displayVariants: ['chart', 'tile'],
+	minHeight: 206,
+	maxHeight: 406,
 };
 
 const BitcoinDominance: Preset = {
@@ -99,6 +105,8 @@ const ConsumerPriceIndex: Preset = {
 const NonfarmPayrolls: Preset = {
 	name: 'Nonfarm Payrolls (1Y)',
 	displayVariants: ['default'],
+	minHeight: 186,
+	maxHeight: 384,
 };
 
 const NominalGDP: Preset = {
@@ -114,6 +122,8 @@ const RealGDP: Preset = {
 const UnemploymentRate: Preset = {
 	name: 'Unemployment Rate (1Y)',
 	displayVariants: ['default'],
+	minHeight: 186,
+	maxHeight: 384,
 };
 
 const NewsSummary: Preset = {
@@ -182,6 +192,24 @@ export interface IWidget extends IWidgetPreset {
 	defaultStateType: string;
 	stateType?: string;
 	maxCountRow?: number;
+}
+
+const CAN_CHANGE_HEIGHT = P.union(
+	WidgetType.TopIndices,
+	WidgetType.Performance,
+	WidgetType.MarketCap,
+	WidgetType.Price,
+	WidgetType.News,
+	WidgetType.UnemploymentRate,
+	WidgetType.NonfarmPayrolls,
+	WidgetType.Calendar,
+);
+
+export function canChangeHeight(widget: IWidget): boolean {
+	return match(widget)
+		.with({ widgetType: WidgetType.ChartPrice, displayVariant: 'chart' }, () => true)
+		.with({ widgetType: CAN_CHANGE_HEIGHT }, () => true)
+		.otherwise(() => false);
 }
 
 export function createWidget(

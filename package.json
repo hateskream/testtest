@@ -39,6 +39,7 @@
     "pinia": "3.0.1",
     "socket.io-client": "4.8.1",
     "technicalindicators": "3.1.0",
+    "ts-pattern": "5.9.0",
     "uuid": "11.1.0",
     "v-calendar": "3.1.2",
     "vue": "3.5.13",

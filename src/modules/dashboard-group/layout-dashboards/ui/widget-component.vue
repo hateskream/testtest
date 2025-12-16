@@ -4,10 +4,11 @@ import { computed, defineAsyncComponent, ref, shallowRef, useTemplateRef, watch 
 import { getWidgetComponent, type IMeta } from '../../dashboards/model';
 import type { DisplayVariant, IWidget } from '../model';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
-import { calcSizeSideGridCell } from '../model/widget';
+import { calcSizeSideGridCell, canChangeHeight } from '../model';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { useDelayedLoading } from '@/shared/composables';
 import { useResizable } from '../composables';
+import { isFeatureEnabled } from '@/shared/lib';
 
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
@@ -37,9 +38,11 @@ const { size } = useResizable(
 	useTemplateRef('sizer'),
 	useTemplateRef('widget'),
 	{
-		minHeight: titleWidgetHeight + (props.widget.snapStep || 0),
+		minHeight: getMinHeight(props.widget),
+		maxHeight: props.widget.maxHeight,
 		axis: 'vertical',
 		cbOnPointerUp: () => snapToNearestStep(size.value),
+		isActivated: () => canChangeHeight(props.widget) && isFeatureEnabled('RESIZE_HEIGHT_WIDGETS'),
 	},
 );
 
@@ -122,6 +125,12 @@ function scrollBy(px: number) {
 
 function setWidgetStateType(widgetId: string, stateType: string) {
 	emits('set-widget-state-type', widgetId, stateType);
+}
+
+function getMinHeight(widget: IWidget) {
+	const { snapStep = 0, minHeight } = widget;
+
+	return minHeight ?? titleWidgetHeight + snapStep;
 }
 
 function calcMaxCountRowVisible(widgetHeight: number) {

@@ -1,4 +1,13 @@
-import { ref, onBeforeUnmount, type Ref, onMounted, readonly } from 'vue';
+import {
+	ref,
+	onBeforeUnmount,
+	type Ref,
+	readonly,
+	type MaybeRefOrGetter,
+	toValue,
+	computed,
+	watch,
+} from 'vue';
 
 type ResizeAxis = 'horizontal' | 'vertical';
 
@@ -9,6 +18,7 @@ interface IUseResizableOptions {
 	minHeight?: number;
 	maxHeight?: number;
 	cbOnPointerUp?: () => void;
+	isActivated?: MaybeRefOrGetter<boolean>;
 }
 
 export function useResizable(
@@ -25,13 +35,14 @@ export function useResizable(
 		cbOnPointerUp,
 	} = options;
 
+	const isActivated = computed(() => toValue(options.isActivated ?? true));
+
 	const isResizing = ref(false);
 	const size = ref(0);
 	const startSize = ref(0);
 
 	let startX = 0;
 	let startY = 0;
-
 	let rafId: number | null = null;
 
 	const onPointerMove = (e: PointerEvent) => {
@@ -48,10 +59,17 @@ export function useResizable(
 
 		rafId = requestAnimationFrame(() => {
 			let newSize = startSize.value;
+
 			if (axis === 'horizontal') {
-				newSize = Math.min(Math.max(startSize.value + dx, minWidth), maxWidth);
-			} else if (axis === 'vertical') {
-				newSize = Math.min(Math.max(startSize.value + dy, minHeight), maxHeight);
+				newSize = Math.min(
+					Math.max(startSize.value + dx, minWidth),
+					maxWidth,
+				);
+			} else {
+				newSize = Math.min(
+					Math.max(startSize.value + dy, minHeight),
+					maxHeight,
+				);
 			}
 
 			size.value = newSize;
@@ -63,7 +81,7 @@ export function useResizable(
 		isResizing.value = false;
 
 		const handle = handleRef.value;
-		if (handle && handle.hasPointerCapture(e.pointerId)) {
+		if (handle?.hasPointerCapture(e.pointerId)) {
 			handle.releasePointerCapture(e.pointerId);
 		}
 
@@ -71,13 +89,21 @@ export function useResizable(
 		document.removeEventListener('pointerup', onPointerUp);
 		document.removeEventListener('pointercancel', onPointerUp);
 
+		if (rafId) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+		}
+
 		cbOnPointerUp?.();
 	};
 
 	const startResize = (e: PointerEvent) => {
+		if (!isActivated.value) {
+			return;
+		}
+
 		const handle = handleRef.value;
 		const target = resizeTargetRef.value;
-
 		if (!handle || !target) {
 			return;
 		}
@@ -95,27 +121,51 @@ export function useResizable(
 		startY = e.clientY;
 
 		startSize.value =
-      axis === 'horizontal' ? target.offsetWidth : target.offsetHeight;
+			axis === 'horizontal'
+				? target.offsetWidth
+				: target.offsetHeight;
 
 		size.value = startSize.value;
 	};
 
-	onMounted(() => {
+	const addListener = () => {
 		const handle = handleRef.value;
 		if (handle) {
 			handle.addEventListener('pointerdown', startResize);
 		}
-	});
+	};
 
-	onBeforeUnmount(() => {
+	const removeListener = () => {
 		const handle = handleRef.value;
 		if (handle) {
 			handle.removeEventListener('pointerdown', startResize);
-
-			document.removeEventListener('pointermove', onPointerMove);
-			document.removeEventListener('pointerup', onPointerUp);
-			document.removeEventListener('pointercancel', onPointerUp);
 		}
+	};
+
+	watch(
+		[isActivated, () => handleRef.value],
+		([active]) => {
+			if (active) {
+				addListener();
+			} else {
+				removeListener();
+
+				isResizing.value = false;
+
+				document.removeEventListener('pointermove', onPointerMove);
+				document.removeEventListener('pointerup', onPointerUp);
+				document.removeEventListener('pointercancel', onPointerUp);
+			}
+		},
+		{ immediate: true },
+	);
+
+	onBeforeUnmount(() => {
+		removeListener();
+
+		document.removeEventListener('pointermove', onPointerMove);
+		document.removeEventListener('pointerup', onPointerUp);
+		document.removeEventListener('pointercancel', onPointerUp);
 	});
 
 	return {
