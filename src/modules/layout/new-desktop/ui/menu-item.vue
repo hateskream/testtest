@@ -46,6 +46,7 @@ const props = defineProps<IMenuItem>();
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	align-self: center;
 	width: 36px;
 	height: 36px;
 	background-color: var(--bg-100, rgb(73 73 80 / 32%));

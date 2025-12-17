@@ -318,7 +318,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
-					height: 135,
+					height: 125,
 					widgetType:  WidgetType.FederalFunds,
 					defaultDisplayVariant: 'chart',
 				},

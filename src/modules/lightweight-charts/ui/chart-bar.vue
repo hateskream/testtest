@@ -64,7 +64,7 @@ const defaultOptions: ChartOptions<'bar'> = {
 					return `${pretty.value}${pretty.suffix}`;
 				},
 				font: {
-					family: '\'Roboto Flex\', sans-serif',
+					family: '\'Roboto Flex Variable\', sans-serif',
 					size: 11,
 					weight: 400,
 					lineHeight: '19.8px',
@@ -76,7 +76,7 @@ const defaultOptions: ChartOptions<'bar'> = {
 			ticks: {
 				padding: 10,
 				font: {
-					family: '\'Roboto Flex\', sans-serif',
+					family: '\'Roboto Flex Variable\', sans-serif',
 					size: 11,
 					weight: 400,
 					lineHeight: '19.8px',

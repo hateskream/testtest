@@ -12,22 +12,10 @@ body {
 	overflow-y: hidden;
 	font-style: normal;
 	font-weight: 400;
-	font-family: 'Roboto Flex', sans-serif;
+	font-family: 'Roboto Flex Variable', sans-serif;
 	color: var(--text-color-base-500);
 	background: var(--bg-color-surface-00);
 	font-optical-sizing: auto;
-	font-variation-settings:
-		'slnt' 0,
-		'wdth' 100,
-		'GRAD' 0,
-		'XOPQ' 96,
-		'XTRA' 468,
-		'YOPQ' 79,
-		'YTAS' 750,
-		'YTDE' -203,
-		'YTFI' 738,
-		'YTLC' 514,
-		'YTUC' 712;
 }
 
 #app {

@@ -44,7 +44,7 @@ const reviewDateLabel = computed(() => {
 .container {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 4px;
 	padding: 12px 0 20px 20px;
 }
 

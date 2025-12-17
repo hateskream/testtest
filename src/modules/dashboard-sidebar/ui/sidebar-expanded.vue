@@ -135,7 +135,6 @@ const { isActive } = useActiveLink();
 .linkText {
 	font-weight: 300;
 	font-size: var(--typography-paragraph-size-p01);
-	font-family: 'Roboto Flex', sans-serif;
 }
 
 .link,

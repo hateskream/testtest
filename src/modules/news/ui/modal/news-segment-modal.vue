@@ -189,7 +189,6 @@ onMounted(() => {
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-02, 15px);
 	line-height: 1;
-	font-family: 'Roboto Flex', sans-serif;
 	text-align: right;
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.08px;

@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import {
-	NewsFiltersPanel,
-	NewsListComponent,
-	useNews,
-	useQueryNews,
-	type IGetNewsRequest,
-} from '@/modules/news';
+import { type IGetNewsRequest, NewsFiltersPanel, NewsListComponent, useNews, useQueryNews } from '@/modules/news';
 
 const {
 	segments,
@@ -104,7 +98,6 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 	font-weight: 300;
 	font-size: var(--typography-headers-size-h-01, 13px);
 	line-height: 170%;
-	font-family: 'Roboto Flex', sans-serif;
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.104px;
 	text-overflow: ellipsis;

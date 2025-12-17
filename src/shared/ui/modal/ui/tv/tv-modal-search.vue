@@ -63,7 +63,6 @@ defineExpose({ focus });
 	font-weight: 300;
 	font-size: 13px;
 	line-height: normal;
-	font-family: 'Roboto Flex', sans-serif;
 	text-align: left;
 	background: none;
 	cursor: text;
