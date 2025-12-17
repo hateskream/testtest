@@ -25,7 +25,7 @@ interface ICalendarDatePickerProps {
 
 const props = withDefaults(defineProps<ICalendarDatePickerProps>(), {
 	masks: () => ({ [DatePickerMaskKey.Title]: 'MMMM yyyy' }),
-	titlePosition: 'left',
+	titlePosition: 'right',
 	transparent: true,
 	borderless: true,
 	isDark: true,
@@ -53,10 +53,16 @@ const skeletonCount = computed(() => props.view === 'monthly' ? 7 : 3);
 			:trim-weeks="props.trimWeeks"
 			:highlight-today="props.highlightToday"
 			:input-debounce="props.inputDebounce"
-			:locale="{ firstDayOfWeek: 2 }"
+			:locale="{ id: 'en', firstDayOfWeek: 2, masks: { weekdays: 'WWW' } }"
 			:class="classes.datePicker"
 			color="white"
-		/>
+		>
+			<template #header-left-button>
+				<button>
+					Today
+				</button>
+			</template>
+		</date-picker>
 		<template #fallback>
 			<ui-skeleton-group
 				:count="skeletonCount"
@@ -70,7 +76,7 @@ const skeletonCount = computed(() => props.view === 'monthly' ? 7 : 3);
 
 <style module="classes">
 .datePicker {
-	width: 100%;
+	width: 100% !important;
 }
 
 .skeleton {
