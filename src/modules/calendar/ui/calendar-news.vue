@@ -96,7 +96,7 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 	overflow: hidden;
 	font-style: normal;
 	font-weight: 300;
-	font-size: var(--typography-headers-size-h-01, 13px);
+	font-size: var(--font-title-100-size, 13px);
 	line-height: 170%;
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.104px;

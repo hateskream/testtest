@@ -13,7 +13,7 @@ const props = defineProps<{
 			<div
 				v-if="item.type === BreadCrumbType.Common"
 				:class="[classes.breadcrumb, { [classes.active]: item.isActive }]"
-				class="paragraph-p-03"
+				class="text-50-r"
 			>
 				{{ item.name }}
 			</div>

@@ -129,6 +129,7 @@ onMounted(() => {
 				</template>
 				<template #right>
 					<button
+						class="text-200-r"
 						:class="classes.selectUnSelectAll"
 						@click.stop="toggleSegment(segment.id, filteredSegments)"
 					>
@@ -185,13 +186,9 @@ onMounted(() => {
 
 .selectUnSelectAll {
 	display: none;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 15px);
 	line-height: 1;
 	text-align: right;
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.08px;
 	cursor: pointer;
 
 	&:hover {

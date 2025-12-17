@@ -39,7 +39,7 @@ const handlePeriodSelect = (period: string) => {
 		trigger="click"
 	>
 		<template #title="{isVisible}">
-			<div :class="classes.selectWrapper" class="paragraph-p-01">
+			<div :class="classes.selectWrapper" class="text-200-r">
 				<div :class="classes.selectedValue">{{ selectedPeriod }}</div>
 				<ui-icon
 					:id="IconIds.DropdownDown"
@@ -51,7 +51,7 @@ const handlePeriodSelect = (period: string) => {
 		</template>
 		<template #content>
 			<chart-common-dropdown-layout>
-				<div :class="classes.dropdown" class="paragraph-p-01">
+				<div :class="classes.dropdown" class="text-200-r">
 					<div
 						v-for="period in periods"
 						:key="period"

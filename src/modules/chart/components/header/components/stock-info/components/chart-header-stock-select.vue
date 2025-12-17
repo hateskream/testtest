@@ -40,9 +40,9 @@ const handleExchangeSelect = (exchangeId: number) => {
 					width="22"
 					height="22"
 				/>
-				<div class="paragraph-p-01" :class="classes.activeExchangeName">{{ activeExchange.fullName }}</div>
+				<div class="text-200-r" :class="classes.activeExchangeName">{{ activeExchange.fullName }}</div>
 
-				<div class="paragraph-p-01" :class="classes.currencyName">{{ currencyName }}</div>
+				<div class="text-200-r" :class="classes.currencyName">{{ currencyName }}</div>
 				<ui-icon
 					:id="IconIds.DropdownDown"
 					width="18"
@@ -55,7 +55,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 		<template #content>
 			<chart-common-dropdown-layout>
 				<div :class="classes.grid">
-					<div :class="classes.header" class="paragraph-p-02">
+					<div :class="classes.header" class="text-100-r">
 						<div>Source</div>
 						<div>Symbol</div>
 					</div>
@@ -63,7 +63,7 @@ const handleExchangeSelect = (exchangeId: number) => {
 						v-for="exchange in exchanges"
 						:key="exchange.id"
 						:class="classes.row"
-						class="paragraph-p-01"
+						class="text-200-r"
 						@click="() => handleExchangeSelect(exchange.id)"
 					>
 						<div :class="classes.source">

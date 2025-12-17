@@ -19,7 +19,7 @@ const formattedValue = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.date" class="paragraph-p-00">{{ formattedValue }}</div>
+	<div :class="classes.date" class="text-300-r">{{ formattedValue }}</div>
 </template>
 
 <style module="classes">

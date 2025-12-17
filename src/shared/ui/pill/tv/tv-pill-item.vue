@@ -3,7 +3,7 @@ const model = defineModel<boolean>();
 </script>
 
 <template>
-	<div :class="[classes.pill, model && classes.active]">
+	<div class="title-100" :class="[classes.pill, model && classes.active]">
 		<slot />
 	</div>
 </template>
@@ -14,11 +14,7 @@ const model = defineModel<boolean>();
 	justify-content: center;
 	align-items: center;
 	padding: 10px 12px;
-	font-style: normal;
-	font-weight: 380;
-	font-size: var(--typography-headers-size-h-02, 10px);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.04px;
 	background: var(--color-bg-base-300, rgb(37 37 39 / 50%));
 	border-radius: var(--radius-full, 9999px);
 	cursor: pointer;

@@ -57,7 +57,7 @@ const formattedTime = computed(() => {
 		</div>
 
 		<!-- Gwei value -->
-		<div :class="classes.gwei" class="paragraph-p-01">
+		<div :class="classes.gwei" class="text-200-r">
 			{{ data.gwei.toFixed(2) }} Gwei
 		</div>
 

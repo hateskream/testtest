@@ -2,11 +2,10 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useNewsPage } from '@/modules/news';
+import { NewsIconScore, useNewsPage } from '@/modules/news';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
-import { NewsIconScore } from '@/modules/news';
 import { RouteNames } from '@/types/route.d';
 import { isFeatureEnabled } from '@/shared/lib';
 
@@ -90,6 +89,7 @@ const isNewsPage = computed(
 							v-if="isFeatureEnabled('NEWS_PAGE_ENABLED')"
 							:to="getPathString(newsDetails.id, newsDetails.slug, {memo: true})"
 							:class="classes.link"
+							class="text-200-r"
 						>
 							Details
 						</router-link>
@@ -127,7 +127,7 @@ const isNewsPage = computed(
 
 .title {
 	font-weight: 340;
-	font-size: var(--typography-headers-size-h02, 24px);
+	font-size: var(--font-title-400-size, 24px);
 	line-height: 1.5;
 	color: #ffffff;
 }
@@ -180,7 +180,6 @@ const isNewsPage = computed(
 
 .link {
 	margin-top: 12px;
-	font-size: var(--typography-paragraph-size-p-01);
 	color: var(--text-color-base-100-effect);
 	text-decoration: underline;
 }

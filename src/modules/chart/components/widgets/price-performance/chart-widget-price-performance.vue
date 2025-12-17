@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
@@ -80,11 +80,11 @@ const allTimeData = computed(() => {
 
 			<div v-if="allTimeData" :class="classes.allTimeWrapper">
 				<div :class="classes.allTimeItem">
-					<div :class="classes.line" class="paragraph-p-01">
+					<div :class="classes.line" class="text-200-r">
 						<div>All time high</div>
 						<div>{{ chartStore.activeExchange?.currency_symbol }}{{ allTimeData.high.value }}</div>
 					</div>
-					<div :class="classes.line" class="paragraph-p-02">
+					<div :class="classes.line" class="text-100-r">
 						<div :class="classes.baseText">
 							{{ allTimeData.high.formattedDate }}
 						</div>
@@ -95,11 +95,11 @@ const allTimeData = computed(() => {
 				</div>
 
 				<div :class="classes.allTimeItem">
-					<div :class="classes.line" class="paragraph-p-01">
+					<div :class="classes.line" class="text-200-r">
 						<div>All time low</div>
 						<div>{{ chartStore.activeExchange?.currency_symbol }}{{ allTimeData.low.value }}</div>
 					</div>
-					<div :class="classes.line" class="paragraph-p-02">
+					<div :class="classes.line" class="text-100-r">
 						<div :class="classes.baseText">
 							{{ allTimeData.low.formattedDate }}
 						</div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ColumnType, mapColumn, mapRow, type ITableColumn } from '@/modules/cell';
+import { ColumnType, type ITableColumn, mapColumn, mapRow } from '@/modules/cell';
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -114,7 +114,7 @@ const emit = defineEmits<{
 }
 
 :deep(.symbolCellText) {
-	font-size: var(--typography-paragraph-size-p-01);
+	font-size: var(--font-text-200-r-size);
 }
 
 :deep(th:last-child) {

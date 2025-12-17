@@ -5,7 +5,7 @@
 			<div
 				v-for="tab in tabList"
 				:key="tab.id"
-				class="header-h01"
+				class="title-300"
 				:class="[
 					classes.tabHeader,
 					{

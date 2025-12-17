@@ -34,12 +34,12 @@ const randomTension = () => {
 			</template>
 			<template #body>
 				<div :class="classes.bodyWrapper">
-					<div class="paragraph-p-01" :class="classes.text">
+					<div class="text-200-r" :class="classes.text">
 						UK's MPC votes shifted to 0-1-8, Bank Rate stable at 4.5%. SNB lowers rate to 0.25%. AU job
 						losses surged to
 						52.8K, UK claimants up to 44.2K.
 					</div>
-					<div class="paragraph-p-02" :class="classes.summarize">
+					<div class="text-100-r" :class="classes.summarize">
 						Summarized at 19:30
 					</div>
 				</div>

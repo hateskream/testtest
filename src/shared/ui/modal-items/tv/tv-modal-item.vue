@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<div :class="classes.item">
+	<div :class="classes.item" class="text-300-b">
 		<slot name="default" />
 	</div>
 </template>
@@ -13,10 +13,6 @@
 	justify-content: space-between;
 	align-items: center;
 	height: 40px;
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-menu-menu-item, 12px);
-	line-height: 150%;
 	color: var(--color-text-base-500, #ffffff);
 	border-radius: 20px;
 	cursor: pointer;

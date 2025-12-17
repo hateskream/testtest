@@ -107,7 +107,7 @@ useIntervalFn(() => {
 						height="26"
 					/>
 				</div>
-				<div class="paragraph-p01">{{ isActiveMarketOpen ? 'Open' : 'Closed' }}</div>
+				<div class="text-400-r">{{ isActiveMarketOpen ? 'Open' : 'Closed' }}</div>
 			</div>
 		</template>
 
@@ -116,11 +116,11 @@ useIntervalFn(() => {
 				<div :class="classes.dropdown">
 					<div
 						:class="[classes.dropdownHeader, isActiveMarketOpen ? classes.openMark : classes.closeMark]"
-						class="paragraph-p02"
+						class="text-500-r"
 					>
 						Market {{ isActiveMarketOpen ? 'opened' : 'closed' }}
 					</div>
-					<div :class="classes.dropdownContent" class="paragraph-p-00">
+					<div :class="classes.dropdownContent" class="text-300-r">
 						<template v-if="isActiveMarketOpen">
 							All's well — market is open. I'll close
 							<div :class="classes.dropdownTimeWrapper">

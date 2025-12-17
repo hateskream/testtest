@@ -1,15 +1,11 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
-import type {
-	IGenericTableColumn,
-	IGenericTableRow,
-	ISortConfig,
-} from '@/modules/table';
-import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import type { IGenericTableColumn, IGenericTableRow, ISortConfig } from '@/modules/table';
 import { GenericDataTable } from '@/modules/table';
+import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IPeerAnalysisData {
@@ -305,7 +301,7 @@ const formatRatio = (value: number) => {
 						<div
 							:class="[
 								classes.metricCell,
-								'paragraph-p-01',
+								'text-200-r',
 								{
 									[classes.positive]: row.data.fcf_share > 0,
 									[classes.negative]: row.data.fcf_share < 0,

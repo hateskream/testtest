@@ -259,7 +259,7 @@ defineExpose({ scrollToDate });
 	align-items: center;
 	height: 44px;
 	padding-left: 10px;
-	font-size: var(--typography-headers-size-h00, 15px);
+	font-size: var(--font-title-200-size, 15px);
 	line-height: 1.7;
 	color: #ffffff;
 	letter-spacing: 0.075px;
@@ -312,10 +312,10 @@ defineExpose({ scrollToDate });
 	padding-bottom: 4px;
 	padding-left: 10px;
 	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	letter-spacing: 0.08px;
+	font-weight: var(--font-text-200-r-weight);
+	font-size: var(--font-text-200-r-size, 10px);
+	line-height: var(--font-text-200-r-line-height);
+	letter-spacing: var(--font-text-200-r-letter-spacing);
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPillItem } from '@/shared/ui/pill';
+import { UiText } from '@/shared/ui/text';
 
 const emits = defineEmits(['reset']);
 </script>
@@ -20,10 +21,19 @@ const emits = defineEmits(['reset']);
 				height="200px"
 			/>
 		</div>
-		<p :class="classes.paragraph">
+		<ui-text
+			as="p"
+			token="title-100"
+			align="center"
+			:class="classes.paragraph"
+		>
 			Nothing Here
-		</p>
-		<ui-pill-item :class="classes.butt" @click="emits('reset')">
+		</ui-text>
+		<ui-pill-item
+			class="title-100"
+			:class="classes.butt"
+			@click="emits('reset')"
+		>
 			Reset filters
 		</ui-pill-item>
 	</div>
@@ -59,22 +69,13 @@ const emits = defineEmits(['reset']);
 }
 
 .paragraph {
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-headers-size-h-01, 16px);
 	line-height: 1;
-	text-align: center;
 	color: var(--color-text-base-500, #ffffff);
-	letter-spacing: 0.104px;
 }
 
 .butt {
-	font-style: normal;
-	font-weight: 380;
-	font-size: var(--typography-headers-size-h-02, 12px);
 	line-height: 1;
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.04px;
 	cursor: pointer;
 
 	&:hover {

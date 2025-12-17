@@ -11,7 +11,7 @@ const props = defineProps<{
 
 <template>
 	<div :class="classes.btcPerformanceRankSeason">
-		<div :class="classes.rank">
+		<div :class="classes.rank" class="text-200-r">
 			<span :class="classes.rankValue">{{ props.performance.btcRank }}</span>
 			<span>/{{DATA_CAP}}</span>
 			<info-tooltip text="Bitcoin current score" />
@@ -34,15 +34,12 @@ const props = defineProps<{
 .rank {
 	display: inline-flex;
 	align-items: center;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
 	gap: 2px;
-	letter-spacing: 0.08px;
 }
 
 .rankValue {
 	font-weight: 340;
-	font-size: var(--typography-headers-size-h02, 24px);
+	font-size: var(--font-title-400-size, 24px);
 	line-height: 150%;
 	color: var(--color-text-base-500, #ffffff);
 }

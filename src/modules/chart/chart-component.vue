@@ -294,7 +294,7 @@ const currentChartRanges = [
 	align-items: center;
 	margin-bottom: 22px;
 	padding: 12px 16px 12px 0;
-	font-size: var(--typography-headers-size-h02);
+	font-size: var(--font-title-400-size);
 	background: var(--bg-color-surface-00);
 	gap: 8px;
 }

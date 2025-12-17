@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
+import { CellType, WidgetTypedTable } from '@/modules/widgets/widget-table';
+import { UiText } from '@/shared/ui/text';
 
 import type { IExtendedTableColumn } from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -273,7 +274,7 @@ const columns = [
 		</template>
 		<template #title>
 			<div :class="classes.header">
-				<div class="header-h03">{{ title }}</div>
+				<ui-text token="title-500">{{ title }}</ui-text>
 			</div>
 		</template>
 

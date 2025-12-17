@@ -5,6 +5,7 @@ import { useChartStore } from '@/modules/chart/store';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ChartHeaderOpenClose, ChartHeaderStockSelect } from './components';
 import { ChartHeaderStockBadge } from './ui';
+import { UiText } from '@/shared/ui/text';
 
 ;
 const { isActiveMarketOpen, activeExchange } = storeToRefs(useChartStore());
@@ -19,14 +20,17 @@ const props = defineProps<IStockInfoProps>();
 </script>
 
 <template>
-
 	<div :class="classes.stockInfoWrapper">
-		<div :class="classes.tickerName" class="header-h01">{{ props.tickerName }}</div>
+		<ui-text
+			:class="classes.tickerName"
+			token="title-300"
+			as="div"
+		>
+			{{ props.tickerName }}
+		</ui-text>
 		<div :class="classes.marketData">
 			<chart-header-stock-select />
 			<chart-header-open-close :is-open="isActiveMarketOpen" :market="activeExchange" />
-
-
 			<chart-header-stock-badge v-if="activeExchange?.isPrimary">
 				<ui-icon
 					:id="IconIds.Crown"
@@ -35,10 +39,8 @@ const props = defineProps<IStockInfoProps>();
 				/>
 			</chart-header-stock-badge>
 			<chart-header-stock-badge>
-
-				<div class="header-h03">≈</div>
+				<ui-text token="title-500">≈</ui-text>
 			</chart-header-stock-badge>
-
 		</div>
 	</div>
 </template>

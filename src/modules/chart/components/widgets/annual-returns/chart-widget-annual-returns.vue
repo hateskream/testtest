@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { LineChartFilled } from '@/modules/bar-chart';
 import type { ILineChartModel } from '@/modules/bar-chart/line-chart.model';
+import { UiText } from '@/shared/ui/text';
 
 // TODO: move to models
 export interface IAnnualReturnsProps {
@@ -52,8 +53,8 @@ const summaryColor = computed(() => {
 					:class="classes.chartWrapper"
 				>
 					<div :class="classes.chartTitle">
-						<span :class="classes.label">{{ chart.label }}</span>
-						<span :class="classes.value">{{ chart.value }}%</span>
+						<ui-text token="text-200-r">{{ chart.label }}</ui-text>
+						<ui-text token="text-200-r">{{ chart.value }}%</ui-text>
 					</div>
 					<line-chart-filled v-bind="chart" />
 				</div>
@@ -112,15 +113,5 @@ const summaryColor = computed(() => {
 	justify-content: space-between;
 	align-items: center;
 	color: var(--color-text-base-300, #9a9a9d);
-
-	.label {
-		font-weight: 440;
-		font-size: var(--typography-paragraph-size-p-01, 12px);
-		letter-spacing: 0.096px;
-	}
-
-	.value {
-		font-size: 12px;
-	}
 }
 </style>

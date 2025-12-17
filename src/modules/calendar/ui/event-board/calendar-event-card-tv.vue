@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ExternalLink } from '@/shared/ui/link';
 import { MarketIds, markets } from '@/modules/calendar';
+import { UiText } from '@/shared/ui/text';
 
 interface ICalendarEventCardProps {
 	id: string;
@@ -108,6 +109,7 @@ const eventStartsIn = computed(() => {
 
 				<div
 					v-if="props.eventTitleDescription"
+					class="text-300-r"
 					:class="classes.eventTitleDescription"
 				>
 					{{ props.eventTitleDescription }}
@@ -125,15 +127,31 @@ const eventStartsIn = computed(() => {
 					:key="metric.label"
 					:class="classes.metricData"
 				>
-					<div :class="classes.metricLabel">{{ metric.label }}:</div>
-					<div :class="classes.metricValue">{{ metric.value }}</div>
+					<ui-text
+						token="text-300-r"
+						as="div"
+						:class="classes.metricLabel"
+					>
+						{{ metric.label }}:
+					</ui-text>
+					<ui-text
+						token="text-300-r"
+						as="div"
+						:class="classes.metricValue"
+					>
+						{{ metric.value }}
+					</ui-text>
 				</div>
 			</div>
 		</div>
 
 		<!-- FIXME: transition doesnt work -->
 		<transition name="slide-fade">
-			<div v-show="isCardOpen" :class="classes.cardBody">
+			<div
+				v-show="isCardOpen"
+				:class="classes.cardBody"
+				class="text-300-r"
+			>
 				<div :class="classes.eventText">
 					{{ props.text }}
 				</div>
@@ -246,9 +264,7 @@ const eventStartsIn = computed(() => {
 		cursor: pointer;
 
 		.eventTitleDescription {
-			font-size: var(--typography-paragraph-size-p00, 13px);
 			color: var(--color-text-base-300, #9a9a9d);
-			letter-spacing: 0.143px;
 			text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 		}
 	}
@@ -275,15 +291,11 @@ const eventStartsIn = computed(() => {
 		gap: 4px;
 
 		.metricLabel {
-			font-size: var(--typography-paragraph-size-p00, 13px);
 			color: var(--color-text-base-300, #9a9a9d);
-			letter-spacing: 0.143px;
 		}
 
 		.metricValue {
-			font-size: var(--typography-paragraph-size-p00, 13px);
 			color: #ffffff;
-			letter-spacing: 0.143px;
 		}
 	}
 }
@@ -291,9 +303,7 @@ const eventStartsIn = computed(() => {
 .cardBody {
 	display: flex;
 	flex-direction: column;
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.143px;
 	gap: 12px;
 
 

@@ -1,15 +1,11 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
-import type {
-	IGenericTableColumn,
-	IGenericTableRow,
-	ISortConfig,
-} from '@/modules/table';
-import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import type { IGenericTableColumn, IGenericTableRow, ISortConfig } from '@/modules/table';
 import { GenericDataTable } from '@/modules/table';
+import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 
 
 interface ITransactionData {
@@ -244,7 +240,7 @@ const formatDate = (dateStr: string) => {
 	<chart-common-widget-layout without-padding>
 		<template #header>
 			<div :class="classes.transactionsHeader">
-				<div class="paragraph-p-01">Recent Activity</div>
+				<div class="text-200-r">Recent Activity</div>
 				<div
 					:class="[
 						classes.totalTransactions,
@@ -276,13 +272,13 @@ const formatDate = (dateStr: string) => {
 			>
 
 				<template #cell-date="{ row }">
-					<div :class="classes.dateCell" class="paragraph-p-00">
+					<div :class="classes.dateCell" class="text-300-r">
 						{{ formatDate(row.data.date) }}
 					</div>
 				</template>
 
 				<template #cell-person="{ row }">
-					<div :class="classes.personCell" class="paragraph-p-00">
+					<div :class="classes.personCell" class="text-300-r">
 						<div :class="classes.personIcon">
 							<div :class="classes.personInitial">
 								{{ row.data.person_initial || row.data.person_name.charAt(0) }}

@@ -36,7 +36,7 @@ const formattedRange = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.range" class="paragraph-p-00">
+	<div :class="classes.range" class="text-300-r">
 		<span v-if="formattedRange.prefix" :class="classes.prefix">{{ formattedRange.prefix }}</span>
 		<span :class="classes.value">{{ formattedRange.startValue }}</span>
 		<span v-if="formattedRange.startSuffix" :class="classes.suffix">{{ formattedRange.startSuffix }}</span>

@@ -53,8 +53,8 @@ const historicalValues = computed(
 	justify-content: space-between;
 	align-self: stretch;
 	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-01, 12px);
+	font-size: var(--font-text-200-r-size, 12px);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.096px;
+	letter-spacing: var(--font-text-200-r-letter-spacing);
 }
 </style>

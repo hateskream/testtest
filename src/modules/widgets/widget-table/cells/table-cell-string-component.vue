@@ -21,7 +21,7 @@ const alignmentStyle = computed((): CSSProperties => {
 	<div
 		:class="classes.text"
 		:style="alignmentStyle"
-		class="paragraph-p-00"
+		class="text-300-r"
 	>
 		{{ props.data?.value ?? '—' }}
 	</div>

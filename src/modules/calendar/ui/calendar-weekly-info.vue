@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { isSameCalendarDay, type IWeeklyDayInfo } from '@/modules/calendar';
+import { UiText } from '@/shared/ui/text';
 
 const props = defineProps<{
 	weekDays: IWeeklyDayInfo[];
@@ -44,8 +45,20 @@ function isSelected(date: Date) {
 						:key="metric.label"
 						:class="classes.metric"
 					>
-						<div :class="classes.metricLabel">{{ metric.label }}:</div>
-						<div :class="classes.metricValue">{{ metric.value }}</div>
+						<ui-text
+							token="text-300-r"
+							as="div"
+							:class="classes.metricLabel"
+						>
+							{{ metric.label }}:
+						</ui-text>
+						<ui-text
+							token="text-300-r"
+							as="div"
+							:class="classes.metricValue"
+						>
+							{{ metric.value }}
+						</ui-text>
 					</div>
 				</div>
 			</div>
@@ -105,7 +118,7 @@ function isSelected(date: Date) {
 	align-items: center;
 	gap: 4px;
 	font-weight: 410;
-	font-size: var(--typography-headers-size-h01, 20px);
+	font-size: var(--font-title-300-size, 20px);
 	color: var(--color-text-base-500, #ffffff);
 }
 
@@ -131,12 +144,10 @@ function isSelected(date: Date) {
 }
 
 .metricLabel {
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-100, #646568);
 }
 
 .metricValue {
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-500, #ffffff);
 }
 </style>

@@ -4,7 +4,7 @@ import { delay } from '@/shared/lib';
 import type { MarketType } from '@/modules/market';
 import { type IChartPriceData, TimeRangeFilterValue } from '../model';
 
-const IS_USE_MOCK = false;
+const IS_USE_MOCK = true;
 
 export interface IGetChartPriceRequest {
 	ticker: string;

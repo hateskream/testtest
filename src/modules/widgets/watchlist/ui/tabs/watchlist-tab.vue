@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef, useCssModule, watch } from 'vue';
+import { nextTick, ref, useCssModule, useTemplateRef, watch } from 'vue';
 
 import type { ITab } from '@/modules/widgets/watchlist/model';
-import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface ITabWithEditing extends ITab {
 	isEditing: boolean;
@@ -133,10 +134,15 @@ defineExpose({ openRenameInput });
 			ref="tabRenameInputRef"
 			v-model="inputModel"
 			:class="classes.tabRenameInput"
+			class="text-200-r"
 			@blur="finishEditing"
 			@keyup.enter="finishEditing"
 		/>
-		<span v-else :class="classes.tabLabel">{{ props.tab.name }}</span>
+		<ui-text
+			v-else
+			token="text-200-r"
+			:class="classes.tabLabel"
+		>{{ props.tab.name }}</ui-text>
 		<ui-icon
 			v-if="props.tab.isActive"
 			:id="IconIds.DropdownDown"
@@ -157,7 +163,7 @@ defineExpose({ openRenameInput });
 	align-self: stretch;
 	height: auto;
 	padding: 4px 8px 4px 12px;
-	font-size: var(--typography-paragraph-size-p-01);
+	font-size: var(--font-text-200-r-size);
 	color: var(--text-color-base-300);
 	border-radius: 28px;
 	cursor: pointer;
@@ -171,18 +177,10 @@ defineExpose({ openRenameInput });
 
 .tabRenameInput {
 	min-width: 1ch;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-01);
-	line-height: 170%;
-	letter-spacing: 0.096px;
 	background: transparent;
 }
 
 .tabLabel {
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-01);
-	line-height: 170%;
-	letter-spacing: 0.096px;
 	text-wrap: nowrap;
 }
 
