@@ -31,6 +31,7 @@ app_build:
     - |
       if [ "$CI_COMMIT_BRANCH" != "main" ]; then
         cp .gitlab-ci/envs/front_config/.env.dev .env || true
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
         npm run build
       fi
     - |
@@ -38,9 +39,11 @@ app_build:
         # Сборка для stage
         cp .gitlab-ci/envs/front_config/.env.stage .env || true
         npm run build
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
         mv dist dist-stage
         cp .gitlab-ci/envs/front_config/.env.prod .env || true
         npm run build
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
         mv dist dist-prod
       fi
   artifacts:
@@ -57,13 +60,14 @@ app_build:
 build:
   stage: build_and_deploy
   image:
-    name: docker:29.0.2-dind
+    name: docker:29.1.3-dind
     pull_policy: if-not-present
   services:
-    - name: docker:29.0.2-dind
+    - name: docker:29.1.3-dind
       pull_policy: if-not-present
   variables:
     DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "0"
     IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
   dependencies:
     - app_build
@@ -81,9 +85,12 @@ build:
 # Дополнительные сборки для main
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+      	rm -rf dist
         mv dist-stage dist
         docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
         docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
+
+        rm -rf dist
         mv dist-prod dist
         docker build -t $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID .
         docker push $CI_REGISTRY_IMAGE:prod-$CI_PIPELINE_IID

@@ -39,3 +39,4 @@ window.getGridInfo()
 * .gitlab-ci\templates - основной CI/CD
 * .gitlab-ci.yml - генератор переменных и билда
 
+
