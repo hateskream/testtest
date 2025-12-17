@@ -40,7 +40,6 @@ const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePi
 			v-model="dateRange"
 			:view="props.view"
 			is-range
-			:show-header="false"
 		/>
 	</div>
 </template>
