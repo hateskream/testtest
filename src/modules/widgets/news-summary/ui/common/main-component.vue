@@ -41,12 +41,13 @@ const props = defineProps<IMainComponentProps>();
 	flex-grow: 1;
 	flex-direction: column;
 	padding: 12px 20px 20px;
+	gap: 6px;
 }
 
 .header {
 	display: flex;
 	justify-content: space-between;
-	padding: 30px 0 18px;
+	padding: 24px 0 6px;
 }
 
 .summary {

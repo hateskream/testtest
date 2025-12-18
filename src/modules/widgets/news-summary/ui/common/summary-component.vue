@@ -13,7 +13,7 @@ const props = defineProps<ISummaryComponentProps>();
 <template>
 	<div :class="classes.container">
 		<ui-text token="text-300-r" as="div">
-			<ui-clamped :class="classes.text" :rows="3">
+			<ui-clamped :class="classes.text" :rows="4">
 				{{ props.text }}
 			</ui-clamped>
 		</ui-text>
@@ -35,6 +35,7 @@ const props = defineProps<ISummaryComponentProps>();
 }
 
 .text {
+	padding-right: 40px;
 	color: rgb(255 255 255 / 96%);
 }
 
