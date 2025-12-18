@@ -211,10 +211,11 @@ const preparedPrice = computed(() => getNumberText(props.ticker.priceCurrent));
 	display: flex;
 	flex-grow: 1;
 	align-items: center;
+	height: 60px;
 	padding: 6px 10px;
-	gap: 12px;
 	border-radius: 16px;
 	transition: background-color 0.3s ease;
+	gap: 12px;
 }
 
 .container {
