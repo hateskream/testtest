@@ -15,7 +15,7 @@ const classList = computed(() => ({
 </script>
 
 <template>
-	<button :class="[classes.chip, classList]">
+	<button class="text-200-r" :class="[classes.chip, classList]">
 		<slot />
 	</button>
 </template>
@@ -28,12 +28,7 @@ const classList = computed(() => ({
 	padding:
 		var(--padding-padding-s3, 4px) var(--padding-padding-s6, 10px)
 		var(--padding-padding-s3, 4px) var(--tile-padding-md-in, 10px);
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.122px;
 	background: var(--bg-500, rgb(73 73 80 / 90%));
 	border-radius: var(--radius-radius-s12-24, 9.2px);
 	gap: var(--padding-padding-s3, 4px);

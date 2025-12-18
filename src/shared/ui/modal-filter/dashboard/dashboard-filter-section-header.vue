@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+
 defineProps<{
 	isActive?: boolean;
 }>();
@@ -6,9 +8,9 @@ defineProps<{
 
 <template>
 	<div :class="classes.top">
-		<span :class="[classes.rowTitle, !isActive && classes.disabled]">
+		<ui-text token="text-200-r" :class="[classes.rowTitle, !isActive && classes.disabled]">
 			<slot />
-		</span>
+		</ui-text>
 
 		<slot name="right" />
 	</div>
@@ -28,12 +30,7 @@ defineProps<{
 .rowTitle {
 	display: flex;
 	align-items: flex-start;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--color-text-active-base-300-active, #ffffff);
-	letter-spacing: 0.122px;
 	gap: 8px;
 	transition: color 0.12s ease-in-out;
 }

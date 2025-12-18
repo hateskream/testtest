@@ -17,7 +17,7 @@ const classList = computed(() => ({
 </script>
 
 <template>
-	<button :class="[classes.tab, classList]">
+	<button class="text-300-r" :class="[classes.tab, classList]">
 		<slot />
 	</button>
 </template>
@@ -30,12 +30,7 @@ const classList = computed(() => ({
 	align-items: center;
 	height: auto;
 	padding: 6px 12px;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-01, 12px);
-	line-height: 170%;
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.096px;
 	white-space: nowrap;
 	background-color: var(--bg-color-base-300);
 	border-radius: 42px;
