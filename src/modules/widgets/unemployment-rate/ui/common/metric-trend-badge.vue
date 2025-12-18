@@ -33,7 +33,7 @@ const topValueLabel = computed(() => {
 		<div :class="classes.bottom">
 			<span>{{ label }}:&nbsp;</span>
 			<span :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
-				{{ isGood ? '+' : '-' }}{{ value }}{{ unit }}
+				{{ isGood ? '-' : '+' }}{{ value }}{{ unit }}
 			</span>
 			<ui-icon
 				:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
