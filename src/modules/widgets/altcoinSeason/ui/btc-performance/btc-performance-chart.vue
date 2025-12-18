@@ -76,10 +76,10 @@ function getTargetColorByRank(rank: number, isActive: boolean = true) {
 	position: absolute;
 	top: 0;
 	left: 50%;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
+	font-weight: var(--font-text-200-r-weight);
+	font-size: var(--font-text-200-r-size, 10px);
 	color: var(--color-text-base-100, #646568);
-	letter-spacing: 0.08px;
+	letter-spacing: var(--font-text-200-r-letter-spacing);
 	transform: translateX(-50%);
 }
 

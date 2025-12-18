@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { ModalFilter } from './components/modal';
 import { useQueryTickerSelector } from '../queries';
@@ -67,6 +67,11 @@ interface IProps {
 	 */
 	closeEmptySelected?: boolean;
 
+	/**
+	 * Close modal on select
+	 */
+	closeOnSelect?: boolean;
+
 	isBackgroundTransparent?: boolean;
 	textAboveSearch?: string;
 }
@@ -86,7 +91,7 @@ const selectedMarkets = defineModel<MarketType[]>('markets', { default: () => []
 
 const { data } = useQueryTickerSelector();
 
-const emits = defineEmits<ITickerEmits>();
+const emit = defineEmits<ITickerEmits>();
 
 const selectedTickersMapped = computed(() => {
 	return (data.value?.tickers ?? [])
@@ -100,10 +105,29 @@ const selectedMarketsMapped = computed(() => {
 		.slice(0, ACTIVE_TICKER_LIST_COUNT_SHOW - selectedTickersMapped.value.length)
 		.map(getMappedMarket);
 });
+
+const badgeDropdownRef = useTemplateRef('badgeDropdown');
+
+function close() {
+	badgeDropdownRef.value?.close?.();
+}
+
+function onSelect(item: string) {
+	emit('select', item);
+
+	if (props.closeOnSelect) {
+		close();
+	}
+}
+
+function onUnselect(item: string) {
+	emit('unselect', item);
+}
 </script>
 
 <template>
 	<modal-badge-dropdown
+		ref="badgeDropdown"
 		:padding-left="selectedTickers.length && props.displayVariant !== 'default' ? `4px` : undefined"
 		:display-variant="props.displayVariant"
 	>
@@ -135,9 +159,9 @@ const selectedMarketsMapped = computed(() => {
 				:close-empty-selected="props.closeEmptySelected"
 				:is-background-transparent="props.isBackgroundTransparent"
 				:text-above-search="props.textAboveSearch"
-				@select="emits('select', $event)"
-				@unselect="emits('unselect', $event)"
-				@select-all="emits('selectAll', $event)"
+				@select="onSelect"
+				@unselect="onUnselect"
+				@select-all="emit('selectAll', $event)"
 			/>
 		</template>
 	</modal-badge-dropdown>

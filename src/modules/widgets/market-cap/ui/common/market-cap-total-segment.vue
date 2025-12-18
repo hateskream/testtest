@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { UiText } from '@/shared/ui/text';
+
 interface IMarketCapSummarySegmentProps {
 	name: string;
 }
@@ -9,9 +11,13 @@ const props = defineProps<IMarketCapSummarySegmentProps>();
 
 <template>
 	<div :class="classes.segment">
-		<div :class="classes.name">
+		<ui-text
+			:class="classes.name"
+			as="div"
+			token="text-200-r"
+		>
 			{{props.name}}
-		</div>
+		</ui-text>
 		<div :class="classes.row">
 			<slot />
 		</div>
@@ -24,11 +30,7 @@ const props = defineProps<IMarketCapSummarySegmentProps>();
 }
 
 .name {
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-color-base-300);
-	letter-spacing: 0.122px;
 }
 
 .row {

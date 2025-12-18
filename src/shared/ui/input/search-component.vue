@@ -37,6 +37,7 @@ defineExpose({ focus });
 			type="text"
 			:placeholder="props.placeholder"
 			:class="classes.input"
+			class="text-300-r"
 		/>
 	</div>
 </template>
@@ -57,11 +58,6 @@ defineExpose({ focus });
 }
 
 .input {
-	font-style: normal;
-	font-weight: 300;
-	font-size: 13px;
-	line-height: normal;
-	font-family: 'Roboto Flex', sans-serif;
 	text-align: left;
 	background: none;
 

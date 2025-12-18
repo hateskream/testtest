@@ -64,6 +64,7 @@ export interface IFilterDisplay {
 	label: string;
 	value: string;
 	icon?: IIcon;
+	selected?: string;
 }
 
 export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
@@ -80,12 +81,12 @@ export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
 	[RankingAndNewFilterValue.New]: { label: 'New', value: 'new' },
 	[SectorFilterValue.Energy]: { label: 'Energy', value: 'energy' },
 	[SectorFilterValue.Metal]: { label: 'Metal', value: 'metal' },
-	[TimeRangeFilterValue.Day]: { label: '1D', value: '1D' },
-	[TimeRangeFilterValue.Week]: { label: '1W', value: '1W' },
-	[TimeRangeFilterValue.Month]: { label: '1M', value: '1M' },
-	[TimeRangeFilterValue.ThreeMonths]: { label: '3M', value: '3M' },
-	[TimeRangeFilterValue.SixMonths]: { label: '6M', value: '6M' },
-	[TimeRangeFilterValue.Year]: { label: '1Y', value: '1Y' },
+	[TimeRangeFilterValue.Day]: { label: '1 day', value: '1D', selected: '1D' },
+	[TimeRangeFilterValue.Week]: { label: '1 week', value: '1W', selected: '1W' },
+	[TimeRangeFilterValue.Month]: { label: '1 month', value: '1M', selected: '1M' },
+	[TimeRangeFilterValue.ThreeMonths]: { label: '3 months', value: '3M', selected: '3M' },
+	[TimeRangeFilterValue.SixMonths]: { label: '6 months', value: '6M', selected: '6M' },
+	[TimeRangeFilterValue.Year]: { label: '1 year', value: '1Y', selected: '1Y' },
 };
 
 export const filterTypeToName: Record<FilterType, string> = {
@@ -97,3 +98,5 @@ export const filterTypeToName: Record<FilterType, string> = {
 
 export type FiltersValues = Partial<Record<FilterType, IFilterDisplay[]>>;
 export type FiltersState = Partial<Record<FilterType, FilterValue>>;
+
+export const filters = Object.values(filterValueToDisplay);

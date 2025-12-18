@@ -21,7 +21,7 @@ const renderMarkdown = () => {
 	const sanitized = DOMPurify.sanitize(html);
 	return h('div', {
 		innerHTML: sanitized,
-		class: [classes.markdownWrapper, 'paragraph-p-01'],
+		class: [classes.markdownWrapper, 'text-200-r'],
 	});
 };
 </script>
@@ -34,7 +34,7 @@ const renderMarkdown = () => {
 		<template #body>
 			<div :class="classes.bodyWrapper">
 				<component :is="renderMarkdown" />
-				<div :class="classes.summarized" class="paragraph-p-02">
+				<div :class="classes.summarized" class="text-200-r">
 					Summarized at 19:30
 				</div>
 			</div>

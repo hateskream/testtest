@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+
 const hoursMap = [
 	{
 		hours: 0,
@@ -77,9 +79,9 @@ const colorMap: Record<string, string> = {
 </script>
 
 <template>
-	<div :class="classes.container">
+	<div>
 		<div :class="classes.header">
-			<span :class="classes.label">next event:</span>
+			<ui-text :class="classes.label" token="text-100-r">next event:</ui-text>
 			<div :class="classes.titleContainer">
 				<div :class="classes.title">
 					<img
@@ -87,12 +89,11 @@ const colorMap: Record<string, string> = {
 						src="https://flagcdn.com/us.svg"
 						alt="US flag"
 					/>
-					<span>US Federal Funds Rate</span>
+					<ui-text token="text-300-r">US Federal Funds Rate</ui-text>
 				</div>
-				<span :class="classes.time">in 2 hours</span>
+				<ui-text :class="classes.time" token="text-300-r">in 2 hours</ui-text>
 			</div>
 		</div>
-
 		<div :class="classes.timeline">
 			<div
 				v-for="el in hoursMap"
@@ -101,19 +102,20 @@ const colorMap: Record<string, string> = {
 				:style="{ backgroundColor: colorMap[el.percent] }"
 			></div>
 		</div>
-
 		<div :class="classes.hours">
-			<span v-for="el in hoursMap" :key="el.hours">{{ el.hours < 10 ? '0' + el.hours : el.hours }}</span>
+			<ui-text
+				v-for="el in hoursMap"
+				:key="el.hours"
+				token="text-100-r"
+				align="center"
+			>
+				{{ el.hours < 10 ? '0' + el.hours : el.hours }}
+			</ui-text>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.container {
-	/* font-family: system-ui, sans-serif;
-	color: #eaeaea; */
-}
-
 .header {
 	display: flex;
 	flex-direction: column;
@@ -127,23 +129,13 @@ const colorMap: Record<string, string> = {
 }
 
 .label {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 11px;
-	line-height: 180%; /* 19.8px */
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.088px;
 }
 
 .title {
 	display: flex;
 	align-items: center;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13.3px;
-	line-height: 180%; /* 23.94px */
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.146px;
 	gap: 6px;
 }
 
@@ -156,12 +148,7 @@ const colorMap: Record<string, string> = {
 }
 
 .time {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13.3px;
-	line-height: 180%; /* 23.94px */
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.146px;
 	text-decoration-line: underline;
 	text-decoration-style: dotted;
 	text-decoration-skip-ink: auto;
@@ -189,12 +176,6 @@ const colorMap: Record<string, string> = {
 .hours {
 	display: flex;
 	justify-content: space-between;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 11px;
-	line-height: 180%; /* 19.8px */
-	text-align: center;
 	color: rgb(255 255 255 / 30%);
-	letter-spacing: 0.088px;
 }
 </style>

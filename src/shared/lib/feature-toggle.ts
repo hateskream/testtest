@@ -30,6 +30,12 @@ export const ALL_FEATURES = [
 	'CALENDAR_PAGE_ENABLED',
 	'NEWS_PAGE_ENABLED',
 	'TV_PAGE_ENABLED',
+
+	/**
+	 * Разрешает локализовать форматирование дат.
+	 * Убрать как только мы возьмемся за локализацию проекта.
+	 */
+	'DATE_FORMAT_LOCALIZATION',
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];

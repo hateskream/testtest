@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IMetricTrendBadge {
 	topValue: number;
@@ -13,18 +16,26 @@ interface IMetricTrendBadge {
 }
 
 const props = defineProps<IMetricTrendBadge>();
+
+const topValueLabel = computed(() => {
+	if (props.isTopValuePercent) {
+		return `${props.topValue}%`;
+	}
+
+	return props.topValue;
+});
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<span>{{ topValue }} {{ isTopValuePercent ? '%' : '' }}:&nbsp;</span>
+			<ui-text token="title-200">{{ topValueLabel }}</ui-text>
 		</div>
 		<div :class="classes.bottom">
-			<span>{{ label }}:&nbsp;</span>
-			<span :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
-				{{ isGood ? '+' : '-' }}{{ value }}{{ unit }}
-			</span>
+			<ui-text token="text-200-r">{{ label }}:&nbsp;</ui-text>
+			<ui-text token="text-200-r" :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
+				{{ isGood ? '-' : '+' }}{{ value }}{{ unit }}
+			</ui-text>
 			<ui-icon
 				:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
 				height="12px"
@@ -43,21 +54,13 @@ const props = defineProps<IMetricTrendBadge>();
 }
 
 .topValue {
-	font-weight: 440;
-	font-size: 16.8px;
-	line-height: 160%;
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.134px;
 }
 
 .bottom {
 	display: flex;
 	align-items: center;
-	font-weight: 400;
-	font-size: 13.3px;
-	line-height: 180%;
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.146px;
 }
 
 .value {

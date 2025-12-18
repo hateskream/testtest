@@ -45,7 +45,6 @@ import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 	align-items: center;
 	width: 12px;
 	height: 12px;
-	font-size: 8px;
 	line-height: 1;
 	color: var(--text-color-base-300);
 	background-color: rgb(217 217 217 / 20%);

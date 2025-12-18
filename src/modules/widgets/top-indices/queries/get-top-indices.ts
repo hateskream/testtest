@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { computed, onUnmounted, toValue } from 'vue';
+import { computed, onUnmounted, toValue, type Ref } from 'vue';
 
 import { getTopIndicesCrypto } from '../api';
 import { type ColumnWithoutSymbol, ColumnType } from '@/modules/cell';
@@ -14,14 +14,14 @@ const realTimeColumns: ColumnWithoutSymbol[] = [
 ];
 
 export function useQueryTopIndices(
-	limit: number,
+	limit: Ref<number>,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
 
 	realTimeColumns.forEach(column => {
 		cellUpdater.register(column, updatedData => {
 			queryClient.setQueryData(
-				['top-indices'],
+				['top-indices', toValue(limit)],
 				oldData => updateQueryData(oldData as QueryData, updatedData),
 			);
 		});
@@ -32,7 +32,7 @@ export function useQueryTopIndices(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['top-indices']),
+		queryKey: computed(() => ['top-indices', toValue(limit)]),
 		queryFn: ({ pageParam = 0 }) =>
 			getTopIndicesCrypto({
 				offset: pageParam,
@@ -45,7 +45,7 @@ export function useQueryTopIndices(
 			}
 
 			const { total, offset } = lastPage.pagination;
-			const nextOffset = offset + limit;
+			const nextOffset = offset + toValue(limit);
 			return nextOffset < total ? nextOffset : undefined;
 		},
 	});

@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue';
 
 import { IconIds, UiIcon } from '../icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IExternalLinkProps {
 	to: string;
@@ -15,7 +16,11 @@ const props = withDefaults(defineProps<IExternalLinkProps>(), {
 </script>
 
 <template>
-	<div :class="classes.externalLink">
+	<ui-text
+		as="div"
+		token="text-300-r"
+		:class="classes.externalLink"
+	>
 		<a
 			:href="props.to"
 			target="_blank"
@@ -30,7 +35,7 @@ const props = withDefaults(defineProps<IExternalLinkProps>(), {
 			height="14"
 			:class="classes.icon"
 		/>
-	</div>
+	</ui-text>
 </template>
 
 <style module="classes">
@@ -38,9 +43,7 @@ const props = withDefaults(defineProps<IExternalLinkProps>(), {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.143px;
 	text-decoration-line: underline;
 	text-underline-position: from-font;
 }

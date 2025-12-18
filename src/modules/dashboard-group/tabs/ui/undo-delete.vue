@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+
 const emit = defineEmits(['undo']);
 </script>
 
 <template>
 	<div :class="classes.container">
-		<span :class="classes.deletedText">Deleted</span>
-		<button :class="classes.undoButton" @click="emit('undo')">Undo</button>
+		<ui-text token="title-100" :class="classes.deletedText">Deleted</ui-text>
+		<button
+			class="title-100"
+			:class="classes.undoButton"
+			@click="emit('undo')"
+		>
+			Undo
+		</button>
 	</div>
 </template>
 
@@ -22,22 +30,12 @@ const emit = defineEmits(['undo']);
 }
 
 .deletedText {
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-menu-menu-title, 13px);
-	line-height: 22px;
 	color: var(--color-text-contrast-300, #5c5c66);
-	letter-spacing: 0.052px;
 }
 
 .undoButton {
 	padding: 4px 14px;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-headers-size-h-01, 13px);
-	line-height: 22px;
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.052px;
 	background: transparent;
 	border: 1px solid rgb(97 97 97 / 30%);
 	border-radius: 20px;

@@ -19,10 +19,15 @@ export const dateRangeFilterValueToDisplay: Record<MarketCapDateRange, { selecte
 	},
 	[MarketCapDateRange.Year]: {
 		selected: '1Y',
-		option: 'Year',
+		option: '1 year',
 	},
 	[MarketCapDateRange.All]: {
 		selected: 'All',
 		option: 'All time',
 	},
 };
+
+export const dateRangeFilters = Object.values(MarketCapDateRange).map(d => ({
+	label: dateRangeFilterValueToDisplay[d].selected,
+	value: d,
+}));

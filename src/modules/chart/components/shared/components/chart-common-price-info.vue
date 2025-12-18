@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 import { useChartStore } from '@/modules/chart/store';
+
 const { activeExchange, isActiveMarketOpen } = storeToRefs(useChartStore());
 
 
@@ -52,11 +53,11 @@ const relevantDateTime = computed(() => {
 
 <template>
 	<div v-if="activeExchange" :class="classes.priceWrapper">
-		<div :class="classes.timestamp" class="paragraph-p-03">
+		<div :class="classes.timestamp" class="text-50-r">
 			{{ marketStatusLabel }} {{ relevantDateTime }}
 		</div>
 		<div :class="classes.performanceWrapper">
-			<div :class="classes.price" class="header-h02">
+			<div :class="classes.price" class="title-400">
 				<div>{{ activeExchange.currency_symbol }}</div>
 				<div>{{ activeExchange.price.toFixed(2) }}</div>
 			</div>

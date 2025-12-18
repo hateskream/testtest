@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IUiTagProps {
 	icon?: IconIds | null;
@@ -22,9 +23,9 @@ const isReversed = computed(() => props.iconPosition === 'start');
 
 <template>
 	<div :class="[classes.tag, classes[props.color], { [classes.reversed]: isReversed }]">
-		<span>
+		<ui-text token="text-200-r">
 			<slot />
-		</span>
+		</ui-text>
 		<slot name="icon">
 			<ui-icon
 				v-if="props.icon"
@@ -42,11 +43,6 @@ const isReversed = computed(() => props.iconPosition === 'start');
 	align-items: center;
 	height: var(--height-height-s12, 24px);
 	padding: var(--tile-padding-md-gap, 3px) var(--tile-padding-md-out, 6px);
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
-	letter-spacing: 0.122px;
 	border-radius: var(--radius-radius-s9-16, 6px);
 	gap: var(--tile-padding-md-gap, 3px);
 }

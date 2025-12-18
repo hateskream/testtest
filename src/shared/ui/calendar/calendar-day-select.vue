@@ -27,6 +27,7 @@ function updateWeek(model: DatePickerModel) {
 .calendarComponent {
 	display: flex;
 	align-self: stretch;
+	width: 100%;
 	padding: 16px;
 }
 </style>

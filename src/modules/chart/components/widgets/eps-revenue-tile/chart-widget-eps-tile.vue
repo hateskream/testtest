@@ -26,7 +26,7 @@ defineProps<IProps>();
 	<chart-common-widget-layout>
 		<template #body>
 			<div :class="classes.container">
-				<div :class="classes.header" class="paragraph-p-01">
+				<div :class="classes.header" class="text-200-r">
 					{{ data.quarter }}
 				</div>
 

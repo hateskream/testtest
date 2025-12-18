@@ -2,7 +2,7 @@
 import { computed, watch, ref, type CSSProperties } from 'vue';
 
 import { UiSkeleton } from '../skeleton';
-import { shouldBlockImageUrl } from './image-blacklist';
+import { shouldBlockImageUrl } from '@/shared/service/images';
 
 interface IUiImage {
 	height?: string;

@@ -6,7 +6,7 @@ export enum CpiRange {
 	All = 'All',
 }
 
-export enum CpiMetric {
+export enum CpiValueType {
 	Points = 'points',
 	ChangeDelta = 'change-delta',
 	ChangePercent = 'change-percent',

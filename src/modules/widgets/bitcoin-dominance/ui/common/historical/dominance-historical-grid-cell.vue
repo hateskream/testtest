@@ -1,9 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+</script>
 
 <template>
-	<div :class="classes.cell">
+	<ui-text
+		:class="classes.cell"
+		token="text-50-r"
+		as="div"
+	>
 		<slot />
-	</div>
+	</ui-text>
 </template>
 
 <style module="classes">
@@ -12,8 +18,6 @@
 	justify-content: center;
 	align-items: center;
 	padding: 0 6px;
-	font-weight: 400;
-	font-size: 10px;
 	color: var(--text-color-base-300);
 }
 </style>

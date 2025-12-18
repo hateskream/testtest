@@ -3,8 +3,7 @@ import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiDriver } from '@/shared/ui/driver';
-import { ModalFilter, ModalFilterTabWrapper, ModalFilterTitle } from '../../base';
+import { ModalFilterTitle } from '../../base';
 import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
 import {
 	groupTableColumns,
@@ -13,6 +12,8 @@ import {
 	type ColumnType,
 	type ITableColumn,
 } from '@/modules/cell';
+import { UiModalContent, UiModalDivider, UiModalTitle, UiModalWrapper } from '@/shared/ui/modal';
+import { UiFilterChip, UiFilterChipWrapper, UiFilterRow, UiFilterSectionLabel } from '@/shared/ui/modal-filter';
 
 interface IGridLayoutCell extends LayoutItem {
 	data: ITableColumn;
@@ -65,36 +66,31 @@ function toggleShowActiveTableColumns(columnType: ColumnType) {
 </script>
 
 <template>
-	<modal-filter>
-		<template #title> Choose Metrics </template>
+	<ui-modal-wrapper :class="classes.wrapper" display-variant="default">
+		<ui-modal-title>
+			Choose Metrics
+		</ui-modal-title>
 
-		<template #content>
-			<div>
-				<div
-					v-for="(cols, key) in groupedTableColumns"
-					:key="key"
-					:class="classes.row"
-				>
-					<div :class="classes.rowTitle">
-						{{ key }}
-					</div>
-
-					<div>
-						<div :class="classes.tabs">
-							<modal-filter-tab-wrapper
-								v-for="tab in cols"
-								:key="tab.columnType"
-								:is-active="showTableColumns.includes(tab.columnType)"
-								@click="toggleShowActiveTableColumns(tab.columnType)"
-							>
-								{{ tab.displayShortColumnName }} d
-							</modal-filter-tab-wrapper>
-						</div>
-					</div>
-				</div>
+		<ui-modal-content>
+			<div :class="classes.rows">
+				<ui-filter-row v-for="(cols, key) in groupedTableColumns" :key="key">
+					<ui-filter-section-label>
+						{{key}}
+					</ui-filter-section-label>
+					<ui-filter-chip-wrapper>
+						<ui-filter-chip
+							v-for="tab in cols"
+							:key="tab.columnType"
+							:is-active="showTableColumns.includes(tab.columnType)"
+							@click="toggleShowActiveTableColumns(tab.columnType)"
+						>
+							{{tab.displayColumnName}}
+						</ui-filter-chip>
+					</ui-filter-chip-wrapper>
+				</ui-filter-row>
 			</div>
 
-			<ui-driver :class="classes.driver" />
+			<ui-modal-divider :class="classes.driver" />
 
 			<div>
 				<modal-filter-title> Column order </modal-filter-title>
@@ -129,23 +125,31 @@ function toggleShowActiveTableColumns(columnType: ColumnType) {
 								width="10px"
 								height="14px"
 							/>
-							<modal-filter-tab-wrapper :class="classes.columnCellTabWrapper">
+							<ui-filter-chip :class="classes.columnCellTabWrapper">
 								<span :class="classes.columnCellTabOrder">{{ item.y + 1 }}</span>
 								<span>
 									{{ item.data.displayColumnName }}
 								</span>
-							</modal-filter-tab-wrapper>
+							</ui-filter-chip>
 						</grid-item>
 					</grid-layout>
 				</div>
 			</div>
-		</template>
-	</modal-filter>
+		</ui-modal-content>
+	</ui-modal-wrapper>
 </template>
 
 <style module="classes">
+.wrapper {
+	width: 580px;
+}
+
+.rows {
+	padding: 0 12px;
+}
+
 .driver {
-	margin: 28px 0 12px;
+	margin: 12px 0 0;
 }
 
 .columnCellTabWrapper {

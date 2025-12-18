@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
+import { UiText } from '@/shared/ui/text';
 
 interface ISectorData {
 	name: string;
@@ -57,10 +58,10 @@ const lastUpdate = 'last update: 10 Jul, 2025';
 	<chart-common-widget-layout>
 		<template #header>
 			<div :class="classes.headerContainer">
-				<div :class="classes.title" class="header-h01">
+				<div :class="classes.title" class="title-300">
 					Sectors
 				</div>
-				<div :class="classes.lastUpdate" class="paragraph-p-02">
+				<div :class="classes.lastUpdate" class="text-100-r">
 					{{ lastUpdate }}
 				</div>
 			</div>
@@ -79,9 +80,9 @@ const lastUpdate = 'last update: 10 Jul, 2025';
 								:class="classes.colorIndicator"
 								:style="{ backgroundColor: sector.color }"
 							></div>
-							<span :class="classes.sectorName" class="paragraph-p-00">{{ sector.name }}</span>
+							<ui-text :class="classes.sectorName" token="text-300-r">{{ sector.name }}</ui-text>
 						</div>
-						<div :class="classes.sectorPercentage" class="paragraph-p-00">
+						<div :class="classes.sectorPercentage" class="text-300-r">
 							{{ sector.percentage }}%
 						</div>
 					</div>
@@ -169,7 +170,6 @@ const lastUpdate = 'last update: 10 Jul, 2025';
 }
 
 .sectorName {
-	line-height: 1.2;
 	color: var(--text-color-base-300);
 }
 

@@ -4,6 +4,7 @@ import { computed } from 'vue';
 
 import type { ITableOpenCell } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IProps {
 	data: ITableOpenCell;
@@ -33,7 +34,13 @@ const isShowMoon = computed(()=>{
 
 <template>
 	<div :class="classes.isOpenContainer">
-		<span :class="classes.value" class="paragraph-p-00 color-base">{{ displayText }}
+		<ui-text
+			:class="classes.value"
+			token="text-300-r"
+			class="color-base"
+			align="left"
+		>
+			{{ displayText }}
 			<ui-icon
 				v-if="isShowMoon"
 
@@ -42,7 +49,7 @@ const isShowMoon = computed(()=>{
 				width="16px"
 				height="16px"
 			/>
-		</span>
+		</ui-text>
 	</div>
 </template>
 
@@ -58,7 +65,6 @@ const isShowMoon = computed(()=>{
 
 
 .value {
-	text-align: left;
 	color: var(--text-color-base-500);
 }
 

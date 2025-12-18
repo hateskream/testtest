@@ -32,11 +32,6 @@ function goBack() {
 	gap: 10px;
 	padding: 20px;
 
-	div {
-		font-size: 32px;
-		color: var(--text-color-base-500);
-	}
-
 	button {
 		padding: 10px;
 		color: var(--text-color-base-500);

@@ -4,6 +4,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 import { bottomNavigation, navigation } from '../constants';
 import { createRouteObject } from '../helpers';
 import { useActiveLink } from '../composables';
+import { UiText } from '@/shared/ui/text';
 
 const emits = defineEmits<{
 	minify: [];
@@ -49,9 +50,9 @@ const { isActive } = useActiveLink();
 						height="20px"
 					/>
 				</div>
-				<span :class="classes.linkText">
+				<ui-text token="text-400-r" :class="classes.linkText">
 					{{item.routeLabels}}
-				</span>
+				</ui-text>
 			</router-link>
 		</div>
 
@@ -130,12 +131,6 @@ const { isActive } = useActiveLink();
 	border-radius: 12px;
 	cursor: pointer;
 	gap: 8px;
-}
-
-.linkText {
-	font-weight: 300;
-	font-size: var(--typography-paragraph-size-p01);
-	font-family: 'Roboto Flex', sans-serif;
 }
 
 .link,

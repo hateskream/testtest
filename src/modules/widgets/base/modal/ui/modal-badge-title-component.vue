@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<IProps>(), {
 			'--color': props.color,
 			'--pl': props.paddingLeft,
 		}"
+		class="text-200-r"
 	>
 		<slot />
 	</div>
@@ -40,12 +41,7 @@ const props = withDefaults(defineProps<IProps>(), {
 	width: max-content;
 	min-height: 32px;
 	padding: 0 var(--pl, 12px);
-	font-style: normal;
-	font-weight: 450;
-	font-size: 11.8px;
-	line-height: 165%;
 	color: var(--color);
-	letter-spacing: 0.059px;
 	background: var(--bg);
 	border-radius: 18px;
 	cursor: pointer;

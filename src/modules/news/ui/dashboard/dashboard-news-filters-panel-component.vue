@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { ModalBadgeDropdown, ModalBadgeList, ModalFilterTitle, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { type MarketType } from '@/modules/market';
 import {
+	getSegmentsTitleStr,
 	type ILocation,
-	type SortState,
 	type ISegmentData,
-	type SelectedSegmentTickersState,
 	NewsLocationFilter,
 	NewsSegmentModal,
+	type SelectedSegmentTickersState,
+	type SortState,
 	sortToName,
-	getSegmentsTitleStr,
 } from '@/modules/news';
 import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 
@@ -54,6 +54,12 @@ const sortTitle = computed(() => {
 const displayItems = computed(() => {
 	return getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers) || 'Market';
 });
+
+const sortByDropdownRef = useTemplateRef('sortByDropdown');
+
+function closeSortByDropdown() {
+	sortByDropdownRef.value?.close?.();
+}
 </script>
 
 <template>
@@ -98,7 +104,7 @@ const displayItems = computed(() => {
 				</template>
 			</modal-badge-dropdown>
 
-			<modal-badge-dropdown display-variant="new">
+			<modal-badge-dropdown ref="sortByDropdown" display-variant="new">
 				<template #title>
 					{{sortTitle}}
 				</template>
@@ -106,7 +112,7 @@ const displayItems = computed(() => {
 					<modal-badge-list display-variant="new">
 						<modal-filter-title>Sort By</modal-filter-title>
 
-						<sortby-modal-inner v-model="sortBy" />
+						<sortby-modal-inner v-model="sortBy" @update:model-value="closeSortByDropdown" />
 					</modal-badge-list>
 				</template>
 			</modal-badge-dropdown>

@@ -5,6 +5,8 @@ import { MarketIds, markets } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ExternalLink } from '@/shared/ui/link';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 interface ICalendarEventCardProps {
 	id: string;
@@ -60,9 +62,9 @@ const openEventCard = () => {
 							width="20px"
 							height="20px"
 						/>
-						<span :class="classes.title">
-							{{eventTitle}}
-						</span>
+						<ui-clamped :class="classes.title" :rows="1">
+							<ui-text token="text-300-r">{{ eventTitle }}</ui-text>
+						</ui-clamped>
 					</div>
 					<button :class="classes.dropdown">
 						<ui-icon
@@ -78,8 +80,20 @@ const openEventCard = () => {
 						:key="metric.label"
 						:class="classes.metricData"
 					>
-						<div :class="classes.metricLabel">{{ metric.label }}:</div>
-						<div :class="classes.metricValue">{{ metric.value }}</div>
+						<ui-text
+							:class="classes.metricLabel"
+							token="text-300-r"
+							as="div"
+						>
+							{{ metric.label }}:
+						</ui-text>
+						<ui-text
+							:class="classes.metricValue"
+							token="text-300-r"
+							as="div"
+						>
+							{{ metric.value }}
+						</ui-text>
 					</div>
 				</div>
 
@@ -88,9 +102,15 @@ const openEventCard = () => {
 						<ui-driver />
 
 						<div :class="classes.detailsContent">
-							<p :class="classes.text">{{text}}</p>
+							<ui-text
+								:class="classes.text"
+								token="text-300-r"
+								as="p"
+							>
+								{{ text }}
+							</ui-text>
 
-							<external-link :class="classes.link" :to="link">{{linkText}}</external-link>
+							<external-link :class="classes.link" :to="link">{{ linkText }}</external-link>
 
 							<button :class="classes.chart">
 								<ui-icon
@@ -98,9 +118,9 @@ const openEventCard = () => {
 									width="16px"
 									height="16px"
 								/>
-								<span :class="classes.chartText">
-									Launch chart
-								</span>
+								<ui-clamped :rows="1">
+									<ui-text token="text-200-b">Launch chart</ui-text>
+								</ui-clamped>
 							</button>
 						</div>
 					</div>
@@ -168,18 +188,8 @@ const openEventCard = () => {
 }
 
 .title {
-	display: -webkit-box;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.146px;
-	text-overflow: ellipsis;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
 }
 
 .dropdown {
@@ -213,15 +223,11 @@ const openEventCard = () => {
 }
 
 .metricLabel {
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.143px;
 }
 
 .metricValue {
-	font-size: var(--typography-paragraph-size-p00, 13px);
 	color: #ffffff;
-	letter-spacing: 0.143px;
 }
 
 .details {
@@ -243,12 +249,7 @@ const openEventCard = () => {
 }
 
 .text {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.146px;
 }
 
 .chart {
@@ -263,19 +264,6 @@ const openEventCard = () => {
 
 .chart:hover {
 	color: var(--text-color-base-300-activated);
-}
-
-.chartText {
-	display: -webkit-box;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 510;
-	font-size: var(--font-text-200-b-size, 12.2px);
-	line-height: 180%;
-	letter-spacing: 0.122px;
-	text-overflow: ellipsis;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
 }
 </style>
 

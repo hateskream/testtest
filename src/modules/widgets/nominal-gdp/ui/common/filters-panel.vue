@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { NominalGdpRange, rangeFilterValueToDisplay } from '../../model';
+import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { NominalGdpRange, rangeFilters, rangeFilterValueToDisplay } from '../../model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -20,28 +20,14 @@ const activeRange = defineModel<NominalGdpRange>('range', { required: true });
 		:display-variant="props.displayVariant"
 		@on-clear-click="emit('reset')"
 	>
-		<modal-badge-dropdown :display-variant="props.displayVariant">
-			<template #title>
-				{{ rangeFilterValueToDisplay[activeRange].selected }}
-			</template>
-			<template #content>
-				<modal-badge-list :display-variant>
-					<template #title>
-						Date range
-					</template>
-					<template
-						v-for="filterKey in NominalGdpRange"
-						:key="filterKey"
-					>
-						<modal-item-selector
-							:model-value="filterKey === activeRange"
-							@update:model-value="activeRange = filterKey"
-						>
-							{{ rangeFilterValueToDisplay[filterKey].option }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
+		<modal-badge-filter
+			:display-variant="props.displayVariant"
+			:options="rangeFilters"
+			:selected-value="activeRange"
+			:label="rangeFilterValueToDisplay[activeRange].selected"
+			close-on-select
+			title="Date range"
+			@select="activeRange = $event.value"
+		/>
 	</widget-filters-scrollable>
 </template>

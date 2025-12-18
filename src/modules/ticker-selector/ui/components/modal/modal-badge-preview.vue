@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 
 import { ACTIVE_TICKER_LIST_COUNT_SHOW, type IMarketMapped, type ITickerMapped } from '../../../model';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 import ModalFilterTickerIcon from './modal-filter-ticker-icon.vue';
 import ModalFilterTickerLabel from './modal-filter-ticker-label.vue';
@@ -57,20 +59,28 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 				+ {{ props.totalSelectedCount - ACTIVE_TICKER_LIST_COUNT_SHOW }}
 			</span>
 
-			<div v-if="props.showLabel" :class="classes.labels">
-				<modal-filter-ticker-label
-					v-for="ticker in props.selectedTickers"
-					:key="ticker.tickerId"
-					:ticker="ticker"
-					:class="classes.label"
-				/>
-				<modal-filter-market-label
-					v-for="market in props.selectedMarkets"
-					:key="market.marketType"
-					:market="market"
-					:class="classes.label"
-				/>
-			</div>
+			<ui-clamped
+				v-if="props.showLabel"
+				:class="classes.labels"
+				:rows="1"
+			>
+				<ui-text
+					token="text-200-r"
+				>
+					<modal-filter-ticker-label
+						v-for="ticker in props.selectedTickers"
+						:key="ticker.tickerId"
+						:ticker="ticker"
+						:class="classes.label"
+					/>
+					<modal-filter-market-label
+						v-for="market in props.selectedMarkets"
+						:key="market.marketType"
+						:market="market"
+						:class="classes.label"
+					/>
+				</ui-text>
+			</ui-clamped>
 		</template>
 		<div v-else>{{ props.emptyLabel }}</div>
 	</div>
@@ -106,14 +116,8 @@ const selectedItemsCount = computed(() => props.selectedTickers.length + props.s
 }
 
 .labels {
+	display: inline-flex;
 	max-width: 120px;
-	overflow: hidden;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
-	letter-spacing: 0.122px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 }
 
 .label:not(:last-child)::after {

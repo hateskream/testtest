@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
@@ -27,7 +27,7 @@ const emits = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
-
+const limit = computed(() => props.meta.maxCountRowTable ?? 50);
 const {
 	currentStock,
 	currentDate,
@@ -45,6 +45,7 @@ const {
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
+	limit: limit,
 });
 </script>
 

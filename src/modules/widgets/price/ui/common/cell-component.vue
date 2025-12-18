@@ -14,6 +14,8 @@ import {
 	isForexSymbolCell,
 	isPlaneTextSymbolCell,
 } from '@/modules/cell';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 interface ICellComponentProps {
 	ticker: ITicker;
@@ -58,13 +60,15 @@ const tickerIcon = computed(() => {
 
 	return null;
 });
+
+const preparedPrice = computed(() => getNumberText(props.ticker.priceCurrent));
 </script>
 
 <template>
 	<div :class="classes.root" data-icon-glow-trigger>
 		<div :class="classes.content">
 			<ui-transition-fade>
-				<div v-if="props.settings.isShowLogo && meta.size.w > 1" :class="classes.logo">
+				<div v-if="props.settings.isShowLogo && meta.size.w > 1">
 					<universal-ticker-icon
 						v-if="tickerIcon"
 						v-bind="tickerIcon"
@@ -74,11 +78,11 @@ const tickerIcon = computed(() => {
 
 			<div :class="classes.container">
 				<div :class="classes.desc">
-					<div :class="classes.ticker">
-						<span>{{ label }}</span>
-					</div>
-					<div :class="classes.containerSecond">
-						<div :class="classes.price">{{ getNumberText(props.ticker.priceCurrent) }}</div>
+					<ui-clamped :class="classes.ticker" :rows="2">
+						<ui-text token="text-300-r">{{ label }}</ui-text>
+					</ui-clamped>
+					<ui-text :class="classes.containerSecond" token="text-300-r">
+						<div :class="classes.price">{{ preparedPrice }}</div>
 						<ui-transition-fade>
 							<div
 								v-if="props.settings.isShowPercentageChange"
@@ -89,7 +93,7 @@ const tickerIcon = computed(() => {
 								{{ priceChange.value }}
 							</div>
 						</ui-transition-fade>
-					</div>
+					</ui-text>
 				</div>
 				<ui-transition-fade>
 					<div
@@ -207,13 +211,11 @@ const tickerIcon = computed(() => {
 	display: flex;
 	flex-grow: 1;
 	align-items: center;
+	height: 60px;
 	padding: 6px 10px;
 	border-radius: 16px;
 	transition: background-color 0.3s ease;
-}
-
-.logo {
-	margin-right: 6px;
+	gap: 12px;
 }
 
 .container {
@@ -225,28 +227,12 @@ const tickerIcon = computed(() => {
 }
 
 .ticker {
-	display: -webkit-box;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 12.5px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.075px;
-	text-overflow: ellipsis;
-	gap: 2px;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
 }
 
 .containerSecond {
 	display: flex;
 	overflow-x: auto;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
-	letter-spacing: 0.146px;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	gap: 4px;

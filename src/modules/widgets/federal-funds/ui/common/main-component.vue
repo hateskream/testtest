@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 
 import type { IFederalFundsDomain } from '@/modules/widgets/federal-funds/model';
+import { getDateFormatter } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IMainComponentProps {
 	data: IFederalFundsDomain;
@@ -10,12 +12,15 @@ interface IMainComponentProps {
 const props = defineProps<IMainComponentProps>();
 
 const reviewDateLabel = computed(() => {
-	// TODO: [PERF] Вынести в DateFormatter
-	return new Date(props.data.next_review_date).toLocaleDateString([], {
+	const date = new Date(props.data.next_review_date);
+
+	const formatter = getDateFormatter({
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric',
 	});
+
+	return formatter.format(date);
 });
 </script>
 
@@ -27,11 +32,15 @@ const reviewDateLabel = computed(() => {
 				src="https://flagcdn.com/us.svg"
 				alt="US flag"
 			/>
-			<span>{{ props.data.rate }}%</span>
+			<ui-text token="title-200">{{ props.data.rate }}%</ui-text>
 		</div>
-		<div :class="classes.text">
+		<ui-text
+			:class="classes.text"
+			token="text-200-r"
+			as="p"
+		>
 			Next FOMC review scheduled for {{ reviewDateLabel }}
-		</div>
+		</ui-text>
 	</div>
 </template>
 
@@ -39,19 +48,14 @@ const reviewDateLabel = computed(() => {
 .container {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 4px;
 	padding: 12px 0 20px 20px;
 }
 
 .title {
 	display: flex;
 	align-items: center;
-	font-style: normal;
-	font-weight: 440;
-	font-size: 16.8px;
-	line-height: 160%; /* 26.88px */
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.134px;
 	gap: 6px;
 }
 
@@ -64,11 +68,6 @@ const reviewDateLabel = computed(() => {
 }
 
 .text {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 12.2px;
-	line-height: 180%; /* 21.96px */
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.122px;
 }
 </style>

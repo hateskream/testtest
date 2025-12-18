@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { MarketType } from '@/modules/market';
 import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
-import { dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
+import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 
 const emit = defineEmits<{
@@ -19,6 +21,8 @@ interface IMarketCapFiltersPanelProps {
 }
 
 const props = defineProps<IMarketCapFiltersPanelProps>();
+
+const selectedRangeLabel = computed(() => dateRangeFilterValueToDisplay[activeDateRange.value].selected);
 </script>
 
 <template>
@@ -39,27 +43,15 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 		/>
 		<template v-if="props.isShowDateRange">
 			<ui-delimiter v-if="props.displayVariant === 'default'" />
-			<modal-badge-dropdown :display-variant="props.displayVariant">
-				<template #title>
-					{{ dateRangeFilterValueToDisplay[activeDateRange].selected }}
-				</template>
-				<template #content>
-					<modal-badge-list :display-variant>
-						<template #title>Date</template>
-						<template
-							v-for="filterKey in MarketCapDateRange"
-							:key="filterKey"
-						>
-							<modal-item-selector
-								:model-value="filterKey === activeDateRange"
-								@update:model-value="activeDateRange = filterKey"
-							>
-								{{ dateRangeFilterValueToDisplay[filterKey].option }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge-dropdown>
+			<modal-badge-filter
+				:display-variant="props.displayVariant"
+				:options="dateRangeFilters"
+				:selected-value="activeDateRange"
+				:label="selectedRangeLabel"
+				close-on-select
+				title="Date"
+				@select="activeDateRange = $event.value"
+			/>
 		</template>
 	</widget-filters-scrollable>
 </template>

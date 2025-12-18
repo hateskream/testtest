@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import type { RangeChart } from './types';
+import { UiText } from '@/shared/ui/text';
 
 interface IChartRangeProps {
 	activeRange: RangeChart;
@@ -45,8 +46,14 @@ const changeIsVisible = computed(() => props.type === 'default' && !props.disabl
 			:class="{ rangeItemActive: activeRange === item.val }"
 			@click="emit('select', item.val)"
 		>
-			<span class="rangeTitle">{{ item.title }}</span>
-			<span v-if="changeIsVisible" class="rangeChange">{{ item.num }}%</span>
+			<ui-text token="text-200-r" class="rangeTitle">{{ item.title }}</ui-text>
+			<ui-text
+				v-if="changeIsVisible"
+				token="text-100-r"
+				class="rangeChange"
+			>
+				{{ item.num }}%
+			</ui-text>
 		</div>
 	</div>
 </template>
@@ -63,18 +70,11 @@ const changeIsVisible = computed(() => props.type === 'default' && !props.disabl
 }
 
 .rangeChange {
-	font-weight: 440;
-	font-size: 10px;
 	color: rgb(4 237 160 / 100%);
 }
 
 .rangeItem:nth-child(2n) .rangeChange {
 	color: rgb(252 74 107 / 100%);
-}
-
-.rangeTitle {
-	font-weight: 440;
-	font-size: 12px;
 }
 
 .rangeItem {

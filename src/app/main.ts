@@ -5,6 +5,7 @@ import { registerComponent } from '@shared/component-library';
 
 import '@/assets/styles/base.css';
 import 'virtual:svg-icons-register';
+import '@fontsource-variable/roboto-flex/full.css';
 
 import { validateConfig } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';

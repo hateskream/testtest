@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 const isOpen = defineModel<boolean>();
 
@@ -11,9 +12,13 @@ function toggle() {
 <template>
 	<div :class="[classes.accordion]">
 		<div :class="classes.header" @click="toggle">
-			<div :class="[classes.left, isOpen && classes.leftActive]">
+			<ui-text
+				:class="{ [classes.leftActive]: isOpen }"
+				token="title-100"
+				as="div"
+			>
 				<slot name="left" />
-			</div>
+			</ui-text>
 			<div :class="classes.right">
 				<slot name="right" />
 
@@ -55,14 +60,6 @@ function toggle() {
 		background: var(--color-metrics-bg-control-300, rgb(45 45 47 / 40%));
 		border-radius: 20px;
 	}
-}
-
-.left {
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-menu-menu-title, 13px);
-	line-height: 170%;
-	letter-spacing: 0.052px;
 }
 
 .leftActive {

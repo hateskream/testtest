@@ -29,7 +29,7 @@ function onClickBreadcrumb(breadcrumb: IBreadcrumb): void {
 </script>
 
 <template>
-	<div v-if="props.breadcrumbs.length" class="breadcrumbs">
+	<div v-if="props.breadcrumbs.length" class="breadcrumbs text-200-r">
 		<div class="all" @click="emit('click-all')"> All <span class="separator">/</span></div>
 		<div
 			v-for="(breadcrumb, index) in props.breadcrumbs"
@@ -54,8 +54,6 @@ function onClickBreadcrumb(breadcrumb: IBreadcrumb): void {
 	align-items: center;
 	height: 40px;
 	gap: 4px;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
 	color: var(--color-text-base-300, #9a9a9d);
 }
 

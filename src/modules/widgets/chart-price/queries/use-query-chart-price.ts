@@ -13,7 +13,7 @@ export function useQueryChartPrice(
 	return useQuery({
 		queryKey:  ['chart-price', ticker, market, range],
 		queryFn: () => getChartPrice({
-			ticker: toValue(ticker),
+			tickerID: toValue(ticker),
 			market: toValue(market),
 			range: toValue(range),
 		}),

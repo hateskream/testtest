@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
-import { CpiMetric, CpiRange } from './cpi';
+import { CpiRange, CpiValueType } from './cpi';
 
 export interface IState {
-	metric: CpiMetric;
+	valueType: CpiValueType;
 	range: CpiRange;
 }
 
 export const stateSchema = z.object({
-	metric: z.nativeEnum(CpiMetric),
+	valueType: z.nativeEnum(CpiValueType),
 	range: z.nativeEnum(CpiRange),
 });
 
@@ -16,7 +16,7 @@ export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		metric: CpiMetric.Points,
+		valueType: CpiValueType.Points,
 		range: CpiRange.Year,
 	};
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+
 interface IChartLegend {
 	items: {
 		label: string;
@@ -17,7 +19,7 @@ const props = defineProps<IChartLegend>();
 			:class="classes.item"
 		>
 			<span :class="classes.dot" :style="{ backgroundColor: item.color }"></span>
-			<span>{{ item.label }}</span>
+			<ui-text token="text-100-r">{{ item.label }}</ui-text>
 		</div>
 	</div>
 </template>
@@ -33,11 +35,7 @@ const props = defineProps<IChartLegend>();
 	display: flex;
 	align-items: center;
 	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-100-r-size, 11px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.088px;
 	gap: 4px;
 }
 

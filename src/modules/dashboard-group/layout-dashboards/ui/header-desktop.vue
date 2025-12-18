@@ -3,8 +3,8 @@ import { computed } from 'vue';
 
 import type { IDashboardTab } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-
-import ComingSoonTooltip from '@/modules/layout/new-desktop/ui/coming-soon-tooltip.vue';
+import { UiText } from '@/shared/ui/text';
+import { ComingSoonTooltip } from '@/modules/layout/new-desktop';
 
 interface IHeaderDesktop {
 	tabs: IDashboardTab[];
@@ -22,7 +22,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 <template>
 	<div :class="classes.navbar">
 		<div :class="classes.left">
-			<div :class="classes.title">Dashboard</div>
+			<ui-text token="text-300-b" as="div">Dashboard</ui-text>
 			<ui-icon
 				:id="IconIds.ControlMore"
 				:class="classes.iconWrapper"
@@ -42,7 +42,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 						<button
 							:class="[classes.tab, active === tab && classes.active]"
 						>
-							{{ tab.name }}
+							<ui-text token="text-300-b">{{ tab.name }}</ui-text>
 						</button>
 					</coming-soon-tooltip>
 					<button
@@ -50,7 +50,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 						:class="[classes.tab, active === tab && classes.active]"
 						@click="emits('changeActive', tab.id)"
 					>
-						{{ tab.name }}
+						<ui-text token="text-300-b">{{ tab.name }}</ui-text>
 					</button>
 				</template>
 			</div>
@@ -64,7 +64,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 						width="16px"
 						height="16px"
 					/>
-					Add
+					<ui-text token="text-300-r">Add</ui-text>
 					<ui-icon
 						:id="IconIds.DropdownDown"
 						width="12"
@@ -109,24 +109,11 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 	color: rgb(255 255 255 / 60%);
 }
 
-.title {
-	font-style: normal;
-	font-weight: 520;
-	font-size: 12px;
-	line-height: 20px;
-	letter-spacing: 0.1px;
-}
-
 .tabs {
 	display: flex;
 	align-items: center;
 	padding-left: 6px;
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 540;
-	font-size: 11.8px;
-	line-height: 165%; /* 19.47px */
-	letter-spacing: 0.071px;
 	text-overflow: ellipsis;
 	gap: 16px;
 }
@@ -152,12 +139,7 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 	height: 30px;
 	padding: 0 10px;
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 450;
-	font-size: 11.8px;
-	line-height: 165%; /* 19.47px */
 	color: rgb(255 255 255 / 50%);
-	letter-spacing: 0.059px;
 	text-overflow: ellipsis;
 	background: rgb(73 73 80 / 32%);
 	border-radius: 12px;

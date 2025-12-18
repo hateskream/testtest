@@ -113,7 +113,7 @@ function onRenameTab(id: string, name: string) {
 
 .heading {
 	font-weight: 300;
-	font-size: var(--typography-headers-size-h-01);
+	font-size: var(--font-title-100-size);
 	text-align: center;
 	color: #ffffff;
 	letter-spacing: 0.104px;

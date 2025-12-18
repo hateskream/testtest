@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
 
-import type { ISection, IWidget, ISectionWheelPayload } from '../model';
+import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
-import { MIN_COL_WIDTH, MAX_COL_WIDTH } from '../../tv';
+import { MAX_COL_WIDTH, MIN_COL_WIDTH } from '../../tv';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
+import { UiText } from '@/shared/ui/text';
 
 import WidgetComponent from './widget-component.vue';
 
@@ -270,9 +271,13 @@ defineExpose({
 				}"
 				@wheel.capture="onWheel"
 			>
-				<h2 :class="classes.sectionTitle">
+				<ui-text
+					:class="classes.sectionTitle"
+					token="title-200"
+					as="h2"
+				>
 					{{ props.section.name }}
-				</h2>
+				</ui-text>
 
 				<div :class="classes.widgets">
 					<widget-component
@@ -305,12 +310,7 @@ defineExpose({
 
 .sectionTitle {
 	padding: 12px 0;
-	font-style: normal;
-	font-weight: 440;
-	font-size: 16.8px;
-	line-height: 160%; /* 26.88px */
 	color: #ffffff;
-	letter-spacing: 0.134px;
 }
 
 .loader {

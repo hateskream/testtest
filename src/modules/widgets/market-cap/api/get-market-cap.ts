@@ -6,9 +6,11 @@ import { arrayToString } from '@/shared/lib';
 import {
 	type IMarketCapHistory,
 	type IMarketCapMarket,
+	type IMarketCapPoint,
 	type IMarketCapTicker,
+	type IMarketCapTotal,
 	MarketCapDateRange,
-} from '../model/market-cap';
+} from '../model';
 import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = false;
@@ -17,6 +19,16 @@ export interface IGetMarketCapRequest {
 	tickers: string[];
 	markets: string[];
 	range: MarketCapDateRange;
+}
+
+export interface IGetMarketCapResponse {
+	tickers: IMarketCapTicker[];
+	markets: IMarketCapMarket[];
+	range: MarketCapDateRange;
+	data: {
+		points: IMarketCapPoint<string>[];
+		total: IMarketCapTotal;
+	};
 }
 
 export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketCapHistory> {
@@ -28,17 +40,35 @@ export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketC
 			return await getMockData(args);
 		}
 
-		return await httpService.get<IMarketCapHistory>('/api/v1/market-cap/data', {
+		const response = await httpService.get<IGetMarketCapResponse>('/api/v1/market-cap/data', {
 			query: {
-				tickers: args.tickers.length ? arrayToString(args.tickers) : undefined,
+				tickerIDs: args.tickers.length ? arrayToString(args.tickers) : undefined,
 				markets: args.markets.length ? arrayToString(args.markets) : undefined,
 				range: args.range,
 			},
 		});
+
+		return prepareResponse(response);
 	} catch (error) {
 		logger.error('Failed to get market', error as Error);
 		throw error;
 	}
+}
+
+function prepareResponse(history: IGetMarketCapResponse) {
+	return {
+		tickers: history.tickers,
+		markets: history.markets,
+		range: history.range,
+		data: {
+			points: history.data.points.map(point => ({
+				timestamp: Date.parse(point.timestamp),
+				marketCap: point.marketCap,
+				volume: point.volume,
+			})),
+			total: history.data.total,
+		},
+	};
 }
 
 interface IMarketCapMockData {

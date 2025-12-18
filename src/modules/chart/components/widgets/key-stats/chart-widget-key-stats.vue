@@ -43,64 +43,64 @@ const formatMarketCap = (value: number | string): string => {
 	<div :class="classes.wrapper">
 
 		<div :class="[classes.gridItem, classes.span2]">
-			<div :class="classes.metricLabel" class="paragraph-p-02">
+			<div :class="classes.metricLabel" class="text-100-r">
 				<span>Market Cap</span>
 				<chart-common-tooltip />
 
 			</div>
-			<div :class="classes.metricValue" class="header-h00">
+			<div :class="classes.metricValue" class="title-200">
 				{{ formatMarketCap(props.marketData.marketCap) }}
 			</div>
 		</div>
 
 
 		<div :class="[classes.gridItem, classes.span1]">
-			<div :class="classes.metricLabel" class="paragraph-p-02">
+			<div :class="classes.metricLabel" class="text-100-r">
 				<span>Volume</span>
 				<chart-common-tooltip />
 			</div>
-			<div :class="classes.metricValue" class="header-h00">
+			<div :class="classes.metricValue" class="title-200">
 				{{ props.marketData.volume }}
 			</div>
 		</div>
 		<div :class="[classes.gridItem, classes.span1]">
-			<div :class="classes.metricLabel" class="paragraph-p-02">
+			<div :class="classes.metricLabel" class="text-100-r">
 				<span>Total Return (3M)</span>
 				<chart-common-tooltip />
 			</div>
-			<div :class="classes.metricValue" class="header-h00">
+			<div :class="classes.metricValue" class="title-200">
 				{{ formatPercentage(props.marketData.totalReturn3M) }}
 			</div>
 		</div>
 
 		<div :class="[classes.gridItem, classes.span1]">
-			<div :class="classes.metricLabel" class="paragraph-p-02">
+			<div :class="classes.metricLabel" class="text-100-r">
 				<span>Total Return (1Y)</span>
 				<chart-common-tooltip />
 			</div>
-			<div :class="classes.metricValue" class="header-h00">
+			<div :class="classes.metricValue" class="title-200">
 				{{ formatPercentage(props.marketData.totalReturn1Y) }}
 			</div>
 		</div>
 		<div :class="[classes.gridItem, classes.span1]">
-			<div :class="classes.metricLabel" class="paragraph-p-02">
+			<div :class="classes.metricLabel" class="text-100-r">
 				<span>
 					Forward P/E
 				</span>
 				<chart-common-tooltip />
 			</div>
-			<div :class="classes.metricValue" class="header-h00">{{ props.marketData.forwardPE }}</div>
+			<div :class="classes.metricValue" class="title-200">{{ props.marketData.forwardPE }}</div>
 		</div>
 
 
 		<div :class="[classes.gridItem, classes.sector, classes.span2]">
-			<div :class="classes.sectorTitle" class="paragraph-p-02">Sector</div>
+			<div :class="classes.sectorTitle" class="text-100-r">Sector</div>
 			<router-link
 				:class="classes.sectorLink"
 				:to="{name:RouteNames.Test}"
-				class="header-h00"
+				class="title-200"
 			>
-				<span :class="classes.sectorName" class="paragraph-p-01">
+				<span :class="classes.sectorName" class="text-200-r">
 					{{
 						props.marketData.sector
 					}}
@@ -205,7 +205,6 @@ const formatMarketCap = (value: number | string): string => {
 }
 
 .metricValue {
-	line-height: 26px;
 	color: var(--text-color-base-500);
 }
 </style>

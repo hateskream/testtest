@@ -8,6 +8,9 @@ import { UiImage } from '@/shared/ui/image';
 import { UiPositionTooltip } from '@/shared/ui/position';
 import type { IDisplaySettings, INews } from '../../model';
 import { DashboardTooltipWrapper } from '@/shared/ui/tooltip';
+import { getDateFormatter } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 interface INewsComponent {
 	news: INews;
@@ -17,15 +20,19 @@ interface INewsComponent {
 
 const props = defineProps<INewsComponent>();
 
-const time = computed(() =>
-	new Date(props.news.timestamp).toLocaleDateString('en-US', {
+const time = computed(() => {
+	const date = new Date(props.news.timestamp);
+
+	const formatter = getDateFormatter({
 		day: '2-digit',
 		month: 'short',
 		hour12: true,
 		hour: '2-digit',
 		minute: '2-digit',
-	}),
-);
+	});
+
+	return formatter.format(date);
+});
 </script>
 
 <template>
@@ -42,32 +49,52 @@ const time = computed(() =>
 		</ui-transition-fade>
 
 		<div :class="classes.right">
-			<h3 :class="classes.title">
-				{{props.news.title}}
-			</h3>
+			<ui-text
+				:class="classes.title"
+				token="text-300-r"
+				as="h3"
+			>
+				{{ props.news.title }}
+			</ui-text>
 
 			<ui-transition-fade>
-				<p v-if="props.displaySettings.isShowDesc" :class="classes.description">
-					{{props.news.description}}
-				</p>
+				<ui-clamped
+					v-if="props.displaySettings.isShowDesc"
+					:rows="2"
+					:class="classes.description"
+				>
+					<ui-text token="text-200-r">{{props.news.description }}</ui-text>
+				</ui-clamped>
 			</ui-transition-fade>
 
 			<div :class="classes.controls">
 				<div :class="classes.leftControls">
 					<ui-transition-fade>
-						<span v-if="props.displaySettings.isShowDate" :class="classes.time">
+						<ui-text
+							v-if="props.displaySettings.isShowDate"
+							:class="classes.time"
+							token="text-200-r"
+						>
 							{{time}}
-						</span>
+						</ui-text>
 					</ui-transition-fade>
 					<ui-transition-fade>
-						<span v-if="props.displaySettings.isShowDate" :class="classes.dot">
+						<ui-text
+							v-if="props.displaySettings.isShowDate"
+							:class="classes.dot"
+							token="text-100-r"
+						>
 							·
-						</span>
+						</ui-text>
 					</ui-transition-fade>
 					<ui-transition-fade>
-						<span v-if="props.displaySettings.isShowAuthor" :class="classes.author">
+						<ui-text
+							v-if="props.displaySettings.isShowAuthor"
+							:class="classes.author"
+							token="text-200-r"
+						>
 							{{props.news.author}}
-						</span>
+						</ui-text>
 					</ui-transition-fade>
 
 					<ui-transition-fade>
@@ -151,27 +178,12 @@ const time = computed(() =>
 
 .title {
 	align-self: stretch;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.146px;
 }
 
 .description {
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
 	align-self: stretch;
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.122px;
-	text-overflow: ellipsis;
 }
 
 .controls {
@@ -191,30 +203,15 @@ const time = computed(() =>
 }
 
 .time {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.122px;
 }
 
 .dot {
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.08px;
 }
 
 .author {
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	letter-spacing: 0.122px;
 }
 
 .stocks {

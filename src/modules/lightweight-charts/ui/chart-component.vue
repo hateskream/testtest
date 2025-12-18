@@ -11,6 +11,7 @@ import {
 	type ISeriesApi,
 	type LineData,
 	LineSeries,
+	LineStyle,
 	type LogicalRangeChangeEventHandler,
 	type SeriesType,
 	type Time,
@@ -41,6 +42,7 @@ import type { ICalendarEvent } from '@/modules/calendar';
 import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';
+import { getDateFormatter } from '@/shared/lib';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -62,12 +64,12 @@ interface IChartProps {
 	isVisiblePriceLine?: boolean;
 	colorSchema?: 'positive' | 'negative' | 'neutral';
 	crosshairMode?: CrosshairMode;
-	priceVisible?: boolean;
 	rightOffsetPixels?: number;
 	events?: ICalendarEvent[];
 	timelineSegments?: IChartTimelineSegment[];
 	data?: ChartData[] | null;
 	lastPriceAnimation?: LastPriceAnimationModeType;
+	priceLabel?: string;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -80,13 +82,13 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	isVisiblePriceLine: true,
 	colorSchema: 'positive',
 	crosshairMode: CrosshairMode.Normal,
-	priceVisible: true,
 	rightOffsetPixels: 0,
 	events: () => [],
 	timelineSegments: () => [],
 	eventsTimelinePadding: '0px',
 	lastPriceAnimation: LastPriceAnimationMode.Disabled,
 	data: null,
+	priceLabel: 'Current Price',
 });
 
 defineExpose({
@@ -203,6 +205,27 @@ const preparedChartData = computed(() => {
 			value: item.close,
 		})) as ChartData[];
 	}
+});
+
+const preparedPriceLines = computed(() => {
+	if (!props.isVisiblePriceLine) {
+		return [];
+	}
+
+	const series = preparedChartData.value as LineData[];
+
+	return [
+		{
+			price: series[series.length - 1].value,
+			color: props.colorSchema === 'positive' ? '#04EDA0' : '#FC1D4D',
+			lineWidth: 2,
+			lineStyle: LineStyle.Dashed,
+			axisLabelVisible: true,
+			title: props.priceLabel,
+			axisLabelColor: props.colorSchema === 'positive' ? '#043222' : '#35040D',
+			axisLabelTextColor: props.colorSchema === 'positive' ? '#04EDA0' : '#FC4A6B',
+		},
+	];
 });
 
 const chartTypeForWebComponent = computed<ChartType>(() => {
@@ -370,6 +393,15 @@ const tooltipRowColor = computed(() => props.colorSchema === 'positive'
 	? 'var(--metrics-color-positive-chart)'
 	: 'var(--metrics-color-negative-chart)');
 
+const tooltipDateFormatter = getDateFormatter({
+	month: 'short',
+	day: 'numeric',
+	year: 'numeric',
+	hour: 'numeric',
+	minute: '2-digit',
+	hour12: true,
+});
+
 function updateTooltipState(state: ChartClickData | null) {
 	if (!state || !container.value) {
 		tooltipState.visible = false;
@@ -388,16 +420,9 @@ function updateTooltipState(state: ChartClickData | null) {
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
 
-	tooltipState.title = [
-		(new Date(segment.time)).toLocaleString(undefined, {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric',
-			hour: 'numeric',
-			minute: '2-digit',
-			hour12: true,
-		}),
-	];
+	const date = new Date(typeof segment.time === 'number' ? segment.time * 1000 : segment.time);
+
+	tooltipState.title = [tooltipDateFormatter.format(date)];
 
 	tooltipState.rows[0] = {
 		text: 'Price',
@@ -490,6 +515,13 @@ onMounted(async () => {
 
 	updateHistoryChartPropChange();
 });
+
+watch(() => props.colorSchema, value => {
+	if (container.value) {
+		// TODO: Убрать, когда решится проблема с shared/component-library
+		(container.value as (HTMLElement & { colorScheme: string })).colorScheme = value;
+	}
+});
 </script>
 
 <template>
@@ -565,11 +597,13 @@ onMounted(async () => {
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
 				:show-time-scale="props.isVisibleTimeScale"
-				:price-visible="props.isVisiblePriceLine && props.priceVisible"
+				:price-visible="false"
 				:crosshair-mode="props.crosshairMode"
 				:right-offset-pixels="props.rightOffsetPixels"
 				:fade-left="props.fadeLeft"
 				:last-price-animation="props.lastPriceAnimation"
+				:price-lines="preparedPriceLines"
+				entire-text-only-price-scale
 				@chart-hover="onChartHover"
 			/>
 		</div>

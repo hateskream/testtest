@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { ModalTickerSelector } from '@/modules/ticker-selector';
 import type { ITickersAddPayload } from '../../model';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import { UiText } from '@/shared/ui/text';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
@@ -63,13 +64,16 @@ function onClickSave() {
 			<img src="../../../../../assets/images/favorite.png" alt="">
 
 			<div :class="classes.info">
-				<div :class="classes.heading">
+				<ui-text
+					:class="classes.heading"
+					token="title-100"
+					align="center"
+				>
 					Watchlist is empty
-				</div>
-
-				<div :class="classes.description">
+				</ui-text>
+				<ui-text :class="classes.description" token="title-100">
 					Add symbols
-				</div>
+				</ui-text>
 			</div>
 		</div>
 
@@ -81,7 +85,11 @@ function onClickSave() {
 				:class="classes.saveButton"
 				@click="onClickSave"
 			>
-				<div :class="classes.topText">Save</div>
+				<ui-text
+					:class="classes.topText"
+					token="title-100"
+					as="div"
+				>Save</ui-text>
 				<div :class="classes.bottomText"> {{ selectedTickers.length }} symbols</div>
 			</div>
 		</div>
@@ -127,10 +135,6 @@ function onClickSave() {
 }
 
 .topText {
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-headers-size-h-01, 13px);
-	line-height: 22px;
 	color: var(--color-text-contrast-500, #0c0c0e);
 }
 
@@ -167,17 +171,10 @@ function onClickSave() {
 }
 
 .heading {
-	font-weight: 300;
-	font-size: var(--typography-headers-size-h-01);
-	text-align: center;
 	color: #ffffff;
-	letter-spacing: 0.104px;
 }
 
 .description {
-	font-weight: 380;
-	font-size: var(--typography-headers-size-h-02);
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.04px;
 }
 </style>

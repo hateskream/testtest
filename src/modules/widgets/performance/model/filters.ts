@@ -1,3 +1,5 @@
+import { Currency } from '@/modules/widgets/performance/model/quote-currency.ts';
+
 export enum Stock {
 	Industry = 'Industry',
 	Sector = 'Sector',
@@ -7,6 +9,11 @@ export const stockToLabel: Readonly<Record<Stock, string>> = {
 	[Stock.Industry]: 'Industry',
 	[Stock.Sector]: 'Sector',
 };
+
+export const stockFilters = Object.values(Stock).map(s => ({
+	label: stockToLabel[s],
+	value: s,
+}));
 
 export enum DateRangeStock {
 	Today = 'Today',
@@ -56,3 +63,8 @@ Record<DateRangeStock, string> | Record<DateRangeForex, string> {
 				.filter(Boolean),
 		) as Record<DateRangeStock, string> | Record<DateRangeForex, string>;
 }
+
+export const quoteCurrencyFilters = Object.values(Currency).map(c => ({
+	label: c,
+	value: c,
+}));

@@ -29,7 +29,7 @@ const preparedDatasets = computed(() => {
 		:is-padded-range="false"
 		:is-show-tooltip="false"
 		:crosshair-mode="CrosshairMode.Hidden"
-		:price-visible="false"
+		:is-visible-price-line="false"
 		:width="100"
 		:data="preparedDatasets"
 		height="100%"

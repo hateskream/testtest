@@ -2,6 +2,7 @@ import type { CSSProperties } from 'vue';
 
 import type { ICalendarEvent, IDailyCalendarInfoResponse, IEventBoardResponse, IWeeklyDayInfo } from '../models';
 import { getStartOfWeek, isSameCalendarDay, isSameWeek } from '@/modules/calendar';
+import { getDateFormatter } from '@/shared/lib';
 
 function localDateKey(d: Date): string {
 	const y = d.getFullYear();
@@ -20,8 +21,8 @@ export function toWeekDays(
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 
-	const fmtShort = new Intl.DateTimeFormat(locale, { weekday: 'short' });
-	const fmtLong = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+	const fmtShort = getDateFormatter({ weekday: 'short', locale });
+	const fmtLong = getDateFormatter({ weekday: 'long', locale });
 
 	const apiMap = new Map<string, IDailyCalendarInfoResponse>();
 	for (const item of apiDays) {

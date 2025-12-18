@@ -26,6 +26,7 @@ defineExpose({ focus });
 			type="text"
 			:placeholder="props.placeholder"
 			:class="classes.input"
+			class="text-300-r"
 		/>
 	</div>
 </template>
@@ -45,12 +46,8 @@ defineExpose({ focus });
 
 .input {
 	font-style: normal;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
-	line-height: 180%;
 	text-align: left;
 	color: rgb(255 255 255 / 100%);
-	letter-spacing: 0.146px;
 	background: none;
 
 	&::placeholder {

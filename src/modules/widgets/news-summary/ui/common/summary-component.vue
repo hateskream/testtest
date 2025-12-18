@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UiClamped } from '@/shared/ui/clamped';
+import { UiText } from '@/shared/ui/text';
 
 interface ISummaryComponentProps {
 	text: string;
@@ -11,12 +12,18 @@ const props = defineProps<ISummaryComponentProps>();
 
 <template>
 	<div :class="classes.container">
-		<ui-clamped :class="classes.text" :rows="3">
-			{{ props.text }}
-		</ui-clamped>
-		<div :class="classes.summaryAt">
+		<ui-text token="text-300-r" as="div">
+			<ui-clamped :class="classes.text" :rows="4">
+				{{ props.text }}
+			</ui-clamped>
+		</ui-text>
+		<ui-text
+			:class="classes.summaryAt"
+			token="text-200-r"
+			as="div"
+		>
 			Summarized at {{ props.summaryAt }}
-		</div>
+		</ui-text>
 	</div>
 </template>
 
@@ -28,20 +35,11 @@ const props = defineProps<ISummaryComponentProps>();
 }
 
 .text {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13.3px;
-	line-height: 180%;
+	padding-right: 40px;
 	color: rgb(255 255 255 / 96%);
-	letter-spacing: 0.146px;
 }
 
 .summaryAt {
-	font-style: normal;
-	font-weight: 400;
-	font-size: 12.2px;
-	line-height: 180%; /* 21.96px */
 	color: rgb(255 255 255 / 62%);
-	letter-spacing: 0.122px;
 }
 </style>

@@ -14,7 +14,7 @@ import {
 import type { TopIndicesTableRow } from '../model';
 import { generateRows } from '@/shared/mock';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 interface IGetTopIndicesRequest {
 	limit: number;
@@ -56,7 +56,7 @@ export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<I
 			return getMockData(req);
 		}
 
-		const response = await httpService.get<IGetTopIndicesResponse>('/api/top-indices');
+		const response = await httpService.get<IGetTopIndicesResponse>('/api/v1/top_indices_ytd/data');
 
 		return prepareMarketResponse<TopIndicesTableRow>(response.data);
 	} catch (error) {
@@ -77,8 +77,8 @@ async function getMockData(req: IGetTopIndicesRequest): Promise<IPreparedRespons
 	return {
 		pagination: {
 			offset: 0,
-			limit: 10,
-			total: 10,
+			limit: req.limit,
+			total: req.limit,
 		},
 		tickers: tickers.slice(0, req.limit),
 	};

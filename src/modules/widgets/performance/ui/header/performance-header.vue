@@ -2,21 +2,18 @@
 import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import {
-	MarketBadge,
-	ModalBadgeDropdown,
-	ModalBadgeList,
-	ModalItemSelector,
-	WidgetFiltersScrollable,
-} from '@/modules/widgets/base';
+import { MarketBadge, ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import {
 	Currency,
 	type DateRange,
+	DateRangeForex,
+	DateRangeStock,
 	DisplayVariant,
 	getDateLabelByType,
 	isDataRangeStock,
+	quoteCurrencyFilters,
 	Stock,
-	stockToLabel,
+	stockFilters,
 } from '../../model';
 import { MarketType } from '@/modules/market';
 
@@ -35,12 +32,23 @@ const activeMarket = defineModel<MarketType>('activeMarket', { required: true })
 const displayVariant = defineModel<DisplayVariant>('displayVariant', { required: true });
 const displayStyle = defineModel<'new' | 'default'>('displayStyle', { required: true });
 
-const dataLabel = computed((): Record<string, string> =>
-	getDateLabelByType(isDataRangeStock(date.value)),
-);
+const isStockRange = computed(() => isDataRangeStock(date.value));
 
-const dataKeys = computed((): string[] => Object.keys(getDateLabelByType(isDataRangeStock(date.value))));
+const dateOptions = computed(() => {
+	const values = getDateLabelByType(isStockRange.value);
 
+	return Object.entries(values).map(([value, label]) => ({ value, label }));
+});
+
+const dateLabel = computed(() => {
+	const values = getDateLabelByType(isStockRange.value);
+
+	if (isStockRange.value) {
+		return (values as Record<DateRangeStock, string>)[date.value as DateRangeStock];
+	}
+
+	return (values as Record<DateRangeForex, string>)[date.value as DateRangeForex];
+});
 
 function updateStock(s: Stock) {
 	stock.value = s;
@@ -69,80 +77,42 @@ function updateCurrency(v: Currency) {
 					MarketType.Indices
 				]"
 				:display-variant="displayStyle"
+				close-on-select
 			/>
 
 			<ui-delimiter v-if="displayStyle === 'default' " />
 
-			<modal-badge-dropdown
+			<modal-badge-filter
 				v-if="stock"
-				:class="classes.stock"
 				:display-variant="displayStyle"
-			>
-				<template #title>
-					{{ stock }}
-				</template>
+				:options="stockFilters"
+				:selected-value="stock"
+				:label="stock"
+				close-on-select
+				title="Stock"
+				@select="updateStock($event.value)"
+			/>
 
-				<template #content>
-					<modal-badge-list :display-variant="displayStyle">
-						<template #title>Stock</template>
-
-						<template v-for="s in Stock" :key="s">
-							<modal-item-selector
-								:model-value="s === stock"
-								@update:model-value="updateStock(s)"
-							>
-								{{ stockToLabel[s] }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge-dropdown>
-
-			<modal-badge-dropdown
+			<modal-badge-filter
 				v-if="quoteCurrency"
-				:class="classes.currency"
 				:display-variant="displayStyle"
-			>
-				<template #title>
-					{{ quoteCurrency }}
-				</template>
+				:options="quoteCurrencyFilters"
+				:selected-value="quoteCurrency"
+				:label="quoteCurrency"
+				close-on-select
+				title="Quote currency"
+				@select="updateCurrency($event.value)"
+			/>
 
-				<template #content>
-					<modal-badge-list :display-variant="displayStyle">
-						<template #title>Quote currency</template>
-
-						<template v-for="c in Currency" :key="c">
-							<modal-item-selector
-								:model-value="c === quoteCurrency"
-								@update:model-value="updateCurrency(c)"
-							>
-								{{ c }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge-dropdown>
-
-			<modal-badge-dropdown :class="classes.date" :display-variant="displayStyle">
-				<template #title>
-					{{ date }}
-				</template>
-
-				<template #content>
-					<modal-badge-list :display-variant="displayStyle">
-						<template #title>Date</template>
-
-						<template v-for="r in dataKeys" :key="r">
-							<modal-item-selector
-								:model-value="r === date"
-								@update:model-value="updateDate(r)"
-							>
-								{{ dataLabel[r] }}
-							</modal-item-selector>
-						</template>
-					</modal-badge-list>
-				</template>
-			</modal-badge-dropdown>
+			<modal-badge-filter
+				:display-variant="displayStyle"
+				:options="dateOptions"
+				:selected-value="date"
+				:label="dateLabel"
+				close-on-select
+				title="Date"
+				@select="updateDate($event.value)"
+			/>
 		</widget-filters-scrollable>
 		<view-toggle v-if="displayStyle === 'default'" v-model:display-variant="displayVariant" />
 	</div>

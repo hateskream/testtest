@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { BaseSwitch, ModalFilterTabWrapper } from '@/modules/widgets/base';
+import { BaseSwitch } from '@/modules/widgets/base';
 import { toggleLocationCountry, toggleLocationRegion, type ILocation } from '../model';
 import { UiModalContent, UiModalTitle, UiModalWrapper } from '@/shared/ui/modal';
+import {
+	UiFilterChip,
+	UiFilterChipWrapper, UiFilterRow,
+	UiFilterSectionHeader,
+	UiFilterSectionLabel,
+} from '@/shared/ui/modal-filter';
 
 defineProps<{
 	displayVariant: 'new' | 'default';
 }>();
+
 const locations = defineModel<ILocation[]>('locations', { required: true });
 
 function toggleRegion(region: string) {
@@ -18,7 +25,12 @@ function toggleCountry(region: string, countryCode: string) {
 </script>
 
 <template>
-	<ui-modal-wrapper :display-variant="displayVariant">
+	<ui-modal-wrapper
+		:style="{
+			width: displayVariant === 'new' ? '418px' : '618px',
+		}"
+		:display-variant="displayVariant"
+	>
 		<ui-modal-title> Location </ui-modal-title>
 
 		<ui-modal-content>
@@ -28,111 +40,62 @@ function toggleCountry(region: string, countryCode: string) {
 				:class="classes.row"
 			>
 				<div v-if="location.isCanAllSwitch">
-					<div :class="classes.top">
-						<span :class="[classes.rowTitle, location.isActive && classes.titleActive]">
-							{{ location.region }}
-						</span>
+					<ui-filter-section-header :is-active="location.isActive">
+						{{ location.region }}
 
-						<base-switch
-							:class="classes.switch"
-							:is-active="location.isActive"
-							@click="toggleRegion(location.region)"
-						/>
-					</div>
+						<template #right>
+							<base-switch
+								:class="classes.switch"
+								:is-active="location.isActive"
+								@click="toggleRegion(location.region)"
+							/>
+						</template>
+					</ui-filter-section-header>
 
-					<div v-if="location.countries.length" :class="classes.content">
-						<div :class="classes.virtual"></div>
-						<div :class="classes.tabs">
-							<modal-filter-tab-wrapper
+					<ui-filter-row v-if="location.countries.length" :class="classes.content">
+						<ui-filter-section-label />
+
+						<ui-filter-chip-wrapper>
+							<ui-filter-chip
 								v-for="country in location.countries"
 								:key="country.code"
 								:is-active="country.isActive"
 								@click.stop.prevent="toggleCountry(location.region, country.code)"
 							>
 								{{ country.name }}
-							</modal-filter-tab-wrapper>
-						</div>
-					</div>
+							</ui-filter-chip>
+						</ui-filter-chip-wrapper>
+					</ui-filter-row>
 				</div>
 
-				<div v-else :class="classes.sub">
-					<div :class="classes.top">
-						<span
-							:class="[classes.rowTitle, location.isActive && classes.titleActive]"
-						>
-							{{location.region}}
-						</span>
-					</div>
+				<ui-filter-row v-else>
+					<ui-filter-section-label :is-active="location.isActive">
+						{{location.region}}
+					</ui-filter-section-label>
 
-					<div :class="classes.tabs">
-						<modal-filter-tab-wrapper
+					<ui-filter-chip-wrapper>
+						<ui-filter-chip
 							v-for="country in location.countries"
 							:key="country.code"
 							:is-active="country.isActive"
 							@click.stop.prevent="toggleCountry(location.region, country.code)"
 						>
 							{{ country.name }}
-						</modal-filter-tab-wrapper>
-					</div>
-				</div>
+						</ui-filter-chip>
+					</ui-filter-chip-wrapper>
+				</ui-filter-row>
 			</div>
 		</ui-modal-content>
 	</ui-modal-wrapper>
 </template>
 
 <style module="classes">
-.container {
-	width: 508px;
-}
-
-.content {
-	display: flex;
-	width: 100%;
-}
-
-.tabs {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	align-items: center;
-	padding: 4px 0;
-}
-
 .row {
 	padding: 0 12px;
 }
 
-.sub {
-	display: flex;
-}
-
-.top {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	box-sizing: border-box;
-	height: 42px;
-	padding: 10px 0;
-}
-
-.rowTitle {
-	min-width: 15ch;
-	font-size: 12px;
-	text-align: left;
-	color: var(--text-color-base-300);
-	transition: all 0.15s ease-in-out;
-}
-
-.titleActive {
-	color: var(--text-color-base-300-activated);
-}
-
-.rowTitle::first-letter {
-	text-transform: uppercase;
-}
-
 .virtual {
-	min-width: 15ch;
+	min-width: 118px;
 	font-size: 12px;
 	white-space: nowrap;
 	visibility: hidden;

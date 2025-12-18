@@ -1,17 +1,17 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
 import {
-	type IState,
-	getDefaultState,
-	Stock,
-	DisplayVariant,
+	Currency,
+	type DateRange,
 	DateRangeForex,
 	DateRangeStock,
-	SymbolDisplayVariant,
+	DisplayVariant,
+	getDefaultState,
+	type IState,
 	type ITicker,
-	type DateRange,
-	Currency,
+	Stock,
+	SymbolDisplayVariant,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useQueryPerformance } from '../queries';
@@ -50,12 +50,14 @@ interface IOptions {
 	widgetId: string;
 	isEphemeral: boolean;
 	defaultStateType: string;
+	limit?: Ref<number>;
 }
 
 export function usePerformance({
 	widgetId,
 	isEphemeral,
 	defaultStateType,
+	limit = ref(11),
 }: IOptions) {
 	const {
 		useStateQuery,
@@ -167,7 +169,6 @@ export function usePerformance({
 		state.value.settings[state.value.activeMarket].pinned = [...newPinned];
 	});
 
-	const limit = 11;
 	const {
 		data: dataResponse,
 		fetchNextPage,

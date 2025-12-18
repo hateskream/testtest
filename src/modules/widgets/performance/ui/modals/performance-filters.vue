@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import {
-	ModalBadge,
-	ModalBadgeList,
-	ModalItemSelector,
-} from '@/modules/widgets/base/';
-import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { ModalBadge, ModalBadgeList, ModalItemSelector } from '@/modules/widgets/base/';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import {
 	Currency,
 	type DateRange,
-	DateRangeStock,
 	DateRangeForex,
+	DateRangeStock,
+	dateToLabel,
 	DisplayVariant,
 	isDataRangeStock,
 	Stock,
-	dateToLabel,
 } from '../../model';
 import { MarketType } from '@/modules/market';
+import { UiText } from '@/shared/ui/text';
 
 const stock = defineModel<Stock>('stock');
 const date = defineModel<DateRange>('date', { required: true });
@@ -34,12 +31,20 @@ interface IFiltersPanelProps {
 const props = defineProps<IFiltersPanelProps>();
 
 const isStock = computed((): boolean => isDataRangeStock(date.value));
+
+const isDefaultDisplaySource = computed(() => props.displaySource === 'default');
 </script>
 
 <template>
 
 	<div :class="classes.content">
-		<div :class="classes.label">Market</div>
+		<ui-text
+			token="title-100"
+			as="div"
+			:class="classes.label"
+		>
+			Market
+		</ui-text>
 		<div :class="classes.switchGroup">
 			<button
 				:class="[
@@ -61,9 +66,15 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</button>
 		</div>
 
-		<ui-delimiter v-if="props.displaySource === 'default'" />
+		<ui-delimiter v-if="isDefaultDisplaySource" />
 
-		<div :class="classes.label">Filter</div>
+		<ui-text
+			token="title-100"
+			as="div"
+			:class="classes.label"
+		>
+			Filter
+		</ui-text>
 
 		<template v-if="isStock">
 			<div :class="classes.subBlock">
@@ -90,7 +101,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 				</div>
 			</div>
 
-			<ui-delimiter v-if="props.displaySource === 'default'" />
+			<ui-delimiter v-if="isDefaultDisplaySource" />
 
 			<div :class="classes.subBlock">
 				<div :class="classes.subLabel">Period</div>
@@ -126,16 +137,20 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</div>
 		</template>
 		<template v-else>
-			<ui-delimiter v-if="props.displaySource === 'default'" />
+			<ui-delimiter v-if="isDefaultDisplaySource" />
 
 			<modal-badge :display-variant="props.displaySource">
 				<template #title>
 					<div :class="classes.forexGroup">
-						<div :class="classes.right">
+						<ui-text
+							token="text-300-b"
+							as="div"
+							:class="classes.right"
+						>
 							<div :class="classes.subLabel">Quote currency</div>
 							<div :class="classes.secondaryColor">·</div>
 							<div :class="classes.secondaryColor">{{ quoteCurrency }}</div>
-						</div>
+						</ui-text>
 						<ui-icon
 							:id="IconIds.RcmArrowRight"
 							:class="classes.secondaryColor"
@@ -159,16 +174,20 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 				</template>
 			</modal-badge>
 
-			<ui-delimiter v-if="props.displaySource === 'default'" />
+			<ui-delimiter v-if="isDefaultDisplaySource" />
 
 			<modal-badge :display-variant="props.displaySource">
 				<template #title>
 					<div :class="classes.forexGroup">
-						<div :class="classes.right">
+						<ui-text
+							token="text-300-b"
+							as="div"
+							:class="classes.right"
+						>
 							<div :class="classes.subLabel">Period</div>
 							<div :class="classes.secondaryColor">·</div>
 							<div :class="classes.secondaryColor">{{ dateToLabel[date] }}</div>
-						</div>
+						</ui-text>
 						<ui-icon
 							:id="IconIds.RcmArrowRight"
 							:class="classes.secondaryColor"
@@ -194,7 +213,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</modal-badge>
 		</template>
 
-		<template v-if="props.displaySource === 'new'">
+		<template v-if="!isDefaultDisplaySource">
 			<div :class="classes.subBlock">
 				<div :class="classes.subLabel">Display</div>
 				<div :class="classes.switchGroup">
@@ -230,10 +249,14 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 			</div>
 		</template>
 
-		<ui-delimiter v-if="props.displaySource === 'default'" />
-
-		<div :class="[classes.label, classes.settings]">Settings</div>
-
+		<ui-delimiter v-if="isDefaultDisplaySource" />
+		<ui-text
+			token="title-100"
+			as="div"
+			:class="[classes.label, classes.settings]"
+		>
+			Settings
+		</ui-text>
 	</div>
 </template>
 
@@ -248,10 +271,6 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 .right {
 	display: flex;
 	align-items: center;
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-menu-menu-item, 12px);
-	line-height: 18px;
 	color: var(--color-text-base-300, #9a9a9d);
 	gap: 6px;
 }
@@ -268,12 +287,7 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 
 .label {
 	padding: 10px 0;
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--typography-menu-menu-title, 13px);
-	line-height: 22px;
 	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.052px;
 }
 
 .subBlock {
@@ -286,12 +300,11 @@ const isStock = computed((): boolean => isDataRangeStock(date.value));
 .subLabel {
 	padding: 10px 0;
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-01, 12px);
-	line-height: 20px;
+	font-weight: var(--font-text-200-r-weight);
+	font-size: var(--font-text-200-r-size, 12px);
+	line-height: var(--font-text-200-r-line-height);
 	color: var(--color-text-base-500, #ffffff);
-	letter-spacing: 0.096px;
+	letter-spacing: var(--font-text-200-r-letter-spacing);
 	text-overflow: ellipsis;
 }
 

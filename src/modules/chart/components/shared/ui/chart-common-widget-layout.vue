@@ -12,7 +12,7 @@ const props = defineProps<IProps>();
 			<div
 				v-if="$slots.header"
 				:class="classes.header"
-				class="header-h01"
+				class="title-300"
 			>
 				<div :class="classes.headerText">
 

@@ -29,7 +29,7 @@ export function getDefaultState(): IState {
 	return {
 		selectedTickers: [],
 		selectedMarkets: [MarketType.Crypto],
-		dateRange: MarketCapDateRange.Month,
+		dateRange: MarketCapDateRange.Day,
 		displaySettings: {
 			isShowChart: true,
 			isShowChange: true,

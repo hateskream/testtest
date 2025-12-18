@@ -18,7 +18,7 @@ const props = defineProps<IChartComponentProps>();
 const { points: filteredPoints } = useAdaptiveBarPoints(
 	() => props.points,
 	useTemplateRef('wrapper'),
-	{ barWidth: BAR_WIDTH },
+	{ barWidth: BAR_WIDTH, minSpaceWidth: BAR_WIDTH * 1.5 },
 );
 
 const preparedLabels = computed(() => filteredPoints.value.map(point => point.label));

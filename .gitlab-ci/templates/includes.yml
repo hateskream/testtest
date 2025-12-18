@@ -31,16 +31,19 @@ app_build:
     - |
       if [ "$CI_COMMIT_BRANCH" != "main" ]; then
         cp .gitlab-ci/envs/front_config/.env.dev .env || true
-        DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
+        npm run build
       fi
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         # Сборка для stage
         cp .gitlab-ci/envs/front_config/.env.stage .env || true
-        DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
+        npm run build
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
         mv dist dist-stage
         cp .gitlab-ci/envs/front_config/.env.prod .env || true
-        DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
+        npm run build
+        # DEBUG=vite:* NODE_OPTIONS="--trace-warnings" npm run build
         mv dist dist-prod
       fi
   artifacts:

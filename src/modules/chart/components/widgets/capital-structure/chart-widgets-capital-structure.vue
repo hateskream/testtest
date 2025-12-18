@@ -18,7 +18,7 @@ const props = defineProps<ICapitalStructureProps>();
 	<chart-common-widget-layout>
 		<template #header>Capital Structure</template>
 		<template #body>
-			<div :class="classes.capitalStructure" class="paragraph-p-01">
+			<div :class="classes.capitalStructure" class="text-200-r">
 				<div :class="classes.metricsTable">
 					<div :class="classes.metricLabel"></div>
 					<div :class="classes.metricValue">

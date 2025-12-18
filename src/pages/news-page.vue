@@ -158,7 +158,7 @@ const { redirect } = useNewsPage();
 	padding: 0 8px;
 	font-style: normal;
 	font-weight: 410;
-	font-size: var(--typography-headers-size-h01, 20px);
+	font-size: var(--font-title-300-size, 20px);
 	line-height: 1;
 }
 

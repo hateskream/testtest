@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { UiIcon } from '@/shared/ui/icon';
 import type { IMenuItem } from '../model';
+import { UiText } from '@/shared/ui/text';
 
 const props = defineProps<IMenuItem>();
 </script>
@@ -23,10 +24,14 @@ const props = defineProps<IMenuItem>();
 				:class="classes.icon"
 			/>
 		</div>
-
-		<div :class="classes.text">
+		<ui-text
+			:class="classes.text"
+			token="text-50-r"
+			align="center"
+			as="div"
+		>
 			{{ props.text }}
-		</div>
+		</ui-text>
 	</router-link>
 </template>
 
@@ -41,6 +46,7 @@ const props = defineProps<IMenuItem>();
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	align-self: center;
 	width: 36px;
 	height: 36px;
 	background-color: var(--bg-100, rgb(73 73 80 / 32%));
@@ -58,13 +64,7 @@ const props = defineProps<IMenuItem>();
 }
 
 .text {
-	font-style: normal;
-	font-weight: 540;
-	font-size: 9px;
-	line-height: 150%;
-	text-align: center;
 	color: var(--text-300, rgb(255 255 255 / 60%));
-	letter-spacing: 0.072px;
 	transition: color 0.3s ease;
 }
 

@@ -18,6 +18,10 @@ const isUpTrend = computed(() => props.trend === 'up');
 const preparedValue = computed(() => {
 	const fixed = props.value.toFixed(2);
 
+	if (props.isPercent) {
+		return `${fixed}%`;
+	}
+
 	if (props.unit) {
 		return `${fixed} ${props.unit}`;
 	}

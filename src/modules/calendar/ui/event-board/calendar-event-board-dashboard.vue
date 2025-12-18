@@ -9,6 +9,8 @@ import {
 	toUtcIsoDate,
 } from '@/modules/calendar';
 import { getHighlightColor } from '@/modules/calendar/models/colors.ts';
+import { getDateFormatter } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 import CalendarEventCardDashboard from './calendar-event-card-dashboard.vue';
 
@@ -24,16 +26,19 @@ const emits = defineEmits<{
 
 const now = new Date();
 
-function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = 'en-US') {
+function formatEventDate(dateStr: DateYYYYMMDD, locale?: string) {
 	const date = new Date(dateStr);
 
 	const sameYear = date.getFullYear() === now.getFullYear();
 	const sameMonth = sameYear && date.getMonth() === now.getMonth();
 
-	const weekdayFormatter = new Intl.DateTimeFormat(locale, {
+	const weekdayFormatter = getDateFormatter({
+		locale,
 		weekday: 'short',
 	});
-	const dayFormatter = new Intl.DateTimeFormat(locale, {
+
+	const dayFormatter = getDateFormatter({
+		locale,
 		day: 'numeric',
 	});
 
@@ -43,7 +48,8 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 	if (sameMonth) {
 		return `${weekday} ${day}`;
 	} else if (sameYear) {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
 
@@ -51,10 +57,13 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 
 		return `${month}, ${weekday} ${day}`;
 	} else {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
-		const yearFormatter = new Intl.DateTimeFormat(locale, {
+
+		const yearFormatter = getDateFormatter({
+			locale,
 			year: 'numeric',
 		});
 
@@ -194,7 +203,9 @@ defineExpose({ scrollToDate });
 				:data-date="day.date"
 			>
 				<div :class="classes.boardDate">
-					{{ formatEventDate(day.date as DateYYYYMMDD) }}
+					<ui-text token="title-200">
+						{{ formatEventDate(day.date as DateYYYYMMDD) }}
+					</ui-text>
 				</div>
 
 				<div
@@ -207,7 +218,7 @@ defineExpose({ scrollToDate });
 						:class="[classes.hourLabel, classes.lightning, group.missed && classes.missed]"
 						:style="getHighlightColor(group.events[0].favorite, group.soon)"
 					>
-						{{ group.hour }}
+						<ui-text token="text-100-r">{{ group.hour }}</ui-text>
 					</div>
 
 					<div
@@ -254,12 +265,7 @@ defineExpose({ scrollToDate });
 	height: var(--height-height-s15, 36px);
 	padding-left: var(--padding-padding-s11, 20px);
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--font-title-200-size, 16.8px);
-	line-height: 160%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.134px;
 	text-overflow: ellipsis;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 	-webkit-box-orient: vertical;
@@ -307,11 +313,6 @@ defineExpose({ scrollToDate });
 	align-items: center;
 	height: 30px;
 	padding: 8px 18px 0;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	letter-spacing: 0.08px;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 	gap: 10px;
 }

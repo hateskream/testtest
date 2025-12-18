@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { Trend } from '@/modules/cell';
+import { UiText } from '@/shared/ui/text';
 
 export interface IPercentData {
 	value?: string;
@@ -63,13 +64,13 @@ const barWidth = computed(() => {
 		}]"
 		class="percentCell"
 	>
-		<span
-			class="paragraph-p-00"
+		<ui-text
+			token="text-300-r"
 			:class="[classes.percent, { [classes.percentWithBar]: props.data.maxAbsValue }]"
 		>
 			<span v-if="isDownTrend">−&nbsp;</span>
 			<span>{{ displayValue }}</span>
-		</span>
+		</ui-text>
 		<div
 			v-if="props.data.maxAbsValue"
 			:class="classes.bar"

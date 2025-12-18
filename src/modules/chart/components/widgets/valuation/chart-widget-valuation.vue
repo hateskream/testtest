@@ -25,7 +25,7 @@ const props = defineProps<IValuationProps>();
 	<chart-common-widget-layout>
 		<template #header>Valuation metrics</template>
 		<template #body>
-			<div :class="classes.financialMetrics" class="paragraph-p-01">
+			<div :class="classes.financialMetrics" class="text-200-r">
 				<div :class="classes.metricsTable">
 
 					<div :class="classes.metricLabelHeader"></div>

@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 .paragraph {
 	font-style: normal;
 	font-weight: 300;
-	font-size: var(--typography-headers-size-h01);
+	font-size: var(--font-title-300-size);
 	line-height: 1;
 	text-align: center;
 	color: var(--text-color-base-500);

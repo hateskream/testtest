@@ -15,3 +15,4 @@ export * from './delay';
 export * from './array';
 export * from './time';
 export * from './clone';
+export { getDateFormatter } from './date-formatter';

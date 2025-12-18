@@ -9,6 +9,7 @@ import {
 	toUtcIsoDate,
 } from '@/modules/calendar';
 import { getHighlightColor } from '@/modules/calendar/models/colors.ts';
+import { getDateFormatter } from '@/shared/lib';
 
 import CalendarEventCardTv from './calendar-event-card-tv.vue';
 
@@ -24,16 +25,19 @@ const emits = defineEmits<{
 
 const now = new Date();
 
-function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = 'en-US') {
+function formatEventDate(dateStr: DateYYYYMMDD, locale?: string) {
 	const date = new Date(dateStr);
 
 	const sameYear = date.getFullYear() === now.getFullYear();
 	const sameMonth = sameYear && date.getMonth() === now.getMonth();
 
-	const weekdayFormatter = new Intl.DateTimeFormat(locale, {
+	const weekdayFormatter = getDateFormatter({
+		locale,
 		weekday: 'short',
 	});
-	const dayFormatter = new Intl.DateTimeFormat(locale, {
+
+	const dayFormatter = getDateFormatter({
+		locale,
 		day: 'numeric',
 	});
 
@@ -43,7 +47,8 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 	if (sameMonth) {
 		return `${weekday} ${day}`;
 	} else if (sameYear) {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
 
@@ -51,10 +56,13 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 
 		return `${month}, ${weekday} ${day}`;
 	} else {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
-		const yearFormatter = new Intl.DateTimeFormat(locale, {
+
+		const yearFormatter = getDateFormatter({
+			locale,
 			year: 'numeric',
 		});
 
@@ -259,7 +267,7 @@ defineExpose({ scrollToDate });
 	align-items: center;
 	height: 44px;
 	padding-left: 10px;
-	font-size: var(--typography-headers-size-h00, 15px);
+	font-size: var(--font-title-200-size, 15px);
 	line-height: 1.7;
 	color: #ffffff;
 	letter-spacing: 0.075px;
@@ -312,10 +320,10 @@ defineExpose({ scrollToDate });
 	padding-bottom: 4px;
 	padding-left: 10px;
 	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	letter-spacing: 0.08px;
+	font-weight: var(--font-text-200-r-weight);
+	font-size: var(--font-text-200-r-size, 10px);
+	line-height: var(--font-text-200-r-line-height);
+	letter-spacing: var(--font-text-200-r-letter-spacing);
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 }
 

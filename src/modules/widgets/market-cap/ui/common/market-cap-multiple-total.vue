@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 import type { IMarketCapMarket, IMarketCapTicker, IMarketCapTotal } from '../../model';
 import { prettyNumberWithKey } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IMarketCapTickersSummaryProps {
 	tickers: IMarketCapTicker[];
@@ -62,10 +63,12 @@ const preparedTotals = computed(() => {
 
 <template>
 	<div :class="classes.list">
-		<div
+		<ui-text
 			v-for="entity in preparedTotals"
 			:key="entity.id"
 			:class="classes.ticker"
+			as="div"
+			token="text-200-r"
 		>
 			<div :class="[classes.segment, classes.name]">
 				<div :class="classes.circle" :style="{ backgroundColor: entity.color }"></div>
@@ -83,7 +86,7 @@ const preparedTotals = computed(() => {
 					{{ entity.formattedChangePercent }}%
 				</div>
 			</div>
-		</div>
+		</ui-text>
 	</div>
 </template>
 
@@ -103,10 +106,6 @@ const preparedTotals = computed(() => {
 	height: 17px;
 	margin-bottom: 4px;
 	overflow: hidden;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	letter-spacing: 0.08px;
 	border-radius: var(--radius-full, 9999px);
 	gap: 1px;
 }

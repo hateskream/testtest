@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IDisplaySettings } from '../../model';
 import { prettyNumberWithKey } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 import MarketCapTotalSegment from './market-cap-total-segment.vue';
 
@@ -31,7 +32,14 @@ const preparedChangePercent = computed(() => Math.abs(props.changePercent).toFix
 <template>
 	<div :class="classes.root">
 		<market-cap-total-segment name="Market cap">
-			<div :class="classes.title">$ {{ preparedMarketCap }}</div>
+			<ui-text
+				:class="classes.title"
+				as="div"
+				token="title-200"
+			>
+				<span>$</span>
+				<span>{{ preparedMarketCap }}</span>
+			</ui-text>
 			<div
 				v-if="props.displaySettings.isShowChange"
 				:class="[classes.change, props.changePercent > 0 ? classes.positive : classes.negative]"
@@ -41,13 +49,20 @@ const preparedChangePercent = computed(() => Math.abs(props.changePercent).toFix
 					height="6px"
 					width="6px"
 				/>
-				<div>
+				<ui-text token="text-200-r">
 					{{ preparedChangePercent }}%
-				</div>
+				</ui-text>
 			</div>
 		</market-cap-total-segment>
 		<market-cap-total-segment name="Volume">
-			<div :class="classes.title">$ {{ preparedVolume }}</div>
+			<ui-text
+				:class="classes.title"
+				as="div"
+				token="title-200"
+			>
+				<span>$</span>
+				<span>{{ preparedVolume }}</span>
+			</ui-text>
 		</market-cap-total-segment>
 	</div>
 </template>
@@ -63,20 +78,14 @@ const preparedChangePercent = computed(() => Math.abs(props.changePercent).toFix
 }
 
 .title {
-	font-weight: 440;
-	font-size: var(--font-title-200-size, 16.8px);
-	line-height: 160%;
+	display: inline-flex;
 	color: var(--text-500, rgb(255 255 255 / 96%));
-	letter-spacing: 0.134px;
+	gap: 2px;
 }
 
 .change {
 	display: flex;
 	align-items: center;
-	font-weight: 400;
-	font-size: var(--font-text-200-r-size, 12.2px);
-	line-height: 180%;
-	letter-spacing: 0.122px;
 	gap: 2px;
 }
 

@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
 import { BarChartFilled } from '@/modules/bar-chart';
 import type { IBarChartModel } from '@/modules/bar-chart/bar-chart.model';
+import { UiText } from '@/shared/ui/text';
 
 // TODO: move to models
 export interface ITradingVolumeProps {
@@ -58,10 +59,10 @@ const colorByChartData = (chart: IChartData) => {
 					:class="classes.tradingVolumeBarChartWrapper"
 				>
 					<div :class="classes.tradingVolumeBarChartTitle">
-						<span :class="classes.period">{{ chart.period }}</span>
-						<span :class="classes.value" :style="{color: colorByChartData(chart)}">
+						<ui-text token="text-200-r" :class="classes.period">{{ chart.period }}</ui-text>
+						<ui-text token="text-200-r" :style="{color: colorByChartData(chart)}">
 							{{ chart.value }}
-						</span>
+						</ui-text>
 					</div>
 					<bar-chart-filled v-bind="chart" />
 				</div>
@@ -118,14 +119,7 @@ const colorByChartData = (chart: IChartData) => {
 	align-items: center;
 
 	.period {
-		font-weight: 440;
-		font-size: var(--typography-paragraph-size-p-01, 12px);
 		color: var(--color-text-base-500, #ffffff);
-		letter-spacing: 0.096px;
-	}
-
-	.value {
-		font-size: 12px;
 	}
 }
 </style>

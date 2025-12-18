@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { UiText } from '@/shared/ui/text';
+
 interface IProps {
 	data: {
 		value: 'sale'
@@ -49,9 +51,14 @@ const currentStatus = computed(() => {
 
 <template>
 	<div :class="classes.plateWrapper">
-		<div :class="[classes.plate, classes[currentStatus.class]]">
+		<ui-text
+			:class="[classes.plate, classes[currentStatus.class]]"
+			token="text-200-r"
+			as="div"
+			align="center"
+		>
 			{{currentStatus.text}}
-		</div>
+		</ui-text>
 	</div>
 </template>
 
@@ -71,9 +78,6 @@ const currentStatus = computed(() => {
 	width: 84px;
 	height: 24px;
 	padding: 0 8px;
-	font-weight: 500;
-	font-size: 12px;
-	text-align: center;
 	border-radius: 6px;
 	gap: 10px;
 }

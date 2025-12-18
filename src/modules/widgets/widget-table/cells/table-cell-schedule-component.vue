@@ -89,7 +89,7 @@ const filledSegments = computed(() => {
 <template>
 	<div :class="classes.chartContainer">
 		<div :class="classes.timelineWrapper">
-			<div :class="classes.timeLabelsContainer" class="paragraph-p-00">
+			<div :class="classes.timeLabelsContainer" class="text-300-r">
 				<template v-if="shouldMergeLabels">
 					<span
 						:class="[classes.timeLabel, classes.timeLabelMerged]"

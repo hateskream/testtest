@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { WidgetTypedTable, CellType } from '@/modules/widgets/widget-table';
+import { CellType, WidgetTypedTable } from '@/modules/widgets/widget-table';
 
 type TSignal = 'buy' | 'sell' | 'neutral';
 
@@ -208,7 +208,7 @@ type TRow = {
 			>
 
 				<template #[`cell-name`]="{ row }">
-					<div :class="classes.left" class="paragraph-p-00">
+					<div :class="classes.left" class="text-300-r">
 						{{ (row as TRow).data.name.value ?? '—' }}
 					</div>
 				</template>

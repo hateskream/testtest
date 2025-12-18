@@ -7,6 +7,7 @@ import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiPositionTooltip } from '@/shared/ui/position';
 import type { IDisplaySettings, INews } from '../../model';
 import { TvTooltipWrapper } from '@/shared/ui/tooltip';
+import { getDateFormatter } from '@/shared/lib';
 
 import NewsIconScoreComponent from '../news-icon-score-component.vue';
 
@@ -18,15 +19,19 @@ interface INewsComponent {
 
 const props = defineProps<INewsComponent>();
 
-const time = computed(() =>
-	new Date(props.news.timestamp).toLocaleDateString('en-US', {
+const time = computed(() => {
+	const date = new Date(props.news.timestamp);
+
+	const formatter = getDateFormatter({
 		day: '2-digit',
 		month: 'short',
 		hour12: true,
 		hour: '2-digit',
 		minute: '2-digit',
-	}),
-);
+	});
+
+	return formatter.format(date);
+});
 </script>
 
 <template>

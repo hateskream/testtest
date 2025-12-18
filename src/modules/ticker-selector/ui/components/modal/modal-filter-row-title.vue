@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 interface IProps {
 	displayVariant: 'new' | 'default';
@@ -43,15 +44,19 @@ const isNewUi = computed(() => props.displayVariant === 'new');
 				:class="classes.back"
 			/>
 
-			<span>
+			<ui-text token="text-200-r">
 				<slot name="title" />
-			</span>
+			</ui-text>
 
 			<span v-if="!isNewUi">·</span>
 
-			<span v-if="!isNewUi" :class="classes.titleBadge">
+			<ui-text
+				v-if="!isNewUi"
+				:class="classes.titleBadge"
+				token="text-200-r"
+			>
 				<slot name="count" />
-			</span>
+			</ui-text>
 		</div>
 
 		<div :class="classes.titleEnd">
@@ -100,12 +105,8 @@ const isNewUi = computed(() => props.displayVariant === 'new');
 .titleText {
 	display: flex;
 	align-items: center;
-	font-style: normal;
-	font-weight: 300;
-	font-size: 13px;
 	color: var(--text-color-base-300);
 	text-transform: capitalize;
-	letter-spacing: 0.052px;
 	gap: 6px;
 }
 
@@ -125,8 +126,6 @@ const isNewUi = computed(() => props.displayVariant === 'new');
 
 .titleBadge {
 	padding: 4px 6px;
-	font-weight: 440;
-	font-size: 12px;
 	color: var(--text-color-base-300) !important;
 	background-color: rgb(255 255 255 / 9%);
 	border-radius: 8px;

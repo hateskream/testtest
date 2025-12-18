@@ -22,6 +22,10 @@ const preparedValue = computed(() => {
 		return `${fixed} ${props.unit}`;
 	}
 
+	if (props.isPercent) {
+		return `${fixed}%`;
+	}
+
 	return fixed;
 });
 

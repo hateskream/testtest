@@ -48,5 +48,6 @@ const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePi
 .calendarComponent {
 	display: flex;
 	align-self: stretch;
+	width: 100%;
 }
 </style>

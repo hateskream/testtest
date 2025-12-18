@@ -77,7 +77,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 245,
+					height: 250,
 					widgetType:  WidgetType.NewsSummary,
 					defaultDisplayVariant: 'default',
 				},
@@ -206,7 +206,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 245,
+					height: 250,
 					widgetType:  WidgetType.NewsSummary,
 					defaultDisplayVariant: 'default',
 				},
@@ -269,12 +269,13 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				{
 					defaultState: 'none',
 					height: 308,
-					maxCountRow: 6,
+					maxCountRow: 7,
 					widgetType:  WidgetType.TopIndices,
 					defaultDisplayVariant: 'default',
 				},
 				{
 					defaultState: 'stock',
+					maxCountRow: 11,
 					height: 496,
 					widgetType:  WidgetType.Performance,
 					defaultDisplayVariant: 'bar',
@@ -317,7 +318,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'stock',
-					height: 135,
+					height: 125,
 					widgetType:  WidgetType.FederalFunds,
 					defaultDisplayVariant: 'chart',
 				},
@@ -383,7 +384,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			widgets: [
 				{
 					defaultState: 'stock',
-					height: 245,
+					height: 250,
 					widgetType:  WidgetType.NewsSummary,
 					defaultDisplayVariant: 'default',
 				},

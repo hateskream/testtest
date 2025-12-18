@@ -2,13 +2,12 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useNewsPage } from '@/modules/news';
+import { NewsIconScore, useNewsPage } from '@/modules/news';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
-import { NewsIconScore } from '@/modules/news';
 import { RouteNames } from '@/types/route.d';
-import { isFeatureEnabled } from '@/shared/lib';
+import { getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 import NewsDetailsSkeletonComponent from './details/news-details-skeleton-component.vue';
 import NewsDetailsSourcesComponent from './details/news-details-sources-component.vue';
@@ -34,13 +33,17 @@ const time = computed(() => {
 		return 'Date not find';
 	}
 
-	return new Date(newsDetails.value.date).toLocaleDateString('en-US', {
+	const date = new Date(newsDetails.value.date);
+
+	const formatter = getDateFormatter({
 		day: '2-digit',
 		month: 'short',
 		hour12: true,
 		hour: '2-digit',
 		minute: '2-digit',
 	});
+
+	return formatter.format(date);
 });
 
 const { getPathString } = useNewsPage();
@@ -90,6 +93,7 @@ const isNewsPage = computed(
 							v-if="isFeatureEnabled('NEWS_PAGE_ENABLED')"
 							:to="getPathString(newsDetails.id, newsDetails.slug, {memo: true})"
 							:class="classes.link"
+							class="text-200-r"
 						>
 							Details
 						</router-link>
@@ -127,7 +131,7 @@ const isNewsPage = computed(
 
 .title {
 	font-weight: 340;
-	font-size: var(--typography-headers-size-h02, 24px);
+	font-size: var(--font-title-400-size, 24px);
 	line-height: 1.5;
 	color: #ffffff;
 }
@@ -180,7 +184,6 @@ const isNewsPage = computed(
 
 .link {
 	margin-top: 12px;
-	font-size: var(--typography-paragraph-size-p-01);
 	color: var(--text-color-base-100-effect);
 	text-decoration: underline;
 }

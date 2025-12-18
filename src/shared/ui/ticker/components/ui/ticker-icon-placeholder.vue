@@ -26,7 +26,7 @@ const tickerLetter = computed(() => {
 	height: 100%;
 	font-style: normal;
 	font-weight: 390;
-	font-size: var(--typography-headers-size-h00);
+	font-size: var(--font-title-200-size);
 	text-align: center;
 	color: var(--text-color-base-300);
 	letter-spacing: 0.075px;

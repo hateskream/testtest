@@ -7,13 +7,13 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 <template>
 	<div :class="classes.wrapper">
 		<div :class="classes.row">
-			<div :class="classes.sectorTitle" class="paragraph-p-02">Sector</div>
+			<div class="text-100-r">Sector</div>
 			<router-link
 				:class="classes.sectorLink"
 				:to="{name:RouteNames.Test}"
-				class="header-h00"
+				class="title-200"
 			>
-				<span :class="classes.sectorName" class="paragraph-p-01">
+				<span :class="classes.sectorName" class="text-200-r">
 					Automobile
 				</span>
 				<span :class="classes.iconWrapper">
@@ -27,13 +27,13 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 			</router-link>
 		</div>
 		<div :class="classes.row">
-			<div :class="classes.sectorTitle" class="paragraph-p-02">Website</div>
+			<div class="text-100-r">Website</div>
 			<router-link
 				:class="classes.sectorLink"
 				:to="{name:RouteNames.Test}"
-				class="header-h00"
+				class="title-200"
 			>
-				<span :class="classes.sectorName" class="paragraph-p-01">
+				<span :class="classes.sectorName" class="text-200-r">
 					tesla.com
 				</span>
 				<span :class="classes.iconWrapper">
@@ -47,13 +47,13 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 			</router-link>
 		</div>
 		<div :class="classes.row">
-			<div :class="classes.sectorTitle" class="paragraph-p-02">Sector</div>
+			<div class="text-100-r">Sector</div>
 			<router-link
 				:class="classes.sectorLink"
 				:to="{name:RouteNames.Test}"
-				class="header-h00"
+				class="title-200"
 			>
-				<span :class="classes.sectorName" class="paragraph-p-01">
+				<span :class="classes.sectorName" class="text-200-r">
 					Automobile
 				</span>
 				<span :class="classes.iconWrapper">
