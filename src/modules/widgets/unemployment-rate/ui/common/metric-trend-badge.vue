@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 interface IMetricTrendBadge {
@@ -13,12 +15,20 @@ interface IMetricTrendBadge {
 }
 
 const props = defineProps<IMetricTrendBadge>();
+
+const topValueLabel = computed(() => {
+	if (props.isTopValuePercent) {
+		return `${props.topValue}%`;
+	}
+
+	return props.topValue;
+});
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<span>{{ topValue }} {{ isTopValuePercent ? '%' : '' }}:&nbsp;</span>
+			<span>{{ topValueLabel }}</span>
 		</div>
 		<div :class="classes.bottom">
 			<span>{{ label }}:&nbsp;</span>

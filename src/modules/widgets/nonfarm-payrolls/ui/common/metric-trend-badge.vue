@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { prettyNumberWithKey } from '@/shared/lib';
 
 interface IMetricTrendBadge {
 	topValue: number;
@@ -13,12 +16,17 @@ interface IMetricTrendBadge {
 }
 
 const props = defineProps<IMetricTrendBadge>();
+
+const preparedTopValue = computed(() => {
+	const { row } = prettyNumberWithKey(props.topValue);
+	return row;
+});
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<span>{{ topValue }} {{ isTopValuePercent ? '%' : '' }}</span>
+			<span>{{ preparedTopValue }} {{ isTopValuePercent ? '%' : '' }}</span>
 		</div>
 		<div :class="classes.bottom">
 			<span>{{ label }}:&nbsp;</span>

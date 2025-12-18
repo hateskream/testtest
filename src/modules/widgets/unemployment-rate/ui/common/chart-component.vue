@@ -2,8 +2,7 @@
 import { CrosshairMode } from 'lightweight-charts';
 
 import { RangeChart } from '@/shared/ui/chart-range';
-
-import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
+import { Chart } from '@/modules/lightweight-charts';
 
 interface IMarketCapChartProps {
 	chartColorSchema: 'positive' | 'negative';
@@ -11,11 +10,13 @@ interface IMarketCapChartProps {
 }
 
 const props = defineProps<IMarketCapChartProps>();
+
+const rangeList = Object.values(RangeChart);
 </script>
 
 <template>
-	<chart-component
-		:range-list="Object.values(RangeChart)"
+	<chart
+		:range-list="rangeList"
 		:is-visible-history-graph="false"
 		:is-visible-indicators="false"
 		:is-visible-range="false"
