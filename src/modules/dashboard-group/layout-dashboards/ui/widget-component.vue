@@ -4,7 +4,13 @@ import { computed, defineAsyncComponent, ref, shallowRef, useTemplateRef, watch 
 import { getWidgetComponent, type IMeta } from '../../dashboards/model';
 import type { DisplayVariant, IWidget } from '../model';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
-import { calcSizeSideGridCell, canChangeHeight } from '../model';
+import {
+	calcMaxCountRowVisible,
+	calcSizeSideGridCell,
+	canChangeHeight,
+	getMinHeight,
+	snapHeightToNearestStep,
+} from '../model';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { useDelayedLoading } from '@/shared/composables';
 import { useResizable } from '../composables';
@@ -31,8 +37,6 @@ const emits = defineEmits<{
 	'change-height': [string, number];
 	'change-max-count-row': [string, number];
 }>();
-
-const titleWidgetHeight = props.widget.hasFilters ? 76 : 40;
 
 const { size } = useResizable(
 	useTemplateRef('sizer'),
@@ -110,7 +114,7 @@ watch(
 
 		emits('change-height', props.widget.id, newHeight);
 		if (maxCountRow) {
-			emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(newHeight));
+			emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(props.widget, newHeight));
 		}
 	},
 );
@@ -127,40 +131,14 @@ function setWidgetStateType(widgetId: string, stateType: string) {
 	emits('set-widget-state-type', widgetId, stateType);
 }
 
-function getMinHeight(widget: IWidget) {
-	const { snapStep = 0, minHeight } = widget;
-
-	return minHeight ?? titleWidgetHeight + snapStep;
-}
-
-function calcMaxCountRowVisible(widgetHeight: number) {
-	const { widget: { snapStep = 1 } } = props;
-
-	return Math.floor((widgetHeight - titleWidgetHeight) / snapStep);
-}
-
 function snapToNearestStep(height: number) {
-	const { widget: { snapStep } } = props;
-	if (!snapStep) {
+	const snappedHeight = snapHeightToNearestStep(props.widget, height);
+	if (!snappedHeight) {
 		return;
 	}
 
-	const newHeightContent = height - titleWidgetHeight;
-
-	const remainder = newHeightContent % snapStep;
-
-	let snappedHeightContent;
-
-	if (remainder >= snapStep / 2) {
-		snappedHeightContent = Math.ceil(newHeightContent / snapStep) * snapStep;
-	} else {
-		snappedHeightContent = Math.floor(newHeightContent / snapStep) * snapStep;
-	}
-
-	const snappedHeight = snappedHeightContent + titleWidgetHeight;
-
 	emits('change-height', props.widget.id, snappedHeight);
-	emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(snappedHeight));
+	emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(props.widget, snappedHeight));
 }
 
 defineExpose({ scrollBy });

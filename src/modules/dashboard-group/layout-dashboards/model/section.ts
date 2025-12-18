@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { WidgetType } from '@/modules/dashboard-group';
-import { createWidget, type DisplayVariant, type IWidget } from './widget';
+import { createWidget, findMovedWidget, type DisplayVariant, type IWidget } from './widget';
+import { updateById } from '@/shared/lib';
 
 export interface ISection {
 	id: string;
@@ -29,7 +30,23 @@ export interface ISectionWheelPayload {
 }
 
 export function changeOrderWidgets(section: ISection, widgets: IWidget[]) {
-	return section.widgets !== widgets ? { ...section, widgets } : section;
+	const widget = findMovedWidget(section.widgets, widgets);
+	if (!widget) {
+		return section;
+	}
+
+	if (Number.isFinite(widget.height)) {
+		return { ...section, widgets };
+	}
+
+	return {
+		...section,
+		widgets: updateById(
+			section.widgets,
+			widget.id,
+			() => widget,
+		),
+	};
 }
 
 export function createSectionFromPreset({ widgets, name, width }: ISectionPreset): ISection {

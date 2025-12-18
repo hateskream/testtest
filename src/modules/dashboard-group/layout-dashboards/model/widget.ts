@@ -190,9 +190,12 @@ export interface IWidget extends IWidgetPreset {
 	height: number;
 	displayVariant: DisplayVariant;
 	defaultStateType: string;
+	hasFilters: boolean;
 	stateType?: string;
 	maxCountRow?: number;
 }
+
+const titleWidgetHeight = (widget: IWidget) => widget.hasFilters ? 76 : 40;
 
 const CAN_CHANGE_HEIGHT = P.union(
 	WidgetType.TopIndices,
@@ -235,6 +238,7 @@ export function createWidget(
 		defaultStateType,
 		displayVariant,
 		maxCountRow,
+		hasFilters: preset.hasFilters ?? false,
 	};
 }
 
@@ -257,6 +261,65 @@ export function changeHeight(
 		height,
 	};
 }
+
+export function getMinHeight(widget: IWidget) {
+	const { snapStep = 0, minHeight } = widget;
+
+	return minHeight ?? titleWidgetHeight(widget) + snapStep;
+}
+
+export function calcMaxCountRowVisible(widget: IWidget, widgetHeight: number) {
+	const { snapStep = 1 } = widget;
+
+	return Math.floor((widgetHeight - titleWidgetHeight(widget)) / snapStep);
+}
+
+export function findMovedWidget(
+	prevWidgets: IWidget[],
+	nextWidgets: IWidget[],
+): IWidget | null {
+	const prevIndexById = prevWidgets.reduce<Record<string, number>>(
+		(acc, w, i) => ({ ...acc, [w.id]: i }),
+		{},
+	);
+
+	return (
+		nextWidgets.find(
+			(widget, index) =>
+				prevIndexById[widget.id] !== undefined &&
+				prevIndexById[widget.id] !== index,
+		) ?? null
+	);
+}
+
+export function snapHeightToNearestStep(widget: IWidget, height: number) {
+	const { snapStep } = widget;
+	if (!snapStep) {
+		return ;
+	}
+
+	const newHeightContent = height - titleWidgetHeight(widget);
+
+	const remainder = newHeightContent % snapStep;
+
+	let snappedHeightContent;
+
+	if (remainder >= snapStep / 2) {
+		snappedHeightContent = Math.ceil(newHeightContent / snapStep) * snapStep;
+	} else {
+		snappedHeightContent = Math.floor(newHeightContent / snapStep) * snapStep;
+	}
+
+	return snappedHeightContent + titleWidgetHeight(widget);
+}
+
+export function fromInfiniteToFinite(widget: IWidget, height: number): IWidget {
+	return {
+		...widget,
+		height,
+	};
+}
+
 
 export function rehydrateWidget(
 	id: string,
@@ -288,6 +351,7 @@ export function rehydrateWidget(
 		defaultStateType,
 		stateType,
 		maxCountRow,
+		hasFilters: preset.hasFilters ?? false,
 	};
 }
 
