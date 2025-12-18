@@ -11,6 +11,8 @@ import {
 	changeWidth,
 	changeHeight,
 	changeMaxCountRow,
+	type IWidget,
+	changeOrderWidgets,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { updateById } from '@/shared/lib';
@@ -178,6 +180,18 @@ export function useDashboardLayout() {
 		);
 	}
 
+	function changeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			s => changeOrderWidgets(s, widgets),
+		);
+	}
+
+	function changeOrderSections(s: ISection[]) {
+		sections.value = s;
+	}
+
 	function setWidgetStateType(
 		widgetId: string,
 		stateType: string,
@@ -199,6 +213,8 @@ export function useDashboardLayout() {
 		changeWidthSection,
 		changeHeighWidget,
 		changeMaxCountRowWidget,
+		changeOrderWidgetsInSection,
+		changeOrderSections,
 	};
 }
 

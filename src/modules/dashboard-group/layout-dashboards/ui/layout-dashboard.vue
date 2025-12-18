@@ -21,6 +21,8 @@ const {
 	changeWidthSection,
 	changeHeighWidget,
 	changeMaxCountRowWidget,
+	changeOrderWidgetsInSection,
+	changeOrderSections,
 } = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
@@ -85,11 +87,12 @@ const {
 				@go-to="goTo"
 				@prev="prev"
 				@next="next"
-				@update-section="sections = $event"
 				@set-widget-state-type="setWidgetStateType"
 				@change-width="changeWidthSection"
 				@change-height="changeHeighWidget"
 				@change-max-count-row="changeMaxCountRowWidget"
+				@change-order-widgets-in-section="changeOrderWidgetsInSection"
+				@change-order-sections="changeOrderSections"
 			/>
 		</div>
 		<pagination-mobile

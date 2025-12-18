@@ -2,7 +2,7 @@
 import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
-import type { ISection, ISectionWheelPayload } from '../model';
+import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
@@ -24,13 +24,14 @@ const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
 	(e: 'set-widget-state-type', widgetId: string, value: string): void;
-	(e: 'updateSection', newSection: ISection[]): void;
 	(e: 'change-width', sectionId: string, width: number): void;
 	(e: 'change-height', sectionId: string, widgetId: string, height: number): void;
 	(e: 'change-max-count-row', sectionId: string, widgetId: string, maxCountRow: number): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
+	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[]): void;
+	(e: 'change-order-sections', sections: ISection[]): void;
 }>();
 
 const trackRef = useTemplateRef<HTMLDivElement>('track');
@@ -101,6 +102,10 @@ function onChangeHeight(sectionId: string, widgetId: string, height: number) {
 
 function onChangeMaxCountRow(sectionId: string, widgetId: string, maxCountRow: number) {
 	emits('change-max-count-row', sectionId, widgetId, maxCountRow);
+}
+
+function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
+	emits('change-order-widgets-in-section', sectionId, widgets);
 }
 
 defineExpose({ trackRef });
@@ -191,8 +196,9 @@ defineExpose({ trackRef });
 			@prev="emits('prev')"
 			@next="emits('next')"
 			@go-to="emits('goTo', $event)"
-			@update-section="emits('updateSection', $event)"
 			@scroll-to-widget="scrollToWidget"
+			@change-order-sections="emits('change-order-sections', $event)"
+			@change-order-widgets-in-section="onChangeOrderWidgetsInSection"
 		/>
 	</div>
 </template>

@@ -28,6 +28,10 @@ export interface ISectionWheelPayload {
 	passedWidgets: number;
 }
 
+export function changeOrderWidgets(section: ISection, widgets: IWidget[]) {
+	return section.widgets !== widgets ? { ...section, widgets } : section;
+}
+
 export function createSectionFromPreset({ widgets, name, width }: ISectionPreset): ISection {
 	return {
 		id: uuidv4(),

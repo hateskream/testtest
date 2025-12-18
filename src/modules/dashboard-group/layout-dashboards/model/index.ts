@@ -1,6 +1,6 @@
 export { type IDashboardGroup, createDashboardGroup, changeActiveDashboard } from './dashboard-group';
 
-export { type ISection, type ISectionWheelPayload, changeWidth } from './section';
+export { type ISection, type ISectionWheelPayload, changeWidth, changeOrderWidgets } from './section';
 
 export {
 	rehydrateWidget,

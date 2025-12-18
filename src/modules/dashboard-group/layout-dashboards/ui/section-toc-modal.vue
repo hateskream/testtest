@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable';
-import { ref, watch } from 'vue';
 
 import type { ISection, IWidget } from '../model';
 import { DashboardModalContent, DashboardModalTitle, DashboardModalWrapper } from '@/shared/ui/modal';
@@ -14,40 +13,20 @@ const props = defineProps<{
 const emits = defineEmits<{
 	'go-to': [number];
 	'scroll-to-widget': [string, string];
-	'update-section': [ISection[]];
+	'change-order-widgets-in-section': [string, IWidget[]];
+	'change-order-sections': [ISection[]];
 }>();
 
-const localSections = ref<ISection[]>([]);
-
-watch(() => props.slides, (v) => {
-	localSections.value = v.map(s => ({
-		...s,
-		widgets: [...s.widgets],
-	}));
-}, { immediate: true, deep: true });
-
 function updateSections(v: ISection[]) {
-	localSections.value = v.map(s => ({
-		...s,
-		widgets: [...s.widgets],
-	}));
-
-	emits('update-section', localSections.value);
+	emits('change-order-sections', v);
 }
 
-function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
+function updateWidgets(sectionId: string, widgets: IWidget[]) {
 	if (!isFeatureEnabled('DRAG_WIDGET_ENABLED')) {
 		return;
 	}
 
-	const next = localSections.value.map((s, i) =>
-		i === sectionIndex
-			? { ...s, widgets: [...widgets] }
-			: s,
-	);
-
-	localSections.value = next;
-	emits('update-section', next);
+	emits('change-order-widgets-in-section', sectionId, widgets);
 }
 </script>
 
@@ -86,7 +65,7 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 								:chosen-class="classes.chosen"
 								:drag-class="classes.drag"
 								:class="classes.widgets"
-								@update:model-value="(v: IWidget[]) => updateWidgets(index, v)"
+								@update:model-value="(v: IWidget[]) => updateWidgets(section.id, v)"
 							>
 								<template #item="{ element: widget }">
 									<ui-text
