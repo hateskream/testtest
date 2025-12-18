@@ -156,6 +156,7 @@ useProvideFloatingContext({} as any);
 			v-if="isVisible"
 			ref="floating"
 			:style="floatingStyles"
+			data-position-root
 			data-position
 			data-portal-content
 		>
