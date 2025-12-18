@@ -109,27 +109,26 @@ export function useDashboardLayout() {
 			);
 		},
 		set(newSections) {
-			state.value = {
-				...state.value,
-				dashboards: updateById(
-					state.value.dashboards,
-					activeDashboardId.value,
-					(d) => ({
-						...d,
-						sections: newSections,
-					}),
-				),
-			};
+			state.value.dashboards = updateById(
+				state.value.dashboards,
+				activeDashboardId.value,
+				(d) => ({
+					...d,
+					sections: newSections,
+				}),
+			);
 		},
 	});
 
 	watch(data, newState => {
 		if (newState) {
-			state.value = { ...newState };
+			state.value.dashboards = [...newState.dashboards];
+			state.value.activeDashboardId = newState.activeDashboardId;
 		}
-	}, { immediate: true });
+	}, { immediate: true, deep: true });
 
 	watch(state, (newState, oldState) => {
+
 		if (JSON.stringify(newState) === JSON.stringify(oldState)) {
 			return;
 		}
@@ -180,11 +179,11 @@ export function useDashboardLayout() {
 		);
 	}
 
-	function changeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
+	function changeOrderWidgetsInSection(sectionId: string, widgets: IWidget[], sectionHeight: number) {
 		sections.value = updateById(
 			sections.value,
 			sectionId,
-			s => changeOrderWidgets(s, widgets),
+			s => changeOrderWidgets(s, widgets, sectionHeight),
 		);
 	}
 

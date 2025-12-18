@@ -53,7 +53,7 @@ const {
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
-	maxCountRows: () => (props.meta.maxCountRowTable || 0),
+	maxCountRows: () => (props.meta.maxCountRowTable || 50),
 });
 
 watch(activeMarket, (value) => {

@@ -30,7 +30,7 @@ const emits = defineEmits<{
 	(e: 'next'): void;
 	(e: 'prev'): void;
 	(e: 'goTo', index: number): void;
-	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[]): void;
+	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[], sectionHeight: number): void;
 	(e: 'change-order-sections', sections: ISection[]): void;
 }>();
 
@@ -105,7 +105,7 @@ function onChangeMaxCountRow(sectionId: string, widgetId: string, maxCountRow: n
 }
 
 function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
-	emits('change-order-widgets-in-section', sectionId, widgets);
+	emits('change-order-widgets-in-section', sectionId, widgets, trackHeight.value);
 }
 
 defineExpose({ trackRef });

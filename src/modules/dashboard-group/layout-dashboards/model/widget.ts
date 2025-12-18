@@ -292,6 +292,16 @@ export function findMovedWidget(
 	);
 }
 
+export function findNewWidget(
+	prevWidgets: IWidget[],
+	nextWidgets: IWidget[],
+): IWidget | null {
+	const prevIds = new Set(prevWidgets.map(w => w.id));
+
+	return nextWidgets.find(widget => !prevIds.has(widget.id)) ?? null;
+}
+
+
 export function snapHeightToNearestStep(widget: IWidget, height: number) {
 	const { snapStep } = widget;
 	if (!snapStep) {
@@ -313,10 +323,18 @@ export function snapHeightToNearestStep(widget: IWidget, height: number) {
 	return snappedHeightContent + titleWidgetHeight(widget);
 }
 
-export function fromInfiniteToFinite(widget: IWidget, height: number): IWidget {
+export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWidget {
+	const height = snapHeightToNearestStep(widget, targetHeight);
+	if (!height) {
+		return widget;
+	}
+
+	const maxCountRow = calcMaxCountRowVisible(widget, height);
+
 	return {
 		...widget,
 		height,
+		maxCountRow,
 	};
 }
 

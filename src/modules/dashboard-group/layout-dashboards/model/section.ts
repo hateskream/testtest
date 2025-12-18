@@ -1,7 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { WidgetType } from '@/modules/dashboard-group';
-import { createWidget, findMovedWidget, type DisplayVariant, type IWidget } from './widget';
+import {
+	createWidget,
+	findMovedWidget,
+	findNewWidget,
+	fromInfiniteToFinite,
+	type DisplayVariant,
+	type IWidget,
+} from './widget';
 import { updateById } from '@/shared/lib';
 
 export interface ISection {
@@ -29,12 +36,32 @@ export interface ISectionWheelPayload {
 	passedWidgets: number;
 }
 
-export function changeOrderWidgets(section: ISection, widgets: IWidget[]) {
-	const widget = findMovedWidget(section.widgets, widgets);
-	if (!widget) {
-		return section;
+export const HEIGHT_SECTION_TITLE = 50;
+
+export function changeOrderWidgets(section: ISection, widgets: IWidget[], sectionHeight: number) {
+	const height = sectionHeight - HEIGHT_SECTION_TITLE;
+
+	const newWidget = findNewWidget(section.widgets, widgets);
+	if (newWidget) {
+		return changeOrderWidget(section, newWidget, widgets, height);
 	}
 
+	const movedWidget = findMovedWidget(section.widgets, widgets);
+	if (movedWidget) {
+		return changeOrderWidget(section, movedWidget, widgets, height);
+	}
+
+	if (!widgets.length) {
+		return {
+			...section,
+			widgets: [],
+		};
+	}
+
+	return section;
+}
+
+function changeOrderWidget(section: ISection, widget: IWidget, widgets: IWidget[], sectionHeight: number) {
 	if (Number.isFinite(widget.height)) {
 		return { ...section, widgets };
 	}
@@ -42,9 +69,9 @@ export function changeOrderWidgets(section: ISection, widgets: IWidget[]) {
 	return {
 		...section,
 		widgets: updateById(
-			section.widgets,
+			widgets,
 			widget.id,
-			() => widget,
+			w => fromInfiniteToFinite(w, sectionHeight),
 		),
 	};
 }
