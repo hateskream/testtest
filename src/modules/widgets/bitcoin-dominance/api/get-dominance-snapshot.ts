@@ -44,18 +44,15 @@ export async function getDominanceSnapshot(args: IGetDominanceSnapshotRequest): 
 	const logger = useLogger();
 
 	const query = removeUndefinedPropertiesFromObject(args);
-	if (query.tickers) {
-		if (query.tickers.match(/(?<=-)[^_]+(?=_)/g)?.join(',') !== null) {
-			query.tickers = query.tickers.match(/(?<=-)[^_]+(?=_)/g)!.join(',');
-		}
-	}
 
 	if (IS_USE_MOCK) {
 		return await getMockData(args);
 	}
 
 	try {
-		const response = await httpService.get<IDominanceSnapshotResponse>('/api/v1/dominance/data', { query });
+		const response = await httpService.get<IDominanceSnapshotResponse>('/api/v1/dominance/data', { query: {
+			tickerIDs: query.tickers,
+		} });
 
 		return prepareResponse(response.data);
 	} catch (error) {
