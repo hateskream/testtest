@@ -14,6 +14,7 @@ import {
 } from '../../model';
 
 import ChartPriceHeader from './chart-price-header.vue';
+import ChartPriceIndicators from './chart-price-indicators.vue';
 
 interface IChartPriceProps {
 	isBig: boolean;
@@ -86,7 +87,11 @@ const timelineSegments = computed(() => {
 const chartColorSchema = computed(() => props.current.changePercent > 0 ? 'positive' : 'negative');
 
 const preparedChartData = computed(() => {
-	return props.points.map((point): LineData => ({ time: point.timestamp, value: point.price }));
+	return props.points.map((point): LineData => ({ time: point.timestamp / 1000, value: point.price }));
+});
+
+const indicators = computed(() => {
+	return [{ title: 'Mainline', color: chartColorSchema.value === 'positive' ? '#04EDA0' : '#FC1D4D' }];
 });
 </script>
 
@@ -109,6 +114,10 @@ const preparedChartData = computed(() => {
 				[classes.tv]: isTvDisplayVariant
 			}]"
 		>
+			<chart-price-indicators
+				:indicators="indicators"
+				:class="classes.indicators"
+			/>
 			<chart
 				v-model:range="activeChartRange"
 				:data="preparedChartData"
@@ -124,13 +133,14 @@ const preparedChartData = computed(() => {
 				:is-visible-time-scale="props.isShowAxes && !props.isShowEventsTimeline"
 				:is-visible-events-timeline="props.isShowEventsTimeline"
 				:range-list="chartRanges"
-				:right-offset-pixels="20"
 				:class="classes.chart"
 				:events="props.events"
 				:timeline-segments="timelineSegments"
 				:events-timeline-padding="eventsTimelinePadding"
 				:last-price-animation="LastPriceAnimationMode.Continuous"
 				:color-schema="chartColorSchema"
+				:right-offset-pixels="120"
+				price-label="Current Price"
 				fade-left
 			/>
 		</div>
@@ -153,8 +163,11 @@ const preparedChartData = computed(() => {
 }
 
 .chartWrapper {
+	display: flex;
 	flex: 1 1 0;
+	flex-direction: column;
 	min-height: 0;
+	gap: 10px;
 	padding: 0 0 12px 20px;
 
 	&.tv {
@@ -170,8 +183,13 @@ const preparedChartData = computed(() => {
 	}
 }
 
+.indicators {
+	margin-right: 10px;
+}
+
 .chart {
 	display: flex;
+	flex: 1 1 0;
 	flex-direction: column;
 	width: 100%;
 	height: 100%;

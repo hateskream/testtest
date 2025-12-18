@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { CpiMetric, CpiRange, metricFilterValueToDisplay, rangeFilterValueToDisplay } from '../../model';
+import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import {
+	CpiMetric,
+	CpiRange,
+	metricFilters,
+	metricFilterValueToDisplay,
+	rangeFilters,
+	rangeFilterValueToDisplay,
+} from '../../model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -22,51 +29,24 @@ const activeMetric = defineModel<CpiMetric>('metric', { required: true });
 		:display-variant="props.displayVariant"
 		@on-clear-click="emit('reset')"
 	>
-		<modal-badge-dropdown :display-variant="props.displayVariant">
-			<template #title>
-				{{ metricFilterValueToDisplay[activeMetric] }}
-			</template>
-			<template #content>
-				<modal-badge-list :display-variant>
-					<template #title>
-						CPI
-					</template>
-					<template
-						v-for="filterKey in CpiMetric"
-						:key="filterKey"
-					>
-						<modal-item-selector
-							:model-value="filterKey === activeMetric"
-							@update:model-value="activeMetric = filterKey"
-						>
-							{{ metricFilterValueToDisplay[filterKey] }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
-		<modal-badge-dropdown v-if="props.isShowRange" :display-variant="props.displayVariant">
-			<template #title>
-				{{ rangeFilterValueToDisplay[activeRange].selected }}
-			</template>
-			<template #content>
-				<modal-badge-list :display-variant>
-					<template #title>
-						Date range
-					</template>
-					<template
-						v-for="filterKey in CpiRange"
-						:key="filterKey"
-					>
-						<modal-item-selector
-							:model-value="filterKey === activeRange"
-							@update:model-value="activeRange = filterKey"
-						>
-							{{ rangeFilterValueToDisplay[filterKey].option }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
+		<modal-badge-filter
+			:display-variant="props.displayVariant"
+			:options="metricFilters"
+			:selected-value="activeMetric"
+			:label="metricFilterValueToDisplay[activeMetric]"
+			close-on-select
+			title="CPI"
+			@select="activeMetric = $event.value"
+		/>
+		<modal-badge-filter
+			v-if="props.isShowRange"
+			:display-variant="props.displayVariant"
+			:options="rangeFilters"
+			:selected-value="activeRange"
+			:label="rangeFilterValueToDisplay[activeRange].selected"
+			close-on-select
+			title="Date range"
+			@select="activeRange = $event.value"
+		/>
 	</widget-filters-scrollable>
 </template>

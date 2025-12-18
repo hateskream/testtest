@@ -61,7 +61,7 @@ const trendClass = computed(() => {
 	<div class="wrapper">
 		<ui-position-tooltip :open-delay="100">
 			<template #default>
-				<div :class="[classes.number, classes[trendClass]]" class="text-300-r">
+				<div :class="[classes.number, classes[trendClass]]">
 					<ui-text token="text-300-r" :class="classes.prefix">{{ formattedValue.prefix }}</ui-text>
 					<ui-text token="text-300-r" :class="classes.formatted">{{ formattedValue.value }}</ui-text>
 					<ui-text token="text-300-r" :class="classes.suffix">{{ formattedValue.suffix }}</ui-text>
@@ -69,7 +69,7 @@ const trendClass = computed(() => {
 			</template>
 
 			<template #content>
-				<div :class="classes.number" class="text-300-r">
+				<div :class="classes.number">
 					<ui-text token="text-300-r">{{ formattedValue.prefix }}</ui-text>
 					<ui-text token="text-300-r">{{ formattedValue.default }}</ui-text>
 					<ui-text token="text-300-r">{{ formattedValue.suffix }}</ui-text>

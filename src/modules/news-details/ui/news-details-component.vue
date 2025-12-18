@@ -7,7 +7,7 @@ import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
 import { RouteNames } from '@/types/route.d';
-import { isFeatureEnabled } from '@/shared/lib';
+import { getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 import NewsDetailsSkeletonComponent from './details/news-details-skeleton-component.vue';
 import NewsDetailsSourcesComponent from './details/news-details-sources-component.vue';
@@ -33,13 +33,17 @@ const time = computed(() => {
 		return 'Date not find';
 	}
 
-	return new Date(newsDetails.value.date).toLocaleDateString('en-US', {
+	const date = new Date(newsDetails.value.date);
+
+	const formatter = getDateFormatter({
 		day: '2-digit',
 		month: 'short',
 		hour12: true,
 		hour: '2-digit',
 		minute: '2-digit',
 	});
+
+	return formatter.format(date);
 });
 
 const { getPathString } = useNewsPage();

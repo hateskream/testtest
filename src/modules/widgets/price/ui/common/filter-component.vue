@@ -2,13 +2,7 @@
 import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import {
-	MarketBadge,
-	ModalBadgeDropdown,
-	ModalBadgeList,
-	ModalItemSelector,
-	WidgetFiltersScrollable,
-} from '@/modules/widgets/base';
+import { MarketBadge, ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import type { MarketType } from '@/modules/market';
 import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
 
@@ -51,34 +45,19 @@ const isTv = computed(()=>{
 		<market-badge
 			v-model="activeMarket"
 			:display-variant="displayVariant"
+			close-on-select
 		/>
 		<ui-delimiter v-if="isTv" />
-		<modal-badge-dropdown
+		<modal-badge-filter
 			v-for="(filterState, filterKey) in filters"
 			:key="filterKey"
 			:display-variant="displayVariant"
-		>
-			<template #title v-if="filterState">
-				{{ filterValueToDisplay[filterState].label }}
-			</template>
-			<template #content>
-				<modal-badge-list :display-variant>
-					<template #title>
-						{{ filterTypeToName[filterKey] }}
-					</template>
-					<template
-						v-for="filterValue in props.filtersValues[filterKey]"
-						:key="filterValue.value"
-					>
-						<modal-item-selector
-							:model-value="filterValue.value === filterState"
-							@update:model-value="updateFilter(filterKey, filterValue.value)"
-						>
-							{{ filterValue.label }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
+			:options="props.filtersValues[filterKey!]!"
+			:selected-value="filterState"
+			:label="filterValueToDisplay[filterState!].selected ?? filterValueToDisplay[filterState!].label"
+			:title="filterTypeToName[filterKey]"
+			close-on-select
+			@select="updateFilter(filterKey, $event.value)"
+		/>
 	</widget-filters-scrollable>
 </template>

@@ -9,6 +9,7 @@ import {
 	toUtcIsoDate,
 } from '@/modules/calendar';
 import { getHighlightColor } from '@/modules/calendar/models/colors.ts';
+import { getDateFormatter } from '@/shared/lib';
 
 import CalendarEventCardTv from './calendar-event-card-tv.vue';
 
@@ -24,16 +25,19 @@ const emits = defineEmits<{
 
 const now = new Date();
 
-function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = 'en-US') {
+function formatEventDate(dateStr: DateYYYYMMDD, locale?: string) {
 	const date = new Date(dateStr);
 
 	const sameYear = date.getFullYear() === now.getFullYear();
 	const sameMonth = sameYear && date.getMonth() === now.getMonth();
 
-	const weekdayFormatter = new Intl.DateTimeFormat(locale, {
+	const weekdayFormatter = getDateFormatter({
+		locale,
 		weekday: 'short',
 	});
-	const dayFormatter = new Intl.DateTimeFormat(locale, {
+
+	const dayFormatter = getDateFormatter({
+		locale,
 		day: 'numeric',
 	});
 
@@ -43,7 +47,8 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 	if (sameMonth) {
 		return `${weekday} ${day}`;
 	} else if (sameYear) {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
 
@@ -51,10 +56,13 @@ function formatEventDate(dateStr: DateYYYYMMDD, locale: Intl.LocalesArgument = '
 
 		return `${month}, ${weekday} ${day}`;
 	} else {
-		const monthFormatter = new Intl.DateTimeFormat(locale, {
+		const monthFormatter = getDateFormatter({
+			locale,
 			month: 'long',
 		});
-		const yearFormatter = new Intl.DateTimeFormat(locale, {
+
+		const yearFormatter = getDateFormatter({
+			locale,
 			year: 'numeric',
 		});
 

@@ -17,4 +17,5 @@ export { default as ModalItemSelector } from './ui/modal-item-selector-component
 export { default as WidgetContextMenu } from './ui/widget-context-menu.vue';
 export { default as WidgetContextMenuFullView } from './ui/widget-context-menu-full-view.vue';
 export { default as ModalBadgeClear } from './ui/modal-badge-clear.vue';
+export { default as ModalBadgeFilter } from './ui/modal-badge-filter.vue';
 export { default as WidgetFiltersScrollable } from './ui/widget-filters-scrollable.vue';

@@ -21,3 +21,8 @@ export interface IFilterList<TValue> {
 	type: typeof FilterType.List;
 	name: string;
 }
+
+export interface IFilterOption<T extends string | number> {
+	label: string;
+	value: T;
+}

@@ -4,10 +4,10 @@ import { delay } from '@/shared/lib';
 import type { MarketType } from '@/modules/market';
 import { type IChartPriceData, TimeRangeFilterValue } from '../model';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface IGetChartPriceRequest {
-	ticker: string;
+	tickerID: string;
 	market: MarketType;
 	range: TimeRangeFilterValue;
 }
@@ -56,8 +56,7 @@ export async function getChartPrice(request: IGetChartPriceRequest): Promise<ICh
 
 function requestToQuery(request: IGetChartPriceRequest) {
 	return {
-		// TODO: Убрать парсинг после изменений бекенда
-		ticker: request.ticker.match(/(?<=-)[^_]+(?=_)?/g)![0],
+		tickerID: request.tickerID,
 		market: request.market,
 		range: request.range,
 	};

@@ -4,7 +4,7 @@ import { computed, useTemplateRef } from 'vue';
 import { useElementSize, useNow } from '@vueuse/core';
 
 import type { IChartTimelineSegment } from '../../model/chart-timeline.ts';
-import { getTimezoneOffset, toTime } from '@/shared/lib';
+import { getDateFormatter, getTimezoneOffset, toTime } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 
 import ChartTimelineDelimiter from './chart-timeline-delimiter.vue';
@@ -65,10 +65,12 @@ const beforeSegmentWidth = computed(() => {
 	return null;
 });
 
+const segmentLabelDateFormatter = getDateFormatter({ day: '2-digit', weekday: 'short' });
+
 const beforeSegmentLabel = computed(() => {
 	const time = props.segments[0].from;
 
-	return (new Date(time)).toLocaleDateString(undefined, { day: '2-digit', weekday: 'short' });
+	return segmentLabelDateFormatter.format(new Date(time));
 });
 
 const afterSegmentWidth = computed(() => {
@@ -88,7 +90,7 @@ const afterSegmentWidth = computed(() => {
 const afterSegmentLabel = computed(() => {
 	const time = props.segments[props.segments.length - 1].to + 1;
 
-	return (new Date(time)).toLocaleDateString(undefined, { day: '2-digit', weekday: 'short' });
+	return segmentLabelDateFormatter.format(new Date(time));
 });
 
 // now label

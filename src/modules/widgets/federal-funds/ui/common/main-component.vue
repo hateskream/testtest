@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import type { IFederalFundsDomain } from '@/modules/widgets/federal-funds/model';
+import { getDateFormatter } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 
 interface IMainComponentProps {
@@ -11,12 +12,15 @@ interface IMainComponentProps {
 const props = defineProps<IMainComponentProps>();
 
 const reviewDateLabel = computed(() => {
-	// TODO: [PERF] Вынести в DateFormatter
-	return new Date(props.data.next_review_date).toLocaleDateString([], {
+	const date = new Date(props.data.next_review_date);
+
+	const formatter = getDateFormatter({
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric',
 	});
+
+	return formatter.format(date);
 });
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
@@ -26,8 +26,17 @@ const emit = defineEmits<{
 	(e: 'reset-all-changes'): void;
 }>();
 
+const timeRangeDropdownRef = useTemplateRef('timeRangeDropdown');
+
+function closeTimeRangeDropdown() {
+	timeRangeDropdownRef.value?.close?.();
+}
+
 function updateFilter(newValue: TimeRangeFilterValue) {
-	timeRange.value = newValue;
+	if (newValue !== timeRange.value) {
+		timeRange.value = newValue;
+		closeTimeRangeDropdown();
+	}
 }
 
 function updateTicker(newValue: string[]) {
@@ -50,11 +59,12 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 				:display-variant="props.displayVariant"
 				:show-label="!isDefaultDisplayVariant"
 				autofocus
+				close-on-select
 				@update:model-value="updateTicker"
 			/>
 			<template v-if="!props.isBig || !isDefaultDisplayVariant">
 				<ui-delimiter v-if="isDefaultDisplayVariant" />
-				<modal-badge-dropdown :display-variant="props.displayVariant">
+				<modal-badge-dropdown ref="timeRangeDropdown" :display-variant="props.displayVariant">
 					<template #title>
 						<span>{{ filterValueToDisplay[timeRange].label }}</span>
 					</template>
@@ -71,7 +81,7 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 									:model-value="filterValue === timeRange"
 									@update:model-value="updateFilter(filterValue)"
 								>
-									{{ filterValueToDisplay[filterValue].label }}
+									{{ filterValueToDisplay[filterValue].option }}
 								</modal-item-selector>
 							</template>
 						</modal-badge-list>

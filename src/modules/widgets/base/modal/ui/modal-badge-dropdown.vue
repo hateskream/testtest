@@ -29,6 +29,14 @@ function getDynamicPlacement() {
 
 	return rect.top > middle ? 'top-start' : 'bottom-start';
 }
+
+const positionRef = useTemplateRef('position');
+
+function close() {
+	positionRef.value?.handleClose?.();
+}
+
+defineExpose({ close });
 </script>
 
 <template>
@@ -62,7 +70,11 @@ function getDynamicPlacement() {
 		</template>
 
 		<template #content="{isVisible}">
-			<slot name="content" :is-visible="isVisible" />
+			<slot
+				name="content"
+				:is-visible="isVisible"
+				:close="close"
+			/>
 		</template>
 	</ui-position>
 </template>

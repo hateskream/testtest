@@ -4,7 +4,6 @@ import { CrosshairMode } from 'lightweight-charts';
 import { RangeChart } from '@/shared/ui/chart-range';
 
 import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue';
-
 </script>
 
 <template>
@@ -19,7 +18,7 @@ import ChartComponent from '@/modules/lightweight-charts/ui/chart-component.vue'
 		:is-padded-range="false"
 		:is-show-tooltip="false"
 		:crosshair-mode="CrosshairMode.Hidden"
-		:price-visible="false"
+		:is-visible-price-line="false"
 		:width="100"
 		height="100%"
 		disable-scroll

@@ -128,7 +128,7 @@ const preparedSingleEntityDataset = computed(() => {
 	const entityId = singleTargetEntity.value.id;
 
 	return props.points.map((point): LineData => {
-		return { time: point.timestamp, value: point.marketCap[entityId] };
+		return { time: point.timestamp / 1000, value: point.marketCap[entityId] };
 	});
 });
 </script>
@@ -168,8 +168,10 @@ const preparedSingleEntityDataset = computed(() => {
 				:is-visible-time-scale="isShowAxes"
 				:width="100"
 				:color-schema="chartColorSchema"
-				is-show-tooltip
+				:right-offset-pixels="isShowAxes ? 100 : 0"
 				height="100%"
+				price-label="Current"
+				is-show-tooltip
 				disable-scroll
 				fade-left
 			>

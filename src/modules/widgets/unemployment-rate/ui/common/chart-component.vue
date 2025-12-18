@@ -26,7 +26,7 @@ const rangeList = Object.values(RangeChart);
 		:is-padded-range="false"
 		:is-show-tooltip="false"
 		:crosshair-mode="CrosshairMode.Hidden"
-		:price-visible="false"
+		:is-visible-price-line="false"
 		:width="100"
 		height="100%"
 		disable-scroll

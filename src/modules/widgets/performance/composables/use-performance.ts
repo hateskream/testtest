@@ -2,16 +2,16 @@ import { computed, ref, watch, type Ref } from 'vue';
 import { z } from 'zod';
 
 import {
-	type IState,
-	getDefaultState,
-	Stock,
-	DisplayVariant,
+	Currency,
+	type DateRange,
 	DateRangeForex,
 	DateRangeStock,
-	SymbolDisplayVariant,
+	DisplayVariant,
+	getDefaultState,
+	type IState,
 	type ITicker,
-	type DateRange,
-	Currency,
+	Stock,
+	SymbolDisplayVariant,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useQueryPerformance } from '../queries';

@@ -6,6 +6,7 @@ import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import type { ICpiHistoryPoint } from '../../model';
+import { getDateFormatter } from '@/shared/lib';
 
 const BAR_WIDTH = 15;
 
@@ -21,12 +22,13 @@ const { points: filteredPoints } = useAdaptiveBarPoints(
 	{ barWidth: BAR_WIDTH },
 );
 
+const pointDateFormatter = getDateFormatter({ month: 'short' });
+
 function parsePointDate(date: string) {
 	if (/\d{4}-\d{2}/g.test(date)) {
 		const [year, month] = date.split('-');
 
-		const shortMonth = (new Date(2000, Number(month) - 1))
-			.toLocaleString(undefined, { month: 'short' });
+		const shortMonth = pointDateFormatter.format(new Date(2000, Number(month) - 1));
 
 		return [shortMonth, year];
 	}

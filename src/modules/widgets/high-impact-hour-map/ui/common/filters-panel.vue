@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 
 const emit = defineEmits<{
@@ -14,6 +16,17 @@ interface IFiltersPanelProps {
 const props = defineProps<IFiltersPanelProps>();
 
 const activeDateRange = defineModel<string>('dateRange', { required: true });
+
+const dropdownRef = useTemplateRef('dropdown');
+
+function closeDropdown() {
+	dropdownRef.value?.close?.();
+}
+
+function select(range: string) {
+	activeDateRange.value = range;
+	closeDropdown();
+}
 </script>
 
 <template>
@@ -21,7 +34,7 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 		:display-variant="props.displayVariant"
 		@on-clear-click="emit('reset')"
 	>
-		<modal-badge-dropdown :display-variant="props.displayVariant">
+		<modal-badge-dropdown ref="dropdown" :display-variant="props.displayVariant">
 			<template #title>
 				{{ displayValueDataRange[activeDateRange] }}
 			</template>
@@ -36,7 +49,7 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 					>
 						<modal-item-selector
 							:model-value="filterKey === activeDateRange"
-							@update:model-value="activeDateRange = filterKey"
+							@update:model-value="select(filterKey)"
 						>
 							{{ displayValueDataRange[filterKey] }}
 						</modal-item-selector>
@@ -46,11 +59,3 @@ const activeDateRange = defineModel<string>('dateRange', { required: true });
 		</modal-badge-dropdown>
 	</widget-filters-scrollable>
 </template>
-
-<style module="classes">
-.container {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-</style>

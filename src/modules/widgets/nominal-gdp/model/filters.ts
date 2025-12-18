@@ -18,3 +18,6 @@ export const rangeFilterValueToDisplay: Record<NominalGdpRange, { selected: stri
 		option: 'All time',
 	},
 };
+
+export const rangeFilters = Object.entries(rangeFilterValueToDisplay)
+	.map(([value, option]) => ({ label: option.selected, value: value as NominalGdpRange }));

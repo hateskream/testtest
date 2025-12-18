@@ -15,6 +15,7 @@ import {
 } from '@/modules/calendar';
 import type { IWatchlist } from '@/modules/watchlist';
 import { getMarketLabel, isAllSelected, toggleSet } from '@/modules/calendar/utils/toolbar.ts';
+import { getDateFormatter } from '@/shared/lib';
 
 import CalendarToolbarEnd from './calendar-toolbar-end.vue';
 import CalendarToolbarStartMinified from '@/modules/calendar/ui/toolbar/calendar-toolbar-start-minified.vue';
@@ -119,8 +120,9 @@ const endDate = computed(() => props.weekDays[props.weekDays.length - 1].date);
 
 const label = computed(() => {
 	const sameYear = startDate.value.getFullYear() === endDate.value.getFullYear();
-	const fmtNoYear = new Intl.DateTimeFormat(props.locale, { month: 'short', day: 'numeric' });
-	const fmtWithYear = new Intl.DateTimeFormat(props.locale, { month: 'short', day: 'numeric', year: 'numeric' });
+
+	const fmtNoYear = getDateFormatter({ month: 'short', day: 'numeric', locale: props.locale });
+	const fmtWithYear = getDateFormatter({ month: 'short', day: 'numeric', year: 'numeric', locale: props.locale });
 
 	const left = sameYear ? fmtNoYear.format(startDate.value) : fmtWithYear.format(startDate.value);
 	const right = fmtWithYear.format(endDate.value);

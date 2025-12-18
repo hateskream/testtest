@@ -2,7 +2,7 @@ import { MarketType } from '@/modules/market';
 
 export enum MarketCapDateRange {
 	Day= '1D',
-	Week = '7D',
+	Week = '1W',
 	Month = '1M',
 	SixMonths = '6M',
 	Year = '1Y',
@@ -22,8 +22,8 @@ export interface IMarketCapMarket {
 	color: string;
 }
 
-export interface IMarketCapPoint {
-	timestamp: number;
+export interface IMarketCapPoint<Time extends string | number = number> {
+	timestamp: Time;
 	marketCap: Record<string, number>;
 	volume: Record<string, number>;
 }

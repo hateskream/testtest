@@ -1,6 +1,11 @@
+import { getDateFormatter } from './date-formatter';
+
 export function toTime(dateTime: number | Date, timezoneOffset?: string) {
 	const date = typeof dateTime === 'number' ? new Date(dateTime) : dateTime;
-	return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: timezoneOffset });
+
+	const formatter = getDateFormatter({ hour: '2-digit', minute: '2-digit', timeZone: timezoneOffset });
+
+	return formatter.format(date);
 }
 
 export function getTimezoneOffset(): string {

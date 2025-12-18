@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ModalItemCheckbox } from '@/modules/widgets/base';
 import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 interface IModalFilterRowItemProps {
 	uppercaseName?: boolean;
@@ -23,9 +24,11 @@ const modelValue = defineModel<boolean>({ default: false });
 				</ui-text>
 				<template v-if="$slots.label">
 					<span>·</span>
-					<ui-text :class="classes.label" token="text-300-r">
-						<slot name="label" />
-					</ui-text>
+					<ui-clamped :rows="2" as="span">
+						<ui-text :class="classes.label" token="text-300-r">
+							<slot name="label" />
+						</ui-text>
+					</ui-clamped>
 				</template>
 			</div>
 		</div>
@@ -42,7 +45,6 @@ const modelValue = defineModel<boolean>({ default: false });
 
 .row {
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
 	gap: 6px;
 }
