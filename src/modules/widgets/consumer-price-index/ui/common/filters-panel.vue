@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import {
-	CpiMetric,
 	CpiRange,
-	metricFilters,
-	metricFilterValueToDisplay,
+	CpiValueType,
 	rangeFilters,
 	rangeFilterValueToDisplay,
+	valueTypeFilters,
+	valueTypeFilterValueToDisplay,
 } from '../../model';
 
 const emit = defineEmits<{
@@ -21,7 +21,7 @@ interface IFiltersPanelProps {
 const props = defineProps<IFiltersPanelProps>();
 
 const activeRange = defineModel<CpiRange>('range', { required: true });
-const activeMetric = defineModel<CpiMetric>('metric', { required: true });
+const activeValueType = defineModel<CpiValueType>('valueType', { required: true });
 </script>
 
 <template>
@@ -31,12 +31,12 @@ const activeMetric = defineModel<CpiMetric>('metric', { required: true });
 	>
 		<modal-badge-filter
 			:display-variant="props.displayVariant"
-			:options="metricFilters"
-			:selected-value="activeMetric"
-			:label="metricFilterValueToDisplay[activeMetric]"
+			:options="valueTypeFilters"
+			:selected-value="activeValueType"
+			:label="valueTypeFilterValueToDisplay[activeValueType]"
 			close-on-select
-			title="CPI"
-			@select="activeMetric = $event.value"
+			title="Value Type"
+			@select="activeValueType = $event.value"
 		/>
 		<modal-badge-filter
 			v-if="props.isShowRange"

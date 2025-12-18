@@ -515,6 +515,13 @@ onMounted(async () => {
 
 	updateHistoryChartPropChange();
 });
+
+watch(() => props.colorSchema, value => {
+	if (container.value) {
+		// TODO: Убрать, когда решится проблема с shared/component-library
+		(container.value as (HTMLElement & { colorScheme: string })).colorScheme = value;
+	}
+});
 </script>
 
 <template>

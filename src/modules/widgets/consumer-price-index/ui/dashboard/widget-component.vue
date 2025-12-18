@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>();
 
 const {
-	activeMetric,
+	activeValueType,
 	activeRange,
 	data,
 	isLoading,
@@ -51,7 +51,7 @@ const {
 		<template #filters>
 			<filters-panel
 				v-model:range="activeRange"
-				v-model:metric="activeMetric"
+				v-model:value-type="activeValueType"
 				display-variant="new"
 				is-show-range
 				@reset="resetAllChanges"
@@ -66,6 +66,7 @@ const {
 			<view-component
 				v-else-if="data"
 				:data="data"
+				:value-type="activeValueType"
 			/>
 		</template>
 	</base-widget-dashboard>

@@ -5,13 +5,14 @@ import type { ChartOptions, TooltipOptions } from 'chart.js';
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import type { ICpiHistoryPoint } from '../../model';
+import { CpiValueType, type ICpiHistoryPoint } from '../../model';
 import { getDateFormatter } from '@/shared/lib';
 
 const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
 	points: ICpiHistoryPoint[];
+	valueType: CpiValueType;
 }
 
 const props = defineProps<IChartComponentProps>();
@@ -19,7 +20,7 @@ const props = defineProps<IChartComponentProps>();
 const { points: filteredPoints } = useAdaptiveBarPoints(
 	() => props.points,
 	useTemplateRef('wrapper'),
-	{ barWidth: BAR_WIDTH },
+	{ barWidth: BAR_WIDTH, minSpaceWidth: BAR_WIDTH * 2 },
 );
 
 const pointDateFormatter = getDateFormatter({ month: 'short' });
@@ -55,7 +56,25 @@ const preparedLabels = computed(() => {
 	});
 });
 
-const preparedData = computed(() => filteredPoints.value.map(point => point.history));
+const preparedData = computed(() => filteredPoints.value.map((point, index, all) => {
+	const value = point.history;
+
+	if (props.valueType === CpiValueType.Points) {
+		return value;
+	}
+
+	if (index === 0) {
+		return 0;
+	}
+
+	const prev = all[index - 1];
+
+	if (props.valueType === CpiValueType.ChangeDelta) {
+		return value - prev.history;
+	}
+
+	return (value - prev.history) / prev.history * 100;
+}));
 
 const preparedDatasets = computed((): [BarDataset] => {
 	return [{

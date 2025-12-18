@@ -2,7 +2,7 @@ import { computed, ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { CpiMetric, CpiRange, getDefaultState, type IState, stateSchema, type StateSchemaType } from '../model';
+import { CpiRange, CpiValueType, getDefaultState, type IState, stateSchema, type StateSchemaType } from '../model';
 import { useQueryCpi } from '../queries';
 
 interface IOptions {
@@ -37,10 +37,10 @@ export function useCpi({
 
 	const state = ref<IState>(getDefaultState());
 
-	const activeMetric = computed({
-		get: () => state.value.metric,
-		set: (val: CpiMetric) => {
-			state.value.metric = val;
+	const activeValueType = computed({
+		get: () => state.value.valueType,
+		set: (val: CpiValueType) => {
+			state.value.valueType = val;
 		},
 	});
 
@@ -68,7 +68,7 @@ export function useCpi({
 	function resetAllFilters() {
 		const defaultState = getDefaultState();
 
-		activeMetric.value = defaultState.metric;
+		activeValueType.value = defaultState.valueType;
 		activeRange.value = defaultState.range;
 	}
 
@@ -77,10 +77,10 @@ export function useCpi({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryCpi(activeMetric, activeRange);
+	} = useQueryCpi(activeRange);
 
 	return {
-		activeMetric,
+		activeValueType,
 		activeRange,
 		data,
 		isError,

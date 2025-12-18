@@ -2,12 +2,11 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { CpiMetric, CpiRange, type ICpiHistory } from '../model';
+import { CpiRange, type ICpiHistory } from '../model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetCpiRequest {
-	metric: CpiMetric;
 	range: CpiRange;
 }
 
@@ -22,7 +21,6 @@ export async function getCpi(args: IGetCpiRequest): Promise<ICpiHistory> {
 
 		return await httpService.get<ICpiHistory>('/api/v1/cpi/data', {
 			query: {
-				metric: args.metric,
 				range: args.range,
 			},
 		});

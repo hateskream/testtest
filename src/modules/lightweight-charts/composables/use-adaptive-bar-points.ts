@@ -22,14 +22,21 @@ export function useAdaptiveBarPoints<T = unknown[]>(
 	const filteredPoints = computed(() => {
 		const limit = maxPointsCount.value;
 		const _points = toValue(points);
+		const total = _points.length;
 
-		if (limit >= _points.length) {
+		if (limit >= total) {
 			return _points;
 		}
 
-		const step = Math.ceil(_points.length / limit);
+		const result: typeof _points = [];
+		const step = (total - 1) / (limit - 1);
 
-		return _points.filter((_, key) => key % step === 0);
+		for (let i = 0; i < limit; i += 1) {
+			const index = Math.round(i * step);
+			result.push(_points[index]);
+		}
+
+		return result;
 	});
 
 	return {

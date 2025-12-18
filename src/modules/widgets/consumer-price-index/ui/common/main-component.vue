@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { ICpiHistory } from '../../model';
+import { CpiValueType, type ICpiHistory } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 import ChartLegend from './chart-legend.vue';
@@ -10,6 +10,7 @@ import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
 	data: ICpiHistory;
+	valueType: CpiValueType;
 }
 
 const props = defineProps<IMainComponentProps>();
@@ -44,7 +45,7 @@ const legends = [
 			<chart-legend :items="legends" />
 		</div>
 		<div :class="classes.chart">
-			<chart-component :points="props.data.points" />
+			<chart-component :points="props.data.points" :value-type="props.valueType" />
 		</div>
 	</div>
 </template>

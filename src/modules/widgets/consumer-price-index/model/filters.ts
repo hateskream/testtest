@@ -1,4 +1,4 @@
-import { CpiMetric, CpiRange } from './cpi';
+import { CpiRange, CpiValueType } from './cpi';
 
 export const rangeFilterValueToDisplay: Record<CpiRange, { selected: string; option: string }> = {
 	[CpiRange.Year]: {
@@ -24,15 +24,15 @@ export const rangeFilterValueToDisplay: Record<CpiRange, { selected: string; opt
 };
 
 export const rangeFilters = Object.entries(rangeFilterValueToDisplay)
-	.map(([value, option]) => ({ label: option.selected, value: value as CpiRange }));
+	.map(([value, option]) => ({ label: option.option, value: value as CpiRange }));
 
 
-export const metricFilterValueToDisplay: Record<CpiMetric, string> = {
-	[CpiMetric.Points]: 'Points',
-	[CpiMetric.ChangeDelta]: 'Change',
-	[CpiMetric.ChangePercent]: 'Change, %',
+export const valueTypeFilterValueToDisplay: Record<CpiValueType, string> = {
+	[CpiValueType.Points]: 'Points',
+	[CpiValueType.ChangeDelta]: 'Change',
+	[CpiValueType.ChangePercent]: 'Change, %',
 };
 
-export const metricFilters = Object.entries(metricFilterValueToDisplay)
-	.map(([value, label]) => ({ label, value: value as CpiMetric }));
+export const valueTypeFilters = Object.entries(valueTypeFilterValueToDisplay)
+	.map(([value, label]) => ({ label, value: value as CpiValueType }));
 
