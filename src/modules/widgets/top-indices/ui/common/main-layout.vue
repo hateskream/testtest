@@ -44,7 +44,7 @@ const genericRows = computed(() => {
 	<div
 		:class="classes.root"
 		:style="{
-			padding: displayVariant === 'dashboard' ? '12px 10px 0' : '0 16px 18px',
+			padding: displayVariant === 'dashboard' ? '12px 10px' : '0 16px 18px',
 		}"
 	>
 		<div :class="classes.scrollable">
@@ -63,20 +63,18 @@ const genericRows = computed(() => {
 			/>
 		</div>
 	</div>
-
 </template>
 
 <style module="classes">
 .root {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-	height: 100%;
-	overflow: hidden;
 }
-
 
 .scrollable {
 	position: relative;
+	flex-grow: 1;
 	height: 100%;
 	min-height: 0;
 	overflow: auto;

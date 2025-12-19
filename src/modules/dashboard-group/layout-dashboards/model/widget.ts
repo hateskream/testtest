@@ -10,6 +10,13 @@ export interface IWidgetPreset {
 	displayVariants: DisplayVariant[];
 	name: string;
 	snapStep?: number;
+	/*
+		нужно для того чтобы работали виджеты calendar/top indices
+		сейчас в нем есть двойной скролл и дата, ее высота как раз и задается в этом поле
+
+		без этого не получится корректно обрезать высоту виджета чтобы не было перекрытых карточек
+	*/
+	otherHeight?: number;
 	hasFilters?: boolean;
 	minHeight?: number;
 	maxHeight?: number;
@@ -26,6 +33,8 @@ const ChartPrice: Preset = {
 const TopIndices: Preset = {
 	name: 'Top Indices YTD',
 	displayVariants: ['list'],
+	otherHeight: 24,
+	snapStep: 36,
 };
 
 const Performance: Preset = {
@@ -48,7 +57,7 @@ const BitcoinDominance: Preset = {
 const Price: Preset = {
 	name: 'Price list',
 	displayVariants: ['list'],
-	snapStep: 68.85,
+	snapStep: 68,
 	hasFilters: true,
 };
 
@@ -60,6 +69,8 @@ const News: Preset = {
 const Calendar: Preset = {
 	name: 'Calendar',
 	displayVariants: ['default'],
+	otherHeight: 36,
+	snapStep: 36,
 };
 
 const FearGreed: Preset = {
@@ -263,15 +274,15 @@ export function changeHeight(
 }
 
 export function getMinHeight(widget: IWidget) {
-	const { snapStep = 0, minHeight } = widget;
+	const { snapStep = 0, minHeight, otherHeight = 0 } = widget;
 
-	return minHeight ?? titleWidgetHeight(widget) + snapStep;
+	return minHeight ?? titleWidgetHeight(widget) + snapStep + otherHeight;
 }
 
 export function calcMaxCountRowVisible(widget: IWidget, widgetHeight: number) {
-	const { snapStep = 1 } = widget;
+	const { snapStep = 1, otherHeight = 0 } = widget;
 
-	return Math.floor((widgetHeight - titleWidgetHeight(widget)) / snapStep);
+	return Math.floor((widgetHeight - titleWidgetHeight(widget) - otherHeight) / snapStep);
 }
 
 export function findMovedWidget(
@@ -303,12 +314,12 @@ export function findNewWidget(
 
 
 export function snapHeightToNearestStep(widget: IWidget, height: number) {
-	const { snapStep } = widget;
+	const { snapStep, otherHeight = 0 } = widget;
 	if (!snapStep) {
 		return ;
 	}
 
-	const newHeightContent = height - titleWidgetHeight(widget);
+	const newHeightContent = height - titleWidgetHeight(widget) - otherHeight;
 
 	const remainder = newHeightContent % snapStep;
 
@@ -320,7 +331,7 @@ export function snapHeightToNearestStep(widget: IWidget, height: number) {
 		snappedHeightContent = Math.floor(newHeightContent / snapStep) * snapStep;
 	}
 
-	return snappedHeightContent + titleWidgetHeight(widget);
+	return snappedHeightContent + titleWidgetHeight(widget) + otherHeight;
 }
 
 export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWidget {
