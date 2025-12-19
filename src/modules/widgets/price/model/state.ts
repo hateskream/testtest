@@ -47,7 +47,7 @@ const defaultSettingsCrypto: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.RankingAndNew]: RankingAndNewFilterValue.Top,
+		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };

@@ -41,7 +41,7 @@ export enum TimeRangeFilterValue {
 export type FilterValue = MarketTrendFilterValue | RankingAndNewFilterValue | SectorFilterValue | TimeRangeFilterValue;
 
 export const filtersByMarketType: Record<MarketType, FilterType[]> = {
-	[MarketType.Crypto]: [FilterType.RankingAndNew, FilterType.TimeRange],
+	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.MarketTrend],
 	[MarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
 	[MarketType.Forex]: [FilterType.TimeRange],
 	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
