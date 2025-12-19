@@ -16,12 +16,28 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
+const numericValue = computed<number | null>(() => {
+	const raw = props.data.value;
+
+	if (raw === undefined || raw === null || raw === 'N/A') {
+		return null;
+	}
+
+	const cleaned = String(raw)
+		.replace(/%/g, '')
+		.replace(/^--?/, '-');
+
+	const num = Number(cleaned);
+
+	return Number.isFinite(num) ? num : null;
+});
+
 const isDownTrend = computed(() => {
 	if (props.data.trend) {
 		return props.data.trend === Trend.DOWN;
 	}
 
-	return +(props.data.value ?? 0) < 0;
+	return (numericValue.value ?? 0) < 0;
 });
 
 const isUpTrend = computed(() => {
@@ -29,29 +45,34 @@ const isUpTrend = computed(() => {
 		return props.data.trend === Trend.UP;
 	}
 
-	return +(props.data.value ?? 0) > 0;
+	return (numericValue.value ?? 0) > 0;
 });
 
 const displayValue = computed(() => {
-	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
+	const { value } = numericValue;
+
+	if (value === null) {
 		return '—';
 	}
 
-	if (props.data.value === '0') {
-		return props.data.value;
+	if (value === 0) {
+		return '0%';
 	}
 
-	return `${Math.abs(+props.data.value)}%`;
+	const abs = Math.abs(value);
+
+	return value < 0 ? `—${abs}%` : `${abs}%`;
 });
 
 const barWidth = computed(() => {
-	const { value, maxAbsValue } = props.data;
-	if (!value || !maxAbsValue || isNaN(+value)) {
+	const { value } = numericValue;
+	const max = props.data.maxAbsValue;
+
+	if (value === null || !max || max <= 0) {
 		return 0;
 	}
 
-	const absValue = Math.abs(+value);
-	return Math.min((absValue / maxAbsValue) * 100, 100);
+	return Math.min((Math.abs(value) / max) * 100, 100);
 });
 </script>
 
@@ -68,7 +89,6 @@ const barWidth = computed(() => {
 			token="text-300-r"
 			:class="[classes.percent, { [classes.percentWithBar]: props.data.maxAbsValue }]"
 		>
-			<span v-if="isDownTrend">−&nbsp;</span>
 			<span>{{ displayValue }}</span>
 		</ui-text>
 		<div
