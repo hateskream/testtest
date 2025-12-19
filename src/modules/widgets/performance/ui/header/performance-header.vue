@@ -35,13 +35,13 @@ const displayStyle = defineModel<'new' | 'default'>('displayStyle', { required: 
 const isStockRange = computed(() => isDataRangeStock(date.value));
 
 const dateOptions = computed(() => {
-	const values = getDateLabelByType(isStockRange.value);
+	const values = getDateLabelByType(isStockRange.value, 'full');
 
 	return Object.entries(values).map(([value, label]) => ({ value, label }));
 });
 
 const dateLabel = computed(() => {
-	const values = getDateLabelByType(isStockRange.value);
+	const values = getDateLabelByType(isStockRange.value, 'short');
 
 	if (isStockRange.value) {
 		return (values as Record<DateRangeStock, string>)[date.value as DateRangeStock];
