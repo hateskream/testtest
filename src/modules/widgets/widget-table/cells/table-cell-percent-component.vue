@@ -52,16 +52,28 @@ const displayValue = computed(() => {
 	const { value } = numericValue;
 
 	if (value === null) {
-		return '—';
+		return {
+			isNull: true,
+			isNegative: false,
+			label: '',
+		};
 	}
 
 	if (value === 0) {
-		return '0%';
+		return {
+			isNull: false,
+			isNegative: false,
+			label: '0%',
+		};
 	}
 
 	const abs = Math.abs(value);
 
-	return value < 0 ? `—${abs}%` : `${abs}%`;
+	return {
+		isNull: false,
+		isNegative: value < 0,
+		label: `${abs}%`,
+	};
 });
 
 const barWidth = computed(() => {
@@ -89,7 +101,14 @@ const barWidth = computed(() => {
 			token="text-300-r"
 			:class="[classes.percent, { [classes.percentWithBar]: props.data.maxAbsValue }]"
 		>
-			<span>{{ displayValue }}</span>
+			<span>
+				<template v-if="!displayValue.isNull">
+					<template v-if="displayValue.isNegative">&#8722;&#8239;</template>{{ displayValue.label }}
+				</template>
+				<template v-else>
+					&#8722;
+				</template>
+			</span>
 		</ui-text>
 		<div
 			v-if="props.data.maxAbsValue"
