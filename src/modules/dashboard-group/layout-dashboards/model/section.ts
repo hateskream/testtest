@@ -37,6 +37,7 @@ export interface ISectionWheelPayload {
 }
 
 export const HEIGHT_SECTION_TITLE = 50;
+export const MIN_SECTION_WIDTH = 320;
 
 export function changeOrderWidgets(section: ISection, widgets: IWidget[], sectionHeight: number) {
 	const height = sectionHeight - HEIGHT_SECTION_TITLE;

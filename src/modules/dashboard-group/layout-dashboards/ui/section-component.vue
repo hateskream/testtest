@@ -8,6 +8,8 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
 import { useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
+import { MIN_SECTION_WIDTH } from '../model/section';
 
 import WidgetComponent from './widget-component.vue';
 
@@ -40,6 +42,7 @@ const { size } = useResizable(
 	useTemplateRef('sizer'),
 	useTemplateRef('section'),
 	{
+		minWidth: MIN_SECTION_WIDTH,
 		isActivated: () => isFeatureEnabled('RESIZE_WIDTH_SECTIONS'),
 	},
 );
@@ -306,9 +309,13 @@ defineExpose({
 					}"
 					@wheel.capture="onWheel"
 				>
-					<h2 :class="classes.sectionTitle">
+					<ui-text
+						:class="classes.sectionTitle"
+						token="title-200"
+						as="h2"
+					>
 						{{ props.section.name }}
-					</h2>
+					</ui-text>
 
 					<div :class="classes.widgets">
 						<widget-component
