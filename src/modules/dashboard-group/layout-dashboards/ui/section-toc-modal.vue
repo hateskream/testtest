@@ -2,9 +2,17 @@
 import draggable from 'vuedraggable';
 
 import type { ISection, IWidget } from '../model';
-import { DashboardModalContent, DashboardModalTitle, DashboardModalWrapper } from '@/shared/ui/modal';
+import {
+	DashboardModalContent,
+	DashboardModalTitle,
+	DashboardModalWrapper,
+} from '@/shared/ui/modal';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
+import { UiPositionTooltip } from '@/shared/ui/position';
+
+import SectionTocModalTooltipContent
+	from '@/modules/dashboard-group/layout-dashboards/ui/section-toc-modal-tooltip-content.vue';
 
 const props = defineProps<{
 	slides: ISection[];
@@ -68,14 +76,22 @@ function updateWidgets(sectionId: string, widgets: IWidget[]) {
 								@update:model-value="(v: IWidget[]) => updateWidgets(section.id, v)"
 							>
 								<template #item="{ element: widget }">
-									<ui-text
-										:class="classes.widget"
-										as="div"
-										token="text-200-r"
-										@click.stop="emits('scroll-to-widget', section.id, widget.id)"
-									>
-										{{ widget.name }} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
-									</ui-text>
+									<ui-position-tooltip>
+										<ui-text
+											:class="classes.widget"
+											as="div"
+											token="text-200-r"
+											@click.stop="emits('scroll-to-widget', section.id, widget.id)"
+										>
+											{{
+												widget.name
+											}} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
+										</ui-text>
+
+										<template #content>
+											<section-toc-modal-tooltip-content />
+										</template>
+									</ui-position-tooltip>
 								</template>
 							</draggable>
 						</div>
