@@ -102,8 +102,10 @@ function updateWidgets(sectionId: string, widgets: IWidget[]) {
 }
 
 .title {
-	padding-bottom: 8px;
+	margin-bottom: 8px;
+	padding: 0 8px;
 	color: var(--text-500, rgb(255 255 255 / 96%));
+	border-radius: var(--radius-radius-s12-24, 9.2px);
 	cursor: pointer;
 }
 
@@ -143,7 +145,13 @@ function updateWidgets(sectionId: string, widgets: IWidget[]) {
 	cursor: pointer;
 }
 
-.widget:hover {
+.widget,
+.title {
+	transition: background-color 0.12s ease-in-out;
+}
+
+.widget:hover,
+.title:hover {
 	background: var(--atom-base-20, rgb(73 73 80 / 80%));
 }
 </style>
