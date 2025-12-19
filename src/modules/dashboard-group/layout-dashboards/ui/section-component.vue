@@ -272,12 +272,25 @@ function onChangeMaxCountRowWidget(widgetId: string, maxCountRow: number) {
 	emits('change-max-count-row', props.section.id, widgetId, maxCountRow);
 }
 
+const flash = ref(false);
+
+function triggerFlash() {
+	flash.value = false;
+	requestAnimationFrame(() => {
+		flash.value = true;
+		setTimeout(() => {
+			flash.value = false;
+		}, 700);
+	});
+}
+
 onMounted(() => {
 	emitScrollInfo();
 });
 
 defineExpose({
 	scrollToWidget,
+	triggerFlash,
 });
 </script>
 
@@ -318,6 +331,8 @@ defineExpose({
 					</ui-text>
 
 					<div :class="classes.widgets">
+						<div :class="[classes.flash, flash && classes.active]" />
+
 						<widget-component
 							v-for="widget in preparedWidgets"
 							:key="widget.id"
@@ -408,6 +423,7 @@ defineExpose({
 }
 
 .widgets {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	border-radius: 24px;
@@ -417,6 +433,35 @@ defineExpose({
 		radial-gradient(circle 24px at top right, transparent 0, black 0),
 		linear-gradient(black, black);
 	mask-composite: intersect;
+}
+
+.flash {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+	pointer-events: none;
+	touch-action: none;
+}
+
+.flash.active {
+	animation: widget-flash 700ms ease-out;
+}
+
+@keyframes widget-flash {
+	0% {
+		background-color: transparent;
+	}
+
+	20% {
+		background-color: rgb(255 255 255 / 25%);
+	}
+
+	100% {
+		background-color: transparent;
+	}
 }
 
 @media (max-width: 768px) {

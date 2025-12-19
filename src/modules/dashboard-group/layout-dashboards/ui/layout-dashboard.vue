@@ -84,7 +84,7 @@ const {
 				:translate-x="translateX"
 				:current-index="currentIndex"
 				:visible-slides-count="visibleSlidesCount"
-				@go-to="goTo"
+				:go-to="goTo"
 				@prev="prev"
 				@next="next"
 				@set-widget-state-type="setWidgetStateType"

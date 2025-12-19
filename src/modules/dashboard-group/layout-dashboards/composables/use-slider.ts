@@ -148,7 +148,7 @@ export function useSlider(opts: {
 		return best;
 	}
 
-	function snapToIndex(index: number) {
+	async function snapToIndex(index: number) {
 		const el = toValue(opts.container);
 
 		if (!el) {
@@ -158,7 +158,7 @@ export function useSlider(opts: {
 		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
 		currentIndex.value = clamped;
 
-		void smoothScrollTo(el, getSlideOffset(clamped), {
+		await smoothScrollTo(el, getSlideOffset(clamped), {
 			duration: 300,
 			axis: 'x',
 		});
@@ -176,9 +176,9 @@ export function useSlider(opts: {
 		}
 	}
 
-	function goTo(index: number) {
+	async function goTo(index: number) {
 		if (index >= 0 && index < slides.value.length) {
-			snapToIndex(index);
+			await snapToIndex(index);
 		}
 	}
 

@@ -18,6 +18,7 @@ interface ISectionSliderProps {
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
+	goTo: (index: number) => Promise<void>;
 }
 
 const props = defineProps<ISectionSliderProps>();
@@ -29,7 +30,6 @@ const emits = defineEmits<{
 	(e: 'change-max-count-row', sectionId: string, widgetId: string, maxCountRow: number): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
-	(e: 'goTo', index: number): void;
 	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[], sectionHeight: number): void;
 	(e: 'change-order-sections', sections: ISection[]): void;
 }>();
@@ -47,11 +47,18 @@ function onSectionWheel(payload: ISectionWheelPayload) {
 	};
 }
 
+async function goToSection(index: number) {
+	await props.goTo(index);
+
+	const section = sectionRefs.value?.[index];
+	section?.triggerFlash();
+}
+
 function scrollToWidget(sectionId: string, widgetId: string) {
 	const index = props.slides.findIndex(s => s.id === sectionId);
 
 	if (index !== -1) {
-		emits('goTo', index);
+		goToSection(index);
 	}
 
 	const section = sectionRefs.value?.find(
@@ -195,7 +202,7 @@ defineExpose({ trackRef });
 			:translate-x="props.translateX"
 			@prev="emits('prev')"
 			@next="emits('next')"
-			@go-to="emits('goTo', $event)"
+			@go-to="goToSection"
 			@scroll-to-widget="scrollToWidget"
 			@change-order-sections="emits('change-order-sections', $event)"
 			@change-order-widgets-in-section="onChangeOrderWidgetsInSection"
