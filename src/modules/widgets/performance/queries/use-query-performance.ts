@@ -7,7 +7,7 @@ import { ColumnType } from '@/modules/cell';
 import { type QueryData, updateQueryData } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { CellUpdater } from '@/shared/service/real-time';
-import { type DateRange, Stock } from '../model';
+import { Currency, type DateRange, Stock } from '../model';
 import { MarketType } from '@/modules/market';
 
 export function useQueryPerformance(
@@ -15,6 +15,7 @@ export function useQueryPerformance(
 	pined: MaybeRefOrGetter<string[]>,
 	dateRange: MaybeRefOrGetter<DateRange>,
 	stockFilter: MaybeRefOrGetter<Stock | undefined>,
+	currency: MaybeRefOrGetter<Currency | undefined>,
 	limit: Ref<number>,
 ) {
 	const cellUpdater = CellUpdater.getInstance();
@@ -31,15 +32,23 @@ export function useQueryPerformance(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => {
-			return ['performance', toValue(market), toValue(pined), toValue(dateRange), toValue(limit)];
-		}),
+		queryKey: computed(() => [
+			'performance',
+			toValue(market),
+			toValue(pined),
+			toValue(dateRange),
+			toValue(limit),
+			toValue(market) === MarketType.Stock
+				? ['stock', toValue(stockFilter)]
+				: ['currency', toValue(currency)],
+		]),
 		queryFn: ({ pageParam = 0 }) => getPerformance({
 			market: toValue(market),
 			pined: toValue(pined),
 			offset: pageParam,
 			dateRange: toValue(dateRange),
-			...(toValue(market) === MarketType.Stock ? { stockFilter: toValue(stockFilter) } : {}),
+			...(toValue(market) === MarketType.Stock ?
+				{ stockFilter: toValue(stockFilter) } : { quoteCurrency: toValue(currency) }),
 			limit: toValue(limit),
 		}),
 
