@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { computed } from 'vue';
+import { useNow } from '@vueuse/core';
 
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { timeZoneFilters, timeZoneToDisplay, type TimeZoneUTC } from '../../model';
+import { getDateFormatter } from '@/shared/lib';
 
 const emit = defineEmits<{
 	reset: [];
@@ -9,24 +12,60 @@ const emit = defineEmits<{
 
 interface IFiltersPanelProps {
 	displayVariant: 'default' | 'new';
-	dataRanges: string[];
-	displayValueDataRange: Record<string, string>;
 }
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeDateRange = defineModel<string>('dateRange', { required: true });
+const activeTimezone = defineModel<TimeZoneUTC>('timezone', { required: true });
 
-const dropdownRef = useTemplateRef('dropdown');
+const now = useNow({ interval: 60_000 });
 
-function closeDropdown() {
-	dropdownRef.value?.close?.();
+function prepareTimezone(offset: TimeZoneUTC) {
+	let numericOffset = offset.replace('UTC', '').replace('_', ':');
+
+	const isNegative = numericOffset.startsWith('-');
+
+	if (numericOffset.includes(':')) {
+		if (isNegative) {
+			if (numericOffset.length === 5) {
+				return `-0${numericOffset.slice(1)}`;
+			}
+
+			return numericOffset;
+		}
+
+		if (numericOffset.length === 4) {
+			return `+0${numericOffset}`;
+		}
+
+		return numericOffset;
+	}
+
+	if (isNegative) {
+		if (numericOffset.length === 2) {
+			return `-0${numericOffset.slice(1)}`;
+		}
+
+		return numericOffset;
+	}
+
+	if (numericOffset.length === 1) {
+		return `+0${numericOffset}`;
+	}
+
+	return `+${numericOffset}`;
 }
 
-function select(range: string) {
-	activeDateRange.value = range;
-	closeDropdown();
-}
+const timezoneLabel = computed(() => {
+	const formatter = getDateFormatter({
+		timeZone: prepareTimezone(activeTimezone.value),
+		hour: 'numeric',
+		minute: '2-digit',
+		hourCycle: 'h23',
+	});
+
+	return `${formatter.format(now.value)} (${timeZoneToDisplay[activeTimezone.value]})`;
+});
 </script>
 
 <template>
@@ -34,28 +73,14 @@ function select(range: string) {
 		:display-variant="props.displayVariant"
 		@on-clear-click="emit('reset')"
 	>
-		<modal-badge-dropdown ref="dropdown" :display-variant="props.displayVariant">
-			<template #title>
-				{{ displayValueDataRange[activeDateRange] }}
-			</template>
-			<template #content>
-				<modal-badge-list :display-variant>
-					<template #title>
-						Time zone
-					</template>
-					<template
-						v-for="filterKey in props.dataRanges"
-						:key="filterKey"
-					>
-						<modal-item-selector
-							:model-value="filterKey === activeDateRange"
-							@update:model-value="select(filterKey)"
-						>
-							{{ displayValueDataRange[filterKey] }}
-						</modal-item-selector>
-					</template>
-				</modal-badge-list>
-			</template>
-		</modal-badge-dropdown>
+		<modal-badge-filter
+			:display-variant="props.displayVariant"
+			:options="timeZoneFilters"
+			:selected-value="activeTimezone"
+			:label="timezoneLabel"
+			close-on-select
+			title="Time zone"
+			@select="activeTimezone = $event.value"
+		/>
 	</widget-filters-scrollable>
 </template>
