@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { type CSSProperties, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { sub } from 'date-fns';
 
@@ -9,13 +9,14 @@ import { type IChartMarketCapDataset } from '../model';
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { MarketCapDateRange } from '@/modules/widgets/market-cap/model';
-import { prettyNumberWithKey } from '@/shared/lib';
+import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled, prettyNumberWithKey } from '@/shared/lib';
 
 interface IChartMarketCapProps {
 	height: CSSProperties['height'];
 	hideAxis?: boolean;
 	range: MarketCapDateRange;
 	datasets: IChartMarketCapDataset[];
+	locale?: string;
 }
 
 const props = defineProps<IChartMarketCapProps>();
@@ -142,6 +143,31 @@ function buildScales() {
 watch(() => props.datasets, updateChartDatasets, { deep: true });
 watch(() => props.hideAxis, updateChartScales);
 
+// locale
+
+const localeIsEnabled = isFeatureEnabled('DATE_FORMAT_LOCALIZATION');
+
+const chartLocale = computed(() => {
+	if (props.locale) {
+		return props.locale;
+	}
+
+	if (localeIsEnabled) {
+		return CURRENT_LOCALE;
+	}
+
+	return FALLBACK_LOCALE;
+});
+
+watch(chartLocale, value => {
+	if (chart.value && chart.value.options.locale !== value) {
+		chart.value.options.locale = value;
+		chart.value.update();
+	}
+});
+
+// tooltip
+
 const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '',
@@ -153,7 +179,25 @@ const { state, handler } = useExternalTooltip({
 
 		return `${pretty.value}${pretty.suffix}`;
 	},
+	transformTitle: (title: string[]) => {
+		const formatter = getDateFormatter({
+			month: 'short',
+			day: '2-digit',
+			year: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+			timeZoneName: 'short',
+			locale: chartLocale.value,
+		});
+
+		return title.map(item => {
+			return formatter.format(item).replace('GMT', 'UTC');
+		}).filter((t, key, array) => key === 0 || array[key - 1] !== t);
+	},
 });
+
+// init
 
 onMounted(() => {
 	chart.value = new Chart(container.value as HTMLCanvasElement, {
@@ -181,9 +225,13 @@ onMounted(() => {
 					enabled: false,
 					position: 'nearest',
 					external: handler,
+					callbacks: {
+						title: context => context.map(ctx => ctx.parsed.x),
+					},
 				},
 			},
 			scales: buildScales(),
+			locale: chartLocale.value,
 		},
 	});
 });

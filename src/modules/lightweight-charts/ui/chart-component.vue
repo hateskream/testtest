@@ -42,7 +42,7 @@ import type { ICalendarEvent } from '@/modules/calendar';
 import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';
-import { getDateFormatter } from '@/shared/lib';
+import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -70,6 +70,7 @@ interface IChartProps {
 	data?: ChartData[] | null;
 	lastPriceAnimation?: LastPriceAnimationModeType;
 	priceLabel?: string;
+	locale?: string | null;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -89,6 +90,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	lastPriceAnimation: LastPriceAnimationMode.Disabled,
 	data: null,
 	priceLabel: 'Current Price',
+	locale: null,
 });
 
 defineExpose({
@@ -441,6 +443,22 @@ function onChartHover(event: SharedChartMouseEvent) {
 	}
 }
 
+// locale
+
+const localeIsEnabled = isFeatureEnabled('DATE_FORMAT_LOCALIZATION');
+
+const chartLocale = computed(() => {
+	if (props.locale) {
+		return props.locale;
+	}
+
+	if (localeIsEnabled) {
+		return CURRENT_LOCALE;
+	}
+
+	return FALLBACK_LOCALE;
+});
+
 // build chart
 
 onMounted(async () => {
@@ -514,13 +532,6 @@ onMounted(async () => {
 	updateIndicators();
 
 	updateHistoryChartPropChange();
-});
-
-watch(() => props.colorSchema, value => {
-	if (container.value) {
-		// TODO: Убрать, когда решится проблема с shared/component-library
-		(container.value as (HTMLElement & { colorScheme: string })).colorScheme = value;
-	}
 });
 </script>
 
@@ -603,6 +614,7 @@ watch(() => props.colorSchema, value => {
 				:fade-left="props.fadeLeft"
 				:last-price-animation="props.lastPriceAnimation"
 				:price-lines="preparedPriceLines"
+				:locale="chartLocale"
 				entire-text-only-price-scale
 				@chart-hover="onChartHover"
 			/>
