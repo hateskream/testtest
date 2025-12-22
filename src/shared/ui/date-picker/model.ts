@@ -1,3 +1,5 @@
+import type { Page as VPage } from 'v-calendar/dist/types/src/utils/page.d.ts';
+
 export type DateSource = Date | string | number;
 
 export interface ISimpleDateParts {
@@ -34,3 +36,7 @@ export enum DatePickerMaskKey {
 	Model = 'model',
 	ISO = 'iso',
 }
+
+export type DateView = 'daily' | 'weekly' | 'monthly';
+
+export type Page = VPage;

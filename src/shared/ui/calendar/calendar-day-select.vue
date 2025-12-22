@@ -39,7 +39,3 @@ function updateWeek(model: DatePickerModel) {
 	background-color: #ff0000;
 }
 </style>
-
-<style src="./styles.css">
-
-</style>
