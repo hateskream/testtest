@@ -40,6 +40,9 @@ const TopIndices: Preset = {
 const Performance: Preset = {
 	name: 'Performance',
 	displayVariants: ['bar', 'list'],
+	snapStep: 36,
+	hasFilters: true,
+	otherHeight: 18,
 };
 
 const MarketCap: Preset = {
@@ -72,7 +75,7 @@ const Calendar: Preset = {
 	name: 'Calendar',
 	displayVariants: ['default'],
 	otherHeight: 36,
-	snapStep: 36,
+	hasFilters: true,
 };
 
 const FearGreed: Preset = {
@@ -343,8 +346,6 @@ function snapHeightToNearestStepBase(widget: IWidget, height: number) {
 
 export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWidget {
 	const { snapHeightToNearestStep, calcMaxCountRowVisible } = resizeHandlerMapping[widget.widgetType];
-
-	console.log('fromInfiniteToFinite', targetHeight);
 
 	const height = snapHeightToNearestStep(widget, targetHeight);
 	if (!height) {

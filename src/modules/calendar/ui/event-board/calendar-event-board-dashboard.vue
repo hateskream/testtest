@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import {
 	type DateYYYYMMDD,
@@ -17,12 +17,15 @@ import CalendarEventCardDashboard from './calendar-event-card-dashboard.vue';
 interface ICalendarEventBoardProps {
 	eventBoard: IEventBoardResponse[];
 	eventBoardFavorites: string[];
+	maxCountRowTable: number;
 }
 
 const props = defineProps<ICalendarEventBoardProps>();
 const emits = defineEmits<{
 	toggleEventBoard: [id: string];
 }>();
+
+const boardsRef = ref<HTMLElement[]>([]);
 
 const now = new Date();
 
@@ -187,11 +190,84 @@ function scrollToDate(
 	dayEl.scrollIntoView({ block: 'start', behavior });
 }
 
-defineExpose({ scrollToDate });
+function scrollBy(px: number) {
+	const scroller = containerRef.value;
+	if (!scroller) {
+		return;
+	}
+
+	if (Number.isFinite(props.maxCountRowTable)) {
+		return;
+	}
+
+	scroller.scrollTop += px;
+}
+
+function calcMaxCountRowVisible(height: number) {
+	return calcMaxRowVisible(height).count;
+}
+
+
+function calcMaxRowVisible(height: number) {
+
+	if (!boardsRef.value) {
+		return { count: 0, height: 0 };
+	}
+
+	let count = 0;
+	let acc = 0;
+
+	while (true) {
+		const el = boardsRef.value[count];
+		if (!el) {
+			break;
+		}
+
+		const elHeight = el.clientHeight;
+
+		if (acc + elHeight > height) {
+			break;
+		}
+
+		acc += elHeight;
+		count += 1;
+	}
+
+	return { count, height: acc };
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!boardsRef.value) {
+		return 0;
+	}
+
+	const { height: heightOccupiedByContent, count: indexLastElement } = calcMaxRowVisible(height);
+
+	const delta = height - heightOccupiedByContent;
+
+	const el = boardsRef.value[indexLastElement];
+	if (!el) {
+		return heightOccupiedByContent;
+	}
+
+	const elHeight = el.clientHeight;
+
+	if (delta > elHeight / 2) {
+		return heightOccupiedByContent + elHeight;
+	} else {
+		return heightOccupiedByContent;
+	}
+}
+
+defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
-	<div ref="container" :class="classes.calendarEventBoard">
+	<div
+		ref="container"
+		:class="classes.calendarEventBoard"
+		:style="Number.isFinite(props.maxCountRowTable) && { overflowY: 'clip'}"
+	>
 		<template
 			v-for="day in groupedBoard"
 			:key="day.date"
@@ -209,10 +285,14 @@ defineExpose({ scrollToDate });
 				</div>
 
 				<div
-					v-for="group in day.grouped"
+					v-for="(group, index) in day.grouped"
 					:key="group.hour"
+					:ref="(el) => boardsRef[index] = el as HTMLElement"
 					:class="[classes.hourSection]"
 					:data-hour="group.hour"
+					:style="{
+						visibility: index < props.maxCountRowTable ? 'visible' : 'hidden',
+					}"
 				>
 					<div
 						:class="[classes.hourLabel, classes.lightning, group.missed && classes.missed]"

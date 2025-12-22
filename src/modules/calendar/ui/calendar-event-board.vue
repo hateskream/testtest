@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue';
+
 import { type IEventBoardResponse } from '@/modules/calendar';
 
 import CalendarEventBoardTv from './event-board/calendar-event-board-tv.vue';
@@ -8,15 +10,45 @@ interface ICalendarEventBoardProps {
 	eventBoard: IEventBoardResponse[];
 	eventBoardFavorites: string[];
 	displayVariant?: 'new' | 'default';
+	maxCountRowTable?: number;
 }
 
 const props = withDefaults(defineProps<ICalendarEventBoardProps>(), {
 	displayVariant: 'default',
+	maxCountRowTable: Infinity,
 });
 
 const emits = defineEmits<{
 	toggleEventBoard: [id: string];
 }>();
+
+const scroller = useTemplateRef<typeof CalendarEventBoardDashboard>('scroller');
+
+function scrollBy(px: number) {
+	if (!scroller.value) {
+		return;
+	}
+
+	scroller.value.scrollBy(px);
+}
+
+function calcMaxCountRowVisible(height: number) {
+	if (!scroller.value) {
+		return;
+	}
+
+	return scroller.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!scroller.value) {
+		return;
+	}
+
+	return scroller.value.snapHeightToNearestStep(height);
+}
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -27,6 +59,10 @@ const emits = defineEmits<{
 	/>
 	<calendar-event-board-dashboard
 		v-else
-		v-bind="props"
+		ref="scroller"
+		v-bind="{
+			...props,
+			maxCountRowTable
+		}"
 	/>
 </template>

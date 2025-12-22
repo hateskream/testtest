@@ -73,6 +73,32 @@ useEventBoardScroll({
 	board: eventBoard.value,
 	baseDate: baseDate.value,
 });
+
+function scrollBy(px: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	eventBoardRef.value.scrollBy(px);
+}
+
+function calcMaxCountRowVisible(height: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	return eventBoardRef.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	return eventBoardRef.value.snapHeightToNearestStep(height);
+}
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -119,7 +145,7 @@ useEventBoardScroll({
 			</widget-filters-scrollable>
 		</template>
 		<template #content>
-			<div v-if="isEventBoardLoading" class="loading" />
+			<div v-if="isEventBoardLoading" />
 
 			<calendar-event-board
 				v-else-if="eventBoard.length"
@@ -127,6 +153,7 @@ useEventBoardScroll({
 				:event-board="eventBoard"
 				:event-board-favorites="eventBoardFavorites"
 				display-variant="new"
+				:max-count-row-table="props.meta.maxCountRowTable"
 				@toggle-event-board="toggleFavorite"
 			/>
 

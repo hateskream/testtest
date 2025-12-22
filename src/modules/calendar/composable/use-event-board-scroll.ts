@@ -4,6 +4,9 @@ import { type DateYYYYMMDD, type IEventBoardResponse, toUtcIsoDate } from '@/mod
 
 export interface IEventBoardExposed {
 	scrollToDate: (date: DateYYYYMMDD, options?: ScrollIntoViewOptions) => void;
+	scrollBy: (x: number) => void;
+	calcMaxCountRowVisible: (height: number) => number;
+	snapHeightToNearestStep: (height: number) => number;
 }
 
 export interface IUseEventBoardScroll {
