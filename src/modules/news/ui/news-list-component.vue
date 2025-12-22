@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { ref, useTemplateRef, type ComponentPublicInstance } from 'vue';
 
 import type { IDisplaySettings, INews } from '../model';
 
@@ -9,9 +9,12 @@ interface IViewNewsComponentProps {
 	news: INews[];
 	displaySettings: IDisplaySettings;
 	displayVariant: 'tv' | 'dashboard';
+	maxCountRowTablet?: number;
 }
 
-const props = defineProps<IViewNewsComponentProps>();
+const props = withDefaults(defineProps<IViewNewsComponentProps>(), {
+	maxCountRowTablet: Infinity,
+});
 
 const emits = defineEmits<{
 	next: [];
@@ -19,6 +22,8 @@ const emits = defineEmits<{
 }>();
 
 const scrollerRef = useTemplateRef('scroller');
+
+const newsRef = ref<ComponentPublicInstance[]>([]);
 
 let ticking = false;
 
@@ -58,7 +63,62 @@ function scrollBy(px: number) {
 	checkBottom(scrollerRef.value);
 }
 
-defineExpose({ scrollBy });
+function calcMaxCountRowVisible(height: number) {
+	return calcMaxRowVisible(height).count;
+}
+
+
+function calcMaxRowVisible(height: number) {
+	if (!newsRef.value) {
+		return { count: 0, height: 0 };
+	}
+
+	let count = 0;
+	let acc = 0;
+
+	while (true) {
+		const el = newsRef.value[count];
+		if (!el) {
+			break;
+		}
+
+		const elHeight = el.$el.clientHeight;
+
+		if (acc + elHeight > height) {
+			break;
+		}
+
+		acc += elHeight;
+		count += 1;
+	}
+
+	return { count, height: acc };
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!newsRef.value) {
+		return 0;
+	}
+
+	const { height: heightOccupiedByContent, count: indexLastElement } = calcMaxRowVisible(height);
+
+	const delta = height - heightOccupiedByContent;
+
+	const el = newsRef.value[indexLastElement];
+	if (!el) {
+		return heightOccupiedByContent;
+	}
+
+	const elHeight = el.$el.clientHeight;
+
+	if (delta > elHeight / 2) {
+		return heightOccupiedByContent + elHeight;
+	} else {
+		return heightOccupiedByContent;
+	}
+}
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -73,11 +133,15 @@ defineExpose({ scrollBy });
 				:style="props.displayVariant === 'dashboard' && {padding: `4px`}"
 			>
 				<news-component
-					v-for="item in props.news"
+					v-for="(item, index) in props.news"
+					:ref="(el) => newsRef[index] = (el as ComponentPublicInstance)"
 					:key="item.id"
 					:news="item"
 					:display-settings="props.displaySettings"
 					:display-variant="props.displayVariant"
+					:style="{
+						visibility: index < props.maxCountRowTablet ? 'visible' : 'hidden',
+					}"
 					@click="emits('select-news', { id: item.id, slug: item.slug })"
 				/>
 			</div>

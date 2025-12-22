@@ -20,6 +20,8 @@ import PreloaderComponent from '../common/preloader-component.vue';
 
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
+	calcMaxCountRowVisible: (height: number) => number;
+	snapHeightToNearestStep: (height: number) => number;
 }
 
 interface IWidgetComponentProps {
@@ -75,8 +77,8 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 	locations: activeLocations.value,
 	activeSort: sortBy.value,
 	selectedTickers: selectedTickers.value,
-	limit: 10,
-})));
+	limit: 50,
+})), !!props.meta.maxCountRowTable);
 
 const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
 
@@ -94,11 +96,27 @@ function scrollBy(px: number) {
 	viewRef.value.scrollBy(px);
 }
 
-defineExpose({ scrollBy });
+function calcMaxCountRowVisible(height: number) {
+	if (!viewRef.value) {
+		return;
+	}
+
+	return viewRef.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!viewRef.value) {
+		return;
+	}
+
+	return viewRef.value.snapHeightToNearestStep(height);
+}
 
 function toggleDisplaySettings(settingsKey: SettingKey) {
 	displaySettings.value = toggleSetting(displaySettings.value, settingsKey);
 }
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -143,6 +161,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 						:news="news"
 						:display-settings="displaySettings"
 						display-variant="dashboard"
+						:max-count-row-tablet="props.meta.maxCountRowTable"
 						@next="fetchNextPage"
 					/>
 				</template>

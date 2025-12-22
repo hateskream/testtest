@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { WidgetType } from '@/modules/dashboard-group';
 import {
 	createWidget,
-	findMovedWidget,
+	findDifferentWidget,
 	findNewWidget,
 	fromInfiniteToFinite,
 	type DisplayVariant,
@@ -47,7 +47,7 @@ export function changeOrderWidgets(section: ISection, widgets: IWidget[], sectio
 		return changeOrderWidget(section, newWidget, widgets, height);
 	}
 
-	const movedWidget = findMovedWidget(section.widgets, widgets);
+	const movedWidget = findDifferentWidget(section.widgets, widgets);
 	if (movedWidget) {
 		return changeOrderWidget(section, movedWidget, widgets, height);
 	}
@@ -58,6 +58,7 @@ export function changeOrderWidgets(section: ISection, widgets: IWidget[], sectio
 			widgets: [],
 		};
 	}
+
 
 	return section;
 }

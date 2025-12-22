@@ -5,11 +5,13 @@ import { getWidgetComponent, type IMeta } from '../../dashboards/model';
 import type { DisplayVariant, IWidget } from '../model';
 import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
 import {
-	calcMaxCountRowVisible,
 	calcSizeSideGridCell,
 	canChangeHeight,
+	changeHeight,
+	getHeightContent,
 	getMinHeight,
-	snapHeightToNearestStep,
+	getWidgetHeight,
+	resizeHandlerMapping,
 } from '../model';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { useDelayedLoading } from '@/shared/composables';
@@ -18,6 +20,8 @@ import { isFeatureEnabled } from '@/shared/lib';
 
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
+	snapHeightToNearestStep?(height: number): number;
+	calcMaxCountRowVisible?(height: number): number;
 }
 
 interface IWidgetComponentProps {
@@ -114,8 +118,55 @@ watch(
 
 		emits('change-height', props.widget.id, newHeight);
 		if (maxCountRow) {
-			emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(props.widget, newHeight));
+			emitChangeMaxCountRow(newHeight);
 		}
+	},
+);
+
+watch(
+	() => refComponent.value,
+	newValue => {
+		if (!newValue) {
+			return;
+		}
+
+		const {
+			snapHeightToNearestStep: snapHeightToNearestStepOverrided,
+			calcMaxCountRowVisible: calcMaxCountRowVisibleOverrided,
+		} = newValue || {};
+
+		if (calcMaxCountRowVisibleOverrided) {
+			resizeHandlerMapping[props.widget.widgetType]
+				.calcMaxCountRowVisible = (widget, height) => {
+					const contentHeight = getHeightContent(changeHeight(widget, height));
+
+					return calcMaxCountRowVisibleOverrided(contentHeight);
+				};
+		}
+
+
+		if (snapHeightToNearestStepOverrided) {
+			resizeHandlerMapping[props.widget.widgetType]
+				.snapHeightToNearestStep = (widget, height: number) => {
+					const contentHeight = getHeightContent(changeHeight(widget, height));
+
+					const snappedContentHeight = snapHeightToNearestStepOverrided(contentHeight);
+
+					return getWidgetHeight(
+						widget,
+						snappedContentHeight,
+					);
+				};
+		}
+
+		snapToNearestStep(size.value);
+	},
+);
+
+watch(
+	() => props.columnWidth,
+	() => {
+		snapToNearestStep(size.value);
 	},
 );
 
@@ -132,13 +183,22 @@ function setWidgetStateType(widgetId: string, stateType: string) {
 }
 
 function snapToNearestStep(height: number) {
-	const snappedHeight = snapHeightToNearestStep(props.widget, height);
+	const snappedHeight = resizeHandlerMapping[props.widget.widgetType].snapHeightToNearestStep(props.widget, height);
 	if (!snappedHeight) {
 		return;
 	}
 
 	emits('change-height', props.widget.id, snappedHeight);
-	emits('change-max-count-row', props.widget.id, calcMaxCountRowVisible(props.widget, snappedHeight));
+	emitChangeMaxCountRow(snappedHeight);
+}
+
+function emitChangeMaxCountRow(newHeight: number) {
+	emits(
+		'change-max-count-row',
+		props.widget.id,
+		resizeHandlerMapping[props.widget.widgetType]
+			.calcMaxCountRowVisible(props.widget, newHeight),
+	);
 }
 
 defineExpose({ scrollBy });
@@ -158,6 +218,7 @@ defineExpose({ scrollBy });
 			<suspense v-if="loaded">
 				<template #default>
 					<component
+
 						:is="component"
 						ref="refComponent"
 						:meta="meta"

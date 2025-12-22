@@ -7,6 +7,7 @@ import {
 	toValue,
 	computed,
 	watch,
+	onMounted,
 } from 'vue';
 
 type ResizeAxis = 'horizontal' | 'vertical';
@@ -159,6 +160,18 @@ export function useResizable(
 		},
 		{ immediate: true },
 	);
+
+	onMounted(() => {
+		const targetEl = resizeTargetRef.value;
+		if (!targetEl) {
+			return;
+		}
+
+		size.value =
+			axis === 'horizontal'
+				? targetEl.offsetWidth
+				: targetEl.offsetHeight;
+	});
 
 	onBeforeUnmount(() => {
 		removeListener();

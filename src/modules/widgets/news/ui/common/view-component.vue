@@ -11,6 +11,7 @@ interface IViewNewsComponentProps {
 	news: INews[];
 	displaySettings: IDisplaySettings;
 	displayVariant: 'tv' | 'dashboard';
+	maxCountRowTablet?: number;
 }
 
 const props = defineProps<IViewNewsComponentProps>();
@@ -29,7 +30,24 @@ function scrollBy(px: number) {
 	newsRef.value.scrollBy(px);
 }
 
-defineExpose({ scrollBy });
+function calcMaxCountRowVisible(height: number) {
+	if (!newsRef.value) {
+		return;
+	}
+
+	return newsRef.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!newsRef.value) {
+		return;
+	}
+
+	return newsRef.value.snapHeightToNearestStep(height);
+}
+
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -38,6 +56,7 @@ defineExpose({ scrollBy });
 		:news="props.news"
 		:display-settings="props.displaySettings"
 		:display-variant="props.displayVariant"
+		:max-count-row-tablet="props.maxCountRowTablet"
 		@select-news="selectedNewsId = $event.id"
 	/>
 </template>

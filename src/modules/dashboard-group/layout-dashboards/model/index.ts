@@ -9,8 +9,9 @@ export {
 	canChangeHeight,
 	calcSizeSideGridCell,
 	getMinHeight,
-	calcMaxCountRowVisible,
-	snapHeightToNearestStep,
+	getHeightContent,
+	getWidgetHeight,
+	resizeHandlerMapping,
 	type IWidget,
 	type DisplayVariant,
 } from './widget';

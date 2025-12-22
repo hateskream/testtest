@@ -64,6 +64,8 @@ const Price: Preset = {
 const News: Preset = {
 	name: 'News',
 	displayVariants: ['default'],
+	hasFilters: true,
+	otherHeight: 4,
 };
 
 const Calendar: Preset = {
@@ -206,6 +208,8 @@ export interface IWidget extends IWidgetPreset {
 	maxCountRow?: number;
 }
 
+export const resizeHandlerMapping = generateResizeHandlerMapping() ;
+
 const titleWidgetHeight = (widget: IWidget) => widget.hasFilters ? 76 : 40;
 
 const CAN_CHANGE_HEIGHT = P.union(
@@ -279,29 +283,32 @@ export function getMinHeight(widget: IWidget) {
 	return minHeight ?? titleWidgetHeight(widget) + snapStep + otherHeight;
 }
 
-export function calcMaxCountRowVisible(widget: IWidget, widgetHeight: number) {
+function calcMaxCountRowVisibleBase(widget: IWidget, widgetHeight: number) {
 	const { snapStep = 1, otherHeight = 0 } = widget;
 
 	return Math.floor((widgetHeight - titleWidgetHeight(widget) - otherHeight) / snapStep);
 }
 
-export function findMovedWidget(
-	prevWidgets: IWidget[],
-	nextWidgets: IWidget[],
+export function findDifferentWidget(
+	widgetsA: IWidget[],
+	widgetsB: IWidget[],
 ): IWidget | null {
-	const prevIndexById = prevWidgets.reduce<Record<string, number>>(
-		(acc, w, i) => ({ ...acc, [w.id]: i }),
-		{},
-	);
+	const idsA = new Set(widgetsA.map(w => w.id));
+	const idsB = new Set(widgetsB.map(w => w.id));
 
-	return (
-		nextWidgets.find(
-			(widget, index) =>
-				prevIndexById[widget.id] !== undefined &&
-				prevIndexById[widget.id] !== index,
-		) ?? null
-	);
+	const missingInB = widgetsA.find(w => !idsB.has(w.id));
+	if (missingInB) {
+		return missingInB;
+	}
+
+	const missingInA = widgetsB.find(w => !idsA.has(w.id));
+	if (missingInA) {
+		return missingInA;
+	}
+
+	return null;
 }
+
 
 export function findNewWidget(
 	prevWidgets: IWidget[],
@@ -313,10 +320,10 @@ export function findNewWidget(
 }
 
 
-export function snapHeightToNearestStep(widget: IWidget, height: number) {
+function snapHeightToNearestStepBase(widget: IWidget, height: number) {
 	const { snapStep, otherHeight = 0 } = widget;
 	if (!snapStep) {
-		return ;
+		return widget.height;
 	}
 
 	const newHeightContent = height - titleWidgetHeight(widget) - otherHeight;
@@ -335,6 +342,10 @@ export function snapHeightToNearestStep(widget: IWidget, height: number) {
 }
 
 export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWidget {
+	const { snapHeightToNearestStep, calcMaxCountRowVisible } = resizeHandlerMapping[widget.widgetType];
+
+	console.log('fromInfiniteToFinite', targetHeight);
+
 	const height = snapHeightToNearestStep(widget, targetHeight);
 	if (!height) {
 		return widget;
@@ -349,6 +360,13 @@ export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWi
 	};
 }
 
+export function getHeightContent(widget: IWidget) {
+	return widget.height - titleWidgetHeight(widget) - (widget.otherHeight ?? 0);
+}
+
+export function getWidgetHeight(widget: IWidget, contentHeight: number) {
+	return contentHeight + titleWidgetHeight(widget) + (widget.otherHeight ?? 0);
+}
 
 export function rehydrateWidget(
 	id: string,
@@ -412,4 +430,24 @@ export function calcSizeSideGridCell(
 		count: bestCount,
 		size: bestSize,
 	};
+}
+
+type ResizeHandlerMapping = Record<
+	WidgetType,
+	{
+		snapHeightToNearestStep: (widget: IWidget, height: number) => number;
+		calcMaxCountRowVisible: (widget: IWidget, height: number) => number;
+	}
+>;
+
+function generateResizeHandlerMapping(): ResizeHandlerMapping {
+	return Object
+		.values(WidgetType)
+		.reduce((map, key) => {
+			map[key] = {
+				snapHeightToNearestStep: snapHeightToNearestStepBase,
+				calcMaxCountRowVisible: calcMaxCountRowVisibleBase,
+			};
+			return map;
+		}, {} as ResizeHandlerMapping);
 }
