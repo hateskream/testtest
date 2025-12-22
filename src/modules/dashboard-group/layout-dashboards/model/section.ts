@@ -4,6 +4,7 @@ import { WidgetType } from '@/modules/dashboard-group';
 import {
 	createWidget,
 	findDifferentWidget,
+	findMovedWidget,
 	findNewWidget,
 	fromInfiniteToFinite,
 	type DisplayVariant,
@@ -47,7 +48,12 @@ export function changeOrderWidgets(section: ISection, widgets: IWidget[], sectio
 		return changeOrderWidget(section, newWidget, widgets, height);
 	}
 
-	const movedWidget = findDifferentWidget(section.widgets, widgets);
+	const differentWidget = findDifferentWidget(section.widgets, widgets);
+	if (differentWidget) {
+		return changeOrderWidget(section, differentWidget, widgets, height);
+	}
+
+	const movedWidget = findMovedWidget(section.widgets, widgets);
 	if (movedWidget) {
 		return changeOrderWidget(section, movedWidget, widgets, height);
 	}

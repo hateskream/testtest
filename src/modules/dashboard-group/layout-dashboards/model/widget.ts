@@ -322,6 +322,24 @@ export function findNewWidget(
 	return nextWidgets.find(widget => !prevIds.has(widget.id)) ?? null;
 }
 
+export function findMovedWidget(
+	prevWidgets: IWidget[],
+	nextWidgets: IWidget[],
+): IWidget | null {
+	const prevIndexById = prevWidgets.reduce<Record<string, number>>(
+		(acc, w, i) => ({ ...acc, [w.id]: i }),
+		{},
+	);
+
+	return (
+		nextWidgets.find(
+			(widget, index) =>
+				prevIndexById[widget.id] !== undefined &&
+				prevIndexById[widget.id] !== index,
+		) ?? null
+	);
+}
+
 
 function snapHeightToNearestStepBase(widget: IWidget, height: number) {
 	const { snapStep, otherHeight = 0 } = widget;
