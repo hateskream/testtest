@@ -91,7 +91,12 @@ defineExpose({
 
 <template>
 	<div data-position-root :data-position-level="level">
-		<slot :is-open="isOpen" :is-pinned="isPinned" />
+		<slot
+			:is-open="isOpen"
+			:is-pinned="isPinned"
+			:open="open"
+			:close="close"
+		/>
 	</div>
 </template>
 

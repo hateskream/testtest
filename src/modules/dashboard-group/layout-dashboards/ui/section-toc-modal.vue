@@ -77,16 +77,19 @@ function updateWidgets(sectionId: string, widgets: IWidget[]) {
 							>
 								<template #item="{ element: widget }">
 									<ui-position-tooltip>
-										<ui-text
-											:class="classes.widget"
-											as="div"
-											token="text-200-r"
-											@click.stop="emits('scroll-to-widget', section.id, widget.id)"
-										>
-											{{
-												widget.name
-											}} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
-										</ui-text>
+										<template #default="{close}">
+											<ui-text
+												:class="classes.widget"
+												as="div"
+												token="text-200-r"
+												@click.stop="emits('scroll-to-widget', section.id, widget.id)"
+												@pointerdown.capture="close"
+											>
+												{{
+													widget.name
+												}} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
+											</ui-text>
+										</template>
 
 										<template #content>
 											<section-toc-modal-tooltip-content />

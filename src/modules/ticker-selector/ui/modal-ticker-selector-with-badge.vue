@@ -143,6 +143,7 @@ function onUnselect(item: string) {
 			/>
 		</template>
 		<template #content>
+
 			<modal-filter
 				v-if="data"
 				v-model="selectedTickers"
