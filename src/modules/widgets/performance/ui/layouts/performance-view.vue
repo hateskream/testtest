@@ -22,30 +22,17 @@ const displayVariant = defineModel<DisplayVariant>('displayVariant', { required:
 </script>
 
 <template>
-	<div :class="classes.performanceView">
-
-
-		<div :class="classes.performanceContent">
-			<performance-table
-				:rows="props.rows"
-				:columns="props.columns"
-				:display-variant="displayVariant"
-			/>
-		</div>
+	<div :class="classes.performanceContent">
+		<performance-table
+			:rows="props.rows"
+			:columns="props.columns"
+			:display-variant="displayVariant"
+		/>
 	</div>
 </template>
 
 <style module="classes">
-.performanceView {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	height: 100%;
-	overflow: hidden;
-}
-
 .performanceContent {
 	flex: 1;
-	overflow: hidden;
 }
 </style>
