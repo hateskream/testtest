@@ -114,6 +114,10 @@ watch(
 watch(
 	size,
 	newHeight => {
+		if (!isFiniteWidget.value) {
+			return;
+		}
+
 		const { widget: { maxCountRow } } = props;
 
 		emits('change-height', props.widget.id, newHeight);
@@ -159,6 +163,10 @@ watch(
 				};
 		}
 
+		if (!isFiniteWidget.value) {
+			return;
+		}
+
 		snapToNearestStep(size.value);
 	},
 );
@@ -166,6 +174,10 @@ watch(
 watch(
 	() => props.columnWidth,
 	() => {
+		if (!isFiniteWidget.value) {
+			return;
+		}
+
 		snapToNearestStep(size.value);
 	},
 );

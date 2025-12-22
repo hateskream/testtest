@@ -69,6 +69,7 @@ function calcMaxCountRowVisible(height: number) {
 
 
 function calcMaxRowVisible(height: number) {
+
 	if (!newsRef.value) {
 		return { count: 0, height: 0 };
 	}
@@ -126,6 +127,9 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		<div
 			ref="scroller"
 			:class="classes.scrollable"
+			:style="{
+				overflowY: Number.isFinite(props.maxCountRowTablet) ? 'hidden' : 'auto',
+			}"
 			@scroll="handleScroll"
 		>
 			<div
