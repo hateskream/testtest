@@ -12,6 +12,7 @@ import { UiText } from '@/shared/ui/text';
 import { MIN_SECTION_WIDTH } from '../model/section';
 
 import WidgetComponent from './widget-component.vue';
+import HighlighterComponent from './highlighter-component.vue';
 
 const WIDGET_GAP = 6;
 const HEIGHT_TITLE = 50;
@@ -258,6 +259,8 @@ async function scrollToWidget(widgetId: string) {
 		duration,
 		onUpdate: emitScrollInfo,
 	});
+
+	widget.triggerFlash();
 }
 
 function setWidgetStateType(widgetId: string, stateType: string) {
@@ -272,21 +275,15 @@ function onChangeMaxCountRowWidget(widgetId: string, maxCountRow: number) {
 	emits('change-max-count-row', props.section.id, widgetId, maxCountRow);
 }
 
-const flash = ref(false);
-
-function triggerFlash() {
-	flash.value = false;
-	requestAnimationFrame(() => {
-		flash.value = true;
-		setTimeout(() => {
-			flash.value = false;
-		}, 700);
-	});
-}
-
 onMounted(() => {
 	emitScrollInfo();
 });
+
+const flashRef = useTemplateRef('flash');
+
+function triggerFlash() {
+	flashRef.value?.trigger();
+}
 
 defineExpose({
 	scrollToWidget,
@@ -331,7 +328,7 @@ defineExpose({
 					</ui-text>
 
 					<div :class="classes.widgets">
-						<div :class="[classes.flash, flash && classes.active]" />
+						<highlighter-component ref="flash" />
 
 						<widget-component
 							v-for="widget in preparedWidgets"

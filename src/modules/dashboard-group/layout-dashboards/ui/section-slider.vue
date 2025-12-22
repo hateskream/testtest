@@ -54,16 +54,16 @@ async function goToSection(index: number) {
 	section?.triggerFlash();
 }
 
-function scrollToWidget(sectionId: string, widgetId: string) {
+async function scrollToWidget(sectionId: string, widgetId: string) {
 	const index = props.slides.findIndex(s => s.id === sectionId);
-
-	if (index !== -1) {
-		goToSection(index);
-	}
 
 	const section = sectionRefs.value?.find(
 		(s) => s?.$props.section.id === sectionId,
 	);
+
+	if (index !== -1) {
+		await props.goTo(index);
+	}
 
 	section?.scrollToWidget(widgetId);
 }

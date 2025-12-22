@@ -18,6 +18,8 @@ import { useDelayedLoading } from '@/shared/composables';
 import { useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
 
+import HighlighterComponent from './highlighter-component.vue';
+
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
 	snapHeightToNearestStep?(height: number): number;
@@ -214,12 +216,19 @@ function emitChangeMaxCountRow(newHeight: number) {
 }
 
 defineExpose({ scrollBy });
+const flashRef = useTemplateRef('flash');
+
+function triggerFlash() {
+	flashRef.value?.trigger();
+}
+
+defineExpose({ triggerFlash, scrollBy });
 </script>
 
 <template>
-	<div
-		:class="classes.root"
-	>
+	<div :class="classes.container">
+		<highlighter-component ref="flash" />
+
 		<div
 			ref="widget"
 			:class="classes.widget"
@@ -230,7 +239,6 @@ defineExpose({ scrollBy });
 			<suspense v-if="loaded">
 				<template #default>
 					<component
-
 						:is="component"
 						ref="refComponent"
 						:meta="meta"
@@ -262,7 +270,8 @@ defineExpose({ scrollBy });
 </template>
 
 <style module="classes">
-.root {
+.container {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
