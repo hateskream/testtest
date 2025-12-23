@@ -19,9 +19,9 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 
 <style module="classes">
 .container {
-	padding-top:16px;
 	display: flex;
 	flex-direction: column;
+	padding-top: 16px;
 	gap: 16px;
 }
 

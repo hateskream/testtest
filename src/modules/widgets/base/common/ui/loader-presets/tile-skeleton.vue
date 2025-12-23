@@ -12,11 +12,11 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 
 <style module="classes">
 .container {
-	padding-top:16px;
 	display: flex;
 	flex: 1 0 0;
 	justify-content: flex-start;
 	align-items: flex-start;
+	padding-top: 16px;
 	gap: 4px;
 }
 </style>
