@@ -11,7 +11,9 @@ export function formatPrice(value: number) {
 		maximumSignificantDigits?: number;
 	} = {};
 
-	if (value >= 1_000) {
+	if (value >= 10_000) {
+		options.maximumFractionDigits = 0;
+	} else if (value >= 1_000) {
 		options.maximumFractionDigits = 2;
 	} else if (value >= 1) {
 		options.maximumFractionDigits = 4;
