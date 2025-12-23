@@ -25,8 +25,6 @@ const genericColumns = computed(() =>
 );
 
 
-
-
 const genericRows = computed(() => {
 	return props.rows.map(ticker => {
 		const percent = { ...ticker[ColumnType.ChangePrice24hPercent] };
