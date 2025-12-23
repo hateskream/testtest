@@ -23,8 +23,7 @@ const WidgetPresetSchema = z.object({
 });
 
 export type WidgetPreset = z.infer<typeof WidgetPresetSchema>;
-
-const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default']);
+const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default', 'indicator', 'heatmap', 'table']);
 
 const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),

@@ -75,7 +75,10 @@ const {
 		</template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<performance-loader v-else-if="isLoading || props.meta.isLoading" />
+			<performance-loader
+				v-else-if="isLoading || props.meta.isLoading"
+				:display-variant="currentDisplayVariant"
+			/>
 			<view-component
 				v-else-if="tickers.length"
 				v-model:display-variant="currentDisplayVariant"

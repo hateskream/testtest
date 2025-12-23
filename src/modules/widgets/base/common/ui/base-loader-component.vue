@@ -1,47 +1,46 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
-import { useElementSize } from '@vueuse/core';
+import { computed, defineAsyncComponent, type Component } from 'vue';
 
-import { UiSkeletonGroup } from '@/shared/ui/skeleton';
+import type { DisplayVariant } from '@/modules/dashboard-group/layout-dashboards/model';
 
 interface IBaseLoaderComponentProps {
-	rowHeight?: number;
-	rowCount?: number;
-	rowGap?: number;
+	displayVariant?: DisplayVariant;
 }
 
 const props = withDefaults(defineProps<IBaseLoaderComponentProps>(), {
-	rowCount: 0,
-	rowHeight: 64,
-	rowGap: 10,
+	displayVariant: 'default',
 });
 
-const { height: contentHeight } = useElementSize(useTemplateRef('contentRef'));
-
-const calculatedLinesCount = computed(() => {
-	return Math.floor(contentHeight.value / (props.rowHeight + props.rowGap));
+const resolvedVariant = computed<string>(() => {
+	return props.displayVariant === 'default' || !props.displayVariant
+		? 'tile'
+		: props.displayVariant;
 });
 
-const optimizedLinesCount = computed(() => {
-	return Math.max(2, props.rowCount || calculatedLinesCount.value);
-});
+const resolvedComponent = computed(() => {
+	const variant = resolvedVariant.value;
 
-const lineHeight = computed(() => props.rowHeight + 'px');
-const rowGapInPx = computed(() => props.rowGap + 'px');
+	const loaders: Record<string, () => Promise<Component>> = {
+		tile: () => import('./loader-presets/tile-skeleton.vue'),
+		chart: () => import('./loader-presets/chart-skeleton.vue'),
+		bar: () => import('./loader-presets/bar-skeleton.vue'),
+		indicator: () => import('./loader-presets/indicator-skeleton.vue'),
+		list: () => import('./loader-presets/list-skeleton.vue'),
+		table: () => import('./loader-presets/table-skeleton.vue'),
+		heatmap: () => import('./loader-presets/heatmap-skeleton.vue'),
+	};
+
+	const loader = loaders[variant] ?? loaders.tile;
+
+	return defineAsyncComponent({ loader });
+});
 </script>
 
 <template>
 	<div :class="classes.container">
 		<slot name="header"></slot>
-		<div ref="contentRef" :class="classes.content">
-			<slot :lines-count="optimizedLinesCount">
-				<ui-skeleton-group
-					:count="optimizedLinesCount"
-					:height="lineHeight"
-					:gap="rowGapInPx"
-				/>
-			</slot>
-		</div>
+		<slot v-if="$slots.default" />
+		<component :is="resolvedComponent" v-else />
 		<slot name="footer"></slot>
 	</div>
 </template>
@@ -52,10 +51,5 @@ const rowGapInPx = computed(() => props.rowGap + 'px');
 	flex-grow: 1;
 	flex-direction: column;
 	padding: 0 16px 16px;
-}
-
-.content {
-	flex-grow: 1;
-	overflow-y: hidden;
 }
 </style>

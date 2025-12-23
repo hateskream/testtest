@@ -3,8 +3,7 @@ import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
 
-export type DisplayVariant = 'chart' | 'tile' | 'bar' | 'list' | 'default';
-
+export type DisplayVariant = 'tile' | 'indicator' | 'bar' | 'list' | 'table' | 'chart' | 'heatmap' | 'default';
 export interface IWidgetPreset {
 	widgetType: WidgetType;
 	displayVariants: DisplayVariant[];

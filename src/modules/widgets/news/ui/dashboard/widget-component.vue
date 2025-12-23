@@ -152,7 +152,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		</template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<preloader-component v-else-if="isNotData" :display-variant="props.meta.activeDisplayVariant" />
 			<news-content-wrapper v-else-if="news" :state="!!selectedNewsId">
 				<template #default>
 					<view-component

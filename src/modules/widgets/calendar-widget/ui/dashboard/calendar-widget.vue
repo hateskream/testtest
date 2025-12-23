@@ -17,6 +17,7 @@ import {
 } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { formattedLabel, getMarketLabel, isAllSelected } from '@/modules/calendar/utils/toolbar.ts';
+import { PreloaderComponent } from '@/modules/widgets/calendar-widget/ui/common';
 import { UiText } from '@/shared/ui/text';
 
 import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
@@ -145,7 +146,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 			</widget-filters-scrollable>
 		</template>
 		<template #content>
-			<div v-if="isEventBoardLoading" />
+			<preloader-component v-if="isEventBoardLoading" :display-variant="props.meta.activeDisplayVariant" />
 
 			<calendar-event-board
 				v-else-if="eventBoard.length"

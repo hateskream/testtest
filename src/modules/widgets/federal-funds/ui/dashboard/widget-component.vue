@@ -44,7 +44,10 @@ const {
 	>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
+			<preloader-component
+				v-else-if="isLoading || props.meta.isLoading"
+				:display-variant="props.meta.activeDisplayVariant"
+			/>
 			<view-component
 				v-else-if="data"
 				:data="data"

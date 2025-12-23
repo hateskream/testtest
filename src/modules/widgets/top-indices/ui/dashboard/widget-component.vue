@@ -48,7 +48,8 @@ const isNotData = computed(() => (!!rows.value.length && isLoading.value) || pro
 		<template #content>
 			<error-network-component v-if="isError" @retry="refetch" />
 			<loader-layout
-				v-else-if="isNotData"
+				v-else-if="isNotData && !isError"
+				:display-variant="props.meta.activeDisplayVariant"
 			/>
 			<view-component
 				v-else

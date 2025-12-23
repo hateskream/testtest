@@ -25,7 +25,8 @@ const emits = defineEmits<{
 
 const isError = false;
 const isLoading = false;
-const refetch = () => {};
+const refetch = () => {
+};
 
 const metricBadge = {
 	trend: 'optimistic' as const,
@@ -50,7 +51,10 @@ const summary = {
 	>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isLoading || props.meta.isLoading" />
+			<preloader-component
+				v-else-if="isLoading || props.meta.isLoading"
+				:display-variant="props.meta.activeDisplayVariant"
+			/>
 			<view-component
 				v-else
 				:metric-badge="metricBadge"
