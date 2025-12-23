@@ -1,35 +1,26 @@
 <script setup lang="ts">
+import type { NewsSummarySentiment } from '../../model';
+
 import SummaryComponent from './summary-component.vue';
 import MetricTrendBadge from './metric-trend-badge.vue';
 
-interface ISummary {
-	text: string;
-	summaryAt: string;
-}
-
-interface IMetricTrendBadge {
-	trend: 'optimistic' | 'pessimistic' | 'neutral';
-}
-
 interface IMainComponentProps {
-	metricBadge: IMetricTrendBadge;
-	summary: ISummary;
+	sentiment: NewsSummarySentiment;
+	summary: string;
+	summarizedAt: Date;
 }
 
 const props = defineProps<IMainComponentProps>();
-
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.header">
-			<metric-trend-badge
-				:trend="props.metricBadge.trend"
-			/>
+			<metric-trend-badge :trend="props.sentiment" />
 		</div>
 		<summary-component
-			:summary-at="props.summary.summaryAt"
-			:text="props.summary.text"
+			:summarized-at="props.summarizedAt"
+			:text="props.summary"
 			:class="classes.summary"
 		/>
 	</div>
