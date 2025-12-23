@@ -77,6 +77,7 @@ interface IChartProps {
 	lastPriceAnimation?: LastPriceAnimationModeType;
 	priceLabel?: string;
 	locale?: string | null;
+	displayVariant?: 'new' | 'default';
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -97,6 +98,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	data: null,
 	priceLabel: 'Current Price',
 	locale: null,
+	displayVariant: 'new',
 });
 
 defineExpose({
@@ -666,6 +668,7 @@ onMounted(async () => {
 				:start-time="currentRangeStartTime"
 				:end-time="currentRangeEndTime"
 				:events="props.events"
+				:display-variant="props.displayVariant"
 			/>
 			<chart-timeline
 				:start-time="currentRangeStartTime"

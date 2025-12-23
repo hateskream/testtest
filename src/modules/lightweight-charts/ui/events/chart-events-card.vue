@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import type { ICalendarEventMetric } from '@/modules/calendar';
+import { UiText } from '@/shared/ui/text';
 
 import ChartEventsCardRow from './chart-events-card-row.vue';
 
@@ -21,11 +22,9 @@ const formattedDate = computed(() => {
 
 <template>
 	<div :class="classes.card">
-		<p :class="classes.title">
-			<span :class="classes.circle"></span>
-			<span>{{props.title}}</span>
-		</p>
-		<p :class="classes.date">{{formattedDate}}</p>
+		<div :class="classes.header">
+			<ui-text token="text-200-r">{{props.title}}</ui-text>
+		</div>
 		<div :class="classes.column">
 			<chart-events-card-row
 				v-for="metric in props.metrics"
@@ -33,37 +32,46 @@ const formattedDate = computed(() => {
 				:name="metric.label"
 				:value="metric.value"
 			/>
+			<ui-text
+				token="text-100-r"
+				as="p"
+				:class="classes.date"
+			>
+				{{formattedDate}}
+			</ui-text>
 		</div>
 	</div>
 </template>
 
 <style module="classes">
-.circle {
-	display: inline-block;
-	width: 8px;
-	height: 8px;
-	margin-right: 5px;
-	margin-bottom: 3px;
-	background-color: var(--success-success-00, #04eda0);
-	border-radius: 999px;
+.card {
+	display: flex;
+	flex-direction: column;
 }
 
-.title {
-	margin-bottom: 12px;
-	font-weight: 500;
-	font-size: 16px;
-	line-height: 22px;
+.header {
+	display: flex;
+	align-items: center;
+	padding:
+		var(--padding-padding-s6, 10px)
+		var(--padding-padding-s8, 14px)
+		var(--padding-padding-s4, 6px)
+		var(--padding-padding-s8, 14px);
 }
 
 .date {
-	font-size: 14px;
-	line-height: 21px;
+	color: var(--text-300, rgb(255 255 255 / 62%));
 }
 
 .column {
 	display: flex;
 	flex-direction: column;
-	margin-top: 12px;
-	font-size: 14px;
+	padding:
+		var(--padding-padding-s4, 6px)
+		var(--padding-padding-s8, 14px)
+		var(--padding-padding-s6, 10px)
+		var(--padding-padding-s8, 14px);
+	border-top: 1px solid rgb(73 73 80 / 32%);
+	gap: 2px;
 }
 </style>

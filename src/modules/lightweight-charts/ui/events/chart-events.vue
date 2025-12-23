@@ -4,19 +4,21 @@ import { computed, useTemplateRef } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { UiPosition } from '@/shared/ui/position';
-import { ModalBadgeList } from '@/modules/widgets/base';
 import type { ICalendarEvent } from '@/modules/calendar';
+import { UiModalWrapper } from '@/shared/ui/modal';
 
 import ChartEventsMarker from './chart-events-marker.vue';
 import ChartEventsCard from './chart-events-card.vue';
+import ChartEventsStack from './chart-events-stack.vue';
 
 interface IProps {
 	events: ICalendarEvent[];
 	startTime: number;
 	endTime: number;
+	displayVariant: 'new' | 'default';
 }
 
-const props = withDefaults(defineProps<IProps>(), {});
+const props = defineProps<IProps>();
 
 const { width: rowElementWidth } = useElementSize(useTemplateRef('row'));
 
@@ -80,7 +82,7 @@ const preparedOffsets = computed(() => {
 				v-for="([time, stack]) in stackedEvents"
 				:key="time"
 				placement="top"
-				trigger="click"
+				:offset="10"
 				:class="classes.point"
 				:style="{
 					left: `${preparedOffsets[time]}%`
@@ -94,21 +96,28 @@ const preparedOffsets = computed(() => {
 					/>
 				</template>
 				<template #content>
-					<modal-badge-list display-variant="default">
-						<template #title>Related events</template>
+					<chart-events-stack
+						:multiple="stack.length > 1"
+						:display-variant="props.displayVariant"
+					>
+						<template #title>
+							Related Events ({{ stack.length }})
+						</template>
 						<template #default>
-							<div :class="classes.scrollable">
+							<ui-modal-wrapper
+								v-for="event in stack"
+								:key="event.id"
+								:display-variant="props.displayVariant"
+							>
 								<chart-events-card
-									v-for="event in stack"
-									:key="event.id"
 									:title="event.eventTitle"
 									:datetime="(event.eventDatetime)!"
 									:metrics="event.metrics"
 									:class="classes.card"
 								/>
-							</div>
+							</ui-modal-wrapper>
 						</template>
-					</modal-badge-list>
+					</chart-events-stack>
 				</template>
 			</ui-position>
 		</div>
@@ -116,6 +125,10 @@ const preparedOffsets = computed(() => {
 </template>
 
 <style module="classes">
+.card {
+	width: 100%;
+}
+
 .container {
 	display: flex;
 	overflow-x: hidden;
@@ -131,20 +144,5 @@ const preparedOffsets = computed(() => {
 .point {
 	position: absolute;
 	transform: translateX(-50%);
-}
-
-.scrollable {
-	min-height: 0;
-	max-height: 400px;
-	padding: 0 12px;
-	overflow-y: auto;
-}
-
-.card {
-	padding: 12px 0;
-}
-
-.card:not(:last-child) {
-	border-bottom: 1px solid rgb(255 255 255 / 12%);
 }
 </style>

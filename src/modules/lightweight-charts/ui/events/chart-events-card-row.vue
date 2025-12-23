@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { UiText } from '@/shared/ui/text';
+
 interface IProps {
 	name: string;
 	value: string;
@@ -10,17 +12,15 @@ const props = defineProps<IProps>();
 
 <template>
 	<div :class="classes.row">
-		<div :class="classes.cell">{{ props.name }}</div>
-		<div :class="classes.cell">{{ props.value }}</div>
+		<ui-text token="text-200-r">{{ props.name }}</ui-text>
+		<ui-text token="text-200-b">{{ props.value }}</ui-text>
 	</div>
 </template>
 
 <style module="classes">
 .row {
 	display: flex;
-}
-
-.cell {
-	flex: 1 0 0;
+	justify-content: space-between;
+	color: var(--text-500, rgb(255 255 255 / 96%));
 }
 </style>
