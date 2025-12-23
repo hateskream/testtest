@@ -72,7 +72,7 @@ export function useDashboardLayout() {
 		useStateMutation,
 	} = createStateQueries<IDashboardGroup, DashboardGroup>({
 		storageKey: '__DASHBOARD_LAYOUT__',
-		isSaveChange: false,
+		isSaveChange: true,
 		getDefaultState: createDashboardGroup,
 		entityId: 'layout-dashboard',
 		schema: DashboardGroupSchema,
