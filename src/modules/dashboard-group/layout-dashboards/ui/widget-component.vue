@@ -215,7 +215,6 @@ function emitChangeMaxCountRow(newHeight: number) {
 	);
 }
 
-defineExpose({ scrollBy });
 const flashRef = useTemplateRef('flash');
 
 function triggerFlash() {
