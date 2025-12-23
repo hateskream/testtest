@@ -459,6 +459,32 @@ const chartLocale = computed(() => {
 	return FALLBACK_LOCALE;
 });
 
+// precision
+
+const minDatasetValue = computed(() => {
+	return preparedChartData.value.reduce((min, value) => {
+		return Math.min(min, value.value ?? value.low);
+	}, 1_000_000);
+});
+
+const chartPrecision = computed(() => {
+	const minValue = minDatasetValue.value;
+
+	if (minValue > 1_000) {
+		return 1;
+	}
+
+	if (minValue > 100) {
+		return 2;
+	}
+
+	if (minValue > 0.00001) {
+		return 6;
+	}
+
+	return 8;
+});
+
 // build chart
 
 onMounted(async () => {
@@ -616,6 +642,7 @@ onMounted(async () => {
 				:price-lines="preparedPriceLines"
 				:locale="chartLocale"
 				entire-text-only-price-scale
+				:precision="chartPrecision"
 				@chart-hover="onChartHover"
 			/>
 		</div>
