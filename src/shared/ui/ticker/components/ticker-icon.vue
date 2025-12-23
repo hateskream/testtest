@@ -143,6 +143,7 @@ watch(isIconId, (value) => {
 	justify-content: center;
 	align-items: center;
 	border-radius: 999px;
+	object-fit: cover;
 }
 
 .bordered {
