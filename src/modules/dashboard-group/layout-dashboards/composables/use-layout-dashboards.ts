@@ -29,7 +29,10 @@ const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
 	stateType: z.string().optional(),
-	height: z.number(),
+	height: z.union([
+		z.number(),
+		z.literal('Infinity'),
+	]),
 	displayVariant: DisplayVariantSchema,
 	maxCountRow: z.number().optional(),
 });
@@ -232,7 +235,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					stateType: widget.stateType,
 					widgetType: widget.widgetType,
 					name: widget.name,
-					height: widget.height,
+					height: widget.height === Infinity ? 'Infinity' : widget.height,
 					maxCountRow: widget.maxCountRow,
 					displayVariant: widget.displayVariant,
 				})),
@@ -258,7 +261,7 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 						rehydrateWidget(
 							w.id,
 							w.widgetType,
-							w.height,
+							w.height === 'Infinity' ? Infinity : w.height,
 							w.displayVariant,
 							w.defaultStateType,
 							w.stateType,
