@@ -24,12 +24,7 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-const maxAbsValue = computed(() => {
-	if (props.displayVariant === DisplayVariant.List) {
-		return undefined;
-	}
-	return 20;
-});
+
 
 
 const genericRows = computed(() => {
@@ -38,8 +33,6 @@ const genericRows = computed(() => {
 
 		if (props.displayVariant === DisplayVariant.List) {
 			percent.maxAbsValue = undefined;
-		} else {
-			percent.maxAbsValue = maxAbsValue.value;
 		}
 
 

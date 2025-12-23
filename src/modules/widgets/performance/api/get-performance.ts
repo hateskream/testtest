@@ -118,11 +118,17 @@ function prepareResponse({ data }: IGetPerformanceResponse): IPerformanceData {
 
 	const remappedTickers = tickers.map(remapForexSymbol);
 	const remappedPinedTickers = pinedTickers.map(remapForexSymbol);
+	const sortedTickers = remappedTickers.sort((a, b) => {
+		const aValue = (a[ColumnType.ChangePrice24hPercent]?.value) || 0;
+		const bValue = (b[ColumnType.ChangePrice24hPercent]?.value) || 0;
+		return Number(bValue) - Number(aValue);
+	});
 
-	const mappedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedTickers).map(ticker => ({
+	const mappedTickers = mapTickersToTableRows<PerformanceTableRow>(sortedTickers).map(ticker => ({
 		...ticker,
 		tickerId: createTickerIdFromCell(ticker.symbol),
 	}));
+
 
 	const mappedPinedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedPinedTickers).map(ticker => ({
 		...ticker,
