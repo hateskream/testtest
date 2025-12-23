@@ -5,7 +5,7 @@ import { computed, type CSSProperties, onMounted, onUnmounted, shallowRef, useTe
 import { Chart } from 'chart.js/auto';
 import { sub } from 'date-fns';
 
-import { type IChartMarketCapDataset } from '../model';
+import { formatPrice, type IChartMarketCapDataset } from '../model';
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { MarketCapDateRange } from '@/modules/widgets/market-cap/model';
@@ -173,12 +173,7 @@ const { state, handler } = useExternalTooltip({
 	valueSuffix: '',
 	valuePrefix: '$',
 	reversed: true,
-	transformRowValue: (rowValue: string) => {
-		const normalizedDecimal = rowValue.replace(/[^\d,]+/g, '').replace(',', '.');
-		const pretty = prettyNumberWithKey(normalizedDecimal, 2);
-
-		return `${pretty.value}${pretty.suffix}`;
-	},
+	transformRowValue: formatPrice,
 	transformTitle: (title: string[]) => {
 		const formatter = getDateFormatter({
 			month: 'short',
@@ -227,6 +222,9 @@ onMounted(() => {
 					external: handler,
 					callbacks: {
 						title: context => context.map(ctx => ctx.parsed.x),
+						label: context => {
+							return `${context.dataset.label}:${context.parsed.y}`;
+						},
 					},
 				},
 			},

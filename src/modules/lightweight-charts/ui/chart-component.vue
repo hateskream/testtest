@@ -31,8 +31,14 @@ import {
 	prepareLineDataFromCandlestick,
 	prepareSeries,
 } from '../utils';
-import type { IChartTimelineSegment, IChartUpdateEmitData, SharedChartMouseEvent } from '../model';
-import { IndicatorsChart, TypeChart } from '../model';
+import {
+	formatPrice,
+	type IChartTimelineSegment,
+	type IChartUpdateEmitData,
+	IndicatorsChart,
+	type SharedChartMouseEvent,
+	TypeChart,
+} from '../model';
 import type { IUseExternalTooltipState } from '../composables';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
@@ -428,7 +434,7 @@ function updateTooltipState(state: ChartClickData | null) {
 
 	tooltipState.rows[0] = {
 		text: 'Price',
-		value: state.value.toString(),
+		value: `$${formatPrice(state.value)}`,
 		color: tooltipRowColor.value,
 	};
 
@@ -462,8 +468,12 @@ const chartLocale = computed(() => {
 // precision
 
 const minDatasetValue = computed(() => {
-	return preparedChartData.value.reduce((min, value) => {
-		return Math.min(min, value.value ?? value.low);
+	return preparedChartData.value.reduce((min, point) => {
+		if ('low' in point) {
+			return Math.min(min, point.low);
+		}
+
+		return Math.min(min, point.value);
 	}, 1_000_000);
 });
 
