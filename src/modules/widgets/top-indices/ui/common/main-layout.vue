@@ -45,6 +45,7 @@ const genericRows = computed(() =>
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:show-header="false"
+				:hide-description="true"
 				@click-on-ticker="goToTickerPage"
 			/>
 		</div>
