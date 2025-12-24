@@ -60,12 +60,14 @@ const sortByDropdownRef = useTemplateRef('sortByDropdown');
 function closeSortByDropdown() {
 	sortByDropdownRef.value?.close?.();
 }
+
+// TODO: Вернуть все фильтры после реализации бекенда
 </script>
 
 <template>
 	<div :class="classes.root">
 		<widget-filters-scrollable display-variant="new" @on-clear-click="emits('resetAllChanges')">
-			<modal-badge-dropdown display-variant="new">
+			<modal-badge-dropdown v-if="false" display-variant="new">
 				<template #title>
 					<span :class="classes.capitalize">
 						{{displayItems}}
@@ -82,7 +84,7 @@ function closeSortByDropdown() {
 					/>
 				</template>
 			</modal-badge-dropdown>
-			<modal-badge-dropdown display-variant="new">
+			<modal-badge-dropdown v-if="false" display-variant="new">
 				<template #title>
 					Location
 				</template>
