@@ -18,6 +18,11 @@ export interface INews {
 	srcSourceImage: string;
 }
 
+export interface INewsSource {
+	site: string;
+	url: string;
+}
+
 export interface IGetNewsRequest {
 	offset: number;
 	limit: number;
