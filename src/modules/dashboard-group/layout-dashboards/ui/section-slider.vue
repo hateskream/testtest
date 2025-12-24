@@ -3,10 +3,10 @@ import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload, IWidget } from '../model';
+import { useIsMobile } from '@/shared/composables';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
-import {useIsMobile} from "@/shared/composables";
 
 interface IPreparedSection extends ISection {
 	isVisible: boolean;
@@ -128,7 +128,7 @@ defineExpose({ trackRef });
 			:class="[classes.viewport, { [classes['mobile-viewport']]: isMobile }]"
 		>
 
-		<div
+			<div
 				:class="classes.track"
 			>
 				<section-component
@@ -239,13 +239,13 @@ defineExpose({ trackRef });
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
+
 	&.mobile-viewport {
 		margin-right: 0;
 		padding-top: 0;
 		padding-right: 0;
 		padding-left: 0;
 	}
-
 }
 
 .viewport::-webkit-scrollbar {

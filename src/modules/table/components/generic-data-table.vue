@@ -183,7 +183,9 @@ const recalculateColumnWidths = async () => {
 
 		const weights = visibleColumns.value.map((col, i) => {
 			const mw = Number(col?.minWidth);
-			if (Number.isFinite(mw) && mw > 0) return mw;
+			if (Number.isFinite(mw) && mw > 0) {
+				return mw;
+			}
 			const m = measuredWidths[i];
 			return Number.isFinite(m) && m > 0 ? m : 1;
 		});
@@ -711,8 +713,8 @@ onUnmounted(() => {
 .scrollContent {
 	width: 100%;
 	height: 100%;
-	overflow-y: auto;
 	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .loadingIndicatorContainer {
