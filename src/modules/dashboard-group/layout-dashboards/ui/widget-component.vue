@@ -17,6 +17,7 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 import { useDelayedLoading } from '@/shared/composables';
 import { useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
+import { useIsMobile } from '@/shared/composables';
 
 import HighlighterComponent from './highlighter-component.vue';
 
@@ -43,6 +44,8 @@ const emits = defineEmits<{
 	'change-height': [string, number];
 	'change-max-count-row': [string, number];
 }>();
+
+const isMobile = useIsMobile();
 
 const { size } = useResizable(
 	useTemplateRef('sizer'),
@@ -266,6 +269,7 @@ defineExpose({ triggerFlash, scrollBy });
 		>
 			<div
 				ref="sizer"
+				:style="isMobile && {visibility: 'hidden'}"
 				:class="classes.sizer"
 			/>
 		</div>
