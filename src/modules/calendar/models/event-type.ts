@@ -1,11 +1,10 @@
 export enum EventType {
 	Economic = 'Economic',
 	Earnings = 'Earnings',
-	Revenue = 'Revenue',
-	Dividends = 'Dividends',
-	Splits = 'Splits',
-	Ipos = 'Ipos',
-	Crypto = 'Crypto',
-	News = 'News',
-	Conference = 'Conference',
+	Dividends = 'Dividend',
+	Splits = 'Split',
+	Ipos = 'Ipo',
+	// Crypto = 'Crypto',
+	// News = 'News',
+	// Conference = 'Conference',
 }

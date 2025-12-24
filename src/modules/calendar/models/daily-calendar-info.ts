@@ -8,8 +8,12 @@ export interface IDailyCalendarInfoRequest {
 export interface IDailyCalendarInfoResponse {
 	date: string;
 	metrics: {
-		economic: number;
-		earnings: number;
+		crypto_events: number;
 		dividends: number;
+		earnings: number;
+		economic: number;
+		ipo: number;
+		news: number;
+		splits: number;
 	};
 }

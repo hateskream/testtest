@@ -25,3 +25,13 @@ export const markets: IMarketData[] = [
 	{ id: MarketIds.HongKong, label: 'Hong Kong, China', icon: IconIds.HongKong },
 	{ id: MarketIds.UnitedKingdom, label: 'United Kingdom', icon: IconIds.UnitedKingdom },
 ] as const;
+
+export const MARKET_ID_TO_ISO: Record<MarketIds, string> = {
+	[MarketIds.USA]: 'US',
+	[MarketIds.India]: 'IN',
+	[MarketIds.Germany]: 'DE',
+	[MarketIds.Japan]: 'JP',
+	[MarketIds.Canada]: 'CA',
+	[MarketIds.HongKong]: 'HK',
+	[MarketIds.UnitedKingdom]: 'GB',
+};

@@ -1,38 +1,73 @@
-import type { IEventBoardRequestOptions, IEventBoardResponse } from '@/modules/calendar';
-import { useLogger } from '@/shared/service/monitoring';
+import {
+	type IEventBoardRequestOptions,
+	type IEventBoardResponse,
+	Impact, MARKET_ID_TO_ISO,
+} from '@/modules/calendar';
+import { useLogger } from '@/shared/service/logger';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockEventBoard } from '@/modules/calendar/api/mock';
 
-enum DataProvider {
-	Production,
-	MockLocal,
-	MockServer,
-}
-
-const dataProvider = DataProvider.MockLocal;
+const IS_USE_MOCK = false;
 
 export async function getEventBoard(options: IEventBoardRequestOptions): Promise<IEventBoardResponse[]> {
 	const logger = useLogger();
 
 	try {
-		return sendRequest(dataProvider, options);
+		return sendRequest(options);
 	} catch (error) {
-		logger.error('Failed to get display settings heatmap', { error: error as Error });
+		logger.error('Failed to get display settings heatmap', error as Error);
 		throw error;
 	}
 }
 
-function sendRequest<T>(type: DataProvider, options: IEventBoardRequestOptions) {
+function sendRequest(options: IEventBoardRequestOptions) {
 	const httpService = useHttpService();
 
-	switch (type) {
-		case DataProvider.MockLocal:
-			return createMockEventBoard(options);
-		case DataProvider.Production:
-			return httpService.get<T>('https://gateway.planet9.uk/event-board');
-		case DataProvider.MockServer:
-			return httpService.get<T>('https://gateway.planet9.uk/event-board');
-		default:
-			return createMockEventBoard(options);
+	if (IS_USE_MOCK) {
+		return createMockEventBoard(options);
+	} else {
+		return httpService.get<IEventBoardResponse[]>('/api/v1/calendar/data', {
+			query: prepareRequest(options),
+		});
 	}
+}
+
+function prepareRequest(
+	options: IEventBoardRequestOptions,
+): Record<string, string | number> {
+	const { range, filters } = options;
+
+	const record: Record<string, string | number> = {
+		from: range.from,
+		to: range.to,
+	};
+
+	if (filters.eventType.length) {
+		record.categories = filters.eventType
+			.map(v => v.toUpperCase())
+			.join(',');
+	}
+
+	if (filters.marketId.length) {
+		record.countries = filters.marketId
+			.map(id => MARKET_ID_TO_ISO[id].toUpperCase())
+			.join(',');
+	}
+
+	if (filters.impact.length) {
+		const priority: Impact[] = [Impact.Low, Impact.Medium, Impact.High];
+		const min = Math.min(
+			...filters.impact.map(v => priority.indexOf(v)),
+		);
+
+		if (min >= 0) {
+			record.minImpact = priority[min].toUpperCase();
+		}
+	}
+
+	if (filters.watchlist.length) {
+		record.tickerIds = filters.watchlist.join(',');
+	}
+
+	return record;
 }

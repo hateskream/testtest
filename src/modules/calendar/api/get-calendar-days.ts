@@ -3,36 +3,30 @@ import { createMockApiDays } from './mock';
 import { useLogger } from '@/shared/service/monitoring';
 import type { IDailyCalendarInfoRequest, IDailyCalendarInfoResponse } from '@/modules/calendar';
 
-enum DataProvider {
-	Production,
-	MockLocal,
-	MockServer,
-}
-
-const dataProvider = DataProvider.MockLocal;
+const IS_USE_MOCK = false;
 
 export async function getCalendarDays(options: IDailyCalendarInfoRequest): Promise<IDailyCalendarInfoResponse[]> {
 	const logger = useLogger();
 
 	try {
-		return sendRequest(dataProvider, options);
+		return sendRequest(options);
 	} catch (error) {
 		logger.error('Failed to get display settings heatmap', { error: error as Error });
 		throw error;
 	}
 }
 
-function sendRequest<T>(type: DataProvider, options: IDailyCalendarInfoRequest) {
+function sendRequest(options: IDailyCalendarInfoRequest) {
 	const httpService = useHttpService();
 
-	switch (type) {
-		case DataProvider.MockLocal:
-			return createMockApiDays(options);
-		case DataProvider.Production:
-			return httpService.get<T>('https://gateway.planet9.uk/с');
-		case DataProvider.MockServer:
-			return httpService.get<T>('https://gateway.planet9.uk/с');
-		default:
-			return createMockApiDays(options);
+	if (IS_USE_MOCK) {
+		return createMockApiDays(options);
+	} else {
+		return httpService.get<IDailyCalendarInfoResponse[]>('/api/v1/calendar/daily-info', {
+			query: {
+				from: options.from,
+				to: options.to,
+			},
+		});
 	}
 }
