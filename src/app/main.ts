@@ -8,6 +8,7 @@ import { createAppHead } from './head';
 import { queryClient } from '@/shared/service/query-client';
 import { validateConfig } from '@/shared/lib';
 import { registerVCalendar } from '@/shared/ui/date-picker/setup';
+import { useStorageVersion } from '@/shared/composables';
 
 import '@fontsource-variable/roboto-flex/full.css';
 import '@/assets/styles/base.css';
@@ -18,6 +19,13 @@ import 'virtual:svg-icons-register';
 import App from './app.vue';
 
 validateConfig();
+
+const { compareVersions, updateVersion } = useStorageVersion();
+
+if (!compareVersions()) {
+	localStorage.clear();
+	updateVersion();
+}
 
 registerComponent('i88-chart');
 
