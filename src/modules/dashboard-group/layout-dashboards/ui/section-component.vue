@@ -10,10 +10,10 @@ import { useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 import { MIN_SECTION_WIDTH } from '../model/section';
+import { useIsMobile } from '@/shared/composables';
 
 import WidgetComponent from './widget-component.vue';
 import HighlighterComponent from './highlighter-component.vue';
-import {useIsMobile} from "@/shared/composables";
 
 const WIDGET_GAP = 6;
 const HEIGHT_TITLE = 50;
@@ -285,7 +285,7 @@ const flashRef = useTemplateRef('flash');
 function triggerFlash() {
 	flashRef.value?.trigger();
 }
-const isMobile = useIsMobile()
+const isMobile = useIsMobile();
 
 defineExpose({
 	scrollToWidget,
@@ -364,11 +364,13 @@ defineExpose({
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
+
 	&.mobileRoot {
-		.section{
+		.section {
 			padding: 12px 12px 0;
 		}
-		.sectionTitle{
+
+		.sectionTitle {
 			padding: 0 0 12px 4px;
 		}
 	}
