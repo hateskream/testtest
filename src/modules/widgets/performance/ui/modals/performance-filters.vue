@@ -9,7 +9,7 @@ import {
 	type DateRange,
 	DateRangeForex,
 	DateRangeStock,
-	dateToLabel,
+	dateToShortLabel,
 	DisplayVariant,
 	isDataRangeStock,
 	Stock,
@@ -186,7 +186,7 @@ const isDefaultDisplaySource = computed(() => props.displaySource === 'default')
 						>
 							<div :class="classes.subLabel">Period</div>
 							<div :class="classes.secondaryColor">·</div>
-							<div :class="classes.secondaryColor">{{ dateToLabel[date] }}</div>
+							<div :class="classes.secondaryColor">{{ dateToShortLabel[date] }}</div>
 						</ui-text>
 						<ui-icon
 							:id="IconIds.RcmArrowRight"
@@ -205,7 +205,7 @@ const isDefaultDisplaySource = computed(() => props.displaySource === 'default')
 								:model-value="r === date"
 								@update:model-value="date = r"
 							>
-								{{ dateToLabel[r] }}
+								{{ dateToShortLabel[r] }}
 							</modal-item-selector>
 						</template>
 					</modal-badge-list>

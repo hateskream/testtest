@@ -1,13 +1,24 @@
 import { v4 as uuidv4 } from 'uuid';
+import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
 
-export type DisplayVariant = 'chart' | 'tile' | 'bar' | 'list' | 'default';
-
+export type DisplayVariant = 'tile' | 'indicator' | 'bar' | 'list' | 'table' | 'chart' | 'heatmap' | 'default';
 export interface IWidgetPreset {
 	widgetType: WidgetType;
 	displayVariants: DisplayVariant[];
 	name: string;
+	snapStep?: number;
+	/*
+		нужно для того чтобы работали виджеты calendar/top indices
+		сейчас в нем есть двойной скролл и дата, ее высота как раз и задается в этом поле
+
+		без этого не получится корректно обрезать высоту виджета чтобы не было перекрытых карточек
+	*/
+	otherHeight?: number;
+	hasFilters?: boolean;
+	minHeight?: number;
+	maxHeight?: number;
 }
 
 type Preset = Omit<IWidgetPreset, 'widgetType'>;
@@ -15,21 +26,29 @@ type Preset = Omit<IWidgetPreset, 'widgetType'>;
 const ChartPrice: Preset = {
 	name: 'Price',
 	displayVariants: ['chart', 'tile'],
+	minHeight: 400,
 };
 
 const TopIndices: Preset = {
 	name: 'Top Indices YTD',
 	displayVariants: ['list'],
+	otherHeight: 24,
+	snapStep: 36,
 };
 
 const Performance: Preset = {
 	name: 'Performance',
 	displayVariants: ['bar', 'list'],
+	snapStep: 36,
+	hasFilters: true,
+	otherHeight: 18,
 };
 
 const MarketCap: Preset = {
 	name: 'Market cap',
 	displayVariants: ['chart', 'tile'],
+	minHeight: 206,
+	maxHeight: 406,
 };
 
 const BitcoinDominance: Preset = {
@@ -40,16 +59,22 @@ const BitcoinDominance: Preset = {
 const Price: Preset = {
 	name: 'Price list',
 	displayVariants: ['list'],
+	snapStep: 68,
+	hasFilters: true,
 };
 
 const News: Preset = {
 	name: 'News',
 	displayVariants: ['default'],
+	hasFilters: true,
+	otherHeight: 4,
 };
 
 const Calendar: Preset = {
 	name: 'Calendar',
 	displayVariants: ['default'],
+	otherHeight: 36,
+	hasFilters: true,
 };
 
 const FearGreed: Preset = {
@@ -95,6 +120,8 @@ const ConsumerPriceIndex: Preset = {
 const NonfarmPayrolls: Preset = {
 	name: 'Nonfarm Payrolls (1Y)',
 	displayVariants: ['default'],
+	minHeight: 186,
+	maxHeight: 384,
 };
 
 const NominalGDP: Preset = {
@@ -110,6 +137,8 @@ const RealGDP: Preset = {
 const UnemploymentRate: Preset = {
 	name: 'Unemployment Rate (1Y)',
 	displayVariants: ['default'],
+	minHeight: 186,
+	maxHeight: 384,
 };
 
 const NewsSummary: Preset = {
@@ -176,8 +205,31 @@ export interface IWidget extends IWidgetPreset {
 	height: number;
 	displayVariant: DisplayVariant;
 	defaultStateType: string;
+	hasFilters: boolean;
 	stateType?: string;
 	maxCountRow?: number;
+}
+
+export const resizeHandlerMapping = generateResizeHandlerMapping() ;
+
+const titleWidgetHeight = (widget: IWidget) => widget.hasFilters ? 76 : 40;
+
+const CAN_CHANGE_HEIGHT = P.union(
+	WidgetType.TopIndices,
+	WidgetType.Performance,
+	WidgetType.MarketCap,
+	WidgetType.Price,
+	WidgetType.News,
+	WidgetType.UnemploymentRate,
+	WidgetType.NonfarmPayrolls,
+	WidgetType.Calendar,
+);
+
+export function canChangeHeight(widget: IWidget): boolean {
+	return match(widget)
+		.with({ widgetType: WidgetType.ChartPrice, displayVariant: 'chart' }, () => true)
+		.with({ widgetType: CAN_CHANGE_HEIGHT }, () => true)
+		.otherwise(() => false);
 }
 
 export function createWidget(
@@ -203,7 +255,135 @@ export function createWidget(
 		defaultStateType,
 		displayVariant,
 		maxCountRow,
+		hasFilters: preset.hasFilters ?? false,
 	};
+}
+
+export function changeMaxCountRow(
+	widget: IWidget,
+	maxCountRow: number,
+): IWidget {
+	return {
+		...widget,
+		maxCountRow,
+	};
+}
+
+export function changeHeight(
+	widget: IWidget,
+	height: number,
+): IWidget {
+	return {
+		...widget,
+		height,
+	};
+}
+
+export function getMinHeight(widget: IWidget) {
+	const { snapStep = 0, minHeight, otherHeight = 0 } = widget;
+
+	return minHeight ?? titleWidgetHeight(widget) + snapStep + otherHeight;
+}
+
+function calcMaxCountRowVisibleBase(widget: IWidget, widgetHeight: number) {
+	const { snapStep = 1, otherHeight = 0 } = widget;
+
+	return Math.floor((widgetHeight - titleWidgetHeight(widget) - otherHeight) / snapStep);
+}
+
+export function findDifferentWidget(
+	widgetsA: IWidget[],
+	widgetsB: IWidget[],
+): IWidget | null {
+	const idsA = new Set(widgetsA.map(w => w.id));
+	const idsB = new Set(widgetsB.map(w => w.id));
+
+	const missingInB = widgetsA.find(w => !idsB.has(w.id));
+	if (missingInB) {
+		return missingInB;
+	}
+
+	const missingInA = widgetsB.find(w => !idsA.has(w.id));
+	if (missingInA) {
+		return missingInA;
+	}
+
+	return null;
+}
+
+
+export function findNewWidget(
+	prevWidgets: IWidget[],
+	nextWidgets: IWidget[],
+): IWidget | null {
+	const prevIds = new Set(prevWidgets.map(w => w.id));
+
+	return nextWidgets.find(widget => !prevIds.has(widget.id)) ?? null;
+}
+
+export function findMovedWidget(
+	prevWidgets: IWidget[],
+	nextWidgets: IWidget[],
+): IWidget | null {
+	const prevIndexById = prevWidgets.reduce<Record<string, number>>(
+		(acc, w, i) => ({ ...acc, [w.id]: i }),
+		{},
+	);
+
+	return (
+		nextWidgets.find(
+			(widget, index) =>
+				prevIndexById[widget.id] !== undefined &&
+				prevIndexById[widget.id] !== index,
+		) ?? null
+	);
+}
+
+
+function snapHeightToNearestStepBase(widget: IWidget, height: number) {
+	const { snapStep, otherHeight = 0 } = widget;
+	if (!snapStep) {
+		return widget.height;
+	}
+
+	const newHeightContent = height - titleWidgetHeight(widget) - otherHeight;
+
+	const remainder = newHeightContent % snapStep;
+
+	let snappedHeightContent;
+
+	if (remainder >= snapStep / 2) {
+		snappedHeightContent = Math.ceil(newHeightContent / snapStep) * snapStep;
+	} else {
+		snappedHeightContent = Math.floor(newHeightContent / snapStep) * snapStep;
+	}
+
+	return snappedHeightContent + titleWidgetHeight(widget) + otherHeight;
+}
+
+export function fromInfiniteToFinite(widget: IWidget, targetHeight: number): IWidget {
+	const { snapHeightToNearestStep, calcMaxCountRowVisible } = resizeHandlerMapping[widget.widgetType];
+
+	const height = snapHeightToNearestStep(widget, targetHeight);
+	if (!height) {
+		return widget;
+	}
+
+	const maxCountRow = calcMaxCountRowVisible(widget, height);
+
+	return {
+		...widget,
+		height,
+		maxCountRow,
+	};
+}
+
+export function getHeightContent(widget: IWidget) {
+	return widget.height - titleWidgetHeight(widget) - (widget.otherHeight ?? 0);
+}
+
+export function getWidgetHeight(widget: IWidget, contentHeight: number) {
+	return contentHeight + titleWidgetHeight(widget) + (widget.otherHeight ?? 0);
 }
 
 export function rehydrateWidget(
@@ -236,6 +416,7 @@ export function rehydrateWidget(
 		defaultStateType,
 		stateType,
 		maxCountRow,
+		hasFilters: preset.hasFilters ?? false,
 	};
 }
 
@@ -267,4 +448,24 @@ export function calcSizeSideGridCell(
 		count: bestCount,
 		size: bestSize,
 	};
+}
+
+type ResizeHandlerMapping = Record<
+	WidgetType,
+	{
+		snapHeightToNearestStep: (widget: IWidget, height: number) => number;
+		calcMaxCountRowVisible: (widget: IWidget, height: number) => number;
+	}
+>;
+
+function generateResizeHandlerMapping(): ResizeHandlerMapping {
+	return Object
+		.values(WidgetType)
+		.reduce((map, key) => {
+			map[key] = {
+				snapHeightToNearestStep: snapHeightToNearestStepBase,
+				calcMaxCountRowVisible: calcMaxCountRowVisibleBase,
+			};
+			return map;
+		}, {} as ResizeHandlerMapping);
 }

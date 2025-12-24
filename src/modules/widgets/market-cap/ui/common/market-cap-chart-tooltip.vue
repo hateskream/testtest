@@ -2,7 +2,7 @@
 import { computed, type CSSProperties } from 'vue';
 
 import { ChartExternalTooltipRow } from '@/modules/lightweight-charts';
-import { prettyNumberWithKey } from '@/shared/lib';
+import { UiText } from '@/shared/ui/text';
 
 interface IMarketCapChartTooltipProps {
 	color: CSSProperties['background-color'];
@@ -12,10 +12,7 @@ interface IMarketCapChartTooltipProps {
 
 const props = defineProps<IMarketCapChartTooltipProps>();
 
-const preparedValue = computed(() => {
-	const { row } = prettyNumberWithKey(props.value.toString());
-	return `$${row}`;
-});
+const preparedValue = computed(() => props.value.toString());
 </script>
 
 <template>
@@ -25,7 +22,7 @@ const preparedValue = computed(() => {
 			text="Market Cap"
 			:value="preparedValue"
 		/>
-		<p :class="classes.title">{{ title }}</p>
+		<ui-text token="text-100-r" :class="classes.title">{{ title }}</ui-text>
 	</div>
 </template>
 
@@ -33,11 +30,10 @@ const preparedValue = computed(() => {
 .tooltip {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 2px;
 }
 
 .title {
-	font-size: 10px;
 	color: var(--text-color-base-300);
 }
 </style>

@@ -2,7 +2,8 @@
 import { ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
-import type { ISection, ISectionWheelPayload } from '../model';
+import type { ISection, ISectionWheelPayload, IWidget } from '../model';
+import { useIsMobile } from '@/shared/composables';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
@@ -18,21 +19,25 @@ interface ISectionSliderProps {
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
+	goTo: (index: number) => void;
 }
 
 const props = defineProps<ISectionSliderProps>();
 
 const emits = defineEmits<{
 	(e: 'set-widget-state-type', widgetId: string, value: string): void;
-	(e: 'updateSection', newSection: ISection[]): void;
+	(e: 'change-width', sectionId: string, width: number): void;
+	(e: 'change-height', sectionId: string, widgetId: string, height: number): void;
+	(e: 'change-max-count-row', sectionId: string, widgetId: string, maxCountRow: number): void;
 	(e: 'next'): void;
 	(e: 'prev'): void;
-	(e: 'goTo', index: number): void;
+	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[], sectionHeight: number): void;
+	(e: 'change-order-sections', sections: ISection[]): void;
 }>();
 
 const trackRef = useTemplateRef<HTMLDivElement>('track');
 
-const { height } = useElementSize(trackRef);
+const { height: trackHeight } = useElementSize(trackRef);
 
 const sectionRefs = useTemplateRef<InstanceType<typeof SectionComponent>[]>('sectionElement');
 const sectionWheelState = ref<Record<string, ISectionWheelPayload>>({});
@@ -43,16 +48,23 @@ function onSectionWheel(payload: ISectionWheelPayload) {
 	};
 }
 
-function scrollToWidget(sectionId: string, widgetId: string) {
-	const index = props.slides.findIndex(s => s.id === sectionId);
+function goToSection(index: number) {
+	props.goTo(index);
 
-	if (index !== -1) {
-		emits('goTo', index);
-	}
+	const section = sectionRefs.value?.[index];
+	section?.triggerFlash();
+}
+
+async function scrollToWidget(sectionId: string, widgetId: string) {
+	const index = props.slides.findIndex(s => s.id === sectionId);
 
 	const section = sectionRefs.value?.find(
 		(s) => s?.$props.section.id === sectionId,
 	);
+
+	if (index !== -1) {
+		await props.goTo(index);
+	}
 
 	section?.scrollToWidget(widgetId);
 }
@@ -69,7 +81,7 @@ watch(
 watch(
 	() => props.visibleSlidesCount,
 	(newCount, oldCount) => {
-		if (newCount === oldCount || newCount < oldCount) {
+		if (newCount <= oldCount) {
 			return;
 		}
 
@@ -88,6 +100,24 @@ function setWidgetStateType(widgetId: string, stateType: string) {
 	emits('set-widget-state-type', widgetId, stateType);
 }
 
+function onChangeWidthSection(sectionId: string, width: number) {
+	emits('change-width', sectionId, width);
+}
+
+function onChangeHeight(sectionId: string, widgetId: string, height: number) {
+	emits('change-height', sectionId, widgetId, height);
+}
+
+function onChangeMaxCountRow(sectionId: string, widgetId: string, maxCountRow: number) {
+	emits('change-max-count-row', sectionId, widgetId, maxCountRow);
+}
+
+function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
+	emits('change-order-widgets-in-section', sectionId, widgets, trackHeight.value);
+}
+
+const isMobile = useIsMobile();
+
 defineExpose({ trackRef });
 </script>
 
@@ -95,34 +125,29 @@ defineExpose({ trackRef });
 	<div id="slider" :class="classes.root">
 		<div
 			ref="track"
-			:class="classes.viewport"
+			:class="[classes.viewport, { [classes['mobile-viewport']]: isMobile }]"
 		>
-			<div
 
+			<div
 				:class="classes.track"
 			>
-				<template v-for="(s, i) in preparedSlides" :key="s.id">
-					<div
-						:class="classes.section"
-						:style="{
-							...i !== 0 ? { 'margin-left': '10px' } : {},
-							...{ 'margin-right': '10px' }
-						}"
-					>
-						<section-component
-							ref="sectionElement"
-							:section="s"
-							:parent-height="height"
-							:is-visible="s.isVisible"
-							@section-wheel="onSectionWheel"
-							@set-widget-state-type="setWidgetStateType"
-						/>
-					</div>
-					<div :class="classes.sizer" />
-				</template>
+				<section-component
+					v-for="(s, i) in preparedSlides"
+					:key="s.id"
+					ref="sectionElement"
+					:section="s"
+					:has-margin-left="i !== 0"
+					:parent-height="trackHeight"
+					:is-visible="s.isVisible"
+					@section-wheel="onSectionWheel"
+					@set-widget-state-type="setWidgetStateType"
+					@change-width="onChangeWidthSection"
+					@change-height="onChangeHeight"
+					@change-max-count-row="onChangeMaxCountRow"
+				/>
 			</div>
 		</div>
-		<div :class="classes.maskContainer">
+		<div v-if="!isMobile" :class="classes.maskContainer">
 			<div :class="classes.topLeft">
 				<svg
 					width="32"
@@ -173,6 +198,7 @@ defineExpose({ trackRef });
 		</div>
 
 		<section-sidebar
+			v-if="!isMobile"
 			:current-index="props.currentIndex"
 			:slides="props.slides"
 			:slides-wheel="sectionWheelState"
@@ -181,9 +207,10 @@ defineExpose({ trackRef });
 			:translate-x="props.translateX"
 			@prev="emits('prev')"
 			@next="emits('next')"
-			@go-to="emits('goTo', $event)"
-			@update-section="emits('updateSection', $event)"
+			@go-to="goToSection"
 			@scroll-to-widget="scrollToWidget"
+			@change-order-sections="emits('change-order-sections', $event)"
+			@change-order-widgets-in-section="onChangeOrderWidgetsInSection"
 		/>
 	</div>
 </template>
@@ -212,6 +239,13 @@ defineExpose({ trackRef });
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
+
+	&.mobile-viewport {
+		margin-right: 0;
+		padding-top: 0;
+		padding-right: 0;
+		padding-left: 0;
+	}
 }
 
 .viewport::-webkit-scrollbar {
@@ -324,16 +358,6 @@ defineExpose({ trackRef });
 	background: rgb(73 73 80 / 32%);
 	border-radius: 8px;
 	backdrop-filter: blur(4px);
-}
-
-.sizer {
-	width: 3px;
-	height: 32px;
-	margin: auto;
-	background: #d9d9d9;
-	border-radius: 4px;
-	cursor: grab;
-	opacity: 0.3;
 }
 
 @media (max-width: 768px) {

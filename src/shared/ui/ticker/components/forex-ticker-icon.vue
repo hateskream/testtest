@@ -6,7 +6,7 @@ import TickerIcon from './ticker-icon.vue';
 
 interface IProps {
 	src: ITickerMapped['srcImage'];
-	ticker: ITickerMapped['ticker'];
+	ticker: string | string[];
 	size: number;
 	domain?: string;
 }
@@ -35,12 +35,12 @@ defineProps<IProps>();
 			</slot>
 
 			<span
-				v-if="image && ticker"
+				v-if="ticker"
 				:class="[classes.item, index === 0 && classes.first]"
 			>
 				<ticker-icon
-					:src="image"
-					:ticker="ticker"
+					:src="image!"
+					:ticker="ticker?.[index]"
 					:domain="domain ?? src?.[1]!"
 					:size="size"
 				>

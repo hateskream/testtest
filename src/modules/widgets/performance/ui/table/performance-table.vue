@@ -5,6 +5,7 @@ import { ColumnType, type ITableColumn, mapColumn, mapRow } from '@/modules/cell
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { useIsMobile } from '@/shared/composables';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -24,13 +25,6 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-const maxAbsValue = computed(() => {
-	if (props.displayVariant === DisplayVariant.List) {
-		return undefined;
-	}
-	return 20;
-});
-
 
 const genericRows = computed(() => {
 	return props.rows.map(ticker => {
@@ -38,8 +32,6 @@ const genericRows = computed(() => {
 
 		if (props.displayVariant === DisplayVariant.List) {
 			percent.maxAbsValue = undefined;
-		} else {
-			percent.maxAbsValue = maxAbsValue.value;
 		}
 
 
@@ -49,6 +41,8 @@ const genericRows = computed(() => {
 		});
 	});
 });
+
+const isMobile = useIsMobile();
 
 const emit = defineEmits<{
 	(e: 'togglePin', tickerId: string): void;
@@ -72,6 +66,7 @@ const emit = defineEmits<{
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:disable-ticker-click="true"
+				:hide-description="isMobile"
 				@click-on-ticker="goToTickerPage"
 			>
 				<template #row-actions="{tickerId} : {tickerId: string}">

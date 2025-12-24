@@ -14,7 +14,7 @@ import type { PerformanceTableRow } from '../model/row';
 import { generateRows } from '@/shared/mock';
 import { MarketType } from '@/modules/market';
 import type { TickerWithoutState } from '../../price/model';
-import { type DateRange, Stock } from '../model';
+import { Currency, type DateRange, Stock } from '../model';
 
 const IS_USE_MOCK = false;
 
@@ -52,6 +52,7 @@ export interface IGetPerformanceRequest {
 	limit: number;
 	dateRange: DateRange;
 	stockFilter?: Stock;
+	quoteCurrency?: Currency;
 }
 
 export async function getPerformance(args: IGetPerformanceRequest): Promise<IPerformanceData> {
@@ -70,6 +71,7 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 				limit: args.limit,
 				offset: args.offset,
 				stockFilter: args.stockFilter,
+				quoteCurrency: args.quoteCurrency,
 			},
 		});
 
@@ -116,11 +118,17 @@ function prepareResponse({ data }: IGetPerformanceResponse): IPerformanceData {
 
 	const remappedTickers = tickers.map(remapForexSymbol);
 	const remappedPinedTickers = pinedTickers.map(remapForexSymbol);
+	const sortedTickers = remappedTickers.sort((a, b) => {
+		const aValue = (a[ColumnType.ChangePrice24hPercent]?.value) || 0;
+		const bValue = (b[ColumnType.ChangePrice24hPercent]?.value) || 0;
+		return Number(bValue) - Number(aValue);
+	});
 
-	const mappedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedTickers).map(ticker => ({
+	const mappedTickers = mapTickersToTableRows<PerformanceTableRow>(sortedTickers).map(ticker => ({
 		...ticker,
 		tickerId: createTickerIdFromCell(ticker.symbol),
 	}));
+
 
 	const mappedPinedTickers = mapTickersToTableRows<PerformanceTableRow>(remappedPinedTickers).map(ticker => ({
 		...ticker,

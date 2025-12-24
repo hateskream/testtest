@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { useDebounce } from '@vueuse/core';
 
-import { ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
-import { UiSearch } from '@/shared/ui/input';
-import { UiDriver } from '@/shared/ui/driver';
-import { UiPillItem } from '@/shared/ui/pill';
+import { ModalItemCheckbox } from '@/modules/widgets/base';
+import { UiPillItem, UiPillWrapper } from '@/shared/ui/pill';
 import { UiAccordion } from '@/shared/ui/accordion';
 import { MarketType } from '@/modules/market';
 import { type ISegmentData, SegmentFilterIds, segmentFilters } from '@/modules/news/model';
 import { hasInSegment, isAllSelectedInSegment, parseTicker, type SelectedSegmentTickersState } from '@/modules/news';
+import { UiModalContent, UiModalSearch, UiModalWrapper } from '@/shared/ui/modal';
+
+import ModalFilterEmptyState from '@/modules/ticker-selector/ui/components/modal/modal-filter-empty-state.vue';
 
 const props = defineProps<{
 	displayVariant: 'default' | 'new';
@@ -29,6 +30,10 @@ const model = defineModel<SegmentFilterIds>('filter', {
 
 const search = ref('');
 const searchDebounced = useDebounce(search, 300);
+
+const isSearching = computed(() => {
+	return search.value.length > 0;
+});
 
 const filteredSegments = computed(() => {
 	const query = searchDebounced.value.trim().toLowerCase();
@@ -60,8 +65,7 @@ const filteredSegments = computed(() => {
 				isAllSelected,
 				toggleLabel,
 			};
-		})
-		.filter(s => s.tickers.length > 0);
+		});
 });
 
 function getTickersCount(filterId: SegmentFilterIds, segments: ISegmentData[]): number {
@@ -91,23 +95,26 @@ function toggleSegment(segmentId: MarketType, segments: ISegmentData[]): void {
 	}
 }
 
-const searchRef = useTemplateRef('searchEl');
+const searchRef = useTemplateRef('searchDOM');
 
-onMounted(() => {
-	searchRef.value?.focus?.();
-});
+function onContainerClick() {
+	searchRef.value?.searchFocus();
+}
 </script>
 
 <template>
-	<modal-badge-list :class="classes.root" :display-variant>
-		<ui-search
-			ref="searchEl"
+	<ui-modal-wrapper
+		:class="classes.root"
+		:display-variant="displayVariant"
+		@click="onContainerClick"
+	>
+		<ui-modal-search
+			ref="searchDOM"
 			v-model="search"
-			:class="classes.search"
-			placeholder="Start typing the ticker..."
+			autofocus
 		/>
-		<ui-driver />
-		<div :class="classes.controls">
+
+		<ui-pill-wrapper>
 			<ui-pill-item
 				v-for="filter in segmentFilters"
 				:key="filter.id"
@@ -116,12 +123,13 @@ onMounted(() => {
 			>
 				{{filter.label}} · {{getTickersCount(filter.id, props.segments)}}
 			</ui-pill-item>
-		</div>
+		</ui-pill-wrapper>
 
-		<div :class="classes.section">
+		<ui-modal-content>
 			<ui-accordion
 				v-for="segment in filteredSegments"
 				:key="segment.label"
+				:model-value="isSearching ?? undefined"
 				:class="classes.accordion"
 			>
 				<template #left>
@@ -136,7 +144,7 @@ onMounted(() => {
 						{{ segment.toggleLabel }}
 					</button>
 				</template>
-				<template #content>
+				<template #content v-if="segment.tickers.length > 0">
 					<modal-item-checkbox
 						v-for="ticker in segment.tickers"
 						:key="`${ticker.left}+${ticker.right}`"
@@ -146,14 +154,20 @@ onMounted(() => {
 						{{ ticker.left }} · {{ ticker.right }}
 					</modal-item-checkbox>
 				</template>
+
+				<template #content v-else>
+					<modal-filter-empty-state>
+						Nothing found in {{ segment.label }}
+					</modal-filter-empty-state>
+				</template>
 			</ui-accordion>
-		</div>
-	</modal-badge-list>
+		</ui-modal-content>
+	</ui-modal-wrapper>
 </template>
 
 <style module="classes">
 .root {
-	width: 285px;
+	min-width: 312px;
 	scrollbar-width: none;
 }
 

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { Source, sourceToName } from '@/modules/news';
+import { type INewsSource } from '@/modules/news';
 import { UiText } from '@/shared/ui/text';
 
 defineProps<{
-	sources: Source[];
+	sources: INewsSource[];
 }>();
 </script>
 
 <template>
 	<section :class="classes.sources">
-		<h3 :class="classes.subheading">Sources</h3>
+		<h3 class="title-100">Sources</h3>
 		<ul :class="classes.sourceList" class="text-300-r">
 			<li
 				v-for="source in sources"
-				:key="source"
+				:key="source.url"
 				:class="classes.source"
 			>
-				<a :href="source">{{ sourceToName[source] }}</a> /
+				<a :href="source.url">{{ source.site }}</a> /
 			</li>
 		</ul>
 		<ui-text token="text-50-r" :class="classes.note">Summarised by i88</ui-text>

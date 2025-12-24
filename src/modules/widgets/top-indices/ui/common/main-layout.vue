@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
+import { mapColumn, mapRow, type ITableColumn, type TableRow } from '@/modules/cell';
 import { useGoToTickerPage } from '@/modules/chart';
-import { mockIndexData } from './mock-index-data.ts';
 import type { IMeta } from '@/modules/dashboard-group';
 import { WidgetTypedTable } from '@/modules/widgets/widget-table';
 
@@ -22,29 +21,16 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-const genericRows = computed(() => {
-	const source = mockIndexData;
-	const limit = props?.meta?.maxCountRowTable ?? 100;
-
-	if (!Array.isArray(source) || source.length === 0) {
-		return [];
-	}
-
-	const result = [];
-
-	for (let i = 0; i < limit; i++) {
-		result.push(source[i % source.length]);
-	}
-
-	return result;
-});
+const genericRows = computed(() =>
+	props.rows.map((row) => mapRow(row)),
+);
 </script>
 
 <template>
 	<div
 		:class="classes.root"
 		:style="{
-			padding: displayVariant === 'dashboard' ? '12px 10px 0' : '0 16px 18px',
+			padding: displayVariant === 'dashboard' ? '12px 10px' : '0 16px 18px',
 		}"
 	>
 		<div :class="classes.scrollable">
@@ -59,24 +45,23 @@ const genericRows = computed(() => {
 				:sticky-first-column="true"
 				:enable-row-actions="false"
 				:show-header="false"
+				:hide-description="true"
 				@click-on-ticker="goToTickerPage"
 			/>
 		</div>
 	</div>
-
 </template>
 
 <style module="classes">
 .root {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-	height: 100%;
-	overflow: hidden;
 }
-
 
 .scrollable {
 	position: relative;
+	flex-grow: 1;
 	height: 100%;
 	min-height: 0;
 	overflow: auto;

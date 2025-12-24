@@ -10,9 +10,9 @@ import '@fontsource-variable/roboto-flex/full.css';
 import { validateConfig } from '@/shared/lib';
 import { queryClient } from '@/shared/service/query-client';
 import { registerVCalendar } from '@/shared/ui/date-picker/setup';
+import { useStorageVersion } from '@/shared/composables';
 import { router } from './router';
 import { createAppHead } from './head';
-import { useStorageVersion } from '@/shared/composables';
 
 import App from './app.vue';
 
@@ -24,6 +24,7 @@ if (!compareVersions()) {
 	localStorage.clear();
 	updateVersion();
 }
+
 registerComponent('i88-chart');
 
 

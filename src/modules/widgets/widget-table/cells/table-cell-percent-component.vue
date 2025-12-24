@@ -16,12 +16,28 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
+const numericValue = computed<number | null>(() => {
+	const raw = props.data.value;
+
+	if (raw === undefined || raw === null || raw === 'N/A') {
+		return null;
+	}
+
+	const cleaned = String(raw)
+		.replace(/%/g, '')
+		.replace(/^--?/, '-');
+
+	const num = Number(cleaned);
+
+	return Number.isFinite(num) ? num : null;
+});
+
 const isDownTrend = computed(() => {
 	if (props.data.trend) {
 		return props.data.trend === Trend.DOWN;
 	}
 
-	return +(props.data.value ?? 0) < 0;
+	return (numericValue.value ?? 0) < 0;
 });
 
 const isUpTrend = computed(() => {
@@ -29,29 +45,46 @@ const isUpTrend = computed(() => {
 		return props.data.trend === Trend.UP;
 	}
 
-	return +(props.data.value ?? 0) > 0;
+	return (numericValue.value ?? 0) > 0;
 });
 
 const displayValue = computed(() => {
-	if (!props.data.value || props.data.value === 'N/A' || isNaN(+props.data.value)) {
-		return '—';
+	const { value } = numericValue;
+
+	if (value === null) {
+		return {
+			isNull: true,
+			isNegative: false,
+			label: '',
+		};
 	}
 
-	if (props.data.value === '0') {
-		return props.data.value;
+	if (value === 0) {
+		return {
+			isNull: false,
+			isNegative: false,
+			label: '0%',
+		};
 	}
 
-	return `${Math.abs(+props.data.value)}%`;
+	const abs = Math.abs(value);
+
+	return {
+		isNull: false,
+		isNegative: value < 0,
+		label: `${abs}%`,
+	};
 });
 
 const barWidth = computed(() => {
-	const { value, maxAbsValue } = props.data;
-	if (!value || !maxAbsValue || isNaN(+value)) {
+	const { value } = numericValue;
+	const max = props.data.maxAbsValue;
+
+	if (value === null || !max || max <= 0) {
 		return 0;
 	}
 
-	const absValue = Math.abs(+value);
-	return Math.min((absValue / maxAbsValue) * 100, 100);
+	return Math.min((Math.abs(value) / max) * 100, 100);
 });
 </script>
 
@@ -68,8 +101,14 @@ const barWidth = computed(() => {
 			token="text-300-r"
 			:class="[classes.percent, { [classes.percentWithBar]: props.data.maxAbsValue }]"
 		>
-			<span v-if="isDownTrend">−&nbsp;</span>
-			<span>{{ displayValue }}</span>
+			<span>
+				<template v-if="!displayValue.isNull">
+					<template v-if="displayValue.isNegative">&#8722;&#8239;</template>{{ displayValue.label }}
+				</template>
+				<template v-else>
+					&#8722;
+				</template>
+			</span>
 		</ui-text>
 		<div
 			v-if="props.data.maxAbsValue"
@@ -87,6 +126,7 @@ const barWidth = computed(() => {
 	width: 100%;
 	min-height: 24px;
 	gap: 12px;
+	container-type: inline-size;
 }
 
 .leftAlign {
@@ -110,6 +150,12 @@ const barWidth = computed(() => {
 	min-width: 8px;
 	height: 8px;
 	border-radius: 4px;
+}
+
+@container (max-width: 100px) {
+	.bar {
+		display: none;
+	}
 }
 
 .rootBarCell.positive .bar {

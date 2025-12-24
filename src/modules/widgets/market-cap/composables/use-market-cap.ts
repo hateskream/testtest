@@ -11,6 +11,7 @@ import {
 	type StateSchemaType,
 } from '../model';
 import { useQueryMarketCap } from '../queries';
+import { deepCompare } from '@/shared/lib/compare.ts';
 
 interface IOptions {
 	widgetId: string;
@@ -72,13 +73,23 @@ export function useMarketCap({
 		},
 	});
 
-	watch(dataState, newState => {
-		if (newState) {
-			state.value = JSON.parse(JSON.stringify(newState));
+	watch(dataState, (newState, oldState) => {
+		if (!newState) {
+			return;
 		}
+
+		if (deepCompare(newState, oldState)) {
+			return;
+		}
+
+		state.value = JSON.parse(JSON.stringify(newState));
 	}, { immediate: true });
 
-	watch(state, (newState) => {
+	watch(state, (newState, oldState) => {
+		if (deepCompare(newState, oldState)) {
+			return;
+		}
+
 		mutate(newState);
 	}, { deep: true });
 

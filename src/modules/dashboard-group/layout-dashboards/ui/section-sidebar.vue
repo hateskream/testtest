@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { PositionContent, PositionRoot, PositionTeleport, PositionTrigger } from '@/shared/ui/position';
 import { UiPresence } from '@/shared/ui/presence';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { ISection, ISectionWheelPayload } from '../model';
+import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 
 import SectionTocModal from './section-toc-modal.vue';
 
@@ -20,8 +20,9 @@ const emits = defineEmits<{
 	prev: [];
 	next: [];
 	'go-to': [number];
-	'update-section': [ISection[]];
 	'scroll-to-widget': [string, string];
+	'change-order-widgets-in-section': [string, IWidget[]];
+	'change-order-sections': [ISection[]];
 }>();
 
 const sticks = computed(() =>
@@ -77,7 +78,9 @@ async function handleStickClick(stick: typeof sticks.value[number]) {
 	}
 }
 
-
+function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
+	emits('change-order-widgets-in-section', sectionId, widgets);
+}
 </script>
 
 <template>
@@ -152,8 +155,9 @@ async function handleStickClick(stick: typeof sticks.value[number]) {
 							<section-toc-modal
 								:slides="props.slides"
 								@scroll-to-widget="(e1, e2) => emits('scroll-to-widget', e1, e2)"
-								@update-section="emits('update-section', $event)"
 								@go-to="emits('go-to', $event)"
+								@change-order-sections="emits('change-order-sections', $event)"
+								@change-order-widgets-in-section="onChangeOrderWidgetsInSection"
 							/>
 						</position-content>
 					</transition>

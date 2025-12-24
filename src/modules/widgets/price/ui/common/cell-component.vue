@@ -43,7 +43,8 @@ const tickerIcon = computed(() => {
 	if (isForexSymbolCell(symbol)) {
 		return {
 			symbolType: symbol.symbolType,
-			src: [symbol.leftSrcImg, symbol.rightSrcImg] as [string, string],
+			src: symbol.leftSrcImg,
+			rightSrc: symbol.rightSrcImg,
 			size: 28,
 			ticker: `${symbol.leftTicker}/${symbol.rightTicker}`,
 		};

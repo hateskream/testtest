@@ -11,7 +11,7 @@ function createFormatter(precision: number) {
 		return cache.get(precision)!;
 	}
 
-	const formatter = new Intl.NumberFormat('en', {
+	const formatter = new Intl.NumberFormat('en-US', {
 		notation: 'compact',
 		compactDisplay: 'short',
 		maximumFractionDigits: precision,

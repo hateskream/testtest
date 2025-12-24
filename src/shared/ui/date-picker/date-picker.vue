@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, shallowRef, useTemplateRef } from 'vue';
 
-import { DatePickerMaskKey, type DatePickerModel } from './model';
+import { DatePickerMaskKey, type DatePickerModel, type DateView, type Page } from './model';
 import { setupVCalendar } from './setup';
+import type { VDatePickerComponent } from './component';
 import { UiSkeletonGroup } from '@/shared/ui/skeleton';
+
+import DatePickerHeader from './date-picker-header.vue';
 
 const DatePicker = defineAsyncComponent(async () => {
 	const { DatePicker: component } = await setupVCalendar();
@@ -11,7 +14,6 @@ const DatePicker = defineAsyncComponent(async () => {
 });
 
 interface ICalendarDatePickerProps {
-	view: 'monthly' | 'weekly';
 	masks?: Partial<Record<DatePickerMaskKey, string | string[]>>;
 	titlePosition?: 'center' | 'left' | 'right';
 	isRange?: boolean;
@@ -35,15 +37,31 @@ const props = withDefaults(defineProps<ICalendarDatePickerProps>(), {
 });
 
 const modelValue = defineModel<DatePickerModel>({ required: true });
+const modelView = defineModel<DateView>('view', { required: true });
 
-const skeletonCount = computed(() => props.view === 'monthly' ? 7 : 3);
+const skeletonCount = computed(() => modelView.value === 'monthly' ? 7 : 3);
+
+const datePickerRef = useTemplateRef<VDatePickerComponent>('datePicker');
+
+function setToday() {
+	if (datePickerRef.value) {
+		datePickerRef.value.move(new Date(), { transition: 'slide-h' });
+	}
+}
+
+const currentPages = shallowRef<Page[]>([]);
+
+function onUpdatePages(pages: Page[]) {
+	currentPages.value = pages;
+}
 </script>
 
 <template>
 	<suspense>
 		<date-picker
+			ref="datePicker"
 			v-model="modelValue"
-			:view="props.view"
+			v-model:view="modelView"
 			:is-range="props.isRange"
 			:masks="props.masks"
 			:transparent="props.transparent"
@@ -56,11 +74,14 @@ const skeletonCount = computed(() => props.view === 'monthly' ? 7 : 3);
 			:locale="{ id: 'en', firstDayOfWeek: 2, masks: { weekdays: 'WWW' } }"
 			:class="classes.datePicker"
 			color="white"
+			@update:pages="onUpdatePages"
 		>
-			<template #header-left-button>
-				<button>
-					Today
-				</button>
+			<template #header-title>
+				<date-picker-header
+					v-model:view="modelView"
+					:pages="currentPages"
+					@set-today="setToday"
+				/>
 			</template>
 		</date-picker>
 		<template #fallback>
@@ -83,3 +104,4 @@ const skeletonCount = computed(() => props.view === 'monthly' ? 7 : 3);
 	width: 100%;
 }
 </style>
+<style src="./styles.css"></style>

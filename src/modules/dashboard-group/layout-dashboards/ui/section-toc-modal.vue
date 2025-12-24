@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable';
-import { ref, watch } from 'vue';
 
 import type { ISection, IWidget } from '../model';
-import { DashboardModalContent, DashboardModalTitle, DashboardModalWrapper } from '@/shared/ui/modal';
+import {
+	DashboardModalContent,
+	DashboardModalTitle,
+	DashboardModalWrapper,
+} from '@/shared/ui/modal';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
+import { UiPositionTooltip } from '@/shared/ui/position';
+
+import SectionTocModalTooltipContent
+	from '@/modules/dashboard-group/layout-dashboards/ui/section-toc-modal-tooltip-content.vue';
 
 const props = defineProps<{
 	slides: ISection[];
@@ -14,40 +21,20 @@ const props = defineProps<{
 const emits = defineEmits<{
 	'go-to': [number];
 	'scroll-to-widget': [string, string];
-	'update-section': [ISection[]];
+	'change-order-widgets-in-section': [string, IWidget[]];
+	'change-order-sections': [ISection[]];
 }>();
 
-const localSections = ref<ISection[]>([]);
-
-watch(() => props.slides, (v) => {
-	localSections.value = v.map(s => ({
-		...s,
-		widgets: [...s.widgets],
-	}));
-}, { immediate: true, deep: true });
-
 function updateSections(v: ISection[]) {
-	localSections.value = v.map(s => ({
-		...s,
-		widgets: [...s.widgets],
-	}));
-
-	emits('update-section', localSections.value);
+	emits('change-order-sections', v);
 }
 
-function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
+function updateWidgets(sectionId: string, widgets: IWidget[]) {
 	if (!isFeatureEnabled('DRAG_WIDGET_ENABLED')) {
 		return;
 	}
 
-	const next = localSections.value.map((s, i) =>
-		i === sectionIndex
-			? { ...s, widgets: [...widgets] }
-			: s,
-	);
-
-	localSections.value = next;
-	emits('update-section', next);
+	emits('change-order-widgets-in-section', sectionId, widgets);
 }
 </script>
 
@@ -86,17 +73,28 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 								:chosen-class="classes.chosen"
 								:drag-class="classes.drag"
 								:class="classes.widgets"
-								@update:model-value="(v: IWidget[]) => updateWidgets(index, v)"
+								@update:model-value="(v: IWidget[]) => updateWidgets(section.id, v)"
 							>
 								<template #item="{ element: widget }">
-									<ui-text
-										:class="classes.widget"
-										as="div"
-										token="text-200-r"
-										@click.stop="emits('scroll-to-widget', section.id, widget.id)"
-									>
-										{{ widget.name }} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
-									</ui-text>
+									<ui-position-tooltip>
+										<template #default="{close}">
+											<ui-text
+												:class="classes.widget"
+												as="div"
+												token="text-200-r"
+												@click.stop="emits('scroll-to-widget', section.id, widget.id)"
+												@pointerdown.capture="close"
+											>
+												{{
+													widget.name
+												}} <span v-if="widget.stateType">— {{ widget.stateType }}</span>
+											</ui-text>
+										</template>
+
+										<template #content>
+											<section-toc-modal-tooltip-content />
+										</template>
+									</ui-position-tooltip>
 								</template>
 							</draggable>
 						</div>
@@ -123,8 +121,10 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 }
 
 .title {
-	padding-bottom: 8px;
+	margin-bottom: 8px;
+	padding: 0 8px;
 	color: var(--text-500, rgb(255 255 255 / 96%));
+	border-radius: var(--radius-radius-s12-24, 9.2px);
 	cursor: pointer;
 }
 
@@ -164,7 +164,13 @@ function updateWidgets(sectionIndex: number, widgets: IWidget[]) {
 	cursor: pointer;
 }
 
-.widget:hover {
+.widget,
+.title {
+	transition: background-color 0.12s ease-in-out;
+}
+
+.widget:hover,
+.title:hover {
 	background: var(--atom-base-20, rgb(73 73 80 / 80%));
 }
 </style>

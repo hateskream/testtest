@@ -31,8 +31,8 @@ export interface IState {
 }
 
 const defaultStockSettings: ISettingsStock = {
-	stock: Stock.Industry,
-	periodStock: DateRangeStock.Week,
+	stock: Stock.Sector,
+	periodStock: DateRangeStock.Today,
 	displayVariant: DisplayVariant.Bar,
 	isCompactMode: false,
 	pinned: [],

@@ -64,6 +64,7 @@ defineExpose({ focus });
 	font-size: 13px;
 	line-height: normal;
 	text-align: left;
+	color: rgb(255 255 255 / 100%);
 	background: none;
 	cursor: text;
 

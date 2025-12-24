@@ -10,13 +10,13 @@ export const ALL_COLUMNS: ITableColumn[] =
 				groupOrder: 0,
 			},
 			{
-				columnType: ColumnType.ChangePrice24hPercent,
+				columnType: ColumnType.ChangePriceYTDPercent,
 				groupOrder: 0,
 				isShow: true,
 				isDraggable: true,
 			},
 			{
-				columnType: ColumnType.ChangePrice24h,
+				columnType: ColumnType.ChangePriceYTD,
 				isShow: true,
 				isDraggable: true,
 				groupOrder: 0,

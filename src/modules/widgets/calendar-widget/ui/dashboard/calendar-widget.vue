@@ -17,6 +17,7 @@ import {
 } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { formattedLabel, getMarketLabel, isAllSelected } from '@/modules/calendar/utils/toolbar.ts';
+import { PreloaderComponent } from '@/modules/widgets/calendar-widget/ui/common';
 import { UiText } from '@/shared/ui/text';
 
 import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
@@ -73,6 +74,32 @@ useEventBoardScroll({
 	board: eventBoard.value,
 	baseDate: baseDate.value,
 });
+
+function scrollBy(px: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	eventBoardRef.value.scrollBy(px);
+}
+
+function calcMaxCountRowVisible(height: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	return eventBoardRef.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!eventBoardRef.value) {
+		return;
+	}
+
+	return eventBoardRef.value.snapHeightToNearestStep(height);
+}
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -119,7 +146,7 @@ useEventBoardScroll({
 			</widget-filters-scrollable>
 		</template>
 		<template #content>
-			<div v-if="isEventBoardLoading" class="loading" />
+			<preloader-component v-if="isEventBoardLoading" :display-variant="props.meta.activeDisplayVariant" />
 
 			<calendar-event-board
 				v-else-if="eventBoard.length"
@@ -127,6 +154,7 @@ useEventBoardScroll({
 				:event-board="eventBoard"
 				:event-board-favorites="eventBoardFavorites"
 				display-variant="new"
+				:max-count-row-table="props.meta.maxCountRowTable"
 				@toggle-event-board="toggleFavorite"
 			/>
 

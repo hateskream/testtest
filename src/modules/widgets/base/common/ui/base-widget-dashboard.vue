@@ -243,7 +243,7 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 	height: 100%;
 	background: rgb(20 20 21 / 92%);
 	border: 1px solid rgb(73 73 80 / 12%);
-	border-radius: 12px;
+	border-radius: 18px;
 }
 
 .title {

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import Image from '@/assets/images/stock/META.png';
 import BTCImage from '@/assets/images/market/BTC.png';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiImage } from '@/shared/ui/image';
@@ -41,7 +40,7 @@ const time = computed(() => {
 			<div v-if="props.displaySettings.isShowSource" :class="classes.left">
 				<ui-image
 					:class="classes.icon"
-					:src="Image"
+					:src="props.news.srcSourceImage"
 					width="14px"
 					height="14px"
 				/>
@@ -166,6 +165,7 @@ const time = computed(() => {
 	height: 14px;
 	aspect-ratio: 1/1;
 	border-radius: 2px;
+	object-fit: cover;
 }
 
 .right {

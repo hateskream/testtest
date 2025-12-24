@@ -13,7 +13,7 @@ import {
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 import WatchlistTab from './watchlist-tab.vue';
@@ -171,7 +171,7 @@ function selectTicker(tickerId: string) {
 										</span>
 									</template>
 									<template #content>
-										<modal-ticker-selector
+										<modal-ticker-selector-legacy
 											:model-value="selectedTickers"
 											:enable-select-all="false"
 											:display-variant="props.displayVariant"

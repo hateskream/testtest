@@ -40,6 +40,7 @@ export interface IProps<T> {
 	isUpdating?: boolean;
 	isFixedWidth?: boolean;
 	disableTickerClick?: boolean;
+	hideDescription?: boolean;
 }
 
 export interface IEmits<T> {
@@ -90,6 +91,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	isUpdating: false,
 	isFixedWidth: false,
 	disableTickerClick: false,
+	hideDescription: false,
 });
 
 const emit = defineEmits<IEmits<T>>();
@@ -153,7 +155,7 @@ const tickerState = computed(() => {
 		...props.tickerState,
 		isShowLogo: showImage.value,
 		isShowTicker: showDescription.value,
-		isShowDescription: showDescription.value,
+		isShowDescription: props.hideDescription ? false : showDescription.value,
 	};
 });
 

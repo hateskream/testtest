@@ -31,8 +31,14 @@ import {
 	prepareLineDataFromCandlestick,
 	prepareSeries,
 } from '../utils';
-import type { IChartTimelineSegment, IChartUpdateEmitData, SharedChartMouseEvent } from '../model';
-import { IndicatorsChart, TypeChart } from '../model';
+import {
+	formatPrice,
+	type IChartTimelineSegment,
+	type IChartUpdateEmitData,
+	IndicatorsChart,
+	type SharedChartMouseEvent,
+	TypeChart,
+} from '../model';
 import type { IUseExternalTooltipState } from '../composables';
 import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
@@ -42,7 +48,7 @@ import type { ICalendarEvent } from '@/modules/calendar';
 import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';
-import { getDateFormatter } from '@/shared/lib';
+import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -70,6 +76,8 @@ interface IChartProps {
 	data?: ChartData[] | null;
 	lastPriceAnimation?: LastPriceAnimationModeType;
 	priceLabel?: string;
+	locale?: string | null;
+	displayVariant?: 'new' | 'default';
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -89,6 +97,8 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	lastPriceAnimation: LastPriceAnimationMode.Disabled,
 	data: null,
 	priceLabel: 'Current Price',
+	locale: null,
+	displayVariant: 'new',
 });
 
 defineExpose({
@@ -426,7 +436,7 @@ function updateTooltipState(state: ChartClickData | null) {
 
 	tooltipState.rows[0] = {
 		text: 'Price',
-		value: state.value.toString(),
+		value: `$${formatPrice(state.value)}`,
 		color: tooltipRowColor.value,
 	};
 
@@ -440,6 +450,52 @@ function onChartHover(event: SharedChartMouseEvent) {
 		updateTooltipState(event.detail[0]);
 	}
 }
+
+// locale
+
+const localeIsEnabled = isFeatureEnabled('DATE_FORMAT_LOCALIZATION');
+
+const chartLocale = computed(() => {
+	if (props.locale) {
+		return props.locale;
+	}
+
+	if (localeIsEnabled) {
+		return CURRENT_LOCALE;
+	}
+
+	return FALLBACK_LOCALE;
+});
+
+// precision
+
+const minDatasetValue = computed(() => {
+	return preparedChartData.value.reduce((min, point) => {
+		if ('low' in point) {
+			return Math.min(min, point.low);
+		}
+
+		return Math.min(min, point.value);
+	}, 1_000_000);
+});
+
+const chartPrecision = computed(() => {
+	const minValue = minDatasetValue.value;
+
+	if (minValue > 1_000) {
+		return 1;
+	}
+
+	if (minValue > 100) {
+		return 2;
+	}
+
+	if (minValue > 0.00001) {
+		return 6;
+	}
+
+	return 8;
+});
 
 // build chart
 
@@ -516,12 +572,7 @@ onMounted(async () => {
 	updateHistoryChartPropChange();
 });
 
-watch(() => props.colorSchema, value => {
-	if (container.value) {
-		// TODO: Убрать, когда решится проблема с shared/component-library
-		(container.value as (HTMLElement & { colorScheme: string })).colorScheme = value;
-	}
-});
+const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS');
 </script>
 
 <template>
@@ -603,12 +654,14 @@ watch(() => props.colorSchema, value => {
 				:fade-left="props.fadeLeft"
 				:last-price-animation="props.lastPriceAnimation"
 				:price-lines="preparedPriceLines"
+				:locale="chartLocale"
 				entire-text-only-price-scale
+				:precision="chartPrecision"
 				@chart-hover="onChartHover"
 			/>
 		</div>
 		<div
-			v-if="isVisibleEventsTimeline"
+			v-if="props.isVisibleEventsTimeline && timelineEventsCanBeShown"
 			:class="classes.events"
 			:style="{ padding: eventsTimelinePadding }"
 		>
@@ -617,6 +670,7 @@ watch(() => props.colorSchema, value => {
 				:start-time="currentRangeStartTime"
 				:end-time="currentRangeEndTime"
 				:events="props.events"
+				:display-variant="props.displayVariant"
 			/>
 			<chart-timeline
 				:start-time="currentRangeStartTime"

@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, toValue, watch, type MaybeRefOrGetter } from 'vue';
 import { z } from 'zod';
 import { notNullish } from '@vueuse/core';
 
@@ -66,7 +66,7 @@ interface IOptions {
 	widgetId: string;
 	isEphemeral: boolean;
 	defaultStateType: string;
-	maxCountRows?: number;
+	maxCountRows?: MaybeRefOrGetter<number>;
 }
 
 export function usePrice({
@@ -186,8 +186,8 @@ export function usePrice({
 		];
 
 		// TODO: Убрать, когда бек починит limit, будет ненужным
-		if (notNullish(maxCountRows) && sortedTickers.length > maxCountRows) {
-			return sortedTickers.slice(0, maxCountRows);
+		if (notNullish(toValue(maxCountRows)) && sortedTickers.length > (toValue(maxCountRows) || 0)) {
+			return sortedTickers.slice(0, toValue(maxCountRows));
 		}
 
 		return sortedTickers;

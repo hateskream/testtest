@@ -13,7 +13,7 @@ defineProps<{
 
 <template>
 	<section :class="classes.tickers">
-		<h3 :class="classes.subheading">Tickers</h3>
+		<h3 class="title-100">Tickers</h3>
 		<ul :class="[classes.tickerList, displayVariant === 'new' ? classes.new : classes.old]">
 			<li v-for="ticker in stocks" :key="ticker.name">
 				<router-link

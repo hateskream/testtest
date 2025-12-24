@@ -1,4 +1,5 @@
 import { type IActiveLocation, type ISegmentRequest, Score, Sentiment, type SortState, Source } from '@/modules/news';
+import type { DateYYYYMMDD } from '@/modules/calendar';
 
 export interface ITicker {
 	ticker: string;
@@ -18,6 +19,11 @@ export interface INews {
 	srcSourceImage: string;
 }
 
+export interface INewsSource {
+	site: string;
+	url: string;
+}
+
 export interface IGetNewsRequest {
 	offset: number;
 	limit: number;
@@ -25,9 +31,10 @@ export interface IGetNewsRequest {
 	segment: ISegmentRequest;
 	sentiment: Set<Sentiment>;
 	source: Set<Source>;
-	selectedTickers: string[];
 	activeSort: SortState;
 	locations: IActiveLocation[];
+	dateFrom: DateYYYYMMDD;
+	dateTo: DateYYYYMMDD;
 }
 
 export interface IGetNewsDetailsRequest {

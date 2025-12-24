@@ -69,7 +69,10 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 				market: req.market,
 				offset: req.offset,
 				limit: req.limit,
-				...req.filters,
+				rank: req.filters.rank,
+				range: req.filters.range,
+				trend: req.filters.trend,
+				type: req.filters.sector,
 			},
 		});
 

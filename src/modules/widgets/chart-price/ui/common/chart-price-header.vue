@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
+import { formatPrice } from '@/modules/lightweight-charts/model';
 
 interface IChartPriceHeaderProps {
 	showTime?: boolean;
@@ -28,19 +29,7 @@ const preparedTime = computed(() => {
 
 const isUpTrend = computed(() => props.changePercent > 0);
 
-const formattedPrice = computed(() => {
-	if (props.price >= 100_000) {
-		const { row } = prettyNumberWithKey(props.price.toString());
-		return row;
-	}
-
-	if (props.price >= 1_000) {
-		const formatter = new Intl.NumberFormat('en');
-		return formatter.format(props.price).replace(',', ' ');
-	}
-
-	return props.price.toFixed(2);
-});
+const formattedPrice = computed(() => formatPrice(props.price));
 
 const formattedChangeDelta = computed(() => {
 	const { row } = prettyNumberWithKey(Math.abs(props.changeDelta), 2);

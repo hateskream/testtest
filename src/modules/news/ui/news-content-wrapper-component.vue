@@ -67,6 +67,7 @@ const state = defineModel<boolean>('state', {
 
 	.selectedList {
 		visibility: hidden;
+		opacity: 0;
 	}
 }
 </style>

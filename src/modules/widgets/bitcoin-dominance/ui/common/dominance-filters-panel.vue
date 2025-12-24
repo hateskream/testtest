@@ -2,11 +2,13 @@
 import { computed } from 'vue';
 
 import { MarketType } from '@/modules/market';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 import { dateRangeFilterValueToDisplay, DominanceDateRange, type IDisplaySettings } from '../../model';
 import { ModalBadge, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group';
+
+import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 const emit = defineEmits<{
 	reset: [];
@@ -27,6 +29,10 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 	&& props.meta.size.h > 5
 	&& props.meta.size.h < 8,
 );
+
+function onTickerUpdate(newTickers: ITickerItem[]) {
+	selectedTickers.value = newTickers.map(v => v.canonical_ticker_id);
+}
 </script>
 
 <template>
@@ -34,11 +40,11 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 		:display-variant="props.displayVariant"
 		@on-clear-click="emit('reset')"
 	>
-		<modal-ticker-selector-with-badge
-			v-model="selectedTickers"
-			:market-types="[MarketType.Crypto]"
+		<ticker-selector-modal-with-badge
+			:enabled-markets="[MarketType.Crypto]"
 			:display-variant="props.displayVariant"
-			autofocus
+			:selection-mode="SelectionMode.Multiple"
+			@update:selected-tickers="onTickerUpdate"
 		/>
 		<modal-badge v-if="dateRangeMustBeVisible" :display-variant="props.displayVariant">
 			<template #title>

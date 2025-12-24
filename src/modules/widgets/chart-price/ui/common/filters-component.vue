@@ -3,9 +3,12 @@ import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
-import { ModalTickerSelectorWithBadge } from '@/modules/ticker-selector';
+import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { MarketType } from '@/modules/market';
+
+import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 interface IFiltersComponentProps {
 	watchlists: IWatchlistData[];
@@ -39,8 +42,12 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 	}
 }
 
-function updateTicker(newValue: string[]) {
-	[selectedTicker.value] = newValue;
+function updateTicker(newValue: ITickerItem[]) {
+	if (!newValue[0]) {
+		return;
+	}
+
+	selectedTicker.value = newValue[0].canonical_ticker_id;
 }
 
 const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
@@ -52,15 +59,14 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 			:class="classes.filters"
 			@on-clear-click="emit('reset-all-changes')"
 		>
-			<modal-ticker-selector-with-badge
-				:model-value="[selectedTicker]"
-				:enable-selected-info="false"
-				selection-mode="single"
+			<ticker-selector-modal-with-badge
+				:enabled-markets="Object.values(MarketType)"
+				:selection-mode="SelectionMode.Single"
 				:display-variant="props.displayVariant"
 				:show-label="!isDefaultDisplayVariant"
 				autofocus
 				close-on-select
-				@update:model-value="updateTicker"
+				@update:selected-tickers="updateTicker"
 			/>
 			<template v-if="!props.isBig || !isDefaultDisplayVariant">
 				<ui-delimiter v-if="isDefaultDisplayVariant" />

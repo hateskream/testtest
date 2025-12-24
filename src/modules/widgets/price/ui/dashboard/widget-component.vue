@@ -53,7 +53,7 @@ const {
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
-	maxCountRows: props.meta.maxCountRowTable,
+	maxCountRows: () => (props.meta.maxCountRowTable || 50),
 });
 
 watch(activeMarket, (value) => {
@@ -111,7 +111,11 @@ defineExpose({ scrollBy });
 		</template>
 		<template #content>
 			<base-error-component v-if="fetchTickersError" @retry="refetch" />
-			<preloader-component v-else-if="tickersIsLoading || props.meta.isLoading" :class="classes.preloader" />
+			<preloader-component
+				v-else-if="tickersIsLoading || props.meta.isLoading"
+				:class="classes.preloader"
+				:display-variant="props.meta.activeDisplayVariant"
+			/>
 			<view-component
 				v-else
 				ref="refView"

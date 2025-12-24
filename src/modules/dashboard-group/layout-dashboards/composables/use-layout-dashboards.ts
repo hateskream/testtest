@@ -8,8 +8,14 @@ import {
 	type ISection,
 	rehydrateWidget,
 	changeActiveDashboard as changeActiveDashboardModel,
+	changeWidth,
+	changeHeight,
+	changeMaxCountRow,
+	type IWidget,
+	changeOrderWidgets,
 } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
+import { updateById } from '@/shared/lib';
 
 const WidgetPresetSchema = z.object({
 	widgetType: z.string(),
@@ -17,14 +23,16 @@ const WidgetPresetSchema = z.object({
 });
 
 export type WidgetPreset = z.infer<typeof WidgetPresetSchema>;
-
-const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default']);
+const DisplayVariantSchema = z.enum(['chart', 'tile', 'bar', 'list', 'default', 'indicator', 'heatmap', 'table']);
 
 const WidgetSchema = WidgetPresetSchema.extend({
 	id: z.string(),
 	defaultStateType: z.string(),
 	stateType: z.string().optional(),
-	height: z.number(),
+	height: z.union([
+		z.number(),
+		z.literal('Infinity'),
+	]),
 	displayVariant: DisplayVariantSchema,
 	maxCountRow: z.number().optional(),
 });
@@ -64,7 +72,7 @@ export function useDashboardLayout() {
 		useStateMutation,
 	} = createStateQueries<IDashboardGroup, DashboardGroup>({
 		storageKey: '__DASHBOARD_LAYOUT__',
-		isSaveChange: false,
+		isSaveChange: true,
 		getDefaultState: createDashboardGroup,
 		entityId: 'layout-dashboard',
 		schema: DashboardGroupSchema,
@@ -103,36 +111,26 @@ export function useDashboardLayout() {
 			);
 		},
 		set(newSections) {
-			const { dashboards } = state.value;
-
-			const index = dashboards.findIndex(
-				d => d.id === activeDashboardId.value,
+			state.value.dashboards = updateById(
+				state.value.dashboards,
+				activeDashboardId.value,
+				(d) => ({
+					...d,
+					sections: newSections,
+				}),
 			);
-
-			if (index === -1) {
-				return;
-			}
-
-			const updatedDashboards = dashboards.map((d, i) =>
-				i === index
-					? { ...d, sections: newSections }
-					: d,
-			);
-
-			state.value = {
-				...state.value,
-				dashboards: updatedDashboards,
-			};
 		},
 	});
 
 	watch(data, newState => {
 		if (newState) {
-			state.value = { ...newState };
+			state.value.dashboards = [...newState.dashboards];
+			state.value.activeDashboardId = newState.activeDashboardId;
 		}
-	}, { immediate: true });
+	}, { immediate: true, deep: true });
 
 	watch(state, (newState, oldState) => {
+
 		if (JSON.stringify(newState) === JSON.stringify(oldState)) {
 			return;
 		}
@@ -143,6 +141,56 @@ export function useDashboardLayout() {
 
 	function changeActiveDashboard(id: string) {
 		state.value = changeActiveDashboardModel(state.value, id);
+	}
+
+	function changeWidthSection(sectionId: string, width: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => changeWidth(s, width),
+		);
+	}
+
+	function changeHeighWidget(sectionId: string, widgetId: string, height: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => ({
+				...s,
+				widgets: updateById(
+					s.widgets,
+					widgetId,
+					(w) => changeHeight(w, height),
+				),
+			}),
+		);
+	}
+
+	function changeMaxCountRowWidget(sectionId: string, widgetId: string, height: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			(s) => ({
+				...s,
+				widgets: updateById(
+					s.widgets,
+					widgetId,
+					(w) => changeMaxCountRow(w, height),
+				),
+			}),
+		);
+	}
+
+	function changeOrderWidgetsInSection(sectionId: string, widgets: IWidget[], sectionHeight: number) {
+		sections.value = updateById(
+			sections.value,
+			sectionId,
+			s => changeOrderWidgets(s, widgets, sectionHeight),
+		);
+	}
+
+	function changeOrderSections(s: ISection[]) {
+		sections.value = s;
 	}
 
 	function setWidgetStateType(
@@ -163,6 +211,11 @@ export function useDashboardLayout() {
 		sections,
 		changeActiveDashboard,
 		setWidgetStateType,
+		changeWidthSection,
+		changeHeighWidget,
+		changeMaxCountRowWidget,
+		changeOrderWidgetsInSection,
+		changeOrderSections,
 	};
 }
 
@@ -182,7 +235,7 @@ function hydrate(data: IDashboardGroup): DashboardGroup {
 					stateType: widget.stateType,
 					widgetType: widget.widgetType,
 					name: widget.name,
-					height: widget.height,
+					height: widget.height === Infinity ? 'Infinity' : widget.height,
 					maxCountRow: widget.maxCountRow,
 					displayVariant: widget.displayVariant,
 				})),
@@ -208,7 +261,7 @@ function rehydrate(data: DashboardGroup): IDashboardGroup {
 						rehydrateWidget(
 							w.id,
 							w.widgetType,
-							w.height,
+							w.height === 'Infinity' ? Infinity : w.height,
 							w.displayVariant,
 							w.defaultStateType,
 							w.stateType,

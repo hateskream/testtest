@@ -62,7 +62,7 @@ const isNewsPage = computed(
 		<article v-else-if="newsDetails" :class="classes.article">
 			<header :class="classes.header">
 				<div :class="classes.headerMain">
-					<h2 :class="classes.title">
+					<h2 :class="classes.title" class="title-300">
 						{{newsDetails.title}}
 					</h2>
 
@@ -88,9 +88,8 @@ const isNewsPage = computed(
 						/>
 					</div>
 
-					<section v-if="!isNewsPage" :class="classes.redirectPage">
+					<section v-if="!isNewsPage && isFeatureEnabled('NEWS_PAGE_ENABLED')" :class="classes.redirectPage">
 						<router-link
-							v-if="isFeatureEnabled('NEWS_PAGE_ENABLED')"
 							:to="getPathString(newsDetails.id, newsDetails.slug, {memo: true})"
 							:class="classes.link"
 							class="text-200-r"
@@ -130,9 +129,6 @@ const isNewsPage = computed(
 }
 
 .title {
-	font-weight: 340;
-	font-size: var(--font-title-400-size, 24px);
-	line-height: 1.5;
 	color: #ffffff;
 }
 
@@ -173,13 +169,6 @@ const isNewsPage = computed(
 	display: flex;
 	justify-content: space-evenly;
 	width: 100%;
-}
-
-.subheading {
-	font-weight: 410;
-	font-size: 18px;
-	line-height: 1;
-	color: #ffffff;
 }
 
 .link {

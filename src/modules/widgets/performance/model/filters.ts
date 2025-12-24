@@ -37,31 +37,48 @@ export function isDataRangeStock(value: string): value is DateRangeStock {
 	return Object.values(DateRangeStock).includes(value as DateRangeStock);
 }
 
-export const dateToLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
+export const dateToShortLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
 	[DateRangeStock.Today]: 'Today',
 	[DateRangeStock.Yesterday]: 'Yesterday',
 	[DateRangeStock.Week]: 'Week',
+
 	[DateRangeForex.Day]: '1D',
-	[DateRangeForex.Month]: '1M',
 	[DateRangeForex.FiveDays]: '5D',
+	[DateRangeForex.Month]: '1M',
 	[DateRangeForex.SixMonths]: '6M',
 	[DateRangeForex.Year]: '1Y',
 	[DateRangeForex.FiveYears]: '5Y',
 	[DateRangeForex.All]: 'All',
 };
 
-export function getDateLabelByType(isStock: boolean):
-Record<DateRangeStock, string> | Record<DateRangeForex, string> {
-	return Object
-		.fromEntries(
-			Object
-				.entries(dateToLabel)
-				.filter(([k]) => {
-					const res = isDataRangeStock(k);
-					return isStock ? res : !res;
-				})
-				.filter(Boolean),
-		) as Record<DateRangeStock, string> | Record<DateRangeForex, string>;
+export const dateToFullLabel: Readonly<Record<DateRangeStock | DateRangeForex, string>> = {
+	[DateRangeStock.Today]: 'Today',
+	[DateRangeStock.Yesterday]: 'Yesterday',
+	[DateRangeStock.Week]: 'Week',
+
+	[DateRangeForex.Day]: '1 day',
+	[DateRangeForex.FiveDays]: '5 days',
+	[DateRangeForex.Month]: '1 month',
+	[DateRangeForex.SixMonths]: '6 months',
+	[DateRangeForex.Year]: '1 year',
+	[DateRangeForex.FiveYears]: '5 years',
+	[DateRangeForex.All]: 'All time',
+};
+
+export function getDateLabelByType(
+	isStock: boolean,
+	type: 'short' | 'full',
+): Record<DateRangeStock, string> | Record<DateRangeForex, string> {
+	const source = type === 'short'
+		? dateToShortLabel
+		: dateToFullLabel;
+
+	return Object.fromEntries(
+		Object.entries(source).filter(([key]) => {
+			const isStockRange = isDataRangeStock(key);
+			return isStock ? isStockRange : !isStockRange;
+		}),
+	) as Record<DateRangeStock, string> | Record<DateRangeForex, string>;
 }
 
 export const quoteCurrencyFilters = Object.values(Currency).map(c => ({

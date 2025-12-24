@@ -6,8 +6,8 @@ type DateFormatterOptions = Intl.DateTimeFormatOptions & { locale?: string };
 
 type FormatterCacheKey = string;
 
-const CURRENT_LOCALE = navigator.language;
-const FALLBACK_LOCALE = 'en-US';
+export const CURRENT_LOCALE = navigator.language;
+export const FALLBACK_LOCALE = 'en-US';
 
 let localizationIsEnabled: boolean | undefined = undefined;
 
@@ -35,7 +35,7 @@ function buildCacheKey(
 }
 
 export function getDateFormatter(
-	options: DateFormatterOptions,
+	options: DateFormatterOptions = {},
 ): Intl.DateTimeFormat {
 	const { locale = getLocalizationIsEnabled() ? CURRENT_LOCALE : FALLBACK_LOCALE } = options;
 

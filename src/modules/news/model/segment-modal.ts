@@ -36,9 +36,9 @@ export interface ISegmentData {
 }
 
 export interface ISegmentRequest {
-	selectAllFrom: SelectAllFrom[];
-	selectTickers: string[];
-	isAllTickersShow: boolean;
+	selectedTickers: string[];
+	excludedTickers: string[];
+	selectedMarkets: MarketType[];
 }
 
 export const segmentsData: ISegmentData[] = [

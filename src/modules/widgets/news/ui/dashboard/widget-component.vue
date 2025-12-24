@@ -2,24 +2,25 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalBadgeList, ModalItemSwitch } from '@/modules/widgets/base';
 import {
 	type IGetNewsRequest,
+	NewsContentWrapper,
 	NewsFilters,
+	NewsFiltersPanel,
 	type SettingKey,
 	toggleSetting,
 	useNews,
 	useQueryNews,
 } from '@/modules/news';
-import { useNewsDetailsState } from '@/modules/news-details';
-import { NewsFiltersPanel, NewsContentWrapper } from '@/modules/news';
-import { NewsDetailsControls, NewsDetails } from '@/modules/news-details';
-import { ModalBadgeList } from '@/modules/widgets/base';
+import { NewsDetails, NewsDetailsControls, useNewsDetailsState } from '@/modules/news-details';
 
 import PreloaderComponent from '../common/preloader-component.vue';
 
 interface IWidgetExposed {
 	scrollBy: (px: number) => void;
+	calcMaxCountRowVisible: (height: number) => number;
+	snapHeightToNearestStep: (height: number) => number;
 }
 
 interface IWidgetComponentProps {
@@ -41,14 +42,13 @@ const ViewComponent = defineAsyncComponent({
 });
 
 const {
+	selectedMarkets,
+	excludedTickers,
+	selectedTickers,
+
 	resetAllChanges,
-	selectAll,
-	unselectAll,
-	toggleTicker,
-	segments,
 	selectedMarketSegments,
-	selectedSegmentTickers,
-	selectedSegmentRequest,
+	selectedSegmentsRequest,
 	selectedScores,
 	selectedSentiment,
 	selectedSources,
@@ -57,7 +57,6 @@ const {
 	include,
 	activeDateRange,
 	activeLocations,
-	selectedTickers,
 	sortBy,
 	dateRange,
 } = useNews({
@@ -69,14 +68,15 @@ const {
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
-	segment: selectedSegmentRequest.value,
+	segment: selectedSegmentsRequest.value,
 	sentiment: selectedSentiment.value,
 	source: selectedSources.value,
 	locations: activeLocations.value,
 	activeSort: sortBy.value,
-	selectedTickers: selectedTickers.value,
-	limit: 10,
-})));
+	limit: 50,
+	dateTo: dateRange.value.to,
+	dateFrom: dateRange.value.from,
+})), !!props.meta.maxCountRowTable);
 
 const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
 
@@ -94,11 +94,27 @@ function scrollBy(px: number) {
 	viewRef.value.scrollBy(px);
 }
 
-defineExpose({ scrollBy });
+function calcMaxCountRowVisible(height: number) {
+	if (!viewRef.value) {
+		return;
+	}
+
+	return viewRef.value.calcMaxCountRowVisible(height);
+}
+
+function snapHeightToNearestStep(height: number) {
+	if (!viewRef.value) {
+		return;
+	}
+
+	return viewRef.value.snapHeightToNearestStep(height);
+}
 
 function toggleDisplaySettings(settingsKey: SettingKey) {
 	displaySettings.value = toggleSetting(displaySettings.value, settingsKey);
 }
+
+defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 </script>
 
 <template>
@@ -123,18 +139,16 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
 				v-model:date-range="dateRange"
-				:segments="segments"
-				:selected-segments-tickers="selectedSegmentTickers"
+				v-model:selected-markets="selectedMarkets"
+				v-model:selected-tickers="selectedTickers"
+				v-model:excluded-tickers="excludedTickers"
 				display-variant="dashboard"
-				@select-all="selectAll"
-				@unselect-all="unselectAll"
-				@toggle-ticker="toggleTicker"
 				@reset-all-changes="resetAllChanges"
 			/>
 		</template>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
-			<preloader-component v-else-if="isNotData" />
+			<preloader-component v-else-if="isNotData" :display-variant="props.meta.activeDisplayVariant" />
 			<news-content-wrapper v-else-if="news" :state="!!selectedNewsId">
 				<template #default>
 					<view-component
@@ -143,6 +157,7 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 						:news="news"
 						:display-settings="displaySettings"
 						display-variant="dashboard"
+						:max-count-row-tablet="props.meta.maxCountRowTable"
 						@next="fetchNextPage"
 					/>
 				</template>
@@ -203,12 +218,10 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:locations="locations"
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
+				v-model:selected-markets="selectedMarkets"
+				v-model:selected-tickers="selectedTickers"
+				v-model:excluded-tickers="excludedTickers"
 				display-variant="new"
-				:segments="segments"
-				:selected-segment-tickers="selectedSegmentTickers"
-				@select-all="selectAll"
-				@unselect-all="unselectAll"
-				@toggle-ticker="toggleTicker"
 			/>
 		</template>
 
@@ -223,12 +236,10 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					v-model:locations="locations"
 					v-model:include="include"
 					v-model:active-date-range="activeDateRange"
+					v-model:selected-markets="selectedMarkets"
+					v-model:selected-tickers="selectedTickers"
+					v-model:excluded-tickers="excludedTickers"
 					display-variant="new"
-					:segments="segments"
-					:selected-segment-tickers="selectedSegmentTickers"
-					@select-all="selectAll"
-					@unselect-all="unselectAll"
-					@toggle-ticker="toggleTicker"
 				/>
 			</modal-badge-list>
 		</template>

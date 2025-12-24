@@ -1,26 +1,30 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { type CSSProperties, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue';
 import 'chartjs-adapter-date-fns';
 import { Chart } from 'chart.js/auto';
 import { sub } from 'date-fns';
+import { useElementSize } from '@vueuse/core';
 
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { DominanceDateRange } from '@/modules/widgets/bitcoin-dominance/model';
 import type { IChartDominanceDataset } from '../model';
 import { colorToRgba } from '@/shared/lib/color-to-rgba.ts';
+import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 interface IChartDominanceProps {
 	height: CSSProperties['height'];
 	hideAxis?: boolean;
 	range: DominanceDateRange;
 	datasets: IChartDominanceDataset[];
+	locale?: string;
 }
 
 const props = withDefaults(defineProps<IChartDominanceProps>(), {
 	hideAxis: false,
+	locale: CURRENT_LOCALE,
 });
 
 const container = useTemplateRef('container');
@@ -69,6 +73,16 @@ function updateChartDatasets() {
 
 	chart.value.update();
 }
+
+// scales
+
+const { width: wrapperWidth } = useElementSize(useTemplateRef('wrapper'));
+
+const TICK_WIDTH = 70;
+
+const maxTicksCount = computed(() => {
+	return Math.ceil(wrapperWidth.value / TICK_WIDTH);
+});
 
 const rangeToScales = {
 	[DominanceDateRange.Day]: {
@@ -121,7 +135,7 @@ function buildScales() {
 			display: !props.hideAxis,
 			type: 'time',
 			ticks: {
-				maxTicksLimit: 12,
+				maxTicksLimit: maxTicksCount.value,
 				color: 'rgba(154, 154, 157, 1)',
 			},
 			...rangeToScales[props.range],
@@ -152,14 +166,65 @@ function buildScales() {
 	};
 }
 
+watch(maxTicksCount, () => {
+	if (chart.value) {
+		chart.value.options.scales = buildScales();
+
+		chart.value.update();
+	}
+});
+
 watch(() => props.datasets, updateChartDatasets, { deep: true });
+
+// locale
+
+const localeIsEnabled = isFeatureEnabled('DATE_FORMAT_LOCALIZATION');
+
+const chartLocale = computed(() => {
+	if (props.locale) {
+		return props.locale;
+	}
+
+	if (localeIsEnabled) {
+		return CURRENT_LOCALE;
+	}
+
+	return FALLBACK_LOCALE;
+});
+
+watch(chartLocale, value => {
+	if (chart.value && chart.value.options.locale !== value) {
+		chart.value.options.locale = value;
+		chart.value.update();
+	}
+});
+
+// tooltip
 
 const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '%',
 	valuePrefix: '',
 	reversed: true,
+	transformTitle: (title: string[]) => {
+		const formatter = getDateFormatter({
+			month: 'short',
+			day: '2-digit',
+			year: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+			timeZoneName: 'short',
+			locale: chartLocale.value,
+		});
+
+		return title.map(item => {
+			return formatter.format(item).replace('GMT', 'UTC');
+		}).filter((t, key, array) => key === 0 || array[key - 1] !== t);
+	},
 });
+
+// init
 
 function createGradient(context2D: CanvasRenderingContext2D, from: number, to: number, color: string) {
 	const gradient = context2D.createLinearGradient(0, from, 0, to);
@@ -198,9 +263,13 @@ onMounted(() => {
 					enabled: false,
 					position: 'nearest',
 					external: handler,
+					callbacks: {
+						title: context => context.map(ctx => ctx.parsed.x),
+					},
 				},
 			},
 			scales: buildScales(),
+			locale: chartLocale.value,
 		},
 	});
 });
@@ -213,7 +282,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div :class="classes.wrapper">
+	<div ref="wrapper" :class="classes.wrapper">
 		<canvas ref="container" :class="classes.mainChart"></canvas>
 	</div>
 	<teleport to="body">

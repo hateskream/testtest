@@ -1,181 +1,84 @@
 <script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
+import { computed, useTemplateRef } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
-const hoursMap = [
-	{
-		hours: 0,
-		percent: '0',
-	},
-	{
-		hours: 1,
-		percent: '0',
-	},
-	{
-		hours: 3,
-		percent: '0',
-	},
-	{
-		hours: 4,
-		percent: '0',
-	},
-	{
-		hours: 6,
-		percent: '1-20',
-	},
-	{
-		hours: 7,
-		percent: '0',
-	},
-	{
-		hours: 9,
-		percent: '0',
-	},
-	{
-		hours: 11,
-		percent: '20-40',
-	},
-	{
-		hours: 12,
-		percent: '0',
-	},
-	{
-		hours: 13,
-		percent: '0',
-	},
-	{
-		hours: 14,
-		percent: '0',
-	},
-	{
-		hours: 16,
-		percent: '20-40',
-	},
-	{
-		hours: 18,
-		percent: '60-80',
-	},
-	{
-		hours: 20,
-		percent: '80-100',
-	},
-	{
-		hours: 22,
-		percent: '0',
-	},
-	{
-		hours: 24,
-		percent: '0',
-	},
-];
+import type { IHighImpactHourMapDomain } from '../../model';
 
-const colorMap: Record<string, string> = {
-	'0': '#181819',
-	'1-20': '#353536',
-	'20-40': '#5E5E5F',
-	'40-60': '#878787',
-	'60-80': '#B0B0B0',
-	'80-100': '#D9D9D9',
-};
+import ChartBar from './chart-bar.vue';
+
+const BAR_WIDTH = 15;
+const MIN_BAR_GAP = 2;
+
+const emit = defineEmits<{
+	'click-on-bar': [hours: number[]];
+}>();
+
+interface IChartProps {
+	data: IHighImpactHourMapDomain;
+}
+
+const props = defineProps<IChartProps>();
+
+const { width: chartWidth } = useElementSize(useTemplateRef('chart'));
+
+const availableBarCount = computed(() => Math.floor(chartWidth.value / (BAR_WIDTH + MIN_BAR_GAP)));
+
+const hoursPerBar = computed(() => {
+	if (availableBarCount.value === 0) {
+		return 1;
+	}
+
+	return Math.max(1, Math.ceil(props.data.hours.length / availableBarCount.value));
+});
+
+const preparedBars = computed(() => {
+	const segmentsCount = Math.ceil(props.data.hours.length / hoursPerBar.value);
+	const segments = [];
+
+	for (let i = 0; i < segmentsCount; i += 1) {
+		const segment = {
+			id: i,
+			hours: [] as number[],
+			impactLevel: 0,
+			active: false,
+			eventsCount: 0,
+		};
+
+		for (let j = 0; j < hoursPerBar.value; j += 1) {
+			const key = i * hoursPerBar.value + j;
+
+			segment.hours.push(props.data.hours[key].hour);
+			segment.impactLevel += props.data.hours[key].impactLevel;
+			segment.active = segment.active || props.data.hours[key].active;
+			segment.eventsCount += props.data.hours[key].highEventsCount;
+		}
+
+		segments.push(segment);
+	}
+
+	return segments;
+});
 </script>
 
 <template>
-	<div>
-		<div :class="classes.header">
-			<ui-text :class="classes.label" token="text-100-r">next event:</ui-text>
-			<div :class="classes.titleContainer">
-				<div :class="classes.title">
-					<img
-						:class="classes.flag"
-						src="https://flagcdn.com/us.svg"
-						alt="US flag"
-					/>
-					<ui-text token="text-300-r">US Federal Funds Rate</ui-text>
-				</div>
-				<ui-text :class="classes.time" token="text-300-r">in 2 hours</ui-text>
-			</div>
-		</div>
-		<div :class="classes.timeline">
-			<div
-				v-for="el in hoursMap"
-				:key="el.hours"
-				:class="classes.bar"
-				:style="{ backgroundColor: colorMap[el.percent] }"
-			></div>
-		</div>
-		<div :class="classes.hours">
-			<ui-text
-				v-for="el in hoursMap"
-				:key="el.hours"
-				token="text-100-r"
-				align="center"
-			>
-				{{ el.hours < 10 ? '0' + el.hours : el.hours }}
-			</ui-text>
-		</div>
+	<div ref="chart" :class="classes.chart">
+		<chart-bar
+			v-for="bar in preparedBars"
+			:key="bar.id"
+			:impact-level="bar.impactLevel"
+			:hours="bar.hours"
+			:active="bar.active"
+			:events-count="bar.eventsCount"
+			@click="emit('click-on-bar', bar.hours)"
+		/>
 	</div>
 </template>
 
 <style module="classes">
-.header {
+.chart {
 	display: flex;
-	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-between;
 	gap: 4px;
-	margin-bottom: 12px;
-}
-
-.titleContainer {
-	display: flex;
-	justify-content: space-between;
-}
-
-.label {
-	color: rgb(255 255 255 / 62%);
-}
-
-.title {
-	display: flex;
-	align-items: center;
-	color: rgb(255 255 255 / 96%);
-	gap: 6px;
-}
-
-.flag {
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	object-fit: cover;
-	object-position: 25%;
-}
-
-.time {
-	color: rgb(255 255 255 / 96%);
-	text-decoration-line: underline;
-	text-decoration-style: dotted;
-	text-decoration-skip-ink: auto;
-	text-decoration-thickness: auto;
-	text-underline-offset: auto;
-	text-underline-position: from-font;
-	cursor: pointer;
-}
-
-.timeline {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-end;
-	margin-top: 4px;
-	gap: 6px;
-}
-
-.bar {
-	width: 16px;
-	height: 40px;
-	background: #1c1c1c;
-	border-radius: 4px;
-}
-
-.hours {
-	display: flex;
-	justify-content: space-between;
-	color: rgb(255 255 255 / 30%);
 }
 </style>

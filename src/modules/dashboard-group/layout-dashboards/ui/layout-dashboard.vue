@@ -13,7 +13,17 @@ const emits = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-const { sections, tabs, changeActiveDashboard, setWidgetStateType } = useDashboardLayout();
+const {
+	sections,
+	tabs,
+	changeActiveDashboard,
+	setWidgetStateType,
+	changeWidthSection,
+	changeHeighWidget,
+	changeMaxCountRowWidget,
+	changeOrderWidgetsInSection,
+	changeOrderSections,
+} = useDashboardLayout();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
 
@@ -74,11 +84,15 @@ const {
 				:translate-x="translateX"
 				:current-index="currentIndex"
 				:visible-slides-count="visibleSlidesCount"
-				@go-to="goTo"
+				:go-to="goTo"
 				@prev="prev"
 				@next="next"
-				@update-section="sections = $event"
 				@set-widget-state-type="setWidgetStateType"
+				@change-width="changeWidthSection"
+				@change-height="changeHeighWidget"
+				@change-max-count-row="changeMaxCountRowWidget"
+				@change-order-widgets-in-section="changeOrderWidgetsInSection"
+				@change-order-sections="changeOrderSections"
 			/>
 		</div>
 		<pagination-mobile

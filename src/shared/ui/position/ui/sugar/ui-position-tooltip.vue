@@ -19,13 +19,19 @@ withDefaults(defineProps<IPositionProps>(), {
 
 <template>
 	<position-root
-		v-slot="{isOpen}"
+		v-slot="{isOpen, isPinned, open, close}"
 		:open-delay="openDelay"
 		:close-delay="closeDelay"
 		:trigger="trigger"
 	>
 		<position-trigger>
-			<slot name="default" />
+			<slot
+				name="default"
+				:is-open="isOpen"
+				:is-pinned="isPinned"
+				:open="open"
+				:close="close"
+			/>
 		</position-trigger>
 		<position-teleport>
 			<ui-presence :state="isOpen" v-slot="{present}">
@@ -37,7 +43,13 @@ withDefaults(defineProps<IPositionProps>(), {
 						:transform="transform"
 						:strategy="strategy"
 					>
-						<slot name="content" />
+						<slot
+							name="content"
+							:is-open="isOpen"
+							:is-pinned="isPinned"
+							:open="open"
+							:close="close"
+						/>
 					</position-content>
 				</transition>
 			</ui-presence>

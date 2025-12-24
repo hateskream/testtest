@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue';
 import { computed, useCssModule } from 'vue';
 
 interface IUiSkeletonProps {
+	display?: CSSProperties['display'];
 	width?: CSSProperties['width'];
 	height?: CSSProperties['height'];
 	shape?: 'circle' | 'rectangle';
@@ -13,6 +14,7 @@ interface IUiSkeletonProps {
 }
 
 const props = withDefaults(defineProps<IUiSkeletonProps>(), {
+	display: 'inline-block',
 	width: '100%',
 	height: '22px',
 	shape: 'rectangle',
@@ -26,6 +28,7 @@ const classes = useCssModule('classes');
 
 const containerStyle = computed(() => {
 	const baseStyle = {
+		display: props.display,
 		borderRadius: props.shape === 'circle' ? '50%' : props.borderRadius,
 		backgroundColor: 'rgba(255, 255, 255, 0.1)',
 		opacity: props.opacity,
@@ -59,7 +62,6 @@ const animation = computed(() => (props.animation === 'wave' ? classes['skeleton
 <style module="classes">
 .skeleton {
 	position: relative;
-	display: inline-block;
 	overflow: hidden;
 }
 

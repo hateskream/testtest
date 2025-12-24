@@ -19,7 +19,13 @@
 		}
 	],
 	"sources": [
-		"https://investing.com",
-		"https://benzinga.com"
+		{
+			"site": "investing.com",
+			"url": "https://investing.com"
+		},
+		{
+			"site": "benzinga.com",
+			"url": "https://benzinga.com"
+		}
 	]
 }
