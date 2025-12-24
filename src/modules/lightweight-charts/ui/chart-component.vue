@@ -571,6 +571,8 @@ onMounted(async () => {
 
 	updateHistoryChartPropChange();
 });
+
+const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS');
 </script>
 
 <template>
@@ -659,7 +661,7 @@ onMounted(async () => {
 			/>
 		</div>
 		<div
-			v-if="isVisibleEventsTimeline"
+			v-if="props.isVisibleEventsTimeline && timelineEventsCanBeShown"
 			:class="classes.events"
 			:style="{ padding: eventsTimelinePadding }"
 		>

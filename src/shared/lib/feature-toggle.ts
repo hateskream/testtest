@@ -36,6 +36,7 @@ export const ALL_FEATURES = [
 	'RESIZE_WIDTH_SECTIONS',
 
 	'WIDGET_HIGH_IMPACT_HOUR_MAP_CALENDAR_REDIRECT',
+	'WIDGET_CHART_TIMELINE_EVENTS',
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];
