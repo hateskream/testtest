@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 
 const emits = defineEmits<{
 	'click-i88': [];
@@ -18,6 +18,9 @@ function closeToast() {
 function setTab(tab: string) {
 	activeTab.value = tab;
 }
+onMounted(() => {
+	emits('click-i88');
+})
 </script>
 
 <template>

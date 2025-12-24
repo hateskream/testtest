@@ -13,6 +13,7 @@ import { MIN_SECTION_WIDTH } from '../model/section';
 
 import WidgetComponent from './widget-component.vue';
 import HighlighterComponent from './highlighter-component.vue';
+import {useIsMobile} from "@/shared/composables";
 
 const WIDGET_GAP = 6;
 const HEIGHT_TITLE = 50;
@@ -284,6 +285,7 @@ const flashRef = useTemplateRef('flash');
 function triggerFlash() {
 	flashRef.value?.trigger();
 }
+const isMobile = useIsMobile()
 
 defineExpose({
 	scrollToWidget,
@@ -293,7 +295,7 @@ defineExpose({
 
 <template>
 	<div
-		:class="classes.root"
+		:class="[classes.root, { [classes.mobileRoot]: isMobile }]"
 		:style="{
 			...props.hasMarginLeft ? { 'margin-left': '10px' } : {},
 			...{ 'margin-right': '10px' }
@@ -362,6 +364,14 @@ defineExpose({
 	flex-grow: 1;
 	flex-direction: column;
 	align-items: center;
+	&.mobileRoot {
+		.section{
+			padding: 12px 12px 0;
+		}
+		.sectionTitle{
+			padding: 0 0 12px 4px;
+		}
+	}
 }
 
 .section {
@@ -470,9 +480,4 @@ defineExpose({
 	}
 }
 
-@media (max-width: 768px) {
-	.section {
-		padding: 12px 12px 0;
-	}
-}
 </style>

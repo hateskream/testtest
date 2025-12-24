@@ -6,6 +6,7 @@ import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
+import {useIsMobile} from "@/shared/composables";
 
 interface IPreparedSection extends ISection {
 	isVisible: boolean;
@@ -115,6 +116,8 @@ function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
 	emits('change-order-widgets-in-section', sectionId, widgets, trackHeight.value);
 }
 
+const isMobile = useIsMobile();
+
 defineExpose({ trackRef });
 </script>
 
@@ -122,9 +125,10 @@ defineExpose({ trackRef });
 	<div id="slider" :class="classes.root">
 		<div
 			ref="track"
-			:class="classes.viewport"
+			:class="[classes.viewport, { [classes['mobile-viewport']]: isMobile }]"
 		>
-			<div
+
+		<div
 				:class="classes.track"
 			>
 				<section-component
@@ -143,7 +147,7 @@ defineExpose({ trackRef });
 				/>
 			</div>
 		</div>
-		<div :class="classes.maskContainer">
+		<div v-if="!isMobile" :class="classes.maskContainer">
 			<div :class="classes.topLeft">
 				<svg
 					width="32"
@@ -194,6 +198,7 @@ defineExpose({ trackRef });
 		</div>
 
 		<section-sidebar
+			v-if="!isMobile"
 			:current-index="props.currentIndex"
 			:slides="props.slides"
 			:slides-wheel="sectionWheelState"
@@ -234,6 +239,13 @@ defineExpose({ trackRef });
 	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
+	&.mobile-viewport {
+		margin-right: 0;
+		padding-top: 0;
+		padding-right: 0;
+		padding-left: 0;
+	}
+
 }
 
 .viewport::-webkit-scrollbar {
