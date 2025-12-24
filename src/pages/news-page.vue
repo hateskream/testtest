@@ -62,6 +62,8 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 	activeSort: sortBy.value,
 	selectedTickers: selectedTickers.value,
 	limit: 10,
+	dateTo: dateRange.value.to,
+	dateFrom: dateRange.value.from,
 })));
 
 const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);

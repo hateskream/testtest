@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent, BaseErrorComponent, ModalItemSwitch } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent, ModalItemSwitch } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
+	type IGetNewsRequest,
 	NewsContentWrapper,
 	NewsFilters,
 	NewsFiltersPanel,
-	type IGetNewsRequest,
 	type SettingKey,
+	toggleSetting,
 	useNews,
 	useQueryNews,
-	toggleSetting,
 } from '@/modules/news';
 import { NewsDetails, NewsDetailsControls, useNewsDetailsState } from '@/modules/news-details';
 
@@ -69,6 +69,8 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 	activeSort: sortBy.value,
 	selectedTickers: selectedTickers.value,
 	limit: 10,
+	dateTo: dateRange.value.to,
+	dateFrom: dateRange.value.from,
 })));
 
 const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);

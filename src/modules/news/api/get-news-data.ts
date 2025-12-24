@@ -74,6 +74,8 @@ function createQuery({
 	sentiment,
 	selectedTickers,
 	activeSort,
+	dateTo,
+	dateFrom,
 }: IGetNewsRequest): Record<string, string | number> {
 	const query: Record<string, string | number> = {
 		category: 'general',
@@ -95,6 +97,14 @@ function createQuery({
 
 	if (selectedTickers.length) {
 		query.symbol = selectedTickers.join(',');
+	}
+
+	if (dateTo) {
+		query.date_to = (new Date(dateTo)).toJSON();
+	}
+
+	if (dateFrom) {
+		query.date_from = (new Date(dateFrom)).toJSON();
 	}
 
 	// TODO: location, locations, date_from, date_to

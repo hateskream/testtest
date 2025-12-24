@@ -41,6 +41,8 @@ const { data, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	activeSort: sortBy.value,
 	selectedTickers: selectedTickers.value,
 	limit: 10,
+	dateTo: dateRange.value.to,
+	dateFrom: dateRange.value.from,
 })));
 
 const selectedNewsId = ref<string | null>(null);

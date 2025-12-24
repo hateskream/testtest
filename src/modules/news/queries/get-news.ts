@@ -21,6 +21,8 @@ export function useQueryNews(_req: MaybeRefOrGetter<IGetNewsRequest>, isSetMaxRo
 				req.value.activeSort,
 				req.value.locations,
 				req.value.limit,
+				req.value.dateTo,
+				req.value.dateFrom,
 			],
 		],
 		queryFn: ({ pageParam = 0 }) => getNews({ ...req.value, offset: pageParam }),

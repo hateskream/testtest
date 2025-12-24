@@ -2,19 +2,18 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalBadgeList, ModalItemSwitch } from '@/modules/widgets/base';
 import {
 	type IGetNewsRequest,
+	NewsContentWrapper,
 	NewsFilters,
+	NewsFiltersPanel,
 	type SettingKey,
 	toggleSetting,
 	useNews,
 	useQueryNews,
 } from '@/modules/news';
-import { useNewsDetailsState } from '@/modules/news-details';
-import { NewsFiltersPanel, NewsContentWrapper } from '@/modules/news';
-import { NewsDetailsControls, NewsDetails } from '@/modules/news-details';
-import { ModalBadgeList } from '@/modules/widgets/base';
+import { NewsDetails, NewsDetailsControls, useNewsDetailsState } from '@/modules/news-details';
 
 import PreloaderComponent from '../common/preloader-component.vue';
 
@@ -78,6 +77,8 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 	activeSort: sortBy.value,
 	selectedTickers: selectedTickers.value,
 	limit: 50,
+	dateTo: dateRange.value.to,
+	dateFrom: dateRange.value.from,
 })), !!props.meta.maxCountRowTable);
 
 const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
