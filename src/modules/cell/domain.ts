@@ -23,10 +23,13 @@ export enum ColumnType {
 	Price30dChart = 'price30dChart',
 
 	ChangePrice24h = 'changePrice24h',
+	ChangePriceYTD = 'changePriceYTD',
+
 	ChangePrice1hPercent = 'changePrice1hPercent',
 	ChangePrice24hPercent = 'changePrice24hPercent',
 	ChangePrice7dPercent = 'changePrice7dPercent',
 	ChangePrice30dPercent = 'changePrice30dPercent',
+	ChangePriceYTDPercent = 'changePriceYTDPercent',
 
 	Volume24h = 'volume24h',
 	VolumeRel10d = 'volumeRel10d',
@@ -307,6 +310,8 @@ export const columnToCell: Record<ColumnType, CellType> = {
 	[ColumnType.ChangePrice24hPercent]: CellType.Percent,
 	[ColumnType.ChangePrice7dPercent]: CellType.Percent,
 	[ColumnType.ChangePrice30dPercent]: CellType.Percent,
+	[ColumnType.ChangePriceYTD]: CellType.Number,
+	[ColumnType.ChangePriceYTDPercent]: CellType.Percent,
 
 	[ColumnType.Volume24h]: CellType.Number,
 	[ColumnType.Volume24hNorm]: CellType.Number,
@@ -397,6 +402,8 @@ export type ColumnToCell = {
 	[ColumnType.ChangePrice24hPercent]: IPercentCell;
 	[ColumnType.ChangePrice7dPercent]: IPercentCell;
 	[ColumnType.ChangePrice30dPercent]: IPercentCell;
+	[ColumnType.ChangePriceYTD]: INumberCell;
+	[ColumnType.ChangePriceYTDPercent]: IPercentCell;
 
 	[ColumnType.Volume24h]: INumberCell;
 	[ColumnType.Volume24hNorm]: INumberCell;

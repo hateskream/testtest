@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
+import { mapColumn, mapRow, type ITableColumn, type TableRow } from '@/modules/cell';
 import { useGoToTickerPage } from '@/modules/chart';
-import { mockIndexData } from './mock-index-data.ts';
 import type { IMeta } from '@/modules/dashboard-group';
 import { WidgetTypedTable } from '@/modules/widgets/widget-table';
 
@@ -22,22 +21,9 @@ const genericColumns = computed(() =>
 	mapColumn(props.columns),
 );
 
-const genericRows = computed(() => {
-	const source = mockIndexData;
-	const limit = props?.meta?.maxCountRowTable ?? 100;
-
-	if (!Array.isArray(source) || source.length === 0) {
-		return [];
-	}
-
-	const result = [];
-
-	for (let i = 0; i < limit; i++) {
-		result.push(source[i % source.length]);
-	}
-
-	return result;
-});
+const genericRows = computed(() =>
+	props.rows.map((row) => mapRow(row)),
+);
 </script>
 
 <template>

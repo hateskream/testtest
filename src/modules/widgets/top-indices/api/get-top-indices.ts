@@ -56,7 +56,12 @@ export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<I
 			return getMockData(req);
 		}
 
-		const response = await httpService.get<IGetTopIndicesResponse>('/api/v1/top_indices_ytd/data');
+		const response = await httpService.get<IGetTopIndicesResponse>('/api/v1/top_indices_ytd/data', {
+			query: {
+				limit: req.limit,
+				offset: req.offset,
+			},
+		});
 
 		return prepareMarketResponse<TopIndicesTableRow>(response.data);
 	} catch (error) {

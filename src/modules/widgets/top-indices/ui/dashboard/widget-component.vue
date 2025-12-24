@@ -32,7 +32,7 @@ const { data, isLoading, isError, refetch } = useQueryTopIndices(limit);
 
 const rows = computed(() => data?.value?.pages.flatMap(page => page?.tickers).filter(t => !!t) ?? []);
 
-const isNotData = computed(() => (!!rows.value.length && isLoading.value) || props.meta.isLoading);
+const isNotData = computed(() => isLoading.value || props.meta.isLoading);
 </script>
 
 <template>
