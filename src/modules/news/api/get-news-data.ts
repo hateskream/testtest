@@ -70,8 +70,6 @@ export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 function createQuery({
 	offset,
 	limit,
-	score,
-	sentiment,
 	selectedTickers,
 	activeSort,
 	dateTo,
@@ -87,13 +85,13 @@ function createQuery({
 		query.sort = activeSort;
 	}
 
-	if (score.size > 0) {
-		[query.score] = Array.from(score);
-	}
+	// if (score.size > 0) {
+	// 	[query.score] = Array.from(score);
+	// }
 
-	if (sentiment.size > 0) {
-		query.sentiment = Array.from(sentiment)[0].toLowerCase();
-	}
+	// if (sentiment.size > 0) {
+	// 	query.sentiment = Array.from(sentiment)[0].toLowerCase();
+	// }
 
 	if (selectedTickers.length) {
 		query.symbol = selectedTickers.join(',');
