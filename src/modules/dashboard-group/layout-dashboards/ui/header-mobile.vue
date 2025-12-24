@@ -33,7 +33,7 @@ const emits = defineEmits<{
 					{{ tab.name }}
 				</button>
 			</div>
-			<div :class="classes.close">
+			<div v-if="false" :class="classes.close">
 				<ui-icon
 					:id="IconIds.ControlPlus"
 					:width="20"
