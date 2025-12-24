@@ -42,16 +42,6 @@ export function useSlider(opts: {
 		return cardSum + gaps + (isMobile.value ? 0 : PADDING_VIEWPORT);
 	});
 
-	const slideOffsets = computed(() => {
-		const offsets: number[] = [];
-		let acc = 0;
-		for (let i = 0; i < slides.value.length; i += 1) {
-			offsets.push(acc);
-			acc += (slides.value[i] || 0) + gap;
-		}
-		return offsets;
-	});
-
 	const seenSlides = new Set<number>();
 
 	const visibleSlidesCount = computed(() => {
@@ -111,11 +101,7 @@ export function useSlider(opts: {
 			return;
 		}
 
-		let currentX = clamp(x);
-
-		if (isMobile.value) {
-			currentX = nearestIndexFromTranslate(x);
-		}
+		const currentX = clamp(x);
 
 		el.scrollLeft = currentX;
 		translateX.value = currentX;
@@ -129,26 +115,7 @@ export function useSlider(opts: {
 		});
 	}
 
-	function nearestIndexFromTranslate(x: number) {
-		const offsets = slideOffsets.value;
-		if (!offsets.length) {
-			return 0;
-		}
-
-		let best = 0;
-		let bestDist = Math.abs(x - offsets[0]);
-
-		for (let i = 1; i < offsets.length; i += 1) {
-			const d = Math.abs(x - offsets[i]);
-			if (d < bestDist) {
-				bestDist = d;
-				best = i;
-			}
-		}
-		return best;
-	}
-
-	async function snapToIndex(index: number) {
+	function snapToIndex(index: number) {
 		const el = toValue(opts.container);
 
 		if (!el) {
@@ -158,10 +125,17 @@ export function useSlider(opts: {
 		const clamped = Math.max(0, Math.min(slides.value.length - 1, index));
 		currentIndex.value = clamped;
 
-		await smoothScrollTo(el, getSlideOffset(clamped), {
-			duration: 300,
-			axis: 'x',
-		});
+		if (isMobile.value) {
+			const currentX = getSlideOffset(clamped);
+
+			el.scrollLeft = currentX;
+			translateX.value = currentX;
+		} else {
+			smoothScrollTo(el, getSlideOffset(clamped), {
+				duration: 200,
+				axis: 'x',
+			});
+		}
 	}
 
 	function next() {
@@ -176,9 +150,9 @@ export function useSlider(opts: {
 		}
 	}
 
-	async function goTo(index: number) {
+	function goTo(index: number) {
 		if (index >= 0 && index < slides.value.length) {
-			await snapToIndex(index);
+			snapToIndex(index);
 		}
 	}
 
@@ -221,6 +195,35 @@ export function useSlider(opts: {
 	}
 
 
+	function onTouchEnd(e: TouchEvent) {
+		if (!isMobile.value) {
+			return;
+		}
+
+		const endX = e.changedTouches[0].clientX;
+
+		isDragging.value = false;
+
+		swipe(endX);
+	}
+
+	const SWIPE_THRESHOLD = 50;
+
+	function swipe(endX: number) {
+		const dx = endX - startX;
+
+		if (Math.abs(dx) < SWIPE_THRESHOLD) {
+			snapToIndex(currentIndex.value);
+			return;
+		}
+
+		if (dx > 0) {
+			prev();
+		} else {
+			next();
+		}
+	}
+
 	function handleScroll() {
 		const el = toValue(opts.container);
 
@@ -245,14 +248,12 @@ export function useSlider(opts: {
 
 		handleScroll();
 
-		// el.addEventListener('pointerdown', onPointerDown);
 		el.addEventListener('pointerdown', onPointerDown, { passive: false });
-
 		el.addEventListener('pointermove', onPointerMove);
 		el.addEventListener('pointerup', onPointerUp);
 		el.addEventListener('pointercancel', onPointerUp);
+		el.addEventListener('touchend', onTouchEnd);
 		el.addEventListener('scroll', throttledHandleScroll);
-
 
 		onBeforeUnmount(() => {
 			el.removeEventListener('pointerdown', onPointerDown);

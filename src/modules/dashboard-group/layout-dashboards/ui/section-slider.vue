@@ -18,7 +18,7 @@ interface ISectionSliderProps {
 	canPrev: boolean;
 	canNext: boolean;
 	translateX: number;
-	goTo: (index: number) => Promise<void>;
+	goTo: (index: number) => void;
 }
 
 const props = defineProps<ISectionSliderProps>();
@@ -47,8 +47,8 @@ function onSectionWheel(payload: ISectionWheelPayload) {
 	};
 }
 
-async function goToSection(index: number) {
-	await props.goTo(index);
+function goToSection(index: number) {
+	props.goTo(index);
 
 	const section = sectionRefs.value?.[index];
 	section?.triggerFlash();
