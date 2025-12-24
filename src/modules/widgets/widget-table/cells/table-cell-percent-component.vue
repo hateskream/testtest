@@ -126,6 +126,7 @@ const barWidth = computed(() => {
 	width: 100%;
 	min-height: 24px;
 	gap: 12px;
+	container-type: inline-size;
 }
 
 .leftAlign {
@@ -149,6 +150,12 @@ const barWidth = computed(() => {
 	min-width: 8px;
 	height: 8px;
 	border-radius: 4px;
+}
+
+@container (max-width: 100px) {
+	.bar {
+		display: none;
+	}
 }
 
 .rootBarCell.positive .bar {

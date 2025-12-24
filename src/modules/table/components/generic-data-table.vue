@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { computed, nextTick, onMounted, type Ref, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, type Ref, ref, watch } from 'vue';
 
 import { useCustomScrollbar } from '../composables/use-custom-scrollbar.ts';
 import type { IDragDropEvent, IGenericTableColumn, IGenericTableRow, IGenericTableSection, ISortConfig } from '../type';
@@ -70,6 +70,7 @@ const props = withDefaults(defineProps<IProps<T>>(), {
 	canAddSections: false,
 	isUpdating: false,
 	showScrollbarsOnHover: true,
+	isFixedWidth: false,
 	backgroundColor: undefined,
 });
 
@@ -93,9 +94,9 @@ const scrollContainerRef: Ref<HTMLDivElement | null> = ref(null);
 
 // Table sizing refs - declared before functions that use them
 const tableRef = ref<HTMLTableElement | null>(null);
-const columnWidths = ref<string[]|undefined>(undefined);
+const columnWidths = ref<string[] | undefined>(undefined);
 const tableWidth = ref('auto');
-let columnLayout = ref<'percent'|'px'>(props.isFixedWidth?'percent':'px');
+const columnLayout = ref<'percent' | 'px'>(props.isFixedWidth ? 'percent' : 'px');
 
 // Animation control
 const isAnimating = ref(false);
@@ -154,7 +155,7 @@ const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	return getRealBackgroundColor(element.parentElement);
 };
 
-const recalculateColumnWidths = async ()=>{
+const recalculateColumnWidths = async () => {
 	await nextTick();
 	const table = tableRef.value;
 	if (!table) {
@@ -168,27 +169,58 @@ const recalculateColumnWidths = async ()=>{
 	if (headerCells.length === 0) {
 		return;
 	}
-	const widths = headerCells.map(cell =>
-		cell.getBoundingClientRect().width,
-	);
+
+	const measuredWidths = headerCells.map(cell => cell.getBoundingClientRect().width);
 
 	if (!containerRef.value) {
 		return;
 	}
-	const totalWidth = containerRef.value?.getBoundingClientRect().width;
-	const COLUMN_MIN_WIDTH=50;
+	const totalWidth = containerRef.value.getBoundingClientRect().width;
 
-	const { minColWidth } = visibleColumns.value.reduce((acc, col)=>{
-		acc.minColWidth+=col.minWidth||COLUMN_MIN_WIDTH;
+	if (props.isFixedWidth) {
+		columnLayout.value = 'percent';
+		tableWidth.value = '100%';
+
+		const weights = visibleColumns.value.map((col, i) => {
+			const mw = Number(col?.minWidth);
+			if (Number.isFinite(mw) && mw > 0) return mw;
+			const m = measuredWidths[i];
+			return Number.isFinite(m) && m > 0 ? m : 1;
+		});
+
+		const sumWeights = weights.reduce((s, w) => s + w, 0) || 1;
+
+		const percents: number[] = [];
+		let running = 0;
+
+		for (let i = 0; i < weights.length; i++) {
+			if (i === weights.length - 1) {
+				percents.push(Math.max(0, 100 - running));
+				break;
+			}
+			const p = (100 * weights[i]) / sumWeights;
+			const rounded = Math.max(0, Math.round(p * 1000) / 1000);
+			percents.push(rounded);
+			running += rounded;
+		}
+
+		columnWidths.value = percents.map(p => `${p}%`);
+		return;
+	}
+
+	const COLUMN_MIN_WIDTH = 50;
+
+	const { minColWidth } = visibleColumns.value.reduce((acc, col) => {
+		acc.minColWidth += col.minWidth || COLUMN_MIN_WIDTH;
 		return acc;
 	}, {
-		minColWidth:0,
+		minColWidth: 0,
 	});
 
-	if (visibleColumns.value?.length<3) {
+	if (visibleColumns.value?.length < 3) {
 		columnLayout.value = 'percent';
 	}
-	if (minColWidth>totalWidth) {
+	if (minColWidth > totalWidth) {
 		columnLayout.value = 'px';
 	} else {
 		columnLayout.value = 'percent';
@@ -197,49 +229,52 @@ const recalculateColumnWidths = async ()=>{
 	const WIDTH_MULTIPLIER = 1.15;
 	if (columnLayout.value === 'px') {
 		let sum = 0;
-		columnWidths.value = widths.map((w, i) => {
+		columnWidths.value = measuredWidths.map((w, i) => {
 			const col = visibleColumns.value[i];
 			if (!col) {
-				sum+=w;
-				return w+'px';
+				sum += w;
+				return `${w}px`;
 			}
-			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w*WIDTH_MULTIPLIER));
-			sum+=width;
-			return w * WIDTH_MULTIPLIER+'px';
+			const width = Math.min(col.maxWidth || Infinity, Math.max(col.minWidth, w * WIDTH_MULTIPLIER));
+			sum += width;
+			return `${width}px`;
 		});
-		tableWidth.value = sum+'px';
+		tableWidth.value = `${sum}px`;
 	} else {
 		tableWidth.value = '100%';
-		const columnWidthSum = widths.reduce((sum, w, i) => {
+
+		const columnWidthSum = measuredWidths.reduce((sum, w, i) => {
 			const col = visibleColumns.value[i];
 			if (!col) {
-				return sum+w;
+				return sum + w;
 			}
-			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w));
-			return sum+width;
+			const width = Math.min(col.maxWidth || Infinity, Math.max(col.minWidth, w));
+			return sum + width;
 		}, 0);
-		let widthRemaining = Math.max(0, totalWidth-columnWidthSum);
-		columnWidths.value = widths.map((w, i) => {
+
+		const widthRemaining = Math.max(0, totalWidth - columnWidthSum);
+
+		columnWidths.value = measuredWidths.map((w, i) => {
 			const col = visibleColumns.value[i];
-			const width = Math.min(col.maxWidth||Infinity, Math.max(col.minWidth, w));
-			if (i===0) {
-				return 100*(width+widthRemaining)/totalWidth+'%';
+			const width = Math.min(col.maxWidth || Infinity, Math.max(col.minWidth, w));
+			if (i === 0) {
+				return `${(100 * (width + widthRemaining)) / totalWidth}%`;
 			}
-			return 100*width/totalWidth+'%';
+			return `${(100 * width) / totalWidth}%`;
 		});
 	}
 };
 
-const handleColumnResize = (i, width)=>{
-	if (columnLayout.value!=='px') {
+const handleColumnResize = (i, width) => {
+	if (columnLayout.value !== 'px') {
 		return;
 	}
-	const maxWidth = visibleColumns.value?.[i]?.maxWidth||500;
-	const minWidth = visibleColumns.value?.[i]?.minWidth||0;
+	const maxWidth = visibleColumns.value?.[i]?.maxWidth || 500;
+	const minWidth = visibleColumns.value?.[i]?.minWidth || 0;
 	const oldWidth = parseFloat(columnWidths.value[i]);
 	const newWidth = Math.min(maxWidth, Math.max(minWidth, width));
-	columnWidths.value[i] = newWidth+'px';
-	tableWidth.value = (parseFloat(tableWidth.value) + newWidth - oldWidth)+'px';
+	columnWidths.value[i] = `${newWidth}px`;
+	tableWidth.value = `${parseFloat(tableWidth.value) + newWidth - oldWidth}px`;
 };
 
 // Event handlers
@@ -385,21 +420,28 @@ const handleContainerMouseLeave = () => {
 // Watchers
 watch(() => props.columns, (newColumns) => {
 	localColumns.value = [...newColumns];
+	recalculateColumnWidths();
 }, { deep: true });
 
 watch(() => props.sections, (newSections) => {
 	localSections.value = [...newSections];
+	recalculateColumnWidths();
 }, { deep: true });
 
 watch(() => props.rows, (newUnsortedRows) => {
 	localUnsortedRows.value = [...newUnsortedRows];
+	recalculateColumnWidths();
 }, { deep: true });
 
 watch(() => props.sortConfig, (newSortConfig) => {
 	localSortConfig.value = { ...newSortConfig };
+	recalculateColumnWidths();
 }, { deep: true });
 
-// Watch for backgroundColor prop changes
+watch(() => props.isFixedWidth, () => {
+	recalculateColumnWidths();
+});
+
 watch(() => props.backgroundColor, (newColor) => {
 	if (newColor) {
 		tableBackgroundColor.value = newColor;
@@ -415,17 +457,40 @@ watch(() => props.isUpdating, (newValue) => {
 	}
 }, { immediate: true });
 
+let resizeObserver: ResizeObserver | null = null;
+let onWinResize: (() => void) | null = null;
+
 // Lifecycle hooks
-onMounted( () => {
-	// If backgroundColor prop is provided, use it. Otherwise, compute from parent element
+onMounted(() => {
 	if (props.backgroundColor) {
 		tableBackgroundColor.value = props.backgroundColor;
 	} else if (containerRef.value) {
 		tableBackgroundColor.value = getRealBackgroundColor(containerRef.value.parentElement);
 	}
+
 	recalculateColumnWidths();
+
+	if (containerRef.value && 'ResizeObserver' in window) {
+		resizeObserver = new ResizeObserver(() => {
+			recalculateColumnWidths();
+		});
+		resizeObserver.observe(containerRef.value);
+	}
+
+	onWinResize = () => recalculateColumnWidths();
+	window.addEventListener('resize', onWinResize, { passive: true });
 });
 
+onUnmounted(() => {
+	if (resizeObserver) {
+		resizeObserver.disconnect();
+		resizeObserver = null;
+	}
+	if (onWinResize) {
+		window.removeEventListener('resize', onWinResize);
+		onWinResize = null;
+	}
+});
 </script>
 
 <template>
@@ -646,7 +711,8 @@ onMounted( () => {
 .scrollContent {
 	width: 100%;
 	height: 100%;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .loadingIndicatorContainer {
@@ -681,7 +747,7 @@ onMounted( () => {
 }
 
 .dataTable {
-	width: auto;
+	width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: var(--table-bg-color);

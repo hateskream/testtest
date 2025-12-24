@@ -6,10 +6,11 @@ import {
 	type PercentDto,
 	type LabelDto,
 	ColumnType,
-	prepareMarketResponse,
 	type TableRowDto,
 	SymbolType,
 	type ColumnWithoutSymbol,
+	mapTickersToTableRows,
+	createTickerIdFromCell,
 } from '@/modules/cell';
 import type { TopIndicesTableRow } from '../model';
 import { generateRows } from '@/shared/mock';
@@ -38,6 +39,7 @@ interface IData {
 	tickers: TickerDto[];
 	pagination: IPagination;
 }
+
 interface IGetTopIndicesResponse {
 	data: IData;
 }
@@ -63,11 +65,28 @@ export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<I
 			},
 		});
 
-		return prepareMarketResponse<TopIndicesTableRow>(response.data);
+		return prepareResponse(response.data);
 	} catch (error) {
 		logger.error('Failed to get top indices', error as Error);
 		throw error;
 	}
+}
+
+function prepareResponse(data: IData): IPreparedResponse {
+	const tickers = data?.tickers ?? [];
+	const pagination = data?.pagination ?? { total: 0, offset: 0, limit: 0 };
+
+	const mappedTickers = mapTickersToTableRows<TopIndicesTableRow>(tickers as unknown as TableRowDto[]).map(
+		ticker => ({
+			...ticker,
+			tickerId: createTickerIdFromCell(ticker.symbol),
+		}),
+	);
+
+	return {
+		tickers: mappedTickers,
+		pagination,
+	};
 }
 
 const columnTypes: ColumnWithoutSymbol[] = [
