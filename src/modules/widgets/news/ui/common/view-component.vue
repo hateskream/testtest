@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import {
-	type IDisplaySettings,
-	type INews,
-	NewsListComponent,
-} from '@/modules/news';
+import { type IDisplaySettings, type INews, NewsListComponent } from '@/modules/news';
+import { isFeatureEnabled } from '@/shared/lib';
 
 interface IViewNewsComponentProps {
 	news: INews[];
@@ -19,6 +16,14 @@ const props = defineProps<IViewNewsComponentProps>();
 const selectedNewsId = defineModel<string | null>('newsId', {
 	required: true,
 });
+
+const newsCanBeSelected = isFeatureEnabled('WIDGET_NEWS_SELECT_NEWS_ITEM');
+
+function selectNews(element: { id: string; slug: string }) {
+	if (newsCanBeSelected) {
+		selectedNewsId.value = element.id;
+	}
+}
 
 const newsRef = ref<typeof NewsListComponent | null>(null);
 
@@ -57,6 +62,6 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		:display-settings="props.displaySettings"
 		:display-variant="props.displayVariant"
 		:max-count-row-tablet="props.maxCountRowTablet"
-		@select-news="selectedNewsId = $event.id"
+		@select-news="selectNews"
 	/>
 </template>
