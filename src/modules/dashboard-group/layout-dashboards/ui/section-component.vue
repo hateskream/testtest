@@ -384,6 +384,15 @@ defineExpose({
 	opacity: 0.3;
 }
 
+.sizer:active {
+	cursor: grabbing;
+}
+
+.sizer:hover {
+	background: #ffffff;
+	opacity: 1;
+}
+
 .sectionTitle {
 	padding: 12px 0;
 	color: #ffffff;

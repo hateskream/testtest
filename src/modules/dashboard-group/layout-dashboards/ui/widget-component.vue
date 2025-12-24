@@ -262,9 +262,14 @@ defineExpose({ triggerFlash, scrollBy });
 		</div>
 		<div
 			v-if="isFiniteWidget"
-			ref="sizer"
-			:class="classes.sizer"
-		/>
+			:class="classes.sizerContainer"
+		>
+			<div
+				ref="sizer"
+				:class="classes.sizer"
+			/>
+		</div>
+
 	</div>
 </template>
 
@@ -278,17 +283,39 @@ defineExpose({ triggerFlash, scrollBy });
 
 .widget {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-	height: 100%;
+}
+
+.sizerContainer {
+	display: flex;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.2s ease-out;
+	pointer-events: auto;
+}
+
+.sizerContainer:hover {
+	opacity: 1;
 }
 
 .sizer {
 	width: 32px;
 	height: 4px;
-	margin: 1px auto;
+	margin: 1px;
 	background: #d9d9d9;
 	border-radius: 4px;
 	cursor: grab;
 	opacity: 0.3;
+	transition: opacity 0.2s ease-out, background 0.2s ease-out;
+}
+
+.sizer:active {
+	cursor: grabbing;
+}
+
+.sizer:hover {
+	background: #ffffff;
+	opacity: 1;
 }
 </style>
