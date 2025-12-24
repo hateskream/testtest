@@ -31,7 +31,6 @@ export interface IGetNewsRequest {
 	segment: ISegmentRequest;
 	sentiment: Set<Sentiment>;
 	source: Set<Source>;
-	selectedTickers: string[];
 	activeSort: SortState;
 	locations: IActiveLocation[];
 	dateFrom: DateYYYYMMDD;

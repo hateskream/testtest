@@ -42,14 +42,13 @@ const ViewComponent = defineAsyncComponent({
 });
 
 const {
+	selectedMarkets,
+	excludedTickers,
+	selectedTickers,
+
 	resetAllChanges,
-	selectAll,
-	unselectAll,
-	toggleTicker,
-	segments,
 	selectedMarketSegments,
-	selectedSegmentTickers,
-	selectedSegmentRequest,
+	selectedSegmentsRequest,
 	selectedScores,
 	selectedSentiment,
 	selectedSources,
@@ -58,7 +57,6 @@ const {
 	include,
 	activeDateRange,
 	activeLocations,
-	selectedTickers,
 	sortBy,
 	dateRange,
 } = useNews({
@@ -70,12 +68,11 @@ const {
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
-	segment: selectedSegmentRequest.value,
+	segment: selectedSegmentsRequest.value,
 	sentiment: selectedSentiment.value,
 	source: selectedSources.value,
 	locations: activeLocations.value,
 	activeSort: sortBy.value,
-	selectedTickers: selectedTickers.value,
 	limit: 50,
 	dateTo: dateRange.value.to,
 	dateFrom: dateRange.value.from,
@@ -142,12 +139,10 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
 				v-model:date-range="dateRange"
-				:segments="segments"
-				:selected-segments-tickers="selectedSegmentTickers"
+				v-model:selected-markets="selectedMarkets"
+				v-model:selected-tickers="selectedTickers"
+				v-model:excluded-tickers="excludedTickers"
 				display-variant="dashboard"
-				@select-all="selectAll"
-				@unselect-all="unselectAll"
-				@toggle-ticker="toggleTicker"
 				@reset-all-changes="resetAllChanges"
 			/>
 		</template>
@@ -223,12 +218,10 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 				v-model:locations="locations"
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
+				v-model:selected-markets="selectedMarkets"
+				v-model:selected-tickers="selectedTickers"
+				v-model:excluded-tickers="excludedTickers"
 				display-variant="new"
-				:segments="segments"
-				:selected-segment-tickers="selectedSegmentTickers"
-				@select-all="selectAll"
-				@unselect-all="unselectAll"
-				@toggle-ticker="toggleTicker"
 			/>
 		</template>
 
@@ -243,12 +236,10 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 					v-model:locations="locations"
 					v-model:include="include"
 					v-model:active-date-range="activeDateRange"
+					v-model:selected-markets="selectedMarkets"
+					v-model:selected-tickers="selectedTickers"
+					v-model:excluded-tickers="excludedTickers"
 					display-variant="new"
-					:segments="segments"
-					:selected-segment-tickers="selectedSegmentTickers"
-					@select-all="selectAll"
-					@unselect-all="unselectAll"
-					@toggle-ticker="toggleTicker"
 				/>
 			</modal-badge-list>
 		</template>

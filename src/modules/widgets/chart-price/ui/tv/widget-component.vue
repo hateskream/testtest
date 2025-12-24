@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
 
@@ -95,7 +95,7 @@ function updateTicker(newValue: string[]) {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector
+					<modal-ticker-selector-legacy
 						:model-value="[selectedTicker]"
 						:enable-selected-info="false"
 						:enable-select-all="false"

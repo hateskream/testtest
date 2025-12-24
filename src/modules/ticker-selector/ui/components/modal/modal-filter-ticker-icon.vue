@@ -16,7 +16,8 @@ defineProps<IProps>();
 
 <template>
 	<universal-ticker-icon
-		:src="<[string, string]>srcImage"
+		:src="srcImage?.[0] ?? undefined"
+		:right-src="srcImage?.[1] ?? undefined"
 		:display-variant="displayVariant"
 		:size="size"
 		:padding="padding"

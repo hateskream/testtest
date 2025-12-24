@@ -3,7 +3,7 @@ import { computed, defineAsyncComponent, watch } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
 import { getMappedRow, isCryptoTicker, isForexTicker } from '@/modules/ticker-selector/model';
@@ -135,7 +135,7 @@ watch(widgetLabel, (label) => {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector
+					<modal-ticker-selector-legacy
 						:model-value="[selectedTicker]"
 						:enable-selected-info="false"
 						:enable-select-all="false"

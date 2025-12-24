@@ -11,6 +11,7 @@ import {
 	Source,
 } from '@/modules/news';
 import type { IDateRange } from '@/shared/ui/calendar';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 import TvNewsFiltersPanelComponent from './tv/tv-news-filters-panel-component.vue';
 import DashboardNewsFiltersPanelComponent from './dashboard/dashboard-news-filters-panel-component.vue';
@@ -25,9 +26,6 @@ const props = withDefaults(defineProps<{
 });
 
 const emits = defineEmits<{
-	selectAll: [id: MarketType];
-	unselectAll: [id: MarketType];
-	toggleTicker: [id: MarketType, tickerId: string];
 	resetAllChanges: [];
 }>();
 
@@ -41,6 +39,16 @@ const selectedSources = defineModel<Set<Source>>('selectedSources', { required: 
 const include = defineModel<Set<Include>>('include', { required: true });
 const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
 const dateRange = defineModel<IDateRange>('dateRange', { required: true });
+
+const selectedMarkets = defineModel<MarketType[]>('selectedMarkets', {
+	required: true,
+});
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', {
+	required: true,
+});
+const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
+	required: true,
+});
 </script>
 
 <template>
@@ -55,12 +63,12 @@ const dateRange = defineModel<IDateRange>('dateRange', { required: true });
 		v-model:include="include"
 		v-model:active-date-range="activeDateRange"
 		v-model:date-range="dateRange"
+		v-model:selected-markets="selectedMarkets"
+		v-model:selected-tickers="selectedTickers"
+		v-model:excluded-tickers="excludedTickers"
 		:display-variant="props.displayVariant"
 		:segments="props.segments"
 		:selected-segments-tickers="props.selectedSegmentsTickers"
-		@select-all="emits('selectAll', $event)"
-		@unselect-all="emits('unselectAll', $event)"
-		@toggle-ticker="(v1: MarketType, v2: string) => emits('toggleTicker', v1, v2)"
 	/>
 	<dashboard-news-filters-panel-component
 		v-else
@@ -73,12 +81,12 @@ const dateRange = defineModel<IDateRange>('dateRange', { required: true });
 		v-model:include="include"
 		v-model:active-date-range="activeDateRange"
 		v-model:date-range="dateRange"
+		v-model:selected-markets="selectedMarkets"
+		v-model:selected-tickers="selectedTickers"
+		v-model:excluded-tickers="excludedTickers"
 		:display-variant="props.displayVariant"
 		:segments="props.segments"
 		:selected-segments-tickers="props.selectedSegmentsTickers"
-		@select-all="emits('selectAll', $event)"
-		@unselect-all="emits('unselectAll', $event)"
-		@toggle-ticker="(v1: MarketType, v2: string) => emits('toggleTicker', v1, v2)"
 		@reset-all-changes="emits('resetAllChanges')"
 	/>
 </template>

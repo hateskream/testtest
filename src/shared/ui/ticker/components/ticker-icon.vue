@@ -11,7 +11,7 @@ import TickerIconGlowEffect from './ui/ticker-icon-glow-effect.vue';
 import TickerIconLoader from './ui/ticker-icon-loader.vue';
 
 interface ITickerIconProps {
-	src: string;
+	src?: string;
 	ticker: string;
 	size?: number;
 }
@@ -19,7 +19,10 @@ interface ITickerIconProps {
 const isImageLoaded = ref(false);
 const isError = ref(false);
 
-const props = defineProps<ITickerIconProps>();
+const props = withDefaults(defineProps<ITickerIconProps>(), {
+	size: 16,
+	src: '',
+});
 
 const isIconId = computed(() => {
 	return Object.values(IconIds).includes(props.src as IconIds);

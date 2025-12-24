@@ -62,7 +62,7 @@ export interface ITickerEmits {
 
 export const ACTIVE_TICKER_LIST_COUNT_SHOW = 2;
 
-export const SymbolToName: Record<SymbolType, string> = {
+export const SymbolToName = {
 	[SymbolType.Index]: 'Index',
 	[SymbolType.Commodity]: 'Commodity',
 	[SymbolType.Stock]: 'Stock',
@@ -71,7 +71,16 @@ export const SymbolToName: Record<SymbolType, string> = {
 	[SymbolType.PlaneText]: 'Text',
 };
 
-export const MarketToSymbol: Record<MarketType, SymbolType> = {
+export const SymbolToMarket = {
+	[SymbolType.Crypto]: MarketType.Crypto,
+	[SymbolType.Stock]: MarketType.Stock,
+	[SymbolType.Forex]: MarketType.Forex,
+	[SymbolType.Commodity]: MarketType.Commodities,
+	[SymbolType.Index]: MarketType.Indices,
+	[SymbolType.PlaneText]: null,
+};
+
+export const MarketToSymbol = {
 	[MarketType.Crypto]: SymbolType.Crypto,
 	[MarketType.Stock]: SymbolType.Stock,
 	[MarketType.Forex]: SymbolType.Forex,

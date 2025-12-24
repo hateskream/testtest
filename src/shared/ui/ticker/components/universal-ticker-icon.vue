@@ -1,24 +1,28 @@
-<script setup lang="ts" generic="T extends SymbolType">
+<script setup lang="ts" generic="T extends SymbolType | MarketType">
 import { SymbolType } from '@/modules/cell';
+import { MarketType } from '@/modules/market';
 
 import TickerIcon from './ticker-icon.vue';
 import ForexTickerIcon from './forex-ticker-icon.vue';
 
 const props = defineProps<{
 	symbolType: T;
-
-	src: string | string[];
 	size: number;
+
+	src?: string;
+	rightSrc?: string;
+
 	ticker: string;
+	rightTicker?: string;
 }>();
 </script>
 
 <template>
 	<forex-ticker-icon
-		v-if="props.symbolType === SymbolType.Forex"
+		v-if="props.symbolType === SymbolType.Forex || props.symbolType === MarketType.Forex"
 		:ticker="ticker"
 		:size="size"
-		:src="<[string, string]>src"
+		:src="[src, rightSrc]"
 	>
 		<template #glow v-if="$slots['forex-first-item-glow']">
 			<slot name="forex-first-item-glow" />
@@ -30,8 +34,8 @@ const props = defineProps<{
 
 	<ticker-icon
 		v-else
-		:src="<string>src"
-		:ticker="ticker"
+		:src="src"
+		:ticker="ticker?.[0]"
 		:size="size"
 	>
 		<template #glow v-if="$slots.glow">

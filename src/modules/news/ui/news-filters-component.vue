@@ -13,8 +13,6 @@ import {
 } from '@/modules/widgets/base';
 import {
 	type ILocation,
-	type ISegmentData,
-	type SelectedSegmentTickersState,
 	type SortState,
 	type Source,
 	includeToName,
@@ -24,25 +22,31 @@ import {
 	Include,
 	ActiveDateRange,
 } from '../model';
-import { type MarketType } from '@/modules/market';
-import { getSegmentsTitleStr, getSelectedCountryNames, NewsSegmentModal } from '@/modules/news';
+import { MarketType } from '@/modules/market';
+import { getSelectedCountryNames } from '@/modules/news';
 import { formatWithCount } from '@/shared/lib';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
+import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { UiText } from '@/shared/ui/text';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 import SortbyModalInner from '@/modules/news/ui/modal/sortby-modal-inner.vue';
+import TickerSelectorModal from '@/modules/ticker-selector/new/ticker-selector-modal.vue';
+import ModalBadgePreview from '@/modules/ticker-selector/new/components/badge/modal-badge-preview.vue';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
-	segments: ISegmentData[];
-	selectedSegmentTickers: SelectedSegmentTickersState;
 }>();
 
-const emits = defineEmits<{
-	selectAll: [id: MarketType];
-	unselectAll: [id: MarketType];
-	toggleTicker: [id: MarketType, tickerId: string];
-}>();
+const selectedMarkets = defineModel<MarketType[]>('selectedMarkets', {
+	required: true,
+});
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', {
+	required: true,
+});
+const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
+	required: true,
+});
 
 // const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
 // const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
@@ -52,10 +56,6 @@ const sortBy = defineModel<SortState>('sortBy', { required: true });
 const locations = defineModel<ILocation[]>('locations', { required: true });
 const include = defineModel<Set<Include>>('include', { required: true });
 const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
-
-const tickersLabel = computed(() => {
-	return getSegmentsTitleStr(props.segments, props.selectedSegmentTickers, 1);
-});
 
 const locationLabel = computed(() => {
 	const names = getSelectedCountryNames(locations.value);
@@ -80,9 +80,16 @@ function toggleSource(source: Source) {
 	selectedSources.value = toggleFilter(selectedSources.value, source);
 }
 
-
 function toggleInclude(value: Include) {
 	include.value = toggleFilter(include.value, value);
+}
+
+function onTickerSelect(tickers: ITickerItem[]) {
+	selectedTickers.value = tickers;
+}
+
+function onExcludeTickers(tickers: ITickerItem[]) {
+	excludedTickers.value = tickers;
 }
 </script>
 
@@ -91,8 +98,18 @@ function toggleInclude(value: Include) {
 		<subposition-root trigger="hover" v-slot="{isOpen}">
 			<subposition-trigger>
 				<modal-item-interaction>
-					<span>Tickers
-						<span v-if="tickersLabel" :class="classes.additional">· {{tickersLabel}}</span>
+					<span style="display: flex;">
+						<ui-text token="text-300-r">Tickers ·&nbsp;</ui-text>
+						<modal-badge-preview
+							font-token="text-300-r"
+							:selected-tickers="selectedTickers"
+							:selected-markets="selectedMarkets"
+							:excluded-tickers="excludedTickers"
+							:selected-market-tickers="[]"
+							:display-variant="props.displayVariant"
+							:show-icon="false"
+							show-label
+						/>
 					</span>
 				</modal-item-interaction>
 			</subposition-trigger>
@@ -100,13 +117,14 @@ function toggleInclude(value: Include) {
 				<ui-presence :state="isOpen" v-slot="{present}">
 					<ui-transition-fade>
 						<subposition-content v-if="present" placement="right-start">
-							<news-segment-modal
-								:display-variant
-								:segments="props.segments"
-								:selected-segment-tickers="props.selectedSegmentTickers"
-								@select-all="emits('selectAll', $event)"
-								@unselect-all="emits('unselectAll', $event)"
-								@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
+							<ticker-selector-modal
+								v-model:selected-markets="selectedMarkets"
+								:enabled-markets="Object.values(MarketType)"
+								:selection-mode="SelectionMode.Multiple"
+								:display-variant="props.displayVariant"
+								enable-select-all
+								@update:selected-tickers="onTickerSelect"
+								@update:excluded-tickers="onExcludeTickers"
 							/>
 						</subposition-content>
 					</ui-transition-fade>

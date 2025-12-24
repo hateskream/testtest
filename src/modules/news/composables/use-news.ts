@@ -6,7 +6,6 @@ import {
 	rehydrateState,
 	compareState,
 	getActiveLocations,
-	getDefaultSegmentTickers,
 
 	type IState,
 	type IDisplaySettings,
@@ -17,7 +16,7 @@ import {
 	Include,
 	Score,
 	Sentiment,
-	Source,
+	Source, getDefaultSegmentMarkets,
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
@@ -62,13 +61,11 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 	});
 
 	const {
-		segments,
-		selectedSegmentRequest,
-		selectedSegmentTickers,
-		selectAll,
-		unselectAll,
-		toggleTicker,
-	} = useSegment(selectedSegments, defaultStateType);
+		selectedSegmentsRequest,
+		excludedTickers,
+		selectedTickers,
+		selectedMarkets,
+	} = useSegment(defaultStateType);
 
 	const selectedScores = computed({
 		get: (): Set<Score> => state.value.score,
@@ -88,13 +85,6 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 		get: () => state.value.source,
 		set: (val: Set<Source>) => {
 			state.value.source = val;
-		},
-	});
-
-	const selectedTickers = computed({
-		get: () => state.value.selectedTickers,
-		set: (val: string[]) => {
-			state.value.selectedTickers = val;
 		},
 	});
 
@@ -156,23 +146,21 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 
 	function resetAllChanges() {
 		state.value = getDefaultState(defaultStateType);
-		selectedSegmentTickers.value = getDefaultSegmentTickers(defaultStateType);
+		selectedTickers.value = [];
+		selectedMarkets.value = getDefaultSegmentMarkets(defaultStateType);
+		excludedTickers.value = [];
 	}
 
 	return {
 		selectedMarketSegments: selectedSegments,
-
-		segments,
-		selectedSegmentRequest,
-		selectedSegmentTickers,
-		selectAll,
-		unselectAll,
-		toggleTicker,
+		selectedSegmentsRequest,
+		selectedTickers,
+		excludedTickers,
+		selectedMarkets,
 
 		selectedScores,
 		selectedSentiment,
 		selectedSources,
-		selectedTickers,
 		displaySettings,
 		locations,
 		sortBy,

@@ -30,29 +30,24 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const {
-	segments,
+	selectedMarkets,
+	excludedTickers,
+	selectedTickers,
+	applyStateToParent,
+
+	resetAllChanges,
 	selectedMarketSegments,
-	selectedSegmentTickers,
-	selectedSegmentRequest,
-
-	selectAll,
-	unselectAll,
-	toggleTicker,
-
+	selectedSegmentsRequest,
 	selectedScores,
 	selectedSentiment,
 	selectedSources,
 	displaySettings,
 	locations,
-	activeLocations,
-	selectedTickers,
-	sortBy,
 	include,
 	activeDateRange,
+	activeLocations,
+	sortBy,
 	dateRange,
-
-	resetAllChanges,
-	applyStateToParent,
 } = useNews({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -62,7 +57,7 @@ const {
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
-	segment: selectedSegmentRequest.value,
+	segment: selectedSegmentsRequest.value,
 	sentiment: selectedSentiment.value,
 	source: selectedSources.value,
 	locations: activeLocations.value,
@@ -121,12 +116,10 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 					v-model:include="include"
 					v-model:active-date-range="activeDateRange"
 					v-model:date-range="dateRange"
-					:segments="segments"
-					:selected-segments-tickers="selectedSegmentTickers"
+					v-model:selected-markets="selectedMarkets"
+					v-model:selected-tickers="selectedTickers"
+					v-model:excluded-tickers="excludedTickers"
 					display-variant="tv"
-					@select-all="selectAll"
-					@unselect-all="unselectAll"
-					@toggle-ticker="toggleTicker"
 					@reset-all-changes="resetAllChanges"
 				/>
 				<base-error-component v-if="isError" @retry="refetch" />
@@ -197,12 +190,10 @@ function toggleDisplaySettings(settingsKey: SettingKey) {
 				v-model:locations="locations"
 				v-model:include="include"
 				v-model:active-date-range="activeDateRange"
-				display-variant="new"
-				:segments="segments"
-				:selected-segment-tickers="selectedSegmentTickers"
-				@select-all="selectAll"
-				@unselect-all="unselectAll"
-				@toggle-ticker="toggleTicker"
+				v-model:selected-markets="selectedMarkets"
+				v-model:selected-tickers="selectedTickers"
+				v-model:excluded-tickers="excludedTickers"
+				display-variant="default"
 			/>
 		</template>
 	</base-widget-tv-component>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 import type { ITickersAddPayload } from '../../model';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 import { UiText } from '@/shared/ui/text';
@@ -46,7 +46,7 @@ function onClickSave() {
 
 <template>
 	<div :class="classes.root">
-		<modal-ticker-selector
+		<modal-ticker-selector-legacy
 			v-if="isOpenSelector"
 			v-model="selectedTickers"
 			:is-background-transparent="true"

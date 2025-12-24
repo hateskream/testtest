@@ -1,0 +1,27 @@
+{
+	"data": {
+		"total_available": 62440,
+		"categories": [
+			{
+				"market_type": "Crypto",
+				"tickers_count": 240
+			},
+			{
+				"market_type": "Stock",
+				"tickers_count": 62000
+			},
+			{
+				"market_type": "Forex",
+				"tickers_count": 150
+			},
+			{
+				"market_type": "Commodity",
+				"tickers_count": 30
+			},
+			{
+				"market_type": "Index",
+				"tickers_count": 20
+			}
+		]
+	}
+}

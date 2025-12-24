@@ -70,7 +70,6 @@ export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 function createQuery({
 	offset,
 	limit,
-	selectedTickers,
 	activeSort,
 	dateTo,
 	dateFrom,
@@ -93,9 +92,9 @@ function createQuery({
 	// 	query.sentiment = Array.from(sentiment)[0].toLowerCase();
 	// }
 
-	if (selectedTickers.length) {
-		query.symbol = selectedTickers.join(',');
-	}
+	// if (selectedTickers.length) {
+	// 	query.symbol = selectedTickers.join(',');
+	// }
 
 	if (dateTo) {
 		query.date_to = (new Date(dateTo)).toJSON();

@@ -17,7 +17,6 @@ export function useQueryNews(_req: MaybeRefOrGetter<IGetNewsRequest>, isSetMaxRo
 				Array.from(req.value.sentiment),
 				Array.from(req.value.source),
 				req.value.segment,
-				req.value.selectedTickers,
 				req.value.activeSort,
 				req.value.locations,
 				req.value.limit,

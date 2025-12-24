@@ -4,26 +4,22 @@ import { computed, ref } from 'vue';
 import { type IGetNewsRequest, NewsFiltersPanel, NewsListComponent, useNews, useQueryNews } from '@/modules/news';
 
 const {
-	segments,
-	selectedMarketSegments,
-	selectedSegmentTickers,
-	selectedSegmentRequest,
+	selectedMarkets,
+	excludedTickers,
+	selectedTickers,
 
 	resetAllChanges,
-	selectAll,
-	unselectAll,
-	toggleTicker,
-
+	selectedMarketSegments,
+	selectedSegmentsRequest,
 	selectedScores,
 	selectedSentiment,
 	selectedSources,
 	displaySettings,
 	locations,
-	activeLocations,
-	selectedTickers,
-	sortBy,
 	include,
 	activeDateRange,
+	activeLocations,
+	sortBy,
 	dateRange,
 } = useNews({
 	widgetId: 'calendar-page-news',
@@ -34,7 +30,7 @@ const {
 const { data, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
-	segment: selectedSegmentRequest.value,
+	segment: selectedSegmentsRequest.value,
 	sentiment: selectedSentiment.value,
 	source: selectedSources.value,
 	locations: activeLocations.value,
@@ -67,12 +63,10 @@ const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filte
 			v-model:include="include"
 			v-model:active-date-range="activeDateRange"
 			v-model:date-range="dateRange"
+			v-model:selected-markets="selectedMarkets"
+			v-model:selected-tickers="selectedTickers"
+			v-model:excluded-tickers="excludedTickers"
 			display-variant="tv"
-			:segments="segments"
-			:selected-segments-tickers="selectedSegmentTickers"
-			@select-all="selectAll"
-			@unselect-all="unselectAll"
-			@toggle-ticker="toggleTicker"
 			@reset-all-changes="resetAllChanges"
 		/>
 		<news-list-component

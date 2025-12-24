@@ -15,7 +15,6 @@ useProvideDisplayVariant('default');
 	box-sizing: border-box;
 	width: max-content;
 	min-width: 208px;
-	height: 100%;
 	max-height: 80svh;
 	padding: 0;
 	overflow: hidden;

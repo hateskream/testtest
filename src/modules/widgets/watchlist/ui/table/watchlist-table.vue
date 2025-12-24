@@ -14,7 +14,7 @@ import { useGoToTickerPage } from '@/modules/chart';
 import { findSectionTypeById } from '@/modules/watchlist';
 import type { MarketType } from '@/modules/market';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
@@ -97,7 +97,7 @@ function selectTicker(tickerId: string, sectionId: string) {
 							/>
 						</template>
 						<template #content>
-							<modal-ticker-selector
+							<modal-ticker-selector-legacy
 								:model-value="selectedTickers"
 								:enable-select-all="false"
 								:display-variant="props.displayVariant"

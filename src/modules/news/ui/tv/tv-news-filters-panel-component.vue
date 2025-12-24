@@ -5,13 +5,12 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeDropdown, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { type MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import {
 	ActiveDateRange,
-	type ILocation, Include,
-	type ISegmentData,
+	type ILocation,
+	Include,
 	type Score,
-	type SelectedSegmentTickersState,
 	type Sentiment,
 	type SortState,
 	type Source,
@@ -19,23 +18,12 @@ import {
 	titleGenerator,
 	toggleFilter,
 } from '../../model';
-import { getSegmentsTitleStr, NewsSegmentModal } from '@/modules/news';
+import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 
 import NewsFilters from '../news-filters-component.vue';
-
-const props = defineProps<{
-	segments: ISegmentData[];
-	selectedSegmentsTickers: SelectedSegmentTickersState;
-}>();
-
-const emits = defineEmits<{
-	selectAll: [id: MarketType];
-	unselectAll: [id: MarketType];
-	toggleTicker: [id: MarketType, tickerId: string];
-}>();
+import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
-const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
 const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
 const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
 const include = defineModel<Set<Include>>('include', { required: true });
@@ -45,9 +33,7 @@ const sortBy = defineModel<SortState>('sortBy', { required: true });
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
 
-const titleSegment = computed(
-	(): string => getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers, 1) || 'Market',
-);
+
 const titleSource = computed((): string => titleGenerator(selectedSources.value, sourceToName));
 
 // function toggleScore(score: Score) {
@@ -91,28 +77,40 @@ function toggleSource(source: Source) {
 // 			return 0;
 // 	}
 // }
+
+const selectedMarkets = defineModel<MarketType[]>('selectedMarkets', {
+	required: true,
+});
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', {
+	required: true,
+});
+const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
+	required: true,
+});
+
+function onTickerSelect(tickers: ITickerItem[]) {
+	selectedTickers.value = tickers;
+}
+
+function onExcludeTickers(tickers: ITickerItem[]) {
+	excludedTickers.value = tickers;
+}
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.listFilters">
 			<div :class="classes.listFilterWithDelimiter">
-				<modal-badge-dropdown display-variant="default">
-					<template #title>
-						{{ titleSegment || 'All' }}
-					</template>
-
-					<template #content>
-						<news-segment-modal
-							display-variant="default"
-							:segments="props.segments"
-							:selected-segment-tickers="props.selectedSegmentsTickers"
-							@select-all="emits('selectAll', $event)"
-							@unselect-all="emits('unselectAll', $event)"
-							@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-						/>
-					</template>
-				</modal-badge-dropdown>
+				<ticker-selector-modal-with-badge
+					v-model:selected-markets="selectedMarkets"
+					:enabled-markets="Object.values(MarketType)"
+					:selection-mode="SelectionMode.Multiple"
+					display-variant="new"
+					enable-select-all
+					:show-icon="false"
+					@update:selected-tickers="onTickerSelect"
+					@update:excluded-tickers="onExcludeTickers"
+				/>
 			</div>
 
 			<ui-delimiter :class="classes.listFilterGroupDelimeter" />
@@ -136,19 +134,16 @@ function toggleSource(source: Source) {
 							<template #content>
 								<news-filters
 									v-model:selected-scores="selectedScores"
-									v-model:selected-segments="selectedSegments"
 									v-model:selected-sentiment="selectedSentiment"
 									v-model:selected-sources="selectedSources"
 									v-model:sort-by="sortBy"
 									v-model:locations="locations"
 									v-model:include="include"
 									v-model:active-date-range="activeDateRange"
+									v-model:selected-markets="selectedMarkets"
+									v-model:selected-tickers="selectedTickers"
+									v-model:excluded-tickers="excludedTickers"
 									display-variant="default"
-									:segments="props.segments"
-									:selected-segment-tickers="props.selectedSegmentsTickers"
-									@select-all="emits('selectAll', $event)"
-									@unselect-all="emits('unselectAll', $event)"
-									@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
 								/>
 							</template>
 						</modal-filter>

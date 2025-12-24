@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ModalBadgeList, ModalItem, ModalSubmenu } from '@/modules/widgets/base';
 import { type ITab, TabAction, tabActionToTitle } from '@/modules/widgets/watchlist/model';
-import { ModalTickerSelector } from '@/modules/ticker-selector';
+import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDriver } from '@/shared/ui/driver';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -90,7 +90,7 @@ function onClickAction(action: TabAction, id: string) {
 									</span>
 								</template>
 								<template #content>
-									<modal-ticker-selector
+									<modal-ticker-selector-legacy
 										:display-variant="props.displayVariant"
 										:model-value="props.selectedTickers"
 										:enable-select-all="false"

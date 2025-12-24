@@ -1,0 +1,45 @@
+{
+	"data": {
+		"total_available": 240,
+		"pagination": {
+			"page": 1,
+			"page_size": 50,
+			"total_pages": 5
+		},
+		"categories": [
+			{
+				"market_type": "Crypto",
+				"ticker_count": 64,
+				"tickers": [
+					{
+						"canonical_ticker_id": "Crypto-BTC_Bitcoin",
+						"market_type": "Crypto",
+						"symbol": "BTC",
+						"name": "Bitcoin",
+						"logo": ""
+					},
+					{
+						"canonical_ticker_id": "Crypto-ETH_Ethereum",
+						"market_type": "Crypto",
+						"symbol": "ETH",
+						"name": "Ethereum",
+						"logo": ""
+					}
+				]
+			},
+			{
+				"market_type": "Stock",
+				"ticker_count": 176,
+				"tickers": [
+					{
+						"canonical_ticker_id": "Stock-AAPL",
+						"market_type": "Stock",
+						"symbol": "AAPL",
+						"name": "Apple Inc.",
+						"logo": ""
+					}
+				]
+			}
+		]
+	}
+}

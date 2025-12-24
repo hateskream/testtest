@@ -76,7 +76,8 @@ const tickerIcon = computed(() => {
 		<universal-ticker-icon
 			v-if="tickerIcon"
 			:symbol-type="tickerIcon.symbol"
-			:src="tickerIcon.src"
+			:src="tickerIcon.src?.[0]"
+			:right-src="tickerIcon.src?.[1]"
 			:size="tickerIcon.size"
 			:ticker="tickerIcon.ticker"
 		/>

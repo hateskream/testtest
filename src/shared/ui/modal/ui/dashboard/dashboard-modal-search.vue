@@ -45,6 +45,8 @@ defineExpose({ focus });
 }
 
 .input {
+	width: 100%;
+	height: 100%;
 	font-style: normal;
 	text-align: left;
 	color: rgb(255 255 255 / 100%);

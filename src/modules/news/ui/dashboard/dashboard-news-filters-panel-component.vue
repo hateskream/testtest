@@ -2,35 +2,35 @@
 import { computed, useTemplateRef } from 'vue';
 
 import { ModalBadgeDropdown, ModalBadgeList, ModalFilterTitle, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { type MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import {
-	getSegmentsTitleStr,
 	type ILocation,
-	type ISegmentData,
 	NewsLocationFilter,
-	NewsSegmentModal,
-	type SelectedSegmentTickersState,
 	type SortState,
 	sortToName,
 } from '@/modules/news';
 import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
+import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 
 import SortbyModalInner from '../modal/sortby-modal-inner.vue';
-
-const props = defineProps<{
-	segments: ISegmentData[];
-	selectedSegmentsTickers: SelectedSegmentTickersState;
-}>();
+import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 const emits = defineEmits<{
-	selectAll: [id: MarketType];
-	unselectAll: [id: MarketType];
-	toggleTicker: [id: MarketType, tickerId: string];
 	resetAllChanges: [];
 }>();
 
 defineOptions({
 	inheritAttrs: false,
+});
+
+const selectedMarkets = defineModel<MarketType[]>('selectedMarkets', {
+	required: true,
+});
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', {
+	required: true,
+});
+const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
+	required: true,
 });
 
 const locations = defineModel<ILocation[]>('locations', { required: true });
@@ -51,14 +51,18 @@ const sortTitle = computed(() => {
 	return value.additional;
 });
 
-const displayItems = computed(() => {
-	return getSegmentsTitleStr(props.segments, props.selectedSegmentsTickers) || 'Market';
-});
-
 const sortByDropdownRef = useTemplateRef('sortByDropdown');
 
 function closeSortByDropdown() {
 	sortByDropdownRef.value?.close?.();
+}
+
+function onTickerSelect(tickers: ITickerItem[]) {
+	selectedTickers.value = tickers;
+}
+
+function onExcludeTickers(tickers: ITickerItem[]) {
+	excludedTickers.value = tickers;
 }
 
 // TODO: Вернуть все фильтры после реализации бекенда
@@ -67,23 +71,18 @@ function closeSortByDropdown() {
 <template>
 	<div :class="classes.root">
 		<widget-filters-scrollable display-variant="new" @on-clear-click="emits('resetAllChanges')">
-			<modal-badge-dropdown v-if="false" display-variant="new">
-				<template #title>
-					<span :class="classes.capitalize">
-						{{displayItems}}
-					</span>
-				</template>
-				<template #content>
-					<news-segment-modal
-						display-variant="new"
-						:segments="props.segments"
-						:selected-segment-tickers="props.selectedSegmentsTickers"
-						@select-all="emits('selectAll', $event)"
-						@unselect-all="emits('unselectAll', $event)"
-						@toggle-ticker="(v1, v2) => emits('toggleTicker', v1, v2)"
-					/>
-				</template>
-			</modal-badge-dropdown>
+			<ticker-selector-modal-with-badge
+				v-if="false"
+				v-model:selected-markets="selectedMarkets"
+				:enabled-markets="Object.values(MarketType)"
+				:selection-mode="SelectionMode.Multiple"
+				display-variant="new"
+				enable-select-all
+				:show-icon="false"
+				@update:selected-tickers="onTickerSelect"
+				@update:excluded-tickers="onExcludeTickers"
+			/>
+
 			<modal-badge-dropdown v-if="false" display-variant="new">
 				<template #title>
 					Location

@@ -1,11 +1,5 @@
-import type { ITickerMapped } from './model/filter-ticker';
+export * from './model';
+export * from './composables';
 
-import ModalTickerSelectorWithBadge from './ui/modal-ticker-selector-with-badge.vue';
-import ModalTickerSelector from './ui/modal-ticker-selector.vue';
-
-
-export {
-	type ITickerMapped,
-	ModalTickerSelector,
-	ModalTickerSelectorWithBadge,
-};
+export { default as ModalTickerSelectorLegacy } from './ui/modal-ticker-selector-legacy.vue';
+export { default as ModalTickerSelectorWithBadgeLegacy } from './ui/modal-ticker-selector-with-badge-legacy.vue';
