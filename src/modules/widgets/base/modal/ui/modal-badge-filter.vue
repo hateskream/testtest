@@ -34,31 +34,18 @@ function select(option: IFilterOption<T>) {
 
 <template>
 	<modal-badge-dropdown ref="dropdown" :display-variant="props.displayVariant">
-		<template #title>
-			<slot name="label">{{ props.label }}</slot>
-		</template>
+		<template #title>{{ props.label }}</template>
 		<template #content>
 			<modal-badge-list :display-variant="props.displayVariant">
-				<template #title>
-					<slot name="title">{{ props.title }}</slot>
-				</template>
-				<template v-for="(option, index) in props.options" :key="option.value">
-					<slot
-						name="option"
-						:option="option"
-						:index="index"
-						:select="select"
-					>
-						<modal-item-selector
-							:model-value="option.value === props.selectedValue"
-							@update:model-value="select(option)"
-						>
-							<slot name="option-label" :option="option">
-								{{ option.label }}
-							</slot>
-						</modal-item-selector>
-					</slot>
-				</template>
+				<template #title>{{ props.title }}</template>
+				<modal-item-selector
+					v-for="option in props.options"
+					:key="option.value"
+					:model-value="option.value === props.selectedValue"
+					@update:model-value="select(option)"
+				>
+					{{ option.label }}
+				</modal-item-selector>
 			</modal-badge-list>
 		</template>
 	</modal-badge-dropdown>
