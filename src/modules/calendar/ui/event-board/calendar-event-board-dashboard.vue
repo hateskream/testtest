@@ -29,8 +29,9 @@ const boardsRef = ref<HTMLElement[]>([]);
 
 const now = new Date();
 
-function formatEventDate(dateStr: DateYYYYMMDD, locale?: string) {
+function formatEventDate(dateStr: DateYYYYMMDD) {
 	const date = new Date(dateStr);
+	const locale = 'en-US';
 
 	const sameYear = date.getFullYear() === now.getFullYear();
 	const sameMonth = sameYear && date.getMonth() === now.getMonth();

@@ -4,7 +4,6 @@ import { computed } from 'vue';
 import { ModalBadge, ModalBadgeDropdown, ModalSubmenuContent } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-// import { CalendarRangeSelect } from '@/shared/ui/calendar';
 import {
 	EventType,
 	type IEventBoardRange,
@@ -50,7 +49,6 @@ const watchlistIdState = defineModel<string | null>('watchlistIdState', { requir
 const watchlistSectionState = defineModel<string | null>('watchlistSectionState', { required: true });
 
 const range = defineModel<IEventBoardRange>('rangeState', { required: true });
-
 
 const marketLabel = computed(() => {
 	const arr = Array.from(countryState.value);

@@ -1,30 +1,17 @@
-import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
+import { computed, type MaybeRefOrGetter } from 'vue';
 
-import type { IEventBoardRequestOptions, IEventBoardResponse } from '../models';
-import { useEventBoardGetState, useEventBoardUpdateState } from '../query';
+import type { IEventBoardRequestOptions } from '../models';
+import { useEventBoardGetState } from '../query';
 
-export function useEventBoard(optionsGetter: MaybeRefOrGetter<IEventBoardRequestOptions>) {
-	const eventBoard = ref<IEventBoardResponse[]>([]);
+export function useEventBoard(options: MaybeRefOrGetter<IEventBoardRequestOptions>) {
+	const rest = useEventBoardGetState(options);
 
-	const options = computed(() => toValue(optionsGetter));
-
-	const { data: eventBoardData, isError, isLoading, ...rest } = useEventBoardGetState(options.value);
-	const { mutate } = useEventBoardUpdateState();
-
-	watch(eventBoardData, newState => {
-		if (newState) {
-			eventBoard.value = [...newState];
-		}
-	}, { immediate: true });
-
-	watch(options, newState => {
-		mutate(newState);
-	}, { deep: true });
+	const eventBoard = computed(() => {
+		return rest.data.value ?? [];
+	});
 
 	return {
 		eventBoard,
-		isError,
-		isLoading,
 		...rest,
 	};
 }

@@ -1,4 +1,4 @@
-import { computed, type MaybeRefOrGetter, nextTick, onMounted, toValue, watch } from 'vue';
+import { computed, type MaybeRefOrGetter, nextTick, toValue, watch } from 'vue';
 
 import { type DateYYYYMMDD, type IEventBoardResponse, toUtcIsoDate } from '@/modules/calendar';
 
@@ -26,21 +26,17 @@ export function useEventBoardScroll(options: IUseEventBoardScroll) {
 		return toValue(options.ref);
 	});
 
-	async function update(date: Date) {
+	watch([ref, baseDate, () => eventBoard.value.length], async ([element, date]) => {
 		await nextTick();
+
+		if (!element) {
+			return;
+		}
 
 		const iso = toUtcIsoDate(date);
 
-		ref.value?.scrollToDate?.(iso, {
+		element.scrollToDate(iso, {
 			behavior: 'auto',
 		});
-	}
-
-	watch([() => eventBoard.value.length, baseDate], async ([_, date]) => {
-		await update(date);
 	}, { immediate: true, deep: true });
-
-	onMounted(async () => {
-		await update(baseDate.value);
-	});
 }

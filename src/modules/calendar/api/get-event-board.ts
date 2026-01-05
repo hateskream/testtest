@@ -66,7 +66,7 @@ function prepareRequest(
 	}
 
 	if (filters.watchlist.length) {
-		record.tickerIds = filters.watchlist.join(',');
+		record.tickerIDs = filters.watchlist.join(',');
 	}
 
 	return record;

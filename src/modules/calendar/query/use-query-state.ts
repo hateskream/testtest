@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/vue-query';
-import { computed, type MaybeRefOrGetter, toValue } from 'vue';
+import { useQuery } from '@tanstack/vue-query';
+import { type MaybeRefOrGetter, toValue } from 'vue';
 
 import type {
 	IDailyCalendarInfoRequest,
@@ -8,39 +8,21 @@ import type {
 	IEventBoardResponse,
 } from '@/modules/calendar';
 import { getCalendarDays, getEventBoard } from '@/modules/calendar/api';
-import { queryClient } from '@/shared/service/query-client.ts';
 
 const SETTINGS_QUERY_KEY = 'calendar-settings';
 
-export function getStateCacheKey() {
-	return SETTINGS_QUERY_KEY;
-}
-
-export const useDailyCalendarGetState = (_options: MaybeRefOrGetter<IDailyCalendarInfoRequest>) => {
-	const options = computed(
-		() => toValue(_options),
-	);
-
+export const useDailyCalendarGetState = (options: MaybeRefOrGetter<IDailyCalendarInfoRequest>) => {
 	return useQuery<IDailyCalendarInfoResponse[]>({
-		queryKey: [getStateCacheKey(), 'daily-calendar', () => options.value.from, () => options.value.to],
-		queryFn: () => getCalendarDays(options.value),
+		queryKey: [SETTINGS_QUERY_KEY, 'daily-calendar', options],
+		queryFn: () => getCalendarDays(toValue(options)),
 		refetchOnMount: false,
 	});
 };
 
-export const useEventBoardGetState = (options: IEventBoardRequestOptions) => {
+export const useEventBoardGetState = (options: MaybeRefOrGetter<IEventBoardRequestOptions>) => {
 	return useQuery<IEventBoardResponse[]>({
-		queryKey: [getStateCacheKey(), 'event-board'],
-		queryFn: async () => await getEventBoard(options),
+		queryKey: [SETTINGS_QUERY_KEY, 'event-board', options],
+		queryFn: () => getEventBoard(toValue(options)),
 		refetchOnMount: false,
-	});
-};
-
-export const useEventBoardUpdateState = () => {
-	return useMutation<IEventBoardResponse[], Error, IEventBoardRequestOptions>({
-		mutationFn: (newOptions) => getEventBoard(newOptions),
-		onSuccess: (data) => {
-			queryClient.setQueryData([getStateCacheKey(), 'event-board'], data);
-		},
 	});
 };

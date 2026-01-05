@@ -5,13 +5,9 @@ const ALL_IMPACTS = [Impact.Low, Impact.Medium, Impact.High];
 const ALL_EVENT_TYPES = [
 	EventType.Economic,
 	EventType.Earnings,
-	EventType.Revenue,
 	EventType.Dividends,
 	EventType.Splits,
 	EventType.Ipos,
-	EventType.Crypto,
-	EventType.News,
-	EventType.Conference,
 ];
 const ALL_MARKETS = [
 	MarketIds.USA,
@@ -50,11 +46,9 @@ export function getDefaultState(defaultState?: string): ToolbarSchemaType {
 				eventType: [
 					EventType.Economic,
 					EventType.Earnings,
-					EventType.Revenue,
 					EventType.Dividends,
 					EventType.Splits,
 					EventType.Ipos,
-					EventType.Crypto,
 				],
 				watchlistId: null,
 				watchlistSection: null,
@@ -90,14 +84,14 @@ export function getDefaultState(defaultState?: string): ToolbarSchemaType {
 				watchlistSection: null,
 			};
 
-		case 'crypto':
-			return {
-				marketId: ALL_MARKETS,
-				impact: ALL_IMPACTS,
-				eventType: [EventType.Crypto],
-				watchlistId: null,
-				watchlistSection: null,
-			};
+			// case 'crypto':
+			// 	return {
+			// 		marketId: ALL_MARKETS,
+			// 		impact: ALL_IMPACTS,
+			// 		eventType: [EventType.Crypto],
+			// 		watchlistId: null,
+			// 		watchlistSection: null,
+			// 	};
 
 		case 'dividends-europe':
 			return {

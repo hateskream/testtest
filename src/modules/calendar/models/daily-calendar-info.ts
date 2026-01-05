@@ -5,15 +5,17 @@ export interface IDailyCalendarInfoRequest {
 	to: DateYYYYMMDD;
 }
 
+export interface IDailyCalendarMetrics {
+	crypto_events: number;
+	dividends: number;
+	earnings: number;
+	economic: number;
+	ipo: number;
+	news: number;
+	splits: number;
+}
+
 export interface IDailyCalendarInfoResponse {
 	date: string;
-	metrics: {
-		crypto_events: number;
-		dividends: number;
-		earnings: number;
-		economic: number;
-		ipo: number;
-		news: number;
-		splits: number;
-	};
+	metrics: IDailyCalendarMetrics;
 }

@@ -18,13 +18,14 @@ import {
 } from '@/modules/calendar';
 import { getRehydrated } from '@/modules/calendar/services';
 
+const locale = 'en-US';
+
 export interface IUseCalendarStateOptions {
 	toolbar: IUseToolbarStateOptions;
 }
 
 export function useCalendarState(options: IUseCalendarStateOptions) {
 	const now = useNow({ interval: 60_000 });
-	const locale = 'en-US';
 
 	const baseDate = ref(now.value);
 	const selectedDate = ref(now.value);
@@ -85,7 +86,10 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 	});
 
 	const filters = computed(() => ({
-		range: weekRange,
+		range: {
+			to: weekRange.to,
+			from: weekRange.from,
+		},
 		filters: {
 			marketId: Array.from(toolbar.value.marketId),
 			impact: Array.from(toolbar.value.impact),
