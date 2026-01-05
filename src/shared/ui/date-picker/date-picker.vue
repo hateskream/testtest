@@ -87,7 +87,7 @@ function onUpdatePages(pages: Page[]) {
 		<template #fallback>
 			<ui-skeleton-group
 				:count="skeletonCount"
-				height="30px"
+				height="42px"
 				gap="2px"
 				:class="classes.skeleton"
 			/>
