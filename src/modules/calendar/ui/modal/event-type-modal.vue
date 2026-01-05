@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { isAllSelected, toggleAllSelect, toggleSet } from '@/modules/calendar/utils/toolbar.ts';
-import { EventType } from '@/modules/calendar';
+import { EventType, EventTypeToLabels } from '@/modules/calendar';
 import { ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
 
 const state = defineModel<Set<EventType>>({ required: true });
@@ -35,7 +35,7 @@ function toggleEventType(id: EventType) {
 				:model-value="state.has(event)"
 				@click="toggleEventType(event)"
 			>
-				{{event}}
+				{{EventTypeToLabels[event]}}
 			</modal-item-checkbox>
 		</template>
 	</modal-badge-list>

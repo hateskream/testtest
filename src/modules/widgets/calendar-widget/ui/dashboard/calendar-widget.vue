@@ -1,24 +1,37 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
 
-import { BaseWidgetDashboard, ModalBadge, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import {
+	BaseWidgetDashboard,
+	ModalBadge,
+	ModalItemCheckbox,
+	WidgetFiltersScrollable,
+} from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	CalendarEmptyEventBoard,
 	CalendarEventBoard,
-	EventType,
 	EventTypeModal,
+	EventTypeToLabels,
 	type IEventBoardExposed,
+	Impact,
+	EventType,
 	MarketIds,
 	markets,
-	markets as marketsData,
 	useCalendarState,
 	useEventBoardScroll,
 } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { formattedLabel, getMarketLabel, isAllSelected } from '@/modules/calendar/utils/toolbar.ts';
+import {
+	formattedLabel,
+	getMarketLabel,
+	isAllSelected,
+	toggleAllSelect,
+	toggleSet,
+} from '@/modules/calendar/utils/toolbar.ts';
 import { PreloaderComponent } from '@/modules/widgets/calendar-widget/ui/common';
 import { UiText } from '@/shared/ui/text';
+import { UiModalContent, UiModalWrapper } from '@/shared/ui/modal';
 
 import MarketsModal from '@/modules/calendar/ui/modal/markets-modal.vue';
 
@@ -35,6 +48,7 @@ const {
 	eventBoardFavorites,
 	marketId,
 	eventType,
+	impact,
 	toggleFavorite,
 	resetAll,
 	refetch,
@@ -51,7 +65,7 @@ const marketIcon = computed(() => {
 		return IconIds.Globus;
 	}
 
-	return marketsData.find(v => v.id === Array.from(marketId.value)[0])?.icon || IconIds.Globus;
+	return markets.find(v => v.id === Array.from(marketId.value)[0])?.icon || IconIds.Globus;
 });
 
 const marketLabel = computed(() => {
@@ -67,6 +81,24 @@ const marketLabel = computed(() => {
 
 	return `${getMarketLabel(arr[0])} +${arr.length - 1}`;
 });
+
+const eventTypeLabel = computed(() =>
+	formattedLabel(
+		Array.from(eventType.value).map((v) => EventTypeToLabels[v]),
+		Object.values(EventType).map((v) => EventTypeToLabels[v]),
+		'All',
+		'Event Type',
+	),
+);
+
+const impactLabel = computed(() =>
+	formattedLabel(
+		Array.from(impact.value),
+		Object.values(Impact),
+		'All',
+		'Impact',
+	),
+);
 
 const eventBoardRef = useTemplateRef<IEventBoardExposed>('event-board-component');
 
@@ -132,9 +164,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 				</modal-badge>
 				<modal-badge display-variant="new">
 					<template #title>
-						{{
-							formattedLabel(Array.from(eventType), Object.values(EventType), 'All', 'Event Type')
-						}}
+						{{ eventTypeLabel }}
 						<ui-icon :id="IconIds.DropdownDown" />
 					</template>
 					<template #content>
@@ -143,6 +173,35 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 							:event-types="Object.values(EventType)"
 							display-variant="new"
 						/>
+					</template>
+				</modal-badge>
+
+				<modal-badge display-variant="new">
+					<template #title>
+						{{impactLabel}}
+						<ui-icon :id="IconIds.DropdownDown" />
+					</template>
+
+					<template #content>
+						<ui-modal-wrapper display-variant="new">
+							<ui-modal-content>
+								<modal-item-checkbox
+									:model-value="isAllSelected(impact, Object.values(Impact))"
+									@click="impact = toggleAllSelect(impact, Object.values(Impact))"
+								>
+									All
+								</modal-item-checkbox>
+
+								<modal-item-checkbox
+									v-for="(propImpact, index) in Object.values(Impact)"
+									:key="index"
+									:model-value="impact.has(propImpact)"
+									@click="impact = toggleSet(impact, propImpact)"
+								>
+									{{propImpact}}
+								</modal-item-checkbox>
+							</ui-modal-content>
+						</ui-modal-wrapper>
 					</template>
 				</modal-badge>
 			</widget-filters-scrollable>

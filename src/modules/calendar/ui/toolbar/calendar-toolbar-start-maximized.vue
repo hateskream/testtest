@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import {
 	ModalBadgeDropdown,
 	ModalBadgeList,
@@ -8,7 +10,7 @@ import {
 import { UiDriver } from '@/shared/ui/driver';
 import { ModalTitle } from '@/shared/ui/modal-title';
 import type { ISection, IWatchlist } from '@/modules/watchlist';
-import { EventType, EventTypeModal, Impact } from '@/modules/calendar';
+import { EventType, EventTypeModal, EventTypeToLabels, Impact } from '@/modules/calendar';
 import { formattedLabel, isAllSelected, toggleAllSelect } from '@/modules/calendar/utils/toolbar.ts';
 
 const props = defineProps<{
@@ -29,6 +31,24 @@ const emits = defineEmits<{
 	toggleImpact: [Impact];
 	toggleEventType: [EventType];
 }>();
+
+const eventTypeLabel = computed(() =>
+	formattedLabel(
+		Array.from(eventState.value).map((v) => EventTypeToLabels[v]),
+		Object.values(EventType).map((v) => EventTypeToLabels[v]),
+		'All',
+		'Event Type',
+	),
+);
+
+const impactLabel = computed(() =>
+	formattedLabel(
+		Array.from(impactState.value),
+		Object.values(Impact),
+		'All',
+		'Impact',
+	),
+);
 </script>
 
 <template>
@@ -77,9 +97,7 @@ const emits = defineEmits<{
 		<modal-badge-dropdown display-variant="default">
 			<template #title>
 				<span>
-					{{
-						formattedLabel(Array.from(eventState), Object.values(EventType), 'All', 'Event Type')
-					}}
+					{{ eventTypeLabel }}
 				</span>
 			</template>
 
@@ -97,9 +115,7 @@ const emits = defineEmits<{
 		>
 			<template #title>
 				<span>
-					{{
-						formattedLabel(Array.from(impactState), Object.values(Impact), 'All', 'Impact')
-					}}
+					{{ impactLabel }}
 				</span>
 			</template>
 

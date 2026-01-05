@@ -2,13 +2,7 @@ import { EventType, Impact, MarketIds } from '@/modules/calendar';
 import type { ToolbarSchemaType } from '@/modules/calendar/services/schema.ts';
 
 const ALL_IMPACTS = [Impact.Low, Impact.Medium, Impact.High];
-const ALL_EVENT_TYPES = [
-	EventType.Economic,
-	EventType.Earnings,
-	EventType.Dividends,
-	EventType.Splits,
-	EventType.Ipos,
-];
+const ALL_EVENT_TYPES = Object.values(EventType);
 const ALL_MARKETS = [
 	MarketIds.USA,
 	MarketIds.India,
@@ -46,9 +40,9 @@ export function getDefaultState(defaultState?: string): ToolbarSchemaType {
 				eventType: [
 					EventType.Economic,
 					EventType.Earnings,
-					EventType.Dividends,
-					EventType.Splits,
-					EventType.Ipos,
+					EventType.Dividend,
+					EventType.Split,
+					EventType.Ipo,
 				],
 				watchlistId: null,
 				watchlistSection: null,
@@ -84,20 +78,20 @@ export function getDefaultState(defaultState?: string): ToolbarSchemaType {
 				watchlistSection: null,
 			};
 
-			// case 'crypto':
-			// 	return {
-			// 		marketId: ALL_MARKETS,
-			// 		impact: ALL_IMPACTS,
-			// 		eventType: [EventType.Crypto],
-			// 		watchlistId: null,
-			// 		watchlistSection: null,
-			// 	};
+		case 'crypto':
+			return {
+				marketId: ALL_MARKETS,
+				impact: ALL_IMPACTS,
+				eventType: [EventType.CryptoEvent, EventType.CryptoNews],
+				watchlistId: null,
+				watchlistSection: null,
+			};
 
 		case 'dividends-europe':
 			return {
 				marketId: [MarketIds.Germany],
 				impact: ALL_IMPACTS,
-				eventType: [EventType.Dividends],
+				eventType: [EventType.Dividend],
 				watchlistId: null,
 				watchlistSection: null,
 			};
