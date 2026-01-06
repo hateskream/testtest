@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="M extends readonly MarketType[]">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import { ModalBadgeDropdown } from '@/modules/widgets/base';
 import { MarketType } from '@/modules/market';
@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<{
 	displayVariant: 'new' | 'default';
 	showLabel?: boolean;
 	showIcon?: boolean;
+	closeOnSelect?: boolean;
 }>(), {
 	enableMarketTickers: false,
 	showLabel: true,
@@ -49,10 +50,23 @@ const paddingLeft = computed(() => {
 
 	return selectedTickers.value.length || isHasMarketTicker ? '4px' : undefined;
 });
+
+const dropdownRef = useTemplateRef('dropdown');
+
+function closeDropdown() {
+	dropdownRef.value?.close();
+}
+
+function onChanged() {
+	if (props.closeOnSelect && props.selectionMode === 'single') {
+		closeDropdown();
+	}
+}
 </script>
 
 <template>
 	<modal-badge-dropdown
+		ref="dropdown"
 		:display-variant="props.displayVariant"
 		:padding-left="paddingLeft"
 	>
@@ -80,6 +94,7 @@ const paddingLeft = computed(() => {
 				:enable-select-all="props.enableSelectAll"
 				:enabled-markets="props.enabledMarkets"
 				:display-variant="props.displayVariant"
+				@changed="onChanged"
 			/>
 		</template>
 	</modal-badge-dropdown>
