@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { MarketIds, markets } from '@/modules/calendar';
+import { Impact, MarketIds, markets } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ExternalLink } from '@/shared/ui/link';
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
+import { isFeatureEnabled } from '@/shared/lib';
+import { UiImage } from '@/shared/ui/image';
 
 interface ICalendarEventCardProps {
 	id: string;
@@ -28,6 +30,8 @@ interface ICalendarEventCardProps {
 	link?: string;
 	linkText?: string;
 	marketId?: MarketIds;
+	imageUrl?: string;
+	impact?: Impact;
 }
 
 const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
@@ -40,6 +44,8 @@ const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
 	text: 'MBA 30-Year Mortgage Rate is average 30-year fixed mortgage lending rate measured during the reported week and backed by the Mortgage Bankers Association.',
 	link: 'https://google.com/',
 	linkText: 'Mortgage Bankers Association of America',
+	imageUrl: '',
+	impact: undefined,
 });
 
 const icon = computed(() => markets.find(v => v.id === props.marketId)?.icon ?? IconIds.Globus);
@@ -49,15 +55,34 @@ const isCardOpen = ref(false);
 const openEventCard = () => {
 	isCardOpen.value = !isCardOpen.value;
 };
+
+const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 </script>
 
 <template>
 	<div :class="[classes.card, props.isMissed && classes.missed]" @click="openEventCard">
 		<div :class="classes.inner">
 			<div :class="classes.container">
+				<div :class="classes.head">
+					<ui-text
+						v-if="eventType"
+						token="text-100-r"
+						:class="classes.category"
+					>
+						{{eventType}}
+					</ui-text>
+				</div>
+
 				<div :class="classes.cell">
 					<div :class="classes.main">
+						<ui-image
+							v-if="imageUrl"
+							:src="props.imageUrl"
+							width="20px"
+							height="20px"
+						/>
 						<ui-icon
+							v-else
 							:id="icon"
 							width="20px"
 							height="20px"
@@ -74,6 +99,7 @@ const openEventCard = () => {
 						/>
 					</button>
 				</div>
+
 				<div :class="classes.eventMetrics">
 					<div
 						v-for="metric in props.metrics"
@@ -95,6 +121,17 @@ const openEventCard = () => {
 							{{ metric.value }}
 						</ui-text>
 					</div>
+
+					<div :class="classes.metricData">
+						<ui-text
+							v-if="props.impact"
+							:class="classes.metricValue"
+							token="text-300-r"
+							as="div"
+						>
+							Impact: {{impact}}
+						</ui-text>
+					</div>
 				</div>
 
 				<transition name="card-expand">
@@ -110,9 +147,15 @@ const openEventCard = () => {
 								{{ text }}
 							</ui-text>
 
-							<external-link :class="classes.link" :to="link">{{ linkText }}</external-link>
+							<external-link
+								v-if="link && linkText"
+								:class="classes.link"
+								:to="link"
+							>
+								{{ linkText }}
+							</external-link>
 
-							<button :class="classes.chart">
+							<button v-if="isChartEnabled" :class="classes.chart">
 								<ui-icon
 									:id="IconIds.Chart"
 									width="16px"
@@ -171,6 +214,21 @@ const openEventCard = () => {
 	align-items: flex-start;
 	gap: var(--padding-padding-s5, 8px);
 	align-self: stretch;
+}
+
+.head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.category {
+	font-weight: 450;
+	line-height: 180%;
+	text-transform: uppercase;
+	letter-spacing: 0.088px;
+	text-overflow: ellipsis;
+	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 }
 
 .cell {
