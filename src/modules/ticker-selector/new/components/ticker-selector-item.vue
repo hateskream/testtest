@@ -5,6 +5,7 @@ import { UniversalTickerIcon } from '@/shared/ui/ticker';
 import type { ITickerItem } from '../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MarketType } from '@/modules/market';
+import { UiClamped } from '@/shared/ui/clamped';
 
 const props = defineProps<{
 	ticker: ITickerItem;
@@ -37,9 +38,13 @@ const symbol = computed(() => {
 			:class="classes.textZone"
 			class="text-300-r"
 		>
-			<span :class="classes.symbol">
+			<ui-clamped
+				as="span"
+				:rows="1"
+				:class="classes.symbol"
+			>
 				{{symbol}}
-			</span>
+			</ui-clamped>
 
 			<template v-if="props.ticker.name && props.ticker.market_type !== MarketType.Forex">
 				<span :class="classes.dot">
@@ -74,14 +79,11 @@ const symbol = computed(() => {
 	padding: 0 12px;
 	border-radius: var(--radius-radius-s14-32, 12.4px);
 	cursor: pointer;
+	gap: 6px;
 }
 
 .tickerItem:hover {
 	background: var(--atom-base-50, rgb(73 73 80 / 52%));
-}
-
-.leftIcon {
-	margin-right: 6px;
 }
 
 .rightIcon {
@@ -132,6 +134,7 @@ const symbol = computed(() => {
 
 .symbol {
 	flex-shrink: 0;
+	max-width: 60%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
 	white-space: nowrap;
 }
