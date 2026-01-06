@@ -1,5 +1,6 @@
 import { type DateYYYYMMDD, EventType, Impact, MarketIds } from '@/modules/calendar';
 import type { MarketType } from '@/modules/market';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 export interface IEventBoardRange {
 	from: DateYYYYMMDD;
@@ -41,6 +42,33 @@ export interface ICalendarEvent {
 	link?: string;
 	linkText?: string;
 	imageUrl?: string;
+}
+
+export interface ICalendarEventBadge {
+	label: string;
+	color: 'negative' | 'neutral' | 'positive';
+}
+
+export interface ICalendarEventDetails {
+	label: string;
+	link: string;
+}
+
+export interface ICalendarEventNew {
+	id: string;
+	meta: {
+		title: string;
+		description: string;
+		datetime: string; // ISO string
+		image: string;
+		category: string; // ECONOMIC, DIVIDENDS...
+		country: MarketIds;
+		impact: Impact;
+		badge?: ICalendarEventBadge; // beat, miss
+	};
+	ticker: ITickerItem;
+	metrics: ICalendarEventMetric[];
+	details?: ICalendarEventDetails;
 }
 
 export interface IEventBoardResponse {

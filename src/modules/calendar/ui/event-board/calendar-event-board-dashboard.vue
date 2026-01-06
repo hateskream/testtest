@@ -295,24 +295,31 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 						visibility: index < props.maxCountRowTable ? 'visible' : 'hidden',
 					}"
 				>
-					<div
-						:class="[classes.hourLabel, classes.lightning, group.missed && classes.missed]"
-						:style="getHighlightColor(group.events[0].favorite, group.soon)"
-					>
-						<ui-text token="text-100-r">{{ group.hour }}</ui-text>
+					<div :class="[classes.hourLabel, group.missed && classes.missed]">
+						<div
+							:class="classes.lightning"
+							:style="getHighlightColor(group.events[0].favorite, group.soon)"
+						/>
+
+						<ui-text :class="classes.hour" token="text-100-r">
+							{{ group.hour }}
+						</ui-text>
 					</div>
 
 					<div
 						v-for="(event, i) in group.events"
 						:key="`${day.date}-${group.hour}-${i}`"
-						:class="[
-							classes.dayBoard,
-							(event.favorite || group.soon) && classes.lightning
-						]"
-						:style="getHighlightColor(event.favorite, group.soon)"
+						:class="classes.dayBoard"
+						style="padding-top: 6px;"
 					>
+						<div
+							v-if="event.favorite || group.soon"
+							:class="classes.lightning"
+							:style="getHighlightColor(event.favorite, group.soon)"
+						/>
+
 						<calendar-event-card-dashboard
-							v-bind="event"
+							:event="event"
 							:is-missed="group.missed"
 							:is-favorite="event.favorite"
 							@toggle-favorite="emits('toggleEventBoard', $event)"
@@ -354,13 +361,13 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 	background: rgb(20 20 21 / 92%);
 }
 
-.lightning::before {
+.lightning {
 	content: '';
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 0;
-	width: 40px;
+	width: 33px;
 	height: 100%;
 	background:
 		linear-gradient(
@@ -369,6 +376,7 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 			var(--light-mid) 100%
 		);
 	border-left: 2px solid var(--light-border);
+	pointer-events: none;
 }
 
 @media screen and (max-width: 1024px) {
@@ -396,6 +404,10 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 	padding: 8px 18px 0;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 	gap: 10px;
+}
+
+.hour {
+	color: var(--text-300, rgb(255 255 255 / 62%));
 }
 
 .dayBoard {

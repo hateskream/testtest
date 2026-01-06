@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { Impact, MarketIds, markets } from '@/modules/calendar';
+import { type ICalendarEvent, markets } from '@/modules/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ExternalLink } from '@/shared/ui/link';
@@ -11,44 +11,16 @@ import { isFeatureEnabled } from '@/shared/lib';
 import { UiImage } from '@/shared/ui/image';
 
 interface ICalendarEventCardProps {
-	id: string;
-
+	event: ICalendarEvent;
 	isMissed: boolean;
 	isFavorite: boolean;
-
-	eventType: string;
-	eventTitle: string;
-	eventTitleDescription?: string;
-	eventDatetime?: string;
-	eventSummary?: string;
-	metrics: {
-		label: string;
-		value: string;
-	}[];
-	ticker?: string;
-	text?: string;
-	link?: string;
-	linkText?: string;
-	marketId?: MarketIds;
-	imageUrl?: string;
-	impact?: Impact;
 }
 
-const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
-	eventDatetime: new Date().toISOString(),
-	eventTitleDescription: '',
-	eventSummary: '',
-	ticker: 'TSLA',
-	marketId: undefined,
-	// eslint-disable-next-line @stylistic/max-len
-	text: 'MBA 30-Year Mortgage Rate is average 30-year fixed mortgage lending rate measured during the reported week and backed by the Mortgage Bankers Association.',
-	link: 'https://google.com/',
-	linkText: 'Mortgage Bankers Association of America',
-	imageUrl: '',
-	impact: undefined,
-});
+const props = defineProps<ICalendarEventCardProps>();
 
-const icon = computed(() => markets.find(v => v.id === props.marketId)?.icon ?? IconIds.Globus);
+const icon = computed(
+	() => markets.find(v => v.id === props.event.marketId)?.icon ?? IconIds.Globus,
+);
 
 const isCardOpen = ref(false);
 
@@ -65,19 +37,19 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 			<div :class="classes.container">
 				<div :class="classes.head">
 					<ui-text
-						v-if="eventType"
+						v-if="props.event.eventType"
 						token="text-100-r"
 						:class="classes.category"
 					>
-						{{eventType}}
+						{{props.event.eventType}}
 					</ui-text>
 				</div>
 
 				<div :class="classes.cell">
 					<div :class="classes.main">
 						<ui-image
-							v-if="imageUrl"
-							:src="props.imageUrl"
+							v-if="props.event.imageUrl"
+							:src="props.event.imageUrl"
 							width="20px"
 							height="20px"
 						/>
@@ -88,7 +60,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 							height="20px"
 						/>
 						<ui-clamped :class="classes.title" :rows="1">
-							<ui-text token="text-300-r">{{ eventTitle }}</ui-text>
+							<ui-text token="text-300-r">{{ props.event.eventTitle }}</ui-text>
 						</ui-clamped>
 					</div>
 					<button :class="classes.dropdown">
@@ -102,7 +74,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 
 				<div :class="classes.eventMetrics">
 					<div
-						v-for="metric in props.metrics"
+						v-for="metric in props.event.metrics"
 						:key="metric.label"
 						:class="classes.metricData"
 					>
@@ -124,12 +96,18 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 
 					<div :class="classes.metricData">
 						<ui-text
-							v-if="props.impact"
+							:class="classes.metricLabel"
+							token="text-300-r"
+							as="div"
+						>
+							Impact:
+						</ui-text>
+						<ui-text
 							:class="classes.metricValue"
 							token="text-300-r"
 							as="div"
 						>
-							Impact: {{impact}}
+							{{ props.event.impact }}
 						</ui-text>
 					</div>
 				</div>
@@ -144,15 +122,15 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 								token="text-300-r"
 								as="p"
 							>
-								{{ text }}
+								{{ props.event.eventTitleDescription || 'No description yet.' }}
 							</ui-text>
 
 							<external-link
-								v-if="link && linkText"
+								v-if="props.event.link && props.event.linkText"
 								:class="classes.link"
-								:to="link"
+								:to="props.event.link"
 							>
-								{{ linkText }}
+								{{ props.event.linkText }}
 							</external-link>
 
 							<button v-if="isChartEnabled" :class="classes.chart">
@@ -225,6 +203,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 .category {
 	font-weight: 450;
 	line-height: 180%;
+	color: var(--text-300, rgb(255 255 255 / 62%));
 	text-transform: uppercase;
 	letter-spacing: 0.088px;
 	text-overflow: ellipsis;
@@ -259,9 +238,12 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 	gap: var(--padding-padding-s0, 0);
 	aspect-ratio: 1/1;
 	color: var(--contrast-contrast-60, rgb(255 255 255 / 40%));
+	cursor: pointer;
+	transition: 0.25s color ease;
 }
 
-.dropdown:hover {
+.dropdown:hover,
+.card:hover .dropdown {
 	color: var(--text-color-base-300-activated);
 }
 
@@ -294,7 +276,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 	align-items: flex-start;
 	align-self: stretch;
 	padding-bottom: var(--padding-padding-s4, 6px);
-	gap: var(--padding-padding-s12, 24px);
+	gap: 6px;
 	overflow: hidden;
 }
 
