@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { computed, type MaybeRefOrGetter, onUnmounted, toValue } from 'vue';
+import { type MaybeRefOrGetter, onUnmounted, toValue } from 'vue';
 
 import { getPrice, type IPriceData } from '../api';
 import { ColumnType, type ColumnWithoutSymbol } from '@/modules/cell';
@@ -35,7 +35,7 @@ export function useQueryPrice(
 	});
 
 	return useInfiniteQuery({
-		queryKey: computed(() => ['price', toValue(market), toValue(limit), toValue(filters)]),
+		queryKey: ['price', market, limit, filters],
 		queryFn: ({ pageParam = 0 }) =>
 			getPrice({
 				market: toValue(market),

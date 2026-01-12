@@ -21,7 +21,10 @@ import { useQueryPrice } from '../queries';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { MarketType } from '@/modules/market';
 
-const MarketTrendFilterValueSchema = z.nativeEnum(MarketTrendFilterValue);
+const MarketTrendFilterValueSchema = z.union([
+	z.nativeEnum(MarketTrendFilterValue),
+	z.literal('new'),
+]);
 const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
 const SectorFilterValueSchema = z.nativeEnum(SectorFilterValue);
 const TimeRangeFilterValueSchema = z.nativeEnum(TimeRangeFilterValue);
