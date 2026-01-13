@@ -2,9 +2,8 @@ import {
 	CryptoTrendFilterValue,
 	FilterType,
 	type FilterValue,
-	StockTrendFilterValue,
-	RankingAndNewFilterValue,
 	SectorFilterValue,
+	StockTrendFilterValue,
 	TimeRangeFilterValue,
 } from './filters';
 import { MarketType } from '@/modules/market';
@@ -146,7 +145,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 				[MarketType.Crypto]: {
 					...defaultSettingsCrypto,
 					filtersState: {
-						[FilterType.RankingAndNew]: RankingAndNewFilterValue.Gainers,
+						[FilterType.CryptoTrend]: CryptoTrendFilterValue.Gainers,
 					},
 				},
 				[MarketType.Stock]: defaultSettingsStock,

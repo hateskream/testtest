@@ -1,4 +1,4 @@
-import { computed, ref, toValue, watch, type MaybeRefOrGetter } from 'vue';
+import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
 import { z } from 'zod';
 import { notNullish } from '@vueuse/core';
 
@@ -13,9 +13,8 @@ import {
 	getDefaultsState,
 	type IDisplaySettings,
 	type IState,
-	StockTrendFilterValue,
-	RankingAndNewFilterValue,
 	SectorFilterValue,
+	StockTrendFilterValue,
 	TimeRangeFilterValue,
 } from '../model';
 import { useQueryPrice } from '../queries';
@@ -24,14 +23,12 @@ import { MarketType } from '@/modules/market';
 
 const StockTrendFilterValueSchema = z.nativeEnum(StockTrendFilterValue);
 const CryptoTrendFilterValueSchema = z.nativeEnum(CryptoTrendFilterValue);
-const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
 const SectorFilterValueSchema = z.nativeEnum(SectorFilterValue);
 const TimeRangeFilterValueSchema = z.nativeEnum(TimeRangeFilterValue);
 
 const FilterValueSchema = z.union([
 	CryptoTrendFilterValueSchema,
 	StockTrendFilterValueSchema,
-	RankingAndNewFilterValueSchema,
 	SectorFilterValueSchema,
 	TimeRangeFilterValueSchema,
 ]);
