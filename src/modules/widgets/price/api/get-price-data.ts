@@ -71,7 +71,7 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 				limit: req.limit,
 				rank: req.filters.rank,
 				range: req.filters.range,
-				trend: req.filters.trend,
+				trend: req.filters['stock-trend'] ?? req.filters['crypto-trend'],
 				type: req.filters.sector,
 			},
 		});
@@ -163,5 +163,3 @@ async function getMockData(req: IGetPriceRequest): Promise<IPriceData> {
 		pinedTickers: [],
 	};
 }
-
-

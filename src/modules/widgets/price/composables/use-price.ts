@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { notNullish } from '@vueuse/core';
 
 import {
+	CryptoTrendFilterValue,
 	filtersByMarketType,
 	type FiltersValues,
 	FilterType,
@@ -12,7 +13,7 @@ import {
 	getDefaultsState,
 	type IDisplaySettings,
 	type IState,
-	MarketTrendFilterValue,
+	StockTrendFilterValue,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
@@ -21,16 +22,15 @@ import { useQueryPrice } from '../queries';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { MarketType } from '@/modules/market';
 
-const MarketTrendFilterValueSchema = z.union([
-	z.nativeEnum(MarketTrendFilterValue),
-	z.literal('new'),
-]);
+const StockTrendFilterValueSchema = z.nativeEnum(StockTrendFilterValue);
+const CryptoTrendFilterValueSchema = z.nativeEnum(CryptoTrendFilterValue);
 const RankingAndNewFilterValueSchema = z.nativeEnum(RankingAndNewFilterValue);
 const SectorFilterValueSchema = z.nativeEnum(SectorFilterValue);
 const TimeRangeFilterValueSchema = z.nativeEnum(TimeRangeFilterValue);
 
 const FilterValueSchema = z.union([
-	MarketTrendFilterValueSchema,
+	CryptoTrendFilterValueSchema,
+	StockTrendFilterValueSchema,
 	RankingAndNewFilterValueSchema,
 	SectorFilterValueSchema,
 	TimeRangeFilterValueSchema,

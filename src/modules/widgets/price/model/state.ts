@@ -1,7 +1,8 @@
 import {
+	CryptoTrendFilterValue,
 	FilterType,
 	type FilterValue,
-	MarketTrendFilterValue,
+	StockTrendFilterValue,
 	RankingAndNewFilterValue,
 	SectorFilterValue,
 	TimeRangeFilterValue,
@@ -47,7 +48,7 @@ const defaultSettingsCrypto: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+		[FilterType.CryptoTrend]: CryptoTrendFilterValue.Top,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };
@@ -56,7 +57,7 @@ const defaultSettingsStock: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+		[FilterType.StockTrend]: StockTrendFilterValue.Top,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };
@@ -113,9 +114,9 @@ export function getDefaultsState(defaultStateType: string): IState {
 					[MarketType.Stock]: {
 						...defaultSettingsStock,
 						filtersState: {
-							[FilterType.MarketTrend]: filter === 'gainers'
-								? MarketTrendFilterValue.Gainers
-								: MarketTrendFilterValue.Losers,
+							[FilterType.StockTrend]: filter === 'gainers'
+								? StockTrendFilterValue.Gainers
+								: StockTrendFilterValue.Losers,
 							[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 						},
 					},

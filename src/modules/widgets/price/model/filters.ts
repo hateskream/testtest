@@ -2,17 +2,26 @@ import { IconIds } from '@/shared/ui/icon';
 import { MarketType } from '@/modules/market';
 
 export enum FilterType {
-	MarketTrend = 'trend',
+	StockTrend = 'stock-trend',
+	CryptoTrend = 'crypto-trend',
 	RankingAndNew = 'rank',
 	Sector = 'sector',
 	TimeRange = 'range',
 }
 
-export enum MarketTrendFilterValue {
+export enum StockTrendFilterValue {
 	All = 'all',
 	Gainers = 'gainers',
 	Losers = 'losers',
 	Top = 'top',
+}
+
+export enum CryptoTrendFilterValue {
+	All = 'all',
+	Top = 'top',
+	Gainers = 'gainers',
+	Losers = 'losers',
+	New = 'new',
 }
 
 export enum RankingAndNewFilterValue {
@@ -38,22 +47,23 @@ export enum TimeRangeFilterValue {
 	Year = '1Y',
 }
 
-export type FilterValue = MarketTrendFilterValue |
+export type FilterValue = StockTrendFilterValue |
 	RankingAndNewFilterValue |
 	SectorFilterValue |
 	TimeRangeFilterValue |
-	(MarketTrendFilterValue | 'new');
+	CryptoTrendFilterValue;
 
 export const filtersByMarketType: Record<MarketType, FilterType[]> = {
-	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.MarketTrend],
-	[MarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
+	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.CryptoTrend],
+	[MarketType.Stock]: [FilterType.StockTrend, FilterType.TimeRange],
 	[MarketType.Forex]: [FilterType.TimeRange],
 	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
 	[MarketType.Indices]: [FilterType.TimeRange],
 };
 
 export const filterTypeToValue: Record<FilterType, FilterValue[]> = {
-	[FilterType.MarketTrend]: [...Object.values(MarketTrendFilterValue), 'new'],
+	[FilterType.StockTrend]: Object.values(StockTrendFilterValue),
+	[FilterType.CryptoTrend]: Object.values(CryptoTrendFilterValue),
 	[FilterType.RankingAndNew]: Object.values(RankingAndNewFilterValue),
 	[FilterType.Sector]: Object.values(SectorFilterValue),
 	[FilterType.TimeRange]: Object.values(TimeRangeFilterValue),
@@ -94,7 +104,8 @@ export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
 };
 
 export const filterTypeToName: Record<FilterType, string> = {
-	[FilterType.MarketTrend]: 'Market Trend',
+	[FilterType.StockTrend]: 'Market Trend',
+	[FilterType.CryptoTrend]: 'Crypto Trend',
 	[FilterType.RankingAndNew]: 'Ranking & New',
 	[FilterType.Sector]: 'Sector',
 	[FilterType.TimeRange]: 'Time Range',
