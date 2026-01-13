@@ -48,7 +48,7 @@ const defaultSettingsCrypto: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.CryptoTrend]: CryptoTrendFilterValue.Top,
+		[FilterType.CryptoTrend]: CryptoTrendFilterValue.Gainers,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };
@@ -94,7 +94,6 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 	[MarketType.Commodities]: defaultSettingsCommodities,
 	[MarketType.Indices]: defaultSettingsIndices,
 };
-
 
 export function getDefaultsState(defaultStateType: string): IState {
 	const ddd = defaultStateType.split('-');

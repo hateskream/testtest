@@ -18,7 +18,6 @@ export enum StockTrendFilterValue {
 
 export enum CryptoTrendFilterValue {
 	All = 'all',
-	Top = 'top',
 	Gainers = 'gainers',
 	Losers = 'losers',
 	New = 'new',
