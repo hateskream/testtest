@@ -1,9 +1,9 @@
 import {
+	CryptoTrendFilterValue,
 	FilterType,
 	type FilterValue,
-	MarketTrendFilterValue,
-	RankingAndNewFilterValue,
 	SectorFilterValue,
+	StockTrendFilterValue,
 	TimeRangeFilterValue,
 } from './filters';
 import { MarketType } from '@/modules/market';
@@ -47,7 +47,7 @@ const defaultSettingsCrypto: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+		[FilterType.CryptoTrend]: CryptoTrendFilterValue.Gainers,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };
@@ -56,7 +56,7 @@ const defaultSettingsStock: ISettings = {
 	display: getDefaultsSettings(),
 	pinned: [],
 	filtersState: {
-		[FilterType.MarketTrend]: MarketTrendFilterValue.Top,
+		[FilterType.StockTrend]: StockTrendFilterValue.Top,
 		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 	},
 };
@@ -94,7 +94,6 @@ const defaultSettingsByMarket: SettingsByMarketType = {
 	[MarketType.Indices]: defaultSettingsIndices,
 };
 
-
 export function getDefaultsState(defaultStateType: string): IState {
 	const ddd = defaultStateType.split('-');
 
@@ -113,9 +112,9 @@ export function getDefaultsState(defaultStateType: string): IState {
 					[MarketType.Stock]: {
 						...defaultSettingsStock,
 						filtersState: {
-							[FilterType.MarketTrend]: filter === 'gainers'
-								? MarketTrendFilterValue.Gainers
-								: MarketTrendFilterValue.Losers,
+							[FilterType.StockTrend]: filter === 'gainers'
+								? StockTrendFilterValue.Gainers
+								: StockTrendFilterValue.Losers,
 							[FilterType.TimeRange]: TimeRangeFilterValue.Day,
 						},
 					},
@@ -146,7 +145,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 				[MarketType.Crypto]: {
 					...defaultSettingsCrypto,
 					filtersState: {
-						[FilterType.RankingAndNew]: RankingAndNewFilterValue.Gainers,
+						[FilterType.CryptoTrend]: CryptoTrendFilterValue.Gainers,
 					},
 				},
 				[MarketType.Stock]: defaultSettingsStock,

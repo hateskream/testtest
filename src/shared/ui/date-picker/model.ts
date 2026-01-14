@@ -1,4 +1,4 @@
-import type { Page as VPage } from 'v-calendar/dist/types/src/utils/page.d.ts';
+import type { CalendarDay as VCalendarDay, Page as VPage } from 'v-calendar/dist/types/src/utils/page.d.ts';
 
 export type DateSource = Date | string | number;
 
@@ -40,3 +40,5 @@ export enum DatePickerMaskKey {
 export type DateView = 'daily' | 'weekly' | 'monthly';
 
 export type Page = VPage;
+
+export type CalendarDay = VCalendarDay;

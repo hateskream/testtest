@@ -6,14 +6,14 @@ import { TvModalDivider, UiModalSearch, UiModalWrapper } from '@/shared/ui/modal
 import { MarketType } from '@/modules/market';
 import { UiPillItem, UiPillWrapper } from '@/shared/ui/pill';
 import {
-	type ITickerItem,
 	arrayToTickerMap,
+	createSelectedMarketTickersMap,
+	flattenSelectedMarketTickersMap,
+	type IMarketTickerItem,
+	type ITickerItem,
 	mapToTickerArray,
 	SelectedSegment,
 	SelectionMode,
-	type IMarketTickerItem,
-	createSelectedMarketTickersMap,
-	flattenSelectedMarketTickersMap,
 } from '../model';
 import { useInitTickerSelectorQuery, useTickerSelectorState } from '../composables';
 
@@ -36,11 +36,12 @@ const props = defineProps<{
 	selectedMarketTickers?: IMarketTickerItem[];
 }>();
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	'update:selectedMarkets': [readonly M[number][]];
 	'update:selectedTickers': [ITickerItem[]];
 	'update:excludedTickers': [ITickerItem[]];
 	'update:selectedMarketTickers': [IMarketTickerItem[]];
+	changed: [];
 }>();
 
 const localSelectedMarkets = ref(
@@ -73,19 +74,23 @@ const state = reactive(useTickerSelectorState({
 }));
 
 watch(localSelectedMarkets, v => {
-	emits('update:selectedMarkets', Array.from(v));
+	emit('update:selectedMarkets', Array.from(v));
+	emit('changed');
 }, { deep: true });
 
 watch(localSelectedTickers, v => {
-	emits('update:selectedTickers', mapToTickerArray(v));
+	emit('update:selectedTickers', mapToTickerArray(v));
+	emit('changed');
 }, { deep: true });
 
 watch(localExcludedTickers, v => {
-	emits('update:excludedTickers', mapToTickerArray(v));
+	emit('update:excludedTickers', mapToTickerArray(v));
+	emit('changed');
 }, { deep: true });
 
 watch(localSelectedMarketTickers, v => {
-	emits('update:selectedMarketTickers', flattenSelectedMarketTickersMap(v));
+	emit('update:selectedMarketTickers', flattenSelectedMarketTickersMap(v));
+	emit('changed');
 }, { deep: true });
 
 const _searchQueryModel = defineModel<string>('searchQuery', {

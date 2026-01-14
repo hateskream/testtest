@@ -2,22 +2,21 @@ import { IconIds } from '@/shared/ui/icon';
 import { MarketType } from '@/modules/market';
 
 export enum FilterType {
-	MarketTrend = 'trend',
-	RankingAndNew = 'rank',
+	StockTrend = 'stock-trend',
+	CryptoTrend = 'crypto-trend',
 	Sector = 'sector',
 	TimeRange = 'range',
 }
 
-export enum MarketTrendFilterValue {
+export enum StockTrendFilterValue {
 	All = 'all',
 	Gainers = 'gainers',
 	Losers = 'losers',
 	Top = 'top',
 }
 
-export enum RankingAndNewFilterValue {
+export enum CryptoTrendFilterValue {
 	All = 'all',
-	Top = 'top',
 	Gainers = 'gainers',
 	Losers = 'losers',
 	New = 'new',
@@ -38,19 +37,22 @@ export enum TimeRangeFilterValue {
 	Year = '1Y',
 }
 
-export type FilterValue = MarketTrendFilterValue | RankingAndNewFilterValue | SectorFilterValue | TimeRangeFilterValue;
+export type FilterValue = StockTrendFilterValue |
+	SectorFilterValue |
+	TimeRangeFilterValue |
+	CryptoTrendFilterValue;
 
 export const filtersByMarketType: Record<MarketType, FilterType[]> = {
-	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.MarketTrend],
-	[MarketType.Stock]: [FilterType.MarketTrend, FilterType.TimeRange],
+	[MarketType.Crypto]: [FilterType.TimeRange, FilterType.CryptoTrend],
+	[MarketType.Stock]: [FilterType.StockTrend, FilterType.TimeRange],
 	[MarketType.Forex]: [FilterType.TimeRange],
 	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
 	[MarketType.Indices]: [FilterType.TimeRange],
 };
 
 export const filterTypeToValue: Record<FilterType, FilterValue[]> = {
-	[FilterType.MarketTrend]: Object.values(MarketTrendFilterValue),
-	[FilterType.RankingAndNew]: Object.values(RankingAndNewFilterValue),
+	[FilterType.StockTrend]: Object.values(StockTrendFilterValue),
+	[FilterType.CryptoTrend]: Object.values(CryptoTrendFilterValue),
 	[FilterType.Sector]: Object.values(SectorFilterValue),
 	[FilterType.TimeRange]: Object.values(TimeRangeFilterValue),
 };
@@ -68,17 +70,17 @@ export interface IFilterDisplay {
 }
 
 export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
-	all: { label: 'All', value: 'all' },
-	gainers: { label: 'Gainers', value: 'gainers', icon: {
+	[StockTrendFilterValue.All]: { label: 'All', value: 'all' },
+	[StockTrendFilterValue.Gainers]: { label: 'Gainers', value: 'gainers', icon: {
 		id: IconIds.Gainers,
 		color: 'rgb(206 255 139 / 100%)',
 	} },
-	losers: { label: 'Losers', value: 'losers', icon: {
+	[StockTrendFilterValue.Losers]: { label: 'Losers', value: 'losers', icon: {
 		id: IconIds.Loosers,
 		color: 'rgb(248 89 97 / 50%)',
 	} },
-	top: { label: 'Top', value: 'top' },
-	[RankingAndNewFilterValue.New]: { label: 'New', value: 'new' },
+	[StockTrendFilterValue.Top]: { label: 'Top', value: 'top' },
+	[CryptoTrendFilterValue.New]: { label: 'New', value: 'new' },
 	[SectorFilterValue.Energy]: { label: 'Energy', value: 'energy' },
 	[SectorFilterValue.Metal]: { label: 'Metal', value: 'metal' },
 	[TimeRangeFilterValue.Day]: { label: '1 day', value: '1D', selected: '1D' },
@@ -90,8 +92,8 @@ export const filterValueToDisplay: Record<FilterValue, IFilterDisplay> = {
 };
 
 export const filterTypeToName: Record<FilterType, string> = {
-	[FilterType.MarketTrend]: 'Market Trend',
-	[FilterType.RankingAndNew]: 'Ranking & New',
+	[FilterType.StockTrend]: 'Market Trend',
+	[FilterType.CryptoTrend]: 'Crypto Trend',
 	[FilterType.Sector]: 'Sector',
 	[FilterType.TimeRange]: 'Time Range',
 };

@@ -38,7 +38,7 @@ export function transformUnemploymentRateData(
 	const badge: IMetricTrendBadge = {
 		topValue: parseFloat(data.primaryValue),
 		isTopValuePercent: data.primaryValueUnit === '%',
-		label: 'Rate up YoY',
+		label: `Rate ${data.change.isPositive ? 'down' : 'up'} YoY`,
 		value: data.change.value,
 		unit: data.change.unit,
 		trend: data.change.direction,

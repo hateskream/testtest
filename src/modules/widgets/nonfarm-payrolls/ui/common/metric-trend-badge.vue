@@ -27,7 +27,7 @@ const preparedTopValue = computed(() => {
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<ui-text token="title-200">{{ preparedTopValue }}{{ isTopValuePercent ? '%' : '' }}:&nbsp;</ui-text>
+			<ui-text token="title-200">{{ preparedTopValue }}{{ isTopValuePercent ? '%' : '' }}</ui-text>
 		</div>
 		<div :class="classes.bottom">
 			<ui-text token="text-200-r">{{ label }}:&nbsp;</ui-text>

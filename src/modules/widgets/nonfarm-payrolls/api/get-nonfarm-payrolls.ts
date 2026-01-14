@@ -1,10 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type {
-	IMetricTrendBadge,
-	INonfarmPayrollsData,
-	INonfarmPayrollsResponse,
-} from '../model';
+import type { IMetricTrendBadge, INonfarmPayrollsData, INonfarmPayrollsResponse } from '../model';
 
 export interface IGetNonfarmPayrollsRequest {
 	widgetId: string;
@@ -38,7 +34,7 @@ export function transformNonfarmPayrollsData(
 	const badge: IMetricTrendBadge = {
 		topValue: parseFloat(data.primaryValue),
 		isTopValuePercent: data.primaryValueUnit === '%',
-		label: 'Payrolls down YoY',
+		label: `Payrolls ${data.change.isPositive ? 'up' : 'down'} YoY`,
 		value: data.change.value,
 		unit: data.change.unit,
 		trend: data.change.direction,
@@ -56,4 +52,3 @@ export function transformNonfarmPayrollsData(
 		points,
 	};
 }
-

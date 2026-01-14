@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, shallowRef, useTemplateRef } from 'vue';
 
-import { DatePickerMaskKey, type DatePickerModel, type DateView, type Page } from './model';
+import { type CalendarDay, DatePickerMaskKey, type DatePickerModel, type DateView, type Page } from './model';
 import { setupVCalendar } from './setup';
 import type { VDatePickerComponent } from './component';
 import { UiSkeletonGroup } from '@/shared/ui/skeleton';
@@ -54,6 +54,10 @@ const currentPages = shallowRef<Page[]>([]);
 function onUpdatePages(pages: Page[]) {
 	currentPages.value = pages;
 }
+
+function onDayClick(_: CalendarDay, event: PointerEvent) {
+	(event.target as HTMLElement).blur();
+}
 </script>
 
 <template>
@@ -75,6 +79,7 @@ function onUpdatePages(pages: Page[]) {
 			:class="classes.datePicker"
 			color="white"
 			@update:pages="onUpdatePages"
+			@dayclick="onDayClick"
 		>
 			<template #header-title>
 				<date-picker-header
@@ -87,7 +92,7 @@ function onUpdatePages(pages: Page[]) {
 		<template #fallback>
 			<ui-skeleton-group
 				:count="skeletonCount"
-				height="30px"
+				height="42px"
 				gap="2px"
 				:class="classes.skeleton"
 			/>
