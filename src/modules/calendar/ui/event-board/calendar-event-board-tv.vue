@@ -4,7 +4,7 @@ import { computed, useTemplateRef } from 'vue';
 import {
 	type DateYYYYMMDD,
 	type ICalendarEvent,
-	type IEventBoardResponse,
+	type IEventBoardItem,
 	toIsoUtcDate,
 	toUtcIsoDate,
 } from '@/modules/calendar';
@@ -14,7 +14,7 @@ import { getDateFormatter } from '@/shared/lib';
 import CalendarEventCardTv from './calendar-event-card-tv.vue';
 
 interface ICalendarEventBoardProps {
-	eventBoard: IEventBoardResponse[];
+	eventBoard: IEventBoardItem[];
 	eventBoardFavorites: string[];
 }
 

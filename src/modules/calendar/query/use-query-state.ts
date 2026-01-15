@@ -5,7 +5,7 @@ import type {
 	IDailyCalendarInfoRequest,
 	IDailyCalendarInfoResponse,
 	IEventBoardRequestOptions,
-	IEventBoardResponse,
+	IEventBoardItem,
 } from '@/modules/calendar';
 import { getCalendarDays, getEventBoard } from '@/modules/calendar/api';
 
@@ -20,7 +20,7 @@ export const useDailyCalendarGetState = (options: MaybeRefOrGetter<IDailyCalenda
 };
 
 export const useEventBoardGetState = (options: MaybeRefOrGetter<IEventBoardRequestOptions>) => {
-	return useQuery<IEventBoardResponse[]>({
+	return useQuery<IEventBoardItem[]>({
 		queryKey: [SETTINGS_QUERY_KEY, 'event-board', options],
 		queryFn: () => getEventBoard(toValue(options)),
 		refetchOnMount: false,

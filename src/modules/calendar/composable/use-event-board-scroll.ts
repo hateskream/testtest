@@ -1,6 +1,6 @@
 import { computed, type MaybeRefOrGetter, nextTick, toValue, watch } from 'vue';
 
-import { type DateYYYYMMDD, type IEventBoardResponse, toUtcIsoDate } from '@/modules/calendar';
+import { type DateYYYYMMDD, type IEventBoardItem, toUtcIsoDate } from '@/modules/calendar';
 
 export interface IEventBoardExposed {
 	scrollToDate: (date: DateYYYYMMDD, options?: ScrollIntoViewOptions) => void;
@@ -10,7 +10,7 @@ export interface IEventBoardExposed {
 }
 
 export interface IUseEventBoardScroll {
-	board: MaybeRefOrGetter<IEventBoardResponse[]>;
+	board: MaybeRefOrGetter<IEventBoardItem[]>;
 	baseDate: MaybeRefOrGetter<Date>;
 	ref: MaybeRefOrGetter<IEventBoardExposed | null>;
 }

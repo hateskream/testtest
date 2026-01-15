@@ -7,7 +7,7 @@ import {
 	EventType,
 	type IDailyCalendarInfoResponse, type IEventBoardExposed,
 	type IEventBoardRange,
-	type IEventBoardResponse,
+	type IEventBoardItem,
 	Impact,
 	type IWeeklyDayInfo,
 	MarketIds,
@@ -25,7 +25,7 @@ interface ICalendarWeeklyContainerProps {
 	weekStartsOn?: 'monday' | 'sunday';
 	currentDate?: Date;
 	watchlists: IWatchlist[];
-	eventBoard: IEventBoardResponse[];
+	eventBoard: IEventBoardItem[];
 	dailyCalendarData: IDailyCalendarInfoResponse[];
 	baseDate: Date;
 	weekDays: IWeeklyDayInfo[];

@@ -1,15 +1,17 @@
 import {
 	type IEventBoardRequestOptions,
+	type IEventBoardItem,
+	Impact,
+	MARKET_ID_TO_ISO,
 	type IEventBoardResponse,
-	Impact, MARKET_ID_TO_ISO,
-} from '@/modules/calendar';
+} from '../models';
 import { useLogger } from '@/shared/service/logger';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockEventBoard } from '@/modules/calendar/api/mock';
 
 const IS_USE_MOCK = false;
 
-export async function getEventBoard(options: IEventBoardRequestOptions): Promise<IEventBoardResponse[]> {
+export async function getEventBoard(options: IEventBoardRequestOptions): Promise<IEventBoardItem[]> {
 	const logger = useLogger();
 
 	try {
@@ -20,15 +22,15 @@ export async function getEventBoard(options: IEventBoardRequestOptions): Promise
 	}
 }
 
-function sendRequest(options: IEventBoardRequestOptions) {
+async function sendRequest(options: IEventBoardRequestOptions) {
 	const httpService = useHttpService();
 
 	if (IS_USE_MOCK) {
 		return createMockEventBoard(options);
 	} else {
-		return httpService.get<IEventBoardResponse[]>('/api/v1/calendar/data', {
+		return (await httpService.get<IEventBoardResponse>('/api/v1/calendar/data', {
 			query: prepareRequest(options),
-		});
+		})).days;
 	}
 }
 

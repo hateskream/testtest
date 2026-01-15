@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 
-import { type DateYYYYMMDD, type IEventBoardResponse } from '@/modules/calendar';
+import { type DateYYYYMMDD, type IEventBoardItem } from '@/modules/calendar';
 
 import CalendarEventBoardTv from './event-board/calendar-event-board-tv.vue';
 import CalendarEventBoardDashboard from '@/modules/calendar/ui/event-board/calendar-event-board-dashboard.vue';
 
 interface ICalendarEventBoardProps {
-	eventBoard: IEventBoardResponse[];
+	eventBoard: IEventBoardItem[];
 	eventBoardFavorites: string[];
 	displayVariant?: 'new' | 'default';
 	maxCountRowTable?: number;

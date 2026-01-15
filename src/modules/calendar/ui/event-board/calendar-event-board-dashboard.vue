@@ -4,7 +4,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 import {
 	type DateYYYYMMDD,
 	type ICalendarEvent,
-	type IEventBoardResponse,
+	type IEventBoardItem,
 	toIsoUtcDate,
 	toUtcIsoDate,
 } from '@/modules/calendar';
@@ -15,7 +15,7 @@ import { UiText } from '@/shared/ui/text';
 import CalendarEventCardDashboard from './calendar-event-card-dashboard.vue';
 
 interface ICalendarEventBoardProps {
-	eventBoard: IEventBoardResponse[];
+	eventBoard: IEventBoardItem[];
 	eventBoardFavorites: string[];
 	maxCountRowTable: number;
 }

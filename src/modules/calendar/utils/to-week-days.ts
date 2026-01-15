@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue';
 
-import type { ICalendarEvent, IDailyCalendarInfoResponse, IEventBoardResponse, IWeeklyDayInfo } from '../models';
+import type { ICalendarEvent, IDailyCalendarInfoResponse, IEventBoardItem, IWeeklyDayInfo } from '../models';
 import { getStartOfWeek, isSameCalendarDay, isSameWeek } from '@/modules/calendar';
 import { getDateFormatter } from '@/shared/lib';
 
@@ -15,7 +15,7 @@ export function toWeekDays(
 	apiDays: IDailyCalendarInfoResponse[],
 	baseDateSource: Date,
 	locale: string,
-	evBoard: IEventBoardResponse[] = [],
+	evBoard: IEventBoardItem[] = [],
 	favorites: string[],
 ): IWeeklyDayInfo[] {
 	const today = new Date();

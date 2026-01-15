@@ -49,7 +49,11 @@ export interface ICalendarEvent {
 	details?: ICalendarEventDetails;
 }
 
-export interface IEventBoardResponse {
+export interface IEventBoardItem {
 	date: string;
 	events: ICalendarEvent[];
+}
+
+export interface IEventBoardResponse {
+	days: IEventBoardItem[];
 }
