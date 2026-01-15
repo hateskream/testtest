@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from 'vue';
+import { useNow } from '@vueuse/core';
 
 import {
 	type DateYYYYMMDD,
@@ -27,14 +28,16 @@ const emits = defineEmits<{
 
 const boardsRef = ref<HTMLElement[]>([]);
 
-const now = new Date();
+const now = useNow({
+	interval: 60_000,
+});
 
 function formatEventDate(dateStr: DateYYYYMMDD) {
 	const date = new Date(dateStr);
 	const locale = 'en-US';
 
-	const sameYear = date.getFullYear() === now.getFullYear();
-	const sameMonth = sameYear && date.getMonth() === now.getMonth();
+	const sameYear = date.getFullYear() === now.value.getFullYear();
+	const sameMonth = sameYear && date.getMonth() === now.value.getMonth();
 
 	const weekdayFormatter = getDateFormatter({
 		locale,
@@ -109,7 +112,7 @@ function getHourStatus(dayDate: DateYYYYMMDD, hour: string) {
 	const start = toIsoUtcDate(dayDate);
 	start.setHours(Number(hh), Number(mm), 0, 0);
 
-	const diff = start.getTime() - now.getTime();
+	const diff = start.getTime() - now.value.getTime();
 
 	return {
 		soon: diff > 0 && diff <= HOUR,
@@ -117,16 +120,38 @@ function getHourStatus(dayDate: DateYYYYMMDD, hour: string) {
 	};
 }
 
+function getRelativeLabel(datetime: string): string | null {
+	const start = new Date(datetime);
+	const diff = start.getTime() - now.value.getTime();
+	const mins = Math.round(diff / 60000);
+
+	if (mins > 0 && mins < 60) {
+		return `in ${mins} min${mins === 1 ? '' : 's'}`;
+	}
+
+	return null;
+}
+
 const groupedBoard = computed(() =>
 	props.eventBoard.map(day => {
-		const grouped = groupEventsByHour(day.events).map(group => ({
-			...group,
-			...getHourStatus(day.date as DateYYYYMMDD, group.hour),
-			events: group.events.map(event => ({
-				...event,
-				favorite: props.eventBoardFavorites.includes(event.id),
-			})),
-		}));
+		const grouped = groupEventsByHour(day.events).map(group => {
+			const [nextEvent] = group.events
+				.map(e => new Date(e.meta.datetime))
+				.filter(d => d.getTime() > now.value.getTime())
+				.sort((a, b) => a.getTime() - b.getTime());
+
+			return {
+				...group,
+				...getHourStatus(day.date as DateYYYYMMDD, group.hour),
+				expires: nextEvent
+					? getRelativeLabel(nextEvent.toISOString())
+					: null,
+				events: group.events.map(event => ({
+					...event,
+					favorite: props.eventBoardFavorites.includes(event.id),
+				})),
+			};
+		});
 
 		return { ...day, grouped };
 	}),
@@ -149,7 +174,7 @@ function scrollToDate(
 		return;
 	}
 
-	const today = toUtcIsoDate(now);
+	const today = toUtcIsoDate(now.value);
 
 	if (date !== today) {
 		dayEl.scrollIntoView({ block: 'start', behavior });
@@ -167,7 +192,7 @@ function scrollToDate(
 		const [hh, mm = '0'] = hhmm.split(':');
 		return (+hh) * 60 + (+mm);
 	};
-	const nowMin = now.getHours() * 60 + now.getMinutes();
+	const nowMin = now.value.getHours() * 60 + now.value.getMinutes();
 
 	const targetHour =
 		groups
@@ -208,9 +233,7 @@ function calcMaxCountRowVisible(height: number) {
 	return calcMaxRowVisible(height).count;
 }
 
-
 function calcMaxRowVisible(height: number) {
-
 	if (!boardsRef.value) {
 		return { count: 0, height: 0 };
 	}
@@ -302,7 +325,7 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 						/>
 
 						<ui-text :class="classes.hour" token="text-100-r">
-							{{ group.hour }}
+							{{ group.hour }} <span :class="classes.expires">{{group.expires}}</span>
 						</ui-text>
 					</div>
 
@@ -422,5 +445,10 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 .missed {
 	cursor: default;
 	opacity: 0.4;
+}
+
+.expires {
+	color: var(--atom-warning-00, #FC1D4D);
+	padding-left: 2px;
 }
 </style>

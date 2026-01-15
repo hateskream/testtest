@@ -29,6 +29,8 @@ const openEventCard = () => {
 };
 
 const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
+
+const now = new Date();
 </script>
 
 <template>
