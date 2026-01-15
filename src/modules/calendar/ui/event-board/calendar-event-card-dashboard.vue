@@ -9,6 +9,7 @@ import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiImage } from '@/shared/ui/image';
+import { useGoToTickerPage } from '@/modules/chart';
 
 interface ICalendarEventCardProps {
 	event: ICalendarEvent;
@@ -29,6 +30,8 @@ const openEventCard = () => {
 };
 
 const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
+
+const { goToTickerPage } = useGoToTickerPage();
 </script>
 
 <template>
@@ -143,7 +146,11 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 								{{ props.event.details.label }}
 							</external-link>
 
-							<button v-if="isChartEnabled" :class="classes.chart">
+							<button
+								v-if="isChartEnabled"
+								:class="classes.chart"
+								@click.stop="goToTickerPage(props.event.canonical_ticker_id)"
+							>
 								<ui-icon
 									:id="IconIds.Chart"
 									width="16px"

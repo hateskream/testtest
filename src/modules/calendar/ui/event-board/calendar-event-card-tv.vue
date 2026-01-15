@@ -38,6 +38,9 @@ const eventStartsIn = computed(() => {
 
 	return null;
 });
+
+const { goToTickerPage } = useGoToTickerPage();
+
 </script>
 
 <template>
@@ -138,7 +141,7 @@ const eventStartsIn = computed(() => {
 					{{ props.event.details.label }}
 				</external-link>
 
-				<div :class="classes.launcChartAction" @click.stop>
+				<div :class="classes.launcChartAction" @click.stop="goToTickerPage(props.event.canonical_ticker_id)">
 					<ui-icon
 						:id="IconIds.GraphIcon"
 						width="20"
