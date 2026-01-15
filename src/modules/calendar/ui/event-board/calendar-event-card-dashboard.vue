@@ -208,7 +208,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 100%
+	width: 100%;
 }
 
 .category {
@@ -329,8 +329,8 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 
 .badge {
 	display: flex;
-	align-items: center;
 	flex-shrink: 0;
+	align-items: center;
 	height: 24px;
 	padding: 3px 6px;
 	border-radius: 6px;

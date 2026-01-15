@@ -448,7 +448,7 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 }
 
 .expires {
-	color: var(--atom-warning-00, #FC1D4D);
 	padding-left: 2px;
+	color: var(--atom-warning-00, #fc1d4d);
 }
 </style>
