@@ -94,7 +94,7 @@ function onChanged() {
 				:enable-select-all="props.enableSelectAll"
 				:enabled-markets="props.enabledMarkets"
 				:display-variant="props.displayVariant"
-				@changed="onChanged"
+				@update:selected-tickers="onChanged"
 			/>
 		</template>
 	</modal-badge-dropdown>
