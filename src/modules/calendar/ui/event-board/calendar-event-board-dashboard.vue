@@ -84,11 +84,11 @@ function groupEventsByHour(events: ICalendarEvent[]) {
 	const groups: Record<string, ICalendarEvent[]> = {};
 
 	for (const ev of events) {
-		if (!ev.eventDatetime) {
+		if (!ev.meta.datetime) {
 			continue;
 		}
 
-		const date = new Date(ev.eventDatetime);
+		const date = new Date(ev.meta.datetime);
 		const hour = date.toLocaleTimeString([], {
 			hour: '2-digit',
 			minute: '2-digit',

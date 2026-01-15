@@ -79,11 +79,11 @@ function groupEventsByHour(events: ICalendarEvent[]) {
 	const groups: Record<string, ICalendarEvent[]> = {};
 
 	for (const ev of events) {
-		if (!ev.eventDatetime) {
+		if (!ev.meta.datetime) {
 			continue;
 		}
 
-		const date = new Date(ev.eventDatetime);
+		const date = new Date(ev.meta.datetime);
 		const hour = date.toLocaleTimeString([], {
 			hour: '2-digit',
 			minute: '2-digit',
@@ -229,7 +229,7 @@ defineExpose({ scrollToDate });
 							:style="getHighlightColor(event.favorite, group.soon)"
 						>
 							<calendar-event-card-tv
-								v-bind="event"
+								:event="event"
 								:is-missed="group.missed"
 								:is-favorite="event.favorite"
 								@toggle-favorite="emits('toggleEventBoard', $event)"

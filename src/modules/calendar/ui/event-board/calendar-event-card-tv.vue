@@ -3,42 +3,16 @@ import { computed, ref } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ExternalLink } from '@/shared/ui/link';
-import { MarketIds, markets } from '@/modules/calendar';
+import { type ICalendarEvent, markets } from '@/modules/calendar';
 import { UiText } from '@/shared/ui/text';
 
 interface ICalendarEventCardProps {
-	id: string;
-
+	event: ICalendarEvent;
 	isMissed: boolean;
 	isFavorite: boolean;
-
-	eventType: string;
-	eventTitle: string;
-	eventTitleDescription?: string;
-	eventDatetime?: string;
-	eventSummary?: string;
-	metrics: {
-		label: string;
-		value: string;
-	}[];
-	ticker?: string;
-	text?: string;
-	link?: string;
-	linkText?: string;
-	marketId?: MarketIds;
 }
 
-const props = withDefaults(defineProps<ICalendarEventCardProps>(), {
-	eventDatetime: new Date().toISOString(),
-	eventTitleDescription: '',
-	eventSummary: '',
-	ticker: 'TSLA',
-	marketId: undefined,
-	// eslint-disable-next-line @stylistic/max-len
-	text: 'MBA 30-Year Mortgage Rate is average 30-year fixed mortgage lending rate measured during the reported week and backed by the Mortgage Bankers Association.',
-	link: 'https://google.com/',
-	linkText: 'Mortgage Bankers Association of America',
-});
+const props = defineProps<ICalendarEventCardProps>();
 
 const emits = defineEmits<{
 	toggleFavorite: [id: string];
@@ -53,7 +27,7 @@ const openEventCard = () => {
 const now = new Date();
 
 const eventStartsIn = computed(() => {
-	const start = new Date(props.eventDatetime);
+	const start = new Date(props.event.meta.datetime);
 
 	const diff = start.getTime() - now.getTime();
 	const mins = Math.round(diff / 60000);
@@ -71,7 +45,7 @@ const eventStartsIn = computed(() => {
 		<div :class="classes.cardHeader">
 			<div :class="classes.flexStart">
 				<div :class="classes.eventType">
-					{{ props.eventType }}
+					{{ props.event.meta.category }}
 				</div>
 
 				<div v-if="eventStartsIn" :class="classes.eventStartsIn">
@@ -80,7 +54,7 @@ const eventStartsIn = computed(() => {
 
 				<button
 					:class="[classes.buttonIcon, props.isFavorite && classes.favorite]"
-					@click="emits('toggleFavorite', props.id)"
+					@click="emits('toggleFavorite', props.event.id)"
 				>
 					<ui-icon
 						:id="IconIds.Favorite"
@@ -90,29 +64,29 @@ const eventStartsIn = computed(() => {
 				</button>
 			</div>
 			<div :class="classes.flexEnd">
-				<div :class="classes.eventSummary">
-					{{ props.eventSummary }}
+				<div v-if="props.event.meta.badge" :class="classes.eventSummary">
+					{{ props.event.meta.badge?.label }}
 				</div>
 			</div>
 		</div>
 		<div :class="classes.cardHeadline">
 			<div :class="classes.eventTitle">
-				<div v-if="props.marketId" :class="classes.iconWrapper">
+				<div v-if="props.event.meta.country" :class="classes.iconWrapper">
 					<ui-icon
-						:id="markets.find(v => v.id === props.marketId)?.icon ?? IconIds.Globus"
+						:id="markets.find(v => v.id === props.event.meta.country)?.icon ?? IconIds.Globus"
 						width="20px"
 						height="20px"
 					/>
 				</div>
 
-				<div :class="classes.eventTitle">{{ props.eventTitle }}</div>
+				<div :class="classes.eventTitle">{{ props.event.meta.title }}</div>
 
 				<div
-					v-if="props.eventTitleDescription"
+					v-if="props.event.meta.description"
 					class="text-300-r"
 					:class="classes.eventTitleDescription"
 				>
-					{{ props.eventTitleDescription }}
+					{{ props.event.meta.description }}
 				</div>
 
 				<ui-icon
@@ -123,7 +97,7 @@ const eventStartsIn = computed(() => {
 			</div>
 			<div :class="classes.eventMetrics">
 				<div
-					v-for="metric in props.metrics"
+					v-for="metric in props.event.metrics"
 					:key="metric.label"
 					:class="classes.metricData"
 				>
@@ -153,10 +127,16 @@ const eventStartsIn = computed(() => {
 				class="text-300-r"
 			>
 				<div :class="classes.eventText">
-					{{ props.text }}
+					{{ props.event.meta.description }}
 				</div>
 
-				<external-link :to="props.link" @click.stop>{{ props.linkText }}</external-link>
+				<external-link
+					v-if="props.event.details"
+					:to="props.event.details.link"
+					@click.stop
+				>
+					{{ props.event.details.label }}
+				</external-link>
 
 				<div :class="classes.launcChartAction" @click.stop>
 					<ui-icon

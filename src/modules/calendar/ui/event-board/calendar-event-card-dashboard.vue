@@ -19,7 +19,7 @@ interface ICalendarEventCardProps {
 const props = defineProps<ICalendarEventCardProps>();
 
 const icon = computed(
-	() => markets.find(v => v.id === props.event.marketId)?.icon ?? IconIds.Globus,
+	() => markets.find(v => v.id === props.event.meta.country)?.icon ?? IconIds.Globus,
 );
 
 const isCardOpen = ref(false);
@@ -37,19 +37,18 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 			<div :class="classes.container">
 				<div :class="classes.head">
 					<ui-text
-						v-if="props.event.eventType"
 						token="text-100-r"
 						:class="classes.category"
 					>
-						{{props.event.eventType}}
+						{{props.event.meta.category}}
 					</ui-text>
 				</div>
 
 				<div :class="classes.cell">
 					<div :class="classes.main">
 						<ui-image
-							v-if="props.event.imageUrl"
-							:src="props.event.imageUrl"
+							v-if="props.event.meta.image"
+							:src="props.event.meta.image"
 							width="20px"
 							height="20px"
 						/>
@@ -60,7 +59,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 							height="20px"
 						/>
 						<ui-clamped :class="classes.title" :rows="1">
-							<ui-text token="text-300-r">{{ props.event.eventTitle }}</ui-text>
+							<ui-text token="text-300-r">{{ props.event.meta.title }}</ui-text>
 						</ui-clamped>
 					</div>
 					<button :class="classes.dropdown">
@@ -107,7 +106,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 							token="text-300-r"
 							as="div"
 						>
-							{{ props.event.impact }}
+							{{ props.event.meta.impact }}
 						</ui-text>
 					</div>
 				</div>
@@ -122,15 +121,15 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 								token="text-300-r"
 								as="p"
 							>
-								{{ props.event.eventTitleDescription || 'No description yet.' }}
+								{{ props.event.meta.description || 'No description yet.' }}
 							</ui-text>
 
 							<external-link
-								v-if="props.event.link && props.event.linkText"
+								v-if="props.event.details?.link && props.event.details.label"
 								:class="classes.link"
-								:to="props.event.link"
+								:to="props.event.details.link"
 							>
-								{{ props.event.linkText }}
+								{{ props.event.details.label }}
 							</external-link>
 
 							<button v-if="isChartEnabled" :class="classes.chart">
