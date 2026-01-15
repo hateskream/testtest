@@ -49,12 +49,14 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 						<ui-image
 							v-if="props.event.meta.image"
 							:src="props.event.meta.image"
+							:class="classes.icon"
 							width="20px"
 							height="20px"
 						/>
 						<ui-icon
 							v-else
 							:id="icon"
+							:class="classes.icon"
 							width="20px"
 							height="20px"
 						/>
@@ -277,6 +279,10 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 	padding-bottom: var(--padding-padding-s4, 6px);
 	gap: 6px;
 	overflow: hidden;
+}
+
+.icon {
+	border-radius: 50%;
 }
 
 .detailsContent {
