@@ -50,10 +50,10 @@ const props = defineProps<IViewComponentProps>();
 
 .segments {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
+	overflow-x: auto;
 	overflow-y: auto;
-	row-gap: 4px;
-	scrollbar-width: none;
+	gap: 16px;
 }
 
 .ticker {
@@ -64,7 +64,8 @@ const props = defineProps<IViewComponentProps>();
 
 .name {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 6px;
 	color: var(--text-color-base-300);
 }

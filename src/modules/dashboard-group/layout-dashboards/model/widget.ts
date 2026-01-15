@@ -62,7 +62,7 @@ const MarketCap: Preset = {
 
 const BitcoinDominance: Preset = {
 	name: 'Dominance',
-	displayVariants: ['chart', 'tile', 'bar'],
+	displayVariants: ['tile'],
 };
 
 const Price: Preset = {
