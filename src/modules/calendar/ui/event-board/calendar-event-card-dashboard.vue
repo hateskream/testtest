@@ -29,8 +29,6 @@ const openEventCard = () => {
 };
 
 const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
-
-const now = new Date();
 </script>
 
 <template>
@@ -44,6 +42,15 @@ const now = new Date();
 					>
 						{{props.event.meta.category}}
 					</ui-text>
+
+					<div
+						v-if="props.event.meta.badge"
+						:class="[classes.badge, classes[`badge-${props.event.meta.badge.color}`]]"
+					>
+						<ui-text token="text-200-r">
+							{{props.event.meta.badge.label}}
+						</ui-text>
+					</div>
 				</div>
 
 				<div :class="classes.cell">
@@ -201,6 +208,7 @@ const now = new Date();
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width: 100%
 }
 
 .category {
@@ -248,6 +256,12 @@ const now = new Date();
 .dropdown:hover,
 .card:hover .dropdown {
 	color: var(--text-color-base-300-activated);
+}
+
+.bottomWrapper {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-between;
 }
 
 .eventMetrics {
@@ -311,6 +325,30 @@ const now = new Date();
 
 .chart:hover {
 	color: var(--text-color-base-300-activated);
+}
+
+.badge {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	height: 24px;
+	padding: 3px 6px;
+	border-radius: 6px;
+}
+
+.badge-neutral {
+	color: var(--text-500, rgb(255 255 255 / 96%));
+	background-color: var(--base-base-80, rgb(73 73 80 / 22%));
+}
+
+.badge-positive {
+	color: var(--success-success-00, #04eda0);
+	background-color: var(--success-success-90, rgb(4 237 160 / 10%));
+}
+
+.badge-negative {
+	color: var(--warning-warning-00, #fc1d4d);
+	background-color: var(--warning-success-90, rgb(252 29 77 / 10%));
 }
 </style>
 
