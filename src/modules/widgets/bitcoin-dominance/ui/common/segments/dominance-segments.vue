@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { IDominanceSnapshot } from '../../../model';
 import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 import DominanceSegmentsIndicator from './dominance-segments-indicator.vue';
 
@@ -23,9 +24,11 @@ const props = defineProps<IViewComponentProps>();
 			>
 				<div :class="classes.name">
 					<div :class="classes.circle" :style="{backgroundColor: item.color}"></div>
-					<ui-text token="text-200-r">
-						{{ item.symbol }}
-					</ui-text>
+					<ui-clamped :rows="1" :class="classes.nameText">
+						<ui-text token="text-200-r">
+							{{ item.symbol }}
+						</ui-text>
+					</ui-clamped>
 				</div>
 				<ui-text
 					:class="classes.value"
@@ -58,6 +61,7 @@ const props = defineProps<IViewComponentProps>();
 
 .ticker {
 	display: flex;
+	flex-shrink: 0;
 	flex-direction: column;
 	width: 80px;
 }
@@ -68,6 +72,10 @@ const props = defineProps<IViewComponentProps>();
 	align-items: flex-start;
 	gap: 6px;
 	color: var(--text-color-base-300);
+}
+
+.nameText {
+	max-width: 100%;
 }
 
 .circle {
