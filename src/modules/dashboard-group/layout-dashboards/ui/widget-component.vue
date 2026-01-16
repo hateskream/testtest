@@ -3,7 +3,6 @@ import { computed, defineAsyncComponent, ref, shallowRef, useTemplateRef, watch 
 
 import { getWidgetComponent, type IMeta } from '../../dashboards/model';
 import type { DisplayVariant, IWidget } from '../model';
-import { MIN_ROW_HEIGHT, MAX_ROW_HEIGHT } from '../../tv';
 import {
 	calcSizeSideGridCell,
 	canChangeHeight,
@@ -13,16 +12,16 @@ import {
 	getWidgetHeight,
 	resizeHandlerMapping,
 } from '../model';
+import { MAX_ROW_HEIGHT, MIN_ROW_HEIGHT } from '../../tv';
 import { UiSkeleton } from '@/shared/ui/skeleton';
-import { useDelayedLoading } from '@/shared/composables';
+import { useDelayedLoading, useIsMobile } from '@/shared/composables';
 import { useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
-import { useIsMobile } from '@/shared/composables';
 
 import HighlighterComponent from './highlighter-component.vue';
 
 interface IWidgetExposed {
-	scrollBy: (px: number) => void;
+	scrollBy?: (px: number) => void;
 	snapHeightToNearestStep?(height: number): number;
 	calcMaxCountRowVisible?(height: number): number;
 }
@@ -192,7 +191,9 @@ function scrollBy(px: number) {
 		return;
 	}
 
-	refComponent.value.scrollBy(px);
+	if (refComponent.value.scrollBy) {
+		refComponent.value.scrollBy(px);
+	}
 }
 
 function setWidgetStateType(widgetId: string, stateType: string) {
