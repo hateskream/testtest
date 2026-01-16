@@ -8,8 +8,8 @@ import { useTickerSelectorInfiniteQuery } from '../../composables';
 import { UiModalContent } from '@/shared/ui/modal';
 
 import TickerSelectorEmpty from './ticker-selector-empty.vue';
-import TickerSelectorItemsSkeleton
-	from '@/modules/ticker-selector/new/components/skeletons/ticker-selector-items-skeleton.vue';
+import TickerSelectorItemsSkeleton from './skeletons/ticker-selector-items-skeleton.vue';
+import TickerSelectorError from './error/ticker-selector-error.vue';
 
 const props = defineProps<{
 	marketType: MarketType;
@@ -19,9 +19,11 @@ const props = defineProps<{
 const {
 	data,
 	isLoading,
+	isError,
 	isFetchingNextPage,
 	hasNextPage,
 	fetchNextPage,
+	refetch,
 } = useTickerSelectorInfiniteQuery(() => ({
 	search_query: props.searchQuery,
 	markets: [props.marketType || MarketType.Forex],
@@ -98,6 +100,10 @@ watch(isLoading, loaded => {
 				width="100%"
 				height="32px"
 			/>
+		</template>
+
+		<template v-else-if="isError">
+			<ticker-selector-error @retry="refetch" />
 		</template>
 
 		<template v-else-if="items.length > 0">

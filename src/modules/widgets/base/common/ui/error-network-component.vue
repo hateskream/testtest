@@ -1,66 +1,33 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText } from '@/shared/ui/text';
 
 const emits = defineEmits<{
 	retry: [];
 }>();
-
-const isWideScreen = ref(window.innerWidth > 400);
-
-watch(
-	() => window.innerWidth,
-	newWidth => {
-		isWideScreen.value = newWidth > 400;
-	},
-);
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.root">
-			<div
-				v-if="isWideScreen"
-				:class="classes.wideContent"
-			>
-				<span :class="classes.text">Couldn't load</span>
-				<span
-					:class="classes.retryContainer"
-					@click="emits('retry')"
-				>
-					<ui-icon
-						:id="IconIds.Retry"
-						:class="classes.icon"
-						width="20px"
-						height="20px"
-					/>
-					<span :class="classes.textRetry"> Retry </span>
-				</span>
-
+			<div :class="classes.wideContent">
+				<ui-text :class="classes.text" token="text-300-r">
+					Couldn't load
+				</ui-text>
 				<button
 					:class="classes.retryButton"
 					@click="emits('retry')"
 				>
-					R
-				</button>
-			</div>
-
-			<div
-				v-else
-				:class="classes.narrowContent"
-				@click="emits('retry')"
-			>
-				<span :class="classes.retryContainer">
 					<ui-icon
 						:id="IconIds.Retry"
 						:class="classes.icon"
-						width="20px"
-						height="20px"
+						width="16px"
+						height="16px"
 					/>
-					<span :class="classes.textRetry"> Retry </span>
-				</span>
-				<button :class="classes.retryButton">R</button>
+					<ui-text token="text-300-r" :class="classes.textRetry">
+						Retry
+					</ui-text>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -70,18 +37,19 @@ watch(
 .container {
 	display: flex;
 	justify-content: center;
-	padding: 6px 0;
+	height: 32px;
 }
 
 .root {
 	display: flex;
 	align-items: center;
 	width: fit-content;
-	padding: 8px 16px;
+	gap: 4px;
+	padding: 0 4px;
 	color: var(--text-color-base-100);
 	letter-spacing: 0.104px;
-	background-color: var(--bg-color-base-100);
-	border-radius: 28px;
+	background: var(--atom-base-90, rgb(73 73 80 / 15%));
+	border-radius: var(--radius-radius-s14-32, 12.4px);
 }
 
 .wideContent {
@@ -91,46 +59,32 @@ watch(
 }
 
 .text {
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 150%;
-}
-
-.retryContainer {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	cursor: pointer;
-}
-
-.icon {
-	/* color: var(--icon-color-base-300); */
-}
-
-.textRetry {
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 150%;
+	padding: 0 var(--padding-padding-s3, 4px);
 	color: var(--text-color-base-300);
 }
 
 .retryButton {
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	width: 24px;
-	height: 24px;
-	font-weight: 500;
-	font-size: 14px;
-	color: var(--text-color-base-100);
-	background-color: var(--bg-color-base-300);
-	border-radius: 6px;
+	height: var(--height-height-s12, 24px);
+	padding: 0 var(--tile-padding-md-in, 10px) 0 var(--tile-padding-md-out, 6px);
+	background: var(--bg-100, rgb(73 73 80 / 32%));
+	border-radius: var(--radius-radius-s12-24, 9.2px);
+	gap: var(--padding-padding-s3, 4px);
 	cursor: pointer;
+	transition: background-color 0.12s ease-in-out;
 }
 
-.narrowContent {
-	display: flex;
-	align-items: center;
-	gap: 8px;
+.textRetry {
+	color: var(--text-color-base-300);
+	transition: color 0.12s ease-in-out;
+}
+
+.retryButton:hover {
+	background: rgb(73 73 80 / 42%);
+}
+
+.retryButton:hover .textRetry {
+	color: var(--text-color-base-300-effect);
 }
 </style>

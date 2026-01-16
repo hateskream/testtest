@@ -17,6 +17,7 @@ import TickerSelectorSelectedTab from './tabs/ticker-selector-selected-tab.vue';
 import TickerSelectorAllTab from './tabs/ticker-selector-all-tab.vue';
 import TickerSelectorMarketTab from './tabs/ticker-selector-market-tab.vue';
 import TickerSelectorInitSkeleton from './components/skeletons/ticker-selector-init-skeleton.vue';
+import TickerSelectorError from './components/error/ticker-selector-error.vue';
 
 const props = defineProps<{
 	enabledMarkets: M;
@@ -86,7 +87,7 @@ function exitMarketTab() {
 	selectedSegment.value = SelectedSegment.All;
 }
 
-const { data, isLoading, isFetched, isError } = useInitTickerSelectorQuery();
+const { data, isLoading, isFetched, isError, refetch } = useInitTickerSelectorQuery();
 
 const selectedSum = computed(() => {
 	if (!data.value || props.selectionMode === SelectionMode.Single) {
@@ -155,7 +156,7 @@ const selectedSum = computed(() => {
 		</template>
 
 		<template v-else-if="isError">
-			Error
+			<ticker-selector-error @retry="refetch" />
 		</template>
 
 		<template v-else-if="data && isFetched">
