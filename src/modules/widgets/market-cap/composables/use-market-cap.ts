@@ -12,6 +12,7 @@ import {
 } from '../model';
 import { useQueryMarketCap } from '../queries';
 import { deepCompare } from '@/shared/lib/compare.ts';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 interface IOptions {
 	widgetId: string;
@@ -47,7 +48,7 @@ export function useMarketCap({
 
 	const selectedTickers = computed({
 		get: () => state.value.selectedTickers,
-		set: (val: string[]) => {
+		set: (val: ITickerItem[]) => {
 			state.value.selectedTickers = val;
 		},
 	});
@@ -110,7 +111,11 @@ export function useMarketCap({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryMarketCap(selectedTickers, selectedMarkets, activeDateRange);
+	} = useQueryMarketCap(
+		() => selectedTickers.value.map(v => v.canonical_ticker_id),
+		selectedMarkets,
+		activeDateRange,
+	);
 
 	return {
 		selectedTickers,

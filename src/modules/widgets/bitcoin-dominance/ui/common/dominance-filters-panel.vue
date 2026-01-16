@@ -8,13 +8,12 @@ import { ModalBadge, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IMeta } from '@/modules/dashboard-group';
 import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
-import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 const emit = defineEmits<{
 	reset: [];
 }>();
 
-const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', { required: true });
 const activeDateRange = defineModel<DominanceDateRange>('dateRange', { required: true });
 
 interface IDominanceFiltersPanelProps {
@@ -29,13 +28,6 @@ const dateRangeMustBeVisible = computed(() => props.displaySettings.isShowChart
 	&& props.meta.size.h > 5
 	&& props.meta.size.h < 8,
 );
-
-const tickersModel = computed({
-	get: () => createCostylTickerItems(selectedTickers.value),
-	set: (tickers: ITickerItem[]) => {
-		selectedTickers.value = tickers.map(ticker => ticker.canonical_ticker_id);
-	},
-});
 </script>
 
 <template>
@@ -44,7 +36,7 @@ const tickersModel = computed({
 		@on-clear-click="emit('reset')"
 	>
 		<ticker-selector-modal-with-badge
-			v-model:selected-tickers="tickersModel"
+			v-model:selected-tickers="selectedTickers"
 			:enabled-markets="[MarketType.Crypto]"
 			:display-variant="props.displayVariant"
 			:selection-mode="SelectionMode.Multiple"

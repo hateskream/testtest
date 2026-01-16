@@ -1,6 +1,7 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
+import { z } from 'zod';
 
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import type { IMarketTickerItem } from '@/modules/ticker-selector';
 
 export enum SelectionMode {
@@ -56,3 +57,16 @@ export interface ITickerCategory {
 	ticker_count: number;
 	tickers: ITickerItem[];
 }
+
+
+export const marketTypeSchema = z.nativeEnum(MarketType);
+
+export const tickerItemSchema = z.object({
+	canonical_ticker_id: z.string(),
+	market_type: marketTypeSchema,
+	symbol: z.string(),
+	name: z.string(),
+	logo: z.string().optional(),
+	currency: z.string().optional(),
+	currency_icon: z.string().optional(),
+});

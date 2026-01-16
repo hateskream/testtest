@@ -3,9 +3,10 @@ import { z } from 'zod';
 import { type IDisplaySettings } from './display';
 import { MarketCapDateRange, type MarketCapType } from './market-cap';
 import { MarketType } from '@/modules/market';
+import { type ITickerItem, tickerItemSchema } from '@/modules/ticker-selector';
 
 export interface IState {
-	selectedTickers: string[];
+	selectedTickers: ITickerItem[];
 	selectedMarkets: MarketCapType[];
 	dateRange: MarketCapDateRange;
 	displaySettings: IDisplaySettings;
@@ -17,7 +18,7 @@ const displaySettingsSchema = z.object({
 });
 
 export const stateSchema = z.object({
-	selectedTickers: z.array(z.string()),
+	selectedTickers: z.array(tickerItemSchema),
 	selectedMarkets: z.array(z.enum([MarketType.Crypto, MarketType.Stock])),
 	dateRange: z.nativeEnum(MarketCapDateRange),
 	displaySettings: displaySettingsSchema,

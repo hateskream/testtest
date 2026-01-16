@@ -11,7 +11,6 @@ import {
 import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
@@ -19,7 +18,7 @@ const emit = defineEmits<{
 	reset: [];
 }>();
 
-const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', { required: true });
 const selectedMarkets = defineModel<MarketCapType[]>('selectedMarkets', { required: true });
 const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
 
@@ -31,13 +30,6 @@ interface IMarketCapFiltersPanelProps {
 const props = defineProps<IMarketCapFiltersPanelProps>();
 
 const selectedRangeLabel = computed(() => dateRangeFilterValueToDisplay[activeDateRange.value].selected);
-
-const tickersModel = computed({
-	get: () => createCostylTickerItems(selectedTickers.value),
-	set: (tickers: ITickerItem[]) => {
-		selectedTickers.value = tickers.map(ticker => ticker.canonical_ticker_id);
-	},
-});
 
 const marketTickers = computed({
 	get: () => {
@@ -61,7 +53,7 @@ const marketTickers = computed({
 		@on-clear-click="emit('reset')"
 	>
 		<ticker-selector-modal-with-badge
-			v-model:selected-tickers="tickersModel"
+			v-model:selected-tickers="selectedTickers"
 			v-model:selected-market-tickers="marketTickers"
 			:enabled-markets="[MarketType.Crypto, MarketType.Stock]"
 			:display-variant="props.displayVariant"

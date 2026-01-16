@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import { createStateQueries } from '@/shared/service/data-repo';
 import {
@@ -10,6 +10,7 @@ import {
 	type StateSchemaType,
 } from '../model';
 import { useQueryDominanceSnapshot } from '../queries';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 
 interface IOptions {
 	widgetId: string;
@@ -43,9 +44,13 @@ export function useDominance({
 
 	const state = ref<IState>(getDefaultState());
 
+	onMounted(async () => {
+		state.value.selectedTickers = await fetchTickers(['Crypto-BTC_Bitcoin', 'Crypto-ETH_Ethereum']);
+	});
+
 	const selectedTickers = computed({
 		get: () => state.value.selectedTickers,
-		set: (val: string[]) => {
+		set: (val: ITickerItem[]) => {
 			state.value.selectedTickers = val;
 		},
 	});
@@ -83,7 +88,7 @@ export function useDominance({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryDominanceSnapshot(selectedTickers);
+	} = useQueryDominanceSnapshot(() => selectedTickers.value.map(v => v.canonical_ticker_id));
 
 	return {
 		selectedTickers,
