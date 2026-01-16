@@ -26,6 +26,7 @@ export interface IGetChartPriceResponse {
 			price: number;
 			changePercent: number;
 			delta: number;
+			prevClosePrice: number;
 			updatedAt: string;
 		};
 	};
@@ -90,6 +91,7 @@ async function getMockData(_: IGetChartPriceRequest): Promise<IChartPriceData> {
 			price: 99000,
 			changePercent: 2.52453,
 			delta: 2.52453,
+			prevClosePrice: 96000,
 			updatedAt: '2025-12-04T00:00:00.000Z',
 		},
 	};

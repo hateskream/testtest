@@ -9,6 +9,7 @@ export interface IChartPriceCurrent {
 	price: number;
 	changePercent: number;
 	delta: number;
+	prevClosePrice: number;
 	updatedAt: string;
 }
 

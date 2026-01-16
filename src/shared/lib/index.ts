@@ -17,3 +17,4 @@ export * from './time';
 export * from './clone';
 export { getDateFormatter, FALLBACK_LOCALE, CURRENT_LOCALE } from './date-formatter';
 export * from './pluralize';
+export * from './calc-number-precision';

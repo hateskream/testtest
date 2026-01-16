@@ -21,7 +21,7 @@ import {
 	LastPriceAnimationMode,
 	type LastPriceAnimationMode as LastPriceAnimationModeType,
 } from '@shared/component-library';
-import { unrefElement } from '@vueuse/core';
+import { notNullish, unrefElement } from '@vueuse/core';
 
 import {
 	calculateSMASeriesData,
@@ -48,7 +48,7 @@ import type { ICalendarEvent } from '@/modules/calendar';
 import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';
-import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
+import { calcNumberPrecision, CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 
@@ -78,6 +78,8 @@ interface IChartProps {
 	priceLabel?: string;
 	locale?: string | null;
 	displayVariant?: 'new' | 'default';
+	prevClosePrice?: number | null;
+	prevClosePriceLabel?: string;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -99,6 +101,8 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	priceLabel: 'Current Price',
 	locale: null,
 	displayVariant: 'new',
+	prevClosePrice: null,
+	prevClosePriceLabel: 'Prev Close',
 });
 
 defineExpose({
@@ -224,18 +228,31 @@ const preparedPriceLines = computed(() => {
 
 	const series = preparedChartData.value as LineData[];
 
-	return [
-		{
-			price: series[series.length - 1].value,
-			color: props.colorSchema === 'positive' ? '#04EDA0' : '#FC1D4D',
+	const lines = [{
+		price: series[series.length - 1].value,
+		color: props.colorSchema === 'positive' ? '#04EDA0' : '#FC1D4D',
+		lineWidth: 2,
+		lineStyle: LineStyle.Dashed,
+		axisLabelVisible: true,
+		title: props.priceLabel,
+		axisLabelColor: props.colorSchema === 'positive' ? '#043222' : '#35040D',
+		axisLabelTextColor: props.colorSchema === 'positive' ? '#04EDA0' : '#FC4A6B',
+	}];
+
+	if (notNullish(props.prevClosePrice)) {
+		lines.push({
+			price: props.prevClosePrice,
+			color: '#FFFFFF7F',
 			lineWidth: 2,
 			lineStyle: LineStyle.Dashed,
 			axisLabelVisible: true,
-			title: props.priceLabel,
-			axisLabelColor: props.colorSchema === 'positive' ? '#043222' : '#35040D',
-			axisLabelTextColor: props.colorSchema === 'positive' ? '#04EDA0' : '#FC4A6B',
-		},
-	];
+			title: props.prevClosePriceLabel,
+			axisLabelColor: '#2d2d31',
+			axisLabelTextColor: '#FFF',
+		});
+	}
+
+	return lines;
 });
 
 const chartTypeForWebComponent = computed<ChartType>(() => {
@@ -479,22 +496,25 @@ const minDatasetValue = computed(() => {
 	}, 1_000_000);
 });
 
+const lastDatasetValue = computed(() => {
+	const lastPoint = preparedChartData.value[preparedChartData.value.length - 1];
+
+	if ('low' in lastPoint) {
+		return lastPoint.low;
+	}
+
+	return lastPoint.value;
+});
+
 const chartPrecision = computed(() => {
-	const minValue = minDatasetValue.value;
+	const current = lastDatasetValue.value;
+	const prevClose = props.prevClosePrice;
 
-	if (minValue > 1_000) {
-		return 1;
+	if (notNullish(prevClose)) {
+		return calcNumberPrecision(Math.abs(current - prevClose));
 	}
 
-	if (minValue > 100) {
-		return 2;
-	}
-
-	if (minValue > 0.00001) {
-		return 6;
-	}
-
-	return 8;
+	return calcNumberPrecision(minDatasetValue.value);
 });
 
 // build chart

@@ -139,6 +139,7 @@ const indicators = computed(() => {
 				:events-timeline-padding="eventsTimelinePadding"
 				:last-price-animation="LastPriceAnimationMode.Continuous"
 				:color-schema="chartColorSchema"
+				:prev-close-price="props.current.prevClosePrice"
 				:right-offset-pixels="120"
 				price-label="Current Price"
 				fade-left
