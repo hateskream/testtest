@@ -7,7 +7,7 @@ interface ITabItem {
 }
 
 interface IProps {
-	activeTab: string;
+	activeTab?: string;
 	tabList: ITabItem[];
 	setActiveTab: (id: string) => void;
 }
