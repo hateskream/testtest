@@ -15,7 +15,6 @@ const props = defineProps<IProps>();
 				class="title-300"
 			>
 				<div :class="classes.headerText">
-
 					<slot name="header"></slot>
 				</div>
 			</div>
@@ -30,15 +29,14 @@ const props = defineProps<IProps>();
 
 <style module="classes">
 .widgetWrapper {
-	width: 100%;
-	padding: 3px;
+	background: var(--surface-01, rgb(17 17 19 / 92%));
+	border: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
+	border-radius: 18px;
 }
 
 .widget {
 	width: 100%;
 	overflow: hidden;
-	background: var(--bg-color-surface-01);
-	border-radius: 18px;
 }
 
 .header {
