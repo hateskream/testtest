@@ -8,11 +8,13 @@ export interface ISocialsItem {
 	url: string;
 }
 
-export interface IContentItem {
+export interface ILinksTabsResponse {
 	website: IWebsite;
 	socials: ISocialsItem[];
+	tags?: string[];
+	summarized?: string;
 }
 
-export interface ILinksTabsResponse {
-	tabs: IContentItem[];
+export interface ILinksTabsRequest {
+	tickerId: string;
 }

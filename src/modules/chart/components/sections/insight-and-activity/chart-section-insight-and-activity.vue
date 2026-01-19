@@ -90,8 +90,7 @@ const keyIndicatorsData = {
 
 			</chart-common-tabs-layout>
 
-			<ticker-widget-links />
-
+			<ticker-widget-links :meta="{tickerId: 'BTC'}" />
 		</template>
 	</chart-common-section-layout>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UiText } from '@/shared/ui/text';
+
 interface IProps {
 	withoutPadding?: boolean;
 }
@@ -14,9 +16,9 @@ const props = defineProps<IProps>();
 				:class="classes.header"
 				class="title-300"
 			>
-				<div :class="classes.headerText">
+				<ui-text token="text-200-r">
 					<slot name="header"></slot>
-				</div>
+				</ui-text>
 			</div>
 			<div
 				:class="props.withoutPadding? '' : classes.body"
@@ -40,12 +42,10 @@ const props = defineProps<IProps>();
 }
 
 .header {
-	padding: 8px 10px;
-}
-
-.headerText {
-	padding: 0 8px;
-	font-size: 13px;
+	display: flex;
+	align-items: center;
+	height: 40px;
+	padding: 0 18px 0 14px;
 }
 
 .body {

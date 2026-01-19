@@ -2,19 +2,37 @@
 import { UiText } from '@/shared/ui/text';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiImage } from '@/shared/ui/image';
-import type { IContentItem } from '../model/contract.ts';
+import type { ILinksTabsResponse } from '../model/contract.ts';
 import { DashboardPillItem, DashboardPillWrapper } from '@/shared/ui/pill';
+import { UiFilterChip, UiFilterChipWrapper } from '@/shared/ui/modal-filter';
 
 import WidgetLinkWebsiteSkeleton from '@/modules/widgets/links/ui/skeletons/widget-link-website-skeleton.vue';
 import WidgetLinkSocialsSkeleton from '@/modules/widgets/links/ui/skeletons/widget-link-socials-skeleton.vue';
 
 const props = defineProps<{
-	content?: IContentItem;
+	content?: ILinksTabsResponse;
 }>();
 </script>
 
 <template>
-	<div :class="classes.wrapper">
+	<div :class="classes.container">
+		<div v-if="props.content" :class="classes.row">
+			<ui-text :class="classes.left" token="text-100-r">
+				Tags
+			</ui-text>
+
+			<ui-filter-chip-wrapper display-variant="new" :class="classes.chipWrapper">
+				<ui-filter-chip
+					v-for="tag in props.content?.tags"
+					:key="tag"
+					display-variant="new"
+					:class="classes.chip"
+				>
+					{{tag}}
+				</ui-filter-chip>
+			</ui-filter-chip-wrapper>
+		</div>
+
 		<div :class="classes.row">
 			<ui-text :class="classes.left" token="text-100-r">
 				Website
@@ -70,24 +88,12 @@ const props = defineProps<{
 </template>
 
 <style module="classes">
-.wrapper {
-	display: flex;
-	flex-direction: column;
-	max-width: 100%;
-	padding: 8px 0;
-	background: var(--surface-01, rgb(17 17 19 / 92%));
-	border: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-radius: 0 18px 18px;
-	gap: 6px;
-}
-
 .row {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--padding-padding-s7, 12px);
 	height: 40px;
-	padding: 0 21px;
 }
 
 .left {
@@ -98,6 +104,14 @@ const props = defineProps<{
 	width: unset;
 	padding: 0;
 	grid-auto-columns: unset;
+}
+
+.chipWrapper {
+	flex: unset;
+}
+
+.chip {
+	border-radius: 6px;
 }
 
 .pillIcon {
