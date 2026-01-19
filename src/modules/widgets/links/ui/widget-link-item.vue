@@ -39,8 +39,8 @@ const props = defineProps<{
 			</ui-text>
 
 			<a
-				v-if="props.content"
-				:href="props.content.website.url"
+				v-if="props.content?.website"
+				:href="props.content.website.link"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
@@ -69,13 +69,13 @@ const props = defineProps<{
 				<a
 					v-for="(item, index) in props.content.socials"
 					:key="index"
-					:href="item.url"
+					:href="item.link"
 					:class="classes.socialItem"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
 					<ui-image
-						:src="item.icon"
+						:src="item.logo_url"
 						width="20px"
 						height="20px"
 					/>

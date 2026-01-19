@@ -1,20 +1,21 @@
 export interface IWebsite {
 	label: string;
-	url: string;
+	link: string;
 }
 
 export interface ISocialsItem {
-	icon: string;
-	url: string;
+	logo_url: string;
+	link: string;
 }
 
 export interface ILinksTabsResponse {
-	website: IWebsite;
-	socials: ISocialsItem[];
+	ticker_id: string;
+	website?: IWebsite;
+	socials?: ISocialsItem[];
 	tags?: string[];
 	summarized?: string;
 }
 
 export interface ILinksTabsRequest {
-	tickerId: string;
+	ticker_id: string;
 }

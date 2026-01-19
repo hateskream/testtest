@@ -14,7 +14,7 @@ const props = defineProps<{
 
 const { data } = useQuery({
 	queryKey: ['ticker-widget', 'tabs'],
-	queryFn: () => getLinksTabs({ tickerId: props.meta.tickerId }),
+	queryFn: () => getLinksTabs({ ticker_id: props.meta.tickerId }),
 });
 </script>
 
