@@ -385,7 +385,6 @@ defineExpose({ scrollToDate, scrollBy, calcMaxCountRowVisible, snapHeightToNeare
 }
 
 .lightning {
-	content: '';
 	position: absolute;
 	top: 0;
 	left: 0;

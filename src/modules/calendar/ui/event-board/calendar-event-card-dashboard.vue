@@ -40,7 +40,7 @@ const { goToTickerPage } = useGoToTickerPage();
 			<div :class="classes.container">
 				<div :class="classes.head">
 					<ui-text
-						token="text-100-r"
+						token="text-100-r-up"
 						:class="classes.category"
 					>
 						{{props.event.meta.category}}
@@ -219,11 +219,7 @@ const { goToTickerPage } = useGoToTickerPage();
 }
 
 .category {
-	font-weight: 450;
-	line-height: 180%;
 	color: var(--text-300, rgb(255 255 255 / 62%));
-	text-transform: uppercase;
-	letter-spacing: 0.088px;
 	text-overflow: ellipsis;
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
 }
