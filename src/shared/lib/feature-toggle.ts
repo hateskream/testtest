@@ -6,6 +6,10 @@ function checkIsConfigValidated() {
 	}
 }
 
+export const EXPERIMENTAL_WIDGETS_FEATURES = [
+	'SHOW_FEAR_AND_GREED_WIDGET',
+] as const;
+
 export const ALL_FEATURES = [
 	'DASHBOARD_PRESETS',
 	'DRAG_WIDGET_ENABLED',
@@ -38,6 +42,8 @@ export const ALL_FEATURES = [
 	'WIDGET_HIGH_IMPACT_HOUR_MAP_CALENDAR_REDIRECT',
 	'WIDGET_CHART_TIMELINE_EVENTS',
 	'WIDGET_NEWS_SELECT_NEWS_ITEM',
+
+	...EXPERIMENTAL_WIDGETS_FEATURES,
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];
@@ -104,4 +110,3 @@ export function validateConfig(): void {
 		isConfigValidated = true;
 	}
 }
-

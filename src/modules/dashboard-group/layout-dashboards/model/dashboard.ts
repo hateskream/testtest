@@ -39,12 +39,12 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			name: 'Overview',
 			width: 360,
 			widgets: [
-				// {
-				// 	defaultState: 'none',
-				// 	height: 226,
-				// 	widgetType:  WidgetType.FearGreed,
-				// 	defaultDisplayVariant: 'chart',
-				// },
+				{
+					defaultState: 'none',
+					height: 226,
+					widgetType: WidgetType.FearGreed,
+					defaultDisplayVariant: 'default',
+				},
 				// {
 				// 	defaultState: 'none',
 				// 	height: 171,
@@ -286,6 +286,12 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			name: 'Overview',
 			width: 360,
 			widgets: [
+				{
+					defaultState: 'none',
+					height: 226,
+					widgetType: WidgetType.FearGreed,
+					defaultDisplayVariant: 'chart',
+				},
 				{
 					defaultState: 'crypto',
 					height: 226,

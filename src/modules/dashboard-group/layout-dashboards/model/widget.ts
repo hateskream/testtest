@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
+import { isFeatureEnabled } from '@/shared/lib';
 
 export type DisplayVariant = 'tile' | 'indicator' | 'bar' | 'list' | 'table' | 'chart' | 'heatmap' | 'default';
 export interface IWidgetPreset {
@@ -27,6 +28,14 @@ const ChartPrice: Preset = {
 	name: 'Price',
 	displayVariants: ['chart', 'tile'],
 	minHeight: 400,
+};
+
+const FearGreed: Preset = {
+	name: 'Fear & Greed',
+	displayVariants: ['default'],
+	minHeight: 210,
+	snapStep: 90,
+	maxHeight: 320,
 };
 
 const TopIndices: Preset = {
@@ -75,11 +84,6 @@ const Calendar: Preset = {
 	displayVariants: ['default'],
 	otherHeight: 36,
 	hasFilters: true,
-};
-
-const FearGreed: Preset = {
-	name: 'Fear & Greed',
-	displayVariants: ['default'],
 };
 
 const Market: Preset = {
@@ -190,6 +194,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 	const preset = presets[widgetType];
+
 	if (!preset) {
 		return null;
 	}
@@ -210,7 +215,7 @@ export interface IWidget extends IWidgetPreset {
 	maxCountRow?: number;
 }
 
-export const resizeHandlerMapping = generateResizeHandlerMapping() ;
+export const resizeHandlerMapping = generateResizeHandlerMapping();
 
 const titleWidgetHeight = (widget: IWidget) => widget.hasFilters ? 76 : 40;
 
@@ -223,6 +228,7 @@ const CAN_CHANGE_HEIGHT = P.union(
 	WidgetType.UnemploymentRate,
 	WidgetType.NonfarmPayrolls,
 	WidgetType.Calendar,
+	WidgetType.FearGreed,
 );
 
 export function canChangeHeight(widget: IWidget): boolean {
@@ -232,6 +238,18 @@ export function canChangeHeight(widget: IWidget): boolean {
 		.otherwise(() => false);
 }
 
+const experimentalWidgets: Partial<Record<WidgetType, boolean>> = {
+	[WidgetType.FearGreed]: isFeatureEnabled('SHOW_FEAR_AND_GREED_WIDGET'),
+};
+
+export function isExperimentalWidgetEnabled(widgetType: WidgetType): boolean {
+	if (experimentalWidgets[widgetType] === undefined) {
+		return true;
+	}
+
+	return experimentalWidgets[widgetType];
+}
+
 export function createWidget(
 	widgetType: WidgetType,
 	height: number,
@@ -239,8 +257,15 @@ export function createWidget(
 	defaultStateType = '',
 	stateType = '',
 	maxCountRow?: number,
-) : IWidget | null {
+): IWidget | null {
+	if (!isExperimentalWidgetEnabled(widgetType)) {
+		// eslint-disable-next-line no-console
+		console.info(`${widgetType} was disabled via feature flag`);
+		return null;
+	}
+
 	const preset = createPreset(widgetType);
+
 	if (!preset) {
 		// eslint-disable-next-line no-console
 		console.error(`Preset not found for widget type: ${widgetType}`);
@@ -401,6 +426,12 @@ export function rehydrateWidget(
 		return null;
 	}
 
+	if (!isExperimentalWidgetEnabled(widgetType)) {
+		// eslint-disable-next-line no-console
+		console.info(`${widgetType} was disabled via feature flag`);
+		return null;
+	}
+
 	const preset = createPreset(widgetType);
 	if (!preset) {
 		// eslint-disable-next-line no-console
@@ -436,7 +467,7 @@ export function calcSizeSideGridCell(
 
 		if (
 			remainder < minRemainder ||
-      (remainder === minRemainder && i > bestSize)
+			(remainder === minRemainder && i > bestSize)
 		) {
 			bestSize = i;
 			bestCount = count;

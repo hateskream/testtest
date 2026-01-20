@@ -1,17 +1,16 @@
 <script setup lang="ts">
-
 import { defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../../base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useFearGreed } from '../composables';
+import { useFearGreed } from '../../composables';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
-import RcmFearGreedComponent from './rcm-fear-greed-component.vue';
-import PreloaderComponent from './preloader-component.vue';
+import RcmFearGreedComponent from '../rcm-fear-greed-component.vue';
+import PreloaderComponent from '../preloader-component.vue';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });
@@ -65,6 +64,7 @@ const emit = defineEmits<{
 				:view-state="viewState"
 				:tension="dataState.data"
 				:size="meta.size"
+				display-variant="default"
 			/>
 		</template>
 
