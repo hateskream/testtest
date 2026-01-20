@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
-
 import { ChartCommonWidgetLayout } from '@/modules/chart/components/shared/ui';
-import { getLinksTabs } from '@/modules/widgets/links/api/get-links-tabs.ts';
+import { getLinksQuery } from '../../query/get-links-query.ts';
 
-import WidgetLinkItem from '@/modules/widgets/links/ui/widget-link-item.vue';
+import WidgetLinks from '../widget-links.vue';
+import WidgetLinksSkeleton from '../widget-links-skeleton.vue';
+import WidgetLinksError from '../widget-links-error.vue';
 
 const props = defineProps<{
 	meta: {
@@ -12,10 +12,9 @@ const props = defineProps<{
 	};
 }>();
 
-const { data } = useQuery({
-	queryKey: ['ticker-widget', 'tabs'],
-	queryFn: () => getLinksTabs({ ticker_id: props.meta.tickerId }),
-});
+const { data, isLoading, isError, refetch } = getLinksQuery(() => ({
+	ticker_id: props.meta.tickerId,
+}));
 </script>
 
 <template>
@@ -25,7 +24,17 @@ const { data } = useQuery({
 		</template>
 
 		<template #body>
-			<widget-link-item :content="data" />
+			<template v-if="isLoading">
+				<widget-links-skeleton />
+			</template>
+
+			<template v-else-if="data && !isError">
+				<widget-links :content="data" />
+			</template>
+
+			<template v-else>
+				<widget-links-error @retry="refetch" />
+			</template>
 		</template>
 	</chart-common-widget-layout>
 </template>
