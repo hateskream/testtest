@@ -45,7 +45,17 @@ export function useDominance({
 	const state = ref<IState>(getDefaultState());
 
 	onMounted(async () => {
-		state.value.selectedTickers = await fetchTickers(['Crypto-BTC_Bitcoin', 'Crypto-ETH_Ethereum']);
+		if (state.value.selectedTickers.length !== 0) {
+			return;
+		}
+
+		const fetched = await fetchTickers(['Crypto-BTC_Bitcoin', 'Crypto-ETH_Ethereum']);
+
+		state.value = {
+			selectedTickers: fetched,
+			displaySettings: state.value.displaySettings,
+			dateRange: state.value.dateRange,
+		};
 	});
 
 	const selectedTickers = computed({

@@ -12,11 +12,12 @@ import { ChartDominance } from '@/modules/lightweight-charts';
 import { UiSkeletonGroup } from '@/shared/ui/skeleton';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import type { IChartDominanceDataset } from '@/modules/lightweight-charts/model';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 interface IDominanceChartProps {
 	meta: IMeta;
 	dateRange: DominanceDateRange;
-	selectedTickers: string[];
+	selectedTickers: ITickerItem[];
 	data: IDominanceSnapshot[];
 }
 
@@ -27,7 +28,7 @@ const {
 	isLoading,
 	isError,
 	refetch,
-} = useQueryDominanceHistory(() => props.selectedTickers, () => props.dateRange);
+} = useQueryDominanceHistory(() => props.selectedTickers.map(t => t.canonical_ticker_id), () => props.dateRange);
 
 function buildChartDatasets(historyValue: IDominanceHistory) {
 	const { tickers } = historyValue;

@@ -5,6 +5,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ExternalLink } from '@/shared/ui/link';
 import { type ICalendarEvent, markets } from '@/modules/calendar';
 import { UiText } from '@/shared/ui/text';
+import { useGoToTickerPage } from '@/modules/chart';
 
 interface ICalendarEventCardProps {
 	event: ICalendarEvent;
@@ -40,7 +41,6 @@ const eventStartsIn = computed(() => {
 });
 
 const { goToTickerPage } = useGoToTickerPage();
-
 </script>
 
 <template>
