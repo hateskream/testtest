@@ -50,13 +50,13 @@ const icon = computed(() => {
 }
 
 .text {
-	color: #FFFFFF;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	display: -webkit-box;
+	flex: 1 0 0;
+	overflow: hidden;
+	color: #ffffff;
+	text-overflow: ellipsis;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 1;
-	flex: 1 0 0;
 }
 
 .negative {

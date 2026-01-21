@@ -16,11 +16,11 @@ import { UiText } from '@/shared/ui/text';
 
 <style module="classes">
 .container {
-	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	width: 100%;
 	padding: 8px 20px;
+	gap: 8px;
 }
 
 .indicators {
@@ -30,6 +30,6 @@ import { UiText } from '@/shared/ui/text';
 }
 
 .summarized {
-	color: var(--text-300, rgba(255, 255, 255, 0.62));
+	color: var(--text-300, rgb(255 255 255 / 62%));
 }
 </style>

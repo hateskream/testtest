@@ -14,9 +14,9 @@ const emits = defineEmits<{
 
 <style module="classes">
 .container {
+	display: grid;
 	width: 100%;
 	height: 144px;
-	display: grid;
 	place-items: center;
 }
 </style>
