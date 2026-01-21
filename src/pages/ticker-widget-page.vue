@@ -3,46 +3,48 @@ import { type Component, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
-import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 import { UiPillItem } from '@/shared/ui/pill';
+import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
+import type { TickerId } from '@/modules/ticker';
+
+const widgets: ITickerWidgetConfig[] = [
+	{
+		name: 'activity-metrics',
+		title: 'Activity Metrics',
+		widget: ActivityMetricsTickerWidget,
+		tickers: [
+			'Crypto-BTC_Bitcoin',
+			'Stock-TSLA',
+			'Index-SPX',
+			'Commodity-Gold',
+			'Forex-USD',
+			'Etf-SPY',
+		],
+	},
+] as const;
 
 const DEFAULT_COLUMN_WIDTH = 320;
 
-const TickerWidgetName = {
-	ACTIVITY_METRICS: 'activity-metrics',
-} as const;
 
-type TickerWidgetNameType = (typeof TickerWidgetName)[keyof typeof TickerWidgetName];
+interface ITickerWidgetConfig {
+	name: string;
+	title: string;
+	widget: Component;
+	tickers: TickerId[];
+}
 
 interface ITickerPageProps {
-	widgetName: TickerWidgetNameType;
+	widgetName: string;
 }
 
 const props = defineProps<ITickerPageProps>();
 
-const widgetMap: Record<TickerWidgetNameType, Component> = {
-	[TickerWidgetName.ACTIVITY_METRICS]: ActivityMetricsTickerWidget,
-} as const;
-
-const widgetNameOptions = {
-	[TickerWidgetName.ACTIVITY_METRICS]: 'Activity Metrics',
-} as const;
-
-const hasWidget = computed(() => props.widgetName in widgetNameOptions);
-const widget = computed(() => hasWidget.value ? widgetMap[props.widgetName] : null);
-
-const tickers = [
-	'Crypto-BTC_Bitcoin',
-	'Stock-TSLA',
-	'Index-SPX',
-	'Commodity-Gold',
-	'Forex-USD',
-	'Etf-SPY',
-];
+const selectedConfig = computed(() => widgets.find(config => config.name === props.widgetName));
+const widget = computed(() => selectedConfig.value?.widget);
 
 const router = useRouter();
 
-function openWidget(widgetName: TickerWidgetNameType) {
+function openWidget(widgetName: string) {
 	if (widgetName === props.widgetName) {
 		return;
 	}
@@ -62,17 +64,17 @@ const widthInPx = computed(() => `${width.value + 38}px`);
 				<div :class="classes.options">
 					<span>Available Widgets:</span>
 					<ui-pill-item
-						v-for="(label, option) in widgetNameOptions"
-						:key="option"
-						:model-value="props.widgetName === option"
+						v-for="config in widgets"
+						:key="config.name"
+						:model-value="props.widgetName === config.name"
 						display-variant="new"
-						@click="openWidget(option)"
+						@click="openWidget(config.name)"
 					>
-						{{ label }}
+						{{ config.title }}
 					</ui-pill-item>
 				</div>
 				<div :class="classes.info">
-					<div>Widget: {{ hasWidget ? props.widgetName : 'Not Found' }}</div>
+					<div>Widget: {{ selectedConfig ? props.widgetName : 'Not Found' }}</div>
 					<div :class="classes.size">
 						<span>Size:</span>
 						<input
@@ -92,12 +94,12 @@ const widthInPx = computed(() => `${width.value + 38}px`);
 					</div>
 				</div>
 				<div
-					v-if="hasWidget"
+					v-if="selectedConfig"
 					:class="classes.widgets"
 					:style="{ width: widthInPx }"
 				>
 					<div
-						v-for="ticker in tickers"
+						v-for="ticker in selectedConfig.tickers"
 						:key="ticker"
 						:class="classes.ticker"
 					>
