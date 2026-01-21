@@ -134,4 +134,7 @@ export enum IconIds {
 	SelectAll = 'select-all',
 	Settings = 'settings',
 	SettingsV2 = 'settings-v2',
+	Feedback = 'feedback',
+	Twitter = 'twitter',
+	Discord = 'discord',
 }

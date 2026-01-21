@@ -5,6 +5,7 @@ import { AppLayout } from '@/modules/layout';
 import { ChartComponent } from '@/modules/chart';
 import { RouteTickerType } from '@/types/route.d';
 import { TickerType } from '@/modules/chart/models';
+import { TickerPageFooter } from '@/modules/ticker-page';
 
 
 interface ITickerPageProps {
@@ -35,6 +36,8 @@ const tickerType = computed((): TickerType => {
 		<div :class="classes.container">
 			<chart-component :id="props.id" :type="tickerType" />
 		</div>
+
+		<ticker-page-footer />
 	</app-layout>
 </template>
 
