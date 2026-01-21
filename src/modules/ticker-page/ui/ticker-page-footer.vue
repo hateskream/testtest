@@ -83,32 +83,32 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 <style module="classes">
 .footer {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: flex-start;
+	align-items: flex-start;
+	align-self: stretch;
 	padding:
 		var(--padding-padding-s17, 44px) var(--padding-padding-s15, 36px)
 		var(--padding-padding-s20, 72px) var(--padding-padding-s15, 36px);
-	justify-content: space-between;
-	align-items: flex-start;
-	align-content: flex-start;
 	row-gap: var(--padding-padding-s19, 60px);
-	align-self: stretch;
-	flex-wrap: wrap;
 }
 
 .left {
 	display: flex;
-	min-width: 180px;
-	padding: 0 var(--padding-padding-s11, 20px) 0 var(--padding-padding-s2, 2px);
-	align-items: flex-start;
-	align-content: flex-start;
-	gap: 72px var(--padding-padding-s20, 72px);
 	flex: 1 0 0;
 	flex-wrap: wrap;
+	align-content: flex-start;
+	align-items: flex-start;
+	min-width: 180px;
+	padding: 0 var(--padding-padding-s11, 20px) 0 var(--padding-padding-s2, 2px);
+	gap: 72px var(--padding-padding-s20, 72px);
 }
 
 .logos {
 	display: flex;
-	height: 32px;
 	align-items: center;
+	height: 32px;
 	gap: 12px;
 }
 
@@ -118,11 +118,11 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 
 .textBlock {
 	display: flex;
-	min-width: 180px;
+	flex: 1 0 0;
 	flex-direction: column;
 	align-items: flex-start;
+	min-width: 180px;
 	gap: 24px;
-	flex: 1 0 0;
 }
 
 .head {
@@ -135,68 +135,68 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 
 .subheading {
 	width: 187px;
-	color: var(--color-text-base-300, #9A9A9D);
+	color: var(--color-text-base-300, #9a9a9d);
 }
 
 .requestFeature {
 	display: flex;
+	align-items: center;
 	height: var(--height-height-s16, 40px);
 	padding: 0 var(--padding-padding-s10, 18px) 0 var(--padding-padding-s9, 16px);
-	align-items: center;
-	gap: var(--padding-paddingsS4, 6px);
+	background: var(--bg-100, rgb(73 73 80 / 32%));
 	border-radius: var(--radius-radius-s16-40, 15.6px);
-	background: var(--bg-100, rgba(73, 73, 80, 0.32));
 	cursor: pointer;
+	gap: var(--padding-paddingsS4, 6px);
 }
 
 .requestFeature:hover {
-	background: var(--bg-200, rgba(73, 73, 80, 0.48));
+	background: var(--bg-200, rgb(73 73 80 / 48%));
 }
 
 .requestFeatureText {
 	overflow: hidden;
-	color: var(--text-300, rgba(255, 255, 255, 0.60));
-	text-overflow: ellipsis;
 	line-height: 1;
+	color: var(--text-300, rgb(255 255 255 / 60%));
+	text-overflow: ellipsis;
 }
 
 .right {
 	display: flex;
-	padding: var(--padding-padding-s4, 6px) var(--padding-padding-s2, 2px);
-	justify-content: flex-end;
-	align-items: center;
-	align-content: center;
-	gap: 6px var(--tile-gap, 6px);
 	flex-wrap: wrap;
+	justify-content: flex-end;
+	align-content: center;
+	align-items: center;
+	padding: var(--padding-padding-s4, 6px) var(--padding-padding-s2, 2px);
+	gap: 6px var(--tile-gap, 6px);
 }
 
 .socialLink {
 	display: flex;
-	width: 128px;
 	align-items: center;
-	gap: 4px;
+	width: 128px;
+	color: var(--color-text-base-300, #9a9a9d);
 	text-decoration: none;
-	color: var(--color-text-base-300, #9A9A9D);
+	gap: 4px;
 }
 
 .socialLink:hover {
-	color: var(--color-text-base-200, #BFBFC2);
+	color: var(--color-text-base-200, #bfbfc2);
 }
 
 .socialIcon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	width: 32px;
 	height: 32px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 
 .socialText {
-	color: inherit;
-	text-align: right;
-	font-size: 13px;
 	font-style: normal;
 	font-weight: 300;
+	font-size: 13px;
 	line-height: normal;
+	text-align: right;
+	color: inherit;
 }
 </style>
