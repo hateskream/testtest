@@ -60,6 +60,7 @@ export enum IconIds {
 	ArrowToTopRight = 'arrow-to-top-right',
 	TrashOutline = 'trash-outline',
 	Info = 'info',
+	InfoRectangle = 'info-rectangle',
 	MetricUp = 'metric-up',
 	MetricDown = 'metric-down',
 	MetricHold = 'metric-hold',

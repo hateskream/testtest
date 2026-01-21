@@ -26,6 +26,8 @@ export enum RouteNames {
 	TickerPageFooter = 'ticker-page-footer',
 	LinksTestPage = 'LinksTestPage',
 	KeyIndicatorsTest = 'KeyIndicatorsTest',
+	TickerWidget = 'ticker-widget',
+	TickerWidgetPreview = 'ticker-widget-preview',
 }
 
 export enum RouteLabels {
@@ -86,6 +88,8 @@ export enum RoutePaths {
 	TickerPageFooter = '/ticker-page-footer-test',
 	LinksTestPage = '/links-test-page',
 	KeyIndicatorsTest = '/key-indicators-test',
+	TickerWidget = '/ticker-widget',
+	TickerWidgetPreview = '/ticker-widget/:widgetName',
 }
 
 export enum RouteTickerType {

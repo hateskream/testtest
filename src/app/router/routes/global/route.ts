@@ -258,4 +258,27 @@ export const testRoutes: RouteRecordRaw[] = [
 		name: RouteNames.KeyIndicatorsTest,
 		component: () => import('@/pages/key-indicators-test-page.vue'),
 	},
+	{
+		path: RoutePaths.TickerWidget,
+		name: RouteNames.TickerWidget,
+		redirect: {
+			name: RouteNames.TickerWidgetPreview,
+			params: {
+				widgetName: 'activity-metrics',
+			},
+		},
+		children: [
+			{
+				path: RoutePaths.TickerWidgetPreview,
+				name: RouteNames.TickerWidgetPreview,
+				component: () => import('@/pages/ticker-widget-page.vue'),
+				props: (route: RouteLocationNormalized) => ({
+					widgetName: route.params.widgetName,
+				}),
+			},
+		],
+		meta: {
+			title: 'Test Ticker Widgets',
+		},
+	},
 ];

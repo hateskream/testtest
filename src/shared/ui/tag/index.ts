@@ -1,1 +1,1 @@
-export { default as UiTag } from './tag-component.vue';
+export { default as UiTag } from './ui-tag.vue';

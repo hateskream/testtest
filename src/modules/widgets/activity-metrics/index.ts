@@ -1,0 +1,1 @@
+export { ActivityMetricsTickerWidget } from './ui';
