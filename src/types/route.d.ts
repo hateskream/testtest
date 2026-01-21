@@ -25,6 +25,7 @@ export enum RouteNames {
 	NewsDetails = 'NewsDetails',
 	TickerPageFooter = 'ticker-page-footer',
 	LinksTestPage = 'LinksTestPage',
+	KeyIndicatorsTest = 'KeyIndicatorsTest',
 }
 
 export enum RouteLabels {
@@ -50,6 +51,7 @@ export enum RouteLabels {
 	ScreenerDex = 'DEX Screener',
 	TickerPageFooter = 'Ticker Page Footer',
 	LinksTestPage = 'Links Test Page',
+	KeyIndicatorsTest = 'Key Indicators Test',
 }
 
 export enum RoutePaths {
@@ -83,6 +85,7 @@ export enum RoutePaths {
 	NewsDetails = ':slug/:id',
 	TickerPageFooter = '/ticker-page-footer-test',
 	LinksTestPage = '/links-test-page',
+	KeyIndicatorsTest = '/key-indicators-test',
 }
 
 export enum RouteTickerType {

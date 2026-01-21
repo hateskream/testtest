@@ -3,8 +3,8 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 </script>
 
 <template>
-	<div :class="classes.container">
-		<div :class="classes.indicators">
+	<key-indicators-wrapper>
+		<template #indicators>
 			<ui-skeleton
 				v-for="item in 4"
 				:key="item"
@@ -12,30 +12,17 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 				width="100%"
 				border-radius="2px"
 			/>
-		</div>
+		</template>
 
-		<span :class="classes.summarized">
+		<template #summarized>
 			<ui-skeleton
-				width="100%"
+				width="108px"
 				height="20px"
 				border-radius="2px"
 			/>
-		</span>
-	</div>
+		</template>
+	</key-indicators-wrapper>
 </template>
 
 <style module="classes">
-.container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	padding: 8px 20px;
-}
-
-.indicators {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-}
 </style>

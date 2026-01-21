@@ -5,6 +5,7 @@ export interface IKeyIndicator {
 
 export interface IKeyIndicatorResponse {
 	indicators: IKeyIndicator[];
+	summarized: string;
 }
 
 export interface IKeyIndicatorRequest {

@@ -2,6 +2,9 @@
 import { useQueryKeyIndicators } from '../../query/use-query-key-indicators';
 
 import KeyIndicatorsLoading from '../key-indicators-loading.vue';
+import KeyIndicatorsError from '../key-indicators-error.vue';
+import KeyIndicatorsWrapper from '../key-indicators-wrapper.vue';
+import KeyIndicatorRow from '../key-indicators-row.vue';
 
 const props = defineProps<{
 	meta: {
@@ -19,12 +22,24 @@ const { data, isLoading, isError } = useQueryKeyIndicators(() => ({
 		<key-indicators-loading />
 	</template>
 
-	<template v-if="data && !isError">
-		{{ data }}
+	<template v-else-if="data && !isError">
+		<key-indicators-wrapper>
+			<template #indicators>
+				<key-indicator-row
+					v-for="(item, index) in data.indicators"
+					:key="index"
+					:indicator="item"
+				/>
+			</template>
+
+			<template #summarized>
+				{{data.summarized}}
+			</template>
+		</key-indicators-wrapper>
 	</template>
 
 	<template v-else>
-
+		<key-indicators-error />
 	</template>
 </template>
 

@@ -137,4 +137,7 @@ export enum IconIds {
 	Feedback = 'feedback',
 	Twitter = 'twitter',
 	Discord = 'discord',
+
+	PositiveKeyIndicator = 'positive-key-indicator',
+	NegativeKeyIndicator = 'negative-key-indicator',
 }

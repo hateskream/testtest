@@ -15,14 +15,23 @@ async function getKeyIndicatorsMock(): Promise<IKeyIndicatorResponse> {
 	return {
 		indicators: [
 			{
-				status: 'positive',
-				label: 'Label 1',
+				status: 'negative',
+				label: 'Trading at +0.74% premium to NAV',
 			},
 			{
-				status: 'negative',
-				label: 'Label 2',
+				status: 'positive',
+				label: '$1.43B net inflows in the last month',
+			},
+			{
+				status: 'positive',
+				label: 'Outperforming S&P 500 by 2.16% YTD',
+			},
+			{
+				status: 'positive',
+				label: 'Top holding subtracted 0.01% to YTD returns',
 			},
 		],
+		summarized: 'Summarized at 19:30',
 	};
 }
 

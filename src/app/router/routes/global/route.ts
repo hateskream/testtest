@@ -253,4 +253,9 @@ export const testRoutes: RouteRecordRaw[] = [
 		name: RouteNames.LinksTestPage,
 		component: () => import('@/pages/links-widget-page-test.vue'),
 	},
+	{
+		path: RoutePaths.KeyIndicatorsTest,
+		name: RouteNames.KeyIndicatorsTest,
+		component: () => import('@/pages/key-indicators-test-page.vue'),
+	},
 ];
