@@ -5,7 +5,7 @@ import { MarketBadge, MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalS
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type FiltersState, type FiltersValues, FilterType, filterTypeToName } from '../../model';
 import { FilterComponent } from '../common';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 
 const emit = defineEmits<{
 	reset: [];
@@ -40,7 +40,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 			/>
 		</div>
 		<div :class="classes.minimized">
-			<market-badge v-model="activeMarket" />
+			<market-badge v-model="activeMarket" :exclude-markets="[MarketType.Etf]" />
 			<ui-delimiter />
 			<ui-position :class="[classes.burger, classes.filter]">
 				<template #title>
@@ -61,6 +61,7 @@ function updateFilter(filterKey: FilterType, filterValue: string) {
 									v-model="activeMarket"
 									display-variant="default"
 									title="Market"
+									:exclude-markets="[MarketType.Etf]"
 								/>
 							</template>
 						</modal-submenu>

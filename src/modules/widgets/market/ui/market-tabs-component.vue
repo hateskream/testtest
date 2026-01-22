@@ -4,7 +4,7 @@ import type { FiltersState, FiltersValues } from '../model';
 import { UiPosition } from '@/shared/ui/position';
 import { MarketBadge } from '../../base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import type { ITableColumn } from '@/modules/cell';
 
 import MarketFiltersComponent from './market-filters-component.vue';
@@ -34,6 +34,7 @@ function updateFilter(filterKey: string, filterValue: string) {
 	<div :class="classes.container">
 		<market-badge
 			v-model="market"
+			:exclude-markets="[MarketType.Etf]"
 			title="Categories"
 		/>
 
