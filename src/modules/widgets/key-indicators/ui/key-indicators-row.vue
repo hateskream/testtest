@@ -4,6 +4,7 @@ import { computed, useCssModule } from 'vue';
 import type { IKeyIndicator } from '../model/contract';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 const props = defineProps<{
 	indicator: IKeyIndicator;
@@ -14,30 +15,37 @@ const classes = useCssModule('classes');
 const icon = computed(() => {
 	if (props.indicator.status === 'positive') {
 		return {
-			id: IconIds.PositiveKeyIndicator,
+			id: IconIds.Gainers,
 			class: classes.positive,
 		};
 	}
 
-	return {
-		id: IconIds.NegativeKeyIndicator,
-		class: classes.negative,
-	};
+	if (props.indicator.status === 'negative') {
+		return {
+			id: IconIds.Loosers,
+			class: classes.negative,
+		};
+	}
+
+	return null;
 });
 </script>
 
 <template>
 	<div :class="classes.root">
 		<ui-icon
+			v-if="icon"
 			:id="icon.id"
 			:class="icon.class"
 			width="8px"
 			height="8px"
 		/>
 
-		<ui-text token="text-200-r" :class="classes.text">
-			{{ indicator.label }}
-		</ui-text>
+		<ui-clamped :rows="1">
+			<ui-text token="text-200-r" :class="classes.text">
+				{{ indicator.label }}
+			</ui-text>
+		</ui-clamped>
 	</div>
 </template>
 
@@ -50,20 +58,14 @@ const icon = computed(() => {
 }
 
 .text {
-	display: -webkit-box;
-	flex: 1 0 0;
-	overflow: hidden;
 	color: #ffffff;
-	text-overflow: ellipsis;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
 }
 
 .negative {
-	color: var(--text-color-negative-500);
+	color: var(--atom-warning-00, #FC1D4D);
 }
 
 .positive {
-	color: var(--text-color-positive-500);
+	color: var(--atom-success-00, #04EDA0);
 }
 </style>

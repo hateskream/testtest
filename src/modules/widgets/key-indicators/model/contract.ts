@@ -1,5 +1,5 @@
 export interface IKeyIndicator {
-	status: 'positive' | 'negative';
+	status: 'positive' | 'negative' | 'neutral';
 	label: string;
 }
 
