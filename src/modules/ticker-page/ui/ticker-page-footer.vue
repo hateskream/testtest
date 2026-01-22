@@ -146,7 +146,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 	background: var(--bg-100, rgb(73 73 80 / 32%));
 	border-radius: var(--radius-radius-s16-40, 15.6px);
 	cursor: pointer;
-	gap: var(--padding-paddingsS4, 6px);
+	gap: var(--padding-paddings-s4, 6px);
 }
 
 .requestFeature:hover {

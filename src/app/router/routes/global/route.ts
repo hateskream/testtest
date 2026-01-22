@@ -243,4 +243,9 @@ export const testRoutes: RouteRecordRaw[] = [
 		name: RouteNames.Test,
 		component: () => import('@/pages/home-page.vue'),
 	},
+	{
+		path: RoutePaths.TickerPageFooter,
+		name: RouteNames.TickerPageFooter,
+		component: () => import('@/pages/ticker-page-footer-test.vue'),
+	},
 ];

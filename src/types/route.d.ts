@@ -23,6 +23,7 @@ export enum RouteNames {
 	ScreenerDex = 'screener-dex',
 	News = 'News',
 	NewsDetails = 'NewsDetails',
+	TickerPageFooter = 'ticker-page-footer',
 }
 
 export enum RouteLabels {
@@ -46,6 +47,7 @@ export enum RouteLabels {
 	ScreenerBond = 'Bond Screener',
 	ScreenerCex = 'CEX Screener',
 	ScreenerDex = 'DEX Screener',
+	TickerPageFooter = 'Ticker Page Footer',
 }
 
 export enum RoutePaths {
@@ -77,6 +79,7 @@ export enum RoutePaths {
 	ScreenerDex = '/screener/dex',
 	News = '/news',
 	NewsDetails = ':slug/:id',
+	TickerPageFooter = '/ticker-page-footer-test',
 }
 
 export enum RouteTickerType {
