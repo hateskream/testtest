@@ -1,20 +1,3 @@
-<script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
-
-interface ITabItem {
-	id: string;
-	title: string;
-}
-
-interface IProps {
-	activeTab?: string;
-	tabList: ITabItem[];
-	setActiveTab: (id: string) => void;
-}
-
-defineProps<IProps>();
-</script>
-
 <template>
 	<div :class="classes.tabsLayout">
 		<!-- Tab Headers -->
@@ -22,6 +5,7 @@ defineProps<IProps>();
 			<div
 				v-for="tab in tabList"
 				:key="tab.id"
+				class="title-300"
 				:class="[
 					classes.tabHeader,
 					{
@@ -36,9 +20,7 @@ defineProps<IProps>();
 					:tab="tab"
 					:is-active="activeTab === tab.id"
 				>
-					<ui-text token="text-200-r">
-						{{ tab.title }}
-					</ui-text>
+					{{ tab.title }}
 				</slot>
 			</div>
 		</div>
@@ -72,6 +54,21 @@ defineProps<IProps>();
 	</div>
 </template>
 
+<script setup lang="ts">
+interface ITabItem {
+	id: string;
+	title: string;
+}
+
+interface IProps {
+	activeTab: string;
+	tabList: ITabItem[];
+	setActiveTab: (id: string) => void;
+}
+
+defineProps<IProps>();
+</script>
+
 <style module="classes">
 .tabsLayout {
 	width: 100%;
@@ -86,31 +83,37 @@ defineProps<IProps>();
 
 .tabHeader {
 	position: relative;
-	display: flex;
 	flex: 1;
-	align-items: center;
-	height: 40px;
-	padding: var(--padding-padding-s5, 8px) var(--padding-padding-s8, 14px);
+	padding: 12px 16px 8px;
 	text-align: center;
-	color: var(--text-color-base-500);
-	border-top: 1px solid transparent;
-	border-right: 1px solid transparent;
-	border-left: 1px solid transparent;
-	border-radius: var(--radius-radius-s14-32, 12.4px) var(--radius-radius-s14-32, 12.4px) 0 0;
+	background:
+		linear-gradient(0deg, #050505, #050505),
+		linear-gradient(64.97deg, #000000 3.91%, #0c0c0d 97.73%);
+	border: none;
+	border-radius: 18px 18px 0 0;
 	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
 .tabHeader.active {
-	background: var(--surface-01, rgb(17 17 19 / 92%));
-	border-top: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-right: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-left: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-radius: var(--radius-radius-s14-32, 12.4px) var(--radius-radius-s14-32, 12.4px) 0 0;
+	color: var(--text-color-base-500);
+	background: var(--bg-color-surface-01);
+}
+
+.tabHeader.inactive {
+	color: #6b7280;
+	background: transparent;
+}
+
+.tabHeader.inactive:hover {
+	color: #9ca3af;
+	background: rgb(255 255 255 / 5%);
 }
 
 .tabContent {
 	display: flex;
 	flex-direction: column;
+	background: var(--bg-color-surface-01);
 	border-radius: 0 18px 18px;
 	gap: 8px;
 }
@@ -123,9 +126,20 @@ defineProps<IProps>();
 
 .tabPanel.active {
 	display: block;
+	animation: fade-in 0.3s ease-in-out;
 }
 
 .tabPanel.inactive {
 	display: none;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
 </style>

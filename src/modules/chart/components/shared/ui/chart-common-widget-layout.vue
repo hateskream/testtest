@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
-
 interface IProps {
 	withoutPadding?: boolean;
 }
@@ -16,9 +14,10 @@ const props = defineProps<IProps>();
 				:class="classes.header"
 				class="title-300"
 			>
-				<ui-text token="text-200-r">
+				<div :class="classes.headerText">
+
 					<slot name="header"></slot>
-				</ui-text>
+				</div>
 			</div>
 			<div
 				:class="props.withoutPadding? '' : classes.body"
@@ -31,21 +30,24 @@ const props = defineProps<IProps>();
 
 <style module="classes">
 .widgetWrapper {
-	background: var(--surface-01, rgb(17 17 19 / 92%));
-	border: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-radius: 18px;
+	width: 100%;
+	padding: 3px;
 }
 
 .widget {
 	width: 100%;
 	overflow: hidden;
+	background: var(--bg-color-surface-01);
+	border-radius: 18px;
 }
 
 .header {
-	display: flex;
-	align-items: center;
-	height: 40px;
-	padding: 0 18px 0 14px;
+	padding: 8px 10px;
+}
+
+.headerText {
+	padding: 0 8px;
+	font-size: 13px;
 }
 
 .body {

@@ -74,10 +74,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
-	padding: 8px 0;
-	background: var(--surface-01, rgb(17 17 19 / 92%));
-	border: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-radius: 0 18px 18px;
+	padding: 3px;
 	gap: 6px;
 }
 
@@ -103,7 +100,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 	display: flex;
 	color: var(--text-color-base-300);
 	cursor: pointer;
-	transition: color 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
 	gap: 4px;
 
 	&:hover {
