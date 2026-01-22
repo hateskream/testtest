@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { TickerKeyIndicatorsPage } from '@/modules/widgets/key-indicators';
+import { TickerKeyIndicatorsWidget } from '@/modules/widgets/key-indicators';
 </script>
 
 <template>
 	<div>
-		<ticker-key-indicators-page :meta="{tickerId: 'Crypto-BTC-Bitcoin'}" />
+		<ticker-key-indicators-widget :meta="{tickerId: 'Crypto-BTC-Bitcoin'}" />
 	</div>
 </template>
 
