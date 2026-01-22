@@ -1,19 +1,20 @@
-import type { TickerId } from '@/modules/ticker';
-import type { ActivityMetricsSentiment } from './sentiment.ts';
+import { MarketType } from '@/modules/market';
+import type { ActivityMetricsSentiment } from './sentiment';
+import { type TickerId } from '../api';
 
-export type ActivityMetrics =
-	ICryptoActivityMetrics |
-	IStockActivityMetrics |
-	IIndexActivityMetrics |
-	ICommodityActivityMetrics |
-	IForexActivityMetrics |
-	IEtfActivityMetrics;
+type ActivityMetricsByMarket = {
+	[MarketType.Crypto]: ICryptoActivityMetrics;
+	[MarketType.Stock]: IStockActivityMetrics;
+	[MarketType.Indices]: IIndexActivityMetrics;
+	[MarketType.Commodities]: ICommodityActivityMetrics;
+	[MarketType.Forex]: IForexActivityMetrics;
+	[MarketType.Etf]: IEtfActivityMetrics;
+};
 
-export interface IBaseActivityMetrics {
-	tickerId: TickerId;
-}
+export type ActivityMetrics<TMarket extends MarketType = MarketType> = ActivityMetricsByMarket[TMarket];
 
-export interface ICryptoActivityMetrics extends IBaseActivityMetrics {
+export interface ICryptoActivityMetrics {
+	tickerId: TickerId<MarketType.Crypto>;
 	marketCap: string;
 	volume24h: string;
 	fdv: string;
@@ -22,7 +23,8 @@ export interface ICryptoActivityMetrics extends IBaseActivityMetrics {
 	sentiment: ActivityMetricsSentiment;
 }
 
-export interface IStockActivityMetrics extends IBaseActivityMetrics {
+export interface IStockActivityMetrics {
+	tickerId: TickerId<MarketType.Stock>;
 	marketCap: string;
 	volume24h: string;
 	totalReturn3m: string;
@@ -31,25 +33,27 @@ export interface IStockActivityMetrics extends IBaseActivityMetrics {
 	sector: string;
 }
 
-export interface IIndexActivityMetrics extends IBaseActivityMetrics {
+export interface IIndexActivityMetrics {
+	tickerId: TickerId<MarketType.Indices>;
 	volume24h: string;
 	sector?: string;
 }
 
-export interface ICommodityActivityMetrics extends IBaseActivityMetrics {
+export interface ICommodityActivityMetrics {
+	tickerId: TickerId<MarketType.Commodities>;
 	volume24h: string;
 }
 
-export interface IForexActivityMetrics extends IBaseActivityMetrics {
+export interface IForexActivityMetrics {
+	tickerId: TickerId<MarketType.Forex>;
 	volume24h: string;
 }
 
-export interface IEtfActivityMetrics extends IBaseActivityMetrics {
+export interface IEtfActivityMetrics {
+	tickerId: TickerId<MarketType.Etf>;
 	marketCap: string;
 	avgVolume: string;
 	beta: string;
 	topHolding: string;
 	numSectors: string;
 }
-
-

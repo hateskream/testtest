@@ -68,6 +68,7 @@ export const SymbolToName = {
 	[SymbolType.Stock]: 'Stock',
 	[SymbolType.Crypto]: 'Cryptocurrency',
 	[SymbolType.Forex]: 'Forex',
+	[SymbolType.Etf]: 'Etf',
 	[SymbolType.PlaneText]: 'Text',
 };
 
@@ -77,6 +78,7 @@ export const SymbolToMarket = {
 	[SymbolType.Forex]: MarketType.Forex,
 	[SymbolType.Commodity]: MarketType.Commodities,
 	[SymbolType.Index]: MarketType.Indices,
+	[SymbolType.Etf]: MarketType.Etf,
 	[SymbolType.PlaneText]: null,
 };
 
@@ -86,6 +88,7 @@ export const MarketToSymbol = {
 	[MarketType.Forex]: SymbolType.Forex,
 	[MarketType.Commodities]: SymbolType.Commodity,
 	[MarketType.Indices]: SymbolType.Index,
+	[MarketType.Etf]: SymbolType.Etf,
 };
 
 export function getMappedRow(item: TickerDto): ITickerMapped {
@@ -138,6 +141,15 @@ export function getMappedRow(item: TickerDto): ITickerMapped {
 				symbolType: item.symbol.symbolType,
 			};
 
+		case SymbolType.Etf:
+			return {
+				srcImage: item.symbol.srcImg,
+				tickerId: item.tickerId,
+				name: item.symbol.ticker,
+				ticker: item.symbol.ticker,
+				symbolType: item.symbol.symbolType,
+			};
+
 
 		default:
 			return {
@@ -185,6 +197,13 @@ export function getMappedMarket(market: MarketType): IMarketMapped {
 				name: 'Indices',
 				label: 'All indices',
 				marketType: MarketType.Indices,
+				icon: IconIds.SelectAll,
+			};
+		case MarketType.Etf:
+			return {
+				name: 'ETF',
+				label: 'All etf tickers',
+				marketType: MarketType.Etf,
 				icon: IconIds.SelectAll,
 			};
 	}

@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/vue-query';
 import { type MaybeRefOrGetter, toValue } from 'vue';
 
-import { getActivityMetrics, mapActivityMetricsResponseToModel } from '../api';
-import type { TickerId } from '@/modules/ticker';
+import { getActivityMetrics, mapActivityMetricsResponseToModel, type TickerId } from '../api';
 
 export function useQueryActivityMetrics(tickerId: MaybeRefOrGetter<TickerId>) {
 	return useQuery({
@@ -13,3 +12,4 @@ export function useQueryActivityMetrics(tickerId: MaybeRefOrGetter<TickerId>) {
 		},
 	});
 }
+

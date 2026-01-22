@@ -1,6 +1,6 @@
 import { MarketType } from '@/modules/market';
 import type { ISelectedFilter } from '../model';
-import type { TableRow, ISort } from '@/modules/cell';
+import type { ISort, TableRow } from '@/modules/cell';
 import { getMarketCommodities, getMarketCrypto, getMarketForex, getMarketIndices, getMarketStock } from '../api';
 
 interface IGetMarketRequest {
@@ -31,6 +31,8 @@ const marketToGetter: Record<MarketType, Getter> = {
 	[MarketType.Forex]: getMarketForex,
 	[MarketType.Commodities]: getMarketCommodities,
 	[MarketType.Indices]: getMarketIndices,
+	// TODO: Интегрировать ETF рынок в маркет
+	[MarketType.Etf]: getMarketCrypto,
 };
 
 export function useGetMarket(req: IGetMarketRequest) {

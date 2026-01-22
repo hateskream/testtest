@@ -1,30 +1,26 @@
-<script setup lang="ts">
-import { computed } from 'vue';
+<script setup lang="ts" generic="TMarket extends MarketType = MarketType">
+import { type Component, computed } from 'vue';
 
-import { type TickerMarket as TickerMarketType, TickerMarket } from '@/modules/ticker';
 import type { ActivityMetrics } from '../../model';
 import { CommodityMetrics, CryptoMetrics, EtfMetrics, ForexMetrics, IndexMetrics, StockMetrics } from './metrics';
+import { MarketType } from '@/modules/market';
 
-interface IActivityMetricsProps {
-	market: TickerMarketType;
-	metrics: ActivityMetrics;
-}
+const props = defineProps<{
+	market: TMarket;
+	metrics: ActivityMetrics<TMarket>;
+}>();
 
-const props = defineProps<IActivityMetricsProps>();
-
-const marketToWidgetMap = {
-	[TickerMarket.CRYPTO]: CryptoMetrics,
-	[TickerMarket.STOCK]: StockMetrics,
-	[TickerMarket.FOREX]: ForexMetrics,
-	[TickerMarket.INDEX]: IndexMetrics,
-	[TickerMarket.ETF]: EtfMetrics,
-	[TickerMarket.COMMODITY]: CommodityMetrics,
+const marketToWidgetMap: Record<MarketType, Component> = {
+	[MarketType.Crypto]: CryptoMetrics,
+	[MarketType.Stock]: StockMetrics,
+	[MarketType.Forex]: ForexMetrics,
+	[MarketType.Indices]: IndexMetrics,
+	[MarketType.Etf]: EtfMetrics,
+	[MarketType.Commodities]: CommodityMetrics,
 } as const;
 
-const marketMetricsComponent = computed(() => marketToWidgetMap[props.market] ?? CryptoMetrics);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const metricsByMarket = computed(() => props.metrics as unknown as any);
+const marketMetricsComponent = computed(() => marketToWidgetMap[props.market]);
 </script>
 <template>
-	<component :is="marketMetricsComponent" :metrics="metricsByMarket" />
+	<market-metrics-component :metrics="props.metrics" />
 </template>

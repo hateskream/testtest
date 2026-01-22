@@ -4,6 +4,7 @@ export enum MarketType {
 	Forex = 'forex',
 	Commodities = 'commodity',
 	Indices = 'index',
+	Etf = 'etf',
 }
 
 export const marketToLabel: Record<MarketType, string> = {
@@ -12,6 +13,7 @@ export const marketToLabel: Record<MarketType, string> = {
 	[MarketType.Forex]: 'Forex',
 	[MarketType.Commodities]: 'Commodity',
 	[MarketType.Indices]: 'Index',
+	[MarketType.Etf]: 'ETF',
 };
 
 export const marketToName: Record<MarketType, string> = {
@@ -20,6 +22,7 @@ export const marketToName: Record<MarketType, string> = {
 	[MarketType.Forex]: 'Forex',
 	[MarketType.Commodities]: 'Commodity',
 	[MarketType.Indices]: 'Index',
+	[MarketType.Etf]: 'ETF',
 };
 
 export function getMarketLabel(market: MarketType): string {

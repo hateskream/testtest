@@ -39,6 +39,8 @@ function newSectionByType(type: SectionType): ISection {
 			return newSection('Commodity');
 		case MarketType.Indices:
 			return newSection('Indices');
+		case MarketType.Etf:
+			return newSection('ETF');
 		case SpecificSectionType.Custom:
 			return newSection('Custom');
 	}

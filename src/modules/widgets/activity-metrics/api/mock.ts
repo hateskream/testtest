@@ -1,20 +1,25 @@
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { getTickerIdMarket, type TickerMarket } from '@/modules/ticker';
 import type { ActivityMetricsResponse, IActivityMetricsRequest } from './contract.ts';
+import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import type { MarketType } from '@/modules/market';
 
-type ActivityMetricsResponseMock = Record<TickerMarket, Omit<ActivityMetricsResponse, 'ticker_id'>>;
+type ActivityMetricsResponseMock = {
+	[K in MarketType]: Omit<ActivityMetricsResponse<K>, 'ticker_id'>;
+};
 
 const { getMock } = useFetchMock<ActivityMetricsResponseMock>('/mock/widgets/activity-metrics.json');
 
-export async function getMockData(request: IActivityMetricsRequest) {
+export async function getMockData<TMarket extends MarketType>(
+	request: IActivityMetricsRequest<TMarket>,
+) {
 	await delay(2000);
 
 	const tickers = await getMock();
-	const market = getTickerIdMarket(request.tickerId);
+	const market = resolveMarketTypeFromTicker(request.tickerId)!;
 
 	return {
-		ticker_id: request.tickerId as string,
+		ticker_id: request.tickerId,
 		...tickers[market],
-	} as ActivityMetricsResponse;
+	} as ActivityMetricsResponse<TMarket>;
 }

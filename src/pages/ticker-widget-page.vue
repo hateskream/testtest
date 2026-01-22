@@ -4,8 +4,8 @@ import { useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
 import { UiPillItem } from '@/shared/ui/pill';
+import type { TickerId } from '@/modules/widgets/activity-metrics/api';
 import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
-import type { TickerId } from '@/modules/ticker';
 
 const widgets: ITickerWidgetConfig[] = [
 	{

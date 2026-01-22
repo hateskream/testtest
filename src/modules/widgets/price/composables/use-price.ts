@@ -57,6 +57,7 @@ export const stateSchema = z.object({
 		[MarketType.Forex]: ISettingsSchema,
 		[MarketType.Commodities]: ISettingsSchema,
 		[MarketType.Indices]: ISettingsSchema,
+		[MarketType.Etf]: ISettingsSchema,
 	}),
 });
 

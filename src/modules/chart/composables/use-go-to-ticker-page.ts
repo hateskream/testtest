@@ -1,6 +1,6 @@
 import { useRouter } from 'vue-router';
 
-import { SymbolType, decodeTickerId } from '@/modules/cell';
+import { decodeTickerId, SymbolType } from '@/modules/cell';
 import { RouteNames, RoutePaths } from '@/types/route.d';
 
 interface ISymbolPage {
@@ -28,6 +28,10 @@ const symbolTypeToPage: Record<SymbolType, ISymbolPage> = {
 	[SymbolType.Forex]: {
 		name: RouteNames.TickerForex,
 		path: RoutePaths.TickerForex,
+	},
+	[SymbolType.Etf]: {
+		name: RouteNames.TickerETF,
+		path: RoutePaths.TickerETF,
 	},
 	[SymbolType.PlaneText]: {
 		name: RouteNames.TickerStock,

@@ -7,6 +7,7 @@ import {
 	createTickerIdFromCell,
 	type ICommoditySymbolCell,
 	type ICryptoSymbolCell,
+	type IEtfSymbolCell,
 	type IForexSymbolCell,
 	type IIndexSymbolCell,
 	type INumberCell,
@@ -121,6 +122,7 @@ const symbolTypeToCell: Record<SymbolType, (td: ITickerData) => ISymbolCell> = {
 	[SymbolType.Index]: createIndexSymbolCell,
 	[SymbolType.Commodity]: createCommoditySymbolCell,
 	[SymbolType.Forex]: createForexSymbolCell,
+	[SymbolType.Etf]: createEtfSymbolCell,
 	[SymbolType.PlaneText]: createPlainTextCell,
 };
 
@@ -181,6 +183,16 @@ function createForexSymbolCell(tickerData: ITickerData): IForexSymbolCell {
 		rightTicker: tickerData.right,
 		leftSrcImg: 'wrong.png',
 		rightSrcImg: 'wrong.png',
+	};
+}
+
+function createEtfSymbolCell(tickerData: ITickerData): IEtfSymbolCell {
+	return {
+		cellType: CellType.Symbol,
+		columnType: ColumnType.Symbol,
+		symbolType: SymbolType.Etf,
+		ticker: tickerData.left,
+		srcImg: 'wrong.png',
 	};
 }
 

@@ -59,6 +59,12 @@ export function getDefaultState(defaultStateType: string): IState {
 				sort: null,
 				filters: {},
 			},
+			[MarketType.Etf]: {
+				// TODO: Etf columns
+				column: [],
+				sort: null,
+				filters: {},
+			},
 		},
 	};
 }
@@ -98,6 +104,11 @@ export const PRESETS: Presets = {
 	[MarketType.Indices]: {
 		filters: {},
 		columns: INDICES_ALL_COLUMNS,
+	},
+	[MarketType.Etf]: {
+		// TODO: Etf columns
+		filters: {},
+		columns: [],
 	},
 };
 
