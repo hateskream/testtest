@@ -1,32 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
-import { UiTag } from '@/shared/ui/tag';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ActivityMetricsSentiment, type ICryptoActivityMetrics } from '../../../model';
+import { type ICryptoActivityMetrics } from '../../../model';
+import { MetricsContainer, MetricsRow, MetricsSentiment } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
-import MetricsContainer from './metrics-container.vue';
-import MetricsRow from './metrics-row.vue';
 
-const props = defineProps<{
+export interface ICryptoMetricsProps {
 	metrics: ICryptoActivityMetrics;
-}>();
+}
 
-const sentimentToColor = {
-	[ActivityMetricsSentiment.BULLISH]: 'positive',
-	[ActivityMetricsSentiment.BEARISH]: 'negative',
-	[ActivityMetricsSentiment.NEUTRAL]: 'neutral',
-} as const;
-
-const sentimentToIcon = {
-	[ActivityMetricsSentiment.BULLISH]: IconIds.Gainers,
-	[ActivityMetricsSentiment.BEARISH]: IconIds.Loosers,
-	[ActivityMetricsSentiment.NEUTRAL]: null,
-} as const;
-
-const sentimentColor = computed(() => sentimentToColor[props.metrics.sentiment]);
-const sentimentIcon = computed(() => sentimentToIcon[props.metrics.sentiment]);
+const props = defineProps<ICryptoMetricsProps>();
 </script>
 
 <template>
@@ -51,16 +33,7 @@ const sentimentIcon = computed(() => sentimentToIcon[props.metrics.sentiment]);
 			{{ props.metrics.totalSupply }}
 		</metrics-container>
 		<metrics-row title="Community Sentiment" :class="classes.full">
-			<ui-tag :color="sentimentColor">
-				<span>{{ props.metrics.sentiment }}</span>
-				<template v-if="sentimentIcon" #icon>
-					<ui-icon
-						:id="sentimentIcon"
-						height="8"
-						width="8"
-					/>
-				</template>
-			</ui-tag>
+			<metrics-sentiment :sentiment="props.metrics.sentiment" />
 		</metrics-row>
 	</base-metrics>
 </template>

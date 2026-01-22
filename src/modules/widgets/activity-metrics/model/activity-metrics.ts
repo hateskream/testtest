@@ -1,12 +1,5 @@
 import type { TickerId } from '@/modules/ticker';
-
-export const ActivityMetricsSentiment = {
-	BULLISH: 'Bullish',
-	BEARISH: 'Bearish',
-	NEUTRAL: 'Neutral',
-} as const;
-
-export type ActivityMetricsSentiment = typeof ActivityMetricsSentiment[keyof typeof ActivityMetricsSentiment];
+import type { ActivityMetricsSentiment } from './sentiment.ts';
 
 export type ActivityMetrics =
 	ICryptoActivityMetrics |

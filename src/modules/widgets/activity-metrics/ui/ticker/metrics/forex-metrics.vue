@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { IForexActivityMetrics } from '../../../model';
+import { MetricsContainer } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
-import MetricsContainer from './metrics-container.vue';
 
-const props = defineProps<{
+export interface IForexMetricsProps {
 	metrics: IForexActivityMetrics;
-}>();
+}
+
+const props = defineProps<IForexMetricsProps>();
 </script>
 
 <template>

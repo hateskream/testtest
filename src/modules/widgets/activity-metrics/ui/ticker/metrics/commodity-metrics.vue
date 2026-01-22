@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { ICommodityActivityMetrics } from '../../../model';
+import { MetricsContainer } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
-import MetricsContainer from './metrics-container.vue';
 
-const props = defineProps<{
+export interface ICommodityMetricsProps {
 	metrics: ICommodityActivityMetrics;
-}>();
+}
+
+const props = defineProps<ICommodityMetricsProps>();
 </script>
 
 

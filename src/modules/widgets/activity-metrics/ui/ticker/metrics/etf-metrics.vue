@@ -2,14 +2,15 @@
 import type { IEtfActivityMetrics } from '../../../model';
 import { TickerControlLink } from '@/modules/widgets/base/ticker';
 import { RouteNames } from '@/types/route.d';
+import { MetricsContainer, MetricsRow } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
-import MetricsContainer from './metrics-container.vue';
-import MetricsRow from './metrics-row.vue';
 
-const props = defineProps<{
+export interface IEtfMetricsProps {
 	metrics: IEtfActivityMetrics;
-}>();
+}
+
+const props = defineProps<IEtfMetricsProps>();
 </script>
 
 <template>
