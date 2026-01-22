@@ -9,11 +9,10 @@ import { useTabs } from '../../shared/composables';
 import {
 	ChartWidgetFearGreed,
 	ChartWidgetKeyIndicators,
-	ChartWidgetNews, ChartWidgetKeyStats,
+	ChartWidgetNews, ChartWidgetKeyStats, ChartWidgetLinks,
 } from '@/modules/chart/components/widgets';
 import { markdown } from './markdown.ts';
 import { IconIds } from '@/shared/ui/icon';
-import { TickerWidgetLinks } from '@/modules/widgets/links';
 
 
 const props = defineProps<ISectionProps>();
@@ -24,7 +23,16 @@ const tabs = computed(() => [
 ],
 );
 
+const smallTabs = computed(() => [
+	{ id: 'insights-and-activity-links', title: 'Links' },
+	{ id: 'insights-and-activity-about', title: 'About' },
+],
+);
+
+
 const { activeTab, tabList, setActiveTab } = useTabs(tabs);
+const { activeTab: smallActiveTab, tabList: smallTabList, setActiveTab: setSmallActiveTab } = useTabs(smallTabs);
+
 
 const marketDate = {
 	marketCap: 3252255,
@@ -89,8 +97,24 @@ const keyIndicatorsData = {
 				</template>
 
 			</chart-common-tabs-layout>
+			<chart-common-tabs-layout
+				:active-tab="smallActiveTab"
+				:tab-list="smallTabList"
+				:set-active-tab="setSmallActiveTab"
+			>
+				<template #insights-and-activity-links>
 
-			<ticker-widget-links :meta="{tickerId: 'BTC'}" />
+					<chart-widget-links />
+
+				</template>
+				<template #insights-and-activity-about>
+
+					<chart-widget-links />
+
+				</template>
+
+			</chart-common-tabs-layout>
+
 		</template>
 	</chart-common-section-layout>
 </template>
