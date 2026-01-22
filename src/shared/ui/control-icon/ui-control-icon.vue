@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+// Figma component: control-icon-24
+import { type IconIds, UiIcon } from '@/shared/ui/icon';
 
-const props = defineProps<{
+export interface IControlIconProps {
+	/**
+	 * Название иконки
+	 */
 	icon: IconIds;
+	/**
+	 * Прозрачный фон без подложки
+	 * @default false
+	 */
 	transparent?: boolean;
-}>();
+}
+
+const props = defineProps<IControlIconProps>();
 </script>
 
 <template>
