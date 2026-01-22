@@ -62,10 +62,10 @@ const icon = computed(() => {
 }
 
 .negative {
-	color: var(--atom-warning-00, #FC1D4D);
+	color: var(--atom-warning-00, #fc1d4d);
 }
 
 .positive {
-	color: var(--atom-success-00, #04EDA0);
+	color: var(--atom-success-00, #04eda0);
 }
 </style>
