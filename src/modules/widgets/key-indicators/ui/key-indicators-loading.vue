@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { UiSkeleton } from '@/shared/ui/skeleton';
+
+import KeyIndicatorsWrapper from './key-indicators-wrapper.vue';
 </script>
 
 <template>
