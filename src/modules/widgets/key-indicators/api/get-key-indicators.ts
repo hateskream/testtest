@@ -1,9 +1,18 @@
 import { useHttpService } from '@/shared/service/http-service';
-import type { IKeyIndicatorRequest, IKeyIndicatorResponse } from '../model/contract';
 import { delay } from '@/shared/lib';
 import { useLogger } from '@/shared/service/logger';
+import type { IKeyIndicator } from '../model/key-indicators';
 
 const IS_USE_MOCK = true;
+
+export interface IKeyIndicatorResponse {
+	indicators: IKeyIndicator[];
+	summarized: string;
+}
+
+export interface IKeyIndicatorRequest {
+	ticker_id: string;
+}
 
 export function getKeyIndicators(request: IKeyIndicatorRequest): Promise<IKeyIndicatorResponse> {
 	return IS_USE_MOCK ? getKeyIndicatorsMock() : getKeyIndicatorsApi(request);

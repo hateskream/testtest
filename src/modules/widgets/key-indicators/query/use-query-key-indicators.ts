@@ -1,7 +1,7 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 
-import type { IKeyIndicatorRequest } from '../model/contract';
+import type { IKeyIndicatorRequest } from '../api/get-key-indicators';
 import { getKeyIndicators } from '../api/get-key-indicators';
 
 export function useQueryKeyIndicators(_request: MaybeRefOrGetter<IKeyIndicatorRequest>) {
