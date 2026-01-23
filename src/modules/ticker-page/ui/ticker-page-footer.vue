@@ -2,6 +2,7 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+import { UiControlButton } from '@/shared/ui/control-button';
 </script>
 
 <template>
@@ -32,16 +33,9 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 					</ui-text>
 				</div>
 
-				<button :class="classes.requestFeature">
-					<ui-icon
-						:id="IconIds.Feedback"
-						width="16px"
-						height="16px"
-					/>
-					<ui-text token="text-400-r" :class="classes.requestFeatureText">
-						Request a feature
-					</ui-text>
-				</button>
+				<ui-control-button token="l-24-bg" :icon-id="IconIds.Feedback">
+					Request a feature
+				</ui-control-button>
 			</section>
 		</div>
 
@@ -52,14 +46,9 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 				rel="noopener noreferrer"
 				:class="classes.socialLink"
 			>
-				<div :class="classes.socialIcon">
-					<ui-icon
-						:id="IconIds.Twitter"
-						width="18px"
-						height="18px"
-					/>
-				</div>
-				<span :class="classes.socialText">@i88-uk</span>
+				<ui-control-button token="m-24" :icon-id="IconIds.Twitter">
+					@i88-uk
+				</ui-control-button>
 			</a>
 			<a
 				href="https://discord.gg/i88-support"
@@ -67,14 +56,9 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 				rel="noopener noreferrer"
 				:class="classes.socialLink"
 			>
-				<div :class="classes.socialIcon">
-					<ui-icon
-						:id="IconIds.Discord"
-						width="18px"
-						height="18px"
-					/>
-				</div>
-				<span :class="classes.socialText">@i88-support</span>
+				<ui-control-button token="m-24" :icon-id="IconIds.Discord">
+					@i88-support
+				</ui-control-button>
 			</a>
 		</section>
 	</footer>
@@ -171,24 +155,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 }
 
 .socialLink {
-	display: flex;
-	align-items: center;
-	width: 128px;
-	color: var(--color-text-base-300, #9a9a9d);
 	text-decoration: none;
-	gap: 4px;
-}
-
-.socialLink:hover {
-	color: var(--color-text-base-200, #bfbfc2);
-}
-
-.socialIcon {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 32px;
-	height: 32px;
 }
 
 .socialText {
