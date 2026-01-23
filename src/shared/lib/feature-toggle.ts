@@ -44,9 +44,9 @@ export const ALL_FEATURES = [
 	'WIDGET_CHART_TIMELINE_EVENTS',
 	'WIDGET_NEWS_SELECT_NEWS_ITEM',
 
-	'SHOW_I88_TWITTER_PAGE_LINK',
-	'SHOW_I88_DISCORD_SUPPORT_LINK',
-	'SHOW_I88_FEATURE_REQUEST_LINK',
+	'I88_TWITTER_PAGE_LINK',
+	'I88_DISCORD_SUPPORT_LINK',
+	'I88_FEATURE_REQUEST_LINK',
 
 	...EXPERIMENTAL_WIDGETS_FEATURES,
 ] as const;
@@ -64,6 +64,16 @@ export function isFeatureEnabled(feature: FeatureName): boolean {
 	return envVar.toLowerCase() === 'true';
 }
 
+export function getFeatureValue(feature: FeatureName): string | undefined {
+	checkIsConfigValidated();
+
+	if (!ALL_FEATURES.includes(feature)) {
+		throw new Error(`Invalid feature name: ${feature}. Must be one of: ${ALL_FEATURES.join(', ')}`);
+	}
+
+	return import.meta.env[`VITE_FEATURE_${feature}`];
+}
+
 function validateFeatureConfig(): void {
 	const errors: string[] = [];
 
@@ -72,13 +82,13 @@ function validateFeatureConfig(): void {
 		const envVarValue = import.meta.env[envVarName];
 
 		if (envVarValue === undefined) {
-			errors.push(`Missing environment variable: ${envVarName}`);
+			errors.push(`Undefined environment variable: ${envVarName}`);
 			continue;
 		}
 
 		const normalizedValue = envVarValue.toLowerCase();
-		if (normalizedValue !== 'true' && normalizedValue !== 'false') {
-			errors.push(`Invalid value for ${envVarName}: expected 'true' or 'false', got '${envVarValue}'`);
+		if (normalizedValue.length < 1) {
+			errors.push(`Empty environment variable: ${envVarName}`);
 		}
 	}
 
@@ -110,8 +120,17 @@ function validateEnvironmentConfig(): void {
 
 export function validateConfig(): void {
 	if (!isConfigValidated) {
-		validateFeatureConfig();
-		validateEnvironmentConfig();
-		isConfigValidated = true;
+		try {
+			validateFeatureConfig();
+			validateEnvironmentConfig();
+			isConfigValidated = true;
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error(error);
+
+			if (getEnvironmentName() === EnvironmentName.DEV) {
+				throw error;
+			}
+		}
 	}
 }

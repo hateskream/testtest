@@ -3,11 +3,11 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiControlButton } from '@/shared/ui/control-button';
-import { isFeatureEnabled } from '@/shared/lib';
+import { getFeatureValue } from '@/shared/lib';
 
-const isShowFeatureRequestLink = isFeatureEnabled('SHOW_I88_FEATURE_REQUEST_LINK');
-const isShowTwitterPageLink = isFeatureEnabled('SHOW_I88_TWITTER_PAGE_LINK');
-const isShowDiscordSupportLink = isFeatureEnabled('SHOW_I88_DISCORD_SUPPORT_LINK');
+const featureRequestLink = getFeatureValue('I88_FEATURE_REQUEST_LINK');
+const twitterPageLink = getFeatureValue('I88_TWITTER_PAGE_LINK');
+const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
 </script>
 
 <template>
@@ -39,8 +39,8 @@ const isShowDiscordSupportLink = isFeatureEnabled('SHOW_I88_DISCORD_SUPPORT_LINK
 				</div>
 
 				<a
-					v-if="isShowFeatureRequestLink"
-					href="https://support.planet9.uk"
+					v-if="featureRequestLink"
+					:href="featureRequestLink"
 					target="_blank"
 					rel="noopener noreferrer"
 					:class="classes.socialLink"
@@ -54,8 +54,8 @@ const isShowDiscordSupportLink = isFeatureEnabled('SHOW_I88_DISCORD_SUPPORT_LINK
 
 		<section :class="classes.right">
 			<a
-				v-if="isShowTwitterPageLink"
-				href="https://x.com/i88-uk"
+				v-if="twitterPageLink"
+				:href="twitterPageLink"
 				target="_blank"
 				rel="noopener noreferrer"
 				:class="classes.socialLink"
@@ -65,8 +65,8 @@ const isShowDiscordSupportLink = isFeatureEnabled('SHOW_I88_DISCORD_SUPPORT_LINK
 				</ui-control-button>
 			</a>
 			<a
-				v-if="isShowDiscordSupportLink"
-				href="https://discord.gg/i88-support"
+				v-if="discordSupportLink"
+				:href="discordSupportLink"
 				target="_blank"
 				rel="noopener noreferrer"
 				:class="classes.socialLink"
