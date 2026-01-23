@@ -6,10 +6,17 @@ function checkIsConfigValidated() {
 	}
 }
 
+/**
+ * List of experimental widget features.
+ */
 export const EXPERIMENTAL_WIDGETS_FEATURES = [
 	'SHOW_FEAR_AND_GREED_WIDGET',
 ] as const;
 
+/**
+ * Complete list of all available feature flags in the application.
+ * Each feature corresponds to an environment variable without `VITE_FEATURE_` prefix.
+ */
 export const ALL_FEATURES = [
 	'DASHBOARD_PRESETS',
 	'DRAG_WIDGET_ENABLED',
@@ -53,6 +60,12 @@ export const ALL_FEATURES = [
 
 export type FeatureName = typeof ALL_FEATURES[number];
 
+/**
+ * Checks if a specific feature is enabled.
+ * @param feature - The name of the feature to check.
+ * @returns `true` if the feature is enabled, `false` otherwise.
+ * @throws Error if config is not validated or feature name is invalid.
+ */
 export function isFeatureEnabled(feature: FeatureName): boolean {
 	checkIsConfigValidated();
 
@@ -64,6 +77,12 @@ export function isFeatureEnabled(feature: FeatureName): boolean {
 	return envVar.toLowerCase() === 'true';
 }
 
+/**
+ * Gets the raw string value of a feature flag from environment variables.
+ * @param feature - The name of the feature to get the value for.
+ * @returns The raw string value of the feature flag, or `undefined` if not set.
+ * @throws Error if config is not validated or feature name is invalid.
+ */
 export function getFeatureValue(feature: FeatureName): string | undefined {
 	checkIsConfigValidated();
 
@@ -97,6 +116,9 @@ function validateFeatureConfig(): void {
 	}
 }
 
+/**
+ * Enum-like object containing all possible environment names.
+ */
 export const EnvironmentName = {
 	PROD: 'PROD',
 	DEMO: 'DEMO',
@@ -105,6 +127,11 @@ export const EnvironmentName = {
 
 export type EnvironmentName = typeof EnvironmentName[keyof typeof EnvironmentName];
 
+/**
+ * Gets the current environment name.
+ * @returns The current environment name (PROD, DEMO, or DEV).
+ * @throws Error if config is not validated.
+ */
 export function getEnvironmentName(): EnvironmentName {
 	checkIsConfigValidated();
 
@@ -118,6 +145,12 @@ function validateEnvironmentConfig(): void {
 	}
 }
 
+/**
+ * Validates the application configuration including feature flags and environment settings.
+ * Must be called before using any feature toggle functions.
+ * In DEV environment, throws an error if validation fails.
+ * In other environments, logs the error but continues execution.
+ */
 export function validateConfig(): void {
 	if (!isConfigValidated) {
 		try {
