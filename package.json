@@ -87,9 +87,5 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.9.5"
-  },
-  "browserslist": [
-    "defaults and supports es6-module",
-    "not IE 11"
-  ]
+  }
 }
