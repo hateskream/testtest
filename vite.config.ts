@@ -1,5 +1,4 @@
 import path from 'path';
-import { readFileSync } from 'fs';
 
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
@@ -10,16 +9,14 @@ import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
 import svgLoader from 'vite-svg-loader';
 
-const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+import pkg from './package.json' with { type: 'json' };
 
 // Plugin to filter out :deep warnings from lightningcss
 const filterDeepWarnings = (): Plugin => {
 	return {
 		name: 'filter-deep-warnings',
 		buildStart() {
-			// eslint-disable-next-line no-console
 			const originalWarn = console.warn;
-			// eslint-disable-next-line no-console
 			console.warn = (...args: unknown[]) => {
 				const message = String(args[0] || '');
 				if (
@@ -53,7 +50,6 @@ export default defineConfig({
 		svgLoader(),
 	],
 	define: {
-		// eslint-disable-next-line @typescript-eslint/naming-convention
 		__APP_VERSION__: JSON.stringify(pkg.version),
 	},
 	resolve: {
@@ -80,16 +76,15 @@ export default defineConfig({
 		},
 	},
 	build: {
-		target: 'es2017',
+		target: 'es2019',
 		cssCodeSplit: true,
 		sourcemap: false,
 		minify: 'terser',
 		cssMinify: 'lightningcss',
 		terserOptions: {
-			parse: {
-				ecma: 2017,
-			},
+			ecma: 2019,
 			compress: {
+				ecma: 2019,
 				inline: 2,
 				passes: 3,
 				collapse_vars: true,
@@ -99,12 +94,11 @@ export default defineConfig({
 				pure_getters: true,
 				drop_console: true,
 				drop_debugger: true,
-				ecma: 2017,
 				comparisons: false,
 			},
 			mangle: true,
-			output: {
-				ecma: 2017,
+			format: {
+				ecma: 2019,
 				comments: false,
 				ascii_only: true,
 			},

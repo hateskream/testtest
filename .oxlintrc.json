@@ -1,0 +1,157 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"categories": {
+		"correctness": "error"
+	},
+	"plugins": [
+		"typescript",
+		"vue",
+		"unicorn",
+		"import",
+		"oxc",
+		"promise",
+		"node"
+	],
+	"jsPlugins": [
+		"eslint-plugin-github"
+	],
+	"env": {
+		"builtin": true,
+		"browser": true
+	},
+	"rules": {
+		"no-plus-plus": "warn",
+		"no-useless-call": "error",
+		"no-unused-expressions": "off",
+		"no-useless-constructor": "error",
+		"no-console": "warn",
+		"no-debugger": "error",
+		"no-unused-vars": [
+			"warn",
+			{
+				"args": "all",
+				"argsIgnorePattern": "^_",
+				"caughtErrors": "all",
+				"caughtErrorsIgnorePattern": "^_",
+				"destructuredArrayIgnorePattern": "^_",
+				"varsIgnorePattern": "^_",
+				"ignoreRestSiblings": true,
+				"vars": "all"
+			}
+		],
+		"no-undef": "off",
+		"no-template-curly-in-string": "error",
+		"curly": [
+			"error",
+			"all"
+		],
+		"no-regex-spaces": "error",
+		"prefer-destructuring": "warn",
+		"no-case-declarations": "error",
+		"no-empty": "error",
+		"no-prototype-builtins": "error",
+		"no-redeclare": "error",
+		"no-param-reassign": [
+			"error",
+			{ "props": false }
+		],
+		"no-throw-literal": "error",
+		"symbol-description": "warn",
+
+		"typescript/no-extraneous-class": "error",
+		"typescript/ban-ts-comment": "warn",
+		"typescript/no-var-requires": "error",
+		"typescript/no-explicit-any": "error",
+		"typescript/array-type": [
+			"error",
+			{ "default": "array" }
+		],
+		"typescript/no-unsafe-function-type": "error",
+
+		"import/no-cycle": [
+			"error",
+			{ "maxDepth": 3 }
+		],
+		"import/extensions": "off",
+		"import/prefer-default-export": "off",
+
+		"github/filenames-match-regex": [
+			"error",
+			"^([a-z0-9]+[-.])*[a-z0-9]+$"
+		],
+
+		"vue/valid-define-emits": "error",
+		"vue/valid-define-props": "error",
+
+		"node/no-process-env": [
+			"error",
+			{ "allowedVariables": ["NODE_ENV"] }
+		],
+
+		"typescript/no-useless-empty-export": "off",
+		"unicorn/no-empty-file": "off",
+		"no-useless-rename": "off",
+		"unicorn/no-useless-spread": "off"
+	},
+	"ignorePatterns": [
+		"dist",
+		"coverage",
+		"node_modules",
+		".*.cjs"
+	],
+	"overrides": [
+		{
+			"files": [
+				"**/*.ts",
+				"**/*.tsx",
+				"**/*.mts",
+				"**/*.cts"
+			],
+			"rules": {
+				"constructor-super": "off",
+				"no-class-assign": "off",
+				"no-const-assign": "off",
+				"no-dupe-class-members": "off",
+				"no-dupe-keys": "off",
+				"no-func-assign": "off",
+				"no-import-assign": "off",
+				"no-new-native-nonconstructor": "off",
+				"no-obj-calls": "off",
+				"no-redeclare": "off",
+				"no-setter-return": "off",
+				"no-this-before-super": "off",
+				"no-unsafe-negation": "off",
+				"no-var": "error",
+				"no-with": "off",
+				"prefer-rest-params": "error",
+				"prefer-spread": "error"
+			}
+		},
+		{
+			"files": [
+				"*.ts"
+			],
+			"rules": {
+				"no-empty-function": "off",
+				"no-useless-constructor": "off"
+			}
+		},
+		{
+			"files": [
+				"**/config.{j,t}s",
+				"**/*.config.{j,t}s",
+				"**/environment.{j,t}s"
+			],
+			"rules": {
+				"node/no-process-env": "off",
+				"no-console": "off"
+			}
+		}
+	],
+	"globals": {
+		"defineProps": "readonly",
+		"defineEmits": "readonly",
+		"defineModel": "readonly",
+		"withDefaults": "readonly"
+	}
+}

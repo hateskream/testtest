@@ -1,13 +1,13 @@
-import globals from 'globals';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import vue from 'eslint-plugin-vue';
-import github from 'eslint-plugin-github';
 import eslintPluginImport from 'eslint-plugin-import';
 import nodePlugin from 'eslint-plugin-n';
 import prettier from 'eslint-config-prettier';
 import stylistic from '@stylistic/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
+import { defineConfig } from 'eslint/config';
+import oxlint from 'eslint-plugin-oxlint';
 
 
 const MAX_LINE_LENGTH = 120;
@@ -18,14 +18,7 @@ const pathGroupsImportOptions = {
 	position: 'after',
 };
 
-export default [
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-			},
-		},
-	},
+export default defineConfig([
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...vue.configs['flat/recommended'],
@@ -34,7 +27,7 @@ export default [
 		languageOptions: {
 			parserOptions: {
 				parser: typescriptParser,
-				ecmaVersion: 2020,
+				ecmaVersion: 2022,
 				sourceType: 'module',
 			},
 		},
@@ -46,35 +39,23 @@ export default [
 			'@stylistic': stylistic,
 			'import': eslintPluginImport,
 			'n': nodePlugin,
-			github,
 		},
 		rules: {
 			'prettier/prettier': 'off',
 
-			'no-param-reassign': ['error', { props: false }],
-			'no-console': 'error',
-			'no-debugger': 'error',
 			'no-undef': 'off',
-			'no-unused-vars': 'off',
-			'no-plusplus': 'warn',
 			'no-shadow': 'error',
-			'no-unused-expressions': 'off',
 			'no-use-before-define': 'off',
 			'no-mixed-spaces-and-tabs': 'error',
 			'no-trailing-spaces': 'error',
 			'no-multi-spaces': 'error',
 			'no-multiple-empty-lines': ['error', { 'max': 2 }],
 			'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
-			'curly': [2, 'all'],
 			'prefer-destructuring': 'warn',
 			'lines-between-class-members': [2, 'always', { exceptAfterSingleLine: true }],
 
-			'github/filenames-match-regex': ['error', '^([a-z0-9]+[-.])*[a-z0-9]+$'],
-
 			'import/no-extraneous-dependencies': 'off',
 			'import/no-unresolved': 'off',
-			'import/extensions': 'off',
-			'import/prefer-default-export': 'off',
 			'import/order': ['error', {
 				'newlines-between': 'always',
 				groups: [
@@ -94,12 +75,7 @@ export default [
 				],
 			}],
 
-
-			'n/no-process-env': ['error', {
-				'allowedVariables': ['NODE_ENV'],
-			}],
-
-			// Vue
+			// Неподдерживаемые vue-правила в oxlint
 			'vue/require-v-for-key': 'off',
 			'vue/max-attributes-per-line': ['error', {
 				'singleline': {
@@ -193,8 +169,6 @@ export default [
 
 			// TypeScript
 			'@typescript-eslint/no-shadow': 'error',
-			'@typescript-eslint/no-explicit-any': 'error',
-			'@typescript-eslint/array-type': ['error', { default: 'array' }],
 			'@typescript-eslint/no-unused-vars': ['warn', {
 				'args': 'all',
 				'argsIgnorePattern': '^_',
@@ -207,6 +181,14 @@ export default [
 			}],
 			'@typescript-eslint/no-unused-expressions': 'off',
 			'@typescript-eslint/naming-convention': ['error',
+				{
+					selector: ['variable', 'property'],
+					format: null,
+					filter: {
+						regex: '^__APP_[A-Z0-9_]+__$',
+						match: true,
+					},
+				},
 				{
 					selector: 'default',
 					format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
@@ -248,9 +230,6 @@ export default [
 					prefix: ['I'],
 				},
 			],
-			'@typescript-eslint/no-extraneous-class': 'error',
-			'@typescript-eslint/no-misused-new': 'error',
-			'@typescript-eslint/no-array-constructor': 'error',
 			'@typescript-eslint/no-use-before-define': ['error', {
 				functions: false,
 				classes: true,
@@ -258,27 +237,16 @@ export default [
 				ignoreTypeReferences: true,
 				typedefs: false,
 			}],
-			'@typescript-eslint/no-useless-constructor': 'error',
-			'@typescript-eslint/no-var-requires': 'off',
-			'@typescript-eslint/ban-ts-comment': 'warn',
-
-
-		},
-	},
-	{
-		files: ['*.ts'],
-		rules: {
-			'no-empty-function': 0,
-			'no-useless-constructor': 0,
 		},
 	},
 	{
 		files: ['**/config.{j,t}s', '**/*.config.{j,t}s', '**/environment.{j,t}s'],
 		rules: {
-			'node/no-process-env': 'off',
+			'n/no-process-env': 'off',
 		},
 	},
 	{
 		ignores: ['dist', 'coverage', 'node_modules', '.*.cjs'],
 	},
-];
+	...oxlint.buildFromOxlintConfigFile('./.oxlintrc.json'),
+]);
