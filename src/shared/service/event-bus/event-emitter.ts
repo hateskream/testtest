@@ -7,7 +7,7 @@ export class EventEmitter<
 	Key extends keyof Events = EventType,
 	Data extends Events[Key] = Events[Key],
 > {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	private static instance: EventEmitter<any>;
 	private readonly emitter: Emitter<Events>;
 

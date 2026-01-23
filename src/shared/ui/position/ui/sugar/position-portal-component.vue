@@ -1,21 +1,6 @@
 <script setup lang="ts">
-import {
-	autoUpdate,
-	useFloating,
-	offset,
-	flip,
-	shift,
-	type ReferenceElement,
-} from '@floating-ui/vue';
-import {
-	ref,
-	watch,
-	toValue,
-	nextTick,
-	onUnmounted,
-	useTemplateRef,
-	type MaybeRefOrGetter,
-} from 'vue';
+import { autoUpdate, flip, offset, type ReferenceElement, shift, useFloating } from '@floating-ui/vue';
+import { type MaybeRefOrGetter, nextTick, onUnmounted, ref, toValue, useTemplateRef, watch } from 'vue';
 
 import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
 import { providePinnedLevel, providePinnedStack, useProvideFloatingContext } from '../../composables';
@@ -146,7 +131,7 @@ onUnmounted(() => {
 	cleanup?.();
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 useProvideFloatingContext({} as any);
 </script>
 

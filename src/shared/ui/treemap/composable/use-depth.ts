@@ -1,4 +1,4 @@
-/* eslint-disable no-plusplus */
+/* oxlint-disable no-plusplus */
 import { computed, type Ref } from 'vue';
 
 export interface IDepthRange {

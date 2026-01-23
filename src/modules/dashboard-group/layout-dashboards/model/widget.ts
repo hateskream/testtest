@@ -460,7 +460,7 @@ export function calcSizeSideGridCell(
 	let bestCount = Math.floor(side / minSize);
 	let minRemainder = side % minSize;
 
-	// eslint-disable-next-line no-plusplus
+	// oxlint-disable-next-line no-plusplus
 	for (let i = minSize; i <= maxSize; i++) {
 		const count = Math.floor(side / i);
 		const remainder = side % i;

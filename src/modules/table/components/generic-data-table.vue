@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-nocheck
 import { computed, nextTick, onMounted, onUnmounted, type Ref, ref, watch } from 'vue';
 

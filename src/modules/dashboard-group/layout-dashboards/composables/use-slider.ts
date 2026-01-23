@@ -53,7 +53,7 @@ export function useSlider(opts: {
 		const end = offset + vp;
 
 		let acc = 0;
-		// eslint-disable-next-line no-plusplus
+		// oxlint-disable-next-line no-plusplus
 		for (let i = 0; i < slides.value.length; i++) {
 			const w = slides.value[i];
 			const s = acc;
