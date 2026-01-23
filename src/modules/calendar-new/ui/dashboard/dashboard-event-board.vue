@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, useTemplateRef } from 'vue';
+import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick, ref } from 'vue';
 
 import type { IEventBoardItem } from '../../model/contract';
 import {
@@ -54,6 +54,26 @@ const groupedBoard = computed(() =>
 );
 
 const scrollContainer = useTemplateRef('container');
+let prevScrollHeight = 0;
+
+watch(() => props.isFetchingPrev, async (isFetching, wasFetching) => {
+	const el = scrollContainer.value;
+
+	if (!el) {
+		return;
+	}
+
+	if (isFetching && !wasFetching) {
+		prevScrollHeight = el.scrollHeight;
+	}
+
+	if (!isFetching && wasFetching) {
+		await nextTick();
+
+		const heightDiff = el.scrollHeight - prevScrollHeight;
+		el.scrollTop += heightDiff;
+	}
+});
 
 function handleScroll() {
 	const el = scrollContainer.value;
