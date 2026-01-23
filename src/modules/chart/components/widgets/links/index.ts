@@ -1,3 +1,1 @@
-import ChartWidgetLinks from './chart-widget-links.vue';
-
-export { ChartWidgetLinks };
+export { default as ChartWidgetLinks } from './chart-widget-links.vue';

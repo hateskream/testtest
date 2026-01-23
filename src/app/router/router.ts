@@ -16,6 +16,7 @@ const PAGE_ENABLED_FEATURES: Partial<Record<RouteNames, FeatureName>> = {
 	[RouteNames.News]: 'NEWS_PAGE_ENABLED',
 	[RouteNames.Tv]: 'TV_PAGE_ENABLED',
 	[RouteNames.TickerPageFooter]: 'TICKER_PAGE_FOOTER_ENABLED',
+	[RouteNames.LinksTestPage]: 'LINKS_WIDGET_PAGE_ENABLED',
 };
 
 router.beforeEach((to) => {
