@@ -4,7 +4,7 @@ import { getMockData } from './mock';
 import { ActivityMetricsSchema } from '../model';
 import { apiSchema, useApiClient } from '@/shared/service/api';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export async function getActivityMetrics(request: IActivityMetricsRequest) {
 	const apiClient = useApiClient();
@@ -20,7 +20,6 @@ export async function getActivityMetrics(request: IActivityMetricsRequest) {
 				ticker_id: request.tickerId,
 			},
 		});
-
 	} catch (error) {
 		logger.error('Failed to get ticker activity metrics', error as Error);
 		throw error;

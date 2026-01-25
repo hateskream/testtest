@@ -14,9 +14,9 @@ const widgets: ITickerWidgetConfig[] = [
 		tickers: [
 			'Crypto-BTC_Bitcoin',
 			'Stock-TSLA',
-			'Index-SPX',
+			'Index-^SPX',
 			'Commodity-Gold',
-			'Forex-USD',
+			'Forex-EUR_USD',
 			'Etf-SPY',
 		],
 	},
