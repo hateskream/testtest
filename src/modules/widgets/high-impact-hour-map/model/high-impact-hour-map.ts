@@ -44,7 +44,7 @@ export function mapHighImpactHourMap(
 		hours: dto.buckets.map(bucket => ({
 			hour: bucket.hour,
 			highEventsCount: bucket.highCount,
-			impactLevel: bucket.highCount / totalHighEventsCount,
+			impactLevel: totalHighEventsCount > 0 ? bucket.highCount / totalHighEventsCount : 0,
 			active: bucket.hour.toString() === hour,
 		})),
 		currentHour: dto.currentHour,
