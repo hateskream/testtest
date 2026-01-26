@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick, ref } from 'vue';
 
-import type { IEventBoardItem } from '../../model/contract';
+import type { IEventBoardItem } from '../../model/calendar';
 import {
 	groupEventsByHour,
 	getHourStatus,

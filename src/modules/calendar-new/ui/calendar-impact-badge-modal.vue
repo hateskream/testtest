@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarImpact, CalendarImpactToLabels } from '../model/contract';
+import { CalendarImpact, CalendarImpactToLabels } from '../model/calendar';
 import { IconIds } from '@/shared/ui/icon';
 import { UiModalWrapper, UiModalContent } from '@/shared/ui/modal';
 

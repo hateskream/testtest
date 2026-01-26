@@ -1,7 +1,7 @@
 import { toValue, type MaybeRefOrGetter } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 
-import type { IDailyInfoResponse } from '../model/contract';
+import type { IDailyInfoResponse } from '../model/calendar';
 import { getDailyInfo } from '../api/get-daily-info';
 
 interface IUseQueryDailyInfo {

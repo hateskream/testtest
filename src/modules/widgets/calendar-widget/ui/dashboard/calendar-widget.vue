@@ -69,7 +69,7 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 			<calendar-loader v-if="query.isLoading" />
 
 			<dashboard-event-board
-				v-if="query.data && !query.isError"
+				v-else-if="query.data && !query.isError"
 				:current-time="currentTime"
 				:event-board="query.data.days"
 				:is-fetching-next="query.isFetchingNextPage"

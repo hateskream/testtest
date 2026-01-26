@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarCategory, CalendarCategoryToLabels } from '../model/contract';
+import { CalendarCategory, CalendarCategoryToLabels } from '../model/calendar';
 import { IconIds } from '@/shared/ui/icon';
 
 defineProps<{

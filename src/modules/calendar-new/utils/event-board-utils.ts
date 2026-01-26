@@ -1,6 +1,6 @@
 import { format, parseISO, differenceInMinutes } from 'date-fns';
 
-import type { ICalendarEvent } from '../model/contract';
+import type { ICalendarEvent } from '../model/calendar';
 
 const HOUR_MS = 60 * 60 * 1000;
 

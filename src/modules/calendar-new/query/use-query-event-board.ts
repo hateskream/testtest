@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
 import { toValue, type MaybeRefOrGetter } from 'vue';
 
-import type { IEventBoardRequest } from '../model/contract';
+import type { IEventBoardRequest } from '../model/calendar';
 import { getEventBoard } from '../api/get-event-board';
 
 const DAY_IN_SECONDS = 86400;

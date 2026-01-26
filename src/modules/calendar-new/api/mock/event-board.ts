@@ -1,5 +1,5 @@
 import { useFetchMock } from '@/shared/mock';
-import type { IEventBoardResponse } from '../../model/contract';
+import type { IEventBoardResponse } from '../../model/calendar';
 
 const { getMock } = useFetchMock<IEventBoardResponse>('/mock/calendar/event-board.json');
 

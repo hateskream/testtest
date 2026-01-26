@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue';
 import { useNow } from '@vueuse/core';
 
-import { CalendarCountryIds, CalendarCategory, CalendarImpact } from '../model/contract';
+import { CalendarCountryIds, CalendarCategory, CalendarImpact } from '../model/calendar';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { type ICalendarStorage, type CalendarStorageSchemaType, calendarStorageSchema } from '../model/storage';
 

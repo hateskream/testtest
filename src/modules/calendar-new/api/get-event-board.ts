@@ -1,4 +1,4 @@
-import { type IEventBoardRequest, type IEventBoardResponse, COUNTRY_TO_ISO } from '../model/contract';
+import { type IEventBoardRequest, type IEventBoardResponse, COUNTRY_TO_ISO } from '../model/calendar';
 import { useLogger } from '@/shared/service/logger';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { getMockEventBoard } from './mock/event-board';

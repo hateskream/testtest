@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { IconIds } from '@/shared/ui/icon';
 import { UiIcon } from '@/shared/ui/icon';
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarCountryIds, calendarCountryData } from '../model/contract';
+import { CalendarCountryIds, calendarCountryData } from '../model/calendar';
 import { UiText } from '@/shared/ui/text';
 
 const props = defineProps<{

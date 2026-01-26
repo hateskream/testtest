@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { CalendarCategory, CalendarCountryIds, CalendarImpact } from './contract';
+import { CalendarCategory, CalendarCountryIds, CalendarImpact } from './calendar';
 
 export interface ICalendarStorage {
 	selectedCountries: CalendarCountryIds[];

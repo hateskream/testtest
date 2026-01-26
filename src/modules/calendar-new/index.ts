@@ -6,3 +6,5 @@ export { default as DashboardEventBoard } from './ui/dashboard/dashboard-event-b
 export * from './composables/use-calendar-state';
 export * from './query/use-query-event-board';
 export * from './query/use-query-daily-info';
+
+export * from './model/calendar';

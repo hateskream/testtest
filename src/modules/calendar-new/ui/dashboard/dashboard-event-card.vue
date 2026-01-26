@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { type ICalendarEvent, calendarCountryData } from '../../model/contract';
+import { type ICalendarEvent, calendarCountryData } from '../../model/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ExternalLink } from '@/shared/ui/link';
