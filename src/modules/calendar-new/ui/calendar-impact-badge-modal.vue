@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalItemCheckbox } from '@/modules/widgets/base';
+import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
 import { CalendarImpact, CalendarImpactToLabels } from '../model/calendar';
-import { IconIds } from '@/shared/ui/icon';
-import { UiModalWrapper, UiModalContent } from '@/shared/ui/modal';
+
+import CalendarImpactList from './common/calendar-impact-list.vue';
 
 defineProps<{
 	displayVariant: 'new' | 'default';
@@ -38,55 +38,28 @@ const label = computed(() => {
 
 	return `${firstItem} +${item.length - 1}`;
 });
-
-function unselectAll(newState: boolean) {
-	if (newState) {
-		model.value = Object.values(CalendarImpact);
-	} else {
-		model.value = [];
-	}
-}
-
-function toggle(newValue: CalendarImpact) {
-	if (model.value.includes(newValue)) {
-		model.value = model.value.filter((impact) => impact !== newValue);
-	} else {
-		model.value = [...model.value, newValue];
-	}
-}
 </script>
 
 <template>
 	<modal-badge :display-variant>
 		<template #title>
-			{{label}}
+			{{ label }}
 			<ui-icon :id="IconIds.DropdownDown" />
 		</template>
 
 		<template #content>
-			<ui-modal-wrapper :display-variant>
-				<ui-modal-content>
-					<modal-item-checkbox
-						:model-value="isAllSelected"
-						@update:model-value="unselectAll"
-					>
-						All
-					</modal-item-checkbox>
+			<modal-badge-list :display-variant="displayVariant">
+				<template #title>
+					Impact
+				</template>
 
-					<modal-item-checkbox
-						v-for="(impact, index) in Object.values(CalendarImpact)"
-						:key="index"
-						:model-value="model.includes(impact)"
-						@click="toggle(impact)"
-					>
-						{{CalendarImpactToLabels[impact]}}
-					</modal-item-checkbox>
-				</ui-modal-content>
-			</ui-modal-wrapper>
+				<template #default>
+					<calendar-impact-list v-model="model" />
+				</template>
+			</modal-badge-list>
 		</template>
 	</modal-badge>
 </template>
 
 <style module="classes">
-
 </style>

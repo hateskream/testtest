@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick, ref } from 'vue';
+import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick } from 'vue';
 
 import type { IEventBoardItem } from '../../model/calendar';
-import {
-	groupEventsByHour,
-	getHourStatus,
-	formatEventDay,
-} from '../../utils/event-board-utils';
+import { groupEventsByHour, getHourStatus, formatEventDay } from '../../utils/event-board-utils';
 import { getHighlightColor } from '../../model/colors';
 import { UiText } from '@/shared/ui/text';
 
@@ -83,17 +79,40 @@ function handleScroll() {
 	}
 }
 
-onMounted(() => {
-	scrollContainer.value?.addEventListener('scroll', handleScroll, { passive: true });
-});
+function scrollToNextEvent() {
+	const el = scrollContainer.value;
 
-onUnmounted(() => {
-	scrollContainer.value?.removeEventListener('scroll', handleScroll);
+	if (!el) {
+		return;
+	}
+
+	for (const day of groupedBoard.value) {
+		for (const group of day.grouped) {
+			if (!group.missed) {
+				const section = el.querySelector(`[data-date="${day.date}"] [data-hour="${group.hour}"]`);
+				if (section) {
+					section.scrollIntoView({ block: 'start' });
+					return;
+				}
+			}
+		}
+	}
+
+	el.scrollTop = el.scrollHeight;
+	emits('loadNext');
+}
+
+onMounted(() => {
+	scrollToNextEvent();
 });
 </script>
 
 <template>
-	<div ref="container" :class="classes.calendarEventBoard">
+	<div
+		ref="container"
+		:class="classes.calendarEventBoard"
+		@scroll.passive="handleScroll"
+	>
 		<div :class="classes.wrapper">
 			<template
 				v-for="day in groupedBoard"

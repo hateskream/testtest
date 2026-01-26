@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { IconIds } from '@/shared/ui/icon';
-import { UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarCountryIds, calendarCountryData } from '../model/calendar';
+import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
+import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
+import { CalendarCountryIds, calendarCountryData } from '../model/calendar';
+
+import CalendarCountryList from './common/calendar-country-list.vue';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
@@ -42,71 +43,20 @@ const marketLabel = computed(() => {
 
 	return `${firstItemLabel} +${model.value.length - 1}`;
 });
-
-function unselectAll(newState: boolean) {
-	if (newState) {
-		model.value = Object.values(CalendarCountryIds);
-	} else {
-		model.value = [];
-	}
-}
-
-function toggle(newValue: CalendarCountryIds) {
-	if (model.value.includes(newValue)) {
-		model.value = model.value.filter((country) => country !== newValue);
-	} else {
-		model.value = [...model.value, newValue];
-	}
-}
 </script>
 
 <template>
 	<modal-badge :display-variant="props.displayVariant">
 		<template #title>
 			<ui-icon :id="marketIcon" />
-			<ui-text token="text-200-r" as="div">{{marketLabel}}</ui-text>
+			<ui-text token="text-200-r" as="div">{{ marketLabel }}</ui-text>
 			<ui-icon :id="IconIds.DropdownDown" />
 		</template>
 		<template #content>
 			<modal-badge-list :display-variant="props.displayVariant">
 				<template #title>Markets</template>
 				<template #default>
-					<modal-item-checkbox
-						:model-value="isAllSelected"
-						@update:model-value="unselectAll"
-					>
-						<div :class="classes.modalItem">
-							<div :class="classes.iconWrapper">
-								<ui-icon
-									:id="IconIds.Globus"
-									width="14px"
-									height="14px"
-								/>
-							</div>
-							<span>
-								Entire World
-							</span>
-						</div>
-					</modal-item-checkbox>
-					<modal-item-checkbox
-						v-for="country in calendarCountryData"
-						:key="country.label"
-						:model-value="model.includes(country.id)"
-						@update:model-value="toggle(country.id)"
-					>
-						<div :class="classes.modalItem">
-							<div :class="classes.iconWrapper">
-								<ui-icon
-									:id="country.icon"
-									width="14px"
-									height="14px"
-								/>
-							</div>
-							<span>
-								{{country.label}}
-							</span>
-						</div>
-					</modal-item-checkbox>
+					<calendar-country-list v-model="model" />
 				</template>
 			</modal-badge-list>
 		</template>
@@ -114,19 +64,4 @@ function toggle(newValue: CalendarCountryIds) {
 </template>
 
 <style module="classes">
-.modalItem {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-}
-
-.iconWrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 16px;
-	height: 16px;
-	border-radius: 50%;
-	outline: 1px solid rgb(44 44 44 / 100%);
-}
 </style>

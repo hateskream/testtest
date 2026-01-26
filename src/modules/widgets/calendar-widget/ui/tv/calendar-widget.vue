@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { defineAsyncComponent, reactive } from 'vue';
+import { defineAsyncComponent, computed, reactive, ref } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useCalendarState, useInfiniteQueryEventBoard } from '@/modules/calendar-new';
+import {
+	getUTCWeekRange,
+	toUTCMidnightUnix,
+	useCalendarState,
+	useInfiniteQueryEventBoard,
+} from '@/modules/calendar-new';
 
 import CalendarLoader from '../views/calendar-loader.vue';
 
@@ -36,11 +41,23 @@ const {
 	},
 });
 
+const limit = ref(getUTCWeekRange(currentTime.value));
+
+const initialFrom = computed(() => {
+	const today = toUTCMidnightUnix(currentTime.value);
+	const { from, to } = limit.value;
+	return today >= from && today <= to ? today : from;
+});
+
 const query = reactive(useInfiniteQueryEventBoard(() => ({
-	from: Math.floor(currentTime.value.setUTCHours(0, 0, 0, 0) / 1000),
+	from: initialFrom.value,
 	categories: selectedCategories.value,
 	countries: selectedCountries.value,
 	minImpact: selectedImpacts.value,
+	limit: {
+		from: limit.value.from,
+		to: limit.value.to,
+	},
 })));
 </script>
 
@@ -63,6 +80,10 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 
 			<calendar-main
 				v-else-if="query.data && !query.isError"
+				v-model:countries="selectedCountries"
+				v-model:categories="selectedCategories"
+				v-model:impact="selectedImpacts"
+				v-model:range="limit"
 				:event-board="query.data.days"
 				:current-time="currentTime"
 				:is-fetching-next="query.isFetchingNextPage"

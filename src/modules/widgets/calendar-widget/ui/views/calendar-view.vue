@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { TvEventBoard, type IEventBoardItem } from '@/modules/calendar-new';
+import {
+	TvEventBoard,
+	TvCalendarToolbar,
+	type IEventBoardItem,
+	type CalendarCountryIds,
+	type CalendarCategory,
+	type CalendarImpact,
+} from '@/modules/calendar-new';
 
 const props = defineProps<{
 	currentTime: Date;
@@ -13,10 +20,30 @@ const emits = defineEmits<{
 	loadPrev: [];
 	loadNext: [];
 }>();
+
+const country = defineModel<CalendarCountryIds[]>('countries', {
+	required: true,
+});
+const categories = defineModel<CalendarCategory[]>('categories', {
+	required: true,
+});
+const impact = defineModel<CalendarImpact[]>('impact', {
+	required: true,
+});
+const range = defineModel<{ from: number; to: number }>('range', {
+	required: true,
+});
 </script>
 
 <template>
 	<div :class="classes.view">
+		<tv-calendar-toolbar
+			v-model:countries="country"
+			v-model:categories="categories"
+			v-model:impact="impact"
+			v-model:range="range"
+		/>
+
 		<tv-event-board
 			:event-board="props.eventBoard"
 			:current-time="props.currentTime"

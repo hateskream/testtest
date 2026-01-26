@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { UiIcon } from '@/shared/ui/icon';
-import { ModalBadge, ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
+import { UiIcon, IconIds } from '@/shared/ui/icon';
+import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
 import { CalendarCategory, CalendarCategoryToLabels } from '../model/calendar';
-import { IconIds } from '@/shared/ui/icon';
+
+import CalendarCategoriesList from './common/calendar-categories-list.vue';
 
 defineProps<{
 	displayVariant: 'new' | 'default';
@@ -37,22 +38,6 @@ const label = computed(() => {
 
 	return `${firstItem} +${item.length - 1}`;
 });
-
-function unselectAll(newState: boolean) {
-	if (newState) {
-		model.value = Object.values(CalendarCategory);
-	} else {
-		model.value = [];
-	}
-}
-
-function toggle(newValue: CalendarCategory) {
-	if (model.value.includes(newValue)) {
-		model.value = model.value.filter((category) => category !== newValue);
-	} else {
-		model.value = [...model.value, newValue];
-	}
-}
 </script>
 
 <template>
@@ -68,21 +53,7 @@ function toggle(newValue: CalendarCategory) {
 				</template>
 
 				<template #default>
-					<modal-item-checkbox
-						:model-value="isAllSelected"
-						@update:model-value="unselectAll"
-					>
-						All
-					</modal-item-checkbox>
-
-					<modal-item-checkbox
-						v-for="(category, index) in Object.values(CalendarCategory)"
-						:key="index"
-						:model-value="model.includes(category)"
-						@click="toggle(category)"
-					>
-						{{CalendarCategoryToLabels[category]}}
-					</modal-item-checkbox>
+					<calendar-categories-list v-model="model" />
 				</template>
 			</modal-badge-list>
 		</template>
@@ -90,5 +61,4 @@ function toggle(newValue: CalendarCategory) {
 </template>
 
 <style module="classes">
-
 </style>

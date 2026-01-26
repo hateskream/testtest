@@ -15,6 +15,7 @@ import {
 	CalendarImpactBadgeModal,
 	DashboardEventBoard,
 	useInfiniteQueryEventBoard,
+	toUTCMidnightUnix,
 } from '@/modules/calendar-new';
 
 import CalendarLoader from '../views/calendar-loader.vue';
@@ -40,7 +41,7 @@ const {
 });
 
 const query = reactive(useInfiniteQueryEventBoard(() => ({
-	from: Math.floor(currentTime.value.setUTCHours(0, 0, 0, 0) / 1000),
+	from: toUTCMidnightUnix(currentTime.value),
 	categories: selectedCategories.value,
 	countries: selectedCountries.value,
 	minImpact: selectedImpacts.value,

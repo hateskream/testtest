@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick, ref } from 'vue';
+import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick } from 'vue';
 
 import type { IEventBoardItem } from '../../model/calendar';
 import {
@@ -91,17 +91,40 @@ function handleScroll() {
 	}
 }
 
-onMounted(() => {
-	scrollContainer.value?.addEventListener('scroll', handleScroll, { passive: true });
-});
+function scrollToNextEvent() {
+	const el = scrollContainer.value;
 
-onUnmounted(() => {
-	scrollContainer.value?.removeEventListener('scroll', handleScroll);
+	if (!el) {
+		return;
+	}
+
+	for (const day of groupedBoard.value) {
+		for (const group of day.grouped) {
+			if (!group.missed) {
+				const section = el.querySelector(`[data-date="${day.date}"] [data-hour="${group.hour}"]`);
+				if (section) {
+					section.scrollIntoView({ block: 'start' });
+					return;
+				}
+			}
+		}
+	}
+
+	el.scrollTop = el.scrollHeight;
+	emits('loadNext');
+}
+
+onMounted(() => {
+	scrollToNextEvent();
 });
 </script>
 
 <template>
-	<div ref="container" :class="classes.eventBoard">
+	<div
+		ref="container"
+		:class="classes.eventBoard"
+		@scroll.passive="handleScroll"
+	>
 		<div
 			v-for="day in groupedBoard"
 			:key="day.date"

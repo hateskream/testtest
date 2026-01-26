@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/vue-query';
-import { toValue, type MaybeRefOrGetter } from 'vue';
+import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 
 import type { IEventBoardRequest } from '../model/calendar';
 import { getEventBoard } from '../api/get-event-board';
@@ -14,6 +14,8 @@ interface IEventBoardOptions extends IEventBoardRequest {
 }
 
 export const useInfiniteQueryEventBoard = (request: MaybeRefOrGetter<IEventBoardOptions>) => {
+	const initialPageParam = computed(() => toValue(request).from);
+
 	return useInfiniteQuery({
 		queryKey: ['event-board', 'infinite', request],
 		queryFn: ({ pageParam }) => getEventBoard({
@@ -21,7 +23,7 @@ export const useInfiniteQueryEventBoard = (request: MaybeRefOrGetter<IEventBoard
 			from: pageParam,
 			to: pageParam,
 		}),
-		initialPageParam: toValue(request).from,
+		initialPageParam,
 		getNextPageParam: (_lastPage, _allPages, lastPageParam) => {
 			const next = lastPageParam + DAY_IN_SECONDS;
 			const limitTo = toValue(request).limit?.to;
