@@ -1,8 +1,8 @@
 import { toValue, type MaybeRefOrGetter } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 
-import type { IDailyInfoResponse } from '../model/calendar';
 import { getDailyInfo } from '../api/get-daily-info';
+import type { IDailyInfoResponse } from '../model/calendar';
 
 interface IUseQueryDailyInfo {
 	from: MaybeRefOrGetter<string>;
@@ -10,7 +10,7 @@ interface IUseQueryDailyInfo {
 }
 
 export const useQueryDailyInfo = (options: IUseQueryDailyInfo) => {
-	return useQuery<IDailyInfoResponse[]>({
+	return useQuery<IDailyInfoResponse>({
 		queryKey: ['daily-calendar', options.from, options.to],
 		queryFn: () => getDailyInfo({
 			from: toValue(options.from),

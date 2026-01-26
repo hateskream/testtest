@@ -5,7 +5,7 @@ import type { IDailyInfoRequest, IDailyInfoResponse } from '../model/calendar';
 
 const IS_USE_MOCK = false;
 
-export async function getDailyInfo(options: IDailyInfoRequest): Promise<IDailyInfoResponse[]> {
+export async function getDailyInfo(options: IDailyInfoRequest): Promise<IDailyInfoResponse> {
 	try {
 		return IS_USE_MOCK ? getMockDailyInfo() : getApiDailyInfo(options);
 	} catch (error) {
@@ -18,7 +18,7 @@ export async function getDailyInfo(options: IDailyInfoRequest): Promise<IDailyIn
 function getApiDailyInfo(options: IDailyInfoRequest) {
 	const httpService = useHttpService();
 
-	return httpService.get<IDailyInfoResponse[]>('/api/v1/calendar/daily-info', {
+	return httpService.get<IDailyInfoResponse>('/api/v1/calendar/daily-info', {
 		query: {
 			from: options.from,
 			to: options.to,

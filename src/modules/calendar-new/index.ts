@@ -7,6 +7,11 @@ export { default as TvEventBoard } from './ui/tv/tv-event-board.vue';
 
 export { default as TvCalendarToolbar } from './ui/tv/tv-calendar-toolbar.vue';
 
+export { default as CalendarPageLayout } from './ui/page/calendar-page-layout.vue';
+export { default as CalendarPageDaySelect } from './ui/page/calendar-page-day-select.vue';
+export { default as CalendarPageDailyInfo } from './ui/page/calendar-page-daily-info.vue';
+export { default as CalendarPageNews } from './ui/page/calendar-page-news.vue';
+
 export * from './composables/use-calendar-state';
 export * from './query/use-query-event-board';
 export * from './query/use-query-daily-info';

@@ -41,17 +41,6 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 				<ui-text token="text-100-r-up" :class="classes.eventType">
 					{{ CalendarCategoryToLabels[props.event.meta.category] }}
 				</ui-text>
-
-				<button
-					:class="[classes.buttonIcon, props.isFavorite && classes.favorite]"
-					@click="emits('toggleFavorite', props.event.id)"
-				>
-					<ui-icon
-						:id="IconIds.Favorite"
-						width="16px"
-						height="16px"
-					/>
-				</button>
 			</div>
 			<div :class="classes.flexEnd">
 				<div v-if="props.event.meta.badge" :class="classes.eventSummary">

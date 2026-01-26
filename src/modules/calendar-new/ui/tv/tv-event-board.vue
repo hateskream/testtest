@@ -16,9 +16,12 @@ const props = withDefaults(defineProps<{
 	currentTime?: Date;
 	isFetchingNext?: boolean;
 	isFetchingPrev?: boolean;
+
+	headerColor?: string;
 }>(), {
 	favorite: () => [],
 	currentTime: () => new Date(),
+	headerColor: '#121213',
 });
 
 const emits = defineEmits<{
@@ -189,7 +192,7 @@ onMounted(() => {
 	height: 44px;
 	padding-left: 10px;
 	color: #ffffff;
-	background: #121213;
+	background: v-bind(headerColor);
 }
 
 .date {
