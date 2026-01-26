@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { CalendarCategoryToLabels, calendarCountryData, type ICalendarEvent } from '../../model/calendar';
+import { CalendarCategoryToLabels, type ICalendarEvent } from '../../model/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ExternalLink } from '@/shared/ui/link';
 import { UiText } from '@/shared/ui/text';
 import { useGoToTickerPage } from '@/modules/chart';
 import { UiClamped } from '@/shared/ui/clamped';
 import { isFeatureEnabled } from '@/shared/lib';
+
+import EventCardIcon from '../common/event-card-icon.vue';
 
 interface ICalendarEventCardProps {
 	event: ICalendarEvent;
@@ -59,13 +61,7 @@ const isChartEnabled = isFeatureEnabled('CALENDAR_OPEN_CHART');
 		</div>
 		<div :class="classes.cardHeadline">
 			<div :class="classes.eventTitleWrapper">
-				<div v-if="props.event.meta.country" :class="classes.iconWrapper">
-					<ui-icon
-						:id="calendarCountryData.find(v => v.id === props.event.meta.country)?.icon ?? IconIds.Globus"
-						width="20px"
-						height="20px"
-					/>
-				</div>
+				<event-card-icon :meta="props.event.meta" />
 
 				<ui-text token="text-300-r" :class="classes.eventTitle">
 					<ui-clamped>

@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-import { type ICalendarEvent, calendarCountryData } from '../../model/calendar';
+import { type ICalendarEvent } from '../../model/calendar';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
 import { ExternalLink } from '@/shared/ui/link';
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
 import { isFeatureEnabled } from '@/shared/lib';
-import { UiImage } from '@/shared/ui/image';
 import { useGoToTickerPage } from '@/modules/chart';
+
+import EventCardIcon from '../common/event-card-icon.vue';
 
 interface ICalendarEventCardProps {
 	event: ICalendarEvent;
@@ -18,10 +19,6 @@ interface ICalendarEventCardProps {
 }
 
 const props = defineProps<ICalendarEventCardProps>();
-
-const icon = computed(
-	() => calendarCountryData.find(v => v.id === props.event.meta.country)?.icon ?? IconIds.Globus,
-);
 
 const isCardOpen = ref(false);
 
@@ -58,20 +55,7 @@ const { goToTickerPage } = useGoToTickerPage();
 
 				<div :class="classes.cell">
 					<div :class="classes.main">
-						<ui-image
-							v-if="props.event.meta.image"
-							:src="props.event.meta.image"
-							:class="classes.icon"
-							width="20px"
-							height="20px"
-						/>
-						<ui-icon
-							v-else
-							:id="icon"
-							:class="classes.icon"
-							width="20px"
-							height="20px"
-						/>
+						<event-card-icon :meta="props.event.meta" />
 						<ui-clamped :class="classes.title" :rows="1">
 							<ui-text token="text-300-r">{{ props.event.meta.title }}</ui-text>
 						</ui-clamped>
@@ -238,6 +222,10 @@ const { goToTickerPage } = useGoToTickerPage();
 	gap: var(--padding-padding-s4, 6px);
 }
 
+.image {
+	width: 20px;
+}
+
 .title {
 	color: var(--text-500, rgb(255 255 255 / 96%));
 	text-shadow: 0 4px 4px rgb(0 0 0 / 25%);
@@ -298,10 +286,6 @@ const { goToTickerPage } = useGoToTickerPage();
 	padding-bottom: var(--padding-padding-s4, 6px);
 	gap: 6px;
 	overflow: hidden;
-}
-
-.icon {
-	border-radius: 50%;
 }
 
 .detailsContent {
