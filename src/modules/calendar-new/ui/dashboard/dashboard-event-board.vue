@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, useTemplateRef, watch, nextTick } from 'vue';
+import { computed, onMounted, useTemplateRef, watch, nextTick } from 'vue';
 
 import type { IEventBoardItem } from '../../model/calendar';
 import {
