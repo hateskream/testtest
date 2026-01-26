@@ -5,16 +5,16 @@ import { getDailyInfo } from '../api/get-daily-info';
 import type { IDailyInfoResponse } from '../model/calendar';
 
 interface IUseQueryDailyInfo {
-	from: MaybeRefOrGetter<string>;
-	to: MaybeRefOrGetter<string>;
+	from: string;
+	to: string;
 }
 
-export const useQueryDailyInfo = (options: IUseQueryDailyInfo) => {
+export const useQueryDailyInfo = (options: MaybeRefOrGetter<IUseQueryDailyInfo>) => {
 	return useQuery<IDailyInfoResponse>({
-		queryKey: ['daily-calendar', options.from, options.to],
+		queryKey: ['daily-calendar', options, options],
 		queryFn: () => getDailyInfo({
-			from: toValue(options.from),
-			to: toValue(options.to),
+			from: toValue(options).from,
+			to: toValue(options).to,
 		}),
 		refetchOnMount: false,
 	});

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { parseISO } from 'date-fns';
 
 import { UiText } from '@/shared/ui/text';
 import type { IDailyInfoItem, IDailyInfoResponse } from '../../model/calendar';
@@ -25,7 +24,7 @@ const emits = defineEmits<{
 }>();
 
 function mapDay(item: IDailyInfoItem, todayStr: string) {
-	const date = parseISO(item.date);
+	const date = new Date(`${item.date}T00:00:00Z`);
 	const weekdayShort = date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
 	const dayNumber = date.getUTCDate();
 

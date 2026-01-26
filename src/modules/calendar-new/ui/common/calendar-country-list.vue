@@ -57,8 +57,8 @@ function toggle(newValue: CalendarCountryIds) {
 			<div :class="classes.iconWrapper">
 				<ui-icon
 					:id="country.icon"
-					width="14px"
-					height="14px"
+					width="16px"
+					height="16px"
 				/>
 			</div>
 			<span>{{ country.label }}</span>
@@ -80,6 +80,5 @@ function toggle(newValue: CalendarCountryIds) {
 	width: 16px;
 	height: 16px;
 	border-radius: 50%;
-	outline: 1px solid rgb(44 44 44 / 100%);
 }
 </style>

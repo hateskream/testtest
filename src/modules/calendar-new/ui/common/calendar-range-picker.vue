@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { UiDatePicker, type DatePickerRangeObject } from '@/shared/ui/date-picker';
-import { toUTCMidnightUnix } from '../../utils/event-board-utils';
+import { localDateToUTCUnix } from '../../utils/event-board-utils';
 
 const model = defineModel<{ from: number; to: number }>({
 	required: true,
@@ -10,15 +10,17 @@ const model = defineModel<{ from: number; to: number }>({
 
 const range = computed<DatePickerRangeObject>({
 	get() {
+		const fromDate = new Date(model.value!.from * 1000);
+		const toDate = new Date(model.value!.to * 1000);
 		return {
-			start: new Date(model.value!.from * 1000),
-			end: new Date(model.value!.to * 1000),
+			start: new Date(fromDate.getUTCFullYear(), fromDate.getUTCMonth(), fromDate.getUTCDate()),
+			end: new Date(toDate.getUTCFullYear(), toDate.getUTCMonth(), toDate.getUTCDate()),
 		};
 	},
 	set(value) {
 		model.value = {
-			from: toUTCMidnightUnix(new Date(value.start as number | string | Date)),
-			to: toUTCMidnightUnix(new Date(value.end as number | string | Date)),
+			from: localDateToUTCUnix(new Date(value.start as number | string | Date)),
+			to: localDateToUTCUnix(new Date(value.end as number | string | Date)),
 		};
 	},
 });

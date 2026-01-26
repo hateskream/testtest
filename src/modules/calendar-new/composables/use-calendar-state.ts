@@ -28,7 +28,7 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 	} = options;
 
 	const {
-		interval = 300_000,
+		interval = 60_000,
 		selectedCountries: defaultSelectedCountries = Object.values(CalendarCountryIds),
 		selectedCategories: defaultSelectedCategories = Object.values(CalendarCategory),
 		selectedImpacts: defaultSelectedImpacts = Object.values(CalendarImpact),

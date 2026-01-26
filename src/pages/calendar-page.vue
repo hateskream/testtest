@@ -10,8 +10,9 @@ import {
 	TvCalendarToolbar,
 	TvEventBoard,
 	useCalendarState,
+	formatUTCDate,
 	getUTCWeekRange,
-	toUTCMidnightUnix,
+	localDateToUTCUnix,
 	useInfiniteQueryEventBoard,
 	useQueryDailyInfo,
 } from '@/modules/calendar-new';
@@ -23,22 +24,24 @@ const { currentTime, selectedCategories, selectedCountries, selectedImpacts } = 
 	},
 });
 
-const limit = ref(getUTCWeekRange(currentTime.value));
+const selectedDate = ref(currentTime.value);
+const limit = ref(getUTCWeekRange(new Date(localDateToUTCUnix(currentTime.value) * 1000)));
+
+const selectedDateUnix = computed(() => localDateToUTCUnix(selectedDate.value));
+const selectedDateStr = computed(() => formatUTCDate(new Date(selectedDateUnix.value * 1000)));
 
 const initialFrom = computed(() => {
-	const today = toUTCMidnightUnix(currentTime.value);
 	const { from, to } = limit.value;
-	return today >= from && today <= to ? today : from;
+	const date = selectedDateUnix.value;
+	return date >= from && date <= to ? date : from;
 });
 
-const selectedDate = ref(new Date(initialFrom.value * 1000));
-
-const selectedDateStr = computed(() => {
-	const d = new Date(selectedDate.value);
-	const y = d.getUTCFullYear();
-	const m = String(d.getUTCMonth() + 1).padStart(2, '0');
-	const day = String(d.getUTCDate()).padStart(2, '0');
-	return `${y}-${m}-${day}`;
+const dailyInfoWeekRange = computed(() => {
+	const week = getUTCWeekRange(new Date(limit.value.from * 1000));
+	return {
+		from: formatUTCDate(new Date(week.from * 1000)),
+		to: formatUTCDate(new Date(week.to * 1000)),
+	};
 });
 
 const query = reactive(useInfiniteQueryEventBoard(() => ({
@@ -52,52 +55,30 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 	},
 })));
 
-const WEEK_S = 7 * 86400;
+const dailyInfo = reactive(useQueryDailyInfo(() => ({
+	from: dailyInfoWeekRange.value.from,
+	to: dailyInfoWeekRange.value.to,
+})));
 
-const dailyInfoRange = computed(() => {
-	const { from, to } = limit.value;
-
-	const srcDate = new Date(from * 1000);
-	const weekday = srcDate.getUTCDay();
-	const daysToMonday = weekday === 0 ? 6 : weekday - 1;
-
-	const mondayUnix = from - daysToMonday * 86400;
-	const weekEndUnix = mondayUnix + WEEK_S - 1;
-
-	const rangeFromUnix = mondayUnix;
-	const rangeToUnix = from === to ? weekEndUnix : Math.min(weekEndUnix, to);
-
-	const formatUTC = (unix: number) => {
-		const d = new Date(unix * 1000);
-		const y = d.getUTCFullYear();
-		const m = String(d.getUTCMonth() + 1).padStart(2, '0');
-		const day = String(d.getUTCDate()).padStart(2, '0');
-		return `${y}-${m}-${day}`;
-	};
-
-	return { from: formatUTC(rangeFromUnix), to: formatUTC(rangeToUnix) };
-});
-
-const dailyInfo = reactive(useQueryDailyInfo({
-	from: () => dailyInfoRange.value.from,
-	to: () => dailyInfoRange.value.to,
-}));
+let skipLimitSync = false;
 
 watch(selectedDate, (d) => {
-	const unix = toUTCMidnightUnix(d);
+	if (skipLimitSync) {
+		skipLimitSync = false;
+		return;
+	}
+	const unix = localDateToUTCUnix(d);
 	limit.value = { from: unix, to: unix };
 });
 
-
-watch(initialFrom, (val) => {
-	selectedDate.value = new Date(val * 1000);
-});
-
 function onSelectDay(date: string) {
-	selectedDate.value = new Date(`${date}T00:00:00Z`);
+	selectedDate.value = new Date(`${date}T00:00:00`);
 }
 
 function onUpdateWeek(date: Date) {
+	const unix = localDateToUTCUnix(date);
+	limit.value = getUTCWeekRange(new Date(unix * 1000));
+	skipLimitSync = true;
 	selectedDate.value = date;
 }
 </script>

@@ -5,7 +5,7 @@ import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/bas
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	getUTCWeekRange,
-	toUTCMidnightUnix,
+	localDateToUTCUnix,
 	useCalendarState,
 	useInfiniteQueryEventBoard,
 } from '@/modules/calendar-new';
@@ -41,10 +41,10 @@ const {
 	},
 });
 
-const limit = ref(getUTCWeekRange(currentTime.value));
+const limit = ref(getUTCWeekRange(new Date(localDateToUTCUnix(currentTime.value) * 1000)));
 
 const initialFrom = computed(() => {
-	const today = toUTCMidnightUnix(currentTime.value);
+	const today = localDateToUTCUnix(currentTime.value);
 	const { from, to } = limit.value;
 	return today >= from && today <= to ? today : from;
 });

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getUnixTime, startOfDay } from 'date-fns';
 import { reactive } from 'vue';
 
 import {
@@ -15,7 +14,7 @@ import {
 	CalendarImpactBadgeModal,
 	DashboardEventBoard,
 	useInfiniteQueryEventBoard,
-	toUTCMidnightUnix,
+	localDateToUTCUnix,
 } from '@/modules/calendar-new';
 
 import CalendarLoader from '../views/calendar-loader.vue';
@@ -41,7 +40,7 @@ const {
 });
 
 const query = reactive(useInfiniteQueryEventBoard(() => ({
-	from: toUTCMidnightUnix(currentTime.value),
+	from: localDateToUTCUnix(currentTime.value),
 	categories: selectedCategories.value,
 	countries: selectedCountries.value,
 	minImpact: selectedImpacts.value,

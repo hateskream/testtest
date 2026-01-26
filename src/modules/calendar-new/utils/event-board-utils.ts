@@ -97,14 +97,25 @@ export function findNextEventTime(events: ICalendarEvent[], now: Date): Date | n
 
 export function toUTCMidnightUnix(date: Date): number {
 	const d = new Date(date);
-	d.setUTCHours(0, 0, 0, 0);
+	d.setUTCHours(0, 0, 0, 1);
 	return Math.floor(d.getTime() / 1000);
+}
+
+export function localDateToUTCUnix(date: Date): number {
+	return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 1000;
 }
 
 export function toUTCEndOfDayUnix(date: Date): number {
 	const d = new Date(date);
 	d.setUTCHours(23, 59, 59, 999);
 	return Math.floor(d.getTime() / 1000);
+}
+
+export function formatUTCDate(date: Date): string {
+	const y = date.getUTCFullYear();
+	const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+	const d = String(date.getUTCDate()).padStart(2, '0');
+	return `${y}-${m}-${d}`;
 }
 
 export function getUTCWeekRange(date: Date): { from: number; to: number } {
@@ -120,6 +131,6 @@ export function getUTCWeekRange(date: Date): { from: number; to: number } {
 
 	return {
 		from: toUTCMidnightUnix(monday),
-		to: toUTCEndOfDayUnix(sunday),
+		to: toUTCMidnightUnix(sunday),
 	};
 }
