@@ -11,6 +11,7 @@ import {
 } from '../model';
 import { useQueryDominanceSnapshot } from '../queries';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { deepCompare } from '@/shared/lib/compare';
 
 interface IOptions {
 	widgetId: string;
@@ -86,6 +87,10 @@ export function useDominance({
 	}, { immediate: true });
 
 	watch(state, (newState) => {
+		if (deepCompare(newState, state.value)) {
+			return;
+		}
+
 		mutate(newState);
 	}, { deep: true });
 
