@@ -11,6 +11,7 @@ import {
 import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
+import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
@@ -31,24 +32,26 @@ const props = defineProps<IMarketCapFiltersPanelProps>();
 
 const selectedRangeLabel = computed(() => dateRangeFilterValueToDisplay[activeDateRange.value].selected);
 
-function onTickerSelect(newTickers: ITickerItem[]) {
-	selectedTickers.value = newTickers.map(v => v.canonical_ticker_id);
-}
+const tickersModel = computed({
+	get: () => createCostylTickerItems(selectedTickers.value),
+	set: (tickers: ITickerItem[]) => {
+		selectedTickers.value = tickers.map(ticker => ticker.canonical_ticker_id);
+	},
+});
 
-function onMarketTickerSelect(
-	newMarketTickers: IMarketTickerItem<MarketType.Crypto | MarketType.Stock>[],
-) {
-	selectedMarkets.value = newMarketTickers.map(v => v.market_type);
-}
+const marketTickers = computed({
+	get: () => {
+		if (selectedMarkets.value.length === 0) {
+			return [MARKET_TICKER_ITEMS[0]] as IMarketTickerItem<MarketCapType>[];
+		}
 
-const marketTickers = computed(() => {
-	if (selectedMarkets.value.length === 0) {
-		return [MARKET_TICKER_ITEMS[0]] as IMarketTickerItem<MarketCapType>[];
-	}
-
-	return selectedMarkets.value.map(
-		v => MARKET_TICKER_ITEMS_BY_MARKET.get(v)!,
-	) as IMarketTickerItem<MarketCapType>[];
+		return selectedMarkets.value.map(
+			v => MARKET_TICKER_ITEMS_BY_MARKET.get(v)!,
+		) as IMarketTickerItem<MarketCapType>[];
+	},
+	set: (newMarketTickers: IMarketTickerItem<MarketType.Crypto | MarketType.Stock>[]) => {
+		selectedMarkets.value = newMarketTickers.map(v => v.market_type);
+	},
 });
 </script>
 
@@ -58,7 +61,8 @@ const marketTickers = computed(() => {
 		@on-clear-click="emit('reset')"
 	>
 		<ticker-selector-modal-with-badge
-			:selected-market-tickers="marketTickers"
+			v-model:selected-tickers="tickersModel"
+			v-model:selected-market-tickers="marketTickers"
 			:enabled-markets="[MarketType.Crypto, MarketType.Stock]"
 			:display-variant="props.displayVariant"
 			:selection-mode="SelectionMode.Multiple"
@@ -66,8 +70,6 @@ const marketTickers = computed(() => {
 			show-label
 			autofocus
 			enable-market-tickers
-			@update:selected-tickers="onTickerSelect"
-			@update:selected-market-tickers="onMarketTickerSelect"
 		/>
 		<template v-if="props.isShowDateRange">
 			<ui-delimiter v-if="props.displayVariant === 'default'" />

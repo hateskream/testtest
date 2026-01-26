@@ -6,6 +6,8 @@ import { ENABLED_MARKETS, filterValueToDisplay, TimeRangeFilterValue } from '../
 import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
+import { MarketType } from '@/modules/market';
+import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
@@ -14,7 +16,6 @@ interface IFiltersComponentProps {
 	isBig: boolean;
 	displayVariant: 'default' | 'new';
 }
-
 
 const props = defineProps<IFiltersComponentProps>();
 
@@ -42,13 +43,16 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 	}
 }
 
-function updateTicker(newValue: ITickerItem[]) {
-	if (!newValue[0]) {
-		return;
-	}
+const tickersModel = computed({
+	get: () => createCostylTickerItems([selectedTicker.value]),
+	set: (tickers: ITickerItem[]) => {
+		if (tickers.length === 0) {
+			return;
+		}
 
-	selectedTicker.value = newValue[0].canonical_ticker_id;
-}
+		selectedTicker.value = tickers[0].canonical_ticker_id;
+	},
+});
 
 const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
 </script>
@@ -60,13 +64,13 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 			@on-clear-click="emit('reset-all-changes')"
 		>
 			<ticker-selector-modal-with-badge
+				v-model:selected-tickers="tickersModel"
 				:enabled-markets="ENABLED_MARKETS"
 				:selection-mode="SelectionMode.Single"
 				:display-variant="props.displayVariant"
 				:show-label="!isDefaultDisplayVariant"
 				autofocus
 				close-on-select
-				@update:selected-tickers="updateTicker"
 			/>
 			<template v-if="!props.isBig || !isDefaultDisplayVariant">
 				<ui-delimiter v-if="isDefaultDisplayVariant" />

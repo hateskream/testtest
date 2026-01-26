@@ -1,17 +1,13 @@
 <script setup lang="ts" generic="M extends readonly MarketType[]">
-import { computed, reactive, type Ref, ref, watch } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 
 import { TvModalDivider, UiModalSearch, UiModalWrapper } from '@/shared/ui/modal';
 import { MarketType } from '@/modules/market';
 import { UiPillItem, UiPillWrapper } from '@/shared/ui/pill';
 import {
-	arrayToTickerMap,
-	createSelectedMarketTickersMap,
-	flattenSelectedMarketTickersMap,
 	type IMarketTickerItem,
 	type ITickerItem,
-	mapToTickerArray,
 	SelectedSegment,
 	SelectionMode,
 } from '../model';
@@ -27,71 +23,35 @@ const props = defineProps<{
 	selectionMode: SelectionMode;
 	enableSelectAll?: boolean;
 	enableMarketTickers?: boolean;
-
 	displayVariant: 'new' | 'default';
-
-	selectedMarkets?: M;
-	selectedTickers?: ITickerItem[];
-	excludedTickers?: ITickerItem[];
-	selectedMarketTickers?: IMarketTickerItem[];
 }>();
 
-const emit = defineEmits<{
-	'update:selectedMarkets': [readonly M[number][]];
-	'update:selectedTickers': [ITickerItem[]];
-	'update:excludedTickers': [ITickerItem[]];
-	'update:selectedMarketTickers': [IMarketTickerItem[]];
-	changed: [];
-}>();
+const selectedMarkets = defineModel<readonly M[number][]>('selectedMarkets', {
+	default: () => [],
+});
 
-const localSelectedMarkets = ref(
-	new Set<M[number]>(props.selectedMarkets ?? []),
-) as Ref<Set<M[number]>>;
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', {
+	default: () => [],
+});
 
-const localSelectedTickers = ref(
-	arrayToTickerMap(props.selectedTickers ?? [], props.enabledMarkets),
-);
+const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
+	default: () => [],
+});
 
-const localExcludedTickers = ref(
-	arrayToTickerMap(props.excludedTickers ?? [], props.enabledMarkets),
-);
-
-const localSelectedMarketTickers = ref(
-	createSelectedMarketTickersMap(props.selectedMarketTickers ?? []),
-);
+const selectedMarketTickers = defineModel<IMarketTickerItem[]>('selectedMarketTickers', {
+	default: () => [],
+});
 
 const state = reactive(useTickerSelectorState({
 	enabledMarkets: () => props.enabledMarkets,
 	enableSelectAll: () => props.enableSelectAll,
 	enableMarketTickers: () => props.enableMarketTickers,
 	selectionMode: props.selectionMode,
-
-	selectedMarkets: localSelectedMarkets,
-	selectedTickers: localSelectedTickers,
-	excludedTickers: localExcludedTickers,
-
-	selectedMarketTickers: localSelectedMarketTickers,
+	selectedMarkets: selectedMarkets,
+	selectedTickers: selectedTickers,
+	excludedTickers: excludedTickers,
+	selectedMarketTickers: selectedMarketTickers,
 }));
-
-watch(localSelectedMarkets, v => {
-	emit('update:selectedMarkets', Array.from(v));
-	emit('changed');
-}, { deep: true });
-
-watch(localSelectedTickers, v => {
-	emit('update:selectedTickers', mapToTickerArray(v));
-	emit('changed');
-}, { deep: true });
-
-watch(localExcludedTickers, v => {
-	emit('update:excludedTickers', mapToTickerArray(v));
-	emit('changed');
-}, { deep: true });
-
-watch(localSelectedMarketTickers, v => {
-	emit('update:selectedMarketTickers', flattenSelectedMarketTickersMap(v));
-	emit('changed');
-}, { deep: true });
 
 const _searchQueryModel = defineModel<string>('searchQuery', {
 	required: false,
@@ -135,29 +95,38 @@ const selectedSum = computed(() => {
 
 	let sum = 0;
 
-	for (let i = 0; i < data.value.categories.length; i+=1) {
+	for (let i = 0; i < data.value.categories.length; i += 1) {
 		const category = data.value.categories[i];
 		const market = category.market_type;
 
-		if (state.selectedMarkets.has(category.market_type)) {
+		const isMarketSelected =
+			state.selectedMarkets.includes(market);
+
+		if (isMarketSelected) {
 			sum += category.tickers_count;
 
-			const excluded = state.excludedTickers.get(market);
+			const excludedCount =
+				state.excludedTickers.filter(
+					t => t.market_type === market,
+				).length;
 
-			if (excluded) {
-				sum -= excluded.size;
-			}
-
+			sum -= excludedCount;
 			continue;
 		}
 
-		const tickers = state.selectedTickers.get(market);
-		if (tickers) {
-			sum += tickers.size;
-		}
+		const selectedCount =
+			state.selectedTickers.filter(
+				t => t.market_type === market,
+			).length;
 
-		const marketTickers = state.selectedMarketTickers.get(market);
-		if (marketTickers) {
+		sum += selectedCount;
+
+		const hasMarketTicker =
+			state.selectedMarketTickers.some(
+				t => t.market_type === market,
+			);
+
+		if (hasMarketTicker) {
 			sum += 1;
 		}
 	}

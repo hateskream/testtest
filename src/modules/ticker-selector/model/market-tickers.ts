@@ -8,9 +8,6 @@ export interface IMarketTickerItem<M extends MarketType = MarketType> {
 	icon: IconIds;
 }
 
-export type IMarketTickerStateItem<M extends readonly MarketType[] = MarketType[]> =
-	Map<M[number], IMarketTickerItem<M[number]>>;
-
 export const MARKET_TICKER_ITEMS: IMarketTickerItem[] = [
 	{
 		id: 'Crypto',

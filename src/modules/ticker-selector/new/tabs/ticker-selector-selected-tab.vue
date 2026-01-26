@@ -1,13 +1,12 @@
 <script setup lang="ts" generic="M extends readonly MarketType[]">
-import { computed, type Ref, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { marketToName, type MarketType } from '@/modules/market';
 import { useTickerSelectorContext, useTickerSelectorInfiniteQuery } from '../../composables';
 import {
 	extractTickerIds,
-	type IMarketTickerStateItem,
+	type IMarketTickerItem,
 	type ITickerItem,
-	type MarketTickersMap,
 	type SelectionMode,
 } from '../../model';
 import { UiModalContent, UiModalDivider } from '@/shared/ui/modal';
@@ -17,16 +16,16 @@ import TickerSelectorItem from '../components/ticker-selector-item.vue';
 import TickerSelectorEmpty from '../components/ticker-selector-empty.vue';
 import TickerSelectorIterator from '../components/ticker-selector-iterator.vue';
 import TickerSelectorItemsSkeleton from '../components/skeletons/ticker-selector-items-skeleton.vue';
-import TickerSelectorMarketItem from '@/modules/ticker-selector/new/components/ticker-selector-market-item.vue';
+import TickerSelectorMarketItem from '../components/ticker-selector-market-item.vue';
 
 const props = defineProps<{
 	markets: M;
 	searchQuery: string;
 	selectionMode: SelectionMode;
-	selectedMarkets: Set<M[number]>;
-	excludedTickers: MarketTickersMap<M[number]>;
-	selectedTickers: MarketTickersMap<M[number]>;
-	selectedMarketTickers: IMarketTickerStateItem<M>;
+	selectedMarkets: readonly M[number][];
+	excludedTickers: ITickerItem[];
+	selectedTickers: ITickerItem[];
+	selectedMarketTickers: IMarketTickerItem<M[number]>[];
 	disableSelectAll: boolean;
 	enableMarketTickers: boolean;
 }>();
@@ -35,42 +34,43 @@ const emits = defineEmits<{
 	selectMarketTab: [MarketType];
 }>();
 
-const localSelectedMarkets = ref(new Set(props.selectedMarkets)) as Ref<Set<M[number]>>;
-const localSelectedTickers = ref(
-	new Map(
-		Array.from(props.selectedTickers.entries()).map(
-			([market, tickers]) => [market, new Map(tickers)],
-		),
-	),
-) as Ref<MarketTickersMap<M[number]>>;
+const localSelectedMarkets = ref<M[number][]>(
+	[...props.selectedMarkets],
+);
 
-const localSelectedMarketTickers = ref<IMarketTickerStateItem<M>>(
-	new Map(
-		Array.from(props.selectedMarketTickers.entries()).filter(
-			([market]) => !localSelectedMarkets.value.has(market),
-		),
-	),
+const localSelectedTickers = ref<ITickerItem[]>(
+	[...props.selectedTickers],
+);
+
+const localSelectedMarketTickers = ref<IMarketTickerItem<M[number]>[]>(
+	[...props.selectedMarketTickers],
 );
 
 const mappedTickers = computed(() => {
 	const q = props.searchQuery.trim().toLowerCase();
 
-	return Array.from(localSelectedTickers.value.entries()).map(
-		([market, tickers]): [M[number], ITickerItem[]] => [
-			market,
-			q
-				? Array.from(tickers.values()).filter(t => {
-					const symbol = t.symbol.toLowerCase();
-					const name = t.name.toLowerCase();
+	const result: [M[number], ITickerItem[]][] = [];
 
-					return (
-						symbol.includes(q) ||
-						name.includes(q)
-					);
-				})
-				: Array.from(tickers.values()),
-		],
-	).filter(([, tickers]) => tickers.length > 0);
+	for (const ticker of localSelectedTickers.value) {
+		const market = ticker.market_type as M[number];
+
+		let bucket = result.find(([m]) => m === market);
+
+		if (!bucket) {
+			bucket = [market, []];
+			result.push(bucket);
+		}
+
+		if (
+			!q ||
+			ticker.symbol.toLowerCase().includes(q) ||
+			ticker.name.toLowerCase().includes(q)
+		) {
+			bucket[1].push(ticker);
+		}
+	}
+
+	return result.filter(([, tickers]) => tickers.length > 0);
 });
 
 const hasAnyTicker = computed(() =>
@@ -96,7 +96,7 @@ const { data, isFetching } = useTickerSelectorInfiniteQuery(() => ({
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	excluded_tickerIDs: extractTickerIds(props.excludedTickers),
 }), () => ({
-	enabled: isMultipleMarketSearching.value && localSelectedMarkets.value.size > 0,
+	enabled: isMultipleMarketSearching.value && localSelectedMarkets.value.length > 0,
 }));
 
 const searchTickerItems = computed(() => {
@@ -109,7 +109,6 @@ const searchTickerItems = computed(() => {
 	for (const page of data.value.pages ?? []) {
 		for (const category of page.categories) {
 			const market = category.market_type;
-
 			(result[market] ??= []).push(...category.tickers);
 		}
 	}
@@ -118,14 +117,16 @@ const searchTickerItems = computed(() => {
 });
 
 const selectedMarketTickerEntries = computed(() =>
-	Array.from(localSelectedMarketTickers.value.entries()),
+	localSelectedMarketTickers.value.map(ticker => [
+		ticker.market_type, ticker,
+	] as [M[number], IMarketTickerItem<M[number]>]),
 );
 
 const searchedMarketTickers = computed(() => {
 	const q = props.searchQuery.trim().toLowerCase();
 
 	return selectedMarketTickerEntries.value.filter(([market, ticker]) => {
-		if (props.selectedMarkets.has(market)) {
+		if (props.selectedMarkets.includes(market)) {
 			return false;
 		}
 
@@ -138,17 +139,15 @@ const searchedMarketTickers = computed(() => {
 });
 
 const hasAny = computed(() => {
-	if (localSelectedMarkets.value.size > 0) {
+	if (localSelectedMarkets.value.length > 0) {
 		return true;
 	}
 
-	for (const tickers of localSelectedTickers.value.values()) {
-		if (tickers.size > 0) {
-			return true;
-		}
+	if (localSelectedTickers.value.length > 0) {
+		return true;
 	}
 
-	return props.selectedMarketTickers.size > 0;
+	return localSelectedMarketTickers.value.length > 0;
 });
 </script>
 
@@ -196,7 +195,7 @@ const hasAny = computed(() => {
 			</template>
 
 			<ui-modal-divider
-				v-if="hasAnyTicker && localSelectedMarkets.size > 0 && searchedMarketTickers.length > 0"
+				v-if="hasAnyTicker && localSelectedMarkets.length > 0 && searchedMarketTickers.length > 0"
 			/>
 
 			<template

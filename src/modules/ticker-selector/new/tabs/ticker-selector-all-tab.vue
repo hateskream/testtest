@@ -17,7 +17,7 @@ const props = defineProps<{
 	markets: M;
 	searchQuery: string;
 	selectionMode: SelectionMode;
-	selectedMarkets: Set<M[number]>;
+	selectedMarkets: readonly M[number][];
 	disableSelectAll: boolean;
 	enableMarketTickers: boolean;
 }>();
