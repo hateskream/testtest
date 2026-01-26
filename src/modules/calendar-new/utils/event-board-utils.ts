@@ -21,8 +21,8 @@ export function formatEventDay(dateStr: string, now: Date = new Date()): string 
 		return dateStr;
 	}
 
-	const sameYear = date.getUTCFullYear() === now.getUTCFullYear();
-	const sameMonth = sameYear && date.getUTCMonth() === now.getUTCMonth();
+	const sameYear = date.getFullYear() === now.getFullYear();
+	const sameMonth = sameYear && date.getMonth() === now.getMonth();
 
 	if (sameMonth) {
 		return format(date, 'EEE d');

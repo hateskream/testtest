@@ -40,7 +40,7 @@ const {
 });
 
 const query = reactive(useInfiniteQueryEventBoard(() => ({
-	from: getUnixTime(startOfDay(currentTime.value)),
+	from: Math.floor(currentTime.value.setUTCHours(0, 0, 0, 0) / 1000),
 	categories: selectedCategories.value,
 	countries: selectedCountries.value,
 	minImpact: selectedImpacts.value,

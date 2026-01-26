@@ -98,7 +98,7 @@ export interface ICalendarEvent {
 		description: string;
 		datetime: string;
 		image: string;
-		category: string;
+		category: CalendarCategory;
 		country: CalendarCountryIds;
 		impact: CalendarImpact;
 		badge?: ICalendarEventBadge;
