@@ -1,59 +1,76 @@
+import { z } from 'zod';
+
 import { MarketType } from '@/modules/market';
-import type { ActivityMetricsSentiment } from './sentiment';
-import { type TickerId } from '../api';
+import { ActivityMetricsSentimentSchema } from './sentiment';
 
-type ActivityMetricsByMarket = {
-	[MarketType.Crypto]: ICryptoActivityMetrics;
-	[MarketType.Stock]: IStockActivityMetrics;
-	[MarketType.Indices]: IIndexActivityMetrics;
-	[MarketType.Commodities]: ICommodityActivityMetrics;
-	[MarketType.Forex]: IForexActivityMetrics;
-	[MarketType.Etf]: IEtfActivityMetrics;
-};
+const BaseActivityMetricsSchema = z.object({
+	tickerId: z.string(),
+});
 
-export type ActivityMetrics<TMarket extends MarketType = MarketType> = ActivityMetricsByMarket[TMarket];
+export const CryptoActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Crypto),
+	marketCap: z.string(),
+	volume24h: z.string(),
+	fdv: z.string(),
+	volToMktCap24h: z.string(),
+	totalSupply: z.string(),
+	sentiment: ActivityMetricsSentimentSchema,
+});
 
-export interface ICryptoActivityMetrics {
-	tickerId: TickerId<MarketType.Crypto>;
-	marketCap: string;
-	volume24h: string;
-	fdv: string;
-	volToMktCap24h: string;
-	totalSupply: string;
-	sentiment: ActivityMetricsSentiment;
-}
+export type CryptoActivityMetrics = z.infer<typeof CryptoActivityMetricsSchema>;
 
-export interface IStockActivityMetrics {
-	tickerId: TickerId<MarketType.Stock>;
-	marketCap: string;
-	volume24h: string;
-	totalReturn3m: string;
-	totalReturn1y: string;
-	forwardPe: string;
-	sector: string;
-}
+export const StockActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Stock),
+	marketCap: z.string(),
+	volume24h: z.string(),
+	totalReturn3m: z.string(),
+	totalReturn1y: z.string(),
+	forwardPe: z.string(),
+	sector: z.string(),
+});
 
-export interface IIndexActivityMetrics {
-	tickerId: TickerId<MarketType.Indices>;
-	volume24h: string;
-	sector?: string;
-}
+export type StockActivityMetrics = z.infer<typeof StockActivityMetricsSchema>;
 
-export interface ICommodityActivityMetrics {
-	tickerId: TickerId<MarketType.Commodities>;
-	volume24h: string;
-}
+export const IndexActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Indices),
+	volume24h: z.string(),
+	sector: z.string().optional(),
+});
 
-export interface IForexActivityMetrics {
-	tickerId: TickerId<MarketType.Forex>;
-	volume24h: string;
-}
+export type IndexActivityMetrics = z.infer<typeof IndexActivityMetricsSchema>;
 
-export interface IEtfActivityMetrics {
-	tickerId: TickerId<MarketType.Etf>;
-	marketCap: string;
-	avgVolume: string;
-	beta: string;
-	topHolding: string;
-	numSectors: string;
-}
+export const ForexActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Forex),
+	volume24h: z.string(),
+});
+
+export type ForexActivityMetrics = z.infer<typeof ForexActivityMetricsSchema>;
+
+export const CommodityActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Commodities),
+	volume24h: z.string(),
+});
+
+export type CommodityActivityMetrics = z.infer<typeof CommodityActivityMetricsSchema>;
+
+export const EtfActivityMetricsSchema = BaseActivityMetricsSchema.extend({
+	marketType: z.literal(MarketType.Etf),
+	marketCap: z.string(),
+	avgVolume: z.string(),
+	beta: z.string(),
+	topHolding: z.string(),
+	numSectors: z.string(),
+});
+
+export type EtfActivityMetrics = z.infer<typeof EtfActivityMetricsSchema>;
+
+export const ActivityMetricsSchema = z.discriminatedUnion('marketType', [
+	CryptoActivityMetricsSchema,
+	StockActivityMetricsSchema,
+	IndexActivityMetricsSchema,
+	CommodityActivityMetricsSchema,
+	ForexActivityMetricsSchema,
+	EtfActivityMetricsSchema,
+]);
+
+export type ActivityMetrics = z.infer<typeof ActivityMetricsSchema>;

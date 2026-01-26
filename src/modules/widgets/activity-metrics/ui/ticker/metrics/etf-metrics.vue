@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IEtfActivityMetrics } from '../../../model';
+import type { EtfActivityMetrics } from '../../../model';
 import { TickerControlLink } from '@/modules/widgets/base/ticker';
 import { RouteNames } from '@/types/route.d';
 import { MetricsContainer, MetricsRow } from '../../common';
@@ -7,7 +7,7 @@ import { MetricsContainer, MetricsRow } from '../../common';
 import BaseMetrics from './base-metrics.vue';
 
 export interface IEtfMetricsProps {
-	metrics: IEtfActivityMetrics;
+	metrics: EtfActivityMetrics;
 }
 
 const props = defineProps<IEtfMetricsProps>();

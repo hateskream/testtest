@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { IForexActivityMetrics } from '../../../model';
+import type { ForexActivityMetrics } from '../../../model';
 import { MetricsContainer } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
 
 export interface IForexMetricsProps {
-	metrics: IForexActivityMetrics;
+	metrics: ForexActivityMetrics;
 }
 
 const props = defineProps<IForexMetricsProps>();

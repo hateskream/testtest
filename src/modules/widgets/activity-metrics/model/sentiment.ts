@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { IconIds } from '@/shared/ui/icon';
 
 export const ActivityMetricsSentiment = {
@@ -7,6 +9,8 @@ export const ActivityMetricsSentiment = {
 } as const;
 
 export type ActivityMetricsSentiment = typeof ActivityMetricsSentiment[keyof typeof ActivityMetricsSentiment];
+
+export const ActivityMetricsSentimentSchema = z.nativeEnum(ActivityMetricsSentiment);
 
 const sentimentToColor = {
 	[ActivityMetricsSentiment.BULLISH]: 'positive',

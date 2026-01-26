@@ -1,11 +1,10 @@
 import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
 import { useQueryActivityMetrics } from '../queries';
-import type { TickerId } from '../api';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 
 interface IOptions {
-	tickerId: MaybeRefOrGetter<TickerId>;
+	tickerId: MaybeRefOrGetter<string>;
 }
 
 export function useActivityMetrics(options: IOptions) {
@@ -17,9 +16,11 @@ export function useActivityMetrics(options: IOptions) {
 	} = useQueryActivityMetrics(options.tickerId);
 
 	const marketType = computed(() => {
-		const tickerId = data.value?.tickerId;
+		if (data.value) {
+			return data.value.marketType;
+		}
 
-		return resolveMarketTypeFromTicker(tickerId ?? toValue(options.tickerId))!;
+		return resolveMarketTypeFromTicker(toValue(options.tickerId))!;
 	});
 
 	return {

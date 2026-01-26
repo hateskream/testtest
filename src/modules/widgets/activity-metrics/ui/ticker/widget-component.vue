@@ -3,7 +3,6 @@ import { defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useActivityMetrics } from '../../composables';
-import type { TickerId } from '../../api';
 
 import PreloaderComponent from './preloader-component.vue';
 
@@ -15,7 +14,7 @@ const ViewComponent = defineAsyncComponent({
 
 interface IWidgetComponentProps {
 	meta: {
-		tickerId: TickerId;
+		tickerId: string;
 	};
 }
 
@@ -26,7 +25,6 @@ const {
 	isLoading,
 	isError,
 	refetch,
-	marketType,
 } = useActivityMetrics({
 	tickerId: () => props.meta.tickerId,
 });
@@ -38,7 +36,6 @@ const {
 		<preloader-component v-else-if="isLoading" />
 		<view-component
 			v-else-if="data"
-			:market="marketType"
 			:metrics="data"
 		/>
 	</div>

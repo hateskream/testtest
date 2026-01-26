@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { type ICryptoActivityMetrics } from '../../../model';
+import { type CryptoActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow, MetricsSentiment } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
 
 export interface ICryptoMetricsProps {
-	metrics: ICryptoActivityMetrics;
+	metrics: CryptoActivityMetrics;
 }
 
 const props = defineProps<ICryptoMetricsProps>();

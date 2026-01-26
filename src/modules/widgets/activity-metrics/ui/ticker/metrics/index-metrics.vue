@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { RouteNames } from '@/types/route.d';
 import { TickerControlLink } from '@/modules/widgets/base/ticker';
-import type { IIndexActivityMetrics } from '../../../model';
+import type { IndexActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
 
 export interface IIndexMetricsProps {
-	metrics: IIndexActivityMetrics;
+	metrics: IndexActivityMetrics;
 }
 
 const props = defineProps<IIndexMetricsProps>();

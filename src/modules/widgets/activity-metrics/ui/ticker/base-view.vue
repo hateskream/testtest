@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TMarket extends MarketType = MarketType">
+<script setup lang="ts">
 import { type Component, computed } from 'vue';
 
 import type { ActivityMetrics } from '../../model';
@@ -6,8 +6,7 @@ import { CommodityMetrics, CryptoMetrics, EtfMetrics, ForexMetrics, IndexMetrics
 import { MarketType } from '@/modules/market';
 
 const props = defineProps<{
-	market: TMarket;
-	metrics: ActivityMetrics<TMarket>;
+	metrics: ActivityMetrics;
 }>();
 
 const marketToWidgetMap: Record<MarketType, Component> = {
@@ -19,7 +18,7 @@ const marketToWidgetMap: Record<MarketType, Component> = {
 	[MarketType.Commodities]: CommodityMetrics,
 } as const;
 
-const marketMetricsComponent = computed(() => marketToWidgetMap[props.market]);
+const marketMetricsComponent = computed(() => marketToWidgetMap[props.metrics.marketType]);
 </script>
 <template>
 	<market-metrics-component :metrics="props.metrics" />

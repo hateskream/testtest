@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { TickerControlLink } from '@/modules/widgets/base/ticker';
 import { RouteNames } from '@/types/route.d';
-import type { IStockActivityMetrics } from '../../../model';
+import type { StockActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow } from '../../common';
 
 import BaseMetrics from './base-metrics.vue';
 
 export interface IStockMetricsProps {
-	metrics: IStockActivityMetrics;
+	metrics: StockActivityMetrics;
 }
 
 const props = defineProps<IStockMetricsProps>();

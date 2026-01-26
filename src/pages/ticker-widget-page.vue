@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
 import { UiPillItem } from '@/shared/ui/pill';
-import type { TickerId } from '@/modules/widgets/activity-metrics/api';
 import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 
 const widgets: ITickerWidgetConfig[] = [
@@ -30,7 +29,7 @@ interface ITickerWidgetConfig {
 	name: string;
 	title: string;
 	widget: Component;
-	tickers: TickerId[];
+	tickers: string[];
 }
 
 interface ITickerPageProps {

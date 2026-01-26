@@ -1,12 +1,13 @@
-import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/logger';
-import type { ActivityMetricsResponse, IActivityMetricsRequest } from './contract';
+import type { IActivityMetricsRequest } from './contract';
 import { getMockData } from './mock';
+import { apiSchema, useApiClient } from '@/shared/service/api';
+import { ActivityMetricsSchema } from '@/modules/widgets/activity-metrics/model';
 
 const IS_USE_MOCK = true;
 
 export async function getActivityMetrics(request: IActivityMetricsRequest) {
-	const httpService = useHttpService();
+	const apiClient = useApiClient();
 	const logger = useLogger();
 
 	try {
@@ -14,11 +15,12 @@ export async function getActivityMetrics(request: IActivityMetricsRequest) {
 			return await getMockData(request);
 		}
 
-		return httpService.get<ActivityMetricsResponse>('/api/v1/widget/insights-activity', {
+		return apiClient.get('/api/v1/insights-activity/data', apiSchema(ActivityMetricsSchema), {
 			query: {
 				ticker_id: request.tickerId,
 			},
 		});
+
 	} catch (error) {
 		logger.error('Failed to get ticker activity metrics', error as Error);
 		throw error;

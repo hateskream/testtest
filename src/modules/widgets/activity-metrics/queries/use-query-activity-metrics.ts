@@ -1,15 +1,12 @@
 import { useQuery } from '@tanstack/vue-query';
 import { type MaybeRefOrGetter, toValue } from 'vue';
 
-import { getActivityMetrics, mapActivityMetricsResponseToModel, type TickerId } from '../api';
+import { getActivityMetrics } from '../api';
 
-export function useQueryActivityMetrics(tickerId: MaybeRefOrGetter<TickerId>) {
+export function useQueryActivityMetrics(tickerId: MaybeRefOrGetter<string>) {
 	return useQuery({
 		queryKey: ['activity-metrics', tickerId],
-		queryFn: async () => {
-			const response = await getActivityMetrics({ tickerId: toValue(tickerId) });
-			return mapActivityMetricsResponseToModel(response);
-		},
+		queryFn: () => getActivityMetrics({ tickerId: toValue(tickerId) }),
 	});
 }
 
