@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { useActivityMetrics } from '../../composables';
 
 import PreloaderComponent from './preloader-component.vue';
@@ -9,7 +9,7 @@ import PreloaderComponent from './preloader-component.vue';
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./base-view.vue'),
 	loadingComponent: PreloaderComponent,
-	errorComponent: BaseErrorComponent,
+	errorComponent: BaseTickerWidgetError,
 });
 
 interface IWidgetComponentProps {
@@ -32,7 +32,7 @@ const {
 
 <template>
 	<div>
-		<base-error-component v-if="isError" @retry="refetch" />
+		<base-ticker-widget-error v-if="isError" @retry="refetch" />
 		<preloader-component v-else-if="isLoading" />
 		<view-component
 			v-else-if="data"

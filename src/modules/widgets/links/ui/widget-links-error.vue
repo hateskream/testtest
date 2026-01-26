@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ErrorNetworkComponent } from '@/modules/widgets/base';
+import { BaseTickerWidgetError } from '@/modules/widgets/base';
 
 const emits = defineEmits<{
 	retry: [];
@@ -7,16 +7,5 @@ const emits = defineEmits<{
 </script>
 
 <template>
-	<div :class="classes.container">
-		<error-network-component @retry="emits('retry')" />
-	</div>
+	<base-ticker-widget-error @retry="emits('retry')" />
 </template>
-
-<style module="classes">
-.container {
-	display: grid;
-	width: 100%;
-	height: 120px;
-	place-items: center;
-}
-</style>
