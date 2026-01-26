@@ -147,8 +147,8 @@ onUnmounted(() => {
 
 <style module="classes">
 .calendarEventBoard {
-	overflow-y: scroll;
 	width: 100%;
+	overflow-y: scroll;
 }
 
 .eventBoard {
@@ -162,16 +162,15 @@ onUnmounted(() => {
 }
 
 .boardDate {
+	position: sticky;
+	top: 0;
 	z-index: 2;
-  height: 44px;
-  color: #fff;
-  align-items: center;
-  padding-left: 10px;
-  display: flex;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  background: #121213;
+	display: flex;
+	align-items: center;
+	height: 44px;
+	padding-left: 10px;
+	color: #ffffff;
+	background: #121213;
 }
 
 .date {
@@ -194,12 +193,12 @@ onUnmounted(() => {
 }
 
 .hourLabel {
+	position: relative;
+	display: flex;
+	align-items: end;
 	height: 30px;
-  align-items: end;
-  padding-bottom: 4px;
-  padding-left: 10px;
-  display: flex;
-  position: relative;
+	padding-bottom: 4px;
+	padding-left: 10px;
 }
 
 .missed {
