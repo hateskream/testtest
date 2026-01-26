@@ -4,7 +4,7 @@ import { computed, useTemplateRef } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { UiPosition } from '@/shared/ui/position';
-import type { ICalendarEvent } from '@/modules/calendar-new';
+import type { ICalendarEvent } from '@/modules/calendar';
 import { UiModalWrapper } from '@/shared/ui/modal';
 
 import ChartEventsMarker from './chart-events-marker.vue';

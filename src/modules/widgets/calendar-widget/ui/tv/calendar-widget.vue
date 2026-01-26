@@ -8,7 +8,7 @@ import {
 	localDateToUTCUnix,
 	useCalendarState,
 	useInfiniteQueryEventBoard,
-} from '@/modules/calendar-new';
+} from '@/modules/calendar';
 
 import CalendarLoader from '../views/calendar-loader.vue';
 

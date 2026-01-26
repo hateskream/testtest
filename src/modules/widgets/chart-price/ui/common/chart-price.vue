@@ -4,7 +4,7 @@ import { LastPriceAnimationMode, type LineData } from '@shared/component-library
 
 import { Chart } from '@/modules/lightweight-charts';
 import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
-import type { ICalendarEvent } from '@/modules/calendar-new';
+import type { ICalendarEvent } from '@/modules/calendar';
 import {
 	getMarketSegmentStateColor,
 	type IChartPriceCurrent,

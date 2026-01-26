@@ -6,7 +6,7 @@ import {
 	type CalendarCountryIds,
 	type CalendarCategory,
 	type CalendarImpact,
-} from '@/modules/calendar-new';
+} from '@/modules/calendar';
 
 const props = defineProps<{
 	currentTime: Date;

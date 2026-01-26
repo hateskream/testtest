@@ -10,7 +10,7 @@ import {
 } from '@/modules/widgets/chart-price/model';
 import { randomInt } from '@/shared/lib';
 import { type IMarketSegment, isTimelineEventsVisible, MarketSegmentState } from '../../model';
-import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar-new';
+import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar';
 
 import ChartPrice from './chart-price.vue';
 

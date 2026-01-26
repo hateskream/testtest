@@ -15,7 +15,7 @@ import {
 	localDateToUTCUnix,
 	useInfiniteQueryEventBoard,
 	useQueryDailyInfo,
-} from '@/modules/calendar-new';
+} from '@/modules/calendar';
 
 const { currentTime, selectedCategories, selectedCountries, selectedImpacts } = useCalendarState({
 	widget: {

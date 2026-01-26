@@ -15,7 +15,7 @@ import {
 	DashboardEventBoard,
 	useInfiniteQueryEventBoard,
 	localDateToUTCUnix,
-} from '@/modules/calendar-new';
+} from '@/modules/calendar';
 
 import CalendarLoader from '../views/calendar-loader.vue';
 
