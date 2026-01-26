@@ -23,4 +23,35 @@ meta: {
 - Общие составляющие виджеты хранить в `widget/ui/common`
 - Базовые компоненты представления можно найти в `@/modules/widgets/base/ticker`
 
----
+**Пример представления:**
+
+```vue
+<script setup lang="ts">
+import {
+	BaseTickerWidgetWrapper,
+	BaseTickerWidgetHeader,
+	BaseTickerWidgetContent,
+	BaseTickerWidgetError
+} from '@/modules/widgets/base';
+import { useWidget } from '../composables';
+
+const props = defineProps<{
+	meta: {
+		tickerId: string;
+	};
+}>();
+
+const { isLoading, isError, data, refetch } = useWidget(() => props.meta.tickerId);
+</script>
+
+<template>
+	<base-ticker-widget-wrapper>
+		<base-ticker-widget-header>Widget Name</base-ticker-widget-header>
+		<base-ticker-widget-content>
+				<widget-loading-component v-if="isLoading" />
+				<widget-view v-else-if="data && !isError" :content="data" />
+				<base-ticker-widget-error v-else-if="isError" @retry="refetch" />
+		</base-ticker-widget-content>
+	</base-ticker-widget-wrapper>
+</template>
+```
