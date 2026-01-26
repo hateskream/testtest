@@ -1,8 +1,8 @@
 import { useLogger } from '@/shared/service/logger';
 import type { IActivityMetricsRequest } from './contract';
 import { getMockData } from './mock';
+import { ActivityMetricsSchema } from '../model';
 import { apiSchema, useApiClient } from '@/shared/service/api';
-import { ActivityMetricsSchema } from '@/modules/widgets/activity-metrics/model';
 
 const IS_USE_MOCK = true;
 

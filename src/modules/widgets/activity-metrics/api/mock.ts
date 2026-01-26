@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import type { IActivityMetricsRequest } from './contract.ts';
+import type { IActivityMetricsRequest } from './contract';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
 import { MarketType } from '@/modules/market';
 import {
