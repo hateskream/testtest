@@ -8,9 +8,9 @@ import {
 	type IChartPricePoint,
 	TimeRangeFilterValue,
 } from '@/modules/widgets/chart-price/model';
-import { EventType, type ICalendarEvent, Impact, MarketIds } from '@/modules/calendar';
 import { randomInt } from '@/shared/lib';
 import { type IMarketSegment, isTimelineEventsVisible, MarketSegmentState } from '../../model';
+import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar-new';
 
 import ChartPrice from './chart-price.vue';
 
@@ -53,17 +53,17 @@ function generateMock(from: number, to: number, count: number) {
 				description: '',
 				datetime: (new Date(currentTime)).toJSON(),
 				image: randomInt(-1, 1) > 0 ? '/mock/widgets/price-chart/usa.svg' : '',
-				category: EventType.Economic,
-				country: MarketIds.USA,
-				impact: Impact.Medium,
+				category: CalendarCategory.CryptoEvent,
+				country: CalendarCountryIds.Canada,
+				impact: CalendarImpact.High,
 			},
 			canonical_ticker_id: 'Stock-AMZW',
 			metrics: [],
-		} as ICalendarEvent;
+		};
 	});
 }
 
-const mockedEvents: ICalendarEvent[] = generateMock(
+const mockedEvents = generateMock(
 	sub(new Date(), { days: 2 }).getTime(),
 	sub(endOfDay(new Date()), { hours: 2 }).getTime(),
 	50,

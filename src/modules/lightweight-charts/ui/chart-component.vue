@@ -44,7 +44,7 @@ import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../c
 import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { getChartRangeOffset, RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
-import type { ICalendarEvent } from '@/modules/calendar';
+import type { ICalendarEvent } from '@/modules/calendar-new';
 import { ChartExternalTooltip } from './external-tooltip';
 import { ChartEvents } from './events';
 import { ChartTimeline } from './timeline';

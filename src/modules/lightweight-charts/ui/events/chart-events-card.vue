@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { ICalendarEventMetric } from '@/modules/calendar';
+import type { ICalendarEventMetric } from '@/modules/calendar-new';
 import { UiText } from '@/shared/ui/text';
 
 import ChartEventsCardRow from './chart-events-card-row.vue';

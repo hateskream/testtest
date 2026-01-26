@@ -1,3 +1,5 @@
+import { endOfWeek, startOfWeek } from 'date-fns';
+
 import {
 	ActiveDateRange,
 	type IState,
@@ -7,7 +9,26 @@ import {
 	Sentiment,
 } from '@/modules/news';
 import { MarketType } from '@/modules/market';
-import { getEndOfWeek, getStartOfWeek, toUtcIsoDate } from '@/modules/calendar';
+
+function toUtcIsoDate(d: Date) {
+	const y = d.getUTCFullYear();
+	const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+	const day = String(d.getUTCDate()).padStart(2, '0');
+
+	return `${y}-${m}-${day}`;
+}
+
+function getStartOfWeek(date: Date): Date {
+	return startOfWeek(date, {
+		weekStartsOn: 1,
+	});
+}
+
+function getEndOfWeek(date: Date): Date {
+	return endOfWeek(date, {
+		weekStartsOn: 1,
+	});
+}
 
 export const DEFAULT_STATE: IState = {
 	score: new Set(),

@@ -6,7 +6,6 @@ import { ENABLED_MARKETS, filterValueToDisplay, TimeRangeFilterValue } from '../
 import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { MarketType } from '@/modules/market';
 import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';

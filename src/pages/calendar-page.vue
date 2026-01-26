@@ -162,13 +162,13 @@ function onUpdateWeek(date: Date) {
 }
 
 .wrapper {
-	background: var(--color-bg-surface-01,#0c0c0d);
-  border-radius: 16px;
-  flex-direction: column;
-  flex: 1 0 0;
-  align-self: stretch;
-  gap: 12px;
-  display: flex;
-  overflow-y: hidden;
+	display: flex;
+	flex: 1 0 0;
+	flex-direction: column;
+	align-self: stretch;
+	overflow-y: hidden;
+	background: var(--color-bg-surface-01, #0c0c0d);
+	border-radius: 16px;
+	gap: 12px;
 }
 </style>

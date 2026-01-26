@@ -19,7 +19,7 @@ interface ICalendarEventCardProps {
 
 const props = defineProps<ICalendarEventCardProps>();
 
-const emits = defineEmits<{
+defineEmits<{
 	toggleFavorite: [id: string];
 }>();
 
