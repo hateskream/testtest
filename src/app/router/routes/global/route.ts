@@ -244,6 +244,82 @@ export const testRoutes: RouteRecordRaw[] = [
 		component: () => import('@/pages/home-page.vue'),
 	},
 	{
+		path: RoutePaths.TickerOld,
+		name: RouteNames.TickerOld,
+		redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+		meta: {
+			title: 'Ticker Page',
+			description: 'Watch live ticker to Dollar chart, follow prices in real-time and get price history. ' +
+				'Check technical analysis and forecasts.',
+		},
+		children: [
+			{
+				path: RoutePaths.TickerCryptoWithId,
+				name: RouteNames.TickerCryptoOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.CRYPTO),
+			},
+			{
+				path: RoutePaths.TickerStockWithId,
+				name: RouteNames.TickerStockOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.STOCK),
+			},
+			{
+				path: RoutePaths.TickerForexWithId,
+				name: RouteNames.TickerForexOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.FOREX),
+			},
+			{
+				path: RoutePaths.TickerCommoditiesWithId,
+				name: RouteNames.TickerCommoditiesOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.COMMODITIES),
+			},
+			{
+				path: RoutePaths.TickerIndicesWithId,
+				name: RouteNames.TickerIndicesOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.INDICES),
+			},
+			{
+				path: RoutePaths.TickerETFWithId,
+				name: RouteNames.TickerETFOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.ETF),
+			},
+			{
+				path: RoutePaths.TickerIndices,
+				redirect: { name: RouteNames.TickerIndicesOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerETF,
+				redirect: { name: RouteNames.TickerETFOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerCommodities,
+				redirect: { name: RouteNames.TickerCommoditiesOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerCrypto,
+				redirect: { name: RouteNames.TickerCryptoOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerStock,
+				redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerForex,
+				redirect: { name: RouteNames.TickerForexOld, params: { id: '1' } },
+			},
+			{
+				path: ':pathMatch(.*)*',
+				redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+			},
+		],
+	},
+	{
 		path: RoutePaths.TickerPageFooter,
 		name: RouteNames.TickerPageFooter,
 		component: () => import('@/pages/ticker-page-footer-test.vue'),

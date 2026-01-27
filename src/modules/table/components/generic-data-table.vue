@@ -195,7 +195,7 @@ const recalculateColumnWidths = async () => {
 		const percents: number[] = [];
 		let running = 0;
 
-		for (let i = 0; i < weights.length; i++) {
+		for (let i = 0; i < weights.length; i+=1) {
 			if (i === weights.length - 1) {
 				percents.push(Math.max(0, 100 - running));
 				break;

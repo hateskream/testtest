@@ -2,9 +2,10 @@
 import { computed } from 'vue';
 
 import { AppLayout } from '@/modules/layout';
-import { TickerComponent } from '@/modules/ticker';
+import { ChartComponent } from '@/modules/chart';
 import { RouteTickerType } from '@/types/route.d';
-import { TickerType } from '@/modules/ticker/models';
+import { TickerType } from '@/modules/chart/models';
+
 
 interface ITickerPageProps {
 	id: number;
@@ -32,7 +33,7 @@ const tickerType = computed((): TickerType => {
 <template>
 	<app-layout>
 		<div :class="classes.container">
-			<ticker-component :id="props.id" :type="tickerType" />
+			<chart-component :id="props.id" :type="tickerType" />
 		</div>
 	</app-layout>
 </template>

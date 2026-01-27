@@ -1,0 +1,26 @@
+import { inject, type InjectionKey, provide, type Ref } from 'vue';
+
+import type { TickerType } from '../models';
+
+export type TickerContext = {
+	tickerType: Readonly<Ref<TickerType>>;
+	tickerId: Readonly<Ref<number>>;
+};
+
+const TickerContextKey: InjectionKey<TickerContext> = Symbol('TickerContext');
+
+export function createTickerContext(context: TickerContext) {
+	provide(TickerContextKey, context);
+
+	return context;
+}
+
+export function useTickerContext() {
+	const context = inject(TickerContextKey);
+
+	if (!context) {
+		throw new Error('useTickerContext must be used in ticker layout');
+	}
+
+	return context;
+}
