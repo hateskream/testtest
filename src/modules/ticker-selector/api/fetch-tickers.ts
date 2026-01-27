@@ -11,7 +11,7 @@ export async function fetchTickers(tickers: string | string[]) {
 
 	try {
 		return IS_USE_MOCK
-			? createCostylTickerItems(tickers)
+			? decodeCanonicalTickerIds(tickers)
 			: http.get<ITickerItem[]>('/api/v1/ticker-selector/tickers-info', {
 				query: prepareRequest(tickers),
 			});
@@ -30,15 +30,15 @@ function prepareRequest(tickers: string | string[]) {
 	};
 }
 
-export function createCostylTickerItems(
+export function decodeCanonicalTickerIds(
 	tickers: string | string[],
 ): ITickerItem[] {
 	const list = Array.isArray(tickers) ? tickers : [tickers];
 
-	return list.map(createCostylTickerItem);
+	return list.map(decodeCanonicalTickerId);
 }
 
-export function createCostylTickerItem(
+export function decodeCanonicalTickerId(
 	tickerId: string,
 ): ITickerItem {
 	const [marketRaw, rest] = tickerId.split('-');

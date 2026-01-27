@@ -3,10 +3,9 @@ import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 import { ENABLED_MARKETS, filterValueToDisplay, TimeRangeFilterValue } from '../../model';
-import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { type ITickerItem, SelectionMode, decodeCanonicalTickerIds } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { createCostylTickerItems } from '@/modules/ticker-selector/api/fetch-tickers.ts';
 
 import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
@@ -43,7 +42,7 @@ function updateFilter(newValue: TimeRangeFilterValue) {
 }
 
 const tickersModel = computed({
-	get: () => createCostylTickerItems([selectedTicker.value]),
+	get: () => decodeCanonicalTickerIds([selectedTicker.value]),
 	set: (tickers: ITickerItem[]) => {
 		if (tickers.length === 0) {
 			return;

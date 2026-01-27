@@ -6,4 +6,4 @@ export { default as ModalTickerSelectorLegacy } from './ui/modal-ticker-selector
 export { default as TickerSelectorModal } from './ui/ticker-selector-modal.vue';
 export { default as TickerSelectorModalWithBadge } from './ui/ticker-selector-modal-with-badge.vue';
 
-export { fetchTickers } from './api/fetch-tickers.ts';
+export { fetchTickers, decodeCanonicalTickerId, decodeCanonicalTickerIds } from './api/fetch-tickers.ts';
