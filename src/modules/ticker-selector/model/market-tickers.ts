@@ -39,6 +39,12 @@ export const MARKET_TICKER_ITEMS: IMarketTickerItem[] = [
 		label: 'All indices',
 		icon: IconIds.SelectAll,
 	},
+	{
+		id: 'Etf',
+		market_type: MarketType.Etf,
+		label: 'All ETFs',
+		icon: IconIds.SelectAll,
+	},
 ];
 
 export const MARKET_TICKER_ITEMS_BY_MARKET = new Map(

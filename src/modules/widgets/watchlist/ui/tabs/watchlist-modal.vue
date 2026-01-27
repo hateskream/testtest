@@ -10,7 +10,7 @@ import {
 import { UiPosition } from '@/shared/ui/position';
 import { UiDriver } from '@/shared/ui/driver';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ALL_MARKET_TYPES } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 
 import WatchlistModalTitle from './watchlist-modal-title.vue';
 
@@ -27,7 +27,10 @@ const props = defineProps<{
 const emits = defineEmits<{
 	onClickAction: [TabAction, string];
 	switchTab: [string];
-	selectTicker: [string];
+	selectTicker: [{
+		tickerId: string;
+		marketType: MarketType;
+	}];
 	removeTicker: [{
 		tickerId: string;
 	}];
@@ -38,18 +41,15 @@ function onClickAction(action: TabAction, id: string) {
 	emits('onClickAction', action, id);
 }
 
-function onTickerSelect(tickerIds: ITickerItem[]) {
-	const [ticker] = tickerIds;
+function selectTicker(ticker: ITickerItem) {
+	emits('selectTicker', {
+		tickerId: ticker.canonical_ticker_id,
+		marketType: ticker.market_type,
+	});
+}
 
-	if (!ticker) {
-		emits('removeTicker', {
-			tickerId: props.selectedTickers[0],
-		});
-
-		return;
-	}
-
-	emits('selectTicker', ticker.canonical_ticker_id);
+function unselectTicker(ticker: ITickerItem) {
+	emits('removeTicker', { tickerId: ticker.canonical_ticker_id });
 }
 </script>
 
@@ -116,7 +116,8 @@ function onTickerSelect(tickerIds: ITickerItem[]) {
 										:selected-tickers="props.selectedTickers.map(decodeCanonicalTickerId)"
 										:selection-mode="SelectionMode.Single"
 										:enable-select-all="false"
-										@update:selected-tickers="onTickerSelect"
+										@ticker-selected="selectTicker"
+										@ticker-unselected="unselectTicker"
 									/>
 								</template>
 							</ui-position>

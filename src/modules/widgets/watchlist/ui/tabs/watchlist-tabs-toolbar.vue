@@ -111,24 +111,13 @@ function openModal(index: number) {
 	positionRefs.value?.[index].handleOpen?.();
 }
 
-function selectTicker(tickerIds: ITickerItem[]) {
-	const [ticker] = tickerIds;
-
-	if (!ticker) {
-		emit('remove-ticker', {
-			tickerId: props.selectedTickers[0],
-		});
-		return;
-	}
-
-	emit('add-ticker',
-		{
-			tickerId: ticker.canonical_ticker_id,
-			tickerType: ticker.market_type,
-		},
-	);
+function selectTicker(ticker: ITickerItem) {
+	emit('add-ticker', { tickerId: ticker.canonical_ticker_id, tickerType: ticker.market_type });
 }
 
+function unselectTicker(ticker: ITickerItem) {
+	emit('remove-ticker', { tickerId: ticker.canonical_ticker_id });
+}
 </script>
 
 <template>
@@ -186,8 +175,8 @@ function selectTicker(tickerIds: ITickerItem[]) {
 											:selection-mode="SelectionMode.Single"
 											:enable-select-all="false"
 											:display-variant="props.displayVariant"
-											@select="selectTicker"
-											@unselect="emit('remove-ticker', { tickerId: $event })"
+											@ticker-selected="selectTicker"
+											@ticker-unselected="unselectTicker"
 										/>
 									</template>
 								</ui-position>
@@ -231,7 +220,10 @@ function selectTicker(tickerIds: ITickerItem[]) {
 						:selected-tickers="props.selectedTickers"
 						:display-variant="props.displayVariant"
 						@on-click-action="onClickAction"
-						@select-ticker="selectTicker"
+						@select-ticker="emit('add-ticker', {
+							tickerId: $event.tickerId,
+							tickerType: $event.marketType,
+						})"
 						@remove-ticker="emit('remove-ticker', $event)"
 						@switch-tab="onSwitchTab"
 						@rename="onRenameTab"

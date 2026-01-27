@@ -46,21 +46,12 @@ const genericColumns = computed(() => mapColumn(props.columns));
 
 const genericSections = computed(() => mapSections(props.sections, props.tickers));
 
-function selectTicker(tickerIds: ITickerItem[]) {
-	const [tickerItem] = tickerIds;
+function selectTicker(ticker: ITickerItem) {
+	emit('add-ticker', { tickerId: ticker.canonical_ticker_id, tickerType: ticker.market_type });
+}
 
-	if (!tickerItem) {
-		emit('remove-ticker', {
-			tickerId: props.selectedTickers[0],
-		});
-
-		return;
-	}
-
-	// eslint-disable-next-line @typescript-eslint/naming-convention
-	const { market_type, canonical_ticker_id } = tickerItem;
-
-	emit('add-ticker', { tickerId: canonical_ticker_id, tickerType: market_type });
+function unselectTicker(ticker: ITickerItem) {
+	emit('remove-ticker', { tickerId: ticker.canonical_ticker_id });
 }
 </script>
 
@@ -108,7 +99,8 @@ function selectTicker(tickerIds: ITickerItem[]) {
 								:selected-tickers="selectedTickers.map(decodeCanonicalTickerId)"
 								:selection-mode="SelectionMode.Single"
 								:display-variant="props.displayVariant"
-								@update:selected-tickers="selectTicker($event)"
+								@ticker-selected="selectTicker"
+								@ticker-unselected="unselectTicker"
 							/>
 						</template>
 					</ui-position>
