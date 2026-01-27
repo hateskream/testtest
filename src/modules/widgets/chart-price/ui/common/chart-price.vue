@@ -124,8 +124,8 @@ const indicators = computed(() => {
 				width="100%"
 				height="100%"
 				is-show-tooltip
+				disable-scroll
 				:is-visible-history-graph="false"
-				:disable-scroll="false"
 				:is-visible-indicators="false"
 				:is-visible-range="props.isBig && props.isShowTimeRange"
 				:is-visible-price-line="props.isShowAxes"

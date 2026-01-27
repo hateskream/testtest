@@ -677,6 +677,7 @@ const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS'
 				:locale="chartLocale"
 				entire-text-only-price-scale
 				:precision="chartPrecision"
+				:handle-scale="!props.disableScroll"
 				@chart-hover="onChartHover"
 			/>
 		</div>
