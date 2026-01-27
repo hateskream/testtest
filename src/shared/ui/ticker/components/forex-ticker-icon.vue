@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { ITickerMapped } from '@/modules/ticker-selector';
 import { TickerIconGlowEffect } from '@/shared/ui/ticker';
 
 import TickerIcon from './ticker-icon.vue';
 
+type TickerSrc = string | null | undefined;
+
 interface IProps {
-	src: ITickerMapped['srcImage'];
+	src: TickerSrc | [TickerSrc, TickerSrc];
 	ticker: string | string[];
 	size: number;
 	domain?: string;

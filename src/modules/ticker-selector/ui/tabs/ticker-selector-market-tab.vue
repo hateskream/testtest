@@ -6,7 +6,7 @@ import { useTickerSelectorContext } from '@/modules/ticker-selector';
 import TickerSelectorTitle from '../components/ticker-selector-title.vue';
 import TickerSelectorIterator from '../components/ticker-selector-iterator.vue';
 import TickerSelectorItem from '../components/ticker-selector-item.vue';
-import TickerSelectorMarketItem from '@/modules/ticker-selector/new/components/ticker-selector-market-item.vue';
+import TickerSelectorMarketItem from '../components/ticker-selector-market-item.vue';
 
 const props = defineProps<{
 	market: M[number];

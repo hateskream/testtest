@@ -1,6 +1,6 @@
 import { computed, toValue } from 'vue';
 
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import {
 	SelectionMode,
 	MARKET_TICKER_ITEMS_BY_MARKET,
@@ -26,7 +26,7 @@ export function useTickerSelectorState<
 	});
 
 	const isAllSelectedInMarket = computed(() =>
-		(Object.values(MarketType) as readonly M[number][]).every(market =>
+		(ALL_MARKET_TYPES as readonly M[number][]).every(market =>
 			selectedMarkets.value.includes(market),
 		),
 	);

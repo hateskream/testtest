@@ -2,7 +2,7 @@
 import { computed, useTemplateRef } from 'vue';
 
 import { ModalBadgeDropdown, ModalBadgeList, ModalFilterTitle, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import {
 	type ILocation,
 	NewsLocationFilter,
@@ -11,9 +11,9 @@ import {
 } from '@/modules/news';
 import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 
 import SortbyModalInner from '../modal/sortby-modal-inner.vue';
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 const emits = defineEmits<{
 	resetAllChanges: [];
@@ -74,7 +74,7 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 			<ticker-selector-modal-with-badge
 				v-if="false"
 				v-model:selected-markets="selectedMarkets"
-				:enabled-markets="Object.values(MarketType)"
+				:enabled-markets="ALL_MARKET_TYPES"
 				:selection-mode="SelectionMode.Multiple"
 				display-variant="new"
 				enable-select-all

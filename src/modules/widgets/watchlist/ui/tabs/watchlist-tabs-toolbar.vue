@@ -13,8 +13,13 @@ import {
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
-import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import {
+	decodeCanonicalTickerId,
+	type ITickerItem,
+	SelectionMode,
+	TickerSelectorModal,
+} from '@/modules/ticker-selector';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 import WatchlistTab from './watchlist-tab.vue';
 import WatchlistModal from './watchlist-modal.vue';
@@ -106,16 +111,20 @@ function openModal(index: number) {
 	positionRefs.value?.[index].handleOpen?.();
 }
 
-function selectTicker(tickerId: string) {
-	const marketType = resolveMarketTypeFromTicker(tickerId);
-	if (!marketType) {
+function selectTicker(tickerIds: ITickerItem[]) {
+	const [ticker] = tickerIds;
+
+	if (!ticker) {
+		emit('remove-ticker', {
+			tickerId: props.selectedTickers[0],
+		});
 		return;
 	}
 
 	emit('add-ticker',
 		{
-			tickerId,
-			tickerType: marketType,
+			tickerId: ticker.canonical_ticker_id,
+			tickerType: ticker.market_type,
 		},
 	);
 }
@@ -171,8 +180,10 @@ function selectTicker(tickerId: string) {
 										</span>
 									</template>
 									<template #content>
-										<modal-ticker-selector-legacy
-											:model-value="selectedTickers"
+										<ticker-selector-modal
+											:enabled-markets="ALL_MARKET_TYPES"
+											:model-value="selectedTickers.map(decodeCanonicalTickerId)"
+											:selection-mode="SelectionMode.Single"
 											:enable-select-all="false"
 											:display-variant="props.displayVariant"
 											@select="selectTicker"

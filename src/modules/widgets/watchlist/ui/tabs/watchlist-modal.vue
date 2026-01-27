@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ModalBadgeList, ModalItem, ModalSubmenu } from '@/modules/widgets/base';
 import { type ITab, TabAction, tabActionToTitle } from '@/modules/widgets/watchlist/model';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import {
+	decodeCanonicalTickerId,
+	type ITickerItem,
+	SelectionMode,
+	TickerSelectorModal,
+} from '@/modules/ticker-selector';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDriver } from '@/shared/ui/driver';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 import WatchlistModalTitle from './watchlist-modal-title.vue';
 
@@ -30,6 +36,20 @@ const emits = defineEmits<{
 
 function onClickAction(action: TabAction, id: string) {
 	emits('onClickAction', action, id);
+}
+
+function onTickerSelect(tickerIds: ITickerItem[]) {
+	const [ticker] = tickerIds;
+
+	if (!ticker) {
+		emits('removeTicker', {
+			tickerId: props.selectedTickers[0],
+		});
+
+		return;
+	}
+
+	emits('selectTicker', ticker.canonical_ticker_id);
 }
 </script>
 
@@ -90,12 +110,13 @@ function onClickAction(action: TabAction, id: string) {
 									</span>
 								</template>
 								<template #content>
-									<modal-ticker-selector-legacy
+									<ticker-selector-modal
 										:display-variant="props.displayVariant"
-										:model-value="props.selectedTickers"
+										:enabled-markets="ALL_MARKET_TYPES"
+										:selected-tickers="props.selectedTickers.map(decodeCanonicalTickerId)"
+										:selection-mode="SelectionMode.Single"
 										:enable-select-all="false"
-										@select="emits('selectTicker', $event)"
-										@unselect="emits('removeTicker', { tickerId: $event })"
+										@update:selected-tickers="onTickerSelect"
 									/>
 								</template>
 							</ui-position>

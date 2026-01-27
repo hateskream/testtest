@@ -8,7 +8,7 @@ import {
 	segmentsData,
 	Sentiment,
 } from '@/modules/news';
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 
 function toUtcIsoDate(d: Date) {
 	const y = d.getUTCFullYear();
@@ -32,7 +32,7 @@ function getEndOfWeek(date: Date): Date {
 
 export const DEFAULT_STATE: IState = {
 	score: new Set(),
-	segments: new Set(Object.values(MarketType)),
+	segments: new Set(ALL_MARKET_TYPES),
 	sentiment: new Set(),
 	source: new Set(),
 	selectedTickers: [],

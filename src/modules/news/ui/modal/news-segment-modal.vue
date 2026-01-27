@@ -10,7 +10,7 @@ import { type ISegmentData, SegmentFilterIds, segmentFilters } from '@/modules/n
 import { hasInSegment, isAllSelectedInSegment, parseTicker, type SelectedSegmentTickersState } from '@/modules/news';
 import { UiModalContent, UiModalSearch, UiModalWrapper } from '@/shared/ui/modal';
 
-import ModalFilterEmptyState from '@/modules/ticker-selector/ui/components/modal/modal-filter-empty-state.vue';
+import ModalFilterEmptyState from '@/modules/ticker-selector/ui/components/ticker-selector-empty.vue';
 
 const props = defineProps<{
 	displayVariant: 'default' | 'new';

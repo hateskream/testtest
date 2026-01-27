@@ -19,13 +19,20 @@ import TickerSelectorMarketTab from './tabs/ticker-selector-market-tab.vue';
 import TickerSelectorInitSkeleton from './components/skeletons/ticker-selector-init-skeleton.vue';
 import TickerSelectorError from './components/error/ticker-selector-error.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	enabledMarkets: M;
 	selectionMode: SelectionMode;
+	displayVariant: 'new' | 'default';
+
 	enableSelectAll?: boolean;
 	enableMarketTickers?: boolean;
-	displayVariant: 'new' | 'default';
-}>();
+
+	searchPlaceholder?: string;
+}>(), {
+	enableSelectAll: false,
+	enableMarketTickers: false,
+	searchPlaceholder: 'Start typing the ticker...',
+});
 
 const selectedMarkets = defineModel<readonly M[number][]>('selectedMarkets', {
 	default: () => [],
@@ -143,7 +150,7 @@ const selectedSum = computed(() => {
 	>
 		<ui-modal-search
 			v-model="searchQuery"
-			placeholder="Start typing the ticker..."
+			:placeholder="props.searchPlaceholder"
 			autofocus
 		/>
 

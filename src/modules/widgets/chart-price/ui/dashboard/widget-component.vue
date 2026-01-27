@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
-import { getMappedRow, isCryptoTicker, isForexTicker } from '@/modules/ticker-selector/model';
-import { useQueryTickerSelector } from '@/modules/ticker-selector/queries';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -52,40 +51,6 @@ const {
 function updateTicker(newValue: string[]) {
 	[selectedTicker.value] = newValue;
 }
-
-const { data: tickersData, isSuccess: isSuccess } = useQueryTickerSelector();
-
-const widgetLabel = computed(() => {
-	if (!selectedTicker.value || !isSuccess.value) {
-		return null;
-	}
-
-	const item = tickersData.value?.tickers
-		.find(t => t.tickerId === selectedTicker.value);
-
-	if (!item) {
-		return null;
-	}
-
-	const row = getMappedRow(item);
-
-	return isCryptoTicker(row) || isForexTicker(row)
-		? row.ticker
-		: row.name;
-});
-
-// TODO: add stateType onTickersLoaded
-watch(widgetLabel, (label) => {
-	if (!label) {
-		return;
-	}
-
-	emits(
-		'set-widget-state-type',
-		props.meta.widgetId,
-		label,
-	);
-}, { immediate: true });
 </script>
 
 <template>
@@ -136,11 +101,11 @@ watch(widgetLabel, (label) => {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector-legacy
+					<ticker-selector-modal
+						:enabled-markets="ALL_MARKET_TYPES"
 						:model-value="[selectedTicker]"
-						:enable-selected-info="false"
 						:enable-select-all="false"
-						selection-mode="single"
+						:selection-mode="SelectionMode.Single"
 						display-variant="new"
 						@update:model-value="updateTicker"
 					/>

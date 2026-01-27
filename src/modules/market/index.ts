@@ -7,6 +7,8 @@ export enum MarketType {
 	Etf = 'etf',
 }
 
+export const ALL_MARKET_TYPES = Object.values(MarketType);
+
 export const marketToLabel: Record<MarketType, string> = {
 	[MarketType.Crypto]: 'Crypto',
 	[MarketType.Stock]: 'Stock',
@@ -35,7 +37,7 @@ interface IMarket {
 }
 
 export function getAllMarkets(): IMarket[] {
-	return Object.values(MarketType).map(market => ({
+	return ALL_MARKET_TYPES.map(market => ({
 		type: market,
 		label: getMarketLabel(market),
 	}));

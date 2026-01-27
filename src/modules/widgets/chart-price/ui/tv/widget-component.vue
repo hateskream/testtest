@@ -3,9 +3,10 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -96,11 +97,11 @@ function updateTicker(newValue: string[]) {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector-legacy
+					<ticker-selector-modal
+						:enabled-markets="ALL_MARKET_TYPES"
 						:model-value="[selectedTicker]"
-						:enable-selected-info="false"
 						:enable-select-all="false"
-						selection-mode="single"
+						:selection-mode="SelectionMode.Single"
 						display-variant="default"
 						@update:model-value="updateTicker"
 					/>

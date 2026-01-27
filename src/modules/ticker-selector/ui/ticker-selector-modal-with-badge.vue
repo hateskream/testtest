@@ -3,10 +3,14 @@ import { computed, useTemplateRef } from 'vue';
 
 import { ModalBadgeDropdown } from '@/modules/widgets/base';
 import { MarketType } from '@/modules/market';
-import { type IMarketTickerItem, type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import {
+	TickerSelectorModal,
+	type IMarketTickerItem,
+	type ITickerItem,
+	SelectionMode,
+} from '@/modules/ticker-selector';
 
 import ModalBadgePreview from './components/badge/modal-badge-preview.vue';
-import TickerSelectorModal from '@/modules/ticker-selector/new/ticker-selector-modal.vue';
 
 const props = withDefaults(defineProps<{
 	enabledMarkets: M;

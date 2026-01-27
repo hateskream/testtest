@@ -11,7 +11,7 @@ import TickerSelectorIterator from '../components/ticker-selector-iterator.vue';
 import TickerSelectorItem from '../components/ticker-selector-item.vue';
 import TickerSelectorEmpty from '../components/ticker-selector-empty.vue';
 import TickerSelectorItemsSkeleton from '../components/skeletons/ticker-selector-items-skeleton.vue';
-import TickerSelectorMarketItem from '@/modules/ticker-selector/new/components/ticker-selector-market-item.vue';
+import TickerSelectorMarketItem from '../components/ticker-selector-market-item.vue';
 
 const props = defineProps<{
 	markets: M;

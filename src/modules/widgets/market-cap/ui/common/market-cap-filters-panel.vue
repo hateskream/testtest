@@ -11,8 +11,7 @@ import {
 import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
+import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 
 const emit = defineEmits<{
 	reset: [];

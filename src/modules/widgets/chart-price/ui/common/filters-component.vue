@@ -6,8 +6,7 @@ import { ENABLED_MARKETS, filterValueToDisplay, TimeRangeFilterValue } from '../
 import { type ITickerItem, SelectionMode, decodeCanonicalTickerIds } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
+import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 
 interface IFiltersComponentProps {
 	watchlists: IWatchlistData[];

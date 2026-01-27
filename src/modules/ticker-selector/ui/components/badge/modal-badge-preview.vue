@@ -1,11 +1,8 @@
 <script setup lang="ts" generic="M extends readonly MarketType[]">
 import { computed } from 'vue';
 
-import {
-	ACTIVE_TICKER_LIST_COUNT_SHOW, type IMarketTickerItem,
-	type ITickerItem,
-	useInitTickerSelectorQuery,
-} from '@/modules/ticker-selector';
+import { ACTIVE_TICKER_LIST_COUNT_SHOW, type IMarketTickerItem, type ITickerItem } from '../../../model';
+import { useInitTickerSelectorQuery } from '../../../composables';
 import { UiClamped } from '@/shared/ui/clamped';
 import { UniversalTickerIcon } from '@/shared/ui/ticker';
 import { marketToLabel, type MarketType } from '@/modules/market';

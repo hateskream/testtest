@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { MarketType } from '@/modules/market';
 import type { IMarketTickerItem } from '@/modules/ticker-selector';
 
+export const ACTIVE_TICKER_LIST_COUNT_SHOW = 2;
+
 export enum SelectionMode {
 	Single = 'single',
 	Multiple = 'multiple',
@@ -12,15 +14,6 @@ export enum SelectionMode {
 export enum SelectedSegment {
 	All = 'all',
 	Selected = 'selected',
-}
-
-export type MarketTickersMap<M extends MarketType> =
-	Map<M, Map<string, ITickerItem>>;
-
-export function extractTickerIds<M extends MarketType>(
-	tickers: ITickerItem<M>[],
-): string[] {
-	return tickers.map(ticker => ticker.canonical_ticker_id);
 }
 
 export interface IUseTickerSelectorOptions<M extends readonly MarketType[]> {
@@ -33,12 +26,6 @@ export interface IUseTickerSelectorOptions<M extends readonly MarketType[]> {
 	selectedTickers: Ref<ITickerItem[]>;
 	excludedTickers: Ref<ITickerItem[]>;
 	selectedMarketTickers: Ref<IMarketTickerItem<M[number]>[]>;
-}
-
-export interface ITickerSelectorSettings<M extends readonly MarketType[]> {
-	enabledMarkets: M;
-	selectionMode: SelectionMode;
-	enableSelectAll?: boolean;
 }
 
 export interface ITickerItem<M extends MarketType = MarketType> {
@@ -57,7 +44,6 @@ export interface ITickerCategory {
 	ticker_count: number;
 	tickers: ITickerItem[];
 }
-
 
 export const marketTypeSchema = z.nativeEnum(MarketType);
 

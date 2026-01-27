@@ -4,7 +4,6 @@ import { computed, ref } from 'vue';
 import { marketToName, type MarketType } from '@/modules/market';
 import { useTickerSelectorContext, useTickerSelectorInfiniteQuery } from '../../composables';
 import {
-	extractTickerIds,
 	type IMarketTickerItem,
 	type ITickerItem,
 	type SelectionMode,
@@ -94,7 +93,7 @@ const { data, isFetching } = useTickerSelectorInfiniteQuery(() => ({
 	search_query: props.searchQuery,
 	markets: Array.from(localSelectedMarkets.value) as unknown as MarketType[],
 	// eslint-disable-next-line @typescript-eslint/naming-convention
-	excluded_tickerIDs: extractTickerIds(props.excludedTickers),
+	excluded_tickerIDs: props.excludedTickers.map(v => v.canonical_ticker_id),
 }), () => ({
 	enabled: isMultipleMarketSearching.value && localSelectedMarkets.value.length > 0,
 }));
