@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, useTemplateRef, watch, nextTick } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import type { IEventBoardItem } from '../../model/calendar';
 import { groupEventsByHour, getHourStatus, formatEventDay } from '../../utils/event-board-utils';
 import { getHighlightColor } from '../../model/colors';
+import { useEventBoard } from '../../composables/use-event-board';
 import { UiText } from '@/shared/ui/text';
 
 import TvEventCard from './tv-event-card.vue';
-
-const SCROLL_THRESHOLD = 100;
 
 const props = withDefaults(defineProps<{
 	eventBoard: IEventBoardItem[];
@@ -44,69 +43,16 @@ const groupedBoard = computed(() =>
 	}),
 );
 
-const scrollContainer = useTemplateRef('container');
-let prevScrollHeight = 0;
+const container = useTemplateRef<HTMLElement>('container');
 
-watch(() => props.isFetchingPrev, async (isFetching, wasFetching) => {
-	const el = scrollContainer.value;
-
-	if (!el) {
-		return;
-	}
-
-	if (isFetching && !wasFetching) {
-		prevScrollHeight = el.scrollHeight;
-	}
-
-	if (!isFetching && wasFetching) {
-		await nextTick();
-
-		const heightDiff = el.scrollHeight - prevScrollHeight;
-		el.scrollTop += heightDiff;
-	}
-});
-
-function handleScroll() {
-	const el = scrollContainer.value;
-
-	if (!el) {
-		return;
-	}
-
-	if (el.scrollTop <= SCROLL_THRESHOLD && !props.isFetchingPrev) {
-		emits('loadPrev');
-	}
-
-	if (el.scrollHeight - el.scrollTop - el.clientHeight <= SCROLL_THRESHOLD && !props.isFetchingNext) {
-		emits('loadNext');
-	}
-}
-
-function scrollToNextEvent() {
-	const el = scrollContainer.value;
-
-	if (!el) {
-		return;
-	}
-
-	for (const day of groupedBoard.value) {
-		for (const group of day.grouped) {
-			if (!group.missed) {
-				const section = el.querySelector(`[data-date="${day.date}"] [data-hour="${group.hour}"]`);
-				if (section) {
-					section.scrollIntoView({ block: 'start' });
-					return;
-				}
-			}
-		}
-	}
-
-	el.scrollTop = el.scrollHeight;
-	emits('loadNext');
-}
-
-onMounted(() => {
-	scrollToNextEvent();
+const { handleScroll } = useEventBoard({
+	container: container,
+	groupedBoard: groupedBoard,
+	isFetchingPrev: () => !!props.isFetchingPrev,
+	isFetchingNext: () => !!props.isFetchingNext,
+	getSectionElement: (el, date, hour) => el.querySelector(`[data-date="${date}"] [data-hour="${hour}"]`),
+	onLoadPrev: () => emits('loadPrev'),
+	onLoadNext: () => emits('loadNext'),
 });
 </script>
 

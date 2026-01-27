@@ -1,16 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { getHighlightColor } from '../../model/colors';
 
 const props = defineProps<{
 	favorite: boolean;
 	soon?: boolean;
 }>();
+
+const highlightColor = computed(
+	() => getHighlightColor(props.favorite, props.soon),
+);
 </script>
 
 <template>
 	<div
 		:class="classes.lightning"
-		:style="getHighlightColor(props.favorite, props.soon)"
+		:style="highlightColor"
 	/>
 </template>
 

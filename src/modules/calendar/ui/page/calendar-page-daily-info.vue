@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
+import { getDateFormatter } from '@/shared/lib/date-formatter';
 import type { IDailyInfoItem, IDailyInfoResponse } from '../../model/calendar';
 
 const METRIC_CONFIG = [
@@ -23,10 +24,11 @@ const emits = defineEmits<{
 	'select-day': [date: string];
 }>();
 
+const weekdayFormatter = getDateFormatter({ weekday: 'short', timeZone: 'UTC' });
+const dayFormatter = getDateFormatter({ day: 'numeric', timeZone: 'UTC' });
+
 function mapDay(item: IDailyInfoItem, todayStr: string) {
 	const date = new Date(`${item.date}T00:00:00Z`);
-	const weekdayShort = date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
-	const dayNumber = date.getUTCDate();
 
 	const metrics = METRIC_CONFIG
 		.map((cfg) => ({
@@ -36,10 +38,10 @@ function mapDay(item: IDailyInfoItem, todayStr: string) {
 
 	return {
 		date: item.date,
-		weekdayShort,
-		dayNumber,
+		weekdayShort: weekdayFormatter.format(date),
+		dayNumber: dayFormatter.format(date),
 		isToday: item.date === todayStr,
-		metrics: metrics,
+		metrics,
 		colorDots: [],
 	};
 }
