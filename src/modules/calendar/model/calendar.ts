@@ -1,18 +1,20 @@
 import { IconIds } from '@/shared/ui/icon';
 
-export enum CalendarCategory {
-	Economic = 'ECONOMIC',
-	Earnings = 'EARNINGS',
-	Ipo = 'IPO',
-	Dividend = 'DIVIDEND',
-	Split = 'SPLIT',
-	CryptoEvent = 'CRYPTO_EVENT',
-	StockNews = 'STOCK_NEWS',
-	ForexNews = 'FOREX_NEWS',
-	GeneralNews = 'GENERAL_NEWS',
-	PressRelease = 'PRESS_RELEASE',
-	CryptoNews = 'CRYPTO_NEWS',
-}
+export const CalendarCategory = {
+	Economic: 'ECONOMIC',
+	Earnings: 'EARNINGS',
+	Ipo: 'IPO',
+	Dividend: 'DIVIDEND',
+	Split: 'SPLIT',
+	CryptoEvent: 'CRYPTO_EVENT',
+	StockNews: 'STOCK_NEWS',
+	ForexNews: 'FOREX_NEWS',
+	GeneralNews: 'GENERAL_NEWS',
+	PressRelease: 'PRESS_RELEASE',
+	CryptoNews: 'CRYPTO_NEWS',
+} as const;
+
+export type CalendarCategoryType = typeof CalendarCategory[keyof typeof CalendarCategory];
 
 export const CalendarCategoryToLabels = {
 	[CalendarCategory.Economic]: 'Economic',
@@ -26,32 +28,36 @@ export const CalendarCategoryToLabels = {
 	[CalendarCategory.GeneralNews]: 'General Market',
 	[CalendarCategory.PressRelease]: 'Press Releases',
 	[CalendarCategory.CryptoNews]: 'Crypto',
-} as const satisfies Record<CalendarCategory, string>;
+} as const satisfies Record<CalendarCategoryType, string>;
 
-export enum CalendarImpact {
-	Low = 'LOW',
-	Medium = 'MEDIUM',
-	High = 'HIGH',
-}
+export const CalendarImpact = {
+	Low: 'LOW',
+	Medium: 'MEDIUM',
+	High: 'HIGH',
+} as const;
+
+export type CalendarImpactType = typeof CalendarImpact[keyof typeof CalendarImpact];
 
 export const CalendarImpactToLabels = {
 	[CalendarImpact.Low]: 'Low',
 	[CalendarImpact.Medium]: 'Medium',
 	[CalendarImpact.High]: 'High',
-} as const satisfies Record<CalendarImpact, string>;
+} as const satisfies Record<CalendarImpactType, string>;
 
-export enum CalendarCountryIds {
-	USA = 'usa',
-	India = 'india',
-	Germany = 'germany',
-	Japan = 'japan',
-	Canada = 'canada',
-	HongKong = 'hongkong',
-	UnitedKingdom = 'united-kingdom',
-}
+export const CalendarCountryIds = {
+	USA: 'usa',
+	India: 'india',
+	Germany: 'germany',
+	Japan: 'japan',
+	Canada: 'canada',
+	HongKong: 'hongkong',
+	UnitedKingdom: 'united-kingdom',
+} as const;
+
+export type CalendarCountryIdsType = typeof CalendarCountryIds[keyof typeof CalendarCountryIds];
 
 export interface ICalendarCountryData {
-	id: CalendarCountryIds;
+	id: CalendarCountryIdsType;
 	label: string;
 	icon: IconIds;
 }
@@ -74,7 +80,7 @@ export const COUNTRY_TO_ISO = {
 	[CalendarCountryIds.Canada]: 'CA',
 	[CalendarCountryIds.HongKong]: 'HK',
 	[CalendarCountryIds.UnitedKingdom]: 'GB',
-} as const satisfies Record<CalendarCountryIds, string>;
+} as const satisfies Record<CalendarCountryIdsType, string>;
 
 export interface ICalendarEventBadge {
 	label: string;
@@ -98,9 +104,9 @@ export interface ICalendarEvent {
 		description: string;
 		datetime: string;
 		image: string;
-		category: CalendarCategory;
-		country: CalendarCountryIds;
-		impact: CalendarImpact;
+		category: CalendarCategoryType;
+		country: CalendarCountryIdsType;
+		impact: CalendarImpactType;
 		badge?: ICalendarEventBadge;
 	};
 	canonical_ticker_id: string;
@@ -120,9 +126,9 @@ export interface IEventBoardResponse {
 export interface IEventBoardRequest {
 	from: number;
 	to?: number;
-	countries?: CalendarCountryIds[];
-	categories?: CalendarCategory[];
-	minImpact?: CalendarImpact[];
+	countries?: CalendarCountryIdsType[];
+	categories?: CalendarCategoryType[];
+	minImpact?: CalendarImpactType[];
 	tickerIDs?: string[];
 }
 

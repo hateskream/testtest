@@ -4,7 +4,12 @@ import { computed } from 'vue';
 import { marketToName, type MarketType } from '@/modules/market';
 import { useTickerSelectorContext, useTickerSelectorInfiniteQuery } from '../../composables';
 import { UiModalContent } from '@/shared/ui/modal';
-import { type ITickerItem, MARKET_TICKER_ITEMS_BY_MARKET, SelectionMode } from '@/modules/ticker-selector';
+import {
+	type ITickerItem,
+	type SelectionModeType,
+	MARKET_TICKER_ITEMS_BY_MARKET,
+	SelectionMode,
+} from '@/modules/ticker-selector';
 
 import TickerSelectorTitle from '../components/ticker-selector-title.vue';
 import TickerSelectorIterator from '../components/ticker-selector-iterator.vue';
@@ -16,7 +21,7 @@ import TickerSelectorMarketItem from '../components/ticker-selector-market-item.
 const props = defineProps<{
 	markets: M;
 	searchQuery: string;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	selectedMarkets: readonly M[number][];
 	disableSelectAll: boolean;
 	enableMarketTickers: boolean;

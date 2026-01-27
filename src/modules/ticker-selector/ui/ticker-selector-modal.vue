@@ -9,6 +9,8 @@ import {
 	type IMarketTickerItem,
 	type ITickerItem,
 	type ITickerSelectorEvents,
+	type SelectionModeType,
+	type SelectedSegmentType,
 	SelectedSegment,
 	SelectionMode,
 } from '../model';
@@ -22,7 +24,7 @@ import TickerSelectorError from './components/error/ticker-selector-error.vue';
 
 const props = withDefaults(defineProps<{
 	enabledMarkets: M;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	displayVariant: 'new' | 'default';
 
 	enableSelectAll?: boolean;
@@ -51,7 +53,7 @@ const selectedMarketTickers = defineModel<IMarketTickerItem[]>('selectedMarketTi
 	default: () => [],
 });
 
-const emit = defineEmits<{
+const emits = defineEmits<{
 	tickerSelected: [ticker: ITickerItem<M[number]>];
 	tickerUnselected: [ticker: ITickerItem<M[number]>];
 	tickerExcluded: [ticker: ITickerItem<M[number]>];
@@ -63,14 +65,14 @@ const emit = defineEmits<{
 }>();
 
 const events: ITickerSelectorEvents<M[number]> = {
-	onTickerSelected: (ticker) => emit('tickerSelected', ticker),
-	onTickerUnselected: (ticker) => emit('tickerUnselected', ticker),
-	onTickerExcluded: (ticker) => emit('tickerExcluded', ticker),
-	onTickerUnexcluded: (ticker) => emit('tickerUnexcluded', ticker),
-	onMarketSelected: (market) => emit('marketSelected', market),
-	onMarketUnselected: (market) => emit('marketUnselected', market),
-	onMarketTickerSelected: (ticker) => emit('marketTickerSelected', ticker),
-	onMarketTickerUnselected: (ticker) => emit('marketTickerUnselected', ticker),
+	onTickerSelected: (ticker) => emits('tickerSelected', ticker),
+	onTickerUnselected: (ticker) => emits('tickerUnselected', ticker),
+	onTickerExcluded: (ticker) => emits('tickerExcluded', ticker),
+	onTickerUnexcluded: (ticker) => emits('tickerUnexcluded', ticker),
+	onMarketSelected: (market) => emits('marketSelected', market),
+	onMarketUnselected: (market) => emits('marketUnselected', market),
+	onMarketTickerSelected: (ticker) => emits('marketTickerSelected', ticker),
+	onMarketTickerUnselected: (ticker) => emits('marketTickerUnselected', ticker),
 };
 
 const state = reactive(useTickerSelectorState({
@@ -82,7 +84,7 @@ const state = reactive(useTickerSelectorState({
 	selectedTickers: selectedTickers,
 	excludedTickers: excludedTickers,
 	selectedMarketTickers: selectedMarketTickers,
-	events,
+	events: events,
 }));
 
 const _searchQueryModel = defineModel<string>('searchQuery', {
@@ -99,11 +101,11 @@ const searchQuery = computed({
 	set: v => updateDebounced(v),
 });
 
-const selectedSegment = ref<SelectedSegment>(SelectedSegment.All);
+const selectedSegment = ref<SelectedSegmentType>(SelectedSegment.All);
 
 const selectedMarketTab = ref<M[number] | null>(null);
 
-function selectSegment(segment: SelectedSegment) {
+function selectSegment(segment: SelectedSegmentType) {
 	selectedSegment.value = segment;
 	selectedMarketTab.value = null;
 }

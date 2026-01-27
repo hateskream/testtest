@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
-import { CalendarImpact, CalendarImpactToLabels } from '../model/calendar';
+import { CalendarImpact, type CalendarImpactType, CalendarImpactToLabels } from '../model/calendar';
 
 import CalendarImpactList from './common/calendar-impact-list.vue';
 
@@ -11,7 +11,7 @@ defineProps<{
 	displayVariant: 'new' | 'default';
 }>();
 
-const model = defineModel<CalendarImpact[]>({
+const model = defineModel<CalendarImpactType[]>({
 	required: true,
 });
 

@@ -6,15 +6,19 @@ import type { IMarketTickerItem } from '@/modules/ticker-selector';
 
 export const ACTIVE_TICKER_LIST_COUNT_SHOW = 2;
 
-export enum SelectionMode {
-	Single = 'single',
-	Multiple = 'multiple',
-}
+export const SelectionMode = {
+	Single: 'single',
+	Multiple: 'multiple',
+} as const;
 
-export enum SelectedSegment {
-	All = 'all',
-	Selected = 'selected',
-}
+export type SelectionModeType = typeof SelectionMode[keyof typeof SelectionMode];
+
+export const SelectedSegment = {
+	All: 'all',
+	Selected: 'selected',
+} as const;
+
+export type SelectedSegmentType = typeof SelectedSegment[keyof typeof SelectedSegment];
 
 export interface ITickerSelectorEvents<M extends MarketType = MarketType> {
 	onTickerSelected?: (ticker: ITickerItem<M>) => void;
@@ -29,7 +33,7 @@ export interface ITickerSelectorEvents<M extends MarketType = MarketType> {
 
 export interface IUseTickerSelectorOptions<M extends readonly MarketType[]> {
 	enabledMarkets: MaybeRefOrGetter<M>;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	enableSelectAll?: MaybeRefOrGetter<boolean>;
 	enableMarketTickers?: MaybeRefOrGetter<boolean>;
 

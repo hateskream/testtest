@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, useTemplateRef } from 'vue';
 
-import type { CalendarCategory, CalendarCountryIds, CalendarImpact } from '../../model/calendar';
+import type { CalendarCategoryType, CalendarCountryIdsType, CalendarImpactType } from '../../model/calendar';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { ModalBadge, ModalBadgeList, ModalSubmenu, ModalSubmenuContent } from '@/modules/widgets/base';
@@ -14,13 +14,13 @@ import CalendarCategoriesList from '../common/calendar-categories-list.vue';
 import CalendarImpactList from '../common/calendar-impact-list.vue';
 import CalendarRangePicker from '../common/calendar-range-picker.vue';
 
-const country = defineModel<CalendarCountryIds[]>('countries', {
+const country = defineModel<CalendarCountryIdsType[]>('countries', {
 	required: true,
 });
-const categories = defineModel<CalendarCategory[]>('categories', {
+const categories = defineModel<CalendarCategoryType[]>('categories', {
 	required: true,
 });
-const impact = defineModel<CalendarImpact[]>('impact', {
+const impact = defineModel<CalendarImpactType[]>('impact', {
 	required: true,
 });
 const range = defineModel<{ from: number; to: number }>('range', {

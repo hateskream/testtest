@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 
 import { ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarImpact, CalendarImpactToLabels } from '../../model/calendar';
+import { CalendarImpact, type CalendarImpactType, CalendarImpactToLabels } from '../../model/calendar';
 
-const model = defineModel<CalendarImpact[]>({
+const model = defineModel<CalendarImpactType[]>({
 	required: true,
 });
 
@@ -20,7 +20,7 @@ function unselectAll(newState: boolean) {
 	}
 }
 
-function toggle(newValue: CalendarImpact) {
+function toggle(newValue: CalendarImpactType) {
 	if (model.value.includes(newValue)) {
 		model.value = model.value.filter((impact) => impact !== newValue);
 	} else {

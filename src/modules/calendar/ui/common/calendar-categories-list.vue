@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 
 import { ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarCategory, CalendarCategoryToLabels } from '../../model/calendar';
+import { CalendarCategory, type CalendarCategoryType, CalendarCategoryToLabels } from '../../model/calendar';
 
-const model = defineModel<CalendarCategory[]>({
+const model = defineModel<CalendarCategoryType[]>({
 	required: true,
 });
 
@@ -20,7 +20,7 @@ function unselectAll(newState: boolean) {
 	}
 }
 
-function toggle(newValue: CalendarCategory) {
+function toggle(newValue: CalendarCategoryType) {
 	if (model.value.includes(newValue)) {
 		model.value = model.value.filter((category) => category !== newValue);
 	} else {

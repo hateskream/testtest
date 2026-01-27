@@ -3,9 +3,9 @@ import {
 	TvEventBoard,
 	TvCalendarToolbar,
 	type IEventBoardItem,
-	type CalendarCountryIds,
-	type CalendarCategory,
-	type CalendarImpact,
+	type CalendarCountryIdsType,
+	type CalendarCategoryType,
+	type CalendarImpactType,
 } from '@/modules/calendar';
 
 const props = defineProps<{
@@ -21,13 +21,13 @@ const emits = defineEmits<{
 	loadNext: [];
 }>();
 
-const country = defineModel<CalendarCountryIds[]>('countries', {
+const country = defineModel<CalendarCountryIdsType[]>('countries', {
 	required: true,
 });
-const categories = defineModel<CalendarCategory[]>('categories', {
+const categories = defineModel<CalendarCategoryType[]>('categories', {
 	required: true,
 });
-const impact = defineModel<CalendarImpact[]>('impact', {
+const impact = defineModel<CalendarImpactType[]>('impact', {
 	required: true,
 });
 const range = defineModel<{ from: number; to: number }>('range', {

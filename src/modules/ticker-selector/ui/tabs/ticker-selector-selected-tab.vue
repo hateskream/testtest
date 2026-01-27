@@ -6,7 +6,7 @@ import { useTickerSelectorContext, useTickerSelectorInfiniteQuery } from '../../
 import {
 	type IMarketTickerItem,
 	type ITickerItem,
-	type SelectionMode,
+	type SelectionModeType,
 } from '../../model';
 import { UiModalContent, UiModalDivider } from '@/shared/ui/modal';
 
@@ -20,7 +20,7 @@ import TickerSelectorMarketItem from '../components/ticker-selector-market-item.
 const props = defineProps<{
 	markets: M;
 	searchQuery: string;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	selectedMarkets: readonly M[number][];
 	excludedTickers: ITickerItem[];
 	selectedTickers: ITickerItem[];

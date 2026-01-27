@@ -7,14 +7,14 @@ import {
 	TickerSelectorModal,
 	type IMarketTickerItem,
 	type ITickerItem,
-	SelectionMode,
+	type SelectionModeType,
 } from '@/modules/ticker-selector';
 
 import ModalBadgePreview from './components/badge/modal-badge-preview.vue';
 
 const props = withDefaults(defineProps<{
 	enabledMarkets: M;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	enableSelectAll?: boolean;
 	enableMarketTickers?: boolean;
 

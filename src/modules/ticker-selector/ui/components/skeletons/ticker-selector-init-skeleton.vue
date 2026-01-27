@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { UiSkeleton } from '@/shared/ui/skeleton';
-import { SelectionMode } from '@/modules/ticker-selector';
+import { SelectionMode, type SelectionModeType } from '@/modules/ticker-selector';
 
 const props = defineProps<{
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 }>();
 </script>
 

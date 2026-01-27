@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
-import { CalendarCountryIds, calendarCountryData } from '../model/calendar';
+import { CalendarCountryIds, type CalendarCountryIdsType, calendarCountryData } from '../model/calendar';
 
 import CalendarCountryList from './common/calendar-country-list.vue';
 
@@ -12,7 +12,7 @@ const props = defineProps<{
 	displayVariant: 'new' | 'default';
 }>();
 
-const model = defineModel<CalendarCountryIds[]>({
+const model = defineModel<CalendarCountryIdsType[]>({
 	required: true,
 });
 

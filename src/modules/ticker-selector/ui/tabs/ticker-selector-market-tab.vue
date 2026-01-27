@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="M extends readonly MarketType[]">
 import { marketToName, MarketType } from '@/modules/market';
-import { MARKET_TICKER_ITEMS_BY_MARKET, SelectionMode } from '../../model';
+import { MARKET_TICKER_ITEMS_BY_MARKET, SelectionMode, type SelectionModeType } from '../../model';
 import { useTickerSelectorContext } from '@/modules/ticker-selector';
 
 import TickerSelectorTitle from '../components/ticker-selector-title.vue';
@@ -11,7 +11,7 @@ import TickerSelectorMarketItem from '../components/ticker-selector-market-item.
 const props = defineProps<{
 	market: M[number];
 	searchQuery: string;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 	isAllSelected: boolean;
 	disableSelectAll: boolean;
 	enableMarketTickers: boolean;

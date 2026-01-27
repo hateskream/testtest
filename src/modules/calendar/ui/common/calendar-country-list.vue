@@ -3,9 +3,9 @@ import { computed } from 'vue';
 
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { ModalItemCheckbox } from '@/modules/widgets/base';
-import { CalendarCountryIds, calendarCountryData } from '../../model/calendar';
+import { CalendarCountryIds, type CalendarCountryIdsType, calendarCountryData } from '../../model/calendar';
 
-const model = defineModel<CalendarCountryIds[]>({
+const model = defineModel<CalendarCountryIdsType[]>({
 	required: true,
 });
 
@@ -21,7 +21,7 @@ function unselectAll(newState: boolean) {
 	}
 }
 
-function toggle(newValue: CalendarCountryIds) {
+function toggle(newValue: CalendarCountryIdsType) {
 	if (model.value.includes(newValue)) {
 		model.value = model.value.filter((country) => country !== newValue);
 	} else {

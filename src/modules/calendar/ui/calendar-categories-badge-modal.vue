@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { ModalBadge, ModalBadgeList } from '@/modules/widgets/base';
-import { CalendarCategory, CalendarCategoryToLabels } from '../model/calendar';
+import { CalendarCategory, type CalendarCategoryType, CalendarCategoryToLabels } from '../model/calendar';
 
 import CalendarCategoriesList from './common/calendar-categories-list.vue';
 
@@ -11,7 +11,7 @@ defineProps<{
 	displayVariant: 'new' | 'default';
 }>();
 
-const model = defineModel<CalendarCategory[]>({
+const model = defineModel<CalendarCategoryType[]>({
 	required: true,
 });
 

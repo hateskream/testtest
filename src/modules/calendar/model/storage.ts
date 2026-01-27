@@ -1,11 +1,18 @@
 import { z } from 'zod';
 
-import { CalendarCategory, CalendarCountryIds, CalendarImpact } from './calendar';
+import {
+	CalendarCategory,
+	type CalendarCategoryType,
+	CalendarCountryIds,
+	type CalendarCountryIdsType,
+	CalendarImpact,
+	type CalendarImpactType,
+} from './calendar';
 
 export interface ICalendarStorage {
-	selectedCountries: CalendarCountryIds[];
-	selectedCategories: CalendarCategory[];
-	selectedImpacts: CalendarImpact[];
+	selectedCountries: CalendarCountryIdsType[];
+	selectedCategories: CalendarCategoryType[];
+	selectedImpacts: CalendarImpactType[];
 }
 
 export const calendarStorageSchema = z.object({

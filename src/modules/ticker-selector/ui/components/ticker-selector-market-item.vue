@@ -2,14 +2,14 @@
 import { computed } from 'vue';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { IMarketTickerItem, SelectionMode } from '../../model';
+import type { IMarketTickerItem, SelectionModeType } from '../../model';
 import { useTickerSelectorContext } from '../../composables';
 
 import MarketTickerIcon from './elements/market-ticker-icon.vue';
 
 const props = defineProps<{
 	market: IMarketTickerItem;
-	selectionMode: SelectionMode;
+	selectionMode: SelectionModeType;
 }>();
 
 const {

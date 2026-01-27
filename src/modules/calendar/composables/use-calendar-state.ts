@@ -1,7 +1,14 @@
 import { ref, watch } from 'vue';
 import { useNow } from '@vueuse/core';
 
-import { CalendarCountryIds, CalendarCategory, CalendarImpact } from '../model/calendar';
+import {
+	CalendarCountryIds,
+	type CalendarCountryIdsType,
+	CalendarCategory,
+	type CalendarCategoryType,
+	CalendarImpact,
+	type CalendarImpactType,
+} from '../model/calendar';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { type ICalendarStorage, type CalendarStorageSchemaType, calendarStorageSchema } from '../model/storage';
 
@@ -14,9 +21,9 @@ interface IWidgetOptions {
 interface IUseCalendarStateOptions {
 	defaults?: {
 		interval?: number;
-		selectedCountries?: CalendarCountryIds[];
-		selectedCategories?: CalendarCategory[];
-		selectedImpacts?: CalendarImpact[];
+		selectedCountries?: CalendarCountryIdsType[];
+		selectedCategories?: CalendarCategoryType[];
+		selectedImpacts?: CalendarImpactType[];
 	};
 	widget: IWidgetOptions;
 }
@@ -36,9 +43,9 @@ export function useCalendarState(options: IUseCalendarStateOptions) {
 
 	const currentTime = useNow({ interval });
 
-	const selectedCountries = ref<CalendarCountryIds[]>(defaultSelectedCountries);
-	const selectedCategories = ref<CalendarCategory[]>(defaultSelectedCategories);
-	const selectedImpacts = ref<CalendarImpact[]>(defaultSelectedImpacts);
+	const selectedCountries = ref<CalendarCountryIdsType[]>(defaultSelectedCountries);
+	const selectedCategories = ref<CalendarCategoryType[]>(defaultSelectedCategories);
+	const selectedImpacts = ref<CalendarImpactType[]>(defaultSelectedImpacts);
 
 	function resetAll() {
 		selectedCountries.value = defaultSelectedCountries;
