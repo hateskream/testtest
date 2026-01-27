@@ -161,6 +161,6 @@ const items = computed(() => {
 .title {
 	width: 100%;
 	margin-bottom: 2px;
-	padding: 0 6px;
+	padding: 6px 6px 0;
 }
 </style>

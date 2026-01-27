@@ -10,8 +10,8 @@ const model = defineModel<{ from: number; to: number }>({
 
 const range = computed<DatePickerRangeObject>({
 	get() {
-		const fromDate = new Date(model.value!.from * 1000);
-		const toDate = new Date(model.value!.to * 1000);
+		const fromDate = new Date(model.value.from * 1000);
+		const toDate = new Date(model.value.to * 1000);
 		return {
 			start: new Date(fromDate.getUTCFullYear(), fromDate.getUTCMonth(), fromDate.getUTCDate()),
 			end: new Date(toDate.getUTCFullYear(), toDate.getUTCMonth(), toDate.getUTCDate()),

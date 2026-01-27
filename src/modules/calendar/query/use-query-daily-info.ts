@@ -11,7 +11,7 @@ interface IUseQueryDailyInfo {
 
 export const useQueryDailyInfo = (options: MaybeRefOrGetter<IUseQueryDailyInfo>) => {
 	return useQuery<IDailyInfoResponse>({
-		queryKey: ['daily-calendar', options, options],
+		queryKey: ['daily-calendar', options],
 		queryFn: () => getDailyInfo({
 			from: toValue(options).from,
 			to: toValue(options).to,

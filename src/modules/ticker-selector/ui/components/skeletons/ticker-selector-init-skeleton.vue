@@ -43,6 +43,10 @@ const props = defineProps<{
 	width: 100%;
 }
 
+.skeleton:has(> :only-child) {
+	padding-top: 6px;
+}
+
 .pills {
 	display: flex;
 	padding: 6px 12px;

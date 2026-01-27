@@ -1,4 +1,4 @@
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { createStateQueries } from '@/shared/service/data-repo';
 import {
@@ -10,7 +10,7 @@ import {
 	type StateSchemaType,
 } from '../model';
 import { useQueryDominanceSnapshot } from '../queries';
-import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { type ITickerItem } from '@/modules/ticker-selector';
 import { deepCompare } from '@/shared/lib/compare';
 
 interface IOptions {
