@@ -8,6 +8,7 @@ import { UiPillItem, UiPillWrapper } from '@/shared/ui/pill';
 import {
 	type IMarketTickerItem,
 	type ITickerItem,
+	type ITickerSelectorEvents,
 	SelectedSegment,
 	SelectionMode,
 } from '../model';
@@ -50,6 +51,28 @@ const selectedMarketTickers = defineModel<IMarketTickerItem[]>('selectedMarketTi
 	default: () => [],
 });
 
+const emit = defineEmits<{
+	tickerSelected: [ticker: ITickerItem<M[number]>];
+	tickerUnselected: [ticker: ITickerItem<M[number]>];
+	tickerExcluded: [ticker: ITickerItem<M[number]>];
+	tickerUnexcluded: [ticker: ITickerItem<M[number]>];
+	marketSelected: [market: M[number]];
+	marketUnselected: [market: M[number]];
+	marketTickerSelected: [ticker: IMarketTickerItem<M[number]>];
+	marketTickerUnselected: [ticker: IMarketTickerItem<M[number]>];
+}>();
+
+const events: ITickerSelectorEvents<M[number]> = {
+	onTickerSelected: (ticker) => emit('tickerSelected', ticker),
+	onTickerUnselected: (ticker) => emit('tickerUnselected', ticker),
+	onTickerExcluded: (ticker) => emit('tickerExcluded', ticker),
+	onTickerUnexcluded: (ticker) => emit('tickerUnexcluded', ticker),
+	onMarketSelected: (market) => emit('marketSelected', market),
+	onMarketUnselected: (market) => emit('marketUnselected', market),
+	onMarketTickerSelected: (ticker) => emit('marketTickerSelected', ticker),
+	onMarketTickerUnselected: (ticker) => emit('marketTickerUnselected', ticker),
+};
+
 const state = reactive(useTickerSelectorState({
 	enabledMarkets: () => props.enabledMarkets,
 	enableSelectAll: () => props.enableSelectAll,
@@ -59,6 +82,7 @@ const state = reactive(useTickerSelectorState({
 	selectedTickers: selectedTickers,
 	excludedTickers: excludedTickers,
 	selectedMarketTickers: selectedMarketTickers,
+	events,
 }));
 
 const _searchQueryModel = defineModel<string>('searchQuery', {

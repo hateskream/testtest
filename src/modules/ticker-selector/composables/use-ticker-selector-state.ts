@@ -19,6 +19,7 @@ export function useTickerSelectorState<
 		selectedTickers,
 		excludedTickers,
 		selectedMarketTickers,
+		events,
 	} = options;
 
 	const enableMarketTickers = computed(() => {
@@ -79,6 +80,7 @@ export function useTickerSelectorState<
 		if (selectionMode === SelectionMode.Single) {
 			clearAllTickers();
 			selectedTickers.value = [ticker];
+			events?.onTickerSelected?.(ticker);
 			return;
 		}
 
@@ -88,15 +90,18 @@ export function useTickerSelectorState<
 				market,
 				ticker.canonical_ticker_id,
 			);
+			events?.onTickerUnexcluded?.(ticker);
 			return;
 		}
 
 		selectedTickers.value = upsertToList(selectedTickers.value, ticker);
+		events?.onTickerSelected?.(ticker);
 	}
 
 	function unselectTicker(market: M[number], ticker: ITickerItem) {
 		if (selectionMode === SelectionMode.Single) {
 			selectedTickers.value = removeAllInMarket(selectedTickers.value, market);
+			events?.onTickerUnselected?.(ticker);
 			return;
 		}
 
@@ -107,6 +112,7 @@ export function useTickerSelectorState<
 				market,
 				ticker.canonical_ticker_id,
 			);
+			events?.onTickerExcluded?.(ticker);
 			return;
 		}
 
@@ -115,6 +121,7 @@ export function useTickerSelectorState<
 			market,
 			ticker.canonical_ticker_id,
 		);
+		events?.onTickerUnselected?.(ticker);
 	}
 
 	function toggleTicker(market: M[number], ticker: ITickerItem) {
@@ -158,6 +165,8 @@ export function useTickerSelectorState<
 		if (enableMarketTickers.value) {
 			selectMarketTicker(market, MARKET_TICKER_ITEMS_BY_MARKET.get(market)!);
 		}
+
+		events?.onMarketSelected?.(market);
 	}
 
 	function unselectMarket(market: M[number]) {
@@ -170,6 +179,8 @@ export function useTickerSelectorState<
 		excludedTickers.value = excludedTickers.value.filter(t => t.market_type !== market);
 
 		unselectMarketTicker(market, market);
+
+		events?.onMarketUnselected?.(market);
 	}
 
 	function toggleMarket(market: M[number]) {
@@ -187,6 +198,7 @@ export function useTickerSelectorState<
 		if (selectionMode === SelectionMode.Single) {
 			selectedTickers.value = [ticker];
 			excludedTickers.value = [];
+			events?.onTickerSelected?.(ticker);
 			return;
 		}
 
@@ -197,6 +209,7 @@ export function useTickerSelectorState<
 					market,
 					tickerId,
 				);
+				events?.onTickerUnexcluded?.(ticker);
 			} else {
 				excludedTickers.value = upsertToList(excludedTickers.value, ticker);
 
@@ -205,6 +218,7 @@ export function useTickerSelectorState<
 					market,
 					tickerId,
 				);
+				events?.onTickerExcluded?.(ticker);
 			}
 
 			return;
@@ -216,6 +230,7 @@ export function useTickerSelectorState<
 				market,
 				tickerId,
 			);
+			events?.onTickerUnselected?.(ticker);
 		} else {
 			selectedTickers.value = upsertToList(selectedTickers.value, ticker);
 
@@ -224,6 +239,7 @@ export function useTickerSelectorState<
 				market,
 				tickerId,
 			);
+			events?.onTickerSelected?.(ticker);
 		}
 	}
 
@@ -249,6 +265,8 @@ export function useTickerSelectorState<
 			...selectedMarketTickers.value.filter(t => t.market_type !== market),
 			ticker,
 		];
+
+		events?.onMarketTickerSelected?.(ticker);
 	}
 
 	function unselectMarketTicker(market: M[number], id: string) {
@@ -260,6 +278,8 @@ export function useTickerSelectorState<
 
 		selectedMarketTickers.value =
 			selectedMarketTickers.value.filter(t => t.market_type !== market);
+
+		events?.onMarketTickerUnselected?.(current);
 	}
 
 	function toggleMarketTicker(
@@ -267,8 +287,14 @@ export function useTickerSelectorState<
 		ticker: IMarketTickerItem<M[number]>,
 	) {
 		if (isMarketTickerSelected(market)) {
+			const current = selectedMarketTickers.value.find(t => t.market_type === market);
+
 			selectedMarketTickers.value =
 				selectedMarketTickers.value.filter(t => t.market_type !== market);
+
+			if (current) {
+				events?.onMarketTickerUnselected?.(current);
+			}
 			return;
 		}
 

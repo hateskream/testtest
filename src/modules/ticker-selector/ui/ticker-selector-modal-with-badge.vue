@@ -44,6 +44,17 @@ const selectedMarketTickers = defineModel<IMarketTickerItem<M[number]>[]>('selec
 	default: [],
 });
 
+const emit = defineEmits<{
+	tickerSelected: [ticker: ITickerItem<M[number]>];
+	tickerUnselected: [ticker: ITickerItem<M[number]>];
+	tickerExcluded: [ticker: ITickerItem<M[number]>];
+	tickerUnexcluded: [ticker: ITickerItem<M[number]>];
+	marketSelected: [market: M[number]];
+	marketUnselected: [market: M[number]];
+	marketTickerSelected: [ticker: IMarketTickerItem<M[number]>];
+	marketTickerUnselected: [ticker: IMarketTickerItem<M[number]>];
+}>();
+
 const paddingLeft = computed(() => {
 	if (!props.showIcon || props.displayVariant === 'default') {
 		return undefined;
@@ -99,6 +110,14 @@ function onChanged() {
 				:enabled-markets="props.enabledMarkets"
 				:display-variant="props.displayVariant"
 				@update:selected-tickers="onChanged"
+				@ticker-selected="emit('tickerSelected', $event)"
+				@ticker-unselected="emit('tickerUnselected', $event)"
+				@ticker-excluded="emit('tickerExcluded', $event)"
+				@ticker-unexcluded="emit('tickerUnexcluded', $event)"
+				@market-selected="emit('marketSelected', $event)"
+				@market-unselected="emit('marketUnselected', $event)"
+				@market-ticker-selected="emit('marketTickerSelected', $event)"
+				@market-ticker-unselected="emit('marketTickerUnselected', $event)"
 			/>
 		</template>
 	</modal-badge-dropdown>

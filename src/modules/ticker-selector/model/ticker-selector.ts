@@ -16,6 +16,17 @@ export enum SelectedSegment {
 	Selected = 'selected',
 }
 
+export interface ITickerSelectorEvents<M extends MarketType = MarketType> {
+	onTickerSelected?: (ticker: ITickerItem<M>) => void;
+	onTickerUnselected?: (ticker: ITickerItem<M>) => void;
+	onTickerExcluded?: (ticker: ITickerItem<M>) => void;
+	onTickerUnexcluded?: (ticker: ITickerItem<M>) => void;
+	onMarketSelected?: (market: M) => void;
+	onMarketUnselected?: (market: M) => void;
+	onMarketTickerSelected?: (ticker: IMarketTickerItem<M>) => void;
+	onMarketTickerUnselected?: (ticker: IMarketTickerItem<M>) => void;
+}
+
 export interface IUseTickerSelectorOptions<M extends readonly MarketType[]> {
 	enabledMarkets: MaybeRefOrGetter<M>;
 	selectionMode: SelectionMode;
@@ -26,6 +37,8 @@ export interface IUseTickerSelectorOptions<M extends readonly MarketType[]> {
 	selectedTickers: Ref<ITickerItem[]>;
 	excludedTickers: Ref<ITickerItem[]>;
 	selectedMarketTickers: Ref<IMarketTickerItem<M[number]>[]>;
+
+	events?: ITickerSelectorEvents<M[number]>;
 }
 
 export interface ITickerItem<M extends MarketType = MarketType> {
