@@ -106,3 +106,16 @@
 5. Полностью удалить ESLint из проекта.
 
 ---
+
+## Запланированные изменения правил
+
+- [ ] Отказаться от `no-plusplus`
+- [ ] Добавить `vue/prefer-use-template-ref`
+- [ ] Добавить `vue/require-v-for-key`
+- [ ] Добавить `vue/no-static-inline-styles`
+- [ ] Добавить `no-nested-ternary`
+- [ ] Добавить `oxc/no-accumulating-spread`
+- [ ] Добавить `unicorn/prefer-array-find`
+- [ ] Добавить `unicorn/prefer-date-now`
+
+При изменении правил необходимо обсудить с командой плюсы (что это нам даст) и минусы (чем пожертвуем)
