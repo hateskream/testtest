@@ -49,10 +49,6 @@ const emit = defineEmits<{
 }>();
 
 const isBig = computed(() => props.meta.size.h >= 6 );
-
-function updateTicker(newValue: string[]) {
-	[selectedTicker.value] = newValue;
-}
 </script>
 
 <template>
