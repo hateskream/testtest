@@ -47,7 +47,25 @@ function selectNews(id: string) {
 	selectedNewsId.value = id;
 }
 
-const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
+const news = computed(() => {
+	if (!data.value?.pages) {
+		return [];
+	}
+
+	const result = [];
+	for (const page of data.value.pages) {
+		if (!page?.data) {
+			continue;
+		}
+		for (const item of page.data) {
+			if (item) {
+				result.push(item);
+			}
+		}
+	}
+
+	return result;
+});
 </script>
 
 <template>

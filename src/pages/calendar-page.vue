@@ -24,6 +24,13 @@ const { currentTime, selectedCategories, selectedCountries, selectedImpacts } = 
 	},
 });
 
+const todayStr = computed(() => {
+	const today = currentTime.value;
+	today.setUTCHours(0, 0, 0, 0);
+
+	return today.toISOString().slice(0, 10);
+});
+
 const selectedDate = ref(currentTime.value);
 const limit = ref(getUTCWeekRange(new Date(localDateToUTCUnix(currentTime.value) * 1000)));
 
@@ -98,6 +105,7 @@ function onUpdateWeek(date: Date) {
 
 					<calendar-page-daily-info
 						v-if="!dailyInfo.isLoading && dailyInfo.data"
+						:today-str="todayStr"
 						:weeks="dailyInfo.data"
 						:selected-date="selectedDateStr"
 						@select-day="onSelectDay"

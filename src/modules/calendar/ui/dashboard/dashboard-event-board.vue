@@ -32,24 +32,31 @@ const emits = defineEmits<{
 	loadNext: [];
 }>();
 
-const groupedBoard = computed(() =>
-	props.eventBoard.map(day => {
-		const grouped = groupEventsByHour(day.events).map(group => {
-			const nextEvent = findNextEventTime(group.events, props.currentTime);
+const baseBoard = computed(() =>
+	props.eventBoard.map(day => ({
+		...day,
+		grouped: groupEventsByHour(day.events).map(group => ({
+			...group,
+			events: group.events.map(event => ({
+				...event,
+				favorite: false,
+			})),
+		})),
+	})),
+);
 
+const groupedBoard = computed(() =>
+	baseBoard.value.map(day => ({
+		...day,
+		grouped: day.grouped.map(group => {
+			const nextEvent = findNextEventTime(group.events, props.currentTime);
 			return {
 				...group,
 				...getHourStatus(day.date, group.hour, props.currentTime),
 				expires: nextEvent ? getRelativeLabel(nextEvent.toISOString(), props.currentTime) : null,
-				events: group.events.map(event => ({
-					...event,
-					favorite: props.favorite.includes(event.id),
-				})),
 			};
-		});
-
-		return { ...day, grouped };
-	}),
+		}),
+	})),
 );
 
 const container = useTemplateRef<HTMLElement>('container');

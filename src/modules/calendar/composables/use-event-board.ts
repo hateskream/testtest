@@ -1,4 +1,5 @@
 import { type Ref, type WatchSource, computed, nextTick, onMounted, toValue, watch } from 'vue';
+import { useThrottleFn } from '@vueuse/core';
 
 const SCROLL_THRESHOLD = 100;
 
@@ -105,7 +106,9 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 		scrollToNextEvent();
 	});
 
+	const handleScrollThrottled = useThrottleFn(handleScroll, 50);
+
 	return {
-		handleScroll,
+		handleScroll: handleScrollThrottled,
 	};
 }

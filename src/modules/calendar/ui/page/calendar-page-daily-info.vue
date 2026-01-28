@@ -17,6 +17,7 @@ const METRIC_CONFIG = [
 
 const props = defineProps<{
 	weeks: IDailyInfoResponse;
+	todayStr: string;
 	selectedDate?: string;
 }>();
 
@@ -47,11 +48,7 @@ function mapDay(item: IDailyInfoItem, todayStr: string) {
 }
 
 const weekDays = computed(() => {
-	const today = new Date();
-	today.setUTCHours(0, 0, 0, 0);
-	const todayStr = today.toISOString().slice(0, 10);
-
-	return props.weeks.map((item) => mapDay(item, todayStr));
+	return props.weeks.map((item) => mapDay(item, props.todayStr));
 });
 
 function isSelected(date: string) {
