@@ -1,7 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
-// import { HomeMobile, NewLayout } from '@/modules/layout';
 import { useIsMobile } from '@/shared/composables';
 import { NewLayout } from '../../new-desktop';
 
@@ -38,7 +37,7 @@ function close() {
 		</transition>
 	</template>
 	<new-layout v-else>
-		<slot />
+		<slot :close="close" />
 	</new-layout>
 </template>
 
