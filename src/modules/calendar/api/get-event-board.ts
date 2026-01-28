@@ -11,7 +11,7 @@ export async function getEventBoard(request: IEventBoardRequest): Promise<IEvent
 	} catch (error) {
 		const logger = useLogger();
 		logger.error('Failed to get event board', {
-			error: error as Error
+			error: error as Error,
 		});
 		throw error;
 	}

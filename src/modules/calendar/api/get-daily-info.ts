@@ -11,7 +11,7 @@ export async function getDailyInfo(options: IDailyInfoRequest): Promise<IDailyIn
 	} catch (error) {
 		const logger = useLogger();
 		logger.error('Failed to get daily calendar info', {
-			error: error as Error
+			error: error as Error,
 		});
 		throw error;
 	}

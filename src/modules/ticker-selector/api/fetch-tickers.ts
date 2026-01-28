@@ -23,7 +23,7 @@ export async function fetchTickers(tickers: string | string[]) {
 		return prepareResponse(items);
 	} catch (error) {
 		logger.error('Failed to get tickers', {
-			error: error as Error
+			error: error as Error,
 		});
 
 		throw error;
