@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 
 import { createStateQueries } from '@/shared/service/data-repo';
 import {
@@ -47,6 +47,10 @@ export function useMarketCap({
 	const state = ref<IState>(getDefaultState());
 
 	const _selectedTickers = ref<ITickerItem[]>([]);
+
+	onBeforeMount(async () => {
+		_selectedTickers.value = await fetchTickers(state.value.selectedTickers);
+	});
 
 	const selectedTickers = computed({
 		get: () => _selectedTickers.value,
