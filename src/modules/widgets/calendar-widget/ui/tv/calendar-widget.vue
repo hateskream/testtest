@@ -69,7 +69,7 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
-		@retry="refetch"
+		@retry="query.refetch"
 	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>

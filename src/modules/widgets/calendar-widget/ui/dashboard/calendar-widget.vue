@@ -31,7 +31,6 @@ const {
 	selectedCountries,
 	selectedImpacts,
 	resetAll,
-	refetch,
 } = useCalendarState({
 	widget: {
 		widgetId: props.meta.widgetId,
@@ -53,7 +52,7 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
-		@retry="refetch"
+		@retry="query.refetch"
 	>
 		<template #filters>
 			<widget-filters-scrollable
