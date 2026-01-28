@@ -1,5 +1,5 @@
 import { type IEventBoardRequest, type IEventBoardResponse, COUNTRY_TO_ISO } from '../model/calendar';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { getMockEventBoard } from './mock/event-board';
 
@@ -10,7 +10,9 @@ export async function getEventBoard(request: IEventBoardRequest): Promise<IEvent
 		return IS_USE_MOCK ? getMockEventBoard() : getApiEventBoard(request);
 	} catch (error) {
 		const logger = useLogger();
-		logger.error('Failed to get event board', error as Error);
+		logger.error('Failed to get event board', {
+			error: error as Error
+		});
 		throw error;
 	}
 }

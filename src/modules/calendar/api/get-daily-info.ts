@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { getMockDailyInfo } from './mock';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IDailyInfoRequest, IDailyInfoResponse } from '../model/calendar';
 
 const IS_USE_MOCK = false;
@@ -10,7 +10,9 @@ export async function getDailyInfo(options: IDailyInfoRequest): Promise<IDailyIn
 		return IS_USE_MOCK ? getMockDailyInfo() : getApiDailyInfo(options);
 	} catch (error) {
 		const logger = useLogger();
-		logger.error('Failed to get daily calendar info', error as Error);
+		logger.error('Failed to get daily calendar info', {
+			error: error as Error
+		});
 		throw error;
 	}
 }

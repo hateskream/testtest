@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { ITickerItem } from '@/modules/ticker-selector';
 import type { MarketType } from '@/modules/market';
 
@@ -22,7 +22,9 @@ export async function fetchTickers(tickers: string | string[]) {
 
 		return prepareResponse(items);
 	} catch (error) {
-		logger.error('Failed to get tickers', error as Error);
+		logger.error('Failed to get tickers', {
+			error: error as Error
+		});
 
 		throw error;
 	}
