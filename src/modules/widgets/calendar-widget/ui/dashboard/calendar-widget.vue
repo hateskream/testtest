@@ -37,6 +37,7 @@ const {
 	eventType,
 	toggleFavorite,
 	resetAll,
+	refetch,
 } = useCalendarState({
 	toolbar: {
 		useQuery: false,
@@ -108,6 +109,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@retry="refetch"
 	>
 		<template #filters>
 			<widget-filters-scrollable

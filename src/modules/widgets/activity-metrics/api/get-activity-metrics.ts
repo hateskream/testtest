@@ -1,4 +1,4 @@
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IActivityMetricsRequest } from './contract';
 import { getMockData } from './mock';
 import { ActivityMetricsSchema } from '../model';
@@ -21,7 +21,7 @@ export async function getActivityMetrics(request: IActivityMetricsRequest) {
 			},
 		});
 	} catch (error) {
-		logger.error('Failed to get ticker activity metrics', error as Error);
+		logger.error('Failed to get ticker activity metrics', { error: error as Error });
 		throw error;
 	}
 }

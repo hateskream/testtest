@@ -62,6 +62,7 @@ function updateTicker(newValue: string[]) {
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
+		@retry="refetch"
 	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>

@@ -1,5 +1,6 @@
-/* eslint-disable no-console */
 import { type Ref } from 'vue';
+
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface IDashboardWidgetPosition {
 	x: number;
@@ -87,7 +88,9 @@ export function getGridInfo(): IGridInfo | null {
 
 		return null;
 	} catch (error) {
-		console.error('Failed to get grid info:', error);
+		const logger = useLogger();
+		logger.error('Failed to get grid info', { error: error as Error });
+
 		return null;
 	}
 }
@@ -98,11 +101,14 @@ export function getGridInfo(): IGridInfo | null {
  * @returns Dashboard state object or null if no active dashboard
  */
 export function getDashboardState(store: IDashboardGroupStore): IDashboardState | null {
+	const logger = useLogger();
+
 	try {
 		if (!store) {
-			if (import.meta.env.MODE === 'development') {
-				console.warn('Dashboard store is not available');
+			if (import.meta.env.DEV) {
+				logger.error('Dashboard store is not available');
 			}
+
 			return null;
 		}
 
@@ -133,9 +139,10 @@ export function getDashboardState(store: IDashboardGroupStore): IDashboardState 
 			widgets,
 		};
 	} catch (error) {
-		if (import.meta.env.MODE === 'development') {
-			console.error('Failed to get dashboard state:', error);
+		if (import.meta.env.DEV) {
+			logger.error('Failed to get dashboard state', { error: error as Error });
 		}
+
 		return null;
 	}
 }
@@ -146,10 +153,12 @@ export function getDashboardState(store: IDashboardGroupStore): IDashboardState 
  * @returns Array of dashboard info objects
  */
 export function getAllDashboards(store: IDashboardGroupStore) {
+	const logger = useLogger();
+
 	try {
 		if (!store) {
-			if (import.meta.env.MODE === 'development') {
-				console.warn('Dashboard store is not available');
+			if (import.meta.env.DEV) {
+				logger.error('Dashboard store is not available');
 			}
 			return [];
 		}
@@ -163,8 +172,8 @@ export function getAllDashboards(store: IDashboardGroupStore) {
 			widgetsCount: widgets.length,
 		}));
 	} catch (error) {
-		if (import.meta.env.MODE === 'development') {
-			console.error('Failed to get dashboards list:', error);
+		if (import.meta.env.DEV) {
+			logger.error('Failed to get dashboards list', { error: error as Error });
 		}
 		return [];
 	}
@@ -175,29 +184,29 @@ export function getAllDashboards(store: IDashboardGroupStore) {
  * Only works in development mode
  */
 export function debugDashboardState(store: IDashboardGroupStore) {
-	if (import.meta.env.MODE !== 'development') {
+	if (!import.meta.env.DEV) {
 		return;
 	}
 
-	console.group('Debug Dashboard State');
+	const logger = useLogger();
 
 	const state = getDashboardState(store);
 	const gridInfo = getGridInfo();
 	const allDashboards = getAllDashboards(store);
 
-	console.log('Current dashboard:', state);
-	console.log('Grid info:', gridInfo);
-	console.log('All dashboards:', allDashboards);
-
-	if (state) {
-		console.log(`Statistics:
-		- Widgets: ${state.widgets.length}
-		- Grid size: ${state.gridSize.columns}x${state.gridSize.rows}
-		- Cell size: ${state.gridSize.columnWidth}x${state.gridSize.rowHeight}px
-		- Widget types: ${[...new Set(state.widgets.map(({ type }) => type))].join(', ')}`);
-	}
-
-	console.groupEnd();
+	logger.debug('Debug Dashboard State', {
+		context: {
+			currentDashboard: state,
+			gridInfo,
+			allDashboards,
+			statistics: state && {
+				widgets: state.widgets.length,
+				gridSize: `${state.gridSize.columns}x${state.gridSize.rows}`,
+				cellSize: `${state.gridSize.columnWidth}x${state.gridSize.rowHeight}px`,
+				widgetTypes: [...new Set(state.widgets.map(({ type }) => type))].join(', '),
+			},
+		},
+	});
 }
 
 export function generateDashboardLayout(
@@ -216,7 +225,10 @@ export function generateDashboardLayout(
 			},
 		},
 	}));
-	console.log(JSON.stringify(formatted, null, 2)); // красиво для копирования
+
+	const logger = useLogger();
+	logger.debug(JSON.stringify(formatted, null, 2)); // красиво для копирования
+
 	return formatted;
 }
 

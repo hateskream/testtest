@@ -8,6 +8,9 @@ import {
 	RouteScreenerType,
 	RouteTickerType,
 } from '@/types/route.d';
+import { ErrorCode } from '@/modules/error/model';
+
+import OfflinePage from '@/pages/offline-page.vue';
 
 const createTickerProps = (type: RouteTickerType) => {
 	return (route: RouteLocationNormalized): ITickerRouteParams => ({
@@ -233,6 +236,37 @@ export const globalRoutes: RouteRecordRaw[] = [
 			title: 'Heatmap',
 			description: 'A quick look at the market: The heat map shows leaders and laggards in real time, ' +
 				'helping you find opportunities for solutions.',
+		},
+	},
+	{
+		path: RoutePaths.Offline,
+		name: RouteNames.Offline,
+		component: OfflinePage,
+		meta: {
+			title: 'Network Error',
+		},
+	},
+	{
+		path: RoutePaths.Error,
+		name: RouteNames.Error,
+		component: () => import('@/pages/error-page.vue'),
+		props: (route: RouteLocationNormalized) => {
+			const { code = 404 } = route.params as { code: string | number | undefined };
+			return {
+				code,
+			};
+		},
+		meta: {
+			title: 'Error',
+		},
+	},
+	{
+		path: '/:pathMatch(.*)*',
+		redirect: {
+			name: RouteNames.Error,
+			params: {
+				code: ErrorCode.NOT_FOUND,
+			},
 		},
 	},
 ];

@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { delay } from '@/shared/lib';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IKeyIndicator } from '../model/key-indicators';
 
 const IS_USE_MOCK = true;
@@ -55,7 +55,7 @@ function getKeyIndicatorsApi(request: IKeyIndicatorRequest) {
 		});
 	} catch (error) {
 		const logger = useLogger();
-		logger.debug('Error fetching key indicators');
+		logger.error('Error fetching key indicators', { error: error as Error });
 		throw error;
 	}
 }

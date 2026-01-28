@@ -1,9 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
-import {
-	mapTickersToTableRows,
-	SymbolType,
-} from '@/modules/cell';
+import { useLogger } from '@/shared/service/monitoring';
+import { mapTickersToTableRows, SymbolType } from '@/modules/cell';
 import type { TickerDto, TickerRow } from '../model';
 import { generateRows } from '@/shared/mock';
 
@@ -34,7 +31,7 @@ export async function getAssetsTickerSelector(): Promise<IPreparedResponse> {
 			tickers: mapTickersToTableRows<TickerRow>(response.data.tickers),
 		};
 	} catch (error) {
-		logger.error('Failed to get ticker-selector', error as Error);
+		logger.error('Failed to get ticker-selector', { error: error as Error });
 		throw error;
 	}
 }

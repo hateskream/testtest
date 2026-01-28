@@ -6,6 +6,7 @@ import { STOCK_ALL_COLUMNS, STOCK_FILTERS } from './stock';
 import { FOREX_ALL_COLUMNS } from './forex';
 import { COMMODITIES_ALL_COLUMNS, COMMODITIES_FILTERS } from './commodities';
 import { INDICES_ALL_COLUMNS } from './indices';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface ISettings {
 	column: ITableColumn[];
@@ -141,8 +142,8 @@ export function rehydrateFilters(states: IFilterHydrateState[], preset: Filters)
 				},
 			}), {});
 	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.log(e);
+		const logger = useLogger();
+		logger.error('Rehydrate filters error', { error: e as Error });
 		return preset;
 	}
 }

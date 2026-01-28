@@ -72,6 +72,7 @@ async function loadMoreTickets(state: IInfiniteStateHandler) {
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
+		@retry="refetch"
 	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>

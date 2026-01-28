@@ -68,6 +68,7 @@ function handleClickOnBar(hours: number[]) {
 		@delete="emits('delete')"
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #filters>
 			<filters-panel

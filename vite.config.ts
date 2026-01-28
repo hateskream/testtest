@@ -1,14 +1,14 @@
-/* eslint-disable no-console */
 import path from 'path';
 import { readFileSync } from 'fs';
 
+import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { visualizer } from 'rollup-plugin-visualizer';
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
-import type { Plugin } from 'vite';
+import svgLoader from 'vite-svg-loader';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
@@ -17,7 +17,9 @@ const filterDeepWarnings = (): Plugin => {
 	return {
 		name: 'filter-deep-warnings',
 		buildStart() {
+			// eslint-disable-next-line no-console
 			const originalWarn = console.warn;
+			// eslint-disable-next-line no-console
 			console.warn = (...args: unknown[]) => {
 				const message = String(args[0] || '');
 				if (
@@ -48,6 +50,7 @@ export default defineConfig({
 			symbolId: 'icon-[name]',
 		}),
 		filterDeepWarnings(),
+		svgLoader(),
 	],
 	define: {
 		// eslint-disable-next-line @typescript-eslint/naming-convention

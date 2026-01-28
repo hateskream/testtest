@@ -1,18 +1,18 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { type Ticker } from '../model';
 import { arrayToString } from '@/shared/lib';
 import {
 	ColumnType,
-	type TableRowDto,
-	type SymbolDto,
-	type NumberDto,
-	type PercentDto,
-	type SvgChartDto,
-	type TextDto,
-	type RangeDto,
 	type LabelDto,
 	mapTickersToTableRows,
+	type NumberDto,
+	type PercentDto,
+	type RangeDto,
+	type SvgChartDto,
+	type SymbolDto,
+	type TableRowDto,
+	type TextDto,
 } from '@/modules/cell';
 import { generateAllRows } from '@/shared/mock';
 
@@ -116,7 +116,7 @@ export async function getTickers({ tickerIds }: IGetWatchlistRequest): Promise<T
 
 		return mapTickersToTableRows<Ticker>(response.data.tickers);
 	} catch (error) {
-		logger.error('Failed to get watchlist', error as Error);
+		logger.error('Failed to get watchlist', { error: error as Error });
 		throw error;
 	}
 }

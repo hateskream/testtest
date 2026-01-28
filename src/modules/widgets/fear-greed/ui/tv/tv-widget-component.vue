@@ -48,6 +48,7 @@ const emit = defineEmits<{
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #title>
 			{{ props.meta.name }}

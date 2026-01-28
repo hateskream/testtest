@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { type IGetNewsRequest, type INews } from '../model';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { getMockNewsData } from '@/modules/news/api/mock/mock-news-data.ts';
@@ -62,7 +62,7 @@ export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get news', error as Error);
+		logger.error('Failed to get news', { error: error as Error });
 		throw error;
 	}
 }

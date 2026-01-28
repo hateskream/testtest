@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import type { ISocialsItem, IWebsite } from '../model/links';
 
@@ -31,7 +31,7 @@ async function getApiLinksTabs(request: ILinksTabsRequest) {
 		});
 	} catch (error) {
 		const logger = useLogger();
-		logger.error('Failed to get news', error as Error);
+		logger.error('Failed to get news', { error: error as Error });
 		throw error;
 	}
 }

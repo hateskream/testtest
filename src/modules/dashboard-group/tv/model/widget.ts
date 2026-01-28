@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { EnvironmentName, getEnvironmentName } from '@/shared/lib';
 import { isWidgetTypeKey, WidgetType } from '../../core';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface IPosition {
 	x: number;
@@ -261,8 +262,8 @@ function getPresetByType(widgetType: WidgetType): IPresetOptions | null {
 	const preset = getPresets()[widgetType];
 
 	if (!preset) {
-		/* eslint-disable no-console */
-		console.warn(`Preset not found for widget type: ${widgetType}`);
+		const logger = useLogger();
+		logger.error('WidgetType preset not found', { context: { widgetType } });
 		return null;
 	}
 

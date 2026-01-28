@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import { useAltcoinSeasonState } from '@/modules/widgets/altcoinSeason/composables';
 import { useAltcoinSeasonQuery } from '@/modules/widgets/altcoinSeason/queries';
 import { usePerformanceStore } from '../../performance/stores';
@@ -48,6 +48,7 @@ function resetAll() {
 		@move-to="emit('moveTo', $event)"
 		@duplicate="emit('duplicate')"
 		@reset="resetAll"
+		@retry="refetch"
 	>
 		<template #title>{{ props.meta.name }}</template>
 		<template #content>

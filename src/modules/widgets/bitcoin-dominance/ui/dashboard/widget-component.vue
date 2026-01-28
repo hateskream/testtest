@@ -51,6 +51,7 @@ const {
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<dominance-filters-panel

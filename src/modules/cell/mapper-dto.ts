@@ -1,45 +1,51 @@
 import {
 	CellType,
+	type ICheckCell,
 	type ICommoditySymbolCell,
 	type ICryptoSymbolCell,
 	type IEmptyCell,
 	type IForexSymbolCell,
-	type IIndexSymbolCell, type IOpenCell,
+	type IIndexSymbolCell,
 	type ILableCell,
 	type INumberCell,
+	type IOpenCell,
 	type IPercentCell,
 	type IPlaneTextSymbolCell,
 	type IRangeCell,
+	type IScheduleCell,
 	type IScoreCell,
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
 	type ITextCell,
-	SymbolType, type ICheckCell, type IScheduleCell,
+	SymbolType,
 } from './domain';
 import type {
 	CellDto,
+	CheckDto,
 	ICommoditySymbolDto,
 	ICryptoSymbolDto,
 	IForexSymbolDto,
 	IIndexSymbolDto,
 	IPlaneTextSymbolDto,
-	OpenDto,
 	IStockSymbolDto,
 	LabelDto,
 	NumberDto,
+	OpenDto,
 	PercentDto,
 	RangeDto,
+	ScheduleDto,
 	ScoreDto,
 	SvgChartDto,
 	SymbolDto,
-	TextDto, CheckDto, ScheduleDto,
+	TextDto,
 } from './dto';
+import { useLogger } from '@/shared/service/monitoring';
 
 
 export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 	if (isEmpty(dto)) {
-		createEmpty(dto);
+		return createEmpty(dto);
 	}
 
 	if (isSymbolDto(dto)) {
@@ -104,14 +110,15 @@ export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Symbol', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Symbol', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
 export function mapNumber(dto: CellDto): INumberCell | IEmptyCell {
 	if (isEmpty(dto)) {
-		createEmpty(dto);
+		return createEmpty(dto);
 	}
 
 	if (isNumberDto(dto)) {
@@ -125,14 +132,15 @@ export function mapNumber(dto: CellDto): INumberCell | IEmptyCell {
 		} as INumberCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Number', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Number', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
 export function mapPercent(dto: CellDto): IPercentCell | IEmptyCell {
 	if (isEmpty(dto)) {
-		createEmpty(dto);
+		return createEmpty(dto);
 	}
 
 	if (isPercentDto(dto)) {
@@ -145,8 +153,9 @@ export function mapPercent(dto: CellDto): IPercentCell | IEmptyCell {
 		} as IPercentCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Percent', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Percent', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
@@ -163,8 +172,9 @@ export function mapText(dto: CellDto): ITextCell | IEmptyCell {
 		} as ITextCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Text', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Text', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
@@ -185,8 +195,9 @@ export function mapRange(dto: CellDto): IRangeCell | IEmptyCell {
 		} as IRangeCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Range', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Range', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
@@ -203,8 +214,9 @@ export function mapSvgChart(dto: CellDto): ISvgChartCell | IEmptyCell {
 		} as ISvgChartCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match SvgChart', dto);
+	const logger = useLogger();
+	logger.error('Cell not match SvgChart', { context: { dto } });
+
 	return createEmpty(dto);
 }
 
@@ -222,8 +234,9 @@ export function mapLabel(dto: CellDto): ILableCell | IEmptyCell {
 		} as ILableCell;
 	}
 
-	// eslint-disable-next-line no-console
-	console.error('Cell not match Label', dto);
+	const logger = useLogger();
+	logger.error('Cell not match Label', { context: { dto } });
+
 	return createEmpty(dto);
 }
 

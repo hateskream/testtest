@@ -46,6 +46,7 @@ const {
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #filters>
 			<filters-panel

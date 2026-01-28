@@ -43,6 +43,7 @@ const {
 		@delete="emits('delete')"
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />

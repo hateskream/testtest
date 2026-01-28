@@ -1,7 +1,8 @@
 import type { LayoutItem } from 'grid-layout-plus';
 
 import { columnDisplay } from './display';
-import { ColumnType, CellType, columnToCell } from './domain';
+import { CellType, columnToCell, ColumnType } from './domain';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface ITableColumn {
 	order: number;
@@ -150,8 +151,8 @@ export function rehydrateColumns(states: IHydratedColumn[], preset: ITableColumn
 			};
 		});
 	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.log(e);
+		const logger = useLogger();
+		logger.error('Rehydrate columns error', { error: e as Error });
 		return preset;
 	}
 }

@@ -1,17 +1,17 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
-	type SymbolDto,
+	ColumnType,
+	type ColumnWithoutSymbol,
+	type ISort,
 	type NumberDto,
 	type PercentDto,
-	type TextDto,
-	type SvgChartDto,
-	ColumnType,
 	prepareMarketResponse,
-	type TableRowDto,
-	type ISort,
-	type ColumnWithoutSymbol,
+	type SvgChartDto,
+	type SymbolDto,
 	SymbolType,
+	type TableRowDto,
+	type TextDto,
 } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 import type { CommoditiesTableRow, ISelectedFilter } from '../model';
@@ -77,7 +77,7 @@ export async function getMarketCommodities(_: IGetMarketRequest): Promise<IPrepa
 
 		return prepareMarketResponse<CommoditiesTableRow>(response.data);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

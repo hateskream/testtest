@@ -3,6 +3,7 @@ import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
 import { isFeatureEnabled } from '@/shared/lib';
+import { useLogger } from '@/shared/service/monitoring';
 
 export type DisplayVariant = 'tile' | 'indicator' | 'bar' | 'list' | 'table' | 'chart' | 'heatmap' | 'default';
 export interface IWidgetPreset {
@@ -258,17 +259,17 @@ export function createWidget(
 	stateType = '',
 	maxCountRow?: number,
 ): IWidget | null {
+	const logger = useLogger();
+
 	if (!isExperimentalWidgetEnabled(widgetType)) {
-		// eslint-disable-next-line no-console
-		console.info(`${widgetType} was disabled via feature flag`);
+		logger.debug(`${widgetType} was disabled via feature flag`);
 		return null;
 	}
 
 	const preset = createPreset(widgetType);
 
 	if (!preset) {
-		// eslint-disable-next-line no-console
-		console.error(`Preset not found for widget type: ${widgetType}`);
+		logger.error('WidgetType preset not found', { context: { widgetType } });
 		return null;
 	}
 
@@ -420,22 +421,21 @@ export function rehydrateWidget(
 	stateType = '',
 	maxCountRow?: number,
 ): IWidget | null {
+	const logger = useLogger();
+
 	if (isWidgetTypeKey(widgetType) === false) {
-		// eslint-disable-next-line no-console
-		console.error(`Invalid widget type: ${widgetType}`);
+		logger.error('Invalid WidgetType', { context: { widgetType } });
 		return null;
 	}
 
 	if (!isExperimentalWidgetEnabled(widgetType)) {
-		// eslint-disable-next-line no-console
-		console.info(`${widgetType} was disabled via feature flag`);
+		logger.debug(`${widgetType} was disabled via feature flag`);
 		return null;
 	}
 
 	const preset = createPreset(widgetType);
 	if (!preset) {
-		// eslint-disable-next-line no-console
-		console.error(`Preset not found for widget type: ${widgetType}`);
+		logger.error('WidgetType preset not found', { context: { widgetType } });
 		return null;
 	}
 

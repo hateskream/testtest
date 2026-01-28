@@ -1,6 +1,7 @@
 import { z, type ZodTypeAny } from 'zod';
 
 import { type BodyType, type IOptions, useHttpService } from '@/shared/service/http-service';
+import { useLogger } from '@/shared/service/monitoring';
 
 export class ApiClient {
 	private readonly http = useHttpService();
@@ -30,9 +31,12 @@ export class ApiClient {
 		const result = schema.safeParse(raw);
 		if (!result.success) {
 			// TODO: Monitoring
-			console.error('API validation failed', {
-				issues: result.error.issues,
-				payload: raw,
+			const logger = useLogger();
+			logger.error('API validation failed', {
+				context: {
+					issues: result.error.issues,
+					payload: raw,
+				},
 			});
 
 			throw result.error;

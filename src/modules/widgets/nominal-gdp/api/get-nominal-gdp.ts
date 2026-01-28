@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
 import { type INominalGdpHistory, type INominalGdpHistoryPoint, NOMINAL_GDP_METRIC, NominalGdpRange } from '../model';
@@ -34,7 +34,7 @@ export async function getNominalGdp(args: IGetNominalGdpRequest): Promise<INomin
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get Nominal GDP data', error as Error);
+		logger.error('Failed to get Nominal GDP data', { error: error as Error });
 		throw error;
 	}
 }

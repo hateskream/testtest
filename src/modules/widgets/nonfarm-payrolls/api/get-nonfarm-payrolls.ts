@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IMetricTrendBadge, INonfarmPayrollsData, INonfarmPayrollsResponse } from '../model';
 
 export interface IGetNonfarmPayrollsRequest {
@@ -23,7 +23,7 @@ export async function getNonfarmPayrolls(
 		);
 		return transformNonfarmPayrollsData(response);
 	} catch (error) {
-		logger.error('Failed to get unemployment rate data', error as Error);
+		logger.error('Failed to get unemployment rate data', { error: error as Error });
 		throw error;
 	}
 }

@@ -1,5 +1,5 @@
 import type { IEventBoardRequestOptions, IEventBoardResponse } from '@/modules/calendar';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockEventBoard } from '@/modules/calendar/api/mock';
 
@@ -17,7 +17,7 @@ export async function getEventBoard(options: IEventBoardRequestOptions): Promise
 	try {
 		return sendRequest(dataProvider, options);
 	} catch (error) {
-		logger.error('Failed to get display settings heatmap', error as Error);
+		logger.error('Failed to get display settings heatmap', { error: error as Error });
 		throw error;
 	}
 }

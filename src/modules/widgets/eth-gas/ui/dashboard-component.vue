@@ -15,7 +15,7 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { viewState, dataState, isNotData, resetAllChanges } = useEthGas(props.meta.widgetId);
+const { viewState, dataState, isNotData, resetAllChanges, refetch } = useEthGas(props.meta.widgetId);
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -24,7 +24,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<base-widget-tv-component :meta="props.meta" :has-reset="false">
+	<base-widget-tv-component
+		:meta="props.meta"
+		:has-reset="false"
+		@retry="refetch"
+	>
 		<template #title>
 			{{ props.meta.name }}
 		</template>

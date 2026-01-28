@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useCalendarState } from '@/modules/calendar';
 
@@ -68,6 +68,7 @@ const isLoading = computed(
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>

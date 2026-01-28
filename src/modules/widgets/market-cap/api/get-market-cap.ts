@@ -1,7 +1,7 @@
 import { add, sub } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { arrayToString } from '@/shared/lib';
 import {
 	type IMarketCapHistory,
@@ -50,7 +50,7 @@ export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketC
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

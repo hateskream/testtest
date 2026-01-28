@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { type ITension } from '../model';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
@@ -29,7 +29,7 @@ export async function getTension(): Promise<ITension> {
 
 		return response;
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

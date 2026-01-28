@@ -1,3 +1,5 @@
+import { useLogger } from '@/shared/service/monitoring';
+
 export interface IImageBlacklistConfig {
 	exactMatches?: string[];
 	startsWith?: string[];
@@ -83,7 +85,11 @@ export function extractTickerFromImageUrl(src: string): string | null {
 
 		return null;
 	} catch (error) {
-		console.warn('Error extracting ticker from URL:', error);
+		const logger = useLogger();
+		logger.error(
+			'Error extracting ticker from URL',
+			{ error: error as Error, context: { tickerSrc: src } },
+		);
 		return null;
 	}
 }

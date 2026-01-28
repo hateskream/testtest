@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { type FiltersState, type ITicker as ITickerDomain, type TickerWithoutState } from '../model';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
 	ColumnType,
 	type ColumnWithoutSymbol,
@@ -77,7 +77,7 @@ export async function getPrice(req: IGetPriceRequest): Promise<IPriceData> {
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get price', error as Error);
+		logger.error('Failed to get price', { error: error as Error });
 		throw error;
 	}
 }

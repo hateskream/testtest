@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IAltcoinSeasonConfig, IChartData, IHistoricalValue, IPerformanceRank, ITop100, Period } from '../model';
 import { useFetchMock } from '@/shared/mock';
 
@@ -27,10 +27,9 @@ export async function getAltcoinSeason(request: IAltcoinSeasonRequest): Promise<
 	const logger = useLogger();
 
 	try {
-		logger.debug('send request');
 		return sendRequestByProvider(dataProvider, request);
 	} catch (error) {
-		logger.error('Failed to get altcoin season', error as Error);
+		logger.error('Failed to get altcoin season', { error: error as Error });
 		throw error;
 	}
 }

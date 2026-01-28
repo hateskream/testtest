@@ -6,6 +6,7 @@ import draggable from 'vuedraggable';
 
 import type { IGenericTableColumn, ISortConfig } from '../type';
 import { useTableColumns } from '../table-common';
+import { useLogger } from '@/shared/service/monitoring';
 
 import GenericColumnSettings from './generic-column-settings.vue';
 
@@ -40,6 +41,8 @@ const props = withDefaults(defineProps<IProps>(), {
 
 const emit = defineEmits<IEmits>();
 
+const logger = useLogger();
+
 const { updateColumnPositions } = useTableColumns();
 
 const ignoreDragClass = 'ignoreDrag';
@@ -60,9 +63,8 @@ const getSortIcon = (direction: string) => {
 };
 
 const handleColumnReorder = (newColumns: IGenericTableColumn[]) => {
+	logger.debug('Column reorder triggered', { context: { newColumns } });
 
-	// eslint-disable-next-line no-console
-	console.log('Column reorder triggered:', newColumns);
 	const updatedColumns = updateColumnPositions(newColumns);
 	emit('update:columns', updatedColumns);
 };
@@ -98,14 +100,10 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 
 // Упрощенная логика для handleMove
 const handleMove = (event: uknown) => {
-
-	// eslint-disable-next-line no-console
-	console.log('handleMove called:', event);
+	logger.debug('handleMove called', { context: { event } });
 
 	if (!props.enableReordering) {
-
-		// eslint-disable-next-line no-console
-		console.log('Reordering disabled');
+		logger.debug('Reordering disabled', { context: { event } });
 		return false;
 	}
 
@@ -113,9 +111,7 @@ const handleMove = (event: uknown) => {
 
 	// Проверяем, что перетаскиваемый элемент можно перетаскивать
 	if (!draggedContext.element.draggable) {
-
-		// eslint-disable-next-line no-console
-		console.log('Element not draggable:', draggedContext.element);
+		logger.debug('Element not draggable', { context: { element: draggedContext.element } });
 		return false;
 	}
 
@@ -123,16 +119,15 @@ const handleMove = (event: uknown) => {
 	const draggedIndex = draggedContext.index;
 	const targetIndex = relatedContext.index;
 
-	// eslint-disable-next-line no-console
-	console.log(`Moving from ${draggedIndex} to ${targetIndex}`);
+	logger.debug(`Moving element from ${draggedIndex} to ${targetIndex}`, { context: { draggedIndex, targetIndex } });
 
 	// Найдем все неперетаскиваемые колонки
 	const nonDraggableIndices = props.columns
 		.map((col, index) => !col.draggable ? index : -1)
 		.filter(index => index !== -1);
 
-	// eslint-disable-next-line no-console
-	console.log('Non-draggable indices:', nonDraggableIndices);
+
+	logger.debug('Non-draggable indices', { context: { nonDraggableIndices } });
 
 	// Если нет неперетаскиваемых колонок, разрешаем любое перемещение
 	if (nonDraggableIndices.length === 0) {
@@ -141,8 +136,7 @@ const handleMove = (event: uknown) => {
 
 	// Проверяем, не пытаемся ли мы переместить на место неперетаскиваемой колонки
 	if (nonDraggableIndices.includes(targetIndex)) {
-		// eslint-disable-next-line no-console
-		console.log('Trying to move to non-draggable position');
+		logger.debug('Trying to move to non-draggable position', { context: { nonDraggableIndices, targetIndex } });
 		return false;
 	}
 

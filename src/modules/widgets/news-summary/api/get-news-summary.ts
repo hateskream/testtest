@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
 
@@ -30,7 +30,7 @@ export async function getNewsSummary(): Promise<IGetNewsSummaryResponse> {
 
 		return schema.parse(response);
 	} catch (error) {
-		logger.error('Failed to get News Summary data', error as Error);
+		logger.error('Failed to get News Summary data', { error: error as Error });
 		throw error;
 	}
 }

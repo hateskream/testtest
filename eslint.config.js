@@ -52,7 +52,7 @@ export default [
 			'prettier/prettier': 'off',
 
 			'no-param-reassign': ['error', { props: false }],
-			'no-console': 'warn',
+			'no-console': 'error',
 			'no-debugger': 'error',
 			'no-undef': 'off',
 			'no-unused-vars': 'off',

@@ -1,6 +1,7 @@
-import { ref, watch, type Ref } from 'vue';
+import { ref, type Ref, watch } from 'vue';
 
-import { TitleKey, TitleViewVariant, type IColorBy, type ISettings, type ITreemap } from '../model';
+import { type IColorBy, type ISettings, type ITreemap, TitleKey, TitleViewVariant } from '../model';
+import { useLogger } from '@/shared/service/monitoring';
 
 interface IHeatmapItem {
 	ticker: string;
@@ -22,6 +23,8 @@ export function useHeatmapCrypto(
 	const isSizeValuePercent = ref(false);
 	const isDisplayValuePercent = ref(false);
 
+	const logger = useLogger();
+
 	watch(
 		[rawHeatmap, sizeBy, colorBy, titleSetting, displayValue],
 		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue]) => {
@@ -36,22 +39,19 @@ export function useHeatmapCrypto(
 
 			const foundSizeBy = newHeatmap.items.find(item => item.values[newSizeBy.key]);
 			if (!foundSizeBy) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundSizeBy', foundSizeBy);
+				logger.debug('Not found SizeBy', { context: { sizeBy: newSizeBy.key } });
 				return;
 			}
 
 			const foundColorBy = newHeatmap.items.find(item => item.values[newColorBy.colorBy.key]);
 			if (!foundColorBy) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundColorBy', foundColorBy);
+				logger.debug('Not found ColorBy', { context: { colorBy: newColorBy.colorBy.key } });
 				return;
 			}
 
 			const foundDisplayValue = newHeatmap.items.find(item => item.values[newDisplayValue.key]);
 			if (!foundDisplayValue) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundDisplayValue', foundDisplayValue);
+				logger.debug('Not found DisplayValue', { context: { displayValue: newDisplayValue.key } });
 				return;
 			}
 
@@ -62,8 +62,7 @@ export function useHeatmapCrypto(
 
 			const foundTicker = newHeatmap.items.find(item => item[currentKeyTicker]);
 			if (!foundTicker) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundTicker', foundTicker);
+				logger.debug('Not found Ticker', { context: { ticker: currentKeyTicker } });
 				return;
 			}
 

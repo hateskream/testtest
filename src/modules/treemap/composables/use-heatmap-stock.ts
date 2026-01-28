@@ -1,13 +1,7 @@
-import { ref, watch, type Ref } from 'vue';
+import { ref, type Ref, watch } from 'vue';
 
-import {
-	NO_GROUP,
-	TitleKey,
-	TitleViewVariant,
-	type IColorBy,
-	type ISettings,
-	type ITreemap,
-} from '../model';
+import { type IColorBy, type ISettings, type ITreemap, NO_GROUP, TitleKey, TitleViewVariant } from '../model';
+import { useLogger } from '@/shared/service/monitoring';
 
 type GroupBy = string;
 
@@ -39,6 +33,8 @@ export function useHeatmapStock(
 	const isSizeValuePercent = ref(false);
 	const isDisplayValuePercent = ref(false);
 
+	const logger = useLogger();
+
 	watch(
 		[rawHeatmap, sizeBy, colorBy, titleSetting, displayValue, groupBy, selectGroup],
 		([newHeatmap, newSizeBy, newColorBy, newTitle, newDisplayValue, newGroupBy]) => {
@@ -54,22 +50,19 @@ export function useHeatmapStock(
 
 			const foundSizeBy = newHeatmap.items.find(item => item.values[newSizeBy.key]);
 			if (!foundSizeBy) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundSizeBy', foundSizeBy);
+				logger.debug('Not found SizeBy', { context: { sizeBy: newSizeBy.key } });
 				return;
 			}
 
 			const foundColorBy = newHeatmap.items.find(item => item.values[newColorBy.colorBy.key]);
 			if (!foundColorBy) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundColorBy', foundColorBy);
+				logger.debug('Not found ColorBy', { context: { colorBy: newColorBy.colorBy.key } });
 				return;
 			}
 
 			const foundDisplayValue = newHeatmap.items.find(item => item.values[newDisplayValue.key]);
 			if (!foundDisplayValue) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundDisplayValue', foundDisplayValue);
+				logger.debug('Not found DisplayValue', { context: { displayValue: newDisplayValue.key } });
 				return;
 			}
 
@@ -80,8 +73,7 @@ export function useHeatmapStock(
 
 			const foundTicker = newHeatmap.items.find(item => item[currentKeyTicker]);
 			if (!foundTicker) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundTicker', foundTicker);
+				logger.debug('Not found Ticker', { context: { ticker: currentKeyTicker } });
 				return;
 			}
 
@@ -91,15 +83,13 @@ export function useHeatmapStock(
 
 				const foundGroupByValue = newHeatmap.items.find(item => item.values[groupByValueKey]);
 				if (!foundGroupByValue) {
-					// eslint-disable-next-line no-console
-					console.log('notFoundGroupByValue', foundGroupByValue);
+					logger.debug('Not found GroupBy', { context: { groupBy: groupByValueKey } });
 					return;
 				}
 
 				const foundGroupBy = newHeatmap.items.find(item => item.values[newGroupBy.key]);
 				if (!foundGroupBy) {
-				// eslint-disable-next-line no-console
-					console.log('notFoundGroupBy', foundGroupBy);
+					logger.debug('Not found GroupBy value', { context: { groupBy: newGroupBy.key } });
 					return;
 				}
 			}

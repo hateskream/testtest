@@ -1,25 +1,21 @@
 import { isEmptyCell } from './check';
-import {
-	CellType,
-	ColumnType,
-	columnToCell,
-	type Cell,
-} from './domain';
+import { type Cell, CellType, columnToCell, ColumnType } from './domain';
 import type { CellDto } from './dto';
 import {
-	mapSymbol,
-	mapNumber,
-	mapPercent,
-	mapText,
-	mapSvgChart,
-	mapRange,
-	mapLabel,
-	mapScore,
-	mapOpen,
 	mapCheck,
+	mapLabel,
+	mapNumber,
+	mapOpen,
+	mapPercent,
+	mapRange,
 	mapSchedule,
+	mapScore,
+	mapSvgChart,
+	mapSymbol,
+	mapText,
 } from './mapper-dto';
 import type { TableRow } from './row';
+import { useLogger } from '@/shared/service/monitoring';
 
 
 // Generic ticker interface with DTO types
@@ -36,6 +32,9 @@ export function mapTickersToTableRows<T extends TableRow>(tickers: TableRowDto[]
 	if (!tickers) {
 		return [];
 	}
+
+	const logger = useLogger();
+
 	return tickers
 		.map(ticker => {
 			const mappedTicker: Partial<TableRow> = {
@@ -48,8 +47,7 @@ export function mapTickersToTableRows<T extends TableRow>(tickers: TableRowDto[]
 					const cellType = columnToCell[columnType];
 					const dto = ticker[columnType];
 					if (!dto) {
-						// eslint-disable-next-line no-console
-						console.error(`No DTO found for column type: ${columnType}`);
+						logger.error(`No DTO found for column type: ${columnType}`, { context: { ticker } });
 						return;
 					}
 

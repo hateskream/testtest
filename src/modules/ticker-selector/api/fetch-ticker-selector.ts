@@ -1,6 +1,6 @@
 import type { MarketType } from '@/modules/market';
 import { useHttpService } from '@/shared/service/http-service.ts';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import type { ITickerCategory } from '../model';
 
@@ -81,7 +81,7 @@ export async function fetchTickerSelector(
 
 		return normalizeTickerSelectorData(response.data);
 	} catch (error) {
-		logger.error('Failed to fetch ticker-selector', error as Error);
+		logger.error('Failed to fetch ticker-selector', { error: error as Error });
 		throw error;
 	}
 }

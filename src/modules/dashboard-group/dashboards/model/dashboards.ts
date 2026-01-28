@@ -3,6 +3,7 @@ import type { AsyncComponentLoader } from 'vue';
 
 import { WidgetType } from '../../core';
 import type { DisplayVariant } from '../../layout-dashboards';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface ISize {
 	w: number;
@@ -79,8 +80,8 @@ export function getWidgetComponent(
 
 	const loader = widgetComponents[key] ?? widgetComponents[widgetType];
 	if (!loader) {
-		// eslint-disable-next-line no-console
-		console.error(`Widget ${widgetType} not found widget variant: ${widgetVariant}`);
+		const logger = useLogger();
+		logger.error('Widget not found widget variant', { context: { widgetType, widgetVariant } });
 	}
 
 	return loader;

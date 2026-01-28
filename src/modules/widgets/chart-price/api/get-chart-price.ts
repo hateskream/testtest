@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import type { MarketType } from '@/modules/market';
 import { type IChartPriceData, TimeRangeFilterValue } from '../model';
@@ -50,7 +50,7 @@ export async function getChartPrice(request: IGetChartPriceRequest): Promise<ICh
 
 		return mapResponseToDomain(response);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
 import { CpiRange, type ICpiHistory } from '../model';
@@ -25,7 +25,7 @@ export async function getCpi(args: IGetCpiRequest): Promise<ICpiHistory> {
 			},
 		});
 	} catch (error) {
-		logger.error('Failed to get CPI data', error as Error);
+		logger.error('Failed to get CPI data', { error: error as Error });
 		throw error;
 	}
 }

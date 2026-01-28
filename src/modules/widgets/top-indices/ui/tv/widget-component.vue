@@ -46,6 +46,7 @@ const isFixedWidth = computed(()=>{
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #title>
 			<div :class="classes.titleContainer">

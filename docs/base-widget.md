@@ -78,7 +78,7 @@ export async function getActivityMetrics(request: IActivityMetricsRequest) {
 		});
 
 	} catch (error) {
-		logger.error('Failed to get ticker activity metrics', error as Error);
+		logger.error('Failed to get ticker activity metrics', { error: error as Error });
 		throw error;
 	}
 }

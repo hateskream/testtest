@@ -12,6 +12,7 @@ import {
 import throttle from 'lodash/throttle';
 
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
+import { useLogger } from '@/shared/service/monitoring';
 
 
 const LEFT_OFFSET = 20;
@@ -29,6 +30,8 @@ export function useSlider(opts: {
 	isMobile: ShallowRef<boolean, boolean>;
 }) {
 	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
+
+	const logger = useLogger();
 
 	const translateX = ref(0);
 	const isDragging = ref(false);
@@ -228,8 +231,7 @@ export function useSlider(opts: {
 		const el = toValue(opts.container);
 
 		if (!el) {
-			// eslint-disable-next-line no-console
-			console.error('Container not found');
+			logger.error('Container not found');
 			return;
 		}
 
@@ -241,8 +243,7 @@ export function useSlider(opts: {
 	onMounted(() => {
 		const el = toValue(opts.container);
 		if (!el) {
-			// eslint-disable-next-line no-console
-			console.error('Container not found');
+			logger.error('Container not found');
 			return;
 		}
 

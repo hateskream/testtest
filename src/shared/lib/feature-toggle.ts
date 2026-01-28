@@ -1,3 +1,5 @@
+import { useLogger } from '@/shared/service/monitoring';
+
 let isConfigValidated = false;
 
 function checkIsConfigValidated() {
@@ -161,8 +163,8 @@ export function validateConfig(): void {
 			validateEnvironmentConfig();
 			isConfigValidated = true;
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error(error);
+			const logger = useLogger();
+			logger.error('Configuration is not valid', { error: error as Error });
 
 			if (getEnvironmentName() === EnvironmentName.DEV) {
 				throw error;

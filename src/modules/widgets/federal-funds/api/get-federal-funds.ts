@@ -1,7 +1,7 @@
 import { isValid } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
 import type { IFederalFundsDomain } from '../model';
@@ -33,7 +33,7 @@ export async function getFederalFunds(request: IGetFederalFundsRequest): Promise
 
 		return response;
 	} catch (error) {
-		logger.error('Failed to get Federal Funds data', error as Error);
+		logger.error('Failed to get Federal Funds data', { error: error as Error });
 		throw error;
 	}
 }

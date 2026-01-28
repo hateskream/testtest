@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { routes } from './routes';
 import { RouteNames } from '@/types/route.d';
-import { type FeatureName, isFeatureEnabled } from '@/shared/lib';
+import { type FeatureName, isFeatureEnabled, isOnline } from '@/shared/lib';
+import { useLogger } from '@/shared/service/monitoring';
 
 export const router = createRouter({
 	history: createWebHistory(),
@@ -33,5 +34,49 @@ router.beforeEach((to) => {
 
 	if (!isFeatureEnabled('TICKER_NAVIGATION_ENABLED') && to.path.startsWith('/ticker')) {
 		return false;
+	}
+
+	if (to.name === RouteNames.Offline) {
+		if (!isOnline()) {
+			return true;
+		}
+
+		return { name: RouteNames.Home };
+	}
+
+	if (!isOnline()) {
+		if (to.name === RouteNames.Offline) {
+			return true;
+		}
+
+		return {
+			name: RouteNames.Offline,
+			query: {
+				redirect: to.fullPath,
+			},
+		};
+	}
+});
+
+let hasReloaded = false;
+
+router.onError((error, to, from) => {
+	const isChunkLoadFailed =
+		error?.message?.includes('Failed to fetch dynamically imported module') ||
+		error?.message?.includes('Loading chunk');
+
+	const logger = useLogger();
+	logger.error(
+		'Vue-Router Error',
+		{
+			error,
+			tags: { source: 'vue-router', type: isChunkLoadFailed ? 'chunk-load' : 'navigation' },
+			context: { to, from },
+		},
+	);
+
+	if (isChunkLoadFailed && !hasReloaded) {
+		hasReloaded = true;
+		window.location.reload();
 	}
 });

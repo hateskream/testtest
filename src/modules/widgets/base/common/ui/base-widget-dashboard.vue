@@ -9,8 +9,11 @@ import { ModalBadgeList, WidgetContextMenu } from '@/modules/widgets/base';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
+import { useLogger } from '@/shared/service/monitoring';
+import { UiErrorBoundary } from '@/shared/ui/error-boundary';
 
 import WidgetDashboardControls from './controls/widget-dashboard-controls.vue';
+import BaseErrorComponent from './base-error-component.vue';
 
 
 interface IBaseDashboardComponentProps {
@@ -26,6 +29,8 @@ const emits = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 	(e: 'reset'): void;
+	(e: 'retry'): void;
+	(e: 'error', error: Error): void;
 }>();
 
 const isWidgetActionsEnabled = isFeatureEnabled('CONTEXT_MENU_WIDGET_ACTIONS');
@@ -52,6 +57,7 @@ const isControlsExpanded = ref<boolean>(true);
 defineSlots<{
 	'filters': unknown;
 	'content': unknown;
+	'error': unknown;
 
 	'nav-menu': unknown;
 	'settings-menu': unknown;
@@ -80,6 +86,13 @@ function handleFullscreen() {
 }
 
 const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_VARIANTS');
+
+const logger = useLogger();
+
+function onContentError(error: Error) {
+	logger.error('Widget dashboard error', { error, context: { meta: props.meta } });
+	emits('error', error);
+}
 </script>
 
 <template>
@@ -220,9 +233,18 @@ const isDisplayVariantEnabled = isFeatureEnabled('SHOW_DASHBOARD_WIDGET_DISPLAY_
 			</div>
 		</div>
 
-		<div :class="classes.content">
-			<slot name="content" />
-		</div>
+		<ui-error-boundary @error="onContentError" @retry="emits('retry')">
+			<div :class="classes.content">
+				<slot name="content" />
+			</div>
+			<template #fallback="{ retry }">
+				<div :class="classes.content">
+					<slot name="error">
+						<base-error-component @retry="retry" />
+					</slot>
+				</div>
+			</template>
+		</ui-error-boundary>
 
 		<teleport to="body">
 			<full-view-dashboard

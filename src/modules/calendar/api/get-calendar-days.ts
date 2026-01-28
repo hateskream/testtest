@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
 import { createMockApiDays } from './mock';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IDailyCalendarInfoRequest, IDailyCalendarInfoResponse } from '@/modules/calendar';
 
 enum DataProvider {
@@ -17,7 +17,7 @@ export async function getCalendarDays(options: IDailyCalendarInfoRequest): Promi
 	try {
 		return sendRequest(dataProvider, options);
 	} catch (error) {
-		logger.error('Failed to get display settings heatmap', error as Error);
+		logger.error('Failed to get display settings heatmap', { error: error as Error });
 		throw error;
 	}
 }

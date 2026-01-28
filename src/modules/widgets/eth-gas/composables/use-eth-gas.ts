@@ -6,7 +6,7 @@ import { getDefaultViewState, type ISettings } from '../model';
 export function useEthGas(widgetId: string) {
 	const viewState = ref<ISettings>(getDefaultViewState());
 
-	const { data, isLoading, isError } = useQueryEthGas();
+	const { data, isLoading, isError, refetch } = useQueryEthGas();
 	const {
 		data: dataSettings,
 		isLoading: isLoadingSettings,
@@ -41,5 +41,6 @@ export function useEthGas(widgetId: string) {
 		dataState,
 		isNotData,
 		resetAllChanges,
+		refetch,
 	};
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base/';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../../queries';
 import { ALL_COLUMNS } from '../../model';
@@ -44,6 +44,7 @@ const isNotData = computed(() => isLoading.value || props.meta.isLoading);
 		@delete="emits('delete')"
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #content>
 			<error-network-component v-if="isError" @retry="refetch" />

@@ -1,4 +1,6 @@
-import { ofetch } from 'ofetch';
+import { FetchError, ofetch } from 'ofetch';
+
+import { useLogger } from '@/shared/service/monitoring';
 
 export const enum HttpMethod {
 	Get = 'GET',
@@ -24,11 +26,19 @@ class HttpService {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		onRequestError({ error }) {
-			console.error('Request error:', error);
+		onRequestError({ error, request }) {
+			const logger = useLogger();
+			logger.error('Request Error', { error: error as Error, tags: { type: 'network' }, context: { request } });
 		},
-		onResponseError({ response }) {
-			console.error('Response error:', response.status, response.statusText);
+		onResponseError({ response, error, request }) {
+			const logger = useLogger();
+			logger.error(
+				`HTTP ${response.status} ${response.statusText}`,
+				{
+					error: error ?? new FetchError(`HTTP ${response.status} ${response.statusText}`),
+					context: { request, status: response.status },
+				},
+			);
 		},
 	});
 
@@ -93,9 +103,7 @@ class HttpService {
 			return await Promise.race([requestPromise, timeoutPromise]);
 		} catch (error) {
 			controller.abort();
-			throw new Error(
-				`HTTP ${method} request failed: ${error instanceof Error ? error.message : String(error)}`,
-			);
+			throw error;
 		}
 	}
 }

@@ -77,6 +77,7 @@ const safeData = computed(() => data.value ?? lastData.value);
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
+		@retry="refetch"
 	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>
