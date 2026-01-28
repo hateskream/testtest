@@ -1,11 +1,12 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 import { z } from 'zod';
 
 import { getDefaultsState, type IState, TimeRangeFilterValue } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useWatchlist } from '@/modules/watchlist';
-import { resolveMarketTypeFromTicker } from '@/modules/cell';
 import { useQueryChartPrice } from '../queries';
+import { decodeCanonicalTickerId, fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { deepCompare } from '@/shared/lib/compare';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),
@@ -52,7 +53,25 @@ export function useChartPrice({
 
 	const state = ref<IState>(getDefaultsState(defaultStateType));
 
-	const selectedTicker = computed({
+	const _selectedTicker = ref<ITickerItem | null>(null);
+
+	onBeforeMount(async () => {
+		[_selectedTicker.value] = await fetchTickers(state.value.selectedTicker);
+	});
+
+	const selectedTickersModel = computed({
+		get: () => _selectedTicker.value ? [_selectedTicker.value] : [],
+		set: ([value]: ITickerItem[]) => {
+			if (!value) {
+				return;
+			}
+
+			_selectedTicker.value = value;
+			state.value.selectedTicker = value.canonical_ticker_id;
+		},
+	});
+
+	const selectedTickerId = computed({
 		get: () => state.value.selectedTicker,
 		set: (val: string) => {
 			state.value.selectedTicker = val;
@@ -73,17 +92,19 @@ export function useChartPrice({
 
 	watch(dataState, newState => {
 		if (newState) {
-			state.value = {
-				...newState,
-			};
+			state.value = JSON.parse(JSON.stringify(newState));
 		}
 	}, { immediate: true });
 
-	watch(() => state.value, newState => {
+	watch(() => state.value, (newState, oldState) => {
+		if (deepCompare(newState, oldState)) {
+			return;
+		}
+
 		mutate(newState);
 	}, { deep: true });
 
-	const selectedMarketType = computed(() => resolveMarketTypeFromTicker(selectedTicker.value)!);
+	const selectedMarketType = computed(() => decodeCanonicalTickerId(selectedTickerId.value).market_type);
 
 	function resetAllChanges() {
 		state.value = getDefaultsState(defaultStateType);
@@ -95,29 +116,31 @@ export function useChartPrice({
 			return;
 		}
 
-		addToWatchlist(watchlistId, selectedTicker.value, marketType);
+		addToWatchlist(watchlistId, selectedTickerId.value, marketType);
 	}
 
 	function handleRemoveFromWatchlist(watchlistId: string) {
-		removeFromWatchlist(watchlistId, selectedTicker.value);
+		removeFromWatchlist(watchlistId, selectedTickerId.value);
 	}
 
 	function handleAddTickerInNewWatchlist() {
-		const marketType = selectedMarketType.value;
+		const marketType = _selectedTicker.value?.market_type;
+
 		if (!marketType) {
 			return;
 		}
 
-		addTickerInNewWatchlist(selectedTicker.value, marketType);
+		addTickerInNewWatchlist(selectedTickerId.value, marketType);
 	}
 
 	function handleToggleFavoriteWatchlist() {
-		const marketType = resolveMarketTypeFromTicker(selectedTicker.value);
+		const marketType = _selectedTicker.value?.market_type;
+
 		if (!marketType) {
 			return;
 		}
 
-		toggleFavoriteWatchlist(selectedTicker.value, marketType);
+		toggleFavoriteWatchlist(selectedTickerId.value, marketType);
 	}
 
 	const {
@@ -125,10 +148,11 @@ export function useChartPrice({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryChartPrice(selectedTicker, selectedMarketType, timeRange);
+	} = useQueryChartPrice(selectedTickerId, selectedMarketType, timeRange);
 
 	return {
-		selectedTicker,
+		selectedTickerId,
+		selectedTickersModel,
 		timeRange,
 		state,
 		watchlists,

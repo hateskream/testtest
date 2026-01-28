@@ -6,6 +6,10 @@ import type { MarketType } from '@/modules/market';
 const IS_USE_MOCK = false;
 
 export async function fetchTickers(tickers: string | string[]) {
+	if (!tickers.length) {
+		return [];
+	}
+
 	const http = useHttpService();
 	const logger = useLogger();
 

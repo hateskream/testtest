@@ -21,7 +21,8 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const {
-	selectedTicker,
+	selectedTickerId,
+	selectedTickersModel,
 	timeRange,
 	watchlists,
 
@@ -80,8 +81,9 @@ function updateTicker(newValue: string[]) {
 			>
 				<template #filters>
 					<filters-component
-						v-model:selected-ticker="selectedTicker"
+						v-model:selected-ticker="selectedTickersModel"
 						v-model:time-range="timeRange"
+						:selected-ticker-id="selectedTickerId"
 						:is-big="isBig"
 						:watchlists="watchlists"
 						display-variant="default"
@@ -98,12 +100,11 @@ function updateTicker(newValue: string[]) {
 				<template #title>Choose ticker</template>
 				<template #content>
 					<ticker-selector-modal
+						v-model:selected-tickers="selectedTickersModel"
 						:enabled-markets="ALL_MARKET_TYPES"
-						:model-value="[selectedTicker]"
 						:enable-select-all="false"
 						:selection-mode="SelectionMode.Single"
 						display-variant="default"
-						@update:model-value="updateTicker"
 					/>
 				</template>
 			</modal-submenu>

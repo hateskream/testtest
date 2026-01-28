@@ -28,7 +28,8 @@ const emits = defineEmits<{
 }>();
 
 const {
-	selectedTicker,
+	selectedTickersModel,
+	selectedTickerId,
 	timeRange,
 	watchlists,
 
@@ -47,10 +48,6 @@ const {
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
 });
-
-function updateTicker(newValue: string[]) {
-	[selectedTicker.value] = newValue;
-}
 </script>
 
 <template>
@@ -67,8 +64,9 @@ function updateTicker(newValue: string[]) {
 	>
 		<template #filters>
 			<filters-component
-				v-model:selected-ticker="selectedTicker"
+				v-model:selected-ticker="selectedTickersModel"
 				v-model:time-range="timeRange"
+				:selected-ticker-id="selectedTickerId"
 				:is-big="true"
 				:watchlists="watchlists"
 				display-variant="new"
@@ -102,12 +100,11 @@ function updateTicker(newValue: string[]) {
 				<template #title>Choose ticker</template>
 				<template #content>
 					<ticker-selector-modal
+						v-model:selected-tickers="selectedTickersModel"
 						:enabled-markets="ALL_MARKET_TYPES"
-						:model-value="[selectedTicker]"
 						:enable-select-all="false"
 						:selection-mode="SelectionMode.Single"
 						display-variant="new"
-						@update:model-value="updateTicker"
 					/>
 				</template>
 			</modal-submenu>
