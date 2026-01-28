@@ -12,7 +12,7 @@ import {
 } from '../model';
 import { useQueryMarketCap } from '../queries';
 import { deepCompare } from '@/shared/lib/compare.ts';
-import type { ITickerItem } from '@/modules/ticker-selector';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 
 interface IOptions {
 	widgetId: string;
@@ -46,10 +46,13 @@ export function useMarketCap({
 
 	const state = ref<IState>(getDefaultState());
 
+	const _selectedTickers = ref<ITickerItem[]>([]);
+
 	const selectedTickers = computed({
-		get: () => state.value.selectedTickers,
+		get: () => _selectedTickers.value,
 		set: (val: ITickerItem[]) => {
-			state.value.selectedTickers = val;
+			_selectedTickers.value = val;
+			state.value.selectedTickers = val.map(v => v.canonical_ticker_id);
 		},
 	});
 
@@ -98,12 +101,12 @@ export function useMarketCap({
 		state.value = getDefaultState();
 	}
 
-	function resetAllFilters() {
+	async function resetAllFilters() {
 		const defaultState = getDefaultState();
 
 		activeDateRange.value = defaultState.dateRange;
-		selectedTickers.value = defaultState.selectedTickers;
 		selectedMarkets.value = defaultState.selectedMarkets;
+		selectedTickers.value = await fetchTickers(defaultState.selectedTickers);
 	}
 
 	const {
