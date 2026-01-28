@@ -17,10 +17,9 @@ app_build:
     key:
       files:
         - package-lock.json
-        - src/
     paths:
       - node_modules/
-      - dist/
+    policy: pull
   dependencies:
     - install_dependencies
   script:
