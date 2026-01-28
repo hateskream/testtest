@@ -37,7 +37,7 @@ export class ProductionLogger implements ILogger {
 				},
 			});
 		} catch (sendErr) {
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.error('Failed to send exception to Sentry:', error, sendErr);
 		}
 	}
@@ -72,10 +72,10 @@ export class ProductionLogger implements ILogger {
 			}
 		} catch (error) {
 			if (level === 'warning') {
-				// eslint-disable-next-line no-console
+				// oxlint-disable-next-line no-console
 				console.warn('Failed to send warning to Sentry:', message, error);
 			} else {
-				// eslint-disable-next-line no-console
+				// oxlint-disable-next-line no-console
 				console.error('Failed to send error to Sentry:', message, error);
 			}
 		}

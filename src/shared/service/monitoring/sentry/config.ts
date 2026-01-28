@@ -1,6 +1,7 @@
 import { replayIntegration } from '@sentry/browser';
+import type { Integration } from '@sentry/core';
 
-import type { IBaseSentryOptions } from './base-sentry-service.ts';
+import type { IBaseSentryOptions } from './base-sentry-service';
 
 export const BASE_OPTIONS = {
 	timeout: 2000,
@@ -14,7 +15,7 @@ export const BASE_OPTIONS = {
 			networkDetailAllowUrls: [window.location.origin],
 			networkRequestHeaders: ['Cache-Control'],
 			networkResponseHeaders: ['Referrer-Policy'],
-		}),
+		}) as Integration,
 	],
 	performance: true,
 } as const satisfies IBaseSentryOptions;

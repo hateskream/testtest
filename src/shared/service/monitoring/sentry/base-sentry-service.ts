@@ -1,4 +1,5 @@
-import { captureException, captureMessage, replayIntegration, Scope, withScope } from '@sentry/browser';
+import { captureException, captureMessage, Scope, withScope } from '@sentry/browser';
+import type { Integration } from '@sentry/core';
 
 import type { LogLevel } from '../logger-interface';
 import { BASE_OPTIONS } from './config';
@@ -10,7 +11,7 @@ export interface IBaseSentryOptions {
 	tracesSampleRate: number;
 	attachStacktrace: boolean;
 	autoSessionTracking: boolean;
-	integrations: ReturnType<typeof replayIntegration>[];
+	integrations: Integration[];
 	performance: boolean;
 }
 

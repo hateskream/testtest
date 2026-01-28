@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* oxlint-disable no-console */
 import { type ILogger, type ILogOptions, LogLevel } from './logger-interface';
 
 export class DevLogger implements ILogger {
