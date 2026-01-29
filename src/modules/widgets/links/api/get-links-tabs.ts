@@ -1,16 +1,10 @@
-import { useHttpService } from '@/shared/service/http-service.ts';
 import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
-import type { ISocialsItem, IWebsite } from '../model/links';
+import { LinksSchema } from '../model';
+import { apiSchema, useApiClient } from '@/shared/service/api';
+import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = false;
-
-export interface ILinksTabsResponse {
-	ticker_id: string;
-	website?: IWebsite;
-	socials?: ISocialsItem[];
-	tags?: string[];
-}
 
 export interface ILinksTabsRequest {
 	ticker_id: string;
@@ -21,44 +15,27 @@ export function getLinksTabs(request: ILinksTabsRequest) {
 }
 
 async function getApiLinksTabs(request: ILinksTabsRequest) {
-	const http = useHttpService();
+	const http = useApiClient();
 
 	try {
-		return http.get<ILinksTabsResponse>('/api/v1/links/data', {
+		return http.get('/api/v1/links/data', apiSchema(LinksSchema), {
 			query: {
 				ticker_id: request.ticker_id,
 			},
 		});
 	} catch (error) {
 		const logger = useLogger();
-		logger.error('Failed to get news', { error: error as Error });
+		logger.error('Failed to get ticker links', { error: error as Error });
 		throw error;
 	}
 }
 
-async function getMockLinksTabs(): Promise<ILinksTabsResponse> {
+const { getMock } = useFetchMock('/mock/widgets/links.json');
+
+async function getMockLinksTabs() {
 	await delay(1000);
 
-	return {
-		ticker_id: 'Crypto-BTC_Bitcoin',
-		website: {
-			label: 'tesla.com',
-			link: 'https://tesla.com',
-		},
-		socials: [
-			{
-				logo_url: 'https://financialmodelingprep.com/image-stock/FREJO.png',
-				link: 'https://tesla.com',
-			},
-			{
-				logo_url: 'https://financialmodelingprep.com/image-stock/FREJO.png',
-				link: 'https://tesla.com',
-			},
-			{
-				logo_url: 'https://financialmodelingprep.com/image-stock/FREJO.png',
-				link: 'https://tesla.com',
-			},
-		],
-		tags: ['Bitcoin Ecosystem', 'Layer 1'],
-	};
+	const response = await getMock();
+
+	return apiSchema(LinksSchema).parse(response);
 }

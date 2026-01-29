@@ -4,10 +4,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiImage } from '@/shared/ui/image';
 import { DashboardPillItem, DashboardPillWrapper } from '@/shared/ui/pill';
 import { UiFilterChip, UiFilterChipWrapper } from '@/shared/ui/modal-filter';
-import type { ILinksTabsResponse } from '../api/get-links-tabs.ts';
+import type { Links } from '../model';
 
 const props = defineProps<{
-	content: ILinksTabsResponse;
+	content: Links;
 }>();
 </script>
 
@@ -70,7 +70,7 @@ const props = defineProps<{
 					rel="noopener noreferrer"
 				>
 					<ui-image
-						:src="item.logo_url"
+						:src="item.logoUrl"
 						width="20px"
 						height="20px"
 					/>
