@@ -21,6 +21,7 @@ const PAGE_ENABLED_FEATURES: Partial<Record<RouteNames, FeatureName>> = {
 	[RouteNames.KeyIndicatorsTest]: 'KEY_INDICATORS_PAGE_ENABLED',
 	[RouteNames.TickerWidget]: 'TICKER_WIDGET_PAGE_ENABLED',
 	[RouteNames.TickerWidgetPreview]: 'TICKER_WIDGET_PAGE_ENABLED',
+	[RouteNames.TickerPageHeader]: 'TICKER_PAGE_HEADER_ENABLED',
 };
 
 router.beforeEach((to) => {

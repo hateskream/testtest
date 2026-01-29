@@ -33,6 +33,7 @@ export enum RouteNames {
 	Error = 'Error',
 	Offline = 'Offline',
 	TickerPageFooter = 'ticker-page-footer',
+	TickerPageHeader = 'ticker-page-header',
 	LinksTestPage = 'LinksTestPage',
 	KeyIndicatorsTest = 'KeyIndicatorsTest',
 	TickerWidget = 'ticker-widget',
@@ -67,6 +68,7 @@ export enum RouteLabels {
 	ScreenerCex = 'CEX Screener',
 	ScreenerDex = 'DEX Screener',
 	TickerPageFooter = 'Ticker Page Footer',
+	TickerPageHeader = 'Ticker Page Header',
 	LinksTestPage = 'Links Test Page',
 	KeyIndicatorsTest = 'Key Indicators Test',
 }
@@ -104,6 +106,7 @@ export enum RoutePaths {
 	Error = '/error',
 	Offline = '/offline',
 	TickerPageFooter = '/ticker-page-footer-test',
+	TickerPageHeader = '/ticker-page-header-test',
 	LinksTestPage = '/links-test-page',
 	KeyIndicatorsTest = '/key-indicators-test',
 	TickerWidget = '/ticker-widget',

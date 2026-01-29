@@ -14,6 +14,7 @@ const props = defineProps<{
 
 	ticker: string;
 	rightTicker?: string;
+	disableGlow?: boolean;
 }>();
 </script>
 
@@ -23,6 +24,7 @@ const props = defineProps<{
 		:ticker="ticker"
 		:size="size"
 		:src="[src, rightSrc]"
+		:disable-glow="disableGlow"
 	>
 		<template #glow v-if="$slots['forex-first-item-glow']">
 			<slot name="forex-first-item-glow" />
@@ -37,6 +39,7 @@ const props = defineProps<{
 		:src="src"
 		:ticker="ticker?.[0]"
 		:size="size"
+		:disable-glow="props.disableGlow"
 	>
 		<template #glow v-if="$slots.glow">
 			<slot name="glow" />
