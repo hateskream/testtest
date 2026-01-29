@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiImage } from '@/shared/ui/image';
-import { DashboardPillItem, DashboardPillWrapper } from '@/shared/ui/pill';
-import { UiFilterChip, UiFilterChipWrapper } from '@/shared/ui/modal-filter';
+import { TickerControlLink } from '@/modules/widgets/base';
+import { UiTag } from '@/shared/ui/tag';
+import { UiClamped } from '@/shared/ui/clamped';
 import type { Links } from '../model';
+
+import WidgetLinksRow from './widget-links-row.vue';
 
 const props = defineProps<{
 	content: Links;
@@ -13,70 +14,45 @@ const props = defineProps<{
 
 <template>
 	<div :class="classes.container">
-		<div v-if="props.content" :class="classes.row">
-			<ui-text :class="classes.left" token="text-100-r">
-				Tags
-			</ui-text>
-
-			<ui-filter-chip-wrapper display-variant="new" :class="classes.chipWrapper">
-				<ui-filter-chip
-					v-for="tag in props.content?.tags"
-					:key="tag"
-					display-variant="new"
-					:class="classes.chip"
+		<widget-links-row v-if="props.content.tags?.length" title="Tags">
+			<template #content>
+				<div :class="[classes.list, classes.chipWrapper]">
+					<ui-tag v-for="tag in props.content?.tags" :key="tag">
+						<ui-clamped :rows="1">{{ tag }}</ui-clamped>
+					</ui-tag>
+				</div>
+			</template>
+		</widget-links-row>
+		<widget-links-row v-if="props.content.website" title="Website">
+			<template #content>
+				<ticker-control-link
+					external
+					:to="props.content.website.link"
 				>
-					{{tag}}
-				</ui-filter-chip>
-			</ui-filter-chip-wrapper>
-		</div>
-
-		<div :class="classes.row">
-			<ui-text :class="classes.left" token="text-100-r">
-				Website
-			</ui-text>
-
-			<a
-				v-if="props.content?.website"
-				:href="props.content.website.link"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<dashboard-pill-wrapper :class="classes.pills">
-					<dashboard-pill-item :class="classes.pillLabel">
-						{{props.content.website.label}}
-					</dashboard-pill-item>
-					<dashboard-pill-item :class="classes.pillIcon">
-						<ui-icon
-							:id="IconIds.ArrowToTopRight"
-							width="16px"
-							height="16px"
+					{{props.content.website.label}}
+				</ticker-control-link>
+			</template>
+		</widget-links-row>
+		<widget-links-row v-if="props.content.socials?.length" title="Socials">
+			<template #content>
+				<div v-if="props.content" :class="[classes.list, classes.socials]">
+					<a
+						v-for="(item, index) in props.content.socials"
+						:key="index"
+						:href="item.link"
+						:class="classes.socialItem"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<ui-image
+							:src="item.logoUrl"
+							width="20px"
+							height="20px"
 						/>
-					</dashboard-pill-item>
-				</dashboard-pill-wrapper>
-			</a>
-		</div>
-		<div :class="classes.row">
-			<ui-text :class="classes.left" token="text-100-r">
-				Socials
-			</ui-text>
-
-			<div v-if="props.content" :class="classes.socials">
-				<a
-					v-for="(item, index) in props.content.socials"
-					:key="index"
-					:href="item.link"
-					:class="classes.socialItem"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<ui-image
-						:src="item.logoUrl"
-						width="20px"
-						height="20px"
-					/>
-				</a>
-			</div>
-		</div>
+					</a>
+				</div>
+			</template>
+		</widget-links-row>
 	</div>
 </template>
 
@@ -86,40 +62,21 @@ const props = defineProps<{
 	padding: 0 var(--padding-padding-s11, 20px);
 }
 
-.row {
+.list {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: var(--padding-padding-s7, 12px);
-	height: 40px;
-}
-
-.left {
-	color: var(--text-300, rgb(255 255 255 / 62%));
-}
-
-.pills {
-	width: unset;
-	padding: 0;
-	grid-auto-columns: unset;
+	flex: 1 0 0;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	align-content: flex-start;
+	align-items: flex-start;
 }
 
 .chipWrapper {
-	flex: unset;
-}
-
-.chip {
-	border-radius: 6px;
-}
-
-.pillIcon {
-	width: 28px;
-	padding: 0;
+	gap: var(--padding-s3, 4px);
 }
 
 .socials {
-	display: flex;
-	gap: 6px;
+	gap: var(--padding-s4, 6px);
 }
 
 .socialItem {
