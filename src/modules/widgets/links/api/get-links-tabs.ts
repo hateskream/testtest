@@ -3,7 +3,7 @@ import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import type { ISocialsItem, IWebsite } from '../model/links';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface ILinksTabsResponse {
 	ticker_id: string;
@@ -24,7 +24,7 @@ async function getApiLinksTabs(request: ILinksTabsRequest) {
 	const http = useHttpService();
 
 	try {
-		return http.get<ILinksTabsResponse>('/api/v1/widget/links', {
+		return http.get<ILinksTabsResponse>('/api/v1/links/data', {
 			query: {
 				ticker_id: request.ticker_id,
 			},
