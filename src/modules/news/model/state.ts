@@ -1,12 +1,4 @@
-import {
-	compareArray,
-	compareFilter,
-	ActiveDateRange,
-	Include,
-	type Score,
-	type Sentiment,
-	type Source,
-} from './filters';
+import { compareArray, compareFilter, Include, type Score, type Sentiment, type Source } from './filters';
 import { compareDisplaySettings, type IDisplaySettings } from './display';
 import {
 	compareLocations,
@@ -18,7 +10,6 @@ import {
 } from './location';
 import { compareSort, type SortState } from './sort';
 import { MarketType } from '@/modules/market';
-import type { IDateRange } from '@/shared/ui/calendar';
 
 export interface IState {
 	score: Set<Score>;
@@ -30,8 +21,6 @@ export interface IState {
 	displaySettings: IDisplaySettings;
 	locations: ILocation[];
 	include: Set<Include>;
-	activeDateRange: ActiveDateRange;
-	dateRange: IDateRange;
 }
 
 export interface IHydratedState {
@@ -44,8 +33,6 @@ export interface IHydratedState {
 	displaySettings: IDisplaySettings;
 	locations: IActiveLocation[];
 	include: Include[];
-	activeDateRange: ActiveDateRange;
-	dateRange: IDateRange;
 }
 
 export function hydrateState({
@@ -58,8 +45,6 @@ export function hydrateState({
 	displaySettings,
 	locations,
 	include,
-	activeDateRange,
-	dateRange,
 }: IState) {
 	return {
 		score: Array.from(score),
@@ -71,8 +56,6 @@ export function hydrateState({
 		displaySettings: displaySettings,
 		locations: getActiveLocations(locations),
 		include: Array.from(include),
-		activeDateRange: activeDateRange,
-		dateRange: dateRange,
 	};
 }
 
@@ -86,8 +69,6 @@ export function rehydrateState({
 	displaySettings,
 	locations,
 	include,
-	activeDateRange,
-	dateRange,
 }: IHydratedState,
 ): IState {
 	return {
@@ -100,8 +81,6 @@ export function rehydrateState({
 		displaySettings,
 		locations: rehydrateLocations(LOCATIONS_DEFAULT, locations),
 		include: new Set(include),
-		activeDateRange: activeDateRange,
-		dateRange: dateRange,
 	};
 }
 
@@ -131,12 +110,6 @@ export function compareState(state1: IState, state2: IState): boolean {
 		return false;
 	}
 	if (!compareArray(Array.from(state1.include), Array.from(state2.include))) {
-		return false;
-	}
-	if (state1.activeDateRange !== state2.activeDateRange) {
-		return false;
-	}
-	if (state1.dateRange.from !== state2.dateRange.from || state1.dateRange.to !== state2.dateRange.to) {
 		return false;
 	}
 

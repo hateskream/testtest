@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 import { type DatePickerRangeObject, UiDatePicker } from '@/shared/ui/date-picker';
 
@@ -28,8 +28,8 @@ const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePi
 	},
 	set({ start, end }) {
 		return {
-			from: parseISO(`${start}T00:00:00Z`),
-			to: parseISO(`${end}T00:00:00Z`),
+			from: format(start, 'yyyy-MM-dd'),
+			to: format(end, 'yyyy-MM-dd'),
 		};
 	},
 });

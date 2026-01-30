@@ -1,14 +1,8 @@
 import { endOfWeek, startOfWeek } from 'date-fns';
 
-import {
-	ActiveDateRange,
-	type IState,
-	LOCATIONS_DEFAULT,
-	Score,
-	segmentsData,
-	Sentiment,
-} from '@/modules/news';
+import { ActiveDateRange, type IState, LOCATIONS_DEFAULT, Score, segmentsData, Sentiment } from '@/modules/news';
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
+import type { IDateRange } from '@/shared/ui/calendar';
 
 function toUtcIsoDate(d: Date) {
 	const y = d.getUTCFullYear();
@@ -47,11 +41,6 @@ export const DEFAULT_STATE: IState = {
 	},
 	locations: LOCATIONS_DEFAULT,
 	include: new Set(),
-	activeDateRange: ActiveDateRange.All,
-	dateRange: {
-		from: toUtcIsoDate(getStartOfWeek(new Date())),
-		to: toUtcIsoDate(getEndOfWeek(new Date())),
-	},
 };
 
 export function getDefaultState(defaultState?: string): IState {
@@ -126,4 +115,15 @@ export function getDefaultSegmentMarkets(defaultState?: string): MarketType[] {
 		default:
 			return segmentsData.map(seg => seg.id);
 	}
+}
+
+export function getDefaultDateRange(): IDateRange {
+	return {
+		from: toUtcIsoDate(getStartOfWeek(new Date())),
+		to: toUtcIsoDate(getEndOfWeek(new Date())),
+	};
+}
+
+export function getDefaultActiveDateRange(): ActiveDateRange {
+	return ActiveDateRange.All;
 }
