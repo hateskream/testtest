@@ -26,3 +26,5 @@ body {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
+
+@layer normalize, kit;
