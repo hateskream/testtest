@@ -11,7 +11,7 @@ export function provideSegmentedControl(ctx: ISegmentedControlContext) {
 	provide(KEY, ctx);
 }
 
-export function useSegmentedControl() {
+export function useSegmentControl() {
 	const ctx = inject<ISegmentedControlContext>(KEY);
 
 	if (!ctx) {
