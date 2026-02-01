@@ -12,17 +12,24 @@ export interface IControlIconProps {
 	 * @default false
 	 */
 	transparent?: boolean;
+	/**
+	 * Размер иконки в пикселях. Использовать с нестандартными иконками.
+	 * @default 16
+	 */
+	iconSize?: number;
 }
 
-const props = defineProps<IControlIconProps>();
+const props = withDefaults(defineProps<IControlIconProps>(), {
+	iconSize: 16,
+});
 </script>
 
 <template>
 	<div :class="[classes.control, {[classes.transparent]: props.transparent}]">
 		<ui-icon
 			:id="props.icon"
-			width="16"
-			height="16"
+			:width="props.iconSize"
+			:height="props.iconSize"
 		/>
 	</div>
 </template>
