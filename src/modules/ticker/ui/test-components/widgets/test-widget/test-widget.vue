@@ -1,8 +1,17 @@
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
 import { WidgetLayout } from '../../shared/ui';
+
+interface IProps {
+	title?: string;
+	displayText?: string;
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+	title: 'Test Component',
+	displayText: 'Test Component',
+});
 
 const randomColor = ref<string>('');
 const rotationX = ref<number>(0);
@@ -48,7 +57,7 @@ onMounted(() => {
 <template>
 	<widget-layout>
 		<template #header>
-			<span>Test Component</span>
+			<span>{{ props.title }}</span>
 		</template>
 		<template #body>
 			<div :class="classes.container">
@@ -58,7 +67,7 @@ onMounted(() => {
 						color: randomColor,
 					}"
 				>
-					<h1 :class="classes.text">Test Component</h1>
+					<h1 :class="classes.text">{{ props.displayText }}</h1>
 				</div>
 				<p :class="classes.info">
 					Color: <span :style="{ color: randomColor }">{{ randomColor }}</span>

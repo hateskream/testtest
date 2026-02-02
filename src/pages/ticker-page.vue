@@ -7,7 +7,7 @@ import { RouteTickerType } from '@/types/route.d';
 import { TickerType } from '@/modules/ticker/models';
 
 interface ITickerPageProps {
-	id: number;
+	id: string;
 	type: RouteTickerType;
 }
 

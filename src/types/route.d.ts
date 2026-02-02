@@ -120,7 +120,7 @@ export enum RouteTickerType {
 }
 
 export interface ITickerRouteParams {
-	id: number;
+	id: string;
 	type: TickerType;
 }
 

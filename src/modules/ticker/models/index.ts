@@ -52,7 +52,7 @@ export const tickerStockSections = {
 	],
 	right: [
 		{
-			title: 'Test section three',
+			title: 'Insights & Activity',
 			component: TICKER_SECTION_COMPONENT.TEST_SECTION_THREE,
 			height: 1000,
 		},

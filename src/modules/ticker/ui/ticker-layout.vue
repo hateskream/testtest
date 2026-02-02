@@ -258,10 +258,17 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 
 <style module="classes">
 .root {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
 	width: 100%;
-	height: 100vh;
+	height: calc(100svh - 40px);
+	padding: 12px;
 	overflow: hidden;
+	border: 1px solid #1d1d1e;
+	border-radius: 18px;
 }
+
 
 .topContent {
 	position: relative;

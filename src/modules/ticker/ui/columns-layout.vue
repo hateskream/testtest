@@ -6,13 +6,34 @@ import { TickerType } from '../models';
 import { useTickerContext } from '@/modules/ticker/composables';
 
 interface IProps {
-	disableScroll: boolean;
+	disableScroll?: boolean;
 }
 
-const { disableScroll } = defineProps<IProps>();
+const { disableScroll = false } = defineProps<IProps>();
 const { tickerType } = useTickerContext();
 const onBottomReached = inject<((reached: boolean) => void) | null>('onBottomReached', null);
 const handleFooterScroll = inject<((delta: number) => boolean) | null>('handleFooterScroll', null);
+
+function isScrollingDown(deltaY: number): boolean {
+	return deltaY > 0;
+}
+
+function isScrollingUp(deltaY: number): boolean {
+	return deltaY < 0;
+}
+
+function canFooterHandleScroll(deltaY: number): boolean {
+	return handleFooterScroll !== null && handleFooterScroll(deltaY);
+}
+
+function preventDefaultScrollBehavior(e: WheelEvent): void {
+	e.stopPropagation();
+	e.preventDefault();
+}
+
+function hasElementReachedBottom(el: HTMLElement): boolean {
+	return Math.round(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+}
 
 const hideLeftColumnTypes: TickerType[] = [TickerType.ETF];
 
@@ -24,23 +45,68 @@ const shouldHideLeftColumn = computed(() => {
 });
 
 const breakpoints = useBreakpoints({
-	tablet: 640,
-	desktop: 1280,
+	mobile: 520,
+	tablet: 656,
+	desktop2col: 1132,
+	desktop3col: 1332,
 });
 
-const isDesktop = computed(() => breakpoints.greaterOrEqual('desktop'));
-const isTablet = computed(() => breakpoints.greaterOrEqual('tablet'));
+const isDesktop2Col = breakpoints.greaterOrEqual('desktop2col');
+const isDesktop3Col = breakpoints.greaterOrEqual('desktop3col');
+const isTablet = breakpoints.greaterOrEqual('tablet');
 
-const showLeftCol = computed(() => !shouldHideLeftColumn.value);
+const layoutMode = computed(() => {
+	if (shouldHideLeftColumn.value) {
+		if (isDesktop2Col.value) {
+			return 'desktop-2col';
+		}
+		if (isTablet.value) {
+			return 'tablet-2col';
+		}
+		return 'mobile-2col';
+	} else {
+		if (isDesktop3Col.value) {
+			return 'desktop-3col';
+		}
+		if (isTablet.value) {
+			return 'tablet-3col';
+		}
+		return 'mobile-3col';
+	}
+});
+
+const isDesktopMode = computed(() =>
+	layoutMode.value === 'desktop-3col' || layoutMode.value === 'desktop-2col',
+);
+
+const hideScrollbar = computed(() => disableScroll);
 
 const container = useTemplateRef<HTMLElement>('container');
+const scrollContainer = useTemplateRef<HTMLElement>('scrollContainer');
 const leftCol = useTemplateRef<HTMLElement>('leftCol');
 const rightCol = useTemplateRef<HTMLElement>('rightCol');
-const mainCol = useTemplateRef<HTMLElement>('mainCol');
 
-const { y: scrollMainCol, arrivedState } = useScroll(mainCol, { observe:  {
-	mutation: true,
-} });
+const scrollElement = computed(() => {
+	return isDesktopMode.value ? scrollContainer.value : container.value;
+});
+
+const { y: scrollY, arrivedState } = useScroll(scrollElement, {
+	observe: {
+		mutation: true,
+	},
+});
+
+function isAtBottom(): boolean {
+	return arrivedState.bottom;
+}
+
+function isAtTop(): boolean {
+	return arrivedState.top;
+}
+
+function isInMiddleOfContent(): boolean {
+	return !isAtTop() && !isAtBottom();
+}
 
 function handleBottomReached(isBottom: boolean) {
 	if (onBottomReached) {
@@ -48,114 +114,267 @@ function handleBottomReached(isBottom: boolean) {
 	}
 }
 
-function handleScrollMainCol() {
-	if (onBottomReached && mainCol.value) {
-		const isAtBottom = Math.abs(
-			mainCol.value.scrollHeight - mainCol.value.scrollTop - mainCol.value.clientHeight,
-		) < 5;
-		onBottomReached(isAtBottom);
+function handleScrollChange() {
+	if (onBottomReached && scrollElement.value) {
+		const el = scrollElement.value;
+		const reachedBottom = hasElementReachedBottom(el);
+		onBottomReached(reachedBottom);
 	}
 }
 
 function onContainerScroll(e: WheelEvent) {
-	if (!arrivedState.top && !arrivedState.bottom) {
-		e.stopPropagation();
-		e.preventDefault();
+	if (isDesktopMode.value) {
+		handleDesktopContainerScroll(e);
+	} else {
+		handleMobileTabletContainerScroll(e);
+	}
+}
+
+function handleDesktopContainerScroll(e: WheelEvent): void {
+	if (isInMiddleOfContent()) {
+		preventDefaultScrollBehavior(e);
+	}
+}
+
+function handleMobileTabletContainerScroll(e: WheelEvent): void {
+	if (disableScroll) {
+		preventDefaultScrollBehavior(e);
+		return;
+	}
+
+	const shouldDelegateScrollDown =
+		isAtBottom() &&
+		isScrollingDown(e.deltaY) &&
+		canFooterHandleScroll(e.deltaY);
+
+	if (shouldDelegateScrollDown) {
+		preventDefaultScrollBehavior(e);
+		return;
+	}
+
+	const shouldDelegateScrollUp =
+		isScrollingUp(e.deltaY) &&
+		canFooterHandleScroll(e.deltaY);
+
+	if (shouldDelegateScrollUp) {
+		preventDefaultScrollBehavior(e);
+		return;
 	}
 }
 
 function onColumnScroll(e: WheelEvent) {
+	if (!isDesktopMode.value) {
+		return;
+	}
+
 	if (disableScroll) {
 		e.preventDefault();
 		return;
 	}
 
-	if (arrivedState.bottom && e.deltaY > 0) {
-		if (handleFooterScroll && handleFooterScroll(e.deltaY)) {
-			e.stopPropagation();
-			e.preventDefault();
-			return;
-		}
+	if (tryDelegateScrollToFooter(e)) {
 		return;
 	}
 
-	if (arrivedState.top && e.deltaY < 0) {
+	if (isAtTop() && isScrollingUp(e.deltaY)) {
 		return;
 	}
 
-	if (handleFooterScroll && e.deltaY < 0) {
-		if (handleFooterScroll(e.deltaY)) {
-			e.stopPropagation();
-			e.preventDefault();
-			return;
+	handleCustomColumnScroll(e);
+}
+
+function tryDelegateScrollToFooter(e: WheelEvent): boolean {
+	if (isAtBottom() && isScrollingDown(e.deltaY)) {
+		if (canFooterHandleScroll(e.deltaY)) {
+			preventDefaultScrollBehavior(e);
+			return true;
+		}
+		return false;
+	}
+
+	if (isScrollingUp(e.deltaY)) {
+		if (canFooterHandleScroll(e.deltaY)) {
+			preventDefaultScrollBehavior(e);
+			return true;
 		}
 	}
 
-	e.stopPropagation();
-	e.preventDefault();
+	return false;
+}
+
+function handleCustomColumnScroll(e: WheelEvent): void {
+	preventDefaultScrollBehavior(e);
+
 	const el = e.currentTarget as HTMLElement;
 	el.scrollTop += e.deltaY;
 
-	if (el.scrollTop === 0 && e.deltaY < 0 && !arrivedState.top) {
-		scrollMainCol.value += e.deltaY;
+	syncColumnScrollWithContainer(el, e.deltaY);
+}
+
+function syncColumnScrollWithContainer(el: HTMLElement, deltaY: number): void {
+	const shouldSyncScrollUp =
+		el.scrollTop === 0 &&
+		isScrollingUp(deltaY) &&
+		!isAtTop();
+
+	if (shouldSyncScrollUp) {
+		scrollY.value += deltaY;
 		return;
 	}
 
-	const isBottom = Math.round(el.scrollTop + el.clientHeight) >= el.scrollHeight;
-	if (isBottom && e.deltaY > 0 && !arrivedState.bottom) {
-		scrollMainCol.value += e.deltaY;
+	const shouldSyncScrollDown =
+		hasElementReachedBottom(el) &&
+		isScrollingDown(deltaY) &&
+		!isAtBottom();
+
+	if (shouldSyncScrollDown) {
+		scrollY.value += deltaY;
 	}
 }
 
 watch(() => arrivedState.bottom, handleBottomReached);
-watch(scrollMainCol, handleScrollMainCol);
+watch(scrollY, handleScrollChange);
 
 useEventListener(container, 'wheel', onContainerScroll, { passive: false });
-useEventListener(leftCol, 'wheel', onColumnScroll, { passive: false });
-useEventListener(rightCol, 'wheel', onColumnScroll, { passive: false });
-useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
+
+watch(isDesktopMode, (isDesktop) => {
+	if (isDesktop) {
+		useEventListener(scrollContainer, 'wheel', onColumnScroll, { passive: false });
+		useEventListener(leftCol, 'wheel', onColumnScroll, { passive: false });
+		useEventListener(rightCol, 'wheel', onColumnScroll, { passive: false });
+	}
+}, { immediate: true });
 </script>
 
 <template>
-	<div ref="container" :class="classes.root">
-		<div
-			v-if="showLeftCol"
-			ref="leftCol"
-			:class="classes.leftCol"
-		>
-			<slot name="leftCol"></slot>
-		</div>
-		<div
-			ref="mainCol"
-			:class="[
-				classes.mainCol,
-				{ [classes.mainColExpanded]: shouldHideLeftColumn }
-			]"
-		>
-			<slot v-if="!isTablet.value" name="leftCol"></slot>
-			<slot v-if="!isDesktop.value" name="rightCol"></slot>
-			<slot name="mainCol"></slot>
-		</div>
-		<div
-			v-if="isDesktop.value"
-			ref="rightCol"
-			:class="classes.rightCol"
-		>
-			<slot name="rightCol"></slot>
-		</div>
+	<div
+		ref="container"
+		:class="[
+			classes.root,
+			classes[layoutMode],
+			{
+				[classes.scrollableContainer]: !isDesktopMode,
+				[classes.hideScrollbar]: hideScrollbar
+			}
+		]"
+	>
+		<template v-if="layoutMode === 'desktop-3col'">
+			<div
+				ref="leftCol"
+				:class="[
+					classes.leftCol,
+					{ [classes.hideScrollbar]: hideScrollbar }
+				]"
+			>
+				<slot name="leftCol"></slot>
+			</div>
+			<div
+				ref="scrollContainer"
+				:class="[
+					classes.mainCol,
+					{ [classes.hideScrollbar]: hideScrollbar }
+				]"
+			>
+				<slot name="mainCol"></slot>
+			</div>
+			<div
+				ref="rightCol"
+				:class="[
+					classes.rightCol,
+					{ [classes.hideScrollbar]: hideScrollbar }
+				]"
+			>
+				<slot name="rightCol"></slot>
+			</div>
+		</template>
+
+		<template v-else-if="layoutMode === 'tablet-3col'">
+			<div :class="classes.topRow">
+				<div :class="classes.sideCol">
+					<slot name="leftCol"></slot>
+				</div>
+				<div :class="classes.sideCol">
+					<slot name="rightCol"></slot>
+				</div>
+			</div>
+			<div :class="classes.mainColStatic">
+				<slot name="mainCol"></slot>
+			</div>
+		</template>
+
+		<template v-else-if="layoutMode === 'mobile-3col'">
+			<div :class="classes.columnStatic">
+				<slot name="leftCol"></slot>
+			</div>
+			<div :class="classes.columnStatic">
+				<slot name="rightCol"></slot>
+			</div>
+			<div :class="classes.columnStatic">
+				<slot name="mainCol"></slot>
+			</div>
+		</template>
+
+		<template v-else-if="layoutMode === 'desktop-2col'">
+			<div
+				ref="scrollContainer"
+				:class="[
+					classes.mainCol,
+					classes.mainColExpanded,
+					{ [classes.hideScrollbar]: hideScrollbar }
+				]"
+			>
+				<slot name="mainCol"></slot>
+			</div>
+			<div
+				ref="rightCol"
+				:class="[
+					classes.rightCol,
+					{ [classes.hideScrollbar]: hideScrollbar }
+				]"
+			>
+				<slot name="rightCol"></slot>
+			</div>
+		</template>
+
+		<template v-else-if="layoutMode === 'tablet-2col'">
+			<div :class="classes.col50Static">
+				<slot name="mainCol"></slot>
+			</div>
+			<div :class="classes.col50Static">
+				<slot name="rightCol"></slot>
+			</div>
+		</template>
+
+		<template v-else-if="layoutMode === 'mobile-2col'">
+			<div :class="classes.columnStatic">
+				<slot name="mainCol"></slot>
+			</div>
+			<div :class="classes.columnStatic">
+				<slot name="rightCol"></slot>
+			</div>
+		</template>
 	</div>
 </template>
 
 <style module="classes">
 .root {
 	display: flex;
-	gap: 24px;
 	height: calc(100svh);
+}
+
+.scrollableContainer {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.desktop-3col {
+	gap: 24px;
+	overflow: hidden;
 }
 
 .leftCol {
 	flex: 0 0 330px;
-	width: 100%;
+	width: 330px;
 	height: 100%;
 	padding-bottom: 10px;
 	overflow: hidden;
@@ -163,10 +382,11 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 
 .rightCol {
 	flex: 0 0 330px;
-	width: 100%;
+	width: 330px;
 	height: 100%;
 	padding-bottom: 10px;
-	overflow: scroll;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .mainCol {
@@ -175,11 +395,81 @@ useEventListener(mainCol, 'wheel', onColumnScroll, { passive: false });
 	flex-direction: column;
 	height: 100%;
 	padding-bottom: 5px;
-	overflow: scroll;
+	overflow-x: hidden;
+	overflow-y: auto;
 	gap: 40px;
 }
 
 .mainColExpanded {
 	flex-grow: 3;
+}
+
+.tablet-3col {
+	flex-direction: column;
+	gap: 24px;
+	padding-bottom: 10px;
+}
+
+.topRow {
+	display: flex;
+	gap: 24px;
+	flex-shrink: 0;
+}
+
+.sideCol {
+	flex: 1;
+	width: 50%;
+	padding-bottom: 10px;
+}
+
+.mainColStatic {
+	display: flex;
+	flex-shrink: 0;
+	flex-direction: column;
+	gap: 40px;
+}
+
+.mobile-3col {
+	flex-direction: column;
+	gap: 24px;
+	padding-bottom: 10px;
+}
+
+.columnStatic {
+	flex-shrink: 0;
+	width: 100%;
+}
+
+.desktop-2col {
+	gap: 24px;
+	overflow: hidden;
+}
+
+.tablet-2col {
+	gap: 24px;
+	padding-bottom: 10px;
+}
+
+.col50Static {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	width: 50%;
+	gap: 40px;
+}
+
+.mobile-2col {
+	flex-direction: column;
+	gap: 24px;
+	padding-bottom: 10px;
+}
+
+.hideScrollbar {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.hideScrollbar::-webkit-scrollbar {
+	display: none;
 }
 </style>

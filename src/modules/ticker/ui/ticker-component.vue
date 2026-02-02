@@ -18,7 +18,7 @@ const ChartComponent = defineAsyncComponent(() => import('@/modules/lightweight-
 
 export interface ITickerComponentProps {
 	type: TickerType;
-	id: number;
+	id: string;
 }
 
 const props = defineProps<ITickerComponentProps>();
@@ -92,6 +92,7 @@ const currentChartRanges = [
 			<div
 				ref="chartContainerRef"
 				:class="classes.placeholderTop"
+				:style="{height:chartHeight}"
 			>
 				<suspense>
 					<template #default>

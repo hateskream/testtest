@@ -7,10 +7,10 @@ import { TestWidget } from '../../widgets';
 
 <template>
 	<div>
-		<test-widget />
-		<test-widget />
-		<test-widget />
-		<test-widget />
+		<test-widget display-text="3-1" />
+		<test-widget display-text="3-2" />
+		<test-widget display-text="3-3" />
+		<test-widget display-text="3-4" />
 	</div>
 
 </template>

@@ -14,7 +14,7 @@ import OfflinePage from '@/pages/offline-page.vue';
 
 const createTickerProps = (type: RouteTickerType) => {
 	return (route: RouteLocationNormalized): ITickerRouteParams => ({
-		id: parseInt(route.params.id as string, 10),
+		id: route.params.id as string,
 		type,
 	});
 };

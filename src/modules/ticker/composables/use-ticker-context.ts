@@ -4,7 +4,7 @@ import type { TickerType } from '../models';
 
 export type TickerContext = {
 	tickerType: Readonly<Ref<TickerType>>;
-	tickerId: Readonly<Ref<number>>;
+	tickerId: Readonly<Ref<string>>;
 };
 
 const TickerContextKey: InjectionKey<TickerContext> = Symbol('TickerContext');
