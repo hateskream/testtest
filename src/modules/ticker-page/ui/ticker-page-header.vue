@@ -268,19 +268,19 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	flex-shrink: 0;
 	width: 264px;
 	height: 199px;
-	background: var(--dominant-color, #FFFFFF);
+	background: var(--dominant-color, #ffffff);
 	border-radius: 264px;
+	opacity: 0.16;
 	filter: blur(88px);
-	opacity: .16;
 }
 
 .inner {
+	z-index: 1;
 	display: flex;
 	flex: 1 0 0;
 	justify-content: space-between;
 	align-items: flex-end;
 	gap: 8px;
-	z-index: 1;
 }
 
 .left {
