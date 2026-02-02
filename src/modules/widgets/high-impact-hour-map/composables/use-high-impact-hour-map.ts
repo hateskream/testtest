@@ -2,15 +2,9 @@ import { computed, ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import {
-	getDefaultState,
-	type IState,
-	mapHighImpactHourMap,
-	stateSchema,
-	type StateSchemaType,
-	type TimeZoneUTC,
-} from '../model';
+import { getDefaultState, type IState, mapHighImpactHourMap, stateSchema, type StateSchemaType } from '../model';
 import { useQueryHighImpactHourMap } from '../queries';
+import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 interface IOptions {
 	widgetId: string;
@@ -46,7 +40,7 @@ export function useHighImpactHourMap({
 
 	const activeTimezone = computed({
 		get: () => state.value.timezone,
-		set: (val: TimeZoneUTC) => {
+		set: (val: TimezoneUtcType) => {
 			state.value.timezone = val;
 		},
 	});

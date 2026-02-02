@@ -1,3 +1,5 @@
+import type { ChartType } from '@shared/component-library';
+
 import {
 	createTickerId,
 	createTickerIdCommodity,
@@ -5,7 +7,7 @@ import {
 	createTickerIdIndex,
 	SymbolType,
 } from '@/modules/cell';
-import { createPreset, DateRangePreset, type DateRangeValue } from '@/modules/lightweight-charts/model';
+import { createPreset, DateRangePreset, type DateRangeValue, TimezoneUtc } from '@/modules/lightweight-charts/model';
 
 export interface IState {
 	selectedTicker: string;
@@ -50,4 +52,12 @@ export function getDefaultsState(defaultStateType: string): IState {
 		selectedTicker: defaultSelectedTicker,
 		timeRange: createPreset(DateRangePreset.Day),
 	};
+}
+
+export function getDefaultTimezone() {
+	return TimezoneUtc.UTC0;
+}
+
+export function getDefaultChartType(): ChartType {
+	return 'area';
 }

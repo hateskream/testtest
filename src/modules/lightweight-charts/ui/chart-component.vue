@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, reactive, ref, useTemplateRef } from 'vue';
+import { computed, type CSSProperties, reactive, useTemplateRef } from 'vue';
 import { CrosshairMode, LineStyle } from 'lightweight-charts';
 import type { CandlestickData, ChartClickData, ChartData, ChartType, LineData } from '@shared/component-library';
 import {
@@ -10,14 +10,14 @@ import { notNullish, unrefElement } from '@vueuse/core';
 
 import {
 	chartTimeToDate,
-	type DateRangePresetType,
-	type DateRangePresetValue,
-	type DateRangeValue,
 	formatPrice,
-	getDateRangePresetLabel,
 	type IChartTimelineSegment,
 	isCandlestickData,
 	type SharedChartMouseEvent,
+	timeToZonedTime,
+	TimezoneUtc,
+	timezoneUtcToIntl,
+	zonedTimeToTime,
 } from '../model';
 import type { IUseExternalTooltipState } from '../composables';
 import type { ICalendarEvent } from '@/modules/calendar';
@@ -30,11 +30,7 @@ import {
 	isFeatureEnabled,
 	isNumber,
 } from '@/shared/lib';
-import { ModalBadgeFilter } from '@/modules/widgets/base';
-import { IconIds } from '@/shared/ui/icon';
-import type { IFilterOption } from '@/modules/widgets/base/modal/model';
-import { UiDelimiter } from '@/shared/ui/delimiter';
-import { UiControlIcon } from '@/shared/ui/control-icon';
+import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 interface IChartProps {
 	height: CSSProperties['height'];
@@ -60,8 +56,7 @@ interface IChartProps {
 	prevClosePriceLabel?: string;
 	type?: ChartType;
 	showInstruments?: boolean;
-	canSwitchType?: boolean;
-	dateRangePresets?: DateRangePresetValue[];
+	timezone?: TimezoneUtcType;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -81,7 +76,7 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	prevClosePrice: null,
 	prevClosePriceLabel: 'Prev Close',
 	type: 'area',
-	dateRangePresets: () => [],
+	timezone: TimezoneUtc.UTC0,
 });
 
 interface IChartEmits {
@@ -100,62 +95,6 @@ const heightInPx = computed(() => {
 	return props.height;
 });
 
-// filters
-
-const ChartTypeFilters = [
-	{ label: 'Candlestick', value: 'candlestick' },
-	{ label: 'Line', value: 'area' },
-] as const satisfies IFilterOption<string>[];
-
-const chartType = ref<ChartType>(props.type);
-
-const chartTypeTitle = computed(() => {
-	if (chartType.value === 'candlestick') {
-		return 'Candlestick';
-	}
-
-	return 'Line';
-});
-
-const DateRangePresetFilters = computed(() => {
-	return props.dateRangePresets.map(preset => ({
-		label: getDateRangePresetLabel(preset.preset),
-		value: preset.preset,
-	})) satisfies IFilterOption<string>[];
-});
-
-const dateRange = defineModel<DateRangeValue>('dateRange');
-
-function selectDateRange(preset: DateRangePresetType) {
-	dateRange.value = props.dateRangePresets.find(it => it.preset === preset);
-}
-
-const selectedDateRangePreset = computed(() => {
-	if (!dateRange.value) {
-		return undefined;
-	}
-
-	if (dateRange.value.type === 'preset') {
-		return dateRange.value.preset;
-	}
-
-	return undefined;
-});
-
-const dateRangeTitle = computed(() => {
-	const range = dateRange.value;
-
-	if (!range) {
-		return 'Range';
-	}
-
-	if (range.type === 'preset') {
-		return `${getDateRangePresetLabel(range.preset)} range`;
-	}
-
-	return 'Custom range';
-});
-
 // data
 
 const preparedChartData = computed(() => {
@@ -163,18 +102,35 @@ const preparedChartData = computed(() => {
 		return props.data;
 	}
 
-	if (chartType.value === 'candlestick') {
-		return props.data as CandlestickData[];
+	const timezoneValue = props.timezone;
+
+	if (props.type === 'candlestick') {
+		return (props.data as CandlestickData[]).map(point => {
+			return { ...point, time: timeToZonedTime(point.time as number, timezoneValue) };
+		});
 	}
 
-	const point = props.data[0];
+	if (isCandlestickData(props.data[0])) {
 
-	if (isCandlestickData(point)) {
-		return (props.data as CandlestickData[])
-			.map(candle => ({ time: candle.time, value: candle.close })) as LineData[];
+
+		return (props.data as CandlestickData[]).map(candle => {
+			console.table({
+				originalTime: candle.time,
+				originalDate: new Date(candle.time * 1000).toJSON(),
+				zonedTime: timeToZonedTime(candle.time, timezoneValue),
+				zonedDate: new Date(timeToZonedTime(candle.time, timezoneValue) * 1000).toJSON(),
+			});
+
+			return {
+				time: timeToZonedTime(candle.time as number, timezoneValue),
+				value: candle.close,
+			} as LineData;
+		});
 	}
 
-	return props.data as LineData[];
+	return (props.data as LineData[]).map(point => {
+		return { value: point.value, time: timeToZonedTime(point.time as number, timezoneValue) };
+	});
 });
 
 const preparedPriceLines = computed(() => {
@@ -262,13 +218,16 @@ const tooltipRowColor = computed(() => props.colorSchema === 'positive'
 	? 'var(--metrics-color-positive-chart)'
 	: 'var(--metrics-color-negative-chart)');
 
-const tooltipDateFormatter = getDateFormatter({
-	month: 'short',
-	day: 'numeric',
-	year: 'numeric',
-	hour: 'numeric',
-	minute: '2-digit',
-	hour12: true,
+const tooltipDateFormatter = computed(() => {
+	return getDateFormatter({
+		timeZone: timezoneUtcToIntl(props.timezone),
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+	});
 });
 
 function updateTooltipState(state: ChartClickData | null) {
@@ -289,9 +248,10 @@ function updateTooltipState(state: ChartClickData | null) {
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
 
-	const date = chartTimeToDate(segment.time);
+	const time = zonedTimeToTime(segment.time as number, props.timezone);
+	const date = chartTimeToDate(time);
 
-	tooltipState.title = [tooltipDateFormatter.format(date)];
+	tooltipState.title = [tooltipDateFormatter.value.format(date)];
 
 	tooltipState.rows[0] = {
 		text: 'Price',
@@ -362,48 +322,11 @@ const chartPrecision = computed(() => {
 
 <template>
 	<div :class="classes.wrapper" :style="{ height: heightInPx }">
-		<div v-if="showInstruments" :class="classes.header">
-			<div :class="classes.filters">
-				<modal-badge-filter
-					v-if="dateRangePresets.length && dateRange"
-					:display-variant="props.displayVariant"
-					:options="DateRangePresetFilters"
-					:selected-value="selectedDateRangePreset"
-					:label="dateRangeTitle"
-					close-on-select
-					title="Range"
-					@select="selectDateRange($event.value)"
-				/>
-				<ui-delimiter :class="classes.delimiter" />
-				<modal-badge-filter
-					v-if="canSwitchType"
-					:display-variant="props.displayVariant"
-					:options="ChartTypeFilters"
-					:selected-value="chartType"
-					:label="chartTypeTitle"
-					close-on-select
-					title="Type"
-					:icon="IconIds.ChartView"
-					@select="chartType = $event.value"
-				/>
-			</div>
-			<div :class="classes.actions">
-				<div :class="classes.instruments">
-					<ui-control-icon :icon="IconIds.Camera" transparent />
-					<ui-control-icon
-						:icon="IconIds.ControlFullView"
-						transparent
-						:icon-size="14"
-					/>
-				</div>
-				<ui-control-icon :icon="IconIds.ControlMore" transparent />
-			</div>
-		</div>
 		<div :class="classes.mainChart">
 			<i88-chart
 				ref="container"
 				:data="preparedChartData"
-				:type="chartType"
+				:type="props.type"
 				:auto-size="true"
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
@@ -445,36 +368,6 @@ const chartPrecision = computed(() => {
 	width: 100%;
 	height: 100%;
 	min-height: 0;
-}
-
-.delimiter {
-	margin: 0 4px;
-}
-
-.header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	align-self: stretch;
-	gap: var(--padding-s7, 12px);
-}
-
-.filters {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.actions {
-	display: flex;
-	align-items: center;
-	gap: var(--padding-s6, 10px);
-}
-
-.instruments {
-	display: flex;
-	align-items: center;
-	gap: var(--padding-s2, 2px);
 }
 
 :global(a#tv-attr-logo) {

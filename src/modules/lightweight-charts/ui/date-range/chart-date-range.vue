@@ -13,6 +13,7 @@ import {
 	toDateRange,
 } from '@/modules/lightweight-charts/model/date-range.ts';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 
 interface IChartDateRangeProps {
 	presets?: DateRangePresetValue[];
@@ -148,6 +149,20 @@ function onPointerUp() {
 					/>
 				</ui-segmented-control-item>
 			</ui-segmented-control>
+			<ui-tooltip-base
+				:class="classes.infoWrapper"
+				label="Timeframe"
+				text="Switch between different time periods to analyze price movements"
+			>
+				<template #trigger>
+					<ui-icon
+						:id="IconIds.InfoRectangle"
+						:class="classes.infoIcon"
+						height="14"
+						width="14"
+					/>
+				</template>
+			</ui-tooltip-base>
 		</div>
 	</div>
 </template>
@@ -199,5 +214,14 @@ function onPointerUp() {
 
 .controlItemCalendar {
 	flex-grow: 0;
+}
+
+.infoWrapper {
+	flex-shrink: 0;
+	cursor: default;
+}
+
+.infoIcon {
+	color: var(--icon-300, rgb(255 255 255 / 50%));
 }
 </style>

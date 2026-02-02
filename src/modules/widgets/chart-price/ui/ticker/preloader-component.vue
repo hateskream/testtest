@@ -27,6 +27,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 				:class="classes.footerSkeleton"
 				height="32px"
 			/>
+			<ui-skeleton height="32px" width="32px" />
 		</div>
 	</div>
 </template>
@@ -70,7 +71,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 	flex-shrink: 0;
 	align-items: center;
 	align-self: stretch;
-	gap: var(--padding-s5, 8px);
+	gap: var(--padding-s1, 1px);
 	padding: var(--padding-s5, 8px) 0;
 }
 

@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { LastPriceAnimationMode } from '@shared/component-library';
+import { type ChartType, LastPriceAnimationMode } from '@shared/component-library';
 
 import { Chart } from '@/modules/lightweight-charts';
-import { type DateRangePresetValue, type DateRangeValue, strTimeToChartTime } from '@/modules/lightweight-charts/model';
+import {
+	type DateRangePresetValue,
+	type DateRangeValue,
+	strTimeToChartTime,
+	TimezoneUtc,
+	type TimezoneUtcType,
+} from '@/modules/lightweight-charts/model';
 import type { ChartPriceCurrentData, ChartPriceHistoryPoint } from '../../model';
 
 export interface IChartPriceTickerProps {
@@ -11,10 +17,14 @@ export interface IChartPriceTickerProps {
 	current: ChartPriceCurrentData;
 	handleScale?: boolean;
 	dateRangePresets?: DateRangePresetValue[];
+	type?: ChartType;
+	timezone?: TimezoneUtcType;
 }
 
 const props = withDefaults(defineProps<IChartPriceTickerProps>(), {
 	dateRangePresets: () => [],
+	type: 'area',
+	timezone: TimezoneUtc.UTC0,
 });
 
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
@@ -41,13 +51,14 @@ const preparedChartData = computed(() => {
 			height="100%"
 			is-show-tooltip
 			:handle-scale="handleScale"
-			type="candlestick"
+			:type="props.type"
 			can-switch-type
 			:data="preparedChartData"
 			:last-price-animation="LastPriceAnimationMode.Continuous"
 			:color-schema="chartColorSchema"
 			:prev-close-price="props.current.prevClosePrice"
 			:right-offset-pixels="120"
+			:timezone="props.timezone"
 			price-label="Current"
 			fade-left
 			show-instruments

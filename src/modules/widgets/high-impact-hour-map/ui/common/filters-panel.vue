@@ -3,8 +3,13 @@ import { computed } from 'vue';
 import { useNow } from '@vueuse/core';
 
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { timeZoneFilters, timeZoneToDisplay, type TimeZoneUTC } from '../../model';
 import { getDateFormatter } from '@/shared/lib';
+import {
+	getTimezoneUtcLabel,
+	timeZoneUtcFilters,
+	timezoneUtcToIntl,
+	type TimezoneUtcType,
+} from '@/modules/lightweight-charts/model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -16,55 +21,19 @@ interface IFiltersPanelProps {
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeTimezone = defineModel<TimeZoneUTC>('timezone', { required: true });
+const activeTimezone = defineModel<TimezoneUtcType>('timezone', { required: true });
 
 const now = useNow({ interval: 60_000 });
 
-function prepareTimezone(offset: TimeZoneUTC) {
-	let numericOffset = offset.replace('UTC', '').replace('_', ':');
-
-	const isNegative = numericOffset.startsWith('-');
-
-	if (numericOffset.includes(':')) {
-		if (isNegative) {
-			if (numericOffset.length === 5) {
-				return `-0${numericOffset.slice(1)}`;
-			}
-
-			return numericOffset;
-		}
-
-		if (numericOffset.length === 4) {
-			return `+0${numericOffset}`;
-		}
-
-		return numericOffset;
-	}
-
-	if (isNegative) {
-		if (numericOffset.length === 2) {
-			return `-0${numericOffset.slice(1)}`;
-		}
-
-		return numericOffset;
-	}
-
-	if (numericOffset.length === 1) {
-		return `+0${numericOffset}`;
-	}
-
-	return `+${numericOffset}`;
-}
-
 const timezoneLabel = computed(() => {
 	const formatter = getDateFormatter({
-		timeZone: prepareTimezone(activeTimezone.value),
+		timeZone: timezoneUtcToIntl(activeTimezone.value),
 		hour: 'numeric',
 		minute: '2-digit',
 		hourCycle: 'h23',
 	});
 
-	return `${formatter.format(now.value)} (${timeZoneToDisplay[activeTimezone.value]})`;
+	return `${formatter.format(now.value)} (${getTimezoneUtcLabel(activeTimezone.value)})`;
 });
 </script>
 
@@ -75,7 +44,7 @@ const timezoneLabel = computed(() => {
 	>
 		<modal-badge-filter
 			:display-variant="props.displayVariant"
-			:options="timeZoneFilters"
+			:options="timeZoneUtcFilters"
 			:selected-value="activeTimezone"
 			:label="timezoneLabel"
 			close-on-select

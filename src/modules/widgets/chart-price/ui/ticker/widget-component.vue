@@ -22,7 +22,15 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-const { data, dateRange, isError, isLoading, refetch } = useTickerChartPrice(() => props.meta.tickerId);
+const {
+	data,
+	dateRange,
+	timezone,
+	chartType,
+	isError,
+	isLoading,
+	refetch,
+} = useTickerChartPrice(() => props.meta.tickerId);
 </script>
 
 <template>
@@ -32,6 +40,8 @@ const { data, dateRange, isError, isLoading, refetch } = useTickerChartPrice(() 
 		<view-component
 			v-else-if="data"
 			v-model:date-range="dateRange"
+			v-model:timezone="timezone"
+			v-model:chart-type="chartType"
 			:data="data"
 			:handle-scale="props.handleScale"
 		/>

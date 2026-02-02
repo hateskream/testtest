@@ -97,3 +97,16 @@ export const DateRangePresetToLabel = {
 export function getDateRangePresetLabel(preset: DateRangePresetType) {
 	return DateRangePresetToLabel[preset];
 }
+
+export const DateRangePresetToTitle = {
+	[DateRangePreset.Day]: '1 day',
+	[DateRangePreset.Week]: '1 week',
+	[DateRangePreset.Month]: '1 month',
+	[DateRangePreset.SixMonths]: '6 months',
+	[DateRangePreset.Year]: '1 year',
+	[DateRangePreset.All]: 'All time',
+} as const satisfies Record<DateRangePresetType, string>;
+
+export function getDateRangePresetTitle(preset: DateRangePresetType) {
+	return DateRangePresetToTitle[preset];
+}

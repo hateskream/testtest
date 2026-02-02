@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { DateRangePreset, type DateRangeValue, DEFAULT_PRESETS } from '@/modules/lightweight-charts/model';
+import type { ChartType } from '@shared/component-library';
+
+import {
+	DateRangePreset,
+	type DateRangeValue,
+	DEFAULT_PRESETS,
+	type TimezoneUtcType,
+} from '@/modules/lightweight-charts/model';
 import { ChartDateRange, ChartDateRangeChange } from '@/modules/lightweight-charts';
 import type { ChartPriceHistoryData } from '../../model';
 
 import ChartComponent from './chart-component.vue';
+import FiltersComponent from './filters-component.vue';
 
 export interface IChartPriceTickerViewProps {
 	data: ChartPriceHistoryData;
@@ -13,7 +21,8 @@ export interface IChartPriceTickerViewProps {
 const props = defineProps<IChartPriceTickerViewProps>();
 
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
-
+const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
+const chartType = defineModel<ChartType>('chartType', { required: true });
 
 // TODO: Вынести в пропсы
 const changes = {
@@ -28,6 +37,11 @@ const changes = {
 
 <template>
 	<div :class="classes.container">
+		<filters-component
+			v-model:date-range="dateRange"
+			v-model:chart-type="chartType"
+			v-model:timezone="timezone"
+		/>
 		<chart-component
 			v-model:date-range="dateRange"
 			:class="classes.chart"
@@ -35,6 +49,8 @@ const changes = {
 			:current="props.data.current"
 			:handle-scale="props.handleScale"
 			:date-range-presets="DEFAULT_PRESETS"
+			:type="chartType"
+			:timezone="timezone"
 		/>
 		<chart-date-range
 			v-model="dateRange"
