@@ -1,16 +1,17 @@
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { z } from 'zod';
 
-import { getDefaultsState, type IState, TimeRangeFilterValue } from '../model';
+import { getDefaultsState, type IState } from '../model';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { useWatchlist } from '@/modules/watchlist';
-import { useQueryChartPrice } from '../queries';
+import { useQueryChartPriceHistory } from '../queries';
 import { decodeCanonicalTickerId, fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 import { deepCompare } from '@/shared/lib/compare';
+import { type DateRangeValue, DateRangeValueSchema } from '@/modules/lightweight-charts/model';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),
-	timeRange: z.nativeEnum(TimeRangeFilterValue),
+	timeRange: DateRangeValueSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
@@ -80,7 +81,7 @@ export function useChartPrice({
 
 	const timeRange = computed({
 		get: () => state.value.timeRange,
-		set: (val: TimeRangeFilterValue) => {
+		set: (val: DateRangeValue) => {
 			state.value.timeRange = val;
 		},
 	});
@@ -148,7 +149,7 @@ export function useChartPrice({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryChartPrice(selectedTickerId, selectedMarketType, timeRange);
+	} = useQueryChartPriceHistory(selectedTickerId, timeRange);
 
 	return {
 		selectedTickerId,

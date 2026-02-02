@@ -141,4 +141,6 @@ export enum IconIds {
 
 	PositiveKeyIndicator = 'positive-key-indicator',
 	NegativeKeyIndicator = 'negative-key-indicator',
+
+	Camera = 'camera',
 }

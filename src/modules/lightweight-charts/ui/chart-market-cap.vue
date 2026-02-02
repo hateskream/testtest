@@ -5,16 +5,15 @@ import { computed, type CSSProperties, onMounted, onUnmounted, shallowRef, useTe
 import { Chart } from 'chart.js/auto';
 import { sub } from 'date-fns';
 
-import { formatPrice, type IChartMarketCapDataset } from '../model';
+import { DateRangePreset, type DateRangeValue, formatPrice, type IChartMarketCapDataset } from '../model';
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import { MarketCapDateRange } from '@/modules/widgets/market-cap/model';
 import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled, prettyNumberWithKey } from '@/shared/lib';
 
 interface IChartMarketCapProps {
 	height: CSSProperties['height'];
 	hideAxis?: boolean;
-	range: MarketCapDateRange;
+	range: DateRangeValue;
 	datasets: IChartMarketCapDataset[];
 	locale?: string;
 }
@@ -60,42 +59,42 @@ function updateChartDatasets() {
 }
 
 const rangeToScales = {
-	[MarketCapDateRange.Day]: {
+	[DateRangePreset.Day]: {
 		min: sub(new Date(), { days: 1 }).getTime(),
 		max: Date.now(),
 		time: {
 			unit: 'hour',
 		},
 	},
-	[MarketCapDateRange.Week]: {
+	[DateRangePreset.Week]: {
 		min: sub(new Date(), { days: 7 }).getTime(),
 		max: Date.now(),
 		time: {
 			unit: 'day',
 		},
 	},
-	[MarketCapDateRange.Month]: {
+	[DateRangePreset.Month]: {
 		min: sub(new Date(), { days: 30 }).getTime(),
 		max: Date.now(),
 		time: {
 			unit: 'day',
 		},
 	},
-	[MarketCapDateRange.SixMonths]: {
+	[DateRangePreset.SixMonths]: {
 		min: sub(new Date(), { days: 180 }).getTime(),
 		max: Date.now(),
 		time: {
 			unit: 'day',
 		},
 	},
-	[MarketCapDateRange.Year]: {
+	[DateRangePreset.Year]: {
 		min: sub(new Date(), { years: 1 }).getTime(),
 		max: Date.now(),
 		time: {
 			unit: 'month',
 		},
 	},
-	[MarketCapDateRange.All]: {
+	[DateRangePreset.All]: {
 		min: sub(new Date(), { years: 1 }).getTime(),
 		max: Date.now(),
 		time: {

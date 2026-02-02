@@ -1,1 +1,1 @@
-export * from './get-chart-price';
+export * from './get-chart-price-history';

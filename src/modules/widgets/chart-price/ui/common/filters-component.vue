@@ -2,11 +2,16 @@
 import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
-import { ENABLED_MARKETS, filterValueToDisplay, TimeRangeFilterValue } from '../../model';
-import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { ENABLED_MARKETS, filterValueToDisplay } from '../../model';
+import { type ITickerItem, SelectionMode, TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
+import {
+	createPreset,
+	DateRangePreset,
+	type DateRangePresetType,
+	type DateRangeValue,
+} from '@/modules/lightweight-charts/model';
 
 interface IFiltersComponentProps {
 	selectedTickerId: string;
@@ -18,7 +23,7 @@ interface IFiltersComponentProps {
 const props = defineProps<IFiltersComponentProps>();
 
 const selectedTicker = defineModel<ITickerItem[]>('selectedTicker', { required: true });
-const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
+const dateRange = defineModel<DateRangeValue>('timeRange', { required: true });
 
 const emit = defineEmits<{
 	(e: 'add-to-watchlist', watchlistId: string): void;
@@ -28,15 +33,38 @@ const emit = defineEmits<{
 	(e: 'reset-all-changes'): void;
 }>();
 
-const timeRangeDropdownRef = useTemplateRef('timeRangeDropdown');
+const selectedDateRangePreset = computed(() => {
+	const range = dateRange.value;
+
+	if (range.type === 'preset') {
+		return range.preset;
+	}
+
+	return undefined;
+});
+
+const dateRangeLabel = computed(() => {
+	const preset = selectedDateRangePreset.value;
+
+	if (preset) {
+		return filterValueToDisplay[preset].label;
+	}
+
+	return 'Custom';
+});
+
+const dateRangeDropdownRef = useTemplateRef('timeRangeDropdown');
 
 function closeTimeRangeDropdown() {
-	timeRangeDropdownRef.value?.close?.();
+	dateRangeDropdownRef.value?.close?.();
 }
 
-function updateFilter(newValue: TimeRangeFilterValue) {
-	if (newValue !== timeRange.value) {
-		timeRange.value = newValue;
+function updateFilter(newValue: DateRangePresetType) {
+	const range = dateRange.value;
+	const preset = createPreset(newValue);
+
+	if (range.type === 'custom' || range.preset !== newValue) {
+		dateRange.value = preset;
 		closeTimeRangeDropdown();
 	}
 }
@@ -63,7 +91,7 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 				<ui-delimiter v-if="isDefaultDisplayVariant" />
 				<modal-badge-dropdown ref="timeRangeDropdown" :display-variant="props.displayVariant">
 					<template #title>
-						<span>{{ filterValueToDisplay[timeRange].label }}</span>
+						<span>{{ dateRangeLabel }}</span>
 					</template>
 					<template #content>
 						<modal-badge-list :display-variant>
@@ -71,11 +99,11 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 								Time Range
 							</template>
 							<template
-								v-for="filterValue in TimeRangeFilterValue"
+								v-for="filterValue in DateRangePreset"
 								:key="filterValue"
 							>
 								<modal-item-selector
-									:model-value="filterValue === timeRange"
+									:model-value="filterValue === selectedDateRangePreset"
 									@update:model-value="updateFilter(filterValue)"
 								>
 									{{ filterValueToDisplay[filterValue].option }}

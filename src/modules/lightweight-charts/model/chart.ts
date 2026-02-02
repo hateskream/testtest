@@ -1,4 +1,6 @@
-import type { ChartClickData } from '@shared/component-library';
+import type { CandlestickData, ChartClickData, ChartData } from '@shared/component-library';
+
+import { isNumber } from '@/shared/lib';
 
 export const IndicatorsChart = {
 	Main: 'Main',
@@ -22,3 +24,16 @@ export interface IChartUpdateEmitData {
 }
 
 export type SharedChartMouseEvent = CustomEvent<ChartClickData[]>;
+
+export function isCandlestickData(data: ChartData): data is CandlestickData {
+	return 'close' in data;
+}
+
+export function strTimeToChartTime(time: string): number {
+	const ms = Date.parse(time);
+	return Math.floor(ms / 1000);
+}
+
+export function chartTimeToDate(time: number | string) {
+	return new Date(isNumber(time) ? time * 1000 : time);
+}

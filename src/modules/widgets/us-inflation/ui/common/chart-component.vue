@@ -33,7 +33,6 @@ const preparedDatasets = computed(() => {
 		:width="100"
 		:data="preparedDatasets"
 		height="100%"
-		disable-scroll
 		color-schema="neutral"
 		fade-left
 	/>

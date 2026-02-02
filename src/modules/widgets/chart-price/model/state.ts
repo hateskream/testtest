@@ -5,13 +5,11 @@ import {
 	createTickerIdIndex,
 	SymbolType,
 } from '@/modules/cell';
-import {
-	TimeRangeFilterValue,
-} from './time-range';
+import { createPreset, DateRangePreset, type DateRangeValue } from '@/modules/lightweight-charts/model';
 
 export interface IState {
 	selectedTicker: string;
-	timeRange: TimeRangeFilterValue;
+	timeRange: DateRangeValue;
 }
 
 export function getDefaultsState(defaultStateType: string): IState {
@@ -50,6 +48,6 @@ export function getDefaultsState(defaultStateType: string): IState {
 
 	return {
 		selectedTicker: defaultSelectedTicker,
-		timeRange: TimeRangeFilterValue.Day,
+		timeRange: createPreset(DateRangePreset.Day),
 	};
 }

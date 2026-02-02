@@ -5,7 +5,6 @@ import {
 	getDefaultState,
 	type IDisplaySettings,
 	type IState,
-	MarketCapDateRange,
 	type MarketCapType,
 	stateSchema,
 	type StateSchemaType,
@@ -13,6 +12,7 @@ import {
 import { useQueryMarketCap } from '../queries';
 import { deepCompare } from '@/shared/lib/compare.ts';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import type { DateRangeValue } from '@/modules/lightweight-charts/model';
 
 interface IOptions {
 	widgetId: string;
@@ -69,7 +69,7 @@ export function useMarketCap({
 
 	const activeDateRange = computed({
 		get: () => state.value.dateRange,
-		set: (val: MarketCapDateRange) => {
+		set: (val: DateRangeValue) => {
 			state.value.dateRange = val;
 		},
 	});

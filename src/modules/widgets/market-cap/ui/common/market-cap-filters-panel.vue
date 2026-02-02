@@ -4,14 +4,16 @@ import { computed } from 'vue';
 import { MarketType } from '@/modules/market';
 import {
 	type IMarketTickerItem,
-	type ITickerItem, MARKET_TICKER_ITEMS,
+	type ITickerItem,
+	MARKET_TICKER_ITEMS,
 	MARKET_TICKER_ITEMS_BY_MARKET,
 	SelectionMode,
+	TickerSelectorModalWithBadge,
 } from '@/modules/ticker-selector';
-import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
+import { dateRangeFilters, dateRangeFilterValueToDisplay, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
+import { createPreset, type DateRangePresetType, type DateRangeValue } from '@/modules/lightweight-charts/model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -19,7 +21,7 @@ const emit = defineEmits<{
 
 const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', { required: true });
 const selectedMarkets = defineModel<MarketCapType[]>('selectedMarkets', { required: true });
-const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
+const activeDateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 
 interface IMarketCapFiltersPanelProps {
 	isShowDateRange?: boolean;
@@ -28,7 +30,31 @@ interface IMarketCapFiltersPanelProps {
 
 const props = defineProps<IMarketCapFiltersPanelProps>();
 
-const selectedRangeLabel = computed(() => dateRangeFilterValueToDisplay[activeDateRange.value].selected);
+const selectedDateRangeLabel = computed(() => {
+	const range = activeDateRange.value;
+
+	if (range.type === 'preset') {
+		return dateRangeFilterValueToDisplay[range.preset].selected;
+	}
+
+	return 'Custom range';
+});
+
+const selectedDateRangePreset = computed(() => {
+	if (!activeDateRange.value) {
+		return undefined;
+	}
+
+	if (activeDateRange.value.type === 'preset') {
+		return activeDateRange.value.preset;
+	}
+
+	return undefined;
+});
+
+function selectDateRange(preset: DateRangePresetType) {
+	activeDateRange.value = createPreset(preset);
+}
 
 const marketTickers = computed({
 	get: () => {
@@ -67,11 +93,11 @@ const marketTickers = computed({
 			<modal-badge-filter
 				:display-variant="props.displayVariant"
 				:options="dateRangeFilters"
-				:selected-value="activeDateRange"
-				:label="selectedRangeLabel"
+				:selected-value="selectedDateRangePreset"
+				:label="selectedDateRangeLabel"
 				close-on-select
 				title="Date"
-				@select="activeDateRange = $event.value"
+				@select="selectDateRange($event.value)"
 			/>
 		</template>
 	</widget-filters-scrollable>

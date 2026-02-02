@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
-import { useElementSize, useWindowSize } from '@vueuse/core';
+import { useWindowSize } from '@vueuse/core';
 
 
 import { useChartStore } from '@/modules/chart/store';
@@ -8,7 +8,6 @@ import { useChartStore } from '@/modules/chart/store';
 import { ChartHeaderComponent } from './components/header';
 import { ChartColumnsLayout, ChartLayout } from './ui';
 import { CHART_COMPONENT_MAP, type CHART_SECTION_COMPONENT, getChartSectionsByType, TickerType } from './models';
-import { RangeChart } from '@/shared/ui/chart-range';
 import { ChartWidgetExplorer } from '@/modules/chart/components/widgets';
 
 import ChartComponent from '../lightweight-charts/ui/chart-component.vue';
@@ -37,12 +36,7 @@ const chartRef = ref<InstanceType<typeof ChartComponent> | null>(null);
 
 const itemRefs = ref<Map<string, HTMLElement>>(new Map());
 
-const { width: containerWidth } = useElementSize(chartContainerEl);
 const { height: windowHeight } = useWindowSize();
-
-const chartWidth = computed(() => {
-	return containerWidth.value || 500;
-});
 
 const chartHeight = computed(() => {
 	const height = Math.floor(windowHeight.value * 0.5);
@@ -121,17 +115,6 @@ watch(() => props.type, (newType) => {
 		setMode(TickerType.CRYPTO);
 	}
 }, { immediate: true });
-
-const currentChartRanges = [
-	RangeChart['1D'],
-	RangeChart['1W'],
-	RangeChart['1M'],
-	RangeChart['3M'],
-	RangeChart['6M'],
-	RangeChart['YTD'],
-	RangeChart['1Y'],
-	RangeChart['ALL'],
-];
 </script>
 
 <template>
@@ -152,10 +135,9 @@ const currentChartRanges = [
 			>
 				<chart-component
 					ref="chartRef"
-					:width="chartWidth"
+					:data="[]"
 					:height="chartHeight"
-					:disable-scroll="disableScroll"
-					:range-list="currentChartRanges"
+					:handle-scale="!disableScroll"
 				/>
 			</div>
 		</template>

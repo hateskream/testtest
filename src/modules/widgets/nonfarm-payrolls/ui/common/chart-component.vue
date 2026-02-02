@@ -31,7 +31,6 @@ const props = defineProps<IMarketCapChartProps>();
 		:is-visible-price-line="false"
 		:width="100"
 		height="100%"
-		disable-scroll
 		:color-schema="props.chartColorSchema"
 		:data="props.points"
 		fade-left

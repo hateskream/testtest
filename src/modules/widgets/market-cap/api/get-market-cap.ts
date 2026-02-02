@@ -9,22 +9,22 @@ import {
 	type IMarketCapPoint,
 	type IMarketCapTicker,
 	type IMarketCapTotal,
-	MarketCapDateRange,
 } from '../model';
 import { useFetchMock } from '@/shared/mock';
+import { DateRangePreset, type DateRangePresetType } from '@/modules/lightweight-charts/model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetMarketCapRequest {
 	tickers: string[];
 	markets: string[];
-	range: MarketCapDateRange;
+	range: DateRangePresetType;
 }
 
 export interface IGetMarketCapResponse {
 	tickers: IMarketCapTicker[];
 	markets: IMarketCapMarket[];
-	range: MarketCapDateRange;
+	range: DateRangePresetType;
 	data: {
 		points: IMarketCapPoint<string>[];
 		total: IMarketCapTotal;
@@ -78,13 +78,13 @@ interface IMarketCapMockData {
 
 const { getMock } = useFetchMock<IMarketCapMockData>('/mock/widgets/market-cap.json');
 
-const rangeDayCounts: Record<MarketCapDateRange, number> = {
-	[MarketCapDateRange.Day]: 1,
-	[MarketCapDateRange.Week]: 7,
-	[MarketCapDateRange.Month]: 30,
-	[MarketCapDateRange.SixMonths]: 180,
-	[MarketCapDateRange.Year]: 365,
-	[MarketCapDateRange.All]: 365,
+const rangeDayCounts: Record<DateRangePresetType, number> = {
+	[DateRangePreset.Day]: 1,
+	[DateRangePreset.Week]: 7,
+	[DateRangePreset.Month]: 30,
+	[DateRangePreset.SixMonths]: 180,
+	[DateRangePreset.Year]: 365,
+	[DateRangePreset.All]: 365,
 };
 
 function generateTickerValue(from: number, to: number) {

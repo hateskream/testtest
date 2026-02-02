@@ -1,10 +1,14 @@
-import { TimeRangeFilterValue } from './time-range';
+import { DateRangePreset, type DateRangePresetType, type DateRangeValue } from '@/modules/lightweight-charts/model';
 
 // На данный момент поддерживаются события только на дневном просмотре
-export const TIMELINE_EVENTS_ALLOWED = new Set<TimeRangeFilterValue>([
-	TimeRangeFilterValue.Day,
+export const TIMELINE_EVENTS_ALLOWED = new Set<DateRangePresetType>([
+	DateRangePreset.Day,
 ]);
 
-export function isTimelineEventsVisible(range: TimeRangeFilterValue): boolean {
-	return TIMELINE_EVENTS_ALLOWED.has(range);
+export function isTimelineEventsVisible(range: DateRangeValue): boolean {
+	if (range.type === 'preset') {
+		TIMELINE_EVENTS_ALLOWED.has(range.preset);
+	}
+
+	return false;
 }

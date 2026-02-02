@@ -19,6 +19,8 @@ export { default as ChartTrailingReturns } from './ui/chart-trailing-returns.vue
 export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue';
 export { default as ChartStylebox } from './ui/chart-stylebox.vue';
 export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
+export { default as ChartDateRange } from './ui/date-range/chart-date-range.vue';
+export { default as ChartDateRangeChange } from './ui/date-range/chart-date-range-change.vue';
 export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';
 
 export { default as ChartBar, type BarDataset } from './ui/chart-bar.vue';

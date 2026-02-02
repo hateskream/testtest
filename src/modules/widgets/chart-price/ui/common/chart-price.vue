@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { LastPriceAnimationMode, type LineData } from '@shared/component-library';
+import { LastPriceAnimationMode } from '@shared/component-library';
 
-import { Chart } from '@/modules/lightweight-charts';
-import { type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
+import { Chart, ChartDateRange } from '@/modules/lightweight-charts';
+import { type DateRangeValue, strTimeToChartTime } from '@/modules/lightweight-charts/model';
 import type { ICalendarEvent } from '@/modules/calendar';
 import {
+	type ChartPriceCurrentData,
+	type ChartPriceHistoryPoint,
 	getMarketSegmentStateColor,
-	type IChartPriceCurrent,
-	type IChartPricePoint,
 	type IMarketSegment,
-	TimeRangeFilterValue,
 } from '../../model';
 
 import ChartPriceHeader from './chart-price-header.vue';
@@ -25,8 +24,8 @@ interface IChartPriceProps {
 	displayVariant: 'tv' | 'dashboard';
 	events?: ICalendarEvent[];
 	marketSegments?: IMarketSegment[];
-	points: IChartPricePoint[];
-	current: IChartPriceCurrent;
+	points: ChartPriceHistoryPoint[];
+	current: ChartPriceCurrentData;
 }
 
 const props = withDefaults(defineProps<IChartPriceProps>(), {
@@ -34,7 +33,7 @@ const props = withDefaults(defineProps<IChartPriceProps>(), {
 	marketSegments: () => [],
 });
 
-const dateRange = defineModel<TimeRangeFilterValue>('range', { required: true });
+const dateRange = defineModel<DateRangeValue>('range', { required: true });
 
 const isTvDisplayVariant = computed(() => props.displayVariant === 'tv');
 
@@ -44,29 +43,6 @@ const eventsTimelinePadding = computed(() => {
 	}
 
 	return '0 20px 0 0';
-});
-
-const dateRangeToRangeChart: Record<TimeRangeFilterValue, RangeChartType> = {
-	[TimeRangeFilterValue.Day]: RangeChart['1D'],
-	[TimeRangeFilterValue.Week]: RangeChart['7D'],
-	[TimeRangeFilterValue.Month]: RangeChart['1M'],
-	[TimeRangeFilterValue.SixMonths]: RangeChart['6M'],
-	[TimeRangeFilterValue.Year]: RangeChart['1Y'],
-	[TimeRangeFilterValue.All]: RangeChart['ALL'],
-};
-
-const chartRanges = Object.values(TimeRangeFilterValue).map(key => dateRangeToRangeChart[key]);
-
-const activeChartRange = computed({
-	get: () => dateRangeToRangeChart[dateRange.value],
-	set: (newRange) => {
-		const dateRangeFilter = Object.entries(dateRangeToRangeChart)
-			.find(([_, value]) => value === newRange);
-
-		if (dateRangeFilter) {
-			dateRange.value = dateRangeFilter[0] as TimeRangeFilterValue;
-		}
-	},
 });
 
 const closeTime = computed(() => {
@@ -87,7 +63,13 @@ const timelineSegments = computed(() => {
 const chartColorSchema = computed(() => props.current.changePercent > 0 ? 'positive' : 'negative');
 
 const preparedChartData = computed(() => {
-	return props.points.map((point): LineData => ({ time: point.timestamp / 1000, value: point.price }));
+	return props.points.map(point => ({
+		time: strTimeToChartTime(point.timestamp),
+		open: point.priceCandle.open,
+		high: point.priceCandle.high,
+		low: point.priceCandle.low,
+		close: point.priceCandle.close,
+	}));
 });
 
 const indicators = computed(() => {
@@ -119,20 +101,13 @@ const indicators = computed(() => {
 				:class="classes.indicators"
 			/>
 			<chart
-				v-model:range="activeChartRange"
 				:data="preparedChartData"
-				width="100%"
 				height="100%"
 				is-show-tooltip
-				disable-scroll
-				:is-visible-history-graph="false"
-				:is-visible-indicators="false"
-				:is-visible-range="props.isBig && props.isShowTimeRange"
 				:is-visible-price-line="props.isShowAxes"
 				:is-visible-price-scale="props.isShowAxes"
 				:is-visible-time-scale="props.isShowAxes && !props.isShowEventsTimeline"
 				:is-visible-events-timeline="props.isShowEventsTimeline"
-				:range-list="chartRanges"
 				:class="classes.chart"
 				:events="props.events"
 				:timeline-segments="timelineSegments"
@@ -144,6 +119,7 @@ const indicators = computed(() => {
 				price-label="Current Price"
 				fade-left
 			/>
+			<chart-date-range v-if="props.isBig && props.isShowTimeRange" v-model="dateRange" />
 		</div>
 	</div>
 </template>

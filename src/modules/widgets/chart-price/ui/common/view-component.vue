@@ -3,14 +3,11 @@ import { computed } from 'vue';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import {
-	type IChartPriceCurrent,
-	type IChartPricePoint,
-	TimeRangeFilterValue,
-} from '@/modules/widgets/chart-price/model';
+import { type ChartPriceCurrentData, type ChartPriceHistoryPoint } from '@/modules/widgets/chart-price/model';
 import { randomInt } from '@/shared/lib';
 import { type IMarketSegment, isTimelineEventsVisible, MarketSegmentState } from '../../model';
 import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar';
+import type { DateRangeValue } from '@/modules/lightweight-charts/model';
 
 import ChartPrice from './chart-price.vue';
 
@@ -18,13 +15,13 @@ interface IViewComponentProps {
 	meta: IMeta;
 	isShowTimeRange: boolean;
 	displayVariant: 'tv' | 'dashboard';
-	points: IChartPricePoint[];
-	current: IChartPriceCurrent;
+	points: ChartPriceHistoryPoint[];
+	current: ChartPriceCurrentData;
 }
 
 const props = defineProps<IViewComponentProps>();
 
-const dateRange = defineModel<TimeRangeFilterValue>('range', { required: true });
+const dateRange = defineModel<DateRangeValue>('range', { required: true });
 
 const isBig = computed(() => props.meta.size.h >= 6 && props.meta.size.w >= 2);
 const isShowChart = computed(() => props.meta.size.h > 3);

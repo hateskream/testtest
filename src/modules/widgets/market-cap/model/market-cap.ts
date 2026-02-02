@@ -1,13 +1,5 @@
 import { MarketType } from '@/modules/market';
-
-export enum MarketCapDateRange {
-	Day= '1D',
-	Week = '1W',
-	Month = '1M',
-	SixMonths = '6M',
-	Year = '1Y',
-	All = 'ALL',
-}
+import type { DateRangePresetType } from '@/modules/lightweight-charts/model';
 
 export type MarketCapType = MarketType.Crypto | MarketType.Stock;
 
@@ -43,7 +35,8 @@ export interface IMarketCapTotalValue {
 export interface IMarketCapHistory {
 	tickers: IMarketCapTicker[];
 	markets: IMarketCapMarket[];
-	range: MarketCapDateRange;
+	// TODO: Перейти на from/to
+	range: DateRangePresetType;
 	data: {
 		points: IMarketCapPoint[];
 		total: IMarketCapTotal;
