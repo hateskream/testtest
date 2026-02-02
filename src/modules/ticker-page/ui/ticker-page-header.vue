@@ -19,6 +19,7 @@ const props = defineProps<{
 	exchange?: IExchange;
 	dataProvider: IDataProvider;
 	price: IPriceData;
+	dominantColor: string;
 }>();
 
 const emits = defineEmits<{
@@ -41,7 +42,7 @@ const selectedTickers = computed({
 const classes = useCssModule('classes');
 
 const chart = computed(() => {
-	const label = `${props.price.change} (${props.price.change_percent}%)`;
+	const label = `${props.price.change_24h} (${props.price.change_24h_percent}%)`;
 
 	if (props.price.status === 'positive') {
 		return {
@@ -71,7 +72,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 <template>
 	<header :class="classes.header">
 		<div :class="classes.glowWrapper">
-			<div :class="classes.glow" />
+			<div :class="classes.glow" :style="`--dominant-color: ${props.dominantColor}`" />
 		</div>
 
 		<div :class="classes.inner">
@@ -267,9 +268,10 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	flex-shrink: 0;
 	width: 264px;
 	height: 199px;
-	background: rgb(9 56 153 / 16%);
+	background: var(--dominant-color, #FFFFFF);
 	border-radius: 264px;
-	filter: blur(44px);
+	filter: blur(88px);
+	opacity: .16;
 }
 
 .inner {
@@ -278,6 +280,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	justify-content: space-between;
 	align-items: flex-end;
 	gap: 8px;
+	z-index: 1;
 }
 
 .left {

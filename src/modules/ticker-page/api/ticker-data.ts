@@ -27,8 +27,8 @@ export interface IDataProvider {
 export interface IPriceData {
 	currency: string;
 	current_price: number;
-	change: number;
-	change_percent: number;
+	change_24h: number;
+	change_24h_percent: number;
 	status: 'positive' | 'negative' | 'neutral';
 }
 
@@ -37,6 +37,7 @@ export interface ITickerDataResponse {
 	exchange?: IExchange;
 	data_provider: IDataProvider;
 	price: IPriceData;
+	dominant_color: string;
 }
 
 export function getTickerData(req: ITickerDataRequest) {
@@ -82,9 +83,10 @@ async function getMockTickerData(): Promise<ITickerDataResponse> {
 		price: {
 			currency: '$',
 			current_price: 1.1655,
-			change: 0.00134,
-			change_percent: 0.12,
+			change_24h: 0.00134,
+			change_24h_percent: 0.12,
 			status: 'positive',
 		},
+		dominant_color: '#FF000001',
 	};
 }

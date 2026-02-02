@@ -27,10 +27,11 @@ const tickersData = ref<ITickerDataResponse[]>([
 		price: {
 			currency: '$',
 			current_price: 1.1655,
-			change: 0.00134,
-			change_percent: 0.12,
+			change_24h: 0.00134,
+			change_24h_percent: 0.12,
 			status: 'positive',
 		},
+		dominant_color: '#FFFFFF',
 	},
 	{
 		ticker: {
@@ -54,10 +55,11 @@ const tickersData = ref<ITickerDataResponse[]>([
 		price: {
 			currency: '€',
 			current_price: 1.0856,
-			change: 0.00234,
-			change_percent: 0.22,
+			change_24h: 0.00234,
+			change_24h_percent: 0.22,
 			status: 'positive',
 		},
+		dominant_color: '#FF0000',
 	},
 ]);
 
@@ -77,6 +79,7 @@ async function handleTickerSelect(index: number, tickerId: string) {
 			:exchange="data.exchange"
 			:data-provider="data.data_provider"
 			:price="data.price"
+			:dominant-color="data.dominant_color"
 			@on-ticker-select="handleTickerSelect(index, $event)"
 		/>
 	</div>
