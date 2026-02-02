@@ -3,8 +3,8 @@ import { computed } from 'vue';
 import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalFilterTitle } from '../../base';
-import { CRYPTO_ALL_COLUMNS } from '../model/crypto';
+import { ModalFilterTitle } from '../../../base';
+import { CRYPTO_ALL_COLUMNS } from '../../model/crypto';
 import {
 	groupTableColumns,
 	toggleShowTableColumns,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IGasCardData } from '../model';
+import type { IGasCardData } from '../../model';
 
 
 export interface IGasCardProps {

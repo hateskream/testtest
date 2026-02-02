@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import type { FiltersState, FiltersValues } from '../model';
+import type { FiltersState, FiltersValues } from '../../model';
 import { UiPosition } from '@/shared/ui/position';
-import { MarketBadge } from '../../base';
+import { MarketBadge } from '../../../base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { MarketType } from '@/modules/market';
 import type { ITableColumn } from '@/modules/cell';

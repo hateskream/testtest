@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { useQueryMarket } from '../queries';
+import { useQueryMarket } from '../../queries';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useMarket } from '../composables';
-import { NONE_SET_FILTER } from '../model';
+import { useMarket } from '../../composables';
+import { NONE_SET_FILTER } from '../../model';
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 
-import PreloaderComponent from './preloader-component.vue';
-import TableColumnsSettingsComponent from './table-columns-settings-component.vue';
+import PreloaderComponent from '../common/preloader-component.vue';
+import TableColumnsSettingsComponent from '../common/table-columns-settings-component.vue';
 
 const ViewComponent = defineAsyncComponent({
-	loader: () => import('./view-component.vue'),
+	loader: () => import('../view-component.vue'),
 	loadingComponent: PreloaderComponent,
 	errorComponent: BaseErrorComponent,
 });

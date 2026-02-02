@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '../../base';
+import { MarketBadgeList, ModalBadgeList, ModalItemSelector, ModalSubmenu } from '../../../base';
 import type { MarketType } from '@/modules/market';
 import type { ITableColumn } from '@/modules/cell';
 import type { FiltersState, FiltersValues } from '@/modules/widgets/market/model';

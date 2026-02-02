@@ -13,6 +13,8 @@ function checkIsConfigValidated() {
  */
 export const EXPERIMENTAL_WIDGETS_FEATURES = [
 	'SHOW_FEAR_AND_GREED_WIDGET',
+	'SHOW_MARKET_CAP_WIDGET_DASHBOARD',
+	'SHOW_ETH_GAS_WIDGET_DASHBOARD',
 ] as const;
 
 /**

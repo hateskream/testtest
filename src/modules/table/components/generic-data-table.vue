@@ -155,6 +155,25 @@ const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	return getRealBackgroundColor(element.parentElement);
 };
 
+const parseCssRgbOrRgba = (color: string): { rgb: string; a: string } => {
+	const c = (color || '').trim();
+
+	// rgb(20, 20, 21) / rgba(20, 20, 21, 0.92)
+	const m = c.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+)\s*)?\)$/i);
+	if (m) {
+		const r = Math.round(Number(m[1]));
+		const g = Math.round(Number(m[2]));
+		const b = Math.round(Number(m[3]));
+		const a = m[4] != null ? String(Number(m[4])) : '1';
+		return { rgb: `${r} ${g} ${b}`, a };
+	}
+
+	// fallback: если пришло не rgb/rgba (var(...) и т.п.) — используем дефолт темы
+	return { rgb: '26 26 26', a: '1' };
+};
+
+const tableBgParts = computed(() => parseCssRgbOrRgba(tableBackgroundColor.value));
+
 const recalculateColumnWidths = async () => {
 	await nextTick();
 	const table = tableRef.value;
@@ -498,7 +517,11 @@ onUnmounted(() => {
 <template>
 	<div
 		:class="classes.tableContainer"
-		:style="{ '--table-bg-color': tableBackgroundColor }"
+		:style="{
+			'--table-bg-color': tableBackgroundColor,
+			'--table-bg-rgb': tableBgParts.rgb,
+			'--table-bg-a': tableBgParts.a
+		}"
 	>
 		<!-- Inject scrollbar styles -->
 		<component :is="'style'">{{ scrollbarStyles }}</component>
@@ -521,7 +544,7 @@ onUnmounted(() => {
 					ref="tableRef"
 					:class="classes.dataTable"
 					:style="{
-						'table-layout':'fixed',
+						'table-layout': 'fixed',
 						width: tableWidth
 					}"
 				>
@@ -538,6 +561,7 @@ onUnmounted(() => {
 						:enable-row-actions="enableRowActions"
 						:sticky="stickyHeader"
 						:sticky-first-column="stickyFirstColumn"
+						:bg-color="tableBackgroundColor"
 						@update:columns="handleColumnsUpdate"
 						@update:sort="handleSortUpdate"
 						@update:column-width="handleColumnResize"

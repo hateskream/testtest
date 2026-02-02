@@ -90,6 +90,8 @@ const Calendar: Preset = {
 const Market: Preset = {
 	name: 'Market',
 	displayVariants: ['default'],
+	minHeight: 206,
+	maxHeight: 406,
 };
 
 const Watchlist: Preset = {
@@ -241,6 +243,8 @@ export function canChangeHeight(widget: IWidget): boolean {
 
 const experimentalWidgets: Partial<Record<WidgetType, boolean>> = {
 	[WidgetType.FearGreed]: isFeatureEnabled('SHOW_FEAR_AND_GREED_WIDGET'),
+	[WidgetType.MarketCap]: isFeatureEnabled('SHOW_MARKET_CAP_WIDGET_DASHBOARD'),
+	[WidgetType.EthGas]: isFeatureEnabled('SHOW_ETH_GAS_WIDGET_DASHBOARD'),
 };
 
 export function isExperimentalWidgetEnabled(widgetType: WidgetType): boolean {

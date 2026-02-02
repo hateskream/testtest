@@ -1,3 +1,3 @@
-import DashboardComponent from './ui/dashboard-component.vue';
+import { MarketTvWidget, MarketDashboardWidget } from './ui';
+export { MarketTvWidget, MarketDashboardWidget };
 
-export { DashboardComponent as MarketDashboard };

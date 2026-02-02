@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type ISize, type IGasStatsData, type IGasCardData } from '../model';
+import { type ISize, type IGasStatsData, type IGasCardData } from '../../model';
 
-import GasCard from './gas-card-component.vue';
-import GasStatsCard from './gast-stats-data.vue';
+import GasCard from '../common/gas-card-component.vue';
+import GasStatsCard from '../common/gast-stats-data.vue';
 
 
 export interface IViewComponentProps {

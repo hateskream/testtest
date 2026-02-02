@@ -14,7 +14,7 @@ interface IProps {
 	columns: IGenericTableColumn[];
 	allColumns: IGenericTableColumn[];
 	sortConfig: ISortConfig;
-	columnWidths:string[]|undefined;
+	columnWidths: string[] | undefined;
 	enableReordering?: boolean;
 	enableResizing?: boolean;
 	enableSorting?: boolean;
@@ -22,12 +22,13 @@ interface IProps {
 	enableRowActions?: boolean;
 	sticky?: boolean;
 	stickyFirstColumn?: boolean;
+	bgColor: string;
 }
 
 interface IEmits {
 	(e: 'update:columns', columns: IGenericTableColumn[]): void;
 	(e: 'update:sort', config: ISortConfig): void;
-	(e: 'update:columnWidth', index:number, width:number): void;
+	(e: 'update:columnWidth', index: number, width: number): void;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -152,29 +153,28 @@ const draggableColumns = computed({
 	},
 });
 
-const resizeStartX = ref<number|null>(null);
-const startResizeWidth = ref<number|null>(null);
-const resizeIndex = ref<number|null>(null);
-const onMouseMove = e=>{
+const resizeStartX = ref<number | null>(null);
+const startResizeWidth = ref<number | null>(null);
+const resizeIndex = ref<number | null>(null);
+const onMouseMove = e => {
 	const dx = e.clientX - resizeStartX.value;
-	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value+dx);
+	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value + dx);
 };
-const onMouseUp = _ =>{
+const onMouseUp = _ => {
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 };
-const startResize = (index, e)=> {
+const startResize = (index, e) => {
 	resizeIndex.value = index;
 	startResizeWidth.value = parseFloat(props.columnWidths[index]);
 	resizeStartX.value = e.clientX;
 	document.addEventListener('mousemove', onMouseMove);
 	document.addEventListener('mouseup', onMouseUp);
 };
-onUnmounted(()=>{
+onUnmounted(() => {
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 });
-
 </script>
 
 <template>
@@ -204,7 +204,7 @@ onUnmounted(()=>{
 						}
 					]"
 					:title="column.label"
-					:style="{ width: columnWidths?.[index] ?? undefined }"
+					:style="{ width: columnWidths?.[index] ?? undefined, '--table-bg-color': props.bgColor }"
 				>
 					<div :class="classes.headerContent">
 						<div
@@ -237,19 +237,15 @@ onUnmounted(()=>{
 								:sort-direction="getSortDirection(column.key)"
 								:sort-icon="getSortIcon(getSortDirection(column.key))"
 							>
-								<span
-									:class="
-										classes.headerLabel"
-								>
+								<span :class="classes.headerLabel">
 									{{ column.label }}
 								</span>
 							</slot>
 						</div>
-
-
 					</div>
 				</th>
 			</template>
+
 			<template #footer>
 				<th
 					v-if="enableColumnSettings"
@@ -261,7 +257,10 @@ onUnmounted(()=>{
 							[classes.stickySettings]: sticky
 						}
 					]"
-					:style="{ width: columnWidths?.[draggableColumns?.length] ?? undefined }"
+					:style="{
+						width: columnWidths?.[draggableColumns?.length] ?? undefined,
+						'--table-bg-color': props.bgColor
+					}"
 				>
 					<slot name="header-settings">
 						<generic-column-settings
@@ -278,8 +277,6 @@ onUnmounted(()=>{
 				</th>
 			</template>
 		</draggable>
-
-
 	</thead>
 </template>
 
@@ -309,9 +306,10 @@ onUnmounted(()=>{
 	vertical-align: middle;
 	text-align: right;
 	color: var(--text-color-base-100, #ffffff);
+	text-transform: uppercase;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background: var(--bg-color-surface-01, #1a1a1a);
+	background: var(--table-bg-color, #1a1a1a);
 	user-select: none;
 
 	& > div {
@@ -351,12 +349,6 @@ onUnmounted(()=>{
 	position: sticky !important;
 	left: 0;
 	z-index: 1;
-	background:
-		linear-gradient(
-			to right,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
-			rgb(26 26 26 / 0%) 100%
-		);
 }
 
 .firstColumn {
@@ -389,7 +381,6 @@ onUnmounted(()=>{
 	}
 }
 
-
 .headerLabel {
 	display: inline-block;
 	width: 100%;
@@ -399,7 +390,6 @@ onUnmounted(()=>{
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-
 
 .sortArrow {
 	font-size: 12px;
@@ -411,11 +401,9 @@ onUnmounted(()=>{
 	color: var(--text-color-base-100, #ffffff);
 }
 
-
 .sortArrowActive .sortArrow {
 	color: var(--text-color-base-100, #ffffff);
 }
-
 
 .settingsCell {
 	width: 50px;
@@ -427,8 +415,9 @@ onUnmounted(()=>{
 	background:
 		linear-gradient(
 			to left,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
-			rgb(26 26 26 / 0%) 100%
+			rgb(var(--table-bg-rgb, 26 26 26) / var(--table-bg-a, 1)) 0%,
+			rgb(var(--table-bg-rgb, 26 26 26) / var(--table-bg-a, 1)) 65%,
+			rgb(var(--table-bg-rgb, 26 26 26) / 0%) 100%
 		);
 	border: none;
 }
@@ -442,6 +431,4 @@ onUnmounted(()=>{
 .draggable-container {
 	display: contents;
 }
-
-
 </style>

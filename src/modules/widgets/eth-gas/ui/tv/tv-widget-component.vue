@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-import { BaseWidgetTvComponent } from '../../base/index.ts';
+import { BaseWidgetTvComponent } from '../../../base/index.ts';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useEthGas } from '../composables';
+import { useEthGas } from '../../composables';
 
-import EthGasContextMenu from './eth-gas-context-menu.vue';
-import ErrorComponent from './error-component.vue';
-import PreloaderComponent from './preloader-component.vue';
-import ViewComponent from './view-component.vue';
+import EthGasContextMenu from '../common/eth-gas-context-menu.vue';
+import ErrorComponent from '../common/error-component.vue';
+import PreloaderComponent from '../common/preloader-component.vue';
+import ViewComponent from '../common/view-component.vue';
 
 interface IWidgetComponentProps {
 	meta: IMeta;

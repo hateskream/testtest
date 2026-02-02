@@ -30,9 +30,9 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				// 	defaultState: 'none',
 				// 	height: 928,
 				// 	maxCountRow: 6,
-				// 	widgetType:  WidgetType.Market,
+				// 	widgetType: WidgetType.Market,
 				// 	defaultDisplayVariant: 'default',
-				// }
+				// },
 			],
 		},
 		{
@@ -260,6 +260,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			name: 'Market Momentum',
 			width: 560,
 			widgets: [
+				// {
+				// 	defaultState: 'none',
+				// 	height: 928,
+				// 	maxCountRow: 6,
+				// 	widgetType: WidgetType.Market,
+				// 	defaultDisplayVariant: 'default',
+				// },
+
 				{
 					defaultState: 'stock',
 					height: 465,

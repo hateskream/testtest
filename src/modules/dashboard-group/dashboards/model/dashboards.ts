@@ -37,8 +37,8 @@ export function getWidgetComponent(
 	widgetType: WidgetType,
 ): AsyncComponentLoader {
 	const widgetComponents = {
-		[WidgetType.FearGreed]: () => import('@/modules/widgets/fear-greed').then(m => m.TvWidgetComponent),
-		[WidgetType.Market]: () => import('@/modules/widgets/market').then(m => m.MarketDashboard),
+		[WidgetType.FearGreed]: () => import('@/modules/widgets/fear-greed').then(m => m.DashboardWidgetComponent),
+		[WidgetType.Market]: () => import('@/modules/widgets/market').then(m => m.MarketTvWidget),
 		[WidgetType.MarketCap]: () => import('@/modules/widgets/market-cap').then(m => m.MarketCapTvWidget),
 		[WidgetType.News]: () => import('@/modules/widgets/news').then(m => m.NewsTvWidget),
 		[WidgetType.Price]: () => import('@/modules/widgets/price').then(m => m.PriceTvWidget),
@@ -51,7 +51,8 @@ export function getWidgetComponent(
 		[WidgetType.Heatmap]: () => import('@/modules/widgets/heatmap').then(m => m.HeatmapDashboard),
 		[WidgetType.ChartPrice]: () => import('@/modules/widgets/chart-price').then(m => m.ChartPriceTvWidget),
 		[WidgetType.Exchange]: () => import('@/modules/widgets/exchanges').then(m => m.ExchangesDashboard),
-		[WidgetType.EthGas]: () => import('@/modules/widgets/eth-gas').then(m => m.EthGasDashboard),
+		[WidgetType.EthGas]: () => import('@/modules/widgets/eth-gas').then(m => m.ETHGasTvWidgetComponent),
+		[WidgetType.EthGas + '_dash']: () => import('@/modules/widgets/eth-gas').then(m => m.ETHGasDashboardWidgetComponent),
 
 		[WidgetType.MarketCap + '_dash']: () => import('@/modules/widgets/market-cap').then(m => m.MarketCapDashboardWidget),
 		[WidgetType.News + '_dash']: () => import('@/modules/widgets/news').then(m => m.NewsDashboardWidget),
@@ -61,6 +62,7 @@ export function getWidgetComponent(
 		[WidgetType.TopIndices + '_dash']: () => import('@/modules/widgets/top-indices').then(m => m.TopIndicesDashboardWidget),
 		[WidgetType.Calendar + '_dash']: () => import('@/modules/widgets/calendar-widget').then(m => m.CalendarDashboardWidget),
 		[WidgetType.ChartPrice + '_dash']: () => import('@/modules/widgets/chart-price').then(m => m.ChartPriceDashboardWidget),
+		[WidgetType.Market + '_dash']: () => import('@/modules/widgets/market').then(m => m.MarketTvWidget),
 		[WidgetType.FearGreed + '_dash']: () => import('@/modules/widgets/fear-greed').then(m => m.DashboardWidgetComponent),
 
 		[WidgetType.ConsumerPriceIndex]: () => import('@/modules/widgets/consumer-price-index').then(m => m.ConsumerPriceIndexDashboardWidget),

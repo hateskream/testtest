@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
 	WidgetContextMenu,
-} from '../../base';
+} from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 
 

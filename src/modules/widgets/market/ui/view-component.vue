@@ -4,8 +4,8 @@ import type { ITableColumn, TableRow } from '@/modules/cell';
 import type { MarketType } from '@/modules/market';
 import type { IWatchlistData } from '@/modules/watchlist';
 
-import MarketTabsComponent from './market-tabs-component.vue';
-import MarketTableComponent from './market-table-component.vue';
+import MarketTabsComponent from './common/market-tabs-component.vue';
+import MarketTableComponent from './table/market-table-component.vue';
 
 interface IViewComponentProps {
 	displayVariant: 'default' | 'new';

@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { type ITableColumn, mapColumn, mapRow, type TableRow } from '@/modules/cell';
-import { type IWatchlistAction } from '../model';
+import { type IWatchlistAction } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
 
@@ -47,6 +47,7 @@ const genericRows = computed(() =>
 			:sticky-first-column="true"
 			:enable-row-actions="true"
 			:show-header="true"
+			:hide-description="true"
 			@click-on-ticker="goToTickerPage"
 		>
 			<template #row-actions="{tickerId} : {tickerId: string}">

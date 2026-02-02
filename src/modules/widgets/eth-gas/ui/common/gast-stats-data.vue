@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import type { IGasStatsData } from '@/modules/widgets/eth-gas/model';
+import type { IGasStatsData } from '../../model';
 
 export interface IGasStatsCardProps {
 	data: IGasStatsData;
