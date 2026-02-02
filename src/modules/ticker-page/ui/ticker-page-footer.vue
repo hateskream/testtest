@@ -1,13 +1,27 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiText } from '@/shared/ui/text';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiControlButton } from '@/shared/ui/control-button';
 import { getFeatureValue } from '@/shared/lib';
+import { requestFeature, type IRequestFeaturePayload } from '../api/request-feature';
 
-const featureRequestLink = getFeatureValue('I88_FEATURE_REQUEST_LINK');
+import FooterFeatureRequest from './components/footer-feature-request.vue';
+
 const twitterPageLink = getFeatureValue('I88_TWITTER_PAGE_LINK');
 const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
+
+const requestState = ref<'initial' | 'form' | 'sended'>('initial');
+
+function handleFeatureRequest() {
+	requestState.value = 'form';
+}
+
+function onFormSend(form: IRequestFeaturePayload) {
+	requestState.value = 'sended';
+	requestFeature(form);
+}
 </script>
 
 <template>
@@ -27,29 +41,11 @@ const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
 				/>
 			</section>
 
-			<section :class="classes.textBlock">
-				<div :class="classes.head">
-					<ui-text token="title-400">
-						Missing feature?
-					</ui-text>
-
-					<ui-text token="text-400-r" :class="classes.subheading">
-						Describe your idea and we’ll make it happen
-					</ui-text>
-				</div>
-
-				<a
-					v-if="featureRequestLink"
-					:href="featureRequestLink"
-					target="_blank"
-					rel="noopener noreferrer"
-					:class="classes.socialLink"
-				>
-					<ui-control-button token="l-24-bg" :icon-id="IconIds.Feedback">
-						Request a feature
-					</ui-control-button>
-				</a>
-			</section>
+			<footer-feature-request
+				:state="requestState"
+				@request-feature="handleFeatureRequest"
+				@form-send="onFormSend"
+			/>
 		</div>
 
 		<section :class="classes.right">
@@ -87,6 +83,7 @@ const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
 	align-content: flex-start;
 	align-items: flex-start;
 	align-self: stretch;
+	width: 100%;
 	padding:
 		var(--padding-padding-s17, 44px) var(--padding-padding-s15, 36px)
 		var(--padding-padding-s20, 72px) var(--padding-padding-s15, 36px);
@@ -113,28 +110,6 @@ const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
 
 .delimiter {
 	height: 16px;
-}
-
-.textBlock {
-	display: flex;
-	flex: 1 0 0;
-	flex-direction: column;
-	align-items: flex-start;
-	min-width: 180px;
-	gap: 24px;
-}
-
-.head {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 12px;
-	align-self: stretch;
-}
-
-.subheading {
-	width: 187px;
-	color: var(--color-text-base-300, #9a9a9d);
 }
 
 .requestFeature {

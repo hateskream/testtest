@@ -1,4 +1,5 @@
 export enum IconIds {
+	Attachment = 'attach',
 	Logo = 'logo',
 	FearGreedHalfCircle = 'fear-greed-half-circle',
 	ControlMore = 'control-more',
@@ -20,6 +21,7 @@ export enum IconIds {
 	Retry = 'retry',
 	DropdownDown = 'dropdown-down',
 	Tertiary = 'tertiary',
+	ArrowUp = 'arrow-up',
 	RcmArrowRight = 'rcm-arrow-right',
 	Checkbox = 'checkbox',
 	RcmCheckbox = 'rcm-checkbox',

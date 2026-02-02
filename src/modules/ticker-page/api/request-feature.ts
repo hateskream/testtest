@@ -1,0 +1,19 @@
+import { useHttpService } from '@/shared/service/http-service';
+
+export interface IRequestFeaturePayload {
+	text: string;
+	images: File[];
+}
+
+export async function requestFeature({ text, images }: IRequestFeaturePayload): Promise<void> {
+	const httpService = useHttpService();
+
+	const formData = new FormData();
+	formData.append('text', text);
+
+	for (const image of images) {
+		formData.append('images', image);
+	}
+
+	await httpService.post('/api/v1/feature-request', formData);
+}
