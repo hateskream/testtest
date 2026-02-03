@@ -165,6 +165,7 @@ function onFormSend() {
 								v-model="inputValue"
 								:class="classes.textArea"
 								placeholder="Type your idea here..."
+								rows="1"
 								@input="handleInput"
 								@paste="handlePaste"
 							/>
