@@ -31,5 +31,5 @@ export const dateRangeFilters = Object.values(DateRangePreset).map(d => {
 	return {
 		label: dateRangeFilterValueToDisplay[d].selected,
 		value: d,
-	} as const;
-}) as const;
+	};
+});

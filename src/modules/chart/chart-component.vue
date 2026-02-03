@@ -59,7 +59,6 @@ const setReports = () => {
 
 const handleRandomize = () => {
 	randomizeExchanges();
-	chartRef.value?.regenerateData();
 };
 
 const disableScroll = ref(false);
