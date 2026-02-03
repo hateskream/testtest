@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { ChartType } from '@shared/component-library';
+import { computed } from 'vue';
 
 import {
 	DateRangePreset,
 	type DateRangeValue,
 	DEFAULT_PRESETS,
+	strTimeToChartTime,
 	type TimezoneUtcType,
 } from '@/modules/lightweight-charts/model';
-import { ChartDateRange, ChartDateRangeChange } from '@/modules/lightweight-charts';
+import { ChartDateRange, ChartDateRangeChange, ChartNavigator } from '@/modules/lightweight-charts';
 import type { ChartPriceHistoryData } from '../../model';
 
 import ChartComponent from './chart-component.vue';
@@ -15,6 +17,7 @@ import FiltersComponent from './filters-component.vue';
 
 export interface IChartPriceTickerViewProps {
 	data: ChartPriceHistoryData;
+	overview: ChartPriceHistoryData;
 	handleScale?: boolean;
 }
 
@@ -23,6 +26,13 @@ const props = defineProps<IChartPriceTickerViewProps>();
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
+
+const preparedOverviewPoints = computed(() => {
+	return props.overview.points.map(point => ({
+		time: strTimeToChartTime(point.timestamp),
+		value: point.priceCandle.close,
+	}));
+});
 
 // TODO: Вынести в пропсы
 const changes = {
@@ -67,6 +77,11 @@ const changes = {
 				/>
 			</template>
 		</chart-date-range>
+		<chart-navigator
+			v-model="dateRange"
+			:data="preparedOverviewPoints"
+			:class="classes.navigator"
+		/>
 	</div>
 </template>
 
@@ -89,6 +104,11 @@ const changes = {
 }
 
 .dateRange {
+	flex-shrink: 0;
 	width: 100%;
+}
+
+.navigator {
+	flex-shrink: 0;
 }
 </style>

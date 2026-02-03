@@ -114,13 +114,6 @@ const preparedChartData = computed(() => {
 
 
 		return (props.data as CandlestickData[]).map(candle => {
-			console.table({
-				originalTime: candle.time,
-				originalDate: new Date(candle.time * 1000).toJSON(),
-				zonedTime: timeToZonedTime(candle.time, timezoneValue),
-				zonedDate: new Date(timeToZonedTime(candle.time, timezoneValue) * 1000).toJSON(),
-			});
-
 			return {
 				time: timeToZonedTime(candle.time as number, timezoneValue),
 				value: candle.close,
@@ -167,41 +160,6 @@ const preparedPriceLines = computed(() => {
 
 	return lines;
 });
-
-// function updateHistoryChartPropChange() {
-// chartHistory.value = createChart(history.value as HTMLElement, {
-// 	autoSize: true,
-// 	crosshair: {
-// 		horzLine: {
-// 			visible: false,
-// 		},
-// 		vertLine: {
-// 			visible: false,
-// 		},
-// 	},
-// 	layout: {
-// 		textColor: '#9A9A9D',
-// 		background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
-// 	},
-// 	rightPriceScale: {
-// 		visible: false,
-// 	},
-// 	timeScale: {
-// 		borderVisible: false,
-// 	},
-// 	grid: {
-// 		horzLines: {
-// 			visible: false,
-// 		},
-// 		vertLines: {
-// 			color: '#37364E',
-// 			visible: false,
-// 		},
-// 	},
-// 	handleScale: false,
-// 	handleScroll: false,
-// });
-// }
 
 // tooltip
 

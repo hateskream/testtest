@@ -1,9 +1,9 @@
-import { type MaybeRefOrGetter, ref } from 'vue';
+import { computed, type MaybeRefOrGetter, ref } from 'vue';
 import type { ChartType } from '@shared/component-library';
 
 import { getDefaultChartType, getDefaultDateRange, getDefaultTimezone } from '../model';
 import { useQueryChartPriceHistory } from '../queries';
-import type { DateRangeValue, TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import { type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const dateRange = ref<DateRangeValue>(getDefaultDateRange());
@@ -17,10 +17,25 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 
 	const {
 		data,
-		isLoading,
-		isError,
-		refetch,
+		isLoading: dataIsLoading,
+		isError: dataIsError,
+		refetch: refetchData,
 	} = useQueryChartPriceHistory(tickerId, dateRange);
+
+	const {
+		data: overview,
+		isLoading: overviewIsLoading,
+		isError: overviewIsError,
+		refetch: refetchOverview,
+	} = useQueryChartPriceHistory(tickerId, { type: 'custom', from: 1041379200000, to: Date.now() });
+
+	const isLoading = computed(() => dataIsLoading.value || overviewIsLoading.value);
+	const isError = computed(() => dataIsError.value || overviewIsError.value);
+
+	function refetch() {
+		refetchData();
+		refetchOverview();
+	}
 
 	return {
 		dateRange,
@@ -28,6 +43,7 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		chartType,
 
 		data,
+		overview,
 		isLoading,
 		isError,
 		refetch,

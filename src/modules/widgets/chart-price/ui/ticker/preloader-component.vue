@@ -20,15 +20,16 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 			</div>
 		</div>
 		<ui-skeleton :class="classes.body" width="100%" />
-		<div :class="classes.footer">
+		<div :class="classes.dateRange">
 			<ui-skeleton
 				v-for="i in 6"
 				:key="i"
-				:class="classes.footerSkeleton"
+				:class="classes.dateRangeSkeleton"
 				height="32px"
 			/>
 			<ui-skeleton height="32px" width="32px" />
 		</div>
+		<ui-skeleton height="82px" width="100%" />
 	</div>
 </template>
 
@@ -66,7 +67,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 	align-self: stretch;
 }
 
-.footer {
+.dateRange {
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
@@ -75,7 +76,7 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 	padding: var(--padding-s5, 8px) 0;
 }
 
-.footerSkeleton {
+.dateRangeSkeleton {
 	flex: 1 0 0;
 }
 </style>

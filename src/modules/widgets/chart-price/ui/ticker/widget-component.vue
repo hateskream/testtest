@@ -24,6 +24,7 @@ const props = defineProps<IWidgetComponentProps>();
 
 const {
 	data,
+	overview,
 	dateRange,
 	timezone,
 	chartType,
@@ -38,11 +39,12 @@ const {
 		<base-error-component v-if="isError" @retry="refetch" />
 		<preloader-component v-else-if="isLoading" />
 		<view-component
-			v-else-if="data"
+			v-else-if="data && overview"
 			v-model:date-range="dateRange"
 			v-model:timezone="timezone"
 			v-model:chart-type="chartType"
 			:data="data"
+			:overview="overview"
 			:handle-scale="props.handleScale"
 		/>
 	</div>
