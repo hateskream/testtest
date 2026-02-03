@@ -4,64 +4,39 @@ import { ref, useTemplateRef } from 'vue';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { UiControlButton } from '@/shared/ui/control-button';
+import { RequestFeatureConfig, type IRequestFeaturePayload } from '../../api/request-feature';
 
 const props = defineProps<{
 	state: 'initial' | 'form' | 'sended';
 }>();
 
-const emits = defineEmits < {
+const emits = defineEmits<{
 	'request-feature': [];
-	'form-send': [{
-		text: string;
-		images: File[];
-	}];
+	'form-send': [IRequestFeaturePayload];
 }>();
+
+interface IUserImage {
+	url: string;
+	file: File;
+}
 
 const textareaRef = useTemplateRef<HTMLTextAreaElement>('textarea');
 const fileInputRef = useTemplateRef<HTMLInputElement>('fileInput');
+
 const inputValue = ref('');
-
-function handleInput() {
-	if (!textareaRef.value) {
-		return;
-	}
-
-	textareaRef.value.style.height = 'auto';
-	textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`;
-};
-
-function openFilePicker() {
-	fileInputRef.value?.click();
-}
-
-function handleFileChange(event: Event) {
-	const input = event.target as HTMLInputElement;
-
-	if (!input.files) {
-		return;
-	}
-
-	addImages(input.files);
-
-	input.value = '';
-}
-
-interface IUserImages {
-	file: File;
-	url: string;
-}
-
-const images = ref<IUserImages[]>([]);
+const images = ref<IUserImage[]>([]);
 
 function addImages(files: FileList | File[]) {
-	const maxImages = 10;
-
 	for (const file of files) {
 		if (!file.type.startsWith('image/')) {
 			continue;
 		}
 
-		if (images.value.length >= maxImages) {
+		if (file.size > RequestFeatureConfig.MaxFileSize) {
+			continue;
+		}
+
+		if (images.value.length >= RequestFeatureConfig.MaxImages) {
 			break;
 		}
 
@@ -72,6 +47,15 @@ function addImages(files: FileList | File[]) {
 function removeImage(index: number) {
 	const [removed] = images.value.splice(index, 1);
 	URL.revokeObjectURL(removed.url);
+}
+
+function handleInput() {
+	if (!textareaRef.value) {
+		return;
+	}
+
+	textareaRef.value.style.height = 'auto';
+	textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`;
 }
 
 function handlePaste(event: ClipboardEvent) {
@@ -96,10 +80,33 @@ function handleDrop(event: DragEvent) {
 	addImages(files);
 }
 
+function handleFileChange(event: Event) {
+	const input = event.target as HTMLInputElement;
+
+	if (!input.files) {
+		return;
+	}
+
+	addImages(input.files);
+	input.value = '';
+}
+
+function openFilePicker() {
+	fileInputRef.value?.click();
+}
+
 function onFormSend() {
 	const trimmed = inputValue.value.trim();
 
-	if (!trimmed) {
+	if (trimmed.length < RequestFeatureConfig.MinTextLength) {
+		return;
+	}
+
+	if (trimmed.length > RequestFeatureConfig.MaxTextLength) {
+		return;
+	}
+
+	if (images.value.length > RequestFeatureConfig.MaxImages) {
 		return;
 	}
 
@@ -173,7 +180,7 @@ function onFormSend() {
 					</div>
 					<button
 						:class="classes.file"
-						:disabled="images.length >= 10"
+						:disabled="images.length >= RequestFeatureConfig.MaxImages"
 						@click="openFilePicker"
 					>
 						<ui-icon

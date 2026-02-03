@@ -5,6 +5,13 @@ export interface IRequestFeaturePayload {
 	images: File[];
 }
 
+export const RequestFeatureConfig = {
+	MaxImages: 10,
+	MaxFileSize: 5 * 1024 * 1024, // 5MB
+	MinTextLength: 12,
+	MaxTextLength: 1000,
+} as const;
+
 export async function requestFeature({ text, images }: IRequestFeaturePayload): Promise<void> {
 	const httpService = useHttpService();
 
