@@ -1,4 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface IRequestFeaturePayload {
 	text: string;
@@ -22,5 +23,10 @@ export async function requestFeature({ text, images }: IRequestFeaturePayload): 
 		formData.append('images', image);
 	}
 
-	await httpService.post('/api/v1/feature-request', formData);
+	try {
+		await httpService.post('/api/v1/feature-request', formData);
+	} catch (error) {
+		const logger = useLogger();
+		logger.error('Failed to request feature:', { error: error as Error });
+	}
 }
