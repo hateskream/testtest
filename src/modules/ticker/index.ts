@@ -1,4 +1,3 @@
-import { useGoToTickerPage } from './composables';
-import { TickerComponent } from './ui';
-
-export { TickerComponent, useGoToTickerPage };
+export { useGoToTickerPage } from './composables';
+export { TickerComponent } from './ui';
+export * from './ui/__base__';
