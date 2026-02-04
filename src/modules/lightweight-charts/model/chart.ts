@@ -2,6 +2,11 @@ import type { CandlestickData, ChartClickData, ChartData } from '@shared/compone
 
 import { isNumber } from '@/shared/lib';
 import { getTimezoneOffsetInMinutes, type TimezoneUtcType } from '@/modules/lightweight-charts/model/timezone.ts';
+import {
+	millisecondsToUtcSeconds,
+	secondsToUtcSeconds,
+	type UtcSeconds,
+} from '@/modules/lightweight-charts/model/timestamp.ts';
 
 export const IndicatorsChart = {
 	Main: 'Main',
@@ -30,21 +35,21 @@ export function isCandlestickData(data: ChartData): data is CandlestickData {
 	return 'close' in data;
 }
 
-export function strTimeToChartTime(time: string): number {
+export function strTimeToChartTime(time: string): UtcSeconds {
 	const ms = Date.parse(time);
-	return Math.floor(ms / 1000);
+	return millisecondsToUtcSeconds(ms);
 }
 
 export function chartTimeToDate(time: number | string) {
 	return new Date(isNumber(time) ? time * 1000 : time);
 }
 
-export function timeToZonedTime(seconds: number, timezone: TimezoneUtcType): number {
+export function timeToZonedTime(seconds: UtcSeconds, timezone: TimezoneUtcType): UtcSeconds {
 	const offset = getTimezoneOffsetInMinutes(timezone);
-	return seconds + offset * 60;
+	return secondsToUtcSeconds(seconds + offset * 60);
 }
 
-export function zonedTimeToTime(zoned: number, timezone: TimezoneUtcType): number {
+export function zonedTimeToTime(zoned: UtcSeconds, timezone: TimezoneUtcType): UtcSeconds {
 	const offset = getTimezoneOffsetInMinutes(timezone);
-	return zoned - offset * 60;
+	return secondsToUtcSeconds(zoned - offset * 60);
 }

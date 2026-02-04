@@ -7,6 +7,7 @@ import {
 	type IState,
 	type MarketCapType,
 	stateSchema,
+	type StateSchemaInputType,
 	type StateSchemaType,
 } from '../model';
 import { useQueryMarketCap } from '../queries';
@@ -27,7 +28,7 @@ export function useMarketCap({
 		useStateQuery,
 		useStateMutation,
 		applyStateToParent,
-	} = createStateQueries<IState, StateSchemaType>({
+	} = createStateQueries<IState, StateSchemaType, StateSchemaInputType>({
 		isEphemeral,
 		storageKey: '__MARKET_CAP__',
 		isSaveChange: !isEphemeral,

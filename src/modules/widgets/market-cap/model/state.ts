@@ -25,6 +25,7 @@ export const stateSchema = z.object({
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
+export type StateSchemaInputType = z.input<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {

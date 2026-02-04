@@ -3,7 +3,7 @@ import type { ChartType } from '@shared/component-library';
 
 import { getDefaultChartType, getDefaultDateRange, getDefaultTimezone } from '../model';
 import { useQueryChartPriceHistory } from '../queries';
-import { type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const dateRange = ref<DateRangeValue>(getDefaultDateRange());
@@ -27,7 +27,10 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		isLoading: overviewIsLoading,
 		isError: overviewIsError,
 		refetch: refetchOverview,
-	} = useQueryChartPriceHistory(tickerId, { type: 'custom', from: 1041379200000, to: Date.now() });
+	} = useQueryChartPriceHistory(
+		tickerId,
+		{ type: 'preset', preset: DateRangePreset.TenYears },
+	);
 
 	const isLoading = computed(() => dataIsLoading.value || overviewIsLoading.value);
 	const isError = computed(() => dataIsError.value || overviewIsError.value);

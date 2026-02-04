@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { startOfDay } from 'date-fns';
+
+import { millisecondsToUtcSeconds, type UtcMilliseconds, type UtcSeconds, UtcSecondsSchema } from './timestamp';
 
 export const DateRangePreset = {
 	Day: '1D',
@@ -6,10 +9,13 @@ export const DateRangePreset = {
 	Month: '1M',
 	SixMonths: '6M',
 	Year: '1Y',
+	TenYears: '10Y',
 	All: 'ALL',
 } as const;
 
 export type DateRangePresetType = (typeof DateRangePreset)[keyof typeof DateRangePreset];
+
+const dateRangePresetList = Object.values(DateRangePreset);
 
 export const DateRangePresetValueSchema = z.object({
 	type: z.literal('preset'),
@@ -18,23 +24,25 @@ export const DateRangePresetValueSchema = z.object({
 
 export const DateRangeCustomValueSchema = z.object({
 	type: z.literal('custom'),
-	from: z.number(),
-	to: z.number(),
+	from: UtcSecondsSchema,
+	to: UtcSecondsSchema,
 });
 
-export type DateRangePresetValue = { type: 'preset'; preset: DateRangePresetType };
-export type DateRangeCustomValue = { type: 'custom'; from: number; to: number };
+export type DateRangePresetValue = z.infer<typeof DateRangePresetValueSchema>;
+export type DateRangeCustomValue = z.infer<typeof DateRangeCustomValueSchema>;
+
+export type UtcRange<T extends UtcSeconds | UtcMilliseconds> = { from: T; to: T };
 
 export const DateRangeValueSchema = z.discriminatedUnion('type', [
 	DateRangePresetValueSchema,
 	DateRangeCustomValueSchema,
 ]);
 
-export type DateRangeValue = DateRangePresetValue | DateRangeCustomValue;
+export type DateRangeValue = z.infer<typeof DateRangeValueSchema>;
 
-export function presetToDateRange(preset: DateRangePresetType) {
-	const now = new Date();
-	const from = new Date();
+export function presetToDateRange(preset: DateRangePresetType): UtcRange<UtcSeconds> {
+	const now = startOfDay(new Date());
+	const from = startOfDay(new Date());
 
 	switch (preset) {
 		case DateRangePreset.Day:
@@ -52,15 +60,18 @@ export function presetToDateRange(preset: DateRangePresetType) {
 		case DateRangePreset.Year:
 			from.setFullYear(now.getFullYear() - 1);
 			break;
+		case DateRangePreset.TenYears:
+			from.setFullYear(now.getFullYear() - 10);
+			break;
 		case DateRangePreset.All:
 			from.setFullYear(2000, 0, 1);
 			break;
 	}
 
-	return { from: from.getTime(), to: now.getTime() };
+	return { from: millisecondsToUtcSeconds(from.getTime()), to: millisecondsToUtcSeconds(now.getTime()) };
 }
 
-export function toDateRange(value: DateRangeValue): { from: number; to: number } {
+export function toUtcSecondsRange(value: DateRangeValue): UtcRange<UtcSeconds> {
 	if (value.type === 'preset') {
 		return presetToDateRange(value.preset);
 	}
@@ -73,7 +84,7 @@ export function createPreset(preset: DateRangePresetType) {
 }
 
 export function isDateRangePreset(preset: string): preset is DateRangePresetType {
-	return Object.values(DateRangePreset).includes(preset as DateRangePresetType);
+	return dateRangePresetList.includes(preset as DateRangePresetType);
 }
 
 export const DEFAULT_PRESETS = [
@@ -91,6 +102,7 @@ export const DateRangePresetToLabel = {
 	[DateRangePreset.Month]: '1M',
 	[DateRangePreset.SixMonths]: '6M',
 	[DateRangePreset.Year]: '1Y',
+	[DateRangePreset.TenYears]: '10Y',
 	[DateRangePreset.All]: 'All',
 } as const satisfies Record<DateRangePresetType, string>;
 
@@ -104,6 +116,7 @@ export const DateRangePresetToTitle = {
 	[DateRangePreset.Month]: '1 month',
 	[DateRangePreset.SixMonths]: '6 months',
 	[DateRangePreset.Year]: '1 year',
+	[DateRangePreset.TenYears]: '10 years',
 	[DateRangePreset.All]: 'All time',
 } as const satisfies Record<DateRangePresetType, string>;
 

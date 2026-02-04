@@ -10,7 +10,7 @@ import {
 	DEFAULT_PRESETS,
 	getDateRangePresetLabel,
 	isDateRangePreset,
-	toDateRange,
+	toUtcSecondsRange,
 } from '@/modules/lightweight-charts/model/date-range.ts';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTooltipBase } from '@/shared/ui/tooltip-base';
@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<IChartDateRangeProps>(), {
 	presets: () => DEFAULT_PRESETS,
 	dragThreshold: 4,
 });
+
 const preparedPresets = computed(() => {
 	return props.presets.map(preset => ({
 		label: getDateRangePresetLabel(preset.preset),
@@ -44,9 +45,10 @@ function onUpdateModelValue(value: SegmentedControlModel | undefined) {
 	}
 
 	if (value === 'custom') {
-		const { from, to } = toDateRange(modelValue.value);
+		const { from, to } = toUtcSecondsRange(modelValue.value);
 		modelValue.value = { type: 'custom', from, to };
 
+		// TODO: Calendar
 		// open calendar
 	}
 }

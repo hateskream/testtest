@@ -17,6 +17,7 @@ import {
 	timeToZonedTime,
 	TimezoneUtc,
 	timezoneUtcToIntl,
+	type UtcSeconds,
 	zonedTimeToTime,
 } from '../model';
 import type { IUseExternalTooltipState } from '../composables';
@@ -106,23 +107,21 @@ const preparedChartData = computed(() => {
 
 	if (props.type === 'candlestick') {
 		return (props.data as CandlestickData[]).map(point => {
-			return { ...point, time: timeToZonedTime(point.time as number, timezoneValue) };
+			return { ...point, time: timeToZonedTime(point.time as UtcSeconds, timezoneValue) };
 		});
 	}
 
 	if (isCandlestickData(props.data[0])) {
-
-
 		return (props.data as CandlestickData[]).map(candle => {
 			return {
-				time: timeToZonedTime(candle.time as number, timezoneValue),
+				time: timeToZonedTime(candle.time as UtcSeconds, timezoneValue),
 				value: candle.close,
 			} as LineData;
 		});
 	}
 
 	return (props.data as LineData[]).map(point => {
-		return { value: point.value, time: timeToZonedTime(point.time as number, timezoneValue) };
+		return { value: point.value, time: timeToZonedTime(point.time as UtcSeconds, timezoneValue) };
 	});
 });
 
@@ -206,7 +205,7 @@ function updateTooltipState(state: ChartClickData | null) {
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
 
-	const time = zonedTimeToTime(segment.time as number, props.timezone);
+	const time = zonedTimeToTime(segment.time as UtcSeconds, props.timezone);
 	const date = chartTimeToDate(time);
 
 	tooltipState.title = [tooltipDateFormatter.value.format(date)];

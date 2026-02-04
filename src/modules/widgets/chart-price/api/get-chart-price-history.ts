@@ -4,13 +4,14 @@ import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import { ChartPriceHistoryDataSchema } from '../model';
 import { apiSchema, useApiClient } from '@/shared/service/api';
+import type { UtcSeconds } from '@/modules/lightweight-charts/model';
 
 const IS_USE_MOCK = false;
 
 export type GetChartPriceHistoryRequest = {
 	ticker: string;
-	to: number;
-	from: number;
+	to: UtcSeconds;
+	from: UtcSeconds;
 };
 
 export const ChartPriceHistoryResponseSchema = apiSchema(z.object({

@@ -12,7 +12,7 @@ import {
 	type IMarketCapTotalValue,
 } from '../../model';
 import { Chart, ChartDateRange, ChartMarketCap } from '@/modules/lightweight-charts';
-import type { DateRangeValue } from '@/modules/lightweight-charts/model';
+import { type DateRangeValue, millisecondsToUtcSeconds } from '@/modules/lightweight-charts/model';
 
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
@@ -95,7 +95,7 @@ const preparedSingleEntityDataset = computed(() => {
 	const entityId = singleTargetEntity.value.id;
 
 	return props.points.map((point): LineData => {
-		return { time: point.timestamp / 1000, value: point.marketCap[entityId] };
+		return { time: millisecondsToUtcSeconds(point.timestamp), value: point.marketCap[entityId] };
 	});
 });
 </script>

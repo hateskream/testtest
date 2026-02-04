@@ -7,3 +7,4 @@ export * from './chart-timeline';
 export * from './price';
 export * from './date-range';
 export * from './timezone';
+export * from './timestamp';

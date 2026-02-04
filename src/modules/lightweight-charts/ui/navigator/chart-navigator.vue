@@ -12,7 +12,13 @@ import {
 } from 'lightweight-charts';
 import type { LineData } from '@shared/component-library';
 
-import { type DateRangeValue, toDateRange } from '@/modules/lightweight-charts/model';
+import {
+	type DateRangeValue,
+	secondsToUtcSeconds,
+	timeToUtcSeconds,
+	toUtcSecondsRange,
+	type UtcSeconds,
+} from '@/modules/lightweight-charts/model';
 
 export interface IChartNavigatorProps {
 	data: LineData[];
@@ -22,24 +28,23 @@ const props = defineProps<IChartNavigatorProps>();
 
 const dateRange = defineModel<DateRangeValue>({ required: true });
 
-const dateRangePresetValue = computed(() => toDateRange(dateRange.value));
+const dateRangePresetValue = computed(() => toUtcSecondsRange(dateRange.value));
 
 const fromIndex = computed(() => {
 	if (props.data.length === 0) {
 		return 0;
 	}
 
-	const from = Math.floor(dateRangePresetValue.value.from / 1000);
+	const fromValue = dateRangePresetValue.value.from;
+	const lastPointTime = props.data[props.data.length - 1].time as UtcSeconds;
 
-	const lastPointTime = (props.data[props.data.length - 1].time as number);
-
-	if (lastPointTime <= from) {
+	if (lastPointTime <= fromValue) {
 		return props.data.length - 1;
 	}
 
 	let index = 0;
 
-	while ((props.data[index].time as number) < from) {
+	while ((props.data[index].time as UtcSeconds) < fromValue) {
 		index++;
 	}
 
@@ -51,16 +56,16 @@ const toIndex = computed(() => {
 		return 0;
 	}
 
-	const to = Math.floor(dateRangePresetValue.value.to / 1000);
-	const firstPointTime = props.data[0].time as number;
+	const toValue = dateRangePresetValue.value.to;
+	const firstPointTime = props.data[0].time as UtcSeconds;
 
-	if (firstPointTime >= to) {
+	if (firstPointTime >= toValue) {
 		return 0;
 	}
 
 	let index = props.data.length - 1;
 
-	while ((props.data[index].time as number) > to) {
+	while ((props.data[index].time as UtcSeconds) > toValue) {
 		index--;
 	}
 
@@ -136,16 +141,16 @@ function onNavigatorClick(params: MouseEventParams) {
 		return;
 	}
 
+	const time = timeToUtcSeconds(params.time);
 	const { from, to } = dateRangePresetValue.value;
 
 	const span = to - from;
-	const time = (params.time as number) * 1000;
-	const lastPointTime = (props.data[props.data.length - 1].time as number) * 1000;
+	const lastPointTime = props.data[props.data.length - 1].time as UtcSeconds;
 
 	dateRange.value = {
 		type: 'custom',
-		from: Math.min(to - span, time),
-		to: Math.min(time + span, lastPointTime),
+		from: secondsToUtcSeconds(Math.min(to - span, time)),
+		to: secondsToUtcSeconds(Math.min(time + span, lastPointTime)),
 	};
 }
 </script>

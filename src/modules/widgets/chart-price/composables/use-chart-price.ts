@@ -15,6 +15,7 @@ export const stateSchema = z.object({
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
+export type StateSchemaInputType = z.input<typeof stateSchema>;
 
 interface IOptions {
 	widgetId: string;
@@ -39,7 +40,7 @@ export function useChartPrice({
 		useStateQuery,
 		useStateMutation,
 		applyStateToParent,
-	} = createStateQueries<IState, StateSchemaType>({
+	} = createStateQueries<IState, StateSchemaType, StateSchemaInputType>({
 		isEphemeral,
 		storageKey: '__CHART_PRICE__',
 		isSaveChange: !isEphemeral,
