@@ -31,6 +31,7 @@ const {
 	overview,
 	dateRange,
 	timezone,
+	changes,
 	chartType,
 	isError,
 	isLoading,
@@ -70,6 +71,7 @@ watchEffect(() => {
 				v-model:full-view="fullView"
 				:data="data"
 				:overview="overview"
+				:changes="changes"
 				:handle-scale="props.handleScale"
 			/>
 		</div>

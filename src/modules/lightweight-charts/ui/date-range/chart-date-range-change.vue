@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { formatPercent } from '../../model';
+
 interface IChartDateRangeChangeProps {
 	value: number;
 	isPercent?: boolean;
@@ -10,9 +12,11 @@ interface IChartDateRangeChangeProps {
 const props = defineProps<IChartDateRangeChangeProps>();
 
 const label = computed(() => {
+	const formatted = formatPercent(Math.abs(props.value));
+
 	const prepared = props.value < 0
-		? `−\u00A0${Math.abs(props.value)}`
-		: props.value;
+		? `−\u00A0${formatted}`
+		: formatted;
 
 	if (props.isPercent) {
 		return `${prepared}%`;

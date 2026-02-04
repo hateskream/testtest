@@ -3,14 +3,13 @@ import type { ChartType } from '@shared/component-library';
 import { computed } from 'vue';
 
 import {
-	DateRangePreset,
 	type DateRangeValue,
 	DEFAULT_PRESETS,
 	strTimeToChartTime,
 	type TimezoneUtcType,
 } from '@/modules/lightweight-charts/model';
 import { ChartDateRange, ChartDateRangeChange, ChartNavigator } from '@/modules/lightweight-charts';
-import type { ChartPriceHistoryData } from '../../model';
+import type { ChartPriceHistoryData, PriceChanges } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 import HeaderComponent from './header-component.vue';
@@ -18,6 +17,7 @@ import HeaderComponent from './header-component.vue';
 export interface IChartPriceTickerViewProps {
 	data: ChartPriceHistoryData;
 	overview: ChartPriceHistoryData;
+	changes?: PriceChanges;
 	handleScale?: boolean;
 }
 
@@ -34,16 +34,6 @@ const preparedOverviewPoints = computed(() => {
 		value: point.priceCandle.close,
 	}));
 });
-
-// TODO: Вынести в пропсы
-const changes = {
-	[DateRangePreset.Day]: -0.33,
-	[DateRangePreset.Week]: -1.43,
-	[DateRangePreset.Month]: -2.19,
-	[DateRangePreset.SixMonths]: 9.44,
-	[DateRangePreset.Year]: -12.88,
-	[DateRangePreset.All]: 92.33,
-} as const;
 </script>
 
 <template>
@@ -78,7 +68,7 @@ const changes = {
 			<template #preset="{ preset }">
 				<span>{{ preset }}</span>
 				<chart-date-range-change
-					v-if="changes[preset]"
+					v-if="changes && changes[preset]"
 					:value="changes[preset]"
 					:trend="changes[preset] < 0 ? 'negative' : 'positive'"
 					is-percent

@@ -72,7 +72,6 @@ const isChartFullView = ref(false);
 			<div :style="{ height: chartHeight }">
 				<chart-price-ticker-widget
 					v-model:full-view="isChartFullView"
-					:class="classes.chart"
 					:meta="{
 						tickerId: 'Crypto-BTC_Bitcoin'
 					}"
@@ -148,10 +147,6 @@ const isChartFullView = ref(false);
 </template>
 
 <style module="classes">
-.chart {
-	height: 100%;
-}
-
 .navigation {
 	position: fixed;
 	bottom: 15px;
