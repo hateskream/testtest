@@ -78,7 +78,7 @@ const selectedTabId = defineModel<string | number>({
 	border-top: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
 	border-right: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
 	border-left: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
-	border-radius: var(--Radius-radius-S14-32, 12.4px) var(--Radius-radius-S14-32, 12.4px) 0 0;
+	border-radius: var(--radius-radius-s14-32, 12.4px) var(--radius-radius-s14-32, 12.4px) 0 0;
 }
 
 .content {

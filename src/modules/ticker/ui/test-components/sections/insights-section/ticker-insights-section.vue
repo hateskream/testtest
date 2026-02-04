@@ -6,6 +6,7 @@ import { TickerKeyIndicatorsWidget } from '@/modules/widgets/key-indicators';
 import { useTickerContext } from '@/modules/ticker/composables';
 import { TickerNewsWidget } from '@/modules/news';
 import { UiText } from '@/shared/ui/text';
+import { EconomicOutlineTickerWidget } from '@/modules/widgets/economic-outline';
 
 const tabs = [
 	{ id: 'insights', title: 'Insights' },
@@ -23,26 +24,7 @@ const { tickerId } = useTickerContext();
 	<div :class="classes.section">
 		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs">
 			<template #insights>
-				<div :class="classes.item">
-					<div :class="classes.head">
-						<ui-text token="title-100">The economic outline is</ui-text>
-						<div :class="classes.status">
-							<ui-text token="text-200-r">
-								Optimistic
-							</ui-text>
-						</div>
-					</div>
-					<div :class="classes.body">
-						<ui-text token="text-200-r" :class="classes.text">
-							UK's MPC votes shifted to 0-1-8, Bank Rate stable at 4.5%.
-							SNB lowers rate to 0.25%. AU job losses surged to 52.8K, UK claimants up to 44.2K.
-						</ui-text>
-
-						<ui-text token="text-100-r" :class="classes.summarized">
-							Summarized at 19:30
-						</ui-text>
-					</div>
-				</div>
+				<economic-outline-ticker-widget :meta="{tickerId}" />
 
 				<ticker-base-list-divider />
 
