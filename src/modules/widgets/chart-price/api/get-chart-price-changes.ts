@@ -4,6 +4,7 @@ import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import { apiSchema, useApiClient } from '@/shared/service/api';
 import { PriceChangesSchema } from '../model';
+import { useFetchMock } from '@/shared/mock';
 
 const IS_USE_MOCK = true;
 
@@ -16,9 +17,11 @@ export const ChartPriceChangesResponseSchema = apiSchema(z.object({
 	changes: PriceChangesSchema,
 }));
 
+type ChartPriceChangesResponse = z.infer<typeof ChartPriceChangesResponseSchema>;
+
 export function getChartPriceChanges(request: GetChartPriceChangesRequest) {
 	if (IS_USE_MOCK) {
-		return getMockData(request);
+		return getMockData();
 	}
 
 	const apiClient = useApiClient();
@@ -36,18 +39,9 @@ export function getChartPriceChanges(request: GetChartPriceChangesRequest) {
 	}
 }
 
-async function getMockData(request: GetChartPriceChangesRequest) {
-	await delay(500);
+const { getMock } = useFetchMock<ChartPriceChangesResponse>('/mock/widgets/price-changes.json');
 
-	return ChartPriceChangesResponseSchema.parse({
-		ticker: request.ticker,
-		changes: {
-			'1D': 0.9012121,
-			'1W': -14.3826528,
-			'1M': -16.5912783,
-			'6M': -35.0672313,
-			'1Y': -24.8812154,
-			'ALL': 699092.1212143,
-		},
-	});
+async function getMockData() {
+	await delay(500);
+	return getMock();
 }
