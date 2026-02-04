@@ -31,9 +31,8 @@ export const useTickerSectionLoader = (
 			import('@/modules/ticker/ui/test-components/sections/test-section-two')
 				.then(m => m.TestSectionTwo),
 
-		[TICKER_SECTION_COMPONENT.TEST_SECTION_THREE]: () =>
-			import('@/modules/ticker/ui/test-components/sections/test-section-three')
-				.then(m => m.TestSectionThree),
+		[TICKER_SECTION_COMPONENT.INSIGHTS_SECTION]: () =>
+			import('@/modules/ticker/ui/test-components/sections/insights-section/ticker-insights-section.vue'),
 	};
 
 	const loadComponent = (type: TickerSectionComponent) => {

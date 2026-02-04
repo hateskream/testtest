@@ -4,7 +4,7 @@ import { ActiveDateRange, type IState, LOCATIONS_DEFAULT, Score, segmentsData, S
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import type { IDateRange } from '@/shared/ui/calendar';
 
-function toUtcIsoDate(d: Date) {
+export function toUtcIsoDate(d: Date) {
 	const y = d.getUTCFullYear();
 	const m = String(d.getUTCMonth() + 1).padStart(2, '0');
 	const day = String(d.getUTCDate()).padStart(2, '0');
@@ -12,13 +12,13 @@ function toUtcIsoDate(d: Date) {
 	return `${y}-${m}-${day}`;
 }
 
-function getStartOfWeek(date: Date): Date {
+export function getStartOfWeek(date: Date): Date {
 	return startOfWeek(date, {
 		weekStartsOn: 1,
 	});
 }
 
-function getEndOfWeek(date: Date): Date {
+export function getEndOfWeek(date: Date): Date {
 	return endOfWeek(date, {
 		weekStartsOn: 1,
 	});

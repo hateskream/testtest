@@ -29,7 +29,7 @@ export function createTickerIdFromType(type: TickerType, payload: string): strin
 export const TICKER_SECTION_COMPONENT = {
 	TEST_SECTION_ONE: 'TEST_SECTION_ONE',
 	TEST_SECTION_TWO: 'TEST_SECTION_TWO',
-	TEST_SECTION_THREE: 'TEST_SECTION_THREE',
+	INSIGHTS_SECTION: 'INSIGHTS_SECTION',
 } as const;
 
 export type TickerSectionComponent =
@@ -68,7 +68,7 @@ export const tickerStockSections = {
 	right: [
 		{
 			title: 'Insights & Activity',
-			component: TICKER_SECTION_COMPONENT.TEST_SECTION_THREE,
+			component: TICKER_SECTION_COMPONENT.INSIGHTS_SECTION,
 			height: 1000,
 		},
 	],
