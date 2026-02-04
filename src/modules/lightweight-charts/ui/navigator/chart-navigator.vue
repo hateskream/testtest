@@ -11,6 +11,7 @@ import {
 	type Time,
 } from 'lightweight-charts';
 import type { LineData } from '@shared/component-library';
+import { useResizeObserver } from '@vueuse/core';
 
 import {
 	type DateRangeValue,
@@ -111,6 +112,7 @@ function initChart() {
 		handleScroll: false,
 		handleScale: false,
 		crosshair: { mode: CrosshairMode.Hidden },
+		autoSize: true,
 	});
 
 	const miniSeries = chartInstance.addSeries(AreaSeries,
@@ -129,6 +131,12 @@ function initChart() {
 
 	chartInstance.subscribeClick(onNavigatorClick);
 }
+
+useResizeObserver(navigatorEl, () => {
+	if (chartInstance) {
+		chartInstance.timeScale().fitContent();
+	}
+});
 
 const selectionLeftInPercent = computed(() => {
 	if (props.data.length === 0) {

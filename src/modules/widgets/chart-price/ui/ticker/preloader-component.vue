@@ -7,7 +7,6 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 	<div :class="classes.preloader">
 		<div :class="[classes.list, classes.header]">
 			<div :class="[classes.list, classes.filters]">
-				<ui-skeleton width="24px" height="24px" />
 				<ui-skeleton width="60px" height="24px" />
 				<ui-skeleton width="60px" height="24px" />
 				<ui-delimiter />

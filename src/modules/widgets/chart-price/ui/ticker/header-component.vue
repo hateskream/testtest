@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<IChartPriceTickerFiltersProps>(), {
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
+const fullView = defineModel<boolean>('fullView', { default: false });
 
 // date range
 
@@ -142,9 +143,10 @@ const timezoneLabel = computed(() => getTimezoneUtcLabel(timezone.value));
 				>
 					<template #trigger>
 						<ui-control-icon
-							:icon="IconIds.ControlFullView"
+							:icon="fullView ? IconIds.ControlMinimize : IconIds.ControlFullView"
 							transparent
 							:icon-size="14"
+							@click="fullView = !fullView"
 						/>
 					</template>
 				</ui-tooltip-base>

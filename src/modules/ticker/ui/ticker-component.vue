@@ -57,6 +57,8 @@ function endDisableScroll() {
 const leftSections = computed(() => chartWidgetSections.value.left);
 const centerSections = computed(() => chartWidgetSections.value.center);
 const rightSections = computed(() => chartWidgetSections.value.right);
+
+const isChartFullView = ref(false);
 </script>
 
 <template>
@@ -69,6 +71,7 @@ const rightSections = computed(() => chartWidgetSections.value.right);
 		<template #topContent>
 			<div :style="{ height: chartHeight }">
 				<chart-price-ticker-widget
+					v-model:full-view="isChartFullView"
 					:class="classes.chart"
 					:meta="{
 						tickerId: 'Crypto-BTC_Bitcoin'
@@ -78,7 +81,7 @@ const rightSections = computed(() => chartWidgetSections.value.right);
 		</template>
 
 		<template #botContent>
-			<ticker-columns-layout :disable-scroll="disableScroll">
+			<ticker-columns-layout v-show="!isChartFullView" :disable-scroll="disableScroll">
 				<template #leftCol>
 					<template
 						v-for="section in leftSections"
@@ -128,7 +131,7 @@ const rightSections = computed(() => chartWidgetSections.value.right);
 		</template>
 	</ticker-layout>
 
-	<div :class="classes.navigation">
+	<div v-show="!isChartFullView" :class="classes.navigation">
 		<button
 			:class="[classes.navigationBtn, { [classes.active]: viewMode === 'mixed' }]"
 			@click="setChart"
