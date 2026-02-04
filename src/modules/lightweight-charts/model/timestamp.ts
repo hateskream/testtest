@@ -23,6 +23,18 @@ export const UtcMillisecondsSchema = z.number()
 
 export type UtcMilliseconds = z.infer<typeof UtcMillisecondsSchema>;
 
+export function isUtcSeconds(value: number): value is UtcSeconds {
+	return UtcSecondsSchema.safeParse(value).success;
+}
+
+function toUtcMilliseconds(value: UtcSeconds | UtcMilliseconds) {
+	if (isUtcSeconds(value)) {
+		return value * 1000 as UtcMilliseconds;
+	}
+
+	return value;
+}
+
 export function secondsToUtcSeconds(value: number): UtcSeconds {
 	return value as UtcSeconds;
 }
@@ -79,4 +91,33 @@ export function timeToUtcMilliseconds(time: Time): UtcMilliseconds {
 
 export function timeToDate(time: Time): Date {
 	return new Date(timeToUtcMilliseconds(time));
+}
+
+export function utcSecondsToString(seconds: UtcSeconds) {
+	const date = new Date(seconds * 1000);
+
+	const y = date.getUTCFullYear();
+	const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+	const day = String(date.getUTCDate()).padStart(2, '0');
+
+	return `${y}-${m}-${day}`;
+}
+
+export function dateStringToUtcSeconds(date: string) {
+	const [year, month, day] = date.split('-').map(v => parseInt(v));
+	return millisecondsToUtcSeconds(Date.UTC(year, month, day));
+}
+
+export function toUtcStartOfDay(time: UtcSeconds | UtcMilliseconds) {
+	const date = new Date(toUtcMilliseconds(time));
+	date.setUTCHours(0, 0, 0, 0);
+
+	return millisecondsToUtcSeconds(date.getTime());
+}
+
+export function toUtcEndOfDay(time: UtcSeconds | UtcMilliseconds) {
+	const date = new Date(toUtcMilliseconds(time));
+	date.setUTCHours(23, 59, 59, 999);
+
+	return millisecondsToUtcSeconds(date.getTime());
 }

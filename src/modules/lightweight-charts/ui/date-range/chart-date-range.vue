@@ -3,17 +3,24 @@ import { computed, ref } from 'vue';
 
 import type { SegmentedControlModel } from '@/shared/ui/segmented-control';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
-import type { DateRangePresetValue, DateRangeValue } from '@/modules/lightweight-charts/model';
 import {
 	createPreset,
+	type DateRangePresetValue,
+	type DateRangeValue,
+	dateStringToUtcSeconds,
 	DEFAULT_PRESETS,
 	getDateRangePresetLabel,
 	isDateRangePreset,
+	toUtcEndOfDay,
 	toUtcSecondsRange,
+	utcSecondsToString,
 } from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
+import { UiPosition } from '@/shared/ui/position';
+import { ModalBadgeList } from '@/modules/widgets/base';
+import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 
 const props = withDefaults(defineProps<{
 	presets?: P[];
@@ -43,17 +50,26 @@ function onUpdateModelValue(value: SegmentedControlModel | undefined) {
 		modelValue.value = createPreset(value);
 		return;
 	}
-
-	if (value === 'custom') {
-		const { from, to } = toUtcSecondsRange(modelValue.value);
-		modelValue.value = { type: 'custom', from, to };
-
-		// TODO: Calendar
-		// open calendar
-	}
 }
 
 const controlModel = ref(modelValue.value.type === 'preset' ? modelValue.value.preset : 'custom');
+
+const calendarDateRangeModel = computed({
+	get() {
+		const { from, to } = toUtcSecondsRange(modelValue.value);
+		return {
+			from: utcSecondsToString(from),
+			to: utcSecondsToString(to),
+		};
+	},
+	set(value: IDateRange) {
+		modelValue.value = {
+			type: 'custom',
+			from: dateStringToUtcSeconds(value.from),
+			to: toUtcEndOfDay(dateStringToUtcSeconds(value.to)),
+		};
+	},
+});
 </script>
 
 <template>
@@ -71,13 +87,29 @@ const controlModel = ref(modelValue.value.type === 'preset' ? modelValue.value.p
 			>
 				<slot name="preset" :preset="preset.value">{{ preset.label }}</slot>
 			</ui-segmented-control-item>
-			<ui-segmented-control-item :class="[classes.controlItem, classes.controlItemCalendar]" value="custom">
-				<ui-icon
-					:id="IconIds.Calendar"
-					width="16px"
-					height="16px"
-				/>
-			</ui-segmented-control-item>
+			<ui-position placement="left">
+				<template #title>
+					<ui-segmented-control-item
+						value="custom"
+						disabled
+						:class="[classes.controlItem, classes.controlItemCalendar]"
+					>
+						<ui-icon
+							:id="IconIds.Calendar"
+							width="16px"
+							height="16px"
+						/>
+					</ui-segmented-control-item>
+				</template>
+				<template #content>
+					<modal-badge-list display-variant="new">
+						<calendar-range-select
+							v-model="calendarDateRangeModel"
+							view="monthly"
+						/>
+					</modal-badge-list>
+				</template>
+			</ui-position>
 		</ui-segmented-control>
 		<ui-tooltip-base
 			:class="classes.infoWrapper"

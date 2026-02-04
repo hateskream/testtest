@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { startOfDay } from 'date-fns';
 
 import { millisecondsToUtcSeconds, type UtcMilliseconds, type UtcSeconds, UtcSecondsSchema } from './timestamp';
 
@@ -41,8 +40,8 @@ export const DateRangeValueSchema = z.discriminatedUnion('type', [
 export type DateRangeValue = z.infer<typeof DateRangeValueSchema>;
 
 export function presetToDateRange(preset: DateRangePresetType): UtcRange<UtcSeconds> {
-	const now = startOfDay(new Date());
-	const from = startOfDay(new Date());
+	const now = new Date();
+	const from = new Date();
 
 	switch (preset) {
 		case DateRangePreset.Day:
