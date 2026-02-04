@@ -79,7 +79,7 @@ export function toUtcSecondsRange(value: DateRangeValue): UtcRange<UtcSeconds> {
 	return { from: value.from, to: value.to };
 }
 
-export function createPreset(preset: DateRangePresetType) {
+export function createPreset<T extends DateRangePresetType>(preset: T) {
 	return { type: 'preset', preset } as const;
 }
 
@@ -106,7 +106,7 @@ export const DateRangePresetToLabel = {
 	[DateRangePreset.All]: 'All',
 } as const satisfies Record<DateRangePresetType, string>;
 
-export function getDateRangePresetLabel(preset: DateRangePresetType) {
+export function getDateRangePresetLabel<T extends DateRangePresetType>(preset: T) {
 	return DateRangePresetToLabel[preset];
 }
 
@@ -120,6 +120,6 @@ export const DateRangePresetToTitle = {
 	[DateRangePreset.All]: 'All time',
 } as const satisfies Record<DateRangePresetType, string>;
 
-export function getDateRangePresetTitle(preset: DateRangePresetType) {
+export function getDateRangePresetTitle<T extends DateRangePresetType>(preset: T) {
 	return DateRangePresetToTitle[preset];
 }

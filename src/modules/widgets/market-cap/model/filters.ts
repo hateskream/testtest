@@ -21,6 +21,10 @@ export const dateRangeFilterValueToDisplay = {
 		selected: '1Y',
 		option: '1 year',
 	},
+	[DateRangePreset.TenYears]: {
+		selected: '10Y',
+		option: '10 years',
+	},
 	[DateRangePreset.All]: {
 		selected: 'All',
 		option: 'All time',

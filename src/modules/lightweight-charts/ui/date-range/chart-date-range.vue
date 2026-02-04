@@ -1,27 +1,24 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="P extends DateRangePresetValue">
 import { computed, reactive, ref, useTemplateRef } from 'vue';
 
 import type { SegmentedControlModel } from '@/shared/ui/segmented-control';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
+import type { DateRangePresetValue, DateRangeValue } from '@/modules/lightweight-charts/model';
 import {
 	createPreset,
-	type DateRangePresetValue,
-	type DateRangeValue,
 	DEFAULT_PRESETS,
 	getDateRangePresetLabel,
 	isDateRangePreset,
 	toUtcSecondsRange,
-} from '@/modules/lightweight-charts/model/date-range.ts';
+} from '@/modules/lightweight-charts/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 
-interface IChartDateRangeProps {
-	presets?: DateRangePresetValue[];
+const props = withDefaults(defineProps<{
+	presets?: P[];
 	dragThreshold?: number;
-}
-
-const props = withDefaults(defineProps<IChartDateRangeProps>(), {
-	presets: () => DEFAULT_PRESETS,
+}>(), {
+	presets: () => DEFAULT_PRESETS as P[],
 	dragThreshold: 4,
 });
 
@@ -33,6 +30,10 @@ const preparedPresets = computed(() => {
 });
 
 const modelValue = defineModel<DateRangeValue>({ required: true });
+
+defineSlots<{
+	preset?: (props: { preset: P['preset'] }) => unknown;
+}>();
 
 function onUpdateModelValue(value: SegmentedControlModel | undefined) {
 	if (!value || typeof value === 'number') {

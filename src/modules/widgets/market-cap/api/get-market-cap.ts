@@ -84,7 +84,8 @@ const rangeDayCounts: Record<DateRangePresetType, number> = {
 	[DateRangePreset.Month]: 30,
 	[DateRangePreset.SixMonths]: 180,
 	[DateRangePreset.Year]: 365,
-	[DateRangePreset.All]: 365,
+	[DateRangePreset.TenYears]: 3650,
+	[DateRangePreset.All]: 3650,
 };
 
 function generateTickerValue(from: number, to: number) {
