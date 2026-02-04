@@ -1,18 +1,25 @@
-<script setup lang="ts" generic="T extends IBaseTabItem">
+<script setup lang="ts">
+import { computed, type Component } from 'vue';
+
 import { UiText } from '@/shared/ui/text';
 
-export interface IBaseTabItem {
+interface IBaseTabItem {
 	id: string | number;
 	title: string;
+	component: Component;
 }
 
 const props = defineProps<{
-	tabs: readonly T[];
+	tabs: readonly IBaseTabItem[];
 }>();
 
 const selectedTabId = defineModel<string | number>({
 	required: true,
 });
+
+const activeComponent = computed(() =>
+	props.tabs.find(tab => tab.id === selectedTabId.value)?.component ?? props.tabs[0].component,
+);
 </script>
 
 <template>
@@ -32,15 +39,11 @@ const selectedTabId = defineModel<string | number>({
 		</div>
 
 		<div :class="classes.content">
-			<template v-for="tab in props.tabs" :key="tab.id">
-				<div v-show="selectedTabId === tab.id" :class="classes.list">
-					<slot
-						:name="tab.id"
-						:tab="tab"
-						:is-active="selectedTabId === tab.id"
-					/>
-				</div>
-			</template>
+			<div :class="classes.list">
+				<keep-alive>
+					<component :is="activeComponent" />
+				</keep-alive>
+			</div>
 		</div>
 	</div>
 </template>
