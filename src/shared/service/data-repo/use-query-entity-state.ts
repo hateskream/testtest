@@ -7,7 +7,7 @@ import { useHistoryManager } from './use-history';
 import { getParentId, isChild } from '@/modules/dashboard-group';
 import { useLogger } from '@/shared/service/monitoring';
 
-interface IOptions<TData, TSchema> extends IOptionsRepository<TData, TSchema> {
+interface IOptions<TData, TSchema, TInput = TSchema> extends IOptionsRepository<TData, TSchema, TInput> {
 	saveHistory?: boolean;
 	isEphemeral?: boolean;
 	transformFirstState?: (parentState: TData) => TData;
@@ -21,7 +21,9 @@ interface IStateQueries<TData> {
 	applyStateToParent: () => void;
 }
 
-export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSchema>): IStateQueries<TData> {
+export function createStateQueries<TData, TSchema, TInput = TSchema>(
+	options: IOptions<TData, TSchema, TInput>,
+): IStateQueries<TData> {
 	const saveHistory = options.saveHistory ?? false;
 
 	const logger = useLogger();
@@ -139,7 +141,7 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 		redo,
 		applyStateToParent,
 	};
-};
+}
 
 function generateQueryStateKey(storageKey: string, entityId: string) {
 	return [`state-${storageKey}`, entityId];

@@ -1,21 +1,20 @@
-import { ZodSchema } from 'zod';
+import type { ZodType, ZodTypeDef } from 'zod';
 
 import { FailedParse } from './error';
 
-export interface IBaseOptions<TData, TSchema> {
+export interface IBaseOptions<TData, TSchema, TInput = TSchema> {
 	entityId: string;
-	schema: ZodSchema<TSchema>;
+	schema: ZodType<TSchema, ZodTypeDef, TInput>;
 	hydrateFn: (data: TData) => TSchema;
 	rehydrateFn: (s: TSchema) => TData;
 }
 
-
-export abstract class BaseRepository<TData, TSchema> {
+export abstract class BaseRepository<TData, TSchema, TInput = TSchema> {
 	protected abstract getter(): Promise<TSchema>;
 	protected abstract setter(data: TSchema): Promise<void>;
 
 	constructor(
-		private readonly schema: ZodSchema<TSchema>,
+		private readonly schema: ZodType<TSchema, ZodTypeDef, TInput>,
 		private readonly hydrateFn: (data: TData) => TSchema,
 		private readonly rehydrateFn: (s: TSchema) => TData,
 	) {}
