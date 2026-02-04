@@ -60,7 +60,7 @@ export function timeToUtcSeconds(time: Time): UtcSeconds {
 		return millisecondsToUtcSeconds(Date.UTC(time.year, time.month, time.day));
 	}
 
-	const [year, month, day] = time.split('-').map(parseInt);
+	const [year, month, day] = time.split('-').map(v => parseInt(v));
 	return millisecondsToUtcSeconds(Date.UTC(year, month, day));
 }
 
@@ -73,7 +73,7 @@ export function timeToUtcMilliseconds(time: Time): UtcMilliseconds {
 		return Date.UTC(time.year, time.month, time.day) as UtcMilliseconds;
 	}
 
-	const [year, month, day] = time.split('-').map(parseInt);
+	const [year, month, day] = time.split('-').map(v => parseInt(v));
 	return Date.UTC(year, month, day) as UtcMilliseconds;
 }
 
