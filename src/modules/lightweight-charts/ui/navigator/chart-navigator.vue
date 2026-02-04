@@ -15,6 +15,7 @@ import type { LineData } from '@shared/component-library';
 import {
 	type DateRangeValue,
 	secondsToUtcSeconds,
+	timeToDate,
 	timeToUtcSeconds,
 	toUtcSecondsRange,
 	type UtcSeconds,
@@ -97,7 +98,15 @@ function initChart() {
 		height: 80,
 		layout: { background: { color: 'transparent' }, textColor: 'rgba(255, 255, 255, 0.50)' },
 		rightPriceScale: { visible: false },
-		timeScale: { visible: true, borderVisible: false },
+		timeScale: {
+			visible: true, borderVisible: false,
+			timeVisible: false,
+			secondsVisible: false,
+			tickMarkFormatter: (time: Time) => {
+				return timeToDate(time).getFullYear().toString();
+			},
+			minBarSpacing: 0.1,
+		},
 		grid: { vertLines: { visible: false }, horzLines: { visible: false } },
 		handleScroll: false,
 		handleScale: false,
