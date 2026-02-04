@@ -1,74 +1,56 @@
 <script setup lang="ts">
-import { computed, type CSSProperties } from 'vue';
-
 import { UiTransitionFade } from '@/shared/ui/transition';
-import type { ISettings, ISize, ITension, ITensionTextData } from '@/modules/widgets/fear-greed/model';
 import { UiText } from '@/shared/ui/text';
 
 interface IProps {
-	tension: ITension;
-	viewState: ISettings;
-	size: ISize;
-	text: ITensionTextData;
-	showDescription: boolean;
+	value: number;
+	color: string;
+	title?: string;
+	description?: string;
 }
 
 const props = defineProps<IProps>();
-
-const metricTextStyles = computed<CSSProperties>(() => ({
-	marginTop: props.viewState.isShowChart && props.size.h > 2 ? '-30px' : 0,
-}));
 </script>
 
 <template>
-	<div
-		:class="classes.metricDescription"
-		:style="metricTextStyles"
-	>
+	<div :class="classes.root">
 		<ui-text
 			token="text-500-b"
-			:class="classes.count"
-			:style="{ color: props.text.colors.text }"
+			:class="classes.value"
+			:style="{ color: props.color }"
 		>
-			{{ tension.tension }}
+			{{ props.value }}
 		</ui-text>
 		<ui-transition-fade>
 			<ui-text
-				v-if="props.viewState.isShowName"
-				:class="classes.dossier"
+				v-if="props.title"
+				:class="classes.title"
 				token="text-300-r"
 			>
-				{{ props.text.text.main }}
+				{{ props.title }}
 			</ui-text>
 		</ui-transition-fade>
 		<ui-transition-fade>
 			<ui-text
-				v-if="props.showDescription"
+				v-if="props.description"
 				token="text-300-b"
-				:class="classes.desc"
+				:class="classes.description"
 			>
-				{{ props.text.text.sub }}
+				{{ props.description }}
 			</ui-text>
 		</ui-transition-fade>
 	</div>
 </template>
 
 <style module="classes">
-.metricDescription > h3 {
-	font-weight: 460;
-	font-size: 28px;
-	color: var(--common-color-white-700);
-}
-
-.metricDescription {
+.root {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
-	height: 70px;
 }
 
-.count {
+.value {
 	overflow: hidden;
 	font-style: normal;
 	font-weight: 460;
@@ -79,23 +61,23 @@ const metricTextStyles = computed<CSSProperties>(() => ({
 	text-overflow: ellipsis;
 }
 
-.dossier {
+.title {
 	overflow: hidden;
 	font-style: normal;
 	font-weight: 400;
 	font-size: var(--typography-paragraph-size-p00, 13px);
-	line-height: 160%; /* 20.8px */
+	line-height: 160%;
 	color: var(--color-text-active-info-500-active, #ffffff);
 	letter-spacing: 0.143px;
 	text-overflow: ellipsis;
 }
 
-.desc {
+.description {
 	overflow: hidden;
 	font-style: normal;
 	font-weight: 440;
 	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%; /* 17px */
+	line-height: 170%;
 	color: var(--color-text-base-300, #9a9a9d);
 	letter-spacing: 0.08px;
 	text-overflow: ellipsis;

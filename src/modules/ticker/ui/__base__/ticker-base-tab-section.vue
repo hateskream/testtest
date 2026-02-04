@@ -1,54 +1,21 @@
 <script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
-import { UiClamped } from '@/shared/ui/clamped';
+import TickerBaseTabSectionWrapper from './atoms/ticker-base-tab-section-wrapper.vue';
+import TickerBaseTabSectionHead from './atoms/ticker-base-tab-section-head.vue';
+import TickerBaseTabSectionBody from './atoms/ticker-base-tab-section-body.vue';
 </script>
 
 <template>
-	<div :class="classes.section">
-		<div :class="classes.head">
-			<ui-clamped :rows="1">
-				<ui-text token="title-100" :class="classes.text">
-					<slot name="title" />
-				</ui-text>
-			</ui-clamped>
+	<ticker-base-tab-section-wrapper>
+		<ticker-base-tab-section-head>
+			<slot name="title" />
 
-			<slot name="tags" />
-		</div>
-		<div :class="classes.body">
-			<slot name="content"></slot>
-		</div>
-	</div>
+			<template #tags>
+				<slot name="tags" />
+			</template>
+		</ticker-base-tab-section-head>
+
+		<ticker-base-tab-section-body>
+			<slot name="content" />
+		</ticker-base-tab-section-body>
+	</ticker-base-tab-section-wrapper>
 </template>
-
-<style module="classes">
-.section {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	align-self: stretch;
-}
-
-.head {
-	display: flex;
-	flex-wrap: wrap;
-	align-content: center;
-	align-items: center;
-	align-self: stretch;
-	padding: var(--padding-padding-s5, 8px) var(--padding-padding-s11, 20px);
-	gap: 4px var(--padding-padding-s3, 4px);
-}
-
-.body {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	align-self: stretch;
-	padding: var(--padding-padding-s5, 8px) var(--padding-padding-s11, 20px);
-	gap: var(--padding-padding-s5, 8px);
-}
-
-.text {
-	display: flex;
-	align-items: center;
-}
-</style>

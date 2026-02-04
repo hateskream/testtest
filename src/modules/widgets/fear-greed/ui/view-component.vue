@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type ISettings, type ISize, type ITension, type ITensionTextData } from '../model';
+import { type ISettings, type ISize, type ITension, type ITensionTextData, Tension } from '../model';
 import { useMapTension } from '../composables';
+import { UiSpeedometer, UiSpeedometerDescription, type ISpeedometerSegment } from '@/shared/ui/speedometer';
 
 import FearGreedHistoryTable from './shared/fear-greed-history-table.vue';
-import FearGreedMetric from './shared/fear-greed-metric.vue';
-import FearGreedDescription from './shared/fear-greed-description.vue';
 
 export interface IViewComponentProps {
 	tension: ITension;
@@ -24,6 +23,14 @@ const props = defineProps<IViewComponentProps>();
 const emits = defineEmits<IViewComponentEmits>();
 
 const { mapTension } = useMapTension();
+
+const SPEEDOMETER_SEGMENTS: ISpeedometerSegment[] = [
+	{ max: Tension.extremeFear.max, position: 1 },
+	{ max: Tension.fear.max, position: 25 },
+	{ max: Tension.neutral.max, position: 50 },
+	{ max: Tension.greed.max, position: 75 },
+	{ max: Tension.extremeGreed.max, position: 99 },
+];
 
 const tensionText = computed<ITensionTextData>(
 	() => mapTension(props.tension.tension ?? 0),
@@ -77,19 +84,19 @@ defineExpose({ snapHeightToNearestStep });
 			:class="classes.metric"
 			@click.stop.prevent="emits('updateInteractive')"
 		>
-			<fear-greed-metric
+			<ui-speedometer
 				v-if="isShowChart"
-				:tension="props.tension"
-				:text="tensionText"
-				@update-interactive="emits('updateInteractive')"
+				:value="props.tension.tension ?? 0"
+				:color="tensionText.colors.chart"
+				:segments="SPEEDOMETER_SEGMENTS"
 			/>
 
-			<fear-greed-description
-				:tension="props.tension"
-				:view-state="props.viewState"
-				:text="tensionText"
-				:size="props.size"
-				:show-description="isShowDescription"
+			<ui-speedometer-description
+				:value="props.tension.tension ?? 0"
+				:color="tensionText.colors.text"
+				:title="props.viewState.isShowName ? tensionText.text.main : undefined"
+				:description="isShowDescription ? tensionText.text.sub : undefined"
+				:style="{ marginTop: isShowChart ? '-30px' : 0 }"
 			/>
 		</div>
 
