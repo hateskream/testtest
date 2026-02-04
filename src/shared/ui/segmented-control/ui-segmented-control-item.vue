@@ -10,6 +10,11 @@ export interface IUiSegmentedControlItemProps {
 	 * Заменит контент, если он не будет передан через slot.
 	 */
 	value: SegmentedControlModel;
+
+	/**
+	 * Отключить select режим. Полезно для ручной обработки клика.
+	 */
+	disabled?: boolean;
 }
 
 const props = defineProps<IUiSegmentedControlItemProps>();
@@ -17,7 +22,9 @@ const props = defineProps<IUiSegmentedControlItemProps>();
 const { select, active } = useSegmentedControlContext();
 
 function onClick() {
-	select(props.value);
+	if (!props.disabled) {
+		select(props.value);
+	}
 }
 
 const isActive = computed(() => active.value === props.value);
