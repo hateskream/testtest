@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { TickerPageHeader, type ITickerDataResponse } from '@/modules/ticker-page';
+import { TickerPageHeader, type ITickerMetaResponse } from '@/modules/ticker-page';
 import { MarketType } from '@/modules/market';
 import { fetchTickers } from '@/modules/ticker-selector';
 
-const tickersData = ref<ITickerDataResponse[]>([
+const tickersData = ref<ITickerMetaResponse[]>([
 	{
 		ticker: {
 			canonical_ticker_id: 'Stock-AAPL',

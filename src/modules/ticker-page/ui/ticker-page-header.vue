@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import { type IDataProvider, type IExchange, type ITickerItemExtended, type IPriceData } from '../api/ticker-data';
+import {
+	type IDataProvider,
+	type IExchange,
+	type ITickerItemExtended,
+	type IPriceData,
+} from '../api/get-ticker-page-meta';
 import { RouteNames } from '@/types/route.d';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
@@ -270,7 +275,6 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	height: 199px;
 	background: var(--dominant-color, #ffffff);
 	border-radius: 264px;
-	opacity: 0.16;
 	filter: blur(88px);
 }
 

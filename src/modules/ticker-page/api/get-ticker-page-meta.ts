@@ -6,7 +6,7 @@ import type { ITickerItem } from '@/modules/ticker-selector';
 
 const IS_USE_MOCK = true;
 
-export interface ITickerDataRequest {
+export interface ITickerMetaRequest {
 	tickerId: string;
 }
 
@@ -32,7 +32,7 @@ export interface IPriceData {
 	status: 'positive' | 'negative' | 'neutral';
 }
 
-export interface ITickerDataResponse {
+export interface ITickerMetaResponse {
 	ticker: ITickerItemExtended;
 	exchange?: IExchange;
 	data_provider: IDataProvider;
@@ -40,15 +40,15 @@ export interface ITickerDataResponse {
 	dominant_color: string;
 }
 
-export function getTickerData(req: ITickerDataRequest) {
+export function getTickerPageMeta(req: ITickerMetaRequest) {
 	return IS_USE_MOCK ? getMockTickerData() : getApiTickerData(req);
 }
 
-function getApiTickerData(req: ITickerDataRequest) {
+function getApiTickerData(req: ITickerMetaRequest) {
 	const http = useHttpService();
 
 	try {
-		return http.get<ITickerDataResponse>('/api/v1/ticker/meta', {
+		return http.get<ITickerMetaResponse>('/api/v1/ticker/meta', {
 			query: {
 				ticker_id: req.tickerId,
 			},
@@ -61,7 +61,7 @@ function getApiTickerData(req: ITickerDataRequest) {
 	}
 }
 
-async function getMockTickerData(): Promise<ITickerDataResponse> {
+async function getMockTickerData(): Promise<ITickerMetaResponse> {
 	await delay(2000);
 
 	return {
@@ -87,6 +87,6 @@ async function getMockTickerData(): Promise<ITickerDataResponse> {
 			change_24h_percent: 0.12,
 			status: 'positive',
 		},
-		dominant_color: '#FF000001',
+		dominant_color: '#FF000018',
 	};
 }

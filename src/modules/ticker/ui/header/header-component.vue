@@ -1,29 +1,32 @@
 <script setup lang="ts">
+import { UiSkeleton } from '@/shared/ui/skeleton';
+import { TickerPageHeader, useQueryTickerPageMeta } from '@/modules/ticker-page';
 import { useTickerContext } from '../../composables';
 
-const { tickerId, tickerType } = useTickerContext();
+const { tickerId } = useTickerContext();
+
+const { data } = useQueryTickerPageMeta(() => ({
+	tickerId: tickerId.value,
+}));
 </script>
 
 <template>
-	<div :class="classes.header">
-		<span :class="classes.title">Header {{tickerType}} {{tickerId}}</span>
-	</div>
+	<ticker-page-header
+		v-if="data"
+		:ticker="data.ticker"
+		:data-provider="data.data_provider"
+		:dominant-color="data.dominant_color"
+		:exchange="data.exchange"
+		:price="data.price"
+	/>
+
+	<ui-skeleton
+		v-else
+		height="115px"
+		width="100%"
+	/>
 </template>
 
 <style module="classes">
-.header {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 80px;
-	background-color: var(--bg-color-surface-00);
-	border-bottom: 1px solid var(--bg-color-surface-01);
-}
 
-.title {
-	font-weight: 600;
-	font-size: 20px;
-	color: var(--text-color-base-100);
-}
 </style>
