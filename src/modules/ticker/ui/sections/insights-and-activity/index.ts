@@ -1,1 +1,1 @@
-export { default as TickerInsightsSection } from './ticker-insights-section.vue';
+export { default as TickerInsightsAndActivitySection } from './ticker-insights-and-activity-section.vue';
