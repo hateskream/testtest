@@ -106,27 +106,30 @@ const preparedChartData = computed(() => {
 	const timezoneValue = props.timezone;
 
 	if (props.type === 'candlestick') {
-		return (props.data as CandlestickData[]).map(point => {
-			return { ...point, time: timeToZonedTime(point.time as UtcSeconds, timezoneValue) };
+		return (props.data as CandlestickData[]).map(candle => {
+			return {
+				...candle,
+				time: timeToZonedTime(candle.time, timezoneValue),
+			};
 		});
 	}
 
 	if (isCandlestickData(props.data[0])) {
 		return (props.data as CandlestickData[]).map(candle => {
 			return {
-				time: timeToZonedTime(candle.time as UtcSeconds, timezoneValue),
+				time: timeToZonedTime(candle.time, timezoneValue),
 				value: candle.close,
 			} as LineData;
 		});
 	}
 
 	return (props.data as LineData[]).map(point => {
-		return { value: point.value, time: timeToZonedTime(point.time as UtcSeconds, timezoneValue) };
+		return { value: point.value, time: timeToZonedTime(point.time, timezoneValue) };
 	});
 });
 
 const preparedPriceLines = computed(() => {
-	if (!props.isVisiblePriceLine) {
+	if (!props.isVisiblePriceLine || props.data.length === 0) {
 		return [];
 	}
 
@@ -256,6 +259,10 @@ const minDatasetValue = computed(() => {
 });
 
 const lastDatasetValue = computed(() => {
+	if (props.data.length === 0) {
+		return null;
+	}
+
 	const lastPoint = preparedChartData.value[preparedChartData.value.length - 1];
 
 	if (isCandlestickData(lastPoint)) {
@@ -269,7 +276,7 @@ const chartPrecision = computed(() => {
 	const current = lastDatasetValue.value;
 	const prevClose = props.prevClosePrice;
 
-	if (notNullish(prevClose)) {
+	if (notNullish(prevClose) && notNullish(current)) {
 		return calcNumberPrecision(Math.abs(current - prevClose));
 	}
 
@@ -281,6 +288,7 @@ const chartPrecision = computed(() => {
 	<div :class="classes.wrapper" :style="{ height: heightInPx }">
 		<div :class="classes.mainChart">
 			<i88-chart
+				v-if="props.data.length"
 				ref="container"
 				:data="preparedChartData"
 				:type="props.type"

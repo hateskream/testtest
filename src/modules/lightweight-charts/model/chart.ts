@@ -44,12 +44,16 @@ export function chartTimeToDate(time: number | string) {
 	return new Date(isNumber(time) ? time * 1000 : time);
 }
 
-export function timeToZonedTime(seconds: UtcSeconds, timezone: TimezoneUtcType): UtcSeconds {
-	const offset = getTimezoneOffsetInMinutes(timezone);
-	return secondsToUtcSeconds(seconds + offset * 60);
+export function timeToZonedTime(time: string | number, timezone: TimezoneUtcType) {
+	if (isNumber(time)) {
+		const offset = getTimezoneOffsetInMinutes(timezone);
+		return secondsToUtcSeconds(time + offset * 60);
+	}
+
+	return time;
 }
 
-export function zonedTimeToTime(zoned: UtcSeconds, timezone: TimezoneUtcType): UtcSeconds {
+export function zonedTimeToTime(zoned: UtcSeconds, timezone: TimezoneUtcType) {
 	const offset = getTimezoneOffsetInMinutes(timezone);
 	return secondsToUtcSeconds(zoned - offset * 60);
 }
