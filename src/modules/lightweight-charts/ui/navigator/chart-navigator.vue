@@ -158,7 +158,7 @@ function onNavigatorClick(params: MouseEventParams) {
 
 	dateRange.value = {
 		type: 'custom',
-		from: secondsToUtcSeconds(Math.min(to - span, time)),
+		from: secondsToUtcSeconds(Math.min(lastPointTime - span, time)),
 		to: secondsToUtcSeconds(Math.min(time + span, lastPointTime)),
 	};
 }
