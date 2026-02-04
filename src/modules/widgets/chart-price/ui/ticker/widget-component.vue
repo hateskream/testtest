@@ -30,12 +30,16 @@ const {
 	data,
 	overview,
 	dateRange,
-	timezone,
 	changes,
+
+	timezone,
 	chartType,
+
 	isError,
 	isLoading,
 	refetch,
+
+	downloadSnapshot,
 } = useTickerChartPrice(() => props.meta.tickerId);
 
 const container = useTemplateRef('container');
@@ -73,6 +77,7 @@ watchEffect(() => {
 				:overview="overview"
 				:changes="changes"
 				:handle-scale="props.handleScale"
+				@download-snapshot="downloadSnapshot"
 			/>
 		</div>
 	</teleport>

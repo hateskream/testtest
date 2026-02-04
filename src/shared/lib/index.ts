@@ -22,3 +22,4 @@ export * from './is-online';
 export * from './keys-to-camel';
 export * from './snake-to-camel';
 export * from './is-number';
+export * from './download';

@@ -1,9 +1,11 @@
-import { computed, type MaybeRefOrGetter, ref } from 'vue';
+import { computed, type MaybeRefOrGetter, ref, toValue } from 'vue';
 import type { ChartType } from '@shared/component-library';
+import { format } from 'date-fns';
 
-import { getDefaultChartType, getDefaultDateRange, getDefaultTimezone } from '../model';
+import { createTickerSnapshot, getDefaultChartType, getDefaultDateRange, getDefaultTimezone } from '../model';
 import { useQueryChartPriceChanges, useQueryChartPriceHistory } from '../queries';
 import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import { download } from '@/shared/lib';
 
 export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const dateRange = ref<DateRangeValue>(getDefaultDateRange());
@@ -46,6 +48,26 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		refetchChanges();
 	}
 
+	async function downloadSnapshot(chartCanvas: HTMLCanvasElement) {
+		const ticker = toValue(tickerId);
+
+		const canvas = await createTickerSnapshot(chartCanvas, ticker);
+
+		const formattedDate = format(Date.now(), 'yyyy-MM-dd_hh:mm:ss');
+
+		canvas.toBlob(
+			(blob: Blob | null) => {
+				if (blob) {
+					const url = URL.createObjectURL(blob);
+					download(url, `${ticker}_${formattedDate}`);
+					URL.revokeObjectURL(url);
+				}
+			},
+			'image/png',
+			1,
+		);
+	}
+
 	return {
 		dateRange,
 		timezone,
@@ -54,6 +76,8 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		changes,
 		data,
 		overview,
+
+		downloadSnapshot,
 
 		isLoading,
 		isError,

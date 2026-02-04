@@ -86,7 +86,11 @@ interface IChartEmits {
 
 const emit = defineEmits<IChartEmits>();
 
-const container = useTemplateRef<HTMLElement>('container');
+interface ISharedChartElement extends HTMLElement {
+	takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean): HTMLCanvasElement | null;
+}
+
+const container = useTemplateRef<ISharedChartElement>('container');
 
 const heightInPx = computed(() => {
 	if (isNumber(props.height)) {
@@ -282,6 +286,16 @@ const chartPrecision = computed(() => {
 
 	return calcNumberPrecision(minDatasetValue.value);
 });
+
+function takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean) {
+	if (container.value) {
+		return container.value.takeScreenshot(addTopLayer, includeCrosshair);
+	}
+
+	return null;
+}
+
+defineExpose({ takeScreenshot });
 </script>
 
 <template>

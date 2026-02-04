@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChartType } from '@shared/component-library';
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 import {
 	type DateRangeValue,
@@ -23,6 +23,10 @@ export interface IChartPriceTickerViewProps {
 
 const props = defineProps<IChartPriceTickerViewProps>();
 
+const emit = defineEmits<{
+	downloadSnapshot: [canvas: HTMLCanvasElement];
+}>();
+
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
@@ -34,6 +38,20 @@ const preparedOverviewPoints = computed(() => {
 		value: point.priceCandle.close,
 	}));
 });
+
+const chartRef = useTemplateRef('chart');
+
+function downloadChartSnapshot() {
+	if (!chartRef.value) {
+		return;
+	}
+
+	const canvas = chartRef.value.takeScreenshot();
+
+	if (canvas) {
+		emit('downloadSnapshot', canvas);
+	}
+}
 </script>
 
 <template>
@@ -48,9 +66,11 @@ const preparedOverviewPoints = computed(() => {
 				v-model:timezone="timezone"
 				v-model:full-view="fullView"
 				:class="classes.header"
+				@download-snapshot="downloadChartSnapshot"
 			/>
 		</div>
 		<chart-component
+			ref="chart"
 			v-model:date-range="dateRange"
 			:class="classes.chart"
 			:points="props.data.points"

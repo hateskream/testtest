@@ -29,6 +29,10 @@ const props = withDefaults(defineProps<IChartPriceTickerFiltersProps>(), {
 	dateRangePresets: () => DEFAULT_PRESETS,
 });
 
+const emit = defineEmits<{
+	downloadSnapshot: [];
+}>();
+
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
@@ -89,6 +93,10 @@ const chartTypeTitle = computed(() => {
 });
 
 const timezoneLabel = computed(() => getTimezoneUtcLabel(timezone.value));
+
+function downloadSnapshot() {
+	emit('downloadSnapshot');
+}
 </script>
 
 <template>
@@ -136,6 +144,7 @@ const timezoneLabel = computed(() => getTimezoneUtcLabel(timezone.value));
 							<ui-control-icon
 								:icon="IconIds.Camera"
 								transparent
+								@click="downloadSnapshot"
 							/>
 						</template>
 					</ui-tooltip-base>

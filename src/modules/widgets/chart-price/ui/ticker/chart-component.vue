@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { type ChartType, LastPriceAnimationMode } from '@shared/component-library';
 
 import { Chart } from '@/modules/lightweight-charts';
@@ -40,11 +40,24 @@ const preparedChartData = computed(() => {
 		close: point.priceCandle.close,
 	}));
 });
+
+const chartRef = useTemplateRef('chart');
+
+function takeScreenshot() {
+	if (chartRef.value) {
+		return chartRef.value.takeScreenshot();
+	}
+
+	return null;
+}
+
+defineExpose({ takeScreenshot });
 </script>
 
 <template>
 	<div :class="classes.container">
 		<chart
+			ref="chart"
 			v-model:date-range="dateRange"
 			:date-range-presets="props.dateRangePresets"
 			width="100%"
