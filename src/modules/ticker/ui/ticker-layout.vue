@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type Ref, ref, watch, nextTick, onUnmounted, provide } from 'vue';
+import { computed, nextTick, onUnmounted, provide, ref, type Ref, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScroll } from '@/shared/composables/scroll.ts';
@@ -7,6 +7,13 @@ import { TickerHeaderComponent } from './header';
 import { TickerFooterComponent } from './footer';
 import type { ViewMode } from '../models';
 
+export interface ITickerLayoutProps {
+	showHeader?: boolean;
+}
+
+const props = withDefaults(defineProps<ITickerLayoutProps>(), {
+	showHeader: true,
+});
 
 const contentShift = ref(0);
 const footerShift = ref(0);
@@ -229,7 +236,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 			:class="classes.topContent"
 			:style="{ opacity: opacityTop }"
 		>
-			<ticker-header-component />
+			<ticker-header-component v-show="props.showHeader" />
 			<slot name="topContent">Graph</slot>
 		</div>
 		<div

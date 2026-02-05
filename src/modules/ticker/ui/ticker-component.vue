@@ -73,6 +73,7 @@ const isChartFullView = ref(false);
 <template>
 	<ticker-layout
 		ref="chartLayoutRef"
+		:show-header="!isChartFullView"
 		@change-view="viewMode = $event"
 		@animation-start="startDisableScroll"
 		@animation-end="endDisableScroll"
