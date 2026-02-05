@@ -296,6 +296,13 @@ function takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean) {
 }
 
 defineExpose({ takeScreenshot });
+
+function onWheel(e: WheelEvent) {
+	if (props.handleScale) {
+		e.preventDefault();
+		e.stopPropagation();
+	}
+}
 </script>
 
 <template>
@@ -321,6 +328,7 @@ defineExpose({ takeScreenshot });
 				:precision="chartPrecision"
 				:handle-scale="props.handleScale"
 				@chart-hover="onChartHover"
+				@wheel.prevent="onWheel"
 			/>
 		</div>
 		<teleport v-if="isShowTooltip" to="body">
