@@ -10,14 +10,20 @@ import {
 } from '@/modules/lightweight-charts/model';
 import { ChartDateRange, ChartDateRangeChange, ChartNavigator } from '@/modules/lightweight-charts';
 import type { ChartPriceHistoryData, PriceChanges } from '../../model';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ALL_MARKET_TYPES } from '@/modules/market';
+import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
+import { UiText } from '@/shared/ui/text';
+import { UiPosition } from '@/shared/ui/position';
 
-import ChartComponent from './chart-component.vue';
 import HeaderComponent from './header-component.vue';
+import ChartComponent from './chart-component.vue';
 
 export interface IChartPriceTickerViewProps {
 	data: ChartPriceHistoryData;
 	overview: ChartPriceHistoryData;
 	changes?: PriceChanges;
+	ticker: ITickerItem | null;
 	handleScale?: boolean;
 	handleScroll?: boolean;
 }
@@ -26,6 +32,7 @@ const props = defineProps<IChartPriceTickerViewProps>();
 
 const emit = defineEmits<{
 	downloadSnapshot: [canvas: HTMLCanvasElement];
+	changeTicker: [tickerId: string];
 }>();
 
 const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
@@ -53,13 +60,42 @@ function downloadChartSnapshot() {
 		emit('downloadSnapshot', canvas);
 	}
 }
+
+function onUpdateSelectedTickers(tickers: ITickerItem[]) {
+	if (tickers.length) {
+		emit('changeTicker', tickers[0].canonical_ticker_id);
+	}
+}
 </script>
 
 <template>
 	<div ref="container" :class="classes.container">
 		<div :class="classes.headerWrapper">
-			<div v-if="fullView">
-				[Ticker Selector]
+			<div v-if="fullView && props.ticker">
+				<ui-position placement="bottom-start">
+					<template #title="{ isVisible }">
+						<button :class="classes.tickerName">
+							<ui-text token="text-300-b">
+								{{ props.ticker.name }}
+							</ui-text>
+							<ui-icon
+								:id="IconIds.DropdownDown"
+								width="16px"
+								height="16px"
+								:class="[classes.dropdownIcon, { [classes.active]: isVisible }]"
+							/>
+						</button>
+					</template>
+					<template #content>
+						<ticker-selector-modal
+							:selected-tickers="[ props.ticker ]"
+							:enabled-markets="ALL_MARKET_TYPES"
+							:selection-mode="SelectionMode.Single"
+							display-variant="new"
+							@update:selected-tickers="onUpdateSelectedTickers"
+						/>
+					</template>
+				</ui-position>
 			</div>
 			<header-component
 				v-model:date-range="dateRange"
@@ -144,5 +180,14 @@ function downloadChartSnapshot() {
 
 .navigator {
 	flex-shrink: 0;
+}
+
+.tickerName {
+	display: flex;
+	align-items: center;
+	padding: 0;
+	color: var(--text-500, rgb(255 255 255 / 96%));
+	cursor: pointer;
+	gap: var(--padding-padding-s2, 2px);
 }
 </style>

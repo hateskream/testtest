@@ -25,6 +25,10 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const emit = defineEmits<{
+	changeTicker: [tickerId: string];
+}>();
+
 const fullView = defineModel<boolean>('fullView', { default: false });
 
 const {
@@ -33,6 +37,7 @@ const {
 	dateRange,
 	changes,
 
+	currentTicker,
 	timezone,
 	chartType,
 
@@ -74,12 +79,14 @@ watchEffect(() => {
 				v-model:timezone="timezone"
 				v-model:chart-type="chartType"
 				v-model:full-view="fullView"
+				:ticker="currentTicker"
 				:data="data"
 				:overview="overview"
 				:changes="changes"
 				:handle-scale="props.handleScale"
 				:handle-scroll="props.handleScroll"
 				@download-snapshot="downloadSnapshot"
+				@change-ticker="emit('changeTicker', $event)"
 			/>
 		</div>
 	</teleport>

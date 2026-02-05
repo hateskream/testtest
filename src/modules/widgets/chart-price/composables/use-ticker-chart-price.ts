@@ -1,4 +1,4 @@
-import { computed, type MaybeRefOrGetter, ref, toValue } from 'vue';
+import { computed, type MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
 import type { ChartType } from '@shared/component-library';
 import { format } from 'date-fns';
 
@@ -6,6 +6,7 @@ import { createTickerSnapshot, getDefaultChartType, getDefaultDateRange, getDefa
 import { useQueryChartPriceChanges, useQueryChartPriceHistory } from '../queries';
 import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
 import { download } from '@/shared/lib';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 
 export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const dateRange = ref<DateRangeValue>(getDefaultDateRange());
@@ -68,7 +69,20 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		);
 	}
 
+	// ticker
+
+	const currentTicker = ref<ITickerItem | null>(null);
+
+	watchEffect(async () => {
+		const [ticker] = await fetchTickers(toValue(tickerId));
+
+		if (ticker.canonical_ticker_id === toValue(tickerId)) {
+			currentTicker.value = ticker;
+		}
+	});
+
 	return {
+		currentTicker,
 		dateRange,
 		timezone,
 		chartType,

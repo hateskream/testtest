@@ -85,6 +85,7 @@ const isChartFullView = ref(false);
 					:meta="{ tickerId: canonicalTickerId }"
 					handle-scale
 					handle-scroll
+					@change-ticker="changeTickerId"
 				/>
 			</div>
 		</template>
