@@ -1,7 +1,8 @@
-import { type Ref, type WatchSource, computed, nextTick, onMounted, toValue, watch } from 'vue';
+import { computed, nextTick, onMounted, onScopeDispose, type Ref, toValue, watch, type WatchSource } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 
 const SCROLL_THRESHOLD = 100;
+const HEADER_HEIGHT = 36;
 
 interface IGroupedDay {
 	date: string;
@@ -13,7 +14,7 @@ interface IUseEventBoardOptions {
 	groupedBoard: WatchSource<IGroupedDay[]>;
 	isFetchingPrev: WatchSource<boolean>;
 	isFetchingNext: WatchSource<boolean>;
-	getSectionElement: (container: HTMLElement, date: string, hour: string) => Element | null;
+	getSectionElement: (container: HTMLElement, date: string, hour: string) => HTMLElement | null;
 	onLoadPrev: () => void;
 	onLoadNext: () => void;
 }
@@ -30,6 +31,44 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 	const container = computed(
 		() => toValue(options.container),
 	);
+
+	let isScrollingProgrammatically = false;
+	let scrollEndTimeout: ReturnType<typeof setTimeout> | null = null;
+	let currentCleanup: (() => void) | null = null;
+
+	function scrollToElement(element: HTMLElement, top: number) {
+		currentCleanup?.();
+
+		isScrollingProgrammatically = true;
+
+		element.scrollTo({
+			top,
+			behavior: 'smooth',
+		});
+
+		const cleanup = () => {
+			isScrollingProgrammatically = false;
+			if (scrollEndTimeout) {
+				clearTimeout(scrollEndTimeout);
+				scrollEndTimeout = null;
+			}
+
+			// eslint-disable-next-line @typescript-eslint/no-use-before-define
+			element.removeEventListener('scrollend', onScrollEnd);
+			currentCleanup = null;
+		};
+
+		const onScrollEnd = () => cleanup();
+
+		// scrollend не работает в некоторых браузерах, fallback для них через timeout
+		scrollEndTimeout = setTimeout(cleanup, 1000);
+		element.addEventListener('scrollend', onScrollEnd, { once: true });
+		currentCleanup = cleanup;
+	}
+
+	onScopeDispose(() => {
+		currentCleanup?.();
+	});
 
 	const isFetchingPrev = computed(() => toValue(options.isFetchingPrev));
 	const isFetchingNext = computed(() => toValue(options.isFetchingNext));
@@ -54,7 +93,7 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 	});
 
 	function handleScroll() {
-		if (isFetchingPrev.value || isFetchingNext.value) {
+		if (isScrollingProgrammatically || isFetchingPrev.value || isFetchingNext.value ) {
 			return;
 		}
 
@@ -91,7 +130,12 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 				if (!group.missed) {
 					const section = getSectionElement(element, day.date, group.hour);
 					if (section) {
-						section.scrollIntoView({ block: 'start' });
+						const containerRect = element.getBoundingClientRect();
+						const sectionRect = section.getBoundingClientRect();
+						const offset = sectionRect.top - containerRect.top + element.scrollTop - HEADER_HEIGHT;
+
+						scrollToElement(element, offset);
+
 						return;
 					}
 				}
