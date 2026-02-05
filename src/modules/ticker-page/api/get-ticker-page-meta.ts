@@ -4,7 +4,7 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import type { ITickerItem } from '@/modules/ticker-selector';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface ITickerMetaRequest {
 	tickerId: string;
@@ -27,8 +27,8 @@ export interface IDataProvider {
 export interface IPriceData {
 	currency: string;
 	current_price: number;
-	change_24h: number;
-	change_24h_percent: number;
+	change: number;
+	change_percent: number;
 	status: 'positive' | 'negative' | 'neutral';
 }
 
@@ -48,7 +48,7 @@ function getApiTickerData(req: ITickerMetaRequest) {
 	const http = useHttpService();
 
 	try {
-		return http.get<ITickerMetaResponse>('/api/v1/ticker/meta', {
+		return http.get<ITickerMetaResponse>('/api/v1/header/data', {
 			query: {
 				ticker_id: req.tickerId,
 			},
@@ -83,8 +83,8 @@ async function getMockTickerData(): Promise<ITickerMetaResponse> {
 		price: {
 			currency: '$',
 			current_price: 1.1655,
-			change_24h: 0.00134,
-			change_24h_percent: 0.12,
+			change: 0.00134,
+			change_percent: 0.12,
 			status: 'positive',
 		},
 		dominant_color: '#FF000018',

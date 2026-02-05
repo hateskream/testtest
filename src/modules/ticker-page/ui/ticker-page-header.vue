@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import { type IDataProvider, type IExchange, type IPriceData, type ITickerItemExtended } from '../api';
+import {
+	type IDataProvider,
+	type IExchange,
+	type IPriceData,
+	type ITickerItemExtended,
+} from '../api/get-ticker-page-meta';
 import { RouteNames } from '@/types/route.d';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
@@ -16,6 +21,8 @@ import { isFeatureEnabled } from '@/shared/lib';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
 import { UiControlIcon } from '@/shared/ui/control-icon';
+import { UiClamped } from '@/shared/ui/clamped';
+import { formatPercent, formatPrice } from '@/modules/lightweight-charts/model';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -45,7 +52,7 @@ const selectedTickers = computed({
 const classes = useCssModule('classes');
 
 const chart = computed(() => {
-	const label = `${props.price.change_24h} (${props.price.change_24h_percent}%)`;
+	const label = `${formatPrice(props.price.change)} (${ formatPercent(props.price.change_percent) }%)`;
 
 	if (props.price.status === 'positive') {
 		return {
@@ -70,6 +77,17 @@ const chart = computed(() => {
 });
 
 const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_ENABLED');
+
+// TODO: Parse label to symbol
+const currentCurrency = computed(() => {
+	if (props.price.currency === 'USD') {
+		return '$';
+	}
+
+	return props.price.currency;
+});
+
+const currentPrice = computed(() => formatPrice(props.price.current_price));
 </script>
 
 <template>
@@ -85,14 +103,6 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 						:size="56"
 						:ticker="props.ticker.symbol"
 						:src="props.ticker.logo"
-						disable-glow
-					/>
-					<ticker-icon
-						v-if="props.ticker.currency"
-						:class="classes.secondLogo"
-						:size="56"
-						:ticker="props.ticker.currency"
-						:src="props.ticker.currency_icon"
 						disable-glow
 					/>
 				</div>
@@ -115,7 +125,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 							:class="classes.breadcrumbsItem"
 							:active-class="classes.breadcrumbsItemActive"
 						>
-							<ui-text token="text-200-b">{{props.ticker.symbol}}</ui-text>
+							<ui-text token="text-200-b">{{ props.ticker.symbol }}</ui-text>
 						</router-link>
 					</div>
 
@@ -148,9 +158,9 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 								</ui-position>
 
 								<div v-if="props.ticker.description" :class="classes.description">
-									<ui-text token="text-100-r">
-										{{props.ticker.description}}
-									</ui-text>
+									<ui-clamped :rows="1">
+										<ui-text token="text-100-r">{{ props.ticker.description }}</ui-text>
+									</ui-clamped>
 								</div>
 							</div>
 
@@ -217,12 +227,8 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 
 						<div :class="classes.price">
 							<div :class="classes.current">
-								<ui-text token="title-200">
-									{{props.price.currency}}
-								</ui-text>
-								<ui-text token="title-200">
-									{{props.price.current_price}}
-								</ui-text>
+								<ui-text token="title-200">{{ currentCurrency }}</ui-text>
+								<ui-text token="title-200">{{ currentPrice }}</ui-text>
 							</div>
 
 							<div :class="[classes.chartPrice, chart.class]">
@@ -258,6 +264,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	padding: 16px 0;
 	border-bottom: 1px solid var(--color-border-surface-01, rgb(199 199 199 / 6%));
 	gap: 4px;
+	container: header / inline-size;
 }
 
 .glowWrapper {
@@ -341,6 +348,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 
 .bottom {
 	display: flex;
+	flex: 0 0 0;
 	align-items: end;
 	gap: 32px;
 }
@@ -370,6 +378,12 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 .tickerName:hover .dropdownIcon,
 .dropdownIcon.active {
 	color: var(--text-500, rgb(255 255 255 / 96%));
+}
+
+@container header (width > 1100px) {
+	.main {
+		max-width: 50%;
+	}
 }
 
 .description {

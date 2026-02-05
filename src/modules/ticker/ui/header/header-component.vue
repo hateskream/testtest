@@ -1,32 +1,25 @@
 <script setup lang="ts">
-import { UiSkeleton } from '@/shared/ui/skeleton';
-import { TickerPageHeader, useQueryTickerPageMeta } from '@/modules/ticker-page';
+import { TickerPageHeader, TickerPageHeaderPreloader, useQueryTickerPageMeta } from '@/modules/ticker-page';
 import { useTickerContext } from '../../composables';
+import { BaseErrorComponent } from '@/modules/widgets/base';
 
-const { tickerId } = useTickerContext();
+const { tickerId, changeTickerId } = useTickerContext();
 
-const { data } = useQueryTickerPageMeta(() => ({
+const { data, isLoading, isError, refetch } = useQueryTickerPageMeta(() => ({
 	tickerId: tickerId.value,
 }));
 </script>
 
 <template>
+	<base-error-component v-if="isError && !isLoading" @retry="refetch" />
+	<ticker-page-header-preloader v-else-if="isLoading" />
 	<ticker-page-header
-		v-if="data"
+		v-else-if="data"
 		:ticker="data.ticker"
 		:data-provider="data.data_provider"
 		:dominant-color="data.dominant_color"
 		:exchange="data.exchange"
 		:price="data.price"
-	/>
-
-	<ui-skeleton
-		v-else
-		height="115px"
-		width="100%"
+		@on-ticker-select="changeTickerId"
 	/>
 </template>
-
-<style module="classes">
-
-</style>

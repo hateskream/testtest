@@ -3,7 +3,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 
 import { createTickerIdFromType, getChartSectionsByType, TickerType, type ViewMode } from '../models';
-import { createTickerContext } from '../composables';
+import { createTickerContext, useGoToTickerPage } from '../composables';
 import { ChartPriceTickerWidget } from '@/modules/widgets/chart-price';
 
 import TickerSection from './section-layout.vue';
@@ -31,9 +31,16 @@ const viewMode = ref<ViewMode>('mixed');
 
 const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
 
+const { goToTickerPage } = useGoToTickerPage();
+
+function changeTickerId(tickerId: string) {
+	goToTickerPage(tickerId);
+}
+
 createTickerContext({
 	tickerType: computed(() => props.type),
 	tickerId: canonicalTickerId,
+	changeTickerId,
 });
 
 const chartLayoutEl = useTemplateRef('chartLayoutRef');

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { TickerPageHeader, type ITickerMetaResponse } from '@/modules/ticker-page';
+import { type ITickerMetaResponse, TickerPageHeader } from '@/modules/ticker-page';
 import { MarketType } from '@/modules/market';
 import { fetchTickers } from '@/modules/ticker-selector';
 
@@ -27,8 +27,8 @@ const tickersData = ref<ITickerMetaResponse[]>([
 		price: {
 			currency: '$',
 			current_price: 1.1655,
-			change_24h: 0.00134,
-			change_24h_percent: 0.12,
+			change: 0.00134,
+			change_percent: 0.12,
 			status: 'positive',
 		},
 		dominant_color: '#FFFFFF',
@@ -55,8 +55,8 @@ const tickersData = ref<ITickerMetaResponse[]>([
 		price: {
 			currency: '€',
 			current_price: 1.0856,
-			change_24h: 0.00234,
-			change_24h_percent: 0.22,
+			change: 0.00234,
+			change_percent: 0.22,
 			status: 'positive',
 		},
 		dominant_color: '#FF0000',
