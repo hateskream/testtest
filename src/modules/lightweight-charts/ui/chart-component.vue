@@ -36,6 +36,7 @@ import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 interface IChartProps {
 	height: CSSProperties['height'];
 	handleScale?: boolean;
+	handleScroll?: boolean;
 	isVisiblePriceScale?: boolean;
 	isVisibleTimeScale?: boolean;
 	isVisibleEventsTimeline?: boolean;
@@ -327,6 +328,7 @@ function onWheel(e: WheelEvent) {
 				entire-text-only-price-scale
 				:precision="chartPrecision"
 				:handle-scale="props.handleScale"
+				:handle-scroll="props.handleScroll"
 				@chart-hover="onChartHover"
 				@wheel.prevent="onWheel"
 			/>

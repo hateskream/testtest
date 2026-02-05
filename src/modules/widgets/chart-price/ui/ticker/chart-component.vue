@@ -16,6 +16,7 @@ export interface IChartPriceTickerProps {
 	points: ChartPriceHistoryPoint[];
 	current: ChartPriceCurrentData;
 	handleScale?: boolean;
+	handleScroll?: boolean;
 	dateRangePresets?: DateRangePresetValue[];
 	type?: ChartType;
 	timezone?: TimezoneUtcType;
@@ -64,6 +65,7 @@ defineExpose({ takeScreenshot });
 			height="100%"
 			is-show-tooltip
 			:handle-scale="handleScale"
+			:handle-scroll="handleScroll"
 			:type="props.type"
 			can-switch-type
 			:data="preparedChartData"

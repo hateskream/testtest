@@ -19,6 +19,7 @@ export interface IChartPriceTickerViewProps {
 	overview: ChartPriceHistoryData;
 	changes?: PriceChanges;
 	handleScale?: boolean;
+	handleScroll?: boolean;
 }
 
 const props = defineProps<IChartPriceTickerViewProps>();
@@ -76,6 +77,7 @@ function downloadChartSnapshot() {
 			:points="props.data.points"
 			:current="props.data.current"
 			:handle-scale="props.handleScale"
+			:handle-scroll="props.handleScroll"
 			:date-range-presets="DEFAULT_PRESETS"
 			:type="chartType"
 			:timezone="timezone"

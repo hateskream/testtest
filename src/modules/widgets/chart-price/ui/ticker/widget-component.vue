@@ -20,6 +20,7 @@ interface IWidgetComponentProps {
 		tickerId: string;
 	};
 	handleScale?: boolean;
+	handleScroll?: boolean;
 }
 
 const props = defineProps<IWidgetComponentProps>();
@@ -77,6 +78,7 @@ watchEffect(() => {
 				:overview="overview"
 				:changes="changes"
 				:handle-scale="props.handleScale"
+				:handle-scroll="props.handleScroll"
 				@download-snapshot="downloadSnapshot"
 			/>
 		</div>

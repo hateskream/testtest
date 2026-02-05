@@ -76,6 +76,7 @@ const isChartFullView = ref(false);
 					v-model:full-view="isChartFullView"
 					:meta="{ tickerId: canonicalTickerId }"
 					handle-scale
+					handle-scroll
 				/>
 			</div>
 		</template>
