@@ -2,7 +2,7 @@
 import { computed, ref, useTemplateRef } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 
-import { getChartSectionsByType, TickerType, type ViewMode } from '../models';
+import { createTickerIdFromType, getChartSectionsByType, TickerType, type ViewMode } from '../models';
 import { createTickerContext } from '../composables';
 import { ChartPriceTickerWidget } from '@/modules/widgets/chart-price';
 
@@ -29,9 +29,11 @@ const chartWidgetSections = computed(() => getChartSectionsByType(props.type));
 
 const viewMode = ref<ViewMode>('mixed');
 
+const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
+
 createTickerContext({
 	tickerType: computed(() => props.type),
-	tickerId: computed(() => props.id),
+	tickerId: canonicalTickerId,
 });
 
 const chartLayoutEl = useTemplateRef('chartLayoutRef');
@@ -72,9 +74,8 @@ const isChartFullView = ref(false);
 			<div :style="{ height: chartHeight }">
 				<chart-price-ticker-widget
 					v-model:full-view="isChartFullView"
-					:meta="{
-						tickerId: 'Crypto-BTC_Bitcoin'
-					}"
+					:meta="{ tickerId: canonicalTickerId }"
+					handle-scale
 				/>
 			</div>
 		</template>
