@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import {
-	type IDataProvider,
-	type IExchange,
-	type ITickerItemExtended,
-	type IPriceData,
-} from '../api/get-ticker-page-meta';
+import { type IDataProvider, type IExchange, type IPriceData, type ITickerItemExtended } from '../api';
 import { RouteNames } from '@/types/route.d';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
@@ -18,6 +13,9 @@ import { useGoToTickerPage } from '@/modules/chart';
 import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { ALL_MARKET_TYPES } from '@/modules/market';
 import { isFeatureEnabled } from '@/shared/lib';
+import { UiTag } from '@/shared/ui/tag';
+import fmp from '@/assets/images/fmp.png';
+import { UiControlIcon } from '@/shared/ui/control-icon';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -156,34 +154,44 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 								</div>
 							</div>
 
-							<div :class="classes.badges">
-								<div v-if="props.exchange" :class="classes.exchange">
-									<ui-image
-										:src="props.exchange.logo_url"
-										width="16px"
-										height="16px"
-										:class="classes.exchangeIcon"
-									/>
-
-									<ui-text token="text-200-r">
-										{{props.exchange.title}}
-									</ui-text>
-								</div>
-
+							<div v-if="props.exchange" :class="classes.badges">
+								<ui-tag icon-position="start">
+									<template #icon>
+										<ui-image
+											:src="props.exchange.logo_url"
+											width="16px"
+											height="16px"
+											:class="classes.exchangeIcon"
+										/>
+									</template>
+									<template #default>
+										{{ props.exchange.title }}
+									</template>
+								</ui-tag>
 								<ui-position
 									trigger="hover"
 									placement="bottom-start"
 									:close-delay="200"
 								>
 									<template #title>
-										<div :class="classes.provider">
+										<ui-tag>
 											<ui-image
 												:src="props.dataProvider.logo_url"
 												width="16px"
 												height="16px"
+												show-loader
 												:class="classes.providerIcon"
-											/>
-										</div>
+											>
+												<template #error>
+													<ui-image
+														:src="fmp"
+														width="16px"
+														height="16px"
+														:class="classes.providerIcon"
+													/>
+												</template>
+											</ui-image>
+										</ui-tag>
 									</template>
 									<template #content>
 										<ui-tooltip-wrapper :class="classes.tooltip" display-variant="new">
@@ -235,13 +243,7 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 			</div>
 
 			<div v-if="isMoreOptionsEnabled" :class="classes.right">
-				<button :class="classes.moreIcon">
-					<ui-icon
-						:id="IconIds.ThreeDots"
-						width="16px"
-						height="16px"
-					/>
-				</button>
+				<ui-control-icon :icon="IconIds.ThreeDots" transparent />
 			</div>
 		</div>
 	</header>
@@ -382,19 +384,6 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	gap: var(--padding-padding-s2, 2px);
 }
 
-.exchange {
-	display: flex;
-	align-items: center;
-	height: var(--height-height-s12, 24px);
-	padding:
-		var(--tile-padding-md-gap, 3px) var(--tile-padding-md-out, 6px)
-		var(--tile-padding-md-gap, 3px) var(--tile-padding-md-gap, 3px);
-	background: var(--base-base-80, rgb(73 73 80 / 22%));
-	border-radius: var(--radius-radius-s9-16, 6px);
-	cursor: default;
-	gap: var(--tile-padding-md-gap, 3px);
-}
-
 .exchangeIcon {
 	border-radius: 50%;
 }
@@ -443,6 +432,11 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	align-items: center;
 }
 
+.current {
+	display: flex;
+	gap: 2px;
+}
+
 .chartPrice {
 	display: flex;
 	justify-content: center;
@@ -459,22 +453,5 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 
 .positive {
 	color: var(--atom-success-00, #04eda0);
-}
-
-.moreIcon {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: var(--height-height-s12, 24px);
-	color: var(--contrast-contrast-60, rgb(255 255 255 / 40%));
-	cursor: pointer;
-	transition: color 0.25s ease-in-out;
-	gap: var(--padding-padding-s0, 0);
-	aspect-ratio: 1/1;
-}
-
-.moreIcon:hover {
-	color: var(--contrast-contrast-80, rgb(255 255 255 / 80%));
 }
 </style>
