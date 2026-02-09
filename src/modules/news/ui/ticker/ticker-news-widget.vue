@@ -85,8 +85,6 @@ const news = computed(() => {
 </template>
 
 <style module="classes">
-
-
 .list {
 	max-height: 700px;
 	overflow: scroll;

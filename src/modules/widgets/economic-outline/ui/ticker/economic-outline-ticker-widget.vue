@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
+import { UiTag } from '@/shared/ui/tag';
 import { TickerBaseTabSection } from '@/modules/ticker';
 import { useQueryEconomicOutline } from '../../query/use-query-economic-outline';
 import { FALLBACK_LOCALE } from '@/shared/lib';
@@ -15,7 +16,7 @@ const props = defineProps<{
 	};
 }>();
 
-const { data, isLoading, isError } = useQueryEconomicOutline(() => ({
+const { data, isLoading, isError, refetch } = useQueryEconomicOutline(() => ({
 	tickerId: props.meta.tickerId,
 }));
 
@@ -40,6 +41,20 @@ const summarizedLabel = computed(() => {
 
 	return `Summarized at ${day} ${month}${year} ${time}`;
 });
+
+const uiTagColor = computed(() => {
+	const value = data.value?.status;
+
+	if (value === 'optimistic') {
+		return 'positive';
+	}
+
+	if (value === 'pessimistic') {
+		return 'negative';
+	}
+
+	return 'neutral';
+});
 </script>
 
 <template>
@@ -50,11 +65,9 @@ const summarizedLabel = computed(() => {
 			The economic outline is
 		</template>
 		<template #tags>
-			<div :class="[classes.status, classes[data.status]]">
-				<ui-text token="text-200-r">
-					{{data.status}}
-				</ui-text>
-			</div>
+			<ui-tag :class="classes.status" :color="uiTagColor">
+				{{data.status}}
+			</ui-tag>
 		</template>
 		<template #content>
 			<ui-text token="text-200-r" :class="classes.text">
@@ -67,7 +80,7 @@ const summarizedLabel = computed(() => {
 		</template>
 	</ticker-base-tab-section>
 
-	<economic-outline-error v-else />
+	<economic-outline-error v-else @retry="refetch" />
 </template>
 
 <style module="classes">
@@ -80,27 +93,6 @@ const summarizedLabel = computed(() => {
 }
 
 .status {
-	display: flex;
-	align-items: center;
-	height: var(--height-height-s12, 24px);
-	padding: var(--tile-padding-md-gap, 3px) var(--tile-padding-md-out, 6px);
 	text-transform: capitalize;
-	border-radius: var(--radius-radius-s9-16, 6px);
-	gap: var(--tile-padding-md-gap, 3px);
-}
-
-.status.neutral {
-	color: var(--text-500, rgb(255 255 255 / 96%));
-	background-color: var(--base-base-80, rgb(73 73 80 / 22%));
-}
-
-.status.optimistic {
-	color: var(--success-success-00, #04eda0);
-	background-color: var(--success-success-90, rgb(4 237 160 / 10%));
-}
-
-.status.pessimistic {
-	color: var(--warning-warning-00, #fc1d4d);
-	background-color: var(--warning-success-90, rgb(252 29 77 / 10%));
 }
 </style>
