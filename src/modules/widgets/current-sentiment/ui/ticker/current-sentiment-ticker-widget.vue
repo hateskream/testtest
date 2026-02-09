@@ -64,6 +64,6 @@ const sentiment = computed(() => {
 }
 
 .chartDescription {
-  margin-top: -35px;
+	margin-top: -35px;
 }
 </style>
