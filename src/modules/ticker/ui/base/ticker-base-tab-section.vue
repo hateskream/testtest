@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TickerBaseTabSectionWrapper from './atoms/ticker-base-tab-section-wrapper.vue';
-import TickerBaseTabSectionHead from './atoms/ticker-base-tab-section-head.vue';
-import TickerBaseTabSectionBody from './atoms/ticker-base-tab-section-body.vue';
+import TickerBaseTabSectionWrapper from './ticker-base-tab-section-wrapper.vue';
+import TickerBaseTabSectionHead from './ticker-base-tab-section-head.vue';
+import TickerBaseTabSectionBody from './ticker-base-tab-section-body.vue';
 </script>
 
 <template>
