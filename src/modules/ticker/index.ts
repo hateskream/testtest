@@ -1,3 +1,3 @@
 export { useGoToTickerPage } from './composables';
 export { TickerComponent } from './ui';
-export * from './ui/__base__';
+export * from './ui/base';

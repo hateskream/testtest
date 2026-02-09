@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { markRaw, ref } from 'vue';
 
-import { TickerBaseTabsLayout } from '@/modules/ticker/ui/__base__';
+import { TickerBaseTabsLayout } from '@/modules/ticker/ui/base';
 
 import TabInsightsContent from './tab-insights-content.vue';
 import TabNewsContent from './tab-news-content.vue';

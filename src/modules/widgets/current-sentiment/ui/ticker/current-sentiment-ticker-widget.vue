@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { TickerBaseTabSection } from '@/modules/ticker/ui/__base__';
+import { TickerBaseTabSection } from '@/modules/ticker/ui/base';
 import { UiSpeedometer, UiSpeedometerDescription } from '@/shared/ui/speedometer';
 import { useQueryCurrentSentiment } from '../../query/use-query-current-sentiment';
 import { SENTIMENT_SEGMENTS, mapSentiment } from '../../model';

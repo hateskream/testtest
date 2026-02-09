@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TickerBaseListDivider } from '@/modules/ticker/ui/__base__';
+import { TickerBaseListDivider } from '@/modules/ticker/ui/base';
 import { TickerKeyIndicatorsWidget } from '@/modules/widgets/key-indicators';
 import { EconomicOutlineTickerWidget } from '@/modules/widgets/economic-outline';
 import { CurrentSentimentTickerWidget } from '@/modules/widgets/current-sentiment';

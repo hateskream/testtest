@@ -7,7 +7,7 @@ import {
 	TickerBaseTabSection,
 	TickerBaseTabSectionWrapper,
 	TickerBaseTabSectionHead,
-} from '@/modules/ticker/ui/__base__';
+} from '@/modules/ticker/ui/base';
 import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
 import { getEndOfWeek, getStartOfWeek, toUtcIsoDate } from '../../model';
 import { useQueryNews } from '../../queries';
