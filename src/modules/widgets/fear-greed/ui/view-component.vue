@@ -96,7 +96,7 @@ defineExpose({ snapHeightToNearestStep });
 				:color="tensionText.colors.text"
 				:title="props.viewState.isShowName ? tensionText.text.main : undefined"
 				:description="isShowDescription ? tensionText.text.sub : undefined"
-				:style="{ marginTop: isShowChart ? '-30px' : 0 }"
+				:class="{ [classes.margin]: isShowChart }"
 			/>
 		</div>
 
@@ -124,5 +124,9 @@ defineExpose({ snapHeightToNearestStep });
 	justify-content: center;
 	align-items: center;
 	width: 180px;
+}
+
+.margin {
+	margin-top: -30px;
 }
 </style>

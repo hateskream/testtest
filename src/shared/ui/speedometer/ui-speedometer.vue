@@ -19,8 +19,8 @@ const chart = computed(() => {
 
 	const arrowRotateInDeg = -90 + (value / 100) * 180;
 
-	const radius = 80;
-	const totalLength = Math.PI * radius;
+	const diameter = 80;
+	const totalLength = Math.PI * diameter;
 	const arcAngle = 180 / 4.5;
 	const arcLength = (arcAngle / 180) * totalLength;
 

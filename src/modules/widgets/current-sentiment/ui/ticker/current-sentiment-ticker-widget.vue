@@ -46,7 +46,7 @@ const sentiment = computed(() => {
 					:color="sentiment?.color ?? ''"
 					:title="sentiment?.signal"
 					:description="sentiment?.description"
-					:style="{ marginTop: '-30px' }"
+					:class="classes.chartDescription"
 				/>
 			</div>
 		</template>
@@ -61,5 +61,9 @@ const sentiment = computed(() => {
 	flex-direction: column;
 	align-items: center;
 	align-self: stretch;
+}
+
+.chartDescription {
+  margin-top: -35px;
 }
 </style>

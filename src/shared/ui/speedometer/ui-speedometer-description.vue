@@ -15,7 +15,7 @@ const props = defineProps<IProps>();
 <template>
 	<div :class="classes.root">
 		<ui-text
-			token="text-500-b"
+			token="title-400"
 			:class="classes.value"
 			:style="{ color: props.color }"
 		>
@@ -24,8 +24,7 @@ const props = defineProps<IProps>();
 		<ui-transition-fade>
 			<ui-text
 				v-if="props.title"
-				:class="classes.title"
-				token="text-300-r"
+				token="text-100-r"
 			>
 				{{ props.title }}
 			</ui-text>
@@ -34,7 +33,6 @@ const props = defineProps<IProps>();
 			<ui-text
 				v-if="props.description"
 				token="text-300-b"
-				:class="classes.description"
 			>
 				{{ props.description }}
 			</ui-text>
@@ -58,28 +56,6 @@ const props = defineProps<IProps>();
 	line-height: 130%;
 	text-align: center;
 	color: var(--color-text-base-500, #ffffff);
-	text-overflow: ellipsis;
-}
-
-.title {
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 400;
-	font-size: var(--typography-paragraph-size-p00, 13px);
-	line-height: 160%;
-	color: var(--color-text-active-info-500-active, #ffffff);
-	letter-spacing: 0.143px;
-	text-overflow: ellipsis;
-}
-
-.description {
-	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--typography-paragraph-size-p-02, 10px);
-	line-height: 170%;
-	color: var(--color-text-base-300, #9a9a9d);
-	letter-spacing: 0.08px;
 	text-overflow: ellipsis;
 }
 </style>
