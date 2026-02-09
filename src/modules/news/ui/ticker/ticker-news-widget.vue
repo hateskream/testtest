@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { UiSkeleton } from '@/shared/ui/skeleton';
-import { BaseErrorComponent } from '@/modules/widgets/base';
-import {
-	TickerBaseTabSection,
-	TickerBaseTabSectionWrapper,
-	TickerBaseTabSectionHead,
-} from '@/modules/ticker/ui/base';
+import { TickerBaseTabSectionWrapper, TickerBaseTabSectionHead } from '@/modules/ticker/ui/base';
 import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
 import { getEndOfWeek, getStartOfWeek, toUtcIsoDate } from '../../model';
 import { useQueryNews } from '../../queries';
 
+import TickerNewsWidgetLoading from './ticker-news-widget-loading.vue';
+import TickerNewsWidgetError from './ticker-news-widget-error.vue';
 import NewsContentWrapper from '../news-content-wrapper-component.vue';
 import NewsListComponent from '../news-list-component.vue';
 
@@ -21,7 +17,7 @@ interface IWidgetComponentProps {
 	};
 }
 
-defineProps<IWidgetComponentProps>();
+const props = defineProps<IWidgetComponentProps>();
 
 const selectedNewsId = ref<string | null>(null);
 
@@ -30,7 +26,7 @@ const { data, isLoading, isError, refetch } = useQueryNews({
 	limit: 50,
 	score: new Set(),
 	segment: {
-		selectedTickers: [],
+		selectedTickers: [props.meta.tickerId],
 		excludedTickers: [],
 		selectedMarkets: [],
 	},
@@ -52,29 +48,12 @@ const news = computed(() => {
 </script>
 
 <template>
-	<ticker-base-tab-section v-if="isLoading">
-		<template #title>
-			<ui-skeleton width="60px" height="22px" />
-		</template>
-		<template #content>
-			<ui-skeleton
-				v-for="key in 5"
-				:key="key"
-				width="100%"
-				height="160px"
-				border-radius="var(--radius-radius-s20-72, 28.4px)"
-			/>
-		</template>
-	</ticker-base-tab-section>
+	<ticker-news-widget-loading v-if="isLoading" />
 
-	<ticker-base-tab-section v-else-if="isError">
-		<template #title>News</template>
-		<template #content>
-			<div :class="classes.error">
-				<base-error-component @retry="refetch()" />
-			</div>
-		</template>
-	</ticker-base-tab-section>
+	<ticker-news-widget-error
+		v-else-if="isError"
+		@refetch="refetch"
+	/>
 
 	<ticker-base-tab-section-wrapper v-else>
 		<ticker-base-tab-section-head>News</ticker-base-tab-section-head>
@@ -106,12 +85,7 @@ const news = computed(() => {
 </template>
 
 <style module="classes">
-.error {
-	display: grid;
-	width: 100%;
-	height: 700px;
-	place-items: center;
-}
+
 
 .list {
 	max-height: 700px;
