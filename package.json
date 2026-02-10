@@ -21,7 +21,7 @@
     "@popperjs/core": "2.11.8",
     "@sentry/browser": "10.29.0",
     "@sentry/vue": "10.29.0",
-    "@shared/component-library": "1.0.0-0",
+    "@shared/component-library": "1.1.0",
     "@tanstack/vue-query": "5.67.3",
     "@types/markdown-it": "^14.1.2",
     "@unhead/vue": "2.0.12",
