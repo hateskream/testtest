@@ -1,15 +1,10 @@
 <script setup lang="ts">
+// Figma component: tag
 import { computed } from 'vue';
 
-import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiIcon } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
-
-interface IUiTagProps {
-	icon?: IconIds | null;
-	iconSize?: number;
-	iconPosition?: 'start' | 'end';
-	color?: 'neutral' | 'positive' | 'negative';
-}
+import type { IUiTagProps } from './types';
 
 const props = withDefaults(defineProps<IUiTagProps>(), {
 	icon: null,
