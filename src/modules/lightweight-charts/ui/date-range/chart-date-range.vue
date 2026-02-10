@@ -24,6 +24,8 @@ import { CalendarRangeSelect, type IDateRange } from '@/shared/ui/calendar';
 
 const props = withDefaults(defineProps<{
 	presets?: P[];
+	showCalendar?: boolean;
+	showInfo?: boolean;
 }>(), {
 	presets: () => DEFAULT_PRESETS as P[],
 });
@@ -87,7 +89,7 @@ const calendarDateRangeModel = computed({
 			>
 				<slot name="preset" :preset="preset.value">{{ preset.label }}</slot>
 			</ui-segmented-control-item>
-			<ui-position placement="left">
+			<ui-position v-if="props.showCalendar" placement="left">
 				<template #title>
 					<ui-segmented-control-item
 						value="custom"
@@ -112,6 +114,7 @@ const calendarDateRangeModel = computed({
 			</ui-position>
 		</ui-segmented-control>
 		<ui-tooltip-base
+			v-if="showInfo"
 			:class="classes.infoWrapper"
 			label="Timeframe"
 			text="Switch between different time periods to analyze price movements"

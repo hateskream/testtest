@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouteNames } from '@/types/route.d';
-import { TickerControlLink } from '@/modules/widgets/base/ticker';
+import { TickerControlLink } from '@/modules/ticker/ui/base';
 import type { IndexActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow } from '../../common';
 

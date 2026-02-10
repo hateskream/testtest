@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TickerControlLink } from '@/modules/widgets/base/ticker';
+import { TickerControlLink } from '@/modules/ticker/ui/base';
 import { RouteNames } from '@/types/route.d';
 import type { StockActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow } from '../../common';

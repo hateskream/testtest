@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import {
-	CpiRange,
-	CpiValueType,
+	type CpiDateRangePresetType,
+	type CpiValueTypeType,
 	rangeFilters,
-	rangeFilterValueToDisplay,
 	valueTypeFilters,
 	valueTypeFilterValueToDisplay,
 } from '../../model';
+import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -20,8 +22,11 @@ interface IFiltersPanelProps {
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeRange = defineModel<CpiRange>('range', { required: true });
-const activeValueType = defineModel<CpiValueType>('valueType', { required: true });
+const activeRange = defineModel<CpiDateRangePresetType>('range');
+const activeValueType = defineModel<CpiValueTypeType>('valueType', { required: true });
+
+const activeRangeLabel = computed(() => activeRange.value && getDateRangePresetLabel(activeRange.value));
+const activeValueTypeLabel = computed(() => valueTypeFilterValueToDisplay[activeValueType.value]);
 </script>
 
 <template>
@@ -33,17 +38,17 @@ const activeValueType = defineModel<CpiValueType>('valueType', { required: true 
 			:display-variant="props.displayVariant"
 			:options="valueTypeFilters"
 			:selected-value="activeValueType"
-			:label="valueTypeFilterValueToDisplay[activeValueType]"
+			:label="activeValueTypeLabel"
 			close-on-select
 			title="Value Type"
 			@select="activeValueType = $event.value"
 		/>
 		<modal-badge-filter
-			v-if="props.isShowRange"
+			v-if="props.isShowRange && activeRange"
 			:display-variant="props.displayVariant"
 			:options="rangeFilters"
 			:selected-value="activeRange"
-			:label="rangeFilterValueToDisplay[activeRange].selected"
+			:label="activeRangeLabel"
 			close-on-select
 			title="Date range"
 			@select="activeRange = $event.value"

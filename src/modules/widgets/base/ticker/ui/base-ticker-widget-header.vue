@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { UiText } from '@/shared/ui/text';
+import { UiWidgetLabel } from '@/shared/ui/widget-label';
+
+interface IBaseTickerWidgetHeaderProps {
+	disabled?: boolean;
+}
+
+const props = defineProps<IBaseTickerWidgetHeaderProps>();
 </script>
 
 <template>
 	<div :class="classes.header">
-		<ui-text token="text-200-r" :class="classes.text">
+		<ui-widget-label :disabled="props.disabled">
 			<slot />
-		</ui-text>
-
+		</ui-widget-label>
 		<slot name="right" />
 	</div>
 </template>
@@ -15,6 +20,7 @@ import { UiText } from '@/shared/ui/text';
 <style module="classes">
 .header {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	align-self: stretch;
 	height: 40px;
@@ -22,9 +28,5 @@ import { UiText } from '@/shared/ui/text';
 		var(--padding-padding-s4, 6px) var(--padding-padding-s7, 12px)
 		var(--padding-padding-s4, 6px) var(--padding-padding-s8, 14px);
 	gap: var(--padding-padding-s3, 4px);
-}
-
-.text {
-	padding: var(--padding-padding-s3, 4px) var(--padding-padding-s4, 6px);
 }
 </style>

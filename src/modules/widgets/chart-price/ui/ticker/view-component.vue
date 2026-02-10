@@ -122,6 +122,8 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 			v-model="dateRange"
 			:presets="DEFAULT_PRESETS"
 			:class="classes.dateRange"
+			show-calendar
+			show-info
 		>
 			<template #preset="{ preset }">
 				<span>{{ preset }}</span>

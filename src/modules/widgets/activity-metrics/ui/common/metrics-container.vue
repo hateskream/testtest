@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
-import { TickerIconTooltip } from '@/modules/widgets/base/ticker';
+import { TickerIconTooltip } from '@/modules/ticker/ui/base';
 
 const props = defineProps<{
 	title: string;

@@ -5,3 +5,6 @@ export { default as TickerBaseTabSectionWrapper } from './ticker-base-tab-sectio
 export { default as TickerBaseTabSectionHead } from './ticker-base-tab-section-head.vue';
 export { default as TickerBaseTabSectionBody } from './ticker-base-tab-section-body.vue';
 export { default as TickerBaseTabSection } from './ticker-base-tab-section.vue';
+
+export { default as TickerIconTooltip } from './ticker-icon-tooltip.vue';
+export { default as TickerControlLink } from './ticker-control-link.vue';

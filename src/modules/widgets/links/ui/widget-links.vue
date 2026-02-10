@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UiImage } from '@/shared/ui/image';
-import { TickerControlLink } from '@/modules/widgets/base';
+import { TickerControlLink } from '@/modules/ticker/ui/base';
 import { UiTag } from '@/shared/ui/tag';
 import { UiClamped } from '@/shared/ui/clamped';
 import type { Links } from '../model';

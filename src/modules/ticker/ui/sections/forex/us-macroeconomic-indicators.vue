@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price-index';
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
 
@@ -27,7 +28,7 @@ const { tickerId } = useTickerContext();
 				:meta="{ tickerId, name: 'US inflation (1Y)' }"
 			/>
 		</div>
-		<empty-ticker-widget style="height: 370px;" :meta="{ tickerId, name: 'Consumer price index' }" />
+		<consumer-price-index-ticker-widget :class="classes.cpi" :meta="{ tickerId, name: 'Consumer price index' }" />
 		<empty-ticker-widget style="height: 370px;" :meta="{ tickerId, name: 'Nominal GDP' }" />
 		<div :class="classes.charts">
 			<empty-ticker-widget
@@ -69,6 +70,10 @@ const { tickerId } = useTickerContext();
 .inflation {
 	grid-row: 1 / span 1;
 	grid-column: 2 / span 2;
+}
+
+.cpi {
+	height: 370px;
 }
 
 .charts {

@@ -119,7 +119,12 @@ const indicators = computed(() => {
 				price-label="Current Price"
 				fade-left
 			/>
-			<chart-date-range v-if="props.isBig && props.isShowTimeRange" v-model="dateRange" />
+			<chart-date-range
+				v-if="props.isBig && props.isShowTimeRange"
+				v-model="dateRange"
+				show-calendar
+				show-info
+			/>
 		</div>
 	</div>
 </template>
