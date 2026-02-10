@@ -67,7 +67,7 @@ const { tickerId } = useTickerContext();
 ```ts
 import { useTickerContext } from '@/modules/ticker/composables';
 
-const { tickerId, tickerType } = useTickerContext();
+const { tickerId } = useTickerContext();
 ```
 
 ## Регистрация секции
