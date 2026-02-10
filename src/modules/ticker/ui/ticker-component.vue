@@ -5,6 +5,7 @@ import { useWindowSize } from '@vueuse/core';
 import { createTickerIdFromType, getChartSectionsByType, TickerType, type ViewMode } from '../models';
 import { createTickerContext, useGoToTickerPage } from '../composables';
 import { ChartPriceTickerWidget } from '@/modules/widgets/chart-price';
+import { isFeatureEnabled } from '@/shared/lib';
 
 import TickerSection from './section-layout.vue';
 import TickerLayout from './ticker-layout.vue';
@@ -67,6 +68,8 @@ const centerSections = computed(() => chartWidgetSections.value.center);
 const rightSections = computed(() => chartWidgetSections.value.right);
 
 const isChartFullView = ref(false);
+
+const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 </script>
 
 <template>
@@ -139,8 +142,11 @@ const isChartFullView = ref(false);
 			</ticker-columns-layout>
 		</template>
 	</ticker-layout>
-
-	<div v-show="!isChartFullView" :class="classes.navigation">
+	<div
+		v-if="navigationIsEnabled"
+		v-show="!isChartFullView"
+		:class="classes.navigation"
+	>
 		<button
 			:class="[classes.navigationBtn, { [classes.active]: viewMode === 'mixed' }]"
 			@click="setChart"
