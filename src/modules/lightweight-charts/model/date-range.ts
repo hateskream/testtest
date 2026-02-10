@@ -8,6 +8,8 @@ export const DateRangePreset = {
 	Month: '1M',
 	SixMonths: '6M',
 	Year: '1Y',
+	ThreeYears: '3Y',
+	FiveYears: '5Y',
 	TenYears: '10Y',
 	All: 'ALL',
 } as const;
@@ -39,35 +41,52 @@ export const DateRangeValueSchema = z.discriminatedUnion('type', [
 
 export type DateRangeValue = z.infer<typeof DateRangeValueSchema>;
 
-export function presetToDateRange(preset: DateRangePresetType): UtcRange<UtcSeconds> {
-	const now = new Date();
-	const from = new Date();
+type PresetConfig =
+	| { type: 'days'; count: number }
+	| { type: 'months'; count: number }
+	| { type: 'years'; count: number }
+	| { type: 'absolute'; date: Date };
 
-	switch (preset) {
-		case DateRangePreset.Day:
-			from.setDate(now.getDate() - 1);
+const PRESET_CONFIG = {
+	[DateRangePreset.Day]: { type: 'days', count: 1 },
+	[DateRangePreset.Week]: { type: 'days', count: 7 },
+	[DateRangePreset.Month]: { type: 'months', count: 1 },
+	[DateRangePreset.SixMonths]: { type: 'months', count: 6 },
+	[DateRangePreset.Year]: { type: 'years', count: 1 },
+	[DateRangePreset.ThreeYears]: { type: 'years', count: 3 },
+	[DateRangePreset.FiveYears]: { type: 'years', count: 5 },
+	[DateRangePreset.TenYears]: { type: 'years', count: 10 },
+	[DateRangePreset.All]: { type: 'absolute', date: new Date(2000, 0, 1) },
+} as const satisfies Record<DateRangePresetType, PresetConfig>;
+
+function calculateFromDate(now: Date, config: PresetConfig): Date {
+	const from = new Date(now);
+
+	switch (config.type) {
+		case 'days':
+			from.setDate(now.getDate() - config.count);
 			break;
-		case DateRangePreset.Week:
-			from.setDate(now.getDate() - 7);
+		case 'months':
+			from.setMonth(now.getMonth() - config.count);
 			break;
-		case DateRangePreset.Month:
-			from.setMonth(now.getMonth() - 1);
+		case 'years':
+			from.setFullYear(now.getFullYear() - config.count);
 			break;
-		case DateRangePreset.SixMonths:
-			from.setMonth(now.getMonth() - 6);
-			break;
-		case DateRangePreset.Year:
-			from.setFullYear(now.getFullYear() - 1);
-			break;
-		case DateRangePreset.TenYears:
-			from.setFullYear(now.getFullYear() - 10);
-			break;
-		case DateRangePreset.All:
-			from.setFullYear(2000, 0, 1);
-			break;
+		case 'absolute':
+			return new Date(config.date);
 	}
 
-	return { from: millisecondsToUtcSeconds(from.getTime()), to: millisecondsToUtcSeconds(now.getTime()) };
+	return from;
+}
+
+export function presetToDateRange(preset: DateRangePresetType): UtcRange<UtcSeconds> {
+	const now = new Date();
+	const from = calculateFromDate(now, PRESET_CONFIG[preset]);
+
+	return {
+		from: millisecondsToUtcSeconds(from.getTime()),
+		to: millisecondsToUtcSeconds(now.getTime()),
+	};
 }
 
 export function toUtcSecondsRange(value: DateRangeValue): UtcRange<UtcSeconds> {
@@ -101,6 +120,8 @@ export const DateRangePresetToLabel = {
 	[DateRangePreset.Month]: '1M',
 	[DateRangePreset.SixMonths]: '6M',
 	[DateRangePreset.Year]: '1Y',
+	[DateRangePreset.ThreeYears]: '3Y',
+	[DateRangePreset.FiveYears]: '5Y',
 	[DateRangePreset.TenYears]: '10Y',
 	[DateRangePreset.All]: 'All',
 } as const satisfies Record<DateRangePresetType, string>;
@@ -115,6 +136,8 @@ export const DateRangePresetToTitle = {
 	[DateRangePreset.Month]: '1 month',
 	[DateRangePreset.SixMonths]: '6 months',
 	[DateRangePreset.Year]: '1 year',
+	[DateRangePreset.ThreeYears]: '3 years',
+	[DateRangePreset.FiveYears]: '5 years',
 	[DateRangePreset.TenYears]: '10 years',
 	[DateRangePreset.All]: 'All time',
 } as const satisfies Record<DateRangePresetType, string>;
