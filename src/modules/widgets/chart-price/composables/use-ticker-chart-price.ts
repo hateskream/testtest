@@ -1,4 +1,4 @@
-import { computed, type MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
+import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue';
 import type { ChartType } from '@shared/component-library';
 import { format } from 'date-fns';
 
@@ -73,8 +73,8 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 
 	const currentTicker = ref<ITickerItem | null>(null);
 
-	watchEffect(async () => {
-		const [ticker] = await fetchTickers(toValue(tickerId));
+	watch(() => toValue(tickerId), async value => {
+		const [ticker] = await fetchTickers(value);
 
 		if (ticker.canonical_ticker_id === toValue(tickerId)) {
 			currentTicker.value = ticker;
