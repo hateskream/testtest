@@ -29,7 +29,7 @@ export function createTickerIdFromType(type: TickerType, payload: string): strin
 export const TICKER_SECTION_COMPONENT = {
 	TEST_SECTION_ONE: 'TEST_SECTION_ONE',
 	TEST_SECTION_TWO: 'TEST_SECTION_TWO',
-	INSIGHTS_SECTION: 'INSIGHTS_SECTION',
+	TEST_SECTION_THREE: 'TEST_SECTION_THREE',
 } as const;
 
 export type TickerSectionComponent =
@@ -55,12 +55,12 @@ export const tickerStockSections = {
 		{
 			title: 'Performance',
 			component: TICKER_SECTION_COMPONENT.TEST_SECTION_ONE,
-			height: 1000,
+			height: 400,
 		},
 	],
 	center: [
 		{
-			title: 'Test section two',
+			title: 'Middle widgets coming soon',
 			component: TICKER_SECTION_COMPONENT.TEST_SECTION_TWO,
 			height: 1000,
 		},
@@ -68,7 +68,27 @@ export const tickerStockSections = {
 	right: [
 		{
 			title: 'Insights & Activity',
-			component: TICKER_SECTION_COMPONENT.INSIGHTS_SECTION,
+			component: TICKER_SECTION_COMPONENT.TEST_SECTION_THREE,
+			height: 400,
+		},
+	],
+} as const satisfies ITickerWidgetSections;
+
+export const tickerStockSectionsEtf = {
+	left: [
+
+	],
+	center: [
+		{
+			title: 'Performance',
+			component: TICKER_SECTION_COMPONENT.TEST_SECTION_ONE,
+			height: 1000,
+		},
+	],
+	right: [
+		{
+			title: 'Insights & Activity',
+			component: TICKER_SECTION_COMPONENT.TEST_SECTION_THREE,
 			height: 1000,
 		},
 	],
@@ -80,7 +100,7 @@ export const TICKER_SECTIONS_BY_TYPE = {
 	[TickerType.FOREX]: tickerStockSections,
 	[TickerType.COMMODITIES]: tickerStockSections,
 	[TickerType.INDICES]: tickerStockSections,
-	[TickerType.ETF]: tickerStockSections,
+	[TickerType.ETF]: tickerStockSectionsEtf,
 } as const;
 
 export const getChartSectionsByType = (

@@ -6,7 +6,6 @@ import { TestWidget } from '../../widgets';
 
 <template>
 	<div>
-
 		<test-widget display-text="2-1" />
 		<test-widget display-text="2-2" />
 		<test-widget display-text="2-3" />

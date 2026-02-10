@@ -38,7 +38,6 @@ function changeTickerId(tickerId: string) {
 }
 
 createTickerContext({
-	tickerType: computed(() => props.type),
 	tickerId: canonicalTickerId,
 	changeTickerId,
 });

@@ -1,15 +1,11 @@
 <script setup lang="ts">
-
-
-import { TestWidget } from '../../widgets';
+import {computed} from "vue";
+import {isFeatureEnabled} from "@/shared/lib";
+const isPricerPerformanceEnabled = computed(()=> isFeatureEnabled('TICKER_WIDGET_PRICE_PERFORMANCE_ENABLED'))
 </script>
 
 <template>
-	<div>
-		<test-widget display-text="1-1" />
-		<test-widget display-text="1-2" />
-		<test-widget display-text="1-3" />
-		<test-widget display-text="1-4" />
+	<div v-if="isPricerPerformanceEnabled">
 	</div>
 </template>
 

@@ -1,9 +1,6 @@
 import { inject, type InjectionKey, provide, type Ref } from 'vue';
 
-import type { TickerType } from '../models';
-
 export type TickerContext = {
-	tickerType: Readonly<Ref<TickerType>>;
 	tickerId: Readonly<Ref<string>>;
 	changeTickerId: (tickerId: string) => void;
 };

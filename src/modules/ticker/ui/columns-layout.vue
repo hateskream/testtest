@@ -2,15 +2,17 @@
 import { computed, inject, watch, useTemplateRef } from 'vue';
 import { useEventListener, useScroll, useBreakpoints } from '@vueuse/core';
 
-import { TickerType } from '../models';
 import { useTickerContext } from '@/modules/ticker/composables';
+import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import { MarketType } from '@/modules/market';
 
 interface IProps {
 	disableScroll?: boolean;
 }
 
 const { disableScroll = false } = defineProps<IProps>();
-const { tickerType } = useTickerContext();
+const { tickerId } = useTickerContext();
+const tickerType = computed(() => resolveMarketTypeFromTicker(tickerId.value));
 const onBottomReached = inject<((reached: boolean) => void) | null>('onBottomReached', null);
 const handleFooterScroll = inject<((delta: number) => boolean) | null>('handleFooterScroll', null);
 
@@ -35,13 +37,13 @@ function hasElementReachedBottom(el: HTMLElement): boolean {
 	return Math.round(el.scrollTop + el.clientHeight) >= el.scrollHeight;
 }
 
-const hideLeftColumnTypes: TickerType[] = [TickerType.ETF];
+const hideLeftColumnTypes: MarketType[] = [MarketType.Etf];
 
 const shouldHideLeftColumn = computed(() => {
-	if (!tickerType) {
+	if (!tickerType.value) {
 		return false;
 	}
-	return hideLeftColumnTypes.includes(tickerType.value);
+	return hideLeftColumnTypes.includes(tickerType.value!);
 });
 
 const breakpoints = useBreakpoints({
