@@ -153,167 +153,169 @@
 	}
 }
 
-.text-50-r,
-.text-50-r-up {
-	font-weight: var(--font-text-50-r-weight);
-	font-size: var(--font-text-50-r-size);
-	line-height: var(--font-text-50-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-50-r-letter-spacing);
-	font-variation-settings: var(--font-text-50-r-font-variation, normal);
-}
+@layer typography {
+	.text-50-r,
+	.text-50-r-up {
+		font-weight: var(--font-text-50-r-weight);
+		font-size: var(--font-text-50-r-size);
+		line-height: var(--font-text-50-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-50-r-letter-spacing);
+		font-variation-settings: var(--font-text-50-r-font-variation, normal);
+	}
 
-.text-50-r-up {
-	font-size: var(--font-text-50-r-up-size);
-	text-transform: uppercase;
-}
+	.text-50-r-up {
+		font-size: var(--font-text-50-r-up-size);
+		text-transform: uppercase;
+	}
 
-.text-100-r,
-.text-100-r-up {
-	font-weight: var(--font-text-100-r-weight);
-	font-size: var(--font-text-100-r-size);
-	line-height: var(--font-text-100-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-100-r-letter-spacing);
-	font-variation-settings: var(--font-text-100-r-font-variation, normal);
-}
+	.text-100-r,
+	.text-100-r-up {
+		font-weight: var(--font-text-100-r-weight);
+		font-size: var(--font-text-100-r-size);
+		line-height: var(--font-text-100-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-100-r-letter-spacing);
+		font-variation-settings: var(--font-text-100-r-font-variation, normal);
+	}
 
-.text-100-r-up {
-	font-weight: var(--font-text-100-r-up-weight);
-	text-transform: uppercase;
-}
+	.text-100-r-up {
+		font-weight: var(--font-text-100-r-up-weight);
+		text-transform: uppercase;
+	}
 
-.text-100-b {
-	font-weight: var(--font-text-100-b-weight);
-	font-size: var(--font-text-100-b-size);
-	line-height: var(--font-text-100-b-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-100-b-letter-spacing);
-	font-variation-settings: var(--font-text-100-b-font-variation, normal);
-}
+	.text-100-b {
+		font-weight: var(--font-text-100-b-weight);
+		font-size: var(--font-text-100-b-size);
+		line-height: var(--font-text-100-b-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-100-b-letter-spacing);
+		font-variation-settings: var(--font-text-100-b-font-variation, normal);
+	}
 
-.text-200-r {
-	font-weight: var(--font-text-200-r-weight);
-	font-size: var(--font-text-200-r-size);
-	line-height: var(--font-text-200-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-200-r-letter-spacing);
-	font-variation-settings: var(--font-text-200-r-font-variation, normal);
-}
+	.text-200-r {
+		font-weight: var(--font-text-200-r-weight);
+		font-size: var(--font-text-200-r-size);
+		line-height: var(--font-text-200-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-200-r-letter-spacing);
+		font-variation-settings: var(--font-text-200-r-font-variation, normal);
+	}
 
-.text-200-b {
-	font-weight: var(--font-text-200-b-weight);
-	font-size: var(--font-text-200-b-size);
-	line-height: var(--font-text-200-b-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-200-b-letter-spacing);
-	font-variation-settings: var(--font-text-200-b-font-variation, normal);
-}
+	.text-200-b {
+		font-weight: var(--font-text-200-b-weight);
+		font-size: var(--font-text-200-b-size);
+		line-height: var(--font-text-200-b-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-200-b-letter-spacing);
+		font-variation-settings: var(--font-text-200-b-font-variation, normal);
+	}
 
-.text-300-r {
-	font-weight: var(--font-text-300-r-weight);
-	font-size: var(--font-text-300-r-size);
-	line-height: var(--font-text-300-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-300-r-letter-spacing);
-	font-variation-settings: var(--font-text-300-r-font-variation, normal);
-}
+	.text-300-r {
+		font-weight: var(--font-text-300-r-weight);
+		font-size: var(--font-text-300-r-size);
+		line-height: var(--font-text-300-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-300-r-letter-spacing);
+		font-variation-settings: var(--font-text-300-r-font-variation, normal);
+	}
 
-.text-300-b {
-	font-weight: var(--font-text-300-b-weight);
-	font-size: var(--font-text-300-b-size);
-	line-height: var(--font-text-300-b-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-300-b-letter-spacing);
-	font-variation-settings: var(--font-text-300-b-font-variation, normal);
-}
+	.text-300-b {
+		font-weight: var(--font-text-300-b-weight);
+		font-size: var(--font-text-300-b-size);
+		line-height: var(--font-text-300-b-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-300-b-letter-spacing);
+		font-variation-settings: var(--font-text-300-b-font-variation, normal);
+	}
 
-.text-400-r {
-	font-weight: var(--font-text-400-r-weight);
-	font-size: var(--font-text-400-r-size);
-	line-height: var(--font-text-400-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-400-r-letter-spacing);
-	font-variation-settings: var(--font-text-400-r-font-variation, normal);
-}
+	.text-400-r {
+		font-weight: var(--font-text-400-r-weight);
+		font-size: var(--font-text-400-r-size);
+		line-height: var(--font-text-400-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-400-r-letter-spacing);
+		font-variation-settings: var(--font-text-400-r-font-variation, normal);
+	}
 
-.text-400-b {
-	font-weight: var(--font-text-400-b-weight);
-	font-size: var(--font-text-400-b-size);
-	line-height: var(--font-text-400-b-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-400-b-letter-spacing);
-	font-variation-settings: var(--font-text-400-b-font-variation, normal);
-}
+	.text-400-b {
+		font-weight: var(--font-text-400-b-weight);
+		font-size: var(--font-text-400-b-size);
+		line-height: var(--font-text-400-b-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-400-b-letter-spacing);
+		font-variation-settings: var(--font-text-400-b-font-variation, normal);
+	}
 
-.text-500-r {
-	font-weight: var(--font-text-500-r-weight);
-	font-size: var(--font-text-500-r-size);
-	line-height: var(--font-text-500-r-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-500-r-letter-spacing);
-	font-variation-settings: var(--font-text-500-r-font-variation, normal);
-}
+	.text-500-r {
+		font-weight: var(--font-text-500-r-weight);
+		font-size: var(--font-text-500-r-size);
+		line-height: var(--font-text-500-r-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-500-r-letter-spacing);
+		font-variation-settings: var(--font-text-500-r-font-variation, normal);
+	}
 
-.text-500-b {
-	font-weight: var(--font-text-500-b-weight);
-	font-size: var(--font-text-500-b-size);
-	line-height: var(--font-text-500-b-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-text-500-b-letter-spacing);
-	font-variation-settings: var(--font-text-500-b-font-variation, normal);
-}
+	.text-500-b {
+		font-weight: var(--font-text-500-b-weight);
+		font-size: var(--font-text-500-b-size);
+		line-height: var(--font-text-500-b-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-text-500-b-letter-spacing);
+		font-variation-settings: var(--font-text-500-b-font-variation, normal);
+	}
 
-.title-100 {
-	font-weight: var(--font-title-100-weight);
-	font-size: var(--font-title-100-size);
-	line-height: var(--font-title-100-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-100-letter-spacing);
-	font-variation-settings: var(--font-title-100-font-variation, normal);
-}
+	.title-100 {
+		font-weight: var(--font-title-100-weight);
+		font-size: var(--font-title-100-size);
+		line-height: var(--font-title-100-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-100-letter-spacing);
+		font-variation-settings: var(--font-title-100-font-variation, normal);
+	}
 
-.title-200 {
-	font-weight: var(--font-title-200-weight);
-	font-size: var(--font-title-200-size);
-	line-height: var(--font-title-200-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-200-letter-spacing);
-	font-variation-settings: var(--font-title-200-font-variation, normal);
-}
+	.title-200 {
+		font-weight: var(--font-title-200-weight);
+		font-size: var(--font-title-200-size);
+		line-height: var(--font-title-200-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-200-letter-spacing);
+		font-variation-settings: var(--font-title-200-font-variation, normal);
+	}
 
-.title-300 {
-	font-weight: var(--font-title-300-weight);
-	font-size: var(--font-title-300-size);
-	line-height: var(--font-title-300-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-300-letter-spacing);
-	font-variation-settings: var(--font-title-300-font-variation, normal);
-}
+	.title-300 {
+		font-weight: var(--font-title-300-weight);
+		font-size: var(--font-title-300-size);
+		line-height: var(--font-title-300-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-300-letter-spacing);
+		font-variation-settings: var(--font-title-300-font-variation, normal);
+	}
 
-.title-400 {
-	font-weight: var(--font-title-400-weight);
-	font-size: var(--font-title-400-size);
-	line-height: var(--font-title-400-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-400-letter-spacing);
-	font-variation-settings: var(--font-title-400-font-variation, normal);
-}
+	.title-400 {
+		font-weight: var(--font-title-400-weight);
+		font-size: var(--font-title-400-size);
+		line-height: var(--font-title-400-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-400-letter-spacing);
+		font-variation-settings: var(--font-title-400-font-variation, normal);
+	}
 
-.title-500 {
-	font-weight: var(--font-title-500-weight);
-	font-size: var(--font-title-500-size);
-	line-height: var(--font-title-500-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-500-letter-spacing);
-	font-variation-settings: var(--font-title-500-font-variation, normal);
-}
+	.title-500 {
+		font-weight: var(--font-title-500-weight);
+		font-size: var(--font-title-500-size);
+		line-height: var(--font-title-500-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-500-letter-spacing);
+		font-variation-settings: var(--font-title-500-font-variation, normal);
+	}
 
-.title-600 {
-	font-weight: var(--font-title-600-weight);
-	font-size: var(--font-title-600-size);
-	line-height: var(--font-title-600-line-height);
-	font-family: 'Roboto Flex Variable', sans-serif;
-	letter-spacing: var(--font-title-600-letter-spacing);
-	font-variation-settings: var(--font-title-600-font-variation, normal);
+	.title-600 {
+		font-weight: var(--font-title-600-weight);
+		font-size: var(--font-title-600-size);
+		line-height: var(--font-title-600-line-height);
+		font-family: 'Roboto Flex Variable', sans-serif;
+		letter-spacing: var(--font-title-600-letter-spacing);
+		font-variation-settings: var(--font-title-600-font-variation, normal);
+	}
 }

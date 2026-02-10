@@ -27,4 +27,4 @@ body {
 	scrollbar-width: none;
 }
 
-@layer normalize, kit;
+@layer normalize, typography, kit;
