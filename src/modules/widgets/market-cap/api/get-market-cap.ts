@@ -1,5 +1,3 @@
-import { add, sub } from 'date-fns';
-
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import { arrayToString } from '@/shared/lib';
@@ -11,7 +9,7 @@ import {
 	type IMarketCapTotal,
 } from '../model';
 import { useFetchMock } from '@/shared/mock';
-import { DateRangePreset, type DateRangePresetType } from '@/modules/lightweight-charts/model';
+import { type DateRangePresetType, presetToDateRange } from '@/modules/lightweight-charts/model';
 
 const IS_USE_MOCK = false;
 
@@ -78,31 +76,16 @@ interface IMarketCapMockData {
 
 const { getMock } = useFetchMock<IMarketCapMockData>('/mock/widgets/market-cap.json');
 
-const rangeDayCounts: Record<DateRangePresetType, number> = {
-	[DateRangePreset.Day]: 1,
-	[DateRangePreset.Week]: 7,
-	[DateRangePreset.Month]: 30,
-	[DateRangePreset.SixMonths]: 180,
-	[DateRangePreset.Year]: 365,
-	[DateRangePreset.TenYears]: 3650,
-	[DateRangePreset.All]: 3650,
-};
-
 function generateTickerValue(from: number, to: number) {
 	return from + Math.random() * (to - from);
 }
 
 function createPointsMock(args: IGetMarketCapRequest) {
-	const daysCount = rangeDayCounts[args.range];
+	const { from: start, to: end } = presetToDateRange(args.range);
 
-	const startDate = sub(new Date(), { days: daysCount + 10 }).getTime();
-	const endDate = add(new Date(), { days: 1 }).getTime();
+	const dateStep = (end - start) / 100;
 
-	const dateStep = (endDate - startDate) / 100;
-
-	const timestamps = Array.from({ length: 100 }).map(
-		(_, key) => (new Date(startDate + key * dateStep)).getTime(),
-	);
+	const timestamps = Array.from({ length: 100 }).map((_, key) => start + key * dateStep);
 
 	function generateSegment(from: number, to: number) {
 		return Object.fromEntries([
@@ -113,7 +96,7 @@ function createPointsMock(args: IGetMarketCapRequest) {
 
 	return timestamps.map(time => {
 		return {
-			timestamp: time,
+			timestamp: time * 1000,
 			marketCap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
 			volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
 		};
@@ -133,7 +116,6 @@ function createTotalMock(args: IGetMarketCapRequest) {
 		volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
 		changePercent: generateSegment(-5, 5),
 	};
-
 }
 
 async function getMockData(args: IGetMarketCapRequest) {

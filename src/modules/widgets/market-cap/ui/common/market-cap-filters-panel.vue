@@ -10,10 +10,15 @@ import {
 	SelectionMode,
 	TickerSelectorModalWithBadge,
 } from '@/modules/ticker-selector';
-import { dateRangeFilters, dateRangeFilterValueToDisplay, type MarketCapType } from '../../model';
+import { dateRangeFilters, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { createPreset, type DateRangePresetType, type DateRangeValue } from '@/modules/lightweight-charts/model';
+import {
+	createPreset,
+	type DateRangePresetType,
+	type DateRangeValue,
+	getDateRangePresetLabel,
+} from '@/modules/lightweight-charts/model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -34,7 +39,7 @@ const selectedDateRangeLabel = computed(() => {
 	const range = activeDateRange.value;
 
 	if (range.type === 'preset') {
-		return dateRangeFilterValueToDisplay[range.preset].selected;
+		return getDateRangePresetLabel(range.preset);
 	}
 
 	return 'Custom range';

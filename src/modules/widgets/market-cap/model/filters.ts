@@ -1,39 +1,17 @@
-import { DateRangePreset, type DateRangePresetType } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangePresetType, getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 
-export const dateRangeFilterValueToDisplay = {
-	[DateRangePreset.Day]: {
-		selected: '1D',
-		option: '1 day',
-	},
-	[DateRangePreset.Week]: {
-		selected: '1W',
-		option: '1 week',
-	},
-	[DateRangePreset.Month]: {
-		selected: '1M',
-		option: '1 month',
-	},
-	[DateRangePreset.SixMonths]: {
-		selected: '6M',
-		option: '6 months',
-	},
-	[DateRangePreset.Year]: {
-		selected: '1Y',
-		option: '1 year',
-	},
-	[DateRangePreset.TenYears]: {
-		selected: '10Y',
-		option: '10 years',
-	},
-	[DateRangePreset.All]: {
-		selected: 'All',
-		option: 'All time',
-	},
-} as const satisfies Record<DateRangePresetType, { selected: string; option: string }>;
+export const MarketCapDateRangePreset = {
+	Day: DateRangePreset.Day,
+	Week: DateRangePreset.Week,
+	Month: DateRangePreset.Month,
+	SixMonths: DateRangePreset.SixMonths,
+	Year: DateRangePreset.Year,
+	All: DateRangePreset.All,
+} as const satisfies Record<string, DateRangePresetType>;
 
-export const dateRangeFilters = Object.values(DateRangePreset).map(d => {
+export const dateRangeFilters = Object.values(MarketCapDateRangePreset).map(d => {
 	return {
-		label: dateRangeFilterValueToDisplay[d].selected,
+		label: getDateRangePresetLabel(d),
 		value: d,
 	};
 });
