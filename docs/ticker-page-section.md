@@ -8,11 +8,16 @@
 ## Реализация
 
 - Секция должна поддерживать отображение под разные рынки, если это подразумевается дизайном
-- Компонент секции не требует обязательных props - она грузится асинхронно и содержит виджеты, которые сами управляют загрузкой своих данных
+- Компонент секции имеет только следующие props:
+```ts
+interface ISectionProps {
+	section: ISectionItem;
+}
+```
 
 ## Структура и загрузка
 
-Секции загружаются асинхронно через `section-layout.vue`, который управляет:
+Секции загружаются асинхронно через `ticker-section.vue`, который управляет:
 
 - Ленивой загрузкой компонента (IntersectionObserver)
 - Кешированием компонентов для оптимизации
@@ -21,14 +26,14 @@
 
 ## UI
 
-- Представление секции должно находиться в каталоге `/modules/ticker/ui/sections`
-- Каждая секция - это отдельная папка с компонентом и index файлом
+- Представление секции должно находиться в каталоге `/modules/ticker/ui/sections/[market]` (например, `/modules/ticker/ui/sections/crypto/overview-section.vue`)
+- Каждая секция - это отдельный vue-файл, реэкспортируемый из `index.ts` внутри `sections/[market]`
 - Секция содержит виджеты, которые отображают данные
 
 **Структура папки:**
 ```
 /modules/ticker/ui/sections/
-├── section-name/
+├── [market]/
 │   ├── index.ts
 │   └── section-name.vue
 ```
@@ -36,28 +41,29 @@
 **Пример реализации:**
 ```vue
 <script setup lang="ts">
+import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 import { useTickerContext } from '../../composables';
 
-const { tickerId, tickerType } = useTickerContext();
+const { tickerId } = useTickerContext();
 </script>
 
 <template>
-  <div class="section-name">
-    <!-- Виджеты секции -->
+  <div class="classes.section">
+    <activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
   </div>
 </template>
 
-<style scoped>
-.section-name {
+<style module="classes">
+.section {
   background: var(--bg-color-surface-00);
   color: var(--text-color-base-100);
 }
 </style>
 ```
 
-## Props
+## Данные о тикере
 
-Секция не требует prop`ов и получает контекст тикера через composable `useTickerContext()` (по факту провайд-инжект):
+Получить данные о тикере можно из контекста модуля через composable `useTickerContext()` (провайд-инжект под капотом):
 ```ts
 import { useTickerContext } from '@/modules/ticker/composables';
 
@@ -68,9 +74,9 @@ const { tickerId, tickerType } = useTickerContext();
 
 После создания секции необходимо:
 
-1. Добавить тип секции в объект `TICKER_SECTION_COMPONENT`:
+1. Добавить название секции в объект `TICKER_SECTION_COMPONENT`:
 ```ts
-// В models/ticker-section.ts или аналогичном файле
+// В models/sections/sections.ts
 export const TICKER_SECTION_COMPONENT = {
 	TEST_SECTION_ONE: 'TEST_SECTION_ONE',
 	TEST_SECTION_TWO: 'TEST_SECTION_TWO',
@@ -88,34 +94,102 @@ const loaders: Record<string, () => Promise<Component>> = {
 };
 ```
 
-3. Добавить секцию в конфигурацию разделов в `ticker-component.vue` через функцию `getChartSectionsByType()`:
+3. Добавить секцию в конфигурацию маркета в `models/sections/[market]`:
 ```ts
-// В моделях тикера
-export const getChartSectionsByType = (type: TickerType) => {
-  return {
-    left: [
-      // Секции для левой колонки
-    ],
-    center: [
-      // Секции для центральной колонки
-      TICKER_SECTION_COMPONENT.SECTION_NAME,
-    ],
-    right: [
-      // Секции для правой колонки
-    ],
-  };
-};
+// Пример конфигурации
+import { type ITickerWidgetSections } from './sections';
 
+export const tickerEtfSections = {
+	left: [
+		{
+			id: 'overview',
+			title: 'Overview',
+			component: 'STOCK_OVERVIEW',
+			height: 1000,
+		},
+	],
+	center: [
+		{
+			id: 'valuation',
+			title: 'Valuation & Estimates',
+			component: 'STOCK_VALUATION_AND_ESTIMATES',
+			height: 200,
+		},
+	],
+	right: [
+		{
+			id: 'insights',
+			title: 'Insights & Activity',
+			component: 'STOCK_INSIGHTS_AND_ACTIVITY',
+			height: 1000,
+		},
+	],
+} as const satisfies ITickerWidgetSections;
 ```
 
 ## ВАЖНОЕ ЗАМЕЧАНИЕ
 
-Некоторые секции СОДЕРЖАТ ТОЛЬКО ЦЕНТРАЛЬНУЮ И ПРАВУЮ КОЛОНКУ
-`@src/modules/ticker/ui/columns-layout.vue`
+Если виджет не содержит центральной колонки, а только левую и правую, то поле `center` можно оставить пустым
+
+Пример:
+```ts
+export const chartForexSections: IChartWidgetSections = {
+	left: [
+		{
+			id: 'price-performance',
+			title: 'Performance',
+			component: CHART_SECTION_COMPONENT.PRICE_PERFORMANCE,
+		},
+		{
+			id: 'explorer',
+			title: 'Explorer',
+		},
+	],
+	center: [],
+	right: [
+		{
+			id: 'insight-and-activity',
+			title: 'Insight',
+			component: CHART_SECTION_COMPONENT.INSIGHT_AND_ACTIVITY,
+		},
+	],
+} as const;
 ```
-const hideLeftColumnTypes: TickerType[] = [TickerType.ETF];
+
+## Что делать, если для одного Market может быть разная конфигурация секций?
+
+На данный момент существуют маркеты (forex), для которых есть несколько конфигураций секций.
+
+Например, USD-тикеры должны отображать секцию `us-macroeconomic-indicators`.
+
+Для решения такой задачи можно описать функцию, которая принимает `tickerId` и на основе его анализа возвращает определенную конфигурацию.
+
+Пример:
+
+```ts
+// config
+const config = {
+	...
+	[TickerType.FOREX]: getForexTickerSections,
+	...
+}
+
+// sections/forex.ts
+const tickerCommonForexSections = { ... }
+const tickerUsForexSections = { ... }
+
+function isUsdForexTicker(tickerId: string) { ... }
+
+export const getForexTickerSections = (
+	tickerId: string,
+): ITickerWidgetSections => {
+	if (isUsdForexTicker(tickerId)) {
+		return tickerUsForexSections;
+	}
+
+	return tickerCommonForexSections;
+};
 ```
-В дальнейшем таких секций быть не должно, но на данном этапе - они есть
 
 ## Стилизация
 
@@ -130,7 +204,7 @@ const hideLeftColumnTypes: TickerType[] = [TickerType.ETF];
 
 ## Обработка ошибок
 
-Ошибки загрузки секции автоматически обрабатываются `section-layout.vue`:
+Ошибки загрузки секции автоматически обрабатываются `ticker-section.vue`:
 
 - Отображается сообщение об ошибке
 - Предоставляется кнопка повтора загрузки
