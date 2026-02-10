@@ -35,6 +35,29 @@ function drawTextWrapped(
 	return startY - y;
 }
 
+function drawRoundedRect(
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius: number,
+) {
+	const r = Math.min(radius, width / 2, height / 2);
+
+	ctx.beginPath();
+	ctx.moveTo(x + r, y);
+	ctx.lineTo(x + width - r, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+	ctx.lineTo(x + width, y + height - r);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+	ctx.lineTo(x + r, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+	ctx.lineTo(x, y + r);
+	ctx.quadraticCurveTo(x, y, x + r, y);
+	ctx.closePath();
+}
+
 const HEADER_HEIGHT = 60;
 
 function drawHeader(context: CanvasRenderingContext2D, ticker: string) {
@@ -69,12 +92,12 @@ const FOOTER_HEIGHT = 80;
 async function drawFooter(context: CanvasRenderingContext2D, y: number) {
 	return new Promise(resolve => {
 		try {
-			const coloredSvg = (logoRaw as string).replace('<svg', '<svg fill="#fff">');
+			const coloredSvg = (logoRaw as string).replace('<svg', '<svg fill="#fff"');
 
 			const svgImage = new Image();
 
 			svgImage.onload = () => {
-				context.drawImage(svgImage, 10, y, 64, 64);
+				context.drawImage(svgImage, 10, y, 160, 48);
 				resolve(true);
 			};
 
@@ -92,9 +115,13 @@ async function drawFooter(context: CanvasRenderingContext2D, y: number) {
 	});
 }
 
+const CHART_PADDING = 10;
+const CHART_BORDER_RADIUS = 12;
+const GAP = 10;
+
 export async function createTickerSnapshot(chartCanvas: HTMLCanvasElement, ticker: string) {
 	const finalCanvas = document.createElement('canvas');
-	finalCanvas.width = chartCanvas.width;
+	finalCanvas.width = chartCanvas.width + CHART_PADDING * 2 + GAP;
 	finalCanvas.height = chartCanvas.height + HEADER_HEIGHT + FOOTER_HEIGHT;
 
 	const context = finalCanvas.getContext('2d')!;
@@ -104,9 +131,31 @@ export async function createTickerSnapshot(chartCanvas: HTMLCanvasElement, ticke
 
 	const headerHeight = drawHeader(context, ticker);
 
-	context.drawImage(chartCanvas, 0, headerHeight, chartCanvas.width, chartCanvas.height);
+	context.drawImage(
+		chartCanvas,
+		CHART_PADDING + 5,
+		headerHeight + CHART_PADDING + GAP,
+		chartCanvas.width,
+		chartCanvas.height,
+	);
 
-	await drawFooter(context, headerHeight + chartCanvas.height);
+	const borderWidth = 1;
+
+	context.lineWidth = borderWidth;
+	context.strokeStyle = '#1d1d1e';
+
+	drawRoundedRect(
+		context,
+		5 + borderWidth / 2,
+		headerHeight + GAP + borderWidth / 2,
+		CHART_PADDING * 2 + chartCanvas.width - borderWidth,
+		chartCanvas.height + CHART_PADDING * 2 - borderWidth,
+		CHART_BORDER_RADIUS,
+	);
+
+	context.stroke();
+
+	await drawFooter(context, headerHeight + chartCanvas.height + CHART_PADDING * 2 + GAP * 2);
 
 	return finalCanvas;
 }

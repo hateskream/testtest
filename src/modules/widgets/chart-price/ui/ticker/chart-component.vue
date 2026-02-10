@@ -46,7 +46,7 @@ const chartRef = useTemplateRef('chart');
 
 function takeScreenshot() {
 	if (chartRef.value) {
-		return chartRef.value.takeScreenshot();
+		return chartRef.value.takeScreenshot(true, true);
 	}
 
 	return null;
