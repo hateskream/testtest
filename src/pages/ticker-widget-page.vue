@@ -105,7 +105,8 @@ const widthInPx = computed(() => `${width.value + 38}px`);
 						<ui-pill-item display-variant="new" :class="classes.tickerName">{{ ticker }}</ui-pill-item>
 						<widget
 							:meta="{
-								tickerId: ticker
+								tickerId: ticker,
+								name: selectedConfig.name,
 							}"
 							:class="classes.widget"
 						/>

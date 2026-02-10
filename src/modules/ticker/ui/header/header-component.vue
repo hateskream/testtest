@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TickerPageHeader, TickerPageHeaderPreloader, useQueryTickerPageMeta } from '@/modules/ticker-page';
 import { useTickerContext } from '../../composables';
-import { BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseTickerWidgetError } from '@/modules/widgets/base';
 
 const { tickerId, changeTickerId } = useTickerContext();
 
@@ -11,7 +11,11 @@ const { data, isLoading, isError, refetch } = useQueryTickerPageMeta(() => ({
 </script>
 
 <template>
-	<base-error-component v-if="isError && !isLoading" @retry="refetch" />
+	<base-ticker-widget-error
+		v-if="isError && !isLoading"
+		:class="classes.error"
+		@retry="refetch"
+	/>
 	<ticker-page-header-preloader v-else-if="isLoading" />
 	<ticker-page-header
 		v-else-if="data"
@@ -23,3 +27,9 @@ const { data, isLoading, isError, refetch } = useQueryTickerPageMeta(() => ({
 		@on-ticker-select="changeTickerId"
 	/>
 </template>
+
+<style module="classes">
+.error {
+	border-bottom: 1px solid var(--color-border-surface-01, rgb(199 199 199 / 6%));
+}
+</style>

@@ -1,0 +1,317 @@
+<script setup lang="ts">
+import { computed, nextTick, onUnmounted, provide, ref, type Ref, watch } from 'vue';
+import { useElementSize } from '@vueuse/core';
+
+import { useCustomScroll } from '@/shared/composables/scroll.ts';
+import { TickerHeaderComponent } from '../header';
+import { TickerFooterComponent } from '../footer';
+import type { ViewMode } from '../../models';
+
+export interface ITickerLayoutProps {
+	showHeader?: boolean;
+}
+
+const props = withDefaults(defineProps<ITickerLayoutProps>(), {
+	showHeader: true,
+});
+
+const contentShift = ref(0);
+const footerShift = ref(0);
+const isBottomReached = ref(false);
+const topContentEl = ref<HTMLElement>();
+const footerEl = ref<HTMLElement>();
+const container = ref<HTMLElement>();
+const viewMode = ref<ViewMode>('mixed');
+let delayedActionTimeout: number | null = null;
+
+const { height: topContentHeightTemp } = useElementSize(topContentEl);
+const topContentHeight = computed(() => {
+	return topContentHeightTemp.value + 28;
+});
+const { height: footerHeight } = useElementSize(footerEl);
+
+const maxShift = computed(() => {
+	const offsetHeight = topContentEl.value?.offsetHeight || 0;
+	return offsetHeight;
+});
+
+const maxFooterShift = computed(() => {
+	return footerHeight.value || 0;
+});
+
+const opacityTop = computed(() => {
+	if (!topContentHeight.value || !contentShift.value) {
+		return 1;
+	}
+	return Math.max(0, 1 - contentShift.value / topContentHeight.value);
+});
+
+const isInReportsMode = computed(() => {
+	return viewMode.value === 'reports' && contentShift.value >= maxShift.value;
+});
+
+const canScrollFooter = computed(() => {
+	return isInReportsMode.value && isBottomReached.value && maxFooterShift.value > 0;
+});
+
+function onBottomReached(reached: boolean) {
+	isBottomReached.value = reached;
+}
+
+function handleFooterScroll(delta: number): boolean {
+	if (!canScrollFooter.value && footerShift.value === 0) {
+		return false;
+	}
+
+	const newFooterShift = Math.max(0, Math.min(maxFooterShift.value, footerShift.value + delta));
+
+	if (delta > 0 && footerShift.value < maxFooterShift.value) {
+		footerShift.value = newFooterShift;
+		return true;
+	}
+
+	if (delta < 0 && footerShift.value > 0) {
+		footerShift.value = newFooterShift;
+		if (footerShift.value === 0) {
+			isBottomReached.value = false;
+		}
+		return true;
+	}
+
+	return false;
+}
+
+provide('onBottomReached', onBottomReached);
+provide('handleFooterScroll', handleFooterScroll);
+
+const emit = defineEmits<{
+	(event: 'change-view', value: ViewMode): void;
+	(event: 'animation-start'): void;
+	(event: 'animation-end'): void;
+}>();
+
+watch(maxShift, (newMax, oldMax) => {
+	if (!oldMax || !newMax || oldMax === newMax) {
+		return;
+	}
+
+	const ratio = contentShift.value / oldMax;
+	contentShift.value = Math.min(newMax, ratio * newMax);
+
+	if (viewMode.value === 'reports' && ratio > 0.8) {
+		contentShift.value = newMax;
+	}
+});
+
+function clearDelayedAction() {
+	if (delayedActionTimeout) {
+		clearTimeout(delayedActionTimeout);
+		delayedActionTimeout = null;
+	}
+}
+
+function setDelayedAction(action: () => void, delay = 1000) {
+	clearDelayedAction();
+	delayedActionTimeout = window.setTimeout(() => {
+		action();
+		delayedActionTimeout = null;
+	}, delay);
+}
+
+function finishScrollToBottom() {
+	clearDelayedAction();
+	if (!maxShift.value) {
+		return;
+	}
+
+	contentShift.value = maxShift.value;
+	viewMode.value = 'reports';
+	emit('change-view', 'reports');
+	emit('animation-start');
+	setTimeout(() => emit('animation-end'), 1000);
+}
+
+function finishScrollToTop() {
+	clearDelayedAction();
+	contentShift.value = 0;
+	footerShift.value = 0;
+	isBottomReached.value = false;
+	viewMode.value = 'mixed';
+	emit('change-view', 'mixed');
+}
+
+onUnmounted(() => {
+	clearDelayedAction();
+});
+
+function handleScroll(delta: number) {
+	if (!topContentHeight.value) {
+		return;
+	}
+
+	if (canScrollFooter.value) {
+		const newFooterShift = Math.max(0, Math.min(maxFooterShift.value, footerShift.value + delta));
+
+		if (delta > 0 && footerShift.value < maxFooterShift.value) {
+			footerShift.value = newFooterShift;
+			return;
+		}
+
+		if (delta < 0 && footerShift.value > 0) {
+			footerShift.value = newFooterShift;
+			if (footerShift.value === 0) {
+				isBottomReached.value = false;
+			}
+			return;
+		}
+
+		if (delta < 0 && footerShift.value === 0) {
+			clearDelayedAction();
+			const threshold = topContentHeight.value / 5;
+
+			if (contentShift.value + delta < topContentHeight.value - threshold) {
+				finishScrollToTop();
+				return;
+			}
+			setDelayedAction(finishScrollToBottom);
+			contentShift.value = Math.max(0, contentShift.value + delta);
+			return;
+		}
+
+		return;
+	}
+
+	clearDelayedAction();
+	const threshold = topContentHeight.value / 5;
+
+	if (delta > 0) {
+		if (contentShift.value + delta > threshold) {
+			finishScrollToBottom();
+			return;
+		}
+		setDelayedAction(finishScrollToTop);
+	}
+
+	if (delta < 0) {
+		if (contentShift.value + delta < topContentHeight.value - threshold) {
+			finishScrollToTop();
+			return;
+		}
+		setDelayedAction(finishScrollToBottom);
+	}
+
+	contentShift.value = Math.max(0, Math.min(topContentHeight.value, contentShift.value + delta));
+}
+
+useCustomScroll(container as Ref<HTMLElement | null>, handleScroll);
+
+function setMixedViewMode() {
+	clearDelayedAction();
+	contentShift.value = 0;
+	footerShift.value = 0;
+	isBottomReached.value = false;
+	viewMode.value = 'mixed';
+	emit('change-view', 'mixed');
+}
+
+async function setReportsViewMode() {
+	clearDelayedAction();
+	if (!container.value) {
+		return;
+	}
+
+	await nextTick();
+	contentShift.value = maxShift.value;
+	viewMode.value = 'reports';
+	emit('change-view', 'reports');
+}
+
+defineExpose({ setMixedViewMode, setReportsViewMode });
+</script>
+
+<template>
+	<div ref="container" :class="classes.root">
+		<div
+			ref="topContentEl"
+			:class="classes.topContent"
+			:style="{ opacity: opacityTop }"
+		>
+			<ticker-header-component v-show="props.showHeader" />
+			<slot name="topContent">Graph</slot>
+		</div>
+		<div
+			:class="classes.contentWrapper"
+			:style="{ transform: `translateY(-${contentShift + footerShift}px)` }"
+		>
+			<div
+				ref="botContentEl"
+				:class="[classes.botContent, { [classes.locked]: viewMode !== 'reports' }]"
+			>
+				<slot name="botContent" />
+				<div
+					ref="footerEl"
+					:class="classes.footer"
+					:style="{
+						opacity: isInReportsMode ? 1 : 0,
+						pointerEvents: isInReportsMode ? 'auto' : 'none'
+					}"
+				>
+					<ticker-footer-component />
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style module="classes">
+.root {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	width: 100%;
+	height: calc(100svh - 40px);
+	overflow: hidden;
+	border-radius: 18px;
+
+	@media (width > 655px) {
+		padding: 12px;
+		border: 1px solid #1d1d1e;
+	}
+}
+
+.topContent {
+	position: relative;
+	padding-bottom: 56px;
+	transition: opacity 0.5s ease-in-out;
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 30px;
+		width: 100%;
+		height: 2px;
+		background: var(--border-color-surface-02);
+	}
+}
+
+.contentWrapper {
+	transition: transform 0.4s ease-in-out;
+}
+
+.botContent {
+	position: relative;
+	transition: none;
+}
+
+.locked {
+	pointer-events: none;
+}
+
+.footer {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	transition: opacity 0.3s ease-in-out;
+}
+</style>

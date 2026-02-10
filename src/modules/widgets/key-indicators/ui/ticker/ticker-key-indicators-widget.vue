@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useQueryKeyIndicators } from '../../query/use-query-key-indicators';
+import type { ITickerWidgetMeta } from '@/modules/ticker';
 
 import KeyIndicatorsLoading from '../key-indicators-loading.vue';
 import KeyIndicatorsError from '../key-indicators-error.vue';
@@ -7,9 +8,7 @@ import KeyIndicatorsWrapper from '../key-indicators-wrapper.vue';
 import KeyIndicatorRow from '../key-indicators-row.vue';
 
 const props = defineProps<{
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }>();
 
 const { data, isLoading, isError } = useQueryKeyIndicators(() => ({

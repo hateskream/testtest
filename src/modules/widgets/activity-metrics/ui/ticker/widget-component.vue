@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
+import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { useActivityMetrics } from '../../composables';
 
@@ -13,9 +14,7 @@ const ViewComponent = defineAsyncComponent({
 });
 
 interface IWidgetComponentProps {
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }
 
 const props = defineProps<IWidgetComponentProps>();

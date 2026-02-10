@@ -2,14 +2,12 @@
 import { computed, ref, useTemplateRef } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 
-import { createTickerIdFromType, getChartSectionsByType, TickerType, type ViewMode } from '../models';
-import { createTickerContext, useGoToTickerPage } from '../composables';
 import { ChartPriceTickerWidget } from '@/modules/widgets/chart-price';
 import { isFeatureEnabled } from '@/shared/lib';
-
-import TickerSection from './section-layout.vue';
-import TickerLayout from './ticker-layout.vue';
-import TickerColumnsLayout from './columns-layout.vue';
+import { createTickerContext, useGoToTickerPage } from '../composables';
+import { createTickerIdFromType, getChartSectionsByTicker, TickerType, type ViewMode } from '../models';
+import { ColumnsLayout, TickerLayout } from './layout';
+import { TickerSection } from './sections';
 
 export interface ITickerComponentProps {
 	type: TickerType;
@@ -26,11 +24,16 @@ const chartHeight = computed(() => {
 	return `${height}px`;
 });
 
-const chartWidgetSections = computed(() => getChartSectionsByType(props.type));
-
 const viewMode = ref<ViewMode>('mixed');
 
 const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
+
+const chartWidgetSections = computed(() => {
+	return getChartSectionsByTicker({
+		tickerType: props.type,
+		tickerId: canonicalTickerId.value,
+	});
+});
 
 const { goToTickerPage } = useGoToTickerPage();
 
@@ -93,11 +96,11 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 		</template>
 
 		<template #botContent>
-			<ticker-columns-layout v-show="!isChartFullView" :disable-scroll="disableScroll">
+			<columns-layout v-show="!isChartFullView" :disable-scroll="disableScroll">
 				<template #leftCol>
 					<template
 						v-for="section in leftSections"
-						:key="section.title"
+						:key="section.id"
 					>
 						<template v-if="section.component">
 							<ticker-section
@@ -110,10 +113,10 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 					</template>
 				</template>
 
-				<template #mainCol>
+				<template v-if="centerSections.length" #mainCol>
 					<template
 						v-for="section in centerSections"
-						:key="section.title"
+						:key="section.id"
 					>
 						<ticker-section
 							v-if="section.component"
@@ -128,7 +131,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 				<template #rightCol>
 					<template
 						v-for="section in rightSections"
-						:key="section.title"
+						:key="section.id"
 					>
 						<ticker-section
 							v-if="section.component"
@@ -139,7 +142,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 						/>
 					</template>
 				</template>
-			</ticker-columns-layout>
+			</columns-layout>
 		</template>
 	</ticker-layout>
 	<div

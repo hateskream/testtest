@@ -38,9 +38,10 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 	display: flex;
 	align-items: flex-end;
 	box-sizing: border-box;
-	height: 118px;
+	height: 120px;
 	padding: var(--padding-s9, 16px) 0;
 	gap: 12px;
+	border-bottom: 1px solid var(--color-border-surface-01, rgb(199 199 199 / 6%));
 }
 
 .logo {

@@ -1,12 +1,4 @@
-import {
-	defineAsyncComponent,
-	shallowRef,
-	ref,
-	watch,
-	markRaw,
-	type Ref,
-	type Component,
-} from 'vue';
+import { type Component, defineAsyncComponent, markRaw, type Ref, ref, shallowRef, watch } from 'vue';
 
 import { TICKER_SECTION_COMPONENT, type TickerSectionComponent } from '../models';
 
@@ -14,25 +6,52 @@ type AsyncComp = ReturnType<typeof defineAsyncComponent>;
 
 const asyncComponentCache = new Map<TickerSectionComponent, AsyncComp>();
 
-export const useTickerSectionLoader = (
-	componentType: Ref<TickerSectionComponent | null>,
-) => {
+export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent | null>) {
 	const component = shallowRef<AsyncComp | null>(null);
 	const error = ref<Error | null>(null);
 	const isLoading = ref(false);
 	const loadAttempts = ref(0);
 
 	const loaders: Record<TickerSectionComponent, () => Promise<Component>> = {
-		[TICKER_SECTION_COMPONENT.TEST_SECTION_ONE]: () =>
-			import('@/modules/ticker/ui/test-components/sections/test-section-one')
-				.then(m => m.TestSectionOne),
+		// forex
+		[TICKER_SECTION_COMPONENT.FOREX_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/forex').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.US_MACROECONOMIC_INDICATORS]: () =>
+			import('@/modules/ticker/ui/sections/forex').then(m => m.UsMacroeconomicIndicators),
+		[TICKER_SECTION_COMPONENT.FOREX_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/forex').then(m => m.InsightsAndActivity),
 
-		[TICKER_SECTION_COMPONENT.TEST_SECTION_TWO]: () =>
-			import('@/modules/ticker/ui/test-components/sections/test-section-two')
-				.then(m => m.TestSectionTwo),
+		// stock
+		[TICKER_SECTION_COMPONENT.STOCK_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/stock').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.STOCK_VALUATION_AND_ESTIMATES]: () =>
+			import('@/modules/ticker/ui/sections/stock').then(m => m.ValuationAndEstimates),
+		[TICKER_SECTION_COMPONENT.STOCK_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/stock').then(m => m.InsightsAndActivity),
 
-		[TICKER_SECTION_COMPONENT.INSIGHTS_SECTION]: () =>
-			import('@/modules/ticker/ui/sections/insights-and-activity/ticker-insights-and-activity-section.vue'),
+		// crypto
+		[TICKER_SECTION_COMPONENT.CRYPTO_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/crypto').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.CRYPTO_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/crypto').then(m => m.InsightsAndActivity),
+
+		// etf
+		[TICKER_SECTION_COMPONENT.ETF_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/etf').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.ETF_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/etf').then(m => m.InsightsAndActivity),
+
+		// index
+		[TICKER_SECTION_COMPONENT.INDEX_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/indices').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.INDEX_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/indices').then(m => m.InsightsAndActivity),
+
+		// commodity
+		[TICKER_SECTION_COMPONENT.COMMODITY_OVERVIEW]: () =>
+			import('@/modules/ticker/ui/sections/commodity').then(m => m.OverviewSection),
+		[TICKER_SECTION_COMPONENT.COMMODITY_INSIGHTS_AND_ACTIVITY]: () =>
+			import('@/modules/ticker/ui/sections/commodity').then(m => m.InsightsAndActivity),
 	};
 
 	const loadComponent = (type: TickerSectionComponent) => {
@@ -125,4 +144,4 @@ export const useTickerSectionLoader = (
 		retry,
 		reset,
 	};
-};
+}

@@ -1,2 +1,1 @@
-import TickerComponent from './ticker-component.vue';
-export { TickerComponent };
+export { default as TickerComponent } from './ticker-component.vue';

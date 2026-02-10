@@ -22,7 +22,7 @@ const width = ref(400);
 		</div>
 
 		<div :style="{ width: `${width}px` }">
-			<ticker-links-widget :meta="{tickerId: 'Crypto-BTC_Bitcoin'}" />
+			<ticker-links-widget :meta="{ tickerId: 'Crypto-BTC_Bitcoin', name: 'Links' }" />
 		</div>
 	</div>
 </template>

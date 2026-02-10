@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { BaseTickerWidgetWrapper, BaseTickerWidgetHeader, BaseTickerWidgetContent } from '@/modules/widgets/base';
+import { BaseTickerWidgetContent, BaseTickerWidgetHeader, BaseTickerWidgetWrapper } from '@/modules/widgets/base';
 import { getLinksQuery } from '../../query/get-links-query.ts';
+import type { ITickerWidgetMeta } from '@/modules/ticker';
 
 import WidgetLinks from '../widget-links.vue';
 import WidgetLinksSkeleton from '../widget-links-skeleton.vue';
 import WidgetLinksError from '../widget-links-error.vue';
 
 const props = defineProps<{
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }>();
 
 const { data, isLoading, isError, refetch } = getLinksQuery(() => ({
@@ -20,7 +19,7 @@ const { data, isLoading, isError, refetch } = getLinksQuery(() => ({
 <template>
 	<base-ticker-widget-wrapper>
 		<base-ticker-widget-header>
-			Links
+			{{ props.meta.name }}
 		</base-ticker-widget-header>
 
 		<base-ticker-widget-content>
