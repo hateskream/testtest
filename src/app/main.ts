@@ -42,10 +42,6 @@ app.use(createAppHead({ appName: 'i88' }));
 
 registerVCalendar(app);
 
-// Test gitlab env
-// oxlint-disable-next-line no-console
-console.log('Sentry DSN', import.meta.env['VITE_SENTRY_DSN']);
-
 registerLogger({ app, router });
 
 app.mount('#app');
