@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { TickerBaseTabSectionWrapper, TickerBaseTabSectionHead } from '@/modules/ticker/ui/base';
+import { TickerBaseTabSectionHead, TickerBaseTabSectionWrapper } from '@/modules/ticker/ui/base';
 import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
 import { getEndOfWeek, getStartOfWeek, toUtcIsoDate } from '../../model';
 import { useQueryNews } from '../../queries';
+import type { ITickerWidgetMeta } from '@/modules/ticker';
 
 import TickerNewsWidgetLoading from './ticker-news-widget-loading.vue';
 import TickerNewsWidgetError from './ticker-news-widget-error.vue';
@@ -12,9 +13,7 @@ import NewsContentWrapper from '../news-content-wrapper-component.vue';
 import NewsListComponent from '../news-list-component.vue';
 
 interface IWidgetComponentProps {
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }
 
 const props = defineProps<IWidgetComponentProps>();
@@ -56,7 +55,7 @@ const news = computed(() => {
 	/>
 
 	<ticker-base-tab-section-wrapper v-else>
-		<ticker-base-tab-section-head>News</ticker-base-tab-section-head>
+		<ticker-base-tab-section-head>{{ props.meta.name }}</ticker-base-tab-section-head>
 		<news-content-wrapper :state="!!selectedNewsId">
 			<template #default>
 				<news-list-component

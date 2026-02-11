@@ -4,15 +4,14 @@ import { computed } from 'vue';
 import { TickerBaseTabSection } from '@/modules/ticker/ui/base';
 import { UiSpeedometer, UiSpeedometerDescription } from '@/shared/ui/speedometer';
 import { useQueryCurrentSentiment } from '../../query/use-query-current-sentiment';
-import { SENTIMENT_SEGMENTS, mapSentiment } from '../../model';
+import { mapSentiment, SENTIMENT_SEGMENTS } from '../../model';
+import type { ITickerWidgetMeta } from '@/modules/ticker';
 
 import CurrentSentimentLoading from '../current-sentiment-loading.vue';
 import CurrentSentimentError from '../current-sentiment-error.vue';
 
 const props = defineProps<{
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }>();
 
 const { data, isLoading, isError, refetch } = useQueryCurrentSentiment(() => ({
@@ -32,7 +31,7 @@ const sentiment = computed(() => {
 
 	<ticker-base-tab-section v-else-if="data && !isError">
 		<template #title>
-			Current Sentiment
+			{{ props.meta.name }}
 		</template>
 		<template #content>
 			<div :class="classes.chart">

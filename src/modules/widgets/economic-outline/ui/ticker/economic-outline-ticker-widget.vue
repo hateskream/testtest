@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
 import { UiTag } from '@/shared/ui/tag';
-import { TickerBaseTabSection } from '@/modules/ticker';
+import { type ITickerWidgetMeta, TickerBaseTabSection } from '@/modules/ticker';
 import { useQueryEconomicOutline } from '../../query/use-query-economic-outline';
 import { FALLBACK_LOCALE } from '@/shared/lib';
 
@@ -11,9 +11,7 @@ import EconomicOutlineLoading from '../economic-outline-loading.vue';
 import EconomicOutlineError from '../economic-outline-error.vue';
 
 const props = defineProps<{
-	meta: {
-		tickerId: string;
-	};
+	meta: ITickerWidgetMeta;
 }>();
 
 const { data, isLoading, isError, refetch } = useQueryEconomicOutline(() => ({

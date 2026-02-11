@@ -2,8 +2,8 @@
 import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
-
-import EmptyTickerWidget from '../empty-ticker-widget.vue';
+import { TickerNewsWidget } from '@/modules/news';
+import { BaseTickerWidgetWrapper } from '@/modules/widgets/base';
 
 interface ISectionProps {
 	section: ISectionItem;
@@ -17,7 +17,9 @@ const { tickerId } = useTickerContext();
 <template>
 	<div :class="classes.section">
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
-		<empty-ticker-widget style="height: 700px;" :meta="{ tickerId, name: 'News' }" />
+		<base-ticker-widget-wrapper>
+			<ticker-news-widget :class="classes.news" :meta="{ tickerId, name: 'News' }" />
+		</base-ticker-widget-wrapper>
 	</div>
 </template>
 
@@ -27,5 +29,9 @@ const { tickerId } = useTickerContext();
 	flex-direction: column;
 	gap: var(--padding-s4, 6px);
 	align-self: stretch;
+}
+
+.news {
+	height: 700px;
 }
 </style>

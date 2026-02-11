@@ -6,5 +6,5 @@ const { tickerId } = useTickerContext();
 </script>
 
 <template>
-	<ticker-news-widget :meta="{ tickerId }" />
+	<ticker-news-widget :meta="{ tickerId, name: 'News' }" />
 </template>
