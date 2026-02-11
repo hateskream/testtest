@@ -46,7 +46,7 @@ const metricTagTrend = computed(() => data.value && data.value.growthYoy > 0 ? '
 </script>
 
 <template>
-	<base-ticker-widget-wrapper>
+	<base-ticker-widget-wrapper :class="classes.wrapper">
 		<base-ticker-widget-header>
 			<template #default>Consumer price index</template>
 			<template #right v-if="!isError && !isLoading && data">
@@ -68,3 +68,10 @@ const metricTagTrend = computed(() => data.value && data.value.growthYoy > 0 ? '
 		/>
 	</base-ticker-widget-wrapper>
 </template>
+
+<style module="classes">
+.wrapper {
+	display: flex;
+	flex-direction: column;
+}
+</style>
