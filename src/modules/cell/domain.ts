@@ -150,7 +150,7 @@ export enum SymbolType {
 	Stock = 'Stock',
 	Crypto = 'Crypto',
 	Forex = 'Forex',
-	Etf = 'Etf',
+	Etf = 'ETF',
 	PlaneText = 'PlainText',
 }
 
