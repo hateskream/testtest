@@ -128,6 +128,7 @@ const preparedSingleEntityDataset = computed(() => {
 				price-label="Current"
 				is-show-tooltip
 				fade-left
+				auto-size
 			>
 				<template #tooltipContent="{rows, title}">
 					<market-cap-chart-tooltip

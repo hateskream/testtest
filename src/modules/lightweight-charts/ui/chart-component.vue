@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { computed, type CSSProperties, reactive, useTemplateRef } from 'vue';
-import { CrosshairMode, LineStyle } from 'lightweight-charts';
+import {
+	CrosshairMode,
+	type ISeriesApi,
+	type ITimeScaleApi,
+	LineStyle,
+	type SeriesDefinition,
+	type SeriesPartialOptionsMap,
+	type SeriesType,
+	type Time,
+} from 'lightweight-charts';
 import type { CandlestickData, ChartClickData, ChartData, ChartType, LineData } from '@shared/component-library';
 import {
 	LastPriceAnimationMode,
 	type LastPriceAnimationMode as LastPriceAnimationModeType,
 } from '@shared/component-library';
-import { notNullish, unrefElement } from '@vueuse/core';
+import { notNullish, unrefElement, useDebounceFn, useResizeObserver } from '@vueuse/core';
 
 import {
 	chartTimeToDate,
@@ -57,8 +66,8 @@ interface IChartProps {
 	prevClosePrice?: number | null;
 	prevClosePriceLabel?: string;
 	type?: ChartType;
-	showInstruments?: boolean;
 	timezone?: TimezoneUtcType;
+	autoSize?: boolean;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
@@ -87,8 +96,16 @@ interface IChartEmits {
 
 const emit = defineEmits<IChartEmits>();
 
-interface ISharedChartElement extends HTMLElement {
+export interface ISharedChartElement extends HTMLElement {
 	takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean): HTMLCanvasElement | null;
+	getTimeScale(): ITimeScaleApi<Time> | null;
+	updateMainSeriesPoint(point: CandlestickData | LineData, historicalUpdate?: boolean): void;
+	addSeries<T extends SeriesType>(
+		definition: SeriesDefinition<T>,
+		options?: SeriesPartialOptionsMap[T],
+		paneIndex?: number
+	): ISeriesApi<T> | null;
+	removeSeries(seriesApi: ISeriesApi<SeriesType, Time>): void;
 }
 
 const container = useTemplateRef<ISharedChartElement>('container');
@@ -296,7 +313,15 @@ function takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean) {
 	return null;
 }
 
-defineExpose({ takeScreenshot });
+function getTimeScale() {
+	if (container.value) {
+		return container.value.getTimeScale();
+	}
+
+	return null;
+}
+
+defineExpose({ takeScreenshot, getTimeScale });
 
 function onWheel(e: WheelEvent) {
 	if (props.handleScale) {
@@ -304,11 +329,36 @@ function onWheel(e: WheelEvent) {
 		e.stopPropagation();
 	}
 }
+
+
+// autosize
+
+const chart = useTemplateRef('chart');
+
+let lastContainerWidth = 0;
+
+if (props.autoSize) {
+	useResizeObserver(
+		chart,
+		useDebounceFn(([entry]) => {
+			if (lastContainerWidth !== entry.contentRect.width) {
+				lastContainerWidth = entry.contentRect.width;
+
+				const scale = getTimeScale();
+				if (scale) {
+					scale.fitContent();
+				}
+			}
+		}),
+	);
+}
+
 </script>
 
 <template>
 	<div :class="classes.wrapper" :style="{ height: heightInPx }">
 		<div :class="classes.mainChart">
+		<div ref="chart" :class="classes.mainChart">
 			<i88-chart
 				v-if="props.data.length"
 				ref="container"

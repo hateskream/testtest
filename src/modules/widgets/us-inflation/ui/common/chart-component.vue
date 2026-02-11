@@ -27,5 +27,6 @@ const preparedDatasets = computed(() => {
 		height="100%"
 		color-schema="neutral"
 		fade-left
+		auto-size
 	/>
 </template>

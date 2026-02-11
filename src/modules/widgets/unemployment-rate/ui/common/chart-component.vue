@@ -22,5 +22,6 @@ const props = defineProps<IMarketCapChartProps>();
 		:color-schema="props.chartColorSchema"
 		:data="props.points"
 		fade-left
+		auto-size
 	/>
 </template>

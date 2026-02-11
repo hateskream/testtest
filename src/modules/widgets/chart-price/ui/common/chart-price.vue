@@ -118,6 +118,7 @@ const indicators = computed(() => {
 				:right-offset-pixels="120"
 				price-label="Current Price"
 				fade-left
+				auto-size
 			/>
 			<chart-date-range
 				v-if="props.isBig && props.isShowTimeRange"

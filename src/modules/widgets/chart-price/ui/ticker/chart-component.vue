@@ -76,7 +76,7 @@ defineExpose({ takeScreenshot });
 			:timezone="props.timezone"
 			price-label="Current"
 			fade-left
-			show-instruments
+			auto-size
 		/>
 	</div>
 </template>
