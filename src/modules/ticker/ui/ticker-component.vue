@@ -97,7 +97,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 
 		<template #botContent>
 			<columns-layout v-show="!isChartFullView" :disable-scroll="disableScroll">
-				<template #leftCol>
+				<template v-if="leftSections.length" #leftCol>
 					<template
 						v-for="section in leftSections"
 						:key="section.id"
@@ -128,7 +128,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 					</template>
 				</template>
 
-				<template #rightCol>
+				<template v-if="rightSections.length" #rightCol>
 					<template
 						v-for="section in rightSections"
 						:key="section.id"

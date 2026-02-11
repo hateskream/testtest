@@ -39,6 +39,12 @@ const tickerType = computed((): TickerType => {
 
 <style module="classes">
 .container {
-	padding: 20px;
+	height: calc(100vh - 16px);
+	margin: 8px 0;
+	border-radius: 18px;
+
+	@media (width > 655px) {
+		border: 1px solid #1d1d1e;
+	}
 }
 </style>

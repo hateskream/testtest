@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onUnmounted, provide, ref, type Ref, watch } from 'vue';
+import { computed, nextTick, onUnmounted, provide, ref, type Ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScroll } from '@/shared/composables/scroll.ts';
@@ -15,24 +15,38 @@ const props = withDefaults(defineProps<ITickerLayoutProps>(), {
 	showHeader: true,
 });
 
+const BOT_CONTENT_PADDING = 24;
+
 const contentShift = ref(0);
 const footerShift = ref(0);
 const isBottomReached = ref(false);
-const topContentEl = ref<HTMLElement>();
-const footerEl = ref<HTMLElement>();
-const container = ref<HTMLElement>();
+
 const viewMode = ref<ViewMode>('mixed');
+
+const topContentEl = useTemplateRef('topContentEl');
+const footerEl = useTemplateRef('footerEl');
+const container = useTemplateRef('container');
+const botContent = useTemplateRef('botContentEl');
+
+const { height: containerHeight } = useElementSize(container);
+const { height: botContentHeight } = useElementSize(botContent);
+
 let delayedActionTimeout: number | null = null;
 
 const { height: topContentHeightTemp } = useElementSize(topContentEl);
-const topContentHeight = computed(() => {
-	return topContentHeightTemp.value + 28;
-});
+
+const topContentHeight = computed(() => topContentHeightTemp.value + 28);
+
 const { height: footerHeight } = useElementSize(footerEl);
 
 const maxShift = computed(() => {
-	const offsetHeight = topContentEl.value?.offsetHeight || 0;
-	return offsetHeight;
+	const topContent = topContentEl.value;
+
+	if (topContent) {
+		return topContentHeightTemp.value + BOT_CONTENT_PADDING;
+	}
+
+	return 0;
 });
 
 const maxFooterShift = computed(() => {
@@ -48,6 +62,10 @@ const opacityTop = computed(() => {
 
 const isInReportsMode = computed(() => {
 	return viewMode.value === 'reports' && contentShift.value >= maxShift.value;
+});
+
+const footerShouldBeVisible = computed(() => {
+	return (botContentHeight.value + topContentHeight.value) < containerHeight.value;
 });
 
 const canScrollFooter = computed(() => {
@@ -189,6 +207,7 @@ function handleScroll(delta: number) {
 			finishScrollToBottom();
 			return;
 		}
+
 		setDelayedAction(finishScrollToTop);
 	}
 
@@ -197,6 +216,7 @@ function handleScroll(delta: number) {
 			finishScrollToTop();
 			return;
 		}
+
 		setDelayedAction(finishScrollToBottom);
 	}
 
@@ -252,8 +272,8 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 					ref="footerEl"
 					:class="classes.footer"
 					:style="{
-						opacity: isInReportsMode ? 1 : 0,
-						pointerEvents: isInReportsMode ? 'auto' : 'none'
+						opacity: (isInReportsMode || footerShouldBeVisible) ? 1 : 0,
+						pointerEvents: (isInReportsMode || footerShouldBeVisible) ? 'auto' : 'none'
 					}"
 				>
 					<ticker-footer-component />
@@ -269,29 +289,15 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 	flex-grow: 1;
 	flex-direction: column;
 	width: 100%;
-	height: calc(100svh - 40px);
+	height: 100%;
 	overflow: hidden;
-	border-radius: 18px;
-
-	@media (width > 655px) {
-		padding: 12px;
-		border: 1px solid #1d1d1e;
-	}
 }
 
 .topContent {
 	position: relative;
-	padding-bottom: 56px;
+	padding: 0 var(--padding-s10, 18px);
+	border-bottom: 1px solid var(--surface-04, rgb(37 37 40 / 92%));
 	transition: opacity 0.5s ease-in-out;
-
-	&::after {
-		content: '';
-		position: absolute;
-		bottom: 30px;
-		width: 100%;
-		height: 2px;
-		background: var(--border-color-surface-02);
-	}
 }
 
 .contentWrapper {
@@ -300,6 +306,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 
 .botContent {
 	position: relative;
+	padding: var(--padding-s12, 24px) var(--padding-s6, 18px);
 	transition: none;
 }
 
