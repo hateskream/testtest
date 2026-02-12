@@ -59,6 +59,10 @@ export default defineConfig({
 	},
 	server: {
 		proxy: {
+			'/api/feedback': {
+				target: 'http://localhost:3000',
+				changeOrigin: true,
+			},
 			'/api': {
 				target: 'https://gateway.planet9.uk',
 				changeOrigin: true,

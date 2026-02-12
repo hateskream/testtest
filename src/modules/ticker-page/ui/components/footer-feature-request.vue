@@ -4,7 +4,7 @@ import { ref, useTemplateRef } from 'vue';
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { UiControlButton } from '@/shared/ui/control-button';
-import { RequestFeatureConfig, type IRequestFeaturePayload } from '../../api/request-feature';
+import { UserRequestConfig, type IUserRequestPayload } from '../../api/user-request';
 
 const props = defineProps<{
 	state: 'initial' | 'form' | 'sended';
@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
 	'request-feature': [];
-	'form-send': [IRequestFeaturePayload];
+	'form-send': [IUserRequestPayload];
 }>();
 
 interface IUserImage {
@@ -32,11 +32,11 @@ function addImages(files: FileList | File[]) {
 			continue;
 		}
 
-		if (file.size > RequestFeatureConfig.MaxFileSize) {
+		if (file.size > UserRequestConfig.MaxFileSize) {
 			continue;
 		}
 
-		if (images.value.length >= RequestFeatureConfig.MaxImages) {
+		if (images.value.length >= UserRequestConfig.MaxFiles) {
 			break;
 		}
 
@@ -98,15 +98,15 @@ function openFilePicker() {
 function onFormSend() {
 	const trimmed = inputValue.value.trim();
 
-	if (trimmed.length < RequestFeatureConfig.MinTextLength) {
+	if (trimmed.length < UserRequestConfig.MinTextLength) {
 		return;
 	}
 
-	if (trimmed.length > RequestFeatureConfig.MaxTextLength) {
+	if (trimmed.length > UserRequestConfig.MaxTextLength) {
 		return;
 	}
 
-	if (images.value.length > RequestFeatureConfig.MaxImages) {
+	if (images.value.length > UserRequestConfig.MaxFiles) {
 		return;
 	}
 
@@ -180,7 +180,7 @@ function onFormSend() {
 					</div>
 					<button
 						:class="classes.file"
-						:disabled="images.length >= RequestFeatureConfig.MaxImages"
+						:disabled="images.length >= UserRequestConfig.MaxFiles"
 						@click="openFilePicker"
 					>
 						<ui-icon

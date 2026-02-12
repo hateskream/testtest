@@ -5,7 +5,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiControlButton } from '@/shared/ui/control-button';
 import { getFeatureValue } from '@/shared/lib';
-import { requestFeature, type IRequestFeaturePayload } from '../api/request-feature';
+import { makeUserRequest, type IUserRequestPayload } from '../api/user-request';
 
 import FooterFeatureRequest from './components/footer-feature-request.vue';
 
@@ -18,9 +18,9 @@ function handleFeatureRequest() {
 	requestState.value = 'form';
 }
 
-function onFormSend(form: IRequestFeaturePayload) {
+function onFormSend(form: IUserRequestPayload) {
 	requestState.value = 'sended';
-	requestFeature(form);
+	makeUserRequest('feature', form);
 }
 </script>
 

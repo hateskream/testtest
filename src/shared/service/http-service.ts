@@ -23,9 +23,6 @@ class HttpService {
 	private readonly fetchInstance = ofetch.create({
 		retry: 1,
 		timeout: 10000,
-		headers: {
-			'Content-Type': 'application/json',
-		},
 		onRequestError({ error, request }) {
 			const logger = useLogger();
 			logger.error('Request Error', { error: error as Error, tags: { type: 'network' }, context: { request } });
