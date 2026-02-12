@@ -29,6 +29,8 @@ const fileInputRef = useTemplateRef<HTMLInputElement>('fileInput');
 
 const inputValue = ref('');
 const attachedFiles = ref<IUserFile[]>([]);
+const isDragging = ref(false);
+let dragCounter = 0;
 
 function addFiles(files: FileList | File[]) {
 	for (const file of files) {
@@ -75,8 +77,23 @@ function handlePaste(event: ClipboardEvent) {
 	addFiles(files);
 }
 
+function handleDragEnter() {
+	dragCounter++;
+	isDragging.value = true;
+}
+
+function handleDragLeave() {
+	dragCounter--;
+
+	if (dragCounter === 0) {
+		isDragging.value = false;
+	}
+}
+
 function handleDrop(event: DragEvent) {
 	event.preventDefault();
+	dragCounter = 0;
+	isDragging.value = false;
 
 	const files = event.dataTransfer?.files;
 
@@ -128,7 +145,13 @@ function onFormSend() {
 </script>
 
 <template>
-	<section :class="classes.textBlock">
+	<section
+		:class="[classes.textBlock, { [classes.dragging]: isDragging }]"
+		@dragover.prevent
+		@dragenter.prevent="handleDragEnter"
+		@dragleave="handleDragLeave"
+		@drop="handleDrop"
+	>
 		<template v-if="props.state === 'initial'">
 			<div :class="classes.head">
 				<ui-text token="title-400">
@@ -162,12 +185,7 @@ function onFormSend() {
 			</div>
 
 			<div :class="classes.attached">
-				<div
-					:class="classes.wrapper"
-					@dragover.prevent
-					@dragleave.prevent
-					@drop="handleDrop"
-				>
+				<div :class="classes.wrapper">
 					<div :class="classes.text">
 						<div :class="classes.fadeWrap">
 							<div :class="classes.top"></div>
@@ -265,7 +283,16 @@ function onFormSend() {
 	flex-direction: column;
 	align-items: flex-start;
 	min-width: 300px;
+	padding: 16px;
+	border-radius: 8px;
+	outline: 2px solid transparent;
+	outline-offset: -2px;
+	transition: outline-color 0.2s ease-in-out;
 	gap: 24px;
+}
+
+.dragging {
+	outline-color: rgb(255 255 255);
 }
 
 .head {
