@@ -306,22 +306,36 @@ const chartPrecision = computed(() => {
 });
 
 function takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean) {
-	if (container.value) {
-		return container.value.takeScreenshot(addTopLayer, includeCrosshair);
-	}
-
-	return null;
+	return container.value?.takeScreenshot(addTopLayer, includeCrosshair);
 }
 
 function getTimeScale() {
-	if (container.value) {
-		return container.value.getTimeScale();
-	}
-
-	return null;
+	return container.value?.getTimeScale();
 }
 
-defineExpose({ takeScreenshot, getTimeScale });
+function addSeries<T extends SeriesType>(
+	definition: SeriesDefinition<T>,
+	options?: SeriesPartialOptionsMap[T],
+	paneIndex?: number,
+) {
+	return container.value?.addSeries(definition, options, paneIndex);
+}
+
+function removeSeries(seriesApi: ISeriesApi<SeriesType, Time>) {
+	container.value?.removeSeries(seriesApi);
+}
+
+function updateMainSeriesPoint(point: CandlestickData | LineData, historicalUpdate?: boolean) {
+	return container.value?.updateMainSeriesPoint(point, historicalUpdate);
+}
+
+defineExpose({
+	takeScreenshot,
+	getTimeScale,
+	addSeries,
+	removeSeries,
+	updateMainSeriesPoint,
+});
 
 function onWheel(e: WheelEvent) {
 	if (props.handleScale) {
@@ -329,7 +343,6 @@ function onWheel(e: WheelEvent) {
 		e.stopPropagation();
 	}
 }
-
 
 // autosize
 
@@ -352,12 +365,10 @@ if (props.autoSize) {
 		}),
 	);
 }
-
 </script>
 
 <template>
 	<div :class="classes.wrapper" :style="{ height: heightInPx }">
-		<div :class="classes.mainChart">
 		<div ref="chart" :class="classes.mainChart">
 			<i88-chart
 				v-if="props.data.length"

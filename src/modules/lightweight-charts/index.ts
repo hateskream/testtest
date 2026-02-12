@@ -23,5 +23,6 @@ export { default as ChartDateRange } from './ui/date-range/chart-date-range.vue'
 export { default as ChartDateRangeChange } from './ui/date-range/chart-date-range-change.vue';
 export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';
 export { default as ChartNavigator } from './ui/navigator/chart-navigator.vue';
+export { default as ChartIndicatorsList } from './ui/chart-indicators-list.vue';
 
 export { default as ChartBar, type BarDataset } from './ui/chart-bar.vue';

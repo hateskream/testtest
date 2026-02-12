@@ -44,6 +44,7 @@ function toggle() {
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
+	gap: 5px;
 }
 
 .content:hover .icon {

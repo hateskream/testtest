@@ -7,6 +7,7 @@ import { useQueryChartPriceChanges, useQueryChartPriceHistory } from '../queries
 import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
 import { download } from '@/shared/lib';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import type { IndicatorType } from '@/modules/indicator';
 
 export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const dateRange = ref<DateRangeValue>(getDefaultDateRange());
@@ -81,11 +82,16 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 		}
 	});
 
+	// indicators
+
+	const indicators = ref<IndicatorType[]>([] as IndicatorType[]);
+
 	return {
 		currentTicker,
 		dateRange,
 		timezone,
 		chartType,
+		indicators,
 
 		changes,
 		data,

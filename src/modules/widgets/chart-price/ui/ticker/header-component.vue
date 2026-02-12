@@ -20,6 +20,8 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeFilter } from '@/modules/widgets/base';
 import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
+import type { IndicatorType } from '@/modules/indicator';
+import { ChartIndicatorsList } from '@/modules/lightweight-charts';
 
 export interface IChartPriceTickerFiltersProps {
 	dateRangePresets?: DateRangePresetValue[];
@@ -37,6 +39,7 @@ const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
 const fullView = defineModel<boolean>('fullView', { default: false });
+const selectedIndicators = defineModel<IndicatorType[]>('indicators', { default: () => [] });
 
 // date range
 
@@ -133,6 +136,7 @@ function downloadSnapshot() {
 					:icon="IconIds.ChartView"
 					@select="chartType = $event.value"
 				/>
+				<chart-indicators-list v-model="selectedIndicators" />
 			</div>
 			<div :class="classes.actions">
 				<div :class="classes.instruments">

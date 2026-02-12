@@ -1,24 +1,28 @@
 import type { IconIds } from '@/shared/ui/icon';
 import {
-	ChartSectionInsightAndActivity,
-	ChartSectionValuationsAndEstimates,
-	ChartSectionPeerAnalysis,
-	ChartSectionInsiderTrading,
-	ChartSectionDividends,
-	ChartSectionFinancials,
-	ChartSectionPricePerformance,
-	ChartSectionPriceEarnings,
-	ChartSectionTechnicals,
-	SectionHoldings,
-	SectionTransactions,
-	SectionHoldingsDigram,
 	ChartSectionDailyNetFlows,
-	ChartSectionDividendsAndCapitalGains, ChartSectionHoldingsEtf,
+	ChartSectionDividends,
+	ChartSectionDividendsAndCapitalGains,
+	ChartSectionFinancials,
+	ChartSectionHoldingsEtf,
+	ChartSectionInsiderTrading,
+	ChartSectionInsightAndActivity,
+	ChartSectionPeerAnalysis,
 	ChartSectionPortfolioComposition,
-	SectionTrailingReturns,
-	ChartSectionSnp, ChartSectionSeasonals,
+	ChartSectionPriceEarnings,
+	ChartSectionPricePerformance,
+	ChartSectionSeasonals,
+	ChartSectionSnp,
+	ChartSectionTechnicals,
 	ChartSectionTop10Weight,
+	ChartSectionValuationsAndEstimates,
+	SectionHoldings,
+	SectionHoldingsDigram,
+	SectionTrailingReturns,
+	SectionTransactions,
 } from '@/modules/chart/components/sections';
+
+export * from './candle';
 
 export enum TickerType {
 	CRYPTO = 'crypto',

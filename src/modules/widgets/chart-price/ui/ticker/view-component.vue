@@ -15,6 +15,7 @@ import { ALL_MARKET_TYPES } from '@/modules/market';
 import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { UiText } from '@/shared/ui/text';
 import { UiPosition } from '@/shared/ui/position';
+import type { IndicatorType } from '@/modules/indicator';
 
 import HeaderComponent from './header-component.vue';
 import ChartComponent from './chart-component.vue';
@@ -39,6 +40,7 @@ const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 const timezone = defineModel<TimezoneUtcType>('timezone', { required: true });
 const chartType = defineModel<ChartType>('chartType', { required: true });
 const fullView = defineModel<boolean>('fullView', { default: false });
+const indicators = defineModel<IndicatorType[]>('indicators', { default: () => [] });
 
 const preparedOverviewPoints = computed(() => {
 	return props.overview.points.map(point => ({
@@ -102,6 +104,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 				v-model:chart-type="chartType"
 				v-model:timezone="timezone"
 				v-model:full-view="fullView"
+				v-model:indicators="indicators"
 				:class="classes.header"
 				@download-snapshot="downloadChartSnapshot"
 			/>
@@ -117,6 +120,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 			:date-range-presets="DEFAULT_PRESETS"
 			:type="chartType"
 			:timezone="timezone"
+			:indicators="indicators"
 		/>
 		<chart-date-range
 			v-model="dateRange"

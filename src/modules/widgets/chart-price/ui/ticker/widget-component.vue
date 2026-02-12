@@ -5,6 +5,7 @@ import { useScrollLock } from '@vueuse/core';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useTickerChartPrice } from '../../composables';
 import { useFocusLock } from '@/shared/ui/modal';
+import { createChartContext } from '@/modules/lightweight-charts/composables';
 
 import PreloaderComponent from './preloader-component.vue';
 
@@ -40,6 +41,7 @@ const {
 	currentTicker,
 	timezone,
 	chartType,
+	indicators,
 
 	isError,
 	isLoading,
@@ -66,6 +68,10 @@ watchEffect(() => {
 		scrollIsLocked.value = false;
 	}
 });
+
+createChartContext();
+
+// TODO: Websocket
 </script>
 
 <template>
@@ -79,6 +85,7 @@ watchEffect(() => {
 				v-model:timezone="timezone"
 				v-model:chart-type="chartType"
 				v-model:full-view="fullView"
+				v-model:indicators="indicators"
 				:ticker="currentTicker"
 				:data="data"
 				:overview="overview"
