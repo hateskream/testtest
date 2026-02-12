@@ -11,6 +11,7 @@ export const DateRangePreset = {
 	ThreeYears: '3Y',
 	FiveYears: '5Y',
 	TenYears: '10Y',
+	TwentyFiveYears: '25Y',
 	All: 'ALL',
 } as const;
 
@@ -56,6 +57,7 @@ const PRESET_CONFIG = {
 	[DateRangePreset.ThreeYears]: { type: 'years', count: 3 },
 	[DateRangePreset.FiveYears]: { type: 'years', count: 5 },
 	[DateRangePreset.TenYears]: { type: 'years', count: 10 },
+	[DateRangePreset.TwentyFiveYears]: { type: 'years', count: 25 },
 	[DateRangePreset.All]: { type: 'absolute', date: new Date(2000, 0, 1) },
 } as const satisfies Record<DateRangePresetType, PresetConfig>;
 
@@ -123,6 +125,7 @@ export const DateRangePresetToLabel = {
 	[DateRangePreset.ThreeYears]: '3Y',
 	[DateRangePreset.FiveYears]: '5Y',
 	[DateRangePreset.TenYears]: '10Y',
+	[DateRangePreset.TwentyFiveYears]: '25Y',
 	[DateRangePreset.All]: 'All',
 } as const satisfies Record<DateRangePresetType, string>;
 
@@ -139,6 +142,7 @@ export const DateRangePresetToTitle = {
 	[DateRangePreset.ThreeYears]: '3 years',
 	[DateRangePreset.FiveYears]: '5 years',
 	[DateRangePreset.TenYears]: '10 years',
+	[DateRangePreset.TwentyFiveYears]: '25 years',
 	[DateRangePreset.All]: 'All time',
 } as const satisfies Record<DateRangePresetType, string>;
 

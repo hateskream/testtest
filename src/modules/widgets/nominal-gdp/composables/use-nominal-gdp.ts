@@ -2,7 +2,14 @@ import { computed, ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { getDefaultState, type IState, NominalGdpRange, stateSchema, type StateSchemaType } from '../model';
+import {
+	calculateGrowthYoy,
+	getDefaultState,
+	type IState,
+	type NominalGdpDateRangePresetType,
+	stateSchema,
+	type StateSchemaType,
+} from '../model';
 import { useQueryNominalGdp } from '../queries';
 
 interface IOptions {
@@ -39,7 +46,7 @@ export function useNominalGdp({
 
 	const activeRange = computed({
 		get: () => state.value.range,
-		set: (val: NominalGdpRange) => {
+		set: (val: NominalGdpDateRangePresetType) => {
 			state.value.range = val;
 		},
 	});
@@ -71,9 +78,18 @@ export function useNominalGdp({
 		refetch,
 	} = useQueryNominalGdp(activeRange);
 
+	const growthYoy = computed(() => {
+		if (!data.value) {
+			return null;
+		}
+
+		return calculateGrowthYoy(data.value.points);
+	});
+
 	return {
 		activeRange,
 		data,
+		growthYoy,
 		isError,
 		isLoading,
 		history,

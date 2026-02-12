@@ -10,9 +10,11 @@ const props = defineProps<IBaseTickerWidgetHeaderProps>();
 
 <template>
 	<div :class="classes.header">
-		<ui-widget-label :disabled="props.disabled">
-			<slot />
-		</ui-widget-label>
+		<slot name="label">
+			<ui-widget-label :disabled="props.disabled">
+				<slot />
+			</ui-widget-label>
+		</slot>
 		<slot name="right" />
 	</div>
 </template>

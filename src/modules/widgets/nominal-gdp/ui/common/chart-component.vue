@@ -56,6 +56,7 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 				color: '#FF8D29',
 				radius: 5,
 			},
+			label: 'Potential',
 		},
 		{
 			data: filteredPoints.value.map(point => point.history).filter(point => point !== 0),
@@ -65,6 +66,7 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 			maxBarThickness: BAR_WIDTH,
 			barPercentage: 1,
 			categoryPercentage: 0.7,
+			label: 'History',
 		},
 	];
 });

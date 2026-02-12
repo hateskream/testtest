@@ -5,7 +5,7 @@ import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics'
 import { TickerLinksWidget } from '@/modules/widgets/links';
 import { useTickerContext } from '@/modules/ticker/composables';
 import type { ISectionItem } from '@/modules/ticker/models';
-import { TickerBaseTabsLayout } from '@/modules/ticker';
+import { TickerBaseTabContent, TickerBaseTabsLayout } from '../../../base';
 
 import TabInsightsContent from './tab-insights-content.vue';
 import TabNewsContent from './tab-news-content.vue';
@@ -27,18 +27,15 @@ const selectedTabId = ref<string | number>('insights');
 </script>
 
 <template>
-	<div :class="classes.section">
+	<ticker-base-tab-content :class="classes.section">
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
 		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
 		<ticker-links-widget :meta="{ tickerId, name: 'Links' }" />
-	</div>
+	</ticker-base-tab-content>
 </template>
 
 <style module="classes">
 .section {
-	display: flex;
-	flex-direction: column;
 	gap: var(--padding-s4, 6px);
-	align-self: stretch;
 }
 </style>

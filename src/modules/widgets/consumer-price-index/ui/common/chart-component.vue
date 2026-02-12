@@ -87,6 +87,7 @@ const preparedDatasets = computed((): [BarDataset] => {
 		barThickness: BAR_WIDTH,
 		maxBarThickness: BAR_WIDTH,
 		barPercentage: 1,
+		label: 'CPI',
 	}];
 });
 

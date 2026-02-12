@@ -7,17 +7,27 @@ export interface IFilterDisplay {
 	option: string;
 }
 
+export const ChartPriceDateRangePreset = {
+	Day: DateRangePreset.Day,
+	Week: DateRangePreset.Week,
+	Month: DateRangePreset.Month,
+	SixMonths: DateRangePreset.SixMonths,
+	Year: DateRangePreset.Year,
+	All: DateRangePreset.All,
+} as const satisfies Record<string, DateRangePresetType>;
+
+export type ChartPriceDateRangePresetType = typeof ChartPriceDateRangePreset[keyof typeof ChartPriceDateRangePreset];
+
 export const filterValueToDisplay = {
-	[DateRangePreset.Day]: { label: '1D', value: DateRangePreset.Day, option: '1 day' },
-	[DateRangePreset.Week]: { label: '1W', value: DateRangePreset.Week, option: '1 week' },
-	[DateRangePreset.Month]: { label: '1M', value: DateRangePreset.Month, option: '1 month' },
-	[DateRangePreset.SixMonths]: { label: '6M', value: DateRangePreset.SixMonths, option: '6 months' },
-	[DateRangePreset.Year]: { label: '1Y', value: DateRangePreset.Year, option: '1 year' },
-	[DateRangePreset.ThreeYears]: { label: '3Y', value: DateRangePreset.ThreeYears, option: '3 years' },
-	[DateRangePreset.FiveYears]: { label: '5Y', value: DateRangePreset.FiveYears, option: '5 years' },
-	[DateRangePreset.TenYears]: { label: '10Y', value: DateRangePreset.Year, option: '10 years' },
-	[DateRangePreset.All]: { label: 'All', value: DateRangePreset.All, option: 'All time' },
-} as const satisfies Record<DateRangePresetType, IFilterDisplay>;
+	[ChartPriceDateRangePreset.Day]: { label: '1D', value: ChartPriceDateRangePreset.Day, option: '1 day' },
+	[ChartPriceDateRangePreset.Week]: { label: '1W', value: ChartPriceDateRangePreset.Week, option: '1 week' },
+	[ChartPriceDateRangePreset.Month]: { label: '1M', value: ChartPriceDateRangePreset.Month, option: '1 month' },
+	[ChartPriceDateRangePreset.SixMonths]: {
+		label: '6M', value: ChartPriceDateRangePreset.SixMonths, option: '6 months',
+	},
+	[ChartPriceDateRangePreset.Year]: { label: '1Y', value: ChartPriceDateRangePreset.Year, option: '1 year' },
+	[ChartPriceDateRangePreset.All]: { label: 'All', value: ChartPriceDateRangePreset.All, option: 'All time' },
+} as const satisfies Record<ChartPriceDateRangePresetType, IFilterDisplay>;
 
 export function getDefaultDateRange() {
 	return createPreset(DateRangePreset.Day);

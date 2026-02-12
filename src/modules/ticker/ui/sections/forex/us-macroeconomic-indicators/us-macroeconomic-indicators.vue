@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { markRaw, ref } from 'vue';
+
 import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price-index';
-import { useTickerContext } from '../../../composables';
-import type { ISectionItem } from '../../../models';
 import { TickerUnemploymentRateWidget } from '@/modules/widgets/unemployment-rate';
 import { NonfarmPayrollsTickerWidget } from '@/modules/widgets/nonfarm-payrolls';
+import { useTickerContext } from '../../../../composables';
+import type { ISectionItem } from '../../../../models';
+import { TickerBaseTabsLayout } from '../../../base';
 
-import EmptyTickerWidget from '../empty-ticker-widget.vue';
+import EmptyTickerWidget from '../../empty-ticker-widget.vue';
+import TabNominalGdp from './tab-nominal-gdp.vue';
+import TabRealGdp from './tab-real-gdp.vue';
 
 interface ISectionProps {
 	section: ISectionItem;
@@ -14,6 +19,13 @@ interface ISectionProps {
 defineProps<ISectionProps>();
 
 const { tickerId } = useTickerContext();
+
+const tabs = [
+	{ id: 'nominal', title: 'Nominal GDP', component: markRaw(TabNominalGdp) },
+	{ id: 'real', title: 'Real GDP', component: markRaw(TabRealGdp) },
+];
+
+const selectedTabId = ref<string | number>('nominal');
 </script>
 
 <template>
@@ -31,7 +43,7 @@ const { tickerId } = useTickerContext();
 			/>
 		</div>
 		<consumer-price-index-ticker-widget :class="classes.cpi" :meta="{ tickerId, name: 'Consumer price index' }" />
-		<empty-ticker-widget style="height: 370px;" :meta="{ tickerId, name: 'Nominal GDP' }" />
+		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
 		<div :class="classes.charts">
 			<ticker-unemployment-rate-widget
 				:class="classes.chart"

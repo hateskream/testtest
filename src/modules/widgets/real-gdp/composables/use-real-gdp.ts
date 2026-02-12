@@ -2,7 +2,13 @@ import { computed, ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { getDefaultState, type IState, RealGdpRange, stateSchema, type StateSchemaType } from '../model';
+import {
+	getDefaultState,
+	type IState,
+	type RealGdpDateRangePresetType,
+	stateSchema,
+	type StateSchemaType,
+} from '../model';
 import { useQueryRealGdp } from '../queries';
 
 interface IOptions {
@@ -39,7 +45,7 @@ export function useRealGdp({
 
 	const activeRange = computed({
 		get: () => state.value.range,
-		set: (val: RealGdpRange) => {
+		set: (val: RealGdpDateRangePresetType) => {
 			state.value.range = val;
 		},
 	});

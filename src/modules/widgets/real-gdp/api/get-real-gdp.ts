@@ -2,16 +2,21 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { type IRealGdpHistory, type IRealGdpHistoryPoint, REAL_GDP_METRIC, RealGdpRange } from '../model';
+import {
+	type IRealGdpHistory,
+	type IRealGdpHistoryPoint,
+	REAL_GDP_METRIC,
+	type RealGdpDateRangePresetType,
+} from '../model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetRealGdpRequest {
-	range: RealGdpRange;
+	range: RealGdpDateRangePresetType;
 }
 
 export interface IGetRealGdpResponse {
-	range: RealGdpRange;
+	range: RealGdpDateRangePresetType;
 	metric: string;
 	points: IRealGdpHistoryPoint[];
 }

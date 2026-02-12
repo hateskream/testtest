@@ -7,7 +7,8 @@ import {
 	createTickerIdIndex,
 	SymbolType,
 } from '@/modules/cell';
-import { createPreset, DateRangePreset, type DateRangeValue, TimezoneUtc } from '@/modules/lightweight-charts/model';
+import { createPreset, type DateRangeValue, TimezoneUtc } from '@/modules/lightweight-charts/model';
+import { ChartPriceDateRangePreset } from './date-range.ts';
 
 export interface IState {
 	selectedTicker: string;
@@ -50,7 +51,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 
 	return {
 		selectedTicker: defaultSelectedTicker,
-		timeRange: createPreset(DateRangePreset.Day),
+		timeRange: createPreset(ChartPriceDateRangePreset.Day),
 	};
 }
 

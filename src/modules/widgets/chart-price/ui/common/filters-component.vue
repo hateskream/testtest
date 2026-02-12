@@ -2,15 +2,15 @@
 import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
-import { ENABLED_MARKETS, filterValueToDisplay } from '../../model';
+import { ChartPriceDateRangePreset, ENABLED_MARKETS, filterValueToDisplay } from '../../model';
 import { type ITickerItem, SelectionMode, TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import {
 	createPreset,
-	DateRangePreset,
 	type DateRangePresetType,
 	type DateRangeValue,
+	getDateRangePresetLabel,
 } from '@/modules/lightweight-charts/model';
 
 interface IFiltersComponentProps {
@@ -47,7 +47,7 @@ const dateRangeLabel = computed(() => {
 	const preset = selectedDateRangePreset.value;
 
 	if (preset) {
-		return filterValueToDisplay[preset].label;
+		return getDateRangePresetLabel(preset);
 	}
 
 	return 'Custom';
@@ -99,7 +99,7 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 								Time Range
 							</template>
 							<template
-								v-for="filterValue in DateRangePreset"
+								v-for="filterValue in ChartPriceDateRangePreset"
 								:key="filterValue"
 							>
 								<modal-item-selector

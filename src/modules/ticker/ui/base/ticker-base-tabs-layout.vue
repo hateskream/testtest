@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type Component } from 'vue';
+import { type Component, computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
 
@@ -88,7 +88,6 @@ const activeComponent = computed(() =>
 	display: flex;
 	align-items: center;
 	align-self: stretch;
-	padding: var(--padding-padding-s5, 8px) 0;
 	background: var(--surface-01, rgb(17 17 19 / 92%));
 	border: 1px solid var(--atom-base-90, rgb(73 73 80 / 15%));
 	border-radius:
@@ -102,5 +101,6 @@ const activeComponent = computed(() =>
 	flex-direction: column;
 	align-items: flex-start;
 	gap: var(--padding-padding-s5, 8px);
+	min-width: 0;
 }
 </style>

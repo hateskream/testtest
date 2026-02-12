@@ -2,16 +2,21 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { type INominalGdpHistory, type INominalGdpHistoryPoint, NOMINAL_GDP_METRIC, NominalGdpRange } from '../model';
+import {
+	type INominalGdpHistory,
+	type INominalGdpHistoryPoint,
+	NOMINAL_GDP_METRIC,
+	type NominalGdpDateRangePresetType,
+} from '../model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetNominalGdpRequest {
-	range: NominalGdpRange;
+	range: NominalGdpDateRangePresetType;
 }
 
 export interface IGetNominalGdpResponse {
-	range: NominalGdpRange;
+	range: NominalGdpDateRangePresetType;
 	metric: string;
 	points: INominalGdpHistoryPoint[];
 }

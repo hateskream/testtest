@@ -19,8 +19,10 @@ const props = defineProps<ILegendOption>();
 @layer kit {
 	.legendOption {
 		display: inline-flex;
+		flex-shrink: 0;
 		align-items: center;
 		gap: var(--padding-s3, 4px);
+		color: var(--text-300, rgb(255 255 255 / 62%));
 	}
 
 	.hint {
