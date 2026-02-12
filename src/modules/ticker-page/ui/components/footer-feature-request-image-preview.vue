@@ -3,6 +3,7 @@ import { UiIcon, IconIds } from '@/shared/ui/icon';
 
 defineProps<{
 	url: string;
+	filename: string;
 }>();
 
 const emits = defineEmits<{
@@ -11,18 +12,19 @@ const emits = defineEmits<{
 </script>
 
 <template>
-	<div
+	<button
 		:class="classes.item"
 		:style="{ backgroundImage: `url(${url})` }"
+		:title="filename"
 	>
-		<button :class="classes.removeButton" @click="emits('remove')">
+		<span :class="classes.removeButton" @click="emits('remove')">
 			<ui-icon
 				:id="IconIds.CloseThicc"
 				width="6px"
 				height="6px"
 			/>
-		</button>
-	</div>
+		</span>
+	</button>
 </template>
 
 <style module="classes">

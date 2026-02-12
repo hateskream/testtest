@@ -214,6 +214,7 @@ function onFormSend() {
 						<footer-feature-request-image-preview
 							v-if="item.isImage"
 							:url="item.url"
+							:filename="item.file.name"
 							@remove="removeFile(index)"
 						/>
 						<footer-feature-request-file-preview

@@ -19,16 +19,16 @@ const extension = computed(() => {
 </script>
 
 <template>
-	<div :class="classes.item">
+	<button :class="classes.item" :title="filename">
 		<ui-text token="text-100-b" :class="classes.ext">{{ extension }}</ui-text>
-		<button :class="classes.removeButton" @click="emits('remove')">
+		<span :class="classes.removeButton" @click="emits('remove')">
 			<ui-icon
 				:id="IconIds.CloseThicc"
 				width="6px"
 				height="6px"
 			/>
-		</button>
-	</div>
+		</span>
+	</button>
 </template>
 
 <style module="classes">
