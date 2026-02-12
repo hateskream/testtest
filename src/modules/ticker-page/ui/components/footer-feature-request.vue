@@ -6,6 +6,9 @@ import { UiText } from '@/shared/ui/text';
 import { UiControlButton } from '@/shared/ui/control-button';
 import { UserRequestConfig, type IUserRequestPayload } from '../../api/user-request';
 
+import FooterFeatureRequestImagePreview from './footer-feature-request-image-preview.vue';
+import FooterFeatureRequestFilePreview from './footer-feature-request-file-preview.vue';
+
 const props = defineProps<{
 	state: 'initial' | 'form' | 'sended';
 }>();
@@ -15,38 +18,42 @@ const emits = defineEmits<{
 	'form-send': [IUserRequestPayload];
 }>();
 
-interface IUserImage {
+interface IUserFile {
 	url: string;
 	file: File;
+	isImage: boolean;
 }
 
 const textareaRef = useTemplateRef<HTMLTextAreaElement>('textarea');
 const fileInputRef = useTemplateRef<HTMLInputElement>('fileInput');
 
 const inputValue = ref('');
-const images = ref<IUserImage[]>([]);
+const attachedFiles = ref<IUserFile[]>([]);
 
-function addImages(files: FileList | File[]) {
+function addFiles(files: FileList | File[]) {
 	for (const file of files) {
-		if (!file.type.startsWith('image/')) {
-			continue;
-		}
-
 		if (file.size > UserRequestConfig.MaxFileSize) {
 			continue;
 		}
 
-		if (images.value.length >= UserRequestConfig.MaxFiles) {
+		if (attachedFiles.value.length >= UserRequestConfig.MaxFiles) {
 			break;
 		}
 
-		images.value.push({ file, url: URL.createObjectURL(file) });
+		const isImage = file.type.startsWith('image/');
+		attachedFiles.value.push({
+			file,
+			url: isImage ? URL.createObjectURL(file) : '',
+			isImage,
+		});
 	}
 }
 
-function removeImage(index: number) {
-	const [removed] = images.value.splice(index, 1);
-	URL.revokeObjectURL(removed.url);
+function removeFile(index: number) {
+	const [removed] = attachedFiles.value.splice(index, 1);
+	if (removed.url) {
+		URL.revokeObjectURL(removed.url);
+	}
 }
 
 function handleInput() {
@@ -65,7 +72,7 @@ function handlePaste(event: ClipboardEvent) {
 		return;
 	}
 
-	addImages(files);
+	addFiles(files);
 }
 
 function handleDrop(event: DragEvent) {
@@ -77,7 +84,7 @@ function handleDrop(event: DragEvent) {
 		return;
 	}
 
-	addImages(files);
+	addFiles(files);
 }
 
 function handleFileChange(event: Event) {
@@ -87,7 +94,7 @@ function handleFileChange(event: Event) {
 		return;
 	}
 
-	addImages(input.files);
+	addFiles(input.files);
 	input.value = '';
 }
 
@@ -106,17 +113,17 @@ function onFormSend() {
 		return;
 	}
 
-	if (images.value.length > UserRequestConfig.MaxFiles) {
+	if (attachedFiles.value.length > UserRequestConfig.MaxFiles) {
 		return;
 	}
 
 	emits('form-send', {
 		text: trimmed,
-		images: images.value.map(({ file }) => file),
+		images: attachedFiles.value.map(({ file }) => file),
 	});
 
 	inputValue.value = '';
-	images.value = [];
+	attachedFiles.value = [];
 }
 </script>
 
@@ -180,7 +187,7 @@ function onFormSend() {
 					</div>
 					<button
 						:class="classes.file"
-						:disabled="images.length >= UserRequestConfig.MaxFiles"
+						:disabled="attachedFiles.length >= UserRequestConfig.MaxFiles"
 						@click="openFilePicker"
 					>
 						<ui-icon
@@ -193,28 +200,28 @@ function onFormSend() {
 					<input
 						ref="fileInput"
 						type="file"
-						accept="image/*"
 						multiple
 						hidden
 						@change="handleFileChange"
 					/>
 				</div>
 
-				<div v-if="images.length" :class="classes.previews">
-					<div
-						v-for="(image, index) in images"
-						:key="image.url"
-						:class="classes.previewItem"
-						:style="{ backgroundImage: `url(${image.url})` }"
+				<div v-if="attachedFiles.length" :class="classes.previews">
+					<template
+						v-for="(item, index) in attachedFiles"
+						:key="item.file.name + index"
 					>
-						<button :class="classes.removeButton" @click="removeImage(index)">
-							<ui-icon
-								:id="IconIds.CloseThicc"
-								width="6px"
-								height="6px"
-							/>
-						</button>
-					</div>
+						<footer-feature-request-image-preview
+							v-if="item.isImage"
+							:url="item.url"
+							@remove="removeFile(index)"
+						/>
+						<footer-feature-request-file-preview
+							v-else
+							:filename="item.file.name"
+							@remove="removeFile(index)"
+						/>
+					</template>
 				</div>
 			</div>
 
@@ -400,44 +407,5 @@ function onFormSend() {
 	align-items: flex-start;
 	align-self: stretch;
 	gap: var(--padding-padding-s3, 4px);
-}
-
-.previewItem {
-	position: relative;
-	width: 40px;
-	height: 40px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
-	border-radius: var(--radius-radius-s16-40, 15.6px);
-	transition: transform 0.2s ease-in-out;
-}
-
-.previewItem:hover {
-	transform: scale(1.1);
-}
-
-.removeButton {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	display: grid;
-	justify-content: center;
-	width: 16px;
-	height: 16px;
-	padding: 0;
-	line-height: 0;
-	color: var(--icon-300, rgb(255 255 255 / 50%));
-	background: var(--bg-100, rgb(73 73 80 / 32%));
-	border-radius: 500px;
-	cursor: pointer;
-	place-items: center;
-	backdrop-filter: blur(9px);
-}
-
-.removeButton:hover {
-	color: rgb(255 255 255 / 80%);
-	background: rgb(73 73 80 / 64%);
 }
 </style>
