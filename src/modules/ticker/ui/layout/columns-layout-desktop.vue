@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, useTemplateRef, watch } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import { notNullish, useEventListener, useScroll } from '@vueuse/core';
 
 import {
@@ -9,6 +9,7 @@ import {
 	isScrollingUp,
 	preventDefaultScrollBehavior,
 } from '@/shared/lib/scroll';
+import { useTickerLayout } from '../../composables';
 
 export interface IProps {
 	disableScroll?: boolean;
@@ -16,28 +17,7 @@ export interface IProps {
 
 const props = defineProps<IProps>();
 
-const onBottomReached = inject<((reached: boolean) => void) | null>('onBottomReached', null);
-
-function handleBottomReached(isBottom: boolean) {
-	if (onBottomReached) {
-		onBottomReached(isBottom);
-	}
-}
-
-const handleFooterScroll = inject<((delta: number) => boolean) | null>('handleFooterScroll', null);
-
-/**
- * Передать скролл футеру, если он может его обработать
- * @param deltaY
- * @return boolean - обработал ли footer скролл
- */
-function tryHandleFooterScroll(deltaY: number) {
-	if (handleFooterScroll) {
-		return handleFooterScroll(deltaY);
-	}
-
-	return false;
-}
+const { setBottomReached, handleFooterScroll } = useTickerLayout();
 
 const container = useTemplateRef('container');
 const mainColumn = useTemplateRef('mainCol');
@@ -54,7 +34,7 @@ const { y: mainColumnScrollPosition, arrivedState: mainColumnScrollArrivedState 
 	},
 });
 
-watch(() => mainColumnScrollArrivedState.bottom, handleBottomReached, { immediate: true });
+watch(() => mainColumnScrollArrivedState.bottom, setBottomReached, { immediate: true });
 
 function isAtBottom() {
 	return mainColumnScrollArrivedState.bottom;
@@ -81,7 +61,7 @@ function tryDelegateScrollToFooter(event: WheelEvent): boolean {
 		return false;
 	}
 
-	if (!tryHandleFooterScroll(deltaY)) {
+	if (!handleFooterScroll(deltaY)) {
 		return false;
 	}
 
@@ -107,7 +87,7 @@ function onMainColumnScroll(event: WheelEvent) {
 	mainColumnScrollPosition.value += event.deltaY;
 
 	requestAnimationFrame(() => {
-		handleBottomReached(isAtBottom());
+		setBottomReached(isAtBottom());
 	});
 }
 
@@ -136,7 +116,7 @@ function syncSideScrollWithMainColumn(event: WheelEvent) {
 	}
 
 	if (isAtBottom()) {
-		handleBottomReached(true);
+		setBottomReached(true);
 	} else {
 		mainColumnScrollPosition.value += deltaY;
 		preventDefaultScrollBehavior(event);
@@ -160,7 +140,7 @@ function onSideColumnScroll(event: WheelEvent) {
 		if (hasMainColumn.value) {
 			syncSideScrollWithMainColumn(event);
 		} else {
-			handleBottomReached(isScrolledToBottom(target));
+			setBottomReached(isScrolledToBottom(target));
 		}
 	} else {
 		target.scrollTop += event.deltaY;

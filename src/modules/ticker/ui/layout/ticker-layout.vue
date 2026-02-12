@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onUnmounted, provide, ref, type Ref, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onUnmounted, ref, type Ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 import { useCustomScroll } from '@/shared/composables/scroll.ts';
 import { TickerHeaderComponent } from '../header';
 import { TickerFooterComponent } from '../footer';
 import type { ViewMode } from '../../models';
+import { createTickerLayoutContext } from '../../composables';
 
 export interface ITickerLayoutProps {
 	showHeader?: boolean;
@@ -72,10 +73,6 @@ const canScrollFooter = computed(() => {
 	return isInReportsMode.value && isBottomReached.value && maxFooterShift.value > 0;
 });
 
-function onBottomReached(reached: boolean) {
-	isBottomReached.value = reached;
-}
-
 function handleFooterScroll(delta: number): boolean {
 	if (!canScrollFooter.value && footerShift.value === 0) {
 		return false;
@@ -99,8 +96,10 @@ function handleFooterScroll(delta: number): boolean {
 	return false;
 }
 
-provide('onBottomReached', onBottomReached);
-provide('handleFooterScroll', handleFooterScroll);
+createTickerLayoutContext({
+	setBottomReached: (state: boolean) => isBottomReached.value = state,
+	handleFooterScroll,
+});
 
 const emit = defineEmits<{
 	(event: 'change-view', value: ViewMode): void;
