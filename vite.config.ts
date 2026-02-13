@@ -60,7 +60,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			'/api/feedback': {
-				target: 'http://localhost:3000',
+				target: 'https://demo-dev.planet9.uk/',
 				changeOrigin: true,
 			},
 			'/api': {
