@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
-
-import EmptyTickerWidget from '../empty-ticker-widget.vue';
-
+import { PricePerformanceTickerWidget } from '@/modules/widgets/price-performance';
+import { useTickerContext } from '@/modules/ticker/composables';
 interface ISectionProps {
 	section: ISectionItem;
 }
@@ -11,10 +9,11 @@ interface ISectionProps {
 defineProps<ISectionProps>();
 
 const { tickerId } = useTickerContext();
+
 </script>
 
 <template>
 	<div>
-		<empty-ticker-widget style="height: 355px;" :meta="{ tickerId, name: 'Price performance' }" />
+		<price-performance-ticker-widget :meta="{ tickerId, name: 'Price performance' }" />
 	</div>
 </template>
