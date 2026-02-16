@@ -5,12 +5,12 @@ import type { ChartOptions, TooltipOptions } from 'chart.js';
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import { type IRealGdpHistoryPoint, RealGdpValueType, type RealGdpValueTypeType } from '../../model';
+import { type RealGdpHistoryPoint, RealGdpValueType, type RealGdpValueTypeType } from '../../model';
 
 const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
-	points: IRealGdpHistoryPoint[];
+	points: RealGdpHistoryPoint[];
 	valueType: RealGdpValueTypeType;
 }
 

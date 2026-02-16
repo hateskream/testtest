@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { INominalGdpHistory } from '@/modules/widgets/nominal-gdp/model';
 import { UiLegendOption, UiLegendRow } from '@/shared/ui/legend';
+import type { NominalGdpHistory } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
-	data: INominalGdpHistory;
+	data: NominalGdpHistory;
 	growthYoy: number;
 }
 

@@ -1,13 +1,10 @@
-import { useHttpService } from '@/shared/service/http-service';
+import { z } from 'zod';
+
 import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import {
-	type IRealGdpHistory,
-	type IRealGdpHistoryPoint,
-	REAL_GDP_METRIC,
-	type RealGdpDateRangePresetType,
-} from '../model';
+import { REAL_GDP_METRIC, type RealGdpDateRangePresetType, type RealGdpHistory, RealGdpHistorySchema } from '../model';
+import { useApiClient } from '@/shared/service/api';
 
 const IS_USE_MOCK = false;
 
@@ -15,14 +12,14 @@ export interface IGetRealGdpRequest {
 	range: RealGdpDateRangePresetType;
 }
 
-export interface IGetRealGdpResponse {
-	range: RealGdpDateRangePresetType;
-	metric: string;
-	points: IRealGdpHistoryPoint[];
-}
+export const GetRealGdpResponseSchema = RealGdpHistorySchema.extend({
+	metric: z.literal(REAL_GDP_METRIC),
+});
 
-export async function getRealGdp(args: IGetRealGdpRequest): Promise<IRealGdpHistory> {
-	const httpService = useHttpService();
+export type GetRealGdpResponse = z.infer<typeof GetRealGdpResponseSchema>;
+
+export async function getRealGdp(args: IGetRealGdpRequest) {
+	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
@@ -30,12 +27,16 @@ export async function getRealGdp(args: IGetRealGdpRequest): Promise<IRealGdpHist
 			return await getMockData(args);
 		}
 
-		const response = await httpService.get<IGetRealGdpResponse>('/api/v1/gdp/data', {
-			query: {
-				metric: REAL_GDP_METRIC,
-				range: args.range,
+		const response = await client.get(
+			'/api/v1/gdp/data',
+			GetRealGdpResponseSchema,
+			{
+				query: {
+					metric: REAL_GDP_METRIC,
+					range: args.range,
+				},
 			},
-		});
+		);
 
 		return prepareResponse(response);
 	} catch (error) {
@@ -44,14 +45,14 @@ export async function getRealGdp(args: IGetRealGdpRequest): Promise<IRealGdpHist
 	}
 }
 
-function prepareResponse(response: IGetRealGdpResponse): IRealGdpHistory {
+function prepareResponse(response: GetRealGdpResponse): RealGdpHistory {
 	return {
 		range: response.range,
 		points: response.points,
 	};
 }
 
-const { getMock } = useFetchMock<IGetRealGdpResponse>('/mock/widgets/gdp/real.json');
+const { getMock } = useFetchMock<GetRealGdpResponse>('/mock/widgets/gdp/real.json');
 
 async function getMockData(_: IGetRealGdpRequest) {
 	await delay(500);

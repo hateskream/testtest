@@ -7,9 +7,9 @@ import { UiLegend } from '@/shared/ui/legend';
 import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 import { BaseTickerWidgetHeader } from '@/modules/widgets/base';
 import {
-	type IRealGdpHistory,
 	REAL_GDP_DATE_RANGE_PRESETS,
 	type RealGdpDateRangePresetType,
+	type RealGdpHistory,
 	type RealGdpValueTypeType,
 } from '../../model';
 
@@ -18,7 +18,7 @@ import MetricTrendTag from './metric-trend-tag.vue';
 import FiltersPanel from './filters-panel.vue';
 
 interface IMainComponentProps {
-	data: IRealGdpHistory;
+	data: RealGdpHistory;
 	growthYoy: number;
 }
 

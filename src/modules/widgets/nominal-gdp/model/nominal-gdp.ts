@@ -16,16 +16,20 @@ export const NominalGdpDateRangePresetSchema = z.nativeEnum(NominalGdpDateRangeP
 
 export type NominalGdpDateRangePresetType = ObjectEnum<typeof NominalGdpDateRangePreset>;
 
-export interface INominalGdpHistoryPoint {
-	label: string;
-	history: number;
-	forecast: number;
-}
+export const NominalGdpHistoryPointSchema = z.object({
+	label: z.string(),
+	history: z.number(),
+	forecast: z.number(),
+});
 
-export interface INominalGdpHistory {
-	range: NominalGdpDateRangePresetType;
-	points: INominalGdpHistoryPoint[];
-}
+export type NominalGdpHistoryPoint = z.infer<typeof NominalGdpHistoryPointSchema>;
+
+export const NominalGdpHistorySchema = z.object({
+	range: NominalGdpDateRangePresetSchema,
+	points: z.array(NominalGdpHistoryPointSchema),
+});
+
+export type NominalGdpHistory = z.infer<typeof NominalGdpHistorySchema>;
 
 export const NOMINAL_GDP_DATE_RANGE_PRESETS = [
 	NominalGdpDateRangePreset.FiveYears,
@@ -34,7 +38,7 @@ export const NOMINAL_GDP_DATE_RANGE_PRESETS = [
 	NominalGdpDateRangePreset.All,
 ] as const satisfies NominalGdpDateRangePresetType[];
 
-export function calculateGrowthYoy(points: INominalGdpHistoryPoint[]) {
+export function calculateGrowthYoy(points: NominalGdpHistoryPoint[]) {
 	const firstNominalPointIndex = points.findIndex(point => point.history === 0);
 
 	const lastRealNominalPointIndex = firstNominalPointIndex === -1

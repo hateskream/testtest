@@ -26,15 +26,19 @@ export const RealGdpValueTypeSchema = z.nativeEnum(RealGdpValueType);
 
 export type RealGdpValueTypeType = ObjectEnum<typeof RealGdpValueType>;
 
-export interface IRealGdpHistoryPoint {
-	label: string;
-	history: number;
-}
+export const RealGdpHistoryPointSchema = z.object({
+	label: z.string(),
+	history: z.number(),
+});
 
-export interface IRealGdpHistory {
-	range: RealGdpDateRangePresetType;
-	points: IRealGdpHistoryPoint[];
-}
+export type RealGdpHistoryPoint = z.infer<typeof RealGdpHistoryPointSchema>;
+
+export const RealGdpHistorySchema = z.object({
+	range: RealGdpDateRangePresetSchema,
+	points: z.array(RealGdpHistoryPointSchema),
+});
+
+export type RealGdpHistory = z.infer<typeof RealGdpHistorySchema>;
 
 export const REAL_GDP_DATE_RANGE_PRESETS = [
 	RealGdpDateRangePreset.FiveYears,
@@ -43,7 +47,7 @@ export const REAL_GDP_DATE_RANGE_PRESETS = [
 	RealGdpDateRangePreset.All,
 ] as const satisfies RealGdpDateRangePresetType[];
 
-export function calculateGrowthYoy(points: IRealGdpHistoryPoint[]) {
+export function calculateGrowthYoy(points: RealGdpHistoryPoint[]) {
 	const [firstPoint, lastPoint] =
 		[points[points.length - 2], points[points.length - 1]];
 

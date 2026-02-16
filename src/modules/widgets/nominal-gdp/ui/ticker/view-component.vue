@@ -6,17 +6,14 @@ import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmente
 import { UiLegend, UiLegendOption, UiLegendRow } from '@/shared/ui/legend';
 import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 import { BaseTickerWidgetHeader } from '@/modules/widgets/base';
-import {
-	type INominalGdpHistory,
-	NOMINAL_GDP_DATE_RANGE_PRESETS,
-	type NominalGdpDateRangePresetType,
-} from '../../model';
+import type { NominalGdpDateRangePresetType, NominalGdpHistory } from '../../model';
+import { NOMINAL_GDP_DATE_RANGE_PRESETS } from '../../model';
 
 import ChartComponent from '../common/chart-component.vue';
 import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
-	data: INominalGdpHistory;
+	data: NominalGdpHistory;
 	growthYoy: number;
 }
 

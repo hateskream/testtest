@@ -8,13 +8,13 @@ import {
 	barDashedBorderConfigurablePlugin,
 	type IBarDashedBorderPluginConfig,
 } from '@/modules/lightweight-charts/plugins';
-import type { INominalGdpHistoryPoint } from '../../model';
+import type { NominalGdpHistoryPoint } from '../../model';
 
 const BAR_WIDTH = 15;
 const BAR_SPACE = 5;
 
 interface IChartComponentProps {
-	points: INominalGdpHistoryPoint[];
+	points: NominalGdpHistoryPoint[];
 }
 
 const props = defineProps<IChartComponentProps>();

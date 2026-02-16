@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 
 import { UiLegendOption, UiLegendRow } from '@/shared/ui/legend';
-import { calculateGrowthYoy, type IRealGdpHistory } from '../../model';
+import { calculateGrowthYoy, type RealGdpHistory } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
-	data: IRealGdpHistory;
+	data: RealGdpHistory;
 }
 
 const props = defineProps<IMainComponentProps>();
