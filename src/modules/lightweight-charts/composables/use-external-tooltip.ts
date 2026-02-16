@@ -60,8 +60,11 @@ function createRows(
 		});
 	} else {
 		bodyLines.forEach((body, i) => {
-			const [ticker, value] = body.toString().split(':');
-			const [symbol, color] = (ticker ?? '').split('-');
+			const row = body.toString().split(':');
+			const ticker = row.length > 1 ? row[0] : '';
+			const value = row.length > 1 ? row[1] : row[0];
+
+			const [symbol, color] = (ticker?.length > 1 ? ticker : '').split('-');
 
 			const labelColor = tooltip.labelColors?.[i]?.borderColor;
 
