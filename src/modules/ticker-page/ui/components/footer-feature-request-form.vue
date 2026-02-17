@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import { IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
@@ -31,6 +31,19 @@ const attachedFiles = ref<IUserFile[]>([]);
 const isDragging = ref(false);
 let dragCounter = 0;
 
+const isFilesLimitReached = computed(
+	() => attachedFiles.value.length >= UserRequestConfig.MaxFiles,
+);
+
+const isSendDisabled = computed(() => {
+	if (props.loading) {
+		return true;
+	}
+
+	const trimmed = inputValue.value.trim();
+	return trimmed.length < UserRequestConfig.MinTextLength || trimmed.length > UserRequestConfig.MaxTextLength;
+});
+
 function isValidFile(file: File) {
 	if (file.size === 0) {
 		return false;
@@ -54,7 +67,7 @@ function addFiles(files: FileList | File[]) {
 			continue;
 		}
 
-		if (attachedFiles.value.length >= UserRequestConfig.MaxFiles) {
+		if (isFilesLimitReached.value) {
 			break;
 		}
 
@@ -152,22 +165,12 @@ function openFilePicker() {
 }
 
 function onFormSend() {
-	const trimmed = inputValue.value.trim();
-
-	if (trimmed.length < UserRequestConfig.MinTextLength) {
-		return;
-	}
-
-	if (trimmed.length > UserRequestConfig.MaxTextLength) {
-		return;
-	}
-
-	if (attachedFiles.value.length > UserRequestConfig.MaxFiles) {
+	if (isSendDisabled.value) {
 		return;
 	}
 
 	emits('form-send', {
-		text: trimmed,
+		text: inputValue.value.trim(),
 		images: attachedFiles.value.map(({ file }) => file),
 	});
 }
@@ -216,8 +219,10 @@ function onFormSend() {
 				</div>
 
 				<ui-control-button
-					token="m-24"
+					token="icon-24"
 					:icon-id="IconIds.Attachment"
+					:disabled="isFilesLimitReached"
+					is-mobile
 					@click="openFilePicker"
 				/>
 
@@ -253,7 +258,7 @@ function onFormSend() {
 		<ui-control-button
 			token="l-24-bg"
 			:icon-id="IconIds.ArrowUp"
-			:disabled="loading"
+			:disabled="isSendDisabled"
 			@click="onFormSend"
 		>
 			Send
