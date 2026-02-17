@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UiIcon, IconIds } from '@/shared/ui/icon';
 
-defineProps<{
+const props = defineProps<{
 	url: string;
 	filename: string;
 }>();
@@ -14,8 +14,8 @@ const emits = defineEmits<{
 <template>
 	<button
 		:class="classes.item"
-		:style="{ backgroundImage: `url(${url})` }"
-		:title="filename"
+		:style="{ backgroundImage: `url(${props.url})` }"
+		:title="props.filename"
 	>
 		<span :class="classes.removeButton" @click="emits('remove')">
 			<ui-icon

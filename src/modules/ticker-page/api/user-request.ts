@@ -1,11 +1,14 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/monitoring';
 
 export type RequestType = 'bug' | 'feature';
 
 export interface IUserRequestPayload {
 	text: string;
 	images: File[];
+}
+
+export interface IUserRequestResponse {
+	success: boolean;
 }
 
 export const UserRequestConfig = {
@@ -15,7 +18,10 @@ export const UserRequestConfig = {
 	MaxTextLength: 2000,
 } as const;
 
-export async function makeUserRequest(type: RequestType, { text, images }: IUserRequestPayload): Promise<void> {
+export function makeUserRequest(
+	type: RequestType,
+	{ text, images }: IUserRequestPayload,
+) {
 	const httpService = useHttpService();
 
 	const formData = new FormData();
@@ -25,10 +31,5 @@ export async function makeUserRequest(type: RequestType, { text, images }: IUser
 		formData.append('file', image);
 	}
 
-	try {
-		await httpService.post(`/api/feedback/${type}`, formData);
-	} catch (error) {
-		const logger = useLogger();
-		logger.error('Failed to request feature:', { error: error as Error });
-	}
+	return httpService.post<IUserRequestResponse>(`/api/feedback/${type}`, formData);
 }

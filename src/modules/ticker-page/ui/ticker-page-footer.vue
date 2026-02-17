@@ -6,21 +6,30 @@ import { UiDelimiter } from '@/shared/ui/delimiter';
 import { UiControlButton } from '@/shared/ui/control-button';
 import { getFeatureValue } from '@/shared/lib';
 import { makeUserRequest, type IUserRequestPayload } from '../api/user-request';
+import { RequestState, type RequestStateType } from '../model/user-request';
 
 import FooterFeatureRequest from './components/footer-feature-request.vue';
 
 const twitterPageLink = getFeatureValue('I88_TWITTER_PAGE_LINK');
 const discordSupportLink = getFeatureValue('I88_DISCORD_SUPPORT_LINK');
 
-const requestState = ref<'initial' | 'form' | 'sended'>('initial');
+const requestState = ref<RequestStateType>(RequestState.Initial);
+const isLoading = ref(false);
 
 function handleFeatureRequest() {
 	requestState.value = 'form';
 }
 
-function onFormSend(form: IUserRequestPayload) {
+async function onFormSend(form: IUserRequestPayload) {
+	isLoading.value = true;
+	const response = await makeUserRequest('feature', form);
+	isLoading.value = false;
+
+	if (!response.success) {
+		// Handle
+	}
+
 	requestState.value = 'sended';
-	makeUserRequest('feature', form);
 }
 </script>
 
@@ -43,6 +52,7 @@ function onFormSend(form: IUserRequestPayload) {
 
 			<footer-feature-request
 				:state="requestState"
+				:loading="isLoading"
 				@request-feature="handleFeatureRequest"
 				@form-send="onFormSend"
 			/>
