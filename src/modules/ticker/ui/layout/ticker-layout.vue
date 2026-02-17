@@ -264,7 +264,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 		>
 			<div
 				ref="botContentEl"
-				:class="[classes.botContent, { [classes.locked]: viewMode !== 'reports' }]"
+				:class="[classes.botContent]"
 			>
 				<slot name="botContent" />
 				<div
@@ -307,10 +307,6 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 	position: relative;
 	padding: var(--padding-s12, 24px) var(--padding-s6, 18px);
 	transition: none;
-}
-
-.locked {
-	pointer-events: none;
 }
 
 .footer {
