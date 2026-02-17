@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
-import { TickerComponent } from '@/modules/ticker';
-import { RouteTickerType } from '@/types/route.d';
+import { createTickerIdFromType, TickerComponent } from '@/modules/ticker';
+import { RouteNames, RouteTickerType } from '@/types/route.d';
 import { TickerType } from '@/modules/ticker/models';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { useLogger } from '@/shared/service/monitoring';
+import { useAppHead } from '@/shared/composables';
+import { ucFirst } from '@/shared/lib/uc-first';
 
 interface ITickerPageProps {
 	id: string;
@@ -26,7 +31,42 @@ const tickerType = computed((): TickerType => {
 	return mapping[props.type];
 });
 
-// TODO: useAppHead with resolver ticker name
+const router = useRouter();
+const logger = useLogger();
+
+const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
+
+const ticker = shallowRef<ITickerItem | null>(null);
+
+async function fetchTicker(tickerId: string) {
+	try {
+		const [response] = await fetchTickers(tickerId);
+
+		ticker.value = response;
+	} catch (error) {
+		logger.error('Invalid TickerId', { error: error as Error, context: { tickerId } });
+		ticker.value = null;
+		void router.replace({ name: RouteNames.Error });
+	}
+}
+
+watch(canonicalTickerId, tickerId => {
+	if (tickerId) {
+		fetchTicker(tickerId);
+	} else {
+		router.replace({ name: RouteNames.Error });
+	}
+}, { immediate: true });
+
+const title = computed(() => {
+	if (ticker.value) {
+		return `${ticker.value.name} — ${ucFirst(ticker.value.market_type)}`;
+	}
+
+	return 'Ticker Page';
+});
+
+useAppHead({ title });
 </script>
 
 <template>
