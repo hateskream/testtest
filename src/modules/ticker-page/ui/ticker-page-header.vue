@@ -16,7 +16,7 @@ import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useGoToTickerPage } from '@/modules/chart';
 import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
-import { ALL_MARKET_TYPES } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
@@ -106,7 +106,7 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 						disable-glow
 					/>
 					<ticker-icon
-						v-if="props.ticker.currency"
+						v-if="props.ticker.currency && props.ticker.market_type === MarketType.Forex"
 						:class="classes.secondLogo"
 						:size="56"
 						:ticker="props.ticker.currency"
