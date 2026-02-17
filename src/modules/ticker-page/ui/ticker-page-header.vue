@@ -105,6 +105,14 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 						:src="props.ticker.logo"
 						disable-glow
 					/>
+					<ticker-icon
+						v-if="props.ticker.currency"
+						:class="classes.secondLogo"
+						:size="56"
+						:ticker="props.ticker.currency"
+						:src="props.ticker.currency_icon"
+						disable-glow
+					/>
 				</div>
 
 				<div :class="classes.etc">
@@ -467,5 +475,17 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 .current,
 .chartPrice {
 	white-space: nowrap;
+}
+
+@container header (max-width: 524px) {
+	.price {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.chartPrice {
+		padding:
+			var(--padding-padding-s2, 2px) 0;
+	}
 }
 </style>
