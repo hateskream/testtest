@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, onMounted, onUnmounted, ref, toRef, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, toRef, watch } from 'vue';
 
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { UiText } from '@/shared/ui/text';
-import { isNumber } from '@/shared/lib';
 import { useTickerSectionLoader } from '../../composables';
-import type { TickerSectionComponent } from '../../models';
+import type { ISectionItem, ISectionItemHeightConfig, LayoutType, TickerSectionComponent } from '../../models';
 
 import TickerSectionError from './ticker-section-error.vue';
 
 interface IProps {
 	sectionType: TickerSectionComponent;
 	title: string;
-	height: CSSProperties['height'];
+	height: number | ISectionItemHeightConfig;
+	section: ISectionItem;
+	layout: LayoutType;
 }
 
 interface IEmits {
@@ -25,11 +26,7 @@ const props = defineProps<IProps>();
 const emit = defineEmits<IEmits>();
 
 const preparedHeight = computed(() => {
-	if (isNumber(props.height)) {
-		return `${props.height}px`;
-	}
-
-	return props.height;
+	return `${props.height}px`;
 });
 
 const componentKey = ref(0);
@@ -123,7 +120,8 @@ onMounted(() => {
 					<component
 						:is="component"
 						v-if="component"
-						v-bind="$attrs"
+						:section="props.section"
+						:layout="props.layout"
 					/>
 				</template>
 

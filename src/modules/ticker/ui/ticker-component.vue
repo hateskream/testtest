@@ -97,7 +97,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 
 		<template #botContent>
 			<columns-layout v-show="!isChartFullView" :disable-scroll="disableScroll">
-				<template v-if="leftSections.length" #leftCol>
+				<template v-if="leftSections.length" #leftCol="{ layout }">
 					<template
 						v-for="section in leftSections"
 						:key="section.id"
@@ -108,12 +108,13 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 								:section-type="section.component"
 								:height="section.height"
 								:section="section"
+								:layout="layout"
 							/>
 						</template>
 					</template>
 				</template>
 
-				<template v-if="centerSections.length" #mainCol>
+				<template v-if="centerSections.length" #mainCol="{ layout }">
 					<template
 						v-for="section in centerSections"
 						:key="section.id"
@@ -124,11 +125,12 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 							:section-type="section.component"
 							:height="section.height"
 							:section="section"
+							:layout="layout"
 						/>
 					</template>
 				</template>
 
-				<template v-if="rightSections.length" #rightCol>
+				<template v-if="rightSections.length" #rightCol="{ layout }">
 					<template
 						v-for="section in rightSections"
 						:key="section.id"
@@ -139,6 +141,7 @@ const navigationIsEnabled = isFeatureEnabled('TICKER_NAVIGATION_MENU_ENABLED');
 							:section-type="section.component"
 							:height="section.height"
 							:section="section"
+							:layout="layout"
 						/>
 					</template>
 				</template>

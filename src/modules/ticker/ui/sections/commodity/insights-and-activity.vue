@@ -1,20 +1,33 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 import { useTickerContext } from '../../../composables';
-import type { ISectionItem } from '../../../models';
+import type { ISectionItem, LayoutType } from '../../../models';
+import { isNumber } from '@/shared/lib';
 
 interface ISectionProps {
 	section: ISectionItem;
+	layout: LayoutType;
 }
 
-defineProps<ISectionProps>();
+const props = defineProps<ISectionProps>();
 
 const { tickerId } = useTickerContext();
+
+const minHeight = computed(() => {
+	if (isNumber(props.section.height)) {
+		return `${props.section.height}px`;
+	}
+
+	const current = props.section.height[props.layout];
+	return `${current}px`;
+});
 </script>
 
 <template>
-	<div :class="classes.section">
-		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
+	<div :class="classes.section" :style="{ minHeight }">
+		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" :class="classes.metrics" />
 	</div>
 </template>
 
@@ -24,5 +37,10 @@ const { tickerId } = useTickerContext();
 	flex-direction: column;
 	gap: var(--padding-s4, 6px);
 	align-self: stretch;
+	height: 100%;
+}
+
+.metrics {
+	flex-grow: 1;
 }
 </style>

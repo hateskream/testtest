@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'vue';
-
 import { isFeatureEnabled } from '@/shared/lib';
 import { TickerType } from '../ticker';
 import { tickerStockSections } from './stock';
@@ -40,11 +38,17 @@ export const TICKER_SECTION_COMPONENT = {
 export type TickerSectionComponent =
 	typeof TICKER_SECTION_COMPONENT[keyof typeof TICKER_SECTION_COMPONENT];
 
+export interface ISectionItemHeightConfig {
+	desktop: number;
+	tablet: number;
+	mobile: number;
+}
+
 export interface ISectionItem {
 	id: string;
 	title: string;
 	component: TickerSectionComponent;
-	height: CSSProperties['height'];
+	height: number | ISectionItemHeightConfig;
 }
 
 export interface ITickerWidgetSections {

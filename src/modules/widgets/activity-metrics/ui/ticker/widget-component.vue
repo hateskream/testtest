@@ -30,7 +30,7 @@ const {
 </script>
 
 <template>
-	<div>
+	<div :class="classes.widget">
 		<base-ticker-widget-error v-if="isError" @retry="refetch" />
 		<preloader-component v-else-if="isLoading" />
 		<view-component
@@ -39,3 +39,11 @@ const {
 		/>
 	</div>
 </template>
+
+<style module="classes">
+.widget {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+</style>

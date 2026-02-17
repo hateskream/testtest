@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 import { useBreakpoints } from '@vueuse/core';
 
+import { Layout } from '../../models';
+
 import ColumnsLayoutDesktop from './columns-layout-desktop.vue';
 import ColumnsLayoutTablet from './columns-layout-tablet.vue';
 import ColumnsLayoutMobile from './columns-layout-mobile.vue';
@@ -21,29 +23,37 @@ const breakpoints = useBreakpoints({
 const isTablet = breakpoints.greaterOrEqual('tablet');
 const isDesktopWith3Col = breakpoints.greaterOrEqual('desktop3col');
 
-const LayoutComponent = computed(() => {
+const layout = computed(() => {
 	if (isDesktopWith3Col.value) {
-		return ColumnsLayoutDesktop;
+		return Layout.Desktop;
 	}
 
 	if (isTablet.value) {
-		return ColumnsLayoutTablet;
+		return Layout.Tablet;
 	}
 
-	return ColumnsLayoutMobile;
+	return Layout.Mobile;
 });
+
+const layoutComponentMap = {
+	[Layout.Desktop]: ColumnsLayoutDesktop,
+	[Layout.Tablet]: ColumnsLayoutTablet,
+	[Layout.Mobile]: ColumnsLayoutMobile,
+} as const;
+
+const LayoutComponent = computed(() => layoutComponentMap[layout.value]);
 </script>
 
 <template>
 	<layout-component v-if="$slots.mainCol || $slots.leftCol || $slots.rightCol" :disable-scroll="props.disableScroll">
 		<template #leftCol>
-			<slot name="leftCol"></slot>
+			<slot name="leftCol" :layout="layout"></slot>
 		</template>
 		<template v-if="$slots.mainCol" #mainCol>
-			<slot name="mainCol"></slot>
+			<slot name="mainCol" :layout="layout"></slot>
 		</template>
 		<template #rightCol>
-			<slot name="rightCol"></slot>
+			<slot name="rightCol" :layout="layout"></slot>
 		</template>
 	</layout-component>
 </template>

@@ -33,7 +33,9 @@ const props = defineProps<{
 <style module="classes">
 .container {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
 	padding: var(--padding-s5, 8px) var(--padding-s11, 20px);
 	background-color: var(--surface-01, rgb(17 17 19 / 92%));

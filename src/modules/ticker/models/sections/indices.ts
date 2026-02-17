@@ -6,7 +6,11 @@ export const tickerIndicesSections = {
 			id: 'overview',
 			title: 'Overview',
 			component: 'INDEX_OVERVIEW',
-			height: 215,
+			height: {
+				desktop: 259,
+				tablet: 504,
+				mobile: 69,
+			},
 		},
 	],
 	center: [],
@@ -15,7 +19,11 @@ export const tickerIndicesSections = {
 			id: 'insights',
 			title: 'Insights & Activity',
 			component: 'INDEX_INSIGHTS_AND_ACTIVITY',
-			height: 215,
+			height: {
+				desktop: 259,
+				tablet: 504,
+				mobile: 69,
+			},
 		},
 	],
 } as const satisfies ITickerWidgetSections;

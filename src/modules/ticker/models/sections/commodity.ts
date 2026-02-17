@@ -6,7 +6,11 @@ export const tickerCommoditySections = {
 			id: 'overview',
 			title: 'Overview',
 			component: 'COMMODITY_OVERVIEW',
-			height: 210,
+			height: {
+				desktop: 327,
+				tablet: 504,
+				mobile: 504,
+			},
 		},
 	],
 	center: [],
@@ -15,7 +19,11 @@ export const tickerCommoditySections = {
 			id: 'insights',
 			title: 'Insights & Activity',
 			component: 'COMMODITY_INSIGHTS_AND_ACTIVITY',
-			height: 210,
+			height: {
+				desktop: 327,
+				tablet: 504,
+				mobile: 69,
+			},
 		},
 	],
 } as const satisfies ITickerWidgetSections;

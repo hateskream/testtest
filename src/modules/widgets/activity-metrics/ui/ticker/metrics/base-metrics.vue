@@ -11,11 +11,16 @@
 
 <style module="classes">
 .container {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	justify-content: center;
 	container-type: inline-size;
 }
 
 .metrics {
 	display: grid;
+	flex-grow: 1;
 	max-width: 100%;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 6px var(--padding-s4, 6px);
