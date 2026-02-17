@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, reactive, useTemplateRef } from 'vue';
+import { computed, type CSSProperties, reactive, shallowReactive, useTemplateRef } from 'vue';
 import {
 	CrosshairMode,
 	type ISeriesApi,
 	type ITimeScaleApi,
 	LineStyle,
 	type SeriesDefinition,
+	type SeriesOptionsMap,
 	type SeriesPartialOptionsMap,
 	type SeriesType,
 	type Time,
@@ -107,6 +108,8 @@ export interface ISharedChartElement extends HTMLElement {
 	): ISeriesApi<T> | null;
 	removeSeries(seriesApi: ISeriesApi<SeriesType, Time>): void;
 }
+
+const series = shallowReactive<ISeriesApi<SeriesType, Time>[]>([]);
 
 const container = useTemplateRef<ISharedChartElement>('container');
 
@@ -235,11 +238,28 @@ function updateTooltipState(state: ChartClickData | null) {
 
 	tooltipState.title = [tooltipDateFormatter.value.format(date)];
 
-	tooltipState.rows[0] = {
-		text: 'Price',
-		value: `$${formatPrice(state.value)}`,
-		color: tooltipRowColor.value,
-	};
+	tooltipState.rows = series.reduce((acc, seriesApi) => {
+		const point = (seriesApi.data() as ChartData[]).find(pnt => pnt.time === state.time);
+		if (point) {
+			const options = seriesApi.options() as SeriesOptionsMap['Line'];
+			const value = isCandlestickData(point) ? point.close : point.value;
+
+			acc.push({
+				text: options.title,
+				value: `$${formatPrice(value)}`,
+				color: options.color,
+			});
+		}
+
+		return acc;
+	}, [
+		{
+			text: 'Price',
+			value: `$${formatPrice(state.value)}`,
+			color: tooltipRowColor.value,
+		},
+	],
+	);
 
 	tooltipState.visible = true;
 }
@@ -313,16 +333,26 @@ function getTimeScale() {
 	return container.value?.getTimeScale();
 }
 
-function addSeries<T extends SeriesType>(
+const addSeries = <T extends SeriesType>(
 	definition: SeriesDefinition<T>,
 	options?: SeriesPartialOptionsMap[T],
 	paneIndex?: number,
-) {
-	return container.value?.addSeries(definition, options, paneIndex);
-}
+) => {
+	const api = container.value?.addSeries?.(definition, options, paneIndex);
+	if (api) {
+		series.push(api);
+	}
+
+	return api;
+};
 
 function removeSeries(seriesApi: ISeriesApi<SeriesType, Time>) {
-	container.value?.removeSeries(seriesApi);
+	container.value?.removeSeries?.(seriesApi);
+
+	const index = series.indexOf(seriesApi);
+	if (index !== -1) {
+		series.splice(index, 1);
+	}
 }
 
 function updateMainSeriesPoint(point: CandlestickData | LineData, historicalUpdate?: boolean) {

@@ -1,4 +1,4 @@
-import type { ICandle } from '@/modules/chart';
+import type { Candle } from '../candle.ts';
 
 export type IndicatorConfig = {
 	id?: string;
@@ -25,7 +25,7 @@ export abstract class Indicator<
 	protected readonly config: TConfig;
 
 	protected values: IndicatorPoint<TValue>[] = [];
-	protected candles: ICandle[] = [];
+	protected candles: Candle[] = [];
 
 	constructor(config: TConfig) {
 		this.id = config.id ?? crypto.randomUUID();
@@ -33,9 +33,9 @@ export abstract class Indicator<
 		this.config = config;
 	}
 
-	abstract calculate(data: ICandle[]): void;
+	abstract calculate(data: Candle[]): void;
 
-	abstract update(candle: ICandle, isFinal?: boolean): IndicatorPoint<TValue> | null;
+	abstract update(candle: Candle, isFinal?: boolean): IndicatorPoint<TValue> | null;
 
 	abstract reset(): void;
 

@@ -3,20 +3,36 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 import ModalItemComponent from './modal-item-component.vue';
 
+export interface IModalCheckboxProps {
+	disabled?: boolean;
+}
+
+const props = defineProps<IModalCheckboxProps>();
+
 const modelValue = defineModel<boolean>({ default: false });
 
 function toggle() {
+	if (props.disabled) {
+		return;
+	}
+
 	modelValue.value = !modelValue.value;
 }
 </script>
 
 <template>
 	<modal-item-component
-		:class="classes.content"
+		:disabled="props.disabled"
+		:class="[
+			classes.content,
+			{
+				[classes.disabled]: props.disabled
+			}
+		]"
 		@click="toggle"
 	>
 		<slot name="default" />
-		<div :class="[classes.icon, { [classes.iconActive]: modelValue }]">
+		<div v-if="!props.disabled" :class="[classes.icon, { [classes.iconActive]: modelValue }]">
 			<ui-icon
 				v-if="modelValue"
 				:id="IconIds.RcmCheckbox"
@@ -43,8 +59,15 @@ function toggle() {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	cursor: pointer;
 	gap: 5px;
+}
+
+.content:not(.disabled) {
+	cursor: pointer;
+}
+
+.content.disabled {
+	opacity: 0.6;
 }
 
 .content:hover .icon {

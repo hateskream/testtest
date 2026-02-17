@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, useTemplateRef, watch } from 'vue';
+import { computed, toRef, useTemplateRef, watch } from 'vue';
 import { type ChartType, LastPriceAnimationMode } from '@shared/component-library';
 
 import { Chart } from '@/modules/lightweight-charts';
@@ -11,9 +11,8 @@ import {
 	type TimezoneUtcType,
 } from '@/modules/lightweight-charts/model';
 import type { ChartPriceCurrentData, ChartPriceHistoryPoint } from '../../model';
-import { useChartContext } from '@/modules/lightweight-charts/composables';
-import { getIndicatorSeriesConfig, type IndicatorType, mapIndicatorToBaselineSeries } from '@/modules/indicator';
-import { createSma } from '@/modules/indicator/sma';
+import { useChartContext, useChartContextIndicators } from '@/modules/lightweight-charts/composables';
+import { type IndicatorType } from '@/modules/indicator';
 
 export interface IChartPriceTickerProps {
 	points: ChartPriceHistoryPoint[];
@@ -69,80 +68,7 @@ watch(preparedChartData, value => {
 	}
 }, { immediate: true, deep: true });
 
-const currentIndicators = {} as Record<IndicatorType, () => void>;
-
-function addIndicator(indicator: IndicatorType) {
-	const current = currentIndicators[indicator];
-	if (current) {
-		return current;
-	}
-
-	const chartEl = chartRef.value;
-	if (!chartEl) {
-		return null;
-	}
-
-	const value = registerIndicator(indicator);
-	if (value) {
-		currentIndicators[indicator] = value;
-		return value;
-	}
-
-	return null;
-}
-
-function registerIndicator(indicator: IndicatorType) {
-	if (!context || !chartRef.value) {
-		return;
-	}
-
-	const indicatorInstance = createSma({ period: 14 });
-	indicatorInstance.calculate(context.getAll());
-
-	const config = getIndicatorSeriesConfig(indicator);
-	const series = chartRef.value.addSeries(config.definition, config.options, config.paneIndex);
-	if (series) {
-		const data = mapIndicatorToBaselineSeries(indicatorInstance.getResult());
-		series.setData(data);
-	}
-
-	const cleanupBulk = context.subscribeBulk((candles) => {
-		indicatorInstance.calculate(candles);
-	});
-
-	const cleanup = context.subscribe((candle) => {
-		indicatorInstance.update(candle);
-	});
-
-	return () => {
-		cleanup();
-		cleanupBulk();
-	};
-}
-
-function deleteIndicator(indicator: IndicatorType) {
-	const unsubscriber = currentIndicators[indicator];
-	if (unsubscriber) {
-		unsubscriber();
-	}
-}
-
-watch(() => props.indicators, (newIndicators, oldIndicators) => {
-	const deletedIndicators = oldIndicators.filter(indicator => !newIndicators.includes(indicator));
-	const addedIndicators = newIndicators.filter(indicator => !oldIndicators.includes(indicator));
-
-	for (const indicator of deletedIndicators) {
-		deleteIndicator(indicator);
-	}
-
-	for (const indicator of addedIndicators) {
-		addIndicator(indicator);
-	}
-}, { deep: true });
-
-onUnmounted(() => {
-	Object.values(currentIndicators).forEach(unsubscriber => unsubscriber());
-});
+useChartContextIndicators(chartRef, toRef(props, 'indicators'));
 </script>
 
 <template>

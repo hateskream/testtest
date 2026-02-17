@@ -1,7 +1,7 @@
 import { SMA } from 'trading-signals';
 
-import type { ICandle } from '@/modules/chart';
-import { Indicator, type IndicatorConfig, type IndicatorPoint } from '../base';
+import { Indicator, type IndicatorConfig, type IndicatorPoint } from '../../base';
+import type { Candle } from '../../candle.ts';
 
 export const SmaSource = {
 	Close: 'close',
@@ -26,14 +26,14 @@ export class SmaIndicator extends Indicator<ISmaConfig> {
 		this.sma = new SMA(this.config.period);
 	}
 
-	public calculate(candles: ICandle[]): void {
+	public calculate(candles: Candle[]): void {
 		this.reset();
 
 		this.candles = [...candles];
 
 		for (const candle of this.candles) {
 			const source = this.getSource();
-			const value = this.sma.update(candle[source], true);
+			const value = this.sma.add(candle[source]);
 
 			if (value !== null) {
 				this.values.push({
@@ -44,7 +44,7 @@ export class SmaIndicator extends Indicator<ISmaConfig> {
 		}
 	}
 
-	public update(candle: ICandle): IndicatorPoint | null {
+	public update(candle: Candle): IndicatorPoint | null {
 		const lastCandle = this.candles[this.candles.length - 1];
 
 		if (lastCandle && lastCandle.time === candle.time) {
@@ -82,6 +82,6 @@ export class SmaIndicator extends Indicator<ISmaConfig> {
 	}
 }
 
-export function createSma(config: ISmaConfig) {
+export function createSma(config: ISmaConfig = { period: 14 }) {
 	return new SmaIndicator(config);
 }

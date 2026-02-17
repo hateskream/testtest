@@ -25,10 +25,12 @@ import { ChartIndicatorsList } from '@/modules/lightweight-charts';
 
 export interface IChartPriceTickerFiltersProps {
 	dateRangePresets?: DateRangePresetValue[];
+	availablePoints?: number;
 }
 
 const props = withDefaults(defineProps<IChartPriceTickerFiltersProps>(), {
 	dateRangePresets: () => DEFAULT_PRESETS,
+	availablePoints: 0,
 });
 
 const emit = defineEmits<{
@@ -136,7 +138,7 @@ function downloadSnapshot() {
 					:icon="IconIds.ChartView"
 					@select="chartType = $event.value"
 				/>
-				<chart-indicators-list v-model="selectedIndicators" />
+				<chart-indicators-list v-model="selectedIndicators" :available-points="availablePoints" />
 			</div>
 			<div :class="classes.actions">
 				<div :class="classes.instruments">

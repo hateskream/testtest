@@ -106,6 +106,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 				v-model:full-view="fullView"
 				v-model:indicators="indicators"
 				:class="classes.header"
+				:available-points="data.points.length"
 				@download-snapshot="downloadChartSnapshot"
 			/>
 		</div>

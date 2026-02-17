@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { ModalBadgeDropdown, ModalBadgeList, ModalItemCheckbox } from '@/modules/widgets/base';
+import { ModalBadgeDropdown, ModalBadgeList } from '@/modules/widgets/base';
 import { IndicatorsConfig, type IndicatorType } from '@/modules/indicator';
-import { UiText } from '@/shared/ui/text';
 
-interface IChartIndicatorsList {
+import ChartIndicatorsListItem from './chart-indicators-list-item.vue';
+
+interface IChartIndicatorsListProps {
 	label?: string;
+	availablePoints?: number;
 }
 
-const props = withDefaults(defineProps<IChartIndicatorsList>(), {
+const props = withDefaults(defineProps<IChartIndicatorsListProps>(), {
 	label: 'Indicators',
+	availablePoints: 0,
 });
 
 const selectedIndicators = defineModel<IndicatorType[]>({ default: () => [] });
@@ -51,34 +54,18 @@ const label = computed(() => {
 		<template #content>
 			<modal-badge-list display-variant="new">
 				<template #title>Indicators</template>
-				<modal-item-checkbox
-					v-for="(config, indicator) in IndicatorsConfig"
-					:key="indicator"
-					:model-value="isSelectedIndicator(indicator)"
-					@update:model-value="toggleIndicator(indicator)"
-				>
-					<div :class="classes.indicatorName">
-						<ui-text token="text-300-r">
-							{{ config.label }}
-						</ui-text>
-						<ui-text :class="classes.indicatorTitle" token="text-200-r">
-							{{ config.title }}
-						</ui-text>
-					</div>
-				</modal-item-checkbox>
+				<template #default>
+					<chart-indicators-list-item
+						v-for="(config, indicator) in IndicatorsConfig"
+						:key="indicator"
+						:title="config.title"
+						:label="config.label"
+						:disabled="config.minPoints > props.availablePoints"
+						:model-value="isSelectedIndicator(indicator)"
+						@update:model-value="toggleIndicator(indicator)"
+					/>
+				</template>
 			</modal-badge-list>
 		</template>
 	</modal-badge-dropdown>
 </template>
-
-<style module="classes">
-.indicatorName {
-	display: flex;
-	align-items: flex-end;
-	gap: 5px;
-}
-
-.indicatorTitle {
-	color: var(--text-color-base-300);
-}
-</style>
