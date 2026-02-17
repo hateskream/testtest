@@ -19,7 +19,7 @@ const { tickerId } = useTickerContext();
 	<div :class="classes.section">
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
 		<empty-ticker-widget style="height: 675px;" :meta="{ tickerId, name: 'Insights' }" />
-		<ticker-links-widget :meta="{ tickerId, name: 'Insights' }" />
+		<ticker-links-widget :meta="{ tickerId, name: 'Links' }" />
 	</div>
 </template>
 

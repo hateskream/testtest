@@ -30,7 +30,7 @@ const selectedTabId = ref<string | number>('insights');
 	<div :class="classes.section">
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
 		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
-		<ticker-links-widget :meta="{ tickerId, name: 'Insights' }" />
+		<ticker-links-widget :meta="{ tickerId, name: 'Links' }" />
 	</div>
 </template>
 
