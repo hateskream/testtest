@@ -4,9 +4,9 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { IconIds } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { UiControlButton } from '@/shared/ui/control-button';
+import { UiAttachedPic } from '@/shared/ui/attached-pic';
 import { UserRequestConfig, type IUserRequestPayload } from '../../api/user-request';
 
-import FooterFeatureRequestImagePreview from './previews/footer-feature-request-image-preview.vue';
 import FooterFeatureRequestFilePreview from './previews/footer-feature-request-file-preview.vue';
 
 const props = defineProps<{
@@ -240,7 +240,7 @@ function onFormSend() {
 					v-for="(item, index) in attachedFiles"
 					:key="item.file.name + index"
 				>
-					<footer-feature-request-image-preview
+					<ui-attached-pic
 						v-if="item.isImage"
 						:url="item.url"
 						:filename="item.file.name"
