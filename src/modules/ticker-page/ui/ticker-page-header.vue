@@ -484,8 +484,7 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 	}
 
 	.chartPrice {
-		padding:
-			var(--padding-padding-s2, 2px) 0;
+		padding: var(--padding-padding-s2, 2px) 0;
 	}
 }
 </style>
