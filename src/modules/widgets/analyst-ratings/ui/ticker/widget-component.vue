@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseTickerWidgetError } from '@/modules/widgets/base';
-import { usePricePerformance } from '../../composables';
+import { useAnalystRatings } from '../../composables';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { isFeatureEnabled } from '@/shared/lib';
+import { MarketType } from '@/modules/market';
 
 import PreloaderComponent from './preloader-component.vue';
 
@@ -25,15 +26,21 @@ const {
 	isLoading,
 	isError,
 	refetch,
-} = usePricePerformance({
+	marketType,
+} = useAnalystRatings({
 	tickerId: () => props.meta.tickerId,
 });
-const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_PRICE_PERFORMANCE_ENABLED');
+
+const isThrowError = computed(() => {
+	return (isError.value || marketType.value !== MarketType.Stock );
+});
+const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED');
+
 </script>
 
 <template>
 	<div v-if="widgetIsEnabled">
-		<base-ticker-widget-error v-if="isError" @retry="refetch" />
+		<base-ticker-widget-error v-if="isThrowError " @retry="refetch" />
 		<preloader-component v-else-if="isLoading" />
 		<view-component
 			v-else-if="data"

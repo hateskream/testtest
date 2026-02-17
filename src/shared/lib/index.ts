@@ -5,6 +5,7 @@ export { compareStrings } from './compare-strings';
 export { removeUndefinedPropertiesFromObject } from './remove-undefined-properties-non-deep-object';
 export { getImagePath } from './get-image-path';
 export { generateRandomColor } from './generate-random-color';
+export { getCssVar } from './get-css-var';
 export * from './feature-toggle';
 export * from './query-params';
 export * from './functions';
