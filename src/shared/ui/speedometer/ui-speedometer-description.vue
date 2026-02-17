@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
+
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiText } from '@/shared/ui/text';
 
 interface IProps {
 	value: number;
-	color: string;
+	color: CSSProperties['color'];
 	title?: string;
 	description?: string;
+	descriptionColor?: CSSProperties['color'];
 }
 
 const props = defineProps<IProps>();
@@ -33,6 +36,7 @@ const props = defineProps<IProps>();
 			<ui-text
 				v-if="props.description"
 				token="text-300-b"
+				:style="{ color: props.descriptionColor }"
 			>
 				{{ props.description }}
 			</ui-text>

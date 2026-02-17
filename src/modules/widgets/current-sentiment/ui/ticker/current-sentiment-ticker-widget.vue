@@ -43,6 +43,7 @@ const sentiment = computed(() => {
 				<ui-speedometer-description
 					:value="data.tension"
 					:color="sentiment?.color ?? ''"
+					description-color="var(--text-300, rgba(255, 255, 255, 0.62))"
 					:title="sentiment?.signal"
 					:description="sentiment?.description"
 					:class="classes.chartDescription"
