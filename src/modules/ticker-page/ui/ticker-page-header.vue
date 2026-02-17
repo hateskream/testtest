@@ -463,7 +463,9 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 	color: var(--atom-success-00, #04eda0);
 }
 
-.tickerName, .current, .chartPrice {
+.tickerName,
+.current,
+.chartPrice {
 	white-space: nowrap;
 }
 </style>
