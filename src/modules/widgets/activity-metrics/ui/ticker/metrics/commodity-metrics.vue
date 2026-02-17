@@ -15,7 +15,7 @@ const props = defineProps<ICommodityMetricsProps>();
 <template>
 	<base-metrics>
 		<metrics-container
-			title="Volume (24H)"
+			title="Volume (24h)"
 			tooltip="Tooltip"
 			:class="classes.full"
 		>
