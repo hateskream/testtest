@@ -380,12 +380,6 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 	color: var(--text-500, rgb(255 255 255 / 96%));
 }
 
-@container header (width > 1100px) {
-	.main {
-		max-width: 50%;
-	}
-}
-
 .description {
 	padding-bottom: var(--padding-padding-s2, 2px);
 	color: var(--text-300, rgb(255 255 255 / 62%));
@@ -467,5 +461,9 @@ const currentPrice = computed(() => formatPrice(props.price.current_price));
 
 .positive {
 	color: var(--atom-success-00, #04eda0);
+}
+
+.tickerName, .current, .chartPrice {
+	white-space: nowrap;
 }
 </style>
