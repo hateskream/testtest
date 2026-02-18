@@ -38,6 +38,7 @@ export enum RouteNames {
 	KeyIndicatorsTest = 'KeyIndicatorsTest',
 	TickerWidget = 'ticker-widget',
 	TickerWidgetPreview = 'ticker-widget-preview',
+	TickerUnemploymentRateTest = 'ticker-unemployment-rate-test',
 }
 
 export enum RouteLabels {
@@ -71,6 +72,7 @@ export enum RouteLabels {
 	TickerPageHeader = 'Ticker Page Header',
 	LinksTestPage = 'Links Test Page',
 	KeyIndicatorsTest = 'Key Indicators Test',
+	UnemploymentRateTest = 'Unemployment Rate Test',
 }
 
 export enum RoutePaths {
@@ -111,6 +113,7 @@ export enum RoutePaths {
 	KeyIndicatorsTest = '/key-indicators-test',
 	TickerWidget = '/ticker-widget',
 	TickerWidgetPreview = '/ticker-widget/:widgetName',
+	TickerUnemploymentRateTest = '/ticker-unemployment-rate-test',
 }
 
 export enum RouteTickerType {

@@ -1,18 +1,7 @@
-export interface IMetricTrendBadge {
-	topValue: number;
-	isTopValuePercent: boolean;
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isGood: boolean;
-	isPercent: boolean;
-}
-
 export interface IUnemploymentRateChange {
-	value: number;
+	value: number | null;
 	unit: string;
-	direction: 'up' | 'down';
+	direction: 'up' | 'down' | 'neutral';
 	isPositive: boolean;
 }
 
@@ -26,9 +15,4 @@ export interface IUnemploymentRateResponse {
 	primaryValueUnit: string;
 	change: IUnemploymentRateChange;
 	points: IUnemploymentRatePoint[];
-}
-
-export interface IUnemploymentRateData {
-	badge: IMetricTrendBadge;
-	points: { time: string; value: number }[];
 }

@@ -46,9 +46,7 @@ const {
 			/>
 			<view-component
 				v-else
-				:metric-badge="currentData!.badge"
-				:points="currentData!.points"
-				:chart-color-schema="currentData!.badge.isGood ? 'positive' : 'negative'"
+				:data="currentData!"
 			/>
 		</template>
 	</base-widget-dashboard>
