@@ -1,6 +1,6 @@
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
-import type { IMetricTrendBadge, INonfarmPayrollsData, INonfarmPayrollsResponse } from '../model';
+import type { INonfarmPayrollsData } from '../model';
 
 export interface IGetNonfarmPayrollsRequest {
 	widgetId: string;
@@ -13,7 +13,7 @@ export async function getNonfarmPayrolls(
 	const logger = useLogger();
 
 	try {
-		const response = await httpService.get<INonfarmPayrollsResponse>(
+		return await httpService.get<INonfarmPayrollsData>(
 			'api/v1/nonfarm-payrolls/data',
 			{
 				query: {
@@ -21,34 +21,8 @@ export async function getNonfarmPayrolls(
 				},
 			},
 		);
-		return transformNonfarmPayrollsData(response);
 	} catch (error) {
 		logger.error('Failed to get unemployment rate data', { error: error as Error });
 		throw error;
 	}
-}
-
-export function transformNonfarmPayrollsData(
-	data: INonfarmPayrollsResponse,
-): INonfarmPayrollsData {
-	const badge: IMetricTrendBadge = {
-		topValue: parseFloat(data.primaryValue),
-		isTopValuePercent: data.primaryValueUnit === '%',
-		label: `Payrolls ${data.change.isPositive ? 'up' : 'down'} YoY`,
-		value: data.change.value,
-		unit: data.change.unit,
-		trend: data.change.direction,
-		isGood: data.change.isPositive,
-		isPercent: data.change.unit === '%' || data.change.unit === 'pp',
-	};
-
-	const points = data.points.map(point => ({
-		time: point.label,
-		value: point.history,
-	}));
-
-	return {
-		badge,
-		points,
-	};
 }

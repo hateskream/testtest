@@ -401,4 +401,9 @@ export const testRoutes: RouteRecordRaw[] = [
 			title: 'Test Ticker Widgets',
 		},
 	},
+	{
+		path: RoutePaths.NonfarmPayrollsTestPage,
+		name: RouteNames.NonfarmPayrollsTestPage,
+		component: () => import('@/pages/nonfarm-payrolls-test-page.vue'),
+	},
 ];

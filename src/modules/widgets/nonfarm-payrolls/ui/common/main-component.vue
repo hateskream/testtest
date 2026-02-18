@@ -1,51 +1,40 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import type { INonfarmPayrollsData } from '../../model';
+
 import ChartComponent from './chart-component.vue';
 import MetricTrendBadge from './metric-trend-badge.vue';
 
-interface IMetricTrendBadge {
-	topValue: number;
-	isTopValuePercent: boolean;
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isGood: boolean;
-	isPercent: boolean;
-}
+const props = defineProps<{
+	data: INonfarmPayrollsData;
+}>();
 
-interface IPoints {
-	time: string;
-	value: number;
-}
+const chartColorSchema = computed<'positive' | 'negative'>(() => {
+	return props.data.change.isPositive ? 'positive' : 'negative';
+});
 
-interface IMainComponentProps {
-	metricBadge: IMetricTrendBadge;
-	chartColorSchema: 'positive' | 'negative';
-	points: IPoints[];
-}
-
-const props = defineProps<IMainComponentProps>();
-
+const chartPoints = computed(() => {
+	return props.data.points.map(point => ({
+		time: point.label,
+		value: point.history,
+	}));
+});
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.header">
 			<metric-trend-badge
-				:top-value="props.metricBadge.topValue"
-				:is-top-value-percent="props.metricBadge.isTopValuePercent"
-				:is-good="props.metricBadge.isGood"
-				:label="props.metricBadge.label"
-				:value="props.metricBadge.value"
-				:unit="props.metricBadge.unit"
-				:trend="props.metricBadge.trend"
-				:is-percent="props.metricBadge.isPercent"
+				:primary-value="props.data.primaryValue"
+				:primary-value-unit="props.data.primaryValueUnit"
+				:change="props.data.change"
 			/>
 		</div>
 		<div :class="classes.chart">
 			<chart-component
-				:chart-color-schema="props.chartColorSchema"
-				:points="props.points"
+				:chart-color-schema="chartColorSchema"
+				:points="chartPoints"
 			/>
 		</div>
 	</div>
