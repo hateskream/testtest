@@ -4,7 +4,7 @@ import { getMockData } from './mock';
 import { AnalystRatingsSchema } from '../model';
 import { apiSchema, useApiClient } from '@/shared/service/api';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export async function getAnalystRatings(request: IAnalystRatingsRequest) {
 	const apiClient = useApiClient();

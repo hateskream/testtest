@@ -594,3 +594,7 @@ export function resolveMarketTypeFromTicker(selectedTicker: string) {
 
 	return marketType;
 }
+
+export function isStockMarket(selectedTicker: string) {
+	return resolveMarketTypeFromTicker(selectedTicker) === MarketType.Stock;
+}

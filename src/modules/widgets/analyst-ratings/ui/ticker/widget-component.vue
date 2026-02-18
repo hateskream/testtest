@@ -5,7 +5,7 @@ import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { useAnalystRatings } from '../../composables';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { isFeatureEnabled } from '@/shared/lib';
-import { MarketType } from '@/modules/market';
+import { isStockMarket } from '@/modules/cell';
 
 import PreloaderComponent from './preloader-component.vue';
 
@@ -26,13 +26,14 @@ const {
 	isLoading,
 	isError,
 	refetch,
-	marketType,
 } = useAnalystRatings({
 	tickerId: () => props.meta.tickerId,
 });
 
+const isStock = computed(() => isStockMarket(props.meta.tickerId));
+
 const isThrowError = computed(() => {
-	return (isError.value || marketType.value !== MarketType.Stock );
+	return isError.value || !isStock.value;
 });
 const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED');
 
