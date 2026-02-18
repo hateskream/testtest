@@ -25,10 +25,10 @@ export interface IDataProvider {
 }
 
 export interface IPriceData {
+	current_price: string;
 	currency: string;
-	current_price: number;
-	change: number;
-	change_percent: number;
+	change_24h: string;
+	change_24h_percent: string;
 	status: 'positive' | 'negative' | 'neutral';
 }
 
@@ -48,7 +48,7 @@ function getApiTickerData(req: ITickerMetaRequest) {
 	const http = useHttpService();
 
 	try {
-		return http.get<ITickerMetaResponse>('/api/v1/header/data', {
+		return http.get<ITickerMetaResponse>('/api/v1/ticker/meta', {
 			query: {
 				ticker_id: req.tickerId,
 			},
@@ -81,10 +81,10 @@ async function getMockTickerData(): Promise<ITickerMetaResponse> {
 			logo_url: 'https://example.com/yahoo-logo.png',
 		},
 		price: {
+			current_price: '187.44',
 			currency: '$',
-			current_price: 1.1655,
-			change: 0.00134,
-			change_percent: 0.12,
+			change_24h: '2.31',
+			change_24h_percent: '1.25',
 			status: 'positive',
 		},
 		dominant_color: '#FF000018',

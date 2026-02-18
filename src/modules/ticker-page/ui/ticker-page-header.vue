@@ -22,7 +22,6 @@ import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
 import { UiControlIcon } from '@/shared/ui/control-icon';
 import { UiClamped } from '@/shared/ui/clamped';
-import { formatPercent, formatPrice } from '@/modules/lightweight-charts/model';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -52,7 +51,7 @@ const selectedTickers = computed({
 const classes = useCssModule('classes');
 
 const chart = computed(() => {
-	const label = `${formatPrice(props.price.change)} (${ formatPercent(props.price.change_percent) }%)`;
+	const label = `${props.price.change_24h} (${ props.price.change_24h_percent }%)`;
 
 	if (props.price.status === 'positive') {
 		return {
@@ -78,16 +77,9 @@ const chart = computed(() => {
 
 const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_ENABLED');
 
-// TODO: Parse label to symbol
-const currentCurrency = computed(() => {
-	if (props.price.currency === 'USD') {
-		return '$';
-	}
+const currentCurrency = computed(() => props.price.currency);
 
-	return props.price.currency;
-});
-
-const currentPrice = computed(() => formatPrice(props.price.current_price));
+const currentPrice = computed(() => props.price.current_price);
 </script>
 
 <template>
