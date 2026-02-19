@@ -2,6 +2,7 @@
 import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price-index';
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
+import { TickerUnemploymentRateWidget } from '@/modules/widgets/unemployment-rate';
 
 import EmptyTickerWidget from '../empty-ticker-widget.vue';
 
@@ -31,7 +32,7 @@ const { tickerId } = useTickerContext();
 		<consumer-price-index-ticker-widget :class="classes.cpi" :meta="{ tickerId, name: 'Consumer price index' }" />
 		<empty-ticker-widget style="height: 370px;" :meta="{ tickerId, name: 'Nominal GDP' }" />
 		<div :class="classes.charts">
-			<empty-ticker-widget
+			<ticker-unemployment-rate-widget
 				:class="classes.chart"
 				style="height: 200px;"
 				:meta="{ tickerId, name: 'Unemployment Rate (1Y)' }"
