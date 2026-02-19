@@ -14,7 +14,7 @@ export async function getNonfarmPayrolls(
 
 	try {
 		return await httpService.get<INonfarmPayrollsData>(
-			'api/v1/nonfarm-payrolls/data',
+			'/api/v1/nonfarm-payrolls/data',
 			{
 				query: {
 					widgetId: args.widgetId,
