@@ -180,6 +180,7 @@ export function useSlider(opts: {
 
 		startX = e.clientX;
 		startScrollLeft = el.scrollLeft;
+		el.setPointerCapture(e.pointerId);
 	}
 
 	function onPointerMove(e: PointerEvent) {
@@ -193,8 +194,21 @@ export function useSlider(opts: {
 		setScrollRAF(nextScroll);
 	}
 
-	function onPointerUp() {
+	function onPointerUp(event: PointerEvent) {
+		if (!isDragging.value) {
+			return;
+		}
+
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
+
 		isDragging.value = false;
+
+		if (el.hasPointerCapture(event.pointerId)) {
+			el.releasePointerCapture(event.pointerId);
+		}
 	}
 
 
@@ -249,6 +263,7 @@ export function useSlider(opts: {
 
 		handleScroll();
 
+		// Если будут настоящие баги с залипанием, то можно присмотреться к lostpointercapture
 		el.addEventListener('pointerdown', onPointerDown, { passive: false });
 		el.addEventListener('pointermove', onPointerMove);
 		el.addEventListener('pointerup', onPointerUp);
@@ -261,6 +276,7 @@ export function useSlider(opts: {
 			el.removeEventListener('pointermove', onPointerMove);
 			el.removeEventListener('pointerup', onPointerUp);
 			el.removeEventListener('pointercancel', onPointerUp);
+			el.removeEventListener('touchend', onTouchEnd);
 			el.removeEventListener('scroll', throttledHandleScroll);
 		});
 	});
