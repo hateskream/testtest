@@ -14,18 +14,10 @@ const props = defineProps<{
 }>();
 
 const chartColorSchema = computed(() => {
-	if (!props.currentData) {
-		return 'positive';
-	}
-
 	return props.currentData.change.isPositive ? 'positive' : 'negative';
 });
 
 const chartPoints = computed(() => {
-	if (!props.currentData) {
-		return [];
-	}
-
 	return props.currentData.points.map(point => ({
 		time: point.label,
 		value: point.history,
@@ -34,7 +26,7 @@ const chartPoints = computed(() => {
 </script>
 
 <template>
-	<base-ticker-widget-wrapper v-if="props.currentData">
+	<base-ticker-widget-wrapper>
 		<base-ticker-widget-header>{{ props.meta.name }}</base-ticker-widget-header>
 		<base-ticker-widget-content :class="classes.content">
 			<div :class="classes.meta">
