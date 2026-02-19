@@ -3,6 +3,7 @@ import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
 import { TickerUnemploymentRateWidget } from '@/modules/widgets/unemployment-rate';
+import { NonfarmPayrollsTickerWidget } from '@/modules/widgets/nonfarm-payrolls';
 
 import EmptyTickerWidget from '../empty-ticker-widget.vue';
 
@@ -37,7 +38,7 @@ const { tickerId } = useTickerContext();
 				style="height: 200px;"
 				:meta="{ tickerId, name: 'Unemployment Rate (1Y)' }"
 			/>
-			<empty-ticker-widget
+			<nonfarm-payrolls-ticker-widget
 				:class="classes.chart"
 				style="height: 200px;"
 				:meta="{ tickerId, name: 'Nonfarm Payrolls (1Y)' }"
