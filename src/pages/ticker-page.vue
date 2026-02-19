@@ -9,7 +9,7 @@ import { TickerType } from '@/modules/ticker/models';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 import { useLogger } from '@/shared/service/monitoring';
 import { useAppHead } from '@/shared/composables';
-import { ucFirst } from '@/shared/lib/uc-first';
+import { capitalize } from '@/shared/lib/capitalize.ts';
 
 interface ITickerPageProps {
 	id: string;
@@ -60,7 +60,7 @@ watch(canonicalTickerId, tickerId => {
 
 const title = computed(() => {
 	if (ticker.value) {
-		return `${ticker.value.name} — ${ucFirst(ticker.value.market_type)}`;
+		return `${ticker.value.name} — ${capitalize(ticker.value.market_type)}`;
 	}
 
 	return 'Ticker Page';
