@@ -2,8 +2,8 @@
 import { markRaw, ref } from 'vue';
 
 import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price-index';
-import { useTickerContext } from '../../../composables';
-import type { ISectionItem } from '../../../models';
+import { useTickerContext } from '../../../../composables';
+import type { ISectionItem } from '../../../../models';
 import { UsInflationTickerWidget } from '@/modules/widgets/us-inflation';
 import { FederalFundsTickerWidget } from '@/modules/widgets/federal-funds';
 import { TickerUnemploymentRateWidget } from '@/modules/widgets/unemployment-rate';
