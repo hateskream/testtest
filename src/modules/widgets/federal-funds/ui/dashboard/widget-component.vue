@@ -4,7 +4,7 @@ import { defineAsyncComponent } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
-import { useFederalFunds } from '@/modules/widgets/federal-funds/composables';
+import { useFederalFunds } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),

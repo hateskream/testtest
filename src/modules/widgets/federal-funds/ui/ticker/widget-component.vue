@@ -3,7 +3,7 @@ import { defineAsyncComponent } from 'vue';
 
 
 import { PreloaderComponent } from '../common';
-import { useFederalFunds } from '@/modules/widgets/federal-funds/composables';
+import { useFederalFunds } from '../../composables';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { type DisplayVariant } from '@/modules/dashboard-group/layout-dashboards/model';

@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { BaseTickerWidgetContent, BaseTickerWidgetHeader, BaseTickerWidgetWrapper } from '@/modules/widgets/base';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
-import type { IFederalFundsDomain } from '@/modules/widgets/federal-funds/model';
+import type { IFederalFundsDomain } from '../../model';
 import { getDateFormatter } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 
