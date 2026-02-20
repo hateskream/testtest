@@ -2,13 +2,14 @@
 import { markRaw, ref } from 'vue';
 
 import { ConsumerPriceIndexTickerWidget } from '@/modules/widgets/consumer-price-index';
+import { useTickerContext } from '../../../composables';
+import type { ISectionItem } from '../../../models';
+import { UsInflationTickerWidget } from '@/modules/widgets/us-inflation';
+import { FederalFundsTickerWidget } from '@/modules/widgets/federal-funds';
 import { TickerUnemploymentRateWidget } from '@/modules/widgets/unemployment-rate';
 import { NonfarmPayrollsTickerWidget } from '@/modules/widgets/nonfarm-payrolls';
-import { useTickerContext } from '../../../../composables';
-import type { ISectionItem } from '../../../../models';
 import { TickerBaseTabsLayout } from '../../../base';
 
-import EmptyTickerWidget from '../../empty-ticker-widget.vue';
 import TabNominalGdp from './tab-nominal-gdp.vue';
 import TabRealGdp from './tab-real-gdp.vue';
 
@@ -31,15 +32,13 @@ const selectedTabId = ref<string | number>('nominal');
 <template>
 	<div :class="classes.section">
 		<div :class="classes.row">
-			<empty-ticker-widget
+			<federal-funds-ticker-widget
 				:class="classes.federalFunds"
-				style="height: 175px;"
 				:meta="{ tickerId, name: 'Federal funds' }"
 			/>
-			<empty-ticker-widget
+			<us-inflation-ticker-widget
 				:class="classes.inflation"
-				style="height: 175px;"
-				:meta="{ tickerId, name: 'US inflation (1Y)' }"
+				:meta="{tickerId, name:'Us Inflation'}"
 			/>
 		</div>
 		<consumer-price-index-ticker-widget :class="classes.cpi" :meta="{ tickerId, name: 'Consumer price index' }" />
@@ -61,6 +60,7 @@ const selectedTabId = ref<string | number>('nominal');
 
 <style module="classes">
 .section {
+	container: section / inline-size;
 	display: flex;
 	flex-direction: column;
 	gap: var(--padding-s4, 6px);
@@ -68,22 +68,35 @@ const selectedTabId = ref<string | number>('nominal');
 }
 
 .row {
-	display: inline-grid;
+	display: grid;
+	align-items: stretch;
 	align-self: stretch;
 	column-gap: 6px;
 	row-gap: 6px;
-	grid-template-rows: repeat(1, fit-content(100%));
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: 200px minmax(0, 1fr);
 }
 
 .federalFunds {
-	grid-row: 1 / span 1;
-	grid-column: 1 / span 1;
+	grid-column: 1;
+	min-width: 0;
+	min-height: 160px;
 }
 
 .inflation {
-	grid-row: 1 / span 1;
-	grid-column: 2 / span 2;
+	grid-column: 2 / -1;
+	min-width: 0;
+	min-height: 160px;
+}
+
+@container section (width < 500px) {
+	.row {
+		grid-template-columns: 1fr;
+	}
+
+	.federalFunds,
+	.inflation {
+		grid-column: auto;
+	}
 }
 
 .cpi {

@@ -57,12 +57,15 @@ const trendLabel = computed(() => {
 .container {
 	display: flex;
 	flex-grow: 1;
+	min-width: 0;
 	gap: 12px;
 	padding: 12px 0 20px 20px;
 }
 
+
 .textContainer {
 	display: flex;
+	flex: 0 0 120px;
 	flex-direction: column;
 }
 
@@ -93,6 +96,7 @@ const trendLabel = computed(() => {
 
 .chart {
 	flex-grow: 1;
+	min-width: 0;
 	height: 100%;
 }
 </style>
