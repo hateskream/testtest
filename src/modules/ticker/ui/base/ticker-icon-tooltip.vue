@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue';
+
 import { UiPositionTooltip } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiTooltipWrapper } from '@/shared/ui/tooltip';
+
+const props = defineProps<{
+	maxWidth?: CSSProperties['maxWidth'];
+}>();
 </script>
 
 <template>
@@ -19,7 +25,11 @@ import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 			/>
 		</template>
 		<template #content>
-			<ui-tooltip-wrapper display-variant="new">
+			<ui-tooltip-wrapper
+				:class="classes.wrapper"
+				:style="{ maxWidth: props.maxWidth }"
+				display-variant="new"
+			>
 				<slot>This is so important content for this help</slot>
 			</ui-tooltip-wrapper>
 		</template>
@@ -45,6 +55,10 @@ import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 }
 
 .tooltip:hover .icon {
+	color: #ffffff;
+}
+
+.wrapper {
 	color: #ffffff;
 }
 </style>

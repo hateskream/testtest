@@ -15,7 +15,7 @@ const props = defineProps<IForexMetricsProps>();
 	<base-metrics>
 		<metrics-container
 			title="Volume (24h)"
-			tooltip="Tooltip"
+			tooltip="Total traded volume of a currency pair across the global market over the past 24 hours"
 			:class="classes.full"
 		>
 			{{ props.metrics.volume24h }}

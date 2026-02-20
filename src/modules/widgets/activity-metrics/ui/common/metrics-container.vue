@@ -15,8 +15,10 @@ const props = defineProps<{
 			<ui-text token="text-100-r">
 				{{ props.title }}
 			</ui-text>
-			<ticker-icon-tooltip v-if="props.tooltip">
-				{{ props.tooltip }}
+			<ticker-icon-tooltip v-if="props.tooltip || $slots.tooltip" max-width="320px">
+				<slot name="tooltip">
+					{{ props.tooltip }}
+				</slot>
 			</ticker-icon-tooltip>
 		</div>
 		<ui-clamped

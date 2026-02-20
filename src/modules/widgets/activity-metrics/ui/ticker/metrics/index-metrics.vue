@@ -16,7 +16,7 @@ const props = defineProps<IIndexMetricsProps>();
 	<base-metrics>
 		<metrics-container
 			title="Volume (24h)"
-			tooltip="Tooltip"
+			tooltip="Total trading volume of all underlying index components combined over the past 24 hours."
 			:class="classes.full"
 		>
 			{{ props.metrics.volume24h }}

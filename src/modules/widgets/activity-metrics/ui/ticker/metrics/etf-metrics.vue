@@ -17,20 +17,23 @@ const props = defineProps<IEtfMetricsProps>();
 	<base-metrics>
 		<metrics-container
 			title="Market Cap"
-			tooltip="Tooltip"
+			tooltip="Total market value of the ETF’s outstanding shares."
 			:class="classes.full"
 		>
 			{{ props.metrics.marketCap }}
 		</metrics-container>
-		<metrics-container title="Avg. Volume" tooltip="Tooltip">
+		<metrics-container title="Avg. Volume">
 			{{ props.metrics.avgVolume }}
 		</metrics-container>
-		<metrics-container title="Beta" tooltip="Tooltip">
+		<metrics-container
+			title="Beta"
+			tooltip="Measure of the ETF’s volatility relative to its benchmark (1 = market-level risk)."
+		>
 			{{ props.metrics.beta }}
 		</metrics-container>
 		<metrics-container
 			title="Top Holding"
-			tooltip="Tooltip"
+			tooltip="Combined percentage of total ETF assets allocated to its ten largest holdings."
 			:class="classes.full"
 		>
 			{{ props.metrics.topHolding }}
