@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { computed, useTemplateRef } from 'vue';
+
 import type { IDominanceSnapshot } from '../../../model';
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
+import { UiScrollFade } from '@/shared/ui/scroll-fade';
+import { useHoverWheelScroll } from '@/shared/composables';
 
 import DominanceSegmentsIndicator from './dominance-segments-indicator.vue';
 
@@ -12,31 +16,48 @@ interface IViewComponentProps {
 }
 
 const props = defineProps<IViewComponentProps>();
+
+const segments = useTemplateRef('segments');
+
+const wheelTarget = computed(() => {
+	const element = segments.value;
+	if (element) {
+		return element.$el;
+	}
+
+	return null;
+});
+
+const { wheelIsActive } = useHoverWheelScroll(wheelTarget);
 </script>
 
 <template>
 	<div :class="classes.root">
-		<div v-if="isShowSegments" :class="classes.segments">
-			<div
-				v-for="item in props.snapshots"
-				:key="item.symbol"
-				:class="classes.ticker"
+		<div :class="classes.segmentsWrapper">
+			<ui-scroll-fade
+				v-if="isShowSegments"
+				ref="segments"
+				:class="[classes.segments, { [classes.wheel]: wheelIsActive }]"
+				:size="24"
 			>
-				<div :class="classes.name">
-					<div :class="classes.circle" :style="{backgroundColor: item.color}"></div>
-					<ui-clamped :rows="1" :class="classes.nameText">
-						<ui-text token="text-200-r">
-							{{ item.symbol }}
-						</ui-text>
-					</ui-clamped>
-				</div>
-				<ui-text
-					:class="classes.value"
-					token="title-200"
+				<div
+					v-for="item in props.snapshots"
+					:key="item.symbol"
+					:class="classes.ticker"
 				>
-					{{ item.dominance.current.toFixed(1) }}%
-				</ui-text>
-			</div>
+					<div :class="classes.name">
+						<div :class="classes.circle" :style="{ backgroundColor: item.color }"></div>
+						<ui-clamped :rows="1" :class="classes.nameText">
+							<ui-text token="text-200-r">
+								{{ item.symbol }}
+							</ui-text>
+						</ui-clamped>
+					</div>
+					<ui-text :class="classes.value" token="title-200">
+						{{ item.dominance.current.toFixed(1) }}%
+					</ui-text>
+				</div>
+			</ui-scroll-fade>
 		</div>
 		<dominance-segments-indicator
 			v-if="isShowIndicator"
@@ -51,12 +72,21 @@ const props = defineProps<IViewComponentProps>();
 	flex-direction: column;
 }
 
+.segmentsWrapper {
+	display: flex;
+	overflow: hidden;
+}
+
 .segments {
 	display: flex;
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
 	overflow-x: auto;
 	overflow-y: auto;
-	gap: 16px;
+	gap: 4px 16px;
+}
+
+.segments.wheel::-webkit-scrollbar-thumb {
+	background-color: var(--scrollbar-color);
 }
 
 .ticker {
