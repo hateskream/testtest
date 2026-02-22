@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, reactive, useTemplateRef, watch } from 'vue';
-import { useResizeObserver } from '@vueuse/core';
+import { computed, type CSSProperties, useTemplateRef } from 'vue';
+
+import { usePointerScroll } from '@/shared/composables';
 
 const MIN_FADE_SIZE = 6;
 
@@ -50,112 +51,28 @@ const props = withDefaults(defineProps<IScrollableRow>(), {
 const finalFadeSize = computed(() => Math.max(props.fadeSize, MIN_FADE_SIZE));
 
 const fadeSizeInPx = computed(() => `${finalFadeSize.value}px`);
-const fadePaddingInPx = computed(() => `${finalFadeSize.value * 0.66}px`);
 
 const scrollableRef = useTemplateRef('scrollable');
 
-const state = reactive({
-	isDown: false,
-	isDragging: false,
-	isOverflowing: false,
-	startX: 0,
-	startScroll: 0,
-	pointerId: null as (number | null),
-});
-
-// overflow
-
-function checkOverflow() {
-	const el = scrollableRef.value;
-	if (!el) {
-		state.isOverflowing = false;
-		return;
-	}
-
-	state.isOverflowing = el.scrollWidth > el.clientWidth;
-}
-
-useResizeObserver(scrollableRef, checkOverflow);
-
-watch(
-	() => state.isOverflowing,
-	(val) => {
-		if (!val) {
-			state.isDown = false;
-			state.isDragging = false;
-			state.pointerId = null;
-
-			scrollableRef.value?.scrollTo({ left: 0, top: 0 });
-		}
-	},
-);
-
-// scroll handlers
-
-function onPointerDown(e: PointerEvent) {
-	if (!scrollableRef.value || !state.isOverflowing) {
-		return;
-	}
-
-	state.isDown = true;
-	state.isDragging = false;
-	state.startX = e.clientX;
-	state.startScroll = scrollableRef.value.scrollLeft;
-	state.pointerId = e.pointerId;
-}
-
-function onPointerMove(e: PointerEvent) {
-	if (!state.isDown || !scrollableRef.value || !state.isOverflowing) {
-		return;
-	}
-
-	const dx = e.clientX - state.startX;
-
-	if (!state.isDragging) {
-		if (Math.abs(dx) < props.dragThreshold) {
-			return;
-		}
-
-		state.isDragging = true;
-		e.preventDefault();
-		e.stopPropagation();
-		scrollableRef.value.setPointerCapture(state.pointerId!);
-	}
-
-	e.preventDefault();
-	e.stopPropagation();
-
-	scrollableRef.value.scrollLeft =
-		state.startScroll - dx;
-}
-
-function onPointerUp() {
-	if (!scrollableRef.value || !state.isOverflowing) {
-		return;
-	}
-
-	if (state.pointerId !== null) {
-		scrollableRef.value.releasePointerCapture(state.pointerId);
-	}
-
-	state.isDown = false;
-	state.isDragging = false;
-	state.pointerId = null;
-}
+const { state } = usePointerScroll(scrollableRef, { dragThreshold: props.dragThreshold });
 </script>
 
 <template>
-	<div :class="[classes.scrollableRow, { [classes.overflowing]: state.isOverflowing, [classes.fade]: props.fade }]">
+	<div
+		:class="[
+			classes.scrollableRow,
+			{
+				[classes.fade]: props.fade,
+				[classes.overflowing]: state.isOverflowing,
+				[classes.left]: !state.left,
+				[classes.right]: !state.right,
+			}
+		]"
+	>
 		<div
 			ref="scrollable"
 			tabindex="0"
 			:class="classes.scrollable"
-			@scroll.prevent.stop
-			@pointerdown.prevent.stop="onPointerDown"
-			@pointermove.prevent.stop="onPointerMove"
-			@pointerup.prevent.stop="onPointerUp"
-			@lostpointercapture="onPointerUp"
-			@pointercancel.prevent.stop
 		>
 			<slot />
 		</div>
@@ -171,20 +88,40 @@ function onPointerUp() {
 		overflow: hidden;
 	}
 
-	.scrollableRow.overflowing.fade::after {
-		content: '';
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: v-bind(fadeSizeInPx);
-		height: 100%;
-		background:
+	.scrollableRow.fade.overflowing.left:not(.right) {
+		mask-image:
 			linear-gradient(
-				90deg,
-				rgb(0 0 0 / 0%) 0%,
-				rgb(0 0 0) 100%
+				to right,
+				transparent 0,
+				rgb(255 255 255 / 70%) calc(v-bind(fadeSizeInPx) * 0.5),
+				#ffffff v-bind(fadeSizeInPx),
+				#ffffff 100%
 			);
-		pointer-events: none;
+	}
+
+	.scrollableRow.fade.overflowing.right:not(.left) {
+		mask-image:
+			linear-gradient(
+				to right,
+				#ffffff 0,
+				#ffffff calc(100% - v-bind(fadeSizeInPx)),
+				rgb(255 255 255 / 70%) calc(100% - calc(v-bind(fadeSizeInPx) * 0.5)),
+				transparent 100%
+			);
+	}
+
+
+	.scrollableRow.fade.overflowing.left.right {
+		mask-image:
+			linear-gradient(
+				to right,
+				transparent 0,
+				rgb(255 255 255 / 70%) calc(v-bind(fadeSizeInPx) * 0.5),
+				#ffffff v-bind(fadeSizeInPx),
+				#ffffff calc(100% - v-bind(fadeSizeInPx)),
+				rgb(255 255 255 / 70%) calc(100% - calc(v-bind(fadeSizeInPx) * 0.5)),
+				transparent 100%
+			);
 	}
 
 	.scrollable {
@@ -203,8 +140,6 @@ function onPointerUp() {
 	}
 
 	.scrollableRow.overflowing.fade .scrollable {
-		margin-right: calc(-1 * v-bind(fadePaddingInPx));
-		padding-right: v-bind(fadePaddingInPx);
 		cursor: grab;
 	}
 
