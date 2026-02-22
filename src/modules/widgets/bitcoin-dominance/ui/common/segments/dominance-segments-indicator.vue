@@ -14,7 +14,7 @@ const props = defineProps<IDominanceIndicatorProps>();
 			v-for="item in props.snapshots"
 			:key="item.symbol"
 			:class="classes.segment"
-			:style="{background: item.color, width: `${item.dominance.current}%`}"
+			:style="{ background: item.color, width: `max(${ item.dominance.current}%, 2px)` }"
 		/>
 	</div>
 </template>
