@@ -224,6 +224,22 @@ export function useSlider(opts: {
 		swipe(endX);
 	}
 
+	function onTouchStart(e: TouchEvent) {
+		if (!isMobile.value) {
+			return;
+		}
+
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
+
+		isDragging.value = true;
+
+		startX = e.changedTouches[0].clientX;
+		startScrollLeft = el.scrollLeft;
+	}
+
 	const SWIPE_THRESHOLD = 50;
 
 	function swipe(endX: number) {
@@ -268,6 +284,7 @@ export function useSlider(opts: {
 		el.addEventListener('pointermove', onPointerMove);
 		el.addEventListener('pointerup', onPointerUp);
 		el.addEventListener('pointercancel', onPointerUp);
+		el.addEventListener('touchstart', onTouchStart);
 		el.addEventListener('touchend', onTouchEnd);
 		el.addEventListener('scroll', throttledHandleScroll);
 
@@ -277,6 +294,7 @@ export function useSlider(opts: {
 			el.removeEventListener('pointerup', onPointerUp);
 			el.removeEventListener('pointercancel', onPointerUp);
 			el.removeEventListener('touchend', onTouchEnd);
+			el.removeEventListener('touchstart', onTouchStart);
 			el.removeEventListener('scroll', throttledHandleScroll);
 		});
 	});
