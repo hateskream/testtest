@@ -24,7 +24,7 @@ export interface IScrollableRow {
 	/**
 	 * Размер fade-gradient в пикселях.
 	 * Применим только если `fade` включен.
-	 * @default 1;
+	 * @default 24;
 	 */
 	fadeSize?: number;
 
