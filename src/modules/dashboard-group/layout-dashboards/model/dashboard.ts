@@ -308,7 +308,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'none',
-					height: 212,
+					height: 214,
 					widgetType:  WidgetType.BitcoinDominance,
 					defaultDisplayVariant: 'tile',
 				},
