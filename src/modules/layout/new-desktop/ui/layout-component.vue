@@ -5,9 +5,14 @@ import { useRoute } from 'vue-router';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IMenuItem, menuItems } from '@/modules/layout/new-desktop/model';
 import { isFeatureEnabled } from '@/shared/lib';
+import { ALL_MARKET_TYPES } from '@/modules/market';
+import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
+import { UiPosition } from '@/shared/ui/position';
+import { useGoToTickerPage } from '@/modules/ticker/composables';
 
 import MenuItem from './menu-item.vue';
-import ComingSoonTooltip from '@/modules/layout/new-desktop/ui/coming-soon-tooltip.vue';
+import ComingSoonTooltip from './coming-soon-tooltip.vue';
+import ActionTooltip from './action-tooltip.vue';
 
 const route = useRoute();
 
@@ -35,6 +40,16 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 	...item,
 	isActive: isActiveLink(item.link) || isNestedActiveLink(item.link),
 })));
+
+const { goToTickerPage } = useGoToTickerPage();
+
+function onUpdateSelectedTickers(tickers: ITickerItem[]) {
+	if (tickers.length === 0) {
+		return;
+	}
+
+	goToTickerPage(tickers[0].canonical_ticker_id);
+}
 </script>
 
 <template>
@@ -120,19 +135,32 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 		</div>
 		<div :class="[classes.panel, classes.rightPanel]">
 			<div :class="classes.iconContainer">
-				<coming-soon-tooltip
-					placement="left"
-					:disable="isFeatureEnabled('SHOW_SEARCH_PAGE_LINK')"
-					title="Search"
-					text="Discover tickers, data, and markets — coming soon."
-				>
-					<menu-item
-						:icon="IconIds.Search"
-						:is-active="false"
-						text="Search"
-						link="/"
-					/>
-				</coming-soon-tooltip>
+				<ui-position placement="left-start">
+					<template #title="{ isVisible }">
+						<action-tooltip
+							placement="left"
+							title="Search"
+							text="Discover tickers, data, and markets"
+							:disable="isVisible"
+						>
+							<menu-item
+								:icon="IconIds.Search"
+								:is-active="isVisible"
+								text="Search"
+								link="/"
+								@click.capture.prevent
+							/>
+						</action-tooltip>
+					</template>
+					<template #content>
+						<ticker-selector-modal
+							:enabled-markets="ALL_MARKET_TYPES"
+							:selection-mode="SelectionMode.Single"
+							display-variant="new"
+							@update:selected-tickers="onUpdateSelectedTickers"
+						/>
+					</template>
+				</ui-position>
 				<coming-soon-tooltip
 					placement="left"
 					:disable="isFeatureEnabled('SHOW_ASK_AI_PAGE_LINK')"
