@@ -6,6 +6,7 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { UiScrollFade } from '@/shared/ui/scroll-fade';
 import { useHoverWheelScroll } from '@/shared/composables';
 import { UiClamped } from '@/shared/ui/clamped';
+import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 
 import DominanceHistoricalGridCell from './dominance-historical-grid-cell.vue';
 
@@ -61,10 +62,30 @@ const { wheelIsActive } = useHoverWheelScroll(wheelTarget);
 			<div :class="[classes.grid, classes.tickers]">
 				<template v-for="item in props.snapshots" :key="item.id">
 					<dominance-historical-grid-cell :class="[classes.name, classes.cell]">
-						<div :class="classes.dot" :style="{ backgroundColor: item.color }"></div>
-						<ui-clamped :rows="1">
-							{{ item.symbol }}
-						</ui-clamped>
+						<ui-tooltip-base
+							:class="classes.nameWrapper"
+							:open-delay="100"
+							width-mode="adaptive"
+							padding="4px 10px"
+						>
+							<template #trigger>
+								<div :class="classes.nameRow">
+									<div :class="classes.dot" :style="{ backgroundColor: item.color }"></div>
+									<ui-clamped :rows="1">
+										{{ item.symbol }}
+									</ui-clamped>
+								</div>
+							</template>
+							<template #label>
+								<div :class="classes.nameLabel">
+									<div :class="classes.dot" :style="{ backgroundColor: item.color }"></div>
+									<span>Symbol</span>
+								</div>
+							</template>
+							<template #text>
+								<span :class="classes.nameRowSymbol">{{ item.symbol }}</span>
+							</template>
+						</ui-tooltip-base>
 					</dominance-historical-grid-cell>
 					<dominance-historical-grid-cell v-if="isShowToday" :class="classes.cell">
 						{{ item.dominance.current.toFixed(1) }}%
@@ -118,9 +139,28 @@ const { wheelIsActive } = useHoverWheelScroll(wheelTarget);
 }
 
 .name {
-	gap: 6px;
 	justify-content: flex-start;
 	border-radius: var(--radius-full, 9999px) 0 0 var(--radius-full, 9999px);
+}
+
+.nameWrapper {
+	max-width: 100%;
+}
+
+.nameRow {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.nameRowSymbol {
+	word-break: break-all;
+}
+
+.nameLabel {
+	display: flex;
+	gap: 6px;
+	align-items: center;
 }
 
 .last {
