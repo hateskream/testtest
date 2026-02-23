@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -13,6 +13,12 @@ import { useGoToTickerPage } from '@/modules/ticker/composables';
 import MenuItem from './menu-item.vue';
 import ComingSoonTooltip from './coming-soon-tooltip.vue';
 import ActionTooltip from './action-tooltip.vue';
+
+interface ILayoutComponentProps {
+	activeTicker?: ITickerItem | null;
+}
+
+const props = defineProps<ILayoutComponentProps>();
 
 const route = useRoute();
 
@@ -41,6 +47,8 @@ const preparedMenuItems = computed(() => menuItems.map(item => ({
 	isActive: isActiveLink(item.link) || isNestedActiveLink(item.link),
 })));
 
+const tooltipRef = useTemplateRef('tooltip');
+
 const { goToTickerPage } = useGoToTickerPage();
 
 function onUpdateSelectedTickers(tickers: ITickerItem[]) {
@@ -48,7 +56,15 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 		return;
 	}
 
-	goToTickerPage(tickers[0].canonical_ticker_id);
+	const tickerId = tickers[0].canonical_ticker_id;
+
+	if (props.activeTicker && props.activeTicker.canonical_ticker_id === tickerId) {
+		return;
+	}
+
+	goToTickerPage(tickerId);
+
+	tooltipRef.value?.handleClose?.();
 }
 </script>
 
@@ -135,7 +151,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 		</div>
 		<div :class="[classes.panel, classes.rightPanel]">
 			<div :class="classes.iconContainer">
-				<ui-position placement="left-start">
+				<ui-position ref="tooltip" placement="left-start">
 					<template #title="{ isVisible }">
 						<action-tooltip
 							placement="left"
@@ -154,9 +170,11 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 					</template>
 					<template #content>
 						<ticker-selector-modal
+							search-placeholder="Search for tickers..."
 							:enabled-markets="ALL_MARKET_TYPES"
 							:selection-mode="SelectionMode.Single"
 							display-variant="new"
+							:selected-tickers="props.activeTicker ? [props.activeTicker] : []"
 							@update:selected-tickers="onUpdateSelectedTickers"
 						/>
 					</template>

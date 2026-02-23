@@ -70,7 +70,7 @@ useAppHead({ title });
 </script>
 
 <template>
-	<app-layout>
+	<app-layout :active-ticker="ticker">
 		<div :class="classes.container">
 			<ticker-component :id="props.id" :type="tickerType" />
 		</div>
