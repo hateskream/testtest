@@ -24,3 +24,5 @@ export * from './keys-to-camel';
 export * from './snake-to-camel';
 export * from './is-number';
 export * from './download';
+export * from './degree';
+export * from './svg';

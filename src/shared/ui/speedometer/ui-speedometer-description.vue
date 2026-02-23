@@ -12,7 +12,11 @@ interface IProps {
 	descriptionColor?: CSSProperties['color'];
 }
 
-const props = defineProps<IProps>();
+const props = withDefaults(defineProps<IProps>(), {
+	title: undefined,
+	description: undefined,
+	descriptionColor: 'var(--text-300, rgba(255, 255, 255, 0.62))',
+});
 </script>
 
 <template>
@@ -27,7 +31,7 @@ const props = defineProps<IProps>();
 		<ui-transition-fade>
 			<ui-text
 				v-if="props.title"
-				token="text-100-r"
+				token="text-300-r"
 			>
 				{{ props.title }}
 			</ui-text>
@@ -35,7 +39,7 @@ const props = defineProps<IProps>();
 		<ui-transition-fade>
 			<ui-text
 				v-if="props.description"
-				token="text-300-b"
+				token="text-100-r"
 				:style="{ color: props.descriptionColor }"
 			>
 				{{ props.description }}
@@ -49,15 +53,10 @@ const props = defineProps<IProps>();
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 4px;
 }
 
 .value {
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 460;
-	font-size: var(--typography-headers-size-h03, 28px);
-	line-height: 130%;
 	text-align: center;
 	color: var(--color-text-base-500, #ffffff);
 	text-overflow: ellipsis;

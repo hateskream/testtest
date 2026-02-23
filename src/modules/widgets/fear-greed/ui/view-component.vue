@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { type ISettings, type ISize, type ITension, type ITensionTextData, Tension } from '../model';
 import { useMapTension } from '../composables';
-import { UiSpeedometer, UiSpeedometerDescription, type ISpeedometerSegment } from '@/shared/ui/speedometer';
+import { type ISpeedometerSegment, UiSpeedometer, UiSpeedometerDescription } from '@/shared/ui/speedometer';
 
 import FearGreedHistoryTable from './shared/fear-greed-history-table.vue';
 
@@ -86,13 +86,12 @@ defineExpose({ snapHeightToNearestStep });
 		>
 			<ui-speedometer
 				v-if="isShowChart"
-				:value="props.tension.tension ?? 0"
+				:value="props.tension.tension"
 				:color="tensionText.colors.chart"
 				:segments="SPEEDOMETER_SEGMENTS"
 			/>
-
 			<ui-speedometer-description
-				:value="props.tension.tension ?? 0"
+				:value="props.tension.tension"
 				:color="tensionText.colors.text"
 				:title="props.viewState.isShowName ? tensionText.text.main : undefined"
 				:description="isShowDescription ? tensionText.text.sub : undefined"
@@ -127,6 +126,6 @@ defineExpose({ snapHeightToNearestStep });
 }
 
 .margin {
-	margin-top: -30px;
+	margin-top: -80px;
 }
 </style>

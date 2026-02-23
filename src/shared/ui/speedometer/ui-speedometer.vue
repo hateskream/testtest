@@ -1,77 +1,78 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 
+import { degreeToRadians } from '@/shared/lib';
 import type { ISpeedometerSegment } from './types';
+import { UiSpeedometerCircle } from './circle';
 
-interface IProps {
+import UiSpeedometerArrow from './ui-speedometer-arrow.vue';
+
+interface ISpeedometerProps {
 	value: number;
-	color: string;
+	color: CSSProperties['color'];
+	shadowColor?: CSSProperties['color'];
 	segments: readonly ISpeedometerSegment[];
+	showBlur?: boolean;
+	width?: number;
+	height?: number;
 }
 
-const props = defineProps<IProps>();
+const props = withDefaults(defineProps<ISpeedometerProps>(), {
+	width: 260,
+	height: 155,
+	shadowColor: undefined,
+});
 
-const chart = computed(() => {
-	const value = props.value ?? 0;
+const widthInPx = computed(() => `${props.width}px`);
+const heightInPx = computed(() => `${props.height}px`);
 
-	const segment = props.segments.find(s => value <= s.max) ?? props.segments[props.segments.length - 1];
-	const val = segment.position;
+const range = computed(() => {
+	if (props.segments.length === 0) {
+		return {
+			from: 0,
+			to: 0,
+		};
+	}
 
-	const arrowRotateInDeg = -90 + (value / 100) * 180;
+	const segmentIndex = Math.max(0, props.segments.findIndex(segment => props.value <= segment.max));
 
-	const diameter = 80;
-	const totalLength = Math.PI * diameter;
-	const arcAngle = 180 / 4.5;
-	const arcLength = (arcAngle / 180) * totalLength;
-
-	const signOffset = value === 100 ? -1 : -(val / 100);
-	const offset = signOffset * (totalLength - arcLength);
+	if (segmentIndex < props.segments.length - 1 && props.segments.length !== 1) {
+		return {
+			from: props.segments[segmentIndex].position,
+			to: props.segments[segmentIndex + 1].position,
+		};
+	}
 
 	return {
-		arrowRotateInDeg,
-		activeLine: {
-			dasharray: `${arcLength}, ${totalLength}`,
-			offset,
-		},
+		from: props.segments[segmentIndex].position,
+		to: 100,
 	};
 });
+
+const arrowRotate = computed(() => (Math.max(0, Math.min(props.value, 100)) / 100) * 180);
+
+const startAngle = computed(() => degreeToRadians(180 + 180 * (range.value.from / 100)));
+const endAngle = computed(() => degreeToRadians(180 + 180 * (range.value.to / 100)));
 </script>
 
 <template>
 	<div :class="classes.root">
 		<div :class="classes.chart">
-			<svg
-				width="200"
-				height="100"
-				viewBox="0 0 200 100"
+			<ui-speedometer-circle
+				:width="widthInPx"
 				:class="classes.svg"
-			>
-				<path
-					:class="classes.bg"
-					d="M 20,100 A 80,80 0 0,1 180,100"
-				/>
-
-				<path
-					d="M 20,100 A 80,80 0 0,1 180,100"
-					:class="classes.active"
-					:stroke="props.color"
-					:stroke-dasharray="chart.activeLine.dasharray"
-					:stroke-dashoffset="chart.activeLine.offset"
-				/>
-			</svg>
-
-			<div :class="classes.arrowContainer">
-				<div
-					:class="classes.arrow"
-					:style="{
-						transform: `rotate(${chart.arrowRotateInDeg}deg)`,
-					}"
-				>
-					<div :class="classes.dot" />
-				</div>
-			</div>
+				:color="props.color"
+				:shadow-color="props.shadowColor ?? props.color"
+				:start="startAngle"
+				:end="endAngle"
+				:show-blur="props.showBlur"
+			/>
+			<ui-speedometer-arrow
+				:width="widthInPx"
+				:rotate="arrowRotate"
+				:class="classes.svg"
+			/>
 		</div>
-
 		<slot />
 	</div>
 </template>
@@ -85,56 +86,14 @@ const chart = computed(() => {
 
 .chart {
 	position: relative;
-	width: 200px;
-	height: 100px;
+	width: v-bind(widthInPx);
+	height: v-bind(heightInPx);
+	overflow: hidden;
 }
 
 .svg {
 	position: absolute;
 	top: 0;
 	left: 0;
-}
-
-.bg {
-	fill: none;
-	stroke: rgb(91 91 91 / 50%);
-	stroke-width: 2;
-}
-
-.active {
-	fill: none;
-	stroke-width: 4;
-	stroke-linecap: round;
-	transition: stroke-dashoffset 0.7s ease-in-out;
-}
-
-.arrowContainer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-	width: 100%;
-	height: 100%;
-}
-
-.arrow {
-	position: absolute;
-	width: 8px;
-	height: 77px;
-	transform-origin: bottom right;
-	transition: transform 0.7s ease-in-out;
-}
-
-.dot {
-	position: absolute;
-	top: -5px;
-	left: 50%;
-	width: 4px;
-	height: 20px;
-	background: url('@/assets/icons/fear-greed-gauge-arrow.svg') no-repeat center center;
-	border-radius: 50%;
-	transform: translateX(-50%);
 }
 </style>

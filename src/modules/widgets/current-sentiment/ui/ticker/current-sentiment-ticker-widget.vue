@@ -29,7 +29,7 @@ const sentiment = computed(() => {
 <template>
 	<current-sentiment-loading v-if="isLoading" />
 
-	<ticker-base-tab-section v-else-if="data && !isError">
+	<ticker-base-tab-section v-else-if="data && sentiment && !isError">
 		<template #title>
 			{{ props.meta.name }}
 		</template>
@@ -37,15 +37,16 @@ const sentiment = computed(() => {
 			<div :class="classes.chart">
 				<ui-speedometer
 					:value="data.tension"
-					:color="sentiment?.color ?? ''"
+					:color="sentiment.color"
+					:shadow-color="sentiment.shadowColor"
 					:segments="SENTIMENT_SEGMENTS"
+					show-blur
 				/>
 				<ui-speedometer-description
 					:value="data.tension"
-					:color="sentiment?.color ?? ''"
-					description-color="var(--text-300, rgba(255, 255, 255, 0.62))"
-					:title="sentiment?.signal"
-					:description="sentiment?.description"
+					:color="sentiment.color"
+					:title="sentiment.signal"
+					:description="sentiment.description"
 					:class="classes.chartDescription"
 				/>
 			</div>
@@ -64,6 +65,6 @@ const sentiment = computed(() => {
 }
 
 .chartDescription {
-	margin-top: -35px;
+	margin-top: -80px;
 }
 </style>
