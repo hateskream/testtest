@@ -241,10 +241,10 @@ export function canChangeHeight(widget: IWidget): boolean {
 		.otherwise(() => false);
 }
 
-const experimentalWidgets: Partial<Record<WidgetType, boolean>> = {
-	[WidgetType.FearGreed]: isFeatureEnabled('SHOW_FEAR_AND_GREED_WIDGET'),
-	[WidgetType.MarketCap]: isFeatureEnabled('SHOW_MARKET_CAP_WIDGET_DASHBOARD'),
-	[WidgetType.EthGas]: isFeatureEnabled('SHOW_ETH_GAS_WIDGET_DASHBOARD'),
+const experimentalWidgets: Partial<Record<WidgetType, () => boolean>> = {
+	[WidgetType.FearGreed]: () => isFeatureEnabled('SHOW_FEAR_AND_GREED_WIDGET'),
+	[WidgetType.MarketCap]: () => isFeatureEnabled('SHOW_MARKET_CAP_WIDGET_DASHBOARD'),
+	[WidgetType.EthGas]: () => isFeatureEnabled('SHOW_ETH_GAS_WIDGET_DASHBOARD'),
 };
 
 export function isExperimentalWidgetEnabled(widgetType: WidgetType): boolean {
@@ -252,7 +252,7 @@ export function isExperimentalWidgetEnabled(widgetType: WidgetType): boolean {
 		return true;
 	}
 
-	return experimentalWidgets[widgetType];
+	return experimentalWidgets[widgetType]();
 }
 
 export function createWidget(

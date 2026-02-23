@@ -494,14 +494,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 };
 
 
-const enabledDashboardPresets: Record<PresetName, boolean> = {
-	Main: true,
-	Crypto: isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
-	Stock: isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
+const enabledDashboardPresets: Record<PresetName, () => boolean> = {
+	Main: () => true,
+	Crypto: () => isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
+	Stock: () => isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
 };
 
 function isComingSoonPreset(presetName: PresetName) {
-	return !enabledDashboardPresets[presetName];
+	return !enabledDashboardPresets[presetName]();
 }
 
 const comingSoonPresets: Record<PresetName, string | undefined> = {
