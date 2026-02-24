@@ -53,13 +53,15 @@
 	width: 77px;
 	height: 36px;
 	margin: 0 auto;
-	font-weight: 400;
-	font-size: var(--font-text-300-r-size, 13.3px);
+	font-weight: 400 !important;
+	font-size: var(--font-text-300-r-size, 13.3px) !important;
 	text-align: center;
 	color: #d3d3d3;
-	letter-spacing: 0.146px;
-	border-radius: var(--radius-radius-s17-44, 17.2px);
-	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+	letter-spacing: 0.146px !important;
+	border-radius: var(--radius-radius-s17-44, 17.2px) !important;
+	transition:
+		background-color 0.2s ease-in-out,
+		color 0.2s ease-in-out;
 }
 
 .vc-nav-items .vc-nav-item:hover {
@@ -94,7 +96,9 @@
 	color: var(--color-icon-300, rgb(255 255 255 / 50%));
 	background-color: var(--bg-100, rgb(73 73 80 / 32%));
 	aspect-ratio: 1/1;
-	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+	transition:
+		background-color 0.2s ease-in-out,
+		color 0.2s ease-in-out;
 }
 
 .vc-header .vc-arrow:hover,
@@ -152,9 +156,9 @@
 	display: -webkit-box;
 	flex: 1 0 0;
 	overflow: hidden;
-	font-style: normal;
-	font-weight: 440;
-	font-size: var(--font-title-200-size, 16.8px);
+	font-style: normal !important;
+	font-weight: 440 !important;
+	font-size: var(--font-title-200-size, 16.8px) !important;
 	line-height: 160%;
 	color: var(--text-500, rgb(255 255 255 / 96%));
 	letter-spacing: 0.134px;
@@ -164,9 +168,9 @@
 }
 
 .vc-weekdays .vc-weekday {
-	font-weight: var(--font-text-100-r-weight, 450);
-	font-size: var(--font-text-100-r-size, 11px);
-	line-height: var(--font-text-100-r-line-height, 180%);
+	font-weight: var(--font-text-100-r-weight, 450) !important;
+	font-size: var(--font-text-100-r-size, 11px) !important;
+	line-height: var(--font-text-100-r-line-height, 180%) !important;
 	text-align: center;
 	color: var(--text-100, rgb(255 255 255 / 30%));
 	text-transform: uppercase;
@@ -181,11 +185,11 @@
 }
 
 .vc-day-content {
-	font-weight: var(--font-text-300-r-weight);
-	font-size: var(--font-text-300-r-size);
-	line-height: var(--font-text-300-r-line-height);
-	letter-spacing: var(--font-text-300-r-letter-spacing);
-	font-variation-settings: var(--font-text-300-r-font-variation);
+	font-weight: var(--font-text-300-r-weight) !important;
+	font-size: var(--font-text-300-r-size) !important;
+	line-height: var(--font-text-300-r-line-height) !important;
+	letter-spacing: var(--font-text-300-r-letter-spacing) !important;
+	font-variation-settings: var(--font-text-300-r-font-variation) !important;
 	transition: background-color 0.3s ease-in-out;
 }
 
