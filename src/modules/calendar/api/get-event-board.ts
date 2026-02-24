@@ -1,13 +1,66 @@
-import { type IEventBoardRequest, type IEventBoardResponse, COUNTRY_TO_ISO } from '../model/calendar';
+import { z } from 'zod';
+
+import {
+	type IEventBoardRequest,
+	CalendarCategory,
+	CalendarCountryIds,
+	CalendarImpact,
+	COUNTRY_TO_ISO,
+} from '../model/calendar';
 import { useLogger } from '@/shared/service/monitoring';
-import { useHttpService } from '@/shared/service/http-service.ts';
+import { useApiClient } from '@/shared/service/api';
 import { getMockEventBoard } from './mock/event-board';
 
 const IS_USE_MOCK = false;
 
-export async function getEventBoard(request: IEventBoardRequest): Promise<IEventBoardResponse> {
+const CalendarEventBadgeSchema = z.object({
+	label: z.string(),
+	color: z.enum(['negative', 'neutral', 'positive']),
+});
+
+const CalendarEventMetricSchema = z.object({
+	label: z.string(),
+	value: z.string(),
+});
+
+const CalendarEventDetailsSchema = z.object({
+	label: z.string(),
+	link: z.string(),
+});
+
+const CalendarEventSchema = z.object({
+	id: z.string(),
+	meta: z.object({
+		title: z.string(),
+		description: z.string(),
+		datetime: z.string(),
+		image: z.string(),
+		category: z.nativeEnum(CalendarCategory),
+		country: z.nativeEnum(CalendarCountryIds),
+		impact: z.nativeEnum(CalendarImpact),
+		badge: CalendarEventBadgeSchema.optional(),
+	}),
+	canonical_ticker_id: z.string(),
+	metrics: z.array(CalendarEventMetricSchema),
+	details: CalendarEventDetailsSchema.optional(),
+});
+
+const EventBoardItemSchema = z.object({
+	date: z.string(),
+	events: z.array(CalendarEventSchema),
+});
+
+export const GetEventBoardResponseSchema = z.object({
+	days: z.array(EventBoardItemSchema).nonempty(),
+});
+
+export type GetEventBoardResponse = z.infer<typeof GetEventBoardResponseSchema>;
+
+export async function getEventBoard(request: IEventBoardRequest): Promise<GetEventBoardResponse> {
 	try {
-		return IS_USE_MOCK ? getMockEventBoard() : getApiEventBoard(request);
+		return IS_USE_MOCK
+			? GetEventBoardResponseSchema.parse(await getMockEventBoard())
+			: getApiEventBoard(request);
 	} catch (error) {
 		const logger = useLogger();
 		logger.error('Failed to get event board', {
@@ -18,9 +71,9 @@ export async function getEventBoard(request: IEventBoardRequest): Promise<IEvent
 }
 
 function getApiEventBoard(options: IEventBoardRequest) {
-	const httpService = useHttpService();
+	const client = useApiClient();
 
-	return httpService.get<IEventBoardResponse>('/api/v1/calendar/data', {
+	return client.get('/api/v1/calendar/data', GetEventBoardResponseSchema, {
 		query: prepareRequest(options),
 	});
 }
