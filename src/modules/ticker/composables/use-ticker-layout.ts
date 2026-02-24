@@ -1,8 +1,9 @@
-import { inject, type InjectionKey, provide } from 'vue';
+import { inject, type InjectionKey, provide, type Ref } from 'vue';
 
 export type TickerLayoutContext = {
 	setBottomReached: (state: boolean) => void;
 	handleFooterScroll: (delta: number) => boolean;
+	isInReportsMode: Readonly<Ref<boolean>>;
 };
 
 const TickerLayoutContextKey: InjectionKey<TickerLayoutContext> = Symbol('TickerLayoutContext');

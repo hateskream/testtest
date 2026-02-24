@@ -45,7 +45,10 @@ const LayoutComponent = computed(() => layoutComponentMap[layout.value]);
 </script>
 
 <template>
-	<layout-component v-if="$slots.mainCol || $slots.leftCol || $slots.rightCol" :disable-scroll="props.disableScroll">
+	<layout-component
+		v-if="$slots.mainCol || $slots.leftCol || $slots.rightCol"
+		:disable-scroll="props.disableScroll"
+	>
 		<template #leftCol>
 			<slot name="leftCol" :layout="layout"></slot>
 		</template>

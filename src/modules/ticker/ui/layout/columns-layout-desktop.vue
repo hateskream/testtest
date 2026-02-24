@@ -17,7 +17,7 @@ export interface IProps {
 
 const props = defineProps<IProps>();
 
-const { setBottomReached, handleFooterScroll } = useTickerLayout();
+const { setBottomReached, handleFooterScroll, isInReportsMode } = useTickerLayout();
 
 const container = useTemplateRef('container');
 const mainColumn = useTemplateRef('mainCol');
@@ -71,6 +71,11 @@ function tryDelegateScrollToFooter(event: WheelEvent): boolean {
 
 function onMainColumnScroll(event: WheelEvent) {
 	if (props.disableScroll) {
+		preventDefaultScrollBehavior(event);
+		return;
+	}
+
+	if (!isInReportsMode.value) {
 		event.preventDefault();
 		return;
 	}
@@ -96,39 +101,32 @@ useEventListener(mainColumn, 'wheel', onMainColumnScroll, { passive: false });
 // sides
 
 function syncSideScrollWithMainColumn(event: WheelEvent) {
-	const { currentTarget, deltaY } = event;
+	const { deltaY } = event;
 
-	const shouldSyncScrollUp = isScrolledToTop(currentTarget as HTMLElement) && isScrollingUp(deltaY) && !isAtTop();
-
-	if (shouldSyncScrollUp) {
-		if (isAtTop()) {
-			return;
-		}
-
-		mainColumnScrollPosition.value += deltaY;
-		preventDefaultScrollBehavior(event);
+	if (isScrollingUp(deltaY) && isAtTop()) {
 		return;
 	}
 
-	const shouldSyncScrollDown = isScrolledToBottom(currentTarget as HTMLElement) && isScrollingDown(deltaY);
-	if (!shouldSyncScrollDown) {
-		return;
-	}
-
-	if (isAtBottom()) {
+	if (isScrollingDown(deltaY) && isAtBottom()) {
 		setBottomReached(true);
-	} else {
-		mainColumnScrollPosition.value += deltaY;
-		preventDefaultScrollBehavior(event);
+		return;
 	}
+
+	mainColumnScrollPosition.value += deltaY;
+	preventDefaultScrollBehavior(event);
+	return;
 }
 
 function onSideColumnScroll(event: WheelEvent) {
 	if (props.disableScroll) {
-		event.preventDefault();
+		preventDefaultScrollBehavior(event);
 		return;
 	}
 
+	if (!isInReportsMode.value) {
+		event.preventDefault();
+		return;
+	}
 
 	if (tryDelegateScrollToFooter(event)) {
 		return;
@@ -136,16 +134,23 @@ function onSideColumnScroll(event: WheelEvent) {
 
 	const target = event.currentTarget as HTMLElement;
 
-	if (isScrolledToBottom(target) || isScrolledToTop(target)) {
+	const scrolledToBottom = isScrolledToBottom(target);
+
+	if (
+		(isScrollingUp(event.deltaY) && isScrolledToTop(target))
+		|| (isScrollingDown(event.deltaY) && scrolledToBottom)
+	) {
 		if (hasMainColumn.value) {
 			syncSideScrollWithMainColumn(event);
 		} else {
-			setBottomReached(isScrolledToBottom(target));
+			setBottomReached(scrolledToBottom);
 		}
-	} else {
-		target.scrollTop += event.deltaY;
-		preventDefaultScrollBehavior(event);
+
+		return;
 	}
+
+	target.scrollTop += event.deltaY;
+	preventDefaultScrollBehavior(event);
 }
 
 useEventListener(leftColumn, 'wheel', onSideColumnScroll, { passive: false });
@@ -201,7 +206,7 @@ useEventListener(container, 'wheel', onContainerScroll);
 .column {
 	min-height: 0;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: hidden;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }

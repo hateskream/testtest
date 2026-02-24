@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed, nextTick, onUnmounted, ref, type Ref, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
-import { useCustomScroll } from '@/shared/composables/scroll.ts';
 import { TickerHeaderComponent } from '../header';
 import { TickerFooterComponent } from '../footer';
 import type { ViewMode } from '../../models';
-import { createTickerLayoutContext } from '../../composables';
+import { createTickerLayoutContext, useTickerContext, useTickerLayoutWheelScroll } from '../../composables';
 
 export interface ITickerLayoutProps {
 	showHeader?: boolean;
@@ -20,6 +19,9 @@ const BOT_CONTENT_PADDING = 24;
 
 const contentShift = ref(0);
 const footerShift = ref(0);
+
+const contentTransform = computed(() => `translateY(-${contentShift.value + footerShift.value}px)`);
+
 const isBottomReached = ref(false);
 
 const viewMode = ref<ViewMode>('mixed');
@@ -106,6 +108,7 @@ function handleFooterScroll(delta: number): boolean {
 createTickerLayoutContext({
 	setBottomReached: (state: boolean) => isBottomReached.value = state,
 	handleFooterScroll,
+	isInReportsMode,
 });
 
 const emit = defineEmits<{
@@ -168,6 +171,10 @@ onUnmounted(() => {
 	clearDelayedAction();
 });
 
+const { tickerId } = useTickerContext();
+
+watch(tickerId, () => setMixedViewMode);
+
 function handleScroll(delta: number) {
 	if (!topContentHeight.value) {
 		return;
@@ -229,7 +236,12 @@ function handleScroll(delta: number) {
 	contentShift.value = Math.max(0, Math.min(topContentHeight.value, contentShift.value + delta));
 }
 
-useCustomScroll(container as Ref<HTMLElement | null>, handleScroll);
+useTickerLayoutWheelScroll(container,
+	{
+		onScroll: handleScroll,
+		handleNestedScrolls: isInReportsMode,
+	},
+);
 
 function setMixedViewMode() {
 	clearDelayedAction();
@@ -267,7 +279,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 		</div>
 		<div
 			:class="classes.contentWrapper"
-			:style="{ transform: `translateY(-${contentShift + footerShift}px)` }"
+			:style="{ transform: contentTransform }"
 		>
 			<div
 				ref="botContentEl"
