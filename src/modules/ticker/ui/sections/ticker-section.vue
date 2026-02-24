@@ -5,6 +5,7 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 import { UiText } from '@/shared/ui/text';
 import { useTickerSectionLoader } from '../../composables';
 import type { ISectionItem, ISectionItemHeightConfig, LayoutType, TickerSectionComponent } from '../../models';
+import { isNumber } from '@/shared/lib';
 
 import TickerSectionError from './ticker-section-error.vue';
 
@@ -26,7 +27,12 @@ const props = defineProps<IProps>();
 const emit = defineEmits<IEmits>();
 
 const preparedHeight = computed(() => {
-	return `${props.height}px`;
+	if (isNumber(props.height)) {
+		return `${props.height}px`;
+	}
+
+	const current = props.height[props.layout];
+	return `${current}px`;
 });
 
 const componentKey = ref(0);
