@@ -40,6 +40,15 @@ const topContentHeight = computed(() => topContentHeightTemp.value + 28);
 
 const { height: footerHeight } = useElementSize(footerEl);
 
+watch(footerHeight, (value, prevValue) => {
+	// если сейчас футер не имеет смещение скролла, то пропускаем
+	if (value === 0 || prevValue === 0 || footerShift.value === 0) {
+		return;
+	}
+
+	handleScroll(value - prevValue);
+});
+
 const maxShift = computed(() => {
 	const topContent = topContentEl.value;
 
@@ -50,9 +59,7 @@ const maxShift = computed(() => {
 	return 0;
 });
 
-const maxFooterShift = computed(() => {
-	return footerHeight.value || 0;
-});
+const maxFooterShift = computed(() => footerHeight.value + BOT_CONTENT_PADDING);
 
 const opacityTop = computed(() => {
 	if (!topContentHeight.value || !contentShift.value) {
