@@ -14,7 +14,7 @@ import {
 	type TimezoneUtcType,
 } from '@/modules/lightweight-charts/model';
 import { UiControlIcon } from '@/shared/ui/control-icon';
-import { IconIds } from '@/shared/ui/icon';
+import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IFilterOption } from '@/modules/widgets/base/modal/model';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeFilter } from '@/modules/widgets/base';
@@ -22,6 +22,10 @@ import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import type { IndicatorType } from '@/modules/indicator';
 import { ChartIndicatorsList } from '@/modules/lightweight-charts';
+import { UiPositionTooltip } from '@/shared/ui/position';
+import { UiModalContent, UiModalWrapper } from '@/shared/ui/modal';
+import { UiModalItem } from '@/shared/ui/modal-items';
+import { UiTagSoon } from '@/shared/ui/tag-soon';
 
 export interface IChartPriceTickerFiltersProps {
 	dateRangePresets?: DateRangePresetValue[];
@@ -168,7 +172,26 @@ function downloadSnapshot() {
 						</template>
 					</ui-tooltip-base>
 				</div>
-				<ui-control-icon :icon="IconIds.ControlMore" transparent />
+				<ui-position-tooltip trigger="click" placement="bottom-end">
+					<template #default>
+						<ui-control-icon :icon="IconIds.ControlMore" transparent />
+					</template>
+					<template #content>
+						<ui-modal-wrapper display-variant="new" :class="classes.menu">
+							<ui-modal-content>
+								<ui-modal-item :class="classes.menuItem">
+									<ui-icon
+										:id="IconIds.ArrowDown"
+										width="16"
+										height="16"
+									/>
+									<span>Download in “.csv”</span>
+									<ui-tag-soon :class="classes.menuItemSoon" />
+								</ui-modal-item>
+							</ui-modal-content>
+						</ui-modal-wrapper>
+					</template>
+				</ui-position-tooltip>
 			</div>
 		</div>
 	</ui-scrollable-row>
@@ -204,5 +227,19 @@ function downloadSnapshot() {
 	display: flex;
 	align-items: center;
 	gap: var(--padding-s2, 2px);
+}
+
+.menu {
+	width: 230px;
+}
+
+.menuItem {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.menuItemSoon {
+	margin-left: auto;
 }
 </style>

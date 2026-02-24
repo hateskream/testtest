@@ -22,6 +22,7 @@ export enum IconIds {
 	DropdownDown = 'dropdown-down',
 	Tertiary = 'tertiary',
 	ArrowUp = 'arrow-up',
+	ArrowDown = 'arrow-down',
 	RcmArrowRight = 'rcm-arrow-right',
 	Checkbox = 'checkbox',
 	RcmCheckbox = 'rcm-checkbox',
