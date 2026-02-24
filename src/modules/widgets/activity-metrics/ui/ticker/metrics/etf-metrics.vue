@@ -22,7 +22,10 @@ const props = defineProps<IEtfMetricsProps>();
 		>
 			{{ props.metrics.marketCap }}
 		</metrics-container>
-		<metrics-container title="Avg. Volume">
+		<metrics-container
+			title="Avg. Volume"
+			tooltip="Average daily trading volume over the past 30 to 90 days."
+		>
 			{{ props.metrics.avgVolume }}
 		</metrics-container>
 		<metrics-container

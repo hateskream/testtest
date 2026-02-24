@@ -5,6 +5,9 @@ import type { IDashboardTab } from '../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
 import { ComingSoonTooltip } from '@/modules/layout/new-desktop';
+import { UiPositionTooltip } from '@/shared/ui/position';
+
+import HeaderDesktopSettings from './header-desktop-settings.vue';
 
 interface IHeaderDesktop {
 	tabs: IDashboardTab[];
@@ -23,12 +26,19 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 	<div :class="classes.navbar">
 		<div :class="classes.left">
 			<ui-text token="text-300-b" as="div">Dashboard</ui-text>
-			<ui-icon
-				:id="IconIds.ControlMore"
-				:class="classes.iconWrapper"
-				width="20px"
-				height="20px"
-			/>
+			<ui-position-tooltip trigger="click" placement="bottom-start">
+				<template #default>
+					<ui-icon
+						:id="IconIds.ControlMore"
+						:class="classes.iconWrapper"
+						width="20px"
+						height="20px"
+					/>
+				</template>
+				<template #content>
+					<header-desktop-settings />
+				</template>
+			</ui-position-tooltip>
 			<div :class="classes.tabs">
 				<template
 					v-for="tab in props.tabs"
@@ -107,6 +117,12 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 
 .iconWrapper {
 	color: rgb(255 255 255 / 60%);
+	cursor: pointer;
+	transition: color 0.2s ease-in-out;
+}
+
+.iconWrapper:hover {
+	color: var(--text-500, rgb(255 255 255 / 96%));
 }
 
 .tabs {

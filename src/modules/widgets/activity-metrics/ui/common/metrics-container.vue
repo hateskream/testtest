@@ -2,6 +2,7 @@
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
 import { TickerIconTooltip } from '@/modules/ticker/ui/base';
+import { UiTooltipHint } from '@/shared/ui/tooltip-hint';
 
 const props = defineProps<{
 	title: string;
@@ -24,8 +25,19 @@ const props = defineProps<{
 		<ui-clamped
 			:rows="1"
 			:class="classes.content"
+			v-slot="{ isClamped }"
 		>
-			<ui-text token="title-200">
+			<ui-tooltip-hint v-if="isClamped">
+				<template #trigger>
+					<ui-text token="title-200">
+						<slot />
+					</ui-text>
+				</template>
+				<template #text>
+					<slot />
+				</template>
+			</ui-tooltip-hint>
+			<ui-text v-else token="title-200">
 				<slot />
 			</ui-text>
 		</ui-clamped>

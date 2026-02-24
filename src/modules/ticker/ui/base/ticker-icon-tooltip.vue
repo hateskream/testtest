@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 
-import { UiPositionTooltip } from '@/shared/ui/position';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { UiTooltipWrapper } from '@/shared/ui/tooltip';
+import { UiTooltipHint } from '@/shared/ui/tooltip-hint';
 
 const props = defineProps<{
 	maxWidth?: CSSProperties['maxWidth'];
@@ -11,12 +10,12 @@ const props = defineProps<{
 </script>
 
 <template>
-	<ui-position-tooltip
-		:open-delay="10"
+	<ui-tooltip-hint
 		placement="top"
+		:open-delay="10"
 		:class="classes.tooltip"
 	>
-		<template #default>
+		<template #trigger>
 			<ui-icon
 				:id="IconIds.InfoRectangle"
 				:class="classes.icon"
@@ -24,16 +23,12 @@ const props = defineProps<{
 				height="12px"
 			/>
 		</template>
-		<template #content>
-			<ui-tooltip-wrapper
-				:class="classes.wrapper"
-				:style="{ maxWidth: props.maxWidth }"
-				display-variant="new"
-			>
-				<slot>This is so important content for this help</slot>
-			</ui-tooltip-wrapper>
+		<template #text>
+			<div :style="{ maxWidth: props.maxWidth }">
+				<slot />
+			</div>
 		</template>
-	</ui-position-tooltip>
+	</ui-tooltip-hint>
 </template>
 
 <style module="classes">
@@ -55,10 +50,6 @@ const props = defineProps<{
 }
 
 .tooltip:hover .icon {
-	color: #ffffff;
-}
-
-.wrapper {
 	color: #ffffff;
 }
 </style>
