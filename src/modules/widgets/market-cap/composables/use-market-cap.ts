@@ -102,11 +102,7 @@ export function useMarketCap({
 		mutate(newState);
 	}, { deep: true });
 
-	function resetAllChanges() {
-		state.value = getDefaultState();
-	}
-
-	async function resetAllFilters() {
+	async function resetAllChanges() {
 		const defaultState = getDefaultState();
 
 		activeDateRange.value = defaultState.dateRange;
@@ -137,6 +133,5 @@ export function useMarketCap({
 		refetch,
 		resetAllChanges,
 		applyStateToParent,
-		resetAllFilters,
 	};
 }

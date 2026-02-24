@@ -108,8 +108,9 @@ export function useChartPrice({
 
 	const selectedMarketType = computed(() => decodeCanonicalTickerId(selectedTickerId.value).market_type);
 
-	function resetAllChanges() {
+	async function resetAllChanges() {
 		state.value = getDefaultsState(defaultStateType);
+		[_selectedTicker.value] = await fetchTickers(state.value.selectedTicker);
 	}
 
 	function handleAddToWatchlist(watchlistId: string ) {
