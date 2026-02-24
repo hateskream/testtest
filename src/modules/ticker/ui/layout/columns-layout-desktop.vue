@@ -167,23 +167,23 @@ useEventListener(container, 'wheel', onContainerScroll);
 </script>
 
 <template>
-	<div ref="container" :class="[classes.root, classes.hideScrollbar]">
+	<div ref="container" :class="classes.root">
 		<div
 			ref="leftCol"
-			:class="[classes.leftCol, classes.hideScrollbar, { [classes.full]: !hasMainColumn }]"
+			:class="[classes.side, classes.column, { [classes.full]: !hasMainColumn }]"
 		>
 			<slot name="leftCol"></slot>
 		</div>
 		<div
 			v-if="$slots.mainCol"
 			ref="mainCol"
-			:class="[classes.mainCol, classes.hideScrollbar]"
+			:class="[classes.main, classes.column]"
 		>
 			<slot name="mainCol"></slot>
 		</div>
 		<div
 			ref="rightCol"
-			:class="[classes.rightCol, classes.hideScrollbar]"
+			:class="[classes.side, classes.column]"
 		>
 			<slot name="rightCol"></slot>
 		</div>
@@ -192,49 +192,36 @@ useEventListener(container, 'wheel', onContainerScroll);
 
 <style module="classes">
 .root {
-	display: flex;
-	height: calc(100svh - 16px);
+	display: grid;
+	grid-template-columns: 330px 1fr 330px;
+	grid-template-rows: fit-content(calc(100svh - 16px));
 	overflow: hidden;
 }
 
-.leftCol {
-	flex: 0 0 330px;
-	width: 330px;
-	height: 100%;
-	padding: 0 var(--padding-s5, 8px) 10px;
-	overflow: hidden;
-}
-
-.full.full {
-	flex-grow: 1;
-}
-
-.rightCol {
-	flex: 0 0 330px;
-	width: 330px;
-	height: 100%;
-	padding: 0 var(--padding-s5, 8px) 10px;
+.column {
+	min-height: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
-}
-
-.mainCol {
-	display: flex;
-	flex-grow: 2;
-	flex-direction: column;
-	height: 100%;
-	padding: 0 var(--padding-s9, 16px) 8px;
-	padding-bottom: 5px;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.hideScrollbar {
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }
 
-.hideScrollbar::-webkit-scrollbar {
+.column::-webkit-scrollbar {
 	display: none;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	padding: 0 var(--padding-s9, 16px) 8px;
+	padding-bottom: 5px;
+}
+
+.side {
+	padding: 0 var(--padding-s5, 8px) 10px;
+}
+
+.side.full {
+	grid-column: span 2;
 }
 </style>
