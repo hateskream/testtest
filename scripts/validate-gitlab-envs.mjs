@@ -1,5 +1,4 @@
 import { readFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
 
 const FEATURE_CONFIG = 'src/shared/lib/feature-toggle.ts';
 const ENV_FILES = [
@@ -36,7 +35,7 @@ function parseEnvFile(filePath) {
 	return readFileSync(filePath, 'utf8')
 		.split('\n')
 		.reduce((acc, line) => {
-			const match = line.match(/^([A-Z0-9_]+)\s*=\s*(.*)$/);
+			const match = line.trim().match(/^([A-Z0-9_]+)\s*=\s*(.*)$/);
 			if (match) acc[match[1]] = match[2].trim();
 			return acc;
 		}, {});
@@ -72,6 +71,7 @@ function validate() {
 			console.log('   ❌ Missing: VITE_ENVIRONMENT');
 			fileError = true;
 		} else if (!VALID_ENVIRONMENTS.includes(envValue)) {
+			// eslint-disable-next-line @stylistic/max-len
 			console.log(`   ❌ Invalid VITE_ENVIRONMENT value: '${envValue}' (must be ${VALID_ENVIRONMENTS.join(', ')})`);
 			fileError = true;
 		} else {
