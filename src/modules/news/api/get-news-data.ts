@@ -22,7 +22,7 @@ export interface IGetNewsResponse {
 
 const GetNewsResponseItemSchema = z.object({
 	id: z.string(),
-	author: z.string(),
+	author: z.string().optional(),
 	first_seen_at: z.string(),
 	primary_title: z.string(),
 	sentiment: z.object({
@@ -34,9 +34,9 @@ const GetNewsResponseItemSchema = z.object({
 	sources_count: z.number(),
 	src_source_image: z.string(),
 	symbols: z.array(z.object({
-		image: z.string(),
+		image: z.string().optional(),
 		label: z.string(),
-		market: z.string(),
+		market: z.string().optional(),
 		ticker: z.string(),
 	})),
 	updated_at: z.string(),

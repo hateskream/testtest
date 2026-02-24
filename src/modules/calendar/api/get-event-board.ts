@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 import {
 	type IEventBoardRequest,
+	type IEventBoardResponse,
+	type ICalendarEventBadge,
+	type CalendarCountryIdsType,
+	type CalendarImpactType,
 	CalendarCategory,
 	CalendarCountryIds,
 	CalendarImpact,
@@ -13,9 +17,13 @@ import { getMockEventBoard } from './mock/event-board';
 
 const IS_USE_MOCK = false;
 
+const CalendarEventBadgeColorSchema = z.enum(['negative', 'neutral', 'positive']).or(
+	z.string().startsWith('#'),
+);
+
 const CalendarEventBadgeSchema = z.object({
 	label: z.string(),
-	color: z.enum(['negative', 'neutral', 'positive']),
+	color: CalendarEventBadgeColorSchema,
 });
 
 const CalendarEventMetricSchema = z.object({
@@ -36,8 +44,8 @@ const CalendarEventSchema = z.object({
 		datetime: z.string(),
 		image: z.string(),
 		category: z.nativeEnum(CalendarCategory),
-		country: z.nativeEnum(CalendarCountryIds),
-		impact: z.nativeEnum(CalendarImpact),
+		country: z.nativeEnum(CalendarCountryIds).or(z.string().min(2)),
+		impact: z.nativeEnum(CalendarImpact).or(z.enum(['Low', 'Medium', 'High'])),
 		badge: CalendarEventBadgeSchema.optional(),
 	}),
 	canonical_ticker_id: z.string(),
@@ -56,11 +64,13 @@ export const GetEventBoardResponseSchema = z.object({
 
 export type GetEventBoardResponse = z.infer<typeof GetEventBoardResponseSchema>;
 
-export async function getEventBoard(request: IEventBoardRequest): Promise<GetEventBoardResponse> {
+export async function getEventBoard(request: IEventBoardRequest): Promise<IEventBoardResponse> {
 	try {
-		return IS_USE_MOCK
+		const response = IS_USE_MOCK
 			? GetEventBoardResponseSchema.parse(await getMockEventBoard())
-			: getApiEventBoard(request);
+			: await getApiEventBoard(request);
+
+		return mapEventBoardResponseToModel(response);
 	} catch (error) {
 		const logger = useLogger();
 		logger.error('Failed to get event board', {
@@ -76,6 +86,42 @@ function getApiEventBoard(options: IEventBoardRequest) {
 	return client.get('/api/v1/calendar/data', GetEventBoardResponseSchema, {
 		query: prepareRequest(options),
 	});
+}
+
+const ISO_TO_COUNTRY = Object.fromEntries(
+	Object.entries(COUNTRY_TO_ISO).map(([k, v]) => [v.toLowerCase(), k]),
+) as Record<string, CalendarCountryIdsType>;
+
+const IMPACT_TO_MODEL: Record<string, CalendarImpactType> = {
+	low: CalendarImpact.Low,
+	medium: CalendarImpact.Medium,
+	high: CalendarImpact.High,
+};
+
+function mapEventBoardResponseToModel(response: GetEventBoardResponse): IEventBoardResponse {
+	return {
+		days: response.days.map(day => ({
+			date: day.date,
+			events: day.events.map(event => ({
+				id: event.id,
+				canonical_ticker_id: event.canonical_ticker_id,
+				metrics: event.metrics,
+				details: event.details,
+				meta: {
+					title: event.meta.title,
+					description: event.meta.description,
+					datetime: event.meta.datetime,
+					image: event.meta.image,
+					category: event.meta.category,
+					country: ISO_TO_COUNTRY[event.meta.country.toLowerCase()]
+						?? event.meta.country as CalendarCountryIdsType,
+					impact: IMPACT_TO_MODEL[event.meta.impact.toLowerCase()]
+						?? event.meta.impact as CalendarImpactType,
+					badge: event.meta.badge as ICalendarEventBadge | undefined,
+				},
+			})),
+		})),
+	};
 }
 
 function prepareRequest(request: IEventBoardRequest) {
