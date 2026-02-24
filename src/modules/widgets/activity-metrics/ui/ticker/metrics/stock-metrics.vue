@@ -3,6 +3,8 @@ import { TickerControlLink } from '@/modules/ticker/ui/base';
 import { RouteNames } from '@/types/route.d';
 import type { StockActivityMetrics } from '../../../model';
 import { MetricsContainer, MetricsRow } from '../../common';
+import { isFeatureEnabled } from '@/shared/lib';
+import { UiTag } from '@/shared/ui/tag';
 
 import BaseMetrics from './base-metrics.vue';
 
@@ -11,6 +13,8 @@ export interface IStockMetricsProps {
 }
 
 const props = defineProps<IStockMetricsProps>();
+
+const sectorLinkIsEnabled = isFeatureEnabled('STOCK_TICKER_SECTOR_LINK_ENABLED');
 </script>
 
 <template>
@@ -55,9 +59,12 @@ const props = defineProps<IStockMetricsProps>();
 			{{ props.metrics.forwardPe }}
 		</metrics-container>
 		<metrics-row title="Sector" :class="classes.full">
-			<ticker-control-link :to="{ name: RouteNames.Home }">
+			<ticker-control-link v-if="sectorLinkIsEnabled" :to="{ name: RouteNames.Home }">
 				{{ props.metrics.sector }}
 			</ticker-control-link>
+			<ui-tag v-else>
+				{{ props.metrics.sector }}
+			</ui-tag>
 		</metrics-row>
 	</base-metrics>
 </template>
