@@ -17,7 +17,6 @@ export const IMAGE_BLACKLIST_CONFIG: IImageBlacklistConfig = {
 	],
 
 	startsWith: [
-		'^',
 		'%',
 	],
 

@@ -18,7 +18,7 @@ export interface IState {
 export function getDefaultsState(defaultStateType: string): IState {
 	let defaultSelectedTicker = createTickerId(
 		SymbolType.Index,
-		createTickerIdIndex('SPX'),
+		createTickerIdIndex('^SPX'),
 	);
 
 	if (defaultStateType === 'forex') {
@@ -31,7 +31,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'USDollar') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Index,
-			createTickerIdIndex('DXY'),
+			createTickerIdIndex('^DXY'),
 		);
 	}
 
@@ -45,7 +45,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'NDX') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Index,
-			createTickerIdIndex('NDX'),
+			createTickerIdIndex('^NDX'),
 		);
 	}
 
