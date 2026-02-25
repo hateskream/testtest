@@ -2,31 +2,32 @@ export const IndicatorKey = {
 	// trend
 	SMA: 'sma',
 	EMA: 'ema',
-	// DEMA: 'dema',
-	// MACD: 'macd',
-	// RMA: 'rma',
+	MACD: 'macd',
+	ADX: 'adx',
+	DEMA: 'dema',
+	RMA: 'rma',
 	// SMMA: 'smma',
-	// WMA: 'wma',
+	WMA: 'wma',
 	// LINREG: 'linreg',
-	// CCI: 'cci',
-	//
-	// // momentum
-	// AO: 'ao',
-	// STOCH: 'stoch',
+	CCI: 'cci',
+
+	// momentum
+	AO: 'ao',
+	STOCH: 'stoch',
 	RSI: 'rsi',
-	// STOCHRSI: 'stochrsi',
+	STOCHRSI: 'stochrsi',
 	// TDS: 'tds',
-	// WILLR: 'willr',
-	//
-	// // volatility
+	WILLR: 'willr',
+
+	// volatility
+	ATR: 'atr',
+	BBANDS: 'bbands',
 	// ABANDS: 'abands',
 	// TR: 'tr',
-	// ATR: 'atr',
-	// BBANDS: 'bbands',
 	// BBW: 'bbw',
 } as const;
 
-export type IndicatorType = typeof IndicatorKey[keyof typeof IndicatorKey];
+export type IndicatorType = (typeof IndicatorKey)[keyof typeof IndicatorKey];
 
 export interface IIndicatorConfig {
 	title: string;
@@ -50,26 +51,31 @@ export const IndicatorsConfig = {
 		label: 'EMA',
 		minPoints: 9,
 	},
-	// [IndicatorKey.DEMA]: {
-	// 	title: 'Double Exponential Moving Average',
-	// 	label: 'DEMA',
-	// },
-	// [IndicatorKey.MACD]: {
-	// 	title: 'Moving Average Convergence Divergence',
-	// 	label: 'MACD',
-	// },
-	// [IndicatorKey.RMA]: {
-	// 	title: 'Relative Moving Average',
-	// 	label: 'RMA',
-	// },
-	// [IndicatorKey.SMMA]: {
-	// 	title: 'Smoothed Moving Average',
-	// 	label: 'SMMA',
-	// },
-	// [IndicatorKey.WMA]: {
-	// 	title: 'Weighted Moving Average',
-	// 	label: 'WMA',
-	// },
+	[IndicatorKey.MACD]: {
+		title: 'Moving Average Convergence Divergence',
+		label: 'MACD',
+		minPoints: 33,
+	},
+	[IndicatorKey.ADX]: {
+		title: 'Average Directional Index',
+		label: 'ADX',
+		minPoints: 28,
+	},
+	[IndicatorKey.DEMA]: {
+		title: 'Double Exponential Moving Average',
+		label: 'DEMA',
+		minPoints: 10,
+	},
+	[IndicatorKey.RMA]: {
+		title: 'Relative Moving Average',
+		label: 'RMA',
+		minPoints: 15,
+	},
+	[IndicatorKey.WMA]: {
+		title: 'Weighted Moving Average',
+		label: 'WMA',
+		minPoints: 10,
+	},
 	// [IndicatorKey.LINREG]: {
 	// 	title: 'Linear Regression',
 	// 	label: 'LINREG',
@@ -80,33 +86,52 @@ export const IndicatorsConfig = {
 	// },
 
 	// momentum
-	// [IndicatorKey.AO]: {
-	// 	title: 'Awesome Oscillator',
-	// 	label: 'AO',
-	// },
-	// [IndicatorKey.STOCH]: {
-	// 	title: 'Stochastic Oscillato',
-	// 	label: 'STOCH',
-	// },
+	[IndicatorKey.AO]: {
+		title: 'Awesome Oscillator',
+		label: 'AO',
+		minPoints: 35,
+	},
+	[IndicatorKey.STOCH]: {
+		title: 'Stochastic Oscillator',
+		label: 'STOCH',
+		minPoints: 21,
+	},
 	[IndicatorKey.RSI]: {
 		title: 'Relative Strength Index',
 		label: 'RSI',
 		minPoints: 14,
 	},
-	// [IndicatorKey.STOCHRSI]: {
-	// 	title: 'Stochastic RSI',
-	// 	label: 'STOCHRSI',
-	// },
+	[IndicatorKey.STOCHRSI]: {
+		title: 'Stochastic RSI',
+		label: 'STOCHRSI',
+		minPoints: 28,
+	},
 	// [IndicatorKey.TDS]: {
 	// 	title: 'Tom Demark\'s Sequential Indicator',
 	// 	label: 'TDS',
 	// },
-	// [IndicatorKey.WILLR]: {
-	// 	title: 'Williams %R',
-	// 	label: 'WILLR',
-	// },
+	[IndicatorKey.WILLR]: {
+		title: 'Williams %R',
+		label: 'WILLR',
+		minPoints: 15,
+	},
+	[IndicatorKey.CCI]: {
+		title: 'Commodity Channel Index',
+		label: 'CCI',
+		minPoints: 21,
+	},
 
 	// volatility
+	[IndicatorKey.ATR]: {
+		title: 'Average True Range',
+		label: 'ATR',
+		minPoints: 14,
+	},
+	[IndicatorKey.BBANDS]: {
+		title: 'Bollinger Bands',
+		label: 'BBANDS',
+		minPoints: 21,
+	},
 	// [IndicatorKey.ABANDS]: {
 	// 	title: 'Acceleration Bands %R',
 	// 	label: 'ABANDS',
@@ -114,14 +139,6 @@ export const IndicatorsConfig = {
 	// [IndicatorKey.TR]: {
 	// 	title: 'True Range',
 	// 	label: 'TR',
-	// },
-	// [IndicatorKey.ATR]: {
-	// 	title: 'Average True Range',
-	// 	label: 'ATR',
-	// },
-	// [IndicatorKey.BBANDS]: {
-	// 	title: 'Bollinger Bands',
-	// 	label: 'BBANDS',
 	// },
 	// [IndicatorKey.BBW]: {
 	// 	title: 'Bollinger Bands Width',
