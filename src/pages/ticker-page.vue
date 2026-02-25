@@ -79,7 +79,11 @@ useAppHead({ title });
 <template>
 	<app-layout :active-ticker="ticker">
 		<div :class="classes.container">
-			<ticker-component :id="props.id" :type="tickerType" />
+			<ticker-component
+				:key="canonicalTickerId"
+				:id="props.id"
+				:type="tickerType"
+			/>
 		</div>
 	</app-layout>
 </template>
@@ -88,6 +92,7 @@ useAppHead({ title });
 .container {
 	height: calc(100vh - 16px);
 	margin: 8px 0;
+	overflow: hidden;
 	border-radius: 18px;
 
 	@media (width > 655px) {
