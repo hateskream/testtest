@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<ITickerLayoutProps>(), {
 });
 
 const BOT_CONTENT_PADDING = 24;
+const TOP_CONTENT_BORDER_WIDTH = 1;
 
 const contentShift = ref(0);
 const footerShift = ref(0);
@@ -55,7 +56,7 @@ const maxShift = computed(() => {
 	const topContent = topContentEl.value;
 
 	if (topContent) {
-		return topContentHeightTemp.value + BOT_CONTENT_PADDING;
+		return topContentHeightTemp.value + TOP_CONTENT_BORDER_WIDTH + BOT_CONTENT_PADDING;
 	}
 
 	return 0;
