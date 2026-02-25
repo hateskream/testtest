@@ -28,15 +28,19 @@ const tagColor = computed(()=>{
 <template>
 	<base-ticker-widget-wrapper>
 		<base-ticker-widget-header>
-			{{props.meta.name}}
+			<template #default>
+
+				{{props.meta.name}}
+			</template>
+			<template #right>
+				<ui-tag :color="tagColor" :class="classes.tag">{{data.summary}}</ui-tag>
+			</template>
+
 		</base-ticker-widget-header>
 		<base-ticker-widget-content>
 
 
 			<div :class="classes.bodyWrapper">
-				<div :class="classes.labelWrapper">
-					<ui-tag :color="tagColor" :class="classes.tag">{{data.summary}}</ui-tag>
-				</div>
 				<div :class="classes.radarWrapper">
 					<radar-chart :data="props.data" />
 				</div>
@@ -57,15 +61,10 @@ const tagColor = computed(()=>{
 	text-transform: capitalize;
 }
 
-.labelWrapper {
-	display: flex;
-	justify-content: flex-end;
-	padding: var(--padding-padding-s5, 8px) var(--padding-padding-s11, 20px);
-}
 
 .radarWrapper {
 	display: flex;
 	justify-content: center;
-	padding: 45px 10px 48px;
+	padding: 65px 10px 48px;
 }
 </style>

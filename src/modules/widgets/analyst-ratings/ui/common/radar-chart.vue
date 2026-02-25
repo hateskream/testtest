@@ -77,6 +77,7 @@ function createDatasets() {
 		pointBackgroundColor: colors.border,
 		pointBorderColor: '#fff',
 		pointBorderWidth: 0,
+		pointHitRadius: 12,
 	}];
 }
 

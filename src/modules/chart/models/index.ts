@@ -215,7 +215,7 @@ export const chartStockSections: IChartWidgetSections = {
 				},
 				{
 					id: 'analyst-ratings',
-					title: 'Analyst Ratings',
+					title: 'Analyst Rating',
 				},
 			],
 		},
