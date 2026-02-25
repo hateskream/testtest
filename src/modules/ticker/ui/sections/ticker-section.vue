@@ -163,13 +163,9 @@ onMounted(() => {
 	position: sticky;
 	top: 0;
 	z-index: 10;
-	display: flex;
-	align-items: center;
-	align-self: stretch;
 	padding: var(--padding-s11, 20px) 0 var(--padding-s9, 16px) 0;
 	color: #ffffff;
 	background: var(--bg-color-surface-00);
-	gap: var(--padding-s5, 8px);
 }
 
 .contentWrapper {
