@@ -23,7 +23,7 @@ const GetNonfarmPayrollsResponseSchema = z.object({
 	primaryValue: z.string(),
 	primaryValueUnit: z.string(),
 	change: NonfarmPayrollsChangeSchema,
-	points: z.array(NonfarmPayrollsPointSchema),
+	points: z.array(NonfarmPayrollsPointSchema).nonempty(),
 });
 
 type GetNonfarmPayrollsResponse = z.infer<typeof GetNonfarmPayrollsResponseSchema>;

@@ -24,7 +24,7 @@ const USInflationPointSchema = z.object({
 export const GetUsInflationResponseSchema = z.object({
 	current_value: z.number(),
 	yoy_change: YoYChangeSchema,
-	chart: z.array(USInflationPointSchema),
+	chart: z.array(USInflationPointSchema).nonempty(),
 });
 
 export type GetUsInflationResponse = z.infer<typeof GetUsInflationResponseSchema>;

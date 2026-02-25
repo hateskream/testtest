@@ -23,7 +23,7 @@ const GetUnemploymentRateResponseSchema = z.object({
 	primaryValue: z.string(),
 	primaryValueUnit: z.string(),
 	change: UnemploymentRateChangeSchema,
-	points: z.array(UnemploymentRatePointSchema),
+	points: z.array(UnemploymentRatePointSchema).nonempty(),
 });
 
 type GetUnemploymentRateResponse = z.infer<typeof GetUnemploymentRateResponseSchema>;
