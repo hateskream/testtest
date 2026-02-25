@@ -10,6 +10,7 @@ import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 import { useLogger } from '@/shared/service/monitoring';
 import { useAppHead } from '@/shared/composables';
 import { capitalize } from '@/shared/lib/capitalize.ts';
+import { isFeatureEnabled } from '@/shared/lib';
 
 interface ITickerPageProps {
 	id: string;
@@ -38,15 +39,21 @@ const canonicalTickerId = computed(() => createTickerIdFromType(props.type, prop
 
 const ticker = shallowRef<ITickerItem | null>(null);
 
+const errorRedirectIsEnabled = isFeatureEnabled('TICKER_PAGE_ERROR_REDIRECT_ENABLED');
+
 async function fetchTicker(tickerId: string) {
 	try {
 		const [response] = await fetchTickers(tickerId);
-
-		ticker.value = response;
+		if (response.canonical_ticker_id === canonicalTickerId.value) {
+			ticker.value = response;
+		}
 	} catch (error) {
 		logger.error('Invalid TickerId', { error: error as Error, context: { tickerId } });
 		ticker.value = null;
-		void router.replace({ name: RouteNames.Error });
+
+		if (errorRedirectIsEnabled) {
+			void router.replace({ name: RouteNames.Error });
+		}
 	}
 }
 

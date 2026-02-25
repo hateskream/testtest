@@ -78,6 +78,11 @@ export const ALL_FEATURES = [
 	 */
 	'STOCK_TICKER_SECTOR_LINK_ENABLED',
 
+	/**
+	 * Редиректить ли на страницу 404, если тикер не найден
+	 */
+	'TICKER_PAGE_ERROR_REDIRECT_ENABLED',
+
 	...EXPERIMENTAL_WIDGETS_FEATURES,
 ] as const;
 
