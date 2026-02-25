@@ -3,6 +3,8 @@ import { inject, type InjectionKey, provide, type Ref } from 'vue';
 export type TickerContext = {
 	tickerId: Readonly<Ref<string>>;
 	changeTickerId: (tickerId: string) => void;
+	aboutText: Readonly<Ref<string | null>>;
+	changeAboutText: (aboutText: string | null) => void;
 };
 
 const TickerContextKey: InjectionKey<TickerContext> = Symbol('TickerContext');

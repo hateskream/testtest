@@ -22,7 +22,7 @@ const { data, isLoading } = useQueryTickerPageMeta(() => ({
 			:data-provider="data.data_provider"
 			:price="data.price"
 			:dominant-color="data.dominant_color"
-			@on-ticker-select="handleTickerSelect($event)"
+			@on-ticker-select="handleTickerSelect($event.canonical_ticker_id)"
 		/>
 	</div>
 

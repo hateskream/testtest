@@ -1,13 +1,25 @@
 <script setup lang="ts">
+import { watch } from 'vue';
+
 import { TickerPageHeader, TickerPageHeaderPreloader, useQueryTickerPageMeta } from '@/modules/ticker-page';
 import { useTickerContext } from '../../composables';
 import { BaseTickerWidgetError } from '@/modules/widgets/base';
 
-const { tickerId, changeTickerId } = useTickerContext();
+const { tickerId, changeTickerId, changeAboutText } = useTickerContext();
 
 const { data, isLoading, isError, refetch } = useQueryTickerPageMeta(() => ({
 	tickerId: tickerId.value,
 }));
+
+function handleTickerSelect(canonicalTickerId: string) {
+	changeTickerId(canonicalTickerId);
+}
+
+watch(() => data.value?.ticker.about, (value) => {
+	if (value) {
+		changeAboutText(value);
+	}
+}, { immediate: true });
 </script>
 
 <template>
@@ -24,7 +36,7 @@ const { data, isLoading, isError, refetch } = useQueryTickerPageMeta(() => ({
 		:dominant-color="data.dominant_color"
 		:exchange="data.exchange"
 		:price="data.price"
-		@on-ticker-select="changeTickerId"
+		@on-ticker-select="handleTickerSelect($event.canonical_ticker_id)"
 	/>
 </template>
 

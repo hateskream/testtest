@@ -25,6 +25,7 @@ const chartHeight = computed(() => {
 });
 
 const viewMode = ref<ViewMode>('mixed');
+const aboutText = ref<string | null>(null);
 
 const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
 
@@ -37,13 +38,20 @@ const chartWidgetSections = computed(() => {
 
 const { goToTickerPage } = useGoToTickerPage();
 
+function changeAboutText(value: string | null) {
+	aboutText.value = value;
+}
+
 function changeTickerId(tickerId: string) {
+	changeAboutText(null);
 	goToTickerPage(tickerId);
 }
 
 createTickerContext({
 	tickerId: canonicalTickerId,
 	changeTickerId,
+	aboutText,
+	changeAboutText,
 });
 
 const chartLayoutEl = useTemplateRef('chartLayoutRef');

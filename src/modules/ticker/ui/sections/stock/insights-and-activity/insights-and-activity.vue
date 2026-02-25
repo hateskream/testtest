@@ -6,6 +6,7 @@ import { TickerLinksWidget } from '@/modules/widgets/links';
 import { useTickerContext } from '@/modules/ticker/composables';
 import type { ISectionItem } from '@/modules/ticker/models';
 import { TickerBaseTabsLayout } from '@/modules/ticker';
+import { TickerAboutWidget } from '@/modules/widgets/ticker-about';
 
 import TabInsightsContent from './tab-insights-content.vue';
 import TabNewsContent from './tab-news-content.vue';
@@ -16,7 +17,7 @@ interface ISectionProps {
 
 defineProps<ISectionProps>();
 
-const { tickerId } = useTickerContext();
+const { tickerId, aboutText } = useTickerContext();
 
 const tabs = [
 	{ id: 'insights', title: 'Insights', component: markRaw(TabInsightsContent) },
@@ -31,6 +32,11 @@ const selectedTabId = ref<string | number>('insights');
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" />
 		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
 		<ticker-links-widget :meta="{ tickerId, name: 'Links' }" />
+		<ticker-about-widget
+			v-if="aboutText"
+			:meta="{ tickerId, name: 'About' }"
+			:text="aboutText"
+		/>
 	</div>
 </template>
 

@@ -22,6 +22,7 @@ import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
 import { UiControlIcon } from '@/shared/ui/control-icon';
 import { UiClamped } from '@/shared/ui/clamped';
+import { UiPositionTooltip } from '@/shared/ui/position';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -32,7 +33,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-	onTickerSelect: [string];
+	onTickerSelect: [ITickerItemExtended];
 }>();
 
 const { goToTickerPageLink } = useGoToTickerPage();
@@ -44,7 +45,7 @@ const selectedTickers = computed({
 			return;
 		}
 
-		emits('onTickerSelect', value.canonical_ticker_id);
+		emits('onTickerSelect', value);
 	},
 });
 
@@ -158,9 +159,20 @@ const currentPrice = computed(() => props.price.current_price);
 								</ui-position>
 
 								<div v-if="props.ticker.description" :class="classes.description">
-									<ui-clamped :rows="1">
-										<ui-text token="text-100-r">{{ props.ticker.description }}</ui-text>
-									</ui-clamped>
+									<ui-position-tooltip placement="bottom-start" :close-delay="200">
+										<ui-clamped :rows="1">
+											<ui-text token="text-100-r">{{ props.ticker.description }}</ui-text>
+										</ui-clamped>
+
+										<template #content>
+											<ui-tooltip-wrapper
+												display-variant="new"
+												:class="classes.descriptionTooltip"
+											>
+												{{props.ticker.description}}
+											</ui-tooltip-wrapper>
+										</template>
+									</ui-position-tooltip>
 								</div>
 							</div>
 
@@ -178,31 +190,29 @@ const currentPrice = computed(() => props.price.current_price);
 										{{ props.exchange.title }}
 									</template>
 								</ui-tag>
-								<ui-position
-									trigger="hover"
+								<ui-position-tooltip
 									placement="bottom-start"
 									:close-delay="200"
 								>
-									<template #title>
-										<ui-tag>
-											<ui-image
-												:src="props.dataProvider.logo_url"
-												width="16px"
-												height="16px"
-												show-loader
-												:class="classes.providerIcon"
-											>
-												<template #error>
-													<ui-image
-														:src="fmp"
-														width="16px"
-														height="16px"
-														:class="classes.providerIcon"
-													/>
-												</template>
-											</ui-image>
-										</ui-tag>
-									</template>
+									<ui-tag>
+										<ui-image
+											:src="props.dataProvider.logo_url"
+											width="16px"
+											height="16px"
+											show-loader
+											:class="classes.providerIcon"
+										>
+											<template #error>
+												<ui-image
+													:src="fmp"
+													width="16px"
+													height="16px"
+													:class="classes.providerIcon"
+												/>
+											</template>
+										</ui-image>
+									</ui-tag>
+
 									<template #content>
 										<ui-tooltip-wrapper :class="classes.tooltip" display-variant="new">
 											<div :class="classes.tooltipIcon">
@@ -221,7 +231,7 @@ const currentPrice = computed(() => props.price.current_price);
 											</div>
 										</ui-tooltip-wrapper>
 									</template>
-								</ui-position>
+								</ui-position-tooltip>
 							</div>
 						</div>
 
@@ -383,6 +393,10 @@ const currentPrice = computed(() => props.price.current_price);
 .description {
 	padding-bottom: var(--padding-padding-s2, 2px);
 	color: var(--text-300, rgb(255 255 255 / 62%));
+}
+
+.descriptionTooltip {
+	max-width: 608px;
 }
 
 .badges {

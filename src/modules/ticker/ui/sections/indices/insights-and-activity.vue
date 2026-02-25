@@ -5,6 +5,7 @@ import { isNumber } from '@/shared/lib';
 import { ActivityMetricsTickerWidget } from '@/modules/widgets/activity-metrics';
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem, LayoutType } from '../../../models';
+import { TickerAboutWidget } from '@/modules/widgets/ticker-about';
 
 interface ISectionProps {
 	section: ISectionItem;
@@ -13,7 +14,7 @@ interface ISectionProps {
 
 const props = defineProps<ISectionProps>();
 
-const { tickerId } = useTickerContext();
+const { tickerId, aboutText } = useTickerContext();
 
 const minHeight = computed(() => {
 	if (isNumber(props.section.height)) {
@@ -28,6 +29,11 @@ const minHeight = computed(() => {
 <template>
 	<div :class="classes.section" :style="{ minHeight }">
 		<activity-metrics-ticker-widget :meta="{ tickerId, name: 'Activity Metrics' }" :class="classes.metrics" />
+		<ticker-about-widget
+			v-if="aboutText"
+			:meta="{ tickerId, name: 'About' }"
+			:text="aboutText"
+		/>
 	</div>
 </template>
 

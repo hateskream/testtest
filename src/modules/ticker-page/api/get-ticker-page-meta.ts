@@ -12,6 +12,7 @@ export interface ITickerMetaRequest {
 
 export interface ITickerItemExtended extends ITickerItem {
 	description?: string;
+	about?: string;
 }
 
 export interface IExchange {
@@ -48,7 +49,7 @@ function getApiTickerData(req: ITickerMetaRequest) {
 	const http = useHttpService();
 
 	try {
-		return http.get<ITickerMetaResponse>('/api/v1/ticker/meta', {
+		return http.get<ITickerMetaResponse>('/api/v1/header/data', {
 			query: {
 				ticker_id: req.tickerId,
 			},
@@ -71,6 +72,10 @@ async function getMockTickerData(): Promise<ITickerMetaResponse> {
 			symbol: 'AAPL',
 			name: 'Apple Inc.',
 			description: 'Apple Inc. is an American multinational technology company.',
+			// eslint-disable-next-line @stylistic/max-len
+			about: 'Apple Inc. is an American multinational technology company that designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. Founded in 1976 by Steve Jobs, Steve Wozniak, and Ronald Wayne, Apple has grown to become one of the most valuable and influential technology companies in the world. The company is known for its innovation, design excellence, and commitment to creating products that seamlessly integrate hardware, software, and services. Apple operates through various segments including iPhone, Services, Mac, iPad, and Wearables, generating revenue from both product sales and digital services. With a global presence and a loyal customer base, Apple continues to shape the technology industry through its pioneering work in areas such as mobile computing, artificial intelligence, and sustainable manufacturing.',
+			// about я добавил чисто для тестирования
+			// в реальном ответе либо description либо about
 		},
 		exchange: {
 			title: 'NASDAQ',
