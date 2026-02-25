@@ -9,6 +9,8 @@ import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { type DisplayVariant } from '@/modules/dashboard-group/layout-dashboards/model';
 import { isFeatureEnabled } from '@/shared/lib';
 
+import ErrorComponent from './error-component.vue';
+
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./ticker-component.vue'),
 	loadingComponent: PreloaderComponent,
@@ -23,19 +25,23 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
-
 const {
 	data,
 	isLoading,
 	isError,
 	refetch,
 } = useFederalFunds({ widgetId: props.meta.tickerId });
+
 const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_FEDERAL_FUNDS_ENABLED');
 </script>
 
 <template>
-	<div v-if="widgetIsEnabled">
-		<base-ticker-widget-error v-if="isError" @retry="refetch" />
+	<template v-if="widgetIsEnabled">
+		<error-component
+			v-if="isError"
+			:meta="props.meta"
+			@retry="refetch"
+		/>
 		<preloader-component
 			v-else-if="isLoading"
 			:display-variant="displayVariant"
@@ -45,5 +51,5 @@ const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_FEDERAL_FUNDS_ENABLED');
 			:data="data"
 			:meta="props.meta"
 		/>
-	</div>
+	</template>
 </template>

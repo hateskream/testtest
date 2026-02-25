@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import {
-	BaseTickerWidgetError,
-} from '@/modules/widgets/base';
+import { BaseTickerWidgetError } from '@/modules/widgets/base';
 import { PreloaderComponent } from '../common';
 import { useUsInflation } from '../../composables';
 import { isFeatureEnabled } from '@/shared/lib';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
+
+import ErrorComponent from './error-component.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('./ticker-component.vue'),
@@ -35,8 +35,12 @@ const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_US_INFLATION_ENABLED');
 </script>
 
 <template>
-	<div v-if="widgetIsEnabled">
-		<base-ticker-widget-error v-if="isError" @retry="refetch" />
+	<template v-if="widgetIsEnabled">
+		<error-component
+			v-if="isError"
+			:meta="props.meta"
+			@retry="refetch"
+		/>
 		<preloader-component
 			v-else-if="isLoading"
 		/>
@@ -45,6 +49,5 @@ const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_US_INFLATION_ENABLED');
 			:data="data"
 			:meta="meta"
 		/>
-
-	</div>
+	</template>
 </template>

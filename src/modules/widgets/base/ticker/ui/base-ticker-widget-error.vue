@@ -14,9 +14,12 @@ const emit = defineEmits<{
 
 <style module="classes">
 .container {
-	display: grid;
+	display: flex;
+	flex: 1 0 0;
+	flex-direction: column;
+	align-items: center;
+	align-self: stretch;
 	width: 100%;
-	height: 120px;
-	place-items: center;
+	padding: var(--padding-s11, 20px) 0;
 }
 </style>
