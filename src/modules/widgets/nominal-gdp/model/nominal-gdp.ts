@@ -19,7 +19,7 @@ export type NominalGdpDateRangePresetType = ObjectEnum<typeof NominalGdpDateRang
 export const NominalGdpHistoryPointSchema = z.object({
 	label: z.string(),
 	history: z.number(),
-	forecast: z.number(),
+	forecast: z.number().optional(),
 });
 
 export type NominalGdpHistoryPoint = z.infer<typeof NominalGdpHistoryPointSchema>;

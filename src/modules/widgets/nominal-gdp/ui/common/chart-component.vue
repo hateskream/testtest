@@ -30,7 +30,7 @@ const preparedLabels = computed(() => filteredPoints.value.map(point => point.la
 const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPluginConfig>)[] => {
 	return [
 		{
-			data: filteredPoints.value.map(point => point.forecast),
+			data: filteredPoints.value.map(point => point.forecast ?? null),
 			backgroundColor: (context) => {
 				if (!context.chart.chartArea) {
 					return;
