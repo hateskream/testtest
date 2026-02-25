@@ -325,6 +325,7 @@ defineExpose({ setMixedViewMode, setReportsViewMode });
 .botContent {
 	position: relative;
 	padding: var(--padding-s12, 24px) var(--padding-s6, 18px);
+	background: var(--bg-color-surface-00);
 	transition: none;
 }
 
