@@ -62,7 +62,13 @@ const maxShift = computed(() => {
 	return 0;
 });
 
-const maxFooterShift = computed(() => footerHeight.value + BOT_CONTENT_PADDING);
+const maxFooterShift = computed(() => {
+	if (botContentHeight.value < containerHeight.value) {
+		return footerHeight.value + BOT_CONTENT_PADDING - (containerHeight.value - botContentHeight.value);
+	}
+
+	return footerHeight.value + BOT_CONTENT_PADDING;
+});
 
 const opacityTop = computed(() => {
 	if (!topContentHeight.value || !contentShift.value) {
