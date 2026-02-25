@@ -149,7 +149,10 @@ function onSideColumnScroll(event: WheelEvent) {
 		return;
 	}
 
-	target.scrollTop += event.deltaY;
+	target.scrollTo({
+		top: target.scrollTop + event.deltaY,
+	});
+
 	preventDefaultScrollBehavior(event);
 }
 

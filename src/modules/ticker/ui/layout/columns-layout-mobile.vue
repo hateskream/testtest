@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useEventListener, useScroll } from '@vueuse/core';
-import { useTemplateRef, watch } from 'vue';
+import { toRef, useTemplateRef } from 'vue';
 
-import { isScrollingDown, isScrollingUp, preventDefaultScrollBehavior } from '@/shared/lib/scroll';
-import { useTickerLayout } from '../../composables';
+import { useTickerLayoutTouchScroll } from '../../composables';
 
 export interface IProps {
 	disableScroll?: boolean;
@@ -11,49 +9,21 @@ export interface IProps {
 
 const props = defineProps<IProps>();
 
-const { setBottomReached, handleFooterScroll } = useTickerLayout();
-
-const container = useTemplateRef('container');
-
-const { arrivedState } = useScroll(container);
-
-function isAtBottom() {
-	return arrivedState.bottom;
-}
-
-function onContainerScroll(event: WheelEvent) {
-	if (props.disableScroll) {
-		preventDefaultScrollBehavior(event);
-		return;
-	}
-
-	setBottomReached(isAtBottom());
-
-	const shouldDelegateScroll = isScrollingDown(event.deltaY) && isAtBottom() || isScrollingUp(event.deltaY);
-
-	if (!shouldDelegateScroll) {
-		return;
-	}
-
-	if (handleFooterScroll(event.deltaY)) {
-		preventDefaultScrollBehavior(event);
-	}
-}
-
-watch(() => arrivedState.bottom, setBottomReached, { immediate: true });
-
-useEventListener(container, 'wheel', onContainerScroll, { passive: false });
+useTickerLayoutTouchScroll(
+	useTemplateRef('container'),
+	{ disabled: toRef(props, 'disableScroll') },
+);
 </script>
 
 <template>
-	<div ref="container" :class="[classes.root, classes.hideScrollbar]">
-		<div v-if="$slots.leftCol" :class="[classes.columnStatic, classes.hideScrollbar]">
+	<div ref="container" :class="[classes.root, classes.scrollable]">
+		<div v-if="$slots.leftCol" :class="[classes.column, classes.scrollable]">
 			<slot name="leftCol"></slot>
 		</div>
-		<div v-if="$slots.rightCol" :class="[classes.columnStatic, classes.hideScrollbar]">
+		<div v-if="$slots.rightCol" :class="[classes.column, classes.scrollable]">
 			<slot name="rightCol"></slot>
 		</div>
-		<div v-if="$slots.mainCol" :class="[classes.columnStatic, classes.hideScrollbar]">
+		<div v-if="$slots.mainCol" :class="[classes.column, classes.scrollable]">
 			<slot name="mainCol"></slot>
 		</div>
 	</div>
@@ -69,17 +39,17 @@ useEventListener(container, 'wheel', onContainerScroll, { passive: false });
 	overflow-y: auto;
 }
 
-.columnStatic {
+.column {
 	flex-shrink: 0;
 	width: 100%;
 }
 
-.hideScrollbar {
+.scrollable {
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }
 
-.hideScrollbar::-webkit-scrollbar {
+.scrollable::-webkit-scrollbar {
 	display: none;
 }
 </style>

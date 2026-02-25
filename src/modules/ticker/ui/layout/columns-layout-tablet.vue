@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useEventListener, useScroll } from '@vueuse/core';
-import { useTemplateRef, watch } from 'vue';
+import { toRef, useTemplateRef } from 'vue';
 
-import { isScrollingDown, isScrollingUp, preventDefaultScrollBehavior } from '@/shared/lib/scroll';
-import { useTickerLayout } from '../../composables';
+import { useTickerLayoutTouchScroll } from '../../composables';
 
 export interface IProps {
 	disableScroll?: boolean;
@@ -11,49 +9,10 @@ export interface IProps {
 
 const props = defineProps<IProps>();
 
-const { setBottomReached, handleFooterScroll, isInReportsMode } = useTickerLayout();
-
-const container = useTemplateRef('container');
-
-const { arrivedState } = useScroll(container);
-
-function isAtBottom() {
-	return arrivedState.bottom;
-}
-
-function isAtTop() {
-	return arrivedState.top;
-}
-
-function onContainerScroll(event: WheelEvent) {
-	if (props.disableScroll) {
-		preventDefaultScrollBehavior(event);
-		return;
-	}
-
-	if (!isInReportsMode.value) {
-		event.preventDefault();
-		return;
-	}
-
-	setBottomReached(isAtBottom());
-
-	if (isAtTop() && isScrollingUp(event.deltaY)) {
-		return;
-	}
-
-	if (isAtBottom() && isScrollingDown(event.deltaY)) {
-		handleFooterScroll(event.deltaY);
-		return;
-	}
-
-	preventDefaultScrollBehavior(event);
-	container.value!.scrollTop += event.deltaY;
-}
-
-watch(() => arrivedState.bottom, setBottomReached, { immediate: true });
-
-useEventListener(container, 'wheel', onContainerScroll, { passive: false });
+useTickerLayoutTouchScroll(
+	useTemplateRef('container'),
+	{ disabled: toRef(props, 'disableScroll') },
+);
 </script>
 
 <template>
