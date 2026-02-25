@@ -14,7 +14,7 @@ interface IPriceInfoProps {
 
 const props = defineProps<IPriceInfoProps>();
 
-const marketStatusLabel = computed(() => props.isMarketOpen ? 'At Close:' : 'At Open:');
+const marketStatusLabel = computed(() => props.isMarketOpen ? 'Last updated:' : 'Now. Market open:');
 
 function formatDateTimeToLocal(timeString: string) {
 	if (!timeString) {

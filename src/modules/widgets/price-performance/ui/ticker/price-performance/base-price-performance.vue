@@ -106,16 +106,6 @@ function formatDate(date: string) {
 
 
 					<div :class="classes.metricsGrid">
-						<div :class="classes.metricItem">
-							<div :class="classes.metricLabel" class="text-100-r">Open</div>
-							<div class="text-100-r">{{ formatValue(props.data.openPrice) }}</div>
-						</div>
-
-						<div :class="[classes.metricItem, classes.alignRight]">
-							<div :class="classes.metricLabel" class="text-100-r">Previous close</div>
-							<div class="text-100-r">{{ formatValue(props.data.previousClose) }}</div>
-						</div>
-
 						<div v-if="props.data.average50" :class="classes.metricItem">
 							<div :class="classes.metricLabel" class="text-100-r">Average, 50 days</div>
 							<div class="text-100-r">{{ formatValue(props.data.average50) }}</div>
@@ -124,6 +114,16 @@ function formatDate(date: string) {
 						<div v-if="props.data.average200" :class="[classes.metricItem, classes.alignRight]">
 							<div :class="classes.metricLabel" class="text-100-r">Average, 200 days</div>
 							<div class="text-100-r">{{ formatValue(props.data.average200) }}</div>
+						</div>
+
+						<div :class="classes.metricItem">
+							<div :class="classes.metricLabel" class="text-100-r">Open</div>
+							<div class="text-100-r">{{ formatValue(props.data.openPrice) }}</div>
+						</div>
+
+						<div :class="[classes.metricItem, classes.alignRight]">
+							<div :class="classes.metricLabel" class="text-100-r">Previous close</div>
+							<div class="text-100-r">{{ formatValue(props.data.previousClose) }}</div>
 						</div>
 						<ticker-base-list-divider :class="classes.fullWidth" />
 						<div v-if="props.data.ath" :class="[classes.metricItem, classes.fullWidth]">
