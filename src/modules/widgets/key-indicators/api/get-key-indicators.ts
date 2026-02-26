@@ -3,7 +3,7 @@ import { delay } from '@/shared/lib';
 import { useLogger } from '@/shared/service/monitoring';
 import type { IKeyIndicator } from '../model/key-indicators';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface IKeyIndicatorResponse {
 	indicators: IKeyIndicator[];
@@ -48,7 +48,7 @@ function getKeyIndicatorsApi(request: IKeyIndicatorRequest) {
 	const https = useHttpService();
 
 	try {
-		return https.get<IKeyIndicatorResponse>('/key-indicators', {
+		return https.get<IKeyIndicatorResponse>('/api/v1/key-indicators/data', {
 			query: {
 				ticker_id: request.ticker_id,
 			},
