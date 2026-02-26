@@ -28,15 +28,22 @@ const props = defineProps<IEtfMetricsProps>();
 		>
 			{{ props.metrics.avgVolume }}
 		</metrics-container>
-		<metrics-container
-			title="Beta"
-			tooltip="Measure of the ETF’s volatility relative to its benchmark (1 = market-level risk)."
-		>
-			{{ props.metrics.beta }}
+		<metrics-container title="Beta">
+			<template #default>
+				{{ props.metrics.beta }}
+			</template>
+			<template #tooltip>
+				<div>
+					<p>Measures the ETF’s volatility relative to its benchmark.</p>
+					<p>1 = moves with the market;</p>
+					<p>&gt;1 = more volatile;</p>
+					<p>&lt;1 = less volatile</p>
+				</div>
+			</template>
 		</metrics-container>
 		<metrics-container
 			title="Top Holding"
-			tooltip="Combined percentage of total ETF assets allocated to its ten largest holdings."
+			tooltip="Percentage of total ETF assets invested in its largest position."
 			:class="classes.full"
 		>
 			{{ props.metrics.topHolding }}

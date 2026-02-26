@@ -15,38 +15,33 @@ const props = defineProps<ICryptoMetricsProps>();
 	<base-metrics>
 		<metrics-container
 			title="Market Cap"
-			tooltip="Total market value of the circulating supply. Market Capitalization = Circulating Supply × Current Price."
+			tooltip="Circulating supply × current price. Shows the total market value of the cryptocurrency."
 			:class="classes.full"
 		>
 			{{ props.metrics.marketCap }}
 		</metrics-container>
 		<metrics-container
 			title="Volume (24h)"
-			tooltip="Total trading volume across tracked exchanges in the last 24 hours.
-			Indicates short-term market activity and liquidity."
+			tooltip="Total amount traded in the last 24 hours. Reflects short-term activity and liquidity."
 		>
 			{{ props.metrics.volume24h }}
 		</metrics-container>
-		<metrics-container title="FDV">
-			<template #default>{{ props.metrics.fdv }}</template>
-			<template #tooltip>
-				<div>
-					<p>Market value assuming the maximum possible supply is in circulation.</p>
-					<p>FDV = Maximum Supply × Current Price</p>
-				</div>
-			</template>
+		<metrics-container
+			title="FDV"
+			tooltip="Fully Diluted Valuation = Maximum supply × current price.
+			Shows the market value if all tokens were in circulation."
+		>
+			{{ props.metrics.fdv }}
 		</metrics-container>
 		<metrics-container
 			title="Vol/Mkt Cap (24h)"
-			tooltip="24h trading volume divided by market cap. Shows relative liquidity and
-			turnover compared to the asset’s size."
+			tooltip="24h trading volume ÷ market cap. Shows how actively the asset is traded relative to its size."
 		>
 			{{ props.metrics.volToMktCap24h }}
 		</metrics-container>
 		<metrics-container
 			title="Total Supply"
-			tooltip="Total number of coins/tokens created minus burned tokens,
-			including those not currently in circulation."
+			tooltip="Total tokens created minus burned tokens, including those not currently in circulation."
 		>
 			{{ props.metrics.totalSupply }}
 		</metrics-container>

@@ -26,35 +26,39 @@ const sectorLinkIsEnabled = isFeatureEnabled('STOCK_TICKER_SECTOR_LINK_ENABLED')
 			It indicates company size and scale in the market."
 			:class="classes.full"
 		>
-			{{ props.metrics.marketCap }}
+			<template #default>
+				{{ props.metrics.marketCap }}
+			</template>
+			<template #tooltip>
+				<div>
+					<p>Current share price × shares outstanding.</p>
+					<p>Shows the company’s total equity value and relative size.</p>
+				</div>
+			</template>
 		</metrics-container>
 		<metrics-container
 			title="Volume"
-			tooltip="Total number of shares traded during the current trading day.
-			Indicates intraday activity and liquidity."
+			tooltip="Total shares traded today. Reflects intraday activity and liquidity."
 		>
 			{{ props.metrics.volume24h }}
 		</metrics-container>
 		<metrics-container
 			title="Total Return (3M)"
-			tooltip="The percentage gain or loss on a stock over the past three months,
-			including price changes and any dividends reinvested.
-			Total return gives a fuller picture of performance, not just price movement."
+			tooltip="Percentage gain or loss over the past three months,
+			including price changes and reinvested dividends."
 		>
 			{{ props.metrics.totalReturn3m }}
 		</metrics-container>
 		<metrics-container
 			title="Total Return (1Y)"
-			tooltip="The percentage gain or loss on a stock over the past year,
-			including price changes and any dividends reinvested.
-			Total return gives a fuller picture of performance, not just price movement."
+			tooltip="Percentage gain or loss over the past year, including price changes and reinvested dividends."
 		>
 			{{ props.metrics.totalReturn1y }}
 		</metrics-container>
 		<metrics-container
 			title="Forward P/E"
-			tooltip="A valuation ratio that divides the current share price by projected earnings per share over the
-			next 12 months. It shows how the market values expected earnings relative to the current price."
+			tooltip="Price divided by expected earnings over the next 12 months.
+			Shows how much investors are paying today for each dollar of future profit."
 		>
 			{{ props.metrics.forwardPe }}
 		</metrics-container>
