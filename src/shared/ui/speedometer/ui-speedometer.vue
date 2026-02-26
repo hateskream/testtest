@@ -7,6 +7,9 @@ import { UiSpeedometerCircle } from './circle';
 
 import UiSpeedometerArrow from './ui-speedometer-arrow.vue';
 
+const BLUR_SIZE = 30;
+const BLUR_SIZE_IN_PX = `${BLUR_SIZE}px`;
+
 interface ISpeedometerProps {
 	value: number;
 	color: CSSProperties['color'];
@@ -19,11 +22,12 @@ interface ISpeedometerProps {
 
 const props = withDefaults(defineProps<ISpeedometerProps>(), {
 	width: 260,
-	height: 155,
+	height: 160,
 	shadowColor: undefined,
 });
 
 const widthInPx = computed(() => `${props.width}px`);
+const svgWidthInPx = computed(() => `${props.width + BLUR_SIZE * 2}px`);
 const heightInPx = computed(() => `${props.height}px`);
 
 const range = computed(() => {
@@ -59,16 +63,17 @@ const endAngle = computed(() => degreeToRadians(180 + 180 * (range.value.to / 10
 	<div :class="classes.root">
 		<div :class="classes.chart">
 			<ui-speedometer-circle
-				:width="widthInPx"
+				:width="svgWidthInPx"
 				:class="classes.svg"
 				:color="props.color"
 				:shadow-color="props.shadowColor ?? props.color"
 				:start="startAngle"
 				:end="endAngle"
 				:show-blur="props.showBlur"
+				:blur-size="BLUR_SIZE"
 			/>
 			<ui-speedometer-arrow
-				:width="widthInPx"
+				:width="svgWidthInPx"
 				:rotate="arrowRotate"
 				:class="classes.svg"
 			/>
@@ -94,6 +99,6 @@ const endAngle = computed(() => degreeToRadians(180 + 180 * (range.value.to / 10
 .svg {
 	position: absolute;
 	top: 0;
-	left: 0;
+	left: calc(-1 * v-bind(BLUR_SIZE_IN_PX));
 }
 </style>

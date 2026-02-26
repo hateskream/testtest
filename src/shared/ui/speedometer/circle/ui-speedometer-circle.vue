@@ -11,13 +11,15 @@ interface ISpeedometerCircleProps {
 	start: number;
 	end: number;
 	showBlur?: boolean;
+	blurSize?: number;
 }
 
-const props = defineProps<ISpeedometerCircleProps>();
+const props = withDefaults(defineProps<ISpeedometerCircleProps>(), {
+	blurSize: 30,
+});
 
 const CIRCLE_RADIUS = 68.5;
 const CIRCLE_CENTER = 98.5;
-const BLUR_SIZE = 30;
 </script>
 
 <template>
@@ -39,7 +41,7 @@ const BLUR_SIZE = 30;
 			:shadow-color="props.shadowColor"
 			:start="props.start"
 			:end="props.end"
-			:blur-size="BLUR_SIZE"
+			:blur-size="props.blurSize"
 			:show-blur="props.showBlur"
 			:radius="CIRCLE_RADIUS"
 			:center="CIRCLE_CENTER"
