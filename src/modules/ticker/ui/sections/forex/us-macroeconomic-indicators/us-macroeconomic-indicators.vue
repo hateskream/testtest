@@ -38,7 +38,7 @@ const selectedTabId = ref<string | number>('nominal');
 			/>
 			<us-inflation-ticker-widget
 				:class="classes.inflation"
-				:meta="{tickerId, name:'Us Inflation'}"
+				:meta="{tickerId, name:'US inflation (1Y)'}"
 			/>
 		</div>
 		<consumer-price-index-ticker-widget :class="classes.cpi" :meta="{ tickerId, name: 'Consumer price index' }" />

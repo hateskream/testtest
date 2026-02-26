@@ -1,4 +1,4 @@
-import { isValid } from 'date-fns';
+//import { isValid } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
@@ -11,6 +11,15 @@ const IS_USE_MOCK = false;
 export interface IGetFederalFundsRequest {
 	widgetId: string;
 }
+
+
+// function validateResponse(response: IFederalFundsDomain) {
+// 	const date = new Date(response.next_review_date);
+//
+// 	if (!isValid(date)) {
+// 		throw new Error('Invalid next review date');
+// 	}
+// }
 
 export async function getFederalFunds(request: IGetFederalFundsRequest): Promise<IFederalFundsDomain> {
 	const httpService = useHttpService();
@@ -28,8 +37,8 @@ export async function getFederalFunds(request: IGetFederalFundsRequest): Promise
 				},
 			});
 		}
-
-		validateResponse(response);
+		//TODO СНЯТЬ КАК БЕК ПОФИКСИТ И ДАТА НАЧНЕТ ПРИХОДИТЬ
+		//validateResponse(response);
 
 		return response;
 	} catch (error) {
@@ -38,13 +47,6 @@ export async function getFederalFunds(request: IGetFederalFundsRequest): Promise
 	}
 }
 
-function validateResponse(response: IFederalFundsDomain) {
-	const date = new Date(response.next_review_date);
-
-	if (!isValid(date)) {
-		throw new Error('Invalid next review date');
-	}
-}
 
 const { getMock } = useFetchMock<IFederalFundsDomain>('/mock/widgets/federal-funds.json');
 

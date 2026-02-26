@@ -15,6 +15,9 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const reviewDateLabel = computed(() => {
+	if (!props.data.next_review_date) {
+		return false;
+	}
 	const date = new Date(props.data.next_review_date);
 
 	const formatter = getDateFormatter({
@@ -38,6 +41,7 @@ const reviewDateLabel = computed(() => {
 					<ui-text token="title-200">{{ props.data.rate }}%</ui-text>
 				</div>
 				<ui-text
+					v-if="reviewDateLabel"
 					:class="classes.text"
 					token="text-200-r"
 					as="p"
