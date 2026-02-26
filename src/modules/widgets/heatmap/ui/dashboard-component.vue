@@ -151,6 +151,7 @@ function mapSingleSettingsToColorDepth(setting: ISingleSetting): IColorDepthSett
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
+		@retry="refetch"
 	>
 		<template #title>
 			{{ props.meta.name }}

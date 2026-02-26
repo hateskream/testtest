@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { NominalGdpRange, rangeFilters, rangeFilterValueToDisplay } from '../../model';
+import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { type NominalGdpDateRangePresetType, rangeFilters } from '../../model';
 
 const emit = defineEmits<{
 	reset: [];
@@ -12,7 +15,9 @@ interface IFiltersPanelProps {
 
 const props = defineProps<IFiltersPanelProps>();
 
-const activeRange = defineModel<NominalGdpRange>('range', { required: true });
+const activeRange = defineModel<NominalGdpDateRangePresetType>('range', { required: true });
+
+const rangeTitle = computed(() => getDateRangePresetLabel(activeRange.value));
 </script>
 
 <template>
@@ -24,7 +29,7 @@ const activeRange = defineModel<NominalGdpRange>('range', { required: true });
 			:display-variant="props.displayVariant"
 			:options="rangeFilters"
 			:selected-value="activeRange"
-			:label="rangeFilterValueToDisplay[activeRange].selected"
+			:label="rangeTitle"
 			close-on-select
 			title="Date range"
 			@select="activeRange = $event.value"

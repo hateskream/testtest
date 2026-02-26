@@ -21,7 +21,7 @@ function formatMarketCap(value: number) {
 function formatChangePercent(value: number) {
 	if (value < 0) {
 		// by design
-		// eslint-disable-next-line no-irregular-whitespace
+		// oxlint-disable-next-line no-irregular-whitespace
 		return `- ${Math.abs(value).toFixed(2)}`;
 	}
 

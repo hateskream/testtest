@@ -1,3 +1,4 @@
+@layer normalize, typography, kit;
 @import url('./colors.css');
 @import url('./normalize.css');
 @import url('./typography.css');
@@ -26,3 +27,4 @@ body {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
+

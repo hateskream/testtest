@@ -1,0 +1,23 @@
+{
+	"ticker_id": "Crypto-BTC_Bitcoin",
+	"website": {
+		"label": "tesla.com",
+		"link": "https://tesla.com"
+	},
+	"socials": [
+		{
+			"logo_url": "https://financialmodelingprep.com/image-stock/FREJO.png",
+			"link": "https://tesla.com"
+		},
+		{
+			"logo_url": "https://financialmodelingprep.com/image-stock/FREJO.png",
+			"link": "https://tesla.com"
+		},
+		{
+			"logo_url": "https://financialmodelingprep.com/image-stock/FREJO.png",
+			"link": "https://tesla.com"
+		}
+	],
+	"tags": ["Bitcoin Ecosystem", "Layer 1"]
+}
+

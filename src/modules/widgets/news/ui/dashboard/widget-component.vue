@@ -127,6 +127,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<news-filters-panel

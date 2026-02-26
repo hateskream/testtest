@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
 	ColumnType,
 	type ColumnWithoutSymbol,
@@ -82,7 +82,7 @@ export async function getScreenerStock(_: IGetScreenerRequest): Promise<IPrepare
 
 		return prepareMarketResponse<StockTableRow>(response.data);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

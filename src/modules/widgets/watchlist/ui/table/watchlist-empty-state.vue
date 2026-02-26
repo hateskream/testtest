@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import type { ITickersAddPayload } from '../../model';
-import { resolveMarketTypeFromTicker } from '@/modules/cell';
 import { UiText } from '@/shared/ui/text';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
@@ -16,21 +16,21 @@ const emit = defineEmits<{
 
 const isOpenSelector = ref(false);
 
-const selectedTickers = ref<string[]>([]);
+const selectedTickers = ref<ITickerItem[]>([]);
 
 function onClickSave() {
 	const tickers = selectedTickers.value
 		.reduce<ITickersAddPayload['tickers']>(
 			(acc, item) => {
-				const marketType = resolveMarketTypeFromTicker(item);
+				const marketType = item.market_type;
 				if (!marketType) {
 					return acc;
 				}
 
 				if (!acc[marketType]) {
-					acc[marketType] = [item];
+					acc[marketType] = [item.market_type];
 				} else {
-					acc[marketType].push(item);
+					acc[marketType].push(item.market_type);
 				}
 
 				return acc;
@@ -46,14 +46,14 @@ function onClickSave() {
 
 <template>
 	<div :class="classes.root">
-		<modal-ticker-selector-legacy
+		<ticker-selector-modal
 			v-if="isOpenSelector"
-			v-model="selectedTickers"
-			:is-background-transparent="true"
-			:enable-selected-info="false"
+			v-model:selected-tickers="selectedTickers"
+			:enabled-markets="ALL_MARKET_TYPES"
+			:selection-mode="SelectionMode.Multiple"
 			:enable-select-all="false"
 			:display-variant="props.displayVariant"
-			text-above-search="Add symbols"
+			search-placeholder="Add symbols..."
 		/>
 
 		<div

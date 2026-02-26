@@ -1,18 +1,9 @@
-export interface IMetricTrendBadge {
-	topValue: number;
-	isTopValuePercent: boolean;
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isGood: boolean;
-	isPercent: boolean;
-}
+export type IChangeDirection = 'up' | 'down' | 'neutral';
 
 export interface INonfarmPayrollsChange {
-	value: number;
+	value: number | null;
 	unit: string;
-	direction: 'up' | 'down';
+	direction: IChangeDirection;
 	isPositive: boolean;
 }
 
@@ -21,17 +12,9 @@ export interface INonfarmPayrollsPoint {
 	history: number;
 }
 
-export interface INonfarmPayrollsResponse {
+export interface INonfarmPayrollsData {
 	primaryValue: string;
 	primaryValueUnit: string;
 	change: INonfarmPayrollsChange;
 	points: INonfarmPayrollsPoint[];
-}
-
-export interface INonfarmPayrollsData {
-	badge: IMetricTrendBadge;
-	points: {
-		time: string;
-		value: number;
-	}[];
 }

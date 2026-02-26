@@ -1,13 +1,13 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
-	type SymbolDto,
 	ColumnType,
-	prepareMarketResponse,
-	type TableRowDto,
-	type ISort,
-	SymbolType,
 	type ColumnWithoutSymbol,
+	type ISort,
+	prepareMarketResponse,
+	type SymbolDto,
+	SymbolType,
+	type TableRowDto,
 } from '@/modules/cell';
 import type { CryptoCEXTableRow, CryptoDEXTableRow } from '../model';
 import { type MarketType } from '../model/exchanges';
@@ -58,7 +58,7 @@ export async function getExchangesCrypto(_: IGetMarketRequest): Promise<IPrepare
 
 		return prepareMarketResponse<CryptoCEXTableRow | CryptoDEXTableRow>(response.data);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

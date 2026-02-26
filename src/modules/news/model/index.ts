@@ -4,5 +4,5 @@ export * from './filters';
 export * from './location';
 export * from './sort';
 export * from './state';
-export * from './segment-modal.ts';
+export * from './segment-modal';
 export * from './presets';

@@ -13,6 +13,7 @@ interface IUiImage {
 	loading?: 'lazy' | 'eager';
 	showLoader?: boolean;
 	skipBlacklist?: boolean;
+	timeout?: number;
 }
 
 const props = withDefaults(defineProps<IUiImage>(), {
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<IUiImage>(), {
 	replacement: '',
 	showLoader: false,
 	skipBlacklist: false,
+	timeout: 10_000,
 });
 
 const emit = defineEmits<{
@@ -48,6 +50,9 @@ watch(
 		currentSrc.value = props.replacement;
 
 		if (!newSrc) {
+			isValidSrc.value = false;
+			isImageLoaded.value = true;
+			emit('error');
 			return;
 		}
 
@@ -83,12 +88,23 @@ watch(refImg, () => {
 async function tryLoadImage(src: string): Promise<boolean> {
 	return new Promise(resolve => {
 		const img = new Image();
+		const timer = setTimeout(() => {
+			img.onload = null;
+			img.onerror = null;
+			img.src = '';
+			isImageLoaded.value = true;
+			emit('error');
+			resolve(false);
+		}, props.timeout);
+
 		img.onload = () => {
+			clearTimeout(timer);
 			isImageLoaded.value = true;
 			emit('loaded');
 			resolve(true);
 		};
 		img.onerror = () => {
+			clearTimeout(timer);
 			isImageLoaded.value = true;
 			emit('error');
 			resolve(false);

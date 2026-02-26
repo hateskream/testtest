@@ -1,23 +1,19 @@
-import { RealGdpRange } from './real-gdp';
+import { RealGdpDateRangePreset, RealGdpValueType, type RealGdpValueTypeType } from './real-gdp';
+import { getDateRangePresetTitle } from '@/modules/lightweight-charts/model';
 
-export const rangeFilterValueToDisplay: Record<RealGdpRange, { selected: string; option: string }> = {
-	[RealGdpRange.FiveYears]: {
-		selected: '5Y',
-		option: '5 years',
-	},
-	[RealGdpRange.TenYears]: {
-		selected: '10Y',
-		option: '10 years',
-	},
-	[RealGdpRange.TwentyFiveYears]: {
-		selected: '25Y',
-		option: '25 years',
-	},
-	[RealGdpRange.All]: {
-		selected: 'All',
-		option: 'All time',
-	},
-};
+export const rangeFilters = Object.values(RealGdpDateRangePreset).map(d => {
+	return {
+		label: getDateRangePresetTitle(d),
+		value: d,
+	};
+});
 
-export const rangeFilters = Object.entries(rangeFilterValueToDisplay)
-	.map(([value, option]) => ({ label: option.selected, value: value as RealGdpRange }));
+export const valueTypeFilterValueToDisplay = {
+	[RealGdpValueType.Points]: 'Points',
+	[RealGdpValueType.ChangeDelta]: 'Change',
+	[RealGdpValueType.ChangePercent]: 'Change, %',
+} as const satisfies Record<RealGdpValueTypeType, string>;
+
+export const valueTypeFilters = Object.values(RealGdpValueType)
+	.map(value => ({ label: valueTypeFilterValueToDisplay[value], value }));
+

@@ -13,8 +13,13 @@ import {
 } from '@/modules/widgets/watchlist/model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiDriver } from '@/shared/ui/driver';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
-import { resolveMarketTypeFromTicker } from '@/modules/cell';
+import {
+	decodeCanonicalTickerId,
+	type ITickerItem,
+	SelectionMode,
+	TickerSelectorModal,
+} from '@/modules/ticker-selector';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 import WatchlistTab from './watchlist-tab.vue';
 import WatchlistModal from './watchlist-modal.vue';
@@ -106,20 +111,13 @@ function openModal(index: number) {
 	positionRefs.value?.[index].handleOpen?.();
 }
 
-function selectTicker(tickerId: string) {
-	const marketType = resolveMarketTypeFromTicker(tickerId);
-	if (!marketType) {
-		return;
-	}
-
-	emit('add-ticker',
-		{
-			tickerId,
-			tickerType: marketType,
-		},
-	);
+function selectTicker(ticker: ITickerItem) {
+	emit('add-ticker', { tickerId: ticker.canonical_ticker_id, tickerType: ticker.market_type });
 }
 
+function unselectTicker(ticker: ITickerItem) {
+	emit('remove-ticker', { tickerId: ticker.canonical_ticker_id });
+}
 </script>
 
 <template>
@@ -171,12 +169,14 @@ function selectTicker(tickerId: string) {
 										</span>
 									</template>
 									<template #content>
-										<modal-ticker-selector-legacy
-											:model-value="selectedTickers"
+										<ticker-selector-modal
+											:enabled-markets="ALL_MARKET_TYPES"
+											:model-value="selectedTickers.map(decodeCanonicalTickerId)"
+											:selection-mode="SelectionMode.Single"
 											:enable-select-all="false"
 											:display-variant="props.displayVariant"
-											@select="selectTicker"
-											@unselect="emit('remove-ticker', { tickerId: $event })"
+											@ticker-selected="selectTicker"
+											@ticker-unselected="unselectTicker"
 										/>
 									</template>
 								</ui-position>
@@ -220,7 +220,10 @@ function selectTicker(tickerId: string) {
 						:selected-tickers="props.selectedTickers"
 						:display-variant="props.displayVariant"
 						@on-click-action="onClickAction"
-						@select-ticker="selectTicker"
+						@select-ticker="emit('add-ticker', {
+							tickerId: $event.tickerId,
+							tickerType: $event.marketType,
+						})"
 						@remove-ticker="emit('remove-ticker', $event)"
 						@switch-tab="onSwitchTab"
 						@rename="onRenameTab"

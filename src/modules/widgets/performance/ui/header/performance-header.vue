@@ -74,7 +74,8 @@ function updateCurrency(v: Currency) {
 				:exclude-markets="[
 					MarketType.Commodities,
 					MarketType.Crypto,
-					MarketType.Indices
+					MarketType.Indices,
+					MarketType.Etf,
 				]"
 				:display-variant="displayStyle"
 				close-on-select

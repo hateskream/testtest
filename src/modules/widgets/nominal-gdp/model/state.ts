@@ -1,19 +1,23 @@
 import { z } from 'zod';
 
-import { NominalGdpRange } from './nominal-gdp';
+import {
+	NominalGdpDateRangePreset,
+	NominalGdpDateRangePresetSchema,
+	type NominalGdpDateRangePresetType,
+} from './nominal-gdp';
 
 export interface IState {
-	range: NominalGdpRange;
+	range: NominalGdpDateRangePresetType;
 }
 
 export const stateSchema = z.object({
-	range: z.nativeEnum(NominalGdpRange),
+	range: NominalGdpDateRangePresetSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		range: NominalGdpRange.TenYears,
+		range: NominalGdpDateRangePreset.TenYears,
 	};
 }

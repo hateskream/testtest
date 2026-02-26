@@ -1,3 +1,4 @@
-import DashboardComponent from './ui/dashboard-component.vue';
+import ETHGasTvWidgetComponent from './ui/tv/tv-widget-component.vue';
+import ETHGasDashboardWidgetComponent from './ui/dashboard/dashboard-widget-component.vue';
 
-export { DashboardComponent as EthGasDashboard };
+export { ETHGasTvWidgetComponent, ETHGasDashboardWidgetComponent };

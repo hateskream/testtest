@@ -21,6 +21,7 @@ const props = defineProps<IViewComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'toggle-pin', tickerId: string): void;
+	(e: 'ticker-select', tickerId: string): void;
 	(e: 'load-more', state: IInfiniteStateHandler): void;
 }>();
 
@@ -84,6 +85,7 @@ defineExpose({ scrollBy });
 						:has-pin="props.hasPin"
 						:display-variant="props.displayVariant"
 						@toggle-pin="emit('toggle-pin', $event)"
+						@ticker-select="emit('ticker-select', $event)"
 					/>
 				</div>
 			</div>

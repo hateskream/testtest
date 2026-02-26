@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
-import { BaseWidgetDashboard, BaseErrorComponent } from '@/modules/widgets/base/';
+import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base/';
 import type { IMeta } from '@/modules/dashboard-group';
 import { useQueryTopIndices } from '../../queries';
 import { ALL_COLUMNS } from '../../model';
-import { ErrorNetworkComponent } from '@/modules/widgets/base';
-import { LoaderLayout } from '../common';
+import { LoaderLayout, ErrorLayout } from '../common';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-layout.vue'),
@@ -44,9 +43,13 @@ const isNotData = computed(() => isLoading.value || props.meta.isLoading);
 		@delete="emits('delete')"
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #content>
-			<error-network-component v-if="isError" @retry="refetch" />
+			<error-layout
+				v-if="isError"
+				@retry="refetch"
+			/>
 			<loader-layout
 				v-else-if="isNotData && !isError"
 				:display-variant="props.meta.activeDisplayVariant"

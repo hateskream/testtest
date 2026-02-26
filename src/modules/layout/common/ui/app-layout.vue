@@ -1,11 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
-// import { HomeMobile, NewLayout } from '@/modules/layout';
 import { useIsMobile } from '@/shared/composables';
 import { NewLayout } from '../../new-desktop';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 import HomeMobile from '../../mobile/ui/home-mobile.vue';
+
+interface IAppLayoutProps {
+	activeTicker?: ITickerItem | null;
+}
+
+const props = defineProps<IAppLayoutProps>();
 
 const isMobile = useIsMobile();
 
@@ -37,8 +43,8 @@ function close() {
 			</div>
 		</transition>
 	</template>
-	<new-layout v-else>
-		<slot />
+	<new-layout v-else :active-ticker="props.activeTicker">
+		<slot :close="close" />
 	</new-layout>
 </template>
 

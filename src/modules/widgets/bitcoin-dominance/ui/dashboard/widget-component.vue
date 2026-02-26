@@ -51,6 +51,7 @@ const {
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<dominance-filters-panel
@@ -97,6 +98,6 @@ const {
 }
 
 .content {
-	padding: 12px 16px 12px 20px;
+	padding: 24px 20px 12px;
 }
 </style>

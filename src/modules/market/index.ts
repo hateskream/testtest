@@ -4,7 +4,10 @@ export enum MarketType {
 	Forex = 'forex',
 	Commodities = 'commodity',
 	Indices = 'index',
+	Etf = 'etf',
 }
+
+export const ALL_MARKET_TYPES = Object.values(MarketType);
 
 export const marketToLabel: Record<MarketType, string> = {
 	[MarketType.Crypto]: 'Crypto',
@@ -12,6 +15,7 @@ export const marketToLabel: Record<MarketType, string> = {
 	[MarketType.Forex]: 'Forex',
 	[MarketType.Commodities]: 'Commodity',
 	[MarketType.Indices]: 'Index',
+	[MarketType.Etf]: 'ETF',
 };
 
 export const marketToName: Record<MarketType, string> = {
@@ -20,6 +24,7 @@ export const marketToName: Record<MarketType, string> = {
 	[MarketType.Forex]: 'Forex',
 	[MarketType.Commodities]: 'Commodity',
 	[MarketType.Indices]: 'Index',
+	[MarketType.Etf]: 'ETF',
 };
 
 export function getMarketLabel(market: MarketType): string {
@@ -32,7 +37,7 @@ interface IMarket {
 }
 
 export function getAllMarkets(): IMarket[] {
-	return Object.values(MarketType).map(market => ({
+	return ALL_MARKET_TYPES.map(market => ({
 		type: market,
 		label: getMarketLabel(market),
 	}));

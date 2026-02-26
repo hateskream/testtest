@@ -7,20 +7,13 @@ interface IOptions {
 export function useUnemploymentRate({
 	widgetId,
 }: IOptions) {
-
-
 	const {
 		data: currentData,
-		isLoading,
-		isError,
-		refetch,
+		...rest
 	} = useQueryUnemploymentRate(widgetId);
 
 	return {
-		isError,
-		isLoading,
 		currentData,
-		refetch,
+		...rest,
 	};
 }
-

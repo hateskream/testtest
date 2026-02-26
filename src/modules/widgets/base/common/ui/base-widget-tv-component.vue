@@ -6,6 +6,10 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { WidgetContextMenu, WidgetContextMenuFullView } from '../../modal';
 import { FullViewDashboard, type IMeta } from '@/modules/dashboard-group';
 import { UiPositionPortal } from '@/shared/ui/position';
+import { UiErrorBoundary } from '@/shared/ui/error-boundary';
+import { useLogger } from '@/shared/service/monitoring';
+
+import BaseErrorComponent from './base-error-component.vue';
 
 interface IBaseDashboardComponentProps {
 	meta: IMeta;
@@ -21,11 +25,14 @@ const emits = defineEmits<{
 	(e: 'reset'): void;
 	(e: 'delete'): void;
 	(e: 'apply-changes'): void;
+	(e: 'retry'): void;
+	(e: 'error', error: Error): void;
 }>();
 
 defineSlots<{
 	title(): unknown;
 	content(): unknown;
+	error(): unknown;
 	rcm(): unknown;
 	filter(): unknown;
 	'change-display'(): unknown;
@@ -68,6 +75,13 @@ function handleOpenFullView() {
 	rcmLayer.value?.close();
 	isOpenFullView.value = true;
 }
+
+const logger = useLogger();
+
+function onContentError(error: Error) {
+	logger.error('Widget dashboard error', { error, context: { meta: props.meta } });
+	emits('error', error);
+}
 </script>
 
 <template>
@@ -97,9 +111,19 @@ function handleOpenFullView() {
 				/>
 			</div>
 		</div>
-		<div :class="[classes.content, 'widget-no-drag']">
-			<slot name="content" />
-		</div>
+
+		<ui-error-boundary @error="onContentError" @retry="emits('retry')">
+			<div :class="[classes.content, 'widget-no-drag']">
+				<slot name="content" />
+			</div>
+			<template #fallback="{ retry }">
+				<div :class="[classes.content, 'widget-no-drag']">
+					<slot name="error">
+						<base-error-component @retry="retry" />
+					</slot>
+				</div>
+			</template>
+		</ui-error-boundary>
 
 		<ui-position-portal
 			ref="rcmLayer"

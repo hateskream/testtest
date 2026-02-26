@@ -1,0 +1,40 @@
+{
+	"crypto": {
+		"market_type": "crypto",
+		"market_cap": "920.81B",
+		"volume_24h": "151 703 351",
+		"fdv": "315.74B",
+		"vol_to_mkt_cap_24h": "5.95%",
+		"total_supply": "151 703 351",
+		"sentiment": "Bullish"
+	},
+	"stock": {
+		"market_type": "stock",
+		"market_cap": "920.81B",
+		"volume_24h": "151 703 351",
+		"total_return_3m": "-29.51%",
+		"total_return_1y": "53.95%",
+		"forward_pe": "151 703 351",
+		"sector": "Technology"
+	},
+	"index": {
+		"market_type": "index",
+		"volume_24h": "184 065"
+	},
+	"commodity": {
+		"market_type": "commodity",
+		"volume_24h": "184 065"
+	},
+	"forex": {
+		"market_type": "forex",
+		"volume_24h": "184 065"
+	},
+	"etf": {
+		"market_type": "etf",
+		"market_cap": "920.81B",
+		"avg_volume": "151 703 351",
+		"beta": "-29.51%",
+		"top_holding": "1.95%",
+		"num_sectors": "Technology"
+	}
+}

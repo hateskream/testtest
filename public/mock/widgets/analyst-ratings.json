@@ -1,0 +1,9 @@
+{
+	"tickerId": "Stock-AAPLApple",
+	"strongBuy": 7,
+	"buy": 5,
+	"neutral": 20,
+	"sell": 1,
+	"strongSell": 0,
+	"summary": "optimistic"
+}

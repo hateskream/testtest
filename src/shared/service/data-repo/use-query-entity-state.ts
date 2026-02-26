@@ -1,12 +1,13 @@
 import { useMutation, useQuery, type UseQueryReturnType } from '@tanstack/vue-query';
 import { onBeforeUnmount } from 'vue';
 
-import { useRepository, type IOptionsRepository } from './use-repository';
+import { type IOptionsRepository, useRepository } from './use-repository';
 import { queryClient } from '@/shared/service/query-client';
 import { useHistoryManager } from './use-history';
 import { getParentId, isChild } from '@/modules/dashboard-group';
+import { useLogger } from '@/shared/service/monitoring';
 
-interface IOptions<TData, TSchema> extends IOptionsRepository<TData, TSchema> {
+interface IOptions<TData, TSchema, TInput = TSchema> extends IOptionsRepository<TData, TSchema, TInput> {
 	saveHistory?: boolean;
 	isEphemeral?: boolean;
 	transformFirstState?: (parentState: TData) => TData;
@@ -20,8 +21,12 @@ interface IStateQueries<TData> {
 	applyStateToParent: () => void;
 }
 
-export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSchema>): IStateQueries<TData> {
+export function createStateQueries<TData, TSchema, TInput = TSchema>(
+	options: IOptions<TData, TSchema, TInput>,
+): IStateQueries<TData> {
 	const saveHistory = options.saveHistory ?? false;
+
+	const logger = useLogger();
 
 	const baseRepository = useRepository(options);
 	const parentRepository = useRepository({
@@ -125,8 +130,7 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 
 			queryClient.invalidateQueries({ queryKey: parentStateKey, refetchType: 'active' });
 		} catch (err) {
-			// eslint-disable-next-line no-console
-			console.error('Failed to apply state to parent:', err);
+			logger.error('Failed to apply state to parent:', { error: err as Error });
 		}
 	};
 
@@ -137,7 +141,7 @@ export function createStateQueries<TData, TSchema>(options: IOptions<TData, TSch
 		redo,
 		applyStateToParent,
 	};
-};
+}
 
 function generateQueryStateKey(storageKey: string, entityId: string) {
 	return [`state-${storageKey}`, entityId];

@@ -1,27 +1,15 @@
 <script setup lang="ts">
-import {
-	computed,
-	createApp,
-	onBeforeUnmount,
-	reactive,
-	ref,
-	watch,
-	type App, getCurrentInstance,
-} from 'vue';
+import { type App, computed, createApp, getCurrentInstance, onBeforeUnmount, reactive, ref, watch } from 'vue';
 import { GridLayout } from 'grid-layout-plus';
 import { VueQueryPlugin } from '@tanstack/vue-query';
-import { throttle, debounce } from '@vexip-ui/utils';
+import { debounce, throttle } from '@vexip-ui/utils';
 
+import { useInjectCanDelete, useInjectSetterDndHandler, useMousePositionSync } from '../composables';
 import {
-	useInjectCanDelete,
-	useInjectSetterDndHandler,
-	useMousePositionSync,
-} from '../composables';
-import {
-	type IWidget,
-	type IPosition,
-	type ILayoutItem,
 	duplicate,
+	type ILayoutItem,
+	type IPosition,
+	type IWidget,
 	mapToWidgetState,
 } from '@/modules/dashboard-group/tv';
 import { queryClient } from '@/shared/service/query-client';
@@ -30,6 +18,7 @@ import type { IWidgetState, WidgetType } from '@/modules/dashboard-group';
 import { CurrentDashboard } from '@/modules/dashboard-group/dashboards';
 import { useDelayedLoading } from '@/shared/composables';
 import { useLayout } from '../../tv/composables/use-layout';
+import { useLogger } from '@/shared/service/monitoring';
 
 import DashboardGridElement from './dashboard-grid-element.vue';
 import PlaceholderComponent from './placeholder-component.vue';
@@ -70,6 +59,8 @@ const emit = defineEmits<{
 }>();
 
 let mountedPlaceholder: App<Element> | null = null;
+
+const logger = useLogger();
 
 const { dnDProvider } = useInjectSetterDndHandler();
 
@@ -453,8 +444,7 @@ function handlerDragEnd() {
 
 function deleteDashboards(widgetId: string) {
 	if (!gridLayoutRef.value) {
-		// eslint-disable-next-line no-console
-		console.warn('GridLayoutRef is not available');
+		logger.error('GridLayoutRef is not available', { context: { widgetId } });
 		return;
 	}
 

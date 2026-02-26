@@ -31,6 +31,7 @@ const {
 	isError,
 	refetch,
 	resetAllChanges,
+	growthYoy,
 } = useNominalGdp({
 	widgetId: props.meta.widgetId,
 	isEphemeral: props.meta.isOpenFull,
@@ -46,6 +47,7 @@ const {
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="refetch"
 	>
 		<template #filters>
 			<filters-panel
@@ -64,8 +66,9 @@ const {
 				:display-variant="props.meta.activeDisplayVariant"
 			/>
 			<view-component
-				v-else-if="data"
+				v-else-if="data && growthYoy"
 				:data="data"
+				:growth-yoy="growthYoy"
 			/>
 		</template>
 	</base-widget-dashboard>

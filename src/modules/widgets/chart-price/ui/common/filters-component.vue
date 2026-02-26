@@ -2,15 +2,19 @@
 import { computed, useTemplateRef } from 'vue';
 
 import { AddToWatchlist, type IWatchlistData } from '@/modules/watchlist';
-import { filterValueToDisplay, TimeRangeFilterValue } from '../../model';
-import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { ChartPriceDateRangePreset, ENABLED_MARKETS, filterValueToDisplay } from '../../model';
+import { type ITickerItem, SelectionMode, TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ModalBadgeDropdown, ModalBadgeList, ModalItemSelector, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { MarketType } from '@/modules/market';
-
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
+import {
+	createPreset,
+	type DateRangePresetType,
+	type DateRangeValue,
+	getDateRangePresetLabel,
+} from '@/modules/lightweight-charts/model';
 
 interface IFiltersComponentProps {
+	selectedTickerId: string;
 	watchlists: IWatchlistData[];
 	isBig: boolean;
 	displayVariant: 'default' | 'new';
@@ -18,8 +22,8 @@ interface IFiltersComponentProps {
 
 const props = defineProps<IFiltersComponentProps>();
 
-const selectedTicker = defineModel<string>('selectedTicker', { required: true });
-const timeRange = defineModel<TimeRangeFilterValue>('timeRange', { required: true });
+const selectedTicker = defineModel<ITickerItem[]>('selectedTicker', { required: true });
+const dateRange = defineModel<DateRangeValue>('timeRange', { required: true });
 
 const emit = defineEmits<{
 	(e: 'add-to-watchlist', watchlistId: string): void;
@@ -29,25 +33,40 @@ const emit = defineEmits<{
 	(e: 'reset-all-changes'): void;
 }>();
 
-const timeRangeDropdownRef = useTemplateRef('timeRangeDropdown');
+const selectedDateRangePreset = computed(() => {
+	const range = dateRange.value;
+
+	if (range.type === 'preset') {
+		return range.preset;
+	}
+
+	return undefined;
+});
+
+const dateRangeLabel = computed(() => {
+	const preset = selectedDateRangePreset.value;
+
+	if (preset) {
+		return getDateRangePresetLabel(preset);
+	}
+
+	return 'Custom';
+});
+
+const dateRangeDropdownRef = useTemplateRef('timeRangeDropdown');
 
 function closeTimeRangeDropdown() {
-	timeRangeDropdownRef.value?.close?.();
+	dateRangeDropdownRef.value?.close?.();
 }
 
-function updateFilter(newValue: TimeRangeFilterValue) {
-	if (newValue !== timeRange.value) {
-		timeRange.value = newValue;
+function updateFilter(newValue: DateRangePresetType) {
+	const range = dateRange.value;
+	const preset = createPreset(newValue);
+
+	if (range.type === 'custom' || range.preset !== newValue) {
+		dateRange.value = preset;
 		closeTimeRangeDropdown();
 	}
-}
-
-function updateTicker(newValue: ITickerItem[]) {
-	if (!newValue[0]) {
-		return;
-	}
-
-	selectedTicker.value = newValue[0].canonical_ticker_id;
 }
 
 const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default');
@@ -60,19 +79,19 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 			@on-clear-click="emit('reset-all-changes')"
 		>
 			<ticker-selector-modal-with-badge
-				:enabled-markets="Object.values(MarketType)"
+				v-model:selected-tickers="selectedTicker"
+				:enabled-markets="ENABLED_MARKETS"
 				:selection-mode="SelectionMode.Single"
 				:display-variant="props.displayVariant"
 				:show-label="!isDefaultDisplayVariant"
 				autofocus
 				close-on-select
-				@update:selected-tickers="updateTicker"
 			/>
 			<template v-if="!props.isBig || !isDefaultDisplayVariant">
 				<ui-delimiter v-if="isDefaultDisplayVariant" />
 				<modal-badge-dropdown ref="timeRangeDropdown" :display-variant="props.displayVariant">
 					<template #title>
-						<span>{{ filterValueToDisplay[timeRange].label }}</span>
+						<span>{{ dateRangeLabel }}</span>
 					</template>
 					<template #content>
 						<modal-badge-list :display-variant>
@@ -80,11 +99,11 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 								Time Range
 							</template>
 							<template
-								v-for="filterValue in TimeRangeFilterValue"
+								v-for="filterValue in ChartPriceDateRangePreset"
 								:key="filterValue"
 							>
 								<modal-item-selector
-									:model-value="filterValue === timeRange"
+									:model-value="filterValue === selectedDateRangePreset"
 									@update:model-value="updateFilter(filterValue)"
 								>
 									{{ filterValueToDisplay[filterValue].option }}
@@ -97,7 +116,7 @@ const isDefaultDisplayVariant = computed(() => props.displayVariant === 'default
 		</widget-filters-scrollable>
 		<add-to-watchlist
 			:watchlists="props.watchlists"
-			:ticker-id="selectedTicker"
+			:ticker-id="selectedTickerId"
 			:display-variant
 			@add-to-watchlist="emit('add-to-watchlist', $event.watchlistId)"
 			@remove-from-watchlist="emit('remove-from-watchlist', $event.watchlistId)"

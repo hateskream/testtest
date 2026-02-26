@@ -1,16 +1,15 @@
-/* eslint-disable no-console */
 import path from 'path';
-import { readFileSync } from 'fs';
 
+import type { Plugin, ProxyOptions } from 'vite';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { visualizer } from 'rollup-plugin-visualizer';
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
-import type { Plugin } from 'vite';
+import svgLoader from 'vite-svg-loader';
 
-const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+import pkg from './package.json' with { type: 'json' };
 
 // Plugin to filter out :deep warnings from lightningcss
 const filterDeepWarnings = (): Plugin => {
@@ -32,6 +31,19 @@ const filterDeepWarnings = (): Plugin => {
 	};
 };
 
+// The backend WAF treats percent-encoded special chars (e.g. %5E for ^) in headers as
+// LDAP injection. Strip origin and referer before forwarding, and preserve the raw
+// request path so node-http-proxy doesn't re-encode it.
+const sanitizeProxyRequest: NonNullable<ProxyOptions['configure']> = (proxy) => {
+	proxy.on('proxyReq', (proxyReq, req) => {
+		if (req.url) {
+			proxyReq.path = req.url;
+		}
+		proxyReq.removeHeader('origin');
+		proxyReq.removeHeader('referer');
+	});
+};
+
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
@@ -48,9 +60,9 @@ export default defineConfig({
 			symbolId: 'icon-[name]',
 		}),
 		filterDeepWarnings(),
+		svgLoader(),
 	],
 	define: {
-		// eslint-disable-next-line @typescript-eslint/naming-convention
 		__APP_VERSION__: JSON.stringify(pkg.version),
 	},
 	resolve: {
@@ -60,41 +72,38 @@ export default defineConfig({
 	},
 	server: {
 		proxy: {
+			'/api/feedback': {
+				target: 'https://demo-dev.planet9.uk/',
+				changeOrigin: true,
+				configure: sanitizeProxyRequest,
+			},
 			'/api': {
 				target: 'https://gateway.planet9.uk',
 				changeOrigin: true,
 				secure: true,
+				configure: sanitizeProxyRequest,
 			},
 		},
 	},
 	css: {
 		transformer: 'lightningcss',
 		lightningcss: {
-			targets: browserslistToTargets(
-				browserslist(`
-					last 5 years,
-					> 0.5%,
-					not dead,
-					iOS >= 13,
-					Safari >= 13
-				`),
-			),
+			targets: browserslistToTargets(browserslist()),
 			cssModules: {
 				pattern: '[local]__[hash]',
 			},
 		},
 	},
 	build: {
-		target: 'es2017',
+		target: 'es2019',
 		cssCodeSplit: true,
 		sourcemap: false,
 		minify: 'terser',
 		cssMinify: 'lightningcss',
 		terserOptions: {
-			parse: {
-				ecma: 2017,
-			},
+			ecma: 2019,
 			compress: {
+				ecma: 2019,
 				inline: 2,
 				passes: 3,
 				collapse_vars: true,
@@ -104,12 +113,11 @@ export default defineConfig({
 				pure_getters: true,
 				drop_console: true,
 				drop_debugger: true,
-				ecma: 2017,
 				comparisons: false,
 			},
 			mangle: true,
-			output: {
-				ecma: 2017,
+			format: {
+				ecma: 2019,
 				comments: false,
 				ascii_only: true,
 			},

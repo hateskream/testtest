@@ -4,7 +4,7 @@ import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { MarketType } from '@/modules/market';
 import { MarketType as ExchangeMarketType } from '../model/exchanges';
 import { type IMeta } from '@/modules/dashboard-group';
-import { BaseWidgetTvComponent, BaseErrorComponent } from '../../base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '../../base';
 import { useExchanges } from '../composables';
 import { useQueryExchanges } from '../queries/use-query-exchange.ts';
 
@@ -91,7 +91,11 @@ const isNotData = computed(() => (!rows.value.length && isLoading.value) || prop
 </script>
 
 <template>
-	<base-widget-tv-component :meta="props.meta" has-reset>
+	<base-widget-tv-component
+		:meta="props.meta"
+		has-reset
+		@retry="refetch"
+	>
 		<template #title> {{ props.meta.name }}</template>
 		<template #content>
 			<base-error-component

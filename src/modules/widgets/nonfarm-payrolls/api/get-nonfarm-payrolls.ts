@@ -1,54 +1,51 @@
-import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
-import type { IMetricTrendBadge, INonfarmPayrollsData, INonfarmPayrollsResponse } from '../model';
+import { z } from 'zod';
+
+import { useLogger } from '@/shared/service/monitoring';
+import { useApiClient } from '@/shared/service/api';
 
 export interface IGetNonfarmPayrollsRequest {
 	widgetId: string;
 }
 
-export async function getNonfarmPayrolls(
+const NonfarmPayrollsChangeSchema = z.object({
+	value: z.number().nullable(),
+	unit: z.string(),
+	direction: z.enum(['up', 'down', 'neutral']),
+	isPositive: z.boolean(),
+});
+
+const NonfarmPayrollsPointSchema = z.object({
+	label: z.string(),
+	history: z.number(),
+});
+
+const GetNonfarmPayrollsResponseSchema = z.object({
+	primaryValue: z.string(),
+	primaryValueUnit: z.string(),
+	change: NonfarmPayrollsChangeSchema,
+	points: z.array(NonfarmPayrollsPointSchema).nonempty(),
+});
+
+type GetNonfarmPayrollsResponse = z.infer<typeof GetNonfarmPayrollsResponseSchema>;
+
+export function getNonfarmPayrolls(
 	args: IGetNonfarmPayrollsRequest,
-): Promise<INonfarmPayrollsData> {
-	const httpService = useHttpService();
+): Promise<GetNonfarmPayrollsResponse> {
+	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
-		const response = await httpService.get<INonfarmPayrollsResponse>(
-			'api/v1/nonfarm-payrolls/data',
+		return client.get(
+			'/api/v1/nonfarm-payrolls/data',
+			GetNonfarmPayrollsResponseSchema,
 			{
 				query: {
 					widgetId: args.widgetId,
 				},
 			},
 		);
-		return transformNonfarmPayrollsData(response);
 	} catch (error) {
-		logger.error('Failed to get unemployment rate data', error as Error);
+		logger.error('Failed to get nonfarm payrolls data', { error: error as Error });
 		throw error;
 	}
-}
-
-export function transformNonfarmPayrollsData(
-	data: INonfarmPayrollsResponse,
-): INonfarmPayrollsData {
-	const badge: IMetricTrendBadge = {
-		topValue: parseFloat(data.primaryValue),
-		isTopValuePercent: data.primaryValueUnit === '%',
-		label: `Payrolls ${data.change.isPositive ? 'up' : 'down'} YoY`,
-		value: data.change.value,
-		unit: data.change.unit,
-		trend: data.change.direction,
-		isGood: data.change.isPositive,
-		isPercent: data.change.unit === '%' || data.change.unit === 'pp',
-	};
-
-	const points = data.points.map(point => ({
-		time: point.label,
-		value: point.history,
-	}));
-
-	return {
-		badge,
-		points,
-	};
 }

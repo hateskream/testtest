@@ -1,11 +1,12 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-nocheck
 import { computed, onUnmounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import type { IGenericTableColumn, ISortConfig } from '../type';
 import { useTableColumns } from '../table-common';
+import { useLogger } from '@/shared/service/monitoring';
 
 import GenericColumnSettings from './generic-column-settings.vue';
 
@@ -13,7 +14,7 @@ interface IProps {
 	columns: IGenericTableColumn[];
 	allColumns: IGenericTableColumn[];
 	sortConfig: ISortConfig;
-	columnWidths:string[]|undefined;
+	columnWidths: string[] | undefined;
 	enableReordering?: boolean;
 	enableResizing?: boolean;
 	enableSorting?: boolean;
@@ -21,12 +22,13 @@ interface IProps {
 	enableRowActions?: boolean;
 	sticky?: boolean;
 	stickyFirstColumn?: boolean;
+	bgColor: string;
 }
 
 interface IEmits {
 	(e: 'update:columns', columns: IGenericTableColumn[]): void;
 	(e: 'update:sort', config: ISortConfig): void;
-	(e: 'update:columnWidth', index:number, width:number): void;
+	(e: 'update:columnWidth', index: number, width: number): void;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -39,6 +41,8 @@ const props = withDefaults(defineProps<IProps>(), {
 });
 
 const emit = defineEmits<IEmits>();
+
+const logger = useLogger();
 
 const { updateColumnPositions } = useTableColumns();
 
@@ -60,9 +64,8 @@ const getSortIcon = (direction: string) => {
 };
 
 const handleColumnReorder = (newColumns: IGenericTableColumn[]) => {
+	logger.debug('Column reorder triggered', { context: { newColumns } });
 
-	// eslint-disable-next-line no-console
-	console.log('Column reorder triggered:', newColumns);
 	const updatedColumns = updateColumnPositions(newColumns);
 	emit('update:columns', updatedColumns);
 };
@@ -98,14 +101,10 @@ const handleColumnSettingsUpdate = (updatedColumns: IGenericTableColumn[]) => {
 
 // Упрощенная логика для handleMove
 const handleMove = (event: uknown) => {
-
-	// eslint-disable-next-line no-console
-	console.log('handleMove called:', event);
+	logger.debug('handleMove called', { context: { event } });
 
 	if (!props.enableReordering) {
-
-		// eslint-disable-next-line no-console
-		console.log('Reordering disabled');
+		logger.debug('Reordering disabled', { context: { event } });
 		return false;
 	}
 
@@ -113,9 +112,7 @@ const handleMove = (event: uknown) => {
 
 	// Проверяем, что перетаскиваемый элемент можно перетаскивать
 	if (!draggedContext.element.draggable) {
-
-		// eslint-disable-next-line no-console
-		console.log('Element not draggable:', draggedContext.element);
+		logger.debug('Element not draggable', { context: { element: draggedContext.element } });
 		return false;
 	}
 
@@ -123,16 +120,15 @@ const handleMove = (event: uknown) => {
 	const draggedIndex = draggedContext.index;
 	const targetIndex = relatedContext.index;
 
-	// eslint-disable-next-line no-console
-	console.log(`Moving from ${draggedIndex} to ${targetIndex}`);
+	logger.debug(`Moving element from ${draggedIndex} to ${targetIndex}`, { context: { draggedIndex, targetIndex } });
 
 	// Найдем все неперетаскиваемые колонки
 	const nonDraggableIndices = props.columns
 		.map((col, index) => !col.draggable ? index : -1)
 		.filter(index => index !== -1);
 
-	// eslint-disable-next-line no-console
-	console.log('Non-draggable indices:', nonDraggableIndices);
+
+	logger.debug('Non-draggable indices', { context: { nonDraggableIndices } });
 
 	// Если нет неперетаскиваемых колонок, разрешаем любое перемещение
 	if (nonDraggableIndices.length === 0) {
@@ -141,8 +137,7 @@ const handleMove = (event: uknown) => {
 
 	// Проверяем, не пытаемся ли мы переместить на место неперетаскиваемой колонки
 	if (nonDraggableIndices.includes(targetIndex)) {
-		// eslint-disable-next-line no-console
-		console.log('Trying to move to non-draggable position');
+		logger.debug('Trying to move to non-draggable position', { context: { nonDraggableIndices, targetIndex } });
 		return false;
 	}
 
@@ -158,29 +153,28 @@ const draggableColumns = computed({
 	},
 });
 
-const resizeStartX = ref<number|null>(null);
-const startResizeWidth = ref<number|null>(null);
-const resizeIndex = ref<number|null>(null);
-const onMouseMove = e=>{
+const resizeStartX = ref<number | null>(null);
+const startResizeWidth = ref<number | null>(null);
+const resizeIndex = ref<number | null>(null);
+const onMouseMove = e => {
 	const dx = e.clientX - resizeStartX.value;
-	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value+dx);
+	emit('update:columnWidth', resizeIndex.value, startResizeWidth.value + dx);
 };
-const onMouseUp = _ =>{
+const onMouseUp = _ => {
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 };
-const startResize = (index, e)=> {
+const startResize = (index, e) => {
 	resizeIndex.value = index;
 	startResizeWidth.value = parseFloat(props.columnWidths[index]);
 	resizeStartX.value = e.clientX;
 	document.addEventListener('mousemove', onMouseMove);
 	document.addEventListener('mouseup', onMouseUp);
 };
-onUnmounted(()=>{
+onUnmounted(() => {
 	document.removeEventListener('mousemove', onMouseMove);
 	document.removeEventListener('mouseup', onMouseUp);
 });
-
 </script>
 
 <template>
@@ -210,7 +204,7 @@ onUnmounted(()=>{
 						}
 					]"
 					:title="column.label"
-					:style="{ width: columnWidths?.[index] ?? undefined }"
+					:style="{ width: columnWidths?.[index] ?? undefined, '--table-bg-color': props.bgColor }"
 				>
 					<div :class="classes.headerContent">
 						<div
@@ -243,19 +237,15 @@ onUnmounted(()=>{
 								:sort-direction="getSortDirection(column.key)"
 								:sort-icon="getSortIcon(getSortDirection(column.key))"
 							>
-								<span
-									:class="
-										classes.headerLabel"
-								>
+								<span :class="classes.headerLabel">
 									{{ column.label }}
 								</span>
 							</slot>
 						</div>
-
-
 					</div>
 				</th>
 			</template>
+
 			<template #footer>
 				<th
 					v-if="enableColumnSettings"
@@ -267,7 +257,10 @@ onUnmounted(()=>{
 							[classes.stickySettings]: sticky
 						}
 					]"
-					:style="{ width: columnWidths?.[draggableColumns?.length] ?? undefined }"
+					:style="{
+						width: columnWidths?.[draggableColumns?.length] ?? undefined,
+						'--table-bg-color': props.bgColor
+					}"
 				>
 					<slot name="header-settings">
 						<generic-column-settings
@@ -284,8 +277,6 @@ onUnmounted(()=>{
 				</th>
 			</template>
 		</draggable>
-
-
 	</thead>
 </template>
 
@@ -315,9 +306,10 @@ onUnmounted(()=>{
 	vertical-align: middle;
 	text-align: right;
 	color: var(--text-color-base-100, #ffffff);
+	text-transform: uppercase;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background: var(--bg-color-surface-01, #1a1a1a);
+	background: var(--table-bg-color, #1a1a1a);
 	user-select: none;
 
 	& > div {
@@ -357,12 +349,6 @@ onUnmounted(()=>{
 	position: sticky !important;
 	left: 0;
 	z-index: 1;
-	background:
-		linear-gradient(
-			to right,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
-			rgb(26 26 26 / 0%) 100%
-		);
 }
 
 .firstColumn {
@@ -395,7 +381,6 @@ onUnmounted(()=>{
 	}
 }
 
-
 .headerLabel {
 	display: inline-block;
 	width: 100%;
@@ -405,7 +390,6 @@ onUnmounted(()=>{
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-
 
 .sortArrow {
 	font-size: 12px;
@@ -417,11 +401,9 @@ onUnmounted(()=>{
 	color: var(--text-color-base-100, #ffffff);
 }
 
-
 .sortArrowActive .sortArrow {
 	color: var(--text-color-base-100, #ffffff);
 }
-
 
 .settingsCell {
 	width: 50px;
@@ -433,8 +415,9 @@ onUnmounted(()=>{
 	background:
 		linear-gradient(
 			to left,
-			var(--bg-color-surface-01, #1a1a1a) 65%,
-			rgb(26 26 26 / 0%) 100%
+			rgb(var(--table-bg-rgb, 26 26 26) / var(--table-bg-a, 1)) 0%,
+			rgb(var(--table-bg-rgb, 26 26 26) / var(--table-bg-a, 1)) 65%,
+			rgb(var(--table-bg-rgb, 26 26 26) / 0%) 100%
 		);
 	border: none;
 }
@@ -448,6 +431,4 @@ onUnmounted(()=>{
 .draggable-container {
 	display: contents;
 }
-
-
 </style>

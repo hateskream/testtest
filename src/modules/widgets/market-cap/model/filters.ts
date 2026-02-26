@@ -1,33 +1,17 @@
-import { MarketCapDateRange } from './market-cap';
+import { DateRangePreset, type DateRangePresetType, getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 
-export const dateRangeFilterValueToDisplay: Record<MarketCapDateRange, { selected: string; option: string }> = {
-	[MarketCapDateRange.Day]: {
-		selected: '1D',
-		option: '1 day',
-	},
-	[MarketCapDateRange.Week]: {
-		selected: '1W',
-		option: '1 week',
-	},
-	[MarketCapDateRange.Month]: {
-		selected: '1M',
-		option: '1 month',
-	},
-	[MarketCapDateRange.SixMonths]: {
-		selected: '6M',
-		option: '6 months',
-	},
-	[MarketCapDateRange.Year]: {
-		selected: '1Y',
-		option: '1 year',
-	},
-	[MarketCapDateRange.All]: {
-		selected: 'All',
-		option: 'All time',
-	},
-};
+export const MarketCapDateRangePreset = {
+	Day: DateRangePreset.Day,
+	Week: DateRangePreset.Week,
+	Month: DateRangePreset.Month,
+	SixMonths: DateRangePreset.SixMonths,
+	Year: DateRangePreset.Year,
+	All: DateRangePreset.All,
+} as const satisfies Record<string, DateRangePresetType>;
 
-export const dateRangeFilters = Object.values(MarketCapDateRange).map(d => ({
-	label: dateRangeFilterValueToDisplay[d].selected,
-	value: d,
-}));
+export const dateRangeFilters = Object.values(MarketCapDateRangePreset).map(d => {
+	return {
+		label: getDateRangePresetLabel(d),
+		value: d,
+	};
+});

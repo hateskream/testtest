@@ -10,6 +10,13 @@ export enum RouteNames {
 	TickerCommodities = 'ticker-commodities',
 	TickerIndices = 'ticker-indices',
 	TickerETF = 'ticker-etf',
+	TickerOld = 'ticker-old',
+	TickerCryptoOld = 'ticker-crypto-old',
+	TickerStockOld = 'ticker-stock-old',
+	TickerForexOld = 'ticker-forex-old',
+	TickerCommoditiesOld = 'ticker-commodities-old',
+	TickerIndicesOld = 'ticker-indices-old',
+	TickerETFOld = 'ticker-etf-old',
 	Test = 'test',
 	Automobile = 'Automobile',
 	Heatmap = 'Heatmap',
@@ -23,6 +30,16 @@ export enum RouteNames {
 	ScreenerDex = 'screener-dex',
 	News = 'News',
 	NewsDetails = 'NewsDetails',
+	Error = 'Error',
+	Offline = 'Offline',
+	TickerPageFooter = 'ticker-page-footer',
+	TickerPageHeader = 'ticker-page-header',
+	LinksTestPage = 'LinksTestPage',
+	KeyIndicatorsTest = 'KeyIndicatorsTest',
+	TickerWidget = 'ticker-widget',
+	TickerWidgetPreview = 'ticker-widget-preview',
+	NonfarmPayrollsTestPage = 'nonfarm-payrolls-test-page',
+	TickerUnemploymentRateTest = 'ticker-unemployment-rate-test',
 }
 
 export enum RouteLabels {
@@ -35,6 +52,12 @@ export enum RouteLabels {
 	TickerCommodities = 'Ticker Commodities',
 	TickerIndices = 'Ticker Indices',
 	TickerETF = 'Ticker Etf',
+	TickerCryptoOld = 'Ticker Crypto Old',
+	TickerStockOld = 'Ticker Stock Old',
+	TickerForexOld = 'Ticker Forex Old',
+	TickerCommoditiesOld = 'Ticker Commodities Old',
+	TickerIndicesOld = 'Ticker Indices Old',
+	TickerETFOld = 'Ticker Etf Old',
 	Test = 'Test',
 	Automobile = 'Automobile',
 	Calendar = 'Calendar',
@@ -46,6 +69,12 @@ export enum RouteLabels {
 	ScreenerBond = 'Bond Screener',
 	ScreenerCex = 'CEX Screener',
 	ScreenerDex = 'DEX Screener',
+	TickerPageFooter = 'Ticker Page Footer',
+	TickerPageHeader = 'Ticker Page Header',
+	LinksTestPage = 'Links Test Page',
+	KeyIndicatorsTest = 'Key Indicators Test',
+	UnemploymentRateTest = 'Unemployment Rate Test',
+	NonfarmPayrollsTestPage = 'Nonfarm Payrolls Test Page',
 }
 
 export enum RoutePaths {
@@ -64,6 +93,7 @@ export enum RoutePaths {
 	TickerCommodities = 'commodities',
 	TickerIndices = 'indices',
 	TickerETF = 'etf',
+	TickerOld = '/ticker-old',
 	Test = '/test',
 	Automobile = '/automobile',
 	Heatmap = '/heatmap',
@@ -77,6 +107,16 @@ export enum RoutePaths {
 	ScreenerDex = '/screener/dex',
 	News = '/news',
 	NewsDetails = ':slug/:id',
+	Error = '/error',
+	Offline = '/offline',
+	TickerPageFooter = '/ticker-page-footer-test',
+	TickerPageHeader = '/ticker-page-header-test',
+	LinksTestPage = '/links-test-page',
+	KeyIndicatorsTest = '/key-indicators-test',
+	TickerWidget = '/ticker-widget',
+	TickerWidgetPreview = '/ticker-widget/:widgetName',
+	TickerUnemploymentRateTest = '/ticker-unemployment-rate-test',
+	NonfarmPayrollsTestPage = '/nonfarm-payrolls-test-page',
 }
 
 export enum RouteTickerType {
@@ -89,7 +129,7 @@ export enum RouteTickerType {
 }
 
 export interface ITickerRouteParams {
-	id: number;
+	id: string;
 	type: TickerType;
 }
 

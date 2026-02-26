@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 
 import { createStateQueries } from '@/shared/service/data-repo';
 import {
@@ -10,6 +10,8 @@ import {
 	type StateSchemaType,
 } from '../model';
 import { useQueryDominanceSnapshot } from '../queries';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { deepCompare } from '@/shared/lib/compare';
 
 interface IOptions {
 	widgetId: string;
@@ -43,10 +45,18 @@ export function useDominance({
 
 	const state = ref<IState>(getDefaultState());
 
+	const _selectedTickers = ref<ITickerItem[]>([]);
+
+	onBeforeMount(async () => {
+		_selectedTickers.value = await fetchTickers(state.value.selectedTickers);
+	});
+
 	const selectedTickers = computed({
-		get: () => state.value.selectedTickers,
-		set: (val: string[]) => {
-			state.value.selectedTickers = val;
+		get: () => _selectedTickers.value,
+		set: (val: ITickerItem[]) => {
+			_selectedTickers.value = val;
+
+			state.value.selectedTickers = val.map(v => v.canonical_ticker_id);
 		},
 	});
 
@@ -71,11 +81,16 @@ export function useDominance({
 	}, { immediate: true });
 
 	watch(state, (newState) => {
+		if (deepCompare(newState, state.value)) {
+			return;
+		}
+
 		mutate(newState);
 	}, { deep: true });
 
-	function resetAllChanges() {
+	async function resetAllChanges() {
 		state.value = getDefaultState();
+		_selectedTickers.value = await fetchTickers(state.value.selectedTickers);
 	}
 
 	const {
@@ -83,7 +98,7 @@ export function useDominance({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryDominanceSnapshot(selectedTickers);
+	} = useQueryDominanceSnapshot(() => selectedTickers.value.map(v => v.canonical_ticker_id));
 
 	return {
 		selectedTickers,

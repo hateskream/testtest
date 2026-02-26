@@ -40,7 +40,7 @@ onMounted(() => {
 					}
 
 					if (opts.image instanceof HTMLImageElement) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// oxlint-disable-next-line typescript/ban-ts-comment
 						// @ts-ignore
 						chart.value.$centerImage = opts.image;
 						return;
@@ -50,7 +50,7 @@ onMounted(() => {
 					ctx.save();
 
 					const meta = ch.getDatasetMeta(0);
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// oxlint-disable-next-line typescript/ban-ts-comment
 					// @ts-ignore
 					const [{ x, y, innerRadius }] = meta.data;
 
@@ -117,7 +117,7 @@ onMounted(() => {
 					},
 				},
 
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// oxlint-disable-next-line typescript/ban-ts-comment
 				// @ts-ignore
 				centerText: {
 					image: MaskImage,

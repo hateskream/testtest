@@ -1,22 +1,23 @@
 import { computed, ref, watch } from 'vue';
 
 import {
-	getDefaultState,
-	hydrateState,
-	rehydrateState,
+	ActiveDateRange,
 	compareState,
 	getActiveLocations,
-
-	type IState,
+	getDefaultActiveDateRange,
+	getDefaultDateRange,
+	getDefaultSegmentMarkets,
+	getDefaultState,
+	hydrateState,
 	type IDisplaySettings,
 	type ILocation,
-	type SortState,
-
-	ActiveDateRange,
 	Include,
+	type IState,
+	rehydrateState,
 	Score,
 	Sentiment,
-	Source, getDefaultSegmentMarkets,
+	type SortState,
+	Source,
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
@@ -120,19 +121,8 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 		},
 	});
 
-	const activeDateRange = computed({
-		get: () => state.value.activeDateRange,
-		set: (val: ActiveDateRange) => {
-			state.value.activeDateRange = val;
-		},
-	});
-
-	const dateRange = computed({
-		get: () => state.value.dateRange,
-		set: (val: IDateRange) => {
-			state.value.dateRange = val;
-		},
-	});
+	const activeDateRange = ref<ActiveDateRange>(getDefaultActiveDateRange());
+	const dateRange = ref<IDateRange>(getDefaultDateRange());
 
 	watch(dataState, newState => {
 		if (newState && !compareState(state.value, newState)) {
@@ -146,9 +136,13 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 
 	function resetAllChanges() {
 		state.value = getDefaultState(defaultStateType);
+
 		selectedTickers.value = [];
 		selectedMarkets.value = getDefaultSegmentMarkets(defaultStateType);
 		excludedTickers.value = [];
+
+		activeDateRange.value = getDefaultActiveDateRange();
+		dateRange.value = getDefaultDateRange();
 	}
 
 	return {

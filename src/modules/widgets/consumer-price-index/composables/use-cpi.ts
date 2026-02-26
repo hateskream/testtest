@@ -2,7 +2,14 @@ import { computed, ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import { CpiRange, CpiValueType, getDefaultState, type IState, stateSchema, type StateSchemaType } from '../model';
+import {
+	type CpiDateRangePresetType,
+	type CpiValueTypeType,
+	getDefaultState,
+	type IState,
+	stateSchema,
+	type StateSchemaType,
+} from '../model';
 import { useQueryCpi } from '../queries';
 
 interface IOptions {
@@ -39,14 +46,14 @@ export function useCpi({
 
 	const activeValueType = computed({
 		get: () => state.value.valueType,
-		set: (val: CpiValueType) => {
+		set: (val: CpiValueTypeType) => {
 			state.value.valueType = val;
 		},
 	});
 
 	const activeRange = computed({
 		get: () => state.value.range,
-		set: (val: CpiRange) => {
+		set: (val: CpiDateRangePresetType) => {
 			state.value.range = val;
 		},
 	});

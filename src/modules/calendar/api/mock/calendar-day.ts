@@ -1,8 +1,8 @@
 import { useFetchMock } from '@/shared/mock';
-import type { IDailyCalendarInfoRequest, IDailyCalendarInfoResponse } from '../../models';
+import type { IDailyInfoResponse } from '../../model/calendar';
 
-const { getMock } = useFetchMock<IDailyCalendarInfoResponse[]>('/mock/calendar/calendar-day.json');
+const { getMock } = useFetchMock<IDailyInfoResponse>('/mock/calendar/calendar-day.json');
 
-export async function createMockApiDays(_: IDailyCalendarInfoRequest): Promise<IDailyCalendarInfoResponse[]> {
+export async function getMockDailyInfo() {
 	return getMock();
 }

@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ModalBadgeList, ModalItem, ModalSubmenu } from '@/modules/widgets/base';
 import { type ITab, TabAction, tabActionToTitle } from '@/modules/widgets/watchlist/model';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import {
+	decodeCanonicalTickerId,
+	type ITickerItem,
+	SelectionMode,
+	TickerSelectorModal,
+} from '@/modules/ticker-selector';
 import { UiPosition } from '@/shared/ui/position';
 import { UiDriver } from '@/shared/ui/driver';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 
 import WatchlistModalTitle from './watchlist-modal-title.vue';
 
@@ -21,7 +27,10 @@ const props = defineProps<{
 const emits = defineEmits<{
 	onClickAction: [TabAction, string];
 	switchTab: [string];
-	selectTicker: [string];
+	selectTicker: [{
+		tickerId: string;
+		marketType: MarketType;
+	}];
 	removeTicker: [{
 		tickerId: string;
 	}];
@@ -30,6 +39,17 @@ const emits = defineEmits<{
 
 function onClickAction(action: TabAction, id: string) {
 	emits('onClickAction', action, id);
+}
+
+function selectTicker(ticker: ITickerItem) {
+	emits('selectTicker', {
+		tickerId: ticker.canonical_ticker_id,
+		marketType: ticker.market_type,
+	});
+}
+
+function unselectTicker(ticker: ITickerItem) {
+	emits('removeTicker', { tickerId: ticker.canonical_ticker_id });
 }
 </script>
 
@@ -90,12 +110,14 @@ function onClickAction(action: TabAction, id: string) {
 									</span>
 								</template>
 								<template #content>
-									<modal-ticker-selector-legacy
+									<ticker-selector-modal
 										:display-variant="props.displayVariant"
-										:model-value="props.selectedTickers"
+										:enabled-markets="ALL_MARKET_TYPES"
+										:selected-tickers="props.selectedTickers.map(decodeCanonicalTickerId)"
+										:selection-mode="SelectionMode.Single"
 										:enable-select-all="false"
-										@select="emits('selectTicker', $event)"
-										@unselect="emits('removeTicker', { tickerId: $event })"
+										@ticker-selected="selectTicker"
+										@ticker-unselected="unselectTicker"
 									/>
 								</template>
 							</ui-position>

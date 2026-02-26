@@ -1,13 +1,14 @@
 import { z } from 'zod';
 
 import { type IDisplaySettings } from './display';
-import { MarketCapDateRange, type MarketCapType } from './market-cap';
+import { type MarketCapType } from './market-cap';
 import { MarketType } from '@/modules/market';
+import { DateRangePreset, type DateRangeValue, DateRangeValueSchema } from '@/modules/lightweight-charts/model';
 
 export interface IState {
 	selectedTickers: string[];
 	selectedMarkets: MarketCapType[];
-	dateRange: MarketCapDateRange;
+	dateRange: DateRangeValue;
 	displaySettings: IDisplaySettings;
 }
 
@@ -19,17 +20,21 @@ const displaySettingsSchema = z.object({
 export const stateSchema = z.object({
 	selectedTickers: z.array(z.string()),
 	selectedMarkets: z.array(z.enum([MarketType.Crypto, MarketType.Stock])),
-	dateRange: z.nativeEnum(MarketCapDateRange),
+	dateRange: DateRangeValueSchema,
 	displaySettings: displaySettingsSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
+export type StateSchemaInputType = z.input<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
 		selectedTickers: [],
 		selectedMarkets: [MarketType.Crypto],
-		dateRange: MarketCapDateRange.Day,
+		dateRange: {
+			type: 'preset',
+			preset: DateRangePreset.Day,
+		},
 		displaySettings: {
 			isShowChart: true,
 			isShowChange: true,

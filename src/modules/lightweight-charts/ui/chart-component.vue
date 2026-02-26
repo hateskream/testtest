@@ -1,66 +1,52 @@
 <script setup lang="ts">
-import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, reactive, shallowReactive, useTemplateRef } from 'vue';
 import {
-	AreaSeries,
-	type CandlestickData,
-	CandlestickSeries,
-	ColorType,
-	createChart,
 	CrosshairMode,
-	type IChartApi,
 	type ISeriesApi,
-	type LineData,
-	LineSeries,
+	type ITimeScaleApi,
 	LineStyle,
-	type LogicalRangeChangeEventHandler,
+	type SeriesDefinition,
+	type SeriesOptionsMap,
+	type SeriesPartialOptionsMap,
 	type SeriesType,
 	type Time,
 } from 'lightweight-charts';
-import type { ChartClickData, ChartData, ChartType } from '@shared/component-library';
+import type { CandlestickData, ChartClickData, ChartData, ChartType, LineData } from '@shared/component-library';
 import {
 	LastPriceAnimationMode,
 	type LastPriceAnimationMode as LastPriceAnimationModeType,
 } from '@shared/component-library';
-import { unrefElement } from '@vueuse/core';
+import { notNullish, unrefElement, useDebounceFn, useResizeObserver } from '@vueuse/core';
 
 import {
-	calculateSMASeriesData,
-	generateCandleDataFromLineData,
-	generateLineData,
-	groupSeriesByRange,
-	prepareLineDataFromCandlestick,
-	prepareSeries,
-} from '../utils';
-import {
+	chartTimeToDate,
 	formatPrice,
 	type IChartTimelineSegment,
-	type IChartUpdateEmitData,
-	IndicatorsChart,
+	isCandlestickData,
 	type SharedChartMouseEvent,
-	TypeChart,
+	timeToZonedTime,
+	TimezoneUtc,
+	timezoneUtcToIntl,
+	type UtcSeconds,
+	zonedTimeToTime,
 } from '../model';
 import type { IUseExternalTooltipState } from '../composables';
-import { MA_SETTINGS, MAIN_AREA_SETTINGS, MAIN_CANDLESTICK_SETTINGS } from '../const';
-import { ModalBadge, ModalBadgeList, ModalItemCheckbox, ModalItemSelector } from '@/modules/widgets/base';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { getChartRangeOffset, RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
 import type { ICalendarEvent } from '@/modules/calendar';
 import { ChartExternalTooltip } from './external-tooltip';
-import { ChartEvents } from './events';
-import { ChartTimeline } from './timeline';
-import { CURRENT_LOCALE, FALLBACK_LOCALE, getDateFormatter, isFeatureEnabled } from '@/shared/lib';
-
-import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
+import {
+	calcNumberPrecision,
+	CURRENT_LOCALE,
+	FALLBACK_LOCALE,
+	getDateFormatter,
+	isFeatureEnabled,
+	isNumber,
+} from '@/shared/lib';
+import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 interface IChartProps {
-	width: CSSProperties['width'];
 	height: CSSProperties['height'];
-	disableScroll: boolean;
-	isVisibleHistoryGraph?:boolean;
-	rangeList: RangeChart[];
-	isVisibleIndicators?: boolean;
-	isVisibleRange?: boolean;
-	isVisibleRangeChange?: boolean;
+	handleScale?: boolean;
+	handleScroll?: boolean;
 	isVisiblePriceScale?: boolean;
 	isVisibleTimeScale?: boolean;
 	isVisibleEventsTimeline?: boolean;
@@ -73,18 +59,19 @@ interface IChartProps {
 	rightOffsetPixels?: number;
 	events?: ICalendarEvent[];
 	timelineSegments?: IChartTimelineSegment[];
-	data?: ChartData[] | null;
+	data: ChartData[];
 	lastPriceAnimation?: LastPriceAnimationModeType;
 	priceLabel?: string;
 	locale?: string | null;
 	displayVariant?: 'new' | 'default';
+	prevClosePrice?: number | null;
+	prevClosePriceLabel?: string;
+	type?: ChartType;
+	timezone?: TimezoneUtcType;
+	autoSize?: boolean;
 }
 
 const props = withDefaults(defineProps<IChartProps>(), {
-	isVisibleHistoryGraph: true,
-	isVisibleIndicators: true,
-	isVisibleRange: true,
-	isVisibleRangeChange: true,
 	isVisiblePriceScale: true,
 	isVisibleTimeScale: true,
 	isVisiblePriceLine: true,
@@ -95,298 +82,119 @@ const props = withDefaults(defineProps<IChartProps>(), {
 	timelineSegments: () => [],
 	eventsTimelinePadding: '0px',
 	lastPriceAnimation: LastPriceAnimationMode.Disabled,
-	data: null,
 	priceLabel: 'Current Price',
 	locale: null,
 	displayVariant: 'new',
-});
-
-defineExpose({
-	regenerateData,
+	prevClosePrice: null,
+	prevClosePriceLabel: 'Prev Close',
+	type: 'area',
+	timezone: TimezoneUtc.UTC0,
 });
 
 interface IChartEmits {
-	(e: 'update', data: IChartUpdateEmitData): void;
 	(e: 'chart-hover', event: SharedChartMouseEvent): void;
 }
 
-const emits = defineEmits<IChartEmits>();
+const emit = defineEmits<IChartEmits>();
 
-type IGroupedData = {
-	[x in RangeChart]: CandlestickData[]
-};
+export interface ISharedChartElement extends HTMLElement {
+	takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean): HTMLCanvasElement | null;
+	getTimeScale(): ITimeScaleApi<Time> | null;
+	updateMainSeriesPoint(point: CandlestickData | LineData, historicalUpdate?: boolean): void;
+	addSeries<T extends SeriesType>(
+		definition: SeriesDefinition<T>,
+		options?: SeriesPartialOptionsMap[T],
+		paneIndex?: number,
+		isPrice?: boolean,
+	): ISeriesApi<T> | null;
+	removeSeries(seriesApi: ISeriesApi<SeriesType, Time>): void;
+}
 
-const container = useTemplateRef<HTMLElement>('container');
-const history = useTemplateRef('history');
-const chart = ref<IChartApi | null>();
-const chartHistory = ref<IChartApi | null>();
-
-type ICalcSeriesData = CandlestickData[];
-type ICalcSeriesReturnData = CandlestickData[] | LineData[];
-
-const indicators = reactive<
-	Map<string, {
-		isActive: boolean;
-		series: ISeriesApi<SeriesType, Time>;
-		calcSeries: (data: ICalcSeriesData, type: TypeChart) => ICalcSeriesReturnData;
-	}>
->(new Map());
-
-const handlerSubscribeVisibleLogicalRangeChangeHistory: LogicalRangeChangeEventHandler = range => {
-	if (range) {
-		// debounceUpdate(targetChart, range);
-		// chartHistory.value?.timeScale().setVisibleLogicalRange(range);
-	}
-};
-
-const handlerSubscribeVisibleLogicalRangeChange: LogicalRangeChangeEventHandler = range => {
-	if (range) {
-		// debounceUpdate(targetChart, range);
-		chart.value?.timeScale().setVisibleLogicalRange(range);
-	}
-};
-
-const modelValueRange = defineModel<RangeChart>('range');
-
-const currentRange = computed({
-	get: () => modelValueRange.value ?? props.rangeList[props.rangeList.length - 1],
-	set: (value) => {
-		modelValueRange.value = value;
-	},
-});
-
-const currentRangeOffset = computed(() => getChartRangeOffset(currentRange.value));
-const currentRangeStartTime = computed(() => currentRangeOffset.value.from.getTime());
-const currentRangeEndTime = computed(() => currentRangeOffset.value.to.getTime());
-
-
-const listTypeGraph = Object.entries(TypeChart).map(([title, val]) => ({ title, val }));
-
-const currentTypeGraph = ref<TypeChart>(TypeChart.Line);
-
-const mainData = ref(generateCandleDataFromLineData(generateLineData(4000)));
-
-watch(mainData, () => {
-	updateIndicators();
-});
-
-const groupedData = computed(() => {
-	const group: IGroupedData = {} as IGroupedData;
-
-	Object.entries(RangeChart).forEach(([key, val]) => {
-		group[key as RangeChart] = groupSeriesByRange<CandlestickData>(mainData.value, RANGE_IN_SECONDS[val]);
-	});
-
-	return group;
-});
-
-const listAvailableIndicators = computed(() => {
-	return Object.entries(IndicatorsChart).map(([title, val]) => ({ title, val }));
-});
-
-const listActiveIndicators = computed(() => {
-	return Array.from(indicators.entries()).filter(([, item]) => item.isActive).map(([name]) => name);
-});
-
-const styleRoot = computed(() => {
-	if (typeof props.height === 'number') {
-		return {
-			height: `${props.height}px`,
-		};
-	}
-
-	return {
-		height: props.height,
+type SeriesItem = {
+	api: ISeriesApi<SeriesType, Time>;
+	meta: {
+		isPrice: boolean;
 	};
+};
+
+const series = shallowReactive<SeriesItem[]>([]);
+
+const container = useTemplateRef<ISharedChartElement>('container');
+
+const heightInPx = computed(() => {
+	if (isNumber(props.height)) {
+		return `${props.height}px`;
+	}
+
+	return props.height;
 });
+
+// data
 
 const preparedChartData = computed(() => {
-	if (props.data) {
+	if (props.data.length === 0) {
 		return props.data;
 	}
 
-	const data = groupedData.value[currentRange.value];
+	const timezoneValue = props.timezone;
 
-	if (currentTypeGraph.value === TypeChart.Candlestick) {
-		return data as ChartData[];
-	} else {
-		return data.map(item => ({
-			time: item.time,
-			value: item.close,
-		})) as ChartData[];
+	if (props.type === 'candlestick') {
+		return (props.data as CandlestickData[]).map(candle => {
+			return {
+				...candle,
+				time: timeToZonedTime(candle.time, timezoneValue),
+			};
+		});
 	}
+
+	if (isCandlestickData(props.data[0])) {
+		return (props.data as CandlestickData[]).map(candle => {
+			return {
+				time: timeToZonedTime(candle.time, timezoneValue),
+				value: candle.close,
+			} as LineData;
+		});
+	}
+
+	return (props.data as LineData[]).map(point => {
+		return { value: point.value, time: timeToZonedTime(point.time, timezoneValue) };
+	});
 });
 
 const preparedPriceLines = computed(() => {
-	if (!props.isVisiblePriceLine) {
+	if (!props.isVisiblePriceLine || props.data.length === 0) {
 		return [];
 	}
 
-	const series = preparedChartData.value as LineData[];
+	const lastPoint = preparedChartData.value[preparedChartData.value.length - 1];
+	const price = isCandlestickData(lastPoint) ? lastPoint.close : lastPoint.value;
 
-	return [
-		{
-			price: series[series.length - 1].value,
-			color: props.colorSchema === 'positive' ? '#04EDA0' : '#FC1D4D',
+	const lines = [{
+		price,
+		color: props.colorSchema === 'positive' ? '#04EDA0' : '#FC1D4D',
+		lineWidth: 2,
+		lineStyle: LineStyle.Dashed,
+		axisLabelVisible: true,
+		title: props.priceLabel,
+		axisLabelColor: props.colorSchema === 'positive' ? '#043222' : '#35040D',
+		axisLabelTextColor: props.colorSchema === 'positive' ? '#04EDA0' : '#FC4A6B',
+	}];
+
+	if (notNullish(props.prevClosePrice)) {
+		lines.push({
+			price: props.prevClosePrice,
+			color: '#FFFFFF7F',
 			lineWidth: 2,
 			lineStyle: LineStyle.Dashed,
 			axisLabelVisible: true,
-			title: props.priceLabel,
-			axisLabelColor: props.colorSchema === 'positive' ? '#043222' : '#35040D',
-			axisLabelTextColor: props.colorSchema === 'positive' ? '#04EDA0' : '#FC4A6B',
-		},
-	];
+			title: props.prevClosePriceLabel,
+			axisLabelColor: '#2d2d31',
+			axisLabelTextColor: '#FFF',
+		});
+	}
+
+	return lines;
 });
-
-const chartTypeForWebComponent = computed<ChartType>(() => {
-	if (currentTypeGraph.value === TypeChart.Candlestick) {
-		return 'candlestick';
-	} else if (currentTypeGraph.value === TypeChart.Line) {
-		return 'area';
-	} else {
-		return 'area';
-	}
-});
-
-function regenerateData() {
-	mainData.value = generateCandleDataFromLineData(generateLineData(4000));
-}
-
-function selectRange(range: RangeChart) {
-	currentRange.value = range;
-	updateIndicators();
-}
-
-function changeVisibleIndicator(indicator: IndicatorsChart) {
-	const item = indicators.get(indicator);
-
-	if (item) {
-		item.isActive = !item.isActive;
-
-		indicators.set(indicator, item);
-
-		item.series.applyOptions({
-			visible: item.isActive,
-		});
-	}
-}
-
-
-function updateIndicators() {
-	indicators.forEach(({ series, calcSeries }) => {
-		series.setData(calcSeries(groupedData.value[currentRange.value], currentTypeGraph.value));
-	});
-
-	chart.value!.timeScale().fitContent();
-	// chartHistory.value?.timeScale()?.fitContent?.();
-
-	emits('update', {
-		value: mainData.value[mainData.value.length - 1].close,
-		time: new Date(mainData.value[mainData.value.length - 1].time as number * 1000),
-	});
-}
-
-function updateTypeChart(type: TypeChart) {
-	const indicator = indicators.get(IndicatorsChart.Main)!;
-
-	currentTypeGraph.value = type;
-
-	if (type === TypeChart.Candlestick) {
-		const candleSeries = chart.value!.addSeries(CandlestickSeries, MAIN_CANDLESTICK_SETTINGS);
-
-		indicators.set(IndicatorsChart.Main, {
-			...indicator,
-			series: candleSeries,
-		});
-
-		chart.value!.removeSeries(indicator.series);
-	} else if (type === TypeChart.Line) {
-		const areaSeries = chart.value!.addSeries(AreaSeries, MAIN_AREA_SETTINGS);
-
-		indicators.set(IndicatorsChart.Main, {
-			...indicator,
-			series: areaSeries,
-		});
-
-		chart.value!.removeSeries(indicator.series);
-	}
-
-	updateIndicators();
-}
-
-
-function updateHistoryChartPropChange() {
-	if (props.isVisibleHistoryGraph) {
-		if (!chartHistory.value) {
-			chartHistory.value = createChart(history.value as HTMLElement, {
-				autoSize: true,
-				crosshair: {
-					horzLine: {
-						visible: false,
-					},
-					vertLine: {
-						visible: false,
-					},
-				},
-				layout: {
-					textColor: '#9A9A9D',
-					background: { type: ColorType.Solid, color: 'rgb(12 12 13 / 100%)' },
-				},
-				rightPriceScale: {
-					visible: false,
-				},
-				timeScale: {
-					borderVisible: false,
-				},
-				grid: {
-					horzLines: {
-						visible: false,
-					},
-					vertLines: {
-						color: '#37364E',
-						visible: false,
-					},
-				},
-				handleScale: false,
-				handleScroll: false,
-			});
-
-
-			indicators.set('history',
-				{
-					series: chartHistory.value!.addSeries(AreaSeries, {
-						topColor: 'rgba(28, 42, 78, 0.35)',
-						bottomColor: 'rgba(4, 237, 160, 0.00)',
-						lineColor: '#6F81A9',
-						lineWidth: 2,
-						crosshairMarkerVisible: false,
-					}),
-					isActive: true,
-					calcSeries(data: ICalcSeriesData) {
-						return prepareSeries(data, 'Line');
-					},
-				},
-			);
-		}
-
-		chartHistory.value.timeScale()
-			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChange);
-		chart.value!.timeScale()
-			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChangeHistory);
-	} else {
-		chartHistory.value?.timeScale?.()
-			.unsubscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChange);
-		chart.value!.timeScale()
-			.subscribeVisibleLogicalRangeChange(handlerSubscribeVisibleLogicalRangeChangeHistory);
-
-		// chartHistory.value?.remove?.();
-
-	}
-
-	updateIndicators();
-}
-
-watch(() => props.isVisibleHistoryGraph, updateHistoryChartPropChange);
 
 // tooltip
 
@@ -403,13 +211,16 @@ const tooltipRowColor = computed(() => props.colorSchema === 'positive'
 	? 'var(--metrics-color-positive-chart)'
 	: 'var(--metrics-color-negative-chart)');
 
-const tooltipDateFormatter = getDateFormatter({
-	month: 'short',
-	day: 'numeric',
-	year: 'numeric',
-	hour: 'numeric',
-	minute: '2-digit',
-	hour12: true,
+const tooltipDateFormatter = computed(() => {
+	return getDateFormatter({
+		timeZone: timezoneUtcToIntl(props.timezone),
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+	});
 });
 
 function updateTooltipState(state: ChartClickData | null) {
@@ -430,21 +241,44 @@ function updateTooltipState(state: ChartClickData | null) {
 	tooltipState.x = rect.left + state.x;
 	tooltipState.y = rect.top + state.y + 20;
 
-	const date = new Date(typeof segment.time === 'number' ? segment.time * 1000 : segment.time);
+	const time = zonedTimeToTime(segment.time as UtcSeconds, props.timezone);
+	const date = chartTimeToDate(time);
 
-	tooltipState.title = [tooltipDateFormatter.format(date)];
+	tooltipState.title = [tooltipDateFormatter.value.format(date)];
 
-	tooltipState.rows[0] = {
-		text: 'Price',
-		value: `$${formatPrice(state.value)}`,
-		color: tooltipRowColor.value,
-	};
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define
+	const precision = chartPrecision.value;
+
+	tooltipState.rows = series.reduce(
+		(acc, seriesItem) => {
+			const point = (seriesItem.api.data() as ChartData[]).find(pnt => pnt.time === state.time);
+			if (point) {
+				const options = seriesItem.api.options() as SeriesOptionsMap['Line'];
+				const value = isCandlestickData(point) ? point.close : point.value;
+
+				acc.push({
+					text: options.title,
+					value: seriesItem.meta.isPrice ? `$${value.toFixed(precision)}` : value.toFixed(2),
+					color: options.color,
+				});
+			}
+
+			return acc;
+		},
+		[
+			{
+				text: 'Price',
+				value: `$${formatPrice(state.value)}`,
+				color: tooltipRowColor.value,
+			},
+		],
+	);
 
 	tooltipState.visible = true;
 }
 
 function onChartHover(event: SharedChartMouseEvent) {
-	emits('chart-hover', event);
+	emit('chart-hover', event);
 
 	if (props.isShowTooltip) {
 		updateTooltipState(event.detail[0]);
@@ -471,7 +305,7 @@ const chartLocale = computed(() => {
 
 const minDatasetValue = computed(() => {
 	return preparedChartData.value.reduce((min, point) => {
-		if ('low' in point) {
+		if (isCandlestickData(point)) {
 			return Math.min(min, point.low);
 		}
 
@@ -479,171 +313,112 @@ const minDatasetValue = computed(() => {
 	}, 1_000_000);
 });
 
+const lastDatasetValue = computed(() => {
+	if (props.data.length === 0) {
+		return null;
+	}
+
+	const lastPoint = preparedChartData.value[preparedChartData.value.length - 1];
+
+	if (isCandlestickData(lastPoint)) {
+		return lastPoint.low;
+	}
+
+	return lastPoint.value;
+});
+
 const chartPrecision = computed(() => {
-	const minValue = minDatasetValue.value;
+	const current = lastDatasetValue.value;
+	const prevClose = props.prevClosePrice;
 
-	if (minValue > 1_000) {
-		return 1;
+	if (notNullish(prevClose) && notNullish(current)) {
+		return calcNumberPrecision(Math.abs(current - prevClose));
 	}
 
-	if (minValue > 100) {
-		return 2;
-	}
-
-	if (minValue > 0.00001) {
-		return 6;
-	}
-
-	return 8;
+	return calcNumberPrecision(minDatasetValue.value);
 });
 
-// build chart
+function takeScreenshot(addTopLayer?: boolean, includeCrosshair?: boolean) {
+	return container.value?.takeScreenshot(addTopLayer, includeCrosshair);
+}
 
-onMounted(async () => {
-	await nextTick();
+function getTimeScale() {
+	return container.value?.getTimeScale();
+}
 
-	if (!container.value) {
-		return;
+const addSeries = <T extends SeriesType>(
+	definition: SeriesDefinition<T>,
+	options?: SeriesPartialOptionsMap[T],
+	paneIndex?: number,
+	isPrice = true,
+) => {
+	const api = container.value?.addSeries?.(definition, options, paneIndex);
+	if (api) {
+		series.push({ api, meta: { isPrice } });
 	}
 
-	chart.value = createChart(unrefElement(container)!, {
-		autoSize: true,
-		layout: {
-			textColor: '#9A9A9D',
-		},
+	return api;
+};
 
-		rightPriceScale: {
-			scaleMargins: {
-				top: 0.3,
-				bottom: 0.25,
-			},
-			minimumWidth: 55,
-			borderVisible: false,
-		},
+function removeSeries(seriesApi: ISeriesApi<SeriesType, Time>) {
+	container.value?.removeSeries?.(seriesApi);
 
-		handleScale: !props.disableScroll,
+	const index = series.findIndex(item => item.api === seriesApi);
+	if (index !== -1) {
+		series.splice(index, 1);
+	}
+}
 
-		timeScale: {
-			borderVisible: false,
-			timeVisible: true,
-			secondsVisible: false,
-		},
+function updateMainSeriesPoint(point: CandlestickData | LineData, historicalUpdate?: boolean) {
+	return container.value?.updateMainSeriesPoint(point, historicalUpdate);
+}
 
-		grid: {
-			vertLines: {
-				visible: false,
-			},
-			horzLines: {
-				visible: false,
-			},
-		},
-
-		crosshair: {
-			mode: 1,
-		},
-	});
-
-	chart.value!.timeScale().applyOptions({
-		borderColor: 'rgba(4, 237, 160, 0.00)',
-	});
-
-	indicators.set(IndicatorsChart.Main,
-		{
-			series: chart.value!.addSeries(AreaSeries, MAIN_AREA_SETTINGS),
-			isActive: true,
-			calcSeries(data: ICalcSeriesData, type: TypeChart) {
-				return prepareSeries(data, type);
-			},
-		},
-	);
-
-	indicators.set(IndicatorsChart.SMA,
-		{
-			series: chart.value!.addSeries(LineSeries, MA_SETTINGS),
-			isActive: false,
-			calcSeries(data: ICalcSeriesData) {
-				return calculateSMASeriesData(prepareLineDataFromCandlestick(data));
-			},
-		},
-	);
-
-	updateIndicators();
-
-	updateHistoryChartPropChange();
+defineExpose({
+	takeScreenshot,
+	getTimeScale,
+	addSeries,
+	removeSeries,
+	updateMainSeriesPoint,
 });
 
-const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS');
+function onWheel(e: WheelEvent) {
+	if (props.handleScale) {
+		e.preventDefault();
+		e.stopPropagation();
+	}
+}
+
+// autosize
+
+const chart = useTemplateRef('chart');
+
+let lastContainerWidth = 0;
+
+if (props.autoSize) {
+	useResizeObserver(
+		chart,
+		useDebounceFn(([entry]) => {
+			if (lastContainerWidth !== entry.contentRect.width) {
+				lastContainerWidth = entry.contentRect.width;
+
+				const scale = getTimeScale();
+				if (scale) {
+					scale.fitContent();
+				}
+			}
+		}),
+	);
+}
 </script>
 
 <template>
-	<div
-		:class="classes.wrapper"
-		:style="styleRoot"
-	>
-		<div v-if="isVisibleIndicators" :class="classes.instruments">
-			<modal-badge>
-				<template #title>
-					Indicators
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-					/>
-				</template>
-
-				<template #content>
-					<modal-badge-list display-variant="default">
-						<template #title>
-							Indicators
-						</template>
-
-						<modal-item-checkbox
-							v-for="item in listAvailableIndicators"
-							:key="item.title"
-							:model-value="listActiveIndicators.includes(item.val)"
-							@update:model-value="changeVisibleIndicator(item.val)"
-						>
-							{{ item.title }}
-						</modal-item-checkbox>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
-
-			<modal-badge>
-				<template #title>
-					Type
-
-					<ui-icon
-						:id="IconIds.DropdownDown"
-						width="12"
-						height="12"
-					/>
-				</template>
-
-				<template #content>
-					<modal-badge-list display-variant="default">
-						<template #title>
-							Type
-						</template>
-
-						<modal-item-selector
-							v-for="item in listTypeGraph"
-							:key="item.title"
-							:model-value="currentTypeGraph === item.val"
-							@update:model-value="updateTypeChart(item.val)"
-						>
-							{{ item.title }}
-						</modal-item-selector>
-					</modal-badge-list>
-				</template>
-			</modal-badge>
-		</div>
-		<div :class="classes.mainChart">
+	<div :class="classes.wrapper" :style="{ height: heightInPx }">
+		<div ref="chart" :class="classes.mainChart">
 			<i88-chart
+				v-if="props.data.length"
 				ref="container"
 				:data="preparedChartData"
-				:type="chartTypeForWebComponent"
+				:type="props.type"
 				:auto-size="true"
 				:color-scheme="props.colorSchema"
 				:show-price-scale="props.isVisiblePriceScale"
@@ -657,40 +432,12 @@ const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS'
 				:locale="chartLocale"
 				entire-text-only-price-scale
 				:precision="chartPrecision"
+				:handle-scale="props.handleScale"
+				:handle-scroll="props.handleScroll"
 				@chart-hover="onChartHover"
+				@wheel.prevent="onWheel"
 			/>
 		</div>
-		<div
-			v-if="props.isVisibleEventsTimeline && timelineEventsCanBeShown"
-			:class="classes.events"
-			:style="{ padding: eventsTimelinePadding }"
-		>
-			<chart-events
-				v-if="props.events.length"
-				:start-time="currentRangeStartTime"
-				:end-time="currentRangeEndTime"
-				:events="props.events"
-				:display-variant="props.displayVariant"
-			/>
-			<chart-timeline
-				:start-time="currentRangeStartTime"
-				:end-time="currentRangeEndTime"
-				:segments="props.timelineSegments"
-			/>
-		</div>
-		<div v-if="isVisibleRange" :class="classes.rangeWrapper">
-			<chart-range
-				:active-range="currentRange"
-				:list="rangeList"
-				:disable-change="!isVisibleRangeChange"
-				@select="selectRange"
-			/>
-		</div>
-		<div
-			v-if="isVisibleHistoryGraph"
-			ref="history"
-			:class="classes.chartHistory"
-		></div>
 		<teleport v-if="isShowTooltip" to="body">
 			<chart-external-tooltip v-bind="tooltipState">
 				<template v-if="$slots.tooltipContent" #content="contentProps">
@@ -717,39 +464,7 @@ const timelineEventsCanBeShown = isFeatureEnabled('WIDGET_CHART_TIMELINE_EVENTS'
 	min-height: 0;
 }
 
-.chartHistory {
-	display: block;
-	width: 100%;
-	height: 80px;
-	min-height: 0;
-}
-
-.rangeWrapper {
-	flex-shrink: 0;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	overflow-x: auto;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}
-
-.instruments {
-	display: flex;
-	gap: 4px;
-	align-items: center;
-	margin-bottom: 10px;
-}
-
 :global(a#tv-attr-logo) {
 	display: none !important;
-}
-
-.events {
-	display: flex;
-	flex-shrink: 0;
-	flex-direction: column;
-	min-height: 0;
-	margin-top: 5px;
-	gap: 5px;
 }
 </style>

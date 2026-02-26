@@ -1,3 +1,5 @@
+import { useLogger } from '@/shared/service/monitoring';
+
 let isConfigValidated = false;
 
 function checkIsConfigValidated() {
@@ -6,11 +8,23 @@ function checkIsConfigValidated() {
 	}
 }
 
+/**
+ * List of experimental widget features.
+ */
+export const EXPERIMENTAL_WIDGETS_FEATURES = [
+	'SHOW_FEAR_AND_GREED_WIDGET',
+	'SHOW_MARKET_CAP_WIDGET_DASHBOARD',
+	'SHOW_ETH_GAS_WIDGET_DASHBOARD',
+] as const;
+
+/**
+ * Complete list of all available feature flags in the application.
+ * Each feature corresponds to an environment variable without `VITE_FEATURE_` prefix.
+ */
 export const ALL_FEATURES = [
 	'DASHBOARD_PRESETS',
 	'DRAG_WIDGET_ENABLED',
 	'CONTEXT_MENU_WIDGET_ACTIONS',
-	'TICKER_NAVIGATION_ENABLED',
 	'CRYPTO_DASHBOARD_ENABLED',
 	'STOCK_DASHBOARD_ENABLED',
 
@@ -22,7 +36,6 @@ export const ALL_FEATURES = [
 	'SHOW_SET_UP_PAGE_LINK',
 	'SHOW_CASHFLOW_PAGE_LINK',
 	'SHOW_ARBITRAGE_PAGE_LINK',
-	'SHOW_SEARCH_PAGE_LINK',
 	'SHOW_ASK_AI_PAGE_LINK',
 
 	'SCREENER_PAGE_ENABLED',
@@ -30,7 +43,14 @@ export const ALL_FEATURES = [
 	'CALENDAR_PAGE_ENABLED',
 	'NEWS_PAGE_ENABLED',
 	'TV_PAGE_ENABLED',
-
+	'TICKER_PAGE_FOOTER_ENABLED',
+	'TICKER_PAGE_HEADER_ENABLED',
+	'LINKS_WIDGET_PAGE_ENABLED',
+	'TICKER_WIDGET_PAGE_ENABLED',
+	'TICKER_WIDGET_ACTIVITY_METRICS_ENABLED',
+	'TICKER_WIDGET_PRICE_PERFORMANCE_ENABLED',
+	'TICKER_WIDGET_ANALYST_RATINGS_ENABLED',
+	'TICKER_WIDGET_INDICATORS_ENABLED',
 	'DATE_FORMAT_LOCALIZATION',
 	'RESIZE_HEIGHT_WIDGETS',
 	'RESIZE_WIDTH_SECTIONS',
@@ -38,10 +58,41 @@ export const ALL_FEATURES = [
 	'WIDGET_HIGH_IMPACT_HOUR_MAP_CALENDAR_REDIRECT',
 	'WIDGET_CHART_TIMELINE_EVENTS',
 	'WIDGET_NEWS_SELECT_NEWS_ITEM',
+	'KEY_INDICATORS_PAGE_ENABLED',
+
+	'I88_TWITTER_PAGE_LINK',
+	'I88_DISCORD_SUPPORT_LINK',
+	'I88_FEATURE_REQUEST_LINK',
+	'TICKER_PAGE_HEADER_MORE_OPTIONS_ENABLED',
+
+	'TICKER_NAVIGATION_MENU_ENABLED',
+	'TICKER_WIDGET_US_INFLATION_ENABLED',
+	'TICKER_WIDGET_FEDERAL_FUNDS_ENABLED',
+
+	'CALENDAR_OPEN_CHART',
+
+	/**
+	 * Показывать ли ссылку на сектор (скриннер) на странице сток тикера
+	 * Убрать, когда появится страница скриннера
+	 */
+	'STOCK_TICKER_SECTOR_LINK_ENABLED',
+
+	/**
+	 * Редиректить ли на страницу 404, если тикер не найден
+	 */
+	'TICKER_PAGE_ERROR_REDIRECT_ENABLED',
+
+	...EXPERIMENTAL_WIDGETS_FEATURES,
 ] as const;
 
 export type FeatureName = typeof ALL_FEATURES[number];
 
+/**
+ * Checks if a specific feature is enabled.
+ * @param feature - The name of the feature to check.
+ * @returns `true` if the feature is enabled, `false` otherwise.
+ * @throws Error if config is not validated or feature name is invalid.
+ */
 export function isFeatureEnabled(feature: FeatureName): boolean {
 	checkIsConfigValidated();
 
@@ -53,6 +104,22 @@ export function isFeatureEnabled(feature: FeatureName): boolean {
 	return envVar.toLowerCase() === 'true';
 }
 
+/**
+ * Gets the raw string value of a feature flag from environment variables.
+ * @param feature - The name of the feature to get the value for.
+ * @returns The raw string value of the feature flag, or `undefined` if not set.
+ * @throws Error if config is not validated or feature name is invalid.
+ */
+export function getFeatureValue(feature: FeatureName): string | undefined {
+	checkIsConfigValidated();
+
+	if (!ALL_FEATURES.includes(feature)) {
+		throw new Error(`Invalid feature name: ${feature}. Must be one of: ${ALL_FEATURES.join(', ')}`);
+	}
+
+	return import.meta.env[`VITE_FEATURE_${feature}`];
+}
+
 function validateFeatureConfig(): void {
 	const errors: string[] = [];
 
@@ -61,13 +128,13 @@ function validateFeatureConfig(): void {
 		const envVarValue = import.meta.env[envVarName];
 
 		if (envVarValue === undefined) {
-			errors.push(`Missing environment variable: ${envVarName}`);
+			errors.push(`Undefined environment variable: ${envVarName}`);
 			continue;
 		}
 
 		const normalizedValue = envVarValue.toLowerCase();
-		if (normalizedValue !== 'true' && normalizedValue !== 'false') {
-			errors.push(`Invalid value for ${envVarName}: expected 'true' or 'false', got '${envVarValue}'`);
+		if (normalizedValue.length < 1) {
+			errors.push(`Empty environment variable: ${envVarName}`);
 		}
 	}
 
@@ -76,6 +143,9 @@ function validateFeatureConfig(): void {
 	}
 }
 
+/**
+ * Enum-like object containing all possible environment names.
+ */
 export const EnvironmentName = {
 	PROD: 'PROD',
 	DEMO: 'DEMO',
@@ -84,6 +154,11 @@ export const EnvironmentName = {
 
 export type EnvironmentName = typeof EnvironmentName[keyof typeof EnvironmentName];
 
+/**
+ * Gets the current environment name.
+ * @returns The current environment name (PROD, DEMO, or DEV).
+ * @throws Error if config is not validated.
+ */
 export function getEnvironmentName(): EnvironmentName {
 	checkIsConfigValidated();
 
@@ -97,11 +172,25 @@ function validateEnvironmentConfig(): void {
 	}
 }
 
+/**
+ * Validates the application configuration including feature flags and environment settings.
+ * Must be called before using any feature toggle functions.
+ * In DEV environment, throws an error if validation fails.
+ * In other environments, logs the error but continues execution.
+ */
 export function validateConfig(): void {
 	if (!isConfigValidated) {
-		validateFeatureConfig();
-		validateEnvironmentConfig();
-		isConfigValidated = true;
+		try {
+			validateFeatureConfig();
+			validateEnvironmentConfig();
+			isConfigValidated = true;
+		} catch (error) {
+			const logger = useLogger();
+			logger.error('Configuration is not valid', { error: error as Error });
+
+			if (getEnvironmentName() === EnvironmentName.DEV) {
+				throw error;
+			}
+		}
 	}
 }
-

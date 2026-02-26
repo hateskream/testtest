@@ -5,7 +5,6 @@ import { ColumnType, type ITableColumn, mapColumn, mapRow } from '@/modules/cell
 import { DisplayVariant, type PerformanceTableRow } from '../../model';
 import { useGoToTickerPage } from '@/modules/chart';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useIsMobile } from '@/shared/composables';
 
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
 
@@ -14,6 +13,7 @@ interface IPerformanceTableProps {
 	rows: PerformanceTableRow[];
 	columns: ITableColumn[];
 	displayVariant: DisplayVariant;
+	enableTickerClick?: boolean;
 }
 
 const props = defineProps<IPerformanceTableProps>();
@@ -42,7 +42,6 @@ const genericRows = computed(() => {
 	});
 });
 
-const isMobile = useIsMobile();
 
 const emit = defineEmits<{
 	(e: 'togglePin', tickerId: string): void;
@@ -65,8 +64,8 @@ const emit = defineEmits<{
 				:sticky-header="true"
 				:sticky-first-column="true"
 				:enable-row-actions="false"
-				:disable-ticker-click="true"
-				:hide-description="isMobile"
+				:disable-ticker-click="!props.enableTickerClick"
+				:hide-description="true"
 				@click-on-ticker="goToTickerPage"
 			>
 				<template #row-actions="{tickerId} : {tickerId: string}">

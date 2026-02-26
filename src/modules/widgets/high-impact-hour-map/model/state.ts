@@ -1,19 +1,19 @@
 import { z } from 'zod';
 
-import { TimeZoneUTC } from './timezone';
+import { TimezoneUtc, TimezoneUtcSchema, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 export interface IState {
-	timezone: TimeZoneUTC;
+	timezone: TimezoneUtcType;
 }
 
 export const stateSchema = z.object({
-	timezone: z.nativeEnum(TimeZoneUTC),
+	timezone: TimezoneUtcSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		timezone: TimeZoneUTC.UTC0,
+		timezone: TimezoneUtc.UTC0,
 	};
 }

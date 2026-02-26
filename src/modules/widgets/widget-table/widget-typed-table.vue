@@ -12,6 +12,7 @@ import {
 } from '@/modules/table/type';
 import { GenericDataTable } from '@/modules/table';
 import { ModalFilterTabWrapper } from '@/modules/widgets/base';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface IExtendedTableColumn extends Omit<IGenericTableColumn, 'type'> {
 	type: string;
@@ -166,8 +167,12 @@ const getCellComponentForColumn = (
 	columnKey: string,
 ) => {
 	if (!cellData) {
-		// eslint-disable-next-line no-console
-		console.error(`No data provided for column "${columnKey}" - falling back to 'nothing' component`);
+		const logger = useLogger();
+		logger.error(
+			'No data provided for column, falling back to \'nothing\' component',
+			{ context: { columnType, columnKey } },
+		);
+
 		return getCellComponent('nothing');
 	}
 	return getCellComponent(columnType);

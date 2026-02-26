@@ -1,21 +1,22 @@
-import { type IChartApi } from 'lightweight-charts';
-import { CanvasRenderingTarget2D } from 'fancy-canvas';
 import {
+	type CandlestickData,
 	CrosshairMode,
+	type IChartApi,
 	type IPrimitivePaneRenderer,
 	type IPrimitivePaneView,
+	type ISeriesPrimitive,
+	type LineData,
 	type MouseEventParams,
 	type PrimitivePaneViewZOrder,
-	type ISeriesPrimitive,
 	type SeriesAttachedParameter,
-	type LineData,
-	type WhitespaceData,
-	type CandlestickData,
 	type Time,
+	type WhitespaceData,
 } from 'lightweight-charts';
+import { CanvasRenderingTarget2D } from 'fancy-canvas';
 
 import { positionsLine } from '../utils/position-line';
 import { convertTime, formattedDateAndTime } from '../utils';
+import { useLogger } from '@/shared/service/monitoring';
 
 export interface ITooltipOptions {
 	title: string;
@@ -112,16 +113,19 @@ export class TooltipElement {
 		const chartElement = this._chart.chartElement();
 		chartElement.appendChild(this._element);
 
+		const logger = useLogger();
+
 		const chartElementParent = chartElement.parentElement;
 		if (!chartElementParent) {
-			// eslint-disable-next-line no-console
-			console.error('Chart Element is not attached to the page.');
+			logger.error('Chart Element is not attached to the page.', { context: { options, chartElement } });
 			return;
 		}
 		const { position } = getComputedStyle(chartElementParent);
 		if (position !== 'relative' && position !== 'absolute') {
-			// eslint-disable-next-line no-console
-			console.error('Chart Element position is expected be `relative` or `absolute`.');
+			logger.error(
+				'Chart Element position is expected be `relative` or `absolute`.',
+				{ context: { options, position } },
+			);
 		}
 	}
 

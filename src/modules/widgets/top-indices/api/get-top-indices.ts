@@ -1,16 +1,16 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
-	type SymbolDto,
+	ColumnType,
+	type ColumnWithoutSymbol,
+	createTickerIdFromCell,
+	type LabelDto,
+	mapTickersToTableRows,
 	type NumberDto,
 	type PercentDto,
-	type LabelDto,
-	ColumnType,
-	type TableRowDto,
+	type SymbolDto,
 	SymbolType,
-	type ColumnWithoutSymbol,
-	mapTickersToTableRows,
-	createTickerIdFromCell,
+	type TableRowDto,
 } from '@/modules/cell';
 import type { TopIndicesTableRow } from '../model';
 import { generateRows } from '@/shared/mock';
@@ -67,7 +67,7 @@ export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<I
 
 		return prepareResponse(response.data);
 	} catch (error) {
-		logger.error('Failed to get top indices', error as Error);
+		logger.error('Failed to get top indices', { error: error as Error });
 		throw error;
 	}
 }

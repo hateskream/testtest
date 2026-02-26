@@ -1,14 +1,14 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import {
 	ColumnType,
-	mapTickersToTableRows,
-	SymbolType,
 	type ColumnWithoutSymbol,
+	createTickerIdFromCell,
+	mapTickersToTableRows,
 	type PercentDto,
 	type SymbolDto,
+	SymbolType,
 	type TableRowDto,
-	createTickerIdFromCell,
 } from '@/modules/cell';
 import type { PerformanceTableRow } from '../model/row';
 import { generateRows } from '@/shared/mock';
@@ -77,7 +77,7 @@ export async function getPerformance(args: IGetPerformanceRequest): Promise<IPer
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get performance data', error as Error);
+		logger.error('Failed to get performance data', { error: error as Error });
 		throw error;
 	}
 }

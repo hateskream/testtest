@@ -1,14 +1,14 @@
 import { add, format } from 'date-fns';
 
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { delay, randomInt } from '@/shared/lib';
-import { type TimeZoneUTC } from '../model';
+import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetHighImpactHourMapRequest {
-	timezone: TimeZoneUTC;
+	timezone: TimezoneUtcType;
 	widgetId: string;
 }
 
@@ -52,7 +52,7 @@ export async function getHighImpactHourMap(args: IGetHighImpactHourMapRequest): 
 			},
 		});
 	} catch (error) {
-		logger.error('Failed to get High Impact Hour Map data', error as Error);
+		logger.error('Failed to get High Impact Hour Map data', { error: error as Error });
 		throw error;
 	}
 }

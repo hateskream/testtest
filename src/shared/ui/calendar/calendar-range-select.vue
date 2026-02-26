@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { type DateYYYYMMDD, toUtcIsoDate } from '@/modules/calendar';
+import { format } from 'date-fns';
+
 import { type DatePickerRangeObject, UiDatePicker } from '@/shared/ui/date-picker';
 
 interface IDateRange {
-	from: DateYYYYMMDD;
-	to: DateYYYYMMDD;
+	from: string;
+	to: string;
 }
 
 interface IDatePickerModel {
@@ -27,8 +28,8 @@ const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePi
 	},
 	set({ start, end }) {
 		return {
-			from: toUtcIsoDate(start),
-			to: toUtcIsoDate(end),
+			from: format(start, 'yyyy-MM-dd'),
+			to: format(end, 'yyyy-MM-dd'),
 		};
 	},
 });

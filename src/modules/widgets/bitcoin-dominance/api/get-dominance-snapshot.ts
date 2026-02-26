@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { delay, getImagePath, removeUndefinedPropertiesFromObject } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { useFetchMock } from '@/shared/mock';
@@ -56,7 +56,7 @@ export async function getDominanceSnapshot(args: IGetDominanceSnapshotRequest): 
 
 		return prepareResponse(response.data);
 	} catch (error) {
-		logger.error('Failed to get dominance snapshot', error as Error);
+		logger.error('Failed to get dominance snapshot', { error: error as Error });
 		throw error;
 	}
 }

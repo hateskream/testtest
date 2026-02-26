@@ -5,14 +5,14 @@ import type { ChartOptions, TooltipOptions } from 'chart.js';
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import { CpiValueType, type ICpiHistoryPoint } from '../../model';
+import { type CpiHistoryPoint, CpiValueType, type CpiValueTypeType } from '../../model';
 import { getDateFormatter } from '@/shared/lib';
 
 const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
-	points: ICpiHistoryPoint[];
-	valueType: CpiValueType;
+	points: CpiHistoryPoint[];
+	valueType: CpiValueTypeType;
 }
 
 const props = defineProps<IChartComponentProps>();
@@ -87,6 +87,7 @@ const preparedDatasets = computed((): [BarDataset] => {
 		barThickness: BAR_WIDTH,
 		maxBarThickness: BAR_WIDTH,
 		barPercentage: 1,
+		label: 'CPI',
 	}];
 });
 

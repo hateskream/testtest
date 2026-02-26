@@ -1,5 +1,6 @@
 import { type IActiveLocation, type ISegmentRequest, Score, Sentiment, type SortState, Source } from '@/modules/news';
-import type { DateYYYYMMDD } from '@/modules/calendar';
+
+export type DateYYYYMMDD = string;
 
 export interface ITicker {
 	ticker: string;

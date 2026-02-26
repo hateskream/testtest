@@ -2,19 +2,23 @@
 import { computed } from 'vue';
 
 import {
-	mapSections,
 	type ISectionUi,
 	type ITickerAddPayload,
 	type ITickerRemovePayload,
 	type ITickersAddPayload,
+	mapSections,
 } from '../../model';
-import { mapColumn, type ITableColumn, type TableRow } from '@/modules/cell';
+import { type ITableColumn, mapColumn, type TableRow } from '@/modules/cell';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { useGoToTickerPage } from '@/modules/chart';
-import { findSectionTypeById } from '@/modules/watchlist';
-import type { MarketType } from '@/modules/market';
 import { UiPosition } from '@/shared/ui/position';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import {
+	decodeCanonicalTickerId,
+	type ITickerItem,
+	SelectionMode,
+	TickerSelectorModal,
+} from '@/modules/ticker-selector';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 import WatchlistEmptyState from './watchlist-empty-state.vue';
 import WidgetTypedTable from '@/modules/widgets/widget-table/widget-typed-table.vue';
@@ -42,19 +46,12 @@ const genericColumns = computed(() => mapColumn(props.columns));
 
 const genericSections = computed(() => mapSections(props.sections, props.tickers));
 
-function selectTicker(tickerId: string, sectionId: string) {
-	const marketType = findSectionTypeById(props.sections, sectionId);
+function selectTicker(ticker: ITickerItem) {
+	emit('add-ticker', { tickerId: ticker.canonical_ticker_id, tickerType: ticker.market_type });
+}
 
-	if (!marketType) {
-		return;
-	}
-
-	emit('add-ticker',
-		{
-			tickerId,
-			tickerType: marketType as MarketType,
-		},
-	);
+function unselectTicker(ticker: ITickerItem) {
+	emit('remove-ticker', { tickerId: ticker.canonical_ticker_id });
 }
 </script>
 
@@ -97,12 +94,13 @@ function selectTicker(tickerId: string, sectionId: string) {
 							/>
 						</template>
 						<template #content>
-							<modal-ticker-selector-legacy
-								:model-value="selectedTickers"
-								:enable-select-all="false"
+							<ticker-selector-modal
+								:enabled-markets="ALL_MARKET_TYPES"
+								:selected-tickers="selectedTickers.map(decodeCanonicalTickerId)"
+								:selection-mode="SelectionMode.Single"
 								:display-variant="props.displayVariant"
-								@select="selectTicker($event, sectionId)"
-								@unselect="emit('remove-ticker', { tickerId: $event })"
+								@ticker-selected="selectTicker"
+								@ticker-unselected="unselectTicker"
 							/>
 						</template>
 					</ui-position>

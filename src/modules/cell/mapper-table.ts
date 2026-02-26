@@ -1,27 +1,26 @@
 import { TableColumnType } from '../table/type';
 import {
-	isCryptoSymbolCell,
-	isStockSymbolCell,
-	isIndexSymbolCell,
+	isCheckCell,
 	isCommoditySymbolCell,
-	isSymbolCell,
-	isNumberCell,
-	isPercentCell,
-	isTextCell,
-	isLabelCell,
-	isSvgChartCell,
-	isRangeCell,
+	isCryptoSymbolCell,
+	isEtfSymbolCell,
 	isForexSymbolCell,
-	isScoreCell, isOpenCell, isCheckCell, isScheduleCell,
+	isIndexSymbolCell,
+	isLabelCell,
+	isNumberCell,
+	isOpenCell,
+	isPercentCell,
+	isRangeCell,
+	isScheduleCell,
+	isScoreCell,
+	isStockSymbolCell,
+	isSvgChartCell,
+	isSymbolCell,
+	isTextCell,
 } from './check';
 import type { ITableColumn } from './column';
 import { getMagnitudeText } from './display';
-import {
-	CellType,
-	Trend,
-	type Cell,
-	ColumnType,
-} from './domain';
+import { type Cell, CellType, ColumnType, Trend } from './domain';
 import type { TableRow } from './row';
 
 
@@ -110,6 +109,14 @@ function mapSymbolToTable(cell: Cell) {
 			leftSrcImg: cell.leftSrcImg,
 			rightTicker: cell.rightTicker,
 			leftTicker: cell.leftTicker,
+		};
+	}
+
+	if (isEtfSymbolCell(cell)) {
+		return {
+			symbolType: cell.symbolType,
+			srcImg: cell.srcImg,
+			ticker: cell.ticker,
 		};
 	}
 

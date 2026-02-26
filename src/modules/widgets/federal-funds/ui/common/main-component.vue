@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { IFederalFundsDomain } from '@/modules/widgets/federal-funds/model';
+import type { IFederalFundsDomain } from '../../model';
 import { getDateFormatter } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 

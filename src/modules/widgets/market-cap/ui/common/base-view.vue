@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { type IDisplaySettings, type IMarketCapHistory, MarketCapDateRange } from '../../model';
+import { type IDisplaySettings, type IMarketCapHistory } from '../../model';
+import type { DateRangeValue } from '@/modules/lightweight-charts/model';
 
 import MarketCapTotal from './market-cap-total.vue';
 import MarketCapChart from './market-cap-chart.vue';
@@ -17,7 +18,7 @@ interface IViewComponentProps {
 
 const props = defineProps<IViewComponentProps>();
 
-const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
+const activeDateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 
 const isWide = computed(() => !props.displaySettings.isShowChart || props.meta.size.h <= 3);
 

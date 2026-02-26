@@ -1,57 +1,81 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue';
+import { computed } from 'vue';
 
-import { useSegmentedControl } from './composables/use-segmented-control.ts';
+import { useSegmentedControlContext } from './use-segmented-control-context';
+import type { SegmentedControlModel } from './model';
 
-const props = defineProps<{
-	value: string | number;
-}>();
-const slots = useSlots();
+export interface IUiSegmentedControlItemProps {
+	/**
+	 * Значение контрола, используемое в модели.
+	 * Заменит контент, если он не будет передан через slot.
+	 */
+	value: SegmentedControlModel;
 
-const control = useSegmentedControl();
+	/**
+	 * Отключить select режим. Полезно для ручной обработки клика.
+	 */
+	disabled?: boolean;
+}
 
-const active = computed(() => control.getValue() === props.value);
+const props = defineProps<IUiSegmentedControlItemProps>();
+
+const { select, active } = useSegmentedControlContext();
 
 function onClick() {
-	control.select(props.value);
+	if (!props.disabled) {
+		select(props.value);
+	}
 }
+
+const isActive = computed(() => active.value === props.value);
 </script>
 
 <template>
 	<button
-		:data-value="props.value"
-		:class="[classes.item, active && classes.active]"
+		class="text-200-r"
+		:class="[classes.segment, {[classes.active]: isActive}]"
 		@click="onClick"
 	>
-		<template v-if="slots.default">
-			<slot />
-		</template>
-		<template v-else>
-			{{props.value}}
-		</template>
+		<slot>{{ props.value }}</slot>
 	</button>
 </template>
 
 <style module="classes">
-.item {
-	position: relative;
-	z-index: 1;
-	display: flex;
-	flex: 1 0 0;
-	justify-content: center;
-	align-items: center;
-	padding: 4px 8px;
-	font-size: 12px;
-	line-height: 170%;
-	color: #9a9a9d;
-	white-space: nowrap;
-	border-radius: 9999px;
-	cursor: pointer;
-	transition: color 0.2s ease;
-	user-select: none;
-}
+@layer kit {
+	.segment {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 28px;
+		padding: 0 12px;
+		color: var(--text-300, rgb(255 255 255 / 62%));
+		background-color: var(--bg-100, rgb(73 73 80 / 32%));
+		border-radius: var(--radius-s9-16, 6px);
+		cursor: pointer;
+		transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+		gap: 3px;
+	}
 
-.active {
-	color: #ffffff;
+	.segment:hover {
+		color: var(--text-500, rgb(255 255 255 / 96%));
+		background-color: var(--bg-300, rgb(73 73 80 / 52%));
+	}
+
+	.segment.active {
+		color: var(--text-500, rgb(255 255 255 / 96%));
+		background-color: var(--bg-500, rgb(73 73 80 / 90%));
+	}
+
+	.segment:first-child {
+		border-radius:
+			var(--control-ct-sm28-radius, 10.8px) var(--radius-s9-16, 6px)
+			var(--radius-s9-16, 6px) var(--control-ct-sm28-radius, 10.8px);
+	}
+
+	.segment:last-child {
+		border-radius:
+			var(--radius-s9-16, 6px) var(--control-ct-sm28-radius, 10.8px)
+			var(--control-ct-sm28-radius, 10.8px) var(--radius-s9-16, 6px);
+	}
 }
 </style>

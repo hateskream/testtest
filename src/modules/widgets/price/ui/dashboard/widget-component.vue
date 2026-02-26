@@ -7,6 +7,7 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
+import { useGoToTickerPage } from '@/modules/ticker';
 
 import RcmPriceComponent from '@/modules/widgets/price/ui/tv/rcm-price-component.vue';
 
@@ -56,6 +57,8 @@ const {
 	maxCountRows: () => (props.meta.maxCountRowTable || 50),
 });
 
+const { goToTickerPage } = useGoToTickerPage();
+
 watch(activeMarket, (value) => {
 	emits(
 		'set-widget-state-type',
@@ -99,6 +102,7 @@ defineExpose({ scrollBy });
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<filter-component
@@ -127,6 +131,7 @@ defineExpose({ scrollBy });
 				:has-infinity-loading="hasInfinityLoading"
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
+				@ticker-select="goToTickerPage($event)"
 			/>
 		</template>
 

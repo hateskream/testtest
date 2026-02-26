@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { ActiveDateRange, Include, Score, Sentiment, Sort, Source } from '@/modules/news';
+import { Include, Score, Sentiment, Sort, Source } from '@/modules/news';
 import { MarketType } from '@/modules/market';
 import type { IDateRange } from '@/shared/ui/calendar';
-import type { DateYYYYMMDD } from '@/modules/calendar';
+import type { DateYYYYMMDD } from '../model';
 
 const displaySettingsSchema = z.object({
 	isShowDate: z.boolean(),
@@ -40,8 +40,6 @@ export const stateSchema = z.object({
 	displaySettings: displaySettingsSchema,
 	locations: z.array(activeLocationSchema),
 	include: z.array(z.nativeEnum(Include)),
-	activeDateRange: z.nativeEnum(ActiveDateRange),
-	dateRange: dateRangeSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;

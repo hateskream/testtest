@@ -12,6 +12,7 @@ import {
 import throttle from 'lodash/throttle';
 
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
+import { useLogger } from '@/shared/service/monitoring';
 
 
 const LEFT_OFFSET = 20;
@@ -27,8 +28,11 @@ export function useSlider(opts: {
 	viewportWidth: MaybeRefOrGetter<number>;
 	container: MaybeRefOrGetter<HTMLDivElement | null>;
 	isMobile: ShallowRef<boolean, boolean>;
+	dragThreshold?: number;
 }) {
-	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
+	const { slidesWidth, gap = 0, viewportWidth, isMobile, dragThreshold = 5 } = opts;
+
+	const logger = useLogger();
 
 	const translateX = ref(0);
 	const isDragging = ref(false);
@@ -50,7 +54,7 @@ export function useSlider(opts: {
 		const end = offset + vp;
 
 		let acc = 0;
-		// eslint-disable-next-line no-plusplus
+		// oxlint-disable-next-line no-plusplus
 		for (let i = 0; i < slides.value.length; i++) {
 			const w = slides.value[i];
 			const s = acc;
@@ -74,13 +78,13 @@ export function useSlider(opts: {
 
 	watch(
 		isDragging,
-		() => {
+		(value) => {
 			const el = toValue(opts.container);
 			if (!el) {
 				return;
 			}
 
-			if (isDragging.value) {
+			if (value) {
 				el.style.scrollSnapType = 'none';
 				el.style.scrollBehavior = 'auto';
 			} else {
@@ -164,6 +168,8 @@ export function useSlider(opts: {
 
 	let startX = 0;
 	let startScrollLeft = 0;
+	let moveIsStarted = false;
+	let pointerIsDown = false;
 
 	function onPointerDown(e: PointerEvent) {
 		const el = toValue(opts.container);
@@ -173,25 +179,53 @@ export function useSlider(opts: {
 
 		e.preventDefault();
 
-		isDragging.value = true;
-
 		startX = e.clientX;
 		startScrollLeft = el.scrollLeft;
+
+		moveIsStarted = false;
+		pointerIsDown = true;
+		isDragging.value = false;
 	}
 
 	function onPointerMove(e: PointerEvent) {
-		if (!isDragging.value) {
+		if (!pointerIsDown) {
 			return;
 		}
 
 		const dx = e.clientX - startX;
+
+		if (!moveIsStarted && Math.abs(dx) > dragThreshold) {
+			moveIsStarted = true;
+			isDragging.value = true;
+
+			const el = toValue(opts.container);
+			if (el) {
+				el.setPointerCapture(e.pointerId);
+			}
+		}
+
 		const nextScroll = startScrollLeft - dx;
 
 		setScrollRAF(nextScroll);
 	}
 
-	function onPointerUp() {
+	function onPointerUp(event: PointerEvent) {
+		pointerIsDown = false;
+
+		if (!isDragging.value) {
+			return;
+		}
+
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
+
 		isDragging.value = false;
+
+		if (el.hasPointerCapture(event.pointerId)) {
+			el.releasePointerCapture(event.pointerId);
+		}
 	}
 
 
@@ -205,6 +239,22 @@ export function useSlider(opts: {
 		isDragging.value = false;
 
 		swipe(endX);
+	}
+
+	function onTouchStart(e: TouchEvent) {
+		if (!isMobile.value) {
+			return;
+		}
+
+		const el = toValue(opts.container);
+		if (!el) {
+			return;
+		}
+
+		isDragging.value = true;
+
+		startX = e.changedTouches[0].clientX;
+		startScrollLeft = el.scrollLeft;
 	}
 
 	const SWIPE_THRESHOLD = 50;
@@ -228,8 +278,7 @@ export function useSlider(opts: {
 		const el = toValue(opts.container);
 
 		if (!el) {
-			// eslint-disable-next-line no-console
-			console.error('Container not found');
+			logger.error('Container not found');
 			return;
 		}
 
@@ -241,17 +290,18 @@ export function useSlider(opts: {
 	onMounted(() => {
 		const el = toValue(opts.container);
 		if (!el) {
-			// eslint-disable-next-line no-console
-			console.error('Container not found');
+			logger.error('Container not found');
 			return;
 		}
 
 		handleScroll();
 
+		// Если будут настоящие баги с залипанием, то можно присмотреться к lostpointercapture
 		el.addEventListener('pointerdown', onPointerDown, { passive: false });
 		el.addEventListener('pointermove', onPointerMove);
 		el.addEventListener('pointerup', onPointerUp);
 		el.addEventListener('pointercancel', onPointerUp);
+		el.addEventListener('touchstart', onTouchStart);
 		el.addEventListener('touchend', onTouchEnd);
 		el.addEventListener('scroll', throttledHandleScroll);
 
@@ -260,6 +310,8 @@ export function useSlider(opts: {
 			el.removeEventListener('pointermove', onPointerMove);
 			el.removeEventListener('pointerup', onPointerUp);
 			el.removeEventListener('pointercancel', onPointerUp);
+			el.removeEventListener('touchend', onTouchEnd);
+			el.removeEventListener('touchstart', onTouchStart);
 			el.removeEventListener('scroll', throttledHandleScroll);
 		});
 	});

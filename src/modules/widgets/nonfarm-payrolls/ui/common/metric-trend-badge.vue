@@ -4,41 +4,51 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
+import type { INonfarmPayrollsChange } from '../../model';
 
-interface IMetricTrendBadge {
-	topValue: number;
-	isTopValuePercent: boolean;
-	label: string;
-	value: number;
-	unit: string;
-	trend: 'up' | 'down';
-	isGood: boolean;
-	isPercent: boolean;
-}
+const props = defineProps<{
+	primaryValue: string;
+	primaryValueUnit: string;
+	change: INonfarmPayrollsChange;
+}>();
 
-const props = defineProps<IMetricTrendBadge>();
-
-const preparedTopValue = computed(() => {
-	const { row } = prettyNumberWithKey(props.topValue);
+const preparedPrimaryValue = computed(() => {
+	const num = parseFloat(props.primaryValue);
+	if (Number.isNaN(num)) {
+		return props.primaryValue;
+	}
+	const { row } = prettyNumberWithKey(num);
 	return row;
+});
+
+const changeLabel = computed(() => {
+	return `Payrolls ${props.change.isPositive ? 'up' : 'down'} YoY`;
+});
+
+const changeIcon = computed(() => {
+	return props.change.direction === 'up' ? IconIds.Gainers : IconIds.Loosers;
 });
 </script>
 
 <template>
 	<div :class="classes.container">
 		<div :class="classes.topValue">
-			<ui-text token="title-200">{{ preparedTopValue }}{{ isTopValuePercent ? '%' : '' }}</ui-text>
+			<ui-text token="title-200">{{ preparedPrimaryValue }}{{ props.primaryValueUnit }}</ui-text>
 		</div>
-		<div :class="classes.bottom">
-			<ui-text token="text-200-r">{{ label }}:&nbsp;</ui-text>
-			<ui-text token="text-200-r" :class="[classes.value, props.isGood ? classes.valueUp : classes.valueDown]">
-				{{ isGood ? '+' : '-' }}{{ value }}{{ unit }}
+		<div v-if="props.change.value !== null" :class="classes.bottom">
+			<ui-text token="text-200-r">{{ changeLabel }}:&nbsp;</ui-text>
+			<ui-text
+				token="text-200-r"
+				:class="[classes.value, props.change.isPositive ? classes.valueUp : classes.valueDown]"
+			>
+				{{ props.change.isPositive ? '+' : '−' }}{{ props.change.value }}{{ props.change.unit }}
 			</ui-text>
 			<ui-icon
-				:id="props.trend === 'up' ? IconIds.Gainers : IconIds.Loosers"
+				v-if="props.change.direction !== 'neutral'"
+				:id="changeIcon"
 				height="12px"
 				width="12px"
-				:class="[classes.icon, props.isGood ? classes.iconUp : classes.iconDown]"
+				:class="[classes.icon, props.change.isPositive ? classes.iconUp : classes.iconDown]"
 			/>
 		</div>
 	</div>

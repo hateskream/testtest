@@ -1,4 +1,5 @@
 export enum IconIds {
+	Attachment = 'attach',
 	Logo = 'logo',
 	FearGreedHalfCircle = 'fear-greed-half-circle',
 	ControlMore = 'control-more',
@@ -20,6 +21,8 @@ export enum IconIds {
 	Retry = 'retry',
 	DropdownDown = 'dropdown-down',
 	Tertiary = 'tertiary',
+	ArrowUp = 'arrow-up',
+	ArrowDown = 'arrow-down',
 	RcmArrowRight = 'rcm-arrow-right',
 	Checkbox = 'checkbox',
 	RcmCheckbox = 'rcm-checkbox',
@@ -60,6 +63,7 @@ export enum IconIds {
 	ArrowToTopRight = 'arrow-to-top-right',
 	TrashOutline = 'trash-outline',
 	Info = 'info',
+	InfoRectangle = 'info-rectangle',
 	MetricUp = 'metric-up',
 	MetricDown = 'metric-down',
 	MetricHold = 'metric-hold',
@@ -103,6 +107,7 @@ export enum IconIds {
 	EventBoardEmpty = 'event-board-empty',
 	Ellipse = 'ellipse',
 	ControlFullView = 'control-full-view',
+	ControlMinimize = 'control-minimize',
 	ToCompact = 'to-compact',
 	ToFull = 'to-full',
 	ControlCheck = 'control-check',
@@ -134,4 +139,12 @@ export enum IconIds {
 	SelectAll = 'select-all',
 	Settings = 'settings',
 	SettingsV2 = 'settings-v2',
+	Feedback = 'feedback',
+	Twitter = 'twitter',
+	Discord = 'discord',
+
+	PositiveKeyIndicator = 'positive-key-indicator',
+	NegativeKeyIndicator = 'negative-key-indicator',
+
+	Camera = 'camera',
 }

@@ -1,5 +1,5 @@
 import type { IGasCardData, IGasStatsData } from '../model';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 
 
 export interface IGasResponse {
@@ -15,7 +15,7 @@ export async function getEth(): Promise<IGasResponse> {
 
 		return response;
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }

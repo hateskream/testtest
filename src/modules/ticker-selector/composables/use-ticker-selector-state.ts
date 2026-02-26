@@ -1,13 +1,12 @@
-import { computed, toValue, watch } from 'vue';
+import { computed, toValue } from 'vue';
 
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import {
-	getMarketMap as getMarketSetUtil,
-	createTickerModel,
 	SelectionMode,
+	MARKET_TICKER_ITEMS_BY_MARKET,
 	type IUseTickerSelectorOptions,
 	type ITickerItem,
-	type ITickerSelectorSettings, type IMarketTickerItem, MARKET_TICKER_ITEMS_BY_MARKET,
+	type IMarketTickerItem,
 } from '../model';
 import { provideTickerSelectorContext } from './use-ticker-selector-context.ts';
 
@@ -20,92 +19,115 @@ export function useTickerSelectorState<
 		selectedTickers,
 		excludedTickers,
 		selectedMarketTickers,
+		events,
 	} = options;
-
-	const markets = computed(() => {
-		return toValue(options.enabledMarkets) ?? Object.values(MarketType) as unknown as M;
-	});
-
-	const enableSelectAll = computed(() => {
-		return toValue(options.enableSelectAll) ?? true;
-	});
 
 	const enableMarketTickers = computed(() => {
 		return toValue(options.enableMarketTickers) ?? false;
 	});
 
-	watch(markets, (value) => {
-		selectedTickers.value = createTickerModel(value);
-		excludedTickers.value = createTickerModel(value);
-	});
-
 	const isAllSelectedInMarket = computed(() =>
-		(Object.values(MarketType) as readonly M[number][]).every(market =>
-			selectedMarkets.value.has(market),
+		(ALL_MARKET_TYPES as readonly M[number][]).every(market =>
+			selectedMarkets.value.includes(market),
 		),
 	);
 
-	function hasAnySelectedMarketTickers() {
-		return selectedMarketTickers.value.size > 0;
+	function hasInTickersList(list: ITickerItem[], id: string) {
+		return list.some(t => t.canonical_ticker_id === id);
 	}
 
-	function getExcludedSet(market: MarketType) {
-		return getMarketSetUtil(excludedTickers.value, market);
+	function getRemovedFromTickersList(list: ITickerItem[], market: MarketType, id: string) {
+		return list.filter(t =>
+			!(t.market_type === market && t.canonical_ticker_id === id),
+		);
 	}
 
-	function getSelectedMap(market: MarketType) {
-		return getMarketSetUtil(selectedTickers.value, market);
+	function upsertToList(list: ITickerItem[], ticker: ITickerItem) {
+		return [
+			...list.filter(t =>
+				!(t.market_type === ticker.market_type && t.canonical_ticker_id === ticker.canonical_ticker_id),
+			),
+			ticker,
+		];
 	}
 
-	function isTickerSelected(market: MarketType, ticker: { canonical_ticker_id: string } | string) {
-		const id = typeof ticker === 'object' ? ticker.canonical_ticker_id : ticker;
+	function removeAllInMarket(list: ITickerItem[], market: MarketType) {
+		return list.filter(t => t.market_type !== market);
+	}
+
+	function isTickerSelected(
+		market: MarketType,
+		ticker: { canonical_ticker_id: string } | string,
+	) {
+		const id = typeof ticker === 'object'
+			? ticker.canonical_ticker_id
+			: ticker;
 
 		if (selectionMode === SelectionMode.Single) {
-			return getSelectedMap(market).has(id);
+			return hasInTickersList(selectedTickers.value, id);
 		}
 
 		return isMarketSelected(market)
-			? !getExcludedSet(market).has(id)
-			: getSelectedMap(market).has(id);
+			? !hasInTickersList(excludedTickers.value, id)
+			: hasInTickersList(selectedTickers.value, id);
 	}
 
 	function selectTicker(market: M[number], ticker: ITickerItem) {
-		if (selectionMode !== SelectionMode.Single && hasAnySelectedMarketTickers()) {
+		if (selectionMode !== SelectionMode.Single && selectedMarketTickers.value.length > 0) {
 			return;
 		}
 
 		if (selectionMode === SelectionMode.Single) {
 			clearAllTickers();
-			getSelectedMap(market).set(ticker.canonical_ticker_id, ticker);
+			selectedTickers.value = [ticker];
+			events?.onTickerSelected?.(ticker);
 			return;
 		}
 
 		if (isMarketSelected(market)) {
-			getExcludedSet(market).delete(ticker.canonical_ticker_id);
+			excludedTickers.value = getRemovedFromTickersList(
+				excludedTickers.value,
+				market,
+				ticker.canonical_ticker_id,
+			);
+			events?.onTickerUnexcluded?.(ticker);
 			return;
 		}
 
-		getSelectedMap(market).set(ticker.canonical_ticker_id, ticker);
+		selectedTickers.value = upsertToList(selectedTickers.value, ticker);
+		events?.onTickerSelected?.(ticker);
 	}
 
 	function unselectTicker(market: M[number], ticker: ITickerItem) {
 		if (selectionMode === SelectionMode.Single) {
-			getSelectedMap(market).clear();
+			selectedTickers.value = removeAllInMarket(selectedTickers.value, market);
+			events?.onTickerUnselected?.(ticker);
 			return;
 		}
 
 		if (isMarketSelected(market)) {
-			getExcludedSet(market).set(ticker.canonical_ticker_id, ticker);
+			excludedTickers.value = upsertToList(excludedTickers.value, ticker);
+			selectedTickers.value = getRemovedFromTickersList(
+				selectedTickers.value,
+				market,
+				ticker.canonical_ticker_id,
+			);
+			events?.onTickerExcluded?.(ticker);
 			return;
 		}
 
-		getSelectedMap(market).delete(ticker.canonical_ticker_id);
+		selectedTickers.value = getRemovedFromTickersList(
+			selectedTickers.value,
+			market,
+			ticker.canonical_ticker_id,
+		);
+		events?.onTickerUnselected?.(ticker);
 	}
 
 	function toggleTicker(market: M[number], ticker: ITickerItem) {
 		if (selectionMode === SelectionMode.Single) {
 			clearAllTickers();
-			getSelectedMap(market).set(ticker.canonical_ticker_id, ticker);
+			selectedTickers.value = [ticker];
 			return;
 		}
 
@@ -118,15 +140,15 @@ export function useTickerSelectorState<
 	}
 
 	function isMarketSelected(market: MarketType) {
-		return selectedMarkets.value.has(market);
+		return selectedMarkets.value.includes(market);
 	}
 
 	function isMarketFullySelected(market: MarketType) {
-		if (!selectedMarkets.value.has(market)) {
+		if (!isMarketSelected(market)) {
 			return false;
 		}
 
-		return getExcludedSet(market).size === 0;
+		return !excludedTickers.value.some(t => t.market_type === market);
 	}
 
 	function selectMarket(market: M[number]) {
@@ -134,12 +156,17 @@ export function useTickerSelectorState<
 			return;
 		}
 
-		selectedMarkets.value.add(market);
-		getSelectedMap(market).clear();
+		if (!selectedMarkets.value.includes(market)) {
+			selectedMarkets.value = [...selectedMarkets.value, market];
+		}
+
+		selectedTickers.value = removeAllInMarket(selectedTickers.value, market);
 
 		if (enableMarketTickers.value) {
 			selectMarketTicker(market, MARKET_TICKER_ITEMS_BY_MARKET.get(market)!);
 		}
+
+		events?.onMarketSelected?.(market);
 	}
 
 	function unselectMarket(market: M[number]) {
@@ -147,9 +174,13 @@ export function useTickerSelectorState<
 			return;
 		}
 
-		selectedMarkets.value.delete(market);
-		getExcludedSet(market).clear();
+		selectedMarkets.value = selectedMarkets.value.filter(m => m !== market);
+
+		excludedTickers.value = excludedTickers.value.filter(t => t.market_type !== market);
+
 		unselectMarketTicker(market, market);
+
+		events?.onMarketUnselected?.(market);
 	}
 
 	function toggleMarket(market: M[number]) {
@@ -165,51 +196,61 @@ export function useTickerSelectorState<
 		const tickerId = ticker.canonical_ticker_id;
 
 		if (selectionMode === SelectionMode.Single) {
-			for (const m of markets.value) {
-				getSelectedMap(m).clear();
-				getExcludedSet(m).clear();
-			}
-
-			getSelectedMap(market).set(tickerId, ticker);
+			selectedTickers.value = [ticker];
+			excludedTickers.value = [];
+			events?.onTickerSelected?.(ticker);
 			return;
 		}
 
 		if (isMarketSelected(market)) {
-			const excluded = getExcludedSet(market);
-
-			if (excluded.has(tickerId)) {
-				excluded.delete(tickerId);
+			if (hasInTickersList(excludedTickers.value, tickerId)) {
+				excludedTickers.value = getRemovedFromTickersList(
+					excludedTickers.value,
+					market,
+					tickerId,
+				);
+				events?.onTickerUnexcluded?.(ticker);
 			} else {
-				excluded.set(tickerId, ticker);
-				getSelectedMap(market).delete(tickerId);
+				excludedTickers.value = upsertToList(excludedTickers.value, ticker);
+
+				selectedTickers.value = getRemovedFromTickersList(
+					selectedTickers.value,
+					market,
+					tickerId,
+				);
+				events?.onTickerExcluded?.(ticker);
 			}
 
 			return;
 		}
 
-		const selected = getSelectedMap(market);
-
-		if (selected.has(tickerId)) {
-			selected.delete(tickerId);
+		if (hasInTickersList(selectedTickers.value, tickerId)) {
+			selectedTickers.value = getRemovedFromTickersList(
+				selectedTickers.value,
+				market,
+				tickerId,
+			);
+			events?.onTickerUnselected?.(ticker);
 		} else {
-			selected.set(tickerId, ticker);
-			getExcludedSet(market).delete(tickerId);
+			selectedTickers.value = upsertToList(selectedTickers.value, ticker);
+
+			excludedTickers.value = getRemovedFromTickersList(
+				excludedTickers.value,
+				market,
+				tickerId,
+			);
+			events?.onTickerSelected?.(ticker);
 		}
 	}
 
 	function clearAllTickers() {
-		for (const market of markets.value) {
-			getSelectedMap(market).clear();
-			getExcludedSet(market).clear();
-		}
-
-		selectedMarketTickers.value.clear();
+		selectedTickers.value = [];
+		excludedTickers.value = [];
+		selectedMarketTickers.value = [];
 	}
 
-	function isMarketTickerSelected(
-		market: M[number],
-	) {
-		return !!selectedMarketTickers.value.get(market);
+	function isMarketTickerSelected(market: M[number]) {
+		return selectedMarketTickers.value.some(t => t.market_type === market);
 	}
 
 	function selectMarketTicker(
@@ -220,20 +261,25 @@ export function useTickerSelectorState<
 			return;
 		}
 
-		selectedMarketTickers.value.set(market, ticker);
+		selectedMarketTickers.value = [
+			...selectedMarketTickers.value.filter(t => t.market_type !== market),
+			ticker,
+		];
+
+		events?.onMarketTickerSelected?.(ticker);
 	}
 
-	function unselectMarketTicker(
-		market: M[number],
-		id: string,
-	) {
-		const current = selectedMarketTickers.value.get(market);
+	function unselectMarketTicker(market: M[number], id: string) {
+		const current = selectedMarketTickers.value.find(t => t.market_type === market);
 
 		if (!current || current.market_type !== id) {
 			return;
 		}
 
-		selectedMarketTickers.value.delete(market);
+		selectedMarketTickers.value =
+			selectedMarketTickers.value.filter(t => t.market_type !== market);
+
+		events?.onMarketTickerUnselected?.(current);
 	}
 
 	function toggleMarketTicker(
@@ -241,7 +287,14 @@ export function useTickerSelectorState<
 		ticker: IMarketTickerItem<M[number]>,
 	) {
 		if (isMarketTickerSelected(market)) {
-			selectedMarketTickers.value.delete(market);
+			const current = selectedMarketTickers.value.find(t => t.market_type === market);
+
+			selectedMarketTickers.value =
+				selectedMarketTickers.value.filter(t => t.market_type !== market);
+
+			if (current) {
+				events?.onMarketTickerUnselected?.(current);
+			}
 			return;
 		}
 
@@ -266,15 +319,7 @@ export function useTickerSelectorState<
 		toggleMarketTicker,
 	});
 
-	const settings = computed<ITickerSelectorSettings<M>>(() => ({
-		enabledMarkets: markets.value,
-		selectionMode: selectionMode,
-		enableSelectAll: enableSelectAll.value,
-	}));
-
 	return {
-		settings,
-
 		selectedMarkets,
 		excludedTickers,
 		selectedTickers,

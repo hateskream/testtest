@@ -1,13 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-	createWidget,
-	type IPosition,
-	type IWidget,
-	type IWidgetState,
-} from './widget';
+import { createWidget, type IPosition, type IWidget, type IWidgetState } from './widget';
 import { WidgetType } from '@/modules/dashboard-group';
 import { NAME_TO_PRESET, type PresetName } from './dashbord-presets';
+import { useLogger } from '@/shared/service/monitoring';
 
 type Layout = Record<number, IWidget[]>;
 
@@ -35,16 +31,17 @@ export function fromInnerToPublicDashboard(dashboard: IDashboardPrivate): IDashb
 
 function getWidgets(dashboard: IDashboardPrivate): IWidget[] {
 	if (!Object.prototype.hasOwnProperty.call(dashboard.layout, dashboard.activeColNum)) {
-		// eslint-disable-next-line no-console
-		console.warn(
-			'[Dashboard] Missing layout for activeColNum',
-			dashboard.activeColNum,
-			'Available layout keys:',
-			Object.keys(dashboard.layout),
-			'Dashboard name:',
-			dashboard.name,
-			'Dashboard ID:',
-			dashboard.id,
+		const logger = useLogger();
+		logger.error(
+			'Missing Dashboard layout for activeColNum',
+			{ context: {
+				dashboard: {
+					availableKeys: Object.keys(dashboard.layout),
+					activeColNum: dashboard.activeColNum,
+					id: dashboard.id,
+					name: dashboard.name,
+				},
+			} },
 		);
 	}
 

@@ -8,10 +8,13 @@ import {
 	RouteScreenerType,
 	RouteTickerType,
 } from '@/types/route.d';
+import { ErrorCode } from '@/modules/error/model';
+
+import OfflinePage from '@/pages/offline-page.vue';
 
 const createTickerProps = (type: RouteTickerType) => {
 	return (route: RouteLocationNormalized): ITickerRouteParams => ({
-		id: parseInt(route.params.id as string, 10),
+		id: route.params.id as string,
 		type,
 	});
 };
@@ -235,6 +238,37 @@ export const globalRoutes: RouteRecordRaw[] = [
 				'helping you find opportunities for solutions.',
 		},
 	},
+	{
+		path: RoutePaths.Offline,
+		name: RouteNames.Offline,
+		component: OfflinePage,
+		meta: {
+			title: 'Network Error',
+		},
+	},
+	{
+		path: RoutePaths.Error,
+		name: RouteNames.Error,
+		component: () => import('@/pages/error-page.vue'),
+		props: (route: RouteLocationNormalized) => {
+			const { code = 404 } = route.params as { code: string | number | undefined };
+			return {
+				code,
+			};
+		},
+		meta: {
+			title: 'Error',
+		},
+	},
+	{
+		path: '/:pathMatch(.*)*',
+		redirect: {
+			name: RouteNames.Error,
+			params: {
+				code: ErrorCode.NOT_FOUND,
+			},
+		},
+	},
 ];
 
 export const testRoutes: RouteRecordRaw[] = [
@@ -242,5 +276,134 @@ export const testRoutes: RouteRecordRaw[] = [
 		path: RoutePaths.Test,
 		name: RouteNames.Test,
 		component: () => import('@/pages/home-page.vue'),
+	},
+	{
+		path: RoutePaths.TickerUnemploymentRateTest,
+		name: RouteNames.TickerUnemploymentRateTest,
+		component: () => import('@/pages/unemployment-rate-test-page.vue'),
+	},
+	{
+		path: RoutePaths.TickerOld,
+		name: RouteNames.TickerOld,
+		redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+		meta: {
+			title: 'Ticker Page',
+			description: 'Watch live ticker to Dollar chart, follow prices in real-time and get price history. ' +
+				'Check technical analysis and forecasts.',
+		},
+		children: [
+			{
+				path: RoutePaths.TickerCryptoWithId,
+				name: RouteNames.TickerCryptoOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.CRYPTO),
+			},
+			{
+				path: RoutePaths.TickerStockWithId,
+				name: RouteNames.TickerStockOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.STOCK),
+			},
+			{
+				path: RoutePaths.TickerForexWithId,
+				name: RouteNames.TickerForexOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.FOREX),
+			},
+			{
+				path: RoutePaths.TickerCommoditiesWithId,
+				name: RouteNames.TickerCommoditiesOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.COMMODITIES),
+			},
+			{
+				path: RoutePaths.TickerIndicesWithId,
+				name: RouteNames.TickerIndicesOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.INDICES),
+			},
+			{
+				path: RoutePaths.TickerETFWithId,
+				name: RouteNames.TickerETFOld,
+				component: () => import('@/pages/old-ticker-page.vue'),
+				props: createTickerProps(RouteTickerType.ETF),
+			},
+			{
+				path: RoutePaths.TickerIndices,
+				redirect: { name: RouteNames.TickerIndicesOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerETF,
+				redirect: { name: RouteNames.TickerETFOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerCommodities,
+				redirect: { name: RouteNames.TickerCommoditiesOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerCrypto,
+				redirect: { name: RouteNames.TickerCryptoOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerStock,
+				redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+			},
+			{
+				path: RoutePaths.TickerForex,
+				redirect: { name: RouteNames.TickerForexOld, params: { id: '1' } },
+			},
+			{
+				path: ':pathMatch(.*)*',
+				redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },
+			},
+		],
+	},
+	{
+		path: RoutePaths.TickerPageFooter,
+		name: RouteNames.TickerPageFooter,
+		component: () => import('@/pages/ticker-page-footer-test.vue'),
+	},
+	{
+		path: RoutePaths.TickerPageHeader,
+		name: RouteNames.TickerPageHeader,
+		component: () => import('@/pages/ticker-header-page-test.vue'),
+	},
+	{
+		path: RoutePaths.LinksTestPage,
+		name: RouteNames.LinksTestPage,
+		component: () => import('@/pages/links-widget-page-test.vue'),
+	},
+	{
+		path: RoutePaths.KeyIndicatorsTest,
+		name: RouteNames.KeyIndicatorsTest,
+		component: () => import('@/pages/key-indicators-test-page.vue'),
+	},
+	{
+		path: RoutePaths.TickerWidget,
+		name: RouteNames.TickerWidget,
+		redirect: {
+			name: RouteNames.TickerWidgetPreview,
+			params: {
+				widgetName: 'activity-metrics',
+			},
+		},
+		children: [
+			{
+				path: RoutePaths.TickerWidgetPreview,
+				name: RouteNames.TickerWidgetPreview,
+				component: () => import('@/pages/ticker-widget-page.vue'),
+				props: (route: RouteLocationNormalized) => ({
+					widgetName: route.params.widgetName,
+				}),
+			},
+		],
+		meta: {
+			title: 'Test Ticker Widgets',
+		},
+	},
+	{
+		path: RoutePaths.NonfarmPayrollsTestPage,
+		name: RouteNames.NonfarmPayrollsTestPage,
+		component: () => import('@/pages/nonfarm-payrolls-test-page.vue'),
 	},
 ];

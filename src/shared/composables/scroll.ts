@@ -23,6 +23,10 @@ export function useCustomScroll(container: Ref<HTMLElement | null>, onScroll: Sc
 			return;
 		}
 
+		if (e.ctrlKey) {
+			return;
+		}
+
 		const scrollable = getScrollableAncestor(e.target as HTMLElement, container.value);
 
 		if (scrollable) {

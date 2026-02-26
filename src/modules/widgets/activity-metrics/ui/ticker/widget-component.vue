@@ -1,0 +1,50 @@
+<script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
+
+import type { ITickerWidgetMeta } from '@/modules/ticker';
+import { BaseTickerWidgetError } from '@/modules/widgets/base';
+import { useActivityMetrics } from '../../composables';
+
+import PreloaderComponent from './preloader-component.vue';
+
+const ViewComponent = defineAsyncComponent({
+	loader: () => import('./base-view.vue'),
+	loadingComponent: PreloaderComponent,
+	errorComponent: BaseTickerWidgetError,
+});
+
+interface IWidgetComponentProps {
+	meta: ITickerWidgetMeta;
+}
+
+const props = defineProps<IWidgetComponentProps>();
+
+const {
+	data,
+	isLoading,
+	isError,
+	refetch,
+} = useActivityMetrics({
+	tickerId: () => props.meta.tickerId,
+});
+</script>
+
+<template>
+	<div :class="classes.widget">
+		<base-ticker-widget-error v-if="isError" @retry="refetch" />
+		<preloader-component v-else-if="isLoading" />
+		<view-component
+			v-else-if="data"
+			:metrics="data"
+		/>
+	</div>
+</template>
+
+<style module="classes">
+.widget {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+}
+</style>

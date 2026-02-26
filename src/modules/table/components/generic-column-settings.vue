@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-nocheck
 import { computed } from 'vue';
-import { GridLayout, GridItem, type LayoutItem } from 'grid-layout-plus';
+import { GridItem, GridLayout, type LayoutItem } from 'grid-layout-plus';
 
 import type { IGenericTableColumn } from '../type';
 import { useTableColumns } from '../composables/use-table-data.ts';

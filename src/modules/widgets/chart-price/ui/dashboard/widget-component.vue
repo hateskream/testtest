@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
-import { getMappedRow, isCryptoTicker, isForexTicker } from '@/modules/ticker-selector/model';
-import { useQueryTickerSelector } from '@/modules/ticker-selector/queries';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -29,7 +28,8 @@ const emits = defineEmits<{
 }>();
 
 const {
-	selectedTicker,
+	selectedTickersModel,
+	selectedTickerId,
 	timeRange,
 	watchlists,
 
@@ -48,44 +48,6 @@ const {
 	isEphemeral: props.meta.isOpenFull,
 	defaultStateType: props.meta.defaultStateType,
 });
-
-function updateTicker(newValue: string[]) {
-	[selectedTicker.value] = newValue;
-}
-
-const { data: tickersData, isSuccess: isSuccess } = useQueryTickerSelector();
-
-const widgetLabel = computed(() => {
-	if (!selectedTicker.value || !isSuccess.value) {
-		return null;
-	}
-
-	const item = tickersData.value?.tickers
-		.find(t => t.tickerId === selectedTicker.value);
-
-	if (!item) {
-		return null;
-	}
-
-	const row = getMappedRow(item);
-
-	return isCryptoTicker(row) || isForexTicker(row)
-		? row.ticker
-		: row.name;
-});
-
-// TODO: add stateType onTickersLoaded
-watch(widgetLabel, (label) => {
-	if (!label) {
-		return;
-	}
-
-	emits(
-		'set-widget-state-type',
-		props.meta.widgetId,
-		label,
-	);
-}, { immediate: true });
 </script>
 
 <template>
@@ -98,11 +60,13 @@ watch(widgetLabel, (label) => {
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<filters-component
-				v-model:selected-ticker="selectedTicker"
+				v-model:selected-ticker="selectedTickersModel"
 				v-model:time-range="timeRange"
+				:selected-ticker-id="selectedTickerId"
 				:is-big="true"
 				:watchlists="watchlists"
 				display-variant="new"
@@ -135,13 +99,12 @@ watch(widgetLabel, (label) => {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector-legacy
-						:model-value="[selectedTicker]"
-						:enable-selected-info="false"
+					<ticker-selector-modal
+						v-model:selected-tickers="selectedTickersModel"
+						:enabled-markets="ALL_MARKET_TYPES"
 						:enable-select-all="false"
-						selection-mode="single"
+						:selection-mode="SelectionMode.Single"
 						display-variant="new"
-						@update:model-value="updateTicker"
 					/>
 				</template>
 			</modal-submenu>

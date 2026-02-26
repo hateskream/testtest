@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service.ts';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import type { MarketType } from '@/modules/market';
 
@@ -30,7 +30,7 @@ export async function initTickerSelector(): Promise<IInitTickerSelectorData> {
 
 		return normalizeInitTickerSelectorData(response.data);
 	} catch (error) {
-		logger.error('Failed to init ticker-selector', error as Error);
+		logger.error('Failed to init ticker-selector', { error: error as Error });
 		throw error;
 	}
 }

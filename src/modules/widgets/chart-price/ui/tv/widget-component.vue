@@ -3,9 +3,10 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetTvComponent, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { ModalTickerSelectorLegacy } from '@/modules/ticker-selector';
+import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { useChartPrice } from '../../composables';
 import { FiltersComponent, PreloaderComponent } from '../common';
+import { ALL_MARKET_TYPES } from '@/modules/market';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/view-component.vue'),
@@ -20,7 +21,8 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const {
-	selectedTicker,
+	selectedTickerId,
+	selectedTickersModel,
 	timeRange,
 	watchlists,
 
@@ -47,10 +49,6 @@ const emit = defineEmits<{
 }>();
 
 const isBig = computed(() => props.meta.size.h >= 6 );
-
-function updateTicker(newValue: string[]) {
-	[selectedTicker.value] = newValue;
-}
 </script>
 
 <template>
@@ -62,6 +60,7 @@ function updateTicker(newValue: string[]) {
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
 		@apply-changes="applyStateToParent"
+		@retry="refetch"
 	>
 		<template #title> {{ props.meta.name }} </template>
 		<template #content>
@@ -78,8 +77,9 @@ function updateTicker(newValue: string[]) {
 			>
 				<template #filters>
 					<filters-component
-						v-model:selected-ticker="selectedTicker"
+						v-model:selected-ticker="selectedTickersModel"
 						v-model:time-range="timeRange"
+						:selected-ticker-id="selectedTickerId"
 						:is-big="isBig"
 						:watchlists="watchlists"
 						display-variant="default"
@@ -95,13 +95,12 @@ function updateTicker(newValue: string[]) {
 			<modal-submenu>
 				<template #title>Choose ticker</template>
 				<template #content>
-					<modal-ticker-selector-legacy
-						:model-value="[selectedTicker]"
-						:enable-selected-info="false"
+					<ticker-selector-modal
+						v-model:selected-tickers="selectedTickersModel"
+						:enabled-markets="ALL_MARKET_TYPES"
 						:enable-select-all="false"
-						selection-mode="single"
+						:selection-mode="SelectionMode.Single"
 						display-variant="default"
-						@update:model-value="updateTicker"
 					/>
 				</template>
 			</modal-submenu>

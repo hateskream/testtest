@@ -1,58 +1,51 @@
-import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
-import type {
-	IMetricTrendBadge,
-	IUnemploymentRateData,
-	IUnemploymentRateResponse,
-} from '@/modules/widgets/unemployment-rate/model';
+import { z } from 'zod';
+
+import { useLogger } from '@/shared/service/monitoring';
+import { useApiClient } from '@/shared/service/api';
 
 export interface IGetUnemploymentRateRequest {
 	widgetId: string;
 }
 
-export async function getUnemploymentRate(
+const UnemploymentRateChangeSchema = z.object({
+	value: z.number().nullable(),
+	unit: z.string(),
+	direction: z.enum(['up', 'down', 'neutral']),
+	isPositive: z.boolean(),
+});
+
+const UnemploymentRatePointSchema = z.object({
+	label: z.string(),
+	history: z.number(),
+});
+
+const GetUnemploymentRateResponseSchema = z.object({
+	primaryValue: z.string(),
+	primaryValueUnit: z.string(),
+	change: UnemploymentRateChangeSchema,
+	points: z.array(UnemploymentRatePointSchema).nonempty(),
+});
+
+type GetUnemploymentRateResponse = z.infer<typeof GetUnemploymentRateResponseSchema>;
+
+export function getUnemploymentRate(
 	args: IGetUnemploymentRateRequest,
-): Promise<IUnemploymentRateData> {
-	const httpService = useHttpService();
+): Promise<GetUnemploymentRateResponse> {
+	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
-		const response = await httpService.get<IUnemploymentRateResponse>(
-			'api/v1/unemployment-rate/data',
+		return client.get(
+			'/api/v1/unemployment-rate/data',
+			GetUnemploymentRateResponseSchema,
 			{
 				query: {
 					widgetId: args.widgetId,
 				},
 			},
 		);
-		return transformUnemploymentRateData(response);
 	} catch (error) {
-		logger.error('Failed to get unemployment rate data', error as Error);
+		logger.error('Failed to get unemployment rate data', { error: error as Error });
 		throw error;
 	}
 }
-
-export function transformUnemploymentRateData(
-	data: IUnemploymentRateResponse,
-): IUnemploymentRateData {
-	const badge: IMetricTrendBadge = {
-		topValue: parseFloat(data.primaryValue),
-		isTopValuePercent: data.primaryValueUnit === '%',
-		label: `Rate ${data.change.isPositive ? 'down' : 'up'} YoY`,
-		value: data.change.value,
-		unit: data.change.unit,
-		trend: data.change.direction,
-		isGood: data.change.isPositive,
-		isPercent: data.change.unit === '%' || data.change.unit === 'pp',
-	};
-	const points = data.points.map(point => ({
-		time: point.label,
-		value: point.history,
-	}));
-
-	return {
-		badge,
-		points,
-	};
-}
-

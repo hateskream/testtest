@@ -1,3 +1,5 @@
+import type { ChartType } from '@shared/component-library';
+
 import {
 	createTickerId,
 	createTickerIdCommodity,
@@ -5,19 +7,18 @@ import {
 	createTickerIdIndex,
 	SymbolType,
 } from '@/modules/cell';
-import {
-	TimeRangeFilterValue,
-} from './time-range';
+import { createPreset, type DateRangeValue, TimezoneUtc } from '@/modules/lightweight-charts/model';
+import { ChartPriceDateRangePreset } from './date-range.ts';
 
 export interface IState {
 	selectedTicker: string;
-	timeRange: TimeRangeFilterValue;
+	timeRange: DateRangeValue;
 }
 
 export function getDefaultsState(defaultStateType: string): IState {
 	let defaultSelectedTicker = createTickerId(
 		SymbolType.Index,
-		createTickerIdIndex('SPX'),
+		createTickerIdIndex('^SPX'),
 	);
 
 	if (defaultStateType === 'forex') {
@@ -30,7 +31,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'USDollar') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Index,
-			createTickerIdIndex('DXY'),
+			createTickerIdIndex('^DXY'),
 		);
 	}
 
@@ -44,12 +45,20 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'NDX') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Index,
-			createTickerIdIndex('NDX'),
+			createTickerIdIndex('^NDX'),
 		);
 	}
 
 	return {
 		selectedTicker: defaultSelectedTicker,
-		timeRange: TimeRangeFilterValue.Day,
+		timeRange: createPreset(ChartPriceDateRangePreset.Day),
 	};
+}
+
+export function getDefaultTimezone() {
+	return TimezoneUtc.UTC0;
+}
+
+export function getDefaultChartType(): ChartType {
+	return 'area';
 }

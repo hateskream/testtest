@@ -1,4 +1,12 @@
-import type { ChartClickData } from '@shared/component-library';
+import type { CandlestickData, ChartClickData, ChartData } from '@shared/component-library';
+
+import { isNumber } from '@/shared/lib';
+import { getTimezoneOffsetInMinutes, type TimezoneUtcType } from '@/modules/lightweight-charts/model/timezone.ts';
+import {
+	millisecondsToUtcSeconds,
+	secondsToUtcSeconds,
+	type UtcSeconds,
+} from '@/modules/lightweight-charts/model/timestamp.ts';
 
 export const IndicatorsChart = {
 	Main: 'Main',
@@ -22,3 +30,30 @@ export interface IChartUpdateEmitData {
 }
 
 export type SharedChartMouseEvent = CustomEvent<ChartClickData[]>;
+
+export function isCandlestickData(data: ChartData): data is CandlestickData {
+	return 'close' in data;
+}
+
+export function strTimeToChartTime(time: string): UtcSeconds {
+	const ms = Date.parse(time);
+	return millisecondsToUtcSeconds(ms);
+}
+
+export function chartTimeToDate(time: number | string) {
+	return new Date(isNumber(time) ? time * 1000 : time);
+}
+
+export function timeToZonedTime(time: string | number, timezone: TimezoneUtcType) {
+	if (isNumber(time)) {
+		const offset = getTimezoneOffsetInMinutes(timezone);
+		return secondsToUtcSeconds(time + offset * 60);
+	}
+
+	return time;
+}
+
+export function zonedTimeToTime(zoned: UtcSeconds, timezone: TimezoneUtcType) {
+	const offset = getTimezoneOffsetInMinutes(timezone);
+	return secondsToUtcSeconds(zoned - offset * 60);
+}

@@ -1,52 +1,62 @@
-import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { z } from 'zod';
+
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { type INominalGdpHistory, type INominalGdpHistoryPoint, NOMINAL_GDP_METRIC, NominalGdpRange } from '../model';
+import {
+	NOMINAL_GDP_METRIC,
+	type NominalGdpDateRangePresetType,
+	type NominalGdpHistory,
+	NominalGdpHistorySchema,
+} from '../model';
+import { useApiClient } from '@/shared/service/api';
 
 const IS_USE_MOCK = false;
 
 export interface IGetNominalGdpRequest {
-	range: NominalGdpRange;
+	range: NominalGdpDateRangePresetType;
 }
 
-export interface IGetNominalGdpResponse {
-	range: NominalGdpRange;
-	metric: string;
-	points: INominalGdpHistoryPoint[];
-}
+export const GetNominalGdpResponseSchema = NominalGdpHistorySchema.extend({
+	metric: z.literal(NOMINAL_GDP_METRIC),
+});
 
-export async function getNominalGdp(args: IGetNominalGdpRequest): Promise<INominalGdpHistory> {
-	const httpService = useHttpService();
+export type GetNominalGdpResponse = z.infer<typeof GetNominalGdpResponseSchema>;
+
+export async function getNominalGdp(args: IGetNominalGdpRequest) {
+	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
 		if (IS_USE_MOCK) {
-			return await getMockData(args);
+			return getMockData(args);
 		}
 
-		const response = await httpService.get<IGetNominalGdpResponse>('/api/v1/gdp/data', {
-			query: {
-				metric: NOMINAL_GDP_METRIC,
-				range: args.range,
-			},
-		});
+		const response = await client.get(
+			'/api/v1/gdp/data',
+			GetNominalGdpResponseSchema,
+			{
+				query: {
+					metric: NOMINAL_GDP_METRIC,
+					range: args.range,
+				},
+			});
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get Nominal GDP data', error as Error);
+		logger.error('Failed to get Nominal GDP data', { error: error as Error });
 		throw error;
 	}
 }
 
-function prepareResponse(response: IGetNominalGdpResponse): INominalGdpHistory {
+function prepareResponse(response: GetNominalGdpResponse): NominalGdpHistory {
 	return {
 		range: response.range,
 		points: response.points,
 	};
 }
 
-const { getMock } = useFetchMock<IGetNominalGdpResponse>('/mock/widgets/gdp/nominal.json');
+const { getMock } = useFetchMock<GetNominalGdpResponse>('/mock/widgets/gdp/nominal.json');
 
 async function getMockData(_: IGetNominalGdpRequest) {
 	await delay(500);

@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, computed, reactive, ref } from 'vue';
 
-import { BaseWidgetTvComponent, BaseErrorComponent } from '@/modules/widgets/base';
+import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { useCalendarState } from '@/modules/calendar';
+import {
+	getUTCWeekRange,
+	localDateToUTCUnix,
+	useCalendarState,
+	useInfiniteQueryEventBoard,
+} from '@/modules/calendar';
 
 import CalendarLoader from '../views/calendar-loader.vue';
 
 const CalendarMain = defineAsyncComponent({
-	loader: () => import('../views/calendar-main.vue'),
+	loader: () => import('../views/calendar-view.vue'),
 	loadingComponent: CalendarLoader,
 	errorComponent: BaseErrorComponent,
 });
@@ -24,40 +29,36 @@ const emit = defineEmits<{
 }>();
 
 const {
-	locale,
-	now,
-	baseDate,
-	isDailyCalendarLoading,
-	isEventBoardLoading,
-	watchlists,
-	eventBoard,
-	eventBoardFavorites,
-	dailyCalendar,
-	marketId,
-	impact,
-	eventType,
-	watchlistId,
-	watchlistSection,
-	weekRange,
-	weekDays,
-	isError,
-	toggleFavorite,
-	nextWeek,
-	prevWeek,
-	resetWeek,
-	refetch,
+	currentTime,
+	selectedCategories,
+	selectedCountries,
+	selectedImpacts,
 	resetAll,
 } = useCalendarState({
-	toolbar: {
-		useQuery: false,
+	widget: {
 		widgetId: props.meta.widgetId,
-		defaultState: props.meta.defaultStateType,
+		isEphemeral: props.meta.isOpenFull,
 	},
 });
 
-const isLoading = computed(
-	() => (isDailyCalendarLoading.value && isEventBoardLoading.value) || props.meta.isLoading,
-);
+const limit = ref(getUTCWeekRange(new Date(localDateToUTCUnix(currentTime.value) * 1000)));
+
+const initialFrom = computed(() => {
+	const today = localDateToUTCUnix(currentTime.value);
+	const { from, to } = limit.value;
+	return today >= from && today <= to ? today : from;
+});
+
+const query = reactive(useInfiniteQueryEventBoard(() => ({
+	from: initialFrom.value,
+	categories: selectedCategories.value,
+	countries: selectedCountries.value,
+	minImpact: selectedImpacts.value,
+	limit: {
+		from: limit.value.from,
+		to: limit.value.to,
+	},
+})));
 </script>
 
 <template>
@@ -68,38 +69,32 @@ const isLoading = computed(
 		@delete="emit('delete')"
 		@duplicate="emit('duplicate')"
 		@move-to="emit('moveTo', $event)"
+		@retry="query.refetch"
 	>
 		<template #title>
 			<span>{{ props.meta.name }}</span>
 		</template>
 
 		<template #content>
-			<base-error-component v-if="isError" @retry="refetch" />
-
-			<calendar-loader v-else-if="isLoading" />
+			<calendar-loader v-if="query.isLoading" />
 
 			<calendar-main
-				v-else-if="eventBoard && dailyCalendar"
-				v-model:week-range="weekRange"
-				v-model:country-state="marketId"
-				v-model:impact-state="impact"
-				v-model:event-state="eventType"
-				v-model:watchlist-id-state="watchlistId"
-				v-model:watchlist-section-state="watchlistSection"
-				display-variant="default"
-				:event-board-favorites="eventBoardFavorites"
-				:base-date="baseDate"
-				:locale="locale"
-				:week-days="weekDays"
-				:watchlists="watchlists"
-				:event-board="eventBoard"
-				:daily-calendar-data="dailyCalendar"
-				:current-date="now"
-				@toggle-favorite="toggleFavorite"
-				@reset-week="resetWeek"
-				@prev-week="prevWeek"
-				@next-week="nextWeek"
-				@reset-all="resetAll"
+				v-else-if="query.data && !query.isError"
+				v-model:countries="selectedCountries"
+				v-model:categories="selectedCategories"
+				v-model:impact="selectedImpacts"
+				v-model:range="limit"
+				:event-board="query.data.days"
+				:current-time="currentTime"
+				:is-fetching-next="query.isFetchingNextPage"
+				:is-fetching-prev="query.isFetchingPreviousPage"
+				@load-next="query.fetchNextPage"
+				@load-prev="query.fetchPreviousPage"
+			/>
+
+			<base-error-component
+				v-else
+				@retry="query.refetch"
 			/>
 		</template>
 	</base-widget-tv-component>

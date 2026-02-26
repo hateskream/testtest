@@ -1,8 +1,8 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
 import { computed, ref, toRefs, watch } from 'vue';
 
 import { useDepth } from '../composable';
+import { useLogger } from '@/shared/service/monitoring';
 
 import UiTreemapElement from './ui-treemap-element.vue';
 import UiTreemapTooltip from './ui-treemap-tooltip.vue';
@@ -65,6 +65,8 @@ const emit = defineEmits<{
 	(e: 'click-all'): void;
 	(e: 'click-original-breadcrumb', id: string): void;
 }>();
+
+const logger = useLogger();
 
 const { getColorByValue } = useDepth(toRefs(props).depthRange);
 
@@ -173,7 +175,14 @@ function onClickNotOriginalBreadcrumb(id: string) {
 			.findIndex(el => el.id === id);
 
 	if (indexStartData == -1) {
-		console.error('not found');
+		logger.error(
+			'Clicked breadcrumb not found',
+			{
+				context: {
+					searchId: id,
+				},
+			},
+		);
 		return;
 	}
 

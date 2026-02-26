@@ -32,7 +32,7 @@ const visibleIndices = computed(() => {
 		start = Math.max(0, end - VISIBLE_DOTS + 1);
 	}
 
-	// eslint-disable-next-line no-plusplus
+	// oxlint-disable-next-line no-plusplus
 	for (let i = start; i <= end; i++) {
 		indices.push(i);
 	}

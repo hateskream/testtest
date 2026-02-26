@@ -48,6 +48,7 @@ export const filtersByMarketType: Record<MarketType, FilterType[]> = {
 	[MarketType.Forex]: [FilterType.TimeRange],
 	[MarketType.Commodities]: [FilterType.Sector, FilterType.TimeRange],
 	[MarketType.Indices]: [FilterType.TimeRange],
+	[MarketType.Etf]: [FilterType.TimeRange],
 };
 
 export const filterTypeToValue: Record<FilterType, FilterValue[]> = {

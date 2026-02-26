@@ -5,7 +5,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiPosition } from '@/shared/ui/position';
 import { ModalBadgeDropdown, ModalBadgeList, ModalFilter, ModalItemSelector } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import {
 	ActiveDateRange,
 	type ILocation,
@@ -19,9 +19,9 @@ import {
 	toggleFilter,
 } from '../../model';
 import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
+import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 
 import NewsFilters from '../news-filters-component.vue';
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
 
 const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
 const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
@@ -103,7 +103,7 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 			<div :class="classes.listFilterWithDelimiter">
 				<ticker-selector-modal-with-badge
 					v-model:selected-markets="selectedMarkets"
-					:enabled-markets="Object.values(MarketType)"
+					:enabled-markets="ALL_MARKET_TYPES"
 					:selection-mode="SelectionMode.Multiple"
 					display-variant="new"
 					enable-select-all

@@ -1,5 +1,5 @@
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import type { IHeatmap, IHeatmapItem } from '../model';
 import { useFetchMock } from '@/shared/mock';
 
@@ -23,7 +23,7 @@ export async function getHeatmapForex(req: IGetHeatmapCryptoRequest): Promise<IH
 
 		return response;
 	} catch (error) {
-		logger.error('Failed to get display settings heatmap', error as Error);
+		logger.error('Failed to get display settings heatmap', { error: error as Error });
 		throw error;
 	}
 }

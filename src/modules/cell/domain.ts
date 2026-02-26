@@ -150,6 +150,7 @@ export enum SymbolType {
 	Stock = 'Stock',
 	Crypto = 'Crypto',
 	Forex = 'Forex',
+	Etf = 'ETF',
 	PlaneText = 'PlainText',
 }
 
@@ -195,6 +196,12 @@ export interface IForexSymbolCell extends ISymbolCellBase {
 	leftTicker: string;
 }
 
+export interface IEtfSymbolCell extends ISymbolCellBase {
+	symbolType: SymbolType.Etf;
+	srcImg: string;
+	ticker: string;
+}
+
 export interface IPlaneTextSymbolCell extends ISymbolCellBase {
 	symbolType: SymbolType.PlaneText;
 	text: string;
@@ -206,6 +213,7 @@ export type ISymbolCell =
 	| IStockSymbolCell
 	| ICryptoSymbolCell
 	| IForexSymbolCell
+	| IEtfSymbolCell
 	| IPlaneTextSymbolCell;
 
 export interface INumberCell extends IBaseCell {
@@ -520,6 +528,9 @@ export function createTickerIdFromCell(symbolCell: ISymbolCell): string {
 		case SymbolType.Forex:
 			idPayload = createTickerIdForex(symbolCell.leftTicker, symbolCell.rightTicker);
 			break;
+		case SymbolType.Etf:
+			idPayload = createTickerIdEtf(symbolCell.ticker);
+			break;
 		default:
 			idPayload = symbolCell.text;
 	}
@@ -547,6 +558,9 @@ export function createTickerIdForex(leftTicker: string, rightTicker: string): st
 	return leftTicker + '_' + rightTicker;
 }
 
+export function createTickerIdEtf(ticker: string): string {
+	return ticker;
+}
 
 export function mapSymbolTypeToMarketType(st: SymbolType): MarketType | null {
 	switch (st) {
@@ -560,6 +574,8 @@ export function mapSymbolTypeToMarketType(st: SymbolType): MarketType | null {
 			return MarketType.Commodities;
 		case SymbolType.Forex:
 			return MarketType.Forex;
+		case SymbolType.Etf:
+			return MarketType.Etf;
 		default:
 			return null;
 	}
@@ -577,4 +593,8 @@ export function resolveMarketTypeFromTicker(selectedTicker: string) {
 	}
 
 	return marketType;
+}
+
+export function isStockMarket(selectedTicker: string) {
+	return resolveMarketTypeFromTicker(selectedTicker) === MarketType.Stock;
 }

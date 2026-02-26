@@ -1,19 +1,19 @@
 import { z } from 'zod';
 
-import { RealGdpRange } from './real-gdp';
+import { RealGdpDateRangePreset, RealGdpDateRangePresetSchema, type RealGdpDateRangePresetType } from './real-gdp';
 
 export interface IState {
-	range: RealGdpRange;
+	range: RealGdpDateRangePresetType;
 }
 
 export const stateSchema = z.object({
-	range: z.nativeEnum(RealGdpRange),
+	range: RealGdpDateRangePresetSchema,
 });
 
 export type StateSchemaType = z.infer<typeof stateSchema>;
 
 export function getDefaultState(): IState {
 	return {
-		range: RealGdpRange.TenYears,
+		range: RealGdpDateRangePreset.TenYears,
 	};
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { CpiValueType, type ICpiHistory } from '../../model';
+import { type CpiHistory, type CpiValueTypeType } from '../../model';
 
 import ChartComponent from './chart-component.vue';
 import ChartLegend from './chart-legend.vue';
@@ -9,18 +9,18 @@ import type { IMetricTrendTag } from './metric-trend-tag.vue';
 import MetricTrendTag from './metric-trend-tag.vue';
 
 interface IMainComponentProps {
-	data: ICpiHistory;
-	valueType: CpiValueType;
+	data: CpiHistory;
+	valueType: CpiValueTypeType;
 }
 
 const props = defineProps<IMainComponentProps>();
 
 const metricTag = computed((): IMetricTrendTag => {
 	return {
-		value: Math.abs(props.data.growth_yoy),
+		value: Math.abs(props.data.growthYoy),
 		// TODO: Points/Change/ChangePercent filter
 		unit: 'points',
-		trend: props.data.growth_yoy > 0 ? 'up' : 'down',
+		trend: props.data.growthYoy > 0 ? 'up' : 'down',
 		isPercent: false,
 	};
 });

@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
-import { ChartComponent } from '@/modules/chart';
-import { RouteTickerType } from '@/types/route.d';
-import { TickerType } from '@/modules/chart/models';
-
+import { createTickerIdFromType, TickerComponent } from '@/modules/ticker';
+import { RouteNames, RouteTickerType } from '@/types/route.d';
+import { TickerType } from '@/modules/ticker/models';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import { useLogger } from '@/shared/service/monitoring';
+import { useAppHead } from '@/shared/composables';
+import { capitalize } from '@/shared/lib/capitalize.ts';
+import { isFeatureEnabled } from '@/shared/lib';
 
 interface ITickerPageProps {
-	id: number;
+	id: string;
 	type: RouteTickerType;
 }
 
@@ -27,19 +32,71 @@ const tickerType = computed((): TickerType => {
 	return mapping[props.type];
 });
 
-// TODO: useAppHead with resolver ticker name
+const router = useRouter();
+const logger = useLogger();
+
+const canonicalTickerId = computed(() => createTickerIdFromType(props.type, props.id));
+
+const ticker = shallowRef<ITickerItem | null>(null);
+
+const errorRedirectIsEnabled = isFeatureEnabled('TICKER_PAGE_ERROR_REDIRECT_ENABLED');
+
+async function fetchTicker(tickerId: string) {
+	try {
+		const [response] = await fetchTickers(tickerId);
+		if (response.canonical_ticker_id === canonicalTickerId.value) {
+			ticker.value = response;
+		}
+	} catch (error) {
+		logger.error('Invalid TickerId', { error: error as Error, context: { tickerId } });
+		ticker.value = null;
+
+		if (errorRedirectIsEnabled) {
+			void router.replace({ name: RouteNames.Error });
+		}
+	}
+}
+
+watch(canonicalTickerId, tickerId => {
+	if (tickerId) {
+		fetchTicker(tickerId);
+	} else {
+		router.replace({ name: RouteNames.Error });
+	}
+}, { immediate: true });
+
+const title = computed(() => {
+	if (ticker.value) {
+		return `${ticker.value.name} — ${capitalize(ticker.value.market_type)}`;
+	}
+
+	return 'Ticker Page';
+});
+
+useAppHead({ title });
 </script>
 
 <template>
-	<app-layout>
+	<app-layout :active-ticker="ticker">
 		<div :class="classes.container">
-			<chart-component :id="props.id" :type="tickerType" />
+			<ticker-component
+				:key="canonicalTickerId"
+				:id="props.id"
+				:type="tickerType"
+			/>
 		</div>
 	</app-layout>
 </template>
 
 <style module="classes">
 .container {
-	padding: 20px;
+	height: calc(100vh - 16px);
+	margin: 8px 0;
+	overflow: hidden;
+	border-radius: 18px;
+
+	@media (width > 655px) {
+		border: 1px solid #1d1d1e;
+	}
 }
 </style>

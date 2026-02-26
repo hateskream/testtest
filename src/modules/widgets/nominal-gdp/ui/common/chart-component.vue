@@ -8,13 +8,13 @@ import {
 	barDashedBorderConfigurablePlugin,
 	type IBarDashedBorderPluginConfig,
 } from '@/modules/lightweight-charts/plugins';
-import type { INominalGdpHistoryPoint } from '../../model';
+import type { NominalGdpHistoryPoint } from '../../model';
 
 const BAR_WIDTH = 15;
 const BAR_SPACE = 5;
 
 interface IChartComponentProps {
-	points: INominalGdpHistoryPoint[];
+	points: NominalGdpHistoryPoint[];
 }
 
 const props = defineProps<IChartComponentProps>();
@@ -30,7 +30,7 @@ const preparedLabels = computed(() => filteredPoints.value.map(point => point.la
 const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPluginConfig>)[] => {
 	return [
 		{
-			data: filteredPoints.value.map(point => point.forecast),
+			data: filteredPoints.value.map(point => point.forecast ?? null),
 			backgroundColor: (context) => {
 				if (!context.chart.chartArea) {
 					return;
@@ -56,6 +56,7 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 				color: '#FF8D29',
 				radius: 5,
 			},
+			label: 'Potential',
 		},
 		{
 			data: filteredPoints.value.map(point => point.history).filter(point => point !== 0),
@@ -65,6 +66,7 @@ const preparedDatasets = computed((): (BarDataset & Partial<IBarDashedBorderPlug
 			maxBarThickness: BAR_WIDTH,
 			barPercentage: 1,
 			categoryPercentage: 0.7,
+			label: 'History',
 		},
 	];
 });

@@ -2,7 +2,6 @@
 import { BaseLoaderComponent } from '@/modules/widgets/base';
 import type { DisplayVariant } from '@/modules/dashboard-group/layout-dashboards/model';
 
-
 const props = defineProps<{
 	displayVariant?: DisplayVariant;
 }>();

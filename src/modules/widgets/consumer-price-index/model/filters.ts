@@ -1,38 +1,16 @@
-import { CpiRange, CpiValueType } from './cpi';
+import { CpiDateRangePreset, CpiValueType, type CpiValueTypeType } from './cpi';
+import { getDateRangePresetTitle } from '@/modules/lightweight-charts/model';
 
-export const rangeFilterValueToDisplay: Record<CpiRange, { selected: string; option: string }> = {
-	[CpiRange.Year]: {
-		selected: '1Y',
-		option: '1 year',
-	},
-	[CpiRange.ThreeYears]: {
-		selected: '3Y',
-		option: '3 years',
-	},
-	[CpiRange.FiveYears]: {
-		selected: '5Y',
-		option: '5 years',
-	},
-	[CpiRange.TenYears]: {
-		selected: '10Y',
-		option: '10 years',
-	},
-	[CpiRange.All]: {
-		selected: 'All',
-		option: 'All time',
-	},
-};
-
-export const rangeFilters = Object.entries(rangeFilterValueToDisplay)
-	.map(([value, option]) => ({ label: option.option, value: value as CpiRange }));
+export const rangeFilters = Object.values(CpiDateRangePreset)
+	.map(option => ({ label: getDateRangePresetTitle(option), value: option }));
 
 
-export const valueTypeFilterValueToDisplay: Record<CpiValueType, string> = {
+export const valueTypeFilterValueToDisplay = {
 	[CpiValueType.Points]: 'Points',
 	[CpiValueType.ChangeDelta]: 'Change',
 	[CpiValueType.ChangePercent]: 'Change, %',
-};
+} as const satisfies Record<CpiValueTypeType, string>;
 
-export const valueTypeFilters = Object.entries(valueTypeFilterValueToDisplay)
-	.map(([value, label]) => ({ label, value: value as CpiValueType }));
+export const valueTypeFilters = Object.values(CpiValueType)
+	.map(value => ({ label: valueTypeFilterValueToDisplay[value], value }));
 

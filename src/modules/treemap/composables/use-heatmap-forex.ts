@@ -1,6 +1,7 @@
-import { ref, watch, type Ref } from 'vue';
+import { ref, type Ref, watch } from 'vue';
 
-import { TitleKey, TitleViewVariant, type IColorBy, type IHeatmap, type ISettings } from '../model';
+import { type IColorBy, type IHeatmap, type ISettings, TitleKey, TitleViewVariant } from '../model';
+import { useLogger } from '@/shared/service/monitoring';
 
 interface ITreeMapItemValue {
 	display: number;
@@ -22,6 +23,8 @@ export function useHeatmapForex(
 	const heatmap = ref<IHeatmapItem[]>([]);
 	const isDisplayValuePercent = ref(false);
 
+	const logger = useLogger();
+
 	watch(
 		[rawHeatmap, colorBy, titleSetting, displayValue],
 		([newHeatmap, newColorBy, newTitle, newDisplayValue]) => {
@@ -35,15 +38,13 @@ export function useHeatmapForex(
 
 			const foundColorBy = newHeatmap.items.find(item => item.values[newColorBy.colorBy.key]);
 			if (!foundColorBy) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundColorBy', foundColorBy);
+				logger.debug('Not found ColorBy', { context: { colorBy: newColorBy.colorBy.key } });
 				return;
 			}
 
 			const foundDisplayValue = newHeatmap.items.find(item => item.values[newDisplayValue.key]);
 			if (!foundDisplayValue) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundDisplayValue', foundDisplayValue);
+				logger.debug('Not found DisplayValue', { context: { displayValue: newDisplayValue.key } });
 				return;
 			}
 
@@ -54,8 +55,7 @@ export function useHeatmapForex(
 
 			const foundTicker = newHeatmap.items.find(item => item[currentKeyTicker]);
 			if (!foundTicker) {
-				// eslint-disable-next-line no-console
-				console.log('notFoundTicker', foundTicker);
+				logger.debug('Not found Ticker', { context: { ticker: currentKeyTicker } });
 				return;
 			}
 

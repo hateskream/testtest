@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import type { IMeta } from '@/modules/dashboard-group';
 import { RangeChart, type RangeChart as RangeChartType } from '@/shared/ui/chart-range';
 import { DominanceDateRange, type IDisplaySettings, type IDominanceSnapshot } from '../../model';
+import type { ITickerItem } from '@/modules/ticker-selector';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import DominanceHistoricalGrid from './historical/dominance-historical-grid.vue';
@@ -14,7 +15,7 @@ interface IViewComponentProps {
 	meta: IMeta;
 	data: IDominanceSnapshot[];
 	displaySettings: IDisplaySettings;
-	selectedTickers: string[];
+	selectedTickers: ITickerItem[];
 	segmentsClass?: string | string[];
 }
 

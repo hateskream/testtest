@@ -10,10 +10,9 @@ import {
 	type IMarketCapTicker,
 	type IMarketCapTotal,
 	type IMarketCapTotalValue,
-	MarketCapDateRange,
 } from '../../model';
-import { Chart, ChartMarketCap } from '@/modules/lightweight-charts';
-import { ChartRange, type RangeChart as RangeChartType, RangeChart } from '@/shared/ui/chart-range';
+import { Chart, ChartDateRange, ChartMarketCap } from '@/modules/lightweight-charts';
+import { type DateRangeValue, millisecondsToUtcSeconds } from '@/modules/lightweight-charts/model';
 
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 
@@ -31,39 +30,7 @@ const props = defineProps<IMarketCapChartProps>();
 
 // date range
 
-const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
-
-const dateRangeToRangeChart: Record<MarketCapDateRange, RangeChartType> = {
-	[MarketCapDateRange.Day]: RangeChart['1D'],
-	[MarketCapDateRange.Week]: RangeChart['7D'],
-	[MarketCapDateRange.Month]: RangeChart['1M'],
-	[MarketCapDateRange.SixMonths]: RangeChart['6M'],
-	[MarketCapDateRange.Year]: RangeChart['1Y'],
-	[MarketCapDateRange.All]: RangeChart['ALL'],
-};
-
-const chartRanges = Object.values(MarketCapDateRange).map(key => dateRangeToRangeChart[key]);
-
-const activeChartRange = computed({
-	get: () => dateRangeToRangeChart[activeDateRange.value],
-	set: (newRange) => {
-		const dateRangeFilter = Object.entries(dateRangeToRangeChart)
-			.find(([_, value]) => value === newRange);
-
-		if (dateRangeFilter) {
-			activeDateRange.value = dateRangeFilter[0] as MarketCapDateRange;
-		}
-	},
-});
-
-function selectDateRange(rangeChart: RangeChartType) {
-	const dateRangeFilter = Object.entries(dateRangeToRangeChart)
-		.find(([_, value]) => value === rangeChart);
-
-	if (dateRangeFilter) {
-		activeDateRange.value = dateRangeFilter[0] as MarketCapDateRange;
-	}
-}
+const dateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 
 // target entity
 
@@ -122,13 +89,13 @@ const preparedEntitiesDatasets = computed(() => {
 
 const preparedSingleEntityDataset = computed(() => {
 	if (!singleTargetEntity.value) {
-		return null;
+		return [];
 	}
 
 	const entityId = singleTargetEntity.value.id;
 
 	return props.points.map((point): LineData => {
-		return { time: point.timestamp / 1000, value: point.marketCap[entityId] };
+		return { time: millisecondsToUtcSeconds(point.timestamp), value: point.marketCap[entityId] };
 	});
 });
 </script>
@@ -138,7 +105,7 @@ const preparedSingleEntityDataset = computed(() => {
 		<template v-if="totalCount > 1">
 			<chart-market-cap
 				:datasets="preparedEntitiesDatasets"
-				:range="activeDateRange"
+				:range="dateRange"
 				:hide-axis="!props.isShowAxes"
 				height="100%"
 			/>
@@ -146,34 +113,22 @@ const preparedSingleEntityDataset = computed(() => {
 				v-if="props.isShowRange"
 				:class="[classes.rangeWrapper, {[classes.visibleAxis]: props.isShowAxes}]"
 			>
-				<chart-range
-					:active-range="activeChartRange"
-					:list="chartRanges"
-					disable-change
-					@select="selectDateRange"
-				/>
+				<chart-date-range v-model="dateRange" />
 			</div>
 		</template>
 		<template v-else-if="singleTargetEntity">
 			<chart
-				v-model:range="activeChartRange"
 				:data="preparedSingleEntityDataset"
-				:range-list="chartRanges"
-				:is-visible-history-graph="false"
-				:is-visible-indicators="false"
 				:is-visible-price-line="isShowAxes"
-				:is-visible-range="props.isShowRange"
-				:is-visible-range-change="props.displaySettings.isShowChange"
 				:is-visible-price-scale="isShowAxes"
 				:is-visible-time-scale="isShowAxes"
-				:width="100"
 				:color-schema="chartColorSchema"
 				:right-offset-pixels="isShowAxes ? 100 : 0"
 				height="100%"
 				price-label="Current"
 				is-show-tooltip
-				disable-scroll
 				fade-left
+				auto-size
 			>
 				<template #tooltipContent="{rows, title}">
 					<market-cap-chart-tooltip
@@ -184,6 +139,11 @@ const preparedSingleEntityDataset = computed(() => {
 					/>
 				</template>
 			</chart>
+			<chart-date-range
+				v-if="props.isShowRange"
+				v-model="dateRange"
+				:class="classes.range"
+			/>
 		</template>
 	</div>
 </template>
@@ -206,5 +166,9 @@ const preparedSingleEntityDataset = computed(() => {
 
 .root.visibleAxis {
 	padding-right: 16px;
+}
+
+.range {
+	flex-shrink: 0;
 }
 </style>

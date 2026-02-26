@@ -1,7 +1,5 @@
-import { add, sub } from 'date-fns';
-
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { arrayToString } from '@/shared/lib';
 import {
 	type IMarketCapHistory,
@@ -9,22 +7,22 @@ import {
 	type IMarketCapPoint,
 	type IMarketCapTicker,
 	type IMarketCapTotal,
-	MarketCapDateRange,
 } from '../model';
 import { useFetchMock } from '@/shared/mock';
+import { type DateRangePresetType, presetToDateRange } from '@/modules/lightweight-charts/model';
 
 const IS_USE_MOCK = false;
 
 export interface IGetMarketCapRequest {
 	tickers: string[];
 	markets: string[];
-	range: MarketCapDateRange;
+	range: DateRangePresetType;
 }
 
 export interface IGetMarketCapResponse {
 	tickers: IMarketCapTicker[];
 	markets: IMarketCapMarket[];
-	range: MarketCapDateRange;
+	range: DateRangePresetType;
 	data: {
 		points: IMarketCapPoint<string>[];
 		total: IMarketCapTotal;
@@ -50,7 +48,7 @@ export async function getMarketCap(args: IGetMarketCapRequest): Promise<IMarketC
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get market', error as Error);
+		logger.error('Failed to get market', { error: error as Error });
 		throw error;
 	}
 }
@@ -78,30 +76,16 @@ interface IMarketCapMockData {
 
 const { getMock } = useFetchMock<IMarketCapMockData>('/mock/widgets/market-cap.json');
 
-const rangeDayCounts: Record<MarketCapDateRange, number> = {
-	[MarketCapDateRange.Day]: 1,
-	[MarketCapDateRange.Week]: 7,
-	[MarketCapDateRange.Month]: 30,
-	[MarketCapDateRange.SixMonths]: 180,
-	[MarketCapDateRange.Year]: 365,
-	[MarketCapDateRange.All]: 365,
-};
-
 function generateTickerValue(from: number, to: number) {
 	return from + Math.random() * (to - from);
 }
 
 function createPointsMock(args: IGetMarketCapRequest) {
-	const daysCount = rangeDayCounts[args.range];
+	const { from: start, to: end } = presetToDateRange(args.range);
 
-	const startDate = sub(new Date(), { days: daysCount + 10 }).getTime();
-	const endDate = add(new Date(), { days: 1 }).getTime();
+	const dateStep = (end - start) / 100;
 
-	const dateStep = (endDate - startDate) / 100;
-
-	const timestamps = Array.from({ length: 100 }).map(
-		(_, key) => (new Date(startDate + key * dateStep)).getTime(),
-	);
+	const timestamps = Array.from({ length: 100 }).map((_, key) => start + key * dateStep);
 
 	function generateSegment(from: number, to: number) {
 		return Object.fromEntries([
@@ -112,7 +96,7 @@ function createPointsMock(args: IGetMarketCapRequest) {
 
 	return timestamps.map(time => {
 		return {
-			timestamp: time,
+			timestamp: time * 1000,
 			marketCap: generateSegment(1_000_000_000_000, 1_100_100_000_000),
 			volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
 		};
@@ -132,7 +116,6 @@ function createTotalMock(args: IGetMarketCapRequest) {
 		volume: generateSegment(1_000_000_000_000, 2_000_000_000_000),
 		changePercent: generateSegment(-5, 5),
 	};
-
 }
 
 async function getMockData(args: IGetMarketCapRequest) {

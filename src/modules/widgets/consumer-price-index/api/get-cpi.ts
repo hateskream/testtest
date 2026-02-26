@@ -1,36 +1,58 @@
-import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { z } from 'zod';
+
+import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import { CpiRange, type ICpiHistory } from '../model';
+import { type CpiDateRangePresetType, type CpiHistoryPoint, CpiHistorySchema } from '../model';
+import { apiSchema, useApiClient } from '@/shared/service/api';
 
 const IS_USE_MOCK = false;
 
 export interface IGetCpiRequest {
-	range: CpiRange;
+	range: CpiDateRangePresetType;
 }
 
-export async function getCpi(args: IGetCpiRequest): Promise<ICpiHistory> {
-	const httpService = useHttpService();
+// TODO: Удалить, когда исправят на бекенде Range
+const ResponseSchema = z.preprocess(input => {
+	const value = input as z.infer<typeof CpiHistorySchema>;
+	return {
+		...value,
+		range: value.range.toUpperCase(),
+	};
+}, apiSchema(CpiHistorySchema));
+
+export async function getCpi(args: IGetCpiRequest) {
+	const httpService = useApiClient();
 	const logger = useLogger();
 
 	try {
 		if (IS_USE_MOCK) {
-			return await getMockData(args);
+			const response = await getMockData(args);
+			return ResponseSchema.parse(response);
 		}
 
-		return await httpService.get<ICpiHistory>('/api/v1/cpi/data', {
-			query: {
-				range: args.range,
+		return httpService.get(
+			'/api/v1/cpi/data',
+			ResponseSchema,
+			{
+				query: {
+					range: args.range,
+				},
 			},
-		});
+		);
 	} catch (error) {
-		logger.error('Failed to get CPI data', error as Error);
+		logger.error('Failed to get CPI data', { error: error as Error });
 		throw error;
 	}
 }
 
-const { getMock } = useFetchMock<ICpiHistory>('/mock/widgets/cpi.json');
+interface ICpiHistoryMock {
+	range: CpiDateRangePresetType;
+	points: CpiHistoryPoint[];
+	growth_yoy: number;
+}
+
+const { getMock } = useFetchMock<ICpiHistoryMock>('/mock/widgets/cpi.json');
 
 async function getMockData(args: IGetCpiRequest) {
 	await delay(500);

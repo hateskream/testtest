@@ -14,6 +14,7 @@ interface ITickerIconProps {
 	src?: string;
 	ticker: string;
 	size?: number;
+	disableGlow?: boolean;
 }
 
 const isImageLoaded = ref(false);
@@ -22,6 +23,7 @@ const isError = ref(false);
 const props = withDefaults(defineProps<ITickerIconProps>(), {
 	size: 16,
 	src: '',
+	disableGlow: false,
 });
 
 const isIconId = computed(() => {
@@ -108,13 +110,12 @@ watch(isIconId, (value) => {
 			</template>
 		</ui-image>
 
-		<template v-if="isImageLoaded">
+		<template v-if="isImageLoaded && !props.disableGlow">
 			<template v-if="slots.glow">
 				<slot name="glow" />
 			</template>
 
 			<ticker-icon-glow-effect
-				v-else
 				:class="classes.glow"
 			/>
 		</template>

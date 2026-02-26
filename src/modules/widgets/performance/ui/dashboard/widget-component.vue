@@ -60,6 +60,7 @@ const {
 		@duplicate="emits('duplicate')"
 		@move-to="emits('moveTo', $event)"
 		@reset="resetAllChanges"
+		@retry="refetch"
 	>
 		<template #filters>
 			<performance-header
@@ -82,6 +83,7 @@ const {
 			<view-component
 				v-else-if="tickers.length"
 				v-model:display-variant="currentDisplayVariant"
+				:active-market="activeMarket"
 				:rows="tickers"
 				:columns="ALL_COLUMNS"
 			/>

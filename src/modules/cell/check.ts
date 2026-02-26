@@ -1,22 +1,26 @@
 import {
-	CellType,
-	SymbolType,
 	type Cell,
+	CellType,
+	type ICheckCell,
 	type ICommoditySymbolCell,
 	type ICryptoSymbolCell,
 	type IEmptyCell,
+	type IEtfSymbolCell,
 	type IForexSymbolCell,
 	type IIndexSymbolCell,
 	type ILableCell,
 	type INumberCell,
+	type IOpenCell,
 	type IPercentCell,
 	type IPlaneTextSymbolCell,
 	type IRangeCell,
+	type IScheduleCell,
+	type IScoreCell,
 	type IStockSymbolCell,
 	type ISvgChartCell,
 	type ISymbolCell,
-	type ITextCell, type IScoreCell, type IOpenCell, type ICheckCell,
-	type IScheduleCell,
+	type ITextCell,
+	SymbolType,
 } from './domain';
 
 export function isEmptyCell(cell: Cell): cell is IEmptyCell {
@@ -40,6 +44,10 @@ export function isStockSymbolCell(cell: ISymbolCell): cell is IStockSymbolCell {
 }
 
 export function isForexSymbolCell(cell: ISymbolCell): cell is IForexSymbolCell {
+	return cell.symbolType === SymbolType.Forex;
+}
+
+export function isEtfSymbolCell(cell: ISymbolCell): cell is IEtfSymbolCell {
 	return cell.symbolType === SymbolType.Forex;
 }
 

@@ -2,9 +2,12 @@ import { useQuery } from '@tanstack/vue-query';
 import { type MaybeRefOrGetter, toValue } from 'vue';
 
 import { getHighImpactHourMap } from '../api';
-import { type TimeZoneUTC } from './../model';
+import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
 
-export function useQueryHighImpactHourMap(widgetId: MaybeRefOrGetter<string>, timezone: MaybeRefOrGetter<TimeZoneUTC>) {
+export function useQueryHighImpactHourMap(
+	widgetId: MaybeRefOrGetter<string>,
+	timezone: MaybeRefOrGetter<TimezoneUtcType>,
+) {
 	return useQuery({
 		queryKey:  ['high-impact-hour-map', widgetId, timezone],
 		queryFn: () => getHighImpactHourMap({ timezone: toValue(timezone), widgetId: toValue(widgetId) }),

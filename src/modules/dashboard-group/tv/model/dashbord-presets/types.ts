@@ -13,7 +13,6 @@ export interface IWidgetInstancePreset {
 	defaultStateType?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const colNumbers = [2, 4, 6, 8, 10] as const;
 type ColNumType = typeof colNumbers[number];
 

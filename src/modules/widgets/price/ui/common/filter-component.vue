@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { MarketBadge, ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import type { MarketType } from '@/modules/market';
+import { MarketType } from '@/modules/market';
 import { type FiltersState, type FiltersValues, FilterType, filterTypeToName, filterValueToDisplay } from '../../model';
 
 const emit = defineEmits<{
@@ -46,6 +46,7 @@ const isTv = computed(()=>{
 			v-model="activeMarket"
 			:display-variant="displayVariant"
 			close-on-select
+			:exclude-markets="[MarketType.Etf]"
 		/>
 		<ui-delimiter v-if="isTv" />
 		<modal-badge-filter

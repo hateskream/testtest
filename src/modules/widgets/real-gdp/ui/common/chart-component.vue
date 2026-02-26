@@ -5,12 +5,13 @@ import type { ChartOptions, TooltipOptions } from 'chart.js';
 import type { BarDataset } from '@/modules/lightweight-charts';
 import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import type { IRealGdpHistoryPoint } from '../../model';
+import { type RealGdpHistoryPoint, RealGdpValueType, type RealGdpValueTypeType } from '../../model';
 
 const BAR_WIDTH = 15;
 
 interface IChartComponentProps {
-	points: IRealGdpHistoryPoint[];
+	points: RealGdpHistoryPoint[];
+	valueType: RealGdpValueTypeType;
 }
 
 const props = defineProps<IChartComponentProps>();
@@ -22,7 +23,28 @@ const { points: filteredPoints } = useAdaptiveBarPoints(
 );
 
 const preparedLabels = computed(() => filteredPoints.value.map(point => point.label));
-const preparedData = computed(() => filteredPoints.value.map(point => point.history));
+
+const preparedData = computed(() => {
+	return filteredPoints.value.map((point, index, all) => {
+		const value = point.history;
+
+		if (props.valueType === RealGdpValueType.Points) {
+			return value;
+		}
+
+		if (index === 0) {
+			return 0;
+		}
+
+		const prev = all[index - 1];
+
+		if (props.valueType === RealGdpValueType.ChangeDelta) {
+			return value - prev.history;
+		}
+
+		return (value - prev.history) / prev.history * 100;
+	});
+});
 
 const preparedDatasets = computed((): [BarDataset] => {
 	return [{
@@ -35,6 +57,7 @@ const preparedDatasets = computed((): [BarDataset] => {
 		barThickness: 15,
 		maxBarThickness: 15,
 		barPercentage: 1,
+		label: 'GDP',
 	}];
 });
 

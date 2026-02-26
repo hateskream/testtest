@@ -30,21 +30,21 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				// 	defaultState: 'none',
 				// 	height: 928,
 				// 	maxCountRow: 6,
-				// 	widgetType:  WidgetType.Market,
+				// 	widgetType: WidgetType.Market,
 				// 	defaultDisplayVariant: 'default',
-				// }
+				// },
 			],
 		},
 		{
 			name: 'Overview',
 			width: 360,
 			widgets: [
-				// {
-				// 	defaultState: 'none',
-				// 	height: 226,
-				// 	widgetType:  WidgetType.FearGreed,
-				// 	defaultDisplayVariant: 'chart',
-				// },
+				{
+					defaultState: 'none',
+					height: 226,
+					widgetType: WidgetType.FearGreed,
+					defaultDisplayVariant: 'default',
+				},
 				// {
 				// 	defaultState: 'none',
 				// 	height: 171,
@@ -260,6 +260,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			name: 'Market Momentum',
 			width: 560,
 			widgets: [
+				// {
+				// 	defaultState: 'none',
+				// 	height: 928,
+				// 	maxCountRow: 6,
+				// 	widgetType: WidgetType.Market,
+				// 	defaultDisplayVariant: 'default',
+				// },
+
 				{
 					defaultState: 'stock',
 					height: 465,
@@ -287,6 +295,12 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 			width: 360,
 			widgets: [
 				{
+					defaultState: 'none',
+					height: 226,
+					widgetType: WidgetType.FearGreed,
+					defaultDisplayVariant: 'chart',
+				},
+				{
 					defaultState: 'crypto',
 					height: 226,
 					widgetType:  WidgetType.MarketCap,
@@ -294,7 +308,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 				},
 				{
 					defaultState: 'none',
-					height: 175,
+					height: 214,
 					widgetType:  WidgetType.BitcoinDominance,
 					defaultDisplayVariant: 'tile',
 				},
@@ -480,14 +494,14 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 };
 
 
-const enabledDashboardPresets: Record<PresetName, boolean> = {
-	Main: true,
-	Crypto: isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
-	Stock: isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
+const enabledDashboardPresets: Record<PresetName, () => boolean> = {
+	Main: () => true,
+	Crypto: () => isFeatureEnabled('CRYPTO_DASHBOARD_ENABLED'),
+	Stock: () => isFeatureEnabled('STOCK_DASHBOARD_ENABLED'),
 };
 
 function isComingSoonPreset(presetName: PresetName) {
-	return !enabledDashboardPresets[presetName];
+	return !enabledDashboardPresets[presetName]();
 }
 
 const comingSoonPresets: Record<PresetName, string | undefined> = {

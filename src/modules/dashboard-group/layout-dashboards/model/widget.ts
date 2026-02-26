@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { match, P } from 'ts-pattern';
 
 import { isWidgetTypeKey, WidgetType } from '@/modules/dashboard-group';
+import { isFeatureEnabled } from '@/shared/lib';
+import { useLogger } from '@/shared/service/monitoring';
 
 export type DisplayVariant = 'tile' | 'indicator' | 'bar' | 'list' | 'table' | 'chart' | 'heatmap' | 'default';
 export interface IWidgetPreset {
@@ -29,6 +31,14 @@ const ChartPrice: Preset = {
 	minHeight: 400,
 };
 
+const FearGreed: Preset = {
+	name: 'Fear & Greed',
+	displayVariants: ['default'],
+	minHeight: 210,
+	snapStep: 90,
+	maxHeight: 320,
+};
+
 const TopIndices: Preset = {
 	name: 'Top Indices YTD',
 	displayVariants: ['list'],
@@ -53,7 +63,7 @@ const MarketCap: Preset = {
 
 const BitcoinDominance: Preset = {
 	name: 'Dominance',
-	displayVariants: ['chart', 'tile', 'bar'],
+	displayVariants: ['tile'],
 };
 
 const Price: Preset = {
@@ -77,14 +87,11 @@ const Calendar: Preset = {
 	hasFilters: true,
 };
 
-const FearGreed: Preset = {
-	name: 'Fear & Greed',
-	displayVariants: ['default'],
-};
-
 const Market: Preset = {
 	name: 'Market',
 	displayVariants: ['default'],
+	minHeight: 206,
+	maxHeight: 406,
 };
 
 const Watchlist: Preset = {
@@ -190,6 +197,7 @@ const presets: Partial<Record<WidgetType, Preset>> = {
 
 function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 	const preset = presets[widgetType];
+
 	if (!preset) {
 		return null;
 	}
@@ -210,7 +218,7 @@ export interface IWidget extends IWidgetPreset {
 	maxCountRow?: number;
 }
 
-export const resizeHandlerMapping = generateResizeHandlerMapping() ;
+export const resizeHandlerMapping = generateResizeHandlerMapping();
 
 const titleWidgetHeight = (widget: IWidget) => widget.hasFilters ? 76 : 40;
 
@@ -223,6 +231,7 @@ const CAN_CHANGE_HEIGHT = P.union(
 	WidgetType.UnemploymentRate,
 	WidgetType.NonfarmPayrolls,
 	WidgetType.Calendar,
+	WidgetType.FearGreed,
 );
 
 export function canChangeHeight(widget: IWidget): boolean {
@@ -232,6 +241,20 @@ export function canChangeHeight(widget: IWidget): boolean {
 		.otherwise(() => false);
 }
 
+const experimentalWidgets: Partial<Record<WidgetType, () => boolean>> = {
+	[WidgetType.FearGreed]: () => isFeatureEnabled('SHOW_FEAR_AND_GREED_WIDGET'),
+	[WidgetType.MarketCap]: () => isFeatureEnabled('SHOW_MARKET_CAP_WIDGET_DASHBOARD'),
+	[WidgetType.EthGas]: () => isFeatureEnabled('SHOW_ETH_GAS_WIDGET_DASHBOARD'),
+};
+
+export function isExperimentalWidgetEnabled(widgetType: WidgetType): boolean {
+	if (experimentalWidgets[widgetType] === undefined) {
+		return true;
+	}
+
+	return experimentalWidgets[widgetType]();
+}
+
 export function createWidget(
 	widgetType: WidgetType,
 	height: number,
@@ -239,11 +262,18 @@ export function createWidget(
 	defaultStateType = '',
 	stateType = '',
 	maxCountRow?: number,
-) : IWidget | null {
+): IWidget | null {
+	const logger = useLogger();
+
+	if (!isExperimentalWidgetEnabled(widgetType)) {
+		logger.debug(`${widgetType} was disabled via feature flag`);
+		return null;
+	}
+
 	const preset = createPreset(widgetType);
+
 	if (!preset) {
-		// eslint-disable-next-line no-console
-		console.error(`Preset not found for widget type: ${widgetType}`);
+		logger.error('WidgetType preset not found', { context: { widgetType } });
 		return null;
 	}
 
@@ -395,16 +425,21 @@ export function rehydrateWidget(
 	stateType = '',
 	maxCountRow?: number,
 ): IWidget | null {
+	const logger = useLogger();
+
 	if (isWidgetTypeKey(widgetType) === false) {
-		// eslint-disable-next-line no-console
-		console.error(`Invalid widget type: ${widgetType}`);
+		logger.error('Invalid WidgetType', { context: { widgetType } });
+		return null;
+	}
+
+	if (!isExperimentalWidgetEnabled(widgetType)) {
+		logger.debug(`${widgetType} was disabled via feature flag`);
 		return null;
 	}
 
 	const preset = createPreset(widgetType);
 	if (!preset) {
-		// eslint-disable-next-line no-console
-		console.error(`Preset not found for widget type: ${widgetType}`);
+		logger.error('WidgetType preset not found', { context: { widgetType } });
 		return null;
 	}
 
@@ -429,14 +464,14 @@ export function calcSizeSideGridCell(
 	let bestCount = Math.floor(side / minSize);
 	let minRemainder = side % minSize;
 
-	// eslint-disable-next-line no-plusplus
+	// oxlint-disable-next-line no-plusplus
 	for (let i = minSize; i <= maxSize; i++) {
 		const count = Math.floor(side / i);
 		const remainder = side % i;
 
 		if (
 			remainder < minRemainder ||
-      (remainder === minRemainder && i > bestSize)
+			(remainder === minRemainder && i > bestSize)
 		) {
 			bestSize = i;
 			bestCount = count;

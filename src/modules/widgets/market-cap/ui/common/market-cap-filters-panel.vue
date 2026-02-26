@@ -4,23 +4,29 @@ import { computed } from 'vue';
 import { MarketType } from '@/modules/market';
 import {
 	type IMarketTickerItem,
-	type ITickerItem, MARKET_TICKER_ITEMS,
+	type ITickerItem,
+	MARKET_TICKER_ITEMS,
 	MARKET_TICKER_ITEMS_BY_MARKET,
 	SelectionMode,
+	TickerSelectorModalWithBadge,
 } from '@/modules/ticker-selector';
-import { dateRangeFilters, dateRangeFilterValueToDisplay, MarketCapDateRange, type MarketCapType } from '../../model';
+import { dateRangeFilters, type MarketCapType } from '../../model';
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
 import { UiDelimiter } from '@/shared/ui/delimiter';
-
-import TickerSelectorModalWithBadge from '@/modules/ticker-selector/new/ticker-selector-modal-with-badge.vue';
+import {
+	createPreset,
+	type DateRangePresetType,
+	type DateRangeValue,
+	getDateRangePresetLabel,
+} from '@/modules/lightweight-charts/model';
 
 const emit = defineEmits<{
 	reset: [];
 }>();
 
-const selectedTickers = defineModel<string[]>('selectedTickers', { required: true });
+const selectedTickers = defineModel<ITickerItem[]>('selectedTickers', { required: true });
 const selectedMarkets = defineModel<MarketCapType[]>('selectedMarkets', { required: true });
-const activeDateRange = defineModel<MarketCapDateRange>('dateRange', { required: true });
+const activeDateRange = defineModel<DateRangeValue>('dateRange', { required: true });
 
 interface IMarketCapFiltersPanelProps {
 	isShowDateRange?: boolean;
@@ -29,26 +35,45 @@ interface IMarketCapFiltersPanelProps {
 
 const props = defineProps<IMarketCapFiltersPanelProps>();
 
-const selectedRangeLabel = computed(() => dateRangeFilterValueToDisplay[activeDateRange.value].selected);
+const selectedDateRangeLabel = computed(() => {
+	const range = activeDateRange.value;
 
-function onTickerSelect(newTickers: ITickerItem[]) {
-	selectedTickers.value = newTickers.map(v => v.canonical_ticker_id);
-}
-
-function onMarketTickerSelect(
-	newMarketTickers: IMarketTickerItem<MarketType.Crypto | MarketType.Stock>[],
-) {
-	selectedMarkets.value = newMarketTickers.map(v => v.market_type);
-}
-
-const marketTickers = computed(() => {
-	if (selectedMarkets.value.length === 0) {
-		return [MARKET_TICKER_ITEMS[0]] as IMarketTickerItem<MarketCapType>[];
+	if (range.type === 'preset') {
+		return getDateRangePresetLabel(range.preset);
 	}
 
-	return selectedMarkets.value.map(
-		v => MARKET_TICKER_ITEMS_BY_MARKET.get(v)!,
-	) as IMarketTickerItem<MarketCapType>[];
+	return 'Custom range';
+});
+
+const selectedDateRangePreset = computed(() => {
+	if (!activeDateRange.value) {
+		return undefined;
+	}
+
+	if (activeDateRange.value.type === 'preset') {
+		return activeDateRange.value.preset;
+	}
+
+	return undefined;
+});
+
+function selectDateRange(preset: DateRangePresetType) {
+	activeDateRange.value = createPreset(preset);
+}
+
+const marketTickers = computed({
+	get: () => {
+		if (selectedMarkets.value.length === 0) {
+			return [MARKET_TICKER_ITEMS[0]] as IMarketTickerItem<MarketCapType>[];
+		}
+
+		return selectedMarkets.value.map(
+			v => MARKET_TICKER_ITEMS_BY_MARKET.get(v)!,
+		) as IMarketTickerItem<MarketCapType>[];
+	},
+	set: (newMarketTickers: IMarketTickerItem<MarketType.Crypto | MarketType.Stock>[]) => {
+		selectedMarkets.value = newMarketTickers.map(v => v.market_type);
+	},
 });
 </script>
 
@@ -58,7 +83,8 @@ const marketTickers = computed(() => {
 		@on-clear-click="emit('reset')"
 	>
 		<ticker-selector-modal-with-badge
-			:selected-market-tickers="marketTickers"
+			v-model:selected-tickers="selectedTickers"
+			v-model:selected-market-tickers="marketTickers"
 			:enabled-markets="[MarketType.Crypto, MarketType.Stock]"
 			:display-variant="props.displayVariant"
 			:selection-mode="SelectionMode.Multiple"
@@ -66,19 +92,17 @@ const marketTickers = computed(() => {
 			show-label
 			autofocus
 			enable-market-tickers
-			@update:selected-tickers="onTickerSelect"
-			@update:selected-market-tickers="onMarketTickerSelect"
 		/>
 		<template v-if="props.isShowDateRange">
 			<ui-delimiter v-if="props.displayVariant === 'default'" />
 			<modal-badge-filter
 				:display-variant="props.displayVariant"
 				:options="dateRangeFilters"
-				:selected-value="activeDateRange"
-				:label="selectedRangeLabel"
+				:selected-value="selectedDateRangePreset"
+				:label="selectedDateRangeLabel"
 				close-on-select
 				title="Date"
-				@select="activeDateRange = $event.value"
+				@select="selectDateRange($event.value)"
 			/>
 		</template>
 	</widget-filters-scrollable>

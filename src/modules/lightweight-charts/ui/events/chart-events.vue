@@ -33,11 +33,11 @@ const stackedEvents = computed(() => {
 	let currentStackEventTime: number;
 
 	for (const event of props.events) {
-		if (!event.eventDatetime) {
+		if (!event.meta.datetime) {
 			continue;
 		}
 
-		const eventTime = Date.parse(event.eventDatetime);
+		const eventTime = Date.parse(event.meta.datetime);
 
 		if (eventTime < props.startTime || eventTime > props.endTime) {
 			continue;
@@ -45,7 +45,7 @@ const stackedEvents = computed(() => {
 
 		if (currentStack.length === 0) {
 			currentStack.push(event);
-			currentStackEventTime = Date.parse(event.eventDatetime);
+			currentStackEventTime = Date.parse(event.meta.datetime);
 			continue;
 		}
 
@@ -92,7 +92,7 @@ const preparedOffsets = computed(() => {
 					<chart-events-marker
 						:segments-count="stack.length"
 						:title="`${stack.length} event(s)`"
-						:image-url="stack[0].imageUrl"
+						:image-url="stack[0].meta.image"
 					/>
 				</template>
 				<template #content>
@@ -110,8 +110,8 @@ const preparedOffsets = computed(() => {
 								:display-variant="props.displayVariant"
 							>
 								<chart-events-card
-									:title="event.eventTitle"
-									:datetime="(event.eventDatetime)!"
+									:title="event.meta.title"
+									:datetime="(event.meta.datetime)!"
 									:metrics="event.metrics"
 									:class="classes.card"
 								/>

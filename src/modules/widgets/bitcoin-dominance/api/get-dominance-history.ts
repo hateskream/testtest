@@ -2,7 +2,7 @@ import { add, sub } from 'date-fns';
 import { notNullish } from '@vueuse/core';
 
 import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { arrayToString } from '@/shared/lib';
 import { DominanceDateRange, type IDominanceHistory } from '../model/dominance.ts';
 
@@ -29,7 +29,7 @@ export async function getDominanceHistory(args: IGetDominanceHistoryRequest): Pr
 			},
 		});
 	} catch (error) {
-		logger.error('Failed to get dominance history', error as Error);
+		logger.error('Failed to get dominance history', { error: error as Error });
 		throw error;
 	}
 }

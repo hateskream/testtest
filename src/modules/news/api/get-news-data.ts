@@ -1,6 +1,8 @@
-import { useHttpService } from '@/shared/service/http-service';
+import { z } from 'zod';
+
 import { type IGetNewsRequest, type INews } from '../model';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
+import { useApiClient } from '@/shared/service/api';
 import { getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { getMockNewsData } from '@/modules/news/api/mock/mock-news-data.ts';
@@ -18,34 +20,35 @@ export interface IGetNewsResponse {
 	pagination: IPagination;
 }
 
-// TODO: REFACTOR. Запланированный контракт (моки) отличается от реализованного.
+const GetNewsResponseItemSchema = z.object({
+	id: z.string(),
+	author: z.string().optional(),
+	first_seen_at: z.string(),
+	primary_title: z.string(),
+	sentiment: z.object({
+		score: z.string(),
+		tone: z.string(),
+	}),
+	slug: z.string(),
+	snippet: z.string(),
+	sources_count: z.number(),
+	src_source_image: z.string(),
+	symbols: z.array(z.object({
+		image: z.string().optional(),
+		label: z.string(),
+		market: z.string().optional(),
+		ticker: z.string(),
+	})),
+	updated_at: z.string(),
+});
 
-export interface IGetNewsResponseItem {
-	id: string;
-	author: string;
-	first_seen_at: string;
-	primary_title: string;
-	sentiment: {
-		score: string;
-		tone: string;
-	};
-	slug: string;
-	snippet: string;
-	sources_count: number;
-	src_source_image: string;
-	symbols: {
-		image: string;
-		label: string;
-		market: string;
-		ticker: string;
-	}[];
-	updated_at: string;
-}
+export const GetNewsResponseSchema = z.array(GetNewsResponseItemSchema).nonempty();
+
+export type GetNewsResponseItem = z.infer<typeof GetNewsResponseItemSchema>;
 
 export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
-	const httpService = useHttpService();
+	const client = useApiClient();
 	const logger = useLogger();
-
 
 	try {
 		if (IS_USE_MOCK) {
@@ -55,14 +58,15 @@ export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 
 		const query = createQuery(req);
 
-		const response = await httpService.get<IGetNewsResponseItem[]>(
+		const response = await client.get(
 			'/api/v1/news/stories',
+			GetNewsResponseSchema,
 			{ query },
 		);
 
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get news', error as Error);
+		logger.error('Failed to get news', { error: error as Error });
 		throw error;
 	}
 }
@@ -146,7 +150,7 @@ function prepareMockResponse({ data, pagination }: IGetNewsResponse): IGetNewsRe
 	};
 }
 
-function prepareResponse(items: IGetNewsResponseItem[]): IGetNewsResponse {
+function prepareResponse(items: GetNewsResponseItem[]): IGetNewsResponse {
 	return {
 		pagination: {
 			total: items.length,

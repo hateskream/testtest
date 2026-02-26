@@ -34,6 +34,7 @@ const {
 		:title="props.meta.name"
 		:active-display-variant="props.meta.activeDisplayVariant"
 		:all-display-variants="props.meta.allDisplayVariants"
+		@retry="refetch"
 	>
 		<template #content>
 			<base-error-component v-if="isError" @retry="refetch" />
@@ -43,9 +44,7 @@ const {
 			/>
 			<view-component
 				v-else
-				:metric-badge="currentData!.badge"
-				:points="currentData!.points"
-				:chart-color-schema="currentData!.badge.isGood ? 'positive' : 'negative'"
+				:data="currentData!"
 			/>
 		</template>
 	</base-widget-dashboard>

@@ -1,4 +1,6 @@
-import { ofetch } from 'ofetch';
+import { FetchError, ofetch } from 'ofetch';
+
+import { useLogger } from '@/shared/service/monitoring';
 
 export const enum HttpMethod {
 	Get = 'GET',
@@ -21,14 +23,19 @@ class HttpService {
 	private readonly fetchInstance = ofetch.create({
 		retry: 1,
 		timeout: 10000,
-		headers: {
-			'Content-Type': 'application/json',
+		onRequestError({ error, request }) {
+			const logger = useLogger();
+			logger.error('Request Error', { error: error as Error, tags: { type: 'network' }, context: { request } });
 		},
-		onRequestError({ error }) {
-			console.error('Request error:', error);
-		},
-		onResponseError({ response }) {
-			console.error('Response error:', response.status, response.statusText);
+		onResponseError({ response, error, request }) {
+			const logger = useLogger();
+			logger.error(
+				`HTTP ${response.status} ${response.statusText}`,
+				{
+					error: error ?? new FetchError(`HTTP ${response.status} ${response.statusText}`),
+					context: { request, status: response.status },
+				},
+			);
 		},
 	});
 
@@ -46,6 +53,18 @@ class HttpService {
 
 	public delete<T>(url: string, options?: IOptions): Promise<T> {
 		return this.request<T>(url, HttpMethod.Delete, options);
+	}
+
+	// Builds query string manually to prevent ofetch from re-encoding values via URLSearchParams.
+	// ^ is kept as-is because the backend WAF blocks its percent-encoded form (%5E).
+	private buildUrl(url: string, query: Record<string, string | number | boolean | undefined>): string {
+		const params = Object.entries(query)
+			.filter(([, value]) => value !== undefined)
+			// eslint-disable-next-line @stylistic/max-len
+			.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value)).replace(/%5E/g, '^')}`)
+			.join('&');
+
+		return params ? `${url}?${params}` : url;
 	}
 
 	private async request<T>(
@@ -74,7 +93,6 @@ class HttpService {
 			timeout?: number;
 		} = {
 			method,
-			query: options.query,
 			body: options.body,
 			signal: options.signal || controller.signal,
 			headers: options.headers,
@@ -87,15 +105,16 @@ class HttpService {
 			requestConfig.timeout = options.timeout;
 		}
 
-		const requestPromise = this.fetchInstance<T>(url, requestConfig);
+		const requestPromise = this.fetchInstance<T>(
+			options.query ? this.buildUrl(url, options.query) : url,
+			requestConfig,
+		);
 
 		try {
 			return await Promise.race([requestPromise, timeoutPromise]);
 		} catch (error) {
 			controller.abort();
-			throw new Error(
-				`HTTP ${method} request failed: ${error instanceof Error ? error.message : String(error)}`,
-			);
+			throw error;
 		}
 	}
 }

@@ -319,7 +319,7 @@ defineExpose({
 					:style="{
 						'padding-bottom': hasPaddingBottom ? '25px' : 0
 					}"
-					@wheel.capture="onWheel"
+					@wheel="onWheel"
 				>
 					<ui-text
 						:class="classes.sectionTitle"

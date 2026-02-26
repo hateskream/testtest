@@ -3,15 +3,11 @@ import { computed } from 'vue';
 import { add, endOfDay, startOfDay, sub } from 'date-fns';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import {
-	type IChartPriceCurrent,
-	type IChartPricePoint,
-	TimeRangeFilterValue,
-} from '@/modules/widgets/chart-price/model';
-import { EventType, type ICalendarEvent, Impact, MarketIds } from '@/modules/calendar';
-import { MarketType } from '@/modules/market';
+import { type ChartPriceCurrentData, type ChartPriceHistoryPoint } from '@/modules/widgets/chart-price/model';
 import { randomInt } from '@/shared/lib';
 import { type IMarketSegment, isTimelineEventsVisible, MarketSegmentState } from '../../model';
+import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar';
+import type { DateRangeValue } from '@/modules/lightweight-charts/model';
 
 import ChartPrice from './chart-price.vue';
 
@@ -19,13 +15,13 @@ interface IViewComponentProps {
 	meta: IMeta;
 	isShowTimeRange: boolean;
 	displayVariant: 'tv' | 'dashboard';
-	points: IChartPricePoint[];
-	current: IChartPriceCurrent;
+	points: ChartPriceHistoryPoint[];
+	current: ChartPriceCurrentData;
 }
 
 const props = defineProps<IViewComponentProps>();
 
-const dateRange = defineModel<TimeRangeFilterValue>('range', { required: true });
+const dateRange = defineModel<DateRangeValue>('range', { required: true });
 
 const isBig = computed(() => props.meta.size.h >= 6 && props.meta.size.w >= 2);
 const isShowChart = computed(() => props.meta.size.h > 3);
@@ -40,7 +36,6 @@ const isTvDisplayVariant = computed(() => props.displayVariant === 'tv');
 // TODO: Change to props data
 function generateMock(from: number, to: number, count: number) {
 	const diff = (to - from) / count;
-	const now = Date.now();
 
 	let time = from + diff;
 
@@ -50,28 +45,22 @@ function generateMock(from: number, to: number, count: number) {
 
 		return {
 			id: key.toString(),
-			ticker: 'S&P500',
-			additional: 'S&P 500',
-			eventType: EventType.Economic,
-			eventTitle: 'S&P 500 Economic',
-			eventDatetime: (new Date(currentTime)).toJSON(),
-			metrics: [
-				{ label: 'Actual', value: time < now ? '1.92' : '-' },
-				{ label: 'Forecast', value: '1.75' },
-				{ label: 'Previous', value: '0.87' },
-			],
-			section: 'Index',
-			link: '',
-			linkText: 'Details',
-			marketId: MarketIds.USA,
-			impact: Impact.Medium,
-			marketType: MarketType.Stock,
-			imageUrl: randomInt(-1, 1) > 0 ? '/mock/widgets/price-chart/usa.svg' : undefined,
-		} as ICalendarEvent;
+			meta: {
+				title: 'S&P 500 Economic',
+				description: '',
+				datetime: (new Date(currentTime)).toJSON(),
+				image: randomInt(-1, 1) > 0 ? '/mock/widgets/price-chart/usa.svg' : '',
+				category: CalendarCategory.CryptoEvent,
+				country: CalendarCountryIds.Canada,
+				impact: CalendarImpact.High,
+			},
+			canonical_ticker_id: 'Stock-AMZW',
+			metrics: [],
+		};
 	});
 }
 
-const mockedEvents: ICalendarEvent[] = generateMock(
+const mockedEvents = generateMock(
 	sub(new Date(), { days: 2 }).getTime(),
 	sub(endOfDay(new Date()), { hours: 2 }).getTime(),
 	50,

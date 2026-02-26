@@ -1,6 +1,6 @@
 import { type IGetNewsDetailsRequest, type INewsSource, type ITicker, Sentiment } from '@/modules/news';
 import { useHttpService } from '@/shared/service/http-service.ts';
-import { useLogger } from '@/shared/service/logger';
+import { useLogger } from '@/shared/service/monitoring';
 import { getMockNewsDetailsData } from './mock/mock-news-details-data';
 import { delay, getImagePath } from '@/shared/lib';
 import { ImageTypePath } from '@/shared/lib/get-image-path.ts';
@@ -61,7 +61,7 @@ export async function getNewsDetails(req: IGetNewsDetailsRequest): Promise<IGetN
 		const response = await httpService.get<IGetNewsDetailsResponseItem>(`/api/v1/news/stories/${req.id}`);
 		return prepareResponse(response);
 	} catch (error) {
-		logger.error('Failed to get news details', error as Error);
+		logger.error('Failed to get news details', { error: error as Error });
 		throw error;
 	}
 }

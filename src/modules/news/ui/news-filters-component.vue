@@ -22,17 +22,16 @@ import {
 	Include,
 	ActiveDateRange,
 } from '../model';
-import { MarketType } from '@/modules/market';
+import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import { getSelectedCountryNames } from '@/modules/news';
 import { formatWithCount } from '@/shared/lib';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 import { type ITickerItem, SelectionMode } from '@/modules/ticker-selector';
 import { UiText } from '@/shared/ui/text';
+import { TickerSelectorModal, ModalBadgePreview } from '@/modules/ticker-selector';
 
 import NewsLocationFilterComponent from './news-location-filter-component.vue';
 import SortbyModalInner from '@/modules/news/ui/modal/sortby-modal-inner.vue';
-import TickerSelectorModal from '@/modules/ticker-selector/new/ticker-selector-modal.vue';
-import ModalBadgePreview from '@/modules/ticker-selector/new/components/badge/modal-badge-preview.vue';
 
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
@@ -119,7 +118,7 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 						<subposition-content v-if="present" placement="right-start">
 							<ticker-selector-modal
 								v-model:selected-markets="selectedMarkets"
-								:enabled-markets="Object.values(MarketType)"
+								:enabled-markets="ALL_MARKET_TYPES"
 								:selection-mode="SelectionMode.Multiple"
 								:display-variant="props.displayVariant"
 								enable-select-all

@@ -1,13 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-nocheck
 import { ref } from 'vue';
 
-import type {
-	IGenericTableColumn,
-	IGenericTableRow,
-	SortDirection,
-	IDragEvent,
-} from '../type';
+import type { IDragEvent, IGenericTableColumn, IGenericTableRow, SortDirection } from '../type';
 import { TableColumnType } from '../type';
 
 // Shared data functions

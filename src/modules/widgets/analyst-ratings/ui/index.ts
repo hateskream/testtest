@@ -1,0 +1,1 @@
+export { AnalystRatingsTickerWidget } from './ticker';

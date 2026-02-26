@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import type { ITickerMapped } from '@/modules/ticker-selector';
 import { TickerIconGlowEffect } from '@/shared/ui/ticker';
 
 import TickerIcon from './ticker-icon.vue';
 
+type TickerSrc = string | null | undefined;
+
 interface IProps {
-	src: ITickerMapped['srcImage'];
+	src: TickerSrc | [TickerSrc, TickerSrc];
 	ticker: string | string[];
 	size: number;
 	domain?: string;
+	disableGlow?: boolean;
 }
 
 defineProps<IProps>();
@@ -24,7 +26,7 @@ defineProps<IProps>();
 		<template v-for="(image, index) in src" :key="image">
 			<slot name="glow1">
 				<ticker-icon-glow-effect
-					v-if="image && ticker && index === 0"
+					v-if="image && ticker && index === 0 && !disableGlow"
 					:icon-src="image"
 					:style="{
 						width: `${size || 16}px`,
@@ -43,6 +45,7 @@ defineProps<IProps>();
 					:ticker="ticker?.[index]"
 					:domain="domain ?? src?.[1]!"
 					:size="size"
+					:disable-glow="disableGlow"
 				>
 					<template #glow v-if="index === 0" />
 

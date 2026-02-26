@@ -86,12 +86,21 @@ const defaultSettingsIndices: ISettings = {
 	},
 };
 
+const defaultSettingsEtf: ISettings = {
+	display: getDefaultsSettings(),
+	pinned: [],
+	filtersState: {
+		[FilterType.TimeRange]: TimeRangeFilterValue.Day,
+	},
+};
+
 const defaultSettingsByMarket: SettingsByMarketType = {
 	[MarketType.Crypto]: defaultSettingsCrypto,
 	[MarketType.Stock]: defaultSettingsStock,
 	[MarketType.Forex]: defaultSettingsForex,
 	[MarketType.Commodities]: defaultSettingsCommodities,
 	[MarketType.Indices]: defaultSettingsIndices,
+	[MarketType.Etf]: defaultSettingsEtf,
 };
 
 export function getDefaultsState(defaultStateType: string): IState {
@@ -121,6 +130,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 					[MarketType.Forex]: defaultSettingsForex,
 					[MarketType.Commodities]: defaultSettingsCommodities,
 					[MarketType.Indices]: defaultSettingsIndices,
+					[MarketType.Etf]: defaultSettingsEtf,
 				},
 			};
 		}
@@ -152,6 +162,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 				[MarketType.Forex]: defaultSettingsForex,
 				[MarketType.Commodities]: defaultSettingsCommodities,
 				[MarketType.Indices]: defaultSettingsIndices,
+				[MarketType.Etf]: defaultSettingsEtf,
 			},
 		};
 	}

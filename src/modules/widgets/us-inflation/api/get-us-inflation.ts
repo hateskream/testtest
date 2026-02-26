@@ -1,8 +1,9 @@
-import { useHttpService } from '@/shared/service/http-service';
-import { useLogger } from '@/shared/service/logger';
+import { z } from 'zod';
+
+import { useLogger } from '@/shared/service/monitoring';
+import { useApiClient } from '@/shared/service/api';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
-import type { IUSInflationDomain } from '../model';
 
 const IS_USE_MOCK = false;
 
@@ -10,8 +11,26 @@ export interface IGetUsInflationRequest {
 	widgetId: string;
 }
 
-export async function getUsInflation(request: IGetUsInflationRequest): Promise<IUSInflationDomain> {
-	const httpService = useHttpService();
+const YoYChangeSchema = z.object({
+	value: z.number(),
+	direction: z.enum(['up', 'down']),
+});
+
+const USInflationPointSchema = z.object({
+	label: z.string(),
+	value: z.number(),
+});
+
+export const GetUsInflationResponseSchema = z.object({
+	current_value: z.number(),
+	yoy_change: YoYChangeSchema,
+	chart: z.array(USInflationPointSchema).nonempty(),
+});
+
+export type GetUsInflationResponse = z.infer<typeof GetUsInflationResponseSchema>;
+
+export async function getUsInflation(request: IGetUsInflationRequest): Promise<GetUsInflationResponse> {
+	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
@@ -19,22 +38,21 @@ export async function getUsInflation(request: IGetUsInflationRequest): Promise<I
 			return await getMockData();
 		}
 
-		return await httpService.get<IUSInflationDomain>('/api/v1/us-inflation/data', {
+		return await client.get('/api/v1/us-inflation/data', GetUsInflationResponseSchema, {
 			query: {
 				widgetId: request.widgetId,
 			},
 		});
 	} catch (error) {
-		logger.error('Failed to get CPI data', error as Error);
+		logger.error('Failed to get US inflation data', { error: error as Error });
 		throw error;
 	}
 }
 
-const { getMock } = useFetchMock<IUSInflationDomain>('/mock/widgets/us-inflation.json');
+const { getMock } = useFetchMock<GetUsInflationResponse>('/mock/widgets/us-inflation.json');
 
 async function getMockData() {
 	await delay(500);
 
 	return await getMock();
 }
-

@@ -1,17 +1,19 @@
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 
 import { createStateQueries } from '@/shared/service/data-repo';
 import {
 	getDefaultState,
 	type IDisplaySettings,
 	type IState,
-	MarketCapDateRange,
 	type MarketCapType,
 	stateSchema,
+	type StateSchemaInputType,
 	type StateSchemaType,
 } from '../model';
 import { useQueryMarketCap } from '../queries';
 import { deepCompare } from '@/shared/lib/compare.ts';
+import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
+import type { DateRangeValue } from '@/modules/lightweight-charts/model';
 
 interface IOptions {
 	widgetId: string;
@@ -26,7 +28,7 @@ export function useMarketCap({
 		useStateQuery,
 		useStateMutation,
 		applyStateToParent,
-	} = createStateQueries<IState, StateSchemaType>({
+	} = createStateQueries<IState, StateSchemaType, StateSchemaInputType>({
 		isEphemeral,
 		storageKey: '__MARKET_CAP__',
 		isSaveChange: !isEphemeral,
@@ -45,10 +47,17 @@ export function useMarketCap({
 
 	const state = ref<IState>(getDefaultState());
 
+	const _selectedTickers = ref<ITickerItem[]>([]);
+
+	onBeforeMount(async () => {
+		_selectedTickers.value = await fetchTickers(state.value.selectedTickers);
+	});
+
 	const selectedTickers = computed({
-		get: () => state.value.selectedTickers,
-		set: (val: string[]) => {
-			state.value.selectedTickers = val;
+		get: () => _selectedTickers.value,
+		set: (val: ITickerItem[]) => {
+			_selectedTickers.value = val;
+			state.value.selectedTickers = val.map(v => v.canonical_ticker_id);
 		},
 	});
 
@@ -61,7 +70,7 @@ export function useMarketCap({
 
 	const activeDateRange = computed({
 		get: () => state.value.dateRange,
-		set: (val: MarketCapDateRange) => {
+		set: (val: DateRangeValue) => {
 			state.value.dateRange = val;
 		},
 	});
@@ -93,16 +102,12 @@ export function useMarketCap({
 		mutate(newState);
 	}, { deep: true });
 
-	function resetAllChanges() {
-		state.value = getDefaultState();
-	}
-
-	function resetAllFilters() {
+	async function resetAllChanges() {
 		const defaultState = getDefaultState();
 
 		activeDateRange.value = defaultState.dateRange;
-		selectedTickers.value = defaultState.selectedTickers;
 		selectedMarkets.value = defaultState.selectedMarkets;
+		selectedTickers.value = await fetchTickers(defaultState.selectedTickers);
 	}
 
 	const {
@@ -110,7 +115,11 @@ export function useMarketCap({
 		isLoading,
 		isError,
 		refetch,
-	} = useQueryMarketCap(selectedTickers, selectedMarkets, activeDateRange);
+	} = useQueryMarketCap(
+		() => selectedTickers.value.map(v => v.canonical_ticker_id),
+		selectedMarkets,
+		activeDateRange,
+	);
 
 	return {
 		selectedTickers,
@@ -124,6 +133,5 @@ export function useMarketCap({
 		refetch,
 		resetAllChanges,
 		applyStateToParent,
-		resetAllFilters,
 	};
 }
