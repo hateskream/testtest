@@ -1,7 +1,7 @@
 {
   "name": "i88-frontend",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,8 +14,8 @@
     "lint:css": "stylelint \"src/**/*.{vue,css}\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" ",
     "lint:fix": "concurrently \"npm:lint:js:ox -- --fix\" \"npm:lint:js:eslint -- --fix\" \"npm:lint:css -- --fix\"",
-		"validate:gitlab-envs": "node scripts/validate-gitlab-envs.mjs"
-	},
+    "validate:gitlab-envs": "node scripts/validate-gitlab-envs.mjs"
+  },
   "dependencies": {
     "@floating-ui/vue": "1.1.6",
     "@fontsource-variable/roboto-flex": "5.2.8",
