@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { useLogger } from '@/shared/service/monitoring';
 import { useFetchMock } from '@/shared/mock';
 import { delay } from '@/shared/lib';
@@ -10,21 +12,28 @@ export interface IGetCpiRequest {
 	range: CpiDateRangePresetType;
 }
 
+// TODO: Удалить, когда исправят на бекенде Range
+const ResponseSchema = z.preprocess(input => {
+	const value = input as z.infer<typeof CpiHistorySchema>;
+	return {
+		...value,
+		range: value.range.toUpperCase(),
+	};
+}, apiSchema(CpiHistorySchema));
+
 export async function getCpi(args: IGetCpiRequest) {
 	const httpService = useApiClient();
 	const logger = useLogger();
 
-	const schema = apiSchema(CpiHistorySchema);
-
 	try {
 		if (IS_USE_MOCK) {
 			const response = await getMockData(args);
-			return schema.parse(response);
+			return ResponseSchema.parse(response);
 		}
 
 		return httpService.get(
 			'/api/v1/cpi/data',
-			schema,
+			ResponseSchema,
 			{
 				query: {
 					range: args.range,
