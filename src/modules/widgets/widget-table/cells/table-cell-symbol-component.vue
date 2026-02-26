@@ -6,6 +6,7 @@ import { computed } from 'vue';
 import type { ITableSymbolCell } from '../model';
 import { UniversalTickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
+import { UiTooltipHint } from '@/shared/ui/tooltip-hint';
 
 interface IProps {
 	data: ITableSymbolCell;
@@ -96,12 +97,18 @@ const tickerIcon = computed(() => {
 			@click="handleClick"
 		>
 			<!-- Show ticker for all types -->
-			<ui-text
-				v-if="props.tickerState.isShowTicker && props.data.ticker"
-				token="text-300-r"
-			>
-				{{ props.data.ticker }}
-			</ui-text>
+			<ui-tooltip-hint v-if="props.tickerState.isShowTicker && props.data.ticker">
+				<template #trigger>
+					<ui-text
+						token="text-300-r"
+					>
+						{{ props.data.ticker }}
+					</ui-text>
+				</template>
+				<template #text>
+					{{ props.data.ticker }}
+				</template>
+			</ui-tooltip-hint>
 
 			<!-- Show Forex pair for Forex -->
 			<ui-text

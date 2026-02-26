@@ -132,13 +132,41 @@ const {
 });
 
 // Utility functions
-const getRealBackgroundColor = (element: HTMLElement | null): string => {
+
+function isTransparentColor(color: string): boolean {
+	if (!color || color === 'transparent') {
+		return true;
+	}
+
+	const slashMatch = color.match(
+		/rgba?\(\s*[\d.]+\s+[\d.]+\s+[\d.]+\s*\/\s*([\d.]+)(%?)\s*\)/i,
+	);
+	if (slashMatch) {
+		const alpha = parseFloat(slashMatch[1]);
+		const isPercent = slashMatch[2] === '%';
+		return (isPercent ? alpha / 100 : alpha) === 0;
+	}
+
+	const commaMatch = color.match(
+		/rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+(?:\s*,\s*([\d.]+))?\s*\)/i,
+	);
+	if (commaMatch) {
+		if (commaMatch[1] == null) {
+			return false;
+		}
+		return parseFloat(commaMatch[1]) === 0;
+	}
+
+	return false;
+}
+
+function getRealBackgroundColor(element: HTMLElement | null): string {
 	if (!element || element === document.body || element === document.documentElement) {
 		if (element) {
 			const computedElStyle = getComputedStyle(element);
 			const bgColor = computedElStyle.backgroundColor;
 
-			if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+			if (bgColor && !isTransparentColor(bgColor)) {
 				return bgColor;
 			}
 		}
@@ -148,17 +176,16 @@ const getRealBackgroundColor = (element: HTMLElement | null): string => {
 	const computedStyle = getComputedStyle(element);
 	const bgColor = computedStyle.backgroundColor;
 
-	if (bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)') {
+	if (bgColor && !isTransparentColor(bgColor)) {
 		return bgColor;
 	}
 
 	return getRealBackgroundColor(element.parentElement);
-};
+}
 
-const parseCssRgbOrRgba = (color: string): { rgb: string; a: string } => {
+function parseCssRgbOrRgba(color: string): { rgb: string; a: string } {
 	const c = (color || '').trim();
 
-	// rgb(20, 20, 21) / rgba(20, 20, 21, 0.92)
 	const m = c.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+)\s*)?\)$/i);
 	if (m) {
 		const r = Math.round(Number(m[1]));
@@ -167,14 +194,12 @@ const parseCssRgbOrRgba = (color: string): { rgb: string; a: string } => {
 		const a = m[4] != null ? String(Number(m[4])) : '1';
 		return { rgb: `${r} ${g} ${b}`, a };
 	}
-
-	// fallback: если пришло не rgb/rgba (var(...) и т.п.) — используем дефолт темы
 	return { rgb: '26 26 26', a: '1' };
 };
 
 const tableBgParts = computed(() => parseCssRgbOrRgba(tableBackgroundColor.value));
 
-const recalculateColumnWidths = async () => {
+async function recalculateColumnWidths() {
 	await nextTick();
 	const table = tableRef.value;
 	if (!table) {
@@ -286,7 +311,7 @@ const recalculateColumnWidths = async () => {
 	}
 };
 
-const handleColumnResize = (i, width) => {
+function handleColumnResize(i, width) {
 	if (columnLayout.value !== 'px') {
 		return;
 	}
@@ -296,27 +321,27 @@ const handleColumnResize = (i, width) => {
 	const newWidth = Math.min(maxWidth, Math.max(minWidth, width));
 	columnWidths.value[i] = `${newWidth}px`;
 	tableWidth.value = `${parseFloat(tableWidth.value) + newWidth - oldWidth}px`;
-};
+}
 
-// Event handlers
-const handleColumnsUpdate = (columns: IGenericTableColumn[]) => {
+
+function handleColumnsUpdate(columns: IGenericTableColumn[]) {
 	localColumns.value = [...columns];
 	recalculateColumnWidths();
 	tableWidth.value = 'auto';
 	emit('update:columns', columns);
-};
+}
 
-const handleSectionsUpdate = (sections: IGenericTableSection<T>[]) => {
+function handleSectionsUpdate(sections: IGenericTableSection<T>[]) {
 	localSections.value = [...sections];
 	emit('update:sections', sections);
-};
+}
 
-const handleUnsortedRowsUpdate = (rows: IGenericTableRow<T>[]) => {
+function handleUnsortedRowsUpdate(rows: IGenericTableRow<T>[]) {
 	localUnsortedRows.value = [...rows];
 	emit('update:unsorted-rows', rows);
-};
+}
 
-const handleSortUpdate = (config: ISortConfig) => {
+function handleSortUpdate(config: ISortConfig) {
 	localSortConfig.value = { ...config };
 	recalculateColumnWidths();
 	emit('update:sortConfig', config);
@@ -324,9 +349,9 @@ const handleSortUpdate = (config: ISortConfig) => {
 		columnKey: config.columnKey,
 		direction: config.direction,
 	});
-};
+}
 
-const handleRowMoved = (payload: IDragDropEvent<T>) => {
+function handleRowMoved(payload: IDragDropEvent<T>) {
 	if (payload.sectionId === 'unsorted') {
 		const updatedRows = [...localUnsortedRows.value];
 
@@ -366,9 +391,9 @@ const handleRowMoved = (payload: IDragDropEvent<T>) => {
 	}
 
 	emit('rowMoved', payload);
-};
+}
 
-const handleRowDeleted = (payload: { rowId: string; sectionId?: string }) => {
+function handleRowDeleted(payload: { rowId: string; sectionId?: string }) {
 	if (isSectionedTable.value && payload.sectionId) {
 		if (payload.sectionId === 'unsorted') {
 			const updatedRows = localUnsortedRows.value.filter(row => row.id !== payload.rowId);
@@ -391,9 +416,9 @@ const handleRowDeleted = (payload: { rowId: string; sectionId?: string }) => {
 	}
 
 	emit('rowDeleted', payload);
-};
+}
 
-const handleSectionToggled = (sectionId: string) => {
+function handleSectionToggled(sectionId: string) {
 	const updatedSections = localSections.value.map(section =>
 		section.id === sectionId
 			? { ...section, isCollapsed: !section.isCollapsed }
@@ -401,19 +426,19 @@ const handleSectionToggled = (sectionId: string) => {
 	);
 	handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
 	emit('sectionToggled', sectionId);
-};
+}
 
-const handleSectionAdded = (sectionName: string) => {
+function handleSectionAdded(sectionName: string) {
 	emit('sectionAdded', sectionName);
-};
+}
 
-const handleSectionDeleted = (sectionId: string) => {
+function handleSectionDeleted(sectionId: string) {
 	const updatedSections = localSections.value.filter(section => section.id !== sectionId);
 	handleSectionsUpdate(updatedSections as IGenericTableSection<T>[]);
 	emit('sectionDeleted', sectionId);
 };
 
-const handleSectionRenamed = (payload: { sectionId: string; newName: string }) => {
+function handleSectionRenamed(payload: { sectionId: string; newName: string }) {
 	const updatedSections = localSections.value.map(section =>
 		section.id === payload.sectionId
 			? { ...section, title: payload.newName }
@@ -423,20 +448,20 @@ const handleSectionRenamed = (payload: { sectionId: string; newName: string }) =
 	emit('sectionRenamed', payload);
 };
 
-const handleAnimationIteration = () => {
+function handleAnimationIteration() {
 	if (shouldFinishAnimation.value) {
 		isAnimating.value = false;
 		shouldFinishAnimation.value = false;
 	}
-};
+}
 
-const handleContainerMouseEnter = () => {
+function handleContainerMouseEnter() {
 	isContainerHovered.value = true;
-};
+}
 
-const handleContainerMouseLeave = () => {
+function handleContainerMouseLeave() {
 	isContainerHovered.value = false;
-};
+}
 
 // Watchers
 watch(() => props.columns, (newColumns) => {
@@ -481,7 +506,7 @@ watch(() => props.isUpdating, (newValue) => {
 let resizeObserver: ResizeObserver | null = null;
 let onWinResize: (() => void) | null = null;
 
-// Lifecycle hooks
+
 onMounted(() => {
 	if (props.backgroundColor) {
 		tableBackgroundColor.value = props.backgroundColor;
