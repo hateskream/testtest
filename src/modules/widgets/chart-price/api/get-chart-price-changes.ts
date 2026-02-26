@@ -6,7 +6,7 @@ import { apiSchema, useApiClient } from '@/shared/service/api';
 import { PriceChangesSchema } from '../model';
 import { useFetchMock } from '@/shared/mock';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export type GetChartPriceChangesRequest = {
 	ticker: string;
@@ -29,7 +29,7 @@ export function getChartPriceChanges(request: GetChartPriceChangesRequest) {
 
 	try {
 		return apiClient.get(
-			'/api/v1/price_chart/history',
+			'/api/v1/price_chart/changes',
 			ChartPriceChangesResponseSchema,
 			{ query: request },
 		);
