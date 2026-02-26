@@ -89,6 +89,8 @@ defineExpose({ snapHeightToNearestStep });
 				:value="props.tension.tension"
 				:color="tensionText.colors.chart"
 				:segments="SPEEDOMETER_SEGMENTS"
+				:width="180"
+				show-blur
 			/>
 			<ui-speedometer-description
 				:value="props.tension.tension"
@@ -113,7 +115,6 @@ defineExpose({ snapHeightToNearestStep });
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	margin-top: 12px;
 	gap: 25px 32px;
 }
 

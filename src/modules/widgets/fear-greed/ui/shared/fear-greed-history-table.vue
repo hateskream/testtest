@@ -26,7 +26,7 @@ const props = defineProps<{
 				v-for="item in props.history"
 				:key="item.name"
 			>
-				<ui-text token="text-100-r">
+				<ui-text :class="classes.name" token="text-100-r">
 					{{ item.name }}
 				</ui-text>
 
@@ -51,5 +51,9 @@ const props = defineProps<{
 	justify-content: space-between;
 	align-items: center;
 	padding: 4px 0;
+}
+
+.name {
+	color: var(--text-300, rgb(255 255 255 / 62%));
 }
 </style>
