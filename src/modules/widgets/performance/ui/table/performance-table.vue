@@ -14,6 +14,7 @@ interface IPerformanceTableProps {
 	rows: PerformanceTableRow[];
 	columns: ITableColumn[];
 	displayVariant: DisplayVariant;
+	enableTickerClick?: boolean;
 }
 
 const props = defineProps<IPerformanceTableProps>();
@@ -65,7 +66,7 @@ const emit = defineEmits<{
 				:sticky-header="true"
 				:sticky-first-column="true"
 				:enable-row-actions="false"
-				:disable-ticker-click="true"
+				:disable-ticker-click="!props.enableTickerClick"
 				:hide-description="isMobile"
 				@click-on-ticker="goToTickerPage"
 			>

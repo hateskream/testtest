@@ -1,4 +1,4 @@
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, type Ref, watch } from 'vue';
 import { z } from 'zod';
 
 import {
@@ -10,6 +10,7 @@ import {
 	getDefaultState,
 	type IState,
 	type ITicker,
+	type PerformanceMarketType,
 	Stock,
 	SymbolDisplayVariant,
 } from '../model';
@@ -83,7 +84,7 @@ export function usePerformance({
 
 	const activeMarket = computed({
 		get: () => state.value.activeMarket,
-		set: (val: MarketType.Stock | MarketType.Forex) => {
+		set: (val: PerformanceMarketType) => {
 			state.value.activeMarket = val;
 		},
 	});

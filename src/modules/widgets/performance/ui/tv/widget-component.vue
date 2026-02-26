@@ -76,13 +76,8 @@ const {
 			<performance-loader v-else-if="isLoading || props.meta.isLoading" />
 			<view-component
 				v-else-if="tickers.length"
-				v-model:active-market="activeMarket"
-				v-model:is-compact-mode="isCompactMode"
 				v-model:display-variant="currentDisplayVariant"
-				v-model:stock="currentStock"
-				v-model:date="currentDate"
-				v-model:symbol-display="currentSymbolDisplayVariant"
-				v-model:quote-currency="quoteCurrency"
+				:active-market="activeMarket"
 				:rows="tickers"
 				:columns="ALL_COLUMNS"
 			/>

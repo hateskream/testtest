@@ -28,8 +28,9 @@ export function useSlider(opts: {
 	viewportWidth: MaybeRefOrGetter<number>;
 	container: MaybeRefOrGetter<HTMLDivElement | null>;
 	isMobile: ShallowRef<boolean, boolean>;
+	dragThreshold?: number;
 }) {
-	const { slidesWidth, gap = 0, viewportWidth, isMobile } = opts;
+	const { slidesWidth, gap = 0, viewportWidth, isMobile, dragThreshold = 5 } = opts;
 
 	const logger = useLogger();
 
@@ -77,13 +78,13 @@ export function useSlider(opts: {
 
 	watch(
 		isDragging,
-		() => {
+		(value) => {
 			const el = toValue(opts.container);
 			if (!el) {
 				return;
 			}
 
-			if (isDragging.value) {
+			if (value) {
 				el.style.scrollSnapType = 'none';
 				el.style.scrollBehavior = 'auto';
 			} else {
@@ -167,6 +168,8 @@ export function useSlider(opts: {
 
 	let startX = 0;
 	let startScrollLeft = 0;
+	let moveIsStarted = false;
+	let pointerIsDown = false;
 
 	function onPointerDown(e: PointerEvent) {
 		const el = toValue(opts.container);
@@ -176,25 +179,39 @@ export function useSlider(opts: {
 
 		e.preventDefault();
 
-		isDragging.value = true;
-
 		startX = e.clientX;
 		startScrollLeft = el.scrollLeft;
-		el.setPointerCapture(e.pointerId);
+
+		moveIsStarted = false;
+		pointerIsDown = true;
+		isDragging.value = false;
 	}
 
 	function onPointerMove(e: PointerEvent) {
-		if (!isDragging.value) {
+		if (!pointerIsDown) {
 			return;
 		}
 
 		const dx = e.clientX - startX;
+
+		if (!moveIsStarted && Math.abs(dx) > dragThreshold) {
+			moveIsStarted = true;
+			isDragging.value = true;
+
+			const el = toValue(opts.container);
+			if (el) {
+				el.setPointerCapture(e.pointerId);
+			}
+		}
+
 		const nextScroll = startScrollLeft - dx;
 
 		setScrollRAF(nextScroll);
 	}
 
 	function onPointerUp(event: PointerEvent) {
+		pointerIsDown = false;
+
 		if (!isDragging.value) {
 			return;
 		}

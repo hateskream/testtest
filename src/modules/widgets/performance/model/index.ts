@@ -4,3 +4,4 @@ export * from './display';
 export * from './filters';
 export * from './state';
 export * from './quote-currency';
+export * from './market-type';

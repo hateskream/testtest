@@ -33,10 +33,6 @@ router.beforeEach((to) => {
 		}
 	}
 
-	if (!isFeatureEnabled('TICKER_NAVIGATION_ENABLED') && to.path.startsWith('/ticker')) {
-		return false;
-	}
-
 	if (to.name === RouteNames.Offline) {
 		if (!isOnline()) {
 			return true;

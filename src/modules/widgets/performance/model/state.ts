@@ -1,7 +1,8 @@
 import { MarketType } from '@/modules/market';
 import { DisplayVariant, SymbolDisplayVariant } from './display';
-import { DateRangeStock, DateRangeForex, Stock } from './filters';
+import { DateRangeForex, DateRangeStock, Stock } from './filters';
 import { Currency } from './quote-currency';
+import type { PerformanceMarketType } from './market-type.ts';
 
 export interface ISettingsBase {
 	displayVariant: DisplayVariant;
@@ -26,7 +27,7 @@ export type SettingsByMarket = {
 };
 
 export interface IState {
-	activeMarket: MarketType.Stock | MarketType.Forex;
+	activeMarket: PerformanceMarketType;
 	settings: SettingsByMarket;
 }
 

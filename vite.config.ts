@@ -1,6 +1,6 @@
 import path from 'path';
 
-import type { Plugin } from 'vite';
+import type { Plugin, ProxyOptions } from 'vite';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
@@ -29,6 +29,19 @@ const filterDeepWarnings = (): Plugin => {
 			};
 		},
 	};
+};
+
+// The backend WAF treats percent-encoded special chars (e.g. %5E for ^) in headers as
+// LDAP injection. Strip origin and referer before forwarding, and preserve the raw
+// request path so node-http-proxy doesn't re-encode it.
+const sanitizeProxyRequest: NonNullable<ProxyOptions['configure']> = (proxy) => {
+	proxy.on('proxyReq', (proxyReq, req) => {
+		if (req.url) {
+			proxyReq.path = req.url;
+		}
+		proxyReq.removeHeader('origin');
+		proxyReq.removeHeader('referer');
+	});
 };
 
 // https://vite.dev/config/
@@ -62,11 +75,13 @@ export default defineConfig({
 			'/api/feedback': {
 				target: 'https://demo-dev.planet9.uk/',
 				changeOrigin: true,
+				configure: sanitizeProxyRequest,
 			},
 			'/api': {
 				target: 'https://gateway.planet9.uk',
 				changeOrigin: true,
 				secure: true,
+				configure: sanitizeProxyRequest,
 			},
 		},
 	},

@@ -83,6 +83,7 @@ const {
 			<view-component
 				v-else-if="tickers.length"
 				v-model:display-variant="currentDisplayVariant"
+				:active-market="activeMarket"
 				:rows="tickers"
 				:columns="ALL_COLUMNS"
 			/>
