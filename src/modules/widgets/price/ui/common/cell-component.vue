@@ -29,6 +29,7 @@ const props = defineProps<ICellComponentProps>();
 
 const emit = defineEmits<{
 	(e: 'togglePin', tickerId: string): void;
+	(e: 'ticker-select', tickerId: string): void;
 }>();
 
 const label = computed(() =>
@@ -66,7 +67,11 @@ const preparedPrice = computed(() => getNumberText(props.ticker.priceCurrent));
 </script>
 
 <template>
-	<div :class="classes.root" data-icon-glow-trigger>
+	<div
+		:class="classes.root"
+		data-icon-glow-trigger
+		@click="emit('ticker-select', props.ticker.tickerId)"
+	>
 		<div :class="classes.content">
 			<ui-transition-fade>
 				<div v-if="props.settings.isShowLogo && meta.size.w > 1">
@@ -117,14 +122,8 @@ const preparedPrice = computed(() => getNumberText(props.ticker.priceCurrent));
 		<div
 			v-if="props.hasPin"
 			:class="classes.hoverActions"
-			:style="
-				props.ticker.isPined
-					? {
-						display: 'flex',
-					}
-					: {}
-			"
-			@click="emit('togglePin', props.ticker.tickerId)"
+			:style="{ display: props.ticker.isPined ? 'flex' : undefined }"
+			@click.stop="emit('togglePin', props.ticker.tickerId)"
 		>
 			<ui-icon
 				v-if="props.ticker.isPined"

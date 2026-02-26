@@ -6,6 +6,7 @@ import type { IMeta } from '@/modules/dashboard-group';
 import { usePrice } from '../../composables';
 import { PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading/model.ts';
+import { useGoToTickerPage } from '@/modules/ticker';
 
 import RcmPriceComponent from './rcm-price-component.vue';
 import HeaderComponent from './header-component.vue';
@@ -43,6 +44,8 @@ const {
 	defaultStateType: props.meta.defaultStateType,
 	maxCountRows: props.meta.maxCountRowTable,
 });
+
+const { goToTickerPage } = useGoToTickerPage();
 
 const emit = defineEmits<{
 	(e: 'delete'): void;
@@ -88,6 +91,7 @@ async function loadMoreTickets(state: IInfiniteStateHandler) {
 				has-infinity-loading
 				@load-more="loadMoreTickets"
 				@toggle-pin="togglePin"
+				@ticker-select="goToTickerPage($event)"
 			>
 				<template #header>
 					<header-component
