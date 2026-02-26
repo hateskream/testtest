@@ -6,6 +6,7 @@ import { defineSeriesConfig } from '../../base';
 export const rsiSeriesConfig = defineSeriesConfig({
 	definition: LineSeries,
 	paneIndex: 1,
+	isPrice: false,
 	options: {
 		color: '#7e57c2',
 		lineStyle: LineStyle.Solid,

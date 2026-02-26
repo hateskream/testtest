@@ -104,12 +104,20 @@ export interface ISharedChartElement extends HTMLElement {
 	addSeries<T extends SeriesType>(
 		definition: SeriesDefinition<T>,
 		options?: SeriesPartialOptionsMap[T],
-		paneIndex?: number
+		paneIndex?: number,
+		isPrice?: boolean,
 	): ISeriesApi<T> | null;
 	removeSeries(seriesApi: ISeriesApi<SeriesType, Time>): void;
 }
 
-const series = shallowReactive<ISeriesApi<SeriesType, Time>[]>([]);
+type SeriesItem = {
+	api: ISeriesApi<SeriesType, Time>;
+	meta: {
+		isPrice: boolean;
+	};
+};
+
+const series = shallowReactive<SeriesItem[]>([]);
 
 const container = useTemplateRef<ISharedChartElement>('container');
 
@@ -238,27 +246,32 @@ function updateTooltipState(state: ChartClickData | null) {
 
 	tooltipState.title = [tooltipDateFormatter.value.format(date)];
 
-	tooltipState.rows = series.reduce((acc, seriesApi) => {
-		const point = (seriesApi.data() as ChartData[]).find(pnt => pnt.time === state.time);
-		if (point) {
-			const options = seriesApi.options() as SeriesOptionsMap['Line'];
-			const value = isCandlestickData(point) ? point.close : point.value;
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define
+	const precision = chartPrecision.value;
 
-			acc.push({
-				text: options.title,
-				value: `$${formatPrice(value)}`,
-				color: options.color,
-			});
-		}
+	tooltipState.rows = series.reduce(
+		(acc, seriesItem) => {
+			const point = (seriesItem.api.data() as ChartData[]).find(pnt => pnt.time === state.time);
+			if (point) {
+				const options = seriesItem.api.options() as SeriesOptionsMap['Line'];
+				const value = isCandlestickData(point) ? point.close : point.value;
 
-		return acc;
-	}, [
-		{
-			text: 'Price',
-			value: `$${formatPrice(state.value)}`,
-			color: tooltipRowColor.value,
+				acc.push({
+					text: options.title,
+					value: seriesItem.meta.isPrice ? `$${value.toFixed(precision)}` : value.toFixed(2),
+					color: options.color,
+				});
+			}
+
+			return acc;
 		},
-	],
+		[
+			{
+				text: 'Price',
+				value: `$${formatPrice(state.value)}`,
+				color: tooltipRowColor.value,
+			},
+		],
 	);
 
 	tooltipState.visible = true;
@@ -337,10 +350,11 @@ const addSeries = <T extends SeriesType>(
 	definition: SeriesDefinition<T>,
 	options?: SeriesPartialOptionsMap[T],
 	paneIndex?: number,
+	isPrice = true,
 ) => {
 	const api = container.value?.addSeries?.(definition, options, paneIndex);
 	if (api) {
-		series.push(api);
+		series.push({ api, meta: { isPrice } });
 	}
 
 	return api;
@@ -349,7 +363,7 @@ const addSeries = <T extends SeriesType>(
 function removeSeries(seriesApi: ISeriesApi<SeriesType, Time>) {
 	container.value?.removeSeries?.(seriesApi);
 
-	const index = series.indexOf(seriesApi);
+	const index = series.findIndex(item => item.api === seriesApi);
 	if (index !== -1) {
 		series.splice(index, 1);
 	}

@@ -56,7 +56,12 @@ export function useChartContextIndicators(
 		indicatorInstance.calculate(context.getAll());
 
 		const config = getIndicatorSeriesConfig(indicator);
-		const series = chartValue.addSeries(config.definition, config.options, config.paneIndex);
+		const series = chartValue.addSeries(
+			config.definition,
+			config.options,
+			config.paneIndex,
+			config.isPrice ?? true,
+		);
 		if (series) {
 			const data = mapIndicatorToBaselineSeries(indicatorInstance.getResult());
 			series.setData(data);
