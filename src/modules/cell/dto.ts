@@ -5,6 +5,7 @@ export type Nullable<T> = { [P in keyof T]: T[P] | null | undefined };
 export type BaseDto = {
 	cellType: CellType;
 	columnType: ColumnType;
+	tickerDisplayName?: string;
 };
 
 export type IIndexSymbolDto = BaseDto & Nullable<{

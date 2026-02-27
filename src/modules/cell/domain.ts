@@ -115,9 +115,13 @@ export enum CellType {
 }
 
 export enum Trend {
-	UP = 'increase',
-	DOWN = 'decrease',
-	NEUTRAL = 'stable',
+	INCREASE = 'increase',
+	UP = 'up',
+	DECREASE = 'decrease',
+	DOWN = 'down',
+	STABLE = 'stable',
+	NEUTRAL = 'neutral',
+
 }
 
 export enum Magnitude {
@@ -158,6 +162,7 @@ export interface ISymbolCellBase extends IBaseCell {
 	cellType: CellType.Symbol;
 	columnType: ColumnType.Symbol;
 	symbolType: SymbolType;
+	tickerDisplayName?: string;
 }
 
 export interface IIndexSymbolCell extends ISymbolCellBase {

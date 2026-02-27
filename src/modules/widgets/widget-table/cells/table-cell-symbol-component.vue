@@ -62,7 +62,16 @@ const tickerIcon = computed(() => {
 	) {
 		return {
 			symbol: data.symbolType,
-			src: data.srcImg,
+			src: [data.srcImg],
+			ticker: data.ticker || '',
+			size: 20,
+		};
+	}
+
+	if (data.srcImg && props.tickerState.isShowLogo) {
+		return {
+			symbol: data.symbolType,
+			src: [data.srcImg],
 			ticker: data.ticker || '',
 			size: 20,
 		};
@@ -81,6 +90,7 @@ const tickerIcon = computed(() => {
 			:right-src="tickerIcon.src?.[1]"
 			:size="tickerIcon.size"
 			:ticker="tickerIcon.ticker"
+			disable-glow
 		/>
 
 		<div
@@ -102,13 +112,14 @@ const tickerIcon = computed(() => {
 					<ui-text
 						token="text-300-r"
 					>
-						{{ props.data.ticker }}
+						{{ props.data.tickerDisplayName ? props.data.tickerDisplayName : props.data.ticker }}
 					</ui-text>
 				</template>
 				<template #text>
-					{{ props.data.ticker }}
+					{{ props.data.tickerDisplayName ? props.data.tickerDisplayName : props.data.ticker }}
 				</template>
 			</ui-tooltip-hint>
+
 
 			<!-- Show Forex pair for Forex -->
 			<ui-text

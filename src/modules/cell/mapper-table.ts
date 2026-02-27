@@ -72,6 +72,7 @@ function mapSymbolToTable(cell: Cell) {
 			srcImg: cell.srcImg,
 			ticker: cell.ticker,
 			blockchain: cell.blockchain,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
@@ -81,6 +82,7 @@ function mapSymbolToTable(cell: Cell) {
 			srcImg: cell.srcImg,
 			ticker: cell.ticker,
 			companyName: cell.companyName,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
@@ -90,6 +92,7 @@ function mapSymbolToTable(cell: Cell) {
 			srcImg: cell.srcImg,
 			ticker: cell.ticker,
 			indexName: cell.indexName,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
@@ -99,6 +102,7 @@ function mapSymbolToTable(cell: Cell) {
 			srcImg: cell.srcImg,
 			ticker: cell.ticker,
 			commodityName: cell.commodityName,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
@@ -109,6 +113,7 @@ function mapSymbolToTable(cell: Cell) {
 			leftSrcImg: cell.leftSrcImg,
 			rightTicker: cell.rightTicker,
 			leftTicker: cell.leftTicker,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
@@ -117,12 +122,14 @@ function mapSymbolToTable(cell: Cell) {
 			symbolType: cell.symbolType,
 			srcImg: cell.srcImg,
 			ticker: cell.ticker,
+			...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 		};
 	}
 
 	return {
 		symbolType: cell.symbolType,
 		text: cell.text,
+		...(cell.tickerDisplayName ? { tickerDisplayName: cell.tickerDisplayName } : {}),
 	};
 }
 
@@ -164,9 +171,13 @@ function mapPercentToTable(cell: Cell) {
 	if (!isPercentCell(cell)) {
 		return mapEmptyToTable(cell);
 	}
+	const cellTrend = cell.trend.toLowerCase();
+
+	const isPositive = cellTrend === Trend.UP || cellTrend === Trend.INCREASE
+	|| cellTrend === Trend.NEUTRAL || cellTrend === Trend.STABLE;
 
 	return {
-		value: cell.trend === Trend.UP || cell.trend === Trend.NEUTRAL ? cell.value : `-${cell.value}`,
+		value: isPositive ? cell.value : `-${cell.value}`,
 		maxAbsValue: cell.maxAbsValue,
 	};
 }
@@ -186,8 +197,10 @@ function mapLabelToTable(cell: Cell) {
 		return mapEmptyToTable(cell);
 	}
 
+	const label = cell.value.toLowerCase();
+
 	return {
-		value: cell.value,
+		value: label,
 	};
 }
 

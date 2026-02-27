@@ -22,11 +22,17 @@ interface IGetTopIndicesRequest {
 	offset: number;
 }
 
+interface ICountryDto {
+	text: string;
+	value: string;
+}
+
 export type TickerDto = TableRowDto<{
 	[ColumnType.Symbol]: SymbolDto;
 	[ColumnType.ChangePrice24hPercent]: PercentDto;
 	[ColumnType.ChangePrice24h]: NumberDto;
 	[ColumnType.Volatility]: LabelDto;
+	country: ICountryDto;
 }>;
 
 interface IPagination {
@@ -47,6 +53,33 @@ interface IGetTopIndicesResponse {
 export interface IPreparedResponse {
 	tickers: TopIndicesTableRow[];
 	pagination: IPagination;
+}
+
+//remape, данные с апи не совпадают с тем что когда-то ожидалось
+function prepareResponse(data: IData): IPreparedResponse {
+	const tickers = data?.tickers ?? [];
+	const pagination = data?.pagination ?? { total: 0, offset: 0, limit: 0 };
+
+	const remappedTickers = tickers.map(ticker => ({
+		...ticker,
+		symbol: {
+			...ticker.symbol,
+			...(ticker.symbol.symbolType === 'Index' ? { tickerDisplayName: ticker.symbol.indexName } : {}),
+			...(ticker.country.text ? { indexName: ticker.country.text } : {}),
+		},
+	}));
+
+	const mappedTickers = mapTickersToTableRows<TopIndicesTableRow>(remappedTickers as unknown as TableRowDto[]).map(
+		ticker => ({
+			...ticker,
+			tickerId: createTickerIdFromCell(ticker.symbol),
+		}),
+	);
+
+	return {
+		tickers: mappedTickers,
+		pagination,
+	};
 }
 
 export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<IPreparedResponse> {
@@ -72,22 +105,6 @@ export async function getTopIndicesCrypto(req: IGetTopIndicesRequest): Promise<I
 	}
 }
 
-function prepareResponse(data: IData): IPreparedResponse {
-	const tickers = data?.tickers ?? [];
-	const pagination = data?.pagination ?? { total: 0, offset: 0, limit: 0 };
-
-	const mappedTickers = mapTickersToTableRows<TopIndicesTableRow>(tickers as unknown as TableRowDto[]).map(
-		ticker => ({
-			...ticker,
-			tickerId: createTickerIdFromCell(ticker.symbol),
-		}),
-	);
-
-	return {
-		tickers: mappedTickers,
-		pagination,
-	};
-}
 
 const columnTypes: ColumnWithoutSymbol[] = [
 	ColumnType.ChangePrice24hPercent,

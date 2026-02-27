@@ -53,6 +53,7 @@ export function mapSymbol(dto: CellDto): ISymbolCell | IEmptyCell {
 			cellType: dto.cellType,
 			columnType: dto.columnType,
 			symbolType: dto.symbolType,
+			...(dto.tickerDisplayName ? { tickerDisplayName: dto.tickerDisplayName } : {}),
 		};
 
 		if (isIndexSymbolDto(dto)) {

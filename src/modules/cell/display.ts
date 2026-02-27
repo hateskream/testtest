@@ -34,8 +34,11 @@ export interface IPercentData {
 
 const trendToColor: Record<Trend, string> = {
 	[Trend.UP]: 'var(--color-metrics-positive, #04EDA0)',
+	[Trend.INCREASE]: 'var(--color-metrics-positive, #04EDA0)',
 	[Trend.DOWN]: 'var(--color-metrics-negative-copy, #FC4A6B)',
+	[Trend.DECREASE]: 'var(--color-metrics-negative-copy, #FC4A6B)',
 	[Trend.NEUTRAL]: 'rgba(250, 250, 250, 1)',
+	[Trend.STABLE]: 'rgba(250, 250, 250, 1)',
 };
 
 export function getPercentData(cell: IPercentCell): IPercentData {

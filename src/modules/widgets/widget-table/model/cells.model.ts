@@ -13,6 +13,7 @@ export interface ITableSymbolCell {
 	rightTicker?: string; // Optional: used by Forex
 	leftTicker?: string; // Optional: used by Forex
 	text?: string; // Optional: used by PlainText
+	tickerDisplayName?: string; //Optional: need when ticker name and ticker Display name different
 }
 
 export interface ITableNumberCell {
