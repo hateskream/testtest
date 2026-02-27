@@ -89,6 +89,5 @@ const {
 	flex-direction: column;
 	width: 100%;
 	gap: 18px;
-	height: 100%;
 }
 </style>
