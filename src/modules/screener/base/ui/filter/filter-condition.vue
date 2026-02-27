@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { ModalFilter, ModalItemInteraction } from '@/modules/widgets/base';
+import { ModalItemInteraction } from '@/modules/widgets/base';
+import { UiSubposition } from '@/shared/ui/position';
+import { UiModalWrapper, UiModalContent, UiModalTitle } from '@/shared/ui/modal';
 import type { IFilterPreset, IFilterState } from '../../model';
-import { UiPosition } from '@/shared/ui/position';
 
 import FilterRadioGroup from './filter-radio-group.vue';
 
@@ -28,8 +29,8 @@ const props = defineProps<IFilterConditionProps>();
 		:key-numbers="props.keyNumbers"
 	>
 		<template #footer-actions v-if="props.manualSetup">
-			<ui-position
-				:teleport="false"
+			<ui-subposition
+				:trigger="['hover', 'click']"
 				position="right-start"
 			>
 				<template #title>
@@ -46,16 +47,16 @@ const props = defineProps<IFilterConditionProps>();
 					</modal-item-interaction>
 				</template>
 				<template #content>
-					<modal-filter>
-						<template #title>
+					<ui-modal-wrapper display-variant="new">
+						<ui-modal-title>
 							Manual Setup
-						</template>
-						<template #content>
+						</ui-modal-title>
+						<ui-modal-content>
 							Manual Setup Handling
-						</template>
-					</modal-filter>
+						</ui-modal-content>
+					</ui-modal-wrapper>
 				</template>
-			</ui-position>
+			</ui-subposition>
 		</template>
 	</filter-radio-group>
 </template>

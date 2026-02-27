@@ -47,10 +47,10 @@ const {
 
 <style module="classes">
 .container {
-	padding: 20px;
 	display: flex;
-	flex-direction: column;
 	flex-grow: 1;
+	flex-direction: column;
+	padding: 20px;
 }
 
 .header {

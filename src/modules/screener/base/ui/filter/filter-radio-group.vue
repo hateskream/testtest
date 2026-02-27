@@ -3,7 +3,7 @@ import { computed, watch } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { IconIds } from '@/shared/ui/icon';
-import { ModalItemSelector } from '@/modules/widgets/base';
+import { UiModalItemNumbered } from '@/shared/ui/modal-items';
 import type { IFilterPreset, IFilterState } from '../../model';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiDriver } from '@/shared/ui/driver';
@@ -58,10 +58,11 @@ watch(() => props.keyNumbers, value => {
 
 <template>
 	<div>
-		<modal-item-selector
+		<ui-modal-item-numbered
 			v-for="(preset, index) in props.presets"
 			:key="preset.id"
 			:model-value="selectedPresetId === preset.id"
+			:number="index + 1"
 			:class="classes.selector"
 			@update:model-value="select(preset)"
 		>
@@ -72,10 +73,7 @@ watch(() => props.keyNumbers, value => {
 					<span :class="classes.description">{{preset.description}}</span>
 				</template>
 			</div>
-			<div v-if="props.keyNumbers && index < 9 && modelValue?.presetId !== preset.id" :class="classes.number">
-				{{ index + 1 }}
-			</div>
-		</modal-item-selector>
+		</ui-modal-item-numbered>
 		<ui-transition-fade>
 			<div v-if="hasSelectedValue && !props.required || $slots['footer-actions']">
 				<ui-driver />
