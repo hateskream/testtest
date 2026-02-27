@@ -202,12 +202,6 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 			>
 				Symbols
 			</modal-item-switch>
-			<modal-item-switch
-				:model-value="displaySettings.isShowScore"
-				@update:model-value="toggleDisplaySettings('isShowScore')"
-			>
-				Score
-			</modal-item-switch>
 		</template>
 
 		<template #filter>

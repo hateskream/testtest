@@ -99,19 +99,22 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 		<subposition-root trigger="hover" v-slot="{isOpen}">
 			<subposition-trigger>
 				<modal-item-interaction>
-					<span style="display: flex;">
-						<ui-text token="text-300-r">Tickers ·&nbsp;</ui-text>
-						<modal-badge-preview
-							font-token="text-300-r"
-							:selected-tickers="selectedTickers"
-							:selected-markets="selectedMarkets"
-							:excluded-tickers="excludedTickers"
-							:selected-market-tickers="[]"
-							:display-variant="props.displayVariant"
-							:show-icon="false"
-							show-label
-						/>
-					</span>
+					<ui-text :class="classes.labelRow" token="text-300-r">
+						Tickers
+						<span :class="classes.dot">·</span>
+						<span :class="classes.additional">
+							<modal-badge-preview
+								font-token="text-300-r"
+								:selected-tickers="selectedTickers"
+								:selected-markets="selectedMarkets"
+								:excluded-tickers="excludedTickers"
+								:selected-market-tickers="[]"
+								:display-variant="props.displayVariant"
+								:show-icon="false"
+								show-label
+							/>
+						</span>
+					</ui-text>
 				</modal-item-interaction>
 			</subposition-trigger>
 			<position-teleport>
@@ -136,9 +139,13 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 		<subposition-root trigger="hover" v-slot="{isOpen}">
 			<subposition-trigger>
 				<modal-item-interaction>
-					<span>Location
-						<span v-if="locationLabel" :class="classes.additional">· {{locationLabel}}</span>
-					</span>
+					<ui-text :class="classes.labelRow" token="text-300-r">
+						Location
+						<template v-if="locationLabel">
+							<span :class="classes.dot">·</span>
+							<span :class="classes.additional">{{ locationLabel }}</span>
+						</template>
+					</ui-text>
 				</modal-item-interaction>
 			</subposition-trigger>
 			<position-teleport>
@@ -185,7 +192,10 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 
 		<modal-item :class="classes.select">
 			<div :class="classes.rowTitle">Date range</div>
-			<ui-segmented-control v-model="activeDateRange">
+			<ui-segmented-control
+				v-model="activeDateRange"
+				:class="classes.segment"
+			>
 				<ui-segmented-control-item
 					v-for="date in ActiveDateRange"
 					:key="date"
@@ -209,6 +219,10 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 <style module="classes">
 .container {
 	width: 389px;
+}
+
+.segment {
+	flex: unset;
 }
 
 .tabs {
@@ -252,5 +266,18 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 	gap: 8px;
 }
 
+.labelRow {
+	display: flex;
+	align-items: center;
+}
+
+.dot {
+	margin: 0 6px;
+	color: var(--color-text-base-300, #9a9a9d);
+}
+
+.additional {
+	color: var(--color-text-base-300, #9a9a9d);
+}
 
 </style>

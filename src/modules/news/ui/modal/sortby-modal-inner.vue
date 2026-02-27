@@ -19,8 +19,10 @@ function toggleSortBy(sort: SortState) {
 		<template v-if="typeof name === 'string'">
 			{{ name }}
 		</template>
-		<div v-else>
-			{{name.value}} · <span :class="[classes.additional, sortBy === key && classes.active]">
+		<div v-else :class="classes.labelRow">
+			{{name.value}}
+			<span :class="classes.dot">·</span>
+			<span :class="[classes.additional, sortBy === key && classes.active]">
 				{{name.additional}}
 			</span>
 		</div>
@@ -28,6 +30,16 @@ function toggleSortBy(sort: SortState) {
 </template>
 
 <style module="classes">
+.labelRow {
+	display: flex;
+	align-items: center;
+}
+
+.dot {
+	margin: 0 6px;
+	color: var(--color-text-base-300, #9a9a9d);
+}
+
 .additional {
 	color: var(--color-text-base-300, #9a9a9d);
 }
