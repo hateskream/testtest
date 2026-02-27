@@ -75,11 +75,6 @@ defineExpose({
 </template>
 
 <style scoped>
-.floating-inner {
-	z-index: 101;
-	border-radius: 6px;
-}
-
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.15s ease;

@@ -9,7 +9,7 @@ import {
 } from '@floating-ui/vue';
 
 import { matchesTrigger } from '../utils';
-import { usePinnedStack, useFloatingContext } from '../composables';
+import { usePinnedLevel, usePinnedStack, useFloatingContext } from '../composables';
 import { type IPositionContentProps, parseAutoUpdate } from '../model';
 
 const props = withDefaults(defineProps<IPositionContentProps>(), {
@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<IPositionContentProps>(), {
 
 const contentRef = useTemplateRef('content');
 
+const level = usePinnedLevel();
 const stack = usePinnedStack();
 const {
 	isOpen,
@@ -158,7 +159,7 @@ watch(floatingStyles, (value, oldValue) => {
 	<div
 		v-if="isOpen"
 		ref="content"
-		:style="memorizedStyles || floatingStyles"
+		:style="[memorizedStyles || floatingStyles, { zIndex: 100 + level }]"
 		data-position-content
 		:data-open="isOpen"
 		:data-pinned="isPinned"
@@ -168,7 +169,4 @@ watch(floatingStyles, (value, oldValue) => {
 </template>
 
 <style>
-[data-position-content] {
-	z-index: 101;
-}
 </style>

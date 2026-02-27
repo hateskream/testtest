@@ -13,7 +13,7 @@ import { autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
 
 import { type ISubpositionContentProps, parseAutoUpdate } from '../../model';
 import { matchesTrigger } from '../../utils';
-import { useSubFloatingContext } from '../../composables';
+import { usePinnedLevel, useSubFloatingContext } from '../../composables';
 
 const props = withDefaults(defineProps<ISubpositionContentProps>(), {
 	autoUpdate: true,
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<ISubpositionContentProps>(), {
 
 const contentRef = useTemplateRef('content');
 
+const level = usePinnedLevel();
 const {
 	isOpen,
 	isPinned,
@@ -137,7 +138,7 @@ watch(enhancedFloatingStyles, (value, oldValue) => {
 	<div
 		v-if="isOpen"
 		ref="content"
-		:style="memorizedStyles || enhancedFloatingStyles"
+		:style="[memorizedStyles || enhancedFloatingStyles, { zIndex: 100 + level }]"
 		data-subposition-content
 		:data-open="isOpen"
 		:data-pinned="isPinned"

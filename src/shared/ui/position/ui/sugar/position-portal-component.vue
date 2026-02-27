@@ -4,7 +4,7 @@ import { type MaybeRefOrGetter, nextTick, onUnmounted, ref, toValue, useTemplate
 
 import { createVirtualFloatingNode, matchesTrigger } from '../../utils';
 import { providePinnedLevel, providePinnedStack, useProvideFloatingContext } from '../../composables';
-import type { IPositionProps } from '../../model';
+import type { IFloatingContext, IPositionProps } from '../../model';
 
 import PositionTeleport from '../position-teleport.vue';
 
@@ -131,8 +131,7 @@ onUnmounted(() => {
 	cleanup?.();
 });
 
-// oxlint-disable-next-line typescript/no-explicit-any
-useProvideFloatingContext({} as any);
+useProvideFloatingContext({} as IFloatingContext);
 </script>
 
 <template>
@@ -140,7 +139,7 @@ useProvideFloatingContext({} as any);
 		<div
 			v-if="isVisible"
 			ref="floating"
-			:style="floatingStyles"
+			:style="[floatingStyles, { zIndex: 101 }]"
 			data-position-root
 			data-position
 			data-portal-content
@@ -152,7 +151,6 @@ useProvideFloatingContext({} as any);
 
 <style scoped>
 [data-portal-content] {
-	z-index: 101;
 	max-height: 80svh;
 }
 </style>
