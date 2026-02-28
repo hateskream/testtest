@@ -67,7 +67,11 @@ const active = computed(() => props.tabs.find(el => el.isActive));
 		</div>
 
 		<div :class="classes.right">
-			<coming-soon-tooltip title="Add widgets" text="Customize your dashboard with new tools — coming soon.">
+			<coming-soon-tooltip
+				title="Add widgets"
+				text="Customize your dashboard with new tools — coming soon."
+				placement="bottom-end"
+			>
 				<div :class="classes.add">
 					<ui-icon
 						:id="IconIds.Plus"
