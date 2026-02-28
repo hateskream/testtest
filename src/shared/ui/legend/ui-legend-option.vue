@@ -3,12 +3,14 @@
 import type { ILegendOption } from './types';
 import { UiText } from '@/shared/ui/text';
 
+import UiLegendOptionHint from './ui-legend-option-hint.vue';
+
 const props = defineProps<ILegendOption>();
 </script>
 
 <template>
 	<div :class="classes.legendOption">
-		<div :class="classes.hint" :style="{ backgroundColor: props.color }"></div>
+		<ui-legend-option-hint :color="props.color" :border="props.hint?.border" />
 		<ui-text token="text-100-r">
 			<slot>{{ props.label }}</slot>
 		</ui-text>
@@ -23,12 +25,6 @@ const props = defineProps<ILegendOption>();
 		align-items: center;
 		gap: var(--padding-s3, 4px);
 		color: var(--text-300, rgb(255 255 255 / 62%));
-	}
-
-	.hint {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
 	}
 }
 </style>

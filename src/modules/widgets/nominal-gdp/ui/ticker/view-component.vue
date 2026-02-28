@@ -53,7 +53,13 @@ const metricTagTrend = computed(() => props.growthYoy > 0 ? 'up' : 'down');
 				</ui-segmented-control>
 				<ui-legend-row>
 					<ui-legend-option color="#fff" label="GDP" />
-					<ui-legend-option color="#FF7F35" label="Potential GDP" />
+					<ui-legend-option
+						color="rgba(255, 127, 53, 0.12)"
+						label="Potential GDP"
+						:hint="{
+							border: '1px dashed var(--atom-attention-00, #FF7029)'
+						}"
+					/>
 				</ui-legend-row>
 			</ui-scrollable-row>
 		</ui-legend>
