@@ -6,4 +6,5 @@ export const ENABLED_MARKETS = [
 	MarketType.Indices,
 	MarketType.Commodities,
 	MarketType.Forex,
+	MarketType.Etf,
 ];
