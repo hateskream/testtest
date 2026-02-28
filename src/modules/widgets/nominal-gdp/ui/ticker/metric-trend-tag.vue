@@ -37,7 +37,7 @@ const color = computed(() => isUpTrend.value ? TagColor.Positive : TagColor.Nega
 		<template #default>
 			<span>Growth YoY: </span>
 			<span v-if="!isUpTrend">−&nbsp;</span>
-			<span>{{ preparedValue }}</span>
+			<span>{{ preparedValue }}%</span>
 		</template>
 	</ui-tag>
 </template>
