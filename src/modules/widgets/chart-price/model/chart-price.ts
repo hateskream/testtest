@@ -30,7 +30,7 @@ export type ChartPriceCurrentData = z.infer<typeof ChartPriceCurrentDataSchema>;
 
 export const ChartPriceHistoryDataSchema = z.object({
 	current: ChartPriceCurrentDataSchema,
-	points: z.array(ChartPriceHistoryPointSchema),
+	points: z.array(ChartPriceHistoryPointSchema).nonempty(),
 });
 
 export type ChartPriceHistoryData = z.infer<typeof ChartPriceHistoryDataSchema>;
