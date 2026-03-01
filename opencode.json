@@ -1,0 +1,80 @@
+{
+	"$schema": "https://opencode.ai/config.json",
+	"plugin": [
+		"opencode-wakatime"
+	],
+	"mcp": {
+		"context7": {
+			"type": "remote",
+			"url": "https://mcp.context7.com/mcp",
+			"headers": {
+				"CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+			},
+			"enabled": true
+		},
+		"eslint": {
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"@eslint/mcp@latest"
+			],
+			"enabled": true
+		},
+		"chrome-devtools": {
+			"type": "local",
+			"command": [
+				"npx",
+				"-y",
+				"chrome-devtools-mcp@latest"
+			]
+		}
+	},
+	"instructions": [
+		"CLAUDE.md"
+	],
+	"formatter": {
+		"eslint": {
+			"command": [
+				"npx",
+				"eslint",
+				"--fix",
+				"$FILE"
+			],
+			"extensions": [
+				".vue",
+				".ts",
+				".tsx",
+				".js",
+				".jsx",
+				".cjs",
+				".mjs"
+			]
+		},
+		"stylelint": {
+			"command": [
+				"npx",
+				"stylelint",
+				"--fix",
+				"$FILE"
+			],
+			"extensions": [
+				".vue",
+				".css"
+			]
+		}
+	},
+	"compaction": {
+		"auto": true,
+		"prune": true
+	},
+	"watcher": {
+		"ignore": [
+			"node_modules/**",
+			"dist/**",
+			".git/**",
+			"*.log"
+		]
+	}
+}

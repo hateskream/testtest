@@ -45,8 +45,26 @@ npm run lint:fix     # Auto-fix ESLint, oxlint, and Stylelint issues
 
 - Use Composition API with `<script setup lang="ts">`
 - Use `defineModel` for two-way bindings
-- Props should use typed defineProps
 - Components should be registered locally when possible
+- **Props**: Always declare a named interface (prefix `I`, suffix `Props`) and pass it to `defineProps`. Never use inline type literals like `defineProps<{ title: string }>()` — always extract to an interface.
+
+```typescript
+interface IMyComponentProps {
+	title: string;
+	count?: number;
+}
+const props = defineProps<IMyComponentProps>();
+```
+
+- **Emits**: Always declare a named interface (prefix `I`, suffix `Emits`) and pass it to `defineEmits`. Never use inline type literals or array syntax for `defineEmits`.
+
+```typescript
+interface IMyComponentEmits {
+	update: [value: string];
+	close: [];
+}
+const emit = defineEmits<IMyComponentEmits>();
+```
 
 ### Import Order
 
@@ -149,6 +167,15 @@ export function useQueryMarketData() {
 - **Routing**: Vue Router
 - **Build Tool**: Vite with LightningCSS transformer
 
+## Documentation Lookup
+
+When you need to clarify API usage, find correct syntax, or verify behavior of any framework or library used in this project (Vue 3, Vite, TanStack Query, Pinia, Chart.js, Lightweight Charts, Vue Router, ofetch, Zod, etc.):
+
+1. Use the **Context7 MCP** tool to query up-to-date documentation before writing or suggesting code
+2. First call `resolve-library-id` with the library name to get the correct Context7 library ID
+3. Then call `query-docs` with the resolved ID and your specific question
+4. Prefer Context7 documentation over relying on training data, especially for version-specific APIs and recent changes
+
 ## Feature Toggles
 
 Features are controlled via environment variables in `.env`:
@@ -171,6 +198,16 @@ This project uses multiple linters:
 - **Stylint**: CSS linting
 
 All linters run via `npm run lint`. The pre-push hook runs this automatically.
+
+### Code Style Enforcement Workflow
+
+After creating or modifying any `.ts`, `.tsx`, or `.vue` file, you **MUST** run ESLint auto-fix on the changed files before considering the task done:
+
+```bash
+npx eslint --fix <file1> <file2> ...
+```
+
+This ensures all stylistic rules (`@stylistic/quotes`, `@stylistic/indent`, `@stylistic/semi`, etc.) are automatically applied. Do **NOT** rely on manually writing correct formatting — always let the linter enforce it.
 
 ## Error Handling
 

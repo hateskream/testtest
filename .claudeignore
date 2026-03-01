@@ -109,3 +109,7 @@ storybook-static/
 Dockerfile
 docker-compose.yml
 .dockerignore
+
+# OpenCode / Claude agent configs (avoid loading into context)
+.opencode/
+.claude/

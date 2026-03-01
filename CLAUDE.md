@@ -34,6 +34,7 @@ This is a Vue 3 + TypeScript financial dashboard application with trading widget
 ### Module Structure Pattern
 
 Each module in `src/modules/` typically follows this structure:
+
 ```
 module-name/
 ├── api/           # API calls using HttpService
@@ -64,11 +65,13 @@ module-name/
 ### Data Fetching Pattern
 
 API calls follow this pattern:
+
 1. API function in `api/` folder using `useHttpService()`
 2. TanStack Query hook in `queries/` folder wrapping the API call
 3. Component uses the query hook
 
 Example:
+
 ```typescript
 // api/get-data.ts
 export async function getData(): Promise<IData> {
@@ -88,6 +91,7 @@ export function useQueryData() {
 ### Feature Toggles
 
 Features are controlled via environment variables in `.env`:
+
 - Format: `VITE_FEATURE_<FEATURE_NAME> = true|false`
 - Check with: `isFeatureEnabled('FEATURE_NAME')` from `@/shared/lib`
 - All features defined in `src/shared/lib/feature-toggle.ts`
@@ -110,8 +114,36 @@ Features are controlled via environment variables in `.env`:
 
 External imports first, then internal imports separated by a blank line. Vue components should be last in their group.
 
+### Vue Component Props & Emits
+
+- **defineProps**: Always extract the type into a named interface prefixed with `I` and suffixed with `Props` (e.g., `IMyComponentProps`). Never use inline generics like `defineProps<{ ... }>()`.
+- **defineEmits**: Always extract the type into a named interface prefixed with `I` and suffixed with `Emits` (e.g., `IMyComponentEmits`). Never use inline generics or array syntax.
+
+```typescript
+interface IWidgetComponentProps {
+	meta: ITickerWidgetMeta;
+	isActive?: boolean;
+}
+
+interface IWidgetComponentEmits {
+	select: [id: string];
+}
+
+const props = defineProps<IWidgetComponentProps>();
+const emit = defineEmits<IWidgetComponentEmits>();
+```
+
+### Code Style Enforcement Workflow
+
+After creating or modifying any `.ts`, `.tsx`, or `.vue` file, you **MUST** run ESLint auto-fix on the changed files before considering the task done:
+
+```bash
+npx eslint --fix <file1> <file2> ...
+```
+
+This ensures all stylistic rules (`@stylistic/quotes`, `@stylistic/indent`, `@stylistic/semi`, etc.) are automatically applied. Do **NOT** rely on manually writing correct formatting — always let the linter enforce it.
+
 ### Conventions
 
 - commit format: Conventional Commits
 - style: eslint (configs in eslint.config.js)
-
