@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { useScroll } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 import { calcSizeSideGridCell } from '../model/widget';
@@ -128,7 +129,7 @@ function emitScrollInfo() {
 	});
 }
 
-const scrollTop = ref(0);
+const { y: scrollTop } = useScroll(scrollRef);
 
 const seenWidgets = reactive(new Set<number>());
 
@@ -213,7 +214,6 @@ function onWheel(event: WheelEvent) {
 		event.preventDefault();
 
 		scrollRef.value.scrollTop += deltaY;
-		scrollTop.value = scrollRef.value.scrollTop;
 		emitScrollInfo();
 		return;
 	}
