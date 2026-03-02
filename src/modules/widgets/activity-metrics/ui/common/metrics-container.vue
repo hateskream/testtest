@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
-import { TickerIconTooltip } from '@/modules/ticker/ui/base';
+import { UiIconInfoTooltip } from '@/shared/ui/icon-info-tooltip';
 import { UiTooltipHint } from '@/shared/ui/tooltip-hint';
 
 const props = defineProps<{
@@ -16,11 +16,11 @@ const props = defineProps<{
 			<ui-text token="text-100-r">
 				{{ props.title }}
 			</ui-text>
-			<ticker-icon-tooltip v-if="props.tooltip || $slots.tooltip" max-width="320px">
+			<ui-icon-info-tooltip v-if="props.tooltip || $slots.tooltip" max-width="320px">
 				<slot name="tooltip">
 					{{ props.tooltip }}
 				</slot>
-			</ticker-icon-tooltip>
+			</ui-icon-info-tooltip>
 		</div>
 		<ui-clamped
 			:rows="1"

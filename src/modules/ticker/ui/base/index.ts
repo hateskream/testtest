@@ -7,5 +7,4 @@ export { default as TickerBaseTabSectionBody } from './ticker-base-tab-section-b
 export { default as TickerBaseTabSection } from './ticker-base-tab-section.vue';
 export { default as TickerBaseTabContent } from './ticker-base-tab-content.vue';
 
-export { default as TickerIconTooltip } from './ticker-icon-tooltip.vue';
 export { default as TickerControlLink } from './ticker-control-link.vue';
