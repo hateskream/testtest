@@ -3,15 +3,18 @@ import { computed } from 'vue';
 
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
-import { UiLegend } from '@/shared/ui/legend';
+import { UiLegend, UiLegendOption, UiLegendRow } from '@/shared/ui/legend';
 import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
 import { BaseTickerWidgetHeader } from '@/modules/widgets/base';
 import {
+	isChangeValueType,
 	REAL_GDP_DATE_RANGE_PRESETS,
 	type RealGdpDateRangePresetType,
 	type RealGdpHistory,
+	RealGdpValueType,
 	type RealGdpValueTypeType,
 } from '../../model';
+import { UiTransitionFade } from '@/shared/ui/transition';
 
 import ChartComponent from '../common/chart-component.vue';
 import MetricTrendTag from './metric-trend-tag.vue';
@@ -34,6 +37,16 @@ const preparedPresets = REAL_GDP_DATE_RANGE_PRESETS.map(preset => ({
 
 const metricTagValue = computed(() => Math.abs(props.growthYoy));
 const metricTagTrend = computed(() => props.growthYoy > 0 ? 'up' : 'down');
+
+const isChangeValueTypeValue = computed(() => isChangeValueType(valueType.value));
+
+const valueTypeLabel = computed(() => {
+	if (valueType.value === RealGdpValueType.ChangeDelta) {
+		return 'Change (Points)';
+	}
+
+	return 'Change (%)';
+});
 </script>
 
 <template>
@@ -65,6 +78,22 @@ const metricTagTrend = computed(() => props.growthYoy > 0 ? 'up' : 'down');
 						{{ preset.label }}
 					</ui-segmented-control-item>
 				</ui-segmented-control>
+				<ui-transition-fade>
+					<ui-legend-row v-if="isChangeValueTypeValue">
+						<ui-legend-option color="#fff" :label="`Real GDP ${valueTypeLabel}`">
+							<template #tooltip>
+								<span v-if="valueType === RealGdpValueType.ChangeDelta">
+									Shows the change in real GDP compared to the previous period.
+									Each column represents the numerical difference from the preceding column.
+								</span>
+								<span v-else>
+									Shows the percentage change in real GDP compared to the previous period.
+									Each column represents the percentage change from the preceding column.
+								</span>
+							</template>
+						</ui-legend-option>
+					</ui-legend-row>
+				</ui-transition-fade>
 			</ui-scrollable-row>
 		</ui-legend>
 	</div>

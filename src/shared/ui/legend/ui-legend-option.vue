@@ -2,6 +2,7 @@
 // Figma component: legend-option
 import type { ILegendOption } from './types';
 import { UiText } from '@/shared/ui/text';
+import { UiIconInfoTooltip } from '@/shared/ui/icon-info-tooltip';
 
 import UiLegendOptionHint from './ui-legend-option-hint.vue';
 
@@ -14,6 +15,9 @@ const props = defineProps<ILegendOption>();
 		<ui-text token="text-100-r">
 			<slot>{{ props.label }}</slot>
 		</ui-text>
+		<ui-icon-info-tooltip v-if="$slots.tooltip" max-width="400px">
+			<slot name="tooltip" />
+		</ui-icon-info-tooltip>
 	</div>
 </template>
 

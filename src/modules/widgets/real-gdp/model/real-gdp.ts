@@ -53,3 +53,7 @@ export function calculateGrowthYoy(points: RealGdpHistoryPoint[]) {
 
 	return (lastPoint.history - firstPoint.history) / lastPoint.history * 100;
 }
+
+export function isChangeValueType(valueType: RealGdpValueTypeType) {
+	return valueType === RealGdpValueType.ChangeDelta || valueType === RealGdpValueType.ChangePercent;
+}
