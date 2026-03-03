@@ -3,7 +3,7 @@ import { computed, watch } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { IconIds } from '@/shared/ui/icon';
-import { UiModalItemNumbered } from '@/shared/ui/modal-items';
+import { UiModalItemNumbered, UiModalItemSelector } from '@/shared/ui/modal-items';
 import type { IFilterPreset, IFilterState } from '../../model';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiDriver } from '@/shared/ui/driver';
@@ -37,12 +37,18 @@ function clear() {
 	};
 }
 
+function getPresetIndex(key: KeydownNumber): number {
+	return key === 0 ? 9 : key - 1;
+}
+
 function handleKeyDown(key: KeydownNumber) {
-	if (!props.keyNumbers || key > props.presets.length) {
+	const index = getPresetIndex(key);
+
+	if (!props.keyNumbers || index >= props.presets.length) {
 		return;
 	}
 
-	select(props.presets[key - 1]);
+	select(props.presets[index]);
 }
 
 const { stop, start } = useNumberKeydown(handleKeyDown);
@@ -58,22 +64,40 @@ watch(() => props.keyNumbers, value => {
 
 <template>
 	<div>
-		<ui-modal-item-numbered
+		<template
 			v-for="(preset, index) in props.presets"
 			:key="preset.id"
-			:model-value="selectedPresetId === preset.id"
-			:number="index + 1"
-			:class="classes.selector"
-			@update:model-value="select(preset)"
 		>
-			<div :class="classes.selectorLabel">
-				<span>{{preset.label}}</span>
-				<template v-if="preset.description">
-					<span>·</span>
-					<span :class="classes.description">{{preset.description}}</span>
-				</template>
-			</div>
-		</ui-modal-item-numbered>
+			<ui-modal-item-numbered
+				v-if="index < 10"
+				:model-value="selectedPresetId === preset.id"
+				:number="index < 9 ? index + 1 : 0"
+				:class="classes.selector"
+				@update:model-value="select(preset)"
+			>
+				<div :class="classes.selectorLabel">
+					<span>{{preset.label}}</span>
+					<template v-if="preset.description">
+						<span>·</span>
+						<span :class="classes.description">{{preset.description}}</span>
+					</template>
+				</div>
+			</ui-modal-item-numbered>
+			<ui-modal-item-selector
+				v-else
+				:model-value="selectedPresetId === preset.id"
+				:class="classes.selector"
+				@update:model-value="select(preset)"
+			>
+				<div :class="classes.selectorLabel">
+					<span>{{preset.label}}</span>
+					<template v-if="preset.description">
+						<span>·</span>
+						<span :class="classes.description">{{preset.description}}</span>
+					</template>
+				</div>
+			</ui-modal-item-selector>
+		</template>
 		<ui-transition-fade>
 			<div v-if="hasSelectedValue && !props.required || $slots['footer-actions']">
 				<ui-driver />
