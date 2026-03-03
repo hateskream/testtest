@@ -1,0 +1,96 @@
+{
+	"quarterly": {
+		"mode": "quarterly",
+		"years": [
+			{
+				"year": 2021,
+				"quarters": [
+					{ "quarter": 1, "value": 14560000000, "is_estimate": false },
+					{ "quarter": 2, "value": 13280000000, "is_estimate": false },
+					{ "quarter": 3, "value": 12950000000, "is_estimate": false },
+					{ "quarter": 4, "value": 13100000000, "is_estimate": false }
+				]
+			},
+			{
+				"year": 2022,
+				"quarters": [
+					{ "quarter": 1, "value": 13750000000, "is_estimate": false },
+					{ "quarter": 2, "value": 12900000000, "is_estimate": false },
+					{ "quarter": 3, "value": 11800000000, "is_estimate": false },
+					{ "quarter": 4, "value": 12200000000, "is_estimate": false }
+				]
+			},
+			{
+				"year": 2023,
+				"quarters": [
+					{ "quarter": 1, "value": 11430000000, "is_estimate": false },
+					{ "quarter": 2, "value": 10850000000, "is_estimate": false },
+					{ "quarter": 3, "value": 12100000000, "is_estimate": false },
+					{ "quarter": 4, "value": 11600000000, "is_estimate": false }
+				]
+			},
+			{
+				"year": 2024,
+				"quarters": [
+					{ "quarter": 1, "value": 12800000000, "is_estimate": false },
+					{ "quarter": 2, "value": 11950000000, "is_estimate": false },
+					{ "quarter": 3, "value": 13200000000, "is_estimate": false },
+					{ "quarter": 4, "value": 12700000000, "is_estimate": false }
+				]
+			},
+			{
+				"year": 2025,
+				"quarters": [
+					{ "quarter": 1, "value": 13100000000, "is_estimate": true },
+					{ "quarter": 2, "value": 12600000000, "is_estimate": true },
+					{ "quarter": 3, "value": 13500000000, "is_estimate": true },
+					{ "quarter": 4, "value": 12900000000, "is_estimate": true }
+				]
+			},
+			{
+				"year": 2026,
+				"quarters": [
+					{ "quarter": 1, "value": 13400000000, "is_estimate": true },
+					{ "quarter": 2, "value": 12800000000, "is_estimate": true },
+					{ "quarter": 3, "value": 13900000000, "is_estimate": true },
+					{ "quarter": 4, "value": 13200000000, "is_estimate": true }
+				]
+			}
+		]
+	},
+	"yearly": {
+		"mode": "yearly",
+		"years": [
+			{
+				"year": 2021,
+				"value": 14560000000,
+				"is_estimate": false
+			},
+			{
+				"year": 2022,
+				"value": 13750000000,
+				"is_estimate": false
+			},
+			{
+				"year": 2023,
+				"value": 11430000000,
+				"is_estimate": false
+			},
+			{
+				"year": 2024,
+				"value": 12800000000,
+				"is_estimate": false
+			},
+			{
+				"year": 2025,
+				"value": 13100000000,
+				"is_estimate": true
+			},
+			{
+				"year": 2026,
+				"value": 13400000000,
+				"is_estimate": true
+			}
+		]
+	}
+}
