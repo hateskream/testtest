@@ -101,6 +101,10 @@ export function useHoverEvents(options: IUseHoverEventsOptions): IUseHoverEvents
 			return;
 		}
 
+		if (related?.closest('[data-subposition-content]')) {
+			return;
+		}
+
 		scheduleHide();
 	}
 
