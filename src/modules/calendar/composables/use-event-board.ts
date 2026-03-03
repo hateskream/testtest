@@ -154,8 +154,8 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 			return;
 		}
 
-		const targetDate = options.scrollToDate ? toValue(options.scrollToDate) : undefined;
-		const targetHour = options.scrollToHour ? toValue(options.scrollToHour) : undefined;
+		const targetDate = toValue(options.scrollToDate);
+		const targetHour = toValue(options.scrollToHour);
 
 		if (targetDate && targetHour) {
 			const section = getSectionElement(element, targetDate, targetHour);
