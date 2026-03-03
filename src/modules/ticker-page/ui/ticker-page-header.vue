@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
+import { computed } from 'vue';
 
 import {
 	type IDataProvider,
@@ -7,22 +7,23 @@ import {
 	type IPriceData,
 	type ITickerItemExtended,
 } from '../api/get-ticker-page-meta';
-import { RouteNames } from '@/types/route.d';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
 import { UiPosition } from '@/shared/ui/position';
 import { UiImage } from '@/shared/ui/image';
 import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { useGoToTickerPage } from '@/modules/chart';
 import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
-import { isFeatureEnabled } from '@/shared/lib';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
-import { UiControlIcon } from '@/shared/ui/control-icon';
 import { UiClamped } from '@/shared/ui/clamped';
 import { UiPositionTooltip } from '@/shared/ui/position';
+import { isFeatureEnabled } from '@/shared/lib';
+import { UiControlIcon } from '@/shared/ui/control-icon';
+
+import TickerHeaderBreadcrumbs from './components/header/ticker-header-breadcrumbs.vue';
+import TickerHeaderPrice from './components/header/ticker-header-price.vue';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -36,8 +37,6 @@ const emits = defineEmits<{
 	onTickerSelect: [ITickerItemExtended];
 }>();
 
-const { goToTickerPageLink } = useGoToTickerPage();
-
 const selectedTickers = computed({
 	get: () => [props.ticker],
 	set: ([value]) => {
@@ -49,38 +48,7 @@ const selectedTickers = computed({
 	},
 });
 
-const classes = useCssModule('classes');
-
-const chart = computed(() => {
-	const label = `${props.price.change_24h} (${ props.price.change_24h_percent }%)`;
-
-	if (props.price.status === 'positive') {
-		return {
-			icon: IconIds.Gainers,
-			class: classes.positive,
-			label,
-		};
-	}
-
-	if (props.price.status === 'negative') {
-		return {
-			icon: IconIds.Loosers,
-			class: classes.negative,
-			label,
-		};
-	}
-
-	return {
-		class: classes.neutral,
-		label,
-	};
-});
-
 const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_ENABLED');
-
-const currentCurrency = computed(() => props.price.currency);
-
-const currentPrice = computed(() => props.price.current_price);
 </script>
 
 <template>
@@ -90,6 +58,11 @@ const currentPrice = computed(() => props.price.current_price);
 		</div>
 
 		<div :class="classes.inner">
+			<ticker-header-breadcrumbs
+				:class="classes.breadcrumbsMobile"
+				:ticker="props.ticker"
+			/>
+
 			<div :class="classes.left">
 				<div :class="classes.logoWrapper">
 					<ticker-icon
@@ -109,26 +82,10 @@ const currentPrice = computed(() => props.price.current_price);
 				</div>
 
 				<div :class="classes.etc">
-					<div :class="classes.breadcrumbs">
-						<router-link
-							:to="{name: RouteNames.Home}"
-							:class="classes.breadcrumbsItem"
-						>
-							<ui-text token="text-200-b">Home</ui-text>
-						</router-link>
-
-						<div :class="classes.separator">
-							/
-						</div>
-
-						<router-link
-							:to="goToTickerPageLink(props.ticker.canonical_ticker_id)"
-							:class="classes.breadcrumbsItem"
-							:active-class="classes.breadcrumbsItemActive"
-						>
-							<ui-text token="text-200-b">{{ props.ticker.symbol }}</ui-text>
-						</router-link>
-					</div>
+					<ticker-header-breadcrumbs
+						:class="classes.breadcrumbs"
+						:ticker="props.ticker"
+					/>
 
 					<div :class="classes.bottom">
 						<div :class="classes.main">
@@ -176,8 +133,8 @@ const currentPrice = computed(() => props.price.current_price);
 								</div>
 							</div>
 
-							<div v-if="props.exchange" :class="classes.badges">
-								<ui-tag icon-position="start">
+							<div :class="classes.badges">
+								<ui-tag v-if="props.exchange" icon-position="start">
 									<template #icon>
 										<ui-image
 											:src="props.exchange.logo_url"
@@ -194,7 +151,7 @@ const currentPrice = computed(() => props.price.current_price);
 									placement="bottom-start"
 									:close-delay="200"
 								>
-									<ui-tag>
+									<ui-tag :class="classes.provider">
 										<ui-image
 											:src="props.dataProvider.logo_url"
 											width="16px"
@@ -235,31 +192,29 @@ const currentPrice = computed(() => props.price.current_price);
 							</div>
 						</div>
 
-						<div :class="classes.price">
-							<div :class="classes.current">
-								<ui-text token="title-200">{{ currentCurrency }}</ui-text>
-								<ui-text token="title-200">{{ currentPrice }}</ui-text>
-							</div>
-
-							<div :class="[classes.chartPrice, chart.class]">
-								<ui-icon
-									v-if="chart.icon"
-									:id="chart.icon"
-									width="8px"
-									height="8px"
-								/>
-
-								<ui-text :class="classes.chartPriceLabel" token="text-100-r">
-									{{chart.label}}
-								</ui-text>
-							</div>
-						</div>
+						<ticker-header-price
+							:class="classes.price"
+							:price="props.price"
+						/>
 					</div>
 				</div>
 			</div>
 
-			<div v-if="isMoreOptionsEnabled" :class="classes.right">
-				<ui-control-icon :icon="IconIds.ThreeDots" transparent />
+			<div :class="classes.options">
+				<div :classes="classes.leftOptions">
+					<ticker-header-price
+						:class="classes.priceMobile"
+						:price="props.price"
+					/>
+				</div>
+
+				<div :class="classes.rightOptions">
+					<ui-control-icon
+						v-if="isMoreOptionsEnabled"
+						:icon="IconIds.ThreeDots"
+						transparent
+					/>
+				</div>
 			</div>
 		</div>
 	</header>
@@ -331,27 +286,6 @@ const currentPrice = computed(() => props.price.current_price);
 	gap: var(--padding-padding-s4, 6px);
 }
 
-.breadcrumbs {
-	display: flex;
-	align-items: center;
-	height: var(--height-height-s12, 24px);
-	color: var(--text-300, rgb(255 255 255 / 62%));
-	gap: var(--padding-padding-s4, 6px);
-}
-
-.breadcrumbsItem {
-	font-size: var(--font-text-200-b-size, 12.2px);
-}
-
-.breadcrumbsItem:hover {
-	color: var(--text-500, rgb(255 255 255 / 96%));
-	text-decoration: underline;
-}
-
-.breadcrumbsItemActive {
-	color: var(--text-500, rgb(255 255 255 / 96%));
-}
-
 .separator {
 	pointer-events: none;
 }
@@ -374,6 +308,7 @@ const currentPrice = computed(() => props.price.current_price);
 	align-items: center;
 	padding: 0;
 	color: var(--text-500, rgb(255 255 255 / 96%));
+	white-space: nowrap;
 	cursor: pointer;
 	gap: var(--padding-padding-s2, 2px);
 }
@@ -411,21 +346,7 @@ const currentPrice = computed(() => props.price.current_price);
 }
 
 .provider {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 24px;
-	height: var(--height-height-s12, 24px);
-	background: var(--bg-100, rgb(73 73 80 / 32%));
-	border-radius: var(--radius-radius-s12-24, 9.2px);
 	cursor: pointer;
-	transition: background-color 0.25s ease-in-out;
-	gap: var(--padding-padding-s0, 0);
-	aspect-ratio: 1/1;
-}
-
-.provider:hover {
-	background: var(--bg-300, rgb(73 73 80 / 52%));
 }
 
 .providerIcon {
@@ -449,48 +370,51 @@ const currentPrice = computed(() => props.price.current_price);
 	padding: var(--padding-padding-s3, 4px) 0;
 }
 
-.price {
+.breadcrumbsMobile {
+	padding-bottom: 4px;
+}
+
+.breadcrumbsMobile,
+.priceMobile {
+	display: none;
+}
+
+.options {
 	display: flex;
-	align-items: center;
+	justify-content: space-between;
+	width: 100%;
 }
 
-.current {
-	display: flex;
-	gap: 2px;
-}
-
-.chartPrice {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding:
-		var(--padding-padding-s2, 2px) var(--padding-padding-s5, 8px)
-		var(--padding-padding-s2, 2px) var(--padding-padding-s4, 6px);
-	gap: var(--padding-padding-s3, 4px);
-}
-
-.negative {
-	color: var(--atom-warning-00, #fc1d4d);
-}
-
-.positive {
-	color: var(--atom-success-00, #04eda0);
-}
-
-.tickerName,
-.current,
-.chartPrice {
-	white-space: nowrap;
-}
-
-@container header (max-width: 524px) {
+@media screen and (max-width: 519px) {
+	.breadcrumbs,
 	.price {
+		display: none;
+	}
+
+	.inner {
 		flex-direction: column;
 		align-items: flex-start;
 	}
 
-	.chartPrice {
-		padding: var(--padding-padding-s2, 2px) 0;
+	.breadcrumbsMobile,
+	.priceMobile {
+		display: flex;
+	}
+
+	.main {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+		align-self: stretch;
+		gap: 0;
+	}
+
+	.badges {
+		display: flex;
+		align-items: center;
+		padding: var(--padding-padding-s3, 4px) 0;
+		gap: var(--padding-padding-s2, 2px);
 	}
 }
 </style>
