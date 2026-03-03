@@ -17,6 +17,8 @@ interface IUseEventBoardOptions {
 	getSectionElement: (container: HTMLElement, date: string, hour: string) => HTMLElement | null;
 	onLoadPrev: () => void;
 	onLoadNext: () => void;
+	scrollToDate?: WatchSource<string | undefined>;
+	scrollToHour?: WatchSource<string | undefined>;
 }
 
 export function useEventBoard(options: IUseEventBoardOptions) {
@@ -146,8 +148,32 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 		onLoadNext();
 	}
 
-	onMounted(() => {
+	function scrollToTarget() {
+		const element = container.value;
+		if (!element) {
+			return;
+		}
+
+		const targetDate = options.scrollToDate ? toValue(options.scrollToDate) : undefined;
+		const targetHour = options.scrollToHour ? toValue(options.scrollToHour) : undefined;
+
+		if (targetDate && targetHour) {
+			const section = getSectionElement(element, targetDate, targetHour);
+			if (section) {
+				const containerRect = element.getBoundingClientRect();
+				const sectionRect = section.getBoundingClientRect();
+				const offset = sectionRect.top - containerRect.top + element.scrollTop - HEADER_HEIGHT;
+
+				scrollToElement(element, offset);
+				return;
+			}
+		}
+
 		scrollToNextEvent();
+	}
+
+	onMounted(() => {
+		scrollToTarget();
 	});
 
 	const handleScrollThrottled = useThrottleFn(handleScroll, 50);

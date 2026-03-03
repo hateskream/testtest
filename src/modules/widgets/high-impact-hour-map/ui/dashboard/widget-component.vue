@@ -43,8 +43,6 @@ function handleClickOnBar(hours: number[]) {
 		return;
 	}
 
-	// TODO: Связать с календарем. Он должен открывать нужный промежуток с учетом часов из hours.
-
 	const today = new Date();
 	today.setHours(hours[0]);
 

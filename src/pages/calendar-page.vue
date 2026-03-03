@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
 import {
@@ -17,11 +18,41 @@ import {
 	useQueryDailyInfo,
 } from '@/modules/calendar';
 
+const route = useRoute();
+
 const { currentTime, selectedCategories, selectedCountries, selectedImpacts } = useCalendarState({
 	widget: {
 		isEphemeral: false,
 		widgetId: 'calendar-page',
 	},
+});
+
+const queryDate = computed(() => {
+	const raw = route.query.date;
+	if (typeof raw !== 'string') {
+		return undefined;
+	}
+	const parsed = new Date(raw);
+	if (Number.isNaN(parsed.getTime())) {
+		return undefined;
+	}
+	return parsed;
+});
+
+const scrollToDate = computed(() => {
+	const d = queryDate.value;
+	if (!d) {
+		return undefined;
+	}
+	return formatUTCDate(d);
+});
+
+const scrollToHour = computed(() => {
+	const d = queryDate.value;
+	if (!d) {
+		return undefined;
+	}
+	return `${String(d.getUTCHours()).padStart(2, '0')}:00`;
 });
 
 const todayStr = computed(() => {
@@ -31,7 +62,7 @@ const todayStr = computed(() => {
 	return today.toISOString().slice(0, 10);
 });
 
-const selectedDate = ref(currentTime.value);
+const selectedDate = ref(queryDate.value ?? currentTime.value);
 const limit = ref(getUTCWeekRange(new Date(localDateToUTCUnix(currentTime.value) * 1000)));
 
 const selectedDateUnix = computed(() => localDateToUTCUnix(selectedDate.value));
@@ -120,6 +151,8 @@ function onUpdateWeek(date: Date) {
 							:event-board="query.data.days"
 							:is-fetching-next="query.isFetchingNextPage"
 							:is-fetching-prev="query.isFetchingPreviousPage"
+							:scroll-to-date="scrollToDate"
+							:scroll-to-hour="scrollToHour"
 							header-color="#0C0C0D"
 							@load-next="query.fetchNextPage"
 							@load-prev="query.fetchPreviousPage"

@@ -15,12 +15,15 @@ const props = withDefaults(defineProps<{
 	currentTime?: Date;
 	isFetchingNext?: boolean;
 	isFetchingPrev?: boolean;
-
+	scrollToDate?: string;
+	scrollToHour?: string;
 	headerColor?: string;
 }>(), {
 	favorite: () => [],
 	currentTime: () => new Date(),
 	headerColor: '#121213',
+	scrollToDate: undefined,
+	scrollToHour: undefined,
 });
 
 const emits = defineEmits<{
@@ -61,6 +64,8 @@ const { handleScroll } = useEventBoard({
 	getSectionElement: (el, date, hour) => el.querySelector(`[data-date="${date}"] [data-hour="${hour}"]`),
 	onLoadPrev: () => emits('loadPrev'),
 	onLoadNext: () => emits('loadNext'),
+	scrollToDate: () => props.scrollToDate,
+	scrollToHour: () => props.scrollToHour,
 });
 </script>
 
