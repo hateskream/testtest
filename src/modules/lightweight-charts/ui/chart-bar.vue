@@ -43,7 +43,7 @@ const defaultOptions: ChartOptions<'bar'> = {
 				display: true,
 				color: (context) => {
 					if (context.index > 0) {
-						return 'rgba(73, 73, 80, 0.44)';
+						return 'rgba(73, 73, 80, 0.60)';
 					}
 
 					return undefined;
@@ -65,9 +65,9 @@ const defaultOptions: ChartOptions<'bar'> = {
 				},
 				font: {
 					family: '\'Roboto Flex Variable\', sans-serif',
-					size: 11,
+					size: 10,
 					weight: 400,
-					lineHeight: '19.8px',
+					lineHeight: '17.2px',
 				},
 				color: 'rgba(255, 255, 255, 0.62)',
 			},
@@ -77,11 +77,11 @@ const defaultOptions: ChartOptions<'bar'> = {
 				padding: 10,
 				font: {
 					family: '\'Roboto Flex Variable\', sans-serif',
-					size: 11,
+					size: 10,
 					weight: 400,
-					lineHeight: '19.8px',
+					lineHeight: '17.2px',
 				},
-				color: 'rgba(255, 255, 255, 0.30)',
+				color: 'rgba(255, 255, 255, 0.62)',
 			},
 			grid: { display: false },
 			border: { display: false },
