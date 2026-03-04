@@ -42,24 +42,42 @@ export interface ITickerMetaResponse {
 }
 
 export function getTickerPageMeta(req: ITickerMetaRequest) {
-	return IS_USE_MOCK ? getMockTickerData() : getApiTickerData(req);
+	return IS_USE_MOCK ? getMockTickerData() : (getApiTickerData(req));
 }
 
 async function getApiTickerData(req: ITickerMetaRequest) {
 	const http = useHttpService();
 
 	try {
-		return await http.get<ITickerMetaResponse>('/api/v1/header/data', {
+		return mapApiResponse(await http.get<ITickerMetaResponse>('/api/v1/header/data', {
 			query: {
 				ticker_id: req.tickerId,
 			},
-		});
+		}));
 	} catch (error) {
 		const logger = useLogger();
 		logger.error('Failed to get ticker info', {
 			error: error as Error,
 		});
 	}
+}
+
+// TODO: убрать это после обновления API
+function mapApiResponse(response: ITickerMetaResponse): ITickerMetaResponse {
+	if (response.ticker.market_type !== MarketType.Forex) {
+		return response;
+	}
+
+	return {
+		...response,
+		ticker: {
+			...response.ticker,
+			// это временные костыли, бэкенд отправляет данные не согласно изначальному контракту
+			currency: response.ticker.currency || response.ticker.name.split('/')[0],
+			currency_icon:
+				response.ticker.currency_icon || (response.ticker as { right_logo?: string }).right_logo,
+		},
+	};
 }
 
 async function getMockTickerData(): Promise<ITickerMetaResponse> {
