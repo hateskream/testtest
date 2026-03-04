@@ -1,24 +1,19 @@
-import { useHttpService } from '@/shared/service/http-service';
 import { delay } from '@/shared/lib';
 import { useLogger } from '@/shared/service/monitoring';
-import type { IKeyIndicator } from '../model/key-indicators';
+import { useApiClient } from '@/shared/service/api';
+import { KeyIndicatorsResponseSchema, type IKeyIndicatorsResponse } from '../model/key-indicators';
 
 const IS_USE_MOCK = false;
-
-export interface IKeyIndicatorResponse {
-	indicators: IKeyIndicator[];
-	summarized: string;
-}
 
 export interface IKeyIndicatorRequest {
 	ticker_id: string;
 }
 
-export function getKeyIndicators(request: IKeyIndicatorRequest): Promise<IKeyIndicatorResponse> {
+export function getKeyIndicators(request: IKeyIndicatorRequest): Promise<IKeyIndicatorsResponse> {
 	return IS_USE_MOCK ? getKeyIndicatorsMock() : getKeyIndicatorsApi(request);
 }
 
-async function getKeyIndicatorsMock(): Promise<IKeyIndicatorResponse> {
+async function getKeyIndicatorsMock(): Promise<IKeyIndicatorsResponse> {
 	await delay(1000);
 
 	return {
@@ -40,21 +35,26 @@ async function getKeyIndicatorsMock(): Promise<IKeyIndicatorResponse> {
 				label: 'Top holding subtracted 0.01% to YTD returns',
 			},
 		],
-		summarized: 'Summarized at 19:30',
+		summarized: 'Today at 17:39',
+		summarized_date: '2026-02-04T12:30:37Z',
 	};
 }
 
-function getKeyIndicatorsApi(request: IKeyIndicatorRequest) {
-	const https = useHttpService();
+async function getKeyIndicatorsApi(request: IKeyIndicatorRequest) {
+	const client = useApiClient();
+	const logger = useLogger();
 
 	try {
-		return https.get<IKeyIndicatorResponse>('/api/v1/key-indicators/data', {
-			query: {
-				ticker_id: request.ticker_id,
+		return await client.get(
+			'/api/v1/key-indicators/data',
+			KeyIndicatorsResponseSchema,
+			{
+				query: {
+					ticker_id: request.ticker_id,
+				},
 			},
-		});
+		);
 	} catch (error) {
-		const logger = useLogger();
 		logger.error('Error fetching key indicators', { error: error as Error });
 		throw error;
 	}
