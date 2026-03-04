@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { useQueryKeyIndicators } from '../../query/use-query-key-indicators';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
-import { FALLBACK_LOCALE } from '@/shared/lib';
+import { getDateFormatter } from '@/shared/lib';
 
 import KeyIndicatorsLoading from '../key-indicators-loading.vue';
 import KeyIndicatorsError from '../key-indicators-error.vue';
@@ -31,14 +31,14 @@ const summarizedLabel = computed(() => {
 	const now = new Date();
 	const isToday = date.toDateString() === now.toDateString();
 
-	const time = date.toLocaleTimeString(FALLBACK_LOCALE, { hour: '2-digit', minute: '2-digit', hour12: false });
+	const time = getDateFormatter({ hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
 
 	if (isToday) {
 		return `Summarized at ${time}`;
 	}
 
 	const day = date.getDate();
-	const month = date.toLocaleDateString(FALLBACK_LOCALE, { month: 'long' });
+	const month = getDateFormatter({ month: 'long' }).format(date);
 	const year = date.getFullYear() !== now.getFullYear() ? ` ${date.getFullYear()}` : '';
 
 	return `Summarized at ${day} ${month}${year} ${time}`;
