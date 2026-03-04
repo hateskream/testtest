@@ -75,6 +75,12 @@ export const ALL_FEATURES = [
 	'CALENDAR_OPEN_CHART',
 
 	/**
+	 * Тикер Sectors
+	 */
+
+	'TICKER_WIDGET_SECTORS_ENABLED',
+
+	/**
 	 * Показывать ли ссылку на сектор (скриннер) на странице сток тикера
 	 * Убрать, когда появится страница скриннера
 	 */

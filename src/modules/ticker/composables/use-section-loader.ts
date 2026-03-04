@@ -40,6 +40,8 @@ export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent
 			import('@/modules/ticker/ui/sections/etf').then(m => m.OverviewSection),
 		[TICKER_SECTION_COMPONENT.ETF_INSIGHTS_AND_ACTIVITY]: () =>
 			import('@/modules/ticker/ui/sections/etf').then(m => m.InsightsAndActivity),
+		[TICKER_SECTION_COMPONENT.ETF_HOLDING_SUMMARY]: () =>
+			import('@/modules/ticker/ui/sections/etf').then(m => m.HoldingSummary),
 		[TICKER_SECTION_COMPONENT.ETF_VALUATION_AND_ESTIMATES]: () =>
 			import('@/modules/ticker/ui/sections/etf').then(m => m.ValuationAndEstimates),
 
@@ -48,6 +50,8 @@ export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent
 			import('@/modules/ticker/ui/sections/indices').then(m => m.OverviewSection),
 		[TICKER_SECTION_COMPONENT.INDEX_INSIGHTS_AND_ACTIVITY]: () =>
 			import('@/modules/ticker/ui/sections/indices').then(m => m.InsightsAndActivity),
+		[TICKER_SECTION_COMPONENT.INDEX_HOLDING_SUMMARY]: () =>
+			import('@/modules/ticker/ui/sections/indices').then(m => m.HoldingSummary),
 
 		// commodity
 		[TICKER_SECTION_COMPONENT.COMMODITY_OVERVIEW]: () =>

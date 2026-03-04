@@ -6,7 +6,7 @@ import { apiSchema, useApiClient } from '@/shared/service/api';
 
 const IS_USE_MOCK = false;
 
-export async function usePricePerformance(request: IPricePerformanceRequest) {
+export async function getPricePerformance(request: IPricePerformanceRequest) {
 	const apiClient = useApiClient();
 	const logger = useLogger();
 
