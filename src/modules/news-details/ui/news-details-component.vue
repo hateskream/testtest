@@ -7,7 +7,8 @@ import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
 import { RouteNames } from '@/types/route.d';
-import { getDateFormatter, isFeatureEnabled } from '@/shared/lib';
+import { isFeatureEnabled } from '@/shared/lib';
+import { formatNewsDate } from '@/modules/news';
 
 import NewsDetailsSkeletonComponent from './details/news-details-skeleton-component.vue';
 import NewsDetailsSourcesComponent from './details/news-details-sources-component.vue';
@@ -30,20 +31,10 @@ const newsDetails = computed<IGetNewsDetailsResponse | null>(() => {
 
 const time = computed(() => {
 	if (!newsDetails.value) {
-		return 'Date not find';
+		return '';
 	}
 
-	const date = new Date(newsDetails.value.date);
-
-	const formatter = getDateFormatter({
-		day: '2-digit',
-		month: 'short',
-		hour12: true,
-		hour: '2-digit',
-		minute: '2-digit',
-	});
-
-	return formatter.format(date);
+	return formatNewsDate(newsDetails.value.updated_at);
 });
 
 const { getPathString } = useNewsPage();
@@ -63,16 +54,23 @@ const isNewsPage = computed(
 			<header :class="classes.header">
 				<div :class="classes.headerMain">
 					<h2 :class="classes.title" class="title-300">
-						{{newsDetails.title}}
+						{{newsDetails.primary_title}}
 					</h2>
 
 					<div :class="classes.meta">
 						<span>{{ time }}</span>
 						<span class="dot">·</span>
-						<span :class="classes.score">
-							<news-icon-score :score="newsDetails.score" />
-						</span>
-						<span :class="classes.sentiment">{{ newsDetails.sentiment }}</span>
+						<div :class="classes.scoreSentimentWrapper">
+							<span :class="classes.score">
+								<news-icon-score
+									:score="newsDetails.sentiment.score"
+									:tone="newsDetails.sentiment.tone"
+								/>
+							</span>
+							<span :class="classes.sentiment">
+								{{newsDetails.sentiment.score}} {{ newsDetails.sentiment.tone }}
+							</span>
+						</div>
 					</div>
 				</div>
 
@@ -83,7 +81,8 @@ const isNewsPage = computed(
 						/>
 
 						<news-details-tickers-component
-							:stocks="newsDetails.stocks"
+							v-if="newsDetails.tickers"
+							:tickers="newsDetails.tickers"
 							:display-variant
 						/>
 					</div>
@@ -101,7 +100,7 @@ const isNewsPage = computed(
 			</header>
 
 			<section v-if="newsDetails" :class="classes.content">
-				{{newsDetails.article}}
+				{{newsDetails.summary}}
 			</section>
 		</article>
 	</div>
@@ -147,6 +146,12 @@ const isNewsPage = computed(
 	color: var(--color-text-base-300, #9a9a9d);
 }
 
+.scoreSentimentWrapper {
+	display: flex;
+	align-items: center;
+	gap: var(--padding-padding-s2, 2px);
+}
+
 .score {
 	position: relative;
 	width: 22px;
@@ -167,8 +172,9 @@ const isNewsPage = computed(
 
 .sidebarRow {
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	width: 100%;
+	gap: var(--padding-s7, 12px) var(--padding-s12, 24px);
 }
 
 .link {

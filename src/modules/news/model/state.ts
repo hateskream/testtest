@@ -1,4 +1,11 @@
-import { compareArray, compareFilter, Include, type Score, type Sentiment, type Source } from './filters';
+import {
+	compareArray,
+	compareFilter,
+	type IncludeType,
+	type ScoreType,
+	type SentimentType,
+	type SourceType,
+} from './filters';
 import { compareDisplaySettings, type IDisplaySettings } from './display';
 import {
 	compareLocations,
@@ -12,27 +19,27 @@ import { compareSort, type SortState } from './sort';
 import { MarketType } from '@/modules/market';
 
 export interface IState {
-	score: Set<Score>;
+	score: Set<ScoreType>;
 	segments: Set<MarketType>;
-	sentiment: Set<Sentiment>;
-	source: Set<Source>;
+	sentiment: Set<SentimentType>;
+	source: Set<SourceType>;
 	selectedTickers: string[];
 	activeSort: SortState;
 	displaySettings: IDisplaySettings;
 	locations: ILocation[];
-	include: Set<Include>;
+	include: Set<IncludeType>;
 }
 
 export interface IHydratedState {
-	score: Score[];
+	score: ScoreType[];
 	segments: MarketType[];
-	sentiment: Sentiment[];
-	source: Source[];
+	sentiment: SentimentType[];
+	source: SourceType[];
 	selectedTickers: string[];
 	activeSort: SortState;
 	displaySettings: IDisplaySettings;
 	locations: IActiveLocation[];
-	include: Include[];
+	include: IncludeType[];
 }
 
 export function hydrateState({

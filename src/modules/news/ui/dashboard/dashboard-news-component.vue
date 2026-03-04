@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import BTCImage from '@/assets/images/market/BTC.png';
 import { UiTransitionFade } from '@/shared/ui/transition';
 import { UiImage } from '@/shared/ui/image';
-import { UiPositionTooltip } from '@/shared/ui/position';
-import type { IDisplaySettings, INews } from '../../model';
-import { DashboardTooltipWrapper } from '@/shared/ui/tooltip';
-import { getDateFormatter } from '@/shared/lib';
+import { formatNewsDate } from '../../utils/date';
 import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
+import type { IDisplaySettings, INews } from '../../model';
+
+import NewsTickers from '../common/news-tickers.vue';
 
 interface INewsComponent {
 	news: INews;
@@ -19,18 +18,20 @@ interface INewsComponent {
 
 const props = defineProps<INewsComponent>();
 
-const time = computed(() => {
-	const date = new Date(props.news.timestamp);
+const time = computed(() => formatNewsDate(props.news.updated_at));
 
-	const formatter = getDateFormatter({
-		day: '2-digit',
-		month: 'short',
-		hour12: true,
-		hour: '2-digit',
-		minute: '2-digit',
-	});
+const isShowAuthor = computed(
+	() => props.displaySettings.isShowAuthor && props.news.author,
+);
+const isShowTickers = computed(
+	() => props.displaySettings.isShowSymbols && props.news.tickers?.length,
+);
 
-	return formatter.format(date);
+const isShowDot = computed(() => {
+	const hasLeft = props.displaySettings.isShowDate;
+	const hasRight = isShowAuthor.value || isShowTickers.value;
+
+	return hasLeft && hasRight;
 });
 </script>
 
@@ -39,8 +40,9 @@ const time = computed(() => {
 		<ui-transition-fade>
 			<div v-if="props.displaySettings.isShowSource" :class="classes.left">
 				<ui-image
+					v-if="props.news.src_source_image"
 					:class="classes.icon"
-					:src="props.news.srcSourceImage"
+					:src="props.news.src_source_image"
 					width="14px"
 					height="14px"
 				/>
@@ -53,7 +55,7 @@ const time = computed(() => {
 				token="text-300-r"
 				as="h3"
 			>
-				{{ props.news.title }}
+				{{ props.news.primary_title }}
 			</ui-text>
 
 			<ui-transition-fade>
@@ -62,7 +64,7 @@ const time = computed(() => {
 					:rows="2"
 					:class="classes.description"
 				>
-					<ui-text token="text-200-r">{{props.news.description }}</ui-text>
+					<ui-text token="text-200-r">{{props.news.snippet }}</ui-text>
 				</ui-clamped>
 			</ui-transition-fade>
 
@@ -79,7 +81,7 @@ const time = computed(() => {
 					</ui-transition-fade>
 					<ui-transition-fade>
 						<ui-text
-							v-if="props.displaySettings.isShowDate"
+							v-if="isShowDot"
 							:class="classes.dot"
 							token="text-100-r"
 						>
@@ -88,7 +90,7 @@ const time = computed(() => {
 					</ui-transition-fade>
 					<ui-transition-fade>
 						<ui-text
-							v-if="props.displaySettings.isShowAuthor"
+							v-if="isShowAuthor"
 							:class="classes.author"
 							token="text-200-r"
 						>
@@ -97,30 +99,11 @@ const time = computed(() => {
 					</ui-transition-fade>
 
 					<ui-transition-fade>
-						<div
-							v-if="props.displaySettings.isShowSymbols"
-							:class="classes.stocks"
-						>
-							<template
-								v-for="stock in props.news.stocks"
-								:key="stock.ticker"
-							>
-								<ui-position-tooltip>
-									<div :class="classes.stock">
-										<ui-image
-											:class="classes.stockImage"
-											:src="BTCImage"
-										/>
-									</div>
-
-									<template #content>
-										<dashboard-tooltip-wrapper>
-											{{ stock.name }}
-										</dashboard-tooltip-wrapper>
-									</template>
-								</ui-position-tooltip>
-							</template>
-						</div>
+						<news-tickers
+							v-if="isShowTickers"
+							:tickers="props.news.tickers!"
+							display-variant="new"
+						/>
 					</ui-transition-fade>
 				</div>
 			</div>
@@ -134,7 +117,6 @@ const time = computed(() => {
 	align-items: flex-start;
 	align-self: stretch;
 	padding: 14px 12px;
-	border-radius: var(--radius-radius-s20-72, 28.4px);
 	cursor: pointer;
 	transition: background-color 0.2s ease-in-out;
 	user-select: none;
@@ -142,7 +124,8 @@ const time = computed(() => {
 }
 
 .container:hover {
-	background-color: var(--bg-color-base-100-effect);
+	background: var(--atom-base-70, rgb(73 73 80 / 32%));
+	border-radius: var(--radius-radius-s14-32, 12.4px);
 }
 
 .left {
@@ -214,24 +197,5 @@ const time = computed(() => {
 	color: var(--text-300, rgb(255 255 255 / 62%));
 }
 
-.stocks {
-	display: flex;
-}
 
-.stock {
-	width: 20px;
-	height: 20px;
-	margin-left: -6px;
-	overflow: hidden;
-	border-radius: 16px;
-	cursor: pointer;
-}
-
-.stocks > div:first-child .stock {
-	margin-left: 0;
-}
-
-.stockImage {
-	object-fit: cover;
-}
 </style>

@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue';
 
 import {
-	ActiveDateRange,
+	type ActiveDateRangeType,
 	compareState,
 	getActiveLocations,
 	getDefaultActiveDateRange,
@@ -11,13 +11,13 @@ import {
 	hydrateState,
 	type IDisplaySettings,
 	type ILocation,
-	Include,
+	type IncludeType,
 	type IState,
 	rehydrateState,
-	Score,
-	Sentiment,
+	type ScoreType,
+	type SentimentType,
 	type SortState,
-	Source,
+	type SourceType,
 } from '../model';
 import { useSegment } from './use-segment';
 import { stateSchema, type StateSchemaType } from '../services';
@@ -69,22 +69,22 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 	} = useSegment(defaultStateType);
 
 	const selectedScores = computed({
-		get: (): Set<Score> => state.value.score,
-		set: (val: Set<Score>) => {
+		get: (): Set<ScoreType> => state.value.score,
+		set: (val: Set<ScoreType>) => {
 			state.value.score = val;
 		},
 	});
 
 	const selectedSentiment = computed({
 		get: () => state.value.sentiment,
-		set: (val: Set<Sentiment>) => {
+		set: (val: Set<SentimentType>) => {
 			state.value.sentiment = val;
 		},
 	});
 
 	const selectedSources = computed({
 		get: () => state.value.source,
-		set: (val: Set<Source>) => {
+		set: (val: Set<SourceType>) => {
 			state.value.source = val;
 		},
 	});
@@ -116,12 +116,12 @@ export function useNews({ widgetId, isEphemeral, defaultStateType }: IOptions) {
 
 	const include = computed({
 		get: () => state.value.include,
-		set: (val: Set<Include>) => {
+		set: (val: Set<IncludeType>) => {
 			state.value.include = val;
 		},
 	});
 
-	const activeDateRange = ref<ActiveDateRange>(getDefaultActiveDateRange());
+	const activeDateRange = ref<ActiveDateRangeType>(getDefaultActiveDateRange());
 	const dateRange = ref<IDateRange>(getDefaultDateRange());
 
 	watch(dataState, newState => {

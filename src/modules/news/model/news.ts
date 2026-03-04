@@ -1,23 +1,28 @@
-import { type IActiveLocation, type ISegmentRequest, Score, Sentiment, type SortState, Source } from '@/modules/news';
-
-export type DateYYYYMMDD = string;
-
-export interface ITicker {
-	ticker: string;
-	name: string;
-	srcImage: string[];
-}
+import {
+	type IActiveLocation,
+	type ISegmentRequest,
+	type ScoreType,
+	type SentimentType,
+	type SortState,
+	type SourceType,
+} from '@/modules/news';
+import type { INewsTicker } from '../api/get-news-data';
 
 export interface INews {
 	id: string;
 	slug: string;
-	description: string;
-	timestamp: number;
-	author: string;
-	title: string;
-	stocks: ITicker[];
-	score: number;
-	srcSourceImage: string;
+	author?: string;
+	first_seen_at: string;
+	primary_title: string;
+	sentiment: {
+		score: ScoreType;
+		tone: SentimentType;
+	};
+	snippet: string;
+	sources_count: number;
+	src_source_image?: string;
+	tickers?: INewsTicker[];
+	updated_at: string;
 }
 
 export interface INewsSource {
@@ -25,13 +30,15 @@ export interface INewsSource {
 	url: string;
 }
 
+export type DateYYYYMMDD = string;
+
 export interface IGetNewsRequest {
 	offset: number;
 	limit: number;
-	score: Set<Score>;
+	score: Set<ScoreType>;
 	segment: ISegmentRequest;
-	sentiment: Set<Sentiment>;
-	source: Set<Source>;
+	sentiment: Set<SentimentType>;
+	source: Set<SourceType>;
 	activeSort: SortState;
 	locations: IActiveLocation[];
 	dateFrom: DateYYYYMMDD;

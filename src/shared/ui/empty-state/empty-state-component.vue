@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { IconIds, UiIcon } from '@/shared/ui/icon';
+import { UiText, type TextToken } from '../text';
 
 interface IEmptyStateProps {
 	label?: string;
+	textToken?: TextToken;
 }
 
 const props = withDefaults(defineProps<IEmptyStateProps>(),
 	{
 		label: 'Nothing Here',
+		textToken: 'title-300',
 	},
 );
 </script>
@@ -27,11 +30,11 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 				height="200px"
 			/>
 		</div>
-		<p :class="classes.paragraph">
+		<ui-text :token="props.textToken" :class="classes.paragraph">
 			<slot name="label">
 				{{ props.label }}
 			</slot>
-		</p>
+		</ui-text>
 		<slot name="footer"></slot>
 	</div>
 </template>
@@ -46,7 +49,6 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	background: var(--bg-color-surface-01);
 	border-radius: 18px;
 }
 
@@ -63,15 +65,5 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 	filter: blur(13px);
 	fill: rgb(255 255 255 / 16%);
 	pointer-events: none;
-}
-
-.paragraph {
-	font-style: normal;
-	font-weight: 300;
-	font-size: var(--font-title-300-size);
-	line-height: 1;
-	text-align: center;
-	color: var(--text-color-base-500);
-	letter-spacing: 0.104px;
 }
 </style>

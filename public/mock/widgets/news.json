@@ -1,229 +1,590 @@
-{
-	"data": [
-		{
-			"id": "vwnakx2gt9a9cnmtcotwot",
-			"slug": "why-cocoa-ice-could-outperform-commodities-through-q4",
-			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
-			"timestamp": 1759890997403,
-			"author": "Noah Kim",
-			"title": "Why Cocoa (ICE) could outperform commodities through Q4",
-			"stocks": [
-				{
-					"name": "Cocoa (ICE)",
-					"ticker": "COCOA",
-					"srcImage": "cocoa"
-				},
-				{
-					"name": "Intel Corporation",
-					"ticker": "INTC",
-					"srcImage": "intc"
-				}
-			],
-			"score": 13,
-			"srcSourceImage": "benzinga.svg"
-		},
-		{
-			"id": "9gm0zwo60hwpe6ge02eknm",
-			"slug": "thorchain-vs-dow-jones-industrial-average-which-is-the-better-crypto-play-now",
-			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
-			"timestamp": 1759871549317,
-			"author": "Zhang Wei",
-			"title": "THORChain vs Dow Jones Industrial Average: which is the better crypto play now",
-			"stocks": [
-				{
-					"name": "THORChain",
-					"ticker": "RUNE",
-					"srcImage": "rune"
-				},
-				{
-					"name": "Dow Jones Industrial Average",
-					"ticker": "DJI",
-					"srcImage": "dji"
-				}
-			],
-			"score": 7,
-			"srcSourceImage": "investing-com.svg"
-		},
-		{
-			"id": "52gwx77in0e7mijcxfwdjj",
-			"slug": "3-signals-usd-is-primed-for-a-breakout",
-			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
-			"timestamp": 1759780234223,
-			"author": "Elena García",
-			"title": "3 signals USD is primed for a breakout",
-			"stocks": [
-				{
-					"name": "USD",
-					"ticker": "EUR",
-					"srcImage": "eur"
-				},
-				{
-					"name": "Pfizer Inc.",
-					"ticker": "PFE",
-					"srcImage": "pfe"
-				}
-			],
-			"score": 31,
-			"srcSourceImage": "bloomberg.svg"
-		},
-		{
-			"id": "mjmrskf81rbravuenaru3",
-			"slug": "analyst-note-thorchain-fair-value-revised-amid-earnings-beat",
-			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
-			"timestamp": 1759732288401,
-			"author": "Zhang Wei",
-			"title": "Analyst note: THORChain fair value revised amid earnings beat",
-			"stocks": [
-				{
-					"name": "THORChain",
-					"ticker": "RUNE",
-					"srcImage": "rune"
-				},
-				{
-					"name": "Wool",
-					"ticker": "WOOL",
-					"srcImage": "wool"
-				}
-			],
-			"score": 12,
-			"srcSourceImage": "benzinga.svg"
-		},
-		{
-			"id": "xuw9aoja17n26x3vl40xb1",
-			"slug": "csi-300-china-vs-dow-jones-industrial-average-which-is-the-better-indices-play-now",
-			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
-			"timestamp": 1759721765223,
-			"author": "Mia Novak",
-			"title": "CSI 300 (China) vs Dow Jones Industrial Average: which is the better indices play now",
-			"stocks": [
-				{
-					"name": "CSI 300 (China)",
-					"ticker": "CSI300",
-					"srcImage": "csi300"
-				},
-				{
-					"name": "Dow Jones Industrial Average",
-					"ticker": "DJI",
-					"srcImage": "dji"
-				}
-			],
-			"score": 28,
-			"srcSourceImage": "benzinga.svg"
-		},
-		{
-			"id": "3v2r70bwvd8pfao8uavat",
-			"slug": "oracle-corporation-vs-s-p-latin-america-which-is-the-better-equities-play-now",
-			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
-			"timestamp": 1759699590521,
-			"author": "Liam O’Connor",
-			"title": "Oracle Corporation vs S&P Latin America: which is the better equities play now",
-			"stocks": [
-				{
-					"name": "Oracle Corporation",
-					"ticker": "ORCL",
-					"srcImage": "orcl"
-				},
-				{
-					"name": "S&P Latin America",
-					"ticker": "SPLATAM",
-					"srcImage": "splatam"
-				}
-			],
-			"score": 24,
-			"srcSourceImage": "bloomberg.svg"
-		},
-		{
-			"id": "b6ehgvakfpk9ir5jm2lpc6",
-			"slug": "ftse-100-vs-alphabet-inc-class-a-which-is-the-better-indices-play-now",
-			"description": "Positioning remains uneven as dispersion across sectors widens.",
-			"timestamp": 1759685145512,
-			"author": "Lucas Moretti",
-			"title": "FTSE 100 vs Alphabet Inc. (Class A): which is the better indices play now",
-			"stocks": [
-				{
-					"name": "FTSE 100",
-					"ticker": "FTSE",
-					"srcImage": "ftse"
-				},
-				{
-					"name": "Alphabet Inc. (Class A)",
-					"ticker": "GOOGL",
-					"srcImage": "googl"
-				}
-			],
-			"score": 35,
-			"srcSourceImage": "benzinga.svg"
-		},
-		{
-			"id": "kmmqri29vmhk7f1mu2xdg",
-			"slug": "why-chainlink-could-outperform-crypto-through-q4",
-			"description": "As we move through 2025, investors weigh earnings momentum against macro risks.",
-			"timestamp": 1759594525813,
-			"author": "Elena García",
-			"title": "Why Chainlink could outperform crypto through Q4",
-			"stocks": [
-				{
-					"name": "Chainlink",
-					"ticker": "LINK",
-					"srcImage": "link"
-				},
-				{
-					"name": "Tesla, Inc.",
-					"ticker": "TSLA",
-					"srcImage": "tsla"
-				}
-			],
-			"score": 26,
-			"srcSourceImage": "investing-com.svg"
-		},
-		{
-			"id": "a9hkvg795tfme178sbv7mb",
-			"slug": "analyst-note-aex-netherlands-fair-value-revised-amid-valuation-reset",
-			"description": "Markets reassess valuation premiums while liquidity rotates across factors.",
-			"timestamp": 1759581987547,
-			"author": "Zhang Wei",
-			"title": "Analyst note: AEX (Netherlands) fair value revised amid valuation reset",
-			"stocks": [
-				{
-					"name": "AEX (Netherlands)",
-					"ticker": "AEX",
-					"srcImage": "aex"
-				},
-				{
-					"name": "Lumber",
-					"ticker": "LUMBER",
-					"srcImage": "lumber"
-				}
-			],
-			"score": 63,
-			"srcSourceImage": "seekingalpha.svg"
-		},
-		{
-			"id": "cni27jkukdpuuziiasgjq",
-			"slug": "analyst-note-lme-cadmium-fair-value-revised-amid-guidance-raise",
-			"description": "Flows suggest growing interest in quality compounders and AI infrastructure.",
-			"timestamp": 1759553796023,
-			"author": "Jesse Cohen",
-			"title": "Analyst note: LME Cadmium fair value revised amid guidance raise",
-			"stocks": [
-				{
-					"name": "LME Cadmium",
-					"ticker": "LMCAD",
-					"srcImage": "lmcad"
-				},
-				{
-					"name": "Lockheed Martin Corporation",
-					"ticker": "LMT",
-					"srcImage": "lmt"
-				}
-			],
-			"score": 16,
-			"srcSourceImage": "seekingalpha.svg"
-		}
-	],
-	"pagination": {
-		"offset": 0,
-		"limit": 10,
-		"total": 48
-	}
-}
+[
+  {
+    "id": "986a335b-86c5-42dc-9f85-507da4a82c64",
+    "slug": "semrush-sets-new-standard-for-digital-brand-visibility-with-spotlight-2026-conference-986a33",
+    "primary_title": "Semrush Sets New Standard for Digital Brand Visibility with Spotlight 2026 Conference",
+    "snippet": "Semrush (SEMR) announced its Spotlight 2026 marketing conference, scheduled for October 13 in London. The event is positioned as a key catalyst for the company, focusing on strateg…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SEMR", "label": "SEMR" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.businesswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:30:04Z"
+  },
+  {
+    "id": "9b217d30-634b-428e-880d-431cdacc7698",
+    "slug": "why-vertiv-stock-soared-37-in-february-9b217d",
+    "primary_title": "Why Vertiv Stock Soared 37% in February",
+    "snippet": "Vertiv (VRT) shares surged 37% in February, driven by its strong Q4 results that beat revenue and earnings estimates. The stock's sharp rise was further fueled by the company's 202…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "VRT", "label": "VRT" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:29:56Z"
+  },
+  {
+    "id": "c44f48de-5203-4fe7-85c2-5f8157206d3a",
+    "slug": "2-stocks-that-could-soar-as-high-as-65-and-195-during-the-next-year-according-to-wall-street-c44f48",
+    "primary_title": "2 Stocks That Could Soar as High as 65% and 195% During the Next Year, According to Wall Street",
+    "snippet": "Pagaya (PGY) has secured $800 million in institutional funding for its loans this year. Meanwhile, Block is implementing significant workforce reductions to improve operational eff…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "PGY", "label": "PGY" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:29:42Z"
+  },
+  {
+    "id": "bc4ea159-7792-4bcc-9c98-096f77f3823b",
+    "slug": "whoop-announces-2026-hiring-surge-adding-more-than-600-roles-as-it-scales-wearable-health-platform-globally-bc4ea1",
+    "primary_title": "WHOOP Announces 2026 Hiring Surge, Adding More Than 600 Roles as It Scales Wearable Health Platform Globally",
+    "snippet": "WHOOP (WHSI) announced plans to add over 600 new roles by 2026 to scale its wearable health platform globally. The hiring surge targets key areas including Software, Hardware, and…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "WHSI", "label": "WHSI" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.businesswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:29:32Z"
+  },
+  {
+    "id": "28a5269e-4d8f-4a43-b3b1-2ba1b1b3a355",
+    "slug": "netscout-reveals-qualitative-shifts-in-ddos-attack-sophistication-infrastructure-capacity-and-threat-actor-capabilities-28a526",
+    "primary_title": "NETSCOUT Reveals Qualitative Shifts in DDoS Attack Sophistication, Infrastructure Capacity, and Threat Actor Capabilities",
+    "snippet": "NETSCOUT Systems (NTCT) reported a surge in DDoS attack sophistication and scale in its latest threat report, noting over eight million global attacks with some reaching 30 terabit…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "NTCT", "label": "NTCT" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.businesswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:05:00Z",
+    "updated_at": "2026-03-04T11:29:23Z"
+  },
+  {
+    "id": "1c10f455-17da-432c-813a-d9e33902d520",
+    "slug": "equinor-asa-notifiable-trading-1c10f4",
+    "primary_title": "Equinor ASA: Notifiable trading",
+    "snippet": "A close associate of an Equinor ASA (EQNR) board member sold 241 shares at NOK 299.00 each on March 4, 2026. The transaction, disclosed as notifiable trading, represents a minor in…",
+    "sentiment": { "score": "low", "tone": "Neutral" },
+    "symbols": [{ "ticker": "ASA", "label": "ASA" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:08:00Z",
+    "updated_at": "2026-03-04T11:29:13Z"
+  },
+  {
+    "id": "75c4acbe-9d90-48f4-9d76-e1c78c5f5d0b",
+    "slug": "is-it-worth-investing-in-ge-vernova-gev-based-on-wall-street-s-bullish-views-75c4ac",
+    "primary_title": "Is It Worth Investing in GE Vernova (GEV) Based on Wall Street's Bullish Views?",
+    "snippet": "GE Vernova (GEV) is highlighted in a bullish analysis reiterating a Strong Buy rating and a $1,169 price target, citing durable growth in Power and Electrification. The outlook is…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "GEV", "label": "GEV" }],
+    "sources_count": 2,
+    "src_source_image": "https://www.zacks.com/favicon.ico",
+    "first_seen_at": "2026-03-03T10:31:08Z",
+    "updated_at": "2026-03-04T11:28:50Z"
+  },
+  {
+    "id": "27064aa9-ef1a-42b5-94b7-02828cb9fb2b",
+    "slug": "new-strong-buy-stocks-for-march-4th-27064a",
+    "primary_title": "New Strong Buy Stocks for March 4th",
+    "snippet": "Five stocks, including **CPRX**, were added to the Zacks Strong Buy list on March 4, 2026. The upgrade for these tickers—ORN, LRCX, GMED, MYRG, and CPRX—is based on the firm's posi…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "CPRX", "label": "CPRX" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.zacks.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:11:05Z",
+    "updated_at": "2026-03-04T11:28:46Z"
+  },
+  {
+    "id": "24cbe712-a471-4a97-81b7-85d707700389",
+    "slug": "blackrock-says-buy-ai-energy-stocks-over-big-tech-in-2026-here-are-3-top-picks-24cbe7",
+    "primary_title": "BlackRock Says Buy AI Energy Stocks Over Big Tech in 2026. Here Are 3 Top Picks.",
+    "snippet": "BlackRock (BLK) is advising a shift from Big Tech to AI-related energy stocks for 2026. The article highlights Bloom Energy, citing its profitability in hydrogen fuel cells, and Co…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "BLK", "label": "BLK" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:21:00Z",
+    "updated_at": "2026-03-04T11:15:04Z"
+  },
+  {
+    "id": "15a45e77-decc-4f7e-a0af-ce1154ce7881",
+    "slug": "sharkninja-still-a-buy-as-market-share-gains-defy-macro-weakness-15a45e",
+    "primary_title": "SharkNinja: Still A Buy As Market Share Gains Defy Macro Weakness",
+    "snippet": "SharkNinja (SN) shares are in focus after the company reported its 11th straight quarter of double-digit revenue growth, defying broader consumer weakness. The firm maintains a str…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SN", "label": "SN" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:47:06Z",
+    "updated_at": "2026-03-04T11:14:51Z"
+  },
+  {
+    "id": "36d8247f-0cd5-490d-8291-fa8375898990",
+    "slug": "allspring-special-small-cap-value-fund-q4-2025-portfolio-review-36d824",
+    "primary_title": "Allspring Special Small Cap Value Fund Q4 2025 Portfolio Review",
+    "snippet": "The Allspring Special Small Cap Value Fund (ALG) saw Haemonetics (HAE) and Mueller Industries (MLI) as its top Q4 2025 contributors, while Eagle Materials (EXP) was the largest det…",
+    "sentiment": { "score": "low", "tone": "Neutral" },
+    "symbols": [{ "ticker": "ALG", "label": "ALG" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:50:00Z",
+    "updated_at": "2026-03-04T11:14:41Z"
+  },
+  {
+    "id": "1aa5dde9-17a9-48f7-952a-273bae44ad5f",
+    "slug": "china-s-xiaomi-tells-cnbc-it-s-planning-a-yearly-smartphone-chip-release-and-its-own-ai-assistant-for-overseas-1aa5dd",
+    "primary_title": "China's Xiaomi tells CNBC it's planning a yearly smartphone chip release and its own AI assistant for overseas",
+    "snippet": "Xiaomi (XIACY) plans an annual release cycle for its XRing smartphone chips, according to company president Lu Weibing. The firm will integrate its own chip, operating system, and…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "XIACY", "label": "XIACY" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.cnbc.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:58:28Z",
+    "updated_at": "2026-03-04T11:14:30Z"
+  },
+  {
+    "id": "a406d09d-62d6-4fe1-9ea8-3e1b231f2c1f",
+    "slug": "adidas-store-in-israel-hit-by-bomb-says-chief-commercial-officer-a406d0",
+    "primary_title": "Adidas store in Israel hit by bomb, says chief commercial officer",
+    "snippet": "An Adidas (ADDYY) franchise store in Israel was damaged by a bomb, according to a company executive. The incident, occurring amid regional conflict, resulted in no injuries. The ne…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "ADDYY", "label": "ADDYY" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.reuters.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:58:44Z",
+    "updated_at": "2026-03-04T11:14:22Z"
+  },
+  {
+    "id": "2d2abdba-820f-4f6d-938d-e7b9af637be6",
+    "slug": "national-vision-holdings-inc-reports-fourth-quarter-and-fiscal-2025-financial-results-2d2abd",
+    "primary_title": "National Vision Holdings, Inc. Reports Fourth Quarter and Fiscal 2025 Financial Results",
+    "snippet": "National Vision Holdings (EYE) reported its Q4 and full-year fiscal 2025 results, providing an outlook for fiscal 2026. The company's CEO described the year as \"remarkable,\" citing…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "EYE", "label": "EYE" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.businesswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:14:11Z"
+  },
+  {
+    "id": "0ddbe48b-63ed-45c0-aff7-8fa7e7e64717",
+    "slug": "member-month-returns-celebrating-wyndham-rewards-members-with-five-weeks-of-incredible-deals-0ddbe4",
+    "primary_title": "Member Month Returns: Celebrating Wyndham Rewards Members with Five Weeks of Incredible Deals",
+    "snippet": "Wyndham Hotels \u0026 Resorts (WH) announced a five-week promotional campaign for its loyalty program members, launching with offers including up to four free nights. The initiative, de…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "WH", "label": "WH" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:14:04Z"
+  },
+  {
+    "id": "a64ddc92-b5fb-4035-8cbe-953a9f041945",
+    "slug": "dingdong-announces-change-in-ceo-a64ddc",
+    "primary_title": "Dingdong Announces Change in CEO",
+    "snippet": "Dingdong (DDL) shares are in focus after the company announced a CEO change. Mr. Changlin Liang has resigned from the role, with a successor appointed. The leadership transition is…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "DDL", "label": "DDL" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:54Z"
+  },
+  {
+    "id": "d68fe86d-290f-4f29-b76b-2168f04936aa",
+    "slug": "kbr-awarded-10-year-global-catalyst-supply-contract-by-indorama-for-its-ammonia-asset-portfolio-d68fe8",
+    "primary_title": "KBR Awarded 10-Year Global Catalyst Supply Contract by Indorama for its Ammonia Asset Portfolio",
+    "snippet": "KBR (KBR) shares gained after the company secured a 10-year global catalyst supply contract from Indorama for its ammonia plant portfolio. This marks KBR's first long-term catalyst…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "KBR", "label": "KBR" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:42Z"
+  },
+  {
+    "id": "3742cd2a-a0a9-409f-a995-4d109f5859ff",
+    "slug": "sylogist-and-rsm-form-strategic-relationship-to-accelerate-digital-transformation-for-public-sector-organizations-across-north-america-3742cd",
+    "primary_title": "Sylogist and RSM Form Strategic Relationship to Accelerate Digital Transformation for Public Sector Organizations Across North America",
+    "snippet": "Sylogist Ltd. (TSX: SYZ) announced a strategic go-to-market relationship with consulting firm RSM US LLP. The partnership aims to accelerate digital transformation for public secto…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SYZLF", "label": "SYZLF" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.newsfilecorp.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:34Z"
+  },
+  {
+    "id": "b82767ca-b314-4e3a-84c6-b20ad244e801",
+    "slug": "happy-belly-food-group-s-yolks-breakfast-signs-franchise-agreement-and-real-estate-location-in-the-city-of-vaughan-ontario-b82767",
+    "primary_title": "Happy Belly Food Group's Yolks Breakfast Signs Franchise Agreement and Real-Estate Location in the City of Vaughan, Ontario",
+    "snippet": "Happy Belly Food Group (HBFG, HBFGF) shares rose after its Yolks Breakfast brand signed a franchise agreement and secured a real-estate location in Vaughan, Ontario. The company an…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "FRG", "label": "FRG" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.newsfilecorp.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:23Z"
+  },
+  {
+    "id": "8e972000-4a0d-4d4f-925d-588453add2c6",
+    "slug": "radnet-inc-reminds-investors-of-the-dedicated-conference-call-and-presentation-about-the-recently-completed-acquisition-of-gleamer-sas-8e9720",
+    "primary_title": "RadNet, Inc. Reminds Investors of the Dedicated Conference Call and Presentation About the Recently Completed Acquisition of Gleamer SAS",
+    "snippet": "RadNet (RDNT) will host a conference call on March 5, 2026, to detail its recently completed acquisition of Gleamer SAS and discuss its digital health strategy. The event will prov…",
+    "sentiment": { "score": "low", "tone": "Neutral" },
+    "symbols": [{ "ticker": "RDNT", "label": "RDNT" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:12Z"
+  },
+  {
+    "id": "777cc5ca-2e61-4d54-9e53-5eec1c293b1a",
+    "slug": "dingdong-cayman-limited-announces-fourth-quarter-2025-financial-results-777cc5",
+    "primary_title": "Dingdong (Cayman) Limited Announces Fourth Quarter 2025 Financial Results",
+    "snippet": "Dingdong (DDL) shares rose after the company reported Q4 2025 results, showing a 2.4% year-over-year increase in GMV to RMB6.7 billion. This marks the eighth consecutive quarter of…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "DDL", "label": "DDL" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:13:05Z"
+  },
+  {
+    "id": "50834354-601f-47be-ad4c-68e85316dbfc",
+    "slug": "dhs-dividend-etf-with-balanced-portfolio-but-average-results-508343",
+    "primary_title": "DHS: Dividend ETF With Balanced Portfolio, But Average Results",
+    "snippet": "The WisdomTree U.S. High Dividend Fund (DHS) offers a 3.43% yield from a diversified portfolio of 322 stocks, with a value tilt that overweights sectors like financials and energy.…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "DHS", "label": "DHS" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:12:56Z"
+  },
+  {
+    "id": "a653c7eb-ea46-4e52-bcae-3e602ea5e8ea",
+    "slug": "european-wax-center-inc-reports-fourth-quarter-and-fiscal-year-2025-results-a653c7",
+    "primary_title": "European Wax Center, Inc. Reports Fourth Quarter and Fiscal Year 2025 Results",
+    "snippet": "European Wax Center (EWCZ) reported a mixed fiscal 2025, with total revenue declining 4.7% to $206.6 million and GAAP net income falling 19.2% to $11.9 million. The results were pr…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "EWCZ", "label": "EWCZ" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T06:00:00Z",
+    "updated_at": "2026-03-04T11:12:48Z"
+  },
+  {
+    "id": "7bdd7ae4-2738-474f-b730-d09d8724bd16",
+    "slug": "skeena-resources-targets-450-million-for-the-eskay-creek-gold-silver-mine-7bdd7a",
+    "primary_title": "Skeena Resources Targets $450 Million For The Eskay Creek Gold/Silver Mine",
+    "snippet": "Skeena Resources (SKE) advanced its Eskay Creek project, securing full regulatory approval and a $750M financing package. The mine is projected to produce 370,000 gold-equivalent o…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SKE", "label": "SKE" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T04:41:31Z",
+    "updated_at": "2026-03-04T10:58:08Z"
+  },
+  {
+    "id": "942ddf29-bdd4-4642-a1dc-7ff13808f3fd",
+    "slug": "is-nuscale-the-smartest-investment-you-can-make-today-942ddf",
+    "primary_title": "Is NuScale the Smartest Investment You Can Make Today?",
+    "snippet": "NuScale Power (SMR) stock has declined over 75% from its October 2025 high. The company's small modular reactor (SMR) design has received approval from the Nuclear Regulatory Commi…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "SMR", "label": "SMR" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:17:00Z",
+    "updated_at": "2026-03-04T10:57:57Z"
+  },
+  {
+    "id": "e0d6d8c1-2367-4746-bed0-9aee6353dfb8",
+    "slug": "moderna-resolves-global-patent-litigation-with-arbutus-genevant-e0d6d8",
+    "primary_title": "Moderna Resolves Global Patent Litigation with Arbutus/Genevant",
+    "snippet": "Moderna has agreed to pay $950 million upfront to settle its global patent litigation with Arbutus and Genevant over COVID-19 vaccine technology, with the total settlement potentia…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "MRNA", "label": "MRNA" }],
+    "sources_count": 5,
+    "src_source_image": "https://www.accessnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-03T16:15:00Z",
+    "updated_at": "2026-03-04T10:57:36Z"
+  },
+  {
+    "id": "0dc1eae1-d67d-4871-9829-2ee930f3c5ec",
+    "slug": "allot-to-participate-at-the-cantor-fitzgerald-global-technology-conference-on-march-11-2026-in-nyc-0dc1ea",
+    "primary_title": "Allot to Participate at the Cantor Fitzgerald Global Technology Conference on March 11, 2026 in NYC",
+    "snippet": "Allot Ltd. (ALLT) will meet with investors at the Cantor Fitzgerald Global Technology Conference in New York on March 11, 2026. The event provides a potential catalyst for the stoc…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "ALLT", "label": "ALLT" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:37:00Z",
+    "updated_at": "2026-03-04T10:57:32Z"
+  },
+  {
+    "id": "e93fb6b0-2af2-4de7-a9a5-5b6d4f7e8982",
+    "slug": "dimensional-fund-advisors-ltd-form-8-3-just-group-plc-ordinary-shares-e93fb6",
+    "primary_title": "Dimensional Fund Advisors Ltd. : Form 8.3 - JUST GROUP PLC - Ordinary Shares",
+    "snippet": "Dimensional Fund Advisors Ltd. has filed a standard Form 8.3 disclosure for **JUST GROUP PLC (JUST.L)**, confirming it holds a position of 1% or more in the company's ordinary shar…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "PLC", "label": "PLC" }],
+    "sources_count": 2,
+    "src_source_image": "https://www.globenewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-03T06:25:00Z",
+    "updated_at": "2026-03-04T10:57:14Z"
+  },
+  {
+    "id": "18368485-416d-4b0d-98ce-8a0de8b8a539",
+    "slug": "interconexi-n-el-ctrica-s-a-e-s-p-iesfy-q4-2025-earnings-call-transcript-183684",
+    "primary_title": "Interconexión Eléctrica S.A. E.S.P. (IESFY) Q4 2025 Earnings Call Transcript",
+    "snippet": "Interconexión Eléctrica S.A. E.S.P. (IESFY) released its Q4 2025 earnings results, with the accompanying call transcript providing details on the period's financial performance and…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "IESFY", "label": "IESFY" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:42:15Z",
+    "updated_at": "2026-03-04T10:57:10Z"
+  },
+  {
+    "id": "b4436d6c-5af5-4b91-8808-bf36f50f8982",
+    "slug": "sea-limited-reports-fourth-quarter-and-full-year-2025-results-b4436d",
+    "primary_title": "Sea Limited Reports Fourth Quarter and Full Year 2025 Results",
+    "snippet": "Sea Limited's (SE) stock remains sharply lower from recent highs despite robust revenue growth, with the selloff driven by concerns over flat adjusted EBITDA expectations as Shopee…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "SE", "label": "SE" }],
+    "sources_count": 6,
+    "src_source_image": "https://www.businesswire.com/favicon.ico",
+    "first_seen_at": "2026-03-03T06:30:00Z",
+    "updated_at": "2026-03-04T10:56:50Z"
+  },
+  {
+    "id": "d7674e67-0c0b-4a93-afea-8df962fc54e3",
+    "slug": "mda-space-reports-fourth-quarter-and-fiscal-2025-results-d7674e",
+    "primary_title": "MDA SPACE REPORTS FOURTH QUARTER AND FISCAL 2025 RESULTS",
+    "snippet": "MDA Space (MDALF) reported strong Q4 and full-year 2025 results, with record revenue of $1.63B, up 51% YoY, and adjusted EBITDA of $324M, up 49%. The company ended the quarter with…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "MDALF", "label": "MDALF" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:45:00Z",
+    "updated_at": "2026-03-04T10:56:46Z"
+  },
+  {
+    "id": "988dfe3c-6c66-4a90-9ebf-df9c00de5501",
+    "slug": "3-historically-cheap-ultra-high-yield-dividend-stocks-sporting-an-average-yield-of-5-68-ripe-for-the-picking-by-opportunistic-income-seekers-988dfe",
+    "primary_title": "3 Historically Cheap Ultra-High-Yield Dividend Stocks -- Sporting an Average Yield of 5.68% -- Ripe for the Picking by Opportunistic Income Seekers",
+    "snippet": "The article highlights **CPB** and two other unnamed stocks as historically cheap, ultra-high-yield dividend plays. It cites an average yield of **5.68%** for the group, suggesting…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "CPB", "label": "CPB" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:06:00Z",
+    "updated_at": "2026-03-04T10:42:04Z"
+  },
+  {
+    "id": "7a5fa404-1c72-4220-9d4f-6bec44c2aa41",
+    "slug": "roivant-sciences-ltd-roiv-discusses-2-25-billion-global-settlement-resolving-covid-vaccine-patent-litigation-transcript-7a5fa4",
+    "primary_title": "Roivant Sciences Ltd. (ROIV) Discusses $2.25 Billion Global Settlement Resolving COVID Vaccine Patent Litigation Transcript",
+    "snippet": "Roivant Sciences (ROIV) has reached a $2.25 billion global settlement to resolve COVID-19 vaccine patent litigation. The agreement removes a significant legal overhang for the comp…",
+    "sentiment": { "score": "high", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "ROIV", "label": "ROIV" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:22:18Z",
+    "updated_at": "2026-03-04T10:41:46Z"
+  },
+  {
+    "id": "415c1f95-bba1-4e9d-8cb5-ce3302fa7f8a",
+    "slug": "why-american-frackers-aren-t-rushing-to-pump-more-oil-415c1f",
+    "primary_title": "Why American Frackers Aren't Rushing to Pump More Oil",
+    "snippet": "U.S. shale producers are maintaining disciplined production plans despite market volatility, a stance highlighted by the WSJ. This supply restraint is a key factor for oil-focused…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "BNO", "label": "BNO" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.wsj.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:30:00Z",
+    "updated_at": "2026-03-04T10:41:18Z"
+  },
+  {
+    "id": "d49ced14-8802-4c1b-9ed5-a99ba534b5fc",
+    "slug": "nvidia-swears-off-an-earnings-crutch-putting-pressure-on-other-tech-companies-d49ced",
+    "primary_title": "Nvidia Swears Off an Earnings Crutch, Putting Pressure on Other Tech Companies",
+    "snippet": "Nvidia (NVDA) is changing its financial reporting by no longer excluding stock-based compensation from its non-GAAP earnings. This move, which increases transparency, could pressur…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "NVDA", "label": "NVDA" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.wsj.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:30:00Z",
+    "updated_at": "2026-03-04T10:41:01Z"
+  },
+  {
+    "id": "7743bb94-adbf-43b4-8504-902860d9f952",
+    "slug": "deutsche-bank-cuts-reach-target-price-but-maintains-buy-rating-after-results-beat-7743bb",
+    "primary_title": "Deutsche Bank cuts Reach target price but maintains 'buy' rating after results beat",
+    "snippet": "Deutsche Bank trimmed its target price for Reach PLC (LSE:RCH) to 175p from 182p, while maintaining a 'buy' rating after the publisher's full-year results beat forecasts. The stock…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "RCH", "label": "RCH" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.proactiveinvestors.co.uk/favicon.ico",
+    "first_seen_at": "2026-03-04T05:34:25Z",
+    "updated_at": "2026-03-04T10:40:45Z"
+  },
+  {
+    "id": "b6b81bc7-0d4a-49a8-8524-8c7866bc1668",
+    "slug": "goldman-s-david-solomon-surprised-by-benign-market-reaction-to-iran-war-b6b81b",
+    "primary_title": "Goldman's David Solomon surprised by ‘benign' market reaction to Iran war",
+    "snippet": "Goldman Sachs (GS) CEO David Solomon expressed surprise at the market's relatively \"benign\" reaction to the Iran conflict, stating it may take weeks for the full impact to be absor…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "GS", "label": "GS" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.cnbc.com/favicon.ico",
+    "first_seen_at": "2026-03-04T04:48:04Z",
+    "updated_at": "2026-03-04T10:27:43Z"
+  },
+  {
+    "id": "cc4f833c-d6cb-4a7a-a07a-0cfa105449f8",
+    "slug": "are-uber-and-joby-aviation-stocks-about-to-take-off-based-on-their-recent-announcement-cc4f83",
+    "primary_title": "Are Uber and Joby Aviation Stocks About to Take Off Based on Their Recent Announcement?",
+    "snippet": "UBER and Joby Aviation announced a partnership to integrate air taxi services into Uber's platform. The deal provides Joby with a new revenue stream by offering rides through Uber'…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "UBER", "label": "UBER" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.fool.com/favicon.ico",
+    "first_seen_at": "2026-03-04T04:53:00Z",
+    "updated_at": "2026-03-04T10:27:30Z"
+  },
+  {
+    "id": "13c88178-f26e-464a-a543-57b700ccf983",
+    "slug": "dassault-ceo-says-fcas-fighter-project-dead-if-airbus-refuses-to-co-operate-13c881",
+    "primary_title": "Dassault CEO says FCAS fighter project 'dead' if Airbus refuses to co-operate",
+    "snippet": "Dassault Aviation (DUAVF) CEO stated the Future Combat Air System (FCAS) project is \"dead\" unless Airbus (AIR.PA) changes its stance. The warning follows what Dassault describes as…",
+    "sentiment": { "score": "high", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "DUAVF", "label": "DUAVF" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.reuters.com/favicon.ico",
+    "first_seen_at": "2026-03-04T04:55:17Z",
+    "updated_at": "2026-03-04T10:27:18Z"
+  },
+  {
+    "id": "ee81c3c7-374f-42c3-a95c-5dff320af00b",
+    "slug": "oil-could-hit-100-if-volumes-from-this-key-passageway-don-t-ramp-soon-says-goldman-sachs-ee81c3",
+    "primary_title": "Oil could hit $100 if volumes from this key passageway don't ramp soon, says Goldman Sachs",
+    "snippet": "Goldman Sachs (GS) raised its short-term Brent crude forecast by $10 to $76 per barrel, citing supply risks. The bank warned that oil prices could surge toward $100 if volumes thro…",
+    "sentiment": { "score": "high", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "BNO", "label": "BNO" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.marketwatch.com/favicon.ico",
+    "first_seen_at": "2026-03-04T04:59:00Z",
+    "updated_at": "2026-03-04T10:27:09Z"
+  },
+  {
+    "id": "286b3ada-2f8d-41ef-895e-c0cefe9990ad",
+    "slug": "ilc-critical-minerals-ltd-does-not-exercise-option-to-buy-lepidico-mauritius-ltd-286b3a",
+    "primary_title": "ILC Critical Minerals Ltd. Does Not Exercise Option to Buy Lepidico Mauritius Ltd.",
+    "snippet": "ILC Critical Minerals Ltd. (ILC) has not exercised its option to acquire 100% of Lepidico (Mauritius) Ltd., a deal it was also unable to extend. The announcement marks a strategic…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "MTX", "label": "MTX" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.newsfilecorp.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:00:00Z",
+    "updated_at": "2026-03-04T10:26:56Z"
+  },
+  {
+    "id": "041d1513-9017-4b51-a0e9-a8d984ce5e0e",
+    "slug": "odine-a-global-technology-partner-signs-strategic-cooperation-mou-with-everpure-at-mobile-world-congress-041d15",
+    "primary_title": "Odine, a Global Technology Partner, Signs Strategic Cooperation MOU with Everpure at Mobile World Congress",
+    "snippet": "Odine signed a strategic cooperation MOU with publicly traded Everpure (GTLL) at the 2026 Mobile World Congress. The agreement focuses on cloud, data, and AI-driven transformation,…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "GTLL", "label": "GTLL" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:00:00Z",
+    "updated_at": "2026-03-04T10:26:44Z"
+  },
+  {
+    "id": "7a7dfeae-8541-4091-a64c-a42710870060",
+    "slug": "blackrock-silver-announces-the-appointment-of-bernard-poznanski-and-susan-mathieu-to-the-board-of-directors-7a7dfe",
+    "primary_title": "Blackrock Silver Announces the Appointment of Bernard Poznanski and Susan Mathieu to the Board of Directors",
+    "snippet": "Blackrock Silver Corp. (TSXV: BRC, OTCQX: BKRRF) announced board changes, appointing Bernard Poznanski and Susan Mathieu as independent directors. The move, which sees Daniel Vicke…",
+    "sentiment": { "score": "low", "tone": "Neutral" },
+    "symbols": [{ "ticker": "BKRRF", "label": "BKRRF" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.newsfilecorp.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:00:00Z",
+    "updated_at": "2026-03-04T10:26:32Z"
+  },
+  {
+    "id": "88fd5b06-8c25-45b3-a3d5-b057bad8e10e",
+    "slug": "no-to-war-spain-pm-hits-back-over-trump-s-threats-to-cut-trade-over-military-base-access-88fd5b",
+    "primary_title": "'No to war': Spain PM hits back over Trump's threats to cut trade over military base access",
+    "snippet": "Spanish Prime Minister Pedro Sanchez criticized U.S. and Israeli strikes on Iran as a \"disaster,\" escalating a diplomatic rift after former President Donald Trump threatened to cut…",
+    "sentiment": { "score": "medium", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "UAMY", "label": "UAMY" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.cnbc.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:01:17Z",
+    "updated_at": "2026-03-04T10:26:14Z"
+  },
+  {
+    "id": "3868a39c-accb-4a8c-beb1-7251e5fc0830",
+    "slug": "apple-stock-flashes-worst-bearish-cross-expert-warns-crash-to-200-imminent-3868a3",
+    "primary_title": "Apple stock flashes ‘worst bearish cross', expert warns crash to $200 imminent",
+    "snippet": "Apple (AAPL) is facing analyst warnings of a potential sharp pullback toward $200, driven by a technical indicator signaling a bearish crossover. The stock's recent price action ha…",
+    "sentiment": { "score": "high", "tone": "Pessimistic" },
+    "symbols": [{ "ticker": "AAPL", "label": "AAPL" }],
+    "sources_count": 1,
+    "src_source_image": "https://finbold.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:05:07Z",
+    "updated_at": "2026-03-04T10:26:01Z"
+  },
+  {
+    "id": "d2ec4de0-cc30-49ce-b5db-425b91f8f9dd",
+    "slug": "fidelity-total-bond-etf-q4-2025-commentary-d2ec4d",
+    "primary_title": "Fidelity Total Bond ETF Q4 2025 Commentary",
+    "snippet": "The Fidelity Total Bond ETF (FBND) outperformed its benchmark in 2025, posting a 7.58% NAV return versus the Bloomberg U.S. Aggregate Bond Index's 7.30%. This relative strength was…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "FBND", "label": "FBND" }],
+    "sources_count": 1,
+    "src_source_image": "https://seekingalpha.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:10:00Z",
+    "updated_at": "2026-03-04T10:25:46Z"
+  },
+  {
+    "id": "50af8961-2c27-4ff7-b5e2-e914bf8d3b14",
+    "slug": "stellantis-toyota-subaru-not-in-tesla-carbon-pool-for-2026-eu-filing-shows-50af89",
+    "primary_title": "Stellantis, Toyota, Subaru not in Tesla carbon pool for 2026, EU filing shows",
+    "snippet": "Stellantis, Toyota (TM), and Subaru have not joined Tesla's 2026 carbon-credit pool, according to an EU filing. This move distances them from a key mechanism to collectively meet t…",
+    "sentiment": { "score": "medium", "tone": "Neutral" },
+    "symbols": [{ "ticker": "TM", "label": "TM" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.reuters.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:10:46Z",
+    "updated_at": "2026-03-04T10:25:35Z"
+  },
+  {
+    "id": "4542f01b-393c-46d7-bf96-d4c4110f27f2",
+    "slug": "sit-on-this-sofa-for-a-sofi-rebound-4542f0",
+    "primary_title": "Sit on This SOFA for a SoFi Rebound",
+    "snippet": "SoFi Technologies (SOFI) has declined nearly 30% year-to-date in 2026, but a recent analyst upgrade to Buy cites strong fundamentals and an attractive valuation following the drop.…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SOFI", "label": "SOFI" }],
+    "sources_count": 2,
+    "src_source_image": "https://www.etftrends.com/favicon.ico",
+    "first_seen_at": "2026-03-03T12:43:19Z",
+    "updated_at": "2026-03-04T10:25:12Z"
+  },
+  {
+    "id": "cb39153b-7034-48ff-b43d-a8a3dc6a1751",
+    "slug": "dotdigital-group-plc-acquires-alia-software-inc-to-power-smarter-audience-growth-and-accelerate-shopify-expansion-cb3915",
+    "primary_title": "Dotdigital Group plc acquires Alia Software Inc. to power smarter audience growth and accelerate Shopify expansion",
+    "snippet": "Dotdigital Group plc (DOTD) acquired Alia Software Inc., an AI-driven web conversion platform built for Shopify (SHOP) merchants. The deal aims to expand Dotdigital's recurring rev…",
+    "sentiment": { "score": "medium", "tone": "Optimistic" },
+    "symbols": [{ "ticker": "SHOP", "label": "SHOP" }],
+    "sources_count": 1,
+    "src_source_image": "https://www.prnewswire.com/favicon.ico",
+    "first_seen_at": "2026-03-04T05:12:00Z",
+    "updated_at": "2026-03-04T10:25:09Z"
+  }
+]

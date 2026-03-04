@@ -80,7 +80,7 @@ const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(comput
 
 const { state: selectedNewsId } = useNewsDetailsState(props.meta.widgetId);
 
-const isNotData = computed(() => (!!data.value && isLoading.value) || props.meta.isLoading);
+const isNotData = computed(() => isLoading.value || props.meta.isLoading);
 
 const news = computed(() => data?.value?.pages.flatMap(page => page?.data).filter(t => !!t) ?? []);
 
@@ -159,6 +159,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 						:display-settings="displaySettings"
 						display-variant="dashboard"
 						:max-count-row-tablet="props.meta.maxCountRowTable"
+						@reset="resetAllChanges"
 						@next="fetchNextPage"
 					/>
 				</template>

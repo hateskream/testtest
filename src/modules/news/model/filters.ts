@@ -1,53 +1,63 @@
-export enum Sentiment {
-	Optimistic = 'optimistic',
-	Neutral = 'neutral',
-	Pessimistic = 'pessimistic',
-}
+export const Sentiment = {
+	Optimistic: 'Optimistic',
+	Neutral: 'Neutral',
+	Pessimistic: 'Pessimistic',
+} as const;
 
-export const sentimentToName: Readonly<Record<Sentiment, string>> = {
+export type SentimentType = (typeof Sentiment)[keyof typeof Sentiment];
+
+export const sentimentToName: Readonly<Record<SentimentType, string>> = {
 	[Sentiment.Optimistic]: 'Optimistic',
 	[Sentiment.Neutral]: 'Neutral',
 	[Sentiment.Pessimistic]: 'Pessimistic',
 };
 
-export enum Score {
-	Low = 'low',
-	Medium = 'medium',
-	High ='high',
-}
+export const Score = {
+	Low: 'low',
+	Medium: 'medium',
+	High: 'high',
+} as const;
 
-export const scoreToName: Readonly<Record<Score, string>> = {
+export type ScoreType = (typeof Score)[keyof typeof Score];
+
+export const scoreToName: Readonly<Record<ScoreType, string>> = {
 	[Score.Low]: 'Low',
 	[Score.Medium]: 'Medium',
 	[Score.High]: 'High',
 };
 
-export enum Source {
-	InvestingCom = 'https://investing.com',
-	Benzinga = 'https://benzinga.com',
-}
+export const Source = {
+	InvestingCom: 'https://investing.com',
+	Benzinga: 'https://benzinga.com',
+} as const;
 
-export const sourceToName: Readonly<Record<Source, string>> = {
+export type SourceType = (typeof Source)[keyof typeof Source];
+
+export const sourceToName: Readonly<Record<SourceType, string>> = {
 	[Source.InvestingCom]: 'Investing.com',
 	[Source.Benzinga]: 'Benzinga',
 };
 
-export enum Include {
-	GeneralNews = 'GeneralNews',
-	PressReleases = 'PressReleases',
-}
+export const Include = {
+	GeneralNews: 'GeneralNews',
+	PressReleases: 'PressReleases',
+} as const;
 
-export const includeToName: Readonly<Record<Include, string>> = {
+export type IncludeType = (typeof Include)[keyof typeof Include];
+
+export const includeToName: Readonly<Record<IncludeType, string>> = {
 	[Include.GeneralNews]: 'General News',
 	[Include.PressReleases]: 'Press Releases',
 };
 
-export enum ActiveDateRange {
-	All = 'All',
-	SelectPeriod = 'SelectPeriod',
-}
+export const ActiveDateRange = {
+	All: 'All',
+	SelectPeriod: 'SelectPeriod',
+} as const;
 
-export const dateRangeStateToName: Readonly<Record<ActiveDateRange, string>> = {
+export type ActiveDateRangeType = (typeof ActiveDateRange)[keyof typeof ActiveDateRange];
+
+export const dateRangeStateToName: Readonly<Record<ActiveDateRangeType, string>> = {
 	[ActiveDateRange.All]: 'All',
 	[ActiveDateRange.SelectPeriod]: 'Select period',
 };

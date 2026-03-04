@@ -8,3 +8,4 @@ export { default as NewsSegmentModal } from './modal/news-segment-modal.vue';
 export { default as NewsListComponent } from './news-list-component.vue';
 export { default as NewsContentWrapper } from './news-content-wrapper-component.vue';
 export { default as TickerNewsWidget } from './ticker/ticker-news-widget.vue';
+export { default as NewsEmptyContent } from './news-empty-content.vue';

@@ -1,18 +1,20 @@
-import { Include } from '@/modules/news';
+import { type IncludeType } from './filters';
 
-export enum Sort {
-	DateNewest = 'date:newest',
-	DateOldest = 'date:oldest',
-	SourcePolarity = 'sourcePolarity',
-	Importance = 'importance',
-}
+export const Sort = {
+	DateNewest: 'date:newest',
+	DateOldest: 'date:oldest',
+	SourcePolarity: 'sourcePolarity',
+	Importance: 'importance',
+} as const;
+
+export type SortType = (typeof Sort)[keyof typeof Sort];
 
 export type SortValue = string | {
 	value: string;
 	additional: string;
 };
 
-export const sortToName: Readonly<Record<Sort, SortValue>> = {
+export const sortToName: Readonly<Record<SortType, SortValue>> = {
 	[Sort.DateNewest]: {
 		value: 'Date',
 		additional: 'Newest first',
@@ -25,7 +27,7 @@ export const sortToName: Readonly<Record<Sort, SortValue>> = {
 	[Sort.Importance]: 'Importance',
 };
 
-export type SortState = Sort | null;
+export type SortState = SortType | null;
 
 export function toggleSort(prevSort: SortState, newSort: SortState): SortState {
 	return prevSort === newSort ? null : newSort;
@@ -41,6 +43,6 @@ export function compareSort(sort1: SortState, sort2: SortState): boolean {
 	return sort1 === sort2;
 }
 
-export function compareInclude(include1: Include, include2: Include) {
+export function compareInclude(include1: IncludeType, include2: IncludeType) {
 	return include1 === include2;
 }

@@ -1,31 +1,25 @@
 {
-	"id": "12312321",
-	"slug": "something",
-	"title": "Tech Giants Lead Market Surge as Investors Regain Confidence After Strong Earnings",
-	"article": "Global markets saw a wave of optimism today as major technology giants reported quarterly results that exceeded Wall Street expectations. Apple Inc. and Microsoft Corporation both delivered stronger-than-expected earnings, providing reassurance to investors who had been wary of a potential slowdown in the technology sector. The earnings reports fueled a broad rally in equities, pushing the Nasdaq Composite up by more than 2% in early trading, with the S&P 500 and Dow Jones Industrial Average also posting solid gains.\n\nAnalysts attribute the renewed confidence to improving fundamentals across the tech industry. Apple’s revenue grew by 9% year-over-year, driven by robust iPhone 16 sales and continued strength in its services division, which includes iCloud, Apple TV+, and the rapidly expanding Vision ecosystem. Meanwhile, Microsoft’s Azure cloud division posted a 28% increase in revenue, underscoring the company’s dominant position in enterprise software and cloud infrastructure. These results helped offset lingering concerns about inflation, interest rate policy, and supply chain pressures that had weighed on sentiment earlier in the quarter.\n\nIn interviews following the earnings announcements, Apple CEO Tim Cook emphasized the company’s focus on innovation, particularly its ongoing work on AI-powered features integrated directly into its hardware ecosystem. ‘We see artificial intelligence not as a separate product, but as a foundational capability that enhances the entire user experience,’ Cook said. Similarly, Microsoft CEO Satya Nadella highlighted the company’s push toward generative AI solutions, noting that Azure OpenAI Service usage has doubled since last quarter, as more enterprises adopt AI copilots across their workflows.\n\nMarket strategists say this wave of strong performance is reviving investor interest in growth stocks after months of defensive positioning. ‘Tech is once again proving its resilience,’ said Morgan Stanley’s chief strategist Lisa Abrams. ‘Investors had been pricing in a slowdown, but the data we’re seeing shows that digital transformation and AI adoption are still in full swing.’ She added that the rally could continue if upcoming economic data, such as the U.S. employment report and CPI release, confirm that inflation pressures are easing.\n\nThe positive momentum wasn’t limited to U.S. markets. European and Asian tech stocks also rose, buoyed by the earnings optimism from their American counterparts. In Tokyo, shares of Sony and SoftBank gained over 3%, while in Frankfurt, semiconductor manufacturer Infineon jumped 4% amid expectations of stronger global chip demand. Analysts suggest that cross-border optimism could drive an extended rally in technology sectors worldwide if macroeconomic conditions remain stable.\n\nDespite the upbeat tone, some analysts caution that volatility could return if central banks signal tighter monetary policy or if geopolitical risks reemerge. However, for now, the tone in the market is decidedly positive. Investors are increasingly shifting away from the defensive sectors like utilities and consumer staples, reallocating capital back into technology, communications, and discretionary stocks. With earnings season just getting underway, market participants are looking to see if this strong start from Apple and Microsoft sets the stage for broader strength across the corporate landscape in the weeks ahead.",
-	"date": 1730083200000,
-	"sentiment": "optimistic",
-	"score": 87,
-	"stocks": [
-		{
-			"ticker": "Stock-AAPL",
-			"name": "Apple Inc.",
-			"srcImage": ["https://logo.clearbit.com/apple.com"]
-		},
-		{
-			"ticker": "Stock-MSFT",
-			"name": "Microsoft Corporation",
-			"srcImage": ["https://logo.clearbit.com/microsoft.com"]
-		}
-	],
-	"sources": [
-		{
-			"site": "investing.com",
-			"url": "https://investing.com"
-		},
-		{
-			"site": "benzinga.com",
-			"url": "https://benzinga.com"
-		}
-	]
+  "id": "986a335b-86c5-42dc-9f85-507da4a82c64",
+  "slug": "semrush-sets-new-standard-for-digital-brand-visibility-with-spotlight-2026-conference-986a33",
+  "primary_title": "Semrush Sets New Standard for Digital Brand Visibility with Spotlight 2026 Conference",
+  "summary": "Semrush (SEMR) announced its Spotlight 2026 marketing conference, scheduled for October 13 in London. The event is positioned as a key catalyst for the company, focusing on strategies for brand visibility in the evolving AI search landscape.",
+  "sentiment": { "score": "medium", "tone": "Optimistic" },
+  "symbols": [{ "ticker": "SEMR", "label": "SEMR" }],
+  "sources": [
+    {
+      "site": "businesswire.com",
+      "url": "https://www.businesswire.com/news/home/20260304689461/en/Semrush-Sets-New-Standard-for-Digital-Brand-Visibility-with-Spotlight-2026-Conference/"
+    }
+  ],
+  "articles": [
+    {
+      "id": "959ceafa-8533-5491-9657-ff45fb9bc686",
+      "title": "Semrush Sets New Standard for Digital Brand Visibility with Spotlight 2026 Conference",
+      "site": "businesswire.com",
+      "url": "https://www.businesswire.com/news/home/20260304689461/en/Semrush-Sets-New-Standard-for-Digital-Brand-Visibility-with-Spotlight-2026-Conference/"
+    }
+  ],
+  "src_source_image": "https://www.businesswire.com/favicon.ico",
+  "first_seen_at": "2026-03-04T06:00:00Z",
+  "updated_at": "2026-03-04T11:30:04Z"
 }

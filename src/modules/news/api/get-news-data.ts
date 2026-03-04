@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
-import { type IGetNewsRequest, type INews } from '../model';
+import { type IGetNewsRequest, type INews, Score, Sentiment } from '../model';
 import { useLogger } from '@/shared/service/monitoring';
 import { useApiClient } from '@/shared/service/api';
-import { getImagePath } from '@/shared/lib';
-import { ImageTypePath } from '@/shared/lib/get-image-path';
 import { getMockNewsData } from '@/modules/news/api/mock/mock-news-data.ts';
+import { MarketType } from '@/modules/market';
 
 const IS_USE_MOCK = false;
 
@@ -20,51 +19,130 @@ export interface IGetNewsResponse {
 	pagination: IPagination;
 }
 
+export interface INewsTickerPrice {
+	change: string;
+	status: 'negative' | 'neutral' | 'positive';
+}
+
+export interface INewsTicker {
+	canonical_ticker_id: string;
+	market_type: MarketType;
+	symbol: string;
+	name: string;
+	logo?: string;
+	currency?: string;
+	currency_icon?: string;
+	price: INewsTickerPrice;
+}
+
+const newsSymbolSchema = z.object({
+	ticker: z.string(),
+	label: z.string(),
+});
+
+/*
+Старая zod-валидация. Сейчас API не готово, поэтому приходится мапить старый API ответ на новую модель
+
+const newsTickerSchema = z.object({
+	canonical_ticker_id: z.string(),
+	market_type: z.nativeEnum(MarketType),
+	symbol: z.string(),
+	name: z.string(),
+	logo: z.string().optional(),
+	currency: z.string().optional(),
+	currency_icon: z.string().optional(),
+	price: newsTickerPriceSchema,
+});
+
 const GetNewsResponseItemSchema = z.object({
 	id: z.string(),
 	author: z.string().optional(),
 	first_seen_at: z.string(),
 	primary_title: z.string(),
 	sentiment: z.object({
-		score: z.string(),
-		tone: z.string(),
+		score: z.nativeEnum(Score),
+		tone: z.nativeEnum(Sentiment),
 	}),
 	slug: z.string(),
 	snippet: z.string(),
 	sources_count: z.number(),
-	src_source_image: z.string(),
-	symbols: z.array(z.object({
-		image: z.string().optional(),
-		label: z.string(),
-		market: z.string().optional(),
-		ticker: z.string(),
-	})),
+	src_source_image: z.string().optional(),
+	tickers: z.array(newsTickerSchema),
 	updated_at: z.string(),
 });
 
-export const GetNewsResponseSchema = z.array(GetNewsResponseItemSchema).nonempty();
+export const GetNewsResponseSchema = z.object({
+	pagination: z.object({
+		total: z.number(),
+		limit: z.number(),
+		offset: z.number(),
+	}),
+	data: z.array(GetNewsResponseItemSchema),
+});
+*/
+
+const GetNewsResponseItemSchema = z.object({
+	id: z.string(),
+	slug: z.string(),
+	primary_title: z.string(),
+	snippet: z.string(),
+	sentiment: z.object({
+		score: z.nativeEnum(Score),
+		tone: z.nativeEnum(Sentiment),
+	}),
+	symbols: z.array(newsSymbolSchema),
+	sources_count: z.number(),
+	src_source_image: z.string().optional(),
+	first_seen_at: z.string().datetime(),
+	updated_at: z.string().datetime(),
+});
+
+export const GetNewsResponseSchema = z.array(GetNewsResponseItemSchema);
 
 export type GetNewsResponseItem = z.infer<typeof GetNewsResponseItemSchema>;
+
+function mapSymbolToTicker(symbol: z.infer<typeof newsSymbolSchema>): INewsTicker {
+	return {
+		canonical_ticker_id: symbol.ticker,
+		market_type: MarketType.Stock,
+		symbol: symbol.ticker,
+		name: symbol.label,
+		price: { change: '+1.17%', status: 'neutral' },
+	};
+}
+
+export function mapResponseToNews(items: GetNewsResponseItem[]): INews[] {
+	return items.map((item) => ({
+		id: item.id,
+		slug: item.slug,
+		primary_title: item.primary_title,
+		snippet: item.snippet,
+		sentiment: item.sentiment,
+		sources_count: item.sources_count,
+		src_source_image: item.src_source_image,
+		tickers: item.symbols.map(mapSymbolToTicker),
+		first_seen_at: item.first_seen_at,
+		updated_at: item.updated_at,
+	}));
+}
 
 export async function getNews(req: IGetNewsRequest): Promise<IGetNewsResponse> {
 	const client = useApiClient();
 	const logger = useLogger();
 
 	try {
-		if (IS_USE_MOCK) {
-			const response = await getMockNewsData(req);
-			return prepareMockResponse(response);
-		}
+		const response = IS_USE_MOCK
+			? GetNewsResponseSchema.parse(await getMockNewsData(req))
+			: await client.get('/api/v1/news/stories', GetNewsResponseSchema, { query: createQuery(req) });
 
-		const query = createQuery(req);
-
-		const response = await client.get(
-			'/api/v1/news/stories',
-			GetNewsResponseSchema,
-			{ query },
-		);
-
-		return prepareResponse(response);
+		return {
+			data: mapResponseToNews(response),
+			pagination: {
+				total: response.length,
+				offset: req.offset,
+				limit: req.limit,
+			},
+		};
 	} catch (error) {
 		logger.error('Failed to get news', { error: error as Error });
 		throw error;
@@ -93,7 +171,7 @@ function createQuery({
 	// }
 
 	// if (sentiment.size > 0) {
-	// 	query.sentiment = Array.from(sentiment)[0].toLowerCase();
+	// 	[query.sentiment] = Array.from(sentiment);
 	// }
 
 	// if (selectedTickers.length) {
@@ -134,46 +212,4 @@ function createQuery({
 	// if (source.size) {
 	// 	params.append('source', arrayToString(Array.from(source)));
 	// }
-}
-
-function prepareMockResponse({ data, pagination }: IGetNewsResponse): IGetNewsResponse {
-	return {
-		pagination,
-		data: data.map(item => ({
-			...item,
-			srcSourceImage: '',
-			stocks: item.stocks.map(stock => ({
-				...stock,
-				srcImage: [getImagePath(stock.ticker, ImageTypePath.Stock)],
-			})),
-		})),
-	};
-}
-
-function prepareResponse(items: GetNewsResponseItem[]): IGetNewsResponse {
-	return {
-		pagination: {
-			total: items.length,
-			limit: items.length,
-			offset: 0,
-		},
-		data: items.map(item => {
-			return {
-				id: item.id,
-				slug: item.slug,
-				title: item.primary_title,
-				description: item.snippet,
-				timestamp: Date.parse(item.updated_at),
-				srcSourceImage: item.src_source_image,
-
-				author: '',
-				score: 0,
-				stocks: item.symbols.map(symbol => ({
-					ticker: symbol.ticker,
-					name: symbol.label,
-					srcImage: [getImagePath(symbol.ticker, ImageTypePath.Stock)],
-				})),
-			};
-		}),
-	};
 }

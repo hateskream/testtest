@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import Image from '@/assets/images/stock/META.png';
 import { UiImage } from '@/shared/ui/image';
 import { UiTransitionFade } from '@/shared/ui/transition';
-import { UiPositionTooltip } from '@/shared/ui/position';
-import type { IDisplaySettings, INews } from '../../model';
-import { TvTooltipWrapper } from '@/shared/ui/tooltip';
-import { getDateFormatter } from '@/shared/lib';
+import type { IDisplaySettings, INews, ScoreType, SentimentType } from '../../model';
+import { formatNewsDate } from '../../utils/date';
+import { UiText } from '@/shared/ui/text';
+import { UiClamped } from '@/shared/ui/clamped';
 
 import NewsIconScoreComponent from '../news-icon-score-component.vue';
+import NewsTickers from '../common/news-tickers.vue';
 
 interface INewsComponent {
 	news: INews;
@@ -19,18 +19,20 @@ interface INewsComponent {
 
 const props = defineProps<INewsComponent>();
 
-const time = computed(() => {
-	const date = new Date(props.news.timestamp);
+const time = computed(() => formatNewsDate(props.news.updated_at));
 
-	const formatter = getDateFormatter({
-		day: '2-digit',
-		month: 'short',
-		hour12: true,
-		hour: '2-digit',
-		minute: '2-digit',
-	});
+const isShowAuthor = computed(
+	() => props.displaySettings.isShowAuthor && props.news.author,
+);
+const isShowTickers = computed(
+	() => props.displaySettings.isShowSymbols && props.news.tickers?.length,
+);
 
-	return formatter.format(date);
+const isShowDot = computed(() => {
+	const hasLeft = props.displaySettings.isShowDate;
+	const hasRight = isShowAuthor.value || isShowTickers.value;
+
+	return hasLeft && hasRight;
 });
 </script>
 
@@ -42,15 +44,18 @@ const time = computed(() => {
 				:class="classes.newsLeftImageWrapper"
 			>
 				<ui-image
+					v-if="props.news.src_source_image"
 					:class="classes.newsLeftImage"
-					:src="Image"
+					:src="props.news.src_source_image"
+					height="14px"
+					width="14px"
 				/>
 			</div>
 		</ui-transition-fade>
 
 		<div :class="classes.newsContent">
 			<div :class="classes.newsTitle">
-				<h3>{{ props.news.title }}</h3>
+				<ui-text token="text-300-r" as="h3">{{ props.news.primary_title }}</ui-text>
 			</div>
 
 			<ui-transition-fade>
@@ -58,27 +63,28 @@ const time = computed(() => {
 					v-if="props.displaySettings.isShowDesc"
 					:class="classes.newsDesc"
 				>
-					<p>
-						{{ props.news.description }}
-					</p>
+					<ui-clamped :rows="2">
+						<ui-text token="text-200-r">{{ props.news.snippet }}</ui-text>
+					</ui-clamped>
 				</div>
 			</ui-transition-fade>
 
 			<div :class="classes.newsOther">
 				<ui-transition-fade>
-					<div v-if="props.displaySettings.isShowDate">
-						<time
-							:class="classes.newsOtherText"
-							:datetime="time"
-						>
+					<ui-text
+						v-if="props.displaySettings.isShowDate"
+						token="text-200-r"
+						:class="classes.newsOtherText"
+					>
+						<time :datetime="time">
 							{{ time }}
 						</time>
-					</div>
+					</ui-text>
 				</ui-transition-fade>
 
 				<ui-transition-fade>
 					<span
-						v-if="props.displaySettings.isShowDate && props.displaySettings.isShowAuthor"
+						v-if="isShowDot"
 						:class="classes.newsOtherText"
 					>
 						·
@@ -86,46 +92,24 @@ const time = computed(() => {
 				</ui-transition-fade>
 
 				<ui-transition-fade>
-					<div v-if="props.displaySettings.isShowAuthor">
-						<small :class="[classes.newsOtherText, classes.newsOtherAuthorText]">
-							{{ props.news.author }}
-						</small>
-					</div>
+					<small v-if="isShowAuthor" :class="[classes.newsOtherText, classes.newsOtherAuthorText]">
+						{{ props.news.author }}
+					</small>
 				</ui-transition-fade>
 
 				<ui-transition-fade>
-					<div
-						v-if="props.displaySettings.isShowSymbols"
-						:class="classes.newsStocks"
-					>
-						<template
-							v-for="stock in props.news.stocks"
-							:key="stock.ticker"
-						>
-							<ui-position-tooltip>
-								<div :class="classes.newsStock">
-									<!--				ToDo: fix srcImage[0]					-->
-									<ui-image
-										:class="classes.newsStockImage"
-										:src="stock.srcImage[0]"
-										replacement="/images/market/ADA.png"
-									/>
-								</div>
-
-								<template #content>
-									<tv-tooltip-wrapper>
-										{{ stock.name }}
-									</tv-tooltip-wrapper>
-								</template>
-							</ui-position-tooltip>
-						</template>
-					</div>
+					<news-tickers
+						v-if="isShowTickers"
+						:tickers="props.news.tickers!"
+						display-variant="default"
+					/>
 				</ui-transition-fade>
 
 				<ui-transition-fade>
 					<news-icon-score-component
 						v-if="props.displaySettings.isShowScore"
-						:score="props.news.score"
+						:score="props.news.sentiment.score as ScoreType"
+						:tone="props.news.sentiment.tone as SentimentType"
 					/>
 				</ui-transition-fade>
 			</div>
@@ -149,12 +133,16 @@ const time = computed(() => {
 }
 
 .newsLeftImageWrapper {
-	flex: 0 0 18px;
-	height: 18px;
+	flex-shrink: 0;
+	width: 14px;
+	padding: 3px 0;
 }
 
 .newsContent {
-	flex: 1 1 100%;
+	display: flex;
+	flex: 1 0 0;
+	flex-direction: column;
+	gap: 6px;
 }
 
 .newsLeftImage {
@@ -172,24 +160,11 @@ const time = computed(() => {
 }
 
 .newsTitle {
-	margin-bottom: 6px;
-}
-
-.newsTitle > h3 {
-	font-weight: 300;
-	font-size: 13px;
 	color: var(--text-color-base-500);
 }
 
 .newsDesc {
-	margin-bottom: 6px;
-}
-
-.newsDesc > p {
-	font-weight: 440;
-	font-size: 10px;
 	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
 }
 
 .newsOther {
@@ -202,31 +177,7 @@ const time = computed(() => {
 }
 
 .newsOtherText {
-	font-weight: 440;
-	font-size: 10px;
+	line-height: 1;
 	color: var(--text-color-base-300);
-	letter-spacing: 0.08px;
-}
-
-.newsStocks {
-	display: flex;
-}
-
-.newsStock {
-	width: 20px;
-	height: 20px;
-	margin-left: -6px;
-	overflow: hidden;
-	border: 2px solid #222223;
-	border-radius: 16px;
-	cursor: pointer;
-}
-
-.newsStocks > div:first-child .newsStock {
-	margin-left: 0;
-}
-
-.newsStockImage {
-	object-fit: cover;
 }
 </style>

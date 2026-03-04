@@ -38,7 +38,8 @@ const state = defineModel<boolean>('state', {
 
 .selectedList {
 	width: 100%;
-	max-width: 325px;
+	min-width: 250px;
+	max-width: 350px;
 }
 
 .controls {

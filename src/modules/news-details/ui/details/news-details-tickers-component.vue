@@ -1,33 +1,51 @@
 <script setup lang="ts">
-import type { ITicker } from '@/modules/news';
 import { useGoToTickerPage } from '@/modules/chart';
 import { TickerIcon } from '@/shared/ui/ticker';
+import { UiTag } from '@/shared/ui/tag';
+import { UiText } from '@/shared/ui/text';
+import type { INewsTicker } from '@/modules/news/api/get-news-data';
 
 const { goToTickerPageLink } = useGoToTickerPage();
 
-defineProps<{
-	displayVariant: 'new' | 'default';
-	stocks: ITicker[];
+const props = defineProps<{
+	tickers: INewsTicker[];
 }>();
 </script>
 
 <template>
 	<section :class="classes.tickers">
 		<h3 class="title-100">Tickers</h3>
-		<ul :class="[classes.tickerList, displayVariant === 'new' ? classes.new : classes.old]">
-			<li v-for="ticker in stocks" :key="ticker.name">
+		<ul :class="[classes.tickerList]">
+			<li v-for="ticker in props.tickers" :key="ticker.symbol">
 				<router-link
-					:to="goToTickerPageLink(ticker.ticker)"
-					:class="classes.tickerItem"
+					:to="goToTickerPageLink(ticker.canonical_ticker_id)"
 					data-icon-glow-trigger
 				>
-					<ticker-icon
-						:ticker="ticker.ticker"
-						:src="ticker.srcImage[0]"
-						:size="21"
-					/>
-					<span :class="classes.tickerSymbol">{{ ticker.ticker }}</span>
-					<span :class="classes.tickerChange">1.10%</span>
+					<ui-tag icon-position="start">
+						<div :class="classes.text">
+							<ui-text token="text-200-r" :class="classes.tickerSymbol">
+								{{ ticker.symbol }}
+							</ui-text>
+							<ui-text
+								v-if="ticker.price.change"
+								token="text-200-r"
+								:class="[
+									classes.tickerChange,
+									classes[ticker.price.status]
+								]"
+							>
+								{{ ticker.price.change }}
+							</ui-text>
+						</div>
+
+						<template #icon>
+							<ticker-icon
+								:ticker="ticker.symbol"
+								:src="ticker.logo"
+								:size="21"
+							/>
+						</template>
+					</ui-tag>
 				</router-link>
 			</li>
 		</ul>
@@ -48,43 +66,23 @@ defineProps<{
 	gap: 4px;
 }
 
-.tickerList.new {
-	gap: 2px;
-}
-
-.new .tickerItem {
-	display: flex;
-	align-items: center;
-	width: max-content;
-	height: var(--height-height-s12, 24px);
-	padding:
-		var(--tile-padding-md-gap, 3px) var(--tile-padding-md-out, 6px)
-		var(--tile-padding-md-gap, 3px) var(--tile-padding-md-gap, 3px);
-	background: var(--base-base-80, rgb(73 73 80 / 22%));
-	border-radius: var(--radius-radius-s9-16, 6px);
-	gap: var(--rile-padding-md-gap, 3px);
-}
-
-.old .tickerItem {
-	display: flex;
-	align-items: center;
-	width: max-content;
-	gap: 4px;
-	height: 24px;
-	padding: 2px 6px 2px 2px;
-	background: var(--color-bg-base-300, rgb(37 37 39 / 50%));
-	border-radius: 9999px;
-}
-
 .tickerSymbol {
-	font-weight: 440;
-	font-size: 10px;
 	color: var(--color-text-base-500, #ffffff);
 }
 
 .tickerChange {
-	font-weight: 440;
-	font-size: 10px;
-	color: var(--color-metrics-positive-copy, #04eda0);
+	padding-left: 3px;
+}
+
+.positive {
+	color: var(--atom-success-00, #04eda0);
+}
+
+.negative {
+	color: var(--atom-warning-00, #fc1d4d);
+}
+
+.neutral {
+	color: var(--text-color-base-300, #9a9a9d);
 }
 </style>

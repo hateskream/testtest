@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { type IDisplaySettings, type INews, NewsListComponent } from '@/modules/news';
+import { type IDisplaySettings, type INews, NewsListComponent, NewsEmptyContent } from '@/modules/news';
 import { isFeatureEnabled } from '@/shared/lib';
 
 interface IViewNewsComponentProps {
@@ -12,6 +12,10 @@ interface IViewNewsComponentProps {
 }
 
 const props = defineProps<IViewNewsComponentProps>();
+
+const emits = defineEmits<{
+	reset: [];
+}>();
 
 const selectedNewsId = defineModel<string | null>('newsId', {
 	required: true,
@@ -57,6 +61,7 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 
 <template>
 	<news-list-component
+		v-if="props.news.length"
 		ref="newsRef"
 		:news="props.news"
 		:display-settings="props.displaySettings"
@@ -64,4 +69,5 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 		:max-count-row-tablet="props.maxCountRowTablet"
 		@select-news="selectNews"
 	/>
+	<news-empty-content v-else @reset="emits('reset')" />
 </template>

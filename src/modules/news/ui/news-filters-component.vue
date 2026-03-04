@@ -12,9 +12,11 @@ import {
 	ModalFilterTabWrapper,
 } from '@/modules/widgets/base';
 import {
+	type ActiveDateRangeType,
 	type ILocation,
+	type IncludeType,
 	type SortState,
-	type Source,
+	type SourceType,
 	includeToName,
 	sourceToName,
 	dateRangeStateToName,
@@ -50,11 +52,11 @@ const excludedTickers = defineModel<ITickerItem[]>('excludedTickers', {
 // const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
 // const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
 // const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
-const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
+const selectedSources = defineModel<Set<SourceType>>('selectedSources', { required: true });
 const sortBy = defineModel<SortState>('sortBy', { required: true });
 const locations = defineModel<ILocation[]>('locations', { required: true });
-const include = defineModel<Set<Include>>('include', { required: true });
-const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
+const include = defineModel<Set<IncludeType>>('include', { required: true });
+const activeDateRange = defineModel<ActiveDateRangeType>('activeDateRange', { required: true });
 
 const locationLabel = computed(() => {
 	const names = getSelectedCountryNames(locations.value);
@@ -75,11 +77,11 @@ const locationLabel = computed(() => {
 	}).toString();
 });
 
-function toggleSource(source: Source) {
+function toggleSource(source: SourceType) {
 	selectedSources.value = toggleFilter(selectedSources.value, source);
 }
 
-function toggleInclude(value: Include) {
+function toggleInclude(value: IncludeType) {
 	include.value = toggleFilter(include.value, value);
 }
 
@@ -173,8 +175,8 @@ function onExcludeTickers(tickers: ITickerItem[]) {
 				<modal-filter-tab-wrapper
 					v-for="[source, label] in Object.entries(sourceToName)"
 					:key="source"
-					:is-active="selectedSources.has(source as Source)"
-					@click="toggleSource(source as Source)"
+					:is-active="selectedSources.has(source as SourceType)"
+					@click="toggleSource(source as SourceType)"
 				>
 					{{label}}
 				</modal-filter-tab-wrapper>

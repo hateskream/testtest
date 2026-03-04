@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { MarketType } from '@/modules/market';
 import {
-	ActiveDateRange,
-	type ILocation, Include,
+	type ActiveDateRangeType,
+	type ILocation,
+	type IncludeType,
 	type ISegmentData,
-	Score,
+	type ScoreType,
 	type SelectedSegmentTickersState,
-	Sentiment,
+	type SentimentType,
 	type SortState,
-	Source,
+	type SourceType,
 } from '@/modules/news';
 import type { IDateRange } from '@/shared/ui/calendar';
 import type { ITickerItem } from '@/modules/ticker-selector';
@@ -32,12 +33,12 @@ const emits = defineEmits<{
 const locations = defineModel<ILocation[]>('locations', { required: true });
 const sortBy = defineModel<SortState>('sortBy', { required: true });
 
-const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
+const selectedScores = defineModel<Set<ScoreType>>('selectedScores', { required: true });
 const selectedSegments = defineModel<Set<MarketType>>('selectedSegments', { required: true });
-const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
-const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
-const include = defineModel<Set<Include>>('include', { required: true });
-const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
+const selectedSentiment = defineModel<Set<SentimentType>>('selectedSentiment', { required: true });
+const selectedSources = defineModel<Set<SourceType>>('selectedSources', { required: true });
+const include = defineModel<Set<IncludeType>>('include', { required: true });
+const activeDateRange = defineModel<ActiveDateRangeType>('activeDateRange', { required: true });
 const dateRange = defineModel<IDateRange>('dateRange', { required: true });
 
 const selectedMarkets = defineModel<MarketType[]>('selectedMarkets', {

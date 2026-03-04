@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
@@ -7,6 +7,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import {
 	type IGetNewsRequest,
 	NewsContentWrapper,
+	NewsEmptyContent,
 	NewsFiltersPanel,
 	NewsListComponent,
 	useNews,
@@ -15,7 +16,7 @@ import {
 } from '@/modules/news';
 import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
 import { BaseErrorComponent } from '@/modules/widgets/base';
-import { RoutePaths } from '@/types/route.d';
+import { RouteNames, RoutePaths } from '@/types/route.d';
 
 import PreloaderComponent from '@/modules/widgets/exchanges/ui/preloader-component.vue';
 
@@ -81,6 +82,17 @@ function goBack() {
 }
 
 const { redirect } = useNewsPage();
+
+function closeDetails() {
+	isOpen.value = false;
+	router.push({ name: RouteNames.News });
+}
+
+watch(() => route.params.id, (id) => {
+	if (id) {
+		isOpen.value = true;
+	}
+});
 </script>
 
 <template>
@@ -119,21 +131,24 @@ const { redirect } = useNewsPage();
 
 					<preloader-component v-else-if="isLoading" />
 
-					<news-list-component
-						v-else-if="news"
-						v-model:news-id="uuid"
-						:news="news"
-						:display-settings="displaySettings"
-						display-variant="tv"
-						@next="fetchNextPage"
-						@select-news="redirect($event.id, $event.slug)"
-					/>
+					<template v-else>
+						<news-list-component
+							v-if="news.length"
+							v-model:news-id="uuid"
+							:news="news"
+							:display-settings="displaySettings"
+							display-variant="tv"
+							@next="fetchNextPage"
+							@select-news="redirect($event.id, $event.slug)"
+						/>
+						<news-empty-content v-else @reset="resetAllChanges" />
+					</template>
 				</template>
 
 				<template #controls>
 					<news-details-controls
 						:class="classes.controls"
-						@click="isOpen = false"
+						@back="closeDetails"
 					/>
 				</template>
 

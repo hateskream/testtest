@@ -1,6 +1,14 @@
 import { endOfWeek, startOfWeek } from 'date-fns';
 
-import { ActiveDateRange, type IState, LOCATIONS_DEFAULT, Score, segmentsData, Sentiment } from '@/modules/news';
+import {
+	ActiveDateRange,
+	type ActiveDateRangeType,
+	type IState,
+	LOCATIONS_DEFAULT,
+	Score,
+	segmentsData,
+	Sentiment,
+} from '@/modules/news';
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import type { IDateRange } from '@/shared/ui/calendar';
 
@@ -124,6 +132,6 @@ export function getDefaultDateRange(): IDateRange {
 	};
 }
 
-export function getDefaultActiveDateRange(): ActiveDateRange {
+export function getDefaultActiveDateRange(): ActiveDateRangeType {
 	return ActiveDateRange.All;
 }

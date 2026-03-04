@@ -7,13 +7,13 @@ import { ModalBadgeDropdown, ModalBadgeList, ModalFilter, ModalItemSelector } fr
 import { UiDelimiter } from '@/shared/ui/delimiter';
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import {
-	ActiveDateRange,
+	type ActiveDateRangeType,
 	type ILocation,
-	Include,
-	type Score,
-	type Sentiment,
+	type IncludeType,
+	type ScoreType,
+	type SentimentType,
 	type SortState,
-	type Source,
+	type SourceType,
 	sourceToName,
 	titleGenerator,
 	toggleFilter,
@@ -23,11 +23,11 @@ import { TickerSelectorModalWithBadge } from '@/modules/ticker-selector';
 
 import NewsFilters from '../news-filters-component.vue';
 
-const selectedScores = defineModel<Set<Score>>('selectedScores', { required: true });
-const selectedSentiment = defineModel<Set<Sentiment>>('selectedSentiment', { required: true });
-const selectedSources = defineModel<Set<Source>>('selectedSources', { required: true });
-const include = defineModel<Set<Include>>('include', { required: true });
-const activeDateRange = defineModel<ActiveDateRange>('activeDateRange', { required: true });
+const selectedScores = defineModel<Set<ScoreType>>('selectedScores', { required: true });
+const selectedSentiment = defineModel<Set<SentimentType>>('selectedSentiment', { required: true });
+const selectedSources = defineModel<Set<SourceType>>('selectedSources', { required: true });
+const include = defineModel<Set<IncludeType>>('include', { required: true });
+const activeDateRange = defineModel<ActiveDateRangeType>('activeDateRange', { required: true });
 
 const sortBy = defineModel<SortState>('sortBy', { required: true });
 
@@ -44,7 +44,7 @@ const titleSource = computed((): string => titleGenerator(selectedSources.value,
 // 	selectedSentiment.value = toggleFilter(selectedSentiment.value, sentiment);
 // }
 
-function toggleSource(source: Source) {
+function toggleSource(source: SourceType) {
 	selectedSources.value = toggleFilter(selectedSources.value, source);
 }
 
