@@ -57,11 +57,6 @@ const isReversed = computed(() => props.iconPosition === 'start');
 	background-color: var(--warning-success-90, rgb(252 29 77 / 10%));
 }
 
-.tag.gray {
-	color: var(--text-base-300, rgb(154 154 157 / 100%));
-	background: var(--color-bg-base-300, rgb(37 37 39 / 50%));
-}
-
 .tag.reversed {
 	flex-direction: row-reverse;
 }

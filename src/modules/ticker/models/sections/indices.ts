@@ -13,7 +13,14 @@ export const tickerIndicesSections = {
 			},
 		},
 	],
-	center: [],
+	center: [
+		{
+			id: 'holding-summary',
+			title: 'Holdings Summary',
+			component: 'ETF_HOLDING_SUMMARY',
+			height: 1100,
+		},
+	],
 	right: [
 		{
 			id: 'insights',

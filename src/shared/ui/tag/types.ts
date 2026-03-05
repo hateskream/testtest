@@ -5,7 +5,6 @@ export const TagColor = {
 	Neutral: 'neutral',
 	Positive: 'positive',
 	Negative: 'negative',
-	GRAY: 'gray',
 } as const;
 
 export type TagColorType = ObjectEnum<typeof TagColor>;

@@ -7,6 +7,7 @@ import { BaseTickerWidgetContent, BaseTickerWidgetHeader, BaseTickerWidgetWrappe
 import { TickerBaseListDivider } from '@/modules/ticker/ui/base';
 import { UiText } from '@/shared/ui/text';
 import { UiTag } from '@/shared/ui/tag';
+import { getDateFormatter } from '@/shared/lib';
 
 interface IProps {
 	data: Sectors;
@@ -22,12 +23,37 @@ const sectorRows = computed(() => {
 	}
 	return rows;
 });
+
+const hasAnySubsectors = computed(() => {
+	return props.data.sectors.some((sector) => sector.subsectors && sector.subsectors.length > 0);
+});
+
+function formatDate(date: string) {
+	const shortFormatter = getDateFormatter({
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	});
+
+	const short = shortFormatter.format(new Date(date));;
+	return `${short}`;
+}
+
 </script>
 
 <template>
-	<base-ticker-widget-wrapper :class="classes.container">
+	<base-ticker-widget-wrapper :class="[classes.container, { [classes.noSubsectors]: !hasAnySubsectors }]">
 		<base-ticker-widget-header>
-			{{ props.meta.name }}
+			<template #default>
+				{{ props.meta.name }}
+			</template>
+			<template #right>
+				<ui-tag
+					v-if="props.data.lastUpdate"
+					token="text-200-r"
+					color="neutral"
+				>last update: {{formatDate(props.data.lastUpdate!)}}</ui-tag>
+			</template>
 		</base-ticker-widget-header>
 		<base-ticker-widget-content>
 			<div :class="classes.sectorsGrid">
@@ -40,11 +66,11 @@ const sectorRows = computed(() => {
 						<div :class="classes.sectorHeader">
 							<div :class="classes.sectorMain">
 								<span :class="classes.dot" :style="{ backgroundColor: sector.color }" />
-								<ui-text token="text-500-r" :class="classes.sectorTitle">
+								<ui-text token="title-100" :class="classes.sectorTitle">
 									{{ sector.sectorDisplayName }}
 								</ui-text>
 							</div>
-							<ui-text token="text-500-r" :class="classes.sectorValue">
+							<ui-text token="title-100" :class="classes.sectorValue">
 								{{ sector.value }}%
 							</ui-text>
 						</div>
@@ -55,7 +81,7 @@ const sectorRows = computed(() => {
 								:key="sub.subSectorName"
 								:class="classes.tagContent"
 								icon-position="start"
-								color="gray"
+								color="neutral"
 							>
 								<template #icon>
 
@@ -69,11 +95,15 @@ const sectorRows = computed(() => {
 						</div>
 						<div :class="classes.mobileDivider">
 							<ticker-base-list-divider
-								v-if="!(rowIndex === sectorRows.length - 1 && sector === row[row.length - 1])"
+								v-if="!(rowIndex === sectorRows.length - 1 && sector === row[row.length - 1])
+									&& hasAnySubsectors"
 							/>
 						</div>
 					</div>
-					<div v-if="rowIndex < sectorRows.length - 1" :class="classes.desktopDivider">
+					<div
+						v-if="rowIndex < sectorRows.length - 1 && hasAnySubsectors"
+						:class="classes.desktopDivider"
+					>
 						<ticker-base-list-divider />
 					</div>
 				</template>
@@ -125,6 +155,16 @@ const sectorRows = computed(() => {
 	.mobileDivider {
 		display: block;
 		margin-top: 4px;
+	}
+
+	.noSubsectors {
+		.sectorItem {
+			gap: 0;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
 	}
 }
 
@@ -179,5 +219,22 @@ const sectorRows = computed(() => {
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
+}
+
+.noSubsectors {
+	.sectorsGrid {
+		padding: 16px 20px;
+		row-gap: 0;
+		column-gap: max(5%, 20px);
+
+		.sectorItem {
+			border-bottom: 1px solid var(--border-100, rgb(73 73 80 / 44%));
+
+			&:last-child,
+			&:nth-last-child(2):nth-child(odd) {
+				border-bottom: none;
+			}
+		}
+	}
 }
 </style>
