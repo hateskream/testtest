@@ -25,6 +25,7 @@ export const TICKER_SECTION_COMPONENT = {
 	// etf
 	ETF_OVERVIEW: 'ETF_OVERVIEW',
 	ETF_INSIGHTS_AND_ACTIVITY: 'ETF_INSIGHTS_AND_ACTIVITY',
+	ETF_VALUATION_AND_ESTIMATES: 'ETF_VALUATION_AND_ESTIMATES',
 
 	// index
 	INDEX_OVERVIEW: 'INDEX_OVERVIEW',
@@ -96,7 +97,10 @@ const experimentalSections = {
 	[TICKER_SECTION_COMPONENT.COMMODITY_OVERVIEW]:
 		() => isFeatureEnabled('TICKER_WIDGET_PRICE_PERFORMANCE_ENABLED'),
 	[TICKER_SECTION_COMPONENT.STOCK_VALUATION_AND_ESTIMATES]:
-		() => isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED'),
+		() => isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED')
+			|| isFeatureEnabled('TICKER_WIDGET_VALUATION_METRICS_ENABLED'),
+	[TICKER_SECTION_COMPONENT.ETF_VALUATION_AND_ESTIMATES]:
+		() => isFeatureEnabled('TICKER_WIDGET_VALUATION_METRICS_ENABLED'),
 } as const satisfies Partial<Record<TickerSectionComponent, () => boolean>>;
 
 function hasExperimentalSection(key: TickerSectionComponent): key is keyof typeof experimentalSections {

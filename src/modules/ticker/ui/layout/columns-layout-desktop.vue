@@ -80,6 +80,10 @@ function onMainColumnScroll(event: WheelEvent) {
 		return;
 	}
 
+	if (event.ctrlKey || event.shiftKey) {
+		return;
+	}
+
 	if (tryDelegateScrollToFooter(event)) {
 		return;
 	}

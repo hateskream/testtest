@@ -9,7 +9,14 @@ export const tickerEtfSections = {
 			height: 265,
 		},
 	],
-	center: [],
+	center: [
+		{
+			id: 'valuation',
+			title: 'Valuation & Estimates',
+			component: 'ETF_VALUATION_AND_ESTIMATES',
+			height: 300,
+		},
+	],
 	right: [
 		{
 			id: 'insights',

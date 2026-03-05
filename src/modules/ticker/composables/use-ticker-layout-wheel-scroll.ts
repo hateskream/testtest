@@ -46,7 +46,7 @@ export function useTickerLayoutWheelScroll(
 			return;
 		}
 
-		if (event.ctrlKey) {
+		if (event.ctrlKey || event.shiftKey) {
 			return;
 		}
 

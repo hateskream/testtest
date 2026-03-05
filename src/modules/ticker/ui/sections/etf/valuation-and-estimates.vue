@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
-import { AnalystRatingsTickerWidget } from '@/modules/widgets/analyst-ratings';
 import { ValuationMetricsTickerWidget } from '@/modules/widgets/valuation-metrics';
-import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { isFeatureEnabled } from '@/shared/lib';
 
 interface ISectionProps {
@@ -15,7 +13,6 @@ defineProps<ISectionProps>();
 const { tickerId } = useTickerContext();
 
 const valuationMetricsIsEnabled = isFeatureEnabled('TICKER_WIDGET_VALUATION_METRICS_ENABLED');
-const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED');
 </script>
 
 <template>
@@ -26,8 +23,6 @@ const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED')
 				:class="classes.metricsItem"
 			/>
 		</div>
-		<analyst-ratings-ticker-widget :meta="{ tickerId, name: 'Analyst Ratings' }" />
-		<revenue-ticker-widget v-if="revenueWidgetIsEnabled" :meta="{ tickerId, name: 'Revenue' }" />
 	</div>
 </template>
 
