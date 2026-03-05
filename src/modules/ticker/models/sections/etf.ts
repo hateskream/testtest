@@ -11,16 +11,16 @@ export const tickerEtfSections = {
 	],
 	center: [
 		{
+			id: 'valuation',
+			title: 'Valuation & Estimates',
+			component: 'ETF_VALUATION_AND_ESTIMATES',
+			height: 250,
+		},
+		{
 			id: 'holding-summary',
 			title: 'Holdings Summary',
 			component: 'ETF_HOLDING_SUMMARY',
 			height: 1100,
-		},
-		{
-			id: 'valuation',
-			title: 'Valuation & Estimates',
-			component: 'ETF_VALUATION_AND_ESTIMATES',
-			height: 300,
 		},
 	],
 	right: [
