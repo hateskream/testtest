@@ -126,14 +126,6 @@ function mapSymbolToTable(cell: Cell) {
 		};
 	}
 
-	if (isEtfSymbolCell(cell)) {
-		return {
-			symbolType: cell.symbolType,
-			srcImg: cell.srcImg,
-			ticker: cell.ticker,
-		};
-	}
-
 	return {
 		symbolType: cell.symbolType,
 		text: cell.text,
