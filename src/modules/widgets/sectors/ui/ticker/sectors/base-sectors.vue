@@ -39,6 +39,13 @@ function formatDate(date: string) {
 	return `${short}`;
 }
 
+const lastUpdateLabel = computed(() => {
+	if (props.data.lastUpdate) {
+		return formatDate(props.data.lastUpdate);
+	}
+
+	return undefined;
+});
 </script>
 
 <template>
@@ -52,7 +59,9 @@ function formatDate(date: string) {
 					v-if="props.data.lastUpdate"
 					token="text-200-r"
 					color="neutral"
-				>last update: {{formatDate(props.data.lastUpdate!)}}</ui-tag>
+				>
+					last update: {{ lastUpdateLabel }}
+				</ui-tag>
 			</template>
 		</base-ticker-widget-header>
 		<base-ticker-widget-content>
