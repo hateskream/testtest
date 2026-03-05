@@ -34,7 +34,6 @@ This is a Vue 3 + TypeScript financial dashboard application with trading widget
 ### Module Structure Pattern
 
 Each module in `src/modules/` typically follows this structure:
-
 ```
 module-name/
 ├── api/           # API calls using HttpService
@@ -65,13 +64,11 @@ module-name/
 ### Data Fetching Pattern
 
 API calls follow this pattern:
-
 1. API function in `api/` folder using `useHttpService()`
 2. TanStack Query hook in `queries/` folder wrapping the API call
 3. Component uses the query hook
 
 Example:
-
 ```typescript
 // api/get-data.ts
 export async function getData(): Promise<IData> {
@@ -91,7 +88,6 @@ export function useQueryData() {
 ### Feature Toggles
 
 Features are controlled via environment variables in `.env`:
-
 - Format: `VITE_FEATURE_<FEATURE_NAME> = true|false`
 - Check with: `isFeatureEnabled('FEATURE_NAME')` from `@/shared/lib`
 - All features defined in `src/shared/lib/feature-toggle.ts`
