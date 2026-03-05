@@ -3,6 +3,7 @@ import { useTickerContext } from '../../../composables';
 import type { ISectionItem } from '../../../models';
 import { AnalystRatingsTickerWidget } from '@/modules/widgets/analyst-ratings';
 import { ValuationMetricsTickerWidget } from '@/modules/widgets/valuation-metrics';
+import { CapitalMetricsTickerWidget } from '@/modules/widgets/capital-metrics';
 import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { isFeatureEnabled } from '@/shared/lib';
 
@@ -15,14 +16,21 @@ defineProps<ISectionProps>();
 const { tickerId } = useTickerContext();
 
 const valuationMetricsIsEnabled = isFeatureEnabled('TICKER_WIDGET_VALUATION_METRICS_ENABLED');
+const capitalStructureIsEnabled = isFeatureEnabled('TICKER_WIDGET_CAPITAL_STRUCTURE_ENABLED');
 const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED');
 </script>
 
 <template>
 	<div :class="classes.section">
-		<div v-if="valuationMetricsIsEnabled" :class="classes.metrics">
+		<div v-if="valuationMetricsIsEnabled || capitalStructureIsEnabled" :class="classes.metrics">
 			<valuation-metrics-ticker-widget
+				v-if="valuationMetricsIsEnabled"
 				:meta="{ tickerId, name: 'Valuation Metrics' }"
+				:class="classes.metricsItem"
+			/>
+			<capital-metrics-ticker-widget
+				v-if="capitalStructureIsEnabled"
+				:meta="{ tickerId, name: 'Capital Structure' }"
 				:class="classes.metricsItem"
 			/>
 		</div>

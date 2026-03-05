@@ -1,0 +1,1 @@
+export { CapitalMetricsTickerWidget } from './ui';

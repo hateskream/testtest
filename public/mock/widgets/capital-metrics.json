@@ -1,0 +1,28 @@
+{
+	"metrics": [
+		{
+			"label": "Expense Ratio",
+			"description": "Annual fee as a percentage of fund assets covering management and operating costs.",
+			"value": "0.09",
+			"unit": "%"
+		},
+		{
+			"label": "30 Day Yield",
+			"description": "Annualized income return over the past 30 days, net of fund expenses.",
+			"value": "1.03",
+			"unit": "%"
+		},
+		{
+			"label": "Dividend Yield",
+			"description": "Annual dividends expressed as a percentage of current share price.",
+			"value": "1.1",
+			"unit": "%"
+		},
+		{
+			"label": "P/E Ratio",
+			"description": "Price per share divided by earnings per share, reflecting investor cost per dollar of profit.",
+			"value": "27.9",
+			"unit": "x"
+		}
+	]
+}
