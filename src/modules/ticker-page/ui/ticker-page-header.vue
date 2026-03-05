@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import {
-	type IDataProvider,
-	type IExchange,
-	type IPriceData,
-	type ITickerItemExtended,
-} from '../api/get-ticker-page-meta';
+import { type IDataProvider, type IExchange, type IPriceData, type ITickerItemExtended } from '../api';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
-import { UiPosition } from '@/shared/ui/position';
+import { UiPosition, UiPositionTooltip } from '@/shared/ui/position';
 import { UiImage } from '@/shared/ui/image';
 import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
@@ -18,7 +13,6 @@ import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
 import { UiClamped } from '@/shared/ui/clamped';
-import { UiPositionTooltip } from '@/shared/ui/position';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiControlIcon } from '@/shared/ui/control-icon';
 

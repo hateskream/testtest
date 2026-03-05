@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { UiText } from '@/shared/ui/text';
 import { useGoToTickerPage } from '@/modules/chart';
-import type { ITickerItemExtended } from '@/modules/ticker-page/api/get-ticker-page-meta';
 import { RouteNames } from '@/types/route.d';
+import type { ITickerItemExtended } from '../../../api';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;

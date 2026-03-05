@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, useCssModule } from 'vue';
 
-import type { IPriceData } from '@/modules/ticker-page/api/get-ticker-page-meta';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiText } from '@/shared/ui/text';
+import type { IPriceData } from '../../../api';
 
 const props = defineProps<{
 	price: IPriceData;
