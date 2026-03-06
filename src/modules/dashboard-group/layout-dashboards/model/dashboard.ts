@@ -319,7 +319,7 @@ const presets: Record<PresetName, ISectionPreset[]> = {
 					defaultDisplayVariant: 'tile',
 				},
 				{
-					defaultState: 'Gold',
+					defaultState: 'Brent Crude Oil',
 					height: 136,
 					widgetType:  WidgetType.ChartPrice,
 					defaultDisplayVariant: 'tile',

@@ -35,7 +35,7 @@ export function getDefaultsState(defaultStateType: string): IState {
 		);
 	}
 
-	if (defaultStateType === 'Gold') {
+	if (defaultStateType === 'Brent Crude Oil') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Commodity,
 			createTickerIdCommodity('BZUSD'),
