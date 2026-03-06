@@ -31,14 +31,14 @@ export function getDefaultsState(defaultStateType: string): IState {
 	if (defaultStateType === 'USDollar') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Index,
-			createTickerIdIndex('^DXY'),
+			createTickerIdIndex('^DJI'),
 		);
 	}
 
 	if (defaultStateType === 'Gold') {
 		defaultSelectedTicker = createTickerId(
 			SymbolType.Commodity,
-			createTickerIdCommodity('XAUUSD'),
+			createTickerIdCommodity('BZUSD'),
 		);
 	}
 
