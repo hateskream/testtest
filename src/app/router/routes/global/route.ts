@@ -283,6 +283,11 @@ export const testRoutes: RouteRecordRaw[] = [
 		component: () => import('@/pages/unemployment-rate-test-page.vue'),
 	},
 	{
+		path: RoutePaths.ImageTest,
+		name: RouteNames.ImageTest,
+		component: () => import('@/pages/image-test-page.vue'),
+	},
+	{
 		path: RoutePaths.TickerOld,
 		name: RouteNames.TickerOld,
 		redirect: { name: RouteNames.TickerStockOld, params: { id: '1' } },

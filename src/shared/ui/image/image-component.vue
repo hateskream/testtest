@@ -48,6 +48,8 @@ watch(
 	() => props.src,
 	async newSrc => {
 		currentSrc.value = props.replacement;
+		isImageLoaded.value = false;
+		isValidSrc.value = false;
 
 		if (!newSrc) {
 			isValidSrc.value = false;
@@ -64,10 +66,20 @@ watch(
 			return;
 		}
 
-		isValidSrc.value = await tryLoadImage(newSrc);
+		const loaded = await tryLoadImage(newSrc);
 
-		if (isValidSrc.value) {
+		if (props.src !== newSrc) {
+			return;
+		}
+
+		isImageLoaded.value = true;
+		isValidSrc.value = loaded;
+
+		if (loaded) {
 			currentSrc.value = newSrc;
+			emit('loaded');
+		} else {
+			emit('error');
 		}
 	},
 	{ immediate: true },
@@ -92,21 +104,15 @@ async function tryLoadImage(src: string): Promise<boolean> {
 			img.onload = null;
 			img.onerror = null;
 			img.src = '';
-			isImageLoaded.value = true;
-			emit('error');
 			resolve(false);
 		}, props.timeout);
 
 		img.onload = () => {
 			clearTimeout(timer);
-			isImageLoaded.value = true;
-			emit('loaded');
 			resolve(true);
 		};
 		img.onerror = () => {
 			clearTimeout(timer);
-			isImageLoaded.value = true;
-			emit('error');
 			resolve(false);
 		};
 		img.src = src;
