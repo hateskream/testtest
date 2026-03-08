@@ -1,0 +1,8 @@
+{
+	"group_by": "holdings",
+	"segments": [
+		{ "key": "small",  "label": "$0–$1k",    "percentage": 65.99, "color": "#FFFFFF" },
+		{ "key": "medium", "label": "$1k–$100k", "percentage": 26.41, "color": "#7C3AED" },
+		{ "key": "large",  "label": "$100k+",    "percentage": 7.60,  "color": "#F59E0B" }
+	]
+}
