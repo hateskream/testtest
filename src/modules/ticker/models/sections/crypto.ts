@@ -9,7 +9,14 @@ export const tickerCryptoSections = {
 			height: 265,
 		},
 	],
-	center: [],
+	center: [
+		{
+			id: 'holdings',
+			title: 'Holdings',
+			component: 'CRYPTO_HOLDINGS',
+			height: 250,
+		},
+	],
 	right: [
 		{
 			id: 'insights',
