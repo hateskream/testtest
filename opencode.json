@@ -1,8 +1,6 @@
 {
 	"$schema": "https://opencode.ai/config.json",
-	"plugin": [
-		"opencode-wakatime"
-	],
+	"plugin": ["opencode-wakatime"],
 	"mcp": {
 		"context7": {
 			"type": "remote",
@@ -14,55 +12,28 @@
 		},
 		"eslint": {
 			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"@eslint/mcp@latest"
-			],
+			"command": ["cmd", "/c", "npx", "@eslint/mcp@latest"],
 			"enabled": true
 		},
 		"chrome-devtools": {
 			"type": "local",
-			"command": [
-				"npx",
-				"-y",
-				"chrome-devtools-mcp@latest"
-			]
+			"command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+		},
+		"figma": {
+			"type": "remote",
+			"url": "http://127.0.0.1:3845/mcp",
+			"enabled": true
 		}
 	},
-	"instructions": [
-		"CLAUDE.md"
-	],
+	"instructions": ["CLAUDE.md"],
 	"formatter": {
 		"eslint": {
-			"command": [
-				"npx",
-				"eslint",
-				"--fix",
-				"$FILE"
-			],
-			"extensions": [
-				".vue",
-				".ts",
-				".tsx",
-				".js",
-				".jsx",
-				".cjs",
-				".mjs"
-			]
+			"command": ["npx", "eslint", "--fix", "$FILE"],
+			"extensions": [".vue", ".ts", ".tsx", ".js", ".jsx", ".cjs", ".mjs"]
 		},
 		"stylelint": {
-			"command": [
-				"npx",
-				"stylelint",
-				"--fix",
-				"$FILE"
-			],
-			"extensions": [
-				".vue",
-				".css"
-			]
+			"command": ["npx", "stylelint", "--fix", "$FILE"],
+			"extensions": [".vue", ".css"]
 		}
 	},
 	"compaction": {
@@ -70,11 +41,6 @@
 		"prune": true
 	},
 	"watcher": {
-		"ignore": [
-			"node_modules/**",
-			"dist/**",
-			".git/**",
-			"*.log"
-		]
+		"ignore": ["node_modules/**", "dist/**", ".git/**", "*.log"]
 	}
 }

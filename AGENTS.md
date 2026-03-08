@@ -1,250 +1,86 @@
 # AGENTS.md - Developer Guide for i88-frontend
 
-This file provides guidance for AI agents working in this repository.
+Vue 3 + TypeScript financial dashboard with trading widgets and market data visualization.
 
-## Project Overview
-
-Vue 3 + TypeScript financial dashboard application with trading widgets, charts, and market data visualization.
-
-## Build & Development Commands
+## Commands
 
 ```bash
-npm run dev          # Start development server (Vite)
-npm run build        # Type-check with vue-tsc and build for production
-npm run preview      # Preview production build locally
-npm run lint         # Run all linters concurrently (ts, js, css)
-npm run lint:ts      # Type-check only (vue-tsc --noEmit)
-npm run lint:js:ox   # Run oxlint for JavaScript/TypeScript
-npm run lint:js:eslint # Run ESLint for .vue files
-npm run lint:css     # Run Stylelint for .vue and .css files
-npm run lint:fix     # Auto-fix ESLint, oxlint, and Stylelint issues
+npm run dev          # Start dev server (Vite)
+npm run build        # Type-check + build
+npm run lint         # Run all linters (ts, js, css)
+npm run lint:fix     # Auto-fix ESLint, oxlint, Stylelint
 ```
 
-**Note**: There are currently no test commands configured in this project.
+Pre-push hook runs `npm run lint`. No test commands configured.
 
-## Code Style Guidelines
+## Architecture
 
-### Formatting
+`@/` maps to `src/`.
 
-- **Indentation**: Tabs
-- **Quotes**: Single quotes (`'`)
-- **Semicolons**: Required
-- **Max line length**: 120 characters
+```
+src/
+├── app/       # Entry point, router
+├── pages/     # Route-level components
+├── modules/   # Feature modules (api/ composables/ queries/ model/ store/ ui/ index.ts)
+├── shared/    # composables/ lib/ service/ ui/ mock/
+├── types/     # Global TS types
+└── assets/    # Styles, icons
+```
 
-### Naming Conventions
+**Data fetching**: API fn in `api/` using `useHttpService()` → TanStack Query hook in `queries/` → component.
+**State**: Pinia (global), TanStack Query (server).
+**HTTP**: `ofetch` via `HttpService` at `@/shared/service/http-service.ts`.
+**Feature flags**: `VITE_FEATURE_<NAME>=true|false` in `.env`, check via `isFeatureEnabled('NAME')` from `@/shared/lib`.
 
-- **Interfaces**: Prefix with `I` (e.g., `IUserData`, `IMarketConfig`)
-- **Types**: PascalCase (e.g., `MarketData`, `TradeConfig`)
-- **Enums**: PascalCase or UPPER_CASE
-- **Files**: kebab-case (e.g., `use-query-data.ts`, `view-component.vue`)
-- **Vue components in templates**: kebab-case (e.g., `<my-component>`)
-- **Variables/functions**: camelCase
-- **Constants**: UPPER_CASE
+## Code Style
 
-### Vue Component Patterns
+- Tabs, single quotes, semicolons, max 120 chars
+- Files: kebab-case; Interfaces: `I` prefix; Types: PascalCase; Constants: UPPER_CASE
+- Vue components in templates: kebab-case
 
-- Use Composition API with `<script setup lang="ts">`
-- Use `defineModel` for two-way bindings
-- Components should be registered locally when possible
-- **Props**: Always declare a named interface (prefix `I`, suffix `Props`) and pass it to `defineProps`. Never use inline type literals like `defineProps<{ title: string }>()` — always extract to an interface.
+**MUST after any `.ts`/`.vue` edit:**
+
+```bash
+npx eslint --fix <files>
+```
+
+## Vue Patterns
+
+- Composition API with `<script setup lang="ts">`
+- `defineModel` for two-way bindings
+- **Props**: always extract to named `I*Props` interface — never inline generics
+- **Emits**: always extract to named `I*Emits` interface — never inline or array syntax
 
 ```typescript
 interface IMyComponentProps {
 	title: string;
 	count?: number;
 }
-const props = defineProps<IMyComponentProps>();
-```
-
-- **Emits**: Always declare a named interface (prefix `I`, suffix `Emits`) and pass it to `defineEmits`. Never use inline type literals or array syntax for `defineEmits`.
-
-```typescript
 interface IMyComponentEmits {
 	update: [value: string];
 	close: [];
 }
+const props = defineProps<IMyComponentProps>();
 const emit = defineEmits<IMyComponentEmits>();
 ```
 
-### Import Order
+## TypeScript
 
-1. External imports (node_modules)
-2. Internal imports (`@/` path alias - maps to `src/`)
-3. Blank line between groups
-4. Vue components last in their group
-
-Example:
-
-```typescript
-import { ref, computed } from "vue";
-import { useQuery } from "@tanstack/vue-query";
-
-import { useHttpService } from "@/shared/service/http-service";
-import { formatCurrency } from "@/shared/lib/utils";
-
-import MyComponent from "./my-component.vue";
-```
-
-### TypeScript Rules
-
-- `strict: true` enabled in tsconfig
-- `noImplicitAny: true`
-- `noUnusedLocals: true`
-- `noUnusedParameters: true`
+- `strict: true`, `noImplicitAny`, `noUnusedLocals`, `noUnusedParameters`
 - Always define return types for functions
-- Use `interface` for object shapes (prefix with `I`)
-- Use `type` for unions, intersections, and primitives
+- `interface` for object shapes, `type` for unions/intersections/primitives
+- Zod for runtime validation of external data
 
-### CSS/Styling
+## Import Order
 
-- CSS modules pattern: `[local]__[hash]`
-- Uses LightningCSS transformer
-- Stylelint enforces CSS standards
+1. External (node_modules)
+2. Internal (`@/`) — blank line between groups
+3. Vue components last in their group
 
-## Architecture
+## Commits
 
-### Directory Structure
+Conventional Commits: `feat:` / `fix:` / `refactor:` / `docs:` / `chore:`
 
-```
-src/
-├── app/           # Application entry point, router, head config
-├── pages/         # Page-level Vue components (routes)
-├── modules/       # Feature modules with domain-specific functionality
-├── shared/        # Reusable code across modules
-│   ├── composables/  # Shared Vue composables
-│   ├── lib/          # Utility functions and helpers
-│   ├── service/      # Core services (HttpService, query-client, event-bus)
-│   └── ui/           # Reusable UI components
-├── types/         # Global TypeScript type definitions
-└── assets/        # Static assets (styles, icons)
-```
+## Documentation
 
-### Module Structure Pattern
-
-Each module in `src/modules/` typically follows:
-
-```
-module-name/
-├── api/           # API calls using HttpService
-├── composables/   # Vue composables (use-*.ts)
-├── queries/       # TanStack Query hooks (use-query-*.ts)
-├── model/         # TypeScript interfaces and types
-├── store/         # Pinia stores (if needed)
-├── ui/            # Vue components
-└── index.ts       # Public exports
-```
-
-### Data Fetching Pattern
-
-1. API function in `api/` folder using `useHttpService()`
-2. TanStack Query hook in `queries/` folder wrapping the API call
-3. Component uses the query hook
-
-Example:
-
-```typescript
-// modules/market/api/get-data.ts
-export async function getMarketData(): Promise<IMarketData> {
-	const httpService = useHttpService();
-	return httpService.get<IMarketData>("/api/v1/market");
-}
-
-// modules/market/queries/use-query-market-data.ts
-export function useQueryMarketData() {
-	return useQuery({
-		queryKey: ["market-data"],
-		queryFn: () => getMarketData(),
-	});
-}
-```
-
-## Key Technologies
-
-- **Framework**: Vue 3 + TypeScript
-- **State Management**: Pinia (global state), TanStack Query (server state)
-- **HTTP Client**: `ofetch` wrapped in `HttpService` (`@/shared/service/http-service.ts`)
-- **Charts**: Chart.js, Lightweight Charts, chartjs-chart-treemap
-- **Routing**: Vue Router
-- **Build Tool**: Vite with LightningCSS transformer
-
-## Documentation Lookup
-
-When you need to clarify API usage, find correct syntax, or verify behavior of any framework or library used in this project (Vue 3, Vite, TanStack Query, Pinia, Chart.js, Lightweight Charts, Vue Router, ofetch, Zod, etc.):
-
-1. Use the **Context7 MCP** tool to query up-to-date documentation before writing or suggesting code
-2. First call `resolve-library-id` with the library name to get the correct Context7 library ID
-3. Then call `query-docs` with the resolved ID and your specific question
-4. Prefer Context7 documentation over relying on training data, especially for version-specific APIs and recent changes
-
-## Feature Toggles
-
-Features are controlled via environment variables in `.env`:
-
-- Format: `VITE_FEATURE_<FEATURE_NAME>=true|false`
-- Check with: `isFeatureEnabled('FEATURE_NAME')` from `@/shared/lib`
-- All features defined in `src/shared/lib/feature-toggle.ts`
-
-## Path Aliases
-
-- `@/` maps to `src/` (configured in tsconfig.app.json and vite.config.ts)
-
-## Linting Configuration
-
-This project uses multiple linters:
-
-- **vue-tsc**: TypeScript type-checking
-- **oxlint**: JavaScript/TypeScript linting
-- **ESLint**: Vue-specific linting
-- **Stylint**: CSS linting
-
-All linters run via `npm run lint`. The pre-push hook runs this automatically.
-
-### Code Style Enforcement Workflow
-
-After creating or modifying any `.ts`, `.tsx`, or `.vue` file, you **MUST** run ESLint auto-fix on the changed files before considering the task done:
-
-```bash
-npx eslint --fix <file1> <file2> ...
-```
-
-This ensures all stylistic rules (`@stylistic/quotes`, `@stylistic/indent`, `@stylistic/semi`, etc.) are automatically applied. Do **NOT** rely on manually writing correct formatting — always let the linter enforce it.
-
-## Error Handling
-
-- Use try/catch for async operations
-- Let TypeScript infer types when possible, but be explicit for function parameters and returns
-- Use Zod for runtime validation of external data
-- Handle API errors gracefully with user feedback
-
-## Commit Format
-
-Follow Conventional Commits:
-
-- `feat: add new feature`
-- `fix: resolve bug`
-- `refactor: restructure code`
-- `docs: update documentation`
-- `chore: maintenance tasks`
-
-## Common Development Tasks
-
-### Creating a new module
-
-1. Create directory structure in `src/modules/<module-name>/`
-2. Add API functions in `api/`
-3. Add TanStack Query hooks in `queries/`
-4. Add Vue components in `ui/`
-5. Export public APIs from `index.ts`
-
-### Adding a new API endpoint
-
-1. Create API function in appropriate module's `api/` folder
-2. Use `useHttpService()` to make HTTP requests
-3. Create corresponding TanStack Query hook in `queries/`
-4. Use the hook in components
-
-### Working with feature flags
-
-1. Add feature toggle in `.env` file: `VITE_FEATURE_NEW_FEATURE=true`
-2. Import and use `isFeatureEnabled('NEW_FEATURE')` from `@/shared/lib`
-3. Wrap new functionality with the feature check
+Use **Context7 MCP** for Vue 3, TanStack Query, Pinia, Vite, Chart.js, ofetch, Zod — call `resolve-library-id` then `query-docs`.
