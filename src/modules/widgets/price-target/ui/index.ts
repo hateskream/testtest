@@ -1,0 +1,1 @@
+export { PriceTargetTickerWidget } from './ticker';

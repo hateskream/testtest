@@ -1,17 +1,29 @@
 <script setup lang="ts">
-import { useTickerContext } from '../../../composables';
-import type { ISectionItem } from '../../../models';
-import { AnalystRatingsTickerWidget } from '@/modules/widgets/analyst-ratings';
+import { markRaw, ref } from 'vue';
+
+import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { ValuationMetricsTickerWidget } from '@/modules/widgets/valuation-metrics';
 import { CapitalMetricsTickerWidget } from '@/modules/widgets/capital-metrics';
-import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { isFeatureEnabled } from '@/shared/lib';
+import { TickerBaseTabsLayout } from '../../../base';
+import { useTickerContext } from '../../../../composables';
+import type { ISectionItem } from '../../../../models';
+
+import TabAnalystRatings from './tab-analyst-ratings.vue';
+import TabPriceTarget from './tab-price-target.vue';
 
 interface ISectionProps {
 	section: ISectionItem;
 }
 
 defineProps<ISectionProps>();
+
+const tabs = [
+	{ id: 'price-target', title: 'Price Target', component: markRaw(TabPriceTarget) },
+	{ id: 'analyst-ratings', title: 'Analyst Ratings', component: markRaw(TabAnalystRatings) },
+];
+
+const selectedTabId = ref('price-target');
 
 const { tickerId } = useTickerContext();
 
@@ -34,10 +46,14 @@ const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED')
 				:class="classes.metricsItem"
 			/>
 		</div>
-		<analyst-ratings-ticker-widget :meta="{ tickerId, name: 'Analyst Ratings' }" />
+		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
 		<revenue-ticker-widget v-if="revenueWidgetIsEnabled" :meta="{ tickerId, name: 'Revenue' }" />
 	</div>
+	<div :class="classes.section">
+		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
+	</div>
 </template>
+
 
 <style module="classes">
 .section {

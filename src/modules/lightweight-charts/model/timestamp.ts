@@ -27,7 +27,7 @@ export function isUtcSeconds(value: number): value is UtcSeconds {
 	return UtcSecondsSchema.safeParse(value).success;
 }
 
-function toUtcMilliseconds(value: UtcSeconds | UtcMilliseconds) {
+export function toUtcMilliseconds(value: UtcSeconds | UtcMilliseconds) {
 	if (isUtcSeconds(value)) {
 		return value * 1000 as UtcMilliseconds;
 	}
