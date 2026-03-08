@@ -1,0 +1,7 @@
+{
+	"group_by": "whales",
+	"segments": [
+		{ "key": "whales", "label": "Whales", "percentage": 49.65, "color": "#FFFFFF" },
+		{ "key": "others", "label": "Others", "percentage": 50.36, "color": "#9CA3AF" }
+	]
+}

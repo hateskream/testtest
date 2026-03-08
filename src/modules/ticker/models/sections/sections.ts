@@ -112,7 +112,8 @@ const experimentalSections = {
 		isFeatureEnabled('TICKER_WIDGET_VALUATION_METRICS_ENABLED') ||
 		isFeatureEnabled('TICKER_WIDGET_CAPITAL_STRUCTURE_ENABLED'),
 	[TICKER_SECTION_COMPONENT.CRYPTO_HOLDINGS]: () =>
-		isFeatureEnabled('TICKER_WIDGET_ADDRESSES_BY_HOLDINGS_ENABLED'),
+		isFeatureEnabled('TICKER_WIDGET_ADDRESSES_BY_HOLDINGS_ENABLED') ||
+		isFeatureEnabled('TICKER_WIDGET_WHALE_HOLDINGS_ENABLED'),
 } as const satisfies Partial<Record<TickerSectionComponent, () => boolean>>;
 
 function hasExperimentalSection(key: TickerSectionComponent): key is keyof typeof experimentalSections {

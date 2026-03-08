@@ -1,0 +1,1 @@
+export { WhaleHoldingsTickerWidget } from './ticker';
