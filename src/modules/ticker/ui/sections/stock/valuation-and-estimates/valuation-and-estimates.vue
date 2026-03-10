@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { markRaw, ref } from 'vue';
+import { notNullish } from '@vueuse/core';
 
 import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { ValuationMetricsTickerWidget } from '@/modules/widgets/valuation-metrics';
@@ -18,12 +19,19 @@ interface ISectionProps {
 
 defineProps<ISectionProps>();
 
-const tabs = [
-	{ id: 'price-target', title: 'Price Target', component: markRaw(TabPriceTarget) },
-	{ id: 'analyst-ratings', title: 'Analyst Ratings', component: markRaw(TabAnalystRatings) },
-];
+const analystRatingsIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED');
+const priceTargetIsEnabled = isFeatureEnabled('TICKER_WIDGET_PRICE_TARGET_ENABLED');
 
-const selectedTabId = ref('price-target');
+const tabs = [
+	analystRatingsIsEnabled
+		? { id: 'price-target', title: 'Price Target', component: markRaw(TabPriceTarget) }
+		: undefined,
+	priceTargetIsEnabled
+		? { id: 'analyst-ratings', title: 'Analyst Ratings', component: markRaw(TabAnalystRatings) }
+		: undefined,
+].filter(notNullish);
+
+const selectedTabId = ref(priceTargetIsEnabled ? 'price-target' : 'analyst-ratings');
 
 const { tickerId } = useTickerContext();
 
@@ -46,11 +54,12 @@ const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED')
 				:class="classes.metricsItem"
 			/>
 		</div>
-		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
+		<ticker-base-tabs-layout
+			v-if="analystRatingsIsEnabled || priceTargetIsEnabled"
+			v-model="selectedTabId"
+			:tabs="tabs"
+		/>
 		<revenue-ticker-widget v-if="revenueWidgetIsEnabled" :meta="{ tickerId, name: 'Revenue' }" />
-	</div>
-	<div :class="classes.section">
-		<ticker-base-tabs-layout v-model="selectedTabId" :tabs="tabs" />
 	</div>
 </template>
 
