@@ -40,7 +40,6 @@ export enum RouteNames {
 	TickerWidgetPreview = 'ticker-widget-preview',
 	NonfarmPayrollsTestPage = 'nonfarm-payrolls-test-page',
 	TickerUnemploymentRateTest = 'ticker-unemployment-rate-test',
-	ImageTest = 'image-test',
 }
 
 export enum RouteLabels {
@@ -118,7 +117,6 @@ export enum RoutePaths {
 	TickerWidgetPreview = '/ticker-widget/:widgetName',
 	TickerUnemploymentRateTest = '/ticker-unemployment-rate-test',
 	NonfarmPayrollsTestPage = '/nonfarm-payrolls-test-page',
-	ImageTest = '/image-test',
 }
 
 export enum RouteTickerType {
