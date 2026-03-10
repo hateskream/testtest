@@ -75,12 +75,16 @@ export function useTickerChartPrice(tickerId: MaybeRefOrGetter<string>) {
 	const currentTicker = ref<ITickerItem | null>(null);
 
 	watch(() => toValue(tickerId), async value => {
+		if (!value) {
+			return;
+		}
+
 		const [ticker] = await fetchTickers(value);
 
 		if (ticker.canonical_ticker_id === toValue(tickerId)) {
 			currentTicker.value = ticker;
 		}
-	});
+	}, { immediate: true });
 
 	// indicators
 
