@@ -35,13 +35,13 @@ const isStock = computed(() => isStockMarket(props.meta.tickerId));
 const isThrowError = computed(() => {
 	return isError.value || !isStock.value;
 });
-const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED');
 
+const widgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_ENABLED');
 </script>
 
 <template>
 	<div v-if="widgetIsEnabled">
-		<base-ticker-widget-error v-if="isThrowError " @retry="refetch" />
+		<base-ticker-widget-error v-if="isThrowError" @retry="refetch()" />
 		<preloader-component v-else-if="isLoading" />
 		<view-component
 			v-else-if="data"

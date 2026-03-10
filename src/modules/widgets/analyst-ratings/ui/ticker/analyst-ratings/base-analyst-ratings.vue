@@ -2,11 +2,9 @@
 import { computed } from 'vue';
 
 import { type AnalystRatings, AnalystRatingsSummary } from '../../../model';
-import { BaseTickerWidgetContent, BaseTickerWidgetHeader, BaseTickerWidgetWrapper } from '@/modules/widgets/base';
 import { type ITickerWidgetMeta } from '@/modules/ticker';
 import { RadarChart } from '../../common';
 import { TagColor, UiTag } from '@/shared/ui/tag';
-
 
 interface IProps {
 	data: AnalystRatings;
@@ -22,35 +20,33 @@ const tagColor = computed(()=>{
 		default : return TagColor.Neutral;
 	}
 });
-
 </script>
 
 <template>
-	<base-ticker-widget-wrapper>
-		<base-ticker-widget-header>
-			<template #default>
-
-				{{props.meta.name}}
-			</template>
-			<template #right>
-				<ui-tag :color="tagColor" :class="classes.tag">{{data.summary}}</ui-tag>
-			</template>
-
-		</base-ticker-widget-header>
-		<base-ticker-widget-content>
-
-
-			<div :class="classes.bodyWrapper">
-				<div :class="classes.radarWrapper">
-					<radar-chart :data="props.data" />
-				</div>
+	<div :class="classes.container">
+		<div :class="classes.header">
+			<ui-tag :color="tagColor" :class="classes.tag">{{ data.summary }}</ui-tag>
+		</div>
+		<div :class="classes.bodyWrapper">
+			<div :class="classes.radarWrapper">
+				<radar-chart :data="props.data" />
 			</div>
-
-		</base-ticker-widget-content>
-	</base-ticker-widget-wrapper>
+		</div>
+	</div>
 </template>
 
 <style module="classes">
+.container {
+	display: flex;
+	flex-direction: column;
+}
+
+.header {
+	display: flex;
+	justify-content: flex-end;
+	padding: var(--padding-s5, 8px) var(--padding-s11, 20px);
+}
+
 .bodyWrapper {
 	display: flex;
 	flex-direction: column;
@@ -61,10 +57,9 @@ const tagColor = computed(()=>{
 	text-transform: capitalize;
 }
 
-
 .radarWrapper {
 	display: flex;
 	justify-content: center;
-	padding: 65px 10px 48px;
+	padding: 34px 10px 38px;
 }
 </style>

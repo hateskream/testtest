@@ -2,9 +2,7 @@
 import type { AnalystRatings } from '../../../model';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 
-import BasePricePerformance
-	from './base-analyst-ratings.vue';
-
+import BaseAnalystRatings from './base-analyst-ratings.vue';
 
 interface IProps {
 	data: AnalystRatings;
@@ -12,14 +10,8 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
-
-
 </script>
 
 <template>
-	<base-price-performance :data="props.data" :meta="props.meta" />
+	<base-analyst-ratings :data="props.data" :meta="props.meta" />
 </template>
-
-<style module="classes">
-
-</style>
