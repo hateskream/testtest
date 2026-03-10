@@ -94,6 +94,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 							:enabled-markets="ALL_MARKET_TYPES"
 							:selection-mode="SelectionMode.Single"
 							display-variant="new"
+							data-no-focus-lock
 							@update:selected-tickers="onUpdateSelectedTickers"
 						/>
 					</template>
