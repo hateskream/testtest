@@ -1,4 +1,4 @@
 export * from './bar-dashed-border';
-export * from './bar-underline-ticks';
-export * from './bar-solid-bottom-line';
+export * from './underline-dash-ticks.ts';
+export * from './solid-bottom-line.ts';
 export * from './bar-dashed-border-configurable';

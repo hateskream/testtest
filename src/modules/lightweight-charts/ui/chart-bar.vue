@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartDataset, type ChartOptions, type Plugin } from 'chart.js/auto';
 
-import { barSolidBottomLinePlugin, barUnderlineTicksPlugin } from '@/modules/lightweight-charts/plugins';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
 import { prettyNumberWithKey } from '@/shared/lib';
 
 export type BarDataset = ChartDataset<'bar'>;
@@ -24,7 +24,7 @@ const container = useTemplateRef('container');
 const chart = shallowRef<Chart<'bar'> | null>(null);
 
 const preparedPlugins = computed(() => {
-	return [...props.plugins, barUnderlineTicksPlugin, barSolidBottomLinePlugin];
+	return [...props.plugins, underlineDashTicksPlugin, solidBottomLinePlugin];
 });
 
 const defaultOptions: ChartOptions<'bar'> = {
@@ -34,6 +34,13 @@ const defaultOptions: ChartOptions<'bar'> = {
 	plugins: {
 		legend: { display: false },
 		tooltip: { enabled: false },
+		solidBottomLine: {
+			color: 'rgba(73, 73, 80, 0.60)',
+			mode: 'full',
+		},
+		underlineDashTicks: {
+			scales: ['y'],
+		},
 	},
 	scales: {
 		y: {

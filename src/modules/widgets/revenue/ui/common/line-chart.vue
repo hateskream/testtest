@@ -4,7 +4,7 @@ import { Chart, type ChartDataset, type ChartOptions } from 'chart.js/auto';
 import type { TooltipOptions } from 'chart.js';
 
 import { prettyNumberWithKey } from '@/shared/lib';
-import { barSolidBottomLinePlugin, barUnderlineTicksPlugin } from '@/modules/lightweight-charts/plugins';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import { formatPrice } from '@/modules/lightweight-charts/model';
@@ -57,6 +57,13 @@ const defaultOptions: ChartOptions<'line'> = {
 		tooltip: {
 			enabled: false,
 			external: handler as unknown as TooltipOptions<'line'>['external'],
+		},
+		solidBottomLine: {
+			color: 'rgba(73, 73, 80, 0.60)',
+			mode: 'full',
+		},
+		underlineDashTicks: {
+			scales: ['y'],
 		},
 	},
 	scales: {
@@ -113,7 +120,7 @@ const defaultOptions: ChartOptions<'line'> = {
 	},
 };
 
-const plugins = [barUnderlineTicksPlugin, barSolidBottomLinePlugin];
+const plugins = [underlineDashTicksPlugin, solidBottomLinePlugin];
 
 function createChart(): void {
 	if (!container.value) {
