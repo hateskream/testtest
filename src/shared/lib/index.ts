@@ -26,3 +26,4 @@ export * from './is-number';
 export * from './download';
 export * from './degree';
 export * from './svg';
+export * from './color';

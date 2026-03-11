@@ -38,6 +38,8 @@ export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent
 			import('@/modules/ticker/ui/sections/crypto').then(m => m.OverviewSection),
 		[TICKER_SECTION_COMPONENT.CRYPTO_INSIGHTS_AND_ACTIVITY]: () =>
 			import('@/modules/ticker/ui/sections/crypto').then(m => m.InsightsAndActivity),
+		[TICKER_SECTION_COMPONENT.CRYPTO_SEASONALS]: () =>
+			import('@/modules/ticker/ui/sections/crypto').then(m => m.SeasonalsSection),
 		[TICKER_SECTION_COMPONENT.CRYPTO_HOLDINGS]: () =>
 			import('@/modules/ticker/ui/sections/crypto').then(m => m.HoldingsSection),
 

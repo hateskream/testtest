@@ -1,0 +1,1 @@
+export { SeasonalsTickerWidget } from './ui';

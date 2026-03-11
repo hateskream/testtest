@@ -17,6 +17,7 @@ export enum IconIds {
 	Loosers = 'loosers',
 	Gainers = 'gainers',
 	Drag = 'drag',
+	DragHorizontal = 'drag-horizontal',
 	DoubleDrag = 'double-drug',
 	Retry = 'retry',
 	DropdownDown = 'dropdown-down',

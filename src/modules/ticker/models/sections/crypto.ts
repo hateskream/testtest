@@ -11,6 +11,12 @@ export const tickerCryptoSections = {
 	],
 	center: [
 		{
+			id: 'seasonals',
+			title: 'Seasonals',
+			component: 'CRYPTO_SEASONALS',
+			height: 600,
+		},
+		{
 			id: 'holdings',
 			title: 'Holdings',
 			component: 'CRYPTO_HOLDINGS',
