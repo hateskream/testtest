@@ -10,7 +10,7 @@ import {
 	strTimeToChartTime,
 	type UtcSeconds,
 } from '@/modules/lightweight-charts/model';
-import { barSolidBottomLinePlugin, barUnderlineTicksPlugin } from '@/modules/lightweight-charts/plugins';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { UiText } from '@/shared/ui/text';
 import type { PriceTargetHistoryPoint } from '../../model';
@@ -266,7 +266,6 @@ const defaultOptions: ChartOptions<'line'> = {
 				crossAlign: 'far',
 				labelOffset: -5,
 				callback: value => formatPrice(Number(value)),
-				backdropColor: 'red',
 				font: {
 					family: '\'Roboto Flex Variable\', sans-serif',
 					size: 11,
@@ -310,7 +309,7 @@ function createPriceTargetChart() {
 		data: {
 			datasets: buildDatasets(),
 		},
-		plugins: [barUnderlineTicksPlugin, barSolidBottomLinePlugin],
+		plugins: [underlineDashTicksPlugin, solidBottomLinePlugin],
 		options: {
 			...defaultOptions,
 			plugins: {
@@ -318,6 +317,13 @@ function createPriceTargetChart() {
 				annotation: {
 					clip: false,
 					annotations: buildAnnotations(),
+				},
+				solidBottomLine: {
+					color: 'rgba(73, 73, 80, 0.44)',
+					mode: 'full',
+				},
+				underlineDashTicks: {
+					scales: ['y'],
 				},
 			},
 		},
