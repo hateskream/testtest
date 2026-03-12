@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, type ComponentPublicInstance } from 'vue';
+import { type ComponentPublicInstance, ref, useTemplateRef } from 'vue';
 
 import type { IDisplaySettings, INews } from '../model';
+import { ListSkeleton } from '@/modules/widgets/base';
 
 import NewsComponent from './news-component.vue';
 
 interface IViewNewsComponentProps {
 	news: INews[];
+	isLoading?: boolean;
 	displaySettings: IDisplaySettings;
 	displayVariant: 'tv' | 'dashboard';
 	maxCountRowTablet?: number;
@@ -136,18 +138,24 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 				:class="classes.content"
 				:style="props.displayVariant === 'dashboard' && {padding: `4px`}"
 			>
-				<news-component
-					v-for="(item, index) in props.news"
-					:ref="(el) => newsRef[index] = (el as ComponentPublicInstance)"
-					:key="item.id"
-					:news="item"
-					:display-settings="props.displaySettings"
-					:display-variant="props.displayVariant"
-					:style="{
-						visibility: index < props.maxCountRowTablet ? 'visible' : 'hidden',
-					}"
-					@click="emits('select-news', { id: item.id, slug: item.slug })"
-				/>
+				<div v-if="props.isLoading" :class="classes.skeletonWrapper">
+					<list-skeleton />
+				</div>
+
+				<template v-else>
+					<news-component
+						v-for="(item, index) in props.news"
+						:ref="(el) => newsRef[index] = (el as ComponentPublicInstance)"
+						:key="item.id"
+						:news="item"
+						:display-settings="props.displaySettings"
+						:display-variant="props.displayVariant"
+						:style="{
+							visibility: index < props.maxCountRowTablet ? 'visible' : 'hidden',
+						}"
+						@click="emits('select-news', { id: item.id, slug: item.slug })"
+					/>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -171,5 +179,9 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 .content {
 	width: 100%;
 	height: auto;
+}
+
+.skeletonWrapper {
+	padding: 0 12px;
 }
 </style>

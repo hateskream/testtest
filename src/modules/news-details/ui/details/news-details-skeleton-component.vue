@@ -1,67 +1,60 @@
 <script setup lang="ts">
 import { UiSkeleton } from '@/shared/ui/skeleton';
 
-const contentWidths = ['100%', '92%', '96%', '88%', '75%', '60%'];
+const contentWidths = ['70%', '90%', '50%', '30%'];
 </script>
 
 <template>
 	<div :class="classes.root">
 		<header :class="classes.header">
-			<div :class="classes.title">
-				<ui-skeleton
-					width="80%"
-					height="24px"
-					border-radius="8px"
-				/>
+			<div :class="classes.headerMain">
+				<div :class="classes.title">
+					<ui-skeleton
+						width="60%"
+						height="32px"
+						border-radius="8px"
+					/>
+				</div>
 
-				<ui-skeleton
-					width="40%"
-					height="24px"
-					border-radius="8px"
-				/>
+				<div :class="classes.meta">
+					<ui-skeleton width="60px" height="20px" />
+					<div :class="classes.scoreSentiment">
+						<ui-skeleton
+							width="20px"
+							height="20px"
+							shape="circle"
+						/>
+						<ui-skeleton width="100px" height="20px" />
+					</div>
+				</div>
 			</div>
 
-			<div :class="classes.meta">
-				<ui-skeleton width="60px" height="14px" />
-				<ui-skeleton width="24px" height="14px" />
-				<ui-skeleton width="80px" height="14px" />
-			</div>
+			<aside :class="classes.sidebar">
+
+				<section :class="classes.section">
+					<ui-skeleton width="100px" height="32px" />
+
+				</section>
+
+				<section :class="[classes.section, classes.sidebarMargin]">
+					<ui-skeleton
+						:class="classes.top"
+						width="100px"
+						height="32px"
+					/>
+					<ui-skeleton width="80px" height="20px" />
+					<ui-skeleton width="80px" height="20px" />
+				</section>
+
+			</aside>
 		</header>
-
-		<aside :class="classes.sidebar">
-			<section :class="classes.section">
-				<ui-skeleton width="90px" height="18px" />
-				<ui-skeleton
-					v-for="i in 2"
-					:key="'src' + i"
-					width="100px"
-					height="14px"
-				/>
-				<ui-skeleton
-					width="70px"
-					height="10px"
-					:opacity="0.6"
-				/>
-			</section>
-
-			<section :class="classes.section">
-				<ui-skeleton width="90px" height="18px" />
-				<ui-skeleton
-					v-for="i in 2"
-					:key="'ticker' + i"
-					width="60px"
-					height="18px"
-					border-radius="9999px"
-				/>
-			</section>
-		</aside>
 
 		<section :class="classes.content">
 			<ui-skeleton
 				v-for="(width, i) in contentWidths"
 				:key="i"
 				:width="width"
-				height="18px"
+				height="20px"
 			/>
 		</section>
 	</div>
@@ -74,41 +67,87 @@ const contentWidths = ['100%', '92%', '96%', '88%', '75%', '60%'];
 	width: 100%;
 	height: 100%;
 	padding: 0 16px;
+	container: details / inline-size;
 }
 
 .header {
-	margin-bottom: 16px;
+	position: relative;
+	display: block;
+}
+
+.headerMain {
+	display: flex;
+	flex-direction: column;
 }
 
 .title {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 8px;
 }
 
 .meta {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	margin-top: 16px;
+	gap: 20px;
+	margin: 16px 0;
+}
+
+.scoreSentiment {
+	display: flex;
+	align-items: center;
+	gap: 4px;
 }
 
 .sidebar {
 	display: flex;
-	gap: 24px;
+	flex-direction: column;
+	gap: 52px;
 	margin-bottom: 16px;
 }
 
 .section {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 8px;
 }
+
 
 .content {
 	display: flex;
 	flex-direction: column;
 	margin-top: 12px;
-	gap: 9px;
+	gap: 12px;
+}
+
+@container (max-width: 649px) {
+	.sidebar {
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: flex-start;
+		gap: 20px;
+		width: auto;
+	}
+}
+
+@container (min-width: 650px) {
+	.header,
+	.content {
+		padding-right: 324px;
+	}
+
+	.sidebar {
+		position: absolute;
+		top: 0;
+		right: 0;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 308px;
+		height: 100%;
+	}
+
+	.content {
+		margin-top: 0;
+	}
 }
 </style>

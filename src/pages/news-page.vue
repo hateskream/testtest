@@ -14,7 +14,7 @@ import {
 	useNewsPage,
 	useQueryNews,
 } from '@/modules/news';
-import { NewsDetails, NewsDetailsControls } from '@/modules/news-details';
+import { NewsDetails, NewsDetailsControls, NewsDetailsSkeleton } from '@/modules/news-details';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { RouteNames, RoutePaths } from '@/types/route.d';
 
@@ -152,8 +152,13 @@ watch(() => route.params.id, (id) => {
 					/>
 				</template>
 
-				<template #details v-if="uuid">
-					<news-details :uuid="uuid" display-variant="new" />
+				<template #details v-if="uuid || isLoading">
+					<news-details
+						v-if="uuid"
+						:uuid="uuid"
+						display-variant="new"
+					/>
+					<news-details-skeleton v-else />
 				</template>
 			</news-content-wrapper>
 		</div>

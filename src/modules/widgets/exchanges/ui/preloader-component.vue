@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { UiSkeleton } from '@/shared/ui/skeleton';
 import { BaseLoaderComponent } from '@/modules/widgets/base';
 </script>
 
 <template>
-	<base-loader-component :row-height="48" :class="classes.preloaderContainer">
-		<template #header>
-			<div>
-				<ui-skeleton width="20%" height="32px" />
-			</div>
-		</template>
-	</base-loader-component>
+	<base-loader-component
+		:row-height="48"
+		:class="classes.preloaderContainer"
+		:display-variant="'list'"
+	/>
 </template>
 
 <style module="classes">

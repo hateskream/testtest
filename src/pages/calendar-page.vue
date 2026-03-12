@@ -15,7 +15,7 @@ import {
 	getUTCWeekRange,
 	localDateToUTCUnix,
 	useInfiniteQueryEventBoard,
-	useQueryDailyInfo,
+	useQueryDailyInfo, CalendarPreloaderComponent,
 } from '@/modules/calendar';
 
 const route = useRoute();
@@ -142,8 +142,7 @@ function onUpdateWeek(date: Date) {
 						@select-day="onSelectDay"
 					/>
 
-					<!--		TODO: Add loader component			-->
-					<div v-if="query.isLoading" class="loading" />
+					<calendar-preloader-component v-if="query.isLoading" />
 
 					<div v-else-if="query.data?.days.length" :class="classes.wrapper">
 						<tv-event-board

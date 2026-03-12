@@ -27,7 +27,7 @@ const {
 	defaultStateType: '',
 });
 
-const { data, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({
+const { data, fetchNextPage, isLoading } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
 	segment: selectedSegmentsRequest.value,
@@ -89,6 +89,7 @@ const news = computed(() => {
 		/>
 		<news-list-component
 			:news="news"
+			:is-loading="isLoading"
 			:display-settings="displaySettings"
 			display-variant="tv"
 			@next="fetchNextPage"

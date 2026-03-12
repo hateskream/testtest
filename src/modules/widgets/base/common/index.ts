@@ -15,3 +15,5 @@ export {
 	BaseSwitchComponent as BaseSwitch,
 	BaseSearchComponent as BaseSearch,
 };
+
+export * from './ui/loader-presets';

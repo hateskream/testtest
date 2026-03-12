@@ -11,6 +11,7 @@ export { default as CalendarPageLayout } from './ui/page/calendar-page-layout.vu
 export { default as CalendarPageDaySelect } from './ui/page/calendar-page-day-select.vue';
 export { default as CalendarPageDailyInfo } from './ui/page/calendar-page-daily-info.vue';
 export { default as CalendarPageNews } from './ui/page/calendar-page-news.vue';
+export { default as CalendarPreloaderComponent } from './ui/common/calendar-preloader-component.vue';
 
 export * from './composables/use-calendar-state';
 export * from './query/use-query-event-board';

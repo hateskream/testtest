@@ -2,13 +2,12 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { NewsIconScore, useNewsPage } from '@/modules/news';
+import { formatNewsDate, NewsIconScore, useNewsPage } from '@/modules/news';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useQueryNewsDetails } from '../queries';
 import type { IGetNewsDetailsResponse } from '../api';
 import { RouteNames } from '@/types/route.d';
 import { isFeatureEnabled } from '@/shared/lib';
-import { formatNewsDate } from '@/modules/news';
 
 import NewsDetailsSkeletonComponent from './details/news-details-skeleton-component.vue';
 import NewsDetailsSourcesComponent from './details/news-details-sources-component.vue';
