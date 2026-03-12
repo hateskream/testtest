@@ -1,0 +1,21 @@
+{
+  "summary": "Above Average",
+  "status": "positive",
+  "items": [
+    {
+      "label": "TSLA",
+      "value": 38.95,
+      "status": "positive"
+    },
+    {
+      "label": "Financial",
+      "value": 25.72,
+      "status": "neutral"
+    },
+    {
+      "label": "US Market",
+      "value": -25.72,
+      "status": "negative"
+    }
+  ]
+}

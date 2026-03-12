@@ -2,9 +2,9 @@
 import { markRaw, ref } from 'vue';
 import { notNullish } from '@vueuse/core';
 
-import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { ValuationMetricsTickerWidget } from '@/modules/widgets/valuation-metrics';
 import { CapitalMetricsTickerWidget } from '@/modules/widgets/capital-metrics';
+import { RevenueTickerWidget } from '@/modules/widgets/revenue';
 import { isFeatureEnabled } from '@/shared/lib';
 import { TickerBaseTabsLayout } from '../../../base';
 import { useTickerContext } from '../../../../composables';
@@ -62,7 +62,6 @@ const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED')
 		<revenue-ticker-widget v-if="revenueWidgetIsEnabled" :meta="{ tickerId, name: 'Revenue' }" />
 	</div>
 </template>
-
 
 <style module="classes">
 .section {

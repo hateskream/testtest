@@ -16,6 +16,12 @@ export const tickerStockSections = {
 			component: 'STOCK_VALUATION_AND_ESTIMATES',
 			height: 350,
 		},
+		{
+			id: 'financials',
+			title: 'Financials',
+			component: 'STOCK_FINANSIALS',
+			height: 350,
+		},
 	],
 	right: [
 		{

@@ -3,7 +3,7 @@ import { useLogger } from '@/shared/service/monitoring';
 import type { ITickerItem } from '@/modules/ticker-selector';
 import type { MarketType } from '@/modules/market';
 
-const IS_USE_MOCK = false;
+const IS_USE_MOCK = true;
 
 export async function fetchTickers(tickers: string | string[]) {
 	if (!tickers.length) {
