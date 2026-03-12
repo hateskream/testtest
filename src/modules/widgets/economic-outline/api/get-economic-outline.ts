@@ -2,7 +2,7 @@ import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface IEconomicOutlineRequest {
 	tickerId: string;
@@ -23,7 +23,7 @@ export function getEconomicOutline(args: IEconomicOutlineRequest): Promise<IEcon
 			return getMockData(args);
 		}
 
-		return httpService.get<IEconomicOutlineResponse>('/api/v1/ticker/economic-outline', {
+		return httpService.get<IEconomicOutlineResponse>('/api/v1/economic-outline/data', {
 			query: {
 				ticker_id: args.tickerId,
 			},
