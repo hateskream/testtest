@@ -1,11 +1,7 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/vue-query';
-import { computed, toValue, type MaybeRefOrGetter } from 'vue';
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/vue-query';
+import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import {
-	fetchTickerSelector,
-	initTickerSelector,
-	type ITickerSelectorRequestBody,
-} from '@/modules/ticker-selector/api';
+import { fetchTickerSelector, initTickerSelector, type ITickerSelectorRequestBody } from '../api';
 
 export function useInitTickerSelectorQuery() {
 	return useQuery({
@@ -18,7 +14,7 @@ export function useInitTickerSelectorQuery() {
 
 export function useTickerSelectorInfiniteQuery(
 	payload: MaybeRefOrGetter<ITickerSelectorRequestBody>,
-	options: MaybeRefOrGetter<{ enabled?: boolean }> = {},
+	options: MaybeRefOrGetter<{ enabled?: boolean; keepPreviousData?: boolean }> = {},
 ) {
 	const resolvedPayload = computed(
 		() => toValue(payload),
@@ -27,6 +23,14 @@ export function useTickerSelectorInfiniteQuery(
 	const resolvedOptions = computed(
 		() => toValue(options) || true,
 	);
+
+	const placeholderData = computed(() => {
+		if (resolvedOptions.value.keepPreviousData) {
+			return keepPreviousData;
+		}
+
+		return undefined;
+	});
 
 	const hasNotCacheable = computed(() => {
 		// eslint-disable-next-line @typescript-eslint/naming-convention
@@ -63,5 +67,6 @@ export function useTickerSelectorInfiniteQuery(
 		},
 		staleTime: computed(() => (hasNotCacheable.value ? 0 : Infinity)),
 		gcTime: computed(() => (hasNotCacheable.value ? 0 : Infinity)),
+		placeholderData: placeholderData,
 	});
 }

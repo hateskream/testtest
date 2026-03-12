@@ -7,11 +7,14 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { MarketType } from '@/modules/market';
 import { UiClamped } from '@/shared/ui/clamped';
 
-const props = defineProps<{
+interface ITickerSelectorItemProps {
 	ticker: ITickerItem;
 	selectionMode: 'single' | 'multiple';
 	active?: boolean;
-}>();
+	shortcutNumber?: number;
+}
+
+const props = defineProps<ITickerSelectorItemProps>();
 
 const symbol = computed(() => {
 	if (props.ticker.market_type === MarketType.Forex) {
@@ -34,16 +37,13 @@ const symbol = computed(() => {
 			:class="classes.leftIcon"
 		/>
 
-		<span
-			:class="classes.textZone"
-			class="text-300-r"
-		>
+		<span :class="classes.textZone" class="text-300-r">
 			<ui-clamped
 				as="span"
 				:rows="1"
 				:class="classes.symbol"
 			>
-				{{symbol}}
+				{{ symbol }}
 			</ui-clamped>
 
 			<template v-if="props.ticker.name && props.ticker.market_type !== MarketType.Forex">
@@ -52,20 +52,30 @@ const symbol = computed(() => {
 				</span>
 
 				<span :class="classes.label">
-					{{props.ticker.name}}
+					{{ props.ticker.name }}
 				</span>
 			</template>
 		</span>
 
-		<span :class="[classes.rightIcon, { [classes.active]: props.active }]">
-			<ui-icon
-				v-if="props.selectionMode === 'multiple'"
-				:id="IconIds.Checkbox"
-				width="12px"
-				height="12px"
-			/>
+		<span :class="[classes.rightZone, { [classes.active]: props.active }]">
+			<span
+				v-if="props.shortcutNumber"
+				:class="classes.shortcut"
+				class="text-200-r"
+			>
+				{{ props.shortcutNumber }}
+			</span>
 
-			<span v-else :class="classes.radio" />
+			<span :class="classes.rightIcon">
+				<ui-icon
+					v-if="props.selectionMode === 'multiple'"
+					:id="IconIds.Checkbox"
+					width="12px"
+					height="12px"
+				/>
+
+				<span v-else :class="classes.radio" />
+			</span>
 		</span>
 	</button>
 </template>
@@ -86,18 +96,41 @@ const symbol = computed(() => {
 	background: var(--atom-base-50, rgb(73 73 80 / 52%));
 }
 
+.rightZone {
+	position: relative;
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	width: 20px;
+	height: 20px;
+}
+
+.rightIcon,
+.shortcut {
+	grid-area: 1 / 1;
+}
+
 .rightIcon {
 	color: var(--atom-contrast-50, rgb(255 255 255 / 50%));
 	opacity: 0;
 }
 
-.rightIcon.active,
+.rightZone.active .rightIcon,
 .tickerItem:hover .rightIcon {
 	opacity: 1;
 }
 
-.rightIcon.active {
+.rightZone.active .rightIcon {
 	color: var(--icon-500, #ffffff);
+}
+
+.shortcut {
+	color: var(--text-100, rgb(255 255 255 / 30%));
+}
+
+.tickerItem:hover .shortcut,
+.rightZone.active .shortcut {
+	opacity: 0;
 }
 
 .radio {
@@ -113,7 +146,7 @@ const symbol = computed(() => {
 	opacity: 0.4;
 }
 
-.rightIcon.active .radio {
+.rightZone.active .radio {
 	box-sizing: border-box;
 	border-width: 6px !important;
 	border-color: rgb(245 245 245 / 90%);

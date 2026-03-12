@@ -1,20 +1,36 @@
 <script setup lang="ts">
-import { computed, nextTick, useTemplateRef, watch } from 'vue';
+import { computed, type CSSProperties, nextTick, useTemplateRef, watch } from 'vue';
+import { useEventListener } from '@vueuse/core';
 
 import { MarketType } from '@/modules/market';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { type ITickerItem } from '../../model';
 import { useTickerSelectorInfiniteQuery } from '../../composables';
 import { UiModalContent } from '@/shared/ui/modal';
+import { UiScrollFade } from '@/shared/ui/scroll-fade';
 
 import TickerSelectorEmpty from './ticker-selector-empty.vue';
 import TickerSelectorItemsSkeleton from './skeletons/ticker-selector-items-skeleton.vue';
 import TickerSelectorError from './error/ticker-selector-error.vue';
 
-const props = defineProps<{
+interface ITickerSelectorIteratorProps {
 	marketType: MarketType;
 	searchQuery?: string;
-}>();
+	maxHeight?: CSSProperties['max-height'];
+	enableShortcuts?: boolean;
+}
+
+interface ITickerSelectorIteratorEmits {
+	tickerShortcutSelect: [ticker: ITickerItem];
+}
+
+const props = withDefaults(defineProps<ITickerSelectorIteratorProps>(), {
+	maxHeight: '382px',
+	searchQuery: '',
+	enableShortcuts: false,
+});
+
+const emit = defineEmits<ITickerSelectorIteratorEmits>();
 
 const {
 	data,
@@ -43,23 +59,24 @@ const items = computed<ITickerItem[]>(() => {
 	);
 });
 
-const wrapperRef = useTemplateRef('wrapper');
+const scrollFadeRef = useTemplateRef<{ $el: HTMLElement }>('scrollFade');
 
 const SCROLL_OFFSET = 300;
 
-function hasScroll(el: HTMLElement) {
+function hasScroll(el: HTMLElement): boolean {
 	return el.scrollHeight > el.clientHeight + SCROLL_OFFSET;
 }
 
 async function ensureScrollable() {
-	if (!wrapperRef.value) {
+	const el = scrollFadeRef.value?.$el;
+	if (!el) {
 		return;
 	}
 
 	while (
 		hasNextPage.value &&
 		!isFetchingNextPage.value &&
-		!hasScroll(wrapperRef.value.$el)
+		!hasScroll(el)
 	) {
 		await fetchNextPage();
 		await nextTick();
@@ -83,59 +100,81 @@ watch(isLoading, loaded => {
 		nextTick().then(ensureScrollable);
 	}
 }, { immediate: true });
+
+const SHORTCUT_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+
+useEventListener(document, 'keydown', (e: KeyboardEvent) => {
+	if (!props.enableShortcuts) {
+		return;
+	}
+
+	const activeEl = document.activeElement;
+
+	if (
+		activeEl instanceof HTMLInputElement ||
+		activeEl instanceof HTMLTextAreaElement
+	) {
+		return;
+	}
+
+	const keyIndex = SHORTCUT_KEYS.indexOf(e.key as (typeof SHORTCUT_KEYS)[number]);
+
+	if (keyIndex === -1) {
+		return;
+	}
+
+	const ticker = items.value[keyIndex];
+
+	if (ticker) {
+		emit('tickerShortcutSelect', ticker);
+	}
+});
 </script>
 
 <template>
-	<ui-modal-content
-		ref="wrapper"
-		:class="classes.content"
-		@scroll.passive="onScroll"
-	>
-		<template v-if="isLoading">
-			<ui-skeleton
-				v-for="i in 9"
-				:key="i"
-				animation="wave"
-				border-radius="12.4px"
-				width="100%"
-				height="32px"
-			/>
-		</template>
+	<ui-modal-content :style="{ maxHeight: props.maxHeight }">
+		<ui-scroll-fade ref="scrollFade" @scroll="onScroll">
+			<div :class="classes.list">
+				<template v-if="isLoading">
+					<ui-skeleton
+						v-for="i in 9"
+						:key="i"
+						animation="wave"
+						border-radius="12.4px"
+						width="100%"
+						height="32px"
+					/>
+				</template>
 
-		<template v-else-if="isError">
-			<ticker-selector-error @retry="refetch" />
-		</template>
+				<template v-else-if="isError">
+					<ticker-selector-error @retry="refetch" />
+				</template>
 
-		<template v-else-if="items.length > 0">
-			<slot name="before-tickers" />
+				<template v-else-if="items.length > 0">
+					<slot name="before-tickers" />
 
-			<template
-				v-for="ticker in items"
-				:key="ticker.canonical_ticker_id"
-			>
-				<slot :ticker="ticker" />
-			</template>
+					<template
+						v-for="(ticker, index) in items"
+						:key="ticker.canonical_ticker_id"
+					>
+						<slot :ticker="ticker" :index="index" />
+					</template>
 
-			<ticker-selector-items-skeleton
-				v-if="isFetchingNextPage"
-			/>
-		</template>
+					<ticker-selector-items-skeleton v-if="isFetchingNextPage" />
+				</template>
 
-		<ticker-selector-empty v-else>
-			Noting found in {{props.marketType}}
-		</ticker-selector-empty>
+				<ticker-selector-empty v-else>
+					Noting found in {{ props.marketType }}
+				</ticker-selector-empty>
+			</div>
+		</ui-scroll-fade>
 	</ui-modal-content>
 </template>
 
 <style module="classes">
-.more {
-	margin-top: 2px;
-	gap: 0;
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--padding-s2, 2px);
 }
-
-.content {
-	max-height: 382px !important;
-}
-
-
 </style>

@@ -19,3 +19,7 @@ export interface IScrollFadeProps {
 	 */
 	disabled?: boolean;
 }
+
+export interface IScrollFadeEmits {
+	scroll: [e: Event];
+}

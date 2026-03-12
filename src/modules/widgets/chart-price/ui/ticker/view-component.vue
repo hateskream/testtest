@@ -12,7 +12,7 @@ import { ChartDateRange, ChartDateRangeChange, ChartNavigator } from '@/modules/
 import type { ChartPriceHistoryData, PriceChanges } from '../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ALL_MARKET_TYPES } from '@/modules/market';
-import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
+import { type ITickerItem, TickerSelectorSearchModal } from '@/modules/ticker-selector';
 import { UiText } from '@/shared/ui/text';
 import { UiPosition } from '@/shared/ui/position';
 import type { IndicatorType } from '@/modules/indicator';
@@ -89,11 +89,9 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 						</button>
 					</template>
 					<template #content>
-						<ticker-selector-modal
+						<ticker-selector-search-modal
 							:selected-tickers="[ props.ticker ]"
 							:enabled-markets="ALL_MARKET_TYPES"
-							:selection-mode="SelectionMode.Single"
-							display-variant="new"
 							data-no-focus-lock
 							@update:selected-tickers="onUpdateSelectedTickers"
 						/>

@@ -8,7 +8,7 @@ import { UiPosition, UiPositionTooltip } from '@/shared/ui/position';
 import { UiImage } from '@/shared/ui/image';
 import { UiTooltipWrapper } from '@/shared/ui/tooltip';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
+import { TickerSelectorSearchModal } from '@/modules/ticker-selector';
 import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
@@ -100,11 +100,9 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 										</button>
 									</template>
 									<template #content>
-										<ticker-selector-modal
+										<ticker-selector-search-modal
 											v-model:selected-tickers="selectedTickers"
 											:enabled-markets="ALL_MARKET_TYPES"
-											:selection-mode="SelectionMode.Single"
-											display-variant="new"
 										/>
 									</template>
 								</ui-position>

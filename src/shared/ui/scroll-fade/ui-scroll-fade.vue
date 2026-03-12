@@ -2,12 +2,14 @@
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 
-import type { IScrollFadeProps } from './types.ts';
+import type { IScrollFadeEmits, IScrollFadeProps } from './types.ts';
 
 const props = withDefaults(defineProps<IScrollFadeProps>(), {
 	size: 24,
 	direction: 'vertical',
 });
+
+const emit = defineEmits<IScrollFadeEmits>();
 
 const root = useTemplateRef('root');
 
@@ -72,6 +74,11 @@ const start = computed(() => hasStartFade.value ? 'transparent' : '#000');
 const end = computed(() => hasEndFade.value ? 'transparent' : '#000');
 
 const gradientDirection = computed(() => props.direction === 'vertical' ? 'bottom' : 'right');
+
+function onScroll(e: Event): void {
+	scheduleMeasure();
+	emit('scroll', e);
+}
 </script>
 
 <template>
@@ -84,7 +91,7 @@ const gradientDirection = computed(() => props.direction === 'vertical' ? 'botto
 				[classes.fade]: hasStartFade || hasEndFade
 			}
 		]"
-		@scroll.passive="scheduleMeasure"
+		@scroll.passive="onScroll"
 	>
 		<slot />
 	</div>

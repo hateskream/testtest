@@ -6,7 +6,7 @@ import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { type IMenuItem, menuItems } from '@/modules/layout/new-desktop/model';
 import { isFeatureEnabled } from '@/shared/lib';
 import { ALL_MARKET_TYPES } from '@/modules/market';
-import { type ITickerItem, SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
+import { type ITickerItem, TickerSelectorSearchModal } from '@/modules/ticker-selector';
 import { UiPosition } from '@/shared/ui/position';
 import { useGoToTickerPage } from '@/modules/ticker/composables';
 
@@ -169,11 +169,9 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 						</action-tooltip>
 					</template>
 					<template #content>
-						<ticker-selector-modal
+						<ticker-selector-search-modal
 							search-placeholder="Search for tickers..."
 							:enabled-markets="ALL_MARKET_TYPES"
-							:selection-mode="SelectionMode.Single"
-							display-variant="new"
 							:selected-tickers="props.activeTicker ? [props.activeTicker] : []"
 							@update:selected-tickers="onUpdateSelectedTickers"
 						/>

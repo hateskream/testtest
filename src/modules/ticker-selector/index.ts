@@ -2,6 +2,7 @@ export * from './model';
 export * from './composables';
 
 export { default as TickerSelectorModal } from './ui/ticker-selector-modal.vue';
+export { default as TickerSelectorSearchModal } from './ui/ticker-selector-search-modal.vue';
 export { default as TickerSelectorModalWithBadge } from './ui/ticker-selector-modal-with-badge.vue';
 export { default as ModalBadgePreview } from './ui/components/badge/modal-badge-preview.vue';
 
