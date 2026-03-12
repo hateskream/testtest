@@ -14,6 +14,7 @@ import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/light
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { UiText } from '@/shared/ui/text';
 import type { PriceTargetHistoryPoint } from '../../model';
+import { createSplitLabel } from '@/modules/lightweight-charts/utils';
 
 interface IPriceTargetChartProps {
 	history: PriceTargetHistoryPoint[];
@@ -76,7 +77,7 @@ function getForecastAxisLabelColors(target: number, currentPrice: number)
 	return { axisLabelColor: '#301219', axisLabelTextColor: '#FC1D4D' };
 }
 
-function gradient(context: PartialEventContext) {
+function boxGradient(context: PartialEventContext) {
 	const { element, chart: { ctx } } = context;
 
 	if (!element) {
@@ -97,12 +98,13 @@ function gradient(context: PartialEventContext) {
 	return g;
 }
 
-function buildTargetAnnotation(
-	target: number,
+function buildTargetAnnotation(target: number,
 	label: string,
 	currentPrice: number,
 ) {
 	const { axisLabelColor, axisLabelTextColor } = getForecastAxisLabelColors(target, currentPrice);
+
+	const splitLabel = createSplitLabel(label, formatPrice(target), axisLabelColor, axisLabelTextColor);
 
 	return {
 		type: 'line' as const,
@@ -113,18 +115,10 @@ function buildTargetAnnotation(
 		borderWidth: 0,
 		label: {
 			display: true,
-			content: `${label}  ${formatPrice(target)}`,
+			content: splitLabel,
 			position: 'end' as const,
-			xAdjust: 30,
-			backgroundColor: axisLabelColor,
-			color: axisLabelTextColor,
-			font: {
-				family: '\'Roboto Flex Variable\', sans-serif',
-				size: 9,
-				weight: 520,
-				lineHeight: '16.2px',
-			},
-			padding: { x: 6, y: 0 },
+			xAdjust: 24,
+			padding: 0,
 			z: 10,
 		},
 	};
@@ -132,6 +126,8 @@ function buildTargetAnnotation(
 
 function buildAnnotations() {
 	const currentPrice = lastPrice.value;
+
+	const splitLabel = createSplitLabel('C', formatPrice(currentPrice), '#323537', '#fff');
 
 	return {
 		lastPrice: {
@@ -143,18 +139,10 @@ function buildAnnotations() {
 			borderWidth: 2,
 			label: {
 				display: true,
-				content: `C  ${formatPrice(currentPrice)}`,
+				content: splitLabel,
 				position: 'end' as const,
-				xAdjust: 30,
-				backgroundColor: '#323537',
-				color: '#fff',
-				font: {
-					family: '\'Roboto Flex Variable\', sans-serif',
-					size: 9,
-					weight: 520,
-					lineHeight: '16.2px',
-				},
-				padding: { x: 6, y: 0 },
+				xAdjust: 24,
+				padding: 0,
 				z: 10,
 			},
 		},
@@ -163,7 +151,7 @@ function buildAnnotations() {
 		targetLow: buildTargetAnnotation(props.targetLow, 'L', currentPrice),
 		box: {
 			type: 'box' as const,
-			backgroundColor: (context: PartialEventContext) => gradient(context),
+			backgroundColor: (context: PartialEventContext) => boxGradient(context),
 			borderWidth: 0,
 			yMax: Math.max(props.targetAverage, currentPrice),
 			yMin: Math.min(props.targetAverage, currentPrice),

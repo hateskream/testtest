@@ -7,3 +7,4 @@ export * from './prepare-series';
 export * from './position-line';
 export * from './time';
 export * from './get-tooltip';
+export * from './split-label.ts';
