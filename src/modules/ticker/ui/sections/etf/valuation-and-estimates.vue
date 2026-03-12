@@ -58,7 +58,7 @@ const capitalStructureIsEnabled = isFeatureEnabled('TICKER_WIDGET_CAPITAL_STRUCT
 	height: 250px;
 }
 
-@container root (width > 580px) {
+@container root (width >= 580px) {
 	.metricsItem {
 		flex: 1 0 0;
 	}

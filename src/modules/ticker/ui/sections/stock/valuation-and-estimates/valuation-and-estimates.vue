@@ -84,7 +84,7 @@ const revenueWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_REVENUE_ENABLED')
 	height: 250px;
 }
 
-@container root (width > 580px) {
+@container root (width >= 580px) {
 	.metricsItem {
 		flex: 1 0 0;
 	}
