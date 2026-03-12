@@ -22,6 +22,12 @@ export const tickerStockSections = {
 			component: 'STOCK_FINANSIALS',
 			height: 350,
 		},
+		{
+			id: 'earnings',
+			title: '',
+			component: 'STOCK_EARNINGS',
+			height: 350,
+		},
 	],
 	right: [
 		{

@@ -28,6 +28,8 @@ export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent
 			import('@/modules/ticker/ui/sections/stock').then(m => m.ValuationAndEstimates),
 		[TICKER_SECTION_COMPONENT.STOCK_INSIGHTS_AND_ACTIVITY]: () =>
 			import('@/modules/ticker/ui/sections/stock').then(m => m.InsightsAndActivity),
+		[TICKER_SECTION_COMPONENT.STOCK_EARNINGS]: () =>
+			import('@/modules/ticker/ui/sections/stock').then(m => m.EarningsSection),
 		[TICKER_SECTION_COMPONENT.STOCK_FINANCIALS]: () =>
 			import('@/modules/ticker/ui/sections/stock').then(m => m.FinancialsSection),
 
