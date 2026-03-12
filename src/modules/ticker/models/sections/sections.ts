@@ -121,6 +121,8 @@ const experimentalSections = {
 	[TICKER_SECTION_COMPONENT.CRYPTO_HOLDINGS]: () =>
 		isFeatureEnabled('TICKER_WIDGET_ADDRESSES_BY_HOLDINGS_ENABLED') ||
 		isFeatureEnabled('TICKER_WIDGET_WHALE_HOLDINGS_ENABLED'),
+	[TICKER_SECTION_COMPONENT.INDEX_HOLDING_SUMMARY]: () =>
+		isFeatureEnabled('TICKER_WIDGET_SECTORS_ENABLED'),
 	[TICKER_SECTION_COMPONENT.STOCK_EARNINGS]: () =>
 		isFeatureEnabled('TICKER_WIDGET_PRICE_TO_EARNINGS_ENABLED'),
 } as const satisfies Partial<Record<TickerSectionComponent, () => boolean>>;
