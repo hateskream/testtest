@@ -23,10 +23,10 @@ const analystRatingsIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANALYST_RATINGS_
 const priceTargetIsEnabled = isFeatureEnabled('TICKER_WIDGET_PRICE_TARGET_ENABLED');
 
 const tabs = [
-	analystRatingsIsEnabled
+	priceTargetIsEnabled
 		? { id: 'price-target', title: 'Price Target', component: markRaw(TabPriceTarget) }
 		: undefined,
-	priceTargetIsEnabled
+	analystRatingsIsEnabled
 		? { id: 'analyst-ratings', title: 'Analyst Ratings', component: markRaw(TabAnalystRatings) }
 		: undefined,
 ].filter(notNullish);

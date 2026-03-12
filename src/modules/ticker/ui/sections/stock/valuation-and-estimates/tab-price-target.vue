@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { useTickerContext } from '../../../../composables';
-import type { ISectionItem } from '../../../../models';
 import { PriceTargetTickerWidget } from '@/modules/widgets/price-target';
-
-interface ISectionProps {
-	section: ISectionItem;
-}
-
-defineProps<ISectionProps>();
 
 const { tickerId } = useTickerContext();
 </script>
