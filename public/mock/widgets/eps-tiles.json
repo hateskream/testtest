@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "quarter": "Q1 2025",
+      "eps": 8.41,
+      "eps_estimate": 8.3,
+      "revenue": "$12.73B",
+      "change": 0.14,
+      "status": "beat",
+      "date": null
+    },
+    {
+      "quarter": "Q2 2025",
+      "eps": 10.41,
+      "eps_estimate": 10.05,
+      "revenue": "$13.45B",
+      "change": 2.17,
+      "status": "beat",
+      "date": null
+    },
+    {
+      "quarter": "Q3 2025",
+      "eps": -12.41,
+      "eps_estimate": -12.1,
+      "revenue": "$14.22B",
+      "change": -3.11,
+      "status": "miss",
+      "date": null
+    },
+    {
+      "quarter": "Q4 2025",
+      "eps": null,
+      "eps_estimate": 12.57,
+      "revenue": "$14.99B",
+      "change": null,
+      "status": "upcoming",
+      "date": "2025-04-14T20:30:00Z"
+    }
+  ]
+}
