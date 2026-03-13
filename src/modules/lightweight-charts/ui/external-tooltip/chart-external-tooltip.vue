@@ -6,14 +6,19 @@ import { UiText } from '@/shared/ui/text';
 
 import ChartExternalTooltipRow from './chart-external-tooltip-row.vue';
 
-type IChartExternalTooltipProps = IUseExternalTooltipState;
+type IChartExternalTooltipProps = IUseExternalTooltipState & {
+	width?: CSSProperties['width'];
+};
 
-const props = defineProps<IChartExternalTooltipProps>();
+const props = withDefaults(defineProps<IChartExternalTooltipProps>(), {
+	width: '170px',
+});
 
 const rootStyles = computed<CSSProperties>(() => ({
 	left: `${props.x}px`,
 	top: `${props.y}px`,
 	padding: `${props.padding}px`,
+	width: props.width,
 }));
 </script>
 
@@ -51,7 +56,6 @@ const rootStyles = computed<CSSProperties>(() => ({
 <style module="classes">
 .tooltip {
 	position: absolute;
-	width: 170px;
 	color: #ffffff;
 	background: rgb(22 22 24 / 100%);
 	border: 1px solid rgb(199 199 199 / 10%);

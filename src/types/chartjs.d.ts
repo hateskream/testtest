@@ -37,3 +37,14 @@ declare module 'chart.js' {
 		_gridLineItems?: GridLineItem[];
 	}
 }
+
+declare module 'chartjs-plugin-annotation' {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	interface AnnotationElement {
+		options?: { id?: string };
+		label?: {
+			options?: { display?: boolean };
+		};
+		inRange?: (x: number, y: number) => boolean;
+	}
+}

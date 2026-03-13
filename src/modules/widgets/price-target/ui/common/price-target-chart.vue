@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartOptions, type Point } from 'chart.js';
 import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annotation';
 import { addMonths } from 'date-fns';
+import { useEventListener } from '@vueuse/core';
 
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import {
@@ -12,7 +13,7 @@ import {
 	type UtcSeconds,
 } from '@/modules/lightweight-charts/model';
 import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { type IUseExternalTooltipState, useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { UiText } from '@/shared/ui/text';
 import { getForecastColor, getForecastLabelColors, getTriangleColor, type PriceTargetHistoryPoint } from '../../model';
 import { createSplitLabel } from '@/modules/lightweight-charts/utils';
@@ -86,9 +87,71 @@ function boxGradient(context: PartialEventContext) {
 	return g;
 }
 
-function buildTargetAnnotation(target: number,
-	label: string,
+const LABEL_TOOLTIP_OFFSET = 5;
+
+const labelTooltipState = reactive<IUseExternalTooltipState>({
+	visible: false,
+	x: 0,
+	y: 0,
+	padding: 6,
+	title: [],
+	rows: [],
+});
+
+const LABEL_TOOLTIP_MAP: Record<string, string> = {
+	lastPrice: 'Current',
+	targetHigh: 'High',
+	targetAverage: 'Average',
+	targetLow: 'Low',
+} as const;
+
+function handleCanvasMouseMove(event: MouseEvent): void {
+	const instance = chart.value;
+
+	if (!instance) {
+		return;
+	}
+
+	const rect = instance.canvas.getBoundingClientRect();
+	const mouseX = event.clientX - rect.left;
+	const mouseY = event.clientY - rect.top;
+
+	const elements = annotationPlugin.getAnnotations(instance);
+
+	for (const el of elements) {
+		const id = el.options?.id;
+
+		if (!id || !(id in LABEL_TOOLTIP_MAP)) {
+			continue;
+		}
+
+		const labelEl = el.label;
+
+		if (!labelEl?.options?.display || !labelEl.inRange) {
+			continue;
+		}
+
+		if (labelEl.inRange(mouseX, mouseY)) {
+			labelTooltipState.visible = true;
+			labelTooltipState.x = rect.left + labelEl.centerX;
+			labelTooltipState.y = rect.top + labelEl.y2 + LABEL_TOOLTIP_OFFSET;
+			labelTooltipState.title = [LABEL_TOOLTIP_MAP[id]];
+			labelTooltipState.rows = [];
+			return;
+		}
+	}
+
+	labelTooltipState.visible = false;
+}
+
+function handleCanvasMouseLeave(): void {
+	labelTooltipState.visible = false;
+}
+
+function buildTargetAnnotation(
+	target: number,
 	currentPrice: number,
+	label: string,
 ) {
 	const { label: labelColor, text: textColor } = getForecastLabelColors(target, currentPrice);
 
@@ -138,9 +201,9 @@ function buildAnnotations() {
 				z: 10,
 			},
 		},
-		targetHigh: buildTargetAnnotation(props.targetHigh, 'H', currentPrice),
-		targetAverage: buildTargetAnnotation(props.targetAverage, 'A', currentPrice),
-		targetLow: buildTargetAnnotation(props.targetLow, 'L', currentPrice),
+		targetHigh: buildTargetAnnotation(props.targetHigh, currentPrice, 'H'),
+		targetAverage: buildTargetAnnotation(props.targetAverage, currentPrice, 'A'),
+		targetLow: buildTargetAnnotation(props.targetLow, currentPrice, 'L'),
 		box: {
 			type: 'box' as const,
 			backgroundColor: (context: PartialEventContext) => boxGradient(context),
@@ -346,6 +409,9 @@ onMounted(() => {
 	createPriceTargetChart();
 });
 
+useEventListener(container, 'mousemove', handleCanvasMouseMove);
+useEventListener(container, 'mouseleave', handleCanvasMouseLeave);
+
 function updateChartData() {
 	const instance = chart.value;
 
@@ -377,15 +443,9 @@ onBeforeUnmount(destroyChart);
 </script>
 
 <template>
-	<div
-		:class="classes.wrapper"
-		:style="{ height: `${props.height}px` }"
-	>
+	<div :class="classes.wrapper" :style="{ height: `${props.height}px` }">
 		<div :style="{ height: `${props.height - 40}px` }">
-			<canvas
-				ref="container"
-				:class="classes.chart"
-			></canvas>
+			<canvas ref="container" :class="classes.chart"></canvas>
 		</div>
 		<div :class="classes.legend">
 			<div :class="classes.legendItem">
@@ -397,6 +457,11 @@ onBeforeUnmount(destroyChart);
 		</div>
 		<teleport to="body">
 			<chart-external-tooltip v-bind="state" />
+			<chart-external-tooltip width="auto" v-bind="labelTooltipState">
+				<template #content="{ title }">
+					<ui-text token="text-200-r">{{ title[0] }}</ui-text>
+				</template>
+			</chart-external-tooltip>
 		</teleport>
 	</div>
 </template>
