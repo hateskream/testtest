@@ -158,14 +158,11 @@ const preparedMarkets = computed(() => {
 				:market-type="selectedMarketTab"
 				:search-query="searchQuery"
 				max-height="unset"
-				enable-shortcuts
-				@ticker-shortcut-select="state.selectOrExcludeTickerToggle(selectedMarketTab, $event)"
 			>
-				<template #default="{ ticker, index }">
+				<template #default="{ ticker }">
 					<ticker-selector-item
 						:ticker="ticker"
 						selection-mode="single"
-						:shortcut-number="index < 9 ? index + 1 : undefined"
 						:active="state.isTickerSelected(selectedMarketTab, ticker.canonical_ticker_id)"
 						@click="state.selectOrExcludeTickerToggle(selectedMarketTab, ticker)"
 					/>
