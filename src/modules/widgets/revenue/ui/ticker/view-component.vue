@@ -57,6 +57,7 @@ const activeMode = defineModel<RevenueModeType>({ required: true });
 
 .chartWrapper {
 	flex-grow: 1;
+	min-height: 0;
 	padding:
 		var(--padding-s14, 32px) var(--padding-s11, 20px) 0
 		var(--padding-s11, 20px);

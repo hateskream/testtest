@@ -3,7 +3,7 @@ import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, wa
 import { Chart, type ChartDataset, type ChartOptions, type Plugin } from 'chart.js/auto';
 
 import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { prettyNumberWithKey } from '@/shared/lib';
+import { formatPrice } from '@/modules/lightweight-charts/model';
 
 export type BarDataset = ChartDataset<'bar'>;
 
@@ -66,10 +66,7 @@ const defaultOptions: ChartOptions<'bar'> = {
 				align: 'end',
 				crossAlign: 'far',
 				labelOffset: -5,
-				callback: (value) => {
-					const pretty = prettyNumberWithKey(value.toString());
-					return `${pretty.value}${pretty.suffix}`;
-				},
+				callback: (value) => formatPrice(Number(value)),
 				font: {
 					family: '\'Roboto Flex Variable\', sans-serif',
 					size: 10,
@@ -168,5 +165,11 @@ watch(() => props.options, (value) => {
 </script>
 
 <template>
-	<canvas ref="container"  />
+	<canvas ref="container" :class="classes.canvas" />
 </template>
+
+<style module="classes">
+.canvas {
+	display: block;
+}
+</style>
