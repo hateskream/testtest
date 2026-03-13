@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartOptions, type Point } from 'chart.js';
 import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annotation';
+import { addMonths } from 'date-fns';
 
 import { ChartExternalTooltip } from '@/modules/lightweight-charts';
 import {
@@ -13,7 +14,7 @@ import {
 import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
 import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
 import { UiText } from '@/shared/ui/text';
-import type { PriceTargetHistoryPoint } from '../../model';
+import { getForecastColor, getForecastLabelColors, getTriangleColor, type PriceTargetHistoryPoint } from '../../model';
 import { createSplitLabel } from '@/modules/lightweight-charts/utils';
 
 interface IPriceTargetChartProps {
@@ -64,19 +65,6 @@ function generateCurvedLine(
 	return result;
 }
 
-function getForecastColor(target: number, currentPrice: number) {
-	return target >= currentPrice ? '#04EDA0' : '#FC4A6B';
-}
-
-function getForecastAxisLabelColors(target: number, currentPrice: number)
-	: { axisLabelColor: string; axisLabelTextColor: string } {
-	if (target >= currentPrice) {
-		return { axisLabelColor: '#162D27', axisLabelTextColor: '#04EDA0' };
-	}
-
-	return { axisLabelColor: '#301219', axisLabelTextColor: '#FC1D4D' };
-}
-
 function boxGradient(context: PartialEventContext) {
 	const { element, chart: { ctx } } = context;
 
@@ -102,9 +90,9 @@ function buildTargetAnnotation(target: number,
 	label: string,
 	currentPrice: number,
 ) {
-	const { axisLabelColor, axisLabelTextColor } = getForecastAxisLabelColors(target, currentPrice);
+	const { label: labelColor, text: textColor } = getForecastLabelColors(target, currentPrice);
 
-	const splitLabel = createSplitLabel(label, formatPrice(target), axisLabelColor, axisLabelTextColor);
+	const splitLabel = createSplitLabel(label, formatPrice(target), labelColor, textColor);
 
 	return {
 		type: 'line' as const,
@@ -128,6 +116,10 @@ function buildAnnotations() {
 	const currentPrice = lastPrice.value;
 
 	const splitLabel = createSplitLabel('C', formatPrice(currentPrice), '#323537', '#fff');
+
+	const topBoxY = Math.max(props.targetAverage, currentPrice);
+	const bottomBoxY = Math.min(props.targetAverage, currentPrice);
+	const triangleX = addMonths(new Date(lastTime.value * 1000), 6).getTime();
 
 	return {
 		lastPrice: {
@@ -153,9 +145,28 @@ function buildAnnotations() {
 			type: 'box' as const,
 			backgroundColor: (context: PartialEventContext) => boxGradient(context),
 			borderWidth: 0,
-			yMax: Math.max(props.targetAverage, currentPrice),
-			yMin: Math.min(props.targetAverage, currentPrice),
+			yMax: topBoxY,
+			yMin: bottomBoxY,
 			xMin: props.history[props.history.length - 1].timestamp,
+		},
+		topTriangle: {
+			type: 'point' as const,
+			backgroundColor: getTriangleColor(props.targetAverage, currentPrice),
+			pointStyle: 'triangle',
+			borderWidth: 0,
+			radius: 5.4,
+			xValue: triangleX,
+			yValue: topBoxY + 11,
+			rotation: 180,
+		},
+		bottomTriangle: {
+			type: 'point' as const,
+			backgroundColor: getTriangleColor(props.targetAverage, currentPrice),
+			pointStyle: 'triangle',
+			borderWidth: 0,
+			radius: 5.4,
+			xValue: triangleX,
+			yValue: bottomBoxY - 11,
 		},
 	};
 }
