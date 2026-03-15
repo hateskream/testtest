@@ -29,6 +29,8 @@ export interface IChartPriceTickerViewProps {
 	handleScroll?: boolean;
 }
 
+const MAX_CHART_RANGE_DATE = new Date();
+
 const props = defineProps<IChartPriceTickerViewProps>();
 
 const emit = defineEmits<{
@@ -126,6 +128,7 @@ function onUpdateSelectedTickers(tickers: ITickerItem[]) {
 			v-model="dateRange"
 			:presets="DEFAULT_PRESETS"
 			:class="classes.dateRange"
+			:max-date="MAX_CHART_RANGE_DATE"
 			show-calendar
 			show-info
 		>

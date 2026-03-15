@@ -26,8 +26,12 @@ const props = withDefaults(defineProps<{
 	presets?: P[];
 	showCalendar?: boolean;
 	showInfo?: boolean;
+	minDate?: Date;
+	maxDate?: Date;
 }>(), {
 	presets: () => DEFAULT_PRESETS as P[],
+	minDate: undefined,
+	maxDate: undefined,
 });
 
 const preparedPresets = computed(() => {
@@ -107,6 +111,8 @@ const calendarDateRangeModel = computed({
 					<modal-badge-list display-variant="new">
 						<calendar-range-select
 							v-model="calendarDateRangeModel"
+							:max-date="props.maxDate"
+							:min-date="props.minDate"
 							view="monthly"
 						/>
 					</modal-badge-list>
