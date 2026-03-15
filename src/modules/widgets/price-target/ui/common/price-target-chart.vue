@@ -178,7 +178,7 @@ function buildTargetAnnotation(
 function buildAnnotations() {
 	const currentPrice = lastPrice.value;
 
-	const splitLabel = createSplitLabel('C', formatPrice(currentPrice), '#323537', '#fff');
+	const splitLabel = createSplitLabel('C', formatPrice(currentPrice), '#2E2E32', '#fff');
 
 	const topBoxY = Math.max(props.targetAverage, currentPrice);
 	const bottomBoxY = Math.min(props.targetAverage, currentPrice);
