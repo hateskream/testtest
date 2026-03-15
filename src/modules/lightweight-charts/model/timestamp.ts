@@ -105,7 +105,7 @@ export function utcSecondsToString(seconds: UtcSeconds) {
 
 export function dateStringToUtcSeconds(date: string) {
 	const [year, month, day] = date.split('-').map(v => parseInt(v));
-	return millisecondsToUtcSeconds(Date.UTC(year, month, day));
+	return millisecondsToUtcSeconds(Date.UTC(year, month - 1, day));
 }
 
 export function toUtcStartOfDay(time: UtcSeconds | UtcMilliseconds) {
