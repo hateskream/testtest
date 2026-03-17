@@ -14,7 +14,7 @@ export const tickerCryptoSections = {
 			id: 'seasonals',
 			title: 'Seasonals',
 			component: 'CRYPTO_SEASONALS',
-			height: 600,
+			height: 540,
 		},
 		{
 			id: 'holdings',
