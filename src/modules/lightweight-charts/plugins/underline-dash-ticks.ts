@@ -9,7 +9,7 @@ export type UnderlineDashTicksPluginOptions = {
 const FALLBACK_COLOR = '#666';
 const FALLBACK_DASH = [2, 2];
 
-export const underlineDashTicksPlugin: Plugin<'line' | 'bar', UnderlineDashTicksPluginOptions> = {
+export const underlineDashTicksPlugin: Plugin<'line' | 'bar' | 'bubble', UnderlineDashTicksPluginOptions> = {
 	id: 'underlineDashTicks',
 	afterDraw(chart, _, options) {
 		const { ctx, scales } = chart;

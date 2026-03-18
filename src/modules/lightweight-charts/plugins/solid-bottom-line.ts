@@ -5,7 +5,7 @@ export type SolidBottomLinePluginOptions = {
 	mode: 'area' | 'full';
 };
 
-export const solidBottomLinePlugin: Plugin<'line' | 'bar', SolidBottomLinePluginOptions> = {
+export const solidBottomLinePlugin: Plugin<'line' | 'bar' | 'bubble', SolidBottomLinePluginOptions> = {
 	id: 'solidBottomLine',
 	defaults: {
 		color: '#fff',
@@ -28,7 +28,7 @@ export const solidBottomLinePlugin: Plugin<'line' | 'bar', SolidBottomLinePlugin
 
 		ctx.beginPath();
 
-		ctx.moveTo(left, bottom);
+		ctx.moveTo(mode === 'area' ? left : 0, bottom);
 		ctx.lineTo(mode === 'area' ? right : chart.width, bottom);
 
 		ctx.setLineDash([]);

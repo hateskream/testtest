@@ -1,0 +1,62 @@
+{
+	"forecast": {
+		"change_percent": 5.17,
+		"direction": "up"
+	},
+	"quarters": [
+		{
+			"year": 2025,
+			"quarter": 1,
+			"estimated_eps": 2.36,
+			"actual_eps": 2.4,
+			"estimated_revenue": 124257393152,
+			"actual_revenue": 124300000000,
+			"status": "beat"
+		},
+		{
+			"year": 2025,
+			"quarter": 2,
+			"estimated_eps": 1.75,
+			"actual_eps": 1.65,
+			"estimated_revenue": 94542181546,
+			"actual_revenue": 95359000000,
+			"status": "missed"
+		},
+		{
+			"year": 2025,
+			"quarter": 3,
+			"estimated_eps": 1.44,
+			"actual_eps": 1.57,
+			"estimated_revenue": 89562736363,
+			"actual_revenue": 94036000000,
+			"status": "beat"
+		},
+		{
+			"year": 2025,
+			"quarter": 4,
+			"estimated_eps": 1.78,
+			"actual_eps": 1.85,
+			"estimated_revenue": 102227074560,
+			"actual_revenue": 102466000000,
+			"status": "beat"
+		},
+		{
+			"year": 2026,
+			"quarter": 1,
+			"estimated_eps": 2.67,
+			"actual_eps": 2.84,
+			"estimated_revenue": 138391007589,
+			"actual_revenue": 143756000000,
+			"status": "beat"
+		},
+		{
+			"year": 2026,
+			"quarter": 2,
+			"estimated_eps": 1.88,
+			"actual_eps": null,
+			"estimated_revenue": null,
+			"actual_revenue": null,
+			"status": null
+		}
+	]
+}
