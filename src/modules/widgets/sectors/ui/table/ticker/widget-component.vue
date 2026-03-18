@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 
 import { BaseTickerWidgetError } from '@/modules/widgets/base';
-import { useSectors } from '../../composables';
+import { useSectors } from '../../../composables';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { isFeatureEnabled } from '@/shared/lib';
 

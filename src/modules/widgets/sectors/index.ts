@@ -1,1 +1,1 @@
-export { SectorsTickerWidget } from './ui';
+export * from './ui';

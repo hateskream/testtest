@@ -1,6 +1,8 @@
 import type { Color } from 'chart.js';
 
 import type {
+	DoughnutCenterTextPluginOptions,
+	DoughnutFloatingLabelsPluginOptions,
 	SolidBottomLinePluginOptions,
 	UnderlineDashTicksPluginOptions,
 } from '@/modules/lightweight-charts/plugins';
@@ -27,14 +29,27 @@ type GridLineItem = {
 
 declare module 'chart.js' {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
+	interface Chart {
+		animating: boolean;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface PluginOptionsByType<TType extends ChartType> {
 		underlineDashTicks?: Partial<UnderlineDashTicksPluginOptions>;
 		solidBottomLine?: Partial<SolidBottomLinePluginOptions>;
+		doughnutCenterText?: Partial<DoughnutCenterTextPluginOptions>;
+		doughnutFloatingLabels?: Partial<DoughnutFloatingLabelsPluginOptions>;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface Scale {
 		_gridLineItems?: GridLineItem[];
+	}
+
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	interface ChartDatasetProperties {
+		labels?: string[];
+		color?: string[];
 	}
 }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { Sectors } from '../../../model';
+import type { Sectors } from '../../../../model';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 import { BaseTickerWidgetContent, BaseTickerWidgetHeader, BaseTickerWidgetWrapper } from '@/modules/widgets/base';
 import { TickerBaseListDivider } from '@/modules/ticker/ui/base';

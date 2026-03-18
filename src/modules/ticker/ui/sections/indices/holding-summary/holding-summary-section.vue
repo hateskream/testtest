@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ISectionItem } from '../../../../models';
-import { SectorsTickerWidget } from '@/modules/widgets/sectors';
+import { SectorsTableTickerWidget } from '@/modules/widgets/sectors';
 import { useTickerContext } from '@/modules/ticker/composables';
 import { TickerCompanyHeadquartersWidget } from '@/modules/widgets/company-headquarters';
 import { isFeatureEnabled } from '@/shared/lib';
@@ -18,7 +18,7 @@ const companyHeadquartersIsEnabled = isFeatureEnabled('TICKER_WIDGET_COMPANY_HEA
 
 <template>
 	<div :class="classes.section">
-		<sectors-ticker-widget :meta="{ tickerId, name: 'Sectors' }" />
+		<sectors-table-ticker-widget :meta="{ tickerId, name: 'Sectors' }" />
 		<ticker-company-headquarters-widget
 			v-if="companyHeadquartersIsEnabled"
 			:meta="{ tickerId, name: 'Company Headquarters' }"

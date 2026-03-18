@@ -2,13 +2,17 @@
 import { type Component, computed } from 'vue';
 
 import {
-	BaseSectors, CryptoSectors,
-	EtfSectors, ForexSectors, IndicesSectors, StockSectors,
+	BaseSectors,
 	CommoditiesSectors,
+	CryptoSectors,
+	EtfSectors,
+	ForexSectors,
+	IndicesSectors,
+	StockSectors,
 } from './sectors';
 import { MarketType } from '@/modules/market';
 import { resolveMarketTypeFromTicker } from '@/modules/cell';
-import { type Sectors } from '../../model';
+import { type Sectors } from '../../../model';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 
 interface IProps {

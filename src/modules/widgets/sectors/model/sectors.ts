@@ -23,6 +23,8 @@ const SectorSchema = z.object({
 	subsectors: z.array(SubSectorSchema).optional(),
 });
 
+export type Sector = z.infer<typeof SectorSchema>;
+
 /**
  * Base
  */

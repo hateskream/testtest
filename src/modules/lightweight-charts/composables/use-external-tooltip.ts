@@ -1,5 +1,5 @@
 import { type CSSProperties, type MaybeRefOrGetter, type Reactive, reactive, toValue } from 'vue';
-import type { Chart, TooltipModel } from 'chart.js';
+import type { Chart, ChartType, TooltipModel } from 'chart.js';
 
 export interface ILegendItem {
 	color: string;
@@ -12,7 +12,7 @@ export interface ITooltipRow {
 	value: string;
 }
 
-export type TooltipMode = 'vaults' | 'split';
+export type TooltipMode = 'vaults' | 'split' | 'datapoint';
 
 export interface IUseExternalTooltipOptions {
 	mode?: TooltipMode;
@@ -36,11 +36,11 @@ export interface IUseExternalTooltipState {
 
 export interface IUseExternalTooltipContext {
 	chart: Chart;
-	tooltip: TooltipModel<'line'>;
+	tooltip: TooltipModel<ChartType>;
 }
 
 function createRows(
-	tooltip: TooltipModel<'line'>,
+	tooltip: TooltipModel<ChartType>,
 	args: IUseExternalTooltipOptions,
 ) {
 	const bodyLines = tooltip.body?.map(b => b.lines) ?? [];
@@ -58,7 +58,7 @@ function createRows(
 				value: `${args.valuePrefix}${value}${args.valueSuffix}`,
 			});
 		});
-	} else {
+	} else if (args.mode === 'split') {
 		bodyLines.forEach((body, i) => {
 			const row = body.toString().split(':');
 			const ticker = row.length > 1 ? row[0] : '';
@@ -74,6 +74,18 @@ function createRows(
 				color: color ?? labelColor ?? 'transparent',
 				text: symbol ?? '',
 				value: `${args.valuePrefix}${(transformedValue ?? '').trim()}${args.valueSuffix}`,
+			});
+		});
+	} else {
+		tooltip.dataPoints.forEach(point => {
+			const { dataset, dataIndex } = point;
+
+			const transformedValue = args.transformRowValue ? args.transformRowValue(point.raw as string) : point.raw;
+
+			rows.push({
+				color: dataset.color![dataIndex],
+				text: dataset.labels![dataIndex],
+				value: `${args.valuePrefix}${transformedValue}${args.valueSuffix}`,
 			});
 		});
 	}

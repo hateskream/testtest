@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { Sectors } from '../../../model';
+import type { Sectors } from '../../../../model';
 import type { ITickerWidgetMeta } from '@/modules/ticker';
 
-import BaseSectors
-	from './base-sectors.vue';
+import BaseSectors from './base-sectors.vue';
 
 
 interface IProps {
