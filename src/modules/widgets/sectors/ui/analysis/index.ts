@@ -1,0 +1,1 @@
+export { SectorsAnalysisTickerWidget } from './ticker';

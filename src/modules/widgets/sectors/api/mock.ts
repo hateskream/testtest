@@ -10,6 +10,7 @@ import {
 	EtfSectorsSchema,
 	ForexSectorsSchema,
 	IndexSectorsSchema,
+	SectorsAnalysisSchema,
 	StockSectorsSchema,
 } from '../model';
 import { apiSchema } from '@/shared/service/api';
@@ -38,4 +39,21 @@ export async function getMockData(request: ISectorsRequest) {
 		tickerId: request.tickerId,
 		...preparedTickers[market],
 	};
+}
+
+interface IGetAnalysisMock {
+	summary: string;
+}
+
+const { getMock: getAnalysisMock } = useFetchMock<IGetAnalysisMock>('/mock/widgets/sectors-analysis.json');
+
+export async function getAnalysisMockData(request: ISectorsRequest) {
+	await delay(1000);
+
+	const response = await getAnalysisMock();
+
+	return apiSchema(SectorsAnalysisSchema).parse({
+		tickerId: request.tickerId,
+		...response,
+	});
 }

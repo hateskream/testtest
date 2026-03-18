@@ -4,6 +4,7 @@ import { UiWidgetLabel } from '@/shared/ui/widget-label';
 
 <template>
 	<div :class="classes.header">
+		<slot name="left" />
 		<slot name="label">
 			<ui-widget-label disabled>
 				<slot />

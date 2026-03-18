@@ -14,11 +14,15 @@ defineProps<ISectionProps>();
 const { tickerId } = useTickerContext();
 
 const companyHeadquartersIsEnabled = isFeatureEnabled('TICKER_WIDGET_COMPANY_HEADQUARTERS_ENABLED');
+const sectorsTableWidgetIsEnabled = isFeatureEnabled('TICKER_WIDGET_SECTORS_ENABLED');
 </script>
 
 <template>
 	<div :class="classes.section">
-		<sectors-table-ticker-widget :meta="{ tickerId, name: 'Sectors' }" />
+		<sectors-table-ticker-widget
+			v-if="sectorsTableWidgetIsEnabled"
+			:meta="{ tickerId, name: 'Sectors' }"
+		/>
 		<ticker-company-headquarters-widget
 			v-if="companyHeadquartersIsEnabled"
 			:meta="{ tickerId, name: 'Company Headquarters' }"
