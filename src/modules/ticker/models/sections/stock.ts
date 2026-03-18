@@ -28,6 +28,12 @@ export const tickerStockSections = {
 			component: 'STOCK_FINANSIALS',
 			height: 350,
 		},
+		{
+			id: 'insider-trading',
+			title: 'Insider Trading',
+			component: 'STOCK_INSIDER_TRADING',
+			height: 350,
+		},
 	],
 	right: [
 		{

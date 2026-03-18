@@ -19,6 +19,7 @@ export const TICKER_SECTION_COMPONENT = {
 	STOCK_INSIGHTS_AND_ACTIVITY: 'STOCK_INSIGHTS_AND_ACTIVITY',
 	STOCK_EARNINGS: 'STOCK_EARNINGS',
 	STOCK_FINANCIALS: 'STOCK_FINANSIALS',
+	STOCK_INSIDER_TRADING: 'STOCK_INSIDER_TRADING',
 
 	// crypto
 	CRYPTO_OVERVIEW: 'CRYPTO_OVERVIEW',
@@ -125,6 +126,8 @@ const experimentalSections = {
 		isFeatureEnabled('TICKER_WIDGET_SECTORS_ENABLED'),
 	[TICKER_SECTION_COMPONENT.STOCK_EARNINGS]: () =>
 		isFeatureEnabled('TICKER_WIDGET_PRICE_TO_EARNINGS_ENABLED'),
+	[TICKER_SECTION_COMPONENT.STOCK_INSIDER_TRADING]: () =>
+		isFeatureEnabled('TICKER_WIDGET_TRADING_VOLUME_ENABLED'),
 } as const satisfies Partial<Record<TickerSectionComponent, () => boolean>>;
 
 function hasExperimentalSection(key: TickerSectionComponent): key is keyof typeof experimentalSections {
