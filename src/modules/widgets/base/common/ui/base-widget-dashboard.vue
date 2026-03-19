@@ -276,8 +276,7 @@ function onContentError(error: Error) {
 	flex-direction: column;
 	backdrop-filter: blur(8px);
 	background: rgb(20 20 21 / 92%);
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
+	border-radius: 18px;
 }
 
 .titleHeader {
