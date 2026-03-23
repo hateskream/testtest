@@ -35,7 +35,7 @@ const props = defineProps<IWidgetLabelProps>();
 		background-color: var(--base-50, rgb(73 73 80 / 52%));
 	}
 
-	.widgetLabel.active {
+	.widgetLabel:not(.disabled).active {
 		background-color: var(--bg-500, rgb(73 73 80 / 70%));
 	}
 }
