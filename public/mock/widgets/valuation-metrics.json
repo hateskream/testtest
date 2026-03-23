@@ -1,31 +1,64 @@
 {
-	"metrics": [
-		{
-			"label": "P/E",
-			"description": "Price per share divided by earnings per share. Shows how much investors pay for $1 of profit.",
-			"ltm": "161.4",
-			"ntm": "150.2",
-			"unit": "x"
-		},
-		{
-			"label": "EV/Sales",
-			"description": "Enterprise Value divided by revenue.",
-			"ltm": "9.3",
-			"ntm": "9.1",
-			"unit": "x"
-		},
-		{
-			"label": "EV/EBITDA",
-			"description": "Enterprise Value divided by EBITDA. Measures valuation relative to operating cash earnings.",
-			"ltm": "62.7",
-			"ntm": "58.3",
-			"unit": "x"
-		},
-		{
-			"label": "Price/Book",
-			"description": "Price per share divided by book value per share. Compares market value to net assets.",
-			"ltm": "12.2",
-			"unit": "x"
-		}
-	]
+	"stock": {
+		"metrics": [
+			{
+				"label": "P/E",
+				"description": "Price-to-Earnings: Price per share divided by earnings per share. Shows how much investors pay for $1 of profit.",
+				"ltm": "161.4",
+				"ntm": "150.2",
+				"unit": "x"
+			},
+			{
+				"label": "EV/Sales",
+				"description": "Enterprise Value divided by revenue.",
+				"ltm": "9.3",
+				"ntm": "9.1",
+				"unit": "x"
+			},
+			{
+				"label": "EV/EBITDA",
+				"description": "Enterprise Value divided by EBITDA. Measures valuation relative to operating cash earnings.",
+				"ltm": "62.7",
+				"ntm": "58.3",
+				"unit": "x"
+			},
+			{
+				"label": "Price/Book",
+				"description": "Price per share divided by book value per share. Compares market value to net assets.",
+				"ltm": "12.2",
+				"unit": "x"
+			}
+		]
+	},
+	"etf": {
+		"metrics": [
+			{
+				"label": "AUM",
+				"description": "Total assets managed by the ETF",
+				"ltm": "161.4",
+				"ntm": "150.2",
+				"unit": "x"
+			},
+			{
+				"label": "Holdings",
+				"description": "Number of securities held in the fund",
+				"ltm": "9.3",
+				"ntm": "9.1",
+				"unit": "x"
+			},
+			{
+				"label": "Top 10 Weight",
+				"description": "Percentage of the portfolio allocated to the top 10 holdings",
+				"ltm": "62.7",
+				"ntm": "58.3",
+				"unit": "x"
+			},
+			{
+				"label": "NAV",
+				"description": "Net Asset Value per share of the ETF",
+				"ltm": "12.2",
+				"unit": "x"
+			}
+		]
+	}
 }

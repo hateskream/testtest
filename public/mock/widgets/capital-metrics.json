@@ -1,28 +1,58 @@
 {
-	"metrics": [
-		{
-			"label": "Expense Ratio",
-			"description": "Annual fee as a percentage of fund assets covering management and operating costs.",
-			"value": "0.09",
-			"unit": "%"
-		},
-		{
-			"label": "30 Day Yield",
-			"description": "Annualized income return over the past 30 days, net of fund expenses.",
-			"value": "1.03",
-			"unit": "%"
-		},
-		{
-			"label": "Dividend Yield",
-			"description": "Annual dividends expressed as a percentage of current share price.",
-			"value": "1.1",
-			"unit": "%"
-		},
-		{
-			"label": "P/E Ratio",
-			"description": "Price per share divided by earnings per share, reflecting investor cost per dollar of profit.",
-			"value": "27.9",
-			"unit": "x"
-		}
-	]
+	"stock": {
+		"metrics": [
+			{
+				"label": "Market Cap",
+				"description": "Total market value of all outstanding shares (Price × Shares).",
+				"value": "920.81B",
+				"unit": null
+			},
+			{
+				"label": "Total Debt",
+				"description": "Sum of short-term and long-term interest-bearing debt.",
+				"value": "161.4",
+				"unit": "x"
+			},
+			{
+				"label": "Cash & Inv.",
+				"description": "Cash & Investments: Cash, equivalents, and short-term investments available on the balance sheet.",
+				"value": "9.3",
+				"unit": "x"
+			},
+			{
+				"label": "Enterprise Value",
+				"description": "Total company value: Market Cap + Debt − Cash.",
+				"value": "62.7",
+				"unit": "x"
+			}
+		]
+	},
+	"etf": {
+		"metrics": [
+			{
+				"label": "Expense Ratio",
+				"description": "Annual fee charged to investors, expressed as % of assets",
+				"value": "920.81B",
+				"unit": null
+			},
+			{
+				"label": "30 Day Yield",
+				"description": "Income earned over the past 30 days, annualized",
+				"value": "161.4",
+				"unit": "x"
+			},
+			{
+				"label": "Dividend Yield",
+				"description": "Annual dividends as a percentage of the ETF price",
+				"value": "9.3",
+				"unit": "x"
+			},
+			{
+				"label": "P/E Ratio",
+				"description": "Weighted average price-to-earnings ratio of the underlying holdings",
+				"value": "62.7",
+				"unit": "x"
+			}
+		]
+	}
 }
