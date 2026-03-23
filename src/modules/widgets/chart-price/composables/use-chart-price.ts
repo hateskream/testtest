@@ -7,7 +7,7 @@ import { useWatchlist } from '@/modules/watchlist';
 import { useQueryChartPriceHistory } from '../queries';
 import { decodeCanonicalTickerId, fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 import { deepCompare } from '@/shared/lib/compare';
-import { type DateRangeValue, DateRangeValueSchema } from '@/modules/lightweight-charts/model';
+import { type DateRangeValue, DateRangeValueSchema } from '@/modules/charts/common/model';
 
 export const stateSchema = z.object({
 	selectedTicker: z.string(),

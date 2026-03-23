@@ -5,18 +5,14 @@ import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annot
 import { addMonths } from 'date-fns';
 import { useEventListener } from '@vueuse/core';
 
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import {
-	formatPrice,
-	millisecondsToUtcMilliseconds,
-	strTimeToChartTime,
-	type UtcSeconds,
-} from '@/modules/lightweight-charts/model';
-import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { type IUseExternalTooltipState, useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { strTimeToChartTime } from '@/modules/charts/lightweight/model';
+import { millisecondsToUtcMilliseconds, type UtcSeconds } from '@/modules/charts/common/model';
+import { createSplitLabel, formatPrice } from '@/modules/charts/common/lib';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { type IUseExternalTooltipState, useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import { UiText } from '@/shared/ui/text';
 import { getForecastColor, getForecastLabelColors, getTriangleColor, type PriceTargetHistoryPoint } from '../../model';
-import { createSplitLabel } from '@/modules/lightweight-charts/utils';
 
 interface IPriceTargetChartProps {
 	history: PriceTargetHistoryPoint[];

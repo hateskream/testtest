@@ -5,7 +5,7 @@ import { useScrollLock } from '@vueuse/core';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 import { useTickerChartPrice } from '../../composables';
 import { useFocusLock } from '@/shared/ui/modal';
-import { createChartContext } from '@/modules/lightweight-charts/composables';
+import { createChartContext } from '@/modules/charts/common/composables';
 
 import PreloaderComponent from './preloader-component.vue';
 

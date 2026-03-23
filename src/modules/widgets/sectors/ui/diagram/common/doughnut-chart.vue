@@ -4,13 +4,13 @@ import { Chart, type ChartDataset, type ChartOptions } from 'chart.js/auto';
 import type { TooltipOptions } from 'chart.js';
 import { notNullish } from '@vueuse/core';
 
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
 import {
 	doughnutCenterTextPlugin,
 	type DoughnutCenterTextPluginOptions,
 	doughnutFloatingLabelsPlugin,
-} from '@/modules/lightweight-charts/plugins';
+} from '@/modules/charts/chart-js/plugins';
 import type { Sector } from '../../../model';
 import DiagramPattern from '@/assets/images/diagram-pattern.png';
 

@@ -5,7 +5,7 @@ import { TagColor, UiTag } from '@/shared/ui/tag';
 import { IconIds } from '@/shared/ui/icon';
 import { PriceTargetChart } from '../common';
 import { getPotentialDirection, getPotentialPercent, PotentialDirection, type PriceTarget } from '../../model';
-import { formatPercent, formatPrice } from '@/modules/lightweight-charts/model';
+import { formatPercent, formatPrice } from '@/modules/charts/common/lib';
 
 interface IViewComponentProps {
 	data: PriceTarget;

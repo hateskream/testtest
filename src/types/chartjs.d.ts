@@ -5,7 +5,7 @@ import type {
 	DoughnutFloatingLabelsPluginOptions,
 	SolidBottomLinePluginOptions,
 	UnderlineDashTicksPluginOptions,
-} from '@/modules/lightweight-charts/plugins';
+} from '@/modules/charts/chart-js/plugins';
 
 type GridLineItem = {
 	tx1: number;

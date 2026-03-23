@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 import { UiLegend, UiLegendOption, UiLegendRow } from '@/shared/ui/legend';
-import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetLabel } from '@/modules/charts/common/model';
 import { BaseTickerWidgetHeader } from '@/modules/widgets/base';
 import type { NominalGdpDateRangePresetType, NominalGdpHistory } from '../../model';
 import { NOMINAL_GDP_DATE_RANGE_PRESETS } from '../../model';

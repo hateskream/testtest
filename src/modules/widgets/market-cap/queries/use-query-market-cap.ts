@@ -3,7 +3,7 @@ import { computed, type MaybeRefOrGetter, toValue } from 'vue';
 
 import { getMarketCap } from '../api';
 import { isNonEmptyArray } from '@/shared/lib';
-import { DateRangePreset, type DateRangeValue } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangeValue } from '@/modules/charts/common/model';
 
 
 export function useQueryMarketCap(

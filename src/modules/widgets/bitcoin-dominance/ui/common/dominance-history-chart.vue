@@ -8,10 +8,10 @@ import {
 	type IDominanceHistory,
 	type IDominanceSnapshot,
 } from '@/modules/widgets/bitcoin-dominance/model';
-import { ChartDominance } from '@/modules/lightweight-charts';
+import { ChartDominance } from '@/modules/charts/chart-js';
 import { UiSkeletonGroup } from '@/shared/ui/skeleton';
 import { BaseErrorComponent } from '@/modules/widgets/base';
-import type { IChartDominanceDataset } from '@/modules/lightweight-charts/model';
+import type { IChartDominanceDataset } from '@/modules/charts/chart-js/model';
 import type { ITickerItem } from '@/modules/ticker-selector';
 
 interface IDominanceChartProps {

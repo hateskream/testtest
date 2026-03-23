@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
 import { type IDisplaySettings, type IMarketCapHistory } from '../../model';
-import type { DateRangeValue } from '@/modules/lightweight-charts/model';
+import type { DateRangeValue } from '@/modules/charts/common/model';
 
 import MarketCapTotal from './market-cap-total.vue';
 import MarketCapChart from './market-cap-chart.vue';

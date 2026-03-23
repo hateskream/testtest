@@ -9,7 +9,7 @@ import {
 	valueTypeFilters,
 	valueTypeFilterValueToDisplay,
 } from '../../model';
-import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetLabel } from '@/modules/charts/common/model';
 
 const emit = defineEmits<{
 	reset: [];

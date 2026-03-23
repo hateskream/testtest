@@ -6,10 +6,10 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays } from 'date-fns';
 
 import type { SeasonalSeries } from '../../model';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { formatPercent } from '@/modules/lightweight-charts/model';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { formatPercent } from '@/modules/charts/common/lib';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import { getDateFormatter, hexToRgba } from '@/shared/lib';
 
 import SeasonalsChartLegend from './seasonals-chart-legend.vue';

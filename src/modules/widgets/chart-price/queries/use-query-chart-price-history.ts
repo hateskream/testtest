@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/vue-query';
 import { type MaybeRefOrGetter, toValue } from 'vue';
 
-import { type DateRangeValue, toUtcSecondsRange } from '@/modules/lightweight-charts/model';
+import { type DateRangeValue, toUtcSecondsRange } from '@/modules/charts/common/model';
 import { getChartPriceHistory } from '../api';
 
 export function useQueryChartPriceHistory(

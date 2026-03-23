@@ -4,7 +4,7 @@ import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
 import { getDefaultState, type IState, mapHighImpactHourMap, stateSchema, type StateSchemaType } from '../model';
 import { useQueryHighImpactHourMap } from '../queries';
-import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import type { TimezoneUtcType } from '@/modules/charts/common/model';
 
 interface IOptions {
 	widgetId: string;

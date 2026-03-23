@@ -11,8 +11,10 @@ import {
 	type IMarketCapTotal,
 	type IMarketCapTotalValue,
 } from '../../model';
-import { Chart, ChartDateRange, ChartMarketCap } from '@/modules/lightweight-charts';
-import { type DateRangeValue, millisecondsToUtcSeconds } from '@/modules/lightweight-charts/model';
+import { ChartDateRange } from '@/modules/charts/common';
+import { ChartMarketCap } from '@/modules/charts/chart-js';
+import { Chart } from '@/modules/charts/lightweight';
+import { type DateRangeValue, millisecondsToUtcSeconds } from '@/modules/charts/common/model';
 
 import MarketCapChartTooltip from './market-cap-chart-tooltip.vue';
 

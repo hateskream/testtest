@@ -1,4 +1,4 @@
-import { DateRangePreset, type DateRangePresetType, type DateRangeValue } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangePresetType, type DateRangeValue } from '@/modules/charts/common/model';
 
 // На данный момент поддерживаются события только на дневном просмотре
 export const TIMELINE_EVENTS_ALLOWED = new Set<DateRangePresetType>([

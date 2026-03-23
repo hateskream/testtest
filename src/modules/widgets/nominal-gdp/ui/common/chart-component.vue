@@ -2,12 +2,10 @@
 import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
-import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import {
-	barDashedBorderConfigurablePlugin,
-	type IBarDashedBorderPluginConfig,
-} from '@/modules/lightweight-charts/plugins';
+import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { useAdaptiveBarPoints } from '@/modules/charts/common/composables';
+import { barDashedBorderPlugin, type IBarDashedBorderPluginConfig } from '@/modules/charts/chart-js/plugins';
 import type { NominalGdpHistoryPoint } from '../../model';
 
 const BAR_WIDTH = 15;
@@ -105,7 +103,7 @@ const options = {
 	},
 } as const satisfies ChartOptions<'bar'>;
 
-const plugins = [barDashedBorderConfigurablePlugin];
+const plugins = [barDashedBorderPlugin];
 </script>
 
 <template>

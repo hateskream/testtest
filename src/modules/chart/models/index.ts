@@ -22,8 +22,6 @@ import {
 	SectionTransactions,
 } from '@/modules/chart/components/sections';
 
-export * from './candle';
-
 export enum TickerType {
 	CRYPTO = 'crypto',
 	STOCK = 'stock',

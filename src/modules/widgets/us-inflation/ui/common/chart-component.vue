@@ -2,7 +2,7 @@
 import { CrosshairMode } from 'lightweight-charts';
 import { computed } from 'vue';
 
-import { Chart } from '@/modules/lightweight-charts';
+import { Chart } from '@/modules/charts/lightweight';
 import type { IUSInflationPoint } from '../../model';
 
 interface IChartComponentProps {

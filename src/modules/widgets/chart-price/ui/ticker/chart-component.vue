@@ -2,16 +2,17 @@
 import { computed, toRef, useTemplateRef, watch } from 'vue';
 import { type ChartType, LastPriceAnimationMode } from '@shared/component-library';
 
-import { Chart } from '@/modules/lightweight-charts';
+import { Chart } from '@/modules/charts/lightweight';
 import {
 	type DateRangePresetValue,
 	type DateRangeValue,
 	strTimeToChartTime,
 	TimezoneUtc,
 	type TimezoneUtcType,
-} from '@/modules/lightweight-charts/model';
+} from '@/modules/charts/common/model';
 import type { ChartPriceCurrentData, ChartPriceHistoryPoint } from '../../model';
-import { useChartContext, useChartContextIndicators } from '@/modules/lightweight-charts/composables';
+import { useChartContextIndicators } from '@/modules/charts/lightweight/composables';
+import { useChartContext } from '@/modules/charts/common/composables';
 import { type IndicatorType } from '@/modules/indicator';
 
 export interface IChartPriceTickerProps {

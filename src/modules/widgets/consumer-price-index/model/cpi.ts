@@ -5,7 +5,7 @@ import {
 	DateRangePreset,
 	type DateRangePresetType,
 	type DateRangePresetValue,
-} from '@/modules/lightweight-charts/model';
+} from '@/modules/charts/common/model';
 import type { ObjectEnum } from '@/shared/types';
 
 export const CpiDateRangePreset = {

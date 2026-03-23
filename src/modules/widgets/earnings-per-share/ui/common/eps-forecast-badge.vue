@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { TagColor, UiTag } from '@/shared/ui/tag';
-import { formatPercent } from '@/modules/lightweight-charts/model';
+import { formatPercent } from '@/modules/charts/common/lib';
 import { ChangeDirection, type EpsForecast } from '../../model';
 
 interface IEpsForecastBadgeProps {

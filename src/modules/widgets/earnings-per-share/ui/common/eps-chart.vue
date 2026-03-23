@@ -4,14 +4,14 @@ import type { BubbleDataPoint, ChartOptions, TooltipOptions } from 'chart.js';
 import { Chart } from 'chart.js/auto';
 import annotationPlugin, { type AnnotationOptions } from 'chartjs-plugin-annotation';
 
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import {
 	bubbleDashedPointBorderPlugin,
 	type IBubbleDatasetWithDash,
 	solidBottomLinePlugin,
 	underlineDashTicksPlugin,
-} from '@/modules/lightweight-charts/plugins';
+} from '@/modules/charts/chart-js/plugins';
 import { type EpsQuarter, EpsQuarterStatus, formatQuarterLabel } from '../../model';
 
 const BUBBLE_RADIUS = 12;

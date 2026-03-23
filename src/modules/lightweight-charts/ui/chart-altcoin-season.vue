@@ -3,7 +3,7 @@ import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { Chart } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
-import { useExternalTooltip } from '../composables';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import type { IChartData } from '@/modules/widgets/altcoinSeason/model';
 import {
 	ALTCOIN_THRESHOLD,
@@ -15,7 +15,7 @@ import {
 	widgetActiveColor,
 	widgetColor,
 } from '@/modules/widgets/altcoinSeason/const';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
 
 const props = defineProps<{
 	show: boolean;

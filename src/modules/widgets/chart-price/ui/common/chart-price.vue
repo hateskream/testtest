@@ -2,8 +2,10 @@
 import { computed } from 'vue';
 import { LastPriceAnimationMode } from '@shared/component-library';
 
-import { Chart, ChartDateRange } from '@/modules/lightweight-charts';
-import { type DateRangeValue, strTimeToChartTime } from '@/modules/lightweight-charts/model';
+import { Chart } from '@/modules/charts/lightweight';
+import { ChartDateRange } from '@/modules/charts/common';
+import { type DateRangeValue } from '@/modules/charts/common/model';
+import { strTimeToChartTime } from '@/modules/charts/lightweight/model';
 import type { ICalendarEvent } from '@/modules/calendar';
 import {
 	type ChartPriceCurrentData,

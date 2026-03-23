@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CrosshairMode } from 'lightweight-charts';
 
-import { Chart } from '@/modules/lightweight-charts';
+import { Chart } from '@/modules/charts/lightweight';
 
 interface IPoints {
 	time: string;

@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import {
-	ColorType,
-	createChart,
-	LineSeries,
-	LineStyle,
-	LineType,
-	type IChartApi,
-	type Time,
-} from 'lightweight-charts';
+import { ColorType, createChart, type IChartApi, LineSeries, LineStyle, LineType, type Time } from 'lightweight-charts';
 import { onMounted, ref, useTemplateRef } from 'vue';
 
-import { generateCandleDataFromLineData, generateLineData, prepareSeries } from '../utils';
-import { Rectangle, TooltipPrimitive } from '../rectangles';
+import { adaptSeriesToChartType } from '@/modules/charts/lightweight/model';
+import { generateCandleDataFromLineData, generateLineData } from '@/modules/charts/lightweight/lib';
+import { Rectangle, TooltipPrimitive } from '@/modules/charts/lightweight/plugins';
 
 interface IChartProps {
 	// width: number;
@@ -73,7 +66,7 @@ onMounted(() => {
 
 	const currentPrice = mainData.value[mainData.value.length - 1].close;
 
-	s.setData(prepareSeries(mainData.value, 'Line'));
+	s.setData(adaptSeriesToChartType(mainData.value, 'Line'));
 
 	s.createPriceLine({
 		price: currentPrice,

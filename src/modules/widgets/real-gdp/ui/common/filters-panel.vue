@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { ModalBadgeFilter, WidgetFiltersScrollable } from '@/modules/widgets/base';
-import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetLabel } from '@/modules/charts/common/model';
 import { rangeFilters, type RealGdpDateRangePresetType } from '../../model';
 
 const emit = defineEmits<{

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DateRangePreset, type DateRangePresetType } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangePresetType } from '@/modules/charts/common/model';
 import type { ObjectEnum } from '@/shared/types';
 
 export const REAL_GDP_METRIC = 'real';

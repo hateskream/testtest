@@ -2,13 +2,10 @@
 import type { ChartType } from '@shared/component-library';
 import { computed, useTemplateRef } from 'vue';
 
-import {
-	type DateRangeValue,
-	DEFAULT_PRESETS,
-	strTimeToChartTime,
-	type TimezoneUtcType,
-} from '@/modules/lightweight-charts/model';
-import { ChartDateRange, ChartDateRangeChange, ChartNavigator } from '@/modules/lightweight-charts';
+import { type DateRangeValue, DEFAULT_PRESETS, type TimezoneUtcType } from '@/modules/charts/common/model';
+import { strTimeToChartTime } from '@/modules/charts/lightweight/model';
+import { ChartDateRange, ChartDateRangeChange } from '@/modules/charts/common';
+import { ChartNavigator } from '@/modules/charts/lightweight';
 import type { ChartPriceHistoryData, PriceChanges } from '../../model';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { ALL_MARKET_TYPES } from '@/modules/market';

@@ -9,7 +9,7 @@ import {
 	type IMarketCapTotal,
 } from '../model';
 import { useFetchMock } from '@/shared/mock';
-import { type DateRangePresetType, presetToDateRange } from '@/modules/lightweight-charts/model';
+import { type DateRangePresetType, presetToDateRange } from '@/modules/charts/common/model';
 
 const IS_USE_MOCK = false;
 

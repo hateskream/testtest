@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetLabel } from '@/modules/charts/common/model';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import { UiLegend } from '@/shared/ui/legend';

@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
-import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { formatPrice } from '@/modules/charts/common/lib';
 import { getQuarterColor, type RevenueYearQuarterly } from '../../model';
-import { formatPrice } from '@/modules/lightweight-charts/model';
 
 const QUARTERS_COUNT = 4;
 

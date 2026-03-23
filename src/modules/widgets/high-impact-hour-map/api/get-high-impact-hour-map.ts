@@ -3,7 +3,7 @@ import { add, format } from 'date-fns';
 import { useHttpService } from '@/shared/service/http-service';
 import { useLogger } from '@/shared/service/monitoring';
 import { delay, randomInt } from '@/shared/lib';
-import type { TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import type { TimezoneUtcType } from '@/modules/charts/common/model';
 
 const IS_USE_MOCK = false;
 

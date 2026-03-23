@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
-import { formatPrice } from '@/modules/lightweight-charts/model/price';
+import { formatPrice } from '@/modules/charts/common/lib';
 import { TradingVolumeSentiment, type TradingVolumeSentimentType } from '../model';
 
 interface ITradingVolumeLabelProps {

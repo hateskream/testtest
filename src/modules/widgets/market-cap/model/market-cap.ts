@@ -1,5 +1,5 @@
 import { MarketType } from '@/modules/market';
-import type { DateRangePresetType } from '@/modules/lightweight-charts/model';
+import type { DateRangePresetType } from '@/modules/charts/common/model';
 
 export type MarketCapType = MarketType.Crypto | MarketType.Stock;
 

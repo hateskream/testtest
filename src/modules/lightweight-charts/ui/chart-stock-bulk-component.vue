@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import {
-	ColorType,
-	createChart,
-	LineSeries,
-	LineStyle,
-	type CandlestickData,
-	type IChartApi,
-} from 'lightweight-charts';
+import type { CandlestickData, IChartApi } from 'lightweight-charts';
+import { ColorType, createChart, LineSeries, LineStyle } from 'lightweight-charts';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
-import { generateCandleDataFromLineData, generateLineData, groupSeriesByRange, prepareSeries } from '../utils';
 import { RANGE_IN_SECONDS, RangeChart } from '@/shared/ui/chart-range';
+import { adaptSeriesToChartType, groupSeriesByRange } from '@/modules/charts/lightweight/model';
+import { generateCandleDataFromLineData, generateLineData } from '@/modules/charts/lightweight/lib';
 
 import ChartRange from '@/shared/ui/chart-range/chart-range.vue';
 import ChartLegends from './chart-legends.vue';
@@ -51,9 +46,9 @@ function selectRange(range: RangeChart) {
 	currentRange.value = range;
 
 
-	graphA.value.setData(prepareSeries(groupedData.value[currentRange.value], 'Line'));
+	graphA.value.setData(adaptSeriesToChartType(groupedData.value[currentRange.value], 'Line'));
 	// eslint-disable-next-line @stylistic/max-len
-	graphB.value.setData(prepareSeries(groupedData.value[currentRange.value].map((item) => ({ ...item, close: item.close - 100 })), 'Line'));
+	graphB.value.setData(adaptSeriesToChartType(groupedData.value[currentRange.value].map((item) => ({ ...item, close: item.close - 100 })), 'Line'));
 
 
 	chart.value!.timeScale().fitContent();
