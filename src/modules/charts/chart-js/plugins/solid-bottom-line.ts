@@ -11,7 +11,7 @@ export const solidBottomLinePlugin: Plugin<'line' | 'bar' | 'bubble', SolidBotto
 		color: '#fff',
 		mode: 'area',
 	},
-	afterDraw(chart, _args, options) {
+	beforeDatasetsDraw(chart, _args, options) {
 		const { ctx, chartArea } = chart;
 
 		if (!chartArea) {

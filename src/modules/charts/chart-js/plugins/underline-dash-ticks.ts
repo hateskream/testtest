@@ -11,7 +11,7 @@ const FALLBACK_DASH = [2, 2];
 
 export const underlineDashTicksPlugin: Plugin<'line' | 'bar' | 'bubble', UnderlineDashTicksPluginOptions> = {
 	id: 'underlineDashTicks',
-	afterDraw(chart, _, options) {
+	beforeDatasetsDraw(chart, _, options) {
 		const { ctx, scales } = chart;
 
 		const hasSolidBottomLinePlugin = chart.config.plugins?.includes(solidBottomLinePlugin);
