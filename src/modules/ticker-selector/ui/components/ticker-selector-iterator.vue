@@ -91,6 +91,15 @@ watch(isLoading, loaded => {
 		nextTick().then(ensureScrollable);
 	}
 }, { immediate: true });
+
+watch(() => props.marketType, () => {
+	nextTick(() => {
+		const scrollElement = scrollFadeRef.value?.$el;
+		if (scrollElement) {
+			scrollElement.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	});
+});
 </script>
 
 <template>
@@ -126,7 +135,7 @@ watch(isLoading, loaded => {
 				</template>
 
 				<ticker-selector-empty v-else>
-					Noting found in {{ props.marketType }}
+					Nothing found in {{ props.marketType }}
 				</ticker-selector-empty>
 			</div>
 		</ui-scroll-fade>

@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 
 import { UiModalSearch, UiModalWrapper } from '@/shared/ui/modal';
-import { marketToName, MarketType } from '@/modules/market';
+import { marketToLabel, MarketType } from '@/modules/market';
 import {
 	type IMarketTickerItem,
 	type ITickerCategory,
@@ -15,6 +15,7 @@ import { useInitTickerSelectorQuery, useTickerSelectorInfiniteQuery, useTickerSe
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import { UiSegmentedControl, UiSegmentedControlItem } from '@/shared/ui/segmented-control';
 import type { IInitTickerSelectorCategory } from '@/modules/ticker-selector/api';
+import { UiText } from '@/shared/ui/text';
 
 import TickerSelectorInitSkeleton from './components/skeletons/ticker-selector-init-skeleton.vue';
 import TickerSelectorError from './components/error/ticker-selector-error.vue';
@@ -123,10 +124,24 @@ const preparedMarkets = computed(() => {
 	return props.enabledMarkets
 		.map(market => ({
 			market,
-			label: marketToName[market],
+			label: marketToLabel[market],
 			total: totalsByMarket[market] ?? 0,
-		}))
-		.sort((a, b) => Number(a.total === 0) - Number(b.total === 0));
+		}));
+});
+
+const selectedMarket = computed(() => preparedMarkets.value.find(market => market.market === selectedMarketTab.value));
+const notEmptyMarket = computed(() => preparedMarkets.value.find(market => market.total > 0));
+
+const showAdditionalList = computed(() => {
+	return !!searchQuery.value && selectedMarket.value?.total === 0 && !!notEmptyMarket.value;
+});
+
+const additionalListLabel = computed(() => {
+	if (!notEmptyMarket.value) {
+		return null;
+	}
+
+	return `Found in ${ notEmptyMarket.value.label.toLowerCase() }`;
 });
 </script>
 
@@ -168,6 +183,24 @@ const preparedMarkets = computed(() => {
 					/>
 				</template>
 			</ticker-selector-iterator>
+			<div v-if="showAdditionalList" :class="classes.additionalList">
+				<p :class="classes.additionalListLabel">
+					<ui-text token="text-100-r">{{ additionalListLabel }}</ui-text>
+				</p>
+				<ticker-selector-iterator
+					:market-type="notEmptyMarket!.market"
+					:search-query="searchQuery"
+				>
+					<template #default="{ ticker }">
+						<ticker-selector-item
+							:ticker="ticker"
+							selection-mode="single"
+							:active="state.isTickerSelected(selectedMarketTab, ticker.canonical_ticker_id)"
+							@click="state.selectOrExcludeTickerToggle(selectedMarketTab, ticker)"
+						/>
+					</template>
+				</ticker-selector-iterator>
+			</div>
 		</template>
 	</ui-modal-wrapper>
 </template>
@@ -186,5 +219,15 @@ const preparedMarkets = computed(() => {
 
 .segmentedControl {
 	padding: 0 var(--padding-s10, 18px);
+}
+
+.additionalList {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.additionalListLabel {
+	padding: var(--padding-s7, 12px) var(--padding-s10, 18px) 0;
 }
 </style>
