@@ -1,0 +1,51 @@
+{
+	"summary": "Expanding Margins",
+	"status": "positive",
+	"series": [
+		{
+			"key": "profitMargin",
+			"label": "Profit Margin",
+			"color": "#04eda0",
+			"backgroundColor": "#0d3b2d",
+			"isDashed": true,
+			"currentValue": 0.5560,
+			"points": [
+				{ "year": 2021, "value": 0.3623 },
+				{ "year": 2022, "value": 0.1619 },
+				{ "year": 2023, "value": 0.4884 },
+				{ "year": 2024, "value": 0.5584 },
+				{ "year": 2025, "value": 0.5560 }
+			]
+		},
+		{
+			"key": "gross",
+			"label": "Gross",
+			"color": "#ddf622",
+			"backgroundColor": "#363b12",
+			"isDashed": false,
+			"currentValue": 0.7106,
+			"points": [
+				{ "year": 2021, "value": 0.6492 },
+				{ "year": 2022, "value": 0.5692 },
+				{ "year": 2023, "value": 0.7271 },
+				{ "year": 2024, "value": 0.7498 },
+				{ "year": 2025, "value": 0.7106 }
+			]
+		},
+		{
+			"key": "operating",
+			"label": "Operating",
+			"color": "#ffffff",
+			"backgroundColor": "#2e2e32",
+			"isDashed": false,
+			"currentValue": 0.6038,
+			"points": [
+				{ "year": 2021, "value": 0.3730 },
+				{ "year": 2022, "value": 0.1565 },
+				{ "year": 2023, "value": 0.5412 },
+				{ "year": 2024, "value": 0.6241 },
+				{ "year": 2025, "value": 0.6038 }
+			]
+		}
+	]
+}
