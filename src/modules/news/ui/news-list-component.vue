@@ -2,7 +2,7 @@
 import { type ComponentPublicInstance, ref, useTemplateRef } from 'vue';
 
 import type { IDisplaySettings, INews } from '../model';
-import { ListSkeleton } from '@/modules/widgets/base';
+import { BaseErrorComponent, ListSkeleton } from '@/modules/widgets/base';
 
 import NewsComponent from './news-component.vue';
 
@@ -12,6 +12,7 @@ interface IViewNewsComponentProps {
 	displaySettings: IDisplaySettings;
 	displayVariant: 'tv' | 'dashboard';
 	maxCountRowTablet?: number;
+	isError?: boolean;
 }
 
 const props = withDefaults(defineProps<IViewNewsComponentProps>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<IViewNewsComponentProps>(), {
 const emits = defineEmits<{
 	next: [];
 	'select-news': [{ id: string; slug: string }];
+	refetch: [];
 }>();
 
 const scrollerRef = useTemplateRef('scroller');
@@ -141,6 +143,9 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 				<div v-if="props.isLoading" :class="classes.skeletonWrapper">
 					<list-skeleton />
 				</div>
+				<div v-else-if="props.isError" :class="classes.errorWrapper">
+					<base-error-component @retry="emits('refetch')" />
+				</div>
 
 				<template v-else>
 					<news-component
@@ -183,5 +188,9 @@ defineExpose({ scrollBy, calcMaxCountRowVisible, snapHeightToNearestStep });
 
 .skeletonWrapper {
 	padding: 0 12px;
+}
+
+.errorWrapper {
+	height: 300px;
 }
 </style>

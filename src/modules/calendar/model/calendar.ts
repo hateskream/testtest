@@ -134,13 +134,13 @@ export interface IEventBoardRequest {
 
 /* DAILY INFO SECTION */
 export interface IDailyInfoMetrics {
-	crypto_events: number;
+	crypto_events?: number;
 	dividends: number;
 	earnings: number;
 	economic: number;
-	ipo: number;
-	news: number;
-	splits: number;
+	ipo?: number;
+	news?: number;
+	splits?: number;
 }
 
 export interface IDailyInfoItem {

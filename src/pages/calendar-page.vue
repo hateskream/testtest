@@ -17,6 +17,9 @@ import {
 	useInfiniteQueryEventBoard,
 	useQueryDailyInfo, CalendarPreloaderComponent,
 } from '@/modules/calendar';
+import { BaseErrorComponent } from '@/modules/widgets/base';
+
+import CalendarDaysPreloaderComponent from '@/modules/calendar/ui/common/calendar-days-preloader-component.vue';
 
 const route = useRoute();
 
@@ -134,8 +137,12 @@ function onUpdateWeek(date: Date) {
 						v-model:range="limit"
 					/>
 
+					<calendar-days-preloader-component
+						v-if="dailyInfo.isLoading && !dailyInfo.data"
+					/>
+
 					<calendar-page-daily-info
-						v-if="!dailyInfo.isLoading && dailyInfo.data"
+						v-else-if="!dailyInfo.isLoading && dailyInfo.data"
 						:today-str="todayStr"
 						:weeks="dailyInfo.data"
 						:selected-date="selectedDateStr"
@@ -143,6 +150,7 @@ function onUpdateWeek(date: Date) {
 					/>
 
 					<calendar-preloader-component v-if="query.isLoading" />
+					<base-error-component v-else-if="query.isError" @retry="query.refetch" />
 
 					<div v-else-if="query.data?.days.length" :class="classes.wrapper">
 						<tv-event-board
