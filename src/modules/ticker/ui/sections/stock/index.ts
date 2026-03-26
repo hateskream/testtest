@@ -3,3 +3,4 @@ export { default as OverviewSection } from './overview-section.vue';
 export { default as EarningsSection } from './earnings-section.vue';
 export { default as FinancialsSection } from './financials-section.vue';
 export { ValuationAndEstimates } from './valuation-and-estimates';
+export { default as InsiderTradingSection } from './insider-trading.vue';

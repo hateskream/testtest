@@ -4,10 +4,10 @@ import { Chart, type ChartDataset, type ChartOptions } from 'chart.js/auto';
 import type { TooltipOptions } from 'chart.js';
 
 import { prettyNumberWithKey } from '@/shared/lib';
-import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { formatPrice } from '@/modules/lightweight-charts/model';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { formatPrice } from '@/modules/charts/common/lib';
 import { getYearlyPointColor, type RevenueYearlyPoint } from '../../model';
 
 interface ILineChartProps {

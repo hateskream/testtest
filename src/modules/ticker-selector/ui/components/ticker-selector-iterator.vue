@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, type CSSProperties, nextTick, useTemplateRef, watch } from 'vue';
-import { useEventListener } from '@vueuse/core';
 
 import { MarketType } from '@/modules/market';
 import { UiSkeleton } from '@/shared/ui/skeleton';
@@ -17,20 +16,12 @@ interface ITickerSelectorIteratorProps {
 	marketType: MarketType;
 	searchQuery?: string;
 	maxHeight?: CSSProperties['max-height'];
-	enableShortcuts?: boolean;
-}
-
-interface ITickerSelectorIteratorEmits {
-	tickerShortcutSelect: [ticker: ITickerItem];
 }
 
 const props = withDefaults(defineProps<ITickerSelectorIteratorProps>(), {
 	maxHeight: '382px',
 	searchQuery: '',
-	enableShortcuts: false,
 });
-
-const emit = defineEmits<ITickerSelectorIteratorEmits>();
 
 const {
 	data,
@@ -101,33 +92,13 @@ watch(isLoading, loaded => {
 	}
 }, { immediate: true });
 
-const SHORTCUT_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
-
-useEventListener(document, 'keydown', (e: KeyboardEvent) => {
-	if (!props.enableShortcuts) {
-		return;
-	}
-
-	const activeEl = document.activeElement;
-
-	if (
-		activeEl instanceof HTMLInputElement ||
-		activeEl instanceof HTMLTextAreaElement
-	) {
-		return;
-	}
-
-	const keyIndex = SHORTCUT_KEYS.indexOf(e.key as (typeof SHORTCUT_KEYS)[number]);
-
-	if (keyIndex === -1) {
-		return;
-	}
-
-	const ticker = items.value[keyIndex];
-
-	if (ticker) {
-		emit('tickerShortcutSelect', ticker);
-	}
+watch(() => props.marketType, () => {
+	nextTick(() => {
+		const scrollElement = scrollFadeRef.value?.$el;
+		if (scrollElement) {
+			scrollElement.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	});
 });
 </script>
 
@@ -154,17 +125,17 @@ useEventListener(document, 'keydown', (e: KeyboardEvent) => {
 					<slot name="before-tickers" />
 
 					<template
-						v-for="(ticker, index) in items"
+						v-for="ticker in items"
 						:key="ticker.canonical_ticker_id"
 					>
-						<slot :ticker="ticker" :index="index" />
+						<slot :ticker="ticker" />
 					</template>
 
 					<ticker-selector-items-skeleton v-if="isFetchingNextPage" />
 				</template>
 
 				<ticker-selector-empty v-else>
-					Noting found in {{ props.marketType }}
+					Nothing found in {{ props.marketType }}
 				</ticker-selector-empty>
 			</div>
 		</ui-scroll-fade>

@@ -11,7 +11,6 @@ interface ITickerSelectorItemProps {
 	ticker: ITickerItem;
 	selectionMode: 'single' | 'multiple';
 	active?: boolean;
-	shortcutNumber?: number;
 }
 
 const props = defineProps<ITickerSelectorItemProps>();
@@ -58,14 +57,6 @@ const symbol = computed(() => {
 		</span>
 
 		<span :class="[classes.rightZone, { [classes.active]: props.active }]">
-			<span
-				v-if="props.shortcutNumber"
-				:class="classes.shortcut"
-				class="text-200-r"
-			>
-				{{ props.shortcutNumber }}
-			</span>
-
 			<span :class="classes.rightIcon">
 				<ui-icon
 					v-if="props.selectionMode === 'multiple'"
@@ -122,15 +113,6 @@ const symbol = computed(() => {
 
 .rightZone.active .rightIcon {
 	color: var(--icon-500, #ffffff);
-}
-
-.shortcut {
-	color: var(--text-100, rgb(255 255 255 / 30%));
-}
-
-.tickerItem:hover .shortcut,
-.rightZone.active .shortcut {
-	opacity: 0;
 }
 
 .radio {

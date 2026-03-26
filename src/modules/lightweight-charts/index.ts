@@ -1,4 +1,3 @@
-export { default as Chart } from './ui/chart-component.vue';
 export { default as ChartForecast } from './ui/chart-forecast-component.vue';
 export { default as ChartQuarterlyRevenue } from './ui/chart-quarterly-revenue-component.vue';
 export { default as ChartYearlyRevenue } from './ui/chart-yearly-revenue-component.vue';
@@ -6,8 +5,6 @@ export { default as ChartStockBulk } from './ui/chart-stock-bulk-component.vue';
 export { default as ChartDividends } from './ui/chart-dividends.vue';
 export { default as ChartBalanceSheet } from './ui/chart-balance-sheet.vue';
 export { default as ChartIncomeStatement } from './ui/chart-income-statement.vue';
-export { default as ChartMarketCap } from './ui/chart-market-cap.vue';
-export { default as ChartDominance } from './ui/chart-dominance.vue';
 export { default as ChartAltcoinSeason } from './ui/chart-altcoin-season.vue';
 export { default as ChartTooltip } from './ui/chart-tooltip.vue';
 export { default as ChartEps } from './ui/chart-eps.vue';
@@ -19,10 +16,3 @@ export { default as ChartTrailingReturns } from './ui/chart-trailing-returns.vue
 export { default as ChartHoldingsDiagram } from './ui/chart-holdings-diagram.vue';
 export { default as ChartStylebox } from './ui/chart-stylebox.vue';
 export { default as ChartSeasonals } from './ui/chart-seasonals.vue';
-export { default as ChartDateRange } from './ui/date-range/chart-date-range.vue';
-export { default as ChartDateRangeChange } from './ui/date-range/chart-date-range-change.vue';
-export { ChartExternalTooltip, ChartExternalTooltipRow } from './ui/external-tooltip';
-export { default as ChartNavigator } from './ui/navigator/chart-navigator.vue';
-export { ChartIndicatorsList } from './ui/indicators';
-
-export { default as ChartBar, type BarDataset } from './ui/chart-bar.vue';

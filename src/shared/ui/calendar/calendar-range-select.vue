@@ -15,6 +15,8 @@ interface IDatePickerModel {
 
 const props = defineProps<{
 	view: 'monthly' | 'weekly';
+	minDate?: Date;
+	maxDate?: Date;
 }>();
 
 
@@ -40,6 +42,8 @@ const dateRange = defineModel<IDateRange, string, DatePickerRangeObject, IDatePi
 		<ui-date-picker
 			v-model="dateRange"
 			:view="props.view"
+			:min-date="props.minDate"
+			:max-date="props.maxDate"
 			is-range
 		/>
 	</div>

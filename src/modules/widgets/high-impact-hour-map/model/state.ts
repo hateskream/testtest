@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { TimezoneUtc, TimezoneUtcSchema, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import { TimezoneUtc, TimezoneUtcSchema, type TimezoneUtcType } from '@/modules/charts/common/model';
 
 export interface IState {
 	timezone: TimezoneUtcType;

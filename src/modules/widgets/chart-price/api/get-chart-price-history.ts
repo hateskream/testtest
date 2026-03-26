@@ -4,7 +4,7 @@ import { useLogger } from '@/shared/service/monitoring';
 import { delay } from '@/shared/lib';
 import { ChartPriceHistoryDataSchema } from '../model';
 import { apiSchema, useApiClient } from '@/shared/service/api';
-import type { UtcSeconds } from '@/modules/lightweight-charts/model';
+import type { UtcSeconds } from '@/modules/charts/common/model';
 
 const IS_USE_MOCK = false;
 

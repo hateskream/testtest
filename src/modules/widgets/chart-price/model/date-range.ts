@@ -1,5 +1,5 @@
-import type { DateRangePresetType } from '@/modules/lightweight-charts/model';
-import { createPreset, DateRangePreset } from '@/modules/lightweight-charts/model';
+import type { DateRangePresetType } from '@/modules/charts/common/model';
+import { createPreset, DateRangePreset } from '@/modules/charts/common/model';
 
 export interface IFilterDisplay {
 	label: string;

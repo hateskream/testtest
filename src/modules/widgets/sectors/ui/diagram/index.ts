@@ -1,0 +1,1 @@
+export { SectorsDiagramTickerWidget } from './ticker';

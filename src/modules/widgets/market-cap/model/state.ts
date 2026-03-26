@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { type IDisplaySettings } from './display';
 import { type MarketCapType } from './market-cap';
 import { MarketType } from '@/modules/market';
-import { DateRangePreset, type DateRangeValue, DateRangeValueSchema } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangeValue, DateRangeValueSchema } from '@/modules/charts/common/model';
 
 export interface IState {
 	selectedTickers: string[];

@@ -23,6 +23,8 @@ interface ICalendarDatePickerProps {
 	trimWeeks?: boolean;
 	highlightToday?: boolean;
 	inputDebounce?: number;
+	minDate?: Date;
+	maxDate?: Date;
 }
 
 const props = withDefaults(defineProps<ICalendarDatePickerProps>(), {
@@ -34,6 +36,8 @@ const props = withDefaults(defineProps<ICalendarDatePickerProps>(), {
 	trimWeeks: true,
 	highlightToday: true,
 	inputDebounce: 1000,
+	minDate: undefined,
+	maxDate: undefined,
 });
 
 const modelValue = defineModel<DatePickerModel>({ required: true });
@@ -77,6 +81,8 @@ function onDayClick(_: CalendarDay, event: PointerEvent) {
 			:input-debounce="props.inputDebounce"
 			:locale="{ id: 'en', firstDayOfWeek: 2, masks: { weekdays: 'WWW' } }"
 			:class="classes.datePicker"
+			:min-date="props.minDate"
+			:max-date="props.maxDate"
 			color="white"
 			@update:pages="onUpdatePages"
 			@dayclick="onDayClick"

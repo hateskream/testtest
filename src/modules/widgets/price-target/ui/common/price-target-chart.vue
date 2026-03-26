@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartOptions, type Point } from 'chart.js';
 import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annotation';
+import { addMonths } from 'date-fns';
+import { useEventListener } from '@vueuse/core';
 
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import {
-	formatPrice,
-	millisecondsToUtcMilliseconds,
-	strTimeToChartTime,
-	type UtcSeconds,
-} from '@/modules/lightweight-charts/model';
-import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { strTimeToChartTime } from '@/modules/charts/lightweight/model';
+import { millisecondsToUtcMilliseconds, type UtcSeconds } from '@/modules/charts/common/model';
+import { createSplitLabel, formatPrice } from '@/modules/charts/common/lib';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { type IUseExternalTooltipState, useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import { UiText } from '@/shared/ui/text';
-import type { PriceTargetHistoryPoint } from '../../model';
+import { getForecastColor, getForecastLabelColors, getTriangleColor, type PriceTargetHistoryPoint } from '../../model';
 
 interface IPriceTargetChartProps {
 	history: PriceTargetHistoryPoint[];
@@ -63,20 +62,7 @@ function generateCurvedLine(
 	return result;
 }
 
-function getForecastColor(target: number, currentPrice: number) {
-	return target >= currentPrice ? '#04EDA0' : '#FC4A6B';
-}
-
-function getForecastAxisLabelColors(target: number, currentPrice: number)
-	: { axisLabelColor: string; axisLabelTextColor: string } {
-	if (target >= currentPrice) {
-		return { axisLabelColor: '#162D27', axisLabelTextColor: '#04EDA0' };
-	}
-
-	return { axisLabelColor: '#301219', axisLabelTextColor: '#FC1D4D' };
-}
-
-function gradient(context: PartialEventContext) {
+function boxGradient(context: PartialEventContext) {
 	const { element, chart: { ctx } } = context;
 
 	if (!element) {
@@ -97,12 +83,75 @@ function gradient(context: PartialEventContext) {
 	return g;
 }
 
+const LABEL_TOOLTIP_OFFSET = 5;
+
+const labelTooltipState = reactive<IUseExternalTooltipState>({
+	visible: false,
+	x: 0,
+	y: 0,
+	padding: 6,
+	title: [],
+	rows: [],
+});
+
+const LABEL_TOOLTIP_MAP: Record<string, string> = {
+	lastPrice: 'Current',
+	targetHigh: 'High',
+	targetAverage: 'Average',
+	targetLow: 'Low',
+} as const;
+
+function handleCanvasMouseMove(event: MouseEvent): void {
+	const instance = chart.value;
+
+	if (!instance) {
+		return;
+	}
+
+	const rect = instance.canvas.getBoundingClientRect();
+	const mouseX = event.clientX - rect.left;
+	const mouseY = event.clientY - rect.top;
+
+	const elements = annotationPlugin.getAnnotations(instance);
+
+	for (const el of elements) {
+		const id = el.options?.id;
+
+		if (!id || !(id in LABEL_TOOLTIP_MAP)) {
+			continue;
+		}
+
+		const labelEl = el.label;
+
+		if (!labelEl?.options?.display || !labelEl.inRange) {
+			continue;
+		}
+
+		if (labelEl.inRange(mouseX, mouseY)) {
+			labelTooltipState.visible = true;
+			labelTooltipState.x = rect.left + labelEl.centerX;
+			labelTooltipState.y = rect.top + labelEl.y2 + LABEL_TOOLTIP_OFFSET;
+			labelTooltipState.title = [LABEL_TOOLTIP_MAP[id]];
+			labelTooltipState.rows = [];
+			return;
+		}
+	}
+
+	labelTooltipState.visible = false;
+}
+
+function handleCanvasMouseLeave(): void {
+	labelTooltipState.visible = false;
+}
+
 function buildTargetAnnotation(
 	target: number,
-	label: string,
 	currentPrice: number,
+	label: string,
 ) {
-	const { axisLabelColor, axisLabelTextColor } = getForecastAxisLabelColors(target, currentPrice);
+	const { label: labelColor, text: textColor } = getForecastLabelColors(target, currentPrice);
+
+	const splitLabel = createSplitLabel(label, formatPrice(target), labelColor, textColor);
 
 	return {
 		type: 'line' as const,
@@ -113,18 +162,10 @@ function buildTargetAnnotation(
 		borderWidth: 0,
 		label: {
 			display: true,
-			content: `${label}  ${formatPrice(target)}`,
+			content: splitLabel,
 			position: 'end' as const,
-			xAdjust: 30,
-			backgroundColor: axisLabelColor,
-			color: axisLabelTextColor,
-			font: {
-				family: '\'Roboto Flex Variable\', sans-serif',
-				size: 9,
-				weight: 520,
-				lineHeight: '16.2px',
-			},
-			padding: { x: 6, y: 0 },
+			xAdjust: 24,
+			padding: 0,
 			z: 10,
 		},
 	};
@@ -132,6 +173,12 @@ function buildTargetAnnotation(
 
 function buildAnnotations() {
 	const currentPrice = lastPrice.value;
+
+	const splitLabel = createSplitLabel('C', formatPrice(currentPrice), '#2E2E32', '#fff');
+
+	const topBoxY = Math.max(props.targetAverage, currentPrice);
+	const bottomBoxY = Math.min(props.targetAverage, currentPrice);
+	const triangleX = addMonths(new Date(lastTime.value * 1000), 6).getTime();
 
 	return {
 		lastPrice: {
@@ -143,31 +190,42 @@ function buildAnnotations() {
 			borderWidth: 2,
 			label: {
 				display: true,
-				content: `C  ${formatPrice(currentPrice)}`,
+				content: splitLabel,
 				position: 'end' as const,
-				xAdjust: 30,
-				backgroundColor: '#323537',
-				color: '#fff',
-				font: {
-					family: '\'Roboto Flex Variable\', sans-serif',
-					size: 9,
-					weight: 520,
-					lineHeight: '16.2px',
-				},
-				padding: { x: 6, y: 0 },
+				xAdjust: 24,
+				padding: 0,
 				z: 10,
 			},
 		},
-		targetHigh: buildTargetAnnotation(props.targetHigh, 'H', currentPrice),
-		targetAverage: buildTargetAnnotation(props.targetAverage, 'A', currentPrice),
-		targetLow: buildTargetAnnotation(props.targetLow, 'L', currentPrice),
+		targetHigh: buildTargetAnnotation(props.targetHigh, currentPrice, 'H'),
+		targetAverage: buildTargetAnnotation(props.targetAverage, currentPrice, 'A'),
+		targetLow: buildTargetAnnotation(props.targetLow, currentPrice, 'L'),
 		box: {
 			type: 'box' as const,
-			backgroundColor: (context: PartialEventContext) => gradient(context),
+			backgroundColor: (context: PartialEventContext) => boxGradient(context),
 			borderWidth: 0,
-			yMax: Math.max(props.targetAverage, currentPrice),
-			yMin: Math.min(props.targetAverage, currentPrice),
+			yMax: topBoxY,
+			yMin: bottomBoxY,
 			xMin: props.history[props.history.length - 1].timestamp,
+		},
+		topTriangle: {
+			type: 'point' as const,
+			backgroundColor: getTriangleColor(props.targetAverage, currentPrice),
+			pointStyle: 'triangle',
+			borderWidth: 0,
+			radius: 5.4,
+			xValue: triangleX,
+			yValue: topBoxY + 11,
+			rotation: 180,
+		},
+		bottomTriangle: {
+			type: 'point' as const,
+			backgroundColor: getTriangleColor(props.targetAverage, currentPrice),
+			pointStyle: 'triangle',
+			borderWidth: 0,
+			radius: 5.4,
+			xValue: triangleX,
+			yValue: bottomBoxY - 11,
 		},
 	};
 }
@@ -347,6 +405,9 @@ onMounted(() => {
 	createPriceTargetChart();
 });
 
+useEventListener(container, 'mousemove', handleCanvasMouseMove);
+useEventListener(container, 'mouseleave', handleCanvasMouseLeave);
+
 function updateChartData() {
 	const instance = chart.value;
 
@@ -378,15 +439,9 @@ onBeforeUnmount(destroyChart);
 </script>
 
 <template>
-	<div
-		:class="classes.wrapper"
-		:style="{ height: `${props.height}px` }"
-	>
+	<div :class="classes.wrapper" :style="{ height: `${props.height}px` }">
 		<div :style="{ height: `${props.height - 40}px` }">
-			<canvas
-				ref="container"
-				:class="classes.chart"
-			></canvas>
+			<canvas ref="container" :class="classes.chart"></canvas>
 		</div>
 		<div :class="classes.legend">
 			<div :class="classes.legendItem">
@@ -398,6 +453,11 @@ onBeforeUnmount(destroyChart);
 		</div>
 		<teleport to="body">
 			<chart-external-tooltip v-bind="state" />
+			<chart-external-tooltip width="auto" v-bind="labelTooltipState">
+				<template #content="{ title }">
+					<ui-text token="text-200-r">{{ title[0] }}</ui-text>
+				</template>
+			</chart-external-tooltip>
 		</teleport>
 	</div>
 </template>

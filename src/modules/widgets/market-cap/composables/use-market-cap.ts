@@ -13,7 +13,7 @@ import {
 import { useQueryMarketCap } from '../queries';
 import { deepCompare } from '@/shared/lib/compare.ts';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
-import type { DateRangeValue } from '@/modules/lightweight-charts/model';
+import type { DateRangeValue } from '@/modules/charts/common/model';
 
 interface IOptions {
 	widgetId: string;

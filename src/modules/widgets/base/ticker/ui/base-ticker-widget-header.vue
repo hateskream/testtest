@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { UiWidgetLabel } from '@/shared/ui/widget-label';
-
-interface IBaseTickerWidgetHeaderProps {
-	disabled?: boolean;
-}
-
-const props = defineProps<IBaseTickerWidgetHeaderProps>();
 </script>
 
 <template>
 	<div :class="classes.header">
+		<slot name="left" />
 		<slot name="label">
-			<ui-widget-label :disabled="props.disabled">
+			<ui-widget-label disabled>
 				<slot />
 			</ui-widget-label>
 		</slot>

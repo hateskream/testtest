@@ -1,1 +1,3 @@
-export { SectorsTickerWidget } from './ticker';
+export * from './table';
+export * from './diagram';
+export * from './analysis';

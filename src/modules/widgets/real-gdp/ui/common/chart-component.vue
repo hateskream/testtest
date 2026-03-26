@@ -2,9 +2,10 @@
 import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
-import type { BarDataset } from '@/modules/lightweight-charts';
-import { ChartBar, ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { useAdaptiveBarPoints, useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import type { BarDataset } from '@/modules/charts/chart-js';
+import { ChartBar, ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { useAdaptiveBarPoints } from '@/modules/charts/common/composables';
 import { type RealGdpHistoryPoint, RealGdpValueType, type RealGdpValueTypeType } from '../../model';
 
 const BAR_WIDTH = 15;

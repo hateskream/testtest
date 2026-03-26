@@ -2,7 +2,7 @@
 import { type INewsSource } from '@/modules/news';
 import { UiText } from '@/shared/ui/text';
 
-defineProps<{
+const props = defineProps<{
 	sources: INewsSource[];
 }>();
 </script>
@@ -12,11 +12,11 @@ defineProps<{
 		<h3 class="title-100">Sources</h3>
 		<ul :class="classes.sourceList" class="text-300-r">
 			<li
-				v-for="source in sources"
+				v-for="source in props.sources"
 				:key="source.url"
 				:class="classes.source"
 			>
-				<a :href="source.url">{{ source.site }}</a> /
+				<span :class="classes.source"><a :href="source.url">{{ source.site }}</a> /</span>
 			</li>
 		</ul>
 		<ui-text token="text-50-r" :class="classes.note">Summarised by i88</ui-text>
@@ -35,6 +35,10 @@ defineProps<{
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
+}
+
+.source {
+	white-space: nowrap;
 }
 
 .sourceList a {

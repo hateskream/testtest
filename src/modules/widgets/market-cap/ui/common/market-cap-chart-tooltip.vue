@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 
-import { ChartExternalTooltipRow } from '@/modules/lightweight-charts';
+import { ChartExternalTooltipRow } from '@/modules/charts/chart-js';
 import { UiText } from '@/shared/ui/text';
 
 interface IMarketCapChartTooltipProps {

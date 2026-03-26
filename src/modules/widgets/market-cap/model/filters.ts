@@ -1,4 +1,4 @@
-import { DateRangePreset, type DateRangePresetType, getDateRangePresetLabel } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangePresetType, getDateRangePresetLabel } from '@/modules/charts/common/model';
 
 export const MarketCapDateRangePreset = {
 	Day: DateRangePreset.Day,

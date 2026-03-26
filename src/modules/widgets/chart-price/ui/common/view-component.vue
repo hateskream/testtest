@@ -7,7 +7,7 @@ import { type ChartPriceCurrentData, type ChartPriceHistoryPoint } from '@/modul
 import { randomInt } from '@/shared/lib';
 import { type IMarketSegment, isTimelineEventsVisible, MarketSegmentState } from '../../model';
 import { CalendarCategory, CalendarCountryIds, CalendarImpact } from '@/modules/calendar';
-import type { DateRangeValue } from '@/modules/lightweight-charts/model';
+import type { DateRangeValue } from '@/modules/charts/common/model';
 
 import ChartPrice from './chart-price.vue';
 

@@ -2,7 +2,7 @@
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js/auto';
 
-import { barDashedBorderPlugin } from '../plugins/bar-dashed-border';
+import { barDashedBorderPlugin } from '@/modules/charts/chart-js/plugins';
 
 import ChartLegends from './chart-legends.vue';
 

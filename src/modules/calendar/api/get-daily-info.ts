@@ -8,13 +8,13 @@ import type { IDailyInfoRequest } from '../model/calendar';
 const IS_USE_MOCK = false;
 
 const DailyInfoMetricsSchema = z.object({
-	crypto_events: z.number(),
+	crypto_events: z.number().optional(),
 	dividends: z.number(),
 	earnings: z.number(),
 	economic: z.number(),
-	ipo: z.number(),
-	news: z.number(),
-	splits: z.number(),
+	ipo: z.number().optional(),
+	news: z.number().optional(),
+	splits: z.number().optional(),
 });
 
 const DailyInfoItemSchema = z.object({

@@ -1,5 +1,5 @@
 import { CpiDateRangePreset, CpiValueType, type CpiValueTypeType } from './cpi';
-import { getDateRangePresetTitle } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetTitle } from '@/modules/charts/common/model';
 
 export const rangeFilters = Object.values(CpiDateRangePreset)
 	.map(option => ({ label: getDateRangePresetTitle(option), value: option }));

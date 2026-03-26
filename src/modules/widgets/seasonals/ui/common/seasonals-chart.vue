@@ -6,10 +6,10 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays } from 'date-fns';
 
 import type { SeasonalSeries } from '../../model';
-import { ChartExternalTooltip } from '@/modules/lightweight-charts';
-import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/lightweight-charts/plugins';
-import { formatPercent } from '@/modules/lightweight-charts/model';
-import { useExternalTooltip } from '@/modules/lightweight-charts/composables';
+import { ChartExternalTooltip } from '@/modules/charts/chart-js';
+import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { createSplitLabel, formatPercent } from '@/modules/charts/common/lib';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import { getDateFormatter, hexToRgba } from '@/shared/lib';
 
 import SeasonalsChartLegend from './seasonals-chart-legend.vue';
@@ -73,6 +73,13 @@ const labels = computed(() => {
 
 function buildAnnotations() {
 	return Object.fromEntries(props.series.map(entry => {
+		const splitLabel = createSplitLabel(
+			entry.year.toString(),
+			`${entry.ytdChangePct}%`,
+			generateLabelColor(entry.color),
+			entry.color,
+		);
+
 		return [
 			entry.year,
 			{
@@ -82,18 +89,10 @@ function buildAnnotations() {
 				borderWidth: 0,
 				label: {
 					display: true,
-					content: `${entry.year}   ${entry.ytdChangePct}%`,
+					content: splitLabel,
 					position: 'end' as const,
-					xAdjust: 30,
-					backgroundColor: generateLabelColor(entry.color),
-					color: entry.color,
-					font: {
-						family: '\'Roboto Flex Variable\', sans-serif',
-						size: 9,
-						weight: 520,
-						lineHeight: '16.2px',
-					},
-					padding: { x: 6, y: 0 },
+					xAdjust: 26,
+					padding: 0,
 					z: 10,
 				},
 			},

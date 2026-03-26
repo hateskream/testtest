@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import { createTickerSnapshot, getDefaultChartType, getDefaultDateRange, getDefaultTimezone } from '../model';
 import { useQueryChartPriceChanges, useQueryChartPriceHistory } from '../queries';
-import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/lightweight-charts/model';
+import { DateRangePreset, type DateRangeValue, type TimezoneUtcType } from '@/modules/charts/common/model';
 import { download } from '@/shared/lib';
 import { fetchTickers, type ITickerItem } from '@/modules/ticker-selector';
 import type { IndicatorType } from '@/modules/indicator';

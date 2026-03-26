@@ -7,7 +7,7 @@ import {
 	createTickerIdIndex,
 	SymbolType,
 } from '@/modules/cell';
-import { createPreset, type DateRangeValue, TimezoneUtc } from '@/modules/lightweight-charts/model';
+import { createPreset, type DateRangeValue, TimezoneUtc } from '@/modules/charts/common/model';
 import { ChartPriceDateRangePreset } from './date-range.ts';
 
 export interface IState {

@@ -1,0 +1,29 @@
+{
+  "sentiment": {
+    "label": "Cashing Out",
+    "status": "negative"
+  },
+  "max_change": 70000000,
+  "periods": [
+    {
+      "period": "1–3 month",
+      "change": -19690000,
+      "status": "negative"
+    },
+    {
+      "period": "3–6 month",
+      "change": 25690000,
+      "status": "positive"
+    },
+    {
+      "period": "6–9 month",
+      "change": -19690000,
+      "status": "negative"
+    },
+    {
+      "period": "9–12 month",
+      "change": -19690000,
+      "status": "negative"
+    }
+  ]
+}

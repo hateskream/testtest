@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { prettyNumberWithKey } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
-import { formatPrice } from '@/modules/lightweight-charts/model';
+import { formatPrice } from '@/modules/charts/common/lib';
 
 interface IChartPriceHeaderProps {
 	showTime?: boolean;

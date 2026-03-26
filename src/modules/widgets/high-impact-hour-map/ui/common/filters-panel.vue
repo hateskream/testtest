@@ -9,7 +9,7 @@ import {
 	timeZoneUtcFilters,
 	timezoneUtcToIntl,
 	type TimezoneUtcType,
-} from '@/modules/lightweight-charts/model';
+} from '@/modules/charts/common/model';
 
 const emit = defineEmits<{
 	reset: [];

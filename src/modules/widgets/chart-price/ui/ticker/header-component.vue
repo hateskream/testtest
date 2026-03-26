@@ -12,7 +12,7 @@ import {
 	getTimezoneUtcLabel,
 	timeZoneUtcFilters,
 	type TimezoneUtcType,
-} from '@/modules/lightweight-charts/model';
+} from '@/modules/charts/common/model';
 import { UiControlIcon } from '@/shared/ui/control-icon';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import type { IFilterOption } from '@/modules/widgets/base/modal/model';
@@ -21,7 +21,7 @@ import { ModalBadgeFilter } from '@/modules/widgets/base';
 import { UiTooltipBase } from '@/shared/ui/tooltip-base';
 import { UiScrollableRow } from '@/shared/ui/scrollable-row';
 import type { IndicatorType } from '@/modules/indicator';
-import { ChartIndicatorsList } from '@/modules/lightweight-charts';
+import { ChartIndicatorsList } from '@/modules/charts/common';
 import { UiPositionTooltip } from '@/shared/ui/position';
 import { UiModalContent, UiModalWrapper } from '@/shared/ui/modal';
 import { UiModalItem } from '@/shared/ui/modal-items';

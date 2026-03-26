@@ -27,7 +27,7 @@ const {
 	defaultStateType: '',
 });
 
-const { data, fetchNextPage, isLoading } = useQueryNews(computed<IGetNewsRequest>(() => ({
+const { data, fetchNextPage, isLoading, refetch, isError } = useQueryNews(computed<IGetNewsRequest>(() => ({
 	offset: 0,
 	score: selectedScores.value,
 	segment: selectedSegmentsRequest.value,
@@ -91,9 +91,11 @@ const news = computed(() => {
 			:news="news"
 			:is-loading="isLoading"
 			:display-settings="displaySettings"
+			:is-error="isError"
 			display-variant="tv"
 			@next="fetchNextPage"
 			@select-news="selectNews($event.id)"
+			@refetch="refetch"
 		/>
 	</div>
 </template>

@@ -2,7 +2,7 @@ import { useHttpService } from '@/shared/service/http-service';
 import { delay } from '@/shared/lib';
 import { useLogger } from '@/shared/service/monitoring';
 
-const IS_USE_MOCK = true;
+const IS_USE_MOCK = false;
 
 export interface ICurrentSentimentRequest {
 	tickerId: string;
@@ -28,7 +28,7 @@ function getCurrentSentimentApi(args: ICurrentSentimentRequest) {
 	const httpService = useHttpService();
 
 	try {
-		return httpService.get<ICurrentSentimentResponse>('/api/ticker/current-sentiment', {
+		return httpService.get<ICurrentSentimentResponse>('/api/v1/current-sentiment/data', {
 			query: {
 				ticker_id: args.tickerId,
 			},

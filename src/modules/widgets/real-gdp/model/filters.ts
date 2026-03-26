@@ -1,5 +1,5 @@
 import { RealGdpDateRangePreset, RealGdpValueType, type RealGdpValueTypeType } from './real-gdp';
-import { getDateRangePresetTitle } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetTitle } from '@/modules/charts/common/model';
 
 export const rangeFilters = Object.values(RealGdpDateRangePreset).map(d => {
 	return {

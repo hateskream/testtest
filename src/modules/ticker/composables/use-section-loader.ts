@@ -32,6 +32,8 @@ export function useTickerSectionLoader(componentType: Ref<TickerSectionComponent
 			import('@/modules/ticker/ui/sections/stock').then(m => m.EarningsSection),
 		[TICKER_SECTION_COMPONENT.STOCK_FINANCIALS]: () =>
 			import('@/modules/ticker/ui/sections/stock').then(m => m.FinancialsSection),
+		[TICKER_SECTION_COMPONENT.STOCK_INSIDER_TRADING]: () =>
+			import('@/modules/ticker/ui/sections/stock').then(m => m.InsiderTradingSection),
 
 		// crypto
 		[TICKER_SECTION_COMPONENT.CRYPTO_OVERVIEW]: () =>

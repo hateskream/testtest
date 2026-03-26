@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import { useTickerContext } from '@/modules/ticker/composables';
 import { TickerAnnualReturnsWidget } from '@/modules/widgets/annual-returns';
+import { AnnualMarginTrendsTickerWidget } from '@/modules/widgets/annual-margin-trends';
+import { isFeatureEnabled } from '@/shared/lib';
 
 const { tickerId } = useTickerContext();
+
+const annualReturnsIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANNUAL_MARGIN_TRENDS_ENABLED');
+const annualMarginTrendsIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANNUAL_RETURNS_ENABLED');
 </script>
 
 <template>
 	<div :class="classes.section">
 		<div :class="classes.metrics">
-			<ticker-annual-returns-widget :meta="{ tickerId, name: 'Annual Returns' }" />
+			<ticker-annual-returns-widget
+				v-if="annualReturnsIsEnabled"
+				:class="classes.metricsItem"
+				:meta="{ tickerId, name: 'Annual Returns' }"
+			/>
+			<annual-margin-trends-ticker-widget
+				v-if="annualMarginTrendsIsEnabled"
+				:class="classes.metricsItem"
+				:meta="{ tickerId, name: 'Annual Margin Trends' }"
+			/>
 		</div>
 	</div>
 </template>
@@ -28,5 +42,25 @@ const { tickerId } = useTickerContext();
 	align-items: flex-start;
 	align-self: stretch;
 	gap: 6px;
+}
+
+.metricsItem {
+	height: 330px;
+}
+
+@container root (width >= 580px) {
+	.metricsItem {
+		flex: 1 0 0;
+	}
+}
+
+@container root (width < 580px) {
+	.metrics {
+		flex-direction: column;
+	}
+
+	.metricsItem {
+		width: 100%;
+	}
 }
 </style>

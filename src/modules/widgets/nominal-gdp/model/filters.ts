@@ -1,5 +1,5 @@
 import { NominalGdpDateRangePreset } from './nominal-gdp';
-import { getDateRangePresetTitle } from '@/modules/lightweight-charts/model';
+import { getDateRangePresetTitle } from '@/modules/charts/common/model';
 
 export const rangeFilters = Object.values(NominalGdpDateRangePreset).map(d => {
 	return {

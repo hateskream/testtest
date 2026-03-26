@@ -2,7 +2,7 @@
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js/auto';
 
-import { generateQuartalLabels, generateRandomNumbers } from '../utils';
+import { generateQuartalLabels, generateRandomNumbers } from '@/modules/charts/chart-js/lib';
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 
 const container = useTemplateRef('container');
