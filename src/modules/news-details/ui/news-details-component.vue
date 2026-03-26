@@ -16,6 +16,7 @@ import NewsDetailsTickersComponent from './details/news-details-tickers-componen
 const props = defineProps<{
 	displayVariant: 'new' | 'default';
 	uuid: string;
+	isLoading?: boolean;
 }>();
 
 const route = useRoute();
@@ -45,7 +46,7 @@ const isNewsPage = computed(
 
 <template>
 	<div :class="classes.root">
-		<news-details-skeleton-component v-if="isLoading" />
+		<news-details-skeleton-component v-if="isLoading || props.isLoading" />
 
 		<base-error-component v-else-if="isError" @retry="refetch" />
 

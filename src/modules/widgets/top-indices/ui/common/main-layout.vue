@@ -17,8 +17,12 @@ const props = defineProps<IViewComponentProps>();
 
 const { goToTickerPage } = useGoToTickerPage();
 
-const genericColumns = computed(() =>
-	mapColumn(props.columns),
+const genericColumns = computed(() => {
+	const columns = mapColumn(props.columns);
+	columns[0].minWidth = 200;
+	return columns;
+
+},
 );
 
 const genericRows = computed(() =>
@@ -46,6 +50,7 @@ const genericRows = computed(() =>
 				:enable-row-actions="false"
 				:show-header="false"
 				:hide-description="false"
+				no-vertical-scroll
 				@click-on-ticker="goToTickerPage"
 			/>
 		</div>

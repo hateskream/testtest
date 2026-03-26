@@ -60,13 +60,13 @@ export function useCustomScrollbar(
 			scrollLeft,
 		} = container;
 
-		showVerticalScrollbar.value = scrollHeight > clientHeight;
+		showVerticalScrollbar.value = scrollHeight > (clientHeight+5);
 		if (showVerticalScrollbar.value) {
 			verticalThumbHeight.value = finalConfig.fixedThumbLength;
 
-			const containerHeight = clientHeight;
+			const trackHeight = verticalTrackRef.value?.clientHeight ?? clientHeight;
 			const availableTrackHeight =
-				containerHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+				trackHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 			const maxScrollTop = scrollHeight - clientHeight;
 			verticalThumbTop.value = maxScrollTop > 0 && availableTrackHeight > 0
@@ -78,8 +78,8 @@ export function useCustomScrollbar(
 		if (showHorizontalScrollbar.value) {
 			horizontalThumbWidth.value = finalConfig.fixedThumbLength;
 
-			const containerWidth = clientWidth;
-			const availableTrackWidth = containerWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+			const trackWidth = horizontalTrackRef.value?.clientWidth ?? clientWidth;
+			const availableTrackWidth = trackWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 			const maxScrollLeft = scrollWidth - clientWidth;
 			horizontalThumbLeft.value = maxScrollLeft > 0 && availableTrackWidth > 0
@@ -107,8 +107,8 @@ export function useCustomScrollbar(
 		const container = scrollContainerRef.value;
 		const maxScrollTop = container.scrollHeight - container.clientHeight;
 
-		const containerHeight = container.clientHeight;
-		const availableTrackHeight = containerHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+		const trackHeight = verticalTrackRef.value?.clientHeight ?? container.clientHeight;
+		const availableTrackHeight = trackHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 		if (availableTrackHeight > 0 && maxScrollTop > 0) {
 			const scrollRatio = maxScrollTop / availableTrackHeight;
@@ -120,8 +120,8 @@ export function useCustomScrollbar(
 	const handleVerticalMouseUp = () => {
 		isDraggingVertical.value = false;
 		setDraggingCursor(false);
-		document.removeEventListener('mousemove', handleVerticalMouseMove);
-		document.removeEventListener('mouseup', handleVerticalMouseUp);
+		document.removeEventListener('pointermove', handleVerticalMouseMove);
+		document.removeEventListener('pointerup', handleVerticalMouseUp);
 	};
 
 	const handleVerticalMouseDown = (e: MouseEvent) => {
@@ -131,8 +131,8 @@ export function useCustomScrollbar(
 		dragStartY.value = e.clientY;
 		scrollStartTop.value = scrollContainerRef.value?.scrollTop || 0;
 		setDraggingCursor(true);
-		document.addEventListener('mousemove', handleVerticalMouseMove);
-		document.addEventListener('mouseup', handleVerticalMouseUp);
+		document.addEventListener('pointermove', handleVerticalMouseMove);
+		document.addEventListener('pointerup', handleVerticalMouseUp);
 	};
 
 	const handleHorizontalMouseMove = (e: MouseEvent) => {
@@ -144,8 +144,8 @@ export function useCustomScrollbar(
 		const container = scrollContainerRef.value;
 		const maxScrollLeft = container.scrollWidth - container.clientWidth;
 
-		const containerWidth = container.clientWidth;
-		const availableTrackWidth = containerWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+		const trackWidth = horizontalTrackRef.value?.clientWidth ?? container.clientWidth;
+		const availableTrackWidth = trackWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 		if (availableTrackWidth > 0 && maxScrollLeft > 0) {
 			const scrollRatio = maxScrollLeft / availableTrackWidth;
@@ -157,8 +157,8 @@ export function useCustomScrollbar(
 	const handleHorizontalMouseUp = () => {
 		isDraggingHorizontal.value = false;
 		setDraggingCursor(false);
-		document.removeEventListener('mousemove', handleHorizontalMouseMove);
-		document.removeEventListener('mouseup', handleHorizontalMouseUp);
+		document.removeEventListener('pointermove', handleHorizontalMouseMove);
+		document.removeEventListener('pointerup', handleHorizontalMouseUp);
 	};
 
 	const handleHorizontalMouseDown = (e: MouseEvent) => {
@@ -168,8 +168,8 @@ export function useCustomScrollbar(
 		dragStartX.value = e.clientX;
 		scrollStartLeft.value = scrollContainerRef.value?.scrollLeft || 0;
 		setDraggingCursor(true);
-		document.addEventListener('mousemove', handleHorizontalMouseMove);
-		document.addEventListener('mouseup', handleHorizontalMouseUp);
+		document.addEventListener('pointermove', handleHorizontalMouseMove);
+		document.addEventListener('pointerup', handleHorizontalMouseUp);
 	};
 
 	const handleVerticalTrackClick = (e: MouseEvent) => {
@@ -187,8 +187,8 @@ export function useCustomScrollbar(
 		const container = scrollContainerRef.value;
 		const maxScrollTop = container.scrollHeight - container.clientHeight;
 
-		const containerHeight = container.clientHeight;
-		const availableTrackHeight = containerHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+		const trackHeight = verticalTrackRef.value.clientHeight;
+		const availableTrackHeight = trackHeight - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 		if (availableTrackHeight > 0) {
 			const scrollRatio = thumbCenter / availableTrackHeight;
@@ -211,8 +211,8 @@ export function useCustomScrollbar(
 		const container = scrollContainerRef.value;
 		const maxScrollLeft = container.scrollWidth - container.clientWidth;
 
-		const containerWidth = container.clientWidth;
-		const availableTrackWidth = containerWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
+		const trackWidth = horizontalTrackRef.value.clientWidth;
+		const availableTrackWidth = trackWidth - finalConfig.grabAreaPadding * 2 - finalConfig.fixedThumbLength;
 
 		if (availableTrackWidth > 0) {
 			const scrollRatio = thumbCenter / availableTrackWidth;
@@ -233,6 +233,13 @@ export function useCustomScrollbar(
 		const resizeObserver = new ResizeObserver(updateScrollbars);
 		resizeObserver.observe(container);
 
+		if (horizontalTrackRef.value) {
+			resizeObserver.observe(horizontalTrackRef.value);
+		}
+		if (verticalTrackRef.value) {
+			resizeObserver.observe(verticalTrackRef.value);
+		}
+
 		onUnmounted(() => {
 			container.removeEventListener('scroll', updateScrollbars);
 			window.removeEventListener('resize', updateScrollbars);
@@ -240,10 +247,10 @@ export function useCustomScrollbar(
 
 			setDraggingCursor(false);
 
-			document.removeEventListener('mousemove', handleVerticalMouseMove);
-			document.removeEventListener('mouseup', handleVerticalMouseUp);
-			document.removeEventListener('mousemove', handleHorizontalMouseMove);
-			document.removeEventListener('mouseup', handleHorizontalMouseUp);
+			document.removeEventListener('pointermove', handleVerticalMouseMove);
+			document.removeEventListener('pointerup', handleVerticalMouseUp);
+			document.removeEventListener('pointermove', handleHorizontalMouseMove);
+			document.removeEventListener('pointerup', handleHorizontalMouseUp);
 		});
 	});
 
