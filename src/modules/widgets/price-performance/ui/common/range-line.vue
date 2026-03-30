@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -29,20 +28,24 @@ const currentRange = computed((): IRangeItem => {
 	return props.ranges[selectedPeriod.value];
 });
 
+function clampPercentage(value: number): number {
+	return Math.max(0, Math.min(100, value));
+}
+
 const startPercentage = computed(() => {
 	const { min, max, start }: IRangeItem = currentRange.value;
-	if (max === min) {
-		return 0;
+	if (max <= min) {
+		return 50;
 	}
-	return ((start - min) / (max - min)) * 100;
+	return clampPercentage(((start - min) / (max - min)) * 100);
 });
 
 const currentPercentage = computed(() => {
 	const { min, max }: IRangeItem = currentRange.value;
-	if (max === min) {
-		return 0;
+	if (max <= min) {
+		return 50;
 	}
-	return ((props.currentValue - min) / (max - min)) * 100;
+	return clampPercentage(((props.currentValue - min) / (max - min)) * 100);
 });
 
 const isPriceUp = computed(() => {
@@ -63,6 +66,9 @@ const highlightStyle = computed(() => {
 });
 
 function formatCurrency(value: number): string {
+	if (value <= 0 && props.currentValue > 0) {
+		return '—';
+	}
 	return `${props.symbol}${value.toFixed(2)}`;
 }
 </script>
@@ -165,7 +171,6 @@ function formatCurrency(value: number): string {
 		background-color: var(--atom-base-50, rgb(73 73 80 / 52%));
 	}
 }
-
 
 .rangeBarBackground {
 	position: absolute;
