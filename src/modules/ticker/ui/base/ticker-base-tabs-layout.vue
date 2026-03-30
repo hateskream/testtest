@@ -30,7 +30,9 @@ const activeComponent = computed(() =>
 				:key="tab.id"
 				:class="classes.tab"
 				:aria-selected="selectedTabId === tab.id"
+				type="button"
 				@click="selectedTabId = tab.id"
+				@mousedown.prevent
 			>
 				<ui-text token="text-200-r">
 					{{ tab.title }}
