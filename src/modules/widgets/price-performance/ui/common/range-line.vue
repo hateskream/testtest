@@ -80,7 +80,7 @@ function formatCurrency(value: number): string {
 				:periods="periods"
 			/>
 			<div>
-				<div :class="classes.rangeLabel" class="text-100-r">High</div>
+				<div :class="[classes.rangeLabel, classes.rangeLabelRight]" class="text-100-r">High</div>
 				<div :class="classes.maxValue" class="text-100-r">{{ formatCurrency(currentRange.max) }}</div>
 			</div>
 		</div>
@@ -128,6 +128,9 @@ function formatCurrency(value: number): string {
 
 .rangeLabel {
 	color: var(--text-300, rgb(255 255 255 / 62%));
+	&.rangeLabelRight {
+		text-align: right;
+	}
 }
 
 .minValue,

@@ -208,8 +208,8 @@ function formatDate(date: string) {
 }
 
 .metricLabel {
-	margin-right: 4px;
 	color: var(--text-color-base-300);
+
 }
 
 .alignRight {
