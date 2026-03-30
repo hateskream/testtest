@@ -209,7 +209,6 @@ function formatDate(date: string) {
 
 .metricLabel {
 	color: var(--text-color-base-300);
-
 }
 
 .alignRight {

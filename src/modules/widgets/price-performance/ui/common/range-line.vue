@@ -128,6 +128,7 @@ function formatCurrency(value: number): string {
 
 .rangeLabel {
 	color: var(--text-300, rgb(255 255 255 / 62%));
+
 	&.rangeLabelRight {
 		text-align: right;
 	}
