@@ -8,6 +8,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
 import svgLoader from 'vite-svg-loader';
+import { qrcode } from 'vite-plugin-qrcode';
 
 import pkg from './package.json' with { type: 'json' };
 
@@ -61,6 +62,7 @@ export default defineConfig({
 		}),
 		filterDeepWarnings(),
 		svgLoader(),
+		qrcode(),
 	],
 	define: {
 		__APP_VERSION__: JSON.stringify(pkg.version),
