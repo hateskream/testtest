@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 
-import { TickerPageHeader, TickerPageHeaderPreloader, useQueryTickerPageMeta } from '@/modules/ticker-page';
+import {
+	TickerPageHeader,
+	TickerPageHeaderPreloader,
+	useQueryTickerPageMeta,
+	TickerPageHeaderError,
+} from '@/modules/ticker-page';
 import { useTickerContext } from '../../composables';
-import { BaseTickerWidgetError } from '@/modules/widgets/base';
+
 
 const { tickerId, changeTickerId, changeAboutText } = useTickerContext();
 
@@ -23,11 +28,13 @@ watch(() => data.value?.ticker.about, (value) => {
 </script>
 
 <template>
-	<base-ticker-widget-error
+	<ticker-page-header-error
 		v-if="isError && !isLoading"
-		:class="classes.error"
+		:ticker-id="tickerId"
 		@retry="refetch"
+		@on-ticker-select="handleTickerSelect"
 	/>
+
 	<ticker-page-header-preloader v-else-if="isLoading" />
 	<ticker-page-header
 		v-else-if="data"

@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import { type IDataProvider, type IExchange, type IPriceData, type ITickerItemExtended } from '../api';
 import { TickerIcon } from '@/shared/ui/ticker';
 import { UiText } from '@/shared/ui/text';
-import { UiPosition, UiPositionTooltip } from '@/shared/ui/position';
+import { UiPositionTooltip } from '@/shared/ui/position';
 import { UiImage } from '@/shared/ui/image';
 import { UiTooltipWrapper } from '@/shared/ui/tooltip';
-import { IconIds, UiIcon } from '@/shared/ui/icon';
-import { TickerSelectorSearchModal } from '@/modules/ticker-selector';
-import { ALL_MARKET_TYPES, MarketType } from '@/modules/market';
+import { IconIds } from '@/shared/ui/icon';
+import { MarketType } from '@/modules/market';
 import { UiTag } from '@/shared/ui/tag';
 import fmp from '@/assets/images/fmp.png';
 import { UiClamped } from '@/shared/ui/clamped';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiControlIcon } from '@/shared/ui/control-icon';
 
-import TickerHeaderBreadcrumbs from './components/header/ticker-header-breadcrumbs.vue';
 import TickerHeaderPrice from './components/header/ticker-header-price.vue';
+import TickerHeaderLayout from './components/header/ticker-header-layout.vue';
 
 const props = defineProps<{
 	ticker: ITickerItemExtended;
@@ -31,306 +28,140 @@ const emits = defineEmits<{
 	onTickerSelect: [ITickerItemExtended];
 }>();
 
-const selectedTickers = computed({
-	get: () => [props.ticker],
-	set: ([value]) => {
-		if (!value) {
-			return;
-		}
-
-		emits('onTickerSelect', value);
-	},
-});
-
 const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_ENABLED');
+
+function handleTickerSelect(canonicalId: string) {
+	emits('onTickerSelect', { ...props.ticker, canonical_ticker_id: canonicalId });
+}
 </script>
 
 <template>
-	<header :class="classes.header">
-		<div :class="classes.glowWrapper">
-			<div :class="classes.glow" :style="`--dominant-color: ${props.dominantColor}`" />
-		</div>
-
-		<div :class="classes.inner">
-			<ticker-header-breadcrumbs
-				:class="classes.breadcrumbsMobile"
-				:ticker="props.ticker"
+	<ticker-header-layout
+		:ticker="ticker"
+		:dominant-color="dominantColor"
+		@on-ticker-select="handleTickerSelect"
+	>
+		<template #logo>
+			<ticker-icon
+				:size="56"
+				:ticker="ticker.symbol"
+				:src="ticker.logo"
+				disable-glow
 			/>
+			<ticker-icon
+				v-if="ticker.currency && ticker.market_type === MarketType.Forex"
+				:class="classes.secondLogo"
+				:size="56"
+				:ticker="ticker.currency"
+				:src="ticker.currency_icon"
+				disable-glow
+			/>
+		</template>
 
-			<div :class="classes.left">
-				<div :class="classes.logoWrapper">
-					<ticker-icon
-						:size="56"
-						:ticker="props.ticker.symbol"
-						:src="props.ticker.logo"
-						disable-glow
+		<template #ticker-name>
+			{{ ticker.name }}
+		</template>
+
+		<template #description v-if="ticker.description">
+			<ui-position-tooltip placement="bottom-start" :close-delay="200">
+				<ui-clamped :rows="1">
+					<ui-text token="text-100-r">{{ ticker.description }}</ui-text>
+				</ui-clamped>
+
+				<template #content>
+					<ui-tooltip-wrapper
+						display-variant="new"
+						:class="classes.descriptionTooltip"
+					>
+						{{ ticker.description }}
+					</ui-tooltip-wrapper>
+				</template>
+			</ui-position-tooltip>
+		</template>
+
+		<template #badges>
+			<ui-tag v-if="exchange" icon-position="start">
+				<template #icon>
+					<ui-image
+						:src="exchange.logo_url"
+						width="16px"
+						height="16px"
+						:class="classes.exchangeIcon"
 					/>
-					<ticker-icon
-						v-if="props.ticker.currency && props.ticker.market_type === MarketType.Forex"
-						:class="classes.secondLogo"
-						:size="56"
-						:ticker="props.ticker.currency"
-						:src="props.ticker.currency_icon"
-						disable-glow
-					/>
-				</div>
+				</template>
+				<template #default>
+					{{ exchange.title }}
+				</template>
+			</ui-tag>
+			<ui-position-tooltip
+				placement="bottom-start"
+				:close-delay="200"
+			>
+				<ui-tag :class="classes.provider">
+					<ui-image
+						:src="dataProvider.logo_url"
+						width="16px"
+						height="16px"
+						show-loader
+						:class="classes.providerIcon"
+					>
+						<template #error>
+							<ui-image
+								:src="fmp"
+								width="16px"
+								height="16px"
+								:class="classes.providerIcon"
+							/>
+						</template>
+					</ui-image>
+				</ui-tag>
 
-				<div :class="classes.etc">
-					<ticker-header-breadcrumbs
-						:class="classes.breadcrumbs"
-						:ticker="props.ticker"
-					/>
-
-					<div :class="classes.bottom">
-						<div :class="classes.main">
-							<div :class="classes.ticker">
-								<ui-position placement="bottom-start">
-									<template #title="{ isVisible }">
-										<button :class="classes.tickerName">
-											<ui-text token="title-300">
-												{{props.ticker.name}}
-											</ui-text>
-
-											<ui-icon
-												:id="IconIds.DropdownDown"
-												width="16px"
-												height="16px"
-												:class="[classes.dropdownIcon, { [classes.active]: isVisible }]"
-											/>
-										</button>
-									</template>
-									<template #content>
-										<ticker-selector-search-modal
-											v-model:selected-tickers="selectedTickers"
-											:enabled-markets="ALL_MARKET_TYPES"
-										/>
-									</template>
-								</ui-position>
-
-								<div v-if="props.ticker.description" :class="classes.description">
-									<ui-position-tooltip placement="bottom-start" :close-delay="200">
-										<ui-clamped :rows="1">
-											<ui-text token="text-100-r">{{ props.ticker.description }}</ui-text>
-										</ui-clamped>
-
-										<template #content>
-											<ui-tooltip-wrapper
-												display-variant="new"
-												:class="classes.descriptionTooltip"
-											>
-												{{props.ticker.description}}
-											</ui-tooltip-wrapper>
-										</template>
-									</ui-position-tooltip>
-								</div>
-							</div>
-
-							<div :class="classes.badges">
-								<ui-tag v-if="props.exchange" icon-position="start">
-									<template #icon>
-										<ui-image
-											:src="props.exchange.logo_url"
-											width="16px"
-											height="16px"
-											:class="classes.exchangeIcon"
-										/>
-									</template>
-									<template #default>
-										{{ props.exchange.title }}
-									</template>
-								</ui-tag>
-								<ui-position-tooltip
-									placement="bottom-start"
-									:close-delay="200"
-								>
-									<ui-tag :class="classes.provider">
-										<ui-image
-											:src="props.dataProvider.logo_url"
-											width="16px"
-											height="16px"
-											show-loader
-											:class="classes.providerIcon"
-										>
-											<template #error>
-												<ui-image
-													:src="fmp"
-													width="16px"
-													height="16px"
-													:class="classes.providerIcon"
-												/>
-											</template>
-										</ui-image>
-									</ui-tag>
-
-									<template #content>
-										<ui-tooltip-wrapper :class="classes.tooltip" display-variant="new">
-											<div :class="classes.tooltipIcon">
-												<ui-image
-													:src="props.dataProvider.logo_url"
-													width="16px"
-													height="16px"
-													:class="classes.providerIcon"
-												/>
-											</div>
-											<div :class="classes.tooltipDescription">
-												<ui-text token="text-200-b">
-													A real-time {{props.ticker.name}} price <br>
-													data provided by {{props.dataProvider.title}}
-												</ui-text>
-											</div>
-										</ui-tooltip-wrapper>
-									</template>
-								</ui-position-tooltip>
-							</div>
+				<template #content>
+					<ui-tooltip-wrapper :class="classes.tooltip" display-variant="new">
+						<div :class="classes.tooltipIcon">
+							<ui-image
+								:src="dataProvider.logo_url"
+								width="16px"
+								height="16px"
+								:class="classes.providerIcon"
+							/>
 						</div>
+						<div :class="classes.tooltipDescription">
+							<ui-text token="text-200-b">
+								A real-time {{ ticker.name }} price <br>
+								data provided by {{ dataProvider.title }}
+							</ui-text>
+						</div>
+					</ui-tooltip-wrapper>
+				</template>
+			</ui-position-tooltip>
+		</template>
 
-						<ticker-header-price
-							:class="classes.price"
-							:price="props.price"
-						/>
-					</div>
-				</div>
-			</div>
+		<template #price>
+			<ticker-header-price :price="price" />
+		</template>
 
-			<div :class="classes.options">
-				<div :classes="classes.leftOptions">
-					<ticker-header-price
-						:class="classes.priceMobile"
-						:price="props.price"
-					/>
-				</div>
+		<template #price-mobile>
+			<ticker-header-price :price="price" />
+		</template>
 
-				<div :class="classes.rightOptions">
-					<ui-control-icon
-						v-if="isMoreOptionsEnabled"
-						:icon="IconIds.ThreeDots"
-						transparent
-					/>
-				</div>
-			</div>
-		</div>
-	</header>
+		<template #actions>
+			<ui-control-icon
+				v-if="isMoreOptionsEnabled"
+				:icon="IconIds.ThreeDots"
+				transparent
+			/>
+		</template>
+	</ticker-header-layout>
 </template>
 
 <style module="classes">
-.header {
-	position: relative;
-	display: flex;
-	align-items: center;
-	align-self: stretch;
-	padding: 16px 0;
-	border-bottom: 1px solid var(--color-border-surface-01, rgb(199 199 199 / 6%));
-	gap: 4px;
-	container: header / inline-size;
-}
-
-.glowWrapper {
-	position: absolute;
-	bottom: -61px;
-	left: -56px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	pointer-events: none;
-	touch-action: none;
-}
-
-.glow {
-	flex-shrink: 0;
-	width: 264px;
-	height: 199px;
-	background: var(--dominant-color, #ffffff);
-	border-radius: 264px;
-	filter: blur(88px);
-}
-
-.inner {
-	z-index: 1;
-	display: flex;
-	flex: 1 0 0;
-	justify-content: space-between;
-	align-items: flex-end;
-	gap: 8px;
-}
-
-.left {
-	display: flex;
-	flex: 1 0 0;
-	align-items: flex-end;
-	gap: 12px;
-}
-
-.logoWrapper {
-	display: flex;
-	align-items: center;
-}
-
 .secondLogo {
 	margin-left: -20px;
 }
 
-.etc {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: flex-start;
-	padding-right: var(--padding-padding-s11, 20px);
-	gap: var(--padding-padding-s4, 6px);
-}
-
-.separator {
-	pointer-events: none;
-}
-
-.bottom {
-	display: flex;
-	flex: 0 0 0;
-	align-items: end;
-	gap: 32px;
-}
-
-.main {
-	display: flex;
-	align-items: end;
-	gap: 12px;
-}
-
-.tickerName {
-	display: flex;
-	align-items: center;
-	padding: 0;
-	color: var(--text-500, rgb(255 255 255 / 96%));
-	white-space: nowrap;
-	cursor: pointer;
-	gap: var(--padding-padding-s2, 2px);
-}
-
-.dropdownIcon {
-	box-sizing: unset;
-	padding: 4px;
-	color: var(--text-300, rgb(255 255 255 / 62%));
-	transition: color 0.25s ease-in-out;
-}
-
-.tickerName:hover .dropdownIcon,
-.dropdownIcon.active {
-	color: var(--text-500, rgb(255 255 255 / 96%));
-}
-
-.description {
-	padding-bottom: var(--padding-padding-s2, 2px);
-	color: var(--text-300, rgb(255 255 255 / 62%));
-}
-
 .descriptionTooltip {
 	max-width: 608px;
-}
-
-.badges {
-	display: flex;
-	align-items: center;
-	padding: var(--padding-padding-s0, 0) 0;
-	gap: var(--padding-padding-s2, 2px);
 }
 
 .exchangeIcon {
@@ -360,53 +191,5 @@ const isMoreOptionsEnabled = isFeatureEnabled('TICKER_PAGE_HEADER_MORE_OPTIONS_E
 	display: flex;
 	align-items: center;
 	padding: var(--padding-padding-s3, 4px) 0;
-}
-
-.breadcrumbsMobile {
-	padding-bottom: 4px;
-}
-
-.breadcrumbsMobile,
-.priceMobile {
-	display: none;
-}
-
-.options {
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-}
-
-@media screen and (max-width: 519px) {
-	.breadcrumbs,
-	.price {
-		display: none;
-	}
-
-	.inner {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-
-	.breadcrumbsMobile,
-	.priceMobile {
-		display: flex;
-	}
-
-	.main {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: flex-start;
-		align-self: stretch;
-		gap: 0;
-	}
-
-	.badges {
-		display: flex;
-		align-items: center;
-		padding: var(--padding-padding-s3, 4px) 0;
-		gap: var(--padding-padding-s2, 2px);
-	}
 }
 </style>

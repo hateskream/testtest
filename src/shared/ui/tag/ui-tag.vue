@@ -18,7 +18,11 @@ const isReversed = computed(() => props.iconPosition === 'start');
 
 <template>
 	<div :class="[classes.tag, classes[props.color], { [classes.reversed]: isReversed }]">
-		<ui-text token="text-200-r" :class="classes.text">
+		<ui-text
+			v-if="$slots.default"
+			token="text-200-r"
+			:class="classes.text"
+		>
 			<slot />
 		</ui-text>
 		<slot name="icon">

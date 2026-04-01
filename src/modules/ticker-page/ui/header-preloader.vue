@@ -11,19 +11,21 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 			shape="circle"
 		/>
 		<div :class="classes.content">
-			<div :class="classes.tickerInfo">
-				<ui-skeleton
-					:class="classes.breadcrumbs"
-					height="var(--height-s12, 24px)"
-					width="100px"
-				/>
-				<ui-skeleton height="var(--height-s14, 32px)" width="200px" />
-				<ui-skeleton height="var(--height-s14, 20px)" width="200px" />
+			<div :class="classes.contentLeft">
+				<div :class="classes.tickerInfo">
+					<ui-skeleton
+						:class="classes.breadcrumbs"
+						height="var(--height-s12, 24px)"
+						width="140px"
+					/>
+					<ui-skeleton height="var(--height-s14, 32px)" width="200px" />
+				</div>
+				<div :class="classes.exchangeInfo">
+					<ui-skeleton height="var(--height-s12, 24px)" width="65px" />
+					<ui-skeleton height="var(--height-s12, 24px)" width="28px" />
+				</div>
 			</div>
-			<div :class="classes.exchangeInfo">
-				<ui-skeleton height="var(--height-s11, 20px)" width="80px" />
-				<ui-skeleton height="var(--height-s11, 20px)" width="40px" />
-			</div>
+			<ui-skeleton height="var(--height-s14, 20px)" width="200px" />
 		</div>
 		<ui-skeleton
 			:class="classes.more"
@@ -38,7 +40,6 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 	display: flex;
 	align-items: flex-end;
 	box-sizing: border-box;
-	height: 120px;
 	padding: var(--padding-s9, 16px) 0;
 	gap: 12px;
 	border-bottom: 1px solid var(--color-border-surface-01, rgb(199 199 199 / 6%));
@@ -69,11 +70,16 @@ import { UiSkeleton } from '@/shared/ui/skeleton';
 .exchangeInfo {
 	display: flex;
 	align-items: center;
-	height: var(--height-s14, 32px);
 	gap: 4px;
 }
 
 .more {
 	margin-left: auto;
+}
+
+.contentLeft {
+	display: flex;
+	gap: 12px;
+	align-items: flex-end;
 }
 </style>
