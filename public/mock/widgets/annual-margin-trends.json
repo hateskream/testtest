@@ -8,13 +8,13 @@
 			"color": "#04eda0",
 			"backgroundColor": "#0d3b2d",
 			"isDashed": true,
-			"currentValue": 0.5560,
+			"currentValue": 0.5450,
 			"points": [
 				{ "year": 2021, "value": 0.3623 },
 				{ "year": 2022, "value": 0.1619 },
 				{ "year": 2023, "value": 0.4884 },
 				{ "year": 2024, "value": 0.5584 },
-				{ "year": 2025, "value": 0.5560 }
+				{ "year": 2025, "value": 0.5450 }
 			]
 		},
 		{

@@ -44,7 +44,6 @@ const props = defineProps<{
 <style module="classes">
 .wrapper {
 	display: flex;
-	flex: 1 0 0;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;

@@ -6,7 +6,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 
 import type { MarginSeries } from '../../model';
 import { ChartExternalTooltip } from '@/modules/charts/chart-js';
-import { underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
+import { preventLabelOverlapPlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
 import { createPointerLabel, formatPercent } from '@/modules/charts/common/lib';
 import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 
@@ -120,6 +120,7 @@ const chartOptions: ChartOptions<'line'> = {
 				dash: [2, 2],
 			},
 			ticks: {
+				maxTicksLimit: 6,
 				align: 'end',
 				crossAlign: 'far',
 				labelOffset: -5,
@@ -156,7 +157,7 @@ function createChart(): void {
 			labels: toRaw(labels.value),
 			datasets: toRaw(datasets.value),
 		},
-		plugins: [underlineDashTicksPlugin],
+		plugins: [underlineDashTicksPlugin, preventLabelOverlapPlugin],
 		options: chartOptions,
 	});
 }

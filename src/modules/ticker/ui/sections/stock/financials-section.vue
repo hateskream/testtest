@@ -48,13 +48,13 @@ const annualMarginTrendsIsEnabled = isFeatureEnabled('TICKER_WIDGET_ANNUAL_RETUR
 	height: 330px;
 }
 
-@container root (width >= 580px) {
+@container root (width >= 600px) {
 	.metricsItem {
 		flex: 1 0 0;
 	}
 }
 
-@container root (width < 580px) {
+@container root (width < 600px) {
 	.metrics {
 		flex-direction: column;
 	}

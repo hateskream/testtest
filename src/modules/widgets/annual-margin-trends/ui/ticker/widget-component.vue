@@ -47,7 +47,6 @@ const { data, isLoading, isError, refetch } = useQueryAnnualMarginTrends(() => p
 <style module="classes">
 .widget {
 	display: flex;
-	flex: 1 0 0;
 	flex-direction: column;
 }
 
