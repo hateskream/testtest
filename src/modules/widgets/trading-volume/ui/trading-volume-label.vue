@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { UiText } from '@/shared/ui/text';
-import { formatPrice } from '@/modules/charts/common/lib';
+import { prettyNumberWithKey } from '@/shared/lib';
 import { TradingVolumeSentiment, type TradingVolumeSentimentType } from '../model';
 
 interface ITradingVolumeLabelProps {
@@ -13,10 +13,13 @@ interface ITradingVolumeLabelProps {
 
 const props = defineProps<ITradingVolumeLabelProps>();
 
+const FRACTION_DIGITS = 2;
+
 const formattedValue = computed((): string => {
 	const sign = props.change < 0 ? '−' : '';
+	const { row } = prettyNumberWithKey(Math.abs(props.change), FRACTION_DIGITS);
 
-	return `${sign}${formatPrice(Math.abs(props.change))}`;
+	return `${sign}${row}`;
 });
 </script>
 
