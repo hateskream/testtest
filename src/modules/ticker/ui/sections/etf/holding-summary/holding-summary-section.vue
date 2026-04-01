@@ -74,16 +74,12 @@ function onChangeAnalysisOverflow(value: boolean) {
 
 .row.vertical .widget {
 	height: max-content;
-	min-height: 370px;
-}
-
-.row:not(.vertical) .widget {
-	height: 370px;
 }
 
 @container root (width >= 580px) {
 	.row:not(.vertical) .widget {
 		flex: 1 0 0;
+		height: 370px;
 	}
 }
 

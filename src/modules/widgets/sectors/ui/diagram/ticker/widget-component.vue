@@ -59,6 +59,7 @@ const {
 
 .error {
 	flex-grow: 1;
+	min-height: 310px;
 }
 
 .content {

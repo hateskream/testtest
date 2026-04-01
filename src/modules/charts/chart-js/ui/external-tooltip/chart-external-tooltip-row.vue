@@ -38,6 +38,7 @@ const props = defineProps<IChartExternalTooltipRowProps>();
 
 .dot {
 	display: inline-block;
+	flex-shrink: 0;
 	width: 10px;
 	height: 10px;
 	border-width: 2px;

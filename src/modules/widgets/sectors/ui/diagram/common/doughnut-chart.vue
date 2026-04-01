@@ -150,7 +150,7 @@ watch(preparedDatasets,
 	<div :class="classes.wrapper">
 		<canvas ref="container" :class="classes.chart"></canvas>
 		<teleport to="body">
-			<chart-external-tooltip v-bind="state" width="auto" />
+			<chart-external-tooltip v-bind="state" width="max-content" />
 		</teleport>
 	</div>
 </template>
