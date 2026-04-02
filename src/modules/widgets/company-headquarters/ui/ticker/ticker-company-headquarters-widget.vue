@@ -6,9 +6,6 @@ import {
 	BaseTickerWidgetWrapper,
 	BaseTickerWidgetHeader,
 	BaseTickerWidgetContent,
-	BaseTickerModalWrapper,
-	BaseTickerModalHeader,
-	BaseTickerModalContent,
 } from '@/modules/widgets/base';
 import { useQueryCompanyHeadquarters } from '../../queries';
 import { UiControlButton } from '@/shared/ui/control-button';
@@ -16,6 +13,7 @@ import { IconIds } from '@/shared/ui/icon';
 
 import TickerCompanyHeadquartersWidgetLoader from './ticker-company-headquarters-widget-loader.vue';
 import TickerCompanyHeadquartersWidgetError from './ticker-company-headquarters-widget-error.vue';
+import TickerCompanyHeadquartersWidgetModal from './ticker-company-headquarters-widget-modal.vue';
 import HeadquartersCitiesContent from '../common/headquarters-cities-content.vue';
 
 const props = defineProps<{
@@ -66,14 +64,11 @@ function onFullscreenClick() {
 		</base-ticker-widget-content>
 	</base-ticker-widget-wrapper>
 
-	<base-ticker-modal-wrapper v-model="isFullscreen">
-		<base-ticker-modal-header>
-			{{ props.meta.name }}
-		</base-ticker-modal-header>
-		<base-ticker-modal-content>
-			<headquarters-cities-content :data="data!" is-fullscreen />
-		</base-ticker-modal-content>
-	</base-ticker-modal-wrapper>
+	<ticker-company-headquarters-widget-modal
+		v-model="isFullscreen"
+		:meta="props.meta"
+		:data="data!"
+	/>
 </template>
 
 <style module="classes">

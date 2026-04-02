@@ -23,7 +23,7 @@ const displayedRegions = computed(() => {
 </script>
 
 <template>
-	<div :class="{[classes.fullsreen]: props.isFullscreen}">
+	<div :class="{[classes.fullscreen]: props.isFullscreen}">
 		<div
 			v-for="region in displayedRegions"
 			:key="region.region"
@@ -49,9 +49,9 @@ const displayedRegions = computed(() => {
 </template>
 
 <style module="classes">
-.fullsreen {
-	width: 612px;
-	height: 794px;
+.fullscreen {
+	max-width: 612px;
+	max-height: 794px;
 }
 
 .region {

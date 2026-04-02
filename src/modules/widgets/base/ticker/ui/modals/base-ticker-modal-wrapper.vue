@@ -73,6 +73,7 @@ defineOptions({
 	flex-direction: column;
 	align-items: center;
 	max-height: 80svh;
+	margin: var(--padding-s12, 24px) var(--padding-s6, 18px);
 	overflow: hidden;
 	background: var(--surface-modal, rgb(30 30 32 / 88%));
 	border: 1px solid var(--border-surf-04, rgb(73 73 80 / 32%));
