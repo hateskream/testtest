@@ -58,7 +58,7 @@ export const EtfActivityMetricsSchema = BaseActivityMetricsSchema.extend({
 	marketCap: z.string(),
 	avgVolume: z.string(),
 	beta: z.string(),
-	topHolding: z.string(),
+	topHolding: z.string().optional(),
 	numSectors: z.string(),
 });
 

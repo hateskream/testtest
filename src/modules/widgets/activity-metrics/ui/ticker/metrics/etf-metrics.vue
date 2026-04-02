@@ -42,6 +42,7 @@ const props = defineProps<IEtfMetricsProps>();
 			</template>
 		</metrics-container>
 		<metrics-container
+			v-if="props.metrics.topHolding"
 			title="Top Holding"
 			tooltip="Percentage of total ETF assets invested in its largest position."
 			:class="classes.full"
