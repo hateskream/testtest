@@ -1,6 +1,7 @@
 import { computed, nextTick, onMounted, onScopeDispose, type Ref, toValue, watch, type WatchSource } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 
+const MAX_AUTO_FETCH_COUNT = 3;
 const SCROLL_THRESHOLD = 100;
 const HEADER_HEIGHT = 36;
 
@@ -74,6 +75,35 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 
 	const isFetchingPrev = computed(() => toValue(options.isFetchingPrev));
 	const isFetchingNext = computed(() => toValue(options.isFetchingNext));
+
+	let autoFetchCount = 0;
+
+	async function fetchNextIfNoScroll(): Promise<void> {
+		await nextTick();
+
+		const element = container.value;
+		if (!element || isFetchingNext.value || isFetchingPrev.value) {
+			return;
+		}
+
+		if (element.scrollHeight > element.clientHeight) {
+			autoFetchCount = 0;
+			return;
+		}
+
+		if (autoFetchCount < MAX_AUTO_FETCH_COUNT) {
+			autoFetchCount++;
+			onLoadNext();
+		}
+	}
+
+	watch(options.groupedBoard, () => fetchNextIfNoScroll());
+
+	watch(isFetchingNext, (fetching, wasFetching) => {
+		if (!fetching && wasFetching) {
+			fetchNextIfNoScroll();
+		}
+	});
 
 	watch(options.isFetchingPrev, async (isFetching, wasFetching) => {
 		const element = container.value;
@@ -172,8 +202,9 @@ export function useEventBoard(options: IUseEventBoardOptions) {
 		scrollToNextEvent();
 	}
 
-	onMounted(() => {
+	onMounted(async () => {
 		scrollToTarget();
+		await fetchNextIfNoScroll();
 	});
 
 	const handleScrollThrottled = useThrottleFn(handleScroll, 50);

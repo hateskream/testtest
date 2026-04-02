@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 import {
 	BaseWidgetDashboard,
@@ -9,6 +9,7 @@ import {
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	useCalendarState,
+	useEventBoardClientFiltration,
 	CalendarCategoriesBadgeModal,
 	CalendarCountryBadgeModal,
 	CalendarImpactBadgeModal,
@@ -44,6 +45,15 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 	countries: selectedCountries.value,
 	minImpact: selectedImpacts.value,
 })));
+
+const { filteredData } = useEventBoardClientFiltration({
+	data: () => query.data,
+	categories: () => selectedCategories.value,
+	countries: () => selectedCountries.value,
+	impacts: () => selectedImpacts.value,
+});
+
+const filteredDays = computed(() => filteredData.value?.days ?? []);
 </script>
 
 <template>
@@ -70,11 +80,12 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 			<dashboard-event-board
 				v-else-if="query.data && !query.isError"
 				:current-time="currentTime"
-				:event-board="query.data.days"
+				:event-board="filteredDays"
 				:is-fetching-next="query.isFetchingNextPage"
 				:is-fetching-prev="query.isFetchingPreviousPage"
 				@load-next="query.fetchNextPage"
 				@load-prev="query.fetchPreviousPage"
+				@reset="resetAll"
 			/>
 
 			<base-error-component v-else @retry="query.refetch" />

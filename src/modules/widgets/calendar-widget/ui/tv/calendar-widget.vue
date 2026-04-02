@@ -7,6 +7,7 @@ import {
 	getUTCWeekRange,
 	localDateToUTCUnix,
 	useCalendarState,
+	useEventBoardClientFiltration,
 	useInfiniteQueryEventBoard,
 } from '@/modules/calendar';
 
@@ -59,6 +60,15 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 		to: limit.value.to,
 	},
 })));
+
+const { filteredData } = useEventBoardClientFiltration({
+	data: () => query.data,
+	categories: () => selectedCategories.value,
+	countries: () => selectedCountries.value,
+	impacts: () => selectedImpacts.value,
+});
+
+const filteredDays = computed(() => filteredData.value?.days ?? []);
 </script>
 
 <template>
@@ -84,12 +94,13 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 				v-model:categories="selectedCategories"
 				v-model:impact="selectedImpacts"
 				v-model:range="limit"
-				:event-board="query.data.days"
+				:event-board="filteredDays"
 				:current-time="currentTime"
 				:is-fetching-next="query.isFetchingNextPage"
 				:is-fetching-prev="query.isFetchingPreviousPage"
 				@load-next="query.fetchNextPage"
 				@load-prev="query.fetchPreviousPage"
+				@reset="resetAll"
 			/>
 
 			<base-error-component

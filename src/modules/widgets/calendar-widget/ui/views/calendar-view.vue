@@ -19,6 +19,7 @@ const props = defineProps<{
 const emits = defineEmits<{
 	loadPrev: [];
 	loadNext: [];
+	reset: [];
 }>();
 
 const country = defineModel<CalendarCountryIdsType[]>('countries', {
@@ -52,6 +53,7 @@ const range = defineModel<{ from: number; to: number }>('range', {
 			:favorite="props.favorite"
 			@load-next="emits('loadNext')"
 			@load-prev="emits('loadPrev')"
+			@reset="emits('reset')"
 		/>
 	</div>
 </template>

@@ -14,6 +14,7 @@ import {
 	formatUTCDate,
 	getUTCWeekRange,
 	localDateToUTCUnix,
+	useEventBoardClientFiltration,
 	useInfiniteQueryEventBoard,
 	useQueryDailyInfo, CalendarPreloaderComponent,
 } from '@/modules/calendar';
@@ -23,7 +24,7 @@ import CalendarDaysPreloaderComponent from '@/modules/calendar/ui/common/calenda
 
 const route = useRoute();
 
-const { currentTime, selectedCategories, selectedCountries, selectedImpacts } = useCalendarState({
+const { currentTime, selectedCategories, selectedCountries, selectedImpacts, resetAll } = useCalendarState({
 	widget: {
 		isEphemeral: false,
 		widgetId: 'calendar-page',
@@ -96,6 +97,15 @@ const query = reactive(useInfiniteQueryEventBoard(() => ({
 	},
 })));
 
+const { filteredData } = useEventBoardClientFiltration({
+	data: () => query.data,
+	categories: () => selectedCategories.value,
+	countries: () => selectedCountries.value,
+	impacts: () => selectedImpacts.value,
+});
+
+const filteredDays = computed(() => filteredData.value?.days ?? []);
+
 const dailyInfo = reactive(useQueryDailyInfo(() => ({
 	from: dailyInfoWeekRange.value.from,
 	to: dailyInfoWeekRange.value.to,
@@ -152,10 +162,10 @@ function onUpdateWeek(date: Date) {
 					<calendar-preloader-component v-if="query.isLoading" />
 					<base-error-component v-else-if="query.isError" @retry="query.refetch" />
 
-					<div v-else-if="query.data?.days.length" :class="classes.wrapper">
+					<div v-else-if="query.data" :class="classes.wrapper">
 						<tv-event-board
 							ref="event-board-component"
-							:event-board="query.data.days"
+							:event-board="filteredDays"
 							:is-fetching-next="query.isFetchingNextPage"
 							:is-fetching-prev="query.isFetchingPreviousPage"
 							:scroll-to-date="scrollToDate"
@@ -163,6 +173,7 @@ function onUpdateWeek(date: Date) {
 							header-color="#0C0C0D"
 							@load-next="query.fetchNextPage"
 							@load-prev="query.fetchPreviousPage"
+							@reset="resetAll"
 						/>
 					</div>
 				</template>

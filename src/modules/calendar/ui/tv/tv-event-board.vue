@@ -7,9 +7,11 @@ import { getHighlightColor } from '../../model/colors';
 import { useEventBoard } from '../../composables/use-event-board';
 import { UiText } from '@/shared/ui/text';
 
+import EventBoardCardLoader from '../common/event-board-card-loader.vue';
+import CalendarEventBoardEmpty from '../common/calendar-event-board-empty.vue';
 import TvEventCard from './tv-event-card.vue';
 
-const props = withDefaults(defineProps<{
+interface ITvEventBoardProps {
 	eventBoard: IEventBoardItem[];
 	favorite?: string[];
 	currentTime?: Date;
@@ -18,7 +20,9 @@ const props = withDefaults(defineProps<{
 	scrollToDate?: string;
 	scrollToHour?: string;
 	headerColor?: string;
-}>(), {
+}
+
+const props = withDefaults(defineProps<ITvEventBoardProps>(), {
 	favorite: () => [],
 	currentTime: () => new Date(),
 	headerColor: '#121213',
@@ -26,10 +30,13 @@ const props = withDefaults(defineProps<{
 	scrollToHour: undefined,
 });
 
-const emits = defineEmits<{
+interface ITvEventBoardEmits {
 	loadPrev: [];
 	loadNext: [];
-}>();
+	reset: [];
+}
+
+const emits = defineEmits<ITvEventBoardEmits>();
 
 const baseBoard = computed(() =>
 	props.eventBoard.map(day => ({
@@ -75,6 +82,13 @@ const { handleScroll } = useEventBoard({
 		:class="classes.calendarEventBoard"
 		@scroll.passive="handleScroll"
 	>
+		<calendar-event-board-empty
+			v-if="!eventBoard.length && !isFetchingPrev && !isFetchingNext"
+			@reset="emits('reset')"
+		/>
+
+		<event-board-card-loader v-if="isFetchingPrev" is-tv />
+
 		<div :class="classes.wrapper">
 			<template
 				v-for="day in groupedBoard"
@@ -123,12 +137,15 @@ const { handleScroll } = useEventBoard({
 				</div>
 			</template>
 		</div>
+
+		<event-board-card-loader v-if="isFetchingNext" is-tv />
 	</div>
 </template>
 
 <style module="classes">
 .calendarEventBoard {
 	width: 100%;
+	height: 100%;
 	overflow-y: scroll;
 }
 

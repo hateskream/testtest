@@ -14,23 +14,30 @@ import { UiText } from '@/shared/ui/text';
 import { UiClamped } from '@/shared/ui/clamped';
 
 import EventBoardLightning from '../common/event-board-lightning.vue';
+import EventBoardCardLoader from '../common/event-board-card-loader.vue';
+import CalendarEventBoardEmpty from '../common/calendar-event-board-empty.vue';
 import DashboardEventCard from './dashboard-event-card.vue';
 
-const props = withDefaults(defineProps<{
+interface IDashboardEventBoardProps {
 	eventBoard: IEventBoardItem[];
 	favorite?: string[];
 	currentTime?: Date;
 	isFetchingNext?: boolean;
 	isFetchingPrev?: boolean;
-}>(), {
+}
+
+const props = withDefaults(defineProps<IDashboardEventBoardProps>(), {
 	favorite: () => [],
 	currentTime: () => new Date(),
 });
 
-const emits = defineEmits<{
+interface IDashboardEventBoardEmits {
 	loadPrev: [];
 	loadNext: [];
-}>();
+	reset: [];
+}
+
+const emits = defineEmits<IDashboardEventBoardEmits>();
 
 const baseBoard = computed(() =>
 	props.eventBoard.map(day => ({
@@ -78,6 +85,13 @@ const { handleScroll } = useEventBoard({
 		:class="classes.eventBoard"
 		@scroll.passive="handleScroll"
 	>
+		<calendar-event-board-empty
+			v-if="!eventBoard.length && !isFetchingPrev && !isFetchingNext"
+			@reset="emits('reset')"
+		/>
+
+		<event-board-card-loader v-if="isFetchingPrev" />
+
 		<div
 			v-for="day in groupedBoard"
 			:key="day.date"
@@ -124,6 +138,8 @@ const { handleScroll } = useEventBoard({
 				</div>
 			</div>
 		</div>
+
+		<event-board-card-loader v-if="isFetchingNext" />
 	</div>
 </template>
 
