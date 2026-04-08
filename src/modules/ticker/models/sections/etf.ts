@@ -20,7 +20,7 @@ export const tickerEtfSections = {
 			id: 'holding-summary',
 			title: 'Holdings Summary',
 			component: 'ETF_HOLDING_SUMMARY',
-			height: 1100,
+			height: 750,
 		},
 	],
 	right: [

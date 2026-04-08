@@ -18,7 +18,7 @@ export const tickerIndicesSections = {
 			id: 'holding-summary',
 			title: 'Holdings Summary',
 			component: 'INDEX_HOLDING_SUMMARY',
-			height: 1100,
+			height: 700,
 		},
 	],
 	right: [
