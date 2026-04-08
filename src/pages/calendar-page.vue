@@ -159,7 +159,10 @@ function onUpdateWeek(date: Date) {
 						@select-day="onSelectDay"
 					/>
 
-					<calendar-preloader-component v-if="query.isLoading" />
+					<div v-if="query.isLoading" :class="classes.wrapper">
+						<calendar-preloader-component />
+					</div>
+
 					<base-error-component v-else-if="query.isError" @retry="query.refetch" />
 
 					<div v-else-if="query.data" :class="classes.wrapper">

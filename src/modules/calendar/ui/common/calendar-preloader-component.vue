@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ListSkeleton } from '@/modules/widgets/base';
+import EventBoardCardLoader from './event-board-card-loader.vue';
 </script>
 
 <template>
 	<div :class="classes.calendarPreloaderWrapper">
-		<list-skeleton />
+		<event-board-card-loader v-for="num in 12" :key="num" />
 	</div>
 </template>
 
 <style module="classes">
 .calendarPreloaderWrapper {
+	flex: 1 0 0;
 	width: 100%;
+	overflow: hidden;
 }
 </style>
