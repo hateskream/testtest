@@ -493,7 +493,13 @@ export interface IDecodeTickerId {
 }
 
 export function decodeTickerId(tickerId: string): IDecodeTickerId | null {
-	const [symbolType, id] = tickerId.split('-');
+	const separatorIndex = tickerId.indexOf('-');
+	if (separatorIndex === -1) {
+		return null;
+	}
+
+	const symbolType = tickerId.slice(0, separatorIndex);
+	const id = tickerId.slice(separatorIndex + 1);
 
 	if (symbolType && id && isValidSymbolType(symbolType)) {
 		return {

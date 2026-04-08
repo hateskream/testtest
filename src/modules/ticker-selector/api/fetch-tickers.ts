@@ -2,6 +2,7 @@ import { useHttpService } from '@/shared/service/http-service.ts';
 import { useLogger } from '@/shared/service/monitoring';
 import type { ITickerItem } from '@/modules/ticker-selector';
 import type { MarketType } from '@/modules/market';
+import { decodeTickerId } from '@/modules/cell';
 
 const IS_USE_MOCK = false;
 
@@ -53,15 +54,22 @@ export function decodeCanonicalTickerIds(
 	return list.map(decodeCanonicalTickerId);
 }
 
-export function decodeCanonicalTickerId(
-	tickerId: string,
-): ITickerItem {
-	const [marketRaw, rest] = tickerId.split('-');
-	const [symbol, nameRaw] = rest.split('_');
+/**
+ * @example "Stock-TSLA" -> { symbolType: "Stock", tickerId: "TSLA" }
+ * @example "Stock-ABA-B" -> { symbolType: "Stock", tickerId: "ABA-B" }
+ */
+export function decodeCanonicalTickerId(canonicalTickerId: string): ITickerItem {
+	const ticker = decodeTickerId(canonicalTickerId);
+
+	if (!ticker) {
+		throw new Error(`Could not decode ticker "${canonicalTickerId}"`);
+	}
+
+	const [symbol, nameRaw] = ticker.tickerId.split('_');
 
 	return {
-		canonical_ticker_id: tickerId,
-		market_type: marketRaw.toLowerCase() as MarketType,
+		canonical_ticker_id: canonicalTickerId,
+		market_type: ticker.symbolType.toLowerCase() as MarketType,
 		symbol: symbol,
 		name: nameRaw ? nameRaw.replace(/_/g, ' ') : symbol,
 		logo: '',
