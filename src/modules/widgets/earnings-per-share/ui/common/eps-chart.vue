@@ -111,6 +111,7 @@ const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '',
 	valuePrefix: '',
+	targetEl: container,
 });
 
 function buildChartOptions(): ChartOptions<'bubble'> {

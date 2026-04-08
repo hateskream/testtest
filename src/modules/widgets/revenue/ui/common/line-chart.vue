@@ -46,6 +46,7 @@ const { state, handler } = useExternalTooltip({
 	valueSuffix: '',
 	valuePrefix: '',
 	transformRowValue: value => formatPrice(Number(value.replaceAll(' ', ''))),
+	targetEl: container,
 });
 
 const defaultOptions: ChartOptions<'line'> = {

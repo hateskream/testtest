@@ -78,6 +78,7 @@ const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '%',
 	valuePrefix: '',
+	targetEl: container,
 });
 
 const chartOptions: ChartOptions<'line'> = {

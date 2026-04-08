@@ -38,7 +38,7 @@ const legendsList = [
 const { state, handler } = useExternalTooltip({
 	mode: 'vaults',
 	legends: legendsList,
-	wrapperEl: document.body,
+	targetEl: container,
 });
 
 function pickQuarter(rank: number) {

@@ -191,6 +191,7 @@ const { state, handler } = useExternalTooltip({
 			return formatter.format(item).replace('GMT', 'UTC');
 		}).filter((t, key, array) => key === 0 || array[key - 1] !== t);
 	},
+	targetEl: container,
 });
 
 // init

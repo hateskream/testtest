@@ -17,9 +17,11 @@ interface IChartComponentProps {
 
 const props = defineProps<IChartComponentProps>();
 
+const wrapper = useTemplateRef('wrapper');
+
 const { points: filteredPoints } = useAdaptiveBarPoints(
 	() => props.points,
-	useTemplateRef('wrapper'),
+	wrapper,
 	{ barWidth: BAR_WIDTH, minSpaceWidth: BAR_WIDTH * 1.5 },
 );
 
@@ -68,6 +70,7 @@ const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '',
 	valuePrefix: '',
+	targetEl: wrapper,
 });
 
 const options = {

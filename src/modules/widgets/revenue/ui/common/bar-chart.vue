@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import type { ChartOptions, TooltipOptions } from 'chart.js';
 
 import { type BarDataset, ChartBar, ChartExternalTooltip } from '@/modules/charts/chart-js';
@@ -35,11 +35,14 @@ const preparedDatasets = computed((): BarDataset[] => {
 	});
 });
 
+const wrapper = useTemplateRef('wrapper');
+
 const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '',
 	valuePrefix: '',
 	transformRowValue: value => formatPrice(Number(value.replaceAll(' ', ''))),
+	targetEl: wrapper,
 });
 
 const options = {

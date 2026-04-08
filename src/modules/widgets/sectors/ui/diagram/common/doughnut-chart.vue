@@ -67,6 +67,7 @@ const { state, handler } = useExternalTooltip({
 	mode: 'datapoint',
 	valuePrefix: '',
 	valueSuffix: '%',
+	targetEl: container,
 });
 
 const defaultOptions: ChartOptions<'doughnut'> = {

@@ -113,6 +113,7 @@ const { state, handler } = useExternalTooltip({
 
 		return [formatter.format(addDays(date, Number(title)))];
 	},
+	targetEl: container,
 });
 
 const chartOptions: ChartOptions<'line'> = {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, type CSSProperties } from 'vue';
+import { computed, type CSSProperties, useTemplateRef } from 'vue';
+import { useElementSize, useWindowSize } from '@vueuse/core';
 
 import type { IUseExternalTooltipState } from '../../composables';
 import { UiText } from '@/shared/ui/text';
@@ -14,17 +15,31 @@ const props = withDefaults(defineProps<IChartExternalTooltipProps>(), {
 	width: '170px',
 });
 
-const rootStyles = computed<CSSProperties>(() => ({
-	left: `${props.x}px`,
-	top: `${props.y}px`,
-	padding: `${props.padding}px`,
-	width: props.width,
-}));
+const tooltipRef = useTemplateRef<HTMLElement>('tooltip');
+
+const { width: tooltipWidth } = useElementSize(tooltipRef);
+const { width: viewportWidth } = useWindowSize({ includeScrollbar: false });
+
+const rootStyles = computed<CSSProperties>(() => {
+	const halfWidth = tooltipWidth.value / 2;
+
+	const minX = halfWidth;
+	const maxX = viewportWidth.value - halfWidth;
+	const clampedX = Math.max(minX, Math.min(props.x, maxX));
+
+	return {
+		left: `${clampedX}px`,
+		top: `${props.y}px`,
+		padding: `${props.padding}px`,
+		width: props.width,
+	};
+});
 </script>
 
 <template>
 	<div
 		v-show="visible"
+		ref="tooltip"
 		:class="classes.tooltip"
 		:style="rootStyles"
 	>

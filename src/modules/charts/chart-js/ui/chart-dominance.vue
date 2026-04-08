@@ -76,7 +76,8 @@ function updateChartDatasets() {
 
 // scales
 
-const { width: wrapperWidth } = useElementSize(useTemplateRef('wrapper'));
+const wrapper = useTemplateRef('wrapper');
+const { width: wrapperWidth } = useElementSize(wrapper);
 
 const TICK_WIDTH = 70;
 
@@ -222,6 +223,7 @@ const { state, handler } = useExternalTooltip({
 			return formatter.format(item).replace('GMT', 'UTC');
 		}).filter((t, key, array) => key === 0 || array[key - 1] !== t);
 	},
+	targetEl: wrapper,
 });
 
 // init

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
 import { Chart, type ChartOptions, type Point } from 'chart.js';
 import annotationPlugin, { type PartialEventContext } from 'chartjs-plugin-annotation';
 import { addMonths } from 'date-fns';
@@ -10,7 +10,7 @@ import { strTimeToChartTime } from '@/modules/charts/lightweight/model';
 import { millisecondsToUtcMilliseconds, type UtcSeconds } from '@/modules/charts/common/model';
 import { createSplitLabel, formatPrice } from '@/modules/charts/common/lib';
 import { solidBottomLinePlugin, underlineDashTicksPlugin } from '@/modules/charts/chart-js/plugins';
-import { type IUseExternalTooltipState, useExternalTooltip } from '@/modules/charts/chart-js/composables';
+import { useExternalTooltip } from '@/modules/charts/chart-js/composables';
 import { UiText } from '@/shared/ui/text';
 import { getForecastColor, getForecastLabelColors, getTriangleColor, type PriceTargetHistoryPoint } from '../../model';
 
@@ -85,14 +85,7 @@ function boxGradient(context: PartialEventContext) {
 
 const LABEL_TOOLTIP_OFFSET = 5;
 
-const labelTooltipState = reactive<IUseExternalTooltipState>({
-	visible: false,
-	x: 0,
-	y: 0,
-	padding: 6,
-	title: [],
-	rows: [],
-});
+const { state: labelTooltipState } = useExternalTooltip({ targetEl: container, padding: 6 });
 
 const LABEL_TOOLTIP_MAP: Record<string, string> = {
 	lastPrice: 'Current',
@@ -274,6 +267,7 @@ const { state, handler } = useExternalTooltip({
 	mode: 'split',
 	valueSuffix: '',
 	valuePrefix: '',
+	targetEl: container,
 });
 
 const defaultOptions: ChartOptions<'line'> = {

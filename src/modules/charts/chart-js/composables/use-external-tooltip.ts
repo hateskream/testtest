@@ -1,5 +1,14 @@
-import { type CSSProperties, type MaybeRefOrGetter, type Reactive, reactive, toValue } from 'vue';
+import {
+	type CSSProperties,
+	type MaybeRefOrGetter,
+	onBeforeUnmount,
+	type Reactive,
+	reactive,
+	toValue,
+	watch,
+} from 'vue';
 import type { Chart, ChartType, TooltipModel } from 'chart.js';
+import { useElementVisibility, useEventListener, useThrottleFn } from '@vueuse/core';
 
 export interface ILegendItem {
 	color: string;
@@ -17,12 +26,16 @@ export type TooltipMode = 'vaults' | 'split' | 'datapoint';
 export interface IUseExternalTooltipOptions {
 	mode?: TooltipMode;
 	legends?: ILegendItem[];
+	/** Элемент-контейнер, относительно которого вычисляется позиция tooltip. По умолчанию — parentElement canvas */
 	wrapperEl?: MaybeRefOrGetter<HTMLElement | null>;
+	/** Элемент, при взаимодействии с которым показывается tooltip. Используется для скрытия при выходе курсора или скролле */
+	targetEl?: MaybeRefOrGetter<HTMLElement | null>;
 	valuePrefix?: string;
 	valueSuffix?: string;
 	reversed?: boolean;
 	transformTitle?: (title: string[]) => string[];
 	transformRowValue?: (rowValue: string) => string;
+	padding?: number;
 }
 
 export interface IUseExternalTooltipState {
@@ -127,7 +140,6 @@ function createHandler(
 
 		state.x = canvasRect.left + tooltip.caretX;
 		state.y = canvasRect.top + tooltip.caretY;
-		state.visible = true;
 	} else {
 		state.x = canvas.offsetLeft + tooltip.caretX;
 		state.y = canvas.offsetTop + tooltip.caretY;
@@ -143,7 +155,7 @@ export function useExternalTooltip(
 		visible: false,
 		x: 0,
 		y: 0,
-		padding: 8,
+		padding: args.padding ?? 8,
 		title: [],
 		rows: [],
 	});
@@ -157,6 +169,70 @@ export function useExternalTooltip(
 			...args,
 		});
 	}
+
+	function hideTooltip() {
+		state.visible = false;
+	}
+
+	onBeforeUnmount(hideTooltip);
+
+	const targetVisible = useElementVisibility(() => toValue(args.targetEl));
+
+	// Скрываем tooltip, если элемент вне вьюпорта (важно на touchscreen устройствах)
+	watch(targetVisible, (visible) => {
+		if (!visible) {
+			hideTooltip();
+		}
+	});
+
+	// Скрываем tooltip при touch вне элемента (важно на touchscreen устройствах)
+	useEventListener('touchend', (event) => {
+		if (!state.visible) {
+			return;
+		}
+
+		const target = event.target as HTMLElement | null;
+		const el = toValue(args.targetEl);
+
+
+		if (el && target && !el.contains(target)) {
+			hideTooltip();
+		}
+	});
+
+	let lastPointerX = 0;
+	let lastPointerY = 0;
+
+	useEventListener(args.targetEl, 'pointermove', (event: PointerEvent) => {
+		lastPointerX = event.clientX;
+		lastPointerY = event.clientY;
+	});
+
+	useEventListener(args.targetEl, 'mouseleave', hideTooltip);
+
+	const handleScroll = useThrottleFn(() => {
+		if (!state.visible) {
+			return;
+		}
+
+		const el = toValue(args.targetEl);
+
+		if (!el) {
+			return;
+		}
+
+		const rect = el.getBoundingClientRect();
+		const isOutside = lastPointerX < rect.left
+			|| lastPointerX > rect.right
+			|| lastPointerY < rect.top
+			|| lastPointerY > rect.bottom;
+
+		if (isOutside) {
+			hideTooltip();
+		}
+	}, 50);
+
+	useEventListener('scroll', handleScroll, { capture: true, passive: true });
 
 	return { state, handler };
 }
