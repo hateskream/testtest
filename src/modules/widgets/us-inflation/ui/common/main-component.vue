@@ -85,6 +85,7 @@ const trendLabel = computed(() => {
 }
 
 .text {
+	width: max-content;
 	color: rgb(255 255 255 / 62%);
 }
 
