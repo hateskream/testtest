@@ -2,6 +2,8 @@
 import { IconIds, UiIcon } from '@/shared/ui/icon';
 import { UiText, type TextToken } from '../text';
 
+import EmptyIcon from './empty-icon.vue';
+
 interface IEmptyStateProps {
 	label?: string;
 	textToken?: TextToken;
@@ -18,16 +20,13 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 <template>
 	<div :class="classes.root">
 		<div :class="classes.icon">
-			<ui-icon
-				:id="IconIds.EventBoardEmpty"
-				width="75px"
-				height="55px"
-			/>
+			<empty-icon />
+
 			<ui-icon
 				:id="IconIds.Ellipse"
 				:class="classes.ellipse"
-				width="200px"
-				height="200px"
+				width="170px"
+				height="150px"
 			/>
 		</div>
 		<ui-text :token="props.textToken" :class="classes.paragraph">
@@ -62,7 +61,6 @@ const props = withDefaults(defineProps<IEmptyStateProps>(),
 	left: 50%;
 	flex-shrink: 0;
 	transform: translate(-50%, -50%);
-	filter: blur(13px);
 	fill: rgb(255 255 255 / 16%);
 	pointer-events: none;
 }

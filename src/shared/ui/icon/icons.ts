@@ -105,7 +105,6 @@ export enum IconIds {
 	Spain = 'spain',
 	Burger = 'burger',
 	Sentiment = 'sentiment',
-	EventBoardEmpty = 'event-board-empty',
 	Ellipse = 'ellipse',
 	ControlFullView = 'control-full-view',
 	ControlMinimize = 'control-minimize',
