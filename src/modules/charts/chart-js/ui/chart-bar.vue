@@ -113,6 +113,11 @@ function createChart() {
 		options: {
 			...defaultOptions,
 			...props.options,
+			plugins: {
+				...defaultOptions?.plugins,
+				...props.options?.plugins,
+			},
+			animation: false,
 		},
 	});
 }
@@ -159,7 +164,15 @@ watch(() => props.options, (value) => {
 		return;
 	}
 
-	instance.options = { ...defaultOptions, ...value };
+	instance.options = {
+		...defaultOptions,
+		...value,
+		plugins: {
+			...defaultOptions?.plugins,
+			...value?.plugins,
+		},
+		animation: false,
+	};
 	instance.update();
 }, { deep: true });
 </script>

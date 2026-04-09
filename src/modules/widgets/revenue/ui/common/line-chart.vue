@@ -53,6 +53,7 @@ const defaultOptions: ChartOptions<'line'> = {
 	maintainAspectRatio: false,
 	normalized: true,
 	responsive: true,
+	animation: false,
 	plugins: {
 		legend: { display: false },
 		tooltip: {

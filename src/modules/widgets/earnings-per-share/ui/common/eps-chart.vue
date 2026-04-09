@@ -121,6 +121,7 @@ function buildChartOptions(): ChartOptions<'bubble'> {
 		maintainAspectRatio: false,
 		normalized: true,
 		responsive: true,
+		animation: false,
 		layout: {
 			autoPadding: false,
 			padding: {

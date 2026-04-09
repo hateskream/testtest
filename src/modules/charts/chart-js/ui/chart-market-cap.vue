@@ -209,6 +209,7 @@ onMounted(() => {
 			},
 			normalized: true,
 			responsive: true,
+			animation: false,
 			interaction: {
 				mode: 'index',
 				intersect: false,
