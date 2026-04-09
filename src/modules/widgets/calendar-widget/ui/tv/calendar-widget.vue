@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent, computed, reactive, ref } from 'vue';
+import { computed, defineAsyncComponent, reactive, ref } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetTvComponent } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
 import {
 	getUTCWeekRange,
 	localDateToUTCUnix,
-	useCalendarState,
+	useCalendar,
 	useEventBoardClientFiltration,
 	useInfiniteQueryEventBoard,
 } from '@/modules/calendar';
@@ -35,7 +35,7 @@ const {
 	selectedCountries,
 	selectedImpacts,
 	resetAll,
-} = useCalendarState({
+} = useCalendar({
 	widget: {
 		widgetId: props.meta.widgetId,
 		isEphemeral: props.meta.isOpenFull,

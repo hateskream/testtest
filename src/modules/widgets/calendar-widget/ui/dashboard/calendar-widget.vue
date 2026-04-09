@@ -2,20 +2,23 @@
 import { computed, reactive } from 'vue';
 
 import {
-	BaseWidgetDashboard,
-	WidgetFiltersScrollable,
 	BaseErrorComponent,
+	BaseWidgetDashboard,
+	useWidgetState,
+	WidgetFiltersScrollable,
 } from '@/modules/widgets/base';
-import type { IMeta } from '@/modules/dashboard-group';
+import { type IMeta, useWidgetContext } from '@/modules/dashboard-group';
+import type { IState } from '@/modules/calendar';
 import {
-	useCalendarState,
-	useEventBoardClientFiltration,
 	CalendarCategoriesBadgeModal,
 	CalendarCountryBadgeModal,
 	CalendarImpactBadgeModal,
 	DashboardEventBoard,
-	useInfiniteQueryEventBoard,
+	getDefaultsState,
 	localDateToUTCUnix,
+	useCalendarState,
+	useEventBoardClientFiltration,
+	useInfiniteQueryEventBoard,
 } from '@/modules/calendar';
 
 import CalendarLoader from '../views/calendar-loader.vue';
@@ -26,18 +29,21 @@ interface IWidgetComponentProps {
 
 const props = defineProps<IWidgetComponentProps>();
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState: () => getDefaultsState(),
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	currentTime,
 	selectedCategories,
 	selectedCountries,
 	selectedImpacts,
 	resetAll,
-} = useCalendarState({
-	widget: {
-		widgetId: props.meta.widgetId,
-		isEphemeral: props.meta.isOpenFull,
-	},
-});
+} = useCalendarState({ state });
 
 const query = reactive(useInfiniteQueryEventBoard(() => ({
 	from: localDateToUTCUnix(currentTime.value),

@@ -7,7 +7,7 @@ import { calcSizeSideGridCell } from '../model/widget';
 import { MAX_COL_WIDTH, MIN_COL_WIDTH } from '../../tv';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll.ts';
-import { useResizable } from '../composables';
+import { useResizable, useDashboardContext } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
 import { UiText } from '@/shared/ui/text';
 import { MIN_SECTION_WIDTH } from '../model/section';
@@ -35,11 +35,9 @@ const props = defineProps<ISectionComponentProps>();
 
 const emits = defineEmits<{
 	'section-wheel': [ISectionWheelPayload];
-	'set-widget-state-type': [string, string];
-	'change-width': [string, number];
-	'change-height': [string, string, number];
-	'change-max-count-row': [string, string, number];
 }>();
+
+const dashboardContext = useDashboardContext();
 
 const { size } = useResizable(
 	useTemplateRef('sizer'),
@@ -58,7 +56,7 @@ const scrollRef = useTemplateRef('scroll');
 
 const lastWidget = computed(() => widgetRefs.value[widgetRefs.value.length - 1]);
 
-const cardStyle = computed(() =>({
+const cardStyle = computed(() => ({
 	width: `${props.section.width}px`,
 	maxWidth: `${props.section.width}px`,
 }));
@@ -114,7 +112,7 @@ function emitScrollInfo() {
 		const widgetTop = Math.round(widgetEl.offsetTop);
 
 		if (scrollTop >= widgetTop) {
-			passed+=1;
+			passed += 1;
 		}
 	}
 
@@ -147,13 +145,12 @@ const visibleWidgetsWithAccumulation = computed(() => {
 		index+=1;
 	}
 
-	for (let i = 0; i < index; i+=1) {
+	for (let i = 0; i < index; i += 1) {
 		seenWidgets.add(i);
 	}
 
 	return seenWidgets.size;
 });
-
 
 watch(
 	() => props.section.widgets,
@@ -178,7 +175,7 @@ watch(
 watch(
 	size,
 	newWidth => {
-		emits('change-width', props.section.id, newWidth);
+		dashboardContext.changeWidthSection(props.section.id, newWidth);
 	},
 );
 
@@ -226,9 +223,7 @@ async function scrollToWidget(widgetId: string) {
 
 	const el = scrollRef.value;
 
-	const widget = widgetRefs.value.find(
-		(w) => w.$props.widget.id === widgetId,
-	);
+	const widget = widgetRefs.value.find(w => w.$props.widget.id === widgetId);
 
 	if (!widget) {
 		return;
@@ -262,18 +257,6 @@ async function scrollToWidget(widgetId: string) {
 	});
 
 	widget.triggerFlash();
-}
-
-function setWidgetStateType(widgetId: string, stateType: string) {
-	emits('set-widget-state-type', widgetId, stateType);
-}
-
-function onChangeWidgetHeight(widgetId: string, height: number) {
-	emits('change-height', props.section.id, widgetId, height);
-}
-
-function onChangeMaxCountRowWidget(widgetId: string, maxCountRow: number) {
-	emits('change-max-count-row', props.section.id, widgetId, maxCountRow);
 }
 
 onMounted(() => {
@@ -337,15 +320,14 @@ defineExpose({
 							:key="widget.id"
 							ref="widgetRefs"
 							:widget="widget"
+							:section-id="props.section.id"
 							:col-count="cellSize.count"
 							:column-width="cellSize.size"
 							:parent-height="heightSection"
 							:active-display-variant="widget.displayVariant"
 							:all-display-variants="widget.displayVariants"
 							:is-visible="widget.isVisible"
-							@set-widget-state-type="setWidgetStateType"
-							@change-height="onChangeWidgetHeight"
-							@change-max-count-row="onChangeMaxCountRowWidget"
+							:state="widget.state"
 						/>
 					</div>
 				</div>
@@ -481,5 +463,4 @@ defineExpose({
 		background-color: transparent;
 	}
 }
-
 </style>

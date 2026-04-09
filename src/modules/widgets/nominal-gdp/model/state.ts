@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
+import type { WidgetState } from '@/modules/dashboard-group';
 import {
 	NominalGdpDateRangePreset,
 	NominalGdpDateRangePresetSchema,
 	type NominalGdpDateRangePresetType,
 } from './nominal-gdp';
 
-export interface IState {
+export interface IState extends WidgetState {
 	range: NominalGdpDateRangePresetType;
 }
 

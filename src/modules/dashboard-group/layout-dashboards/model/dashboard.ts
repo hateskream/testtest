@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { createSectionFromPreset, type ISection, type ISectionPreset } from './section';
 import { WidgetType } from '../../core';
 import { isFeatureEnabled } from '@/shared/lib';
@@ -514,9 +512,15 @@ function getComingSoonText(presetName: PresetName): string | undefined {
 	return comingSoonPresets[presetName];
 }
 
+export const STABLE_DASHBOARD_IDS = {
+	Main: 'dashboard-main',
+	Crypto: 'dashboard-crypto',
+	Stock: 'dashboard-stock',
+} as const satisfies Record<PresetName, string>;
+
 export function createDashboardFromPreset(presetName: PresetName): IDashboard {
 	return {
-		id: uuidv4(),
+		id: STABLE_DASHBOARD_IDS[presetName],
 		name: presetName,
 		sections: presets[presetName].map(createSectionFromPreset),
 		isComingSoon: isComingSoonPreset(presetName),

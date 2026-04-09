@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { BaseErrorComponent, BaseWidgetDashboard, ModalSubmenu } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
+import { useWidgetContext } from '@/modules/dashboard-group/layout-dashboards/composables';
+import { useWidgetState } from '@/modules/widgets/base/composables';
 import { SelectionMode, TickerSelectorModal } from '@/modules/ticker-selector';
-import { useChartPrice } from '../../composables';
+import { useChartPriceState } from '../../composables';
+import { getDefaultsState, type IState } from '../../model';
 import { FiltersComponent, PreloaderComponent } from '../common';
 import { ALL_MARKET_TYPES } from '@/modules/market';
 
@@ -21,11 +24,18 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState: () => getDefaultsState(props.meta.defaultStateType),
+	onStateChange: (s) => updateState(s),
+});
 
 const {
 	selectedTickersModel,
@@ -43,9 +53,8 @@ const {
 	handleAddTickerInNewWatchlist,
 	handleToggleFavoriteWatchlist,
 	resetAllChanges,
-} = useChartPrice({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
+} = useChartPriceState({
+	state,
 	defaultStateType: props.meta.defaultStateType,
 });
 </script>

@@ -21,6 +21,10 @@ export {
 export {
 	LayoutDashboard,
 	type DisplayVariant,
+	type WidgetState,
+	useDashboard,
+	useWidgetContext,
+	useDashboardContext,
 } from './layout-dashboards';
 
 export * from './core';

@@ -2,13 +2,14 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { ALL_COLUMNS, DisplayVariant } from '../../model';
-import { usePerformance } from '../../composables';
+import { useWidgetContext } from '@/modules/dashboard-group';
+import { BaseErrorComponent, BaseWidgetDashboard, useWidgetState } from '@/modules/widgets/base';
+import { usePerformanceState } from '../../composables';
+import { ALL_COLUMNS, DisplayVariant, getDefaultState, type IState } from '../../model';
 
 import PerformanceLoader from '../layouts/performance-loader.vue';
-import PerformanceHeader from '@/modules/widgets/performance/ui/header/performance-header.vue';
-import PerformanceFilter from '@/modules/widgets/performance/ui/modals/performance-filters.vue';
+import PerformanceHeader from '../header/performance-header.vue';
+import PerformanceFilter from '../modals/performance-filters.vue';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../layouts/performance-view.vue'),
@@ -27,7 +28,17 @@ const emits = defineEmits<{
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
+
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState: () => getDefaultState(props.meta.defaultStateType),
+	onStateChange: (s) => updateState(s),
+});
+
 const limit = computed(() => props.meta.maxCountRowTable ?? 50);
+
 const {
 	currentStock,
 	currentDate,
@@ -41,11 +52,10 @@ const {
 	quoteCurrency,
 	refetch,
 	resetAllChanges,
-} = usePerformance({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
+} = usePerformanceState({
+	state,
 	defaultStateType: props.meta.defaultStateType,
-	limit: limit,
+	limit,
 });
 </script>
 

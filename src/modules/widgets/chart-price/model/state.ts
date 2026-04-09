@@ -9,8 +9,9 @@ import {
 } from '@/modules/cell';
 import { createPreset, type DateRangeValue, TimezoneUtc } from '@/modules/charts/common/model';
 import { ChartPriceDateRangePreset } from './date-range.ts';
+import type { WidgetState } from '@/modules/dashboard-group';
 
-export interface IState {
+export interface IState extends WidgetState {
 	selectedTicker: string;
 	timeRange: DateRangeValue;
 }

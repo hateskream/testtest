@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch } from '@/modules/widgets/base';
+import { useWidgetContext } from '@/modules/dashboard-group';
+import { BaseErrorComponent, BaseWidgetDashboard, ModalItemSwitch, useWidgetState } from '@/modules/widgets/base';
 import { MarketCapFiltersPanel, PreloaderComponent } from '../common';
-import { useMarketCap } from './../../composables';
+import { useMarketCapState } from './../../composables';
+import { getDefaultState, type IState } from '../../model';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/base-view.vue'),
@@ -24,6 +26,14 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState,
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	selectedTickers,
 	selectedMarkets,
@@ -34,10 +44,7 @@ const {
 	isError,
 	refetch,
 	resetAllChanges,
-} = useMarketCap({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
-});
+} = useMarketCapState({ state });
 </script>
 
 <template>

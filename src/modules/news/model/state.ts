@@ -1,3 +1,5 @@
+import type { WidgetState } from '@/modules/dashboard-group';
+import { MarketType } from '@/modules/market';
 import {
 	compareArray,
 	compareFilter,
@@ -16,9 +18,8 @@ import {
 	rehydrateLocations,
 } from './location';
 import { compareSort, type SortState } from './sort';
-import { MarketType } from '@/modules/market';
 
-export interface IState {
+export interface IState extends WidgetState {
 	score: Set<ScoreType>;
 	segments: Set<MarketType>;
 	sentiment: Set<SentimentType>;
@@ -30,7 +31,7 @@ export interface IState {
 	include: Set<IncludeType>;
 }
 
-export interface IHydratedState {
+export interface IHydratedState extends WidgetState {
 	score: ScoreType[];
 	segments: MarketType[];
 	sentiment: SentimentType[];

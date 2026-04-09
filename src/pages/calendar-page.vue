@@ -4,19 +4,20 @@ import { useRoute } from 'vue-router';
 
 import { AppLayout } from '@/modules/layout';
 import {
-	CalendarPageNews,
-	CalendarPageLayout,
 	CalendarPageDailyInfo,
 	CalendarPageDaySelect,
-	TvCalendarToolbar,
-	TvEventBoard,
-	useCalendarState,
+	CalendarPageLayout,
+	CalendarPageNews,
+	CalendarPreloaderComponent,
 	formatUTCDate,
 	getUTCWeekRange,
 	localDateToUTCUnix,
+	TvCalendarToolbar,
+	TvEventBoard,
+	useCalendar,
 	useEventBoardClientFiltration,
 	useInfiniteQueryEventBoard,
-	useQueryDailyInfo, CalendarPreloaderComponent,
+	useQueryDailyInfo,
 } from '@/modules/calendar';
 import { BaseErrorComponent } from '@/modules/widgets/base';
 
@@ -24,7 +25,7 @@ import CalendarDaysPreloaderComponent from '@/modules/calendar/ui/common/calenda
 
 const route = useRoute();
 
-const { currentTime, selectedCategories, selectedCountries, selectedImpacts, resetAll } = useCalendarState({
+const { currentTime, selectedCategories, selectedCountries, selectedImpacts, resetAll } = useCalendar({
 	widget: {
 		isEphemeral: false,
 		widgetId: 'calendar-page',

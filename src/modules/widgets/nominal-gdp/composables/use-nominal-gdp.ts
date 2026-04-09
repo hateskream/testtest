@@ -1,16 +1,9 @@
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import {
-	calculateGrowthYoy,
-	getDefaultState,
-	type IState,
-	type NominalGdpDateRangePresetType,
-	stateSchema,
-	type StateSchemaType,
-} from '../model';
-import { useQueryNominalGdp } from '../queries';
+import { getDefaultState, type IState, stateSchema, type StateSchemaType } from '../model';
+import { useNominalGdpState } from './use-nominal-gdp-state';
 
 interface IOptions {
 	widgetId: string;
@@ -21,6 +14,19 @@ export function useNominalGdp({
 	widgetId,
 	isEphemeral,
 }: IOptions) {
+	const state = ref<IState>(getDefaultState());
+
+	const {
+		activeRange,
+		data,
+		growthYoy,
+		isError,
+		isLoading,
+		refetch,
+		resetAllChanges,
+		resetAllFilters,
+	} = useNominalGdpState({ state });
+
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -39,17 +45,7 @@ export function useNominalGdp({
 	});
 
 	const { data: dataState } = useStateQuery();
-
 	const { mutate } = useStateMutation();
-
-	const state = ref<IState>(getDefaultState());
-
-	const activeRange = computed({
-		get: () => state.value.range,
-		set: (val: NominalGdpDateRangePresetType) => {
-			state.value.range = val;
-		},
-	});
 
 	watch(dataState, newState => {
 		if (newState) {
@@ -61,38 +57,12 @@ export function useNominalGdp({
 		mutate(newState);
 	}, { deep: true });
 
-	function resetAllChanges() {
-		state.value = getDefaultState();
-	}
-
-	function resetAllFilters() {
-		const defaultState = getDefaultState();
-
-		activeRange.value = defaultState.range;
-	}
-
-	const {
-		data,
-		isLoading,
-		isError,
-		refetch,
-	} = useQueryNominalGdp(activeRange);
-
-	const growthYoy = computed(() => {
-		if (!data.value) {
-			return null;
-		}
-
-		return calculateGrowthYoy(data.value.points);
-	});
-
 	return {
 		activeRange,
 		data,
 		growthYoy,
 		isError,
 		isLoading,
-		history,
 		refetch,
 		resetAllChanges,
 		applyStateToParent,

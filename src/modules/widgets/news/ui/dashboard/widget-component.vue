@@ -2,18 +2,30 @@
 import { computed, defineAsyncComponent, ref } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard, ModalBadgeList, ModalItemSwitch } from '@/modules/widgets/base';
+import { useWidgetContext } from '@/modules/dashboard-group';
 import {
+	getDefaultState,
+	hydrateState,
 	type IGetNewsRequest,
+	type IHydratedState,
+	type IState,
 	NewsContentWrapper,
 	NewsFilters,
 	NewsFiltersPanel,
+	rehydrateState,
 	type SettingKey,
 	toggleSetting,
-	useNews,
+	useNewsState,
 	useQueryNews,
 } from '@/modules/news';
 import { NewsDetails, NewsDetailsControls, useNewsDetailsState } from '@/modules/news-details';
+import {
+	BaseErrorComponent,
+	BaseWidgetDashboard,
+	ModalBadgeList,
+	ModalItemSwitch,
+	useWidgetState,
+} from '@/modules/widgets/base';
 
 import PreloaderComponent from '../common/preloader-component.vue';
 
@@ -41,6 +53,16 @@ const ViewComponent = defineAsyncComponent({
 	errorComponent: BaseErrorComponent,
 });
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState, IHydratedState>({
+	externalState: computed(() => props.meta.state as IHydratedState | undefined),
+	getDefaultState: () => getDefaultState(props.meta.defaultStateType),
+	rehydrate: rehydrateState,
+	hydrate: hydrateState,
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	selectedMarkets,
 	excludedTickers,
@@ -59,10 +81,9 @@ const {
 	activeLocations,
 	sortBy,
 	dateRange,
-} = useNews({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
+} = useNewsState({
 	defaultStateType: props.meta.defaultStateType,
+	state,
 });
 
 const { data, isLoading, isError, refetch, fetchNextPage } = useQueryNews(computed<IGetNewsRequest>(() => ({

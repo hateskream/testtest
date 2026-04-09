@@ -1,14 +1,5 @@
-import {
-	computed,
-	type MaybeRefOrGetter,
-	onBeforeUnmount,
-	onMounted,
-	readonly,
-	ref,
-	type ShallowRef,
-	toValue,
-	watch,
-} from 'vue';
+import type { MaybeRefOrGetter, ShallowRef } from 'vue';
+import { computed, onBeforeUnmount, readonly, ref, toValue, watch } from 'vue';
 import throttle from 'lodash/throttle';
 
 import { smoothScrollTo } from '@/shared/lib/smooth-scroll';
@@ -287,33 +278,44 @@ export function useSlider(opts: {
 
 	const throttledHandleScroll = throttle(handleScroll, 33);
 
-	onMounted(() => {
-		const el = toValue(opts.container);
-		if (!el) {
-			logger.error('Container not found');
-			return;
+	let abortController: AbortController | null = null;
+
+	watch(() => toValue(opts.container), value => {
+		if (value) {
+			handleScroll();
+			createListeners(value);
+		} else {
+			clearListeners();
+		}
+	}, { immediate: true });
+
+	function createListeners(el: HTMLElement) {
+		if (abortController) {
+			abortController.abort();
 		}
 
-		handleScroll();
+		abortController = new AbortController();
 
-		// Если будут настоящие баги с залипанием, то можно присмотреться к lostpointercapture
-		el.addEventListener('pointerdown', onPointerDown, { passive: false });
-		el.addEventListener('pointermove', onPointerMove);
-		el.addEventListener('pointerup', onPointerUp);
-		el.addEventListener('pointercancel', onPointerUp);
-		el.addEventListener('touchstart', onTouchStart);
-		el.addEventListener('touchend', onTouchEnd);
-		el.addEventListener('scroll', throttledHandleScroll);
+		const { signal } = abortController;
 
-		onBeforeUnmount(() => {
-			el.removeEventListener('pointerdown', onPointerDown);
-			el.removeEventListener('pointermove', onPointerMove);
-			el.removeEventListener('pointerup', onPointerUp);
-			el.removeEventListener('pointercancel', onPointerUp);
-			el.removeEventListener('touchend', onTouchEnd);
-			el.removeEventListener('touchstart', onTouchStart);
-			el.removeEventListener('scroll', throttledHandleScroll);
-		});
+		el.addEventListener('pointerdown', onPointerDown, { passive: false, signal });
+		el.addEventListener('pointermove', onPointerMove, { signal });
+		el.addEventListener('pointerup', onPointerUp, { signal });
+		el.addEventListener('pointercancel', onPointerUp, { signal });
+		el.addEventListener('touchstart', onTouchStart, { signal });
+		el.addEventListener('touchend', onTouchEnd, { signal });
+		el.addEventListener('scroll', throttledHandleScroll, { signal });
+	}
+
+	function clearListeners() {
+		if (abortController) {
+			abortController.abort();
+			abortController = null;
+		}
+	}
+
+	onBeforeUnmount(() => {
+		clearListeners();
 	});
 
 	return {

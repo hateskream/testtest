@@ -24,6 +24,10 @@ export class LocalRepository<TData, TSchema, TInput = TSchema> extends BaseRepos
 		return this.instances.get(options.entityId) as LocalRepository<D, S, I>;
 	}
 
+	public static dispose(entityId: string) {
+		this.instances.delete(entityId);
+	}
+
 	private constructor(
 		options: IOptionsLocal<TData, TSchema, TInput>,
 	) {

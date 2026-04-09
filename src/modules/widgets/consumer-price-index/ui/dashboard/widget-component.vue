@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import { useWidgetContext } from '@/modules/dashboard-group';
+import { BaseErrorComponent, BaseWidgetDashboard, useWidgetState } from '@/modules/widgets/base';
 import { FiltersPanel, PreloaderComponent } from '../common';
-import { useCpi } from '../../composables';
+import { useCpiState } from '../../composables';
+import { getDefaultState, type IState } from '../../model';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -24,6 +26,14 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState,
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	activeValueType,
 	activeRange,
@@ -32,10 +42,7 @@ const {
 	isError,
 	refetch,
 	resetAllChanges,
-} = useCpi({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
-});
+} = useCpiState({ state });
 </script>
 
 <template>

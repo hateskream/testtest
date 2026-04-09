@@ -208,6 +208,8 @@ function createPreset(widgetType: WidgetType): IWidgetPreset | null {
 	};
 }
 
+export type WidgetState = Record<string, unknown>;
+
 export interface IWidget extends IWidgetPreset {
 	id: string;
 	height: number;
@@ -216,6 +218,7 @@ export interface IWidget extends IWidgetPreset {
 	hasFilters: boolean;
 	stateType?: string;
 	maxCountRow?: number;
+	state?: WidgetState;
 }
 
 export const resizeHandlerMapping = generateResizeHandlerMapping();
@@ -424,6 +427,7 @@ export function rehydrateWidget(
 	defaultStateType: string,
 	stateType = '',
 	maxCountRow?: number,
+	state?: WidgetState,
 ): IWidget | null {
 	const logger = useLogger();
 
@@ -452,6 +456,7 @@ export function rehydrateWidget(
 		stateType,
 		maxCountRow,
 		hasFilters: preset.hasFilters ?? false,
+		state,
 	};
 }
 

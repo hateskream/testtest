@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, useTemplateRef, watch } from 'vue';
 import { notNullish } from '@vueuse/core';
 
 import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
 import type { IMeta } from '@/modules/dashboard-group';
-import { usePrice } from '../../composables';
+import { useWidgetContext } from '@/modules/dashboard-group/layout-dashboards/composables';
+import { usePriceState } from '../../composables';
 import { FilterComponent, PreloaderComponent } from '../common';
 import type { IInfiniteStateHandler } from '@/shared/ui/infinite-loading';
 import { useGoToTickerPage } from '@/modules/ticker';
+import { getDefaultsState, type IState } from '../../model';
+import { useWidgetState } from '@/modules/widgets/base/composables';
 
 import RcmPriceComponent from '@/modules/widgets/price/ui/tv/rcm-price-component.vue';
 
@@ -28,13 +31,20 @@ interface IWidgetComponentProps {
 const props = defineProps<IWidgetComponentProps>();
 
 const emits = defineEmits<{
-	(e: 'set-widget-state-type', widgetId: string, value: string): void;
 	(e: 'delete'): void;
 	(e: 'moveTo', dashboardId: string): void;
 	(e: 'duplicate'): void;
 }>();
 
-const refView = ref<IWidgetExposed | null>(null);
+const { updateState, setStateType } = useWidgetContext();
+
+const refView = useTemplateRef<IWidgetExposed>('refView');
+
+const { state: widgetState } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState: () => getDefaultsState(props.meta.defaultStateType),
+	onStateChange: (s) => updateState(s),
+});
 
 const {
 	activeMarket,
@@ -50,21 +60,16 @@ const {
 	hasNextPage,
 	tickersIsLoading,
 	resetAllChanges,
-} = usePrice({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
+} = usePriceState({
 	defaultStateType: props.meta.defaultStateType,
 	maxCountRows: () => (props.meta.maxCountRowTable || 50),
+	state: widgetState,
 });
 
 const { goToTickerPage } = useGoToTickerPage();
 
 watch(activeMarket, (value) => {
-	emits(
-		'set-widget-state-type',
-		props.meta.widgetId,
-		value.charAt(0).toUpperCase() + value.slice(1),
-	);
+	setStateType(value.charAt(0).toUpperCase() + value.slice(1));
 });
 
 async function loadMoreTickets(state: IInfiniteStateHandler) {

@@ -2,7 +2,7 @@
 import type { AsyncComponentLoader } from 'vue';
 
 import { WidgetType } from '../../core';
-import type { DisplayVariant } from '../../layout-dashboards';
+import type { DisplayVariant, WidgetState } from '../../layout-dashboards';
 import { useLogger } from '@/shared/service/monitoring';
 
 export interface ISize {
@@ -30,6 +30,9 @@ export interface IMeta {
 	maxCountRowTable?: number;
 	activeDisplayVariant: DisplayVariant;
 	allDisplayVariants: DisplayVariant[];
+
+	/** Widget-specific state */
+	state?: WidgetState;
 }
 
 export function getWidgetComponent(

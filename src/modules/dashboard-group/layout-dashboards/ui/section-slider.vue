@@ -4,6 +4,7 @@ import { useElementSize } from '@vueuse/core';
 
 import type { ISection, ISectionWheelPayload, IWidget } from '../model';
 import { useIsMobile } from '@/shared/composables';
+import { useDashboardContext } from '../composables';
 
 import SectionSidebar from './section-sidebar.vue';
 import SectionComponent from './section-component.vue';
@@ -24,16 +25,12 @@ interface ISectionSliderProps {
 
 const props = defineProps<ISectionSliderProps>();
 
-const emits = defineEmits<{
-	(e: 'set-widget-state-type', widgetId: string, value: string): void;
-	(e: 'change-width', sectionId: string, width: number): void;
-	(e: 'change-height', sectionId: string, widgetId: string, height: number): void;
-	(e: 'change-max-count-row', sectionId: string, widgetId: string, maxCountRow: number): void;
-	(e: 'next'): void;
-	(e: 'prev'): void;
-	(e: 'change-order-widgets-in-section', sectionId: string, widgets: IWidget[], sectionHeight: number): void;
-	(e: 'change-order-sections', sections: ISection[]): void;
+const emit = defineEmits<{
+	next: [];
+	prev: [];
 }>();
+
+const dashboardContext = useDashboardContext();
 
 const trackRef = useTemplateRef<HTMLDivElement>('track');
 
@@ -76,6 +73,7 @@ watch(
 	newSlides => {
 		setPreparedSlides(newSlides, props.visibleSlidesCount);
 	},
+	{ immediate: true },
 );
 
 watch(
@@ -96,24 +94,8 @@ function setPreparedSlides(newSlides: ISection[], visibleWindowSize: number) {
 	}));
 }
 
-function setWidgetStateType(widgetId: string, stateType: string) {
-	emits('set-widget-state-type', widgetId, stateType);
-}
-
-function onChangeWidthSection(sectionId: string, width: number) {
-	emits('change-width', sectionId, width);
-}
-
-function onChangeHeight(sectionId: string, widgetId: string, height: number) {
-	emits('change-height', sectionId, widgetId, height);
-}
-
-function onChangeMaxCountRow(sectionId: string, widgetId: string, maxCountRow: number) {
-	emits('change-max-count-row', sectionId, widgetId, maxCountRow);
-}
-
 function onChangeOrderWidgetsInSection(sectionId: string, widgets: IWidget[]) {
-	emits('change-order-widgets-in-section', sectionId, widgets, trackHeight.value);
+	dashboardContext.changeOrderWidgetsInSection(sectionId, widgets, trackHeight.value);
 }
 
 const isMobile = useIsMobile();
@@ -127,10 +109,7 @@ defineExpose({ trackRef });
 			ref="track"
 			:class="[classes.viewport, { [classes['mobile-viewport']]: isMobile }]"
 		>
-
-			<div
-				:class="classes.track"
-			>
+			<div :class="classes.track">
 				<section-component
 					v-for="(s, i) in preparedSlides"
 					:key="s.id"
@@ -140,10 +119,6 @@ defineExpose({ trackRef });
 					:parent-height="trackHeight"
 					:is-visible="s.isVisible"
 					@section-wheel="onSectionWheel"
-					@set-widget-state-type="setWidgetStateType"
-					@change-width="onChangeWidthSection"
-					@change-height="onChangeHeight"
-					@change-max-count-row="onChangeMaxCountRow"
 				/>
 			</div>
 		</div>
@@ -205,11 +180,11 @@ defineExpose({ trackRef });
 			:can-next="props.canNext"
 			:can-prev="props.canPrev"
 			:translate-x="props.translateX"
-			@prev="emits('prev')"
-			@next="emits('next')"
+			@prev="emit('prev')"
+			@next="emit('next')"
 			@go-to="goToSection"
 			@scroll-to-widget="scrollToWidget"
-			@change-order-sections="emits('change-order-sections', $event)"
+			@change-order-sections="dashboardContext.changeOrderSections($event)"
 			@change-order-widgets-in-section="onChangeOrderWidgetsInSection"
 		/>
 	</div>

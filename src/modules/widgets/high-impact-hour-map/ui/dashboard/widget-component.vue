@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
-import { FiltersPanel, PreloaderComponent } from '../common';
-import { useHighImpactHourMap } from '@/modules/widgets/high-impact-hour-map/composables';
+import { useWidgetContext } from '@/modules/dashboard-group';
+import { BaseErrorComponent, BaseWidgetDashboard, useWidgetState } from '@/modules/widgets/base';
 import { RouteNames } from '@/types/route.d';
 import { isFeatureEnabled } from '@/shared/lib';
+import { FiltersPanel, PreloaderComponent } from '../common';
+import { useHighImpactHourMapState } from '../../composables';
+import { getDefaultState, type IState } from '../../model';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -27,6 +29,14 @@ const emits = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState,
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	activeTimezone,
 	data,
@@ -34,7 +44,7 @@ const {
 	isError,
 	refetch,
 	resetAllChanges,
-} = useHighImpactHourMap({ widgetId: props.meta.widgetId, isEphemeral: props.meta.isOpenFull });
+} = useHighImpactHourMapState({ state, widgetId: props.meta.widgetId });
 
 const router = useRouter();
 

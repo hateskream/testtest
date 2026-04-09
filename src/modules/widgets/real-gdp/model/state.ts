@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
+import type { WidgetState } from '@/modules/dashboard-group';
 import { RealGdpDateRangePreset, RealGdpDateRangePresetSchema, type RealGdpDateRangePresetType } from './real-gdp';
 
-export interface IState {
+export interface IState extends WidgetState {
 	range: RealGdpDateRangePresetType;
 }
 

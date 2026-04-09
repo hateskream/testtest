@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import type { IMeta } from '@/modules/dashboard-group';
-import { BaseErrorComponent, BaseWidgetDashboard } from '@/modules/widgets/base';
+import { useWidgetContext } from '@/modules/dashboard-group';
+import { BaseErrorComponent, BaseWidgetDashboard, useWidgetState } from '@/modules/widgets/base';
 import { FiltersPanel, PreloaderComponent } from '../common';
-import { useRealGdp } from '@/modules/widgets/real-gdp/composables';
+import { getDefaultState, type IState } from '../../model';
+import { useRealGdpState } from '../../composables';
 
 const ViewComponent = defineAsyncComponent({
 	loader: () => import('../common/main-component.vue'),
@@ -24,6 +26,14 @@ const emit = defineEmits<{
 	(e: 'duplicate'): void;
 }>();
 
+const { updateState } = useWidgetContext();
+
+const { state } = useWidgetState<IState>({
+	externalState: computed(() => props.meta.state as IState | undefined),
+	getDefaultState,
+	onStateChange: (s) => updateState(s),
+});
+
 const {
 	activeRange,
 	data,
@@ -31,10 +41,7 @@ const {
 	isError,
 	refetch,
 	resetAllChanges,
-} = useRealGdp({
-	widgetId: props.meta.widgetId,
-	isEphemeral: props.meta.isOpenFull,
-});
+} = useRealGdpState({ state });
 </script>
 
 <template>

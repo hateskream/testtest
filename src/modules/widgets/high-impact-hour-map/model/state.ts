@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
 import { TimezoneUtc, TimezoneUtcSchema, type TimezoneUtcType } from '@/modules/charts/common/model';
+import type { WidgetState } from '@/modules/dashboard-group';
 
-export interface IState {
+export interface IState extends WidgetState {
 	timezone: TimezoneUtcType;
 }
 

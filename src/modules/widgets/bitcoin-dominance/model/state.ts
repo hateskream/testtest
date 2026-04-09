@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 import { type IDisplaySettings } from './display';
 import { DominanceDateRange } from '@/modules/widgets/bitcoin-dominance/model/dominance.ts';
+import type { WidgetState } from '@/modules/dashboard-group';
 
-export interface IState {
+export interface IState extends WidgetState {
 	selectedTickers: string[];
 	dateRange: DominanceDateRange;
 	displaySettings: IDisplaySettings;

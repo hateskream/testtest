@@ -4,7 +4,7 @@ import { queryClient } from '../query-client';
 
 interface IOptions<T> {
 	key: string[];
-	repository: (data: T) => Promise<void>;
+	repository: (data: T) => Promise<unknown>;
 	maxHistory?: number;
 }
 

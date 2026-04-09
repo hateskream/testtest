@@ -1,4 +1,5 @@
 import { MarketType } from '@/modules/market';
+import type { WidgetState } from '@/modules/dashboard-group';
 import { DisplayVariant, SymbolDisplayVariant } from './display';
 import { DateRangeForex, DateRangeStock, Stock } from './filters';
 import { Currency } from './quote-currency';
@@ -26,7 +27,7 @@ export type SettingsByMarket = {
 	[MarketType.Forex]: ISettingsForex;
 };
 
-export interface IState {
+export interface IState extends WidgetState {
 	activeMarket: PerformanceMarketType;
 	settings: SettingsByMarket;
 }

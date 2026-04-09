@@ -2,7 +2,7 @@
 import { computed, defineAsyncComponent, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
 import { getWidgetComponent, type IMeta } from '../../dashboards/model';
-import type { DisplayVariant, IWidget } from '../model';
+import type { DisplayVariant, IWidget, WidgetState } from '../model';
 import {
 	calcSizeSideGridCell,
 	canChangeHeight,
@@ -15,7 +15,7 @@ import {
 import { MAX_ROW_HEIGHT, MIN_ROW_HEIGHT } from '../../tv';
 import { UiSkeleton } from '@/shared/ui/skeleton';
 import { useDelayedLoading, useIsMobile } from '@/shared/composables';
-import { useResizable } from '../composables';
+import { createWidgetContext, useDashboardContext, useResizable } from '../composables';
 import { isFeatureEnabled } from '@/shared/lib';
 
 import HighlighterComponent from './highlighter-component.vue';
@@ -28,21 +28,24 @@ interface IWidgetExposed {
 
 interface IWidgetComponentProps {
 	widget: IWidget;
+	sectionId: string;
 	columnWidth: number;
 	colCount: number;
 	parentHeight: number;
 	activeDisplayVariant: DisplayVariant;
 	allDisplayVariants: DisplayVariant[];
 	isVisible: boolean;
+	state?: WidgetState;
 }
 
 const props = defineProps<IWidgetComponentProps>();
 
-const emits = defineEmits<{
-	'set-widget-state-type': [string, string];
-	'change-height': [string, number];
-	'change-max-count-row': [string, number];
-}>();
+const dashboardContext = useDashboardContext();
+
+createWidgetContext({
+	updateState: (state) => dashboardContext.updateWidgetState(props.widget.id, state),
+	setStateType: (stateType) => dashboardContext.setWidgetStateType(props.widget.id, stateType),
+});
 
 const isMobile = useIsMobile();
 
@@ -96,8 +99,9 @@ const meta = computed((): IMeta => ({
 	columnWidth: props.columnWidth,
 	rowHeight: cellSize.value.size,
 	maxCountRowTable: props.widget.maxCountRow,
-	activeDisplayVariant:  props.activeDisplayVariant,
+	activeDisplayVariant: props.activeDisplayVariant,
 	allDisplayVariants: props.allDisplayVariants,
+	state: props.state,
 }));
 
 watch(
@@ -124,7 +128,7 @@ watch(
 
 		const { widget: { maxCountRow } } = props;
 
-		emits('change-height', props.widget.id, newHeight);
+		dashboardContext.changeHeightWidget(props.sectionId, props.widget.id, newHeight);
 		if (maxCountRow) {
 			emitChangeMaxCountRow(newHeight);
 		}
@@ -151,7 +155,6 @@ watch(
 					return calcMaxCountRowVisibleOverrided(contentHeight);
 				};
 		}
-
 
 		if (snapHeightToNearestStepOverrided) {
 			resizeHandlerMapping[props.widget.widgetType]
@@ -196,23 +199,19 @@ function scrollBy(px: number) {
 	}
 }
 
-function setWidgetStateType(widgetId: string, stateType: string) {
-	emits('set-widget-state-type', widgetId, stateType);
-}
-
 function snapToNearestStep(height: number) {
 	const snappedHeight = resizeHandlerMapping[props.widget.widgetType].snapHeightToNearestStep(props.widget, height);
 	if (!snappedHeight) {
 		return;
 	}
 
-	emits('change-height', props.widget.id, snappedHeight);
+	dashboardContext.changeHeightWidget(props.sectionId, props.widget.id, snappedHeight);
 	emitChangeMaxCountRow(snappedHeight);
 }
 
 function emitChangeMaxCountRow(newHeight: number) {
-	emits(
-		'change-max-count-row',
+	dashboardContext.changeMaxCountRowWidget(
+		props.sectionId,
 		props.widget.id,
 		resizeHandlerMapping[props.widget.widgetType]
 			.calcMaxCountRowVisible(props.widget, newHeight),
@@ -245,7 +244,6 @@ defineExpose({ triggerFlash, scrollBy });
 						:is="component"
 						ref="refComponent"
 						:meta="meta"
-						@set-widget-state-type="setWidgetStateType"
 					/>
 				</template>
 				<template #fallback>
@@ -274,7 +272,6 @@ defineExpose({ triggerFlash, scrollBy });
 				:class="classes.sizer"
 			/>
 		</div>
-
 	</div>
 </template>
 

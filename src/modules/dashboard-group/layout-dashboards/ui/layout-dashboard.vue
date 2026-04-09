@@ -1,115 +1,57 @@
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
-import { useDashboardLayout, useSlider } from '../composables';
+import { useDashboardList } from '../composables';
 
+import DashboardContent from './dashboard-content.vue';
 import HeaderDesktop from './header-desktop.vue';
 import HeaderMobile from './header-mobile.vue';
-import PaginationMobile from './pagination-mobile.vue';
-import SectionSlider from './section-slider.vue';
+import LayoutDashboardError from './layout-dashboard-error.vue';
+import LayoutDashboardLoader from './layout-dashboard-loader.vue';
 
-const emits = defineEmits<{
-	(e: 'close'): void;
-}>();
+interface ILayoutDashboardEmits {
+	close: [];
+}
+
+const emit = defineEmits<ILayoutDashboardEmits>();
 
 const {
-	sections,
 	tabs,
+	activeDashboardId,
 	changeActiveDashboard,
-	setWidgetStateType,
-	changeWidthSection,
-	changeHeighWidget,
-	changeMaxCountRowWidget,
-	changeOrderWidgetsInSection,
-	changeOrderSections,
-} = useDashboardLayout();
+	isLoading,
+	isError,
+	refetch,
+} = useDashboardList();
 
 const { width } = useElementSize(useTemplateRef('viewport'));
 
 const viewportWidth = computed(() => width.value);
-
-const isMobile = computed(() => viewportWidth.value < 768 - 72*2);
-const isSectionWidthLessThanViewport = computed(() =>
-	sections.value.reduce((acc, s) => acc + s.width, 0) < viewportWidth.value,
-);
-
-const normalizeWidth = computed(() => viewportWidth.value / sections.value.length);
-
-const preparedSlides = computed(
-	() => sections.value
-		.map(s => ({
-			...s,
-			width: isMobile.value
-				? viewportWidth.value
-				: isSectionWidthLessThanViewport.value
-					? normalizeWidth.value
-					: s.width,
-		})),
-);
-
-const sliderRef = ref<typeof SectionSlider | null>(null);
-
-const {
-	translateX,
-	canNext,
-	canPrev,
-	currentIndex,
-	next,
-	prev,
-	goTo,
-	visibleSlidesCount,
-} = useSlider({
-	slidesWidth: computed (() => preparedSlides.value.map(s => s.width)),
-	viewportWidth,
-	gap: 23,
-	isMobile,
-	container: computed(() => sliderRef.value?.trackRef),
-});
+const isMobile = computed(() => viewportWidth.value < 768 - 72 * 2);
 </script>
 
 <template>
 	<div ref="viewport" :class="classes.root">
-		<div :class="classes.container">
+		<layout-dashboard-error v-if="isError" @retry="refetch" />
+		<layout-dashboard-loader v-else-if="isLoading" :is-mobile="isMobile" />
+		<div v-else-if="activeDashboardId" :class="classes.container">
 			<header-desktop
 				v-if="!isMobile"
 				:tabs="tabs"
 				@change-active="changeActiveDashboard"
 			/>
-			<section-slider
-				ref="sliderRef"
-				:slides="preparedSlides"
-				:can-next="canNext"
-				:can-prev="canPrev"
-				:translate-x="translateX"
-				:current-index="currentIndex"
-				:visible-slides-count="visibleSlidesCount"
-				:go-to="goTo"
-				@prev="prev"
-				@next="next"
-				@set-widget-state-type="setWidgetStateType"
-				@change-width="changeWidthSection"
-				@change-height="changeHeighWidget"
-				@change-max-count-row="changeMaxCountRowWidget"
-				@change-order-widgets-in-section="changeOrderWidgetsInSection"
-				@change-order-sections="changeOrderSections"
+			<dashboard-content
+				:key="activeDashboardId"
+				:dashboard-id="activeDashboardId"
+				:is-mobile="isMobile"
+			/>
+			<header-mobile
+				v-if="isMobile"
+				:tabs="tabs"
+				@close="emit('close')"
 			/>
 		</div>
-		<pagination-mobile
-			v-if="isMobile"
-			:can-next="canNext"
-			:can-prev="canPrev"
-			:current-index="currentIndex"
-			:total-slides="preparedSlides.length"
-			@go-to="goTo"
-			@prev="prev"
-			@next="next"
-		/>
-		<header-mobile
-			v-if="isMobile"
-			:tabs="tabs"
-			@close="emits('close')"
-		/>
 	</div>
 </template>
 
@@ -136,4 +78,4 @@ const {
 		border-radius: 34px;
 	}
 }
- </style>
+</style>

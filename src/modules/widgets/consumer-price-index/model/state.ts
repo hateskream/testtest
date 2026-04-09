@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import type { WidgetState } from '@/modules/dashboard-group';
 import {
 	CpiDateRangePreset,
 	CpiDateRangePresetSchema,
@@ -9,7 +10,7 @@ import {
 	type CpiValueTypeType,
 } from './cpi';
 
-export interface IState {
+export interface IState extends WidgetState {
 	valueType: CpiValueTypeType;
 	range: CpiDateRangePresetType;
 }

@@ -4,8 +4,9 @@ import { type IDisplaySettings } from './display';
 import { type MarketCapType } from './market-cap';
 import { MarketType } from '@/modules/market';
 import { DateRangePreset, type DateRangeValue, DateRangeValueSchema } from '@/modules/charts/common/model';
+import type { WidgetState } from '@/modules/dashboard-group';
 
-export interface IState {
+export interface IState extends WidgetState {
 	selectedTickers: string[];
 	selectedMarkets: MarketCapType[];
 	dateRange: DateRangeValue;

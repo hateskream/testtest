@@ -1,15 +1,9 @@
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import { clone } from '@/shared/lib';
 import { createStateQueries } from '@/shared/service/data-repo';
-import {
-	getDefaultState,
-	type IState,
-	type RealGdpDateRangePresetType,
-	stateSchema,
-	type StateSchemaType,
-} from '../model';
-import { useQueryRealGdp } from '../queries';
+import { getDefaultState, type IState, stateSchema, type StateSchemaType } from '../model';
+import { useRealGdpState } from './use-real-gdp-state';
 
 interface IOptions {
 	widgetId: string;
@@ -20,6 +14,18 @@ export function useRealGdp({
 	widgetId,
 	isEphemeral,
 }: IOptions) {
+	const state = ref<IState>(getDefaultState());
+
+	const {
+		activeRange,
+		data,
+		isError,
+		isLoading,
+		refetch,
+		resetAllChanges,
+		resetAllFilters,
+	} = useRealGdpState({ state });
+
 	const {
 		useStateQuery,
 		useStateMutation,
@@ -38,17 +44,7 @@ export function useRealGdp({
 	});
 
 	const { data: dataState } = useStateQuery();
-
 	const { mutate } = useStateMutation();
-
-	const state = ref<IState>(getDefaultState());
-
-	const activeRange = computed({
-		get: () => state.value.range,
-		set: (val: RealGdpDateRangePresetType) => {
-			state.value.range = val;
-		},
-	});
 
 	watch(dataState, newState => {
 		if (newState) {
@@ -60,29 +56,11 @@ export function useRealGdp({
 		mutate(newState);
 	}, { deep: true });
 
-	function resetAllChanges() {
-		state.value = getDefaultState();
-	}
-
-	function resetAllFilters() {
-		const defaultState = getDefaultState();
-
-		activeRange.value = defaultState.range;
-	}
-
-	const {
-		data,
-		isLoading,
-		isError,
-		refetch,
-	} = useQueryRealGdp(activeRange);
-
 	return {
 		activeRange,
 		data,
 		isError,
 		isLoading,
-		history,
 		refetch,
 		resetAllChanges,
 		applyStateToParent,

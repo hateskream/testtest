@@ -14,9 +14,11 @@ export { default as CalendarPageNews } from './ui/page/calendar-page-news.vue';
 export { default as CalendarPreloaderComponent } from './ui/common/calendar-preloader-component.vue';
 
 export * from './composables/use-calendar-state';
+export * from './composables/use-calendar';
 export * from './composables/use-event-board-client-filtration';
 export * from './query/use-query-event-board';
 export * from './query/use-query-daily-info';
 
 export * from './utils/event-board-utils';
 export * from './model/calendar';
+export * from './model/state';

@@ -7,6 +7,7 @@ import {
 	TimeRangeFilterValue,
 } from './filters';
 import { MarketType } from '@/modules/market';
+import type { WidgetState } from '@/modules/dashboard-group';
 
 export interface IDisplaySettings {
 	isShowChart: boolean;
@@ -26,7 +27,7 @@ interface ISettings {
 
 type SettingsByMarketType = Record<MarketType, ISettings>;
 
-export interface IState {
+export interface IState extends WidgetState {
 	activeMarket: MarketType;
 	settings: SettingsByMarketType;
 }
