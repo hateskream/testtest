@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useWindowSize } from '@vueuse/core';
 
 import { AppLayout } from '@/modules/layout';
 import {
@@ -133,6 +134,10 @@ function onUpdateWeek(date: Date) {
 	skipLimitSync = true;
 	selectedDate.value = date;
 }
+const { width } = useWindowSize();
+const isMobile = computed(()=>{
+	return width.value<768;
+});
 </script>
 
 <template>
@@ -183,7 +188,11 @@ function onUpdateWeek(date: Date) {
 				</template>
 
 				<template #calendar-sidebar>
-					<calendar-page-day-select v-model="selectedDate" @update-week="onUpdateWeek" />
+					<calendar-page-day-select
+						v-if="!isMobile"
+						v-model="selectedDate"
+						@update-week="onUpdateWeek"
+					/>
 
 					<calendar-page-news />
 				</template>
@@ -212,6 +221,12 @@ function onUpdateWeek(date: Date) {
 	flex-direction: column;
 	align-self: stretch;
 	overflow-y: hidden;
+
+	@media (max-width: 768px) {
+		flex: auto;
+		overflow-y: auto;
+	}
+
 	background: var(--color-bg-surface-01, #0c0c0d);
 	border-radius: 16px;
 	gap: 12px;
